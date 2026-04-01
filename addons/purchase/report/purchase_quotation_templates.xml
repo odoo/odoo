@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_purchasequotation_document">
+    <t t-call="web.external_layout">
+        <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
+        <t t-set="forced_vat" t-value="o.fiscal_position_id.foreign_vat"/> <!-- So that it appears in the footer of the report instead of the company VAT if it's set -->
+        <t t-set="address">
+            <div t-field="o.partner_id"
+                 t-options='{"widget": "contact", "fields": ["address", "name", "phone", "vat"], "no_marker": True, "phone_icons": True}'/>
+        </t>
+        <t t-if="o.dest_address_id">
+            <t t-set="information_block">
+                <strong class="d-block mt-3">Shipping address</strong>
+                <div t-field="o.dest_address_id"
+                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}' name="purchase_shipping_address"/>
+                <div>
+                    <strong>Requested Ship Date:</strong>
+                    <span t-field="o.date_planned" t-options="{'date_only': 'true'}"/>
+                </div>
+            </t>
+        </t>
+        <div class="page">
+            <div class="oe_structure"/>
+            <t t-set="layout_document_title">
+                <span>Request for Quotation <span t-field="o.name"/></span>
+            </t>
+
+            <table class="table table-borderless">
+                <thead style="display: table-row-group">
+                    <tr>
+                        <th name="th_description"><strong>Description</strong></th>
+                        <th name="th_expected_date" class="text-center"><strong>Expected Date</strong></th>
+                        <th name="th_quantity" class="text-end"><strong>Qty</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="o.order_line.filtered(lambda l: l.display_type or l.product_qty != 0)" t-as="order_line">
+                        <tr t-att-class="'fw-bolder o_line_section' if order_line.display_type == 'line_section' else 'fw-bold o_line_subsection' if order_line.display_type == 'line_subsection' else 'fst-italic o_line_note' if order_line.display_type == 'line_note' else ''">
+                            <t t-if="not order_line.display_type">
+                                <td id="product">
+                                    <span t-field="order_line.name"/>
+                                </td>
+                                <td class="text-center">
+                                    <span t-field="order_line.date_planned" t-options="{'date_only': 'true'}"/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-field="order_line.product_qty"/>
+                                    <span t-field="order_line.product_uom_id" groups="uom.group_uom"/>
+                                    <span t-if="order_line.product_uom_id != order_line.product_id.uom_id" class="text-muted small">
+                                    <br/>
+                                        <span t-field="order_line.product_uom_qty" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit'}"/> <span t-field="order_line.product_id.uom_id"/>
+                                    </span>
+                                </td>
+                            </t>
+                            <t t-else="">
+                                <td colspan="99" id="section">
+                                    <span t-field="order_line.name"/>
+                                </td>
+                            </t>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+
+            <p t-field="o.note" class="mt-4"/>
+
+            <div class="oe_structure"/>
+
+            <t t-set="base_address" t-value="o.env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+            <t t-set="portal_url" t-value="base_address + '/my/purchase/' + str(o.id) + '#portal_connect_software_modal'"/>
+            <div t-if="any(u._is_portal() for u in o.partner_id.user_ids) and o._get_edi_builders()" class="text-center">
+                <a t-att-href="portal_url">Connect your software</a> with <t t-out="o.company_id.name"/> to create quotes automatically.
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="report_purchasequotation">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="purchase.report_purchasequotation_document" t-lang="o.partner_id.lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

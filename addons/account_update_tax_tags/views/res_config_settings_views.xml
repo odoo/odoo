@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_open_wizard" model="ir.actions.act_window">
+            <field name="name">Update tax tags on existing Journal Entries</field>
+            <field name="res_model">account.update.tax.tags.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.account_update_tax_tags</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//block[@name='default_taxes_setting_container']" position="inside">
+                    <setting id="update_tax_tags" groups="base.group_no_one">
+                        <button name="%(account_update_tax_tags.action_open_wizard)d" icon="fa-refresh" type="action" class="btn-link"
+                                string="Update tax tags on existing Journal Entries"/>
+                    </setting>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

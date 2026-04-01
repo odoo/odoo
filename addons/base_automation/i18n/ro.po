@@ -1,0 +1,1080 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_automation
+#
+# Translators:
+# Cozmin Candea <office@terrabit.ro>, 2022
+# Martin Trigaux, 2022
+# Foldi Robert <foldirobert@nexterp.ro>, 2022
+# Hongu Cosmin <cosmin513@gmail.com>, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Alin Ilie <alin.ilie@logit-solutions.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-12-02 14:36+0000\n"
+"Last-Translator: Alin Ilie <alin.ilie@logit-solutions.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
+"base_automation/ro/>\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
+msgid ""
+"\"\n"
+"                (ID:"
+msgstr ""
+"\"\n"
+"                (ID:"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/group_config_menu_patch.js:0
+msgid "\"%s\" tag is added"
+msgstr "Eticheta \"%s” este adăugată"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+msgid ""
+"\"On live update\" automation rules can only be used with \"Execute Python "
+"Code\" action type."
+msgstr ""
+"Regulile de automatizare „On live update” pot fi utilizate numai cu tipul de "
+"acțiune „Executare cod Python”."
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+msgid "%s actions"
+msgstr "%s acțiuni"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
+msgid "1 action"
+msgstr "1 acțiune"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "<code>env</code>: environment on which the action is triggered"
+msgstr "<code>env</code>: mediul asupra căruia este declanșată acțiunea"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"<code>model</code>: model of the record on which the action is triggered; is "
+"a void recordset"
+msgstr ""
+"<code>model</code>: modelul înregistrării pe care este declanșată acțiunea; "
+"este un set de înregistrări nule"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"<code>payload</code>: the payload of the call (GET parameters, JSON body), "
+"as a dict."
+msgstr ""
+"<code>sarcină utilă</code>: sarcina utilă a apelului (parametri GET, corp "
+"JSON), ca dict."
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
+"<code>timezone</code>: useful Python libraries"
+msgstr ""
+"<code><code>ora</code>, data</code>, <code>dateutil</code>, <code>fusul "
+"orar</code>: biblioteci Python utile"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
+msgid "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
+msgstr "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"<i class=\"fa fa-info-circle\"/> The default target record getter will work "
+"out-of-the-box for any webhook coming from another Odoo instance."
+msgstr ""
+"<i class=\"fa fa-info-circle\"/> Instrumentul implicit de obținere a "
+"înregistrărilor țintă va funcționa imediat pentru orice webhook care provine "
+"dintr-o altă instanță Odoo."
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"<i class=\"fa fa-warning\"/> Automation rules triggered by UI changes will "
+"be executed <em>every time</em> the watched fields change, <em>whether you "
+"save or not</em>."
+msgstr ""
+"Regulile de<i class=\"fa fa-warning\"/> automatizare declanșate de "
+"modificările UI vor fi executate de <em>fiecare dată</em> când se modifică "
+"câmpurile urmărite, <em>indiferent dacă salvați sau nu</em>."
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_server_action_form
+msgid "<span class=\"o_stat_text\">Automation</span>"
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "<span class=\"text-muted\"> Available variables: </span>"
+msgstr "Variabile <span class=\"text-muted\"> disponibile: </span>"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__message_needaction
+msgid "Action Needed"
+msgstr "Acțiune necesară"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_ids
+msgid "Actions"
+msgstr "Acțiuni"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Actions To Do"
+msgstr "Definiți acțiunile de făcut"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__active
+msgid "Active"
+msgstr "Activ"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_ids
+msgid "Activities"
+msgstr "Activități"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Decorare excepție activitate"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_state
+msgid "Activity State"
+msgstr "Stare activitate"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Iconiță tip activitate"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_mode__after
+msgid "After"
+msgstr "După"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_created
+msgid "After creation"
+msgstr "După creare"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_updated
+msgid "After last update"
+msgstr "După ultima actualizare"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_domain
+msgid "Apply on"
+msgstr "Aplică pe"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
+msgid "Archived"
+msgstr "Arhivat"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__message_attachment_count
+msgid "Attachment Count"
+msgstr "Număr atașamente"
+
+#. module: base_automation
+#: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
+msgid "Automate <em>everything</em> with Automation Rules"
+msgstr "Automatizați <em>totul</em> cu Reguli de automatizare"
+
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_base_automation
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__base_automation_id
+#: model:ir.model.fields,field_description:base_automation.field_ir_cron__base_automation_id
+#: model:ir.model.fields.selection,name:base_automation.selection__ir_actions_server__usage__base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Automation Rule"
+msgstr "Regula de automatizare"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__name
+msgid "Automation Rule Name"
+msgstr "Nume regulă de automatizare"
+
+#. module: base_automation
+#: model:ir.actions.act_window,name:base_automation.base_automation_act
+#: model:ir.ui.menu,name:base_automation.menu_base_automation_form
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
+msgid "Automation Rules"
+msgstr "Regulă de automatizare"
+
+#. module: base_automation
+#: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
+msgid "Automation Rules: check and execute"
+msgstr "Reguli de automatizare: verificați și executați"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/group_config_menu_patch.js:0
+msgid "Automations"
+msgstr "Automatizări"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time
+msgid "Based on date field"
+msgstr "Pe baza câmpului dată"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_mode__before
+msgid "Before"
+msgstr "Înainte"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
+msgid "Before Update Domain"
+msgstr "Înainte de actualizare domeniu"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
+msgid "Created by"
+msgstr "Creat de"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__create_date
+msgid "Created on"
+msgstr "Creat în"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
+msgid "Custom"
+msgstr "Personalizat"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__day
+msgid "Days"
+msgstr "Zile"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
+msgid "Delay"
+msgstr "Întârziere"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range_mode
+msgid "Delay mode"
+msgstr "Modul de întârziere"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+msgid ""
+"Delay must be positive. Set 'Delay mode' to 'Before' to negate the delay."
+msgstr ""
+"Întârzierea trebuie să fie pozitivă. Setați „Modul de întârziere” la "
+"„Înainte” pentru a anula întârzierea."
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range_type
+msgid "Delay unit"
+msgstr "Unitate de întârziere"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
+msgid "Deprecated (do not use)"
+msgstr "Depreciat (a nu se utiliza)"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__description
+msgid "Description"
+msgstr "Descriere"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
+msgid "Disable"
+msgstr "Dezactivat"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__display_name
+#: model:ir.model.fields,field_description:base_automation.field_ir_cron__display_name
+msgid "Display Name"
+msgstr "Nume afișat"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
+msgid "Edit"
+msgstr "Editare"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
+msgid "Email Events"
+msgstr "Evenimente prin e-mail"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+msgid ""
+"Email, follower or activity action types cannot be used when deleting "
+"records, as there are no more records to apply these changes to!"
+msgstr ""
+"E-mailul, urmăritorul sau tipurile de acțiuni de activitate nu pot fi "
+"utilizate la ștergerea înregistrărilor, deoarece nu mai există înregistrări "
+"pentru care să se aplice aceste modificări!"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
+msgid "External"
+msgstr "Extern"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
+msgid "Fields that trigger the onchange."
+msgstr "Câmpuri care declanșează schimbarea."
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__message_follower_ids
+msgid "Followers"
+msgstr "Urmăritori"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Urmăritori (Parteneri)"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+msgid "Following child actions have warnings: %(children)s"
+msgstr "Următoarele acțiuni secundare au avertismente: %(children)s"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Iconiță Font Awesome, ex: fa-tasks"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__model_is_mail_thread
+msgid "Has Mail Thread"
+msgstr "Are thread de mail"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__has_message
+msgid "Has Message"
+msgstr "Are mesaj"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__hour
+msgid "Hours"
+msgstr "Ore"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__id
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__id
+#: model:ir.model.fields,field_description:base_automation.field_ir_cron__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_exception_icon
+msgid "Icon"
+msgstr "Iconiță"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Iconiță pentru a indica o activitate excepțională."
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Dacă este bifat, mesajele noi necesită atenția dvs."
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__message_has_error
+#: model:ir.model.fields,help:base_automation.field_base_automation__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Dacă este bifat, unele mesaje au o eroare de livrare."
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
+msgid ""
+"If present, this condition must be satisfied before executing the automation "
+"rule."
+msgstr ""
+"Dacă este prezentă, această condiție trebuie să fie îndeplinită înainte de "
+"executarea regulii de automatizare."
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
+msgid ""
+"If present, this condition must be satisfied before the update of the "
+"record. Not checked on record creation."
+msgstr ""
+"Dacă este prezentă, această condiție trebuie să fie îndeplinită înainte de "
+"actualizarea înregistrării. Nu se verifică la crearea înregistrării."
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid ""
+"If renewed, update the secret URL in the third-party app that calls this "
+"webhook."
+msgstr ""
+"Dacă este reînnoit, actualizați URL-ul secret în aplicația terță parte care "
+"apelează acest webhook."
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
+msgid "Include Archived"
+msgstr "Include arhiva"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__message_is_follower
+msgid "Is Follower"
+msgstr "Este urmăritor"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Keep track of what this automation does and why it exists..."
+msgstr "Urmăriți ce face această automatizare și de ce există..."
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
+msgid "Last Run"
+msgstr "Ultima executare"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__write_uid
+msgid "Last Updated by"
+msgstr "Ultima actualizare făcută de"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__write_date
+msgid "Last Updated on"
+msgstr "Ultima actualizare pe"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__log_webhook_calls
+msgid "Log Calls"
+msgstr "Înregistrare apeluri"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Logs"
+msgstr "Jurnale"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+msgid ""
+"Mail event can not be configured on model %s. Only models with discussion "
+"feature can be used."
+msgstr ""
+"E-mail eveniment nu poate fi configurat pe model %s. Doar modelele cu "
+"funcție de discuții pot fi utilizate."
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__message_has_error
+msgid "Message Delivery error"
+msgstr "Eroare la livrarea mesajului"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__message_ids
+msgid "Messages"
+msgstr "Mesaje"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
+msgid "Minutes"
+msgstr "Minute"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
+msgid "Model"
+msgstr "Model"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__model_name
+msgid "Model Name"
+msgstr "Nume model"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/ir_actions_server.py:0
+msgid ""
+"Model of action %(action_name)s should match the one from automated rule %"
+"(rule_name)s."
+msgstr ""
+"Modelul de acțiune %(action_name)s trebuie să se potrivească cu cel din "
+"regula automată %(rule_name)s."
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__month
+msgid "Months"
+msgstr "Luni"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Termen limită pentru activitatea mea"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Următorul eveniment din calendarul de activități"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Următoarea dată limită pentru activitate"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
+msgid "Next Activity Summary"
+msgstr "Rezumatul următoarei activități"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_type_id
+msgid "Next Activity Type"
+msgstr "Următorul tip de activitate"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+msgid "No record to run the automation on was found."
+msgstr "Nu a fost găsită nicio înregistrare pentru a rula automatizarea."
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Notes"
+msgstr "Note"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Număr acțiuni"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__message_has_error_counter
+msgid "Number of errors"
+msgstr "Număr erori"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Număr de mesaje care necesită acțiune"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Număr de mesaje cu eroare de livrare"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
+msgid "On Change Fields Trigger"
+msgstr "Declanșator câmpuri On Change"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
+msgid "On UI change"
+msgstr "La modificarea interfeței cu utilizatorul"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_archive
+msgid "On archived"
+msgstr "La arhivat"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
+msgid "On create"
+msgstr "La creare"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
+msgid "On create and edit"
+msgstr "La creare și editare"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
+msgid "On deletion"
+msgstr "La ștergere"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_received
+msgid "On incoming message"
+msgstr "La intrare de mesaj"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_sent
+msgid "On outgoing message"
+msgstr "La ieșire de mesaj"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unarchive
+msgid "On unarchived"
+msgstr "La ne-arhivat"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_write
+msgid "On update"
+msgstr "La actualizare"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_webhook
+msgid "On webhook"
+msgstr "Pe webhook"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__previous_domain
+msgid "Previous Domain"
+msgstr "Domeniu anterior"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_priority_set
+msgid "Priority is set to"
+msgstr "Prioritatea este setată la"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__rating_ids
+msgid "Ratings"
+msgstr "Evaluări"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__record_getter
+msgid "Record Getter"
+msgstr "Înregistrare Getter"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Renew"
+msgstr "Reînnoire"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
+msgid "Responsible User"
+msgstr "Utilizator responsabil"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Eroare la livrarea SMS"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+msgid "Scheduled Action"
+msgstr "Acțiune planificată"
+
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_ir_cron
+msgid "Scheduled Actions"
+msgstr "Acțiuni planificate"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Scheduled action"
+msgstr "Acțiune programată"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Secret URL"
+msgstr "URL secret"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Select a date field..."
+msgstr "Selectați un tip de câmp"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Select a value..."
+msgstr "Selectează o valoare"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Select fields..."
+msgstr "Câmpuri selectate"
+
+#. module: base_automation
+#: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
+msgid ""
+"Send an email when an object changes state, archive records\n"
+"                after a month of inactivity or remind yourself to follow-up "
+"on\n"
+"                tasks when a specific tag is added."
+msgstr ""
+"Trimiteți un e-mail atunci când un obiect își schimbă starea, arhivați "
+"înregistrările\n"
+"                după o lună de inactivitate sau reamintiți-vă să urmăriți\n"
+"                atunci când este adăugată o anumită etichetă."
+
+#. module: base_automation
+#: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
+msgid ""
+"Send an email when an object changes state, archive records after a month of "
+"inactivity or remind yourself to follow-up on tasks when a specific tag is "
+"added.<br>With Automation Rules, you can automate any workflow."
+msgstr ""
+"Trimite un e-mail când un obiect își schimbă starea, arhivează "
+"înregistrările după o lună de inactivitate sau reamintește-ți să urmărești "
+"sarcinile când este adăugată o etichetă specifică.<br>Cu Regulile de "
+"automatizare, poți automatiza orice flux de lucru."
+
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_ir_actions_server
+msgid "Server Action"
+msgstr "Acțiune server"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Set an explicit name"
+msgstr "Setați un nume explicit"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__trg_selection_field_id
+msgid ""
+"Some triggers need a reference to a selection field. This field is used to "
+"store it."
+msgstr ""
+"Unele mecanisme de declanșare au nevoie de o referință la un câmp de "
+"selecție. Acest câmp este utilizat pentru a o stoca."
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
+msgid ""
+"Some triggers need a reference to another field. This field is used to store "
+"it."
+msgstr ""
+"Unele mecanisme de declanșare au nevoie de o referință la un alt câmp. Acest "
+"câmp este utilizat pentru a o stoca."
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_stage_set
+msgid "Stage is set to"
+msgstr "Etapa este setată la"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/group_config_menu_patch.js:0
+msgid "Stage is set to \"%s\""
+msgstr "Etapa este setată la \"%s”"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_state_set
+msgid "State is set to"
+msgstr "Starea este setată la"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Stare bazată pe activități\n"
+"Depășit: Data scadentă a trecut deja\n"
+"Astăzi: Data activității este astăzi\n"
+"Planificat: Activități viitoare."
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_tag_set
+msgid "Tag is added"
+msgstr "Eticheta este adăugată"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Target Record"
+msgstr "Înregistrare țintă"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+msgid "Target model of actions %(action_names)s are different from rule model."
+msgstr ""
+"Modelul țintă al acțiunilor %(action_names)s este diferit de modelul de "
+"regulă."
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+msgid ""
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
+"(state_value)s\" action type"
+msgstr ""
+"\"%(trigger_value)s\" %(trigger_label)s poate fi utilizat numai cu \"%"
+"(state_value)s\" tipul de acțiune"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
+msgid ""
+"The automation rule will be triggered if and only if one of these fields is "
+"updated.If empty, all fields are watched."
+msgstr ""
+"Regula de automatizare va fi declanșată dacă și numai dacă unul dintre "
+"aceste câmpuri este actualizat.Dacă este necompletat, toate câmpurile sunt "
+"urmărite."
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
+msgid ""
+"The error occurred during the execution of the automation rule\n"
+"                \""
+msgstr ""
+"Eroarea a apărut în timpul executării regulii de automatizare\n"
+"                ”"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+msgid "The scheduled action for Automation Rules seems to have vanished."
+msgstr ""
+"Acțiunea programată pentru regulile de automatizare pare să fi dispărut."
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__record_getter
+msgid ""
+"This code will be run to find on which record the automation rule should be "
+"run."
+msgstr ""
+"Acest cod va fi executat pentru a afla pe ce înregistrare trebuie să fie "
+"executată regula de automatizare."
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
+msgid "Timing Conditions"
+msgstr "Condiții de timp"
+
+#. module: base_automation
+#: model:digest.tip,name:base_automation.digest_tip_base_automation_0
+#: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
+msgid "Tip: Automate everything with Automation Rules"
+msgstr "Sfat: Automatizează totul cu Regulile de automatizare"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
+msgid "Trigger"
+msgstr "Declansati"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_id
+msgid "Trigger Date"
+msgstr "Data declansarii"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_selection_field_id
+msgid "Trigger Field"
+msgstr "Câmp declanșator"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_model_name
+msgid "Trigger Field Model"
+msgstr "Model câmp declanșator"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
+msgid "Trigger Fields"
+msgstr "Câmpuri de declanșare"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref
+msgid "Trigger Reference"
+msgstr "Referință declanșator"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Tipul activității de excepție înregistrate."
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__url
+msgid "Url"
+msgstr "Url"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__usage
+#: model:ir.model.fields,field_description:base_automation.field_ir_cron__usage
+msgid "Usage"
+msgstr "Utilizare"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
+msgid "Use Calendar"
+msgstr "Utilizează Calendar"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__url
+msgid "Use this URL in the third-party app to call this webhook."
+msgstr ""
+"Utilizați această adresă URL în aplicația terță parte pentru a apela acest "
+"webhook."
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_user_set
+msgid "User is set"
+msgstr "Utilizatorul este setat"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
+msgid "Values Updated"
+msgstr "Valori actualizate"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+msgid "Warning"
+msgstr "Atenție"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+msgid "Webhook Log"
+msgstr "URL Webhook"
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+msgid "Webhook Logs"
+msgstr "URL Webhook"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__webhook_uuid
+msgid "Webhook UUID"
+msgstr "Webhook UUID"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_message_ids
+msgid "Website Messages"
+msgstr "Mesaje website"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__website_message_ids
+msgid "Website communication history"
+msgstr "Istoric comunicare website"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
+msgid ""
+"When calculating a day-based timed condition, it is possible to use a "
+"calendar to compute the date based on working days."
+msgstr ""
+"Atunci când se calculează o condiție temporizată pe bază de zile, este "
+"posibil să se utilizeze un calendar pentru a calcula data pe baza zilelor "
+"lucrătoare."
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
+msgid ""
+"When should the condition be triggered.\n"
+"                If present, will be checked by the scheduler. If empty, will "
+"be checked at creation and update."
+msgstr ""
+"Când ar trebui să fie declanșată condiția.\n"
+"                Dacă este prezent, va fi verificat de programator. Dacă este "
+"gol, va fi verificat la creare și actualizare."
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__active
+msgid "When unchecked, the rule is hidden and will not be executed."
+msgstr ""
+"Atunci cand nu este selectata, regula este ascunsa si nu va fi executata."
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "When updating"
+msgstr "La actualizarea"
+
+#. module: base_automation
+#: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
+msgid ""
+"With Automation Rules, you can automate\n"
+"                <em>any</em> workflow."
+msgstr ""
+"Cu Regulile de automatizare, puteți automatiza\n"
+"                <em>orice</em> flux de lucru."
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
+msgid "You can ask an administrator to disable or fix this automation."
+msgstr ""
+"Puteți solicita unui administrator să dezactiveze sau să remedieze această "
+"automatizare."
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+msgid ""
+"You cannot send an email, add followers or create an activity for a deleted "
+"record.  It simply does not work."
+msgstr ""
+"Nu puteți trimite un e-mail, adăugați urmăritori sau creați o activitate "
+"pentru un înregistrare ștearsă.  Nu funcționează."
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
+msgid "based on"
+msgstr "în baza"
+
+#. module: base_automation
+#. odoo-javascript
+#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.xml:0
+msgid "no action defined..."
+msgstr "nicio acțiune definită..."
+
+#. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
+msgid "path"
+msgstr "cale"
+
+#~ msgid "Action Name"
+#~ msgstr "Nume acțiune"
+
+#~ msgid "Delay after trigger date"
+#~ msgstr "Întârziere după data declanșării"
+
+#~ msgid "Delay type"
+#~ msgstr "Tip întârziere"
+
+#~ msgid ""
+#~ "If present, this condition must be satisfied before the update of the "
+#~ "record."
+#~ msgstr ""
+#~ "Dacă este prezent, această condiție trebuie să fie îndeplinită înainte de "
+#~ "actualizarea înregistrării."
+
+#~ msgid "Least Delay Msg"
+#~ msgstr "Minima întârziere Msg"

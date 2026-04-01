@@ -1,0 +1,151 @@
+.o-hb-range {
+    .popover & {
+        --o-hb-range-thumb-color: var(--o-hb-range-thumb-color-popover, #{$o-we-bg-darkest});
+    }
+    &:has(output) {
+        .o-hb-rangeInput {
+            // Needed because without it the output overflows to the right
+            // and makes a horizontal scrollbar appear on
+            // 'o_we_customize_panel' if 'o_we_customize_panel' already has
+            // a vertical scrollbar.
+            min-width: 0;
+        }
+    }
+    .o-hb-rangeInput {
+        height: $o-we-sidebar-content-field-height;
+        padding: 0 $o-we-item-border-width 0 0;
+        background-color: transparent;
+        appearance: none;
+        cursor: col-resize;
+        width: 100%;
+
+        &:focus {
+            outline: none;
+
+            &::-webkit-slider-thumb { box-shadow: none; }
+            &::-moz-range-thumb     { box-shadow: none; }
+            &::-ms-thumb            { box-shadow: none; }
+        }
+        &:focus-visible {
+            &::-webkit-slider-thumb {
+                box-shadow: 0 0 0 1px $o-we-bg-dark, 0 0 0 3px $o-we-sidebar-content-field-progress-active-color;
+            }
+            &::-moz-range-thumb {
+                box-shadow: 0 0 0 1px $o-we-bg-dark, 0 0 0 3px $o-we-sidebar-content-field-progress-active-color;
+            }
+            &::-ms-thumb {
+                box-shadow: 0 0 0 1px $o-we-bg-dark, 0 0 0 3px $o-we-sidebar-content-field-progress-active-color;
+            }
+        }
+        &::-moz-focus-outer {
+            border: 0;
+        }
+        &::-webkit-slider-thumb {
+            width: $o-we-sidebar-content-field-progress-control-height;
+            height: $o-we-sidebar-content-field-progress-control-height;
+            margin-top: ($o-we-sidebar-content-field-progress-height - $o-we-sidebar-content-field-progress-control-height) / 2;
+            border: none;
+            border-radius: 10rem;
+            background-color: var(--o-hb-range-thumb-color, #{$o-we-fg-lighter});
+            box-shadow: none;
+            appearance: none;
+
+            &:active {
+                background-color: $o-we-sidebar-content-field-progress-active-color;
+            }
+        }
+        &::-webkit-slider-runnable-track {
+            width: 100%;
+            height: $o-we-sidebar-content-field-progress-height;
+            // Unfortunately, Chrome does not support customizing the lower part of the track
+            background-color: $o-we-sidebar-content-field-progress-color;
+            border-color: transparent;
+            border-radius: 10rem;
+            box-shadow: none;
+
+            position: relative;
+            // z-index: 1000;
+        }
+        &::-moz-range-thumb {
+            width: $o-we-sidebar-content-field-progress-control-height;
+            height: $o-we-sidebar-content-field-progress-control-height;
+            border: none;
+            border-radius: 10rem;
+            background-color: var(--o-hb-range-thumb-color, #{$o-we-fg-lighter});
+            box-shadow: none;
+            appearance: none;
+
+            &:active {
+                background-color: $o-we-sidebar-content-field-progress-active-color;
+            }
+        }
+        &::-moz-range-track {
+            width: 100%;
+            height: $o-we-sidebar-content-field-progress-height;
+            background-color: $o-we-sidebar-content-field-progress-color;
+            border-color: transparent;
+            border-radius: 10rem;
+            box-shadow: none;
+        }
+        &::-moz-range-progress {
+            background-color: $o-we-sidebar-content-field-progress-active-color;
+            height: $o-we-sidebar-content-field-progress-height;
+            border-color: transparent;
+            border-radius: 10rem;
+        }
+        &::-ms-thumb {
+            width: $o-we-sidebar-content-field-progress-control-height;
+            height: $o-we-sidebar-content-field-progress-control-height;
+            margin-top: 0;
+            margin-right: 0;
+            margin-left: 0;
+            border: none;
+            border-radius: 10rem;
+            background-color: var(--o-hb-range-thumb-color, #{$o-we-fg-lighter});
+            box-shadow: none;
+            appearance: none;
+
+            &:active {
+                background-color: $o-we-sidebar-content-field-progress-active-color;
+            }
+        }
+        &::-ms-track {
+            width: 100%;
+            height: $o-we-sidebar-content-field-progress-height;
+            background-color: transparent;
+            border-color: transparent;
+            border-width: $o-we-sidebar-content-field-progress-control-height / 2;
+            box-shadow: none;
+        }
+        &::-ms-fill-lower {
+            background-color: $o-we-sidebar-content-field-progress-active-color;
+            border-radius: 10rem;
+            @include border-radius($form-range-track-border-radius);
+        }
+        &::-ms-fill-upper {
+            background-color: $o-we-sidebar-content-field-progress-color;
+            border-radius: 10rem;
+        }
+
+        &.o_we_inverted_range {
+            transform: rotate(180deg);
+
+            &::-moz-range-track {
+                background-color: $o-we-sidebar-content-field-progress-active-color;
+            }
+            &::-moz-range-progress {
+                background-color: $o-we-sidebar-content-field-progress-color;
+            }
+            &::-ms-fill-lower {
+                background-color: $o-we-sidebar-content-field-progress-color;
+            }
+            &::-ms-fill-upper {
+                background-color: $o-we-sidebar-content-field-progress-active-color;
+            }
+        }
+    }
+
+    output {
+        font-size: $o-we-font-size-xs;
+    }
+}

@@ -1,0 +1,8 @@
+{%- set countryPascal = name|pascal -%}
+<odoo>
+    <record id="l10n_{{code}}_structure_type_employee_{{code}}" model="hr.payroll.structure.type">
+        <field name="name">{{countryPascal}}: Employee</field>
+        <field name="default_resource_calendar_id" ref="resource.resource_calendar_std"/>
+        <field name="country_id" ref="base.{{code}}"/>
+    </record>
+</odoo>

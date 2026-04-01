@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ThemeTab">
+    <div class="o_theme_tab h-100" role="tabpanel" aria-labelledby="theme-tab">
+        <div t-ref="content" class="d-flex flex-column h-100">
+            <t t-foreach="optionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
+                <!-- TODO Define a more basic kind of options container -->
+                <OptionsContainer
+                    snippetModel="optionsContainer.snippetModel"
+                    editingElement="optionsContainer.element"
+                    options="optionsContainer.options"
+                    containerTitle="optionsContainer.containerTitle"
+                    headerMiddleButtons="optionsContainer.headerMiddleButtons"
+                    isRemovable="optionsContainer.isRemovable"
+                    isClonable="optionsContainer.isClonable"
+                    containerTopButtons="optionsContainer.optionsContainerTopButtons"/>
+            </t>
+        </div>
+    </div>
+</t>
+<t t-name="website.ThemeWebsiteSettingsOption">
+    <BuilderContext preview="false">
+        <BuilderRow label.translate="Theme">
+            <BuilderButton action="'switchTheme'" type="'global'">Switch Theme</BuilderButton>
+        </BuilderRow>
+        <BuilderRow label.translate="Language">
+            <BuilderButton action="'addLanguage'">Add a Language</BuilderButton>
+        </BuilderRow>
+        <BuilderRow label.translate="Page Layout">
+            <BuilderSelect action="'customizePageLayout'" actionParam="'layout'">
+                <BuilderSelectItem actionValue="'full'" id="'layout_full_opt'">Full</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'boxed'">Boxed</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'framed'">Framed</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'postcard'">Postcard</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Background" level="1">
+            <BuilderColorPicker t-if="!this.isActiveItem('layout_full_opt')"
+                enabledTabs="['solid', 'custom']"
+                action="'customizeWebsiteColor'"
+                actionParam="'body'"/>
+            <BuilderButtonGroup action="'customizeBodyBgType'">
+                <BuilderButton title.translate="Image" actionValue="'image'" className="'fa fa-fw fa-camera'"/>
+                <BuilderButton title.translate="Pattern" actionValue="'pattern'" className="'fa fa-fw fa-th'"/>
+                <BuilderButton title.translate="None" actionValue="'NONE'" className="'fa fa-fw fa-ban'"/>
+            </BuilderButtonGroup>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+<t t-name="website.ThemeParagraphOption">
+    <BuilderContext preview="false">
+        <BuilderRow label.translate="Font Size">
+            <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'font-size-base'" default="null" unit="'px'" saveUnit="'rem'"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'small-font-size'" default="null" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Font Family">
+            <BuilderFontFamilyPicker action="'customizeWebsiteVariable'" actionParam="'font'" valueParamName="'actionValue'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Line Height">
+            <!-- "×": \u00D7\u2000 -->
+            <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'body-line-height'" default="null" unit="'✕'" saveUnit="''"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Margins" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput title.translate="Top" actionParam="'paragraph-margin-top'" unit="'px'" saveUnit="'px'"/>
+            <BuilderNumberInput title.translate="Bottom" actionParam="'paragraph-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+<t t-name="website.ThemeLinkOption">
+    <BuilderContext preview="false">
+        <BuilderRow label.translate="Link Style">
+            <BuilderSelect action="'customizeWebsiteVariable'" actionParam="'link-underline'">
+                <BuilderSelectItem actionValue="'never'">No Underline</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'hover'">Underline On Hover</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'always'">Always Underline</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+<t t-name="website.ThemeInputOption">
+    <BuilderContext preview="false">
+        <BuilderRow label.translate="Padding" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput title.translate="Y" actionParam="'input-padding-y'" unit="'px'" saveUnit="'rem'"/>
+            <BuilderNumberInput title.translate="X" actionParam="'input-padding-x'" unit="'px'" saveUnit="'rem'"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderNumberInput title.translate="Y" actionParam="'input-padding-y-sm'" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderNumberInput title.translate="X" actionParam="'input-padding-x-sm'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Large" level="1">
+                    <BuilderNumberInput title.translate="Y" actionParam="'input-padding-y-lg'" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderNumberInput title.translate="X" actionParam="'input-padding-x-lg'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Font Size" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput actionParam="'input-font-size'" unit="'px'" saveUnit="'rem'"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderNumberInput actionParam="'input-font-size-sm'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Large" level="1">
+                    <BuilderNumberInput actionParam="'input-font-size-lg'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Border Width" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput actionParam="'input-border-width'" unit="'px'" saveUnit="'rem'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Border Radius" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput actionParam="'input-border-radius'" unit="'px'" saveUnit="'rem'"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderNumberInput actionParam="'input-border-radius-sm'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Large" level="1">
+                    <BuilderNumberInput actionParam="'input-border-radius-lg'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Background">
+            <BuilderColorPicker noTransparency="true"
+                enabledTabs="['solid', 'custom']"
+                action="'customizeWebsiteColor'"
+                actionParam="'input'"
+            />
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+</templates>

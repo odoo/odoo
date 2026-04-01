@@ -1,0 +1,146 @@
+.oe_website_sale {
+    .o_add_compare_dyn.btn-lg {
+        aspect-ratio: 1/1;
+        height: calc(#{$btn-padding-y-lg} * 2 + #{$btn-font-size-lg} * #{$btn-line-height} + #{$btn-border-width} * 2);
+    }
+}
+
+:where(main:has(.oe_website_sale.container-fluid)) {
+    .o_wsale_comparison_bottom_bar > .container {
+        max-width: unset;
+    }
+
+    ul {
+        @media screen and (min-width: 1920px) {
+            max-width: 75%;
+        }
+    }
+}
+
+.o_wsale_comparison_page {
+    --o-website-sale-comparison-table-column-padding-x: #{map-get($spacers, 2)};
+
+    > .overflow-x-auto {
+        margin: 0 calc(var(--o-website-sale-comparison-table-column-padding-x) * -1);
+
+        @include media-breakpoint-down(lg) {
+            margin: 0 calc(var(--gutter-x, 30px) / -2);
+        }
+    }
+
+    .o_wsale_compare_table_column {
+        --o-website-sale-comparison-table-column-width: #{map-get($container-max-widths, 'sm') * .5};
+
+        @include media-breakpoint-up(xl) {
+            --o-website-sale-comparison-table-column-width: 25%;
+        }
+
+        width: var(--o-website-sale-comparison-table-column-width);
+        padding: 0 var(--o-website-sale-comparison-table-column-padding-x);
+
+        img {
+            @extend %o-wsale-shop-thumb;
+        }
+    }
+
+    #o_comparelist_table {
+        @include media-breakpoint-down(xl) {
+            min-width: max-content;
+        }
+
+        @include media-breakpoint-down(lg) {
+            padding: 0 calc(var(--o-website-sale-comparison-table-column-padding-x));
+        }
+    }
+
+
+    // Mini sticky comparison overview
+    .o_wsale_comparison_mini_sticky {
+        transform: translateY(-100%);
+        transition: transform .4s ease-in-out;
+        box-shadow: 0px 3px 3px rgba($black, .1);
+        z-index: $zindex-fixed - 1;
+
+        &.show {
+            transform: translateY(0);
+        }
+
+        .o_mini_product_img_container {
+            width: 2.5rem;
+        }
+
+        .o_wsale_comparison_scroll_container {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            margin: 0 calc(var(--o-website-sale-comparison-table-column-padding-x) * -1);
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+
+        &::after {
+            @include o-position-absolute(-50vh, 0, 0, 0);
+            content: "";
+            background-color: inherit;
+            height: 50vh;
+            width: 100%;
+        }
+    }
+}
+
+// Specifications
+#product_full_spec {
+    border-top: 1px solid map-get($grays, '400');
+
+    .o_add_compare_dyn {
+        @include font-size(1.1rem);
+    }
+}
+
+.o_wsale_comparison_bottom_bar {
+    z-index: $zindex-modal;
+
+    box-shadow: 0px -12px 32px rgba($black, .175);
+
+    .btn[data-bs-toggle="collapse"] {
+        .oi-chevron-up {
+            transition: transform 0.2s ease-in-out;
+        }
+        &[aria-expanded="true"] .oi-chevron-up {
+            transform: rotate(180deg);
+        }
+    }
+
+    .o_wsale_comparison_offcanvas_image {
+        width: 5rem;
+    }
+
+    a[title="Compare products"] .badge {
+        --badge-color: var(--btn-hover-bg);
+        --badge-bg: var(--btn-color);
+    }
+
+    div[name="product_comparison_bottom_bar_row"]:where(:has(button[aria-label="Remove product from comparison"]:hover)) {
+        background: $light;
+    }
+
+    .o_wsale_comparison_bottom_bar_image {
+        width: 2.5rem;
+        height: fit-content;
+        @extend %o-wsale-shop-thumb;
+    }
+}
+
+// Style the <main> element when comparison bar is present
+:where(main:has(.o_wsale_comparison_bottom_bar)) {
+    --o-wsale-comparison-bottom-bar-height: 80px;
+
+    position: relative;
+    padding-bottom: var(--o-wsale-comparison-bottom-bar-height);
+
+    // Offset floating bar when comparison bar is visible
+    #o_wsale_floating_bar {
+        bottom: calc(var(--_container-gap) + var(--o-wsale-comparison-bottom-bar-height)) !important;
+    }
+}

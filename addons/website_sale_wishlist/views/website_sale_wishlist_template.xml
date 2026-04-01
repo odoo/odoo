@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inject the wishlist button into the products cards template -->
+    <template
+        id="website_sale_wishlist.add_to_wishlist"
+        inherit_id="website_sale.shop_product_buttons"
+        name="Wishlist Button"
+        priority="20"
+        active="True"
+    >
+        <t name="buttons_container" position="inside">
+            <t t-set="isWishlistAvailable" t-value="products_in_wishlist is not None"/>
+
+            <t t-if="isWishlistAvailable" t-call="website_sale.product_tile_element_visibility">
+                <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_wishlist'"/>
+
+                <t t-set="in_wish" t-value="product in products_in_wishlist"/>
+                <t t-set="btnTitle">Add to wishlist</t>
+                <t t-set="btnTitleActive">Handle your wishlist from the menu icon.</t>
+                <t
+                    t-set="product_variant_id"
+                    t-value="in_wish or product._get_first_possible_variant_id()"
+                />
+                <button
+                    t-if="product_variant_id"
+                    type="button"
+                    t-attf-class="btn o_add_wishlist #{in_wish and 'o_in_wishlist'}"
+                    t-att-disabled="in_wish"
+                    t-att-data-product-template-id="product.id"
+                    t-att-data-product-product-id="product_variant_id"
+                    data-action="o_wishlist"
+                    t-att-title="in_wish and btnTitleActive or btnTitle"
+                >
+                    <span
+                        t-attf-class="fa o_not-animable #{in_wish and 'fa-heart' or 'fa-heart-o'}"
+                        role="presentation"
+                    />
+                    <span t-if="not in_wish" class="o_label small ms-2">Add to wishlist</span>
+                    <span t-else="" class="o_label small ms-2">In your wishlist</span>
+                </button>
+            </t>
+        </t>
+    </template>
+
+    <template id="product_cart_lines" inherit_id="website_sale.cart_lines" active="True">
+        <xpath expr="//div[@name='o_wsale_cart_line_button_container']/a" position="after">
+            <t t-if="line._is_sellable()">
+                <span class="text-300">|</span>
+                <a
+                    href="#"
+                    class="o_add_wishlist js_delete_product small"
+                    t-att-data-product-template-id="line.product_id.product_tmpl_id.id"
+                    t-att-data-product-product-id="line.product_id.id"
+                    data-action="o_wishlist"
+                >
+                    Save for Later
+                </a>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[@name='o_wsale_cart_line_button_container_mobile']/button" position="before">
+            <button
+                t-if="line._is_sellable()"
+                class="o_add_wishlist js_delete_product btn btn-link d-inline-block d-md-none px-2"
+                t-att-data-product-template-id="line.product_id.product_tmpl_id.id"
+                t-att-data-product-product-id="line.product_id.id"
+                data-action="o_wishlist"
+                title="Wishlist"
+            >
+                <i class="fa fa-fw fa-heart-o"/>
+            </button>
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale_wishlist.product_add_to_wishlist"
+        inherit_id="website_sale.cta_wrapper"
+        name="Wishlist Button"
+        priority="20"
+    >
+        <xpath expr="//div[@id='product_option_block']" position="inside">
+            <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
+            <t t-set="in_wish" t-value="product_variant and product_variant._is_in_wishlist()"/>
+            <t
+                t-set="_button_classes"
+                t-valuef="o_add_wishlist_dyn btn btn-outline-primary text-nowrap"
+            />
+            <t
+                t-if="website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large'))"
+                t-set="_button_classes"
+                t-value="_button_classes + ' flex-grow-1 flex-sm-grow-0'"
+            />
+            <t
+                t-else=""
+                t-set="_button_classes"
+                t-value="_button_classes + ' flex-grow-1'"
+            />
+            <t
+                t-if="is_view_active('website_sale.cta_wrapper_large')"
+                t-set="_button_classes"
+                t-value="_button_classes + ' btn-lg px-lg-0'"
+            />
+            <!-- using A instead of BUTTON so space character works when editing -->
+            <a
+                t-if="product_variant"
+                t-att-class="_button_classes"
+                t-att-disabled="in_wish"
+                t-att-data-product-template-id="product.id"
+                t-att-data-product-product-id="product_variant.id"
+                data-action="o_wishlist"
+                title="Add to wishlist"
+            >
+                <i class="fa fa-heart-o me-2 me-lg-0" role="img" aria-label="Add to wishlist"/>
+                <t
+                    t-set="_span_classes"
+                    t-valuef="d-inline"
+                />
+                <t
+                    t-if="website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large'))"
+                    t-set="_span_classes"
+                    t-value="_span_classes + ' d-lg-none'"
+                />
+                <span t-att-class="_span_classes">Add to wishlist</span>
+            </a>
+        </xpath>
+    </template>
+
+    <template id="header_wishlist_link" name="Header Wishlist Link">
+        <t t-set="wishcount" t-value="len(request.env['product.wishlist'].current())"/>
+        <t t-set="show_wishes" t-value="website.has_ecommerce_access()"/>
+        <li t-attf-class="o_wsale_my_wish #{not show_wishes and 'd-none'} #{_item_class}">
+            <a href="/shop/wishlist" t-attf-class="#{_link_class}">
+                <div t-attf-class="#{_icon_wrap_class}">
+                    <i t-if="_icon" class="fa fa-1x fa-heart fa-stack"/>
+                    <sup
+                        t-out="wishcount"
+                        t-attf-class="my_wish_quantity o_animate_blink badge bg-primary #{_badge_class} #{'d-none' if (wishcount == 0) else ''}"
+                    />
+                </div>
+                <span t-if="_text" t-attf-class="#{_text_class}">Wishlist</span>
+            </a>
+        </li>
+    </template>
+
+    <template id="header_hide_empty_wishlist_link" inherit_id="website_sale_wishlist.header_wishlist_link">
+        <xpath expr="//t[@t-set='show_wishes']" position="after">
+            <t t-set="show_wishes" t-value="show_wishes and wishcount > 0"/>
+        </xpath>
+        <xpath expr="//li[contains(@t-attf-class, 'o_wsale_my_wish')]" position="attributes">
+            <attribute name="t-attf-class" add="o_wsale_my_wish_hide_empty" separator=" "/>
+        </xpath>
+    </template>
+
+    <template id="template_header_mobile" inherit_id="website_sale.template_header_mobile">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_link_class" t-value="'o_navlink_background_hover btn position-relative rounded-circle border-0 p-1 text-reset'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_default" inherit_id="website_sale.template_header_default">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_link_class" t-value="'o_navlink_background btn position-relative rounded-circle p-1 text-center text-reset'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_hamburger" inherit_id="website_sale.template_header_hamburger">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_link_class" t-value="'o_navlink_background btn position-relative rounded-pill p-1 text-reset'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1 rounded'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_stretch" inherit_id="website_sale.template_header_stretch">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'border-start o_border_contrast'"/>
+                <t t-set="_link_class" t-value="'o_navlink_background_hover btn position-relative d-flex align-items-center h-100 rounded-0 p-2 text-reset'"/>
+                <t t-set="_badge_class" t-value="'rounded'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_vertical" inherit_id="website_sale.template_header_vertical">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_link_class" t-value="'o_navlink_background btn position-relative rounded-circle p-1 text-reset'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_search" inherit_id="website_sale.template_header_search">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_item_class" t-value="'border-start o_border_contrast'"/>
+                <t t-set="_link_class" t-value="'o_navlink_background_hover btn btn-sm d-flex align-items-center gap-1 h-100 rounded-0 p-2 text-reset'"/>
+                <t t-set="_badge_class" t-value="'rounded'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_sales_one" inherit_id="website_sale.template_header_sales_one">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_link_class" t-value="'o_navlink_background btn position-relative rounded-circle p-1 text-reset'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_sales_two" inherit_id="website_sale.template_header_sales_two">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_icon_wrap_class" t-value="'o_navlink_background position-relative me-2 rounded-circle p-2 transition-base'"/>
+                <t t-set="_link_class" t-value="'o_navlink_trigger_hover btn d-flex align-items-center fw-bold text-reset'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill'"/>
+                <t t-set="_text_class" t-value="'small'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_sales_three" inherit_id="website_sale.template_header_sales_three">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_item_class" t-value="'position-relative'"/>
+                <t t-set="_link_class" t-value="'nav-link d-flex flex-row-reverse align-items-center text-uppercase fw-bold'"/>
+                <t t-set="_icon_wrap_class" t-value="'d-contains'"/>
+                <t t-set="_badge_class" t-value="'top-0 d-block ms-2'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_sales_four" inherit_id="website_sale.template_header_sales_four">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_link_class" t-value="'o_navlink_background btn position-relative rounded-pill p-1 text-reset'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_sidebar" inherit_id="website_sale.template_header_sidebar">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_link_class" t-value="'o_navlink_background btn position-relative p-1 rounded-circle text-reset'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_boxed" inherit_id="website_sale.template_header_boxed">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_link_class" t-value="'o_navlink_background btn position-relative rounded-circle p-1 text-center text-reset'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="product_wishlist" name="Wishlist Page">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Shop Wishlist</t>
+            <div id="wrap" class="js_sale">
+                <div class="oe_structure" id="oe_structure_website_sale_wishlist_product_wishlist_1"/>
+                <div class="container oe_website_sale">
+                    <section class="container wishlist-section pb-5">
+                        <div class="o_wishlist_products_header pt-4 pb-3">
+                            <h1 class="h4-fs mb-0">My Wishlist</h1>
+                        </div>
+                        <div
+                            id="empty-wishlist-message"
+                            t-attf-class="w-100 #{'d-none' if wishes else ''}"
+                        >
+                            <div class="mt-5 mb-3">
+                                <t t-call="website_sale_wishlist.empty_wishlist_svg"/>
+                            </div>
+                            <h5 class="mb-3" style="text-align: center;">
+                                Your wishlist is empty!
+                            </h5>
+                            <p style="text-align: center;">
+                                <a href="/shop" class="btn btn-primary">
+                                    Shop
+                                </a>
+                            </p>
+                        </div>
+
+                        <div
+                            id="o_comparelist_table"
+                            t-att-data-wishlist-grid-columns="website.wishlist_grid_columns"
+                            t-att-data-wishlist-mobile-columns="website.wishlist_mobile_columns"
+                            t-attf-style="--o-wsale-wishlist-grid-gap: {{website.wishlist_gap}};"
+                            t-attf-class="o_wishlist_table grid table-comparator mb-5 {{website.wishlist_opt_products_design_classes}}"
+                        >
+                            <t t-foreach="wishes" t-as="wish">
+                                <t t-set="product_variant" t-value="wish.product_id"/>
+                                <t t-set="product" t-value="product_variant.product_tmpl_id"/>
+                                <t t-set="product_href" t-value="product_variant.website_url"/>
+                                <t t-set="combination_info" t-value="product_variant._get_combination_info_variant()"/>
+                                <article
+                                    class="o_wishlist_item"
+                                    t-att-data-wish-id="wish.id"
+                                    t-att-data-product-id="product_variant.id"
+                                >
+                                    <t t-call="website_sale.products_item">
+                                        <t t-set="show_variations" t-value="False"/>
+                                        <t t-set="show_ribbons" t-value="False"/>
+                                        <t t-set="product_price">
+                                            <br t-if="combination_info['prevent_zero_price_sale']"/>
+                                            <div t-else="" class="align-middle o_wish_price">
+                                                <span aria-label="Sale price">
+                                                    <t t-out="combination_info['price']"
+                                                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                                                    />
+                                                </span>
+                                                <small
+                                                    t-if="combination_info['has_discounted_price']"
+                                                    class="cart_product_base_unit_price text-muted"
+                                                >
+                                                    <del
+                                                        aria-label="Original price"
+                                                        t-out="combination_info['list_price']"
+                                                        class="text-nowrap"
+                                                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                                                        name="product_list_price"
+                                                    />
+                                                </small>
+                                            </div>
+                                        </t>
+                                        <t t-set="product_actions">
+                                            <div class="o_wsale_product_action_row">
+                                                <a
+                                                    t-if="combination_info['prevent_zero_price_sale']"
+                                                    t-att-href="website.contact_us_button_url + '?subject=' + combination_info['display_name']"
+                                                    class="btn btn-primary btn_cta"
+                                                >
+                                                    Contact Us
+                                                </a>
+                                                <button
+                                                    t-else=""
+                                                    id="add_to_cart_button"
+                                                    type="button"
+                                                    class="o_wsale_product_btn_primary btn btn-primary o_wish_add"
+                                                    t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
+                                                    t-att-data-product-template-id="product.id"
+                                                    t-att-data-product-product-id="product_variant.id"
+                                                    t-att-data-product-type="product.type"
+                                                    t-att-data-ptav-ids="json.dumps(product_variant.product_template_attribute_value_ids.ids)"
+                                                >
+                                                    <i
+                                                        class="fa fa-fw fa-shopping-cart o_not-animable"
+                                                        role="presentation"
+                                                    />
+                                                    <span class="o_label small ms-1">Add to Cart</span>
+                                                </button>
+                                            </div>
+                                        </t>
+                                        <t
+                                            t-set="extra_actions"
+                                        >
+                                            <button
+                                                type="button"
+                                                class="btn btn-light o_wish_rm z-3 rounded-pill lh-1"
+                                                title="Remove from wishlist"
+                                            >
+                                                <i class="oi oi-close" role="presentation"/>
+                                            </button>
+                                        </t>
+                                    </t>
+                                </article>
+                            </t>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,1029 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_project
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2026-02-05 08:03+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"sale_project/ko/>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order.py:0
+msgid ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    No milestones found. Let's create one!\n"
+"                </p><p>\n"
+"                    Track major progress points that must be reached to "
+"achieve success.\n"
+"                </p>\n"
+"            "
+msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    마일스톤을 찾을 수 없습니다. 새로 생성해 주세요!\n"
+"                </p><p>\n"
+"                    성공적으로 완료하기 위해 달성해야 하는 주요 진행 포인트"
+"를 추적할 수 있습니다.\n"
+"                </p>\n"
+"            "
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid "%(name)s's %(action_name)s"
+msgstr "%(name)s의 %(action_name)s"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid "%(name)s's Sales Order Items"
+msgstr "%(name)s 관련 판매 주문 항목"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
+"order associated with this project has been cancelled. We recommend either "
+"updating the sales order item or cancelling this project in alignment with "
+"the cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
+msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"이 프로젝트"
+"에 연결된 판매 주문이 취소되었습니다. 판매 주문 항목을 업데이트하거나 판매 주"
+"문 취소에 맞춰 프로젝트를 취소하는 것이 좋습니다.\" "
+"invisible=\"sale_order_state != 'cancel'\"/>"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
+msgid ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
+"order associated with this task has been cancelled. We recommend either "
+"updating the sales order item or cancelling this task in alignment with the "
+"cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
+msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"이 작업과 관"
+"련된 판매 주문이 취소되었습니다. 판매 주문 취소에 맞춰 판매 주문 항목을 업데"
+"이트하거나 이 작업을 취소하는 것이 좋습니다.\" invisible=\"sale_order_state !"
+"= 'cancel'\"/>"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                            <span class=\"o_stat_value\">0</span> Sales "
+"Order\n"
+"                        </span>\n"
+"                        <span class=\"o_stat_text\">\n"
+"                            Make Billable\n"
+"                        </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            <span class=\"o_stat_value\">0</span> 판매주문"
+"서\n"
+"                        </span>\n"
+"                        <span class=\"o_stat_text\">\n"
+"                            청구 가능\n"
+"                        </span>"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                            Sales Orders\n"
+"                        </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            판매주문서\n"
+"                        </span>"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
+msgid "<span class=\"o_stat_text\"> Projects</span>"
+msgstr "<span class=\"o_stat_text\"> 프로젝트</span>"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
+msgid "<span class=\"o_stat_text\"> Tasks</span>"
+msgstr "<span class=\"o_stat_text\">작업</span>"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid "<span class=\"o_stat_text\">Preview</span>"
+msgstr "<span class=\"o_stat_text\">미리 보기</span>"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
+#: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
+msgid "<span class=\"o_stat_text\">Sales Order</span>"
+msgstr "<span class=\"o_stat_text\">판매 주문</span>"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.task_type_edit_inherit_sale_project
+msgid ""
+"<span name=\"rating_status_helper\">\n"
+"                    <span invisible=\"rating_status == 'periodic'\">A rating "
+"request will be sent as soon as a task reaches this stage, provided the "
+"project is billable.</span>\n"
+"                    <span invisible=\"rating_status == 'stage'\">Rating "
+"requests will be sent as long as the task remains in this stage, provided "
+"the project is billable.</span>\n"
+"                </span>"
+msgstr ""
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
+msgid "<span>)</span>"
+msgstr "<span>)</span>"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order_line.py:0
+msgid ""
+"A project must be defined on the quotation %(order)s or on the form of "
+"products creating a task on order.\n"
+"The following product need a project in which to put its task: %"
+"(product_name)s"
+msgstr ""
+"프로젝트에 대한 내용은 반드시 견적 %(order)s 또는 주문을 할 때 작업을 생성하"
+"는 품목 양식에서 지정해야 합니다.\n"
+"다음 품목은 작업을 배정할 때 프로젝트가 있어야 합니다: %(product_name)s"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_sale_order__project_id
+msgid ""
+"A task will be created for the project upon sales order confirmation. The "
+"analytic distribution of this project will also serve as a reference for "
+"newly created sales order items."
+msgstr ""
+"판매 주문이 확인되면 프로젝트에 대한 작업이 생성됩니다. 이 프로젝트의 분석 분"
+"포는 새로 생성된 판매 주문 항목에 대한 참조로도 사용됩니다."
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
+msgid ""
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
+msgstr ""
+"품목의 환경 설정에 따라, 출고 수량은 자동으로 계산될 수 있습니다:\n"
+"  - 수동: 수량은 수동으로 설정됩니다\n"
+"  - 비용 분석: 수량은 게시된 비용의 합계입니다\n"
+"  - 작업기록: 수량은 이 판매 내역과 연결된 작업에 기록된 시간의 합입니다\n"
+"  - 재고 이동: 확정된 재고 이동에서 수량이 계산됩니다\n"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product_template.py:0
+msgid "Based on Delivered Quantity (Manual)"
+msgstr "납품 수량 (수기)"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product_template.py:0
+msgid "Based on Milestones"
+msgstr "마일스톤 기준"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_project__allow_billable
+#: model:ir.model.fields,field_description:sale_project.field_project_task__allow_billable
+#: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__allow_billable
+msgid "Billable"
+msgstr "청구 가능"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order_line.py:0
+msgid "Cancelled"
+msgstr "취소됨"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
+msgid "Confirm & Close"
+msgstr "확정 후 닫기"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid ""
+"Converting this template to a regular project will unlink it from its "
+"associated products."
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid "Cost of Goods Sold"
+msgstr "매출원가"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid "Cost of Goods Sold Items"
+msgstr "매출원가 항목"
+
+#. module: sale_project
+#: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
+msgid "Create Project"
+msgstr "프로젝트 생성"
+
+#. module: sale_project
+#. odoo-javascript
+#: code:addons/sale_project/static/src/components/so_line_create_button/so_line_create_button.xml:0
+msgid "Create Sales Order"
+msgstr "판매주문서 생성"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order.py:0
+msgid "Create a Project"
+msgstr "프로젝트 생성"
+
+#. module: sale_project
+#: model:ir.model,website_form_label:sale_project.model_project_task
+msgid "Create a Task"
+msgstr "작업 만들기"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid "Create a customer invoice"
+msgstr "고객용 청구서 생성"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product_template.py:0
+msgid ""
+"Create a project for the order with a task for each sales order line to "
+"track the time spent."
+msgstr ""
+"각 판매 주문 항목에 대한 작업을 포함하여 주문에 대한 프로젝트를 생성하여 소"
+"요 시간을 모니터링합니다."
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product_template.py:0
+msgid "Create a task in an existing project to track the time spent."
+msgstr "기존 프로젝트에서 작업을 만들어 소요 시간을 추적하세요."
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid "Create a vendor bill"
+msgstr "거래처 청구서 생성"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product_template.py:0
+msgid "Create an empty project for the order to track the time spent."
+msgstr "주문에 대한 빈 프로젝트를 생성하여 소요 시간을 추적합니다."
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid ""
+"Create invoices, register payments and keep track of the discussions with "
+"your customers."
+msgstr "청구서를 생성하고 결제를 등록하거나 고객과의 협의 내용을 관리합니다."
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid ""
+"Create invoices, register payments and keep track of the discussions with "
+"your vendors."
+msgstr ""
+"청구서를 생성하고 결제 내용을 등록하거나 업체와의 협의 내용을 관리합니다."
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
+#: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
+msgid "Create on Order"
+msgstr "주문서 생성"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product_template.py:0
+msgid ""
+"Create projects or tasks later, and link them to order to track the time "
+"spent."
+msgstr ""
+"프로젝트나 작업을 나중에 만들고 주문에 연결하여 소요 시간을 추적하세요."
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_project__partner_id
+#: model:ir.model.fields,field_description:sale_project.field_project_task__partner_id
+#: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_template
+msgid "Customer"
+msgstr "고객"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid "Customer Invoices"
+msgstr "고객 청구서"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
+msgid "Defined on quotation"
+msgstr "견적에 명시되어 있음"
+
+#. module: sale_project
+#. odoo-javascript
+#: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
+#: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
+msgid "Delivered"
+msgstr "배송완료"
+
+#. module: sale_project
+#: model:product.template,name:sale_project.product_service_create_project_only_product_template
+msgid "Digital Marketing Campaign (project)"
+msgstr "디지털 마케팅 캠페인 (프로젝트)"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
+msgid "Discard"
+msgstr "작성 취소"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_project.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_project.field_product_product__display_name
+#: model:ir.model.fields,field_description:sale_project.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_milestone__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_project__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_task__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_task_recurrence__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_task_type__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_update__display_name
+#: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__display_name
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_template_line__display_name
+#: model:ir.model.fields,field_description:sale_project.field_sale_report__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
+msgid "Display Sales Order"
+msgstr "판매주문서 표시"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order_line.py:0
+msgid "Done"
+msgstr "완료"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid "Down Payments"
+msgstr "선결제 금액"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
+msgid "Empty project"
+msgstr "빈 프로젝트"
+
+#. module: sale_project
+#: model:product.template,name:sale_project.product_product_flooring_product_template
+msgid "Flooring Services"
+msgstr "바닥재 서비스"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_account_move__id
+#: model:ir.model.fields,field_description:sale_project.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_project.field_product_product__id
+#: model:ir.model.fields,field_description:sale_project.field_product_template__id
+#: model:ir.model.fields,field_description:sale_project.field_project_milestone__id
+#: model:ir.model.fields,field_description:sale_project.field_project_project__id
+#: model:ir.model.fields,field_description:sale_project.field_project_task__id
+#: model:ir.model.fields,field_description:sale_project.field_project_task_recurrence__id
+#: model:ir.model.fields,field_description:sale_project.field_project_task_type__id
+#: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__id
+#: model:ir.model.fields,field_description:sale_project.field_project_update__id
+#: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__id
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_template_line__id
+#: model:ir.model.fields,field_description:sale_project.field_sale_report__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order_line.py:0
+msgid "In Progress"
+msgstr "진행 중"
+
+#. module: sale_project
+#. odoo-javascript
+#: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
+msgid "Internal link"
+msgstr "내부 링크"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product_template.py:0
+msgid "Invoice your milestones when they are reached."
+msgstr "마일스톤에 도달하게 되면 청구서를 발행하십시오."
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid "Invoice your time and material to customers"
+msgstr "시간 및 재료를 고객에게 청구하십시오"
+
+#. module: sale_project
+#. odoo-javascript
+#: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
+#: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
+msgid "Invoiced"
+msgstr "발행 완료된 청구서"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+#: model:ir.embedded.actions,name:sale_project.project_embedded_action_invoices
+#: model:ir.embedded.actions,name:sale_project.project_embedded_action_invoices_dashboard
+msgid "Invoices"
+msgstr "청구서"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
+msgid "Invoicing Policy"
+msgstr "청구서 발행 기준"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_account_move
+msgid "Journal Entry"
+msgstr "전표 입력"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_account_move_line
+msgid "Journal Item"
+msgstr "전표 항목"
+
+#. module: sale_project
+#. odoo-javascript
+#: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
+msgid "Load more"
+msgstr "추가 불러오기"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_product_product__service_type
+#: model:ir.model.fields,help:sale_project.field_product_template__service_type
+msgid ""
+"Manually set quantities on order: Invoice based on the manually entered "
+"quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related "
+"timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation "
+"and track the work hours."
+msgstr ""
+"주문에서 수량을 수동으로 설정합니다. : 청구서에 자동으로 생성되지 않고, 수동"
+"으로 수량을 입력하여 반영합니다. \n"
+"연락처의 작업 기록 : 청구서에 관련된 작업 기록에 추적된 시간을 반영합니다. \n"
+"작업 생성 및 시간 추적 : 판매 주문 승인에서 작업을 생성하고 작업 시간을 추적"
+"합니다."
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid "Materials"
+msgstr "자재류"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__qty_delivered_method
+msgid "Method to update delivered qty"
+msgstr "배송 수량을 갱신하는 방법"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order.py:0
+#: model:ir.model.fields.selection,name:sale_project.selection__sale_order_line__qty_delivered_method__milestones
+#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
+msgid "Milestones"
+msgstr "마일스톤"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order_line.py:0
+msgid "New Sales Order Item"
+msgstr "새 판매 주문 항목"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.sale_project_view_form_simplified_template
+msgid "New project"
+msgstr "신규 프로젝트"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
+#: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
+#: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
+msgid "Non-billable"
+msgstr "청구 불가"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
+msgid "Not Billed"
+msgstr "청구되지 않음"
+
+#. module: sale_project
+#: model:product.template,name:sale_project.product_service_create_task_only_product_template
+msgid "Office Furniture Set (task)"
+msgstr "사무용 가구 세트 (작업)"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid "Other Services"
+msgstr "기타 서비스"
+
+#. module: sale_project
+#: model:product.template,name:sale_project.product_product_painting_product_template
+msgid "Painting"
+msgstr "페인팅"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__partner_id
+msgid "Partner"
+msgstr "파트너"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
+msgid ""
+"Percentage of the ordered quantity that will automatically be delivered once "
+"the milestone is reached."
+msgstr "주문 수량 중 마일스톤에 도달할 경우 자동으로 배송되는 백분율입니다."
+
+#. module: sale_project
+#: model:product.template,name:sale_project.product_product_plumbing_product_template
+msgid "Plumbing Services"
+msgstr "배관 서비스"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_task.py:0
+msgid "Portal Sale Order"
+msgstr "포털 판매주문서"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product_template.py:0
+msgid "Prepaid/Fixed Price"
+msgstr "선불/고정 가격"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_product_template
+msgid "Product"
+msgstr "품목"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_product_product
+msgid "Product Variant"
+msgstr "품목 세부선택"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_project__reinvoiced_sale_order_id
+msgid ""
+"Products added to stock pickings, whose operation type is configured to "
+"generate analytic costs, will be re-invoiced in this sales order if they are "
+"set up for it."
+msgstr ""
+"분석 비용을 생성하도록 구성된 작업 유형이 있는 재고 피킹에 추가된 제품이 적절"
+"하게 설정된 경우 이 판매 주문에서 다시 인보이스가 발행됩니다."
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_project_project
+#: model:ir.model.fields,field_description:sale_project.field_product_product__project_id
+#: model:ir.model.fields,field_description:sale_project.field_product_template__project_id
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__project_id
+#: model:ir.model.fields,field_description:sale_project.field_sale_report__project_id
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__project_only
+msgid "Project"
+msgstr "프로젝트"
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
+msgid "Project & Task"
+msgstr "프로젝트 및 작업"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__project_account_id
+msgid "Project Account"
+msgstr "프로젝트 계정"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_project_milestone
+msgid "Project Milestone"
+msgstr "프로젝트 마일스톤"
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_type__milestones
+msgid "Project Milestones"
+msgstr "프로젝트 마일스톤"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
+#: model:ir.model.fields,field_description:sale_project.field_product_template__project_template_id
+#: model_terms:ir.ui.view,arch_db:sale_project.sale_project_view_form_simplified_template
+msgid "Project Template"
+msgstr "프로젝트 서식"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_project_template_create_wizard
+msgid "Project Template create Wizard"
+msgstr "프로젝트 템플릿 생성 마법사"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_project_update
+msgid "Project Update"
+msgstr "프로젝트 업데이트"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
+msgid "Project's sale order"
+msgstr "프로젝트 판매 주문서"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_milestone__product_uom_qty
+msgid "Quantity"
+msgstr "수량"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_milestone__quantity_percentage
+#: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
+msgid "Quantity (%)"
+msgstr "수량 (%)"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_sale_order_template_line
+msgid "Quotation Template Line"
+msgstr "견적 서식 명세"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__role_to_users_ids
+msgid "Role To Users"
+msgstr "사용자에게 부여된 역할"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid "Sales & Invoicing"
+msgstr "판매 및 청구서 발행"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_sale_report
+msgid "Sales Analysis Report"
+msgstr "판매 분석 보고서"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_milestone.py:0
+#: code:addons/sale_project/models/project_task.py:0
+#: model:ir.model,name:sale_project.model_sale_order
+#: model:ir.model.fields,field_description:sale_project.field_project_project__reinvoiced_sale_order_id
+#: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_id
+#: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__sale_order_id
+#: model:project.project,name:sale_project.so_template_project
+msgid "Sales Order"
+msgstr "판매 주문"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/controllers/portal.py:0
+#: model:ir.model.fields,field_description:sale_project.field_project_milestone__sale_line_id
+#: model:ir.model.fields,field_description:sale_project.field_project_project__sale_line_id
+#: model:ir.model.fields,field_description:sale_project.field_project_task__sale_line_id
+#: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__sale_line_id
+#: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
+msgid "Sales Order Item"
+msgstr "판매 주문 항목"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
+msgid "Sales Order Item that will be updated once the milestone is reached."
+msgstr "판매주문서 중 마일스톤에 도달할 경우 업데이트되는 항목입니다."
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
+msgid ""
+"Sales Order Item to which the time spent on this task will be added in order "
+"to be invoiced to your customer.\n"
+"By default the sales order item set on the project will be selected. In the "
+"absence of one, the last prepaid sales order item that has time remaining "
+"will be used.\n"
+"Remove the sales order item in order to make this task non billable. You can "
+"also change or remove the sales order item of each timesheet entry "
+"individually."
+msgstr ""
+"이 작업에 소요된 시간을 추가하여 고객에게 청구서를 발행할 판매주문서 항목입니"
+"다.\n"
+"프로젝트에 설정되어 있는 판매주문서 항목이 기본값으로 선택됩니다. 해당되는 내"
+"용이 없는 경우, 선불 완료된 판매주문서 중 잔여 시간이 남아 있는 항목을 사용합"
+"니다.\n"
+"이 작업을 청구하지 않도록 하려면 판매주문서 항목을 삭제하시기 바랍니다. 판매"
+"주문서의 작업시간표 입력 내용을 개별적으로 변경하거나 삭제할 수도 있습니다."
+
+#. module: sale_project
+#. odoo-javascript
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+#: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
+#: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
+msgid "Sales Order Items"
+msgstr "판매 주문 항목"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "판매 주문 내역"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+#: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_orders
+#: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_orders_dashboard
+msgid "Sales Orders"
+msgstr "판매 주문"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
+msgid ""
+"Sales order item that will be selected by default on the tasks and "
+"timesheets of this project, except if the employee set on the timesheets is "
+"explicitely linked to another sales order item on the project.\n"
+"It can be modified on each task and timesheet entry individually if "
+"necessary."
+msgstr ""
+"이 프로젝트의 작업 및 작업시간표의 기본값으로 선택되는 판매주문서 항목입니"
+"다. 작업시간표에 설정된 담당자가 기록상 명확히 프로젝트의 다른 판매주문서 항"
+"목에 연결되어 있는 경우에는 예외로 합니다.\n"
+"필요한 경우 각 작업 및 작업주문서 입력 내용을 개별적으로 변경하거나 삭제할 "
+"수 있습니다."
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
+msgid "Sales order to which the task is linked."
+msgstr "작업이 연결된 판매 주문."
+
+#. module: sale_project
+#: model:product.template,name:sale_project.product_product_screw_driver_product_template
+msgid "Screw Driver"
+msgstr "나사 드라이버"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/controllers/portal.py:0
+msgid "Search in Invoice"
+msgstr "청구서 검색"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/controllers/portal.py:0
+msgid "Search in Sales Order Item"
+msgstr "판매주문서 항목 검색"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
+#: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_template
+msgid "Select who to bill..."
+msgstr "청구 대상 선택..."
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_product_product__service_policy
+#: model:ir.model.fields,field_description:sale_project.field_product_template__service_policy
+msgid "Service Invoicing Policy"
+msgstr "서비스 청구 정책"
+
+#. module: sale_project
+#. odoo-javascript
+#: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
+#: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
+msgid "Sold"
+msgstr "판매됨"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_state
+msgid "Status"
+msgstr "상태"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_project_task
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_global_project
+msgid "Task"
+msgstr "작업"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order_line.py:0
+msgid "Task Created (%(name)s): %(link)s"
+msgstr "생성된 작업 (%(name)s):"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_project_task_recurrence
+msgid "Task Recurrence"
+msgstr "반복되는 작업"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_project_task_type
+msgid "Task Stage"
+msgstr "작업 단계"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_product_product__task_template_id
+#: model:ir.model.fields,field_description:sale_project.field_product_template__task_template_id
+msgid "Task Template"
+msgstr "작업 템플릿"
+
+#. module: sale_project
+#: model:project.project,label_tasks:sale_project.so_template_project
+msgid "Tasks"
+msgstr "작업"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_report_project_task_user
+msgid "Tasks Analysis"
+msgstr "작업 분석"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order.py:0
+msgid "The Sales Order must contain at least one service product."
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product_template.py:0
+msgid ""
+"The product %s should not have a global project since it will generate a "
+"project."
+msgstr "%s 상품은 프로젝트를 생성하므로 전역 프로젝트가 있어서는 안 됩니다."
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product_template.py:0
+msgid ""
+"The product %s should not have a project nor a project template since it "
+"will not generate project."
+msgstr ""
+"%s 상품은 프로젝트를 생성하지 않으므로 프로젝트나 프로젝트 서식을 가지고 있"
+"지 않아야 합니다."
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product_template.py:0
+msgid ""
+"The product %s should not have a project template since it will generate a "
+"task in a global project."
+msgstr ""
+"%s 상품은 전역 프로젝트에서 작업을 생성하므로 프로젝트 서식이 없어야 합니다."
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order.py:0
+msgid ""
+"The project couldn't be created as the Sales Order must be confirmed or is "
+"already linked to a project."
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order_line.py:0
+msgid "This task has been created from: %(order_link)s (%(product_name)s)"
+msgstr "이 작업은 다음에서 생성되었습니다: %(order_link)s (%(product_name)s)"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order_line.py:0
+msgid "To Do"
+msgstr "To Do"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
+msgid "To invoice"
+msgstr "청구서 발행"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_product_product__service_type
+#: model:ir.model.fields,field_description:sale_project.field_product_template__service_type
+msgid "Track Service"
+msgstr "서비스 추적"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_task__display_name
+msgid ""
+"Use these keywords in the title to set new tasks:\n"
+"\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a medium priority\n"
+"        !! Set the task a high priority\n"
+"        !!! Set the task a urgent priority\n"
+"\n"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
+msgstr ""
+"작업 제목에 다음 키워드를 사용하여 새 작업을 설정하세요:\n"
+"\n"
+"        30h 작업에 30시간 할당\n"
+"        #tags 작업에 태그 설정\n"
+"        @user 작업을 사용자에게 할당\n"
+"        !! 작업 우선순위를 중간으로 설정\n"
+"        !! 작업 우선순위를 높음으로 설정\n"
+"        !!! 작업의 우선순위를 긴급으로 설정\n"
+"\n"
+"        형식과 순서가 알맞게 지정되어 있는지 확인하세요. 예: 환경설정 화면 개"
+"선 5h #feature #v16 @Mitchell !"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+#: model:ir.embedded.actions,name:sale_project.project_embedded_action_vendor_bills
+#: model:ir.embedded.actions,name:sale_project.project_embedded_action_vendor_bills_dashboard
+msgid "Vendor Bills"
+msgstr "공급업체 청구서"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
+msgid "View Sales Order"
+msgstr "판매주문서 보기"
+
+#. module: sale_project
+#: model:product.template,name:sale_project.product_service_create_project_and_task_product_template
+msgid "Website Redesign Service (project & task)"
+msgstr "웹사이트 재디자인 서비스 (프로젝트 & 작업)"
+
+#. module: sale_project
+#: model:product.template,name:sale_project.product_product_wiring_product_template
+msgid "Wiring Services"
+msgstr "유선 서비스"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_task.py:0
+msgid ""
+"You cannot link the order item %(order_id)s - %(product_id)s to this task "
+"because it is a re-invoiced expense."
+msgstr ""
+"재청구된 비용이므로 이 작업을 위해 %(order_id)s - %(product_id)s 아이템의 주"
+"문을 연결할 수 없습니다."
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order.py:0
+msgid "[Project] %(task_name)s"
+msgstr "[프로젝트] %(task_name)s"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product_template.py:0
+msgid "delivered_manual"
+msgstr "delivered_manual"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order.py:0
+msgid "sale_line_id"
+msgstr "sale_line_id"
+
+#~ msgid ""
+#~ "<span class=\"o_stat_text\">Customer</span>\n"
+#~ "                        <span class=\"o_stat_text\">Preview</span>"
+#~ msgstr ""
+#~ "<span class=\"o_stat_text\">고객</span>\n"
+#~ "                        <span class=\"o_stat_text\">미리보기</span>"
+
+#~ msgid "<span class=\"o_stat_text\">Tasks</span>"
+#~ msgstr "<span class=\"o_stat_text\">작업</span>"
+
+#~ msgid "Config Settings"
+#~ msgstr "환경 설정"
+
+#~ msgid "Projects"
+#~ msgstr "프로젝트"

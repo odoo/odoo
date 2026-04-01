@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.Meeting">
+        <div t-if="store.rtc.channel" class="o-mail-Meeting h-100 w-100 d-flex flex-column" t-att-class="{'o-fullscreen': store.rtc.state.isFullscreen, 'p-1': !ui.isSmall, 'pb-3': !ui.iSmall and !props.isPip}">
+            <div class="d-flex flex-grow-1 h-100 o-min-height-0 gap-1 position-relative">
+                <div class="o-mail-Meeting-callContainer h-100 flex-grow-1 o-min-width-0" t-att-class="{'d-none': ui.isSmall and threadActions.activeAction?.actionPanelComponentCondition, 'pb-0': ui.isSmall}">
+                    <Call hasOverlay="false" isPip="props.isPip"/>
+                </div>
+                <div t-if="threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-discussSidebarBgColor h-100 border-start border-secondary flex-shrink-0 rounded-2" t-att-class="{ 'w-100': ui.isSmall }">
+                    <t t-component="threadActions.activeAction.actionPanelComponent" t-props="threadActions.activeAction.actionPanelComponentProps" thread="thread"/>
+                </div>
+            </div>
+            <div class="pt-2 d-flex justify-content-between overflow-x-auto flex-shrink-0" t-att-class="{'p-2 pb-3': ui.isSmall}">
+                <div/>
+                <CallActionList thread="store.rtc.channel"/>
+                <MeetingSideActions threadActions="threadActions"/>
+            </div>
+        </div>
+    </t>
+</templates>

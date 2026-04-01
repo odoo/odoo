@@ -1,0 +1,343 @@
+.o_bottom_sheet {
+    // =============================================
+    // Layout and inner elements
+    // =============================================
+    --BottomSheet-slideIn-duration: #{$o_BottomSheet_slideIn_duration};
+    --BottomSheet-slideIn-easing: #{$o_BottomSheet_slideIn_easing};
+    --BottomSheet-slideOut-duration: #{$o_BottomSheet_slideOut_duration};
+    --BottomSheet-slideOut-easing: #{$o_BottomSheet_slideOut_easing};
+
+    --BottomSheet-Sheet-borderColor: #{$o_BottomSheet_Sheet_borderColor};
+
+    @mixin has-more-content-visual {
+        content: "";
+        position: fixed;
+        inset: auto 0 0;
+        height: map-get($spacers, 4);
+        background: linear-gradient(transparent, #00000050);
+        z-index: $zindex-offcanvas;
+        pointer-events: none;
+    }
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100dvh;
+    z-index: $zindex-offcanvas;
+    opacity: 0;
+    transform-style: preserve-3d;
+    contain: layout paint size;
+
+    // Workaround
+    animation-name: has-animation;
+    @media (prefers-reduced-motion: reduce) {
+        animation-name: none;
+    }
+
+    // Main scroll container for gesture handling
+    .o_bottom_sheet_rail {
+        @include o-position-absolute(0, 0, 0, 0);
+        overflow-y: auto;
+        scrollbar-width: none;
+        touch-action: pan-y;
+        pointer-events: auto;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        &.o_bottom_sheet_rail_prevent_overscroll,
+        &.o_bottom_sheet_rail_prevent_overscroll * {
+            overscroll-behavior: contain;
+        }
+
+        &::after {
+            @include has-more-content-visual;
+            opacity: 0;
+            transition: opacity var(--BottomSheet-slideIn-duration, 500ms);
+        }
+    }
+
+    // Set snapping behaviors
+    .o_bottom_sheet_dismiss, .o_bottom_sheet_spacer, .o_bottom_sheet_sheet {
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+    }
+
+    // Backdrop overlay
+    .o_bottom_sheet_backdrop {
+        position: fixed;
+        inset: 0;
+        background-color: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
+        opacity: 0;
+        transition: all 0.2s ease;
+        pointer-events: auto;
+        touch-action: none;
+        z-index: $zindex-offcanvas - 1;
+        backdrop-filter: blur(0px) grayscale(0%);
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
+    }
+
+    // Dismiss area
+    .o_bottom_sheet_dismiss {
+        height: var(--dismiss-height, 50dvh);
+    }
+
+    // Spacer area
+    .o_bottom_sheet_spacer {
+        height: calc(100dvh - var(--sheet-height, 50dvh));
+        pointer-events: none;
+    }
+
+    // The actual sheet
+    .o_bottom_sheet_sheet {
+        --offcanvas-box-shadow: #{$box-shadow};
+
+        margin: 0 auto;
+        min-height: var(--sheet-height);
+        max-height: var(--sheet-max-height);
+        border-radius: $border-radius-xl $border-radius-xl 0 0;
+        border-bottom-width: 0;
+        visibility: visible;
+        transition: none;
+        contain: content;
+        backface-visibility: hidden;
+        perspective: 1000px;
+        user-select: none;
+        background-color: $dropdown-bg;
+
+        .o_bottom_sheet_body {
+            scrollbar-width: none;
+            flex: 1;
+        }
+    }
+
+    // =============================================
+    // States
+    // =============================================
+    @keyframes bottom-sheet-in {
+        from { transform: translateY(100%) translateZ(0); }
+        to { transform: translateY(0) translateZ(0); }
+    }
+
+    @keyframes bottom-sheet-out {
+        from { transform: translateY(0) translateZ(0); }
+        to { transform: translateY(100%) translateZ(0); }
+    }
+
+    // BottomSheet is ready to be rendered on screen
+    &.o_bottom_sheet_ready {
+        opacity: 1;
+
+        .o_bottom_sheet_sheet {
+            animation: var(--BottomSheet-slideIn-duration, 500ms) bottom-sheet-in var(--BottomSheet-slideIn-easing, ease-out) forwards;
+            @media (prefers-reduced-motion: reduce) {
+                animation: none;
+            }
+        }
+
+        .o_bottom_sheet_backdrop {
+            opacity: MAX(var(--BottomSheet-progress, 0), 0.2);
+            backdrop-filter: blur(.5px) grayscale(50%);
+        }
+    }
+
+    // User interactions are now allowed
+    &.o_bottom_sheet_snapping .o_bottom_sheet_rail {
+        // Enable snap behavior
+        scroll-snap-type: y mandatory;
+
+        .o_bottom_sheet_backdrop {
+            transition: none;
+        }
+
+        // Provide a visual safenet in case of elastic
+        // overscroll (mostly iOS).
+        &:before {
+            position: fixed;
+            inset: auto auto 0 50%;
+            height: calc(var(--sheet-height) - #{$border-radius-xl * 2});
+            width: calc(100% - #{$border-width * 2});
+            max-width: map-get($grid-breakpoints, sm) - ($border-width * 2);
+            background: $offcanvas-bg-color;
+            z-index: $zindex-offcanvas;
+            transform: translateY(calc((1 - var(--BottomSheet-progress)) * 150%)) translateX(-50%);
+            content: "";
+        }
+
+        &::after {
+            @container scroll-state(scrollable: bottom) {
+                opacity: 1;
+            }
+        }
+    }
+
+    // Dismissing the sheet
+    &.o_bottom_sheet_dismissing {
+        .o_bottom_sheet_sheet {
+            animation: var(--BottomSheet-slideOut-duration, 300ms) bottom-sheet-out var(--BottomSheet-slideOut-easing, ease-in) forwards;
+            @media (prefers-reduced-motion: reduce) {
+                animation: none;
+            }
+        }
+
+        .o_bottom_sheet_backdrop {
+            opacity: 0;
+            backdrop-filter: blur(0) grayscale(0%);
+            transition: all var(--BottomSheet-slideOut-duration, 300ms) var(--BottomSheet-slideOut-easing, ease-in);
+            @media (prefers-reduced-motion: reduce) {
+                transition: none;
+            }
+        }
+    }
+
+    // When bottom sheet is open, apply styles to the body
+    @at-root .bottom-sheet-open {
+        overflow: hidden;
+
+        // Scale down the main content
+        .o_navbar, .o_action_manager {
+            transition: transform $o_BottomSheet_slideIn_duration ease;
+            transform: scale(.95) translateZ(0);
+            transform-origin: center top;
+            @media (prefers-reduced-motion: reduce) {
+                transition: none;
+            }
+        }
+
+        // Avoid blank on the side
+        &:not(.o_home_menu_background) .o_main_navbar {
+            box-shadow: 20px 0 0 $o-navbar-background, -20px 0 0 $o-navbar-background;
+        }
+
+        &:not(.bottom-sheet-open-multiple):has(.o_bottom_sheet_dismissing) {
+            .o_navbar, .o_action_manager {
+                transition: transform $o_BottomSheet_slideOut_duration ease;
+                transform: scale(1) translateZ(0);
+                @media (prefers-reduced-motion: reduce) {
+                    transition: none;
+                }
+            }
+        }
+    }
+}
+
+// =============================================
+// Inner components design
+// =============================================
+.o_bottom_sheet .o_bottom_sheet_sheet {
+    --BottomSheet-Entry-paddingX: #{$list-group-item-padding-x};
+
+    %BottomSheet-Entry-active {
+        position: relative;
+        border: $border-width solid $list-group-active-border-color;
+        border-radius: $border-radius-lg;
+        color: var(--BottomSheetStatusBar__entry-color--active, #{color-contrast($component-active-bg)});
+
+        &:not(.focus) {
+            background: var(--BottomSheetStatusBar__entry-background--active, #{rgba($component-active-bg, .5)});
+        }
+
+        &::before {
+            content: none !important;
+        }
+
+        &::after {
+            @include o-position-absolute(50%, $list-group-item-padding-x);
+            transform: translateY(-50%);
+            color: $o-action;
+            // .fa
+            text-rendering: auto;
+            font: normal normal normal 14px/1 FontAwesome;
+            // .fa-check
+            content: "";
+        }
+    }
+
+    // TreeEntry
+    --treeEntry-padding-v: 1.4rem;
+
+    // Dropdown
+    .dropdown-divider {
+        --dropdown-divider-bg: #{$border-color};
+        margin: map-get($spacers, 2) ($offcanvas-padding-x * .5);
+    }
+
+    .dropdown-item, .dropdown-header {
+        --dropdown-item-padding-y: #{map-get($spacers, 3)};
+        --dropdown-item-padding-x: var(--BottomSheet-Entry-paddingX);
+        --dropdown-header-padding-y: var(--dropdown-item-padding-y);
+        --dropdown-header-padding-x: var(--dropdown-item-padding-x);
+
+        font-size: $h5-font-size;
+        font-weight: $o-font-weight-medium;
+        text-align: start !important;
+    }
+
+    .dropdown-item .o_stat_value {
+        display: flex;
+    }
+
+    .o_bottom_sheet_body:not(.o_custom_bottom_sheet) {
+        // Dropdown
+        .dropdown-item {
+            &.active, &.selected {
+                @extend %BottomSheet-Entry-active;
+            }
+        }
+    }
+
+    .o_accordion_toggle {
+        &::after {
+            // Reset original style
+            border: unset;
+            transform: unset;
+
+            @include o-position-absolute(var(--dropdown-item-padding-y), $list-group-item-padding-x);
+            padding-block: map-get($spacers, 2);
+            // .fa
+            text-rendering: auto;
+            font: normal normal normal 14px/1 FontAwesome;
+            // .fa-caret-down
+            content: "\f0d7";
+        }
+        &.open::after {
+            // .fa-caret-up
+            content: "\f0d8";
+        }
+    }
+
+    .o_kanban_card_manage_settings:has(.o_colorlist) {
+        &, > div:last-child {
+            padding: 0;
+        }
+    }
+    .row.o_kanban_card_manage_settings:last-child {
+        &:has(:not(.o_field_boolean_favorite)) {
+            flex-direction: column-reverse;
+
+            .o_field_kanban_color_picker {
+                padding: map-get($spacers, 3);
+            }
+        }
+
+        div[class*="col-"] + div[class*="col-"] {
+            border-left: none;
+        }
+
+        > div[class*="col-"] {
+            width: 100%;
+            padding: 0;
+
+            a {
+                margin: 0;
+                padding: #{map-get($spacers, 3)} var(--BottomSheet-Entry-paddingX);
+                font-size: $h5-font-size;
+                font-weight: $o-font-weight-medium;
+            }
+        }
+    }
+}

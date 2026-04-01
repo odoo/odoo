@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<odoo>
+<data>
+    <record id="event_stage_view_form" model="ir.ui.view">
+        <field name="name">event.stage.view.form</field>
+        <field name="model">event.stage</field>
+        <field name="arch" type="xml">
+            <form string="Events Stage">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" placeholder='e.g. "Promoting"'/>
+                            <field name="pipe_end"/>
+                        </group>
+                        <group>
+                            <field name="fold"/>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                    <group string="Add a description that will appear as a tooltip for this stage">
+                        <field name="description" placeholder="Add a description..." nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_stage_view_tree" model="ir.ui.view">
+        <field name="name">event.stage.view.list</field>
+        <field name="model">event.stage</field>
+        <field name="arch" type="xml">
+            <list string="Events Stage">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="event_stage_action" model="ir.actions.act_window">
+        <field name="name">Event Stages</field>
+        <field name="res_model">event.stage</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an Event Stage
+            </p><p>
+                Event stages are used to track the progress of an Event from its origin until its conclusion.
+            </p>
+        </field>
+    </record>
+
+    <record id="event_stage_menu" model="ir.ui.menu">
+        <field name="action" ref="event.event_stage_action"/>
+    </record>
+
+</data>
+</odoo>

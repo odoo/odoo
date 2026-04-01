@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_rs_edi</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='invoicing_settings']" position="after">
+                <block title="eFaktura (Serbia)" id="l10n_rs_edi_settings" invisible="country_code != 'RS'">
+                    <setting string="eFaktura Credentials" help="Configure your eFaktura credentials here" company_dependent="1">
+                        <div class="content-group">
+                            <div class="row">
+                                <label for="l10n_rs_edi_api_key" class="col-lg-3 o_light_label" string="API Key"/>
+                                <field name="l10n_rs_edi_api_key"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="l10n_rs_edi_demo_env_setting"
+                        class="mt-3"
+                        help="Activate demo environment for sending e-invoice to eFaktura">
+                        <field name="l10n_rs_edi_demo_env"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,20 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.FontFamilySelector">
+        <Dropdown menuClass="'o_font_family_selector_menu'" menuRef="menuRef">
+            <button class="btn btn-light" t-att-title="props.title" name="font_family" t-att-disabled="props.isDisabled">
+                <span class="px-1" t-esc="props.currentFontFamily.displayName"/>
+            </button>
+            <t t-set-slot="content">
+                <div data-prevent-closing-overlay="true">
+                    <t t-foreach="props.fontFamilyItems" t-as="item" t-key="item_index">
+                        <DropdownItem
+                            attrs="{ name: item.nameShort }"
+                            onSelected="() => props.onSelected(item)" t-on-pointerdown.prevent="() => {}">
+                            <t t-esc="item.name"/>
+                        </DropdownItem>
+                    </t>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

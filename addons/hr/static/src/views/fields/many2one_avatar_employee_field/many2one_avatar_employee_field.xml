@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr.Many2OneAvatarEmployeeField">
+        <t t-set="value" t-value="props.record.data[props.name]"/>
+        <div class="d-flex align-items-center gap-1">
+            <t t-if="value !== false">
+                <AvatarEmployee cssClass="'o_m2o_avatar'" resModel="relation" resId="value.id" noSpacing="true"/>
+            </t>
+            <Many2One t-props="m2oProps" cssClass="'w-100'">
+                <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                    <div class="o_avatar_many2x_autocomplete d-flex align-items-center">
+                        <AvatarEmployee resModel="relation" resId="autoCompleteItemScope.record.id" canOpenPopover="false"/>
+                        <span t-out="autoCompleteItemScope.label"/>
+                    </div>
+                </t>
+            </Many2One>
+        </div>
+    </t>
+
+</templates>

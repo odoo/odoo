@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+    <record id="goal_gamification_hr_user_visibility" model="ir.rule">
+        <field name="name">HR Officer can see any goal</field>
+        <field name="model_id" ref="gamification.model_gamification_goal"/>
+        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="hr_gamification_badge_base_user_owned_access" model="ir.rule">
+        <field name="name">Base group user granted badge write/unlink access</field>
+        <field name="model_id" ref="gamification.model_gamification_badge_user"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+    </record>
+
+    <record id="hr_gamification_badge_base_user_not_owned_access" model="ir.rule">
+        <field name="name">Base group user not granted badge write/unlink access</field>
+        <field name="model_id" ref="gamification.model_gamification_badge_user"/>
+        <field name="domain_force">[('create_uid', '!=', user.id)]</field>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+    </record>
+
+    <record id="hr_gamification_badge_group_hr_user_access" model="ir.rule">
+        <field name="name">Officer: Manage all employees- Badge Access</field>
+        <field name="model_id" ref="gamification.model_gamification_badge_user"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('hr.group_hr_user'))]"/>
+    </record>
+
+</odoo>

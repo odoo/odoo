@@ -1,0 +1,19 @@
+.o_calendar_header {
+	@for $index from 1 through length($o-colors-complete) {
+		$color: nth($o-colors-complete, $index);
+		$color-subtle: mix($o-white, $color, 55%);
+		$color-hover: mix($o-white, $color, 45%);
+
+		.o_gantt_color_#{$index - 1} {
+			color: color-contrast($color-subtle);
+			background-color: $color-subtle;
+			border-color: $color-subtle;
+		}
+
+		.btn.o_gantt_color_#{$index - 1}:hover {
+			color: color-contrast($color-hover);
+			background-color: $color-hover;
+			border-color: $color-hover;
+		}
+	}
+}

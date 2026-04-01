@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="resource_mail.Many2ManyAvatarResourceField.option" t-inherit="web.Many2ManyTagsAvatarField.option">
+        <xpath expr="//span[hasclass('o_avatar_many2x_autocomplete')]/img" position="before">
+            <i t-if="autoCompleteItemScope.record.resource_type === 'material'" class="o_material_resource fa fa-wrench rounded text-center me-2
+            d-flex align-items-center justify-content-center" t-attf-class="o_colorlist_item_color_{{ autoCompleteItemScope.record.color }}"/>
+        </xpath>
+        <xpath expr="//span[hasclass('o_avatar_many2x_autocomplete')]/img" position="attributes">
+            <attribute name="t-if" add="&amp;&amp; autoCompleteItemScope.record.resource_type !== 'material'" separator=" "/>
+        </xpath>
+    </t>
+
+    <t t-name="resource_mail.Many2ManyAvatarResourceTagsList" t-inherit="mail.Many2ManyAvatarUserTagsList">
+        <i position="attributes">
+            <attribute name="t-on-click.stop.prevent">tag.onImageClicked</attribute>
+            <attribute name="class">o_avatar o_m2m_avatar position-relative rounded</attribute>
+            <attribute name="t-attf-class" separator=" " add="o_colorlist_item_color_{{ tag.colorIndex }}"/>
+        </i>
+        <xpath expr="//span[hasclass('o_tag')]" position="attributes">
+            <attribute name="t-attf-class"/>
+            <attribute name="t-att-class"/>
+            <attribute name="class" separator=" " add="o_avatar opacity-trigger-hover"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_tag_badge_text')]" position="attributes">
+            <attribute name="t-attf-class"/>
+            <attribute name="class" separator=" " add="position-relative ms-1"/>
+        </xpath>
+        <a position="attributes">
+            <attribute name="t-attf-class"/>
+            <attribute name="class" separator=" " add="btn btn-link position-relative py-0 px-1 text-danger opacity-0"/>
+        </a>
+    </t>
+</templates>

@@ -1,0 +1,12 @@
+[Unit]
+Description=ramdisks
+DefaultDependencies=no
+After=sysinit.target local-fs.target
+Before=basic.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/pi/odoo/addons/iot_box_image/configuration/setup_ramdisks.sh
+
+[Install]
+WantedBy=basic.target

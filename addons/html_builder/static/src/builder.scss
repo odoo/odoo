@@ -1,0 +1,208 @@
+.o-snippets-menu {
+    background-color: $o-we-bg-darker;
+    font-family: $o-we-font-family;
+    font-size: $o-we-font-size;
+    color: $o-we-fg-light;
+    width: $o-we-sidebar-width;
+}
+
+.o-snippets-top-actions {
+    border-bottom: $o-we-border-width solid $o-we-bg-lighter;
+    height: 46px;
+
+    .o_rtl & {
+        .fa-undo, .fa-repeat {
+            transform: scaleX(-1);
+        }
+    }
+}
+
+.o-snippets-top-actions, .o-snippets-tabs {
+    .o-hb-btn {
+        --btn-font-size: #{$o-we-font-size};
+        --btn-padding-x: #{map-get($spacers, 2)};
+
+        flex: 1 auto;
+    }
+}
+
+.o-snippets-tabs {
+    .o-snippets-tabs-highlighter {
+        --x: -50%;
+        --border-color: #{$o-we-color-accent};
+        --bg-color: #{rgba($o-we-color-accent, .15)};
+
+        width: percentage(1/3);
+        transition: all .5s, transform .25s;
+        border-bottom: #{$o-we-sidebar-tabs-active-border-width} solid var(--border-color);
+        background-color: var(--bg-color);
+        transform: translateX(var(--x));
+
+        &.o-highlight-blocks {
+            --x: -150%;
+            --border-color: #{$o-we-color-success};
+            --bg-color: #{rgba($o-we-color-success, .15)};
+        }
+
+        &.o-highlight-theme {
+            --x: 50%;
+            --border-color: #{$o-we-color-global};
+            --bg-color: #{rgba($o-we-color-global, .15)};
+        }
+
+        .o_rtl & {
+            --x: 50%;
+
+            &.o-highlight-blocks {
+                --x: 150%;
+            }
+
+            &.o-highlight-theme {
+                --x: -50%;
+            }
+        }
+    }
+
+    .nav-underline {
+        --nav-underline-gap: 0;
+        --nav-link-color: #{$o-we-fg-light};
+        --nav-link-hover-color: #{$o-we-fg-lighter};
+        --nav-underline-link-active-color: #{$o-we-fg-light};
+
+        .nav-item {
+            width:  percentage(1/3);
+        }
+
+        .nav-link {
+            transition: none;
+        }
+
+        .nav-link[data-name="blocks"]{
+            --o-snippets-tabs-accent-color: #{$o-we-color-success};
+            --o-snippets-tabs-border-color-hover: #{rgba($o-we-color-success, .5)};
+        }
+
+        .nav-link[data-name="customize"] {
+            --o-snippets-tabs-accent-color: #{$o-we-color-accent};
+            --o-snippets-tabs-border-color-hover: #{rgba($o-we-color-accent, .5)};
+        }
+
+        .nav-link[data-name="theme"] {
+            --o-snippets-tabs-accent-color: #{$o-we-color-global};
+            --o-snippets-tabs-border-color-hover: #{rgba($o-we-color-global, .5)};
+        }
+
+        .nav-link.active, .nav-link:hover, & .show > .nav-link {
+            border-bottom-color: var(--o-snippets-tabs-border-color-hover);
+        }
+
+        .nav-link:focus-visible {
+            box-shadow: none;
+            outline: 1px solid var(--o-snippets-tabs-accent-color);
+            outline-offset: -1px;
+            border-bottom-color: transparent;
+        }
+
+        & .fa {
+            color: var(--o-snippets-tabs-accent-color);
+        }
+    }
+}
+
+.o-tab-content {
+    border-top: $o-we-border-width solid $o-we-bg-lighter;
+    scrollbar-color: $o-we-bg-lightest $o-we-bg-darker;
+    scrollbar-width: thin;
+    will-change: scroll-position;
+}
+
+.o_theme_tab {
+    --o-hb-btn-active-color: #{$o-we-color-global};
+    --o-hb-btn-secondary-active-bg: RGBA(#{to-rgb($o-we-color-global)}, 0.4);
+    --o-hb-input-active-border: #{$o-we-color-global};
+    --o-hb-form-switch-color-active: #{$o-we-color-global};
+}
+
+.o_we_color_preview {
+    @extend %o-preview-alpha-background;
+    flex: 0 0 auto;
+    display: block;
+    width: $o-we-sidebar-content-field-colorpicker-size;
+    height: $o-we-sidebar-content-field-colorpicker-size;
+    border: $o-we-sidebar-content-field-border-width solid $o-we-bg-darkest;
+    background: unset;
+    border-radius: 10rem;
+    cursor: pointer;
+
+    &::after {
+        content: "" !important;
+        box-shadow: $o-we-sidebar-content-field-colorpicker-shadow;
+    }
+
+    &:active, &:focus-visible {
+        outline: #{$o-we-border-width} solid  var(--o-hb-btn-active-color, #{$o-we-color-accent});
+    }
+}
+
+.o_we_lower_panel {
+    max-height: 220px;
+    overflow-y: auto;
+    background-color: $o-we-sidebar-blocks-content-bg;
+    box-shadow: $o-we-item-standup-top $o-we-bg-lighter;
+
+    &:has(*) {
+        padding: $o-we-sidebar-blocks-content-spacing;
+    }
+}
+
+.o_we_invisible_el_panel {
+    .o_panel_header {
+        padding: $o-we-sidebar-content-field-spacing 0;
+    }
+
+    .o_we_invisible_entry {
+        padding: $o-we-sidebar-content-field-spacing $o-we-sidebar-content-field-clickable-spacing;
+        cursor: pointer;
+
+        &:hover {
+            background-color: $o-we-sidebar-bg;
+        }
+    }
+
+    ul {
+        list-style: none;
+        padding-inline-start: 15px;
+        margin-bottom: $o-we-sidebar-content-field-spacing - 4px;
+    }
+}
+
+%o_we_sublevel > div.o_title::before {
+    content: "└"; // TODO The size and look of this depends on the
+                  // browser default font, we should use a SVG instead.
+    display: inline-block;
+    margin-right: 0.4em;
+
+    .o_rtl & {
+        transform: scaleX(-1);
+    }
+}
+@for $level from 1 through 3 {
+    .o_we_sublevel_#{$level} {
+        --o-we-checkbox-color: #{$o-we-fg-light};
+
+        @extend %o_we_sublevel;
+        color: $o-we-fg-light;
+
+        @if $level > 1 {
+            > div.o_title {
+                padding-left: ($level - 1) * 0.6em;
+            }
+        }
+    }
+}
+
+// TODO: adjust the style of those elements
+.o_pager_container {
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+}

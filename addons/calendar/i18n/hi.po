@@ -1,0 +1,3191 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * calendar
+#
+# Translators:
+# Zeeshan Ali Khan <zeeshan1234@gmail.com>, 2015
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 19:11+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hindi <https://translate.odoo.com/projects/odoo-19/calendar/"
+"hi/>\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_count
+#: model:ir.model.fields,field_description:calendar.field_res_users__meeting_count
+msgid "# Meetings"
+msgstr "# Meetings"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid ""
+"%(date_start)s at %(time_start)s To\n"
+" %(date_end)s at %(time_end)s (%(timezone)s)"
+msgstr ""
+"%(date_start)s, %(time_start)s से\n"
+"%(date_end)s, %(time_end)s तक (%(timezone)s)"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
+msgstr "%(day)s को (%(start)s से %(end)s तक) (%(timezone)s)"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_attendee.py:0
+msgid "%s has accepted the invitation"
+msgstr "%s ने न्योता स्वीकार कर लिया है"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_attendee.py:0
+msgid "%s has declined the invitation"
+msgstr "%s ने न्योता अस्वीकार कर लिया है"
+
+#. module: calendar
+#: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
+msgid ""
+"<div style=\"font-size: 13px; color: #374151;\">\n"
+"\n"
+"    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in "
+"object.event_id and object.event_id.appointment_type_id\"/>\n"
+"    <t t-set=\"customer\" t-value=\"object.event_id.find_partner_customer()"
+"\"/>\n"
+"    <t t-set=\"target_responsible\" t-value=\"object.partner_id == "
+"object.event_id.partner_id\"/>\n"
+"    <t t-set=\"target_customer\" t-value=\"object.partner_id == customer\"/"
+">\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not "
+"ctx.get('calendar_template_ignore_recurrence')\"/>\n"
+"    <t t-set=\"organizer\" t-value=\"object.event_id.user_id\"/>\n"
+"\n"
+"    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
+"bottom: 28px;\">\n"
+"        Date Updated\n"
+"        <img src=\"/calendar/static/src/img/sync.png\" style=\"border:0; "
+"width: 24px; height: 24px; margin-left: 10px; text-decoration:none; vertical-"
+"align: bottom;\"/>\n"
+"    </h1>\n"
+"    <p style=\"margin: 0;\">\n"
+"        <span style=\"display: block; margin-bottom: 8px;\">Hello <t t-"
+"out=\"object.common_name or ''\">Ready Mat</t>,</span>\n"
+"        <t t-if=\"is_online and target_responsible\">\n"
+"            <t t-if=\"customer\">\n"
+"                Your appointment with <t t-out=\"customer.name or ''\">Jesse "
+"Brown</t> has been updated:\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Your appointment has been updated:\n"
+"            </t>\n"
+"            <strong t-out=\"object.event_id.appointment_type_id.name or "
+"''\">Schedule a Demo</strong> is now scheduled for\n"
+"            <t t-"
+"out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or "
+"''\">05/04/2021 at (11:00:00 To 11:30:00) (Europe/Brussels)</t>.\n"
+"        </t>\n"
+"        <t t-elif=\"is_online and target_customer\">\n"
+"            Your appointment <strong t-"
+"out=\"object.event_id.appointment_type_id.name or ''\"/> <t t-"
+"if=\"organizer\">with </t><t t-out=\"organizer.partner_id.name or "
+"''\">Colleen Diaz</t>\n"
+"            is now scheduled for <t t-"
+"out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or "
+"''\">05/04/2021 at (11:00:00 To 11:30:00) (Europe/Brussels)</t>.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            The date of the meeting <strong t-out=\"object.event_id.name or "
+"''\">Follow-up for Project proposal</strong> <t t-if=\"organizer\">created "
+"by </t><t t-out=\"organizer.partner_id.name or ''\">Colleen Diaz</t> is now "
+"scheduled for\n"
+"            <t t-"
+"out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or "
+"''\">05/04/2021 at (11:00:00 To 11:30:00) (Europe/Brussels)</t>.\n"
+"        </t>\n"
+"    </p>\n"
+"    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/calendar/meeting/accept?"
+"token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" t-attf-"
+"style=\"display: inline-block; padding: 7px 14px; color: "
+"{{organizer.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: "
+"none; background-color: {{organizer.company_id.email_secondary_color or "
+"'#875A7B'}}; border-radius: 3px;\">\n"
+"            Accept</a>\n"
+"        <a t-attf-href=\"/calendar/meeting/decline?"
+"token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" t-attf-"
+"style=\"display: inline-block; margin-left: 6px; padding: 7px 14px; color: "
+"{{organizer.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: "
+"none; background-color: {{organizer.company_id.email_secondary_color or "
+"'#875A7B'}}; border-radius: 3px;\">\n"
+"            Decline</a>\n"
+"        <a t-attf-href=\"/calendar/meeting/view?"
+"token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" t-attf-"
+"style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; color: "
+"#111827; text-decoration: none; background-color: #E7E9ED; border-radius: "
+"3px;\">\n"
+"            View</a>\n"
+"    </div>\n"
+"    <div style=\"margin: 16px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
+"\">Details</h2>\n"
+"        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-"
+"size: 13px; color: #374151;\">\n"
+"\t\t    <tr>\n"
+"                <td style=\"width: 100px; color: #676F7B;\">Date &amp; Time</"
+"td>\n"
+"                <td style=\"font-weight: bold;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+"tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', "
+"lang_code=object.env.lang) or ''\">Tuesday</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+"tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', "
+"lang_code=object.env.lang) or ''\">4</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+"tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM "
+"y', lang_code=object.env.lang) or ''\">May 2021</t>\n"
+"                    <t t-if=\"not object.event_id.allday\">\n"
+"                        <t t-out=\"format_time(time=object.event_id.start, "
+"tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or "
+"''\">11:00 AM</t>\n"
+"                        <t t-if=\"object.mail_tz\">\n"
+"                            <span style=\"font-size: 11px; font-weight: "
+"normal;\">\n"
+"                                (<t t-out=\"object.mail_tz or ''\">Europe/"
+"Brussels</t>)\n"
+"                            </span>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"recurrent\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">When</td>\n"
+"                <td style=\"padding-top: 6px;\"><t t-"
+"out=\"object.recurrence_id.get_recurrence_name() or ''\">Every 1 Weeks, for "
+"3 events</t></td>\n"
+"            </tr>\n"
+"            <tr t-if=\"not object.event_id.allday and "
+"object.event_id.duration\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">Duration</td>\n"
+"                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
+"(object.event_id.duration,round(object.event_id.duration*60)%60)) or "
+"''\">0H30</t></td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.event_id.location\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B; "
+"vertical-align: top;\">Location</td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <t t-out=\"object.event_id.location or ''\">Bruxelles</"
+"t>\n"
+"                    <a target=\"_blank\" t-if=\"not is_online or is_online "
+"and object.event_id.location != "
+"object.event_id.appointment_type_id.location_id.name\" t-attf-href=\"http://"
+"maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}\" "
+"style=\"margin-left: 12px; font-size: 12px; color: #008f8c; text-decoration: "
+"underline;\">View Map</a>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.event_id.videocall_location\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">\n"
+"                    <t t-if=\"object.event_id.videocall_source == "
+"'discuss'\">Join with</t>\n"
+"                    <t t-else=\"\">Join</t>\n"
+"                </td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <a t-att-href=\"object.event_id.videocall_location\" "
+"target=\"_blank\" style=\"color: #008f8c;\">\n"
+"                        <t t-if=\"object.event_id.videocall_source == "
+"'discuss'\">Odoo Discuss</t>\n"
+"                        <t t-else=\"\">Video meeting</t>\n"
+"                    </a>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <div style=\"margin: 32px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
+"\">Attendees</h2>\n"
+"        <div t-foreach=\"object.event_id.attendee_ids\" t-as=\"attendee\" "
+"style=\"margin-bottom: 5px;\">\n"
+"            <img t-if=\"attendee.state\" t-attf-src=\"/calendar/static/src/"
+"img/state_{{ attendee.state }}.png\" style=\"border:0; width: 15px; height: "
+"15px; vertical-align: text-bottom;\"/>\n"
+"            <t t-if=\"attendee != object\">\n"
+"                <span style=\"margin-left: 5px;\" t-"
+"out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <span style=\"margin-left: 5px;\">You</span>\n"
+"            </t>\n"
+"        </div>\n"
+"    </div>\n"
+"    <div t-if=\"not is_html_empty(object.event_id.description)\" "
+"style=\"margin: 32px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
+"\">Description of the event</h2>\n"
+"        <t t-out=\"object.event_id.description\">Internal meeting for "
+"discussion for new pricing for product and services.</t>\n"
+"    </div>\n"
+"    <p style=\"margin: 32px 0 0;\">\n"
+"        Thank you!\n"
+"        <t t-if=\"organizer.signature\">\n"
+"            <span style=\"display: block; margin-top: 8px;\"><t t-"
+"out=\"organizer.signature or ''\">Mitchell Admin</t></span>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: calendar
+#: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
+msgid ""
+"<div style=\"font-size: 13px; color: #374151;\">\n"
+"    <t t-set=\"customer\" t-value=\" object.event_id.find_partner_customer()"
+"\"/>\n"
+"    <t t-set=\"target_responsible\" t-value=\"object.partner_id == "
+"object.event_id.partner_id\"/>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not "
+"ctx.get('calendar_template_ignore_recurrence')\"/>\n"
+"    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in "
+"object.event_id and object.event_id.appointment_type_id\"/>\n"
+"\n"
+"    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
+"bottom: 28px;\">\n"
+"        Invitation\n"
+"    </h1>\n"
+"    <p style=\"margin: 0;\">\n"
+"        <span style=\"display: block; margin-bottom: 8px;\">Hello <t t-"
+"out=\"object.common_name or ''\">Wood Corner</t>,</span>\n"
+"\n"
+"        <t t-if=\"not target_responsible\">\n"
+"            <t t-if=\"not object.event_id.user_id.active\">\n"
+"                You have been invited by Customer to the <strong t-"
+"out=\"object.event_id.name or ''\">Follow-up for Project proposal</strong> "
+"meeting.\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.event_id.user_id.partner_id.name or "
+"''\">Colleen Diaz</t> invited you for the <strong t-"
+"out=\"object.event_id.name or ''\">Follow-up for Project proposal</strong> "
+"meeting.\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Your meeting <strong t-out=\"object.event_id.name or ''\">Follow-"
+"up for Project proposal</strong> has been booked.\n"
+"        </t>\n"
+"\n"
+"    </p>\n"
+"    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/calendar/meeting/accept?"
+"token={{object.access_token}}&amp;id={{object.event_id.id}}\" t-attf-"
+"style=\"display: inline-block; padding: 7px 14px; color: "
+"{{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; "
+"text-decoration: none; background-color: "
+"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
+"border-radius: 3px;\">\n"
+"            Accept</a>\n"
+"        <a t-attf-href=\"/calendar/meeting/decline?"
+"token={{object.access_token}}&amp;id={{object.event_id.id}}\" t-attf-"
+"style=\"display: inline-block; margin-left: 6px; padding: 7px 14px; color: "
+"{{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; "
+"text-decoration: none; background-color: "
+"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
+"border-radius: 3px;\">\n"
+"            Decline</a>\n"
+"        <a t-attf-href=\"/calendar/meeting/view?token={{object.access_token}}"
+"&amp;id={{object.event_id.id}}\" t-attf-style=\"display: inline-block; "
+"margin-left: 12px; padding: 7px 14px; color: #111827; text-decoration: none; "
+"background-color: #E7E9ED; border-radius: 3px;\">\n"
+"            View</a>\n"
+"    </div>\n"
+"    <div style=\"margin: 16px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
+"\">Details</h2>\n"
+"        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-"
+"size: 13px; color: #374151;\">\n"
+"            <tr>\n"
+"                <td style=\"width: 100px; color: #676F7B;\">Date &amp; Time</"
+"td>\n"
+"                <td style=\"font-weight: bold;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+"tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', "
+"lang_code=object.env.lang) or ''\">Tuesday</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+"tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', "
+"lang_code=object.env.lang) or ''\">4</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+"tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM "
+"y', lang_code=object.env.lang) or ''\">May 2021</t>\n"
+"                    <t t-if=\"not object.event_id.allday\">\n"
+"                        <t t-out=\"format_time(time=object.event_id.start, "
+"tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or "
+"''\">11:00 AM</t>\n"
+"                        <t t-if=\"object.mail_tz\">\n"
+"                            <span style=\"font-size: 11px; font-weight: "
+"normal;\">\n"
+"                                (<t t-out=\"object.mail_tz or ''\">Europe/"
+"Brussels</t>)\n"
+"                            </span>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"recurrent\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">When</td>\n"
+"                <td style=\"padding-top: 6px;\"><t t-"
+"out=\"object.recurrence_id.get_recurrence_name() or ''\">Every 1 Weeks, for "
+"3 events</t></td>\n"
+"            </tr>\n"
+"            <tr t-if=\"not object.event_id.allday and "
+"object.event_id.duration\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">Duration</td>\n"
+"                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
+"(object.event_id.duration,round(object.event_id.duration*60)%60)) or "
+"''\">0H30</t></td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.event_id.location\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B; "
+"vertical-align: top;\">Location</td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <t t-out=\"object.event_id.location or ''\">Bruxelles</"
+"t>\n"
+"                    <a target=\"_blank\" t-if=\"not is_online or is_online "
+"and object.event_id.location != "
+"object.event_id.appointment_type_id.location_id.name\" t-attf-href=\"http://"
+"maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}\" "
+"style=\"margin-left: 12px; font-size: 12px; color: #008f8c; text-decoration: "
+"underline;\">View Map</a>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.event_id.videocall_location\">\n"
+"                <td style=\"width: 100px; padding-top: 6px;color: #676F7B;"
+"\">\n"
+"                    <t t-if=\"object.get_base_url() in "
+"object.event_id.videocall_location\">Join with</t>\n"
+"                    <t t-else=\"\">Join</t>\n"
+"                </td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <a t-att-href=\"object.event_id.videocall_location\" "
+"target=\"_blank\" style=\"color: #008f8c;\">\n"
+"                        <t t-if=\"object.get_base_url() in "
+"object.event_id.videocall_location\">Odoo Discuss</t>\n"
+"                        <t t-else=\"\">Video meeting</t>\n"
+"                    </a>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <div style=\"margin: 32px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
+"\">Attendees</h2>\n"
+"        <div t-foreach=\"object.event_id.attendee_ids\" t-as=\"attendee\" "
+"style=\"margin-bottom: 5px;\">\n"
+"            <img t-if=\"attendee.state\" t-attf-src=\"/calendar/static/src/"
+"img/state_{{ attendee.state }}.png\" style=\"border:0; width: 15px; height: "
+"15px; vertical-align: text-bottom;\"/>\n"
+"            <t t-if=\"attendee != object\">\n"
+"                <span style=\"margin-left: 5px;\" t-"
+"out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <span style=\"margin-left: 5px;\">You</span>\n"
+"            </t>\n"
+"        </div>\n"
+"    </div>\n"
+"    <div t-if=\"not is_html_empty(object.event_id.description)\" "
+"style=\"margin: 32px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
+"\">Description of the event</h2>\n"
+"        <t t-out=\"object.event_id.description\">Internal meeting for "
+"discussion for new pricing for product and services.</t>\n"
+"    </div>\n"
+"    <p style=\"margin: 32px 0 0;\">\n"
+"        Thank you!\n"
+"        <t t-if=\"object.event_id.user_id.signature\">\n"
+"            <span style=\"display: block; margin-top: 8px;\"><t t-"
+"out=\"object.event_id.user_id.signature or ''\">Mitchell Admin</t></span>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: calendar
+#: model:mail.template,body_html:calendar.calendar_template_meeting_update
+msgid ""
+"<div style=\"font-size: 13px; color: #374151;\">\n"
+"    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in object and "
+"object.appointment_type_id\"/>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not "
+"ctx.get('calendar_template_ignore_recurrence')\"/>\n"
+"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
+"ctx.get('mail_tz')\"/>\n"
+"    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
+"bottom: 28px;\">\n"
+"        Event updated\n"
+"        <img src=\"/calendar/static/src/img/sync.png\" style=\"border:0; "
+"width: 24px; height: 24px; margin-left: 10px; text-decoration:none; vertical-"
+"align: bottom;\"/>\n"
+"    </h1>\n"
+"    <p style=\"margin: 0;\">\n"
+"        <span style=\"display: block; margin-bottom: 8px;\">Hello,</span>\n"
+"        This meeting has been updated.\n"
+"    </p>\n"
+"    <div style=\"margin: 32px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
+"\">Details</h2>\n"
+"        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-"
+"size: 13px; color: #374151;\">\n"
+"            <tr>\n"
+"                <td style=\"width: 100px; color: #676F7B;\">Date &amp; Time</"
+"td>\n"
+"                <td style=\"font-weight: bold;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
+"if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang)"
+"\">Tuesday</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
+"if not object.allday else None, dt_format='d', lang_code=object.env.lang)"
+"\">4</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
+"if not object.allday else None, dt_format='MMMM y', "
+"lang_code=object.env.lang)\">May 2021</t>\n"
+"                    <t t-if=\"not object.allday\">\n"
+"                        <t t-out=\"format_time(time=object.start, "
+"tz=mail_tz, time_format='short', lang_code=object.env.lang)\">11:00 AM</t>\n"
+"                        <t t-if=\"mail_tz\">\n"
+"                            <span style=\"font-size: 11px; font-weight: "
+"normal;\">\n"
+"                                (<t t-out=\"mail_tz or ''\">Europe/Brussels</"
+"t>)\n"
+"                            </span>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"recurrent\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">When</td>\n"
+"                <td style=\"padding-top: 6px;\"><t t-"
+"out=\"object.recurrence_id.get_recurrence_name() or ''\">Every 1 Weeks, for "
+"3 events</t></td>\n"
+"            </tr>\n"
+"            <tr t-if=\"not object.allday and object.duration\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">Duration</td>\n"
+"                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
+"(object.duration,round(object.duration*60)%60))\">0H30</t></td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.location\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">Location</td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <t t-out=\"object.location or ''\">Bruxelles</t>\n"
+"                    <a target=\"_blank\" t-if=\"not is_online or is_online "
+"and object.location != object.appointment_type_id.location_id.name\" t-attf-"
+"href=\"http://maps.google.com/maps?oi=map&amp;q={{object.location}}\" "
+"style=\"margin-left: 12px; font-size: 12px; color: #008f8c; text-decoration: "
+"underline;\">View Map</a>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.videocall_location\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">\n"
+"                    <t t-if=\"object.videocall_source == 'discuss'\">Join "
+"with</t>\n"
+"                    <t t-else=\"\">Join</t>\n"
+"                </td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <a t-att-href=\"object.videocall_location\" "
+"target=\"_blank\" style=\"color: #008f8c;\">\n"
+"                        <t t-if=\"object.videocall_source == "
+"'discuss'\">Odoo Discuss</t>\n"
+"                        <t t-else=\"\">Video meeting</t>\n"
+"                    </a>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <div style=\"margin: 32px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
+"\">Attendees</h2>\n"
+"        <div t-foreach=\"object.attendee_ids\" t-as=\"attendee\" "
+"style=\"margin-bottom: 5px;\">\n"
+"            <img t-if=\"attendee.state\" t-attf-src=\"/calendar/static/src/"
+"img/state_{{ attendee.state }}.png\" style=\"border:0; width: 15px; height: "
+"15px; vertical-align: text-bottom;\"/>\n"
+"            <t t-if=\"attendee.common_name\">\n"
+"                <span style=\"margin-left: 5px\" t-"
+"out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <span style=\"margin-left: 5px;\">You</span>\n"
+"            </t>\n"
+"        </div>\n"
+"    </div>\n"
+"    <div t-if=\"not is_html_empty(object.description)\" style=\"margin: 32px "
+"0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
+"\">Description of the event</h2>\n"
+"        <t t-out=\"object.description\">Internal meeting for discussion for "
+"new pricing for product and services.</t>\n"
+"    </div>\n"
+"    <p style=\"margin: 32px 0 0;\">\n"
+"        Thank you!\n"
+"        <t t-if=\"object.user_id.signature\">\n"
+"            <span style=\"display: block; margin-top: 8px;\"><t t-"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></span>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: calendar
+#: model:mail.template,body_html:calendar.calendar_template_meeting_reminder
+msgid ""
+"<div style=\"font-size: 13px; color: #374151;\">\n"
+"    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in "
+"object.event_id and object.event_id.appointment_type_id\"/>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not "
+"ctx.get('calendar_template_ignore_recurrence')\"/>\n"
+"    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
+"bottom: 28px;\">\n"
+"        Reminder\n"
+"        <img src=\"/calendar/static/src/img/bell.png\" style=\"border:0; "
+"width: 21px; height: 24px; margin-left: 10px; text-decoration:none; vertical-"
+"align: bottom;\"/>\n"
+"    </h1>\n"
+"    <p style=\"margin: 0;\">\n"
+"        Hello <t t-out=\"object.common_name or ''\">Gemini Furniture</t>,<br/"
+">\n"
+"        <span style=\"display: block; margin-top: 8px;\">This is a reminder "
+"for the event below.</span>\n"
+"    </p>\n"
+"    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/calendar/{{ 'recurrence' if recurrent else "
+"'meeting' }}/accept?token={{ object.access_token }}"
+"&amp;id={{ object.event_id.id }}\" t-attf-style=\"display: inline-block; "
+"padding: 7px 14px; color: "
+"{{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; "
+"text-decoration: none; background-color: "
+"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
+"border-radius: 3px;\">\n"
+"            Accept</a>\n"
+"        <a t-attf-href=\"/calendar/{{ 'recurrence' if recurrent else "
+"'meeting' }}/decline?token={{ object.access_token }}"
+"&amp;id={{ object.event_id.id }}\" t-attf-style=\"display: inline-block; "
+"margin-left: 6px; padding: 7px 14px; color: "
+"{{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; "
+"text-decoration: none; background-color: "
+"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
+"border-radius: 3px;\">\n"
+"            Decline</a>\n"
+"        <a t-attf-href=\"/calendar/meeting/view?"
+"token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" t-attf-"
+"style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; color: "
+"#111827; text-decoration: none; background-color: #E7E9ED; border-radius: "
+"3px;\">\n"
+"            View</a>\n"
+"    </div>\n"
+"    <div style=\"margin: 16px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
+"\">Details</h2>\n"
+"        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-"
+"size: 13px; color: #374151;\">\n"
+"            <tr>\n"
+"                <td style=\"width: 100px; color: #676F7B;\">Date &amp; Time</"
+"td>\n"
+"                <td style=\"font-weight: bold;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+"tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', "
+"lang_code=object.env.lang) or ''\">Tuesday</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+"tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', "
+"lang_code=object.env.lang) or ''\">4</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+"tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM "
+"y', lang_code=object.env.lang) or ''\">May 2021</t>\n"
+"                    <t t-if=\"not object.event_id.allday\">\n"
+"                        <t t-out=\"format_time(time=object.event_id.start, "
+"tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or "
+"''\">11:00 AM</t>\n"
+"                        <t t-if=\"object.mail_tz\">\n"
+"                            <span style=\"font-size: 11px; font-weight: "
+"normal;\">\n"
+"                                (<t t-out=\"object.mail_tz or ''\">Europe/"
+"Brussels</t>)\n"
+"                            </span>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"recurrent\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">When</td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <t t-out=\"object.recurrence_id.get_recurrence_name() or "
+"''\">Every 1 Weeks, for 3 events</t>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"not object.event_id.allday and "
+"object.event_id.duration\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">Duration</td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <t t-out=\"('%dH%02d' % "
+"(object.event_id.duration,round(object.event_id.duration*60)%60)) or "
+"''\">0H30</t>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.event_id.location\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B; "
+"vertical-align: top;\">Location</td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <t t-out=\"object.event_id.location or ''\">Bruxelles</"
+"t>\n"
+"                    <a target=\"_blank\" t-if=\"not is_online or is_online "
+"and object.event_id.location != "
+"object.event_id.appointment_type_id.location_id.name\" t-attf-href=\"http://"
+"maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}\" "
+"style=\"margin-left: 12px; font-size: 12px; color: #008f8c; text-decoration: "
+"underline;\">View Map</a>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.event_id.videocall_location\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">\n"
+"                    <t t-if=\"object.get_base_url() in "
+"object.event_id.videocall_location\">Join with</t>\n"
+"                    <t t-else=\"\">Join</t>\n"
+"                </td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <a t-att-href=\"object.event_id.videocall_location\" "
+"target=\"_blank\" style=\"color: #008f8c;\">\n"
+"                        <t t-if=\"object.get_base_url() in "
+"object.event_id.videocall_location\">Odoo Discuss</t>\n"
+"                        <t t-else=\"\">Video meeting</t>\n"
+"                    </a>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <div style=\"margin: 32px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
+"\">Attendees</h2>\n"
+"        <div t-foreach=\"object.event_id.attendee_ids\" t-as=\"attendee\" "
+"style=\"margin-bottom: 5px;\">\n"
+"            <img t-if=\"attendee.state\" t-attf-src=\"/calendar/static/src/"
+"img/state_{{ attendee.state }}.png\" style=\"border:0; width: 15px; height: "
+"15px; vertical-align: text-bottom;\"/>\n"
+"            <t t-if=\"attendee != object\">\n"
+"                <span style=\"margin-left: 5px;\" t-"
+"out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <span style=\"margin-left: 5px;\">You</span>\n"
+"            </t>\n"
+"        </div>\n"
+"    </div>\n"
+"    <div t-if=\"not is_html_empty(object.event_id.description)\" "
+"style=\"margin: 32px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
+"\">Description of the event</h2>\n"
+"        <t t-out=\"object.event_id.description\">Internal meeting for "
+"discussion for new pricing for product and services.</t>\n"
+"    </div>\n"
+"    <p style=\"margin: 32px 0 0;\">\n"
+"        Thank you!\n"
+"        <t t-if=\"object.event_id.user_id.signature\">\n"
+"            <span style=\"display: block; margin-top: 8px;\"><t t-"
+"out=\"object.event_id.user_id.signature or ''\">Mitchell Admin</t></span>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: calendar
+#: model:mail.template,body_html:calendar.calendar_template_delete_event
+msgid ""
+"<div style=\"font-size: 13px; color: #374151;\">\n"
+"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
+"ctx.get('mail_tz')\"/>\n"
+"    <t t-set=\"event_name\" t-value=\"object.name or ''\"/>\n"
+"    <t t-set=\"event_organizer\" t-value=\"object.user_id.name or ''\"/>\n"
+"    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
+"bottom: 28px;\">\n"
+"        Event canceled\n"
+"        <img src=\"/calendar/static/src/img/times-circle.png\" "
+"style=\"border:0; width: 24px; height: 24px; margin-left: 10px; text-"
+"decoration:none; vertical-align: bottom;\"/>\n"
+"    </h1>\n"
+"    <p style=\"margin: 0;\">\n"
+"        Hello,<br/>\n"
+"        <span style=\"display: block; margin-top: 8px;\">\n"
+"            This is to inform you that the event <strong t-out=\"event_name "
+"or ''\">Follow-up for Project proposal</strong> <t t-"
+"if=\"event_organizer\">organized by </t><t t-out=\"event_organizer or "
+"''\">Colleen Diaz</t> has been canceled and removed from your calendar.\n"
+"        </span>\n"
+"    </p>\n"
+"    <div style=\"margin: 32px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
+"\">Details</h2>\n"
+"        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-"
+"size: 13px; color: #374151;\">\n"
+"            <tr>\n"
+"                <td style=\"width: 100px; color: #676F7B;\">Date &amp; Time</"
+"td>\n"
+"                <td style=\"font-weight: bold;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
+"if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang)"
+"\">Tuesday</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
+"if not object.allday else None, dt_format='d', lang_code=object.env.lang)"
+"\">4</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
+"if not object.allday else None, dt_format='MMMM y', "
+"lang_code=object.env.lang)\">May 2021</t>\n"
+"                    <t t-if=\"not object.allday\">\n"
+"                        <t t-out=\"format_time(time=object.start, "
+"tz=mail_tz, time_format='short', lang_code=object.env.lang)\">11:00 AM</t>\n"
+"                        <t t-if=\"mail_tz\">\n"
+"                            <span style=\"font-size: 11px; font-weight: "
+"normal;\">\n"
+"                                (<t t-out=\"mail_tz or ''\">Europe/Brussels</"
+"t>)\n"
+"                            </span>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"not object.allday and object.duration\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">Duration</td>\n"
+"                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
+"(object.duration,round(object.duration*60)%60))\">0H30</t></td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.location\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">Location</td>\n"
+"                <td style=\"padding-top: 6px;\"><t t-out=\"object.location "
+"or ''\">Bruxelles</t></td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <p style=\"margin: 32px 0 0;\">\n"
+"        If you have any questions or concerns, please feel free to contact "
+"us. <br/>\n"
+"        Best regards,\n"
+"        <span style=\"display: block; margin-top: 8px;\">The Calendar Team</"
+"span>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
+msgid ""
+"<i class=\"fa fa-9x fa-calendar p-3\" title=\"Calendar\" aria-"
+"hidden=\"true\"/>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "<i class=\"fa fa-clock-o text-600\" title=\"Dates\"/>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "<i class=\"fa fa-lock text-600\" title=\"Visibility\"/>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "<i class=\"fa fa-map text-600\" title=\"Location\"/>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "<i class=\"fa fa-remove\" title=\"Remove\"/>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "<i class=\"fa fa-sticky-note mt-2 text-600\" title=\"Notes\"/>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "<i class=\"fa fa-tag text-600\" title=\"Booking Name\"/>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "<i class=\"fa fa-user mt-1 text-600\" title=\"Participants\"/>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "<i class=\"fa fa-video-camera text-600\" title=\"Videocall URL\"/>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "<span class=\"fa fa-plus me-1\"/>Video"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "<span class=\"fa fa-plus\"/><span> Odoo meeting</span>"
+msgstr "<span class=\"fa fa-plus\"/><span> Odoo मीटिंग</span>"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid ""
+"<span class=\"fw-bold text-nowrap\" invisible=\"rrule_type_ui not in "
+"['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
+"'weekly')\">Repeat on</span>"
+msgstr ""
+"<span class=\"fw-bold text-nowrap\" invisible=\"rrule_type_ui not in "
+"['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
+"'weekly')\">इस समय दोहराएं</span>"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
+msgid "<span class=\"me-1 o_form_label\">Google Calendar</span>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
+msgid "<span class=\"me-1 o_form_label\">Outlook Calendar</span>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "<span invisible=\"allday\" style=\"white-space: pre;\"> or </span>"
+msgstr "<span invisible=\"allday\" style=\"white-space: pre;\"> या </span>"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "<span invisible=\"not recurrency\" class=\"mx-1\">Repeat:</span>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "<span title=\"Clear meeting\" class=\"fa fa-times\"/>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "<span title=\"Join video call\" class=\"fa fa-sign-in\"/>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "<span> guests</span>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "<span> hours</span>"
+msgstr "<span> घंटे</span>"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "<span>All day</span>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
+msgid "<span>Are you sure you want to delete this event? <br/></span>"
+msgstr "<span>क्या आप वाकई इस इवेंट को मिटाना चाहते हैं?<br/></span>"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
+msgid ""
+"<strong>Save</strong> this page and come back here to set up the feature."
+msgstr "इस पेज को <strong>सेव करें</strong> और फ़ीचर सेट अप करने के लिए यहां वापस आएं।"
+
+#. module: calendar
+#: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
+msgid "A user cannot have the same contact twice."
+msgstr "एक उपयोगकर्ता का एक ही संपर्क दो बार नहीं हो सकता।"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Accept"
+msgstr "स्वीकार करना"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__accepted_count
+msgid "Accepted Count"
+msgstr "स्वीकार करने वाले लोगों की संख्या"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
+msgid "Action"
+msgstr "कार्रवाई"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction
+msgid "Action Needed"
+msgstr "कार्रवाई की ज़रूरत है"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
+"कुछ कार्रवाइयों से कैलेंडर खुलता है या दस्तावेज़ अपलोड होने पर काम अपने-आप 'हो गया' हो "
+"जाता है"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__active
+#: model:ir.model.fields,field_description:calendar.field_calendar_filters__active
+msgid "Active"
+msgstr "सक्रिय"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_ids
+msgid "Activities"
+msgstr "गतिविधियाँ"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_mail_activity
+msgid "Activity"
+msgstr "ऐक्टिविटी"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_mail_activity_mixin
+msgid "Activity Mixin"
+msgstr "ऐक्टिविटी मिक्सिन"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_mail_activity_type
+msgid "Activity Type"
+msgstr "ऐक्टिविटी टाइप"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_mail_activity_schedule
+msgid "Activity schedule plan Wizard"
+msgstr "ऐक्टिविटी शेड्यूल प्लान विज़ॉर्ड"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "Add Title"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Add description"
+msgstr "विवरण जोड़ें"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Add notes about this meeting..."
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__body
+msgid "Additional Message"
+msgstr "अतिरिक्त मैसेज"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_alarm__body
+msgid ""
+"Additional message that would be sent with the notification for the reminder"
+msgstr "अतिरिक्त संदेश जो रिमाइंडर के लिए सूचना के साथ भेजा जाएगा"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/activity/activity_menu_patch.xml:0
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__allday
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "All Day"
+msgstr "सभी दिन"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "All Day, %(day)s"
+msgstr "सभी दिन, %(day)s"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__all_events
+msgid "All events"
+msgstr "सभी इवेंट"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Archived"
+msgstr "संग्रहीत किया गया"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
+msgid "Attachment Count"
+msgstr "अटैचमेंट की संख्या"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__partner_id
+msgid "Attendee"
+msgstr "प्रतिभागी"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_ids
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "Attendees"
+msgstr "प्रतिभागी"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__attendees_count
+msgid "Attendees Count"
+msgstr "प्रतिभागियों की संख्या"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__current_status
+msgid "Attending?"
+msgstr "शामिल हो रहे हैं?"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__free
+msgid "Available"
+msgstr "उपलब्ध"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
+msgid "Available/Busy"
+msgstr "उपलब्ध/बिज़ी"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Awaiting"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__awaiting_count
+msgid "Awaiting Count"
+msgstr "प्रतीक्षा की संख्या"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
+msgid "Base Event"
+msgstr "बेस इवेंट"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body_has_template_value
+msgid "Body content is the same as the template"
+msgstr "बॉडी कॉन्टेंट बिलकुल टेंप्लेट की तरह है"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__busy
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__busy
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Busy"
+msgstr "बिज़ी"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__byday
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__byday
+msgid "By day"
+msgstr "दिन के हिसाब से"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
+msgid "Bye-bye, record!"
+msgstr "अलविदा, रिकॉर्ड!"
+
+#. module: calendar
+#: model:ir.ui.menu,name:calendar.calendar_event_menu
+#: model:ir.ui.menu,name:calendar.mail_menu_calendar
+#: model:ir.ui.menu,name:calendar.menu_calendar_configuration
+#: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
+msgid "Calendar"
+msgstr "कैलेंडर"
+
+#. module: calendar
+#: model:ir.actions.act_window,name:calendar.action_calendar_alarm
+#: model:ir.ui.menu,name:calendar.menu_calendar_alarm
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
+msgid "Calendar Alarm"
+msgstr "कैलेंडर अलार्म"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_attendee
+msgid "Calendar Attendee Information"
+msgstr "कैलेंडर पर किसी मीटिंग में भाग लेने वाले लोगों की जानकारी"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_users__calendar_default_privacy
+#: model:ir.model.fields,field_description:calendar.field_res_users_settings__calendar_default_privacy
+msgid "Calendar Default Privacy"
+msgstr "कैलेंडर डिफ़ॉल्ट प्राइवेसी"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_event
+#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__calendar_event_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__calendar_event_ids
+#: model:ir.model.fields,field_description:calendar.field_discuss_channel__calendar_event_ids
+msgid "Calendar Event"
+msgstr "कैलेंडर इवेंट"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_filters
+msgid "Calendar Filters"
+msgstr "कैलेंडर फिल्टर"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "Calendar Invitation"
+msgstr "कैलेंडर इन्विटेशन"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_mail_activity__calendar_event_id
+msgid "Calendar Meeting"
+msgstr "कैलेंडर मीटिंग"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_popover_delete_wizard
+msgid "Calendar Popover Delete Wizard"
+msgstr "कैलेंडर पॉपओवर डिलीट विज़ॉर्ड"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_provider_config
+msgid "Calendar Provider Configuration Wizard"
+msgstr "कैलेंडर प्रोवाइडर कॉन्फ़िगरेशन विज़ॉर्ड"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
+msgid "Calendar Settings"
+msgstr "कैलेंडर सेटिंग"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Calendar description"
+msgstr ""
+
+#. module: calendar
+#: model:mail.template,name:calendar.calendar_template_meeting_changedate
+msgid "Calendar: Date Updated"
+msgstr "कैलेंडर: तारीख अपडेट की गई"
+
+#. module: calendar
+#: model:mail.template,name:calendar.calendar_template_delete_event
+msgid "Calendar: Event Deleted"
+msgstr "कैलेंडर: इवेंट मिटाया गया"
+
+#. module: calendar
+#: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
+msgid "Calendar: Event Reminder"
+msgstr "कैलेंडर: इवेंट के लिए रिमाइंडर"
+
+#. module: calendar
+#: model:mail.template,name:calendar.calendar_template_meeting_update
+msgid "Calendar: Event Update"
+msgstr "कैलेंडर: इवेंट अपडेट"
+
+#. module: calendar
+#: model:mail.template,name:calendar.calendar_template_meeting_invitation
+msgid "Calendar: Meeting Invitation"
+msgstr "कैलेंडर: मीटिंग के लिए न्योता"
+
+#. module: calendar
+#: model:mail.template,name:calendar.calendar_template_meeting_reminder
+msgid "Calendar: Reminder"
+msgstr "कैलेंडर: रिमाइंडर"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__can_edit_body
+msgid "Can Edit Body"
+msgstr "बॉडी में बदलाव किया जा सकता है"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
+msgid "Cancel"
+msgstr "रद्द"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__is_organizer_alone
+msgid ""
+"Check if the organizer is alone in the event, i.e. if the organizer is the "
+"only one that hasn't declined\n"
+"        the event (only if the organizer is not the only attendee)"
+msgstr ""
+"जांचें कि क्या आयोजक ही इवेंट में अकेला बचा है, यानी अगर आयोजक ही एकमात्र ऐसा व्यक्ति है "
+"जिसने न्योता अस्वीकार नहीं किया है\n"
+"         (सिर्फ़ तभी जब आयोजक ही एकमात्र भाग लेने वाला व्यक्ति न हो)"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_checked
+msgid "Checked"
+msgstr "जांच की गई"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__external_calendar_provider
+msgid "Choose an external calendar to configure"
+msgstr "कॉन्फ़िगर करने के लिए एक एक्सटर्नल कैलेंडर चुनें"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__recurrence_update
+msgid ""
+"Choose what to do with other events in the recurrence. Updating All Events "
+"is not allowed when dates or time is modified"
+msgstr ""
+"चुनें कि आवर्ती क्रम में अन्य इवेंट के साथ क्या करना है. तारीख या समय में बदलाव होने पर, सभी "
+"इवेंट को अपडेट करने की अनुमति नहीं है"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
+msgid "Client ID"
+msgstr "क्लाइंड आईडी"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
+msgid "Client Secret"
+msgstr "क्लाइंट सीक्रेट"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__color
+msgid "Color"
+msgstr "कलर"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__common_name
+msgid "Common name"
+msgstr "सामान्य नाम"
+
+#. module: calendar
+#: model:ir.ui.menu,name:calendar.calendar_menu_config
+msgid "Configuration"
+msgstr "कॉन्फ़िगरेशन"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
+msgid "Confirm"
+msgstr "पुष्टि करें"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/components/calendar_provider_config/calendar_connect_provider.xml:0
+msgid "Connect"
+msgstr "कनेक्ट"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.js:0
+msgid "Connect your Calendar"
+msgstr "अपना कैलेंडर कनेक्ट करें"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_res_partner
+msgid "Contact"
+msgstr "संपर्क"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "Contact Attendees"
+msgstr "प्रतिभागी से संपर्क करें"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "Contact Details"
+msgstr "संपर्क करने की जानकारी"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body
+msgid "Contents"
+msgstr "कॉन्टेंट"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__count
+msgid "Count"
+msgstr "काउंट"
+
+#. module: calendar
+#: model:ir.model,website_form_label:calendar.model_res_partner
+msgid "Create a Customer"
+msgstr "ग्राहक बनाएं"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_filters__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__create_uid
+msgid "Created by"
+msgstr "इन्होंने बनाया"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_filters__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__create_date
+msgid "Created on"
+msgstr "इस तारीख को बनाया गया"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__current_attendee
+msgid "Current Attendee"
+msgstr "मौजूदा प्रतिभागी"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__custom
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__videocall_source__custom
+msgid "Custom"
+msgstr "कस्टम"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__daily
+msgid "Daily"
+msgstr "हर दिन"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Date"
+msgstr "तिथि"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__day
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__month_by__date
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__month_by__date
+msgid "Date of month"
+msgstr "महीने का दिन"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "Dates"
+msgstr "तारीख"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__day
+msgid "Day"
+msgstr "दिन"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Day of Month"
+msgstr "महीने का दिन"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__month_by__day
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__month_by__day
+msgid "Day of month"
+msgstr "महीने का दिन"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__days
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__daily
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__rrule_type__daily
+msgid "Days"
+msgstr "दिन"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Decline"
+msgstr "अस्वीकार करें"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__declined_count
+msgid "Declined Count"
+msgstr "अस्वीकार करने वाले लोगों की संख्या"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Default Privacy"
+msgstr "डिफ़ॉल्ट प्राइवेसी"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_res_users_settings__calendar_default_privacy
+msgid "Default privacy setting for whom the calendar events will be visible."
+msgstr "कैलेंडर इवेंट किसके लिए दिखाई देंगे, इसके लिए डिफ़ॉल्ट प्राइवेसी सेटिंग।"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
+#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__delete
+#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
+msgid "Delete"
+msgstr "हटाएं"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
+#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
+msgid "Delete Event"
+msgstr "इवेंट मिटाएं"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__all
+msgid "Delete all the events"
+msgstr "सभी इवेंट मिटाएं"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__next
+msgid "Delete this and following events"
+msgstr "इस इवेंट और आने वाले इवेंट को मिटाएं"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__one
+msgid "Delete this event"
+msgstr "इस इवेंट को मिटाएं"
+
+#. module: calendar
+#: model:mail.template,subject:calendar.calendar_template_delete_event
+msgid "Deleted event: {{ object.name }}"
+msgstr "इवेंट मिटाएं: {{ object.name }}"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__description
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "Description"
+msgstr "विवरण"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/js/services/calendar_notification_service.js:0
+msgid "Details"
+msgstr "विवरण"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
+msgid "Discard"
+msgstr "खारिज करें"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__videocall_source__discuss
+msgid "Discuss"
+msgstr "डिस्कस"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_channel_id
+msgid "Discuss Channel"
+msgstr "चर्चा करने के लिए चैनल"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_discuss_channel
+msgid "Discussion Channel"
+msgstr "डिस्कशन चैनल"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__display_description
+msgid "Display Description"
+msgstr "विवरण दिखाएं"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_filters__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__display_name
+#: model:ir.model.fields,field_description:calendar.field_discuss_channel__display_name
+#: model:ir.model.fields,field_description:calendar.field_ir_http__display_name
+#: model:ir.model.fields,field_description:calendar.field_mail_activity__display_name
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_mixin__display_name
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_schedule__display_name
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__display_name
+#: model:ir.model.fields,field_description:calendar.field_res_partner__display_name
+#: model:ir.model.fields,field_description:calendar.field_res_users__display_name
+#: model:ir.model.fields,field_description:calendar.field_res_users_settings__display_name
+msgid "Display Name"
+msgstr "डिस्प्ले का नाम"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__res_id
+msgid "Document ID"
+msgstr "डॉक्यूमेंट आईडी"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_id
+msgid "Document Model"
+msgstr "डॉक्यूमेंट मॉडल"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model
+msgid "Document Model Name"
+msgstr "डॉक्यूमेंट मॉडल का नाम"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__dtstart
+msgid "Dtstart"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__duration
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Duration"
+msgstr "अवधि"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration_minutes
+msgid "Duration in minutes"
+msgstr "अवधि मिनटों में"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "EMAIL"
+msgstr "ईमेल"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
+msgid "Edit Recurrent event"
+msgstr "बार-बार होने वाले इवेंट में बदलाव करें"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Edit recurring event"
+msgstr "बार-बार होने वाले इवेंट में बदलाव करें"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__effective_privacy
+msgid "Effective Privacy"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__email
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__email
+msgid "Email"
+msgstr "ईमेल"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_1
+msgid "Email - 3 Hours"
+msgstr "ईमेल - 3 घंटे"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_2
+msgid "Email - 6 Hours"
+msgstr "ईमेल - 6 घंटे"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__mail_template_id
+msgid "Email Template"
+msgstr "ईमेल टेम्प्लेट"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_id
+msgid "Employee"
+msgstr "कर्मचारी"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__stop_date
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
+msgid "End Date"
+msgstr "समाप्ति तिथि"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__end_type
+msgid "End Type"
+msgstr "एंड टाइप"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__end_date
+msgid "End date"
+msgstr "समाप्ति तिथि"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_alarm
+msgid "Event Alarm"
+msgstr "इवेंट अलार्म"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_alarm_manager
+msgid "Event Alarm Manager"
+msgstr "इवेंट अलार्म मैनेजर"
+
+#. module: calendar
+#: model:ir.actions.act_window,name:calendar.action_event_delete_wizard
+msgid "Event Cancel Wizard"
+msgstr "इवेंट रद्द करने का विज़ॉर्ड"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_event_type
+msgid "Event Meeting Type"
+msgstr "इवेंट मीटिंग टाइप"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_recurrence
+msgid "Event Recurrence Rule"
+msgstr "इवेंट दोहराने का नियम"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
+msgid "Event Time"
+msgstr "इवेंट का समय"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+msgid "Every %(interval)s Days"
+msgstr "हर %(interval)s दिन"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+msgid "Every %(interval)s Days for %(count)s events"
+msgstr "%(count)s इवेंट के लिए हर %(interval)s दिन"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+msgid "Every %(interval)s Days until %(until)s"
+msgstr "हर %(interval)s दिन, %(until)s तक"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+msgid "Every %(interval)s Months day %(day)s"
+msgstr "हर %(interval)s महीने, %(day)s दिन"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+msgid "Every %(interval)s Months day %(day)s for %(count)s events"
+msgstr "हर %(interval)s महीने के %(day)s दिन, %(count)s इवेंट के लिए"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+msgid "Every %(interval)s Months day %(day)s until %(until)s"
+msgstr "हर %(interval)s महीने के %(day)s दिन, %(until)s तक"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+msgid "Every %(interval)s Months on the %(position)s %(weekday)s"
+msgstr "हर %(interval)s महीने, %(position)s %(weekday)s को"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+msgid ""
+"Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s "
+"events"
+msgstr "हर %(interval)s महीने, %(position)s %(weekday)s को, %(count)s इवेंट के लिए"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+msgid ""
+"Every %(interval)s Months on the %(position)s %(weekday)s until %(until)s"
+msgstr "हर %(interval)s महीने, %(position)s %(weekday)s को, %(until)s तक"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+msgid "Every %(interval)s Weeks on %(days)s"
+msgstr "हर %(interval)s हफ़्ते, %(days)s को"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+msgid "Every %(interval)s Weeks on %(days)s for %(count)s events"
+msgstr "हर %(interval)s हफ़्ते, %(days)s को, %(count)s इवेंट के लिए"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+msgid "Every %(interval)s Weeks on %(days)s until %(until)s"
+msgstr "हर %(interval)s हफ़्ते, %(days)s को, %(until)s तक"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+msgid "Every %(interval)s Years"
+msgstr "हर %(interval)s साल"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+msgid "Every %(interval)s Years for %(count)s events"
+msgstr "हर %(interval)s साल, %(count)s इवेंट के लिए"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+msgid "Every %(interval)s Years until %(until)s"
+msgstr "हर %(interval)s साल, %(until)s तक"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/mail_activity.py:0
+msgid "Feedback: %s"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__1
+msgid "First"
+msgstr "पहला"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "First you have to specify the date of the invitation."
+msgstr "पहले आप आमंत्रण तिथि दर्ज करें"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__follow_recurrence
+msgid "Follow Recurrence"
+msgstr "बार-बार होने वाले इवेंट को फ़ॉलो करें"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_follower_ids
+msgid "Followers"
+msgstr "फ़ॉलोवर"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "फ़ॉलोवर (पार्टनर)"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__forever
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__forever
+msgid "Forever"
+msgstr "हमेशा के लिए"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__4
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__4
+msgid "Fourth"
+msgstr "चौथा"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Free"
+msgstr "स्वतंत्र"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__fri
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__fri
+msgid "Fri"
+msgstr "शुक्र"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__fri
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__fri
+msgid "Friday"
+msgstr "शुक्रवार"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Going?"
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_provider_config__external_calendar_provider__google
+msgid "Google"
+msgstr "Google"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
+msgid "Google Calendar"
+msgstr "Google Calendar"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
+msgid "Google Calendar icon"
+msgstr "Google Calendar आइकॉन"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_client_id
+msgid "Google Client_id"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_client_secret
+msgid "Google Client_key"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_sync_paused
+msgid "Google Synchronization Paused"
+msgstr "Google सिंक्रोनाइज़ेशन रोक दिया गया"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_ir_http
+msgid "HTTP Routing"
+msgstr "एचटीपीपी राउटिंग"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__has_message
+msgid "Has Message"
+msgstr "मैसेज है"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__hours
+msgid "Hours"
+msgstr "घंटे"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_filters__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__id
+#: model:ir.model.fields,field_description:calendar.field_discuss_channel__id
+#: model:ir.model.fields,field_description:calendar.field_ir_http__id
+#: model:ir.model.fields,field_description:calendar.field_mail_activity__id
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_mixin__id
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_schedule__id
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__id
+#: model:ir.model.fields,field_description:calendar.field_res_partner__id
+#: model:ir.model.fields,field_description:calendar.field_res_users__id
+#: model:ir.model.fields,field_description:calendar.field_res_users_settings__id
+msgid "ID"
+msgstr "आईडी"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "अगर यह बॉक्स चेक है, तो नए मैसेज देखने ज़रूरी हैं।"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "अगर बॉक्स पर टिक है, तो कुछ मैसेज भेजने में गलती हुई है।"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the event "
+"alarm information without removing it."
+msgstr ""
+"अगर ऐक्टिव फ़ील्ड को गलत पर सेट किया जाता है, तो यह इवेंट अलार्म की जानकारी को हटाए "
+"बिना उसे छिपाने की अनुमति देगा।"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__show_as
+msgid ""
+"If the time is shown as 'busy', this event will be visible to other people "
+"with either the full         information or simply 'busy' written depending "
+"on its privacy. Use this option to let other people know         that you "
+"are unavailable during that period of time. \n"
+" If the event is shown as 'free', other users know         that you are "
+"available during that period of time."
+msgstr ""
+"अगर समय को 'व्यस्त' के रूप में दिखाया जाता है, तो यह इवेंट उसकी गोपनीयता के आधार पर या "
+"तो पूरी जानकारी के साथ या केवल 'व्यस्त' के रूप में अन्य लोगों को दिखाई देगा. इस विकल्प का "
+"इस्तेमाल अन्य लोगों को यह बताने के लिए करें कि आप उस समयावधि के दौरान अनुपलब्ध हैं.\n"
+"अगर इवेंट को 'खाली' के रूप में दिखाया जाता है, तो अन्य उपयोगकर्ताओं को पता चल जाएगा कि "
+"आप उस समयावधि के दौरान उपलब्ध हैं।"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__confidential
+msgid "Internal users only"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__interval
+msgid "Interval"
+msgstr "इंटरवल"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__invalid_email_partner_ids
+msgid "Invalid Email Partner"
+msgstr "अमान्य ईमेल पार्टनर"
+
+#. module: calendar
+#: model:mail.message.subtype,name:calendar.subtype_invitation
+msgid "Invitation"
+msgstr "न्यौता"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__access_token
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__access_token
+msgid "Invitation Token"
+msgstr "न्योता के लिए टोकन"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Invitation details"
+msgstr "न्योता की जानकारी"
+
+#. module: calendar
+#: model:mail.template,description:calendar.calendar_template_meeting_invitation
+msgid "Invitation email to new attendees"
+msgstr "नए प्रतिभागी को भेजा जाने वाला न्योते का ईमेल"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "Invitation for"
+msgstr "के लिए न्योता"
+
+#. module: calendar
+#: model:mail.template,subject:calendar.calendar_template_meeting_invitation
+msgid "Invitation to {{ object.event_id.name }}"
+msgstr "{{ object.event_id.name }} को न्योता"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Invitations"
+msgstr "न्योता"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__is_mail_template_editor
+msgid "Is Editor"
+msgstr "एडिटर है"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_is_follower
+msgid "Is Follower"
+msgstr "फ़ॉलोवर है"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
+msgid "Is the Event Highlighted"
+msgstr "क्या इवेंट को हाइलाइट किया गया है"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__is_organizer_alone
+msgid "Is the Organizer Alone"
+msgstr "क्या आयोजक अकेले है"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Join Video Call"
+msgstr "वीडियो कॉल ज्वॉइन करें"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__lang
+msgid "Language"
+msgstr "भाषा"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__-1
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__-1
+msgid "Last"
+msgstr "आखिरी"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_filters__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__write_uid
+msgid "Last Updated by"
+msgstr "इन्होंने आखिरी बार अपडेट किया"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_filters__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__write_date
+msgid "Last Updated on"
+msgstr "आखिरी बार अपडेट हुआ"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_partner__calendar_last_notif_ack
+#: model:ir.model.fields,field_description:calendar.field_res_users__calendar_last_notif_ack
+msgid "Last notification marked as read from base Calendar"
+msgstr "बेस कैलेंडर से आखिरी पढ़ी हुई सूचना"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type
+#: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type_ui
+msgid "Let the event automatically repeat at that interval"
+msgstr "इवेंट को एक तय समय के बाद अपने आप बार-बार होने दें"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Linked to"
+msgstr "लिंक किया गया"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__location
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "Location"
+msgstr "जगह"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "Logo"
+msgstr "लोगो"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__template_id
+msgid "Mail Template"
+msgstr "मेल टेंप्लेट"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__mail_tz
+msgid "Mail Tz"
+msgstr "मेल टीज़ेड"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__tentative
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Maybe"
+msgstr "शायद"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_filters__user_id
+msgid "Me"
+msgstr "मैं"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__mail_activity_type__category__meeting
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Meeting"
+msgstr "मीटिंग"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__name
+msgid "Meeting Subject"
+msgstr "मीटिंग का विषय"
+
+#. module: calendar
+#: model:ir.actions.act_window,name:calendar.action_calendar_event_type
+#: model:ir.ui.menu,name:calendar.menu_calendar_event_type
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
+msgid "Meeting Types"
+msgstr "मीटिंग टाइप"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_location
+msgid "Meeting URL"
+msgstr "मीटिंग यूआरएल"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__event_id
+msgid "Meeting linked"
+msgstr "मीटिंग लिंक है"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/res_partner.py:0
+#: model:ir.actions.act_window,name:calendar.action_calendar_event
+#: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_ids
+#: model:ir.model.fields,field_description:calendar.field_res_users__meeting_ids
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
+#: model_terms:ir.ui.view,arch_db:calendar.view_partners_form
+msgid "Meetings"
+msgstr "मीटिंग"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
+msgid "Message Delivery error"
+msgstr "मैसेज डिलीवरी में गड़बड़ी"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_ids
+msgid "Messages"
+msgstr "संदेश"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
+msgid "Microsoft Outlook icon"
+msgstr "Microsoft Outlook आइकॉन"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__minutes
+msgid "Minutes"
+msgstr "मिनट"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_name
+msgid "Model Description"
+msgstr "मॉडल का विवरण"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__mon
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__mon
+msgid "Mon"
+msgstr "सोम"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__mon
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__mon
+msgid "Monday"
+msgstr "सोमवार"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__month_by
+msgid "Month By"
+msgstr "महीने के हिसाब से"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__monthly
+msgid "Monthly"
+msgstr "महीने के हिसाब से"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__monthly
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__rrule_type__monthly
+msgid "Months"
+msgstr "महीने"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/calendar_form/calendar_quick_create.xml:0
+msgid "More Options"
+msgstr "ज़्यादा विकल्प"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "My Meetings"
+msgstr "मेरी मीटिंग"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__name
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__name
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__name
+msgid "Name"
+msgstr "नाम"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__needsaction
+msgid "Needs Action"
+msgstr "कार्रवाई की ज़रूरत है"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+msgid "New"
+msgstr "नया"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_ir_actions_server__activity_calendar_event_id
+#: model:ir.model.fields,field_description:calendar.field_ir_cron__activity_calendar_event_id
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_mixin__activity_calendar_event_id
+#: model:ir.model.fields,field_description:calendar.field_res_partner__activity_calendar_event_id
+#: model:ir.model.fields,field_description:calendar.field_res_users__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "अगली गतिविधि कैलेंडर इवेंट"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__declined
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "No"
+msgstr "नही"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "No I'm not going."
+msgstr "नहीं, मैं नहीं जा रहा।"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "No feedback yet"
+msgstr "अभी तक कोई फ़ीडबैक नहीं"
+
+#. module: calendar
+#: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
+msgid "No meetings found. Let's schedule one!"
+msgstr "कोई मीटिंग नहीं. चलिए, पहले एक मीटिंग शेड्यूल करते हैं!"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
+msgid "No, keep it"
+msgstr "नहीं, इसे रहने दें"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__notes
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "Notes"
+msgstr "नोट्स"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
+msgid "Notification"
+msgstr "नोटिफ़िकेशन"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_5
+msgid "Notification - 1 Days"
+msgstr "नोटिफ़िकेशन - 1 दिन"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_3
+msgid "Notification - 1 Hours"
+msgstr "नोटिफ़िकेशन - 1 घंटा"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_1
+msgid "Notification - 15 Minutes"
+msgstr "नोटिफ़िकेशन - 15 मिनट"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_4
+msgid "Notification - 2 Hours"
+msgstr "नोटिफ़िकेशन - 2 घंटे"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_2
+msgid "Notification - 30 Minutes"
+msgstr "नोटिफ़िकेशन - 30 मिनट"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__alarm_ids
+msgid "Notifications sent to all attendees to remind of the meeting."
+msgstr "मीटिंग की याद दिलाने के लिए सभी प्रतिभागियों को भेजी गई सूचनाएं।"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_alarm.py:0
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__notify_responsible
+msgid "Notify Responsible"
+msgstr "ज़िम्मेदार व्यक्ति को सूचित करें"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
+msgid "Number of Actions"
+msgstr "ऐक्शन की संख्या"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__count
+msgid "Number of Repetitions"
+msgstr "इवेंट को दोहराने की संख्या"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
+msgid "Number of errors"
+msgstr "गड़बड़ी की संख्या"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "ऐसे मैसेज की संख्या जिनपर कार्रवाई की ज़रूरत है"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "डिलीवरी में गड़बड़ी वाले मैसेज की संख्या"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__count
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__count
+msgid "Number of repetitions"
+msgstr "इवेंट को दोहराने की संख्या"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/js/services/calendar_notification_service.js:0
+msgid "OK"
+msgstr "ठीक है"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Online Meeting"
+msgstr "ऑनलाइन मीटिंग"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Only Internal Users"
+msgstr "सिर्फ़ इंटरनल यूज़र"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__confidential
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__confidential
+#: model:ir.model.fields.selection,name:calendar.selection__res_users_settings__calendar_default_privacy__confidential
+msgid "Only internal users"
+msgstr "सिर्फ़ इंटरनल यूज़र"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
+msgid "Option"
+msgstr "विकल्प"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_popover_delete_wizard__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the main partner's language will be used. This should "
+"usually be a placeholder expression that provides the appropriate language, "
+"e.g. {{ object.partner_id.lang }}."
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Options"
+msgstr "विकल्प"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "Organized by"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
+msgid "Organizer"
+msgstr "आयोजक"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_provider_config__external_calendar_provider__microsoft
+msgid "Outlook"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
+msgid "Outlook Calendar"
+msgstr "Outlook कैलेंडर"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_identifier
+msgid "Outlook Client Id"
+msgstr "Outlook क्लाइंट आईडी"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_secret
+msgid "Outlook Client Secret"
+msgstr "Outlook क्लाइंट सीक्रेट"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_sync_paused
+msgid "Outlook Synchronization Paused"
+msgstr "Outlook सिंक्रोनाइज़ेशन रोका गया"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
+msgid "Participant"
+msgstr "प्रतिभागी"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "Participants"
+msgstr "प्रतिभागी"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__partner_id
+msgid "Partner-related data of the user"
+msgstr "उपयोगकर्ता से संबंधित पार्टनर का डेटा"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__privacy
+msgid "People to whom this event will be visible."
+msgstr "वे लोग जिन्हें यह इवेंट दिखाई देगा।"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__phone
+msgid "Phone"
+msgstr "फ़ोन"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__privacy
+#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view
+#: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendar_default_privacy
+msgid "Privacy"
+msgstr "गोपनीयता"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__private
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__private
+#: model:ir.model.fields.selection,name:calendar.selection__res_users_settings__calendar_default_privacy__private
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Private"
+msgstr "प्राइवेट"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__private
+msgid "Private by default"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__public
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
+#: model:ir.model.fields.selection,name:calendar.selection__res_users_settings__calendar_default_privacy__public
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Public"
+msgstr "पब्लिक"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__public
+msgid "Public by default"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__recipient_ids
+msgid "Recipients"
+msgstr "रसीद"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type
+msgid "Recurrence"
+msgstr "रिकरेंस"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__recurrence_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_id
+msgid "Recurrence Rule"
+msgstr "दोहराने का नियम"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__end_type
+msgid "Recurrence Termination"
+msgstr "दोहराव की समाप्ति"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_update
+msgid "Recurrence Update"
+msgstr "दोहराब के बारे में अपडेट"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrency
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Recurrent"
+msgstr "दोहराव"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule
+msgid "Recurrent Rule"
+msgstr "दोहराव का नियम"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration
+msgid "Remind Before"
+msgstr "इससे पहले याद दिलाएं"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__alarm_ids
+#: model:ir.ui.menu,name:calendar.calendar_submenu_reminders
+msgid "Reminders"
+msgstr "रिमाइंडर"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__render_model
+msgid "Rendering Model"
+msgstr "रेंडरिंग मॉडल"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type_ui
+msgid "Repeat"
+msgstr "दोहराएं"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__interval
+msgid "Repeat On"
+msgstr "इस समय दोहराएं"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__until
+msgid "Repeat Until"
+msgstr "तक दोहराएं"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Repeat every"
+msgstr "दोहराएं"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__interval
+msgid "Repeat every (Days/Week/Month/Year)"
+msgstr "हर (दिन/सप्ताह/महीना/साल) दोहराएं"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__count
+msgid "Repeat x times"
+msgstr "x बार दोहराएं"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/activity/activity_patch.xml:0
+msgid "Reschedule"
+msgstr "फिर से शेड्यूल करें"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Responsible"
+msgstr "जिम्मेदार"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__rrule
+msgid "Rrule"
+msgstr "नियम"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__rrule_type
+msgid "Rrule Type"
+msgstr "नियम के प्रकार"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__sat
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__sat
+msgid "Sat"
+msgstr "शनि"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__sat
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__sat
+msgid "Saturday"
+msgstr "शनिवार"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
+msgid "Schedule"
+msgstr "शेड्यूल बनाने की सुविधा"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
+msgid "Schedule a meeting in your calendar"
+msgstr "अपने कैलेंडर में मीटिंग शेड्यूल करें"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
+msgid "Scheduled by"
+msgstr "इन्होंने शेड्यूल किया"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/wizard/mail_activity_schedule.py:0
+msgid ""
+"Scheduling an activity using the calendar is not possible on more than one "
+"record."
+msgstr ""
+"कैलेंडर का इस्तेमाल करके एक से ज़्यादा रिकॉर्ड पर किसी एक्टिविटी को शेड्यूल करना संभव नहीं है।"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Search Meetings"
+msgstr "मीटिंग खोजें"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__2
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__2
+msgid "Second"
+msgstr "दूसरा"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Select attendees..."
+msgstr "प्रतिभागी चुनें..।"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Send Email to attendees"
+msgstr "प्रतिभागियों को ईमेल भेजें"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Send Invitations"
+msgstr "न्योता भेजें"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
+msgid "Send Mail"
+msgstr "मेल भेजें"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
+msgid "Send and delete"
+msgstr "भेजें और मिटाएं"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Send email"
+msgstr "ईमेल भेजें"
+
+#. module: calendar
+#: model:mail.template,description:calendar.calendar_template_meeting_reminder
+msgid "Sent to all attendees if a reminder is set"
+msgstr "अगर रिमाइंडर सेट किया गया है, तो सभी प्रतिभागी को भेजा जाता है"
+
+#. module: calendar
+#: model:mail.template,description:calendar.calendar_template_meeting_changedate
+msgid "Sent to all attendees if the schedule change"
+msgstr "अगर शेड्यूल में बदलाव होता है, तो सभी प्रतिभागी को भेजा जाता है"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid ""
+"Set whether you're available for other simultaneous events and the privacy "
+"of this event to others. Manage your default privacy in your user "
+"preferences."
+msgstr ""
+
+#. module: calendar
+#: model:ir.actions.act_window,name:calendar.calendar_settings_action
+#: model:ir.ui.menu,name:calendar.menu_calendar_settings
+msgid "Settings"
+msgstr "कॉन्फ़िगरेशन"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__should_show_status
+msgid "Should Show Status"
+msgstr "स्टेटस दिखाना चाहिए"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
+msgid "Show as"
+msgstr "के तौर पर दिखाएं"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/js/services/calendar_notification_service.js:0
+msgid "Snooze"
+msgstr "स्नूज़ करें"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__start
+msgid "Start"
+msgstr "प्रारंभ"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__start_date
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
+msgid "Start Date"
+msgstr "प्रारंभ दिनांक"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__start
+msgid "Start date of an event, without time for full days events"
+msgstr "किसी इवेंट के शुरू होने की तारीख, पूरे दिन के इवेंट के लिए समय के बिना"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__state
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Status"
+msgstr "स्थिति"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Status:"
+msgstr "स्थिति:"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__stop
+msgid "Stop"
+msgstr "रोकें"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__stop
+msgid "Stop date of an event, without time for full days events"
+msgstr "किसी इवेंट के खत्म होने की तारीख, पूरे दिन के इवेंट के लिए समय के बिना"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+msgid "Stop synchro"
+msgstr "सिंक्रोनाइज़ेशन रोकें"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__subject
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
+#: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
+msgid "Subject"
+msgstr "विषय"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
+msgid "Submit"
+msgstr "सबमिट करें"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__sun
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__sun
+msgid "Sun"
+msgstr "रवि"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__sun
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__sun
+msgid "Sunday"
+msgstr "रविवार"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+msgid "Synchro is paused"
+msgstr "सिंक्रोनाइज़ेशन रूका हुआ है"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+msgid "Synchronize with"
+msgstr "के साथ सिंक्रोनाइज़ करें"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
+msgid "Synchronize your calendar with Google Calendar"
+msgstr "अपने कैलेंडर को Google कैलेंडर से सिंक करें"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
+msgid "Synchronize your calendar with Outlook"
+msgstr "अपने कैलेंडर को Outlook से सिंक करें"
+
+#. module: calendar
+#: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
+msgid "Tag name already exists!"
+msgstr "टैग नाम पहले से ही मौजूद है!"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
+msgid "Tags"
+msgstr "टैग"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_alarm__mail_template_id
+msgid "Template used to render mail reminder content."
+msgstr "मेल रिमाइंडर के कॉन्टेंट को रेंडर करने के लिए इस्तेमाल किया जाने वाला टेंप्लेट।"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "Tentative"
+msgstr "संभावित"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__tentative_count
+msgid "Tentative Count"
+msgstr "संभावित संख्या"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "The"
+msgstr "दी"
+
+#. module: calendar
+#: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
+msgid ""
+"The calendar is shared between employees and fully integrated with\n"
+"            other applications such as the employee leaves or the business\n"
+"            opportunities."
+msgstr ""
+"कैलेंडर कर्मचारियों के बीच शेयर किया जाता है और पूरी तरह\n"
+"             से अन्य ऐप्लिकेशन के साथ इंटिग्रेट किया गया है, जैसे कर्मचारी की छुट्टियां या\n"
+"            बिज़नेस के अवसर।"
+
+#. module: calendar
+#: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
+msgid "The day must be between 1 and 31"
+msgstr "दिन 1 और 31 के बीच होना चाहिए"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid ""
+"The ending date and time cannot be earlier than the starting date and time.\n"
+"Meeting “%(name)s” starts at %(start_time)s and ends at %(end_time)s"
+msgstr ""
+"खत्म होने की तारीख और समय, शुरू होने की तारीख और समय से पहले नहीं हो सकता.\n"
+"मीटिंग “%(name)s” %(start_time)s बजे शुरू होती है और %(end_time)s बजे खत्म होती है"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid ""
+"The ending date cannot be earlier than the starting date.\n"
+"Meeting “%(name)s” starts on %(start_date)s and ends on %(end_date)s"
+msgstr ""
+"खत्म होने की तारीख, शुरू होने की तारीख से पहले नहीं हो सकती.\n"
+"मीटिंग “%(name)s” %(start_date)s को शुरू होती है और %(end_date)s को खत्म होती है"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+msgid "The interval cannot be negative."
+msgstr "दो मीटिंग के बीच का समय माइनस में नहीं हो सकता।"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+msgid "The number of repetitions cannot be negative."
+msgstr "दोहराव की संख्या निगेटिव नहीं हो सकती।"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "There are no attendees on these events"
+msgstr "इन इवेंट में कोई प्रतिभागी नहीं हैं"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__3
+msgid "Third"
+msgstr "तीसरा"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
+msgid "This and following events"
+msgstr "यह और आने वाले इवेंट"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__self_only
+msgid "This event"
+msgstr "यह इवेंट"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__thu
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__thu
+msgid "Thu"
+msgstr "गुरू"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__thu
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__thu
+msgid "Thursday"
+msgstr "गुरूवार"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__event_tz
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__event_tz
+msgid "Timezone"
+msgstr "टाइमज़ोन"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_attendee__mail_tz
+msgid "Timezone used for displaying time in the mail template"
+msgstr "मेल टेंप्लेट में समय दिखाने के लिए इस्तेमाल किया जाने वाला टाइमज़ोन"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/res_users.py:0
+msgid "Today's Meetings"
+msgstr "आज की मीटिंग"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__trigger_id
+msgid "Trigger"
+msgstr "ट्रिगर"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__tue
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__tue
+msgid "Tue"
+msgstr "मंगल"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__tue
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__tue
+msgid "Tuesday"
+msgstr "मंगलवार"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__alarm_type
+msgid "Type"
+msgstr "प्रकार"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "Unable to save the recurrence with \"This Event\""
+msgstr "बार-बार होने वाले “इस इवेंट” को सेव नहीं कर सकते"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__unavailable_partner_ids
+msgid "Unavailable Attendees"
+msgstr "ऐसे प्रतिभागी जो उपलब्ध नहीं है"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Uncertain"
+msgstr "अनिश्चित"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__interval
+msgid "Unit"
+msgstr "यूनिट"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__until
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Until"
+msgstr "जबतक"
+
+#. module: calendar
+#: model:mail.template,description:calendar.calendar_template_delete_event
+#: model:mail.template,description:calendar.calendar_template_meeting_update
+msgid "Used to manually notify attendees"
+msgstr "प्रतिभागी को मैन्युअल रूप से सूचित करने के लिए इस्तेमाल किया जाता है"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_res_users
+msgid "User"
+msgstr "उपयोगकर्ता"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__user_can_edit
+msgid "User Can Edit"
+msgstr "उपयोगकर्ता बदलाव कर सकते हैं"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_res_users_settings
+msgid "User Settings"
+msgstr "यूज़र सेटिंग"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "User default"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Video Link"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_source
+msgid "Videocall Source"
+msgstr "वीडियोकॉल का सोर्स"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "Visibility"
+msgstr "विज़िबिलिटी"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__wed
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__wed
+msgid "Wed"
+msgstr "बुध"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__wed
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__wed
+msgid "Wednesday"
+msgstr "बुधवार"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__weekday
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__weekday
+msgid "Weekday"
+msgstr "रविवार को छोड़कर कोई दिन"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__weekly
+msgid "Weekly"
+msgstr "साप्ताहिक"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__weekly
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__rrule_type__weekly
+msgid "Weeks"
+msgstr "सप्ताह"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__description
+msgid ""
+"When synchronization with an external calendar is active, this description "
+"is synchronized         with the one of the associated meeting in that "
+"external calendar. Any update will be propagated there         and vice "
+"versa."
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__effective_privacy
+msgid "Whether the event is private, considering the user privacy"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__yearly
+msgid "Yearly"
+msgstr "सालान"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__yearly
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__rrule_type__yearly
+msgid "Years"
+msgstr "साल"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__accepted
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Yes"
+msgstr "हाँ"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "Yes I'm going."
+msgstr "हां, मैं जा रहा हूं।"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/res_users.py:0
+msgid ""
+"You are not allowed to change the calendar default privacy of another user "
+"due to privacy constraints."
+msgstr ""
+"निजता से जुड़ी पाबंदियों के कारण, आपको किसी दूसरे उपयोगकर्ता की कैलेंडर की डिफ़ॉल्ट निजता "
+"बदलने की अनुमति नहीं है।"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+msgid "You can't update a recurrence without base event."
+msgstr "आप बेस इवेंट के बिना दोहराव को अपडेट नहीं कर सकते।"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_attendee.py:0
+msgid "You cannot duplicate a calendar attendee."
+msgstr "आप किसी कैलेंडर प्रतिभागी को डुप्लिकेट नहीं कर सकते।"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+msgid "You have to choose at least one day in the week"
+msgstr "आपको हफ़्ते में कम से कम एक दिन चुनना होगा"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_renderer.xml:0
+msgid "You're alone in this meeting"
+msgstr "आप मीटिंग में अकेले हैं"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
+msgid "accepted"
+msgstr "स्वीकार किया गया"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
+msgid "attendees"
+msgstr "प्रतिभागी"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
+msgid "declined"
+msgstr "अस्वीकार किया गया"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "e.g. Business Lunch"
+msgstr "जैसे, बिज़नेस लंच"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "e.g: 12/31/2023"
+msgstr "जैसे, 31/12/2023"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/fields/attendee_tags_list.xml:0
+msgid "no email"
+msgstr "कोई ईमेल नहीं"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
+msgid "props.placeholder"
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/fields/attendee_tags_list.xml:0
+msgid "unavailable"
+msgstr "उपलब्ध नहीं"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
+msgid "uncertain"
+msgstr "तय नहीं"
+
+#. module: calendar
+#: model:mail.template,subject:calendar.calendar_template_meeting_reminder
+msgid "{{ object.event_id.name }} - Reminder"
+msgstr "{{ object.event_id.name }} - रिमाइंडर"
+
+#. module: calendar
+#: model:mail.template,subject:calendar.calendar_template_meeting_changedate
+msgid "{{ object.event_id.name }}: Date updated"
+msgstr "{{ object.event_id.name }}: तारीख अपडेट किया गया"
+
+#. module: calendar
+#: model:mail.template,subject:calendar.calendar_template_meeting_update
+msgid "{{object.name}}: Event update"
+msgstr "{{object.name}}: इवेंट अपडेट"
+
+#~ msgid "Accepted"
+#~ msgstr "स्वीकार किए जाते हैं"

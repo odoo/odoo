@@ -1,0 +1,1608 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mail_group
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-09-14 21:11+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/"
+"mail_group/da/>\n"
+"Language: da\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+msgid "#Members"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+msgid "#Messages"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+msgid "#To Review"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid ") <span invisible=\"not send_email\">and send them an email</span>."
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid ""
+"<br/>\n"
+"                    Get the conversation started by sending an email to"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "<br/> You'll be notified as soon as some new content is posted."
+msgstr ""
+
+#. module: mail_group
+#: model:mail.template,body_html:mail_group.mail_template_list_subscribe
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hello,<br/><br/>\n"
+"                You have requested to be subscribed to the mailing list "
+"<strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                To confirm, please visit the following link: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"                If this was a mistake or you did not requested this action, "
+"please ignore this message.\n"
+"            </div>\n"
+"        "
+msgstr ""
+
+#. module: mail_group
+#: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hello,<br/><br/>\n"
+"                You have requested to be unsubscribed to the mailing list "
+"<strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                To confirm, please visit the following link: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"                <br/><br/>\n"
+"                If this was a mistake or you did not requested this action, "
+"please ignore this message.\n"
+"            </div>\n"
+"        "
+msgstr ""
+
+#. module: mail_group
+#: model:mail.template,body_html:mail_group.mail_template_guidelines
+msgid ""
+"<div>\n"
+"                <p>Hello <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
+"                <p>Please find below the guidelines of the <t t-"
+"out=\"object.mail_group_id.name\"/> mailing list.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
+"or ''\"/></p>\n"
+"            </div>\n"
+"        "
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_footer
+msgid ""
+"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr ""
+"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_name
+msgid ""
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
+"title=\"Traffic\"/>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
+"title=\"Recipients\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Modtagere\" "
+"title=\"Modtagere\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid ""
+"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
+"title=\"Previous message\"/>"
+msgstr ""
+"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
+"title=\"Previous message\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid ""
+"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Next message\" "
+"title=\"Next message\"/>"
+msgstr ""
+"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Next message\" "
+"title=\"Next message\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+msgid ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show attachments\" "
+"title=\"Show attachments\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show attachments\" "
+"title=\"Show attachments\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
+"title=\"Show replies\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
+"title=\"Show replies\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+msgid ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide "
+"attachments\" title=\"Hide attachments\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide "
+"attachments\" title=\"Hide attachments\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
+"title=\"Hide replies\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
+"title=\"Hide replies\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid "<span class=\"bg-warning\">Pending</span>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid ""
+"<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != "
+"'allow'\">Whitelisted</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" "
+"invisible=\"author_moderation != 'ban'\">Banned</span>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_footer
+msgid "<span class=\"mx-2\">-</span>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
+msgid "<span>By thread</span>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"<span>No Mail Group yet.</span>\n"
+"                    <br/>"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_defaults
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr ""
+"En Python-ordbog, der vil blive evalueret for at angive standardværdier, når "
+"du opretter nye poster til dette alias."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Accept"
+msgstr "Godkend"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__accepted
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid "Accepted"
+msgstr "Godkendt"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__action
+msgid "Action"
+msgstr "Handling"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__active
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid ""
+"Add this email address to white list of people and accept all pending "
+"messages from the same author."
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_id
+msgid "Alias"
+msgstr "Alias"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_contact
+msgid "Alias Contact Security"
+msgstr "Alias kontakt sikkerhed"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain_id
+msgid "Alias Domain"
+msgstr "Alias domæne"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain
+msgid "Alias Domain Name"
+msgstr "Alias domænenavn"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_full_name
+msgid "Alias Email"
+msgstr "Alias e-mail"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_name
+msgid "Alias Name"
+msgstr "Alias navn"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_status
+msgid "Alias Status"
+msgstr "Alias status"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_status
+msgid "Alias status assessed on the last message received."
+msgstr "Alias status vurderet ud fra den seneste modtagne besked."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_model_id
+msgid "Aliased Model"
+msgstr "Aliased model"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "All messages of this group"
+msgstr "Alle beskeder i denne gruppe"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Allowed Emails"
+msgstr "Tilladte emails"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Alone we can do so little, together we can do so much"
+msgstr "Alene kan vi gøre så lidt, sammen kan vi gøre så meget"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__allow
+msgid "Always Allow"
+msgstr "Tillad altid"
+
+#. module: mail_group
+#. odoo-javascript
+#: code:addons/mail_group/static/src/interactions/mail_group.js:0
+msgid "An email with instructions has been sent."
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+msgid "Archived"
+msgstr "Arkiveret"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
+msgid "Archives"
+msgstr "Arkiverede"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__attachment_ids
+msgid "Attachments"
+msgstr "Vedhæftede filer"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_id
+msgid "Author"
+msgstr "Forfatter"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_moderation
+msgid "Author Moderation Status"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group_message__author_id
+msgid ""
+"Author of the message. If not set, email_from may hold an email address that "
+"did not match any partner."
+msgstr ""
+"Forfatter af beskeden. Hvis ikke angivet, kan email_from indeholde en mail-"
+"addresse der ikke stemte overens med nogen partner."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__access_group_id
+msgid "Authorized Group"
+msgstr "Autoriseret gruppe"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify
+msgid "Automatic notification"
+msgstr "Automatiseret notifikation"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message_reject__action__ban
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Ban"
+msgstr "Banlys"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Ban the author of the message ("
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid ""
+"Ban this email address and reject all pending messages from the same author "
+"and send an email to the author"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__ban
+msgid "Banned"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Banned Emails"
+msgstr "Banlyste emails"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
+msgid "By date"
+msgstr "Efter dato"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__can_manage_group
+msgid "Can Manage"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__can_manage_group
+msgid "Can manage the members"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_child_ids
+msgid "Children"
+msgstr "Underkonti"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Choose or configure a custom domain"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_name
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Closed"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__is_closed
+msgid ""
+"Closed groups might still be accessed, but emails sent to it will bounce"
+msgstr ""
+
+#. module: mail_group
+#: model:mail.template,subject:mail_group.mail_template_list_subscribe
+msgid "Confirm subscription to {{ object.name }}"
+msgstr ""
+
+#. module: mail_group
+#: model:mail.template,subject:mail_group.mail_template_list_unsubscribe
+msgid "Confirm unsubscription to {{ object.name }}"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__body
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__body
+msgid "Contents"
+msgstr "Indhold"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
+msgid "Create a Mail Group"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Create a new group"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_uid
+msgid "Created by"
+msgstr "Oprettet af"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__create_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__create_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_date
+msgid "Created on"
+msgstr "Oprettet den"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__is_moderator
+msgid "Current user is a moderator of the group"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_bounced_content
+msgid "Custom Bounced Message"
+msgstr "Tilpasset Ikke modtaget Besked"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_defaults
+msgid "Default Values"
+msgstr "Standardværdier"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__description
+msgid "Description"
+msgstr "Beskrivelse"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Discard"
+msgstr "Kassér"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__display_name
+msgid "Display Name"
+msgstr "Vis navn"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__email
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_tree
+msgid "Email"
+msgstr "E-mail"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Email %s is invalid"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_email
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Email Alias"
+msgstr "E-mail alias"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__email_from_normalized
+msgid "Email From"
+msgstr "Email fra"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group_message__email_from
+msgid ""
+"Email address of the sender. This field is set when no matching partner is "
+"found and replaces the author_id field in the chatter."
+msgstr ""
+"Email adresse tilhørende afsender. Dette felt er sat når ingen matchende "
+"partner kan findes, og erstatter author_id feltet i chatter'en."
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "E-mail domæne f.eks. 'example.com' i 'odoo@example.com'"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Emails"
+msgstr "E-mail"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Emails waiting an action for this group"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__public
+msgid "Everyone"
+msgstr "Alle"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid "Follow-Ups"
+msgstr "Opfølgninger"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid "From"
+msgstr "Fra"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__mail_group_id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__mail_group_id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__mail_group_id
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Group"
+msgstr "Gruppe"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid "Group Message"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Group Name"
+msgstr "Gruppenavn"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+msgid "Group message can only be linked to mail group. Current model is %s."
+msgstr ""
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/controllers/portal.py:0
+msgid "Groups"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Guidelines"
+msgstr "Retningslinjer"
+
+#. module: mail_group
+#: model:mail.template,subject:mail_group.mail_template_guidelines
+msgid "Guidelines of group {{ object.mail_group_id.name }}"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+msgid "Hello"
+msgstr "Hej"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.email_template_mail_group_closed
+msgid ""
+"Hello there,\n"
+"    <br/><br/>\n"
+"    The mailing list you are trying to reach has been closed, and will not "
+"accept new messages.\n"
+"    <br/><br/>\n"
+"    Kind Regards,"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__id
+msgid "ID"
+msgstr "ID"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_thread_id
+msgid ""
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
+msgstr ""
+"ID for overordnet record indeholdende aliaset (eksempel: projekt, der "
+"indeholder opgaveoprettelses aliaset)"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_bounced_content
+msgid ""
+"If set, this content will automatically be sent out to unauthorized users "
+"instead of the default message."
+msgstr ""
+"Hvis angivet vil dette indhold automatisk blive sendt ud til uautoriserede "
+"brugere, i stedet for standard beskeden."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__image_128
+msgid "Image"
+msgstr "Billede"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Invalid action for URL generation (%s)"
+msgstr ""
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_moderation.py:0
+msgid "Invalid email address “%s”"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.invalid_token_subscription
+msgid "Invalid or expired confirmation link."
+msgstr "Ugyldigt eller udløbet bekræftelseslink."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Is Allowed"
+msgstr "Er tilladt"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Is Banned"
+msgstr "Er banlyst"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__is_closed
+msgid "Is Closed"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__is_group_moderated
+msgid "Is Group Moderated"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__is_member
+msgid "Is Member"
+msgstr "Er medlem"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+msgid "Join"
+msgstr "Deltag"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__write_uid
+msgid "Last Updated by"
+msgstr "Sidst opdateret af"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__write_date
+msgid "Last Updated on"
+msgstr "Sidst opdateret den"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+msgid "Leave"
+msgstr "Forlad"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
+msgid "Let people subscribe to your list online or manually add them here."
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_incoming_local
+msgid "Local-part based incoming detection"
+msgstr "Lokal-del baseret indgående detektion"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Mail Group"
+msgstr "Distributionsliste"
+
+#. module: mail_group
+#: model:res.groups,name:mail_group.group_mail_group_manager
+msgid "Mail Group Administrator"
+msgstr ""
+
+#. module: mail_group
+#: model:mail.template,name:mail_group.mail_template_list_subscribe
+msgid "Mail Group: Mailing List Subscription"
+msgstr ""
+
+#. module: mail_group
+#: model:mail.template,name:mail_group.mail_template_list_unsubscribe
+msgid "Mail Group: Mailing List Unsubscription"
+msgstr ""
+
+#. module: mail_group
+#: model:mail.template,name:mail_group.mail_template_guidelines
+msgid "Mail Group: Send Guidelines"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_action
+#: model:ir.ui.menu,name:mail_group.mail_group_menu
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+msgid "Mail Groups"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.actions.server,name:mail_group.ir_cron_mail_notify_group_moderators_ir_actions_server
+msgid "Mail List: Notify group moderators"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__mail_message_id
+msgid "Mail Message"
+msgstr "Mail besked"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_member
+msgid "Mailing List Member"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_message
+msgid "Mailing List Message"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_moderation
+msgid "Mailing List black/white list"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.portal_breadcrumbs_group
+msgid "Mailing Lists"
+msgstr "Adresselister"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
+msgid ""
+"Mailing groups are communities that like to discuss a specific topic "
+"together."
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+msgid "Mailing-List:"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_member_action
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__member_ids
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Members"
+msgstr "Medlemmer"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__member_count
+msgid "Members Count"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Members of this group"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__members
+msgid "Members only"
+msgstr "Kun for medlemmer"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__mail_group_message_id
+msgid "Message"
+msgstr "Besked"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_message_reject_action
+msgid "Message Rejection Explanation"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_message_action
+msgid "Messages"
+msgstr "Beskeder"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_count
+msgid "Messages Count"
+msgstr "Antal beskeder"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_last_month_count
+msgid "Messages Per Month"
+msgstr ""
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Messages are pending moderation"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_moderation_count
+msgid "Messages that need an action"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
+msgid "Moderate"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+msgid "Moderate Messages"
+msgstr "Moderer beskeder"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+msgid "Moderated"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderator_id
+msgid "Moderated By"
+msgstr "Modereret af"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_ids
+msgid "Moderated Emails"
+msgstr "Modererede emails"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_count
+msgid "Moderated emails count"
+msgstr "Modereret antal emails"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Moderated emails in this group"
+msgstr ""
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Moderated group must have moderators."
+msgstr ""
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_moderation_action
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+msgid "Moderation"
+msgstr "Moderering"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_tree
+msgid "Moderation Lists"
+msgstr "Modereringsliste"
+
+#. module: mail_group
+#: model:ir.ui.menu,name:mail_group.mail_group_moderation_menu
+msgid "Moderation Rules"
+msgstr "Modereringsregler"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Moderations"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__is_moderator
+msgid "Moderator"
+msgstr "Moderator"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderator_ids
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Moderators"
+msgstr "Moderatorer"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Moderators must have an email address."
+msgstr "Moderatorer skal have en email adresse."
+
+#. module: mail_group
+#: model:mail.group,name:mail_group.mail_group_1
+msgid "My Company News"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__name
+msgid "Name"
+msgstr "Navn"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"Need to unsubscribe? <br/>It's right here! <span class=\"oi fa-2x oi-arrow-"
+"down float-end\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__moderation_guidelines
+msgid ""
+"Newcomers on this moderated group will automatically receive the guidelines."
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
+msgid "No Members in this list yet!"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
+msgid "No Messages in this list yet!"
+msgstr "Ingen beskeder på denne liste endnu!"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email_normalized
+msgid "Normalized Email"
+msgstr "Normaliseret email"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from_normalized
+msgid "Normalized From"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify_msg
+msgid "Notification message"
+msgstr "Notifikation besked"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Notify Members"
+msgstr "Underret medlemmer"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_count
+msgid "Number of message in this group"
+msgstr ""
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid ""
+"Only an administrator or a moderator can send guidelines to group members."
+msgstr ""
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Only members can send email to the mailing list."
+msgstr ""
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Only selected groups of users can send email to the mailing list."
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid "Oops, there are no messages here."
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
+msgid ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
+msgstr ""
+"Valgfri ID for en tråd (record), som alle indgående meddelelser vil blive "
+"vedhæftet, selvom de ikke svarede på det. Hvis opsat, vil dette fuldstændigt "
+"deaktivere oprettelsen af nye poster."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_parent_id
+msgid "Parent"
+msgstr "Overordnet"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_model_id
+msgid "Parent Model"
+msgstr "Overordnet model"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_thread_id
+msgid "Parent Record Thread ID"
+msgstr "Overordnet tråd (record) ID"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_model_id
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+"Den overordnede model for aliasset. Denne model, som indeholder "
+"aliasreferencen, er ikke nødvendigvis den samme som den model, der er "
+"angivet i alias_model_id (f.eks. projekt (parent_model) og opgave (model))"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__partner_id
+msgid "Partner"
+msgstr "Kontakt"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__member_partner_ids
+msgid "Partners Member"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_ids
+msgid "Pending Messages"
+msgstr "Afventende beskeder"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_moderation_count
+msgid "Pending Messages Count"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__pending_moderation
+msgid "Pending Moderation"
+msgstr "Afventende moderation"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__moderation_notify
+msgid ""
+"People receive an automatic notification about their message being waiting "
+"for moderation."
+msgstr ""
+"Folk modtager en automatisk notifikation om, at deres besked afventer "
+"moderering."
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__ban
+msgid "Permanent Ban"
+msgstr "Permanent banlysning"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
+msgstr ""
+"Politik til at oprette en besked på dokumentet ved hjælp af mailgatewayen.\n"
+"- alle: alle kan skrive\n"
+"- partnere: kun godkendte partnere\n"
+"- følgere: kun følgere af det relaterede dokument eller medlemmer af "
+"følgende kanaler\n"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+msgid "Post to:"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_date
+msgid "Posted"
+msgstr "Bogført"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__access_mode
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Privacy"
+msgstr "Adgang"
+
+#. module: mail_group
+#: model:mail.group,name:mail_group.mail_group_2
+msgid "Public Mailing List"
+msgstr ""
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/wizard/mail_group_message_reject.py:0
+msgid "Re: %s"
+msgstr "Re: %s"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_force_thread_id
+msgid "Record Thread ID"
+msgstr "Optag tråd ID"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid "Reference"
+msgstr "Reference"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message_reject__action__reject
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Reject"
+msgstr "Afvis"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_message_reject
+msgid "Reject Group Message"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Reject Silently"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Reject the message"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__rejected
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid "Rejected"
+msgstr "Afvist"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Remove message with explanation"
+msgstr "Fjern besked med forklaring"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Responsibles"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
+msgid "Search Group Message"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_search
+msgid "Search Mail Group Member"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+msgid "Search Mail group"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Search Moderation List"
+msgstr "Søg Moderations liste"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Select users"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
+msgid "Selected group of users"
+msgstr "Valgte gruppe af brugere"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Send"
+msgstr "Send"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Send & Ban"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Send & Reject"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__send_email
+msgid "Send Email"
+msgstr "Send e-mail"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group_message_reject__send_email
+msgid "Send an email to the author of the message"
+msgstr "Send en email til forfatteren af beskeden"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_compose_message_action_mail_group
+msgid "Send email"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
+msgid "Send guidelines to new members"
+msgstr ""
+
+#. module: mail_group
+#: model:mail.template,description:mail_group.mail_template_guidelines
+msgid "Sent to people who subscribed to a mailing group with group guidelines"
+msgstr ""
+
+#. module: mail_group
+#: model:mail.template,description:mail_group.mail_template_list_unsubscribe
+msgid "Sent to people who unsubscribed from a mailing group"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__status
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Status"
+msgstr "Status"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Stay in touch with our Community"
+msgstr "Hold kontakten med vores Community"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__subject
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__subject
+msgid "Subject"
+msgstr "Emne"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Subscribe"
+msgstr "Tilmeld"
+
+#. module: mail_group
+#: model:mail.template,description:mail_group.mail_template_list_subscribe
+msgid "Subscription confirmation to a mailing group"
+msgstr ""
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid ""
+"Template \"mail_group.mail_template_guidelines\" was not found. No email has "
+"been sent. Please contact an administrator to fix this issue."
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+msgid "Thank you!"
+msgstr "Mange tak!"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "The \"Authorized Group\" is missing."
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "The email"
+msgstr ""
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+msgid "The email \"%s\" is not valid."
+msgstr ""
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "The group of the message do not match."
+msgstr ""
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "The guidelines description is empty."
+msgstr ""
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "The guidelines description is missing."
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_model_id
+msgid ""
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
+msgstr ""
+"Modellen (Odoo Document Kind), som dette alias svarer til. Enhver indgående "
+"e-mail, der ikke svarer til en eksisterende post, vil medføre oprettelse af "
+"en ny rekord af denne model (f.eks. en projektopgave)"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_name
+msgid ""
+"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
+"<jobs@example.odoo.com>"
+msgstr ""
+"Navnet på e-mail aliaset, f.eks. 'jobs', hvis du vil fange e-mails til "
+"<jobs@example.odoo.com>"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "The notification message is missing."
+msgstr ""
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "The partner can not be found."
+msgstr "Partneren kan ikke findes."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+msgid "The record of the message should be the group."
+msgstr ""
+
+#. module: mail_group
+#. odoo-javascript
+#: code:addons/mail_group/static/src/interactions/mail_group.js:0
+msgid "This email is already subscribed."
+msgstr ""
+
+#. module: mail_group
+#. odoo-javascript
+#: code:addons/mail_group/static/src/interactions/mail_group.js:0
+msgid "This email is not subscribed."
+msgstr ""
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+msgid "This message can not be moderated"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.constraint,message:mail_group.constraint_mail_group_member_unique_partner
+msgid "This partner is already subscribed to the group"
+msgstr ""
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+msgid "Those messages can not be moderated: %s."
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "To Review"
+msgstr "Til gennemgang"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Unsubscribe"
+msgstr "Afmeld"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+msgid "Unsubscribe:"
+msgstr "Afmeld:"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
+msgid ""
+"When people send an email to the alias of the list, they will appear here."
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Whitelist"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__allow
+msgid "Whitelisted"
+msgstr ""
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+msgid "Wrong status (%s)"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.constraint,message:mail_group.constraint_mail_group_moderation_mail_group_email_uniq
+msgid "You can create only one rule for a given email address in a group."
+msgstr ""
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "You can not join a closed group."
+msgstr ""
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "You can not send guidelines for a closed group."
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+msgid "You have messages to moderate, please go for the proceedings."
+msgstr "Du har beskeder der skal modereres, gå venligst til sager."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+msgid "_______________________________________________"
+msgstr "_______________________________________________"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "alias"
+msgstr "alias"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "and send an email to the author ("
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+msgid "attachments"
+msgstr "Vedhæftninger"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_footer
+msgid "by"
+msgstr "af"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "e.g. \"Newsletter\""
+msgstr "f.eks. \"Nyhedsbrev\""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "e.g. \"This group is about ...\""
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "e.g. mycompany.com"
+msgstr "f.eks. mitfirma.com"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "e.g.\"Please be polite and ...\""
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
+msgid "group"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "has been"
+msgstr "har været"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "members<br/>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "messages / month"
+msgstr "beskeder/ pr. måned"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+msgid "messages to review"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid "more replies"
+msgstr "flere svar"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid "replies"
+msgstr "svar"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "subscribed to"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "the list"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "unsubscribed from"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "your email..."
+msgstr "din e-mail..."
+
+#~ msgid "Group By"
+#~ msgstr "Sortér efter"

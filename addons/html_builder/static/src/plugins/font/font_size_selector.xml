@@ -1,0 +1,7 @@
+<templates xml:space="preserve">
+    <t t-name="html_builder.FontSizeSelector" t-inherit="html_editor.FontSizeSelector">
+        <xpath expr="//DropdownItem" position="inside">
+            <span class="badge o-we-font-size-item-bg ms-3 float-end"><t t-out="fontSizeTags[item.variableName]"/></span>
+        </xpath>
+    </t>
+</templates>

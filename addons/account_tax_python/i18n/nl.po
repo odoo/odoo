@@ -1,0 +1,275 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_tax_python
+#
+# Translators:
+# Martin Trigaux, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-01-07 18:04+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
+"account_tax_python/nl/>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
+msgid ""
+"\n"
+"    - Group of Taxes: The tax is a set of sub taxes.\n"
+"    - Fixed: The tax amount stays the same whatever the price.\n"
+"    - Percentage: The tax amount is a % of the price:\n"
+"        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+"        e.g 110 / (1 + 10%) = 100 (price included)\n"
+"    - Percentage Tax Included: The tax amount is a division of the price:\n"
+"        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+"        e.g 200 * (1 - 10%) = 180 (price included)\n"
+"        "
+msgstr ""
+"\n"
+"    - Groep van btw's: de btw is een groep van deelbtw's.\n"
+"    - Vast: Het btw-bedrag is gelijk ongeacht de prijs.\n"
+"    - Percentage: Het btw-bedrag is een percentage van de prijs:\n"
+"        Bijv. 100 * (1 + 10%) = 110 (niet inbegrepen in de prijs)\n"
+"        Bijv. 110 / (1 + 10%) = 100 (Percentage van de prijs)\n"
+"    - Percentage is inclusief btw: Het btw-bedrag is een gedeelte van de "
+"prijs:\n"
+"        Bijv. 180 / (1 - 10%) = 200 (exclusief btw)\n"
+"        Bijv. 200 * (1 - 10%) = 180 (inclusief btw)\n"
+"        "
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
+msgid ""
+"Compute the amount of the tax.\n"
+"\n"
+":param base: float, actual amount on which the tax is applied\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: A object representing the product\n"
+msgstr ""
+"Bereken het btw-bedrag.\n"
+"\n"
+":param base: float, het werkelijke bedrag waarover de btw berekend wordt\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: een object dat het product weergeeft\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
+msgid "Custom Formula"
+msgstr "Aangepaste formule"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
+msgid "Display Name"
+msgstr "Weergavenaam"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Field '%s' is not accessible"
+msgstr "Veld '%s' is niet toegankelijk"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
+msgid "Formula"
+msgstr "Formule"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
+msgid "Formula Decoded Info"
+msgstr "Formule gedecodeerd"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Invalid AST node: %s"
+msgstr "Ongeldig AST-knooppunt: %s"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Invalid formula"
+msgstr "Ongeldige formule"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Kwargs are not allowed"
+msgstr "Kwargs zijn niet toegestaan"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only int, float or None are allowed as constant values"
+msgstr "Alleen int, float of Geen zijn toegestaan als constante waarden"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/models/account_tax.py:0
+msgid "Only primitive types are allowed in python tax formula context."
+msgstr ""
+"Alleen primitieve typen zijn toegestaan in python belastingformule context."
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only product['string'] or uom['string'] read-access is allowed"
+msgstr "Alleen product['string'] of uom['string'] leesrechten zijn toegestaan"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only read access to identifiers is allowed"
+msgstr "Alleen leestoegang tot identifiers is toegestaan"
+
+#. module: account_tax_python
+#: model:ir.model,name:account_tax_python.model_account_tax
+msgid "Tax"
+msgstr "Btw"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
+msgid "Tax Computation"
+msgstr "Btw-berekening"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Unknown function call"
+msgstr "Onbekende functie-aanroep"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Unknown identifier: %s"
+msgstr "Onbekende identificator: %s"
+
+#~ msgid "Only product['string'] read-access is allowed"
+#~ msgstr "Alleen product['string'] leestoegang is toegestaan"
+
+#~ msgid ""
+#~ "\n"
+#~ "    - Group of Taxes: The tax is a set of sub taxes.\n"
+#~ "    - Fixed: The tax amount stays the same whatever the price.\n"
+#~ "    - Percentage of Price: The tax amount is a % of the price:\n"
+#~ "        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+#~ "        e.g 110 / (1 + 10%) = 100 (price included)\n"
+#~ "    - Percentage of Price Tax Included: The tax amount is a division of "
+#~ "the price:\n"
+#~ "        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+#~ "        e.g 200 * (1 - 10%) = 180 (price included)\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "    - Groep van BTW's: de BTW is een set van sub BTW's.\n"
+#~ "    - Vast: Het BTW bedrag is gelijk ongeacht de prijs.\n"
+#~ "    - Percentage van prijs: Het BTW bedrag is een percentage van de "
+#~ "prijs:\n"
+#~ "        Bijv. 100 * (1 + 10%) = 110 (niet inbegrepen in de prijs)\n"
+#~ "        Bijv. 110 / (1 + 10%) = 100 (Percentage van de prijs)\n"
+#~ "    - Percentage van de prijs is inclusief BTW: Het BTW bedrag is een "
+#~ "gedeelte van de prijs:\n"
+#~ "        Bijv. 180 / (1 - 10%) = 200 (exclusief BTW)\n"
+#~ "        Bijv. 200 * (1 - 10%) = 180 (inclusief BTW)\n"
+#~ "        "
+
+#~ msgid "Applicable Code"
+#~ msgstr "Toepasbare code"
+
+#~ msgid ""
+#~ "Compute the amount of the tax by setting the variable 'result'.\n"
+#~ "\n"
+#~ ":param base_amount: float, actual amount on which the tax is applied\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res.company recordset singleton\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "Bereken het bedrag van de BTW door de variabele 'result' in te stellen.\n"
+#~ "\n"
+#~ ":param base_amount: float, het werkelijke bedrag waarover de BTW berekend "
+#~ "wordt\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res.company recordset singleton\n"
+#~ ":param product: product.product recordset singleton of None\n"
+#~ ":param relatie: res.relatie recordset singleton of None"
+
+#~ msgid ""
+#~ "Compute the amount of the tax by setting the variable 'result'.\n"
+#~ "\n"
+#~ ":param base_amount: float, actual amount on which the tax is applied\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "Bereken het bedrag van de BTW door de variabele 'result' in te stellen.\n"
+#~ "\n"
+#~ ":param base_amount: float, het werkelijke bedrag waarover de BTW berekend "
+#~ "wordt\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product recordset singleton of None\n"
+#~ ":param relatie: res.relatie recordset singleton of None"
+
+#~ msgid ""
+#~ "Determine if the tax will be applied by setting the variable 'result' to "
+#~ "True or False.\n"
+#~ "\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res.company recordset singleton\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "Bepaal of de BTW zal toegepast worden door de variabele 'result' op True "
+#~ "of False te plaatsen.\n"
+#~ "\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res.company recordset singleton\n"
+#~ ":param product: product.product recordset singleton of None\n"
+#~ ":param relatie: res.relatie recordset singleton of None"
+
+#~ msgid ""
+#~ "Determine if the tax will be applied by setting the variable 'result' to "
+#~ "True or False.\n"
+#~ "\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "Bepaal of de BTW zal toegepast worden door de variabele 'result' op True "
+#~ "of False te plaatsen.\n"
+#~ "\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product recordset singleton of None\n"
+#~ ":param relatie: res.relatie recordset singleton of None"
+
+#~ msgid "Python Code"
+#~ msgstr "Python code"
+
+#~ msgid "Templates for Taxes"
+#~ msgstr "Sjablonen voor BTW"

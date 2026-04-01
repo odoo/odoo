@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <record id="ir_cron_mail_notify_group_moderators" model="ir.cron">
+            <field name="name">Mail List: Notify group moderators</field>
+            <field name="model_id" ref="model_mail_group"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_notify_moderators()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="priority">1000</field>
+        </record>
+    </data>
+</odoo>

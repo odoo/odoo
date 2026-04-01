@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="spreadsheet.DefaultDateValue">
+        <Dropdown>
+            <input class="o_input w-100 o-date-filter-input" readonly="true" t-att-value="currentFormattedValue"/>
+            <t t-set-slot="content">
+                <t t-foreach="dateOptions" t-as="option" t-key="option.id">
+                    <DropdownItem class="{ 'selected': option.id === props.value }"
+                                  attrs="{ 'data-id': option.id }"
+                                  onSelected="() => props.update(option.id)">
+                        <span t-esc="option.label"/>
+                    </DropdownItem>
+                    <div class="dropdown-divider" t-if="option.separator"/>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

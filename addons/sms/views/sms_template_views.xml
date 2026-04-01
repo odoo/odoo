@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo><data>
+    <record id="sms_template_view_form" model="ir.ui.view">
+        <field name="name">sms.template.view.form</field>
+        <field name="model">sms.template</field>
+        <field name="arch" type="xml">
+            <form string="SMS Templates">
+                <header>
+                    <field name="template_fs" invisible="1"/>
+                    <button string="Reset Template"
+                            name="%(sms_template_reset_action)d" type="action"
+                            groups="base.group_system"
+                            invisible="not template_fs"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <field name="sidebar_action_id" invisible="1"/>
+                        <button name="action_create_sidebar_action" type="object"
+                                groups="base.group_no_one"
+                                class="oe_stat_button"
+                                invisible="sidebar_action_id" icon="fa-plus"
+                                help="Add a contextual action on the related model to open a sms composer with this template">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Add</span>
+                                <span class="o_stat_text">Context Action</span>
+                            </div>
+                        </button>
+                        <button name="action_unlink_sidebar_action" type="object"
+                                groups="base.group_no_one"
+                                class="oe_stat_button" icon="fa-minus"
+                                invisible="not sidebar_action_id"
+                                help="Remove the contextual action of the related model" widget="statinfo">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Remove</span>
+                                <span class="o_stat_text">Context Action</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" name="%(sms_template_preview_action)d" icon="fa-search-plus" type="action" target="new">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Preview</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="SMS Template"/>
+                        <h1><field name="name" placeholder="e.g. Calendar Reminder" required="1"/></h1>
+                        <group>
+                            <field name="model_id" placeholder="e.g. Contact" required="1" options="{'no_create': True}"/>
+                            <field name="model" invisible="1"/>
+                            <field name="lang" groups="base.group_no_one" placeholder="e.g. en_US or {{ object.partner_id.lang }}"/>
+                        </group>
+                    </div>
+                    <notebook>
+                        <page string="Content" name="content">
+                            <group>
+                                <field name="body" widget="sms_widget" nolabel="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sms_template_view_tree" model="ir.ui.view">
+        <field name="name">sms.template.view.list</field>
+        <field name="model">sms.template</field>
+        <field name="arch" type="xml">
+            <list string="SMS Templates">
+                <field name="name"/>
+                <field name="model_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="sms_template_view_search" model="ir.ui.view">
+        <field name="name">sms.template.view.search</field>
+        <field name="model">sms.template</field>
+        <field name="arch" type="xml">
+            <search string="Search SMS Templates">
+                <field name="name"/>
+                <field name="model_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="sms_template_action" model="ir.actions.act_window">
+        <field name="name">Templates</field>
+        <field name="res_model">sms.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="sms_template_menu"
+        name="SMS Templates"
+        parent="phone_validation.phone_menu_main"
+        sequence="2"
+        action="sms_template_action"/>
+
+</data></odoo>

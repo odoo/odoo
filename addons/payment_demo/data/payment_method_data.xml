@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment_method_demo" model="payment.method">
+        <field name="name">Demo</field>
+        <field name="code">demo</field>
+        <field name="sequence">1</field>
+        <field name="image" type="base64" file="payment_demo/static/img/demo.png"/>
+        <field name="support_tokenization">True</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">partial</field>
+    </record>
+
+</odoo>

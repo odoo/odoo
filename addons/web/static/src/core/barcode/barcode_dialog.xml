@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.BarcodeDialog">
+        <Dialog title.translate="Barcode Scanner" fullscreen="true" footer="false" contentClass="'o-barcode-modal'">
+            <BarcodeVideoScanner t-if="state.barcodeScannerSupported"
+                                 t-props="props" onError.bind="onError" onResult.bind="onResult"/>
+            <div t-else="" t-ref="videoPreview"
+                 class="h-100 d-flex flex-column justify-content-center align-items-center gap-1">
+                <i class="fa fa-2x fa-camera text-muted"></i>
+                <strong>Unable to access camera</strong>
+                <span class="text-muted" t-out="state.errorMessage"/>
+            </div>
+        </Dialog>
+    </t>
+</templates>

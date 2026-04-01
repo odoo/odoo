@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_loyalty.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
+        <xpath
+            expr="//t[@t-if='props.showRemainingButtons']/div/button[hasclass('o_pricelist_button')]"
+            position="before">
+            <t t-if="pos.models['loyalty.program'].some((p) => p.program_type == 'ewallet')">
+                <t t-set="_orderTotal" t-value="pos.getOrder().priceIncl" />
+                <t t-set="_eWalletPrograms" t-value="_getEWalletPrograms()" />
+                <t t-set="_eWalletRewards" t-value="_getEWalletRewards(pos.getOrder())" />
+                <button t-att-class="buttonClass"
+                    t-on-click="onClickWallet"
+                    t-attf-class="{{(_orderTotal lt 0 and _eWalletPrograms.length gte 1) or _eWalletRewards.length gte 1 ? 'highlight text-action': 'disabled'}}">
+                    <i class="fa fa-credit-card me-1" />
+                    <t t-if="_orderTotal lt 0 and _eWalletPrograms.length">eWallet Refund</t>
+                    <t t-elif="_eWalletRewards.length">eWallet Pay</t>
+                    <t t-else="">eWallet</t>
+                </button>
+            </t>
+            <t t-if="pos.models['loyalty.program'].some((p) => ['coupons', 'promotion', 'gift_card', 'promo_code', 'next_order_coupons'].includes(p.program_type))">
+                <button t-att-class="buttonClass"
+                    t-on-click="() => this.clickPromoCode()">
+                    <i class="fa fa-barcode me-1"/>Enter Code
+                </button>
+            </t>
+            <t t-if="pos.models['loyalty.program'].length and this.pos.cashier._role !== 'minimal'">
+                <button class="control-button"
+                    t-att-class="buttonClass"
+                    t-attf-class="{{state.nbrRewards ? 'highlight' : 'disabled'}}"
+                    t-on-click="() => this.clickRewards()">
+                    <i class="fa fa-star me-1 text-favourite"/>Reward
+                </button>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-if='props.showRemainingButtons']/div/button[hasclass('o_pricelist_button')]" position="before">
+            <t t-if="pos.models['loyalty.program'].some((p) => ['coupons', 'promotion'].includes(p.program_type)) and this.pos.cashier._role !== 'minimal'">
+                <button class="btn btn-secondary btn-lg py-5" t-att-class="{'disabled': !pos.getOrder().isProgramsResettable()}"
+                    t-on-click="() => this.pos.resetPrograms()">
+                    <i class="fa fa-star me-1"/>Reset Programs
+                </button>
+            </t>
+        </xpath>
+        <xpath expr="//button[hasclass('more-btn')]" position="attributes">
+            <attribute name="t-attf-class">{{ state.nbrRewards ? 'active text-action' : '' }}</attribute>
+        </xpath>
+    </t>
+</templates>

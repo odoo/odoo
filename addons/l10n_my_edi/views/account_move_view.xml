@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_move_form_inherit_l10n_my_myinvois" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n_my_myinvois</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="l10n_my_edi_document_ids" invisible="1"/>
+                <button name="action_show_myinvois_documents" type="object" class="oe_stat_button" icon="fa-file-text-o" invisible="not l10n_my_edi_document_ids">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">MyInvois<br/>Documents</span>
+                    </div>
+                </button>
+           </xpath>
+            <xpath expr="//widget[@name='web_ribbon']" position="before">
+                <widget name="web_ribbon" title="Processing" bg_color="text-bg-info" invisible="l10n_my_edi_state != 'in_progress'"/>
+                <widget name="web_ribbon" title="Rejected" bg_color="text-bg-warning" invisible="l10n_my_edi_state != 'rejected'"/>
+            </xpath>
+            <!-- We want the CTA to be primary only on invoices, and secondary on vendor bills. -->
+            <button name="action_invoice_sent" position="before">
+                <button name="action_l10n_my_edi_send_invoice" string="Send To MyInvois" type="object"
+                        groups="account.group_account_invoice"
+                        class="oe_highlight"
+                        invisible="not l10n_my_invoice_need_edi or l10n_my_edi_state or move_type not in ('out_invoice', 'out_refund')"/>
+            </button>
+            <button name="action_register_payment" position="after">
+                <button name="action_l10n_my_edi_send_invoice" string="Send To MyInvois" type="object"
+                        groups="account.group_account_invoice"
+                        invisible="not l10n_my_invoice_need_edi or l10n_my_edi_state or move_type not in ('in_invoice', 'in_refund')"/>
+            </button>
+            <xpath expr="//header" position="inside">
+                <!-- The invalid/cancelled states should be final. -->
+                <!-- This button is not needed on rejected invoices as it expects an action from the user -->
+                <button name="action_l10n_my_edi_update_status" string="Update MyInvois Status" type="object"
+                        groups="account.group_account_invoice"
+                        invisible="not l10n_my_edi_state or (l10n_my_edi_state not in ['in_progress', 'valid']) or (l10n_my_edi_state == 'rejected' and move_type not in ('out_invoice', 'out_refund'))"/>
+            </xpath>
+            <!-- Add the classification code to the invoice lines -->
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='name']" position="after">
+                <field name="l10n_my_edi_classification_code" optional="hide"/>
+            </xpath>
+            <!-- There are quite a few fields, and with other modules adding some too it would be too messy to not put them in a tab. -->
+            <xpath expr="//notebook" position="inside">
+                <page string="MyInvois" invisible="country_code != 'MY' or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')">
+                    <group>
+                        <group>
+                            <!-- Only displayed if the invoice contains a tax of type Exempt -->
+                            <field name="l10n_my_edi_state" invisible="not l10n_my_edi_state"/>
+                            <field name="l10n_my_edi_exemption_reason" invisible="not l10n_my_edi_display_tax_exemption_reason" readonly="l10n_my_edi_state != False"/>
+                            <field name="l10n_my_edi_custom_form_reference" readonly="l10n_my_edi_state != False"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_list_inherit_l10n_my_myinvois" model="ir.ui.view">
+        <field name="name">account.move.list.inherit.l10n_my_myinvois</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree" />
+        <field name="arch" type="xml">
+            <field name="status_in_payment" position="before">
+                <field name="l10n_my_edi_state" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="invoice_send_to_myinvois" model="ir.actions.server">
+        <field name="name">Send To MyInvois</field>
+        <field name="state">code</field>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="binding_model_id" ref="model_account_move"/>
+        <field name="binding_view_types">list,kanban</field>
+        <field name="code">
+            if records:
+                action = records.action_l10n_my_edi_send_invoice()
+        </field>
+    </record>
+</odoo>

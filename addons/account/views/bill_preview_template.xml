@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="bill_preview">
+            <div id="wrapwrap" class="p-4">
+                <main class="shadow p-4">
+                    <div class="article">
+                        <div class="o_company_1_layout">
+                            <div class="row">
+                                <div class="col-4" style="margin-bottom: 8px !important;">
+                                    <img style="max-height: 60px;" alt="Logo" src="data:image/png;base64,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"/>
+                                </div>
+                            </div>
+                            <div class="row zero_min_height">
+                                <div class="col-12">
+                                    <div style="border-bottom: 1px solid black;"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6" name="company_address"></div>
+                            </div>
+                        </div>
+                        <div class="o_report_layout_standard o_company_1_layout ">
+                            <div class="pt-3">
+                                <div id="addr" class="page"  style="margin-top: 32px !important;">
+                                    <div style="width:49%; display:inline-block;"></div>
+                                    <div  style="width:50%; display:inline-block;">
+                                        <address class="mb-0" itemscope="itemscope" itemtype="http://schema.org/Organization" style="width:100%">
+                                            <div>
+                                                <span itemprop="name"><t t-out="company_name"/></span>
+                                            </div>
+                                            <div itemprop="address" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
+                                                <div class="d-flex align-items-baseline">
+                                                    <span class="w-100 o_force_ltr d-block" itemprop="streetAddress">
+                                                        <t t-foreach="company_street_address" t-as="line">
+                                                            <t t-out="line"/><br/>
+                                                        </t>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </address>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pt-3" style="margin-top: 32px;">
+                                <h2><t t-out="invoice_name"/></h2>
+                                <div id="dates" class="page"  style="margin-top: 28px !important;">
+                                    <div style="width:25%; display:inline-block;">
+                                        <strong>Invoice Date:</strong>
+                                        <p class="m-0"><t t-out="invoice_date"/></p>
+                                    </div>
+
+                                    <div  style="width:25%; display:inline-block;">
+                                        <div class="mb-0" itemscope="itemscope" itemtype="http://schema.org/Organization" style="width:100%">
+                                                <strong>Due Date:</strong>
+                                                <p class="m-0"><t t-out="invoice_due_date"/></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="page" style="margin-top: 32px !important;">
+                                <table class="table table-sm o_main_table" name="invoice_line_table" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th name="th_description" class="text-start"><span>Description</span></th>
+                                            <th name="th_quantity" class="text-end"><span>Quantity</span></th>
+                                            <th name="th_priceunit" class="text-end d-md-table-cell"><span>Unit Price</span></th>
+                                            <th name="th_taxes" class="text-end d-md-table-cell"><span>Taxes</span></th>
+                                            <th name="th_subtotal" class="text-end"><span>Amount</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="invoice_tbody">
+                                        <tr class="">
+                                            <td name="account_invoice_line_name">
+                                                [FURN_8999] Three-Seat Sofa
+                                            </td>
+                                            <td class="text-end">
+                                                <span>5.00</span>
+                                            </td>
+                                            <td class="text-end d-md-table-cell">
+                                                <span class="text-nowrap">1,500.00</span>
+                                            </td>
+                                            <td class="text-end d-md-table-cell">
+                                                <span>Tax 0%</span>
+                                            </td>
+                                            <td class="text-end o_price_total">
+                                                <span class="text-nowrap">$ <span class="oe_currency_value">7,500.00</span></span>
+                                            </td>
+                                        </tr>
+                                        <tr class="">
+                                            <td name="account_invoice_line_name">
+                                                [FURN_8220] Four Person Desk
+                                            </td>
+                                            <td class="text-end">
+                                                <span>5.00</span>
+                                            </td>
+                                            <td class="text-end d-md-table-cell">
+                                                <span class="text-nowrap">2,350.00</span>
+                                            </td>
+                                            <td class="text-end d-md-table-cell">
+                                                <span>Tax 0%</span>
+                                            </td>
+                                            <td class="text-end o_price_total">
+                                                <span class="text-nowrap">$ <span class="oe_currency_value">11,750.00</span></span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div id="total" class="page"  style="margin-top: 32px !important;">
+                                    <div style="width:49%; display:inline-block;"></div>
+                                    <div  style="width:50%; display:inline-block;">
+                                        <table class="table table-sm" style="page-break-inside: avoid; width:100%">
+                                            <tbody><tr class="o_subtotal">
+                                                <td><strong>Subtotal</strong></td>
+                                                <td class="text-end">
+                                                    <span>$ <span class="oe_currency_value">19,250.00</span></span>
+                                                </td>
+                                            </tr>
+                                            <tr class="o_total">
+                                                <td><strong>Total</strong></td>
+                                                <td class="text-end">
+                                                    <span class="text-nowrap">$ <span class="oe_currency_value">19,250.00</span></span>
+                                                </td>
+                                            </tr>
+                                        </tbody></table>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <p>Please use the following communication for your payment: <b><t t-out="invoice_ref"/></b></p>
+                                    <p>Payment terms: 30 Days</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="o_company_1_layout mt-4">
+                            <div class="text-center" style="border-top: 1px solid black;">
+                                <ul class="list-inline mb4"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </template>
+    </data>
+</odoo>

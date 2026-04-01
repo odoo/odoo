@@ -1,0 +1,439 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_totp
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-16 15:16+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/"
+"auth_totp/hu/>\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/controllers/home.py:0
+msgid "%(browser)s on %(platform)s"
+msgstr "%(browser)s %(platform)splatformon"
+
+#. module: auth_totp
+#: model:ir.model,name:auth_totp.model_auth_totp_wizard
+msgid "2-Factor Setup Wizard"
+msgstr "Kétlépcsős azonosítás varázsló"
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
+msgid "2-Factor authentication is now enabled."
+msgstr "Kétlépcsős azonosítás bekapcsolva."
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid ""
+"<i class=\"fa fa-check text-success\"/>\n"
+"                        <span class=\"fw-bold ms-1 me-2\">\n"
+"                            Enabled\n"
+"                        </span>"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid ""
+"<i class=\"fa fa-remove text-danger\"/>\n"
+"                        <span class=\"fw-bold ms-1\">\n"
+"                            Disabled\n"
+"                        </span>"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid ""
+"<span class=\"text-muted\">\n"
+"                            Recommended for extra security.\n"
+"                        </span>"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Add this key in your Authenticator app"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Authentication Code"
+msgstr "Hitelesítő kód"
+
+#. module: auth_totp
+#: model:ir.model,name:auth_totp.model_auth_totp_device
+msgid "Authentication Device"
+msgstr "Hitelesítő eszköz"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Cancel"
+msgstr "Visszavonás"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Cannot scan it?"
+msgstr "Nem tudja beszkennelni?"
+
+#. module: auth_totp
+#: model:ir.model.fields.selection,name:auth_totp.selection__auth_totp_rate_limit_log__limit_type__code_check
+msgid "Code Checking"
+msgstr ""
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__create_uid
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__create_uid
+msgid "Created by"
+msgstr "Létrehozta"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__create_date
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__create_date
+msgid "Created on"
+msgstr "Létrehozva"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__create_date
+msgid "Creation Date"
+msgstr "Létrehozva"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__name
+msgid "Description"
+msgstr "Leírás"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Disable"
+msgstr "Letiltás"
+
+#. module: auth_totp
+#: model:ir.actions.server,name:auth_totp.action_disable_totp
+msgid "Disable two-factor authentication"
+msgstr "Kétlépcsős azonosítás kikapcsolása"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Discard"
+msgstr "Elvetés"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__display_name
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__display_name
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__display_name
+#: model:ir.model.fields,field_description:auth_totp.field_res_users__display_name
+msgid "Display Name"
+msgstr "Megjelenített név"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Don't ask again on this device"
+msgstr "Ne kérje többet ezen az eszközön"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Enable 2FA"
+msgstr "Kétlépcsős azonosítás bekapcsolása"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Enable Two-Factor Authentication"
+msgstr ""
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__expiration_date
+msgid "Expiration Date"
+msgstr "Lejárat dátuma"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__id
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__id
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__id
+#: model:ir.model.fields,field_description:auth_totp.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/controllers/home.py:0
+msgid "Invalid authentication code format."
+msgstr "Hitelesítő kód formátuma érvénytelen."
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__ip
+msgid "Ip"
+msgstr ""
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__write_uid
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Frissítette"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__write_date
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__write_date
+msgid "Last Updated on"
+msgstr "Frissítve"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Learn More"
+msgstr "Tudjon meg többet"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__limit_type
+msgid "Limit Type"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Log in"
+msgstr "Bejelentkezés"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__qrcode
+msgid "Qrcode"
+msgstr "QR-kód"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Scan this barcode in your Authenticator app"
+msgstr ""
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__scope
+msgid "Scope"
+msgstr "Hatáskör"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__secret
+msgid "Secret"
+msgstr "Titok"
+
+#. module: auth_totp
+#: model:ir.model.fields.selection,name:auth_totp.selection__auth_totp_rate_limit_log__limit_type__send_email
+msgid "Send Email"
+msgstr "E-mail küldés"
+
+#. module: auth_totp
+#: model:ir.model,name:auth_totp.model_auth_totp_rate_limit_log
+msgid "TOTP rate limit logs"
+msgstr ""
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
+msgid "The verification code should only contain numbers"
+msgstr "A hitelesítő kód csak számokat tartalmazhat"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid ""
+"To login, enter below the six-digit authentication code provided by your "
+"Authenticator app.\n"
+"                        <br/>"
+msgstr ""
+"A belépéshez adja meg az Autentikátor alkalmazás által generált 6-jegyű "
+"belépési kódot."
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_last_counter
+msgid "Totp Last Counter"
+msgstr ""
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_secret
+msgid "Totp Secret"
+msgstr "Totp titok"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_trusted_device_ids
+msgid "Trusted Devices"
+msgstr "Megbízható eszköz"
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/models/res_users.py:0
+msgid "Two-Factor Authentication Activation"
+msgstr "Kétlépcsős azonosítás aktiválása"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Two-factor Authentication"
+msgstr "Kétlépcsős azonosítás"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
+msgid "Two-factor authentication"
+msgstr "Kétlépcsős azonosítás"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
+msgid "Two-factor authentication Disabled"
+msgstr "Kétlépcsős azonosítás kikapcsolva"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
+msgid "Two-factor authentication Enabled"
+msgstr "Kétlépcsős azonosítás bekapcsolva"
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/models/res_users.py:0
+msgid "Two-factor authentication already enabled"
+msgstr "Kétlépcsős azonosítás már engedélyezve van"
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/models/res_users.py:0
+msgid "Two-factor authentication can only be enabled for yourself"
+msgstr "A kétlépcsős azonosítást csak saját magának kapcsolhatja be"
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/models/res_users.py:0
+msgid "Two-factor authentication disabled for the following user(s): %s"
+msgstr "A kétlépcsős azonosítás kikapcsolva ezeneknél a felhasználóknál: %s"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url
+msgid "Url"
+msgstr "Webcím"
+
+#. module: auth_totp
+#: model:ir.model,name:auth_totp.model_res_users
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__user_id
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__user_id
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__user_id
+msgid "User"
+msgstr "Felhasználó"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__code
+msgid "Verification Code"
+msgstr "Ellenőrző kód"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Verification code"
+msgstr ""
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/models/res_users.py:0
+#: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
+msgid "Verification failed, please double-check the 6-digit code"
+msgstr "Az ellenőrzés sikertelen, ellenőrizze a 6 számjegyzű kódot"
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/models/res_users.py:0
+msgid "Verification failed, please use the latest 6-digit code"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Write the code given by your app"
+msgstr ""
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/models/res_users.py:0
+msgid ""
+"You reached the limit of authentication mails sent for your account, please "
+"try again later."
+msgstr ""
+
+#. module: auth_totp
+#. odoo-python
+#: code:addons/auth_totp/models/res_users.py:0
+msgid ""
+"You reached the limit of code verifications for your account, please try "
+"again later."
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "e.g. 123456"
+msgstr "pl.: 123456"
+
+#~ msgid ""
+#~ "<span class=\"d-md-none d-block\">Or install an authenticator app</span>\n"
+#~ "                                        <span class=\"d-none d-md-"
+#~ "block\">Install an authenticator app on your mobile device</span>"
+#~ msgstr ""
+#~ "<span class=\"d-md-none d-block\">Vagy telepítsen egy autentikátor "
+#~ "alkalmazást</span>\n"
+#~ "                                        <span class=\"d-none d-md-"
+#~ "block\">Autentikátor alkalmazás telepítése mobileszközre</span>"
+
+#~ msgid ""
+#~ "<span class=\"d-none d-md-block\">When requested to do so, scan the "
+#~ "barcode below</span>\n"
+#~ "                                    <span class=\"d-block d-md-"
+#~ "none\">When requested to do so, copy the key below</span>"
+#~ msgstr ""
+#~ "<span class=\"d-none d-md-block\">Kérésre szkennelje be az alábbi "
+#~ "vonalkódot</span>\n"
+#~ "                                    <span class=\"d-block d-md-"
+#~ "none\">Kérdésre gépelje be a az alábbi kódot</span>"
+
+#~ msgid ""
+#~ "<span class=\"text-muted\">Popular ones include Authy, Google "
+#~ "Authenticator or the Microsoft Authenticator.</span>"
+#~ msgstr ""
+#~ "Népszerű alkalmazások az Authy, a Google Authenticator és a Microsoft "
+#~ "Authenticator"
+
+#~ msgid "Added On"
+#~ msgstr "Hozzáadva"
+
+#~ msgid "Authenticator App Setup"
+#~ msgstr "Autentikátor alkalmazás beállítása"
+
+#~ msgid "Click on this link to open your authenticator app"
+#~ msgstr "Kattintson erre a linkre az autentikátor alkalmazás megnyitásához"
+
+#~ msgid "Device"
+#~ msgstr "Eszköz"
+
+#~ msgid "Disable 2FA"
+#~ msgstr "Kétlépcsős azonosítás kikapcsolása"
+
+#~ msgid "Enter your six-digit code below"
+#~ msgstr "Adja meg a hatjegyű kódot"
+
+#~ msgid "Look for an \"Add an account\" button"
+#~ msgstr "Keresse a \"Fiók hozzáadása\" gombot"
+
+#~ msgid "On Apple Store"
+#~ msgstr "Az App Store-ban"
+
+#~ msgid "On Google Play"
+#~ msgstr "A Google Play-en"
+
+#~ msgid "Revoke"
+#~ msgstr "Visszavonás"
+
+#~ msgid "Revoke All"
+#~ msgstr "Összes visszavonása"

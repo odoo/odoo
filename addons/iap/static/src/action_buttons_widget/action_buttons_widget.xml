@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template id="template" xml:space="preserve">
+
+    <t t-name="iap.ActionButtonsWidget">
+        <div class="row">
+            <div class="col-sm">
+                <button t-on-click="onManageServiceLinkClicked" class="btn btn-link px-0 o-hidden-ios text-nowrap"><i class="oi oi-arrow-right"/> Manage Service &amp; Buy Credits</button><br/>
+                <button t-if="props.showServiceButtons" t-on-click="onViewServicesClicked" class="btn btn-link px-0 o-hidden-ios text-nowrap"><i class="oi oi-arrow-right"/> View My Services</button>
+            </div>
+        </div>
+    </t>
+
+</template>

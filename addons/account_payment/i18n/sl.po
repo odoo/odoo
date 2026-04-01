@@ -1,0 +1,809 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_payment
+#
+# Translators:
+# Boris Kodelja <boris@hbs.si>, 2022
+# laznikd <laznik@mentis.si>, 2022
+# matjaz k <matjaz@mentis.si>, 2022
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2022
+# Martin Trigaux, 2022
+# Tadej Lupšina <tadej@hbs.si>, 2022
+# Jasmina Macur <jasmina@hbs.si>, 2022
+# Nejc G <nejc@luxim.si>, 2022
+# Tomaž Jug <tomaz@editor.si>, 2023
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-09-16 21:35+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
+"account_payment/sl/>\n"
+"Language: sl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/wizards/payment_link_wizard.py:0
+msgid ""
+"#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong "
+"class=\"text-primary\">%(date)s</strong>"
+msgstr ""
+"#%(number)s - Obrok <strong>%(amount)s</strong> zapadlost <strong "
+"class=\"text-primary\">%(date)s</strong>"
+
+#. module: account_payment
+#. odoo-javascript
+#: code:addons/account_payment/static/src/interactions/portal_my_invoices_payment_list.js:0
+msgid "%s day(s) overdue"
+msgstr "%s dan(-i) zamude"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
+msgid "<b>Communication: </b>"
+msgstr "<b>Komuniciranje: </b>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
+"Pay Now</span>"
+msgstr ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
+"Plačaj zdaj</span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-arrow-circle-right\"/> Pay Now"
+msgstr "<i class=\"fa fa-fw fa-arrow-circle-right\"/> Plačaj zdaj"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Authorized</span>"
+msgstr ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Pooblaščeno</span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Paid</span>"
+msgstr ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Plačano</span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-check-circle\"/> Paid"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Plačano"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-check-circle\"/> Pending"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> V čakanju"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-check-circle\"/> Processing Payment"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Obdelava plačila"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "<span class=\"d-none d-md-inline\"> Pending</span>"
+msgstr "<span class=\"d-none d-md-inline\"> V teku</span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "<strong>Full Amount</strong><br/>"
+msgstr "<strong>Polni znesek</strong><br/>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid ""
+"<strong>Installment</strong>\n"
+"                                        <br/>"
+msgstr ""
+"<strong>Obročno plačilo\n"
+"</strong>\n"
+"                                        <br/>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
+msgid ""
+"<strong>Warning!</strong> There is a refund pending for this payment.\n"
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
+msgstr ""
+"<strong>Opozorilo!</strong> Za to plačilo je čakajoče vračilo.\n"
+"Počakajte trenutek, da se obdela. Če vračilo še vedno čaka \n"
+"                        čez nekaj minut preverite konfiguracijo svojega "
+"ponudnika plačilnih storitev."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/wizards/payment_link_wizard.py:0
+msgid "A discount will be applied if the customer pays before %s included."
+msgstr "Popust se obračuna, če stranka plača pred %s vključen."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid ""
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
+msgstr ""
+"Plačilo za ta račun je že bilo izvedeno, prosimo, poskrbite, da ne plačate "
+"dvakrat."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_payment.py:0
+msgid "A payment transaction with reference %s already exists."
+msgstr "Plačilna transakcija s sklicem %s že obstaja."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_payment.py:0
+msgid "A token is required to create a new payment transaction."
+msgstr "Za ustvarjanje nove plačilne transakcije je potreben žeton."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_overdue_invoices_page
+msgid "Amount"
+msgstr "Znesek"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_available_for_refund
+msgid "Amount Available For Refund"
+msgstr "Razpoložljivi znesek za vračilo"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__invoice_amount_due
+msgid "Amount Due"
+msgstr "Dolgovani znesek"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
+#: model:ir.model.fields,field_description:account_payment.field_account_move__amount_paid
+msgid "Amount paid"
+msgstr "Plačani znesek"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
+msgid ""
+"Are you sure you want to void the authorized transaction? This action can't "
+"be undone."
+msgstr ""
+"Ali si prepričan, da želiš razveljaviti potrjeno transakcijo? Tega opravila "
+"ni mogoče povrniti."
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__authorized_transaction_ids
+#: model:ir.model.fields,field_description:account_payment.field_account_move__authorized_transaction_ids
+msgid "Authorized Transactions"
+msgstr "Odobrene transakcije"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
+msgid "Capture Transaction"
+msgstr "Zajem transakcije"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
+msgid "Close"
+msgstr "Zaključi"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_res_config_settings
+msgid "Config Settings"
+msgstr "Uredi nastavitve"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__create_uid
+msgid "Created by"
+msgstr "Ustvaril"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__create_date
+msgid "Created on"
+msgstr "Ustvarjeno"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__currency_id
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__discount_date
+msgid "Discount Date"
+msgstr "Datum popusta"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_move__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:account_payment.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Prikazani naziv"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__display_open_installments
+msgid "Display Open Installments"
+msgstr "Prikaz odprtih obrokov"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
+msgid ""
+"Done, your online payment has been successfully processed. Thank you for "
+"your order."
+msgstr ""
+"Končano, vaše spletno plačilo je bilo uspešno obdelano. Hvala za vaše "
+"naročilo."
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__epd_info
+msgid "Early Payment Discount Information"
+msgstr "Informacije o popustu za predčasno plačilo"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "Early Payment Discount of"
+msgstr "Popust za predčasno plačilo"
+
+#. module: account_payment
+#: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
+msgid "Full Only"
+msgstr "Samo polno"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_payment_link_wizard
+msgid "Generate Sales Payment Link"
+msgstr "Ustvari povezavo za plačilo prodaje"
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_invoice_order_generate_link
+msgid "Generate a Payment Link"
+msgstr "Ustvarite plačilno povezavo"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__has_eligible_epd
+msgid "Has Eligible Epd"
+msgstr "Ima upravičen EPD"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__has_pending_refund
+msgid "Has a pending refund"
+msgstr "Ima čakajoče vračilo"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_journal__id
+#: model:ir.model.fields,field_description:account_payment.field_account_move__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_provider__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__id
+#: model:ir.model.fields,field_description:account_payment.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+msgid ""
+"Impossible to pay all the overdue invoices if they don't share the same "
+"currency."
+msgstr "Nemogoče je plačati vse zapadle račune, če niso v isti valuti."
+
+#. module: account_payment
+#: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
+msgid ""
+"In test mode, a fake payment is processed through a test payment interface.\n"
+"This mode is advised when setting up the provider."
+msgstr ""
+"V testnem načinu se lažno plačilo obdela prek testnega plačilnega vmesnika.\n"
+"This mode is advised when setting up the provider."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
+msgid "Invoice Online Payment"
+msgstr "Plačilo računa preko spleta"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
+msgid "Invoice(s)"
+msgstr "Račun(i)"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_transaction.py:0
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoice_ids
+msgid "Invoices"
+msgstr "Računi"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_overdue_invoice
+msgid "Invoices &amp; Bills"
+msgstr "Izdani &amp; prejeti računi"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoices_count
+msgid "Invoices Count"
+msgstr "Število računov"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_account_payment
+msgid "Invoices to pay"
+msgstr "Računi za plačilo"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_journal
+msgid "Journal"
+msgstr "Dnevnik"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_move
+msgid "Journal Entry"
+msgstr "Temeljnica"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Zadnji posodobil"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__write_date
+msgid "Last Updated on"
+msgstr "Zadnjič posodobljeno"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_available_for_refund
+msgid "Maximum Refund Allowed"
+msgstr "Največje dovoljeno povračilo"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_link_wizard__form_inherit_account_payment
+msgid "Next Installments"
+msgstr "Naslednji obroki"
+
+#. module: account_payment
+#: model:ir.model.fields,help:account_payment.field_account_payment__payment_token_id
+msgid ""
+"Note that only tokens from providers allowing to capture the amount are "
+"available."
+msgstr ""
+"Upoštevajte, da so na voljo samo žetoni ponudnikov, ki omogočajo zajem "
+"zneska."
+
+#. module: account_payment
+#: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
+msgid ""
+"Note that tokens from providers set to only authorize transactions (instead "
+"of capturing the amount) are not available."
+msgstr ""
+"Upoštevajte, da žetoni ponudnikov, ki so nastavljeni samo za avtorizacijo "
+"transakcij (namesto zajem zneska), niso na voljo."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/wizards/payment_link_wizard.py:0
+msgid "Online payment option is not enabled in Configuration."
+msgstr "Možnost spletnega plačila ni omogočena v konfiguraciji."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/portal.py:0
+msgid "Overdue invoices should share the same company."
+msgstr "Zamujeni računi morajo biti iz istega podjetja."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/portal.py:0
+msgid "Overdue invoices should share the same currency."
+msgstr "Zapadli računi morajo imeti isto valuto."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/portal.py:0
+msgid "Overdue invoices should share the same partner."
+msgstr "Zapadli računi morajo biti iz istega partnerja."
+
+#. module: account_payment
+#: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__partial
+msgid "Partial"
+msgstr "Delno"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_payment_register
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "Pay"
+msgstr "Plačaj"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
+msgid "Pay Invoice"
+msgstr "Plačilo računa"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_res_config_settings__pay_invoices_online
+msgid "Pay Invoices Online"
+msgstr "Plačaj račune preko spleta"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_docs_entry
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "Pay Now"
+msgstr "Plačaj takoj"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "Pay now"
+msgstr "Plačaj takoj"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_overdue_invoice
+msgid "Pay overdue"
+msgstr "Zamujeno plačilo"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_id
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__payment_id
+msgid "Payment"
+msgstr "Plačilo"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_amount
+msgid "Payment Amount"
+msgstr "Znesek plačila"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_provider__journal_id
+msgid "Payment Journal"
+msgstr "Dnevnik plačil"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_payment_method
+#: model:ir.model,name:account_payment.model_account_payment_method_line
+#: model:ir.ui.menu,name:account_payment.payment_method_menu
+msgid "Payment Methods"
+msgstr "Načini plačila"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_payment_provider
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_id
+msgid "Payment Provider"
+msgstr "Ponudnik plačil"
+
+#. module: account_payment
+#: model:ir.ui.menu,name:account_payment.payment_provider_menu
+msgid "Payment Providers"
+msgstr "Ponudniki plačil"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_payment_refund_wizard
+msgid "Payment Refund Wizard"
+msgstr "Čarovnik za vračilo plačila"
+
+#. module: account_payment
+#: model:ir.ui.menu,name:account_payment.payment_token_menu
+msgid "Payment Tokens"
+msgstr "Plačilni žetoni"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_payment_transaction
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_transaction_id
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__transaction_id
+#: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
+msgid "Payment Transaction"
+msgstr "Plačilna transakcija"
+
+#. module: account_payment
+#: model:ir.ui.menu,name:account_payment.payment_transaction_menu
+msgid "Payment Transactions"
+msgstr "Plačilne transakcije"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_payment
+msgid "Payments"
+msgstr "Plačila"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+msgid "Please log in to pay your overdue invoices"
+msgstr "Za plačilo zapadlih računov se prijavite"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_payment_method_line.py:0
+msgid "Provider"
+msgstr "Ponudnik"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_overdue_invoices_page
+msgid "Reference"
+msgstr "Referenca"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_payment.py:0
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__support_refund
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
+msgid "Refund"
+msgstr "Dobropis"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_to_refund
+msgid "Refund Amount"
+msgstr "Vračilni znesek"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__refunded_amount
+msgid "Refunded Amount"
+msgstr "Znesek povračila"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
+msgid "Refunds"
+msgstr "Dobropisi"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__refunds_count
+msgid "Refunds Count"
+msgstr "Število vračil"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.view_account_journal_form
+msgid "SETUP"
+msgstr "NASTAVITEV"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_token_id
+msgid "Saved Payment Token"
+msgstr "Shranjen žeton plačila"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_token_id
+msgid "Saved payment token"
+msgstr "Shranjen žeton plačila"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__source_payment_id
+msgid "Source Payment"
+msgstr "Vir plačila"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
+msgid "State"
+msgstr "Zvezna država ali regija"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
+msgid "Suitable Payment Token"
+msgstr "Ustrezen plačilni žeton"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+msgid "The access token is invalid."
+msgstr "Žeton za dostop je neveljaven."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/wizards/payment_refund_wizard.py:0
+msgid ""
+"The amount to be refunded must be positive and cannot be superior to %s."
+msgstr "Znesek za povračilo mora biti pozitiven in ne sme biti večji od %s."
+
+#. module: account_payment
+#: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
+msgid "The journal in which the successful transactions are posted."
+msgstr "Dnevnik, v katerega so vnesene uspešne transakcije."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_transaction.py:0
+msgid "The payment related to transaction %(ref)s has been posted: %(link)s"
+msgstr ""
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+msgid "The provided parameters are invalid."
+msgstr "Navedeni parametri so neveljavni."
+
+#. module: account_payment
+#: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id
+msgid "The source payment of related refund payments"
+msgstr "Vir plačila povezanih povračil"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_move.py:0
+msgid "There are pending transactions for this invoice."
+msgstr "Za ta račun so čakajoče transakcije."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_move.py:0
+msgid "There is no amount to be paid."
+msgstr "Ni zneska za plačilo."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid "There was an error processing your payment: invalid invoice."
+msgstr "Pri obdelavi plačila je prišlo do napake: neveljaven račun."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid ""
+"There was an error processing your payment: issue with credit card ID "
+"validation."
+msgstr ""
+"Pri obdelavi vašega plačila je prišlo do napake: težava s preverjanjem "
+"veljavnosti ID-ja kreditne kartice."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid "There was an error processing your payment: transaction failed.<br/>"
+msgstr "Pri obdelavi plačila je prišlo do napake: transakcija ni uspela.<br/>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid "There was en error processing your payment: invalid credit card ID."
+msgstr ""
+"Pri obdelavi vašega plačila je prišlo do napake: neveljaven ID kreditne "
+"kartice."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_move.py:0
+msgid "This invoice cannot be paid online."
+msgstr "Tega računa ni mogoče plačati prek spleta."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_move.py:0
+msgid "This invoice has already been paid."
+msgstr "Ta račun je že plačan."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_move.py:0
+msgid "This invoice isn't posted."
+msgstr "Ta račun ni knjižen."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_move.py:0
+msgid "This is not an outgoing invoice."
+msgstr "To ni izhodni račun."
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_count
+#: model:ir.model.fields,field_description:account_payment.field_account_move__transaction_count
+msgid "Transaction Count"
+msgstr "Število transakcij"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_ids
+#: model:ir.model.fields,field_description:account_payment.field_account_move__transaction_ids
+msgid "Transactions"
+msgstr "Transakcije"
+
+#. module: account_payment
+#: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__none
+msgid "Unsupported"
+msgstr "Nepodprto"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__use_electronic_payment_method
+msgid "Use Electronic Payment Method"
+msgstr "Uporabite elektronsko plačilno metodo"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
+msgid "Void Transaction"
+msgstr "Neveljavna transakcija"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_payment_method_line.py:0
+msgid ""
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
+"Linked providers(s): %s"
+msgstr ""
+"Plačilne metode, ki je povezana s ponudnikom v omogočenem ali testnem "
+"stanju, ni mogoče izbrisati.\n"
+"Povezani ponudnik(i): %s"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+msgid ""
+"You cannot uninstall this module as payments using this payment method "
+"already exist."
+msgstr ""
+"Tega modula ne morete odstraniti, ker plačila s to plačilno metodo že "
+"obstajajo."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_journal.py:0
+msgid ""
+"You must first deactivate a payment provider before deleting its journal.\n"
+"Linked providers: %s"
+msgstr ""
+"Preden izbrišete dnevnik ponudnika plačilnih storitev, ga morate najprej "
+"deaktivirati.\n"
+"Povezani ponudniki: %s"
+
+#. module: account_payment
+#. odoo-javascript
+#: code:addons/account_payment/static/src/interactions/portal_my_invoices_payment_list.js:0
+msgid "due in %s day(s)"
+msgstr "zapadlost v %s dnevih"
+
+#. module: account_payment
+#. odoo-javascript
+#: code:addons/account_payment/static/src/interactions/portal_my_invoices_payment_list.js:0
+msgid "due today"
+msgstr "zapadlost danes"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "has been applied."
+msgstr "je bil uporabljen."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "overdue"
+msgstr "zapadle"
+
+#~ msgid "Code"
+#~ msgstr "Oznaka"
+
+#~ msgid ""
+#~ "<strong>No suitable payment option could be found.</strong><br/>\n"
+#~ "                                If you believe that it is an error, "
+#~ "please contact the website administrator."
+#~ msgstr ""
+#~ "<strong>Primerne možnosti plačila ni bilo mogoče najti.</strong><br/>\n"
+#~ "                                    Če menite, da gre za napako, se "
+#~ "obrnite na skrbnika spletnega mesta."
+
+#~ msgid "Pay with"
+#~ msgstr "Plačaj preko"
+
+#~ msgid "Register Payment"
+#~ msgstr "Zabeleži plačilo"

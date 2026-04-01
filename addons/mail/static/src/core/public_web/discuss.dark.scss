@@ -1,0 +1,12 @@
+.o_web_client:where(:has(.o-mail-Discuss)) {
+    --mail-Discuss-surface-dark: #{mix($white, $o-webclient-background-color, 15%)};
+    --NavBar-entry-backgroundColor: var(--mail-Discuss-surface-dark);
+
+    .o_main_navbar, .o_control_panel, .breadcrumb {
+        background-color: var(--mail-Discuss-surface-dark);
+    }
+    .breadcrumb .btn-light {
+        --btn-bg: var(--mail-Discuss-surface-dark);
+        border-color: transparent;
+    }
+}

@@ -1,0 +1,271 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_tax_python
+#
+# Translators:
+# Martin Trigaux, 2022
+#
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-12-20 09:32+0000\n"
+"Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
+"account_tax_python/id/>\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
+msgid ""
+"\n"
+"    - Group of Taxes: The tax is a set of sub taxes.\n"
+"    - Fixed: The tax amount stays the same whatever the price.\n"
+"    - Percentage: The tax amount is a % of the price:\n"
+"        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+"        e.g 110 / (1 + 10%) = 100 (price included)\n"
+"    - Percentage Tax Included: The tax amount is a division of the price:\n"
+"        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+"        e.g 200 * (1 - 10%) = 180 (price included)\n"
+"        "
+msgstr ""
+"\n"
+"    - Kelompok Pajak: Pajak adalah kelompok sub-paja.\n"
+"    - Tetap: Jumlah pajak tetap sama terlepas dari harga.\n"
+"    - Persentase: Jumlah pajak adalah % dari harga:\n"
+"        contoh, 100 * (1 + 10%) = 110 (sebelum harga)\n"
+"        contoh, 110 / (1 + 10%) = 100 (sesudah harga)\n"
+"    - Termasuk Persentase Pajak: Jumlah pajak adalah pembagian dari harga:\n"
+"        contoh, 180 / (1 - 10%) = 200 (sebelum harga)\n"
+"        contoh, 200 * (1 - 10%) = 180 (sesudah harga)\n"
+"        "
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
+msgid ""
+"Compute the amount of the tax.\n"
+"\n"
+":param base: float, actual amount on which the tax is applied\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: A object representing the product\n"
+msgstr ""
+"Hitung jumlah pajak.\n"
+"\n"
+":param base: float, jumlah asli pada mana pajak diterapkan\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: Object yang mewakili produk\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
+msgid "Custom Formula"
+msgstr "Formula Kustom"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Field '%s' is not accessible"
+msgstr "Field '%s' tidak dapat diakses"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
+msgid "Formula"
+msgstr "Rumus"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
+msgid "Formula Decoded Info"
+msgstr "Formula Decoded Info"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Invalid AST node: %s"
+msgstr "AST node tidak valid: %s"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Invalid formula"
+msgstr "Formula tidak valid"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Kwargs are not allowed"
+msgstr "Kwargs tidak diizinkan"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only int, float or None are allowed as constant values"
+msgstr "Hanya int, float atau None yang diizinkan sebagai constant values"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/models/account_tax.py:0
+msgid "Only primitive types are allowed in python tax formula context."
+msgstr ""
+"Hanya tipe-tipe primitif yang diizinkan di konteks formula pajak python."
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only product['string'] or uom['string'] read-access is allowed"
+msgstr "Hanya read-access product['string'] atau uom['string'] yang diizinkan"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only read access to identifiers is allowed"
+msgstr "Hanya read access ke pengidentifikasi diizinkan"
+
+#. module: account_tax_python
+#: model:ir.model,name:account_tax_python.model_account_tax
+msgid "Tax"
+msgstr "Pajak"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
+msgid "Tax Computation"
+msgstr "Penghitungan Pajak"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Unknown function call"
+msgstr "Fungction call tidak diketahui"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Unknown identifier: %s"
+msgstr "Pengidentifikasi tidak diketahui: %s"
+
+#~ msgid "Only product['string'] read-access is allowed"
+#~ msgstr "Hanya product['string'] read-access yang diizinkan"
+
+#~ msgid ""
+#~ "\n"
+#~ "    - Group of Taxes: The tax is a set of sub taxes.\n"
+#~ "    - Fixed: The tax amount stays the same whatever the price.\n"
+#~ "    - Percentage of Price: The tax amount is a % of the price:\n"
+#~ "        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+#~ "        e.g 110 / (1 + 10%) = 100 (price included)\n"
+#~ "    - Percentage of Price Tax Included: The tax amount is a division of "
+#~ "the price:\n"
+#~ "        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+#~ "        e.g 200 * (1 - 10%) = 180 (price included)\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "    - Kelompok Pajak: Pajak adalah satu set sub pajak.\n"
+#~ "    - Tetap: Jumlah pajak tetap sama berapa pun harganya.\n"
+#~ "    - Persentase Harga: Jumlah pajak adalah % dari harga:\n"
+#~ "        misal: 100 * (1 + 10%) = 110 (tidak termasuk harga)\n"
+#~ "        misal: 110 / (1 + 10%) = 100 (termasuk harga)\n"
+#~ "    - Persentase Termasuk Pajak Harga: Jumlah pajak adalah pembagian "
+#~ "harga:\n"
+#~ "        misal: 180 / (1 - 10%) = 200 (tidak termasuk harga)\n"
+#~ "        misal: 200 * (1 - 10%) = 180 (termasuk harga)\n"
+#~ "        "
+
+#~ msgid "Applicable Code"
+#~ msgstr "Kode yang Berlaku"
+
+#~ msgid ""
+#~ "Compute the amount of the tax by setting the variable 'result'.\n"
+#~ "\n"
+#~ ":param base_amount: float, actual amount on which the tax is applied\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res.company recordset singleton\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "Hitung jumlah pajak dengan mengatur variabel 'result'.\n"
+#~ "\n"
+#~ ":param base_amount: float, actual amount on which the tax is applied\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res.company recordset singleton\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+
+#~ msgid ""
+#~ "Compute the amount of the tax by setting the variable 'result'.\n"
+#~ "\n"
+#~ ":param base_amount: float, actual amount on which the tax is applied\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "Hitung jumlah pajak dengan mengatur variabel 'hasil'.\n"
+#~ "\n"
+#~ ":param base_amount: float, actual amount on which the tax is applied\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+
+#~ msgid ""
+#~ "Determine if the tax will be applied by setting the variable 'result' to "
+#~ "True or False.\n"
+#~ "\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res.company recordset singleton\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "Tentukan jika pajak akan diterapkan dengan mengatur variabel 'result' ke "
+#~ "True atau False.\n"
+#~ "\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res.company recordset singleton\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+
+#~ msgid ""
+#~ "Determine if the tax will be applied by setting the variable 'result' to "
+#~ "True or False.\n"
+#~ "\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "Tentukan jika pajak akan diterapkan dengan mengatur variabel 'result' ke "
+#~ "True atau False.\n"
+#~ "\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+
+#~ msgid "Python Code"
+#~ msgstr "Kode Python"
+
+#~ msgid "Templates for Taxes"
+#~ msgstr "Template untuk Perpajakan"

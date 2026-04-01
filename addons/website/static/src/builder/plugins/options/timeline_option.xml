@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.TimelineOption">
+    <BuilderRow label.translate="Date">
+        <BuilderButton
+            type="'success'"
+            action="'addItem'"
+            actionParam="'.s_timeline_row'"
+            actionValue="'beforebegin'"
+            preview="false"
+            applyTo="':scope > :has(.s_timeline_row)'">
+            Add Date
+        </BuilderButton>
+    </BuilderRow>
+</t>
+
+</templates>
+

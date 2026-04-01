@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sale-related subtypes for messaging / Chatter -->
+        <record id="mt_order_sent" model="mail.message.subtype">
+            <field name="name">Quotation sent</field>
+            <field name="res_model">sale.order</field>
+            <field name="default" eval="False"/>
+            <field name="description">Quotation sent</field>
+        </record>
+        <record id="mt_order_confirmed" model="mail.message.subtype">
+            <field name="name">Sales Order Confirmed</field>
+            <field name="res_model">sale.order</field>
+            <field name="default" eval="False"/>
+            <field name="description">Quotation confirmed</field>
+        </record>
+        <record id="mt_order_viewed" model="mail.message.subtype">
+            <field name="name">Quotation Viewed</field>
+            <field name="res_model">sale.order</field>
+            <field name="internal" eval="True"/>
+            <field name="default" eval="True"/>
+        </record>
+
+        <!-- Salesteam-related subtypes for messaging / Chatter -->
+        <record id="mt_salesteam_order_sent" model="mail.message.subtype">
+            <field name="name">Quotation sent</field>
+            <field name="sequence">20</field>
+            <field name="res_model">crm.team</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" ref="sale.mt_order_sent"/>
+            <field name="relation_field">team_id</field>
+        </record>
+        <record id="mt_salesteam_order_viewed" model="mail.message.subtype">
+            <field name="name">Quotation Viewed</field>
+            <field name="sequence">25</field>
+            <field name="res_model">crm.team</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" ref="sale.mt_order_viewed"/>
+            <field name="relation_field">team_id</field>
+        </record>
+        <record id="mt_salesteam_order_confirmed" model="mail.message.subtype">
+            <field name="name">Sales Order Confirmed</field>
+            <field name="sequence">30</field>
+            <field name="res_model">crm.team</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" ref="sale.mt_order_confirmed"/>
+            <field name="relation_field">team_id</field>
+        </record>
+        <record id="mt_salesteam_invoice_paid" model="mail.message.subtype">
+            <field name="name">Invoice Paid</field>
+            <field name="sequence">35</field>
+            <field name="res_model">crm.team</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" ref="account.mt_invoice_paid"/>
+            <field name="relation_field">team_id</field>
+        </record>
+        <record id="mt_salesteam_invoice_posted" model="mail.message.subtype">
+            <field name="name">Invoice Posted</field>
+            <field name="sequence">40</field>
+            <field name="res_model">crm.team</field>
+            <field name="parent_id" ref="account.mt_invoice_validated"/>
+            <field name="relation_field">team_id</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+<template id="report_repairorder">
+        <t t-set="o" t-value="doc"/>
+            <t t-call="web.external_layout">
+                <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)" />
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <h2>
+                        <span>Repair Order #</span>
+                        <span t-field="o.name">RO123456</span>
+                    </h2>
+                    <div class="oe_structure"/>
+                    <div id="informations" class="row mb-3">
+                        <div class="col-6">
+                            <p t-if="o.partner_id" class="m-0">
+                                <strong>Customer:</strong>
+                                <span t-field="o.partner_id">John Doe</span>
+                            </p>
+                            <p t-if="o.product_id" class="m-0">
+                                <strong>Product:</strong>
+                                <span t-field="o.product_id">Laptop</span>
+                            </p>
+                            <p t-if="o.lot_id" class="m-0" groups="stock.group_production_lot">
+                                <strong>Lot/Serial:</strong>
+                                <span t-field="o.lot_id">L12345</span>
+                            </p>
+                        </div>
+                        <div class="col-6">
+                            <p class="m-0">
+                                <strong>Status:</strong>
+                                <span t-field="o.state">Pending</span>
+                            </p>
+                            <p t-if="o.user_id" class="m-0">
+                                <strong>Responsible:</strong>
+                                <span t-field="o.user_id">Jane Smith</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="oe_structure"/>
+                    <h2 class="mb-3 border-bottom border-2 border-dark">Parts</h2>
+                    <table class="table table-borderless o_main_table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th class="text-end">Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.move_ids" t-as="line">
+                                <td>
+                                    <p t-if="line.repair_line_type == 'add'"><i>(Add)</i> <span t-field="line.product_id">Product A</span></p>
+                                    <p t-if="line.repair_line_type == 'remove'">(<i>Remove</i>) <span t-field="line.product_id">Product B</span></p>
+                                    <p t-if="line.repair_line_type == 'recycle'">(<i>Recycle</i>) <span t-field="line.product_id" data-oe-demo="Product C"/></p>
+                                </td>
+                                <td class="text-end">
+                                    <span t-field="line.product_uom_qty">5</span>
+                                    <span groups="uom.group_uom" t-field="line.product_uom.name">Units</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="oe_structure"/>
+                    <div t-if="o.internal_notes">
+                        <h2 class="mb-3 border-bottom border-2 border-dark">Repair Notes</h2>
+                        <span t-field="o.internal_notes">This is a repair note.</span>
+                    </div>
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+</template>
+
+<template id="report_repairorder2">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="repair.report_repairorder" t-lang="doc.partner_id.lang"/>
+        </t>
+    </t>
+</template>
+</data>
+</odoo>

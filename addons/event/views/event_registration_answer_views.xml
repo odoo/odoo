@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_registration_answer_view_search" model="ir.ui.view">
+        <field name="name">event.registration.answer.view.search</field>
+        <field name="model">event.registration.answer</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="value_text_box" />
+                <field name="value_answer_id" />
+                <field name="question_id" />
+                <field name="event_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="event_registration_answer_view_tree" model="ir.ui.view">
+        <field name="name">event.registration.answer.view.list</field>
+        <field name="model">event.registration.answer</field>
+        <field name="arch" type="xml">
+            <list string="Answer Breakdown" create="0">
+                <field name="registration_id" optional="show" />
+                <field name="partner_id" optional="hide" />
+                <field name="question_id" optional="show" />
+                <field name="value_text_box" />
+                <field name="value_answer_id" string="Selected answer" />
+                <field name="event_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="event_registration_answer_view_graph" model="ir.ui.view">
+        <field name="name">event.registration.answer.view.graph</field>
+        <field name="model">event.registration.answer</field>
+        <field name="arch" type="xml">
+            <graph string="Answer Breakdown" sample="1" type="bar">
+                <field name="value_answer_id" type="col"/>
+                <field name="event_id" type="row"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="event_registration_answer_view_pivot" model="ir.ui.view">
+        <field name="name">event.registration.answer.view.pivot</field>
+        <field name="model">event.registration.answer</field>
+        <field name="arch" type="xml">
+            <pivot string="Answer Breakdown" sample="1">
+                <field name="registration_id" type="row"/>
+                <field name="value_answer_id" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_event_registration_report" model="ir.actions.act_window">
+        <field name="name">Answer Breakdown</field>
+        <field name="res_model">event.registration.answer</field>
+        <field name="view_mode">list,graph,pivot</field>
+        <field name="search_view_id" ref="event_registration_answer_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Answers yet!
+            </p><p>
+                Come back once you have registrations to overview answers.
+            </p>
+        </field>
+    </record>
+</odoo>

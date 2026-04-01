@@ -1,0 +1,35 @@
+<templates xml:space="preserve">
+<t t-name="html_builder.ColorPickerThemeTab">
+    <div class="p-2 d-flex flex-column gap-1 o_cc_preview_wrapper"
+        t-on-click="props.onColorClick"
+        t-on-mouseover="props.onColorPointerOver"
+        t-on-mouseout="props.onColorPointerOut"
+        t-on-mouseleave="props.onColorPointerLeave"
+        t-on-focusin="props.onFocusin" t-on-focusout="props.onFocusout">
+        <!-- List all Presets -->
+        <t t-foreach="[1, 2, 3, 4, 5]" t-as="number" t-key="number">
+            <t t-set="className" t-value="'o_cc' + number"/>
+            <t t-set="activeClass" t-value="this.props.selectedColorCombination === className ? 'selected' : ''"/>
+            <div class="d-flex align-items-center">
+                <button type="button" class="w-100 p-0 border-0 color-combination-button"
+                    t-att-class="[className, activeClass].join(' ')" t-att-data-color="className"
+                    t-attf-title="Preset {{number}}">
+                    <div inert="" class="p-2 d-flex justify-content-between align-items-center">
+                        <h1 class="m-0 fs-4">Title</h1>
+                        <p class="m-0 flex-grow-1">Text</p>
+                        <span class="py-1 px-1 rounded-1 fs-6 btn btn-sm lh-1 btn btn-sm me-1 d-flex flex-column justify-content-center btn-primary">
+                            <small>Button</small>
+                        </span>
+                        <span class="py-1 px-1 rounded-1 fs-6 btn btn-sm lh-1 btn btn-sm d-flex flex-column justify-content-center btn-secondary">
+                            <small>Button</small>
+                        </span>
+                    </div>
+                </button>
+                <button t-on-click="() => this.props.editColorCombination(number)"
+                    class="o-hb-edit-color-combination o_colorpicker_ignore fa fa-pencil btn ms-1 px-1"
+                    title="Edit"/>
+            </div>
+        </t>
+    </div>
+</t>
+</templates>

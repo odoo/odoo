@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.MessagingMenu.content" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-MessagingMenu-header')]" position="inside">
+            <t t-if="ui.isSmall">
+                <DiscussSearch t-if="!['inbox', 'starred'].includes(store.discuss.activeTab)" class="'w-100 px-2 pb-1'"/>
+            </t>
+            <t t-else="">
+                <div class="flex-grow-1"/>
+                <button t-if="!ui.isSmall" t-att-class="ui.isSmall ? 'w-50 p-2 btn btn-secondary m-1' : 'btn btn-link px-2 py-1'" t-on-click.stop="onClickNewMessage">
+                    New Message
+                </button>
+            </t>
+        </xpath>
+    </t>
+</templates>

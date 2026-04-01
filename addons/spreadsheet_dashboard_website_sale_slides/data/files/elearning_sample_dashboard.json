@@ -1,0 +1,383 @@
+{
+  "version": "18.4.14",
+  "sheets": [
+    {
+      "id": "sheet1",
+      "name": "Dashboard",
+      "colNumber": 11,
+      "rowNumber": 42,
+      "rows": {
+        "6": { "size": 40 },
+        "22": { "size": 40 }
+      },
+      "cols": {
+        "0": { "size": 100 },
+        "1": { "size": 100 },
+        "2": { "size": 100 },
+        "3": { "size": 100 },
+        "4": { "size": 75 },
+        "5": { "size": 50 },
+        "6": { "size": 100 },
+        "7": { "size": 100 },
+        "8": { "size": 100 },
+        "9": { "size": 100 },
+        "10": { "size": 75 }
+      },
+      "merges": [],
+      "cells": {
+        "A7": "[Revenues](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"product_id.channel_ids\",\"!=\",false]],\"context\":{\"group_by\":[\"date:month\"],\"graph_measure\":\"price_subtotal\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"date:month\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"eLearning Revenues\"})",
+        "A23": "[Attendees by Course](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"channel_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"channel_id\"]},\"modelName\":\"slide.channel.partner\",\"views\":[[false,\"list\"],[false,\"form\"],[false,\"kanban\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Attendees by Course\"})",
+        "G23": "[Views by Course](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"is_category\",\"=\",false]],\"context\":{\"group_by\":[\"channel_id\",\"slide_category\"],\"graph_measure\":\"total_views\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"channel_id\",\"slide_category\"]},\"modelName\":\"slide.slide\",\"views\":[[false,\"graph\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Views by Course\"})"
+      },
+      "styles": { "A7": 1, "A23": 1, "G23": 1 },
+      "formats": {},
+      "borders": {
+        "A23:E23": 1,
+        "A7:K7": 1,
+        "G23:K23": 1,
+        "A24:E24": 2,
+        "A8:K8": 2,
+        "G24:K24": 2
+      },
+      "conditionalFormats": [],
+      "dataValidationRules": [],
+      "figures": [
+        {
+          "id": "cc154c8b-08a2-4878-b245-37ea92d373c8",
+          "width": 192,
+          "height": 104,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": { "text": "Courses", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "keyValue": "Data!D2",
+            "humanize": false
+          },
+          "offset": { "x": 0, "y": 12 },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "1a2f0ccc-460d-405a-aa89-a3f39a771104",
+          "width": 192,
+          "height": 104,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": { "text": "Content", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "keyValue": "Data!D3",
+            "humanize": false
+          },
+          "offset": { "x": 202, "y": 12 },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "1f39216f-cebd-4884-8cfb-27d94e5c2e22",
+          "width": 192,
+          "height": 104,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Attendees", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!E4",
+            "baselineDescr": { "text": "since last period" },
+            "keyValue": "Data!D4",
+            "humanize": false
+          },
+          "offset": { "x": 606, "y": 12 },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "165a7593-a6b6-4c5d-8758-d9b09572fa30",
+          "width": 192,
+          "height": 104,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Revenue", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#FFF7ED",
+            "baseline": "Data!E6",
+            "baselineDescr": { "text": "since last period" },
+            "keyValue": "Data!D6",
+            "humanize": false
+          },
+          "offset": { "x": 808, "y": 12 },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "bbd06704-ff49-496b-90dc-e1616f65d613",
+          "width": 192,
+          "height": 104,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": { "text": "Rating", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "keyValue": "Data!D5",
+            "humanize": false
+          },
+          "offset": { "x": 404, "y": 12 },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "569091e3-1b9b-43b7-8f79-26fed8c39a4d",
+          "width": 1000,
+          "height": 345,
+          "tag": "chart",
+          "data": {
+            "type": "line",
+            "dataSetsHaveTitle": false,
+            "dataSets": [
+              { "dataRange": "Data!C9:C16", "yAxisId": "y" }
+            ],
+            "legendPosition": "none",
+            "labelRange": "Data!A9:A16",
+            "title": {},
+            "labelsAsText": true,
+            "stacked": false,
+            "aggregated": false,
+            "cumulative": true,
+            "fillArea": true
+          },
+          "offset": { "x": 0, "y": 178 },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "fbf2d9af-f4ca-4c52-8f24-076dd9f873b9",
+          "width": 477,
+          "height": 392,
+          "tag": "chart",
+          "data": {
+            "type": "bar",
+            "dataSetsHaveTitle": false,
+            "dataSets": [
+              { "dataRange": "Data!B20:B24", "yAxisId": "y" }
+            ],
+            "legendPosition": "none",
+            "labelRange": "Data!A20:A24",
+            "title": {},
+            "stacked": false,
+            "aggregated": false
+          },
+          "offset": { "x": 0, "y": 563 },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "491d9161-1056-4615-90a7-33b13cb778b5",
+          "width": 475,
+          "height": 391,
+          "tag": "chart",
+          "data": {
+            "type": "bar",
+            "dataSetsHaveTitle": true,
+            "dataSets": [
+              { "dataRange": "Data!B27:B32", "yAxisId": "y" },
+              { "dataRange": "Data!C27:C32" },
+              { "dataRange": "Data!D27:D32" },
+              { "dataRange": "Data!E27:E32" },
+              { "dataRange": "Data!F27:F32" }
+            ],
+            "legendPosition": "top",
+            "labelRange": "Data!A27:A32",
+            "title": {},
+            "stacked": true,
+            "aggregated": false,
+            "horizontal": false
+          },
+          "offset": { "x": 525, "y": 563 },
+          "col": 0,
+          "row": 0
+        }
+      ],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "7c4d0b0e-26a0-410c-b37f-b7e0c2c819c8",
+      "name": "Data",
+      "colNumber": 26,
+      "rowNumber": 96,
+      "rows": {},
+      "cols": {},
+      "merges": [],
+      "cells": {
+        "A2": "=_t(\"Courses\")",
+        "A3": "=_t(\"Content\")",
+        "A4": "=_t(\"Attendees\")",
+        "A5": "=_t(\"Rating\")",
+        "A6": "=_t(\"Revenue\")",
+        "A9": "=EDATE(TODAY(),-B9)",
+        "A10": "=EDATE(TODAY(),-B10)",
+        "A11": "=EDATE(TODAY(),-B11)",
+        "A12": "=EDATE(TODAY(),-B12)",
+        "A13": "=EDATE(TODAY(),-B13)",
+        "A14": "=EDATE(TODAY(),-B14)",
+        "A15": "=EDATE(TODAY(),-B15)",
+        "A16": "=EDATE(TODAY(),-B16)",
+        "A19": "=_t(\"Attendees by course\")",
+        "A20": "=_t(\"Introduction to AI\")",
+        "A21": "=_t(\"Python for Beginners\")",
+        "A22": "=_t(\"Data Science 101\")",
+        "A23": "=_t(\"AWS Cloud Essentials\")",
+        "A24": "=_t(\"Machine Learning Basics\")",
+        "A27": "=_t(\"Views by course\")",
+        "A28": "=_t(\"Introduction to AI\")",
+        "A29": "=_t(\"Python for Beginners\")",
+        "A30": "=_t(\"Data Science 101\")",
+        "A31": "=_t(\"AWS Cloud Essentials\")",
+        "A32": "=_t(\"Machine Learning Basics\")",
+        "B1": "=_t(\"Current\")",
+        "B2": "35",
+        "B3": "145",
+        "B4": "3562",
+        "B5": "4.2",
+        "B6": "17478",
+        "B9": "7",
+        "B10": "6",
+        "B11": "5",
+        "B12": "4",
+        "B13": "3",
+        "B14": "2",
+        "B15": "1",
+        "B16": "0",
+        "B20": "120",
+        "B21": "85",
+        "B22": "95",
+        "B23": "67",
+        "B24": "100",
+        "B27": "=_t(\"Article\")",
+        "B28": "85",
+        "B29": "55",
+        "B30": "76",
+        "B31": "70",
+        "B32": "83",
+        "C1": "=_t(\"Previous\")",
+        "C2": "20",
+        "C3": "123",
+        "C4": "2987",
+        "C6": "11456",
+        "C9": "147574",
+        "C10": "234217",
+        "C11": "455646",
+        "C12": "184701",
+        "C13": "128578",
+        "C14": "177586",
+        "C15": "70810",
+        "C16": "455098",
+        "C27": "=_t(\"Document\")",
+        "C28": "92",
+        "C29": "94",
+        "C30": "52",
+        "C31": "53",
+        "C32": "65",
+        "D1": "=_t(\"Current\")",
+        "D2": "=FORMAT.LARGE.NUMBER(B2)",
+        "D3": "=FORMAT.LARGE.NUMBER(B3)",
+        "D4": "=FORMAT.LARGE.NUMBER(B4)",
+        "D5": "=CONCATENATE(B5,\"/5\")",
+        "D6": "=FORMAT.LARGE.NUMBER(B6)",
+        "D27": "=_t(\"Image\")",
+        "D28": "101",
+        "D29": "77",
+        "D30": "109",
+        "D31": "75",
+        "D32": "76",
+        "E1": "=_t(\"Previous\")",
+        "E4": "=FORMAT.LARGE.NUMBER(C4)",
+        "E6": "=FORMAT.LARGE.NUMBER(C6)",
+        "E27": "=_t(\"Video\")",
+        "E28": "78",
+        "E29": "97",
+        "E30": "116",
+        "E31": "91",
+        "E32": "68",
+        "F27": "=_t(\"Quiz\")",
+        "F28": "79",
+        "F29": "76",
+        "F30": "87",
+        "F31": "117",
+        "F32": "51"
+      },
+      "styles": { "B1:E1": 2, "D2:D4": 3, "E4": 3, "D6:E6": 3, "D5": 4 },
+      "formats": { "A9:A16": 1, "B2:B4": 2, "C4": 2, "B5": 3, "C9:C16": 4, "B6:E6": 4 },
+      "borders": {},
+      "conditionalFormats": [],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    }
+  ],
+  "styles": {
+    "1": { "textColor": "#01666b", "bold": true, "fontSize": 16 },
+    "2": { "bold": true },
+    "3": { "fillColor": "#f2f2f2" },
+    "4": { "fillColor": "#f2f2f2", "align": "right" }
+  },
+  "formats": { "1": "mmmm yyyy", "2": "0", "3": "#,##0", "4": "[$$]#,##0" },
+  "borders": {
+    "1": {
+      "bottom": { "style": "thin", "color": "#CCCCCC" }
+    },
+    "2": {
+      "top": { "style": "thin", "color": "#CCCCCC" }
+    }
+  },
+  "revisionId": "START_REVISION",
+  "uniqueFigureIds": true,
+  "settings": {
+    "locale": {
+      "name": "English (US)",
+      "code": "en_US",
+      "thousandsSeparator": ",",
+      "decimalSeparator": ".",
+      "dateFormat": "mm/dd/yyyy",
+      "timeFormat": "hh:mm:ss",
+      "formulaArgSeparator": ",",
+      "weekStart": 7
+    }
+  },
+  "pivots": {},
+  "pivotNextId": 12,
+  "customTableStyles": {},
+  "globalFilters": [],
+  "lists": {},
+  "listNextId": 1,
+  "chartOdooMenusReferences": {}
+}

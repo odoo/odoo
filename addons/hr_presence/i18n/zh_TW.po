@@ -1,0 +1,290 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_presence
+#
+# Translators:
+# Wil Odoo, 2025
+# Tony Ng, 2025
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-09-16 08:10+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-19/hr_presence/zh_Hant/>\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid "%(name)s has been noted as %(state)s today"
+msgstr "%(name)s 今天已被標記為 %(state)s"
+
+#. module: hr_presence
+#: model:mail.template,body_html:hr_presence.mail_template_presence
+msgid ""
+"<div>\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,"
+"<br/><br/>\n"
+"We hope this message finds you well. It has come to our attention that you "
+"are currently not present at work, and there is no record of a time off "
+"request from you. If this absence is due to an oversight on our part, we "
+"sincerely apologize for any confusion.\n"
+"Please take the necessary steps to address this unplanned absence. Should "
+"you have any questions or need assistance, do not hesitate to reach out to "
+"your manager or the HR department at your earliest convenience.\n"
+"Thank you for your prompt attention to this matter.\n"
+"                    <br/>Best Regards,<br/><br/>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div>\n"
+"                    親愛的 <t t-out=\"object.name or ''\">Abigail Peterson</"
+"t>：<br/><br/>\n"
+"首先希望你安好。我們注意到你目前沒有上班，而系統並無你申請休假的記錄。若今次"
+"缺勤是因我們的疏忽引起，並造成任何混亂，我們誠懇道歉。\n"
+"請採取必要的措施，解決今次未有通知的缺勤問題。如有任何疑問或需要協助，請盡快"
+"聯絡你的主管或人力資源部門。感謝你對此事作出及時關注。\n"
+"                    <br/>順祝  安康<br/><br/>\n"
+"                </div>\n"
+"            "
+
+#. module: hr_presence
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__absent
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
+msgid "Absent"
+msgstr "病假"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_log
+msgid "Add a log note"
+msgstr "新增日誌備註"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設定"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_time_off
+msgid "Create a Time Off"
+msgstr "建立休假"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_ir_websocket__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_res_company__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__email_sent
+msgid "Email Sent"
+msgstr "電郵已發送"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_hr_employee
+msgid "Employee"
+msgstr "員工"
+
+#. module: hr_presence
+#: model:sms.template,name:hr_presence.sms_template_data_hr_presence
+msgid "Employee: Presence Reminder"
+msgstr "員工：出勤狀況提醒"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.ir_cron_presence_control_ir_actions_server
+msgid "HR Presence: cron"
+msgstr "人力資源出勤：cron"
+
+#. module: hr_presence
+#: model:mail.template,name:hr_presence.mail_template_presence
+msgid "HR: Employee Absence email"
+msgstr "人力資源：員工缺勤電郵"
+
+#. module: hr_presence
+#: model:sms.template,body:hr_presence.sms_template_data_hr_presence
+msgid ""
+"Hi, we noticed you're not at work and no time-off was submitted. If this is "
+"an oversight from us, we apologize. Please contact your manager or HR ASAP. "
+"Thanks"
+msgstr ""
+"你好，我們注意到你沒有上班，也沒有提交休假申請。如果這是我們的疏忽，我們深表"
+"歉意。請盡快聯絡你的經理或人力資源部門。謝謝。"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
+msgid "Hr Presence Last Compute Date"
+msgstr "人員出勤狀態前次更新時間"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__hr_presence_state_display
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__hr_presence_state_display
+msgid "Hr Presence State Display"
+msgstr "人員出勤狀態顯示"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__id
+#: model:ir.model.fields,field_description:hr_presence.field_ir_websocket__id
+#: model:ir.model.fields,field_description:hr_presence.field_res_company__id
+#: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__id
+#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__id
+msgid "ID"
+msgstr "識別號"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
+msgid "IP Address"
+msgstr "IP 位址"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__ip_connected
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__ip_connected
+msgid "Ip Connected"
+msgstr "Ip 已連接"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_presence
+msgid "Manually Set Presence"
+msgstr "手動設定出勤"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_present
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_present
+msgid "Manually Set Present"
+msgstr "手動設置為出勤"
+
+#. module: hr_presence
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__out_of_working_hour
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__out_of_working_hour
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
+msgid "Off-Hours"
+msgstr ""
+
+#. module: hr_presence
+#. odoo-javascript
+#: code:addons/hr_presence/static/src/search/hr_presence_cog_menu/hr_presence_cog_menu.xml:0
+msgid "Presence Control"
+msgstr "出勤控制"
+
+#. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
+msgid "Presence/Absence"
+msgstr "出勤/缺勤"
+
+#. module: hr_presence
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__present
+msgid "Present"
+msgstr "現在"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_hr_employee_public
+msgid "Public Employee"
+msgstr "公開員工"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid "Send SMS"
+msgstr "發送簡訊"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_sms
+msgid "Send a SMS"
+msgstr "傳送電話短訊"
+
+#. module: hr_presence
+#: model:mail.template,description:hr_presence.mail_template_presence
+msgid ""
+"Sent manually in presence module when an employee wasn't working despite not "
+"being off"
+msgstr "當員工不工作時，儘管沒有休假，在出勤模組中手動發送"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_absent
+msgid "Set Absent"
+msgstr "設為缺席"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_present
+msgid "Set Present"
+msgstr "設為出席"
+
+#. module: hr_presence
+#: model:mail.template,subject:hr_presence.mail_template_presence
+msgid "Unexpected Absence"
+msgstr "未預期的缺勤"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid "Unplanned Absence"
+msgstr "突發缺勤"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_res_users_log
+msgid "Users Log"
+msgstr "使用者紀錄"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid ""
+"We hope this message finds you well. It has come to our attention that you "
+"are currently not present at work, and there is no record of a time off "
+"request from you. If this absence is due to an oversight on our part, we "
+"sincerely apologize for any confusion.\n"
+"Please take the necessary steps to address this unplanned absence. Should "
+"you have any questions or need assistance, do not hesitate to reach out to "
+"your manager or the HR department at your earliest convenience.\n"
+"Thank you for your prompt attention to this matter."
+msgstr ""
+"首先希望你安好。我們注意到你目前沒有上班，而系統並無你申請休假的記錄。若今次"
+"缺勤是因我們的疏忽引起，並造成任何混亂，我們誠懇道歉。\n"
+"請採取必要的措施，解決今次未有通知的缺勤問題。如有任何疑問或需要協助，請盡快"
+"聯絡你的主管或人力資源部門。感謝你對此事作出及時關注。"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid "You don't have the right to do this. Please contact an Administrator."
+msgstr "你沒有權限進行此操作。請聯絡系統管理員。"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_ir_websocket
+msgid "websocket message handling"
+msgstr "WebSocket 訊息處理"
+
+#~ msgid "Basic Employee"
+#~ msgstr "一般員工"
+
+#~ msgid "Create Uid"
+#~ msgstr "建立 Uid"
+
+#~ msgid "Out of Working Hours"
+#~ msgstr "不在工作時間"
+
+#~ msgid "Presence"
+#~ msgstr "出勤"

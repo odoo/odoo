@@ -1,0 +1,1493 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_work_entry
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-06 08:44+0000\n"
+"Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
+"hr_work_entry/id/>\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_employee__work_entry_source
+#: model:ir.model.fields,help:hr_work_entry.field_hr_version__work_entry_source
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__work_entry_source
+msgid ""
+"\n"
+"        Defines the source for work entries generation\n"
+"\n"
+"        Working Schedule: Work entries will be generated from the working "
+"hours below.\n"
+"        Attendances: Work entries will be generated from the employee's "
+"attendances. (requires Attendance app)\n"
+"        Planning: Work entries will be generated from the employee's "
+"planning. (requires Planning app)\n"
+"    "
+msgstr ""
+"\n"
+"        Definisikan sumber untuk pembuatan entri-entri kerja\n"
+"\n"
+"        Jadwal Kerja: Entri-entri kerja akan dibuat dari jam kerja di "
+"bawah.\n"
+"        Absensi: Entri-entri kerja akan dibuat dari absensi karyawan. "
+"(membutuhkan app Absensi)\n"
+"        Perencanaan: Entri-entri kerja akan dibuat dari perencanaan "
+"karyawan. (membutuhkan app Planning)\n"
+"    "
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_employee.py:0
+msgid "%s work entries"
+msgstr "%s entri kerja"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>Employees in "
+"red will be skipped because they have at least one validated work entry."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Peringatan\"/>Karyawan "
+"yang berwarna merah akan dilewati karena mereka memiliki setidaknya satu "
+"entri kerja yang divalidasi."
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+msgid "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
+msgstr "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                            Work Entries\n"
+"                            </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Entri-Entri Kerja\n"
+"                            </span>"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+msgid ""
+"<span class=\"text-muted\">Warning: The work entry regeneration will delete "
+"all manual changes on the selected period.</span>"
+msgstr ""
+"<span class=\"text-muted\">Warning: Pembuatan ulang entri kerja akan "
+"menghapus semua perubahan manual pada periode yang dipilih.</span>"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "<span>Hours</span>"
+msgstr "<span>Jam</span>"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__active
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__active
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__active
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Active"
+msgstr "Aktif"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_selection_buttons.xml:0
+msgid "Add"
+msgstr "Tambah"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__is_extra_hours
+msgid "Added to Monthly Pay"
+msgstr "Ditambahkan ke Pembayaran Bulanan"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "Additional Description..."
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_additional_paid
+msgid "Additional Time (Paid)"
+msgstr "Waktu Tambahan (Dibayar)"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__is_leave
+msgid "Allow the work entry type to be linked with time off types."
+msgstr "Izinkan tipe entri kerja untuk di-link ke tipe time off."
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_defence
+msgid "Ancillary and Defence Leave"
+msgstr "Ancillary and Defence Leave"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Archived"
+msgstr "Diarsipkan"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance
+msgid "Attendance"
+msgstr "Absensi"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_bereavement_leave
+msgid "Bereavement Leave"
+msgstr "Cuti Berkabung"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_breast_feeding
+msgid "Breastfeeding Break"
+msgstr "Istirahat Menyusui"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_small_unemployment_birth
+msgid "Brief Holiday (Birth)"
+msgstr "Hari Merah Singkat (Kelahiran)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_compensatory
+msgid "CTO"
+msgstr "CTO"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+msgid "Cancel"
+msgstr "Batal"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__cancelled
+msgid "Cancelled"
+msgstr "Dibatalkan"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__code
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__code
+msgid ""
+"Careful, the Code is used in many references, changing it could lead to "
+"unwanted changes."
+msgstr ""
+"Hati-hati, Kode digunakan dibanyak referensi, merubahnya dapat berujung ke "
+"perubahan yang tidak diinginkan."
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_cash_out
+msgid "Cash Out of Leave in Service"
+msgstr "Uang Cuti Tahunan"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__is_extra_hours
+msgid ""
+"Check this setting if you want the hours to be considered as extra time and "
+"added as a bonus to the basic salary."
+msgstr ""
+"Centang pengaturan ini bila Anda ingin jam-jam untuk dianggap jam ekstra dan "
+"ditambahkan sebagai bonus ke gaji standar."
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__color
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__color
+msgid "Color"
+msgstr "Warna"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__company_id
+msgid "Company"
+msgstr "Perusahaan"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_compassionate_leave
+msgid "Compassionate Leave"
+msgstr "Cuti Berkabung"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_compensatory
+msgid "Compensatory Time Off"
+msgstr "Kompensasi Cuti"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Conflicting"
+msgstr "Memiliki Konflik"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__conflict
+msgid "Conflicts"
+msgstr "Berkonflik"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_corona
+msgid "Corona Unemployment"
+msgstr "Pengangguran Covid"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__country_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_id
+msgid "Country"
+msgstr "Negara"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_code
+msgid "Country Code"
+msgstr "Kode Negara"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_type_action
+msgid "Create a new work entry type"
+msgstr "Buat tipe entri kerja baru"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__create_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__create_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__create_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__create_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_credit_time
+msgid "Credit Time"
+msgstr "Waktu Kredit"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Current Month"
+msgstr "Bulan Saat Ini"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Date"
+msgstr "Tanggal"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_selection_buttons.xml:0
+msgid "Delete"
+msgstr "Hapus"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__department_id
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Department"
+msgstr "Departemen"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "Description"
+msgstr "Deskripsi"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_disability_due_to_illness_imss
+msgid "Disability due to illness (IMSS)"
+msgstr "Disabilitas oleh karena penyakit (IMSS)"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_code
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_code
+msgid "Display Code"
+msgstr "Kode Tampilan"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_double
+msgid "Double Time Hours"
+msgstr "Jam Kerja Dobel"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Draft"
+msgstr "Draft"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__duration
+msgid "Duration"
+msgstr "Durasi"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "Duration must be positive and cannot exceed 24 hours."
+msgstr "Durasi harus positif dan tidak dapat melampaui 24 jam."
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__earliest_available_date_message
+msgid "Earliest Available Date Message"
+msgstr "Pesan Tanggal Tersedia Paling Awal"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__earliest_available_date
+msgid "Earliest date"
+msgstr "Tanggal paling awal"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_economic_unemployment
+msgid "Economic Unemployment"
+msgstr "Pengangguran Ekonomis"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_training_time_off
+msgid "Educational Time Off"
+msgstr "Cuti Edukasi"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_emergency
+msgid "Emergency Leave"
+msgstr "Cuti Darurat"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_employee
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__employee_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Employee"
+msgstr "Karyawan"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_version
+msgid "Employee Contract"
+msgstr "Kontrak Karyawan"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__version_id
+msgid "Employee Record"
+msgstr "Rekaman Karyawan"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__employee_ids
+msgid "Employees"
+msgstr "Karyawan"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_european
+msgid "European Time Off"
+msgstr "Cuti Eropa"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_examination_leave
+msgid "Examination Leave"
+msgstr "Cuti Ujian"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__external_code
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__external_code
+msgid "External Code"
+msgstr "Kode Eksternal"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_extra_hours
+msgid "Extra Hours"
+msgstr "Jam Ekstra"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_extra_legal
+msgid "Extra Legal Time Off"
+msgstr "Cuti Hukum Ekstra"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_flemish_training_time_off
+msgid "Flemish Educational Time Off"
+msgstr "Cuti Edukasi Flander"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__date_from
+msgid "From"
+msgstr "Dari"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_leave
+msgid "GTO"
+msgstr "GTO"
+
+#. module: hr_work_entry
+#: model:ir.actions.server,name:hr_work_entry.ir_cron_generate_missing_work_entries_ir_actions_server
+msgid "Generate Missing Work Entries"
+msgstr "Buat Entri-Entri Kerja yang Kurang"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__date_generated_from
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__date_generated_from
+msgid "Generated From"
+msgstr "Dibuat Dari"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__date_generated_to
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__date_generated_to
+msgid "Generated To"
+msgstr "Dibuat Ke"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_leave
+msgid "Generic Time Off"
+msgstr "Cuti Umum"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_work_entry
+msgid "HR Work Entry"
+msgstr "Entri Kerja HR"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_work_entry_type
+msgid "HR Work Entry Type"
+msgstr "Tipe Entri Kerja HR"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_home_working
+msgid "HW"
+msgstr "HW"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__has_work_entries
+msgid "Has Work Entries"
+msgstr "Memiliki Entri-Entri Kerja"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_home_working
+msgid "Home Working"
+msgstr "Bekerja di Rumah"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_hourly_wt
+msgid "Hourly Salary"
+msgstr "Gaji Per Jam"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_accident_wt_hourly
+msgid "Hourly Salary in case of Accident"
+msgstr "Gaji Per Jam dalam kasus Kecelakaan"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_illness_wt_hourly
+msgid "Hourly Salary in case of Illness"
+msgstr "Gaji Per Jam dalam kasus Penyakit"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_maternity_wt_hourly
+msgid "Hourly Salary in case of Maternity / Paternity Leave"
+msgstr "Gaji Per Jam dalam kasus Cuti Hamil Ibu / Ayah"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_military_wt_hourly
+msgid "Hourly Salary in case of Military Leave"
+msgstr "Gaji Per Jam dalam kasus Cuti Militer"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__is_work
+msgid ""
+"If checked, the work entry is counted as work time in the working schedule"
+msgstr "Bila dicentang, entri kerja dihitung sebagai jam kerja di jadwal kerja"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the work "
+"entry type without removing it."
+msgstr ""
+"Bila field aktif ditetapkan menjadi False, ini akan memungkinkan Anda untuk "
+"menyembunyikkan tipe entri kerja tanpa menghapusnya."
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__amount_rate
+msgid "If you want the hours should be paid double, the rate should be 200%."
+msgstr "Bila Anda ingin jam-jam di bayar ganda, rate harus 200%."
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__conflict
+msgid "In Conflict"
+msgstr "Sedang Konflik"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__validated
+msgid "In Payslip"
+msgstr "Dalam Payslip"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_work_entry_regeneration_wizard.py:0
+msgid ""
+"In order to regenerate the work entries, you need to provide the wizard with "
+"an employee_id, a date_from and a date_to."
+msgstr ""
+"Untuk membuat ulang entri-entri kerja, Anda harus menyediakan wizard dengan "
+"employee_id, date_from dan date_to."
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_interruption_wt
+msgid "Interruption of Work"
+msgstr "Gangguan saat Kerja"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/components/work_entry_source_field/work_entry_source_field.js:0
+msgid ""
+"Invalid option: For fully flexible calendars, the work entry source cannot "
+"be 'Working Hours'."
+msgstr ""
+"Opsi tidak valid: Untuk kalender yang sepenuhnya fleksibel, sumber entri "
+"kerja tidak boleh 'Jam Kerja'."
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__is_checked
+msgid "Is Checked"
+msgstr "Apakah Diperiksa"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__last_generation_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__last_generation_date
+msgid "Last Generation Date"
+msgstr "Tanggal Pembuatan Terakhir"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__write_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__write_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diperbarui oleh"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__write_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__write_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbarui pada"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__latest_available_date_message
+msgid "Latest Available Date Message"
+msgstr "Pesan Tanggal Tersedia Paling Terbaru"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__latest_available_date
+msgid "Latest date"
+msgstr "Tanggal terbaru"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_lesson_wt
+msgid "Lesson Salary"
+msgstr "Gaji Pelajaran"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_long_service_leave
+msgid "Long Service Leave"
+msgstr "Cuti Besar Karyawan"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_long_sick
+msgid "Long Term Sick"
+msgstr "Penyakit Jangka Panjang"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_long_leave
+msgid "Long Term Time Off"
+msgstr "Cuti Jangka Panjang"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_marriage_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_marriage_leave
+msgid "Marriage Leave"
+msgstr "Cuti Menikah"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_maternity_imss
+msgid "Maternity (IMSS)"
+msgstr "Hamil Ibu (IMSS)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_maternity_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_maternity_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_maternity
+msgid "Maternity Leave"
+msgstr "Cuti Hamil Ibu"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_maternity_leave_80
+msgid "Maternity Leave 80%"
+msgstr "Cuti Hamil Ibu 80%"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_maternity
+msgid "Maternity Time Off"
+msgstr "Cuti Hamil Ibu"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_maternity
+msgid "Maternity Time Off (Paid at 75%)"
+msgstr "Cuti Hamil Ibu (Dibayar pada 75%)"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__user_id
+msgid "Me"
+msgstr "Saya"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_medical_assistance
+msgid "Medical Assistance"
+msgstr "Bantuan Medis"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_care_children_with_cancer_imss
+msgid "Medical Leave for Care of Children Diagnosed with Cancer (IMSS)"
+msgstr ""
+"Cuti Medis untuk Perawatan Anak yang Didiagnosis Mengidap Kanker (IMSS)"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_version.py:0
+msgid "Missing date or duration on work entry"
+msgstr "Kurang tanggal atau durasi di entri kerja"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_version.py:0
+msgid "Missing timezone for work entries generation."
+msgstr "Kurang zona waktu untuk pembuatan entri kerja."
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_monthly_wt
+msgid "Monthly Salary"
+msgstr "Gaji Bulanan"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__name
+msgid "Name"
+msgstr "Nama"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__draft
+msgid "New"
+msgstr "Baru"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid "No data to display"
+msgstr "Tidak data yang bisa ditampilkan"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_work_entry_regeneration_wizard.py:0
+msgid ""
+"No work entry can be regenerated in this range of dates and these employees."
+msgstr ""
+"Tidak ada entri kerja yang dapat dibuat ulang di rentang tanggal dan "
+"karyawan-karyawan ini."
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "Note: Validated work entries cannot be modified."
+msgstr "Catatan: Entri kerja yang divalidasi tidak dapat dimodifikasi."
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_notice
+msgid "Notice (Unprovided)"
+msgstr "Catatan (Tidak Disediakan)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_overtime
+msgid "OT"
+msgstr "OT"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.hr_work_entry_type_out_of_contract
+msgid "OoC"
+msgstr "OoC"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_other
+msgid "Other Paid Leave"
+msgstr "Cuti Berbayar Lainnya"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.hr_work_entry_type_out_of_contract
+msgid "Out of Contract"
+msgstr "Diluar Kontrak"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_overtime_wt
+msgid "Overtime 100%"
+msgstr "Lembur 100%"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_overtime_125_wt
+msgid "Overtime 125%"
+msgstr "Lembur 125%"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_overtime
+msgid "Overtime Hours"
+msgstr "Jam-Jam Lembur"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_overtime
+msgid "Overtime Hours (Paid at 150%)"
+msgstr "Jam-Jam Lembur (Dibayar 150%)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_pto
+msgid "Overtime: Public Time Off"
+msgstr "Lembur: Hari Libur Nasional"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_regular
+msgid "Overtime: Regular"
+msgstr "Lembur: Reguler"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_saturday
+msgid "Overtime: Saturday"
+msgstr "Lembur: Sabtu"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_saturday_pto
+msgid "Overtime: Saturday & Public Time Off"
+msgstr "Lembur: Sabtu & Hari Libur Nasional"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_sunday
+msgid "Overtime: Sunday"
+msgstr "Lembur: Minggu"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_sunday_pto
+msgid "Overtime: Sunday & Public Time Off"
+msgstr "Lembur: Minggu & Hari Libur Nasional"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_legal_leave
+msgid "PTO"
+msgstr "PTO"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_parental
+msgid "Paid Parental Leave"
+msgstr "Cuti Hamil Ayah Berbayar"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_paid_sick_leave
+msgid "Paid Sick Time off"
+msgstr "Cuti Sakit Berbayar"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_paid_time_off
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_legal_leave
+msgid "Paid Time Off"
+msgstr "Cuti Berbayar"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_parental_time_off
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_parental_time_off
+msgid "Parental Time Off"
+msgstr "Cuti Orang Tua"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_partial_incapacity
+msgid "Partial Incapacity (due to illness)"
+msgstr "Ketidakmampuan Separuh (oleh karena penyakit)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_paternity_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_paternity_leave
+msgid "Paternity Leave"
+msgstr "Cuti Hamil Ayah"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_paternity_leave_80
+msgid "Paternity Leave 80%"
+msgstr "Cuti Ayah 80%"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paternity_legal
+msgid "Paternity Time Off (Legal)"
+msgstr "Cuti Hamil Ayah (Legal)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paternity_company
+msgid "Paternity Time Off (Paid by Company)"
+msgstr "Cuti Hamil Ayah (Dibayar oleh Perusahaan)"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__amount_rate
+msgid "Pay rate"
+msgstr "Tarif pembayaran"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__code
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__code
+msgid "Payroll Code"
+msgstr "Kode Payroll"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+msgid "Period"
+msgstr "Periode"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_personal_leave
+msgid "Personal Leave"
+msgstr "Cuti Pribadi"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_bank_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_work_entry_type_bank_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.uae_public_holiday_entry_type
+msgid "Public Holiday"
+msgstr "Tanggal Merah"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_phc
+msgid "Public Holiday Compensation"
+msgstr "Kompensasi Hari Libur Nasional"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__amount_rate
+msgid "Rate"
+msgstr "Rate"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_recovery_additional
+msgid "Recovery Additional Time"
+msgstr "Waktu Penyembuhan Tambahan"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_recovery
+msgid "Recovery Bank Holiday"
+msgstr "Pengganti Hari Libur"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_work_entry_regeneration_wizard
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+msgid "Regenerate Employee Work Entries"
+msgstr "Buat Ulang Entr-Entri Kerja Karyawan"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+msgid "Regenerate Work Entries"
+msgstr "Buat Ulang Entri-Entri Kerja"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_create_popover.xml:0
+msgid "Replace"
+msgstr "Ganti"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_calendar.xml:0
+msgid "Reset"
+msgstr "Reset"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_selection_buttons.xml:0
+msgid "Reset Selected Work Entries"
+msgstr "Reset Entri-Entri Kerja Terpilih"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "Detail Sumber Daya Cuti"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_resource_calendar
+msgid "Resource Working Time"
+msgstr "Sumber Daya Jam Kerja"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_retro_overtime
+msgid "Retro Overtime Hours"
+msgstr "Jam-Jam Lembur Retrospektif"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_retro_regular
+msgid "Retro Regular Pay Hours"
+msgstr "Gaji Jam-Jam Reguler Retrospektif"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_sick_leave
+msgid "STO"
+msgstr "STO"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_accident_wt
+msgid "Salary in case of Accident"
+msgstr "Gaji dalam kasus Kecelakaan"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_illness_wt
+msgid "Salary in case of Illness"
+msgstr "Gaji dalam kasus penyakit"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_maternity_wt
+msgid "Salary in case of Maternity / Paternity Leave"
+msgstr "Gaji dalam kasus Cuti Hamil Ibu / Ayah"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_military_wt
+msgid "Salary in case of Military Leave"
+msgstr "Gaji dalam kasus Cuti Militer"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__search_criteria_completed
+msgid "Search Criteria Completed"
+msgstr "Kriteria Pencarian Selesai"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Search Work Entry"
+msgstr "Cari Entri Kerja"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
+msgid "Search Work Entry Type"
+msgstr "Cari Tipe Entri Kerja"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__sequence
+msgid "Sequence"
+msgstr "Urutan"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_selection_buttons.xml:0
+msgid "Set"
+msgstr "Set"
+
+#. module: hr_work_entry
+#: model:ir.actions.server,name:hr_work_entry.action_hr_work_entry_set_to_draft
+msgid "Set to Draft"
+msgstr "Tetapkan menjadi Draft"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_100
+msgid "Sick Leave (100% Paid)"
+msgstr "Cuti Sakit (100% Dibayar)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_75
+msgid "Sick Leave (75% Paid)"
+msgstr "Cuti Sakit (75% Dibayar)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_sick_leave_unpaid
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_0
+msgid "Sick Leave (Unpaid)"
+msgstr "Cuti Sakit (Tidak Dibayar)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.uae_sick_leave_0_entry_type
+msgid "Sick Leave 0"
+msgstr "Cuti Sakit 0"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.uae_sick_leave_50_entry_type
+msgid "Sick Leave 50"
+msgstr "Cuti Sakit 50"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_sick_leave_80
+msgid "Sick Leave 80%"
+msgstr "Cuti Sakit 80%"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_sick_leave
+msgid "Sick Time Off"
+msgstr "Cuti Sakit"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_pl_work_entry_type_sick_leave
+msgid "Sick Time Off (Paid at 80%)"
+msgstr "Cuti Sakit (Dibayar 80%)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_part_sick
+msgid "Sick Time Off (Without Guaranteed Salary)"
+msgstr "Cuti Sakit (Tanpa Gaji yang Dijamin)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_25
+msgid "Sick Time Off Day 1-3 (Paid at 25%)"
+msgstr "Cuti Sakit Hari 1-3 (Dibayar 25%)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_55
+msgid "Sick Time Off Day 4-10 (Paid at 55%)"
+msgstr "Cuti Sakit Hari 4-10 (Dibayar 55%)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_0
+msgid "Sick Time Off Day up to 52 weeks (Paid at 55% by social security)"
+msgstr "Cuti Sakit sampai dengan 52 minggu (Dibayar 55% oleh jaminan sosial)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_sick_leave_75
+msgid "Sick Time off (75% Paid)"
+msgstr "Cuti Sakit (75% Dibayar)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_sick_leave_unpaid
+msgid "Sick Time off (Unpaid)"
+msgstr "Cuti Sakit (Tidak Berbayar)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_simple_holiday_pay_variable_salary
+msgid "Simple Holiday Pay - Variable Salary"
+msgstr "Gaji Libur Simpel - Gaji Variabel"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_situational_unemployment
+msgid "Situational Unemployment"
+msgstr "Pengangguran Situasional"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_small_unemployment
+msgid "Small Unemployment (Brief Holiday)"
+msgstr "Pengangguran Kecil (Libur Sejenak)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_solicitation_time_off
+msgid "Solicitation Time Off"
+msgstr "Permohonan Cuti"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/xml/work_entry_templates.xml:0
+msgid "Solve conflicts first"
+msgstr "Betulkan konflik terlebih dahulu"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/calendar_common/work_entry_calendar_common_popover.xml:0
+msgid "Split"
+msgstr "Pisah"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_calendar_controller.js:0
+msgid "Split Work Entry"
+msgstr "Pisah Entri Kerja"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid ""
+"Split work entry duration has to be less than the existing work entry "
+"duration."
+msgstr ""
+"Durasi entri kerja terpisah harus kurang dari durasi entri kerja saat ini."
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
+msgid "State"
+msgstr "Status"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_statutory_holiday
+msgid "Statutory Holiday"
+msgstr "Hari Libur Nasional"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_strike
+msgid "Strike"
+msgstr "Strike"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"Kode ISO negara dalam dua karakter.\n"
+"Anda dapat menggunakan kolom ini untuk pencarian cepat."
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "The amount of work on the day should not exceed 24 hours."
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_work_entry_regeneration_wizard.py:0
+msgid ""
+"The from date must be >= '%(earliest_available_date)s' and the to date must "
+"be <= '%(latest_available_date)s', which correspond to the generated work "
+"entries time interval."
+msgstr ""
+"Tanggal dari harus >= '%(earliest_available_date)s' dan tanggal sampai hari "
+"<= '%(latest_available_date)s', yang masing-masing sesuai dengan interval "
+"waktu entri-entri kerja yang dibuat."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+msgid "The same code cannot be associated to multiple work entry types (%s)"
+msgstr ""
+"Code yang sama tidak boleh terkait ke lebih dari satu tipe entri kerja (%s)"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__display_code
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__display_code
+msgid ""
+"This code can be changed, it is only for a display purpose (3 letters max)"
+msgstr ""
+"Kode ini dapat diubah, ini hanya untuk tujuan penampilan (maks 3 huruf)"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "This work entry cannot be validated. The work entry type is undefined."
+msgstr ""
+"Entri kerja ini tidak dapat divalidasi. Tipe entri kerja adalah belum "
+"didefinisikan."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "This work entry is validated. You can't delete it."
+msgstr "Entri kerja ini divalidasi. Anda tidak dapat menghapusnya."
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__is_leave
+msgid "Time Off"
+msgstr "Cuti"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid "Time Off Options"
+msgstr "Opsi Cuti"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__date_to
+msgid "To"
+msgstr "Kepada"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_training
+msgid "Training"
+msgstr "Pelatihan"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid ""
+"Try to add some records, or make sure that there is no active filter in the "
+"search bar."
+msgstr ""
+"Coba untuk menambahkan beberapa record, atau pastikan tidak ada filter aktif "
+"di kolom pencarian."
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Type"
+msgstr "Tipe"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_unpaid_leave
+msgid "UN"
+msgstr "UN"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "Undefined"
+msgstr "Belum didefinisikan"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "Undefined Type"
+msgstr "Tipe Belum Didefinisikan"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_unjustified_reason
+msgid "Unjustified Reason"
+msgstr "Alasan Tidak Dapat Disetujui"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_unpaid_leave
+msgid "Unpaid"
+msgstr "Belum Dibayar"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_unpaid_wt
+msgid "Unpaid Salary"
+msgstr "Gaji Tidak Dibayar"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_unpredictable
+msgid "Unpredictable Reason"
+msgstr "Alasan Tidak Disangka"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_termination
+msgid "Unused Leave on Termination"
+msgstr "Cuti yang Tidak Digunakan pada Pemutusan Kerja"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__external_code
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__external_code
+msgid "Use this code to export your data to a third party"
+msgstr "Gunakan kode ini untuk mengekspor data Anda ke pihak ketiga"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__valid
+msgid "Valid"
+msgstr "Valid"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Validated"
+msgstr "Sudah Divalidasi"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_weekend
+msgid "Weekend"
+msgstr "Akhir Pekan"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident
+msgid "Work Accident"
+msgstr "Kecelakaan Kerja"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_resource_calendar_attendance
+msgid "Work Detail"
+msgstr "Detail Pekerjaan"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_pivot
+msgid "Work Entries"
+msgstr "Entri Kerja"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_user_work_entry_employee
+msgid "Work Entries Employees"
+msgstr "Entri Kerja Karyawan"
+
+#. module: hr_work_entry
+#: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_action
+#: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_action_conflict
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "Work Entry"
+msgstr "Entri Kerja"
+
+#. module: hr_work_entry
+#: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_regeneration_wizard_action
+msgid "Work Entry Regeneration"
+msgstr "Pembuatan Ulang Entri Kerja"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__work_entry_source
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__work_entry_source
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__work_entry_source
+msgid "Work Entry Source"
+msgstr "Sumber Entri Kerja"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__work_entry_source_calendar_invalid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__work_entry_source_calendar_invalid
+msgid "Work Entry Source Calendar Invalid"
+msgstr "Kalender Sumber Entri Kerja Tidak Valid"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__work_entry_type_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__work_entry_type_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__work_entry_type_id
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.resource_calendar_leaves_view_search_inherit
+msgid "Work Entry Type"
+msgstr "Tipe Entri Kerja"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid "Work Entry Type Name"
+msgstr "Nama Tipe Entri Kerja"
+
+#. module: hr_work_entry
+#: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_type_action
+msgid "Work Entry Types"
+msgstr "Tipe-Tipe Entri Kerja"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_work_risk_imss
+msgid "Work risk (IMSS)"
+msgstr "Resiko Kerja (IMSS)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_compensation
+msgid "Workers Compensation"
+msgstr "Kompensasi Pekerja"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_version__work_entry_source__calendar
+msgid "Working Schedule"
+msgstr "Jadwal Kerja"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__is_work
+msgid "Working Time"
+msgstr "Waktu Kerja"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+msgid ""
+"You can't change the Country of this work entry type cause it's currently "
+"used by the system. You need to delete related working entries first."
+msgstr ""
+"Anda tidak dapat mengubah Negara tipe entri kerja ini karena saat in "
+"digunakan oleh sistem. Anda harus menghapus entri kerja terkait terlebih "
+"dahulu."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+msgid "You can't change the country of this specific work entry type."
+msgstr "Anda tidak dapat mengubah negara tipe entri kerja ini."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "You can't split a work entry with less than 1 hour."
+msgstr "Anda tidak dapat memisahkan entri kerja yang kurang dari satu jam."
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/calendar_common/work_entry_calendar_common_popover.xml:0
+msgid "You cannot edit a validated work entry"
+msgstr "Anda tidak dapat mengedit entri kerja yang divalidasi"
+
+#. module: hr_work_entry
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique
+msgid "You cannot have the same employee twice."
+msgstr "Anda tidak dapat memiliki karyawan yang sama dua kali."
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_youth_time_off
+msgid "Youth Time Off"
+msgstr "Cuti Remaja"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
+msgid "hours"
+msgstr "jam"
+
+#~ msgid "%(employee)s does not have a contract on %(date)s."
+#~ msgstr "%(employee)s tidak memiliki kontrak pada %(date)s."
+
+#~ msgid ""
+#~ "%(employee)s does not have a contract from %(date_start)s to %(date_end)s."
+#~ msgstr ""
+#~ "%(employee)s tidak memiliki kontrak dari tanggal %(date_start)s sampai %"
+#~ "(date_end)s."
+
+#~ msgid ""
+#~ "%(employee)s has multiple contracts from %(date_start)s to %(date_end)s. "
+#~ "A work entry cannot overlap multiple contracts."
+#~ msgstr ""
+#~ "%(employee)s memiliki lebih dari satu kontrak dari tanggal %(date_start)s "
+#~ "sampai %(date_end)s. Entri kerja tidak dapat memiliki lebih dari satu "
+#~ "kontrak."
+
+#~ msgid ""
+#~ "<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>You are "
+#~ "not allowed to regenerate validated work entries"
+#~ msgstr ""
+#~ "<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>Anda "
+#~ "tidak diizinkan untuk membuat ulang entri kerja yang divalidasi"
+
+#~ msgid "Beginning"
+#~ msgstr "Permulaan"
+
+#~ msgid "Conflict"
+#~ msgstr "Konflik"
+
+#~ msgid "End"
+#~ msgstr "Akhir"
+
+#~ msgid ""
+#~ "In order to regenerate the work entries, you need to provide the wizard "
+#~ "with an employee_id, a date_from and a date_to. In addition to that, the "
+#~ "time interval defined by date_from and date_to must not contain any "
+#~ "validated work entries."
+#~ msgstr ""
+#~ "Untuk membuat ulang entri-entri kerja, Anda harus menyediakan wizard "
+#~ "dengan employee_id, date_from dan date_to. Di atas itu, interval waktu "
+#~ "yang didefinisikan oleh date_from dan date_to tidak boleh memiliki entri-"
+#~ "entri kerja apapun yang divalidasi."
+
+#~ msgid "Start Date"
+#~ msgstr "Tanggal Mulai"
+
+#~ msgid "Starting time should be before end time."
+#~ msgstr "Waktu mulai harus sebelum waktu berakhir."
+
+#~ msgid "Validated work entries cannot overlap"
+#~ msgstr "Entri kerja yang sudah divalidasi tidak boleh tumpang tindih"
+
+#~ msgid "Version"
+#~ msgstr "Versi"
+
+#~ msgid "Work Entries Within Interval"
+#~ msgstr "Entri-Entri Kerja Di Dalam Interval"
+
+#~ msgid "Work Entry Name"
+#~ msgstr "Nama Entri Kerja"
+
+#~ msgid "Work entry must end. Please define an end date or a duration."
+#~ msgstr ""
+#~ "Entri kerja harus berakhir. Silakan definisikan tanggal akhir atau durasi."

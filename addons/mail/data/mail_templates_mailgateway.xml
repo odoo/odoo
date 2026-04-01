@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="message_notification_limit_email">
+            <p>Dear Sender,</p>
+            <p>
+                The message below could not be accepted by the address <t t-esc="email"/> because you have
+                contacted it too many times in the last few minutes.
+                <br/>
+                Please try again later.
+            </p>
+            <p>Kind Regards</p>
+        </template>
+
+        <!-- Out-Of-Office content layout -->
+        <template id="message_notification_out_of_office">
+            <div t-out="out_of_office_message"/>
+            <div class="o_mail_reply_container">
+                <div class="o_mail_reply_content">
+                    <blockquote t-out="replied_body"/>
+                </div>
+            </div>
+        </template>
+
+        <template id="mail_bounce_catchall">
+<div>
+    <p>Hello <t t-esc="message['email_from']"/>,</p>
+    <p>The email sent to <t t-esc="message['to']"/> cannot be processed. This address
+    is used to collect replies and should not be used to directly contact <t t-esc="res_company.name"/>.</p>
+    <p>Please contact us instead using <a t-att-href="'mailto:%s' % res_company.email"><t t-esc="res_company.email"/></a></p>
+    <p>Regards,</p>
+    <p>The <t t-esc="res_company.name"/> team.</p>
+</div>
+<blockquote><t t-esc="message['body']"/></blockquote>
+        </template>
+
+        <!-- Mail bounce alias mail template -->
+        <template id="mail_bounce_alias_security">
+<div><t t-out="body"/></div>
+<blockquote><t t-out="message['body']"/></blockquote>
+        </template>
+
+        <template id="mail_attachment_links" name="Attachment links">
+<div style="max-width: 900px; width: 100%;">
+    <hr style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 10px 0px;"/>
+    <div t-foreach="attachments" t-as="attachment">
+        <a t-attf-href="{{attachment.get_base_url()}}/web/content/{{attachment.id}}?download=1&amp;access_token={{attachment.access_token}}"
+           style="font-size: 12px; color: #875A7B; text-decoration:none !important; text-decoration:none; font-weight: 400;">
+            &amp;#128229; <t t-out="attachment.name"/>
+        </a>
+    </div>
+</div>
+        </template>
+    </data>
+</odoo>

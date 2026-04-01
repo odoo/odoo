@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.OrderDisplay">
+        <t t-set="lines" t-value="comboSortedLines"/>
+        <t t-if="lines.length">
+            <div class="d-flex flex-column flex-grow-1 overflow-hidden">
+                <div t-ref="scrollable" class="order-container d-flex flex-column flex-grow-1 overflow-y-auto text-start">
+                    <t t-foreach="lines" t-as="line" t-key="line_index">
+                        <t t-if="props.slots.default" t-slot="default" line="line" />
+                        <Orderline t-else="" line="line" mode="this.props.mode" />
+                    </t>
+                    <div t-if="order.general_customer_note"
+                        t-attf-class="{{this.props.mode === 'receipt' ? 'mt-1 bg-opacity-75 p-0 ' : 'customer-note w-100 p-2 text-break bg-warning bg-opacity-25 mt-0 text-warning'}}">
+                        <div class="flex-wrap w-100 m-0">
+                            <div class="ps-1">
+                                <t t-foreach="order.general_customer_note.trim().split('\n')" t-as="subNote" t-key="subNote_index">
+                                    <div class="d-inline text-break">
+                                        <t t-esc="subNote"/><br/>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    <div t-if="order.internal_note and props.mode !== 'receipt'" 
+                        class="internal-note-container d-flex flex-wrap gap-2" 
+                        t-attf-class="{{this.props.mode === 'receipt' ? 'py-2' : 'p-2'}}">
+                        <TagsList tags="getInternalNotes()"/>
+                    </div>
+                </div>
+                <div t-if="props.mode !== 'receipt'" class="order-summary d-flex flex-column gap-1 p-2 border-bottom fw-bolder lh-sm">
+                    <div t-if="this.order.config_id.iface_tax_included != 'total' and order.prices.taxDetails.has_tax_groups" class="tax-info subentry d-flex justify-content-between w-100 fs-6 text-muted">
+                        <span>Subtotal</span>
+                        <span t-esc="order.currencyDisplayPriceExcl" class="subtotal"/>
+                    </div>
+                    <div t-if="order.prices.taxDetails.has_tax_groups" class="tax-info subentry d-flex justify-content-between w-100 fs-6 text-muted">
+                        Taxes
+                        <div id="order-widget-taxes">
+                            <span t-esc="order.currencyAmountTaxes" class="tax"/>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between w-100 fs-3">
+                        <span>Total</span>
+                        <span t-esc="order.currencyDisplayPriceIncl" class="total"/>
+                    </div>
+                </div>
+            </div>
+            <t t-slot="details"/>
+        </t>
+        <t t-elif="props.mode !== 'receipt'">
+            <div t-if="!props.slots?.emptyCart" class="d-flex flex-column align-items-center justify-content-center flex-grow-1 rounded-3 gap-3">
+                <t t-slot="details"/>
+            </div>
+            <t t-else="" t-slot="emptyCart" />
+        </t>
+    </t>
+</templates>

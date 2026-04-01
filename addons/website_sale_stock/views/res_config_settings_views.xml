@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.sale.stock</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website_sale.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <setting id="automatic_invoice_generation_setting" position="after">
+                <setting
+                    string="Inventory Defaults"
+                    id="product_availability_setting"
+                    info="This setting is common to all websites."
+                >
+                    <div class="content-group">
+                        <div class="row mt16"
+                            id="website_warehouse_setting"
+                            groups="stock.group_stock_multi_warehouses">
+                            <field name="website_company_id" invisible="1"/>
+                            <label for="website_warehouse_id" string="Warehouse" class="col-lg-3 o_light_label" />
+                            <field name="website_warehouse_id" placeholder="All warehouses"/>
+                        </div>
+                        <div class="content-group">
+                            <div class="row mt16"
+                                id="allow_out_of_stock_order_setting"
+                                title="Default availability mode set on newly created storable products. This can be changed at the product level.">
+                                <div class="col-12">
+                                    <label for="default_allow_out_of_stock_order" string="Out-of-Stock" class="p-0 col-4 o_light_label"/>
+                                    <field name="default_allow_out_of_stock_order" class=" w-auto"/>
+                                    <label for="default_allow_out_of_stock_order" class="o_light_label" string="Continue Selling"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content-group">
+                            <label for="default_show_availability" string="Show Available Quantity" class="p-0 col-4 o_light_label mt-2"/>
+                            <field name="default_show_availability" class="w-auto"/>
+                            <label for="default_available_threshold" string="only if below" class="o_light_label" invisible="not default_show_availability"/>
+                            <field
+                                name="default_available_threshold"
+                                style="width: 30px;"
+                                digits="[42, 0]"
+                                invisible="not default_show_availability"
+                            />
+                            <span invisible="not default_show_availability">units</span>
+                        </div>
+                    </div>
+                </setting>
+            </setting>
+        </field>
+    </record>
+
+</odoo>
+

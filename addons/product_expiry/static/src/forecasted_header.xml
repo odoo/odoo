@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="product_expiry.ForecastedHeader" t-inherit="stock.ForecastedHeader" t-inherit-mode="extension">
+        <xpath expr="//div[@name='on_hand']" position="after">
+            <t t-if="props.docs.use_expiration_date">
+                <div class="h3 col-md-auto text-center">-</div>
+                <div t-attf-class="col-md-auto text-center #{to_remove_qty}">
+                    <div class="h3">
+                        <t t-out="_formatFloat(to_remove_qty)"/>
+                    </div>
+                    <div>To Remove</div>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

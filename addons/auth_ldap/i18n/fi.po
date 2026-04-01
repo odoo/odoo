@@ -1,0 +1,264 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_ldap
+#
+# Translators:
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2018
+# Martin Trigaux, 2018
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
+# Miku Laitinen <miku.laitinen@gmail.com>, 2018
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
+# Topi Aura <topi@aurat.fi>, 2018
+# Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2018
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2026-02-19 06:23+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
+"auth_ldap/fi/>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
+msgid ""
+"    Filter used to look up user accounts in the LDAP database. It is an    arbitrary LDAP filter in string representation. Any `%s` placeholder    will be replaced by the login (identifier) provided by the user, the filter    should contain at least one such placeholder.\n"
+"\n"
+"    The filter must result in exactly one (1) result, otherwise the login will    be considered invalid.\n"
+"\n"
+"    Example (actual attributes depend on LDAP server and setup):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    or\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
+msgstr ""
+"    Suodatin, jota käytetään käyttäjätilien etsimiseen LDAP-tietokannasta. "
+"Tämä on sattumanvarainen LDAP-suodatin merkkijonomuodossa. Mikä tahansa `%s`-"
+"tunniste korvataan käyttäjän antamalla kirjautumistunnuksella (tunnisteella)"
+", suodattimen on sisällettävä vähintään yksi tällainen tunniste.\n"
+"\n"
+"    Suodattimen on annettava täsmälleen yksi (1) tulos, muutoin "
+"kirjautumista pidetään virheellisenä.\n"
+"\n"
+"    Esimerkki (todelliset määritteet riippuvat LDAP-palvelimesta ja "
+"asetuksista):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s)))\n"
+"\n"
+"    tai\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
+msgid "Automatically create local user accounts for new users authenticating via LDAP"
+msgstr ""
+"Luo uusille LDAP:in kautta kirjautuville käyttäjille paikallinen käyttäjä "
+"automaattisesti"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company
+msgid "Companies"
+msgstr "Yritykset"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__company
+msgid "Company"
+msgstr "Yritys"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company_ldap
+msgid "Company LDAP configuration"
+msgstr "Yrityksen LDAP-asetukset"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_config_settings
+msgid "Config Settings"
+msgstr "Asetukset"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
+msgid "Create User"
+msgstr "Luo käyttäjä"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_date
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_base
+msgid "DN of the user search scope: all descendants of this base will be searched for users."
+msgstr ""
+"Käyttäjähakualueen DN: käyttäjiä etsitään kaikista tämän tietokannan "
+"jälkeläisistä."
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "LDAP Configuration"
+msgstr "LDAP-määritykset"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__ldaps
+msgid "LDAP Parameters"
+msgstr "LDAP-parametrit"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
+msgid "LDAP Server"
+msgstr "LDAP-palvelin"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
+msgid "LDAP Server address"
+msgstr "LDAP-palvelimen osoite"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
+msgid "LDAP Server port"
+msgstr "LDAP-palvelimen portti"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
+msgid "LDAP base"
+msgstr "LDAP-kanta"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
+msgid "LDAP binddn"
+msgstr "LDAP-binddn"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
+msgid "LDAP filter"
+msgstr "LDAP-suodatin"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_password
+msgid "LDAP password"
+msgstr "LDAP-salasana"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap____last_update
+msgid "Last Modified on"
+msgstr "Viimeksi muokattu"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "Login Information"
+msgstr "Kirjautumistiedot"
+
+#. module: auth_ldap
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
+msgid "No local user found for LDAP login and not configured to create one"
+msgstr ""
+"LDAP-kirjautumiseen ei löydetty paikallista käyttäjää, eikä uuden käyttäjän "
+"luontia ei ole määritetty"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "Process Parameter"
+msgstr "Prosessin parametri"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
+msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
+msgstr ""
+"Vaadi suojattu TLS/SSL-salaus yhdistäessä LDAP-palvelimeen. Tämä valinta "
+"vaatii, että palvelin käyttää STARTTLS-protokollaa. Muussa tapauksessa "
+"kaikki yhteyspyynnöt tulevat epäonnistumaan."
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
+msgid "Sequence"
+msgstr "Järjestys"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "Server Information"
+msgstr "Palvelimen tiedot"
+
+#. module: auth_ldap
+#: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
+msgid "Setup your LDAP Server"
+msgstr "Määrittele LDAP-palvelin"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
+msgid "Template User"
+msgstr "Mallikäyttäjä"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
+msgid "The password of the user account on the LDAP server that is used to query the directory."
+msgstr ""
+"Salasana LDAP-palvelimen käyttäjätunnukselle jota käytetään hakuihin LDAP-"
+"hakemistosta."
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
+msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
+msgstr ""
+"Käyttäjätunnus, jota käytetään LDAP-hakemistokyselyihin. Jätä tyhjäksi, jos "
+"haluat yhdistää anonyymisti."
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
+msgid "Use TLS"
+msgstr "Käytä TLS-salausta"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "User Information"
+msgstr "Käyttäjän tiedot"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
+msgid "User to copy when creating new users"
+msgstr "Uutta käyttäjää luotaessa kopioitava käyttäjä"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_users
+msgid "Users"
+msgstr "Käyttäjät"

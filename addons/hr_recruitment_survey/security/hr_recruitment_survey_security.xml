@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    <!--
+        Specific survey access rules for recruitment
+        - The recruitment manager can CRUD survey / questions / question answers for survey_type == 'recruitment'
+        - The recruitment manager can see all the answers of surveys being 'recruitment
+        - The recruitment officer can see answers from survey type 'recruitment' unrestricted or in restricted users
+        - The recruitment interviewers can send surveys to applicants and read their answers when they are set as
+        interviewer for these applicants or the job they apply to.
+        - All groups can send surveys of type 'recruiment' via the survey_invite wizard
+    -->
+        <!--special rights for recruitment manager on recruitment surveys-->
+        <record id="survey_user_input_rule_recruitment_manager" model="ir.rule">
+            <field name="name">Survey user input: recruitment manager: all recruitment</field>
+            <field name="model_id" ref="survey.model_survey_user_input"/>
+            <field name="domain_force">[('survey_id.survey_type', '=', 'recruitment')]</field>
+            <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+        <record id="survey_user_input_line_rule_recruitment_manager" model="ir.rule">
+            <field name="name">Survey user input line: recruitment manager: all recruitment</field>
+            <field name="model_id" ref="survey.model_survey_user_input_line"/>
+            <field name="domain_force">[('survey_id.survey_type', '=', 'recruitment')]</field>
+            <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+        <record id="survey_survey_rule_recruitment_manager" model="ir.rule">
+            <field name="name">Survey survey: recruitment manager: all recruitment</field>
+            <field name="model_id" ref="survey.model_survey_survey"/>
+            <field name="domain_force">[('survey_type', '=', 'recruitment')]</field>
+            <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+        <record id="survey_question_rule_recruitment_manager" model="ir.rule">
+            <field name="name">Survey question: recruitment manager: all recruitment</field>
+            <field name="model_id" ref="survey.model_survey_question"/>
+            <field name="domain_force">[('survey_id.survey_type', '=', 'recruitment')]</field>
+            <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+        <record id="survey_question_answer_rule_recruitment_manager" model="ir.rule">
+            <field name="name">Survey question answer: recruitment manager: all recruitment</field>
+            <field name="model_id" ref="survey.model_survey_question_answer"/>
+            <field name="domain_force">['|', ('question_id.survey_id.survey_type', '=', 'recruitment'),
+                ('matrix_question_id.survey_id.survey_type', '=', 'recruitment')]</field>
+            <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+        <record id="survey_invite_recruitment_manager" model="ir.rule">
+            <field name="name">Survey invite: recruitment manager: all recruitment</field>
+            <field name="model_id" ref="survey.model_survey_invite"/>
+            <field name="domain_force">[('survey_id.survey_type', '=', 'recruitment')]</field>
+            <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+
+        <!--special rights for recruitment officer on recruitment surveys-->
+        <record id="survey_user_input_rule_recruitment_user" model="ir.rule">
+            <field name="name">Survey user input: recruitment officer: unrestricted or in restricted users</field>
+            <field name="model_id" ref="survey.model_survey_user_input"/>
+            <field name="domain_force">[
+                '&amp;', ('survey_id.survey_type', '=', 'recruitment'),
+                '|',  ('survey_id.restrict_user_ids', 'in', user.id),
+                        ('survey_id.restrict_user_ids', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+        </record>
+        <record id="survey_user_input_line_rule_recruitment_user" model="ir.rule">
+            <field name="name">Survey user input line: recruitment officer: unrestricted or in restricted users</field>
+            <field name="model_id" ref="survey.model_survey_user_input_line"/>
+            <field name="domain_force">[
+                '&amp;', ('survey_id.survey_type', '=', 'recruitment'),
+                '|',  ('survey_id.restrict_user_ids', 'in', user.id),
+                        ('survey_id.restrict_user_ids', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+        </record>
+        <record id="survey_invite_recruitment_user" model="ir.rule">
+            <field name="name">Survey invite: recruitment officer: unrestricted or in restricted users</field>
+            <field name="model_id" ref="survey.model_survey_invite"/>
+            <field name="domain_force">[
+                '&amp;', ('survey_id.survey_type', '=', 'recruitment'),
+                '|',  ('survey_id.restrict_user_ids', 'in', user.id),
+                        ('survey_id.restrict_user_ids', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+
+        <!--special rights for recruitment interviewers on recruitment surveys-->
+        <record id="survey_user_input_line_rule_recruitment_interviewer" model="ir.rule">
+            <field name="name">Survey user input line: recruitment interviewer: read survey answers for which they are set as interviewer</field>
+            <field name="model_id" ref="survey.model_survey_user_input_line"/>
+            <field name="domain_force">[
+                '|',
+                    ('user_input_id.applicant_id.interviewer_ids', 'in', user.id),
+                    ('user_input_id.applicant_id.job_id.interviewer_ids', 'in', user.id),
+                ]</field>
+            <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_interviewer'))]"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+        </record>
+        <record id="survey_user_input_rule_recruitment_interviewer" model="ir.rule">
+            <field name="name">Survey user input: recruitment interviewer: read survey answers for which they are set as interviewer</field>
+            <field name="model_id" ref="survey.model_survey_user_input"/>
+            <field name="domain_force">[
+                '|',
+                    ('applicant_id.interviewer_ids', 'in', user.id),
+                    ('applicant_id.job_id.interviewer_ids', 'in', user.id),
+                ]</field>
+            <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_interviewer'))]"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+        </record>
+        <record id="survey_survey_recruitment_interviewer" model="ir.rule">
+            <field name="name">Survey: recruitment interviewer: send surveys to applicants for which they are set as interviewer</field>
+            <field name="model_id" ref="survey.model_survey_survey"/>
+            <field name="domain_force">[('survey_type', '=', 'recruitment'),
+                '|', ('hr_job_ids.interviewer_ids', 'in', user.id),
+                     ('hr_job_ids.application_ids.interviewer_ids', 'in', user.id)
+                ]</field>
+            <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_interviewer'))]"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+        </record>
+
+        <record id="survey_question_recruitment_interviewer" model="ir.rule">
+            <field name="name">Survey: recruitment interviewer: send surveys to applicants for which they are set as interviewer</field>
+            <field name="model_id" ref="survey.model_survey_question"/>
+            <field name="domain_force">[('survey_id.survey_type', '=', 'recruitment'),
+                '|', ('survey_id.hr_job_ids.interviewer_ids', 'in', user.id),
+                     ('survey_id.hr_job_ids.application_ids.interviewer_ids', 'in', user.id)
+                ]</field>
+            <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_interviewer'))]"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+        </record>
+
+        <record id="survey_invite_recruitment_interviewer" model="ir.rule">
+            <field name="name">Survey invite: recruitment interviewer: send surveys to applicants for which they are set as interviewer</field>
+            <field name="model_id" ref="survey.model_survey_invite"/>
+            <field name="domain_force">[('survey_id.survey_type', '=', 'recruitment'),
+                '|', ('survey_id.hr_job_ids.interviewer_ids', 'in', user.id),
+                     ('survey_id.hr_job_ids.application_ids.interviewer_ids', 'in', user.id)
+                ]</field>
+            <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_interviewer'))]"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+         <record id="report_layout_striped" model="report.layout">
+            <field name="name">Striped</field>
+            <field name="sequence">5</field>
+            <field name="view_id" ref="web.external_layout_striped"/>
+        </record>
+
+        <record id="report_layout_standard" model="report.layout">
+            <field name="name">Light</field>
+            <field name="sequence">2</field>
+            <field name="view_id" ref="web.external_layout_standard"/>
+        </record>
+
+        <record id="report_layout_boxed" model="report.layout">
+            <field name="name">Boxed</field>
+            <field name="sequence">3</field>
+            <field name="view_id" ref="web.external_layout_boxed"/>
+        </record>
+        
+        <record id="report_layout_bold" model="report.layout">
+            <field name="name">Bold</field>
+            <field name="sequence">4</field>
+            <field name="view_id" ref="web.external_layout_bold"/>
+        </record>
+
+        <record id="report_layout_bubble" model="report.layout">
+            <field name="name">Bubble</field>
+            <field name="sequence">6</field>
+            <field name="view_id" ref="web.external_layout_bubble"/>
+        </record>
+
+        <record id="report_layout_wave" model="report.layout">
+            <field name="name">Wave</field>
+            <field name="sequence">7</field>
+            <field name="view_id" ref="web.external_layout_wave"/>
+        </record>
+
+        <record id="report_layout_folder" model="report.layout">
+            <field name="name">Folder</field>
+            <field name="sequence">8</field>
+            <field name="view_id" ref="web.external_layout_folder"/>
+        </record>
+
+        <record id="asset_styles_company_report" model="ir.attachment">
+            <field name="datas" model="res.company" eval="obj()._get_asset_style_b64()"/>
+            <field name="mimetype">text/scss</field>
+            <field name="name">res.company.scss</field>
+            <field name="type">binary</field>
+            <field name="url">web/static/asset_styles_company_report.scss</field>
+        </record>
+
+    </data>
+</odoo>

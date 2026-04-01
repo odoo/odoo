@@ -1,0 +1,269 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_tax_python
+#
+# Translators:
+# Martin Trigaux, 2022
+#
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-17 19:01+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"account_tax_python/ko/>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
+msgid ""
+"\n"
+"    - Group of Taxes: The tax is a set of sub taxes.\n"
+"    - Fixed: The tax amount stays the same whatever the price.\n"
+"    - Percentage: The tax amount is a % of the price:\n"
+"        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+"        e.g 110 / (1 + 10%) = 100 (price included)\n"
+"    - Percentage Tax Included: The tax amount is a division of the price:\n"
+"        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+"        e.g 200 * (1 - 10%) = 180 (price included)\n"
+"        "
+msgstr ""
+"\n"
+"    - 세금 그룹: 하위 세금 항목을 그룹으로 묶은 것입니다.\n"
+"    - 고정액: 가격과 무관한 일정 금액으로 세금을 설정합니다.\n"
+"    - 백분위 금액: 가격의 일정 비율로 세금을 계산합니다:\n"
+"        예: 100 * (1 + 10%) = 110 (가격에 미포함)\n"
+"        예: 110 / (1 + 10%) = 100 (가격에 포함)\n"
+"    - 세금 포함가 대비 금액: 가격을 나눈 금액으로 세금을 계산합니다:\n"
+"        예: 180 / (1 - 10%) = 200 (가격에 미포함)\n"
+"        예: 200 * (1 - 10%) = 180 (가격에 포함)\n"
+"        "
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
+msgid ""
+"Compute the amount of the tax.\n"
+"\n"
+":param base: float, actual amount on which the tax is applied\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: A object representing the product\n"
+msgstr ""
+"세금 금액을 계산합니다.\n"
+"\n"
+":param base: float, 세금이 적용되는 실제 금액\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: A object representing the product\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
+msgid "Custom Formula"
+msgstr "사용자 지정 수식"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Field '%s' is not accessible"
+msgstr "'%s' 필드에 액세스할 수 없습니다."
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
+msgid "Formula"
+msgstr "수식"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
+msgid "Formula Decoded Info"
+msgstr "공식 디코딩된 정보"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Invalid AST node: %s"
+msgstr "잘못된 AST 노드: %s"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Invalid formula"
+msgstr "잘못된 수식"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Kwargs are not allowed"
+msgstr "Kwargs 함수 미허용"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only int, float or None are allowed as constant values"
+msgstr "상수 값으로는 int, float 또는 None 값만 입력할 수 있습니다."
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/models/account_tax.py:0
+msgid "Only primitive types are allowed in python tax formula context."
+msgstr "파이썬 세금 수식에서는 기본 유형만 입력할 수 있습니다."
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only product['string'] or uom['string'] read-access is allowed"
+msgstr ""
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only read access to identifiers is allowed"
+msgstr "식별자에 대해서는 읽기 권한만 허용됩니다."
+
+#. module: account_tax_python
+#: model:ir.model,name:account_tax_python.model_account_tax
+msgid "Tax"
+msgstr "세금"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
+msgid "Tax Computation"
+msgstr "세금 계산"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Unknown function call"
+msgstr "알 수 없는 함수 호출"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Unknown identifier: %s"
+msgstr "알 수 없는 식별자: %s"
+
+#~ msgid "Only product['string'] read-access is allowed"
+#~ msgstr "product['string'] 읽기 권한만 허용"
+
+#~ msgid ""
+#~ "\n"
+#~ "    - Group of Taxes: The tax is a set of sub taxes.\n"
+#~ "    - Fixed: The tax amount stays the same whatever the price.\n"
+#~ "    - Percentage of Price: The tax amount is a % of the price:\n"
+#~ "        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+#~ "        e.g 110 / (1 + 10%) = 100 (price included)\n"
+#~ "    - Percentage of Price Tax Included: The tax amount is a division of "
+#~ "the price:\n"
+#~ "        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+#~ "        e.g 200 * (1 - 10%) = 180 (price included)\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "    - 세금 그룹 : 하위 세금들의 집합.\n"
+#~ "    - 고정세율 : 가격에 상관없이 세금 일정.\n"
+#~ "    - 가격에 따른 변동세율 : 세금은 가격에 따른 %임 :\n"
+#~ "        예 : 100 * (1 + 10%) = 110 (가격에 미포함)\n"
+#~ "        예 : 110 / (1 + 10%) = 100 (가격에 포함)\n"
+#~ "    - 세금을 포함한 가격에 따른 변동세율 : 세금이 가격의 한 부분임 :\n"
+#~ "        예 : 180 / (1 - 10%) = 200 (가격에 미포함)\n"
+#~ "        예 : 200 * (1 - 10%) = 180 (가격에 포함)\n"
+#~ "        "
+
+#~ msgid "Applicable Code"
+#~ msgstr "적용 코드"
+
+#~ msgid ""
+#~ "Compute the amount of the tax by setting the variable 'result'.\n"
+#~ "\n"
+#~ ":param base_amount: float, actual amount on which the tax is applied\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res.company recordset singleton\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "변수 'result'를 설정하여 세금 금액을 계산하십시오.\n"
+#~ "\n"
+#~ ":param base_amount: float, 세금이 적용되는 실제 금액\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res.company recordset singleton\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+
+#~ msgid ""
+#~ "Compute the amount of the tax by setting the variable 'result'.\n"
+#~ "\n"
+#~ ":param base_amount: float, actual amount on which the tax is applied\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "변수 'result'를 설정하여 세금 금액을 계산하십시오.\n"
+#~ "\n"
+#~ ":param base_amount: float, 세금이 적용되는 실제 금액\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+
+#~ msgid ""
+#~ "Determine if the tax will be applied by setting the variable 'result' to "
+#~ "True or False.\n"
+#~ "\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res.company recordset singleton\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "변수 'result'를 True 또는 False로 설정하여 세금 적용 여부를 결정하십시"
+#~ "오.\n"
+#~ "\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res.company recordset singleton\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+
+#~ msgid ""
+#~ "Determine if the tax will be applied by setting the variable 'result' to "
+#~ "True or False.\n"
+#~ "\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "변수 'result'를 True 또는 False로 설정하여 세금 적용 여부를 결정하십시"
+#~ "오.\n"
+#~ "\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+
+#~ msgid "Python Code"
+#~ msgstr "파이썬 코드"
+
+#~ msgid "Templates for Taxes"
+#~ msgstr "세금 템플릿"

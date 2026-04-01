@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tax_report_vat_return" model="account.report">
+        <field name="name">GST Return</field>
+        <field name="name@ar_001">إقرار ضريبة السلع والخدمات</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.jo"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_vat_return_base" model="account.report.column">
+                <field name="name">Value</field>
+                <field name="name@ar_001">القيمة</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="tax_report_vat_return_tax" model="account.report.column">
+                <field name="name">GST Amount</field>
+                <field name="name@ar_001">مبلغ ضريبة السلع والخدمات</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_vat_credit_previous_period" model="account.report.line">
+                <field name="name">1. Credit carried from the previous period</field>
+                <field name="name@ar_001">1. الرصيد المرحل من الفترة السابقة </field>
+                <field name="sequence">1</field>
+                <field name="code">jo_1</field>
+                <field name="expression_ids">
+                    <record id="tax_report_vat_credit_previous_period_tax_aggregation" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">jo_1._applied_carryover_tax</field>
+                    </record>
+                    <record id="tax_report_vat_credit_previous_period_tax_carryover" model="account.report.expression">
+                        <field name="label">_applied_carryover_tax</field>
+                        <field name="engine">external</field>
+                        <field name="formula">most_recent</field>
+                        <field name="date_scope">previous_return_period</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="tax_report_vat_purchase_section" model="account.report.line">
+                <field name="name">A. Tax on Purchases</field>
+                <field name="name@ar_001">A. ضرائب المشتريات  </field>
+                <field name="sequence">2</field>
+                <field name="hierarchy_level">0</field>
+             </record>
+
+            <record id="tax_report_vat_purchase_domestic" model="account.report.line">
+                <field name="name">2. Domestic purchases subject to standard rate at</field>
+                <field name="name@ar_001">2. المشتريات المحلية الخاضعة للمعدل القياسي عند</field>
+                <field name="code">jo_2</field>
+                <field name="sequence">3</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="tax_report_vat_domestic_purchase_base_aggregation" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">jo_2a.base + jo_2b.base + jo_2c.base + jo_2d.base + jo_2e.base +
+                            jo_2f.base</field>
+                    </record>
+                    <record id="tax_report_vat_domestic_purchase_tax_aggregation" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">jo_2a.tax + jo_2b.tax + jo_2c.tax + jo_2d.tax + jo_2f.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_vat_purchase_sixteen" model="account.report.line">
+                        <field name="name">2a. 16%</field>
+                        <field name="sequence">4</field>
+                        <field name="code">jo_2a</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_purchase_base_sixteen_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">2a_b</field>
+                            </record>
+                            <record id="tax_report_vat_purchase_tax_sixteen_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">2a_t</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_purchase_ten" model="account.report.line">
+                        <field name="name">2b. 10%</field>
+                        <field name="code">jo_2b</field>
+                        <field name="sequence">5</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_purchase_base_ten_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">2b_b</field>
+                            </record>
+                            <record id="tax_report_vat_purchase_tax_ten_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">2b_t</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_purchase_four" model="account.report.line">
+                        <field name="name">2c. 4%</field>
+                        <field name="code">jo_2c</field>
+                        <field name="sequence">6</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_purchase_base_four_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">2c_b</field>
+                            </record>
+                            <record id="tax_report_vat_purchase_tax_four_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">2c_t</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_purchase_other" model="account.report.line">
+                        <field name="name">2d. Other</field>
+                        <field name="name@ar_001">2d. أخرى</field>
+                        <field name="code">jo_2d</field>
+                        <field name="sequence">7</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_purchase_base_other_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">2d_b</field>
+                            </record>
+                            <record id="tax_report_vat_purchase_tax_other_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">2d_t</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_purchase_zero_tax" model="account.report.line">
+                        <field name="name">2e. Zero</field>
+                        <field name="name@ar_001">2e. صفر</field>
+                        <field name="code">jo_2e</field>
+                        <field name="sequence">8</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_purchase_base_zero_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">2e_b</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_purchases_2f" model="account.report.line">
+                        <field name="name">2f. Purchase of taxable assets and expenses</field>
+                        <field name="name@ar_001">2f. شراء الأصول الخاضعة للضريبة والنفقات</field>
+                        <field name="code">jo_2f</field>
+                        <field name="sequence">9</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_purchase_base_2f_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">2f_b</field>
+                            </record>
+                            <record id="tax_report_vat_purchase_tax_2f_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">2f_t</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+
+            <!-- Imports -->
+            <record id="tax_report_vat_import_base" model="account.report.line">
+                <field name="name">3. Imports subject to standard rate at</field>
+                <field name="name@ar_001">3. الواردات الخاضعة للمعدل القياسي عند</field>
+                <field name="code">jo_3</field>
+                <field name="sequence">10</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="tax_report_vat_import_purchase_base_aggregation" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">jo_3a.base + jo_3b.base + jo_3c.base + jo_3d.base + jo_3e.base +
+                            jo_3f.base</field>
+                    </record>
+                    <record id="tax_report_vat_import_purchase_tax_aggregation" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">jo_3a.tax + jo_3b.tax + jo_3c.tax + jo_3d.tax + jo_3f.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_vat_purchase_import_sixteen" model="account.report.line">
+                        <field name="name">3a. 16%</field>
+                        <field name="code">jo_3a</field>
+                        <field name="sequence">11</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_purchase_import_base_sixteen_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">3a_b</field>
+                            </record>
+                            <record id="tax_report_vat_purchase_import_tax_sixteen_tag"
+                                    model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">3a_t</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_purchase_import_ten" model="account.report.line">
+                        <field name="name">3b. 10%</field>
+                        <field name="code">jo_3b</field>
+                        <field name="sequence">12</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_purchase_import_base_ten_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">3b_b</field>
+                            </record>
+                            <record id="tax_report_vat_purchase_import_tax_ten_tag"
+                                    model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">3b_t</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_purchase_import_four" model="account.report.line">
+                        <field name="name">3c. 4%</field>
+                        <field name="code">jo_3c</field>
+                        <field name="sequence">13</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_purchase_import_base_four_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">3c_b</field>
+                            </record>
+                            <record id="tax_report_vat_purchase_import_tax_four_tag"
+                                    model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">3c_t</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_purchase_import_other" model="account.report.line">
+                        <field name="name">3d. Other</field>
+                        <field name="name@ar_001">3d. أخرى</field>
+                        <field name="code">jo_3d</field>
+                        <field name="sequence">14</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_purchase_import_base_other_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">3d_b</field>
+                            </record>
+                            <record id="tax_report_vat_purchase_import_tax_other_tag"
+                                    model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">3d_t</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_purchase_import_zero" model="account.report.line">
+                        <field name="name">3e. Zero</field>
+                        <field name="name@ar_001">3e. صفر</field>
+                        <field name="code">jo_3e</field>
+                        <field name="sequence">15</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_purchase_import_base_zero_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">3e_b</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_taxable_import_base" model="account.report.line">
+                        <field name="name">3f. Taxable imported services</field>
+                        <field name="name@ar_001">3f. الخدمات المستوردة الخاضعة للضريبة </field>
+                        <field name="code">jo_3f</field>
+                        <field name="sequence">16</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_taxable_import_3f_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">3f_b</field>
+                            </record>
+                            <record id="tax_report_vat_taxable_import_tax_3f_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">3f_t</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="tax_report_vat_purchase_deferred_supply" model="account.report.line">
+                <field name="name">4. Imports under deferred payment status</field>
+                <field name="name@ar_001">4. الواردات الخاضعة لوضع الدفع المؤجل</field>
+                <field name="code">jo_4</field>
+                <field name="sequence">17</field>
+                <field name="expression_ids">
+                    <record id="tax_report_vat_purchase_deferred_supply_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">4_b</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="tax_report_vat_purchase_exempt" model="account.report.line">
+                <field name="name">5. Tax-exempt purchases and imports</field>
+                <field name="name@ar_001">5. المشتريات والواردات المعفاة من الضرائب</field>
+                <field name="code">jo_5</field>
+                <field name="sequence">18</field>
+                <field name="expression_ids">
+                    <record id="tax_report_vat_purchase_exempt_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">5_b</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="tax_report_vat_total_purchases" model="account.report.line">
+                <field name="name">Total Purchases</field>
+                <field name="name@ar_001">إجمالي المشتريات</field>
+                <field name="sequence">19</field>
+                <field name="expression_ids">
+                    <record id="tax_report_vat_total_purchases_base_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">jo_2.base + jo_3.base + jo_4.base + jo_5.base</field>
+                    </record>
+                    <record id="tax_report_vat_total_purchases_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">jo_2.tax + jo_3.tax</field>
+                    </record>
+                </field>
+            </record>
+
+             <record id="tax_report_vat_sales_section" model="account.report.line">
+                <field name="name">B. Tax on Sales</field>
+                <field name="name@ar_001">B. ضرائب المبيعات</field>
+                <field name="sequence">20</field>
+                <field name="hierarchy_level">0</field>
+             </record>
+
+            <!-- Sales -->
+            <record id="tax_report_vat_sales" model="account.report.line">
+                <field name="name">6. Domestic sales subject to standard rates at</field>
+                <field name="name@ar_001">6. المبيعات المحلية الخاضعة للمعدلات القياسية في</field>
+                <field name="code">jo_6</field>
+                <field name="sequence">21</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="tax_report_vat_sales_base_aggregation" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">jo_6a.base + jo_6b.base + jo_6c.base + jo_6d.base</field>
+                    </record>
+                    <record id="tax_report_vat_sales_tax_aggregation" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">jo_6a.tax + jo_6b.tax + jo_6c.tax + jo_6d.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_vat_sales_sixteen" model="account.report.line">
+                        <field name="name">6a. 16%</field>
+                        <field name="code">jo_6a</field>
+                        <field name="sequence">22</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_sales_base_sixteen_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-6a_b</field>
+                            </record>
+                            <record id="tax_report_vat_sales_tax_sixteen_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-6a_t</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_sales_ten" model="account.report.line">
+                        <field name="name">6b. 10%</field>
+                        <field name="code">jo_6b</field>
+                        <field name="sequence">23</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_sales_base_ten_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-6b_b</field>
+                            </record>
+                             <record id="tax_report_vat_sales_tax_ten_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-6b_t</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_sales_four" model="account.report.line">
+                        <field name="name">6c. 4%</field>
+                        <field name="code">jo_6c</field>
+                        <field name="sequence">24</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_sales_base_four_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-6c_b</field>
+                            </record>
+                            <record id="tax_report_vat_sales_tax_four_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-6c_t</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_sales_other" model="account.report.line">
+                        <field name="name">6d. Other</field>
+                        <field name="name@ar_001">6d. أخرى</field>
+                        <field name="code">jo_6d</field>
+                        <field name="sequence">25</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_sale_base_other_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-6d_b</field>
+                            </record>
+                            <record id="tax_report_vat_sale_tax_other_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-6d_t</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="tax_report_vat_domestic_sales_zero_7a" model="account.report.line">
+                <field name="name">7a. Domestic sales to zero-rated entities</field>
+                <field name="name@ar_001">7a. المبيعات المحلية إلى الكيانات المعفاة من الضريبة</field>
+                <field name="code">jo_7a</field>
+                <field name="sequence">26</field>
+                <field name="expression_ids">
+                    <record id="tax_report_vat_sale_zero_7a_base_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-7a_b</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="tax_report_vat_domestic_sales_zero_7b" model="account.report.line">
+                <field name="name">7b. Domestic sales of zero-rated goods and services</field>
+                <field name="name@ar_001">7b. المبيعات المحلية للسلع والخدمات المعفاة من الضريبة</field>
+                <field name="code">jo_7b</field>
+                <field name="sequence">27</field>
+                <field name="expression_ids">
+                    <record id="tax_report_vat_sale_zero_7b_base_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-7b_b</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="tax_report_vat_sales_exported" model="account.report.line">
+                <field name="name">8. Exported sales</field>
+                <field name="name@ar_001">8. المبيعات التي تم تصديرها </field>
+                <field name="code">jo_8</field>
+                <field name="sequence">28</field>
+                <field name="expression_ids">
+                    <record id="tax_report_vat_sales_exported_base_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-8_b</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="tax_report_vat_sales_no_tax_zero" model="account.report.line">
+                <field name="name">9. Non-taxable sales</field>
+                <field name="name@ar_001">9. المبيعات غير الخاضعة للضريبة</field>
+                <field name="code">jo_9</field>
+                <field name="sequence">29</field>
+                <field name="expression_ids">
+                    <record id="tax_report_vat_sale_export_no_tax_zero_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-9_b</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="tax_report_vat_sales_exempt_local_zero" model="account.report.line">
+                <field name="name">10. Domestic tax exempt sales</field>
+                <field name="name@ar_001">10. المبيعات المعفاة من الضرائب المحلية </field>
+                <field name="code">jo_10</field>
+                <field name="sequence">30</field>
+                <field name="expression_ids">
+                    <record id="tax_report_vat_sale_export_exempt_local_zero_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-10_b</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="tax_report_vat_sales_no_deductible_zero" model="account.report.line">
+                <field name="name">11. Non-deductible tax (related to exempted sales)</field>
+                <field name="name@ar_001">11. الضريبة غير القابلة للخصم (المتعلقة بالمبيعات المعفاة)</field>
+                <field name="code">jo_11</field>
+                <field name="sequence">31</field>
+                <field name="expression_ids">
+                    <record id="tax_report_vat_sale_export_no_deductible_zero_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-11_t</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="tax_report_vat_total_sales" model="account.report.line">
+                <field name="name">Total Sales</field>
+                <field name="name@ar_001">إجمالي المبيعات</field>
+                <field name="sequence">32</field>
+                <field name="hierarchy_level">1</field>
+                <field name="expression_ids">
+                    <record id="tax_report_vat_total_sales_base_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">jo_6.base + jo_7a.base + jo_7b.base + jo_8.base + jo_9.base +
+                            jo_10.base</field>
+                    </record>
+                    <record id="tax_report_vat_total_sales_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">jo_6.tax + jo_11.tax</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="tax_report_vat_adjustments_title" model="account.report.line">
+                <field name="name">C. Adjustments</field>
+                <field name="name@ar_001">C. التعديلات</field>
+                <field name="sequence">33</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="True"/>
+                <field name="children_ids">
+                    <record id="tax_report_vat_tax_adjustment_partner" model="account.report.line">
+                        <field name="name">12. Adjustment for the registered person</field>
+                        <field name="name@ar_001">12. تعديل البيانات المتعلقة بالشخص المسجل</field>
+                        <field name="code">jo_12</field>
+                        <field name="sequence">34</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_tax_adjustment_partner_tax_tag"
+                                    model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-12_t</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_tax_adjustment_department" model="account.report.line">
+                        <field name="name">13. Adjustment for the tax department</field>
+                        <field name="name@ar_001">13. تعديل خاص بإدارة الضرائب</field>
+                        <field name="code">jo_13</field>
+                        <field name="sequence">35</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_tax_adjustment_department_tax_tag"
+                                    model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-13_t</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="tax_report_vat_credit_period_amount_section" model="account.report.line">
+                <field name="name">D. Calculation of the due tax, refund, and credit brought forward for the next period</field>
+                <field name="name@ar_001">D. حساب الضريبة المستحقة، والمبلغ المسترد، ورصيد الائتمان المرحل إلى الفترة التالية </field>
+                <field name="sequence">36</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+
+            <record id="tax_report_vat_payable_amount" model="account.report.line">
+                <field name="name">14. Payable Amount</field>
+                <field name="name@ar_001">14. المبلغ المستحق الدفع </field>
+                <field name="sequence">37</field>
+                <field name="expression_ids">
+                    <record id="tax_report_vat_payable_tax_amount_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">(jo_1.tax + jo_6.tax + jo_11.tax + jo_13.tax) - 
+                            (jo_2.tax + jo_3.tax + jo_12.tax)
+                        </field>
+                        <field name="subformula">if_above(JOD(0))</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="tax_report_vat_claimable_amount" model="account.report.line">
+                <field name="name">15. Claimable Amount</field>
+                <field name="name@ar_001">15. المبلغ الذي يمكن تحصيله</field>
+                <field name="code">jo_15</field>
+                <field name="sequence">38</field>
+                <field name="expression_ids">
+                    <record id="tax_report_vat_claimable_tax_amount_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">(jo_1.tax + jo_6.tax + jo_11.tax + jo_13.tax) - 
+                            (jo_2.tax + jo_3.tax + jo_12.tax)
+                        </field>
+                        <field name="subformula">if_below(JOD(0))</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="tax_report_vat_claimable_gst_16" model="account.report.line">
+                <field name="name">16. Claim back GST paid on exports</field>
+                <field name="name@ar_001">16. المطالبة باسترداد ضريبة السلع والخدمات المدفوعة على الصادرات</field>
+                <field name="code">jo_16</field>
+                <field name="sequence">39</field>
+                <field name="expression_ids">
+                    <record id="tax_report_vat_claimable_gst_16_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-16_t</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="tax_report_vat_claimable_gst_17" model="account.report.line">
+                <field name="name">17. Claim the general tax held over more than 2 months</field>
+                <field name="name@ar_001">17. المطالبة بالضريبة العامة المحتجزة لأكثر من شهرين</field>
+                <field name="code">jo_17</field>
+                <field name="sequence">40</field>
+                <field name="expression_ids">
+                    <record id="tax_report_vat_claimable_gst_17_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-17_t</field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="tax_report_vat_credit_next_period" model="account.report.line">
+                <field name="name">18. Credit brought forward to the next period</field>
+                <field name="name@ar_001">18. الرصيد المرحل إلى الفترة التالية</field>
+                <field name="code">jo_18</field>
+                <field name="sequence">41</field>
+                <field name="expression_ids">
+                    <record id="tax_report_credit_next_period_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">jo_15.tax + jo_16.tax + jo_17.tax</field>
+                        <field name="carryover_target" eval="False"/>
+                    </record>
+                    <record id="tax_report_credit_next_period_carryover_tax_tag" model="account.report.expression">
+                        <field name="label">_carryover_tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">jo_18.tax</field>
+                        <field name="carryover_target">jo_1._applied_carryover_tax</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

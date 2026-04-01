@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+<t t-name="website_builder.SelectTranslateDialog">
+    <WebsiteDialog close.bind="addStepAndClose"
+        title.translate="Translate Selection Option"
+        showSecondaryButton="false">
+        <input
+            t-ref="input"
+            type="text" class="form-control my-3"
+            t-att-value="optionEl.textContent or ''"
+            t-on-change="onInputChange"/>
+    </WebsiteDialog>
+</t>
+
+</templates>

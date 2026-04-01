@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_template_guidelines" model="mail.template">
+        <field name="name">Mail Group: Send Guidelines</field>
+        <field name="model_id" ref="mail_group.model_mail_group_member"/>
+        <field name="subject">Guidelines of group {{ object.mail_group_id.name }}</field>
+        <field name="email_to" eval="False"/>
+        <field name="use_default_to" eval="True"/>
+        <field name="description">Sent to people who subscribed to a mailing group with group guidelines</field>
+        <field name="body_html" type="html">
+            <div>
+                <p>Hello <t t-out="object.partner_id.name or ''"></t>,</p>
+                <p>Please find below the guidelines of the <t t-out="object.mail_group_id.name"></t> mailing list.</p>
+                <p><t t-out="object.mail_group_id.moderation_guidelines_msg or ''"></t></p>
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+    <!-- Confirm subscription email -->
+    <!-- TDE note: this should not be a mail template -->
+    <record id="mail_template_list_subscribe" model="mail.template">
+        <field name="name">Mail Group: Mailing List Subscription</field>
+        <field name="model_id" ref="mail_group.model_mail_group"/>
+        <field name="use_default_to" eval="False"/>
+        <field name="subject">Confirm subscription to {{ object.name }}</field>
+        <field name="description">Subscription confirmation to a mailing group</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                Hello,<br/><br/>
+                You have requested to be subscribed to the mailing list <strong t-out="object.name or ''"></strong>.
+                <br/><br/>
+                To confirm, please visit the following link: <strong t-if="ctx.get('token_url')"><a t-att-href="ctx['token_url']"><t t-out="ctx['token_url'] or ''"></t></a></strong>
+                <br/><br/>
+                If this was a mistake or you did not requested this action, please ignore this message.
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+    <!-- Confirm unsubscription email -->
+     <!-- TDE note: this should not be a mail template -->
+    <record id="mail_template_list_unsubscribe" model="mail.template">
+        <field name="name">Mail Group: Mailing List Unsubscription</field>
+        <field name="model_id" ref="mail_group.model_mail_group"/>
+        <field name="use_default_to" eval="False"/>
+        <field name="subject">Confirm unsubscription to {{ object.name }}</field>
+        <field name="description">Sent to people who unsubscribed from a mailing group</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                Hello,<br/><br/>
+                You have requested to be unsubscribed to the mailing list <strong t-out="object.name or ''"></strong>.
+                <br/><br/>
+                To confirm, please visit the following link: <strong t-if="ctx.get('token_url')"><a t-att-href="ctx['token_url']"><t t-out="ctx['token_url'] or ''"></t></a></strong>.
+                <br/><br/>
+                If this was a mistake or you did not requested this action, please ignore this message.
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+</odoo>

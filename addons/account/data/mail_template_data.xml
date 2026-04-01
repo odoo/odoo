@@ -1,0 +1,525 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <!-- Mail template are declared in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="1">
+        <!--Email template -->
+        <record id="email_template_edi_invoice" model="mail.template">
+            <field name="name">Invoice: Sending</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="email_from">{{ (object.invoice_user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to" eval="False"/>
+            <field name="use_default_to" eval="True"/>
+            <field name="subject">{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})</field>
+            <field name="description">Sent to customers with their invoices in attachment</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear
+        <t t-if="object.partner_id.parent_id">
+            <t t-if="object.partner_id.name">
+                <t t-out="object.partner_id.name">Brandon Freeman</t> (<t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>),
+            </t>
+            <t t-else="">
+                <t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>,
+            </t>
+        </t>
+        <t t-else="">
+            <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,
+        </t>
+        <br /><br />
+        Here is your
+        <t t-if="object.name">
+            invoice <span style="font-weight:bold;" t-out="object.name or ''">INV/2021/05/0005</span>
+        </t>
+        <t t-else="">
+            invoice
+        </t>
+        <t t-if="object.invoice_origin">
+            (with reference: <t t-out="object.invoice_origin or ''">SUB003</t>)
+        </t>
+        amounting in <span style="font-weight:bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 143,750.00</span>
+        from <t t-out="object.company_id.name or ''">YourCompany</t>.
+        <t t-if="object.payment_state in ('paid', 'in_payment')">
+            This invoice is already paid.
+        </t>
+        <t t-else="">
+            Please remit payment at your earliest convenience.
+            <t t-if="object.payment_reference">
+                <br /><br />
+                Please use the following communication for your payment: <strong t-out="object.payment_reference or ''">INV/2021/05/0005</strong>
+                <t t-if="object.partner_bank_id">
+                    on the account <strong t-out="object.partner_bank_id.acc_number"/>
+                </t>
+                .
+            </t>
+        </t>
+        <t t-if="hasattr(object, 'timesheet_count') and object.timesheet_count">
+            <br /><br />
+            PS: you can review your timesheets <a t-att-href="'/my/timesheets?search_in=invoice&amp;search=%s' % object.name">from the portal.</a>
+        </t>
+        <br /><br />
+        Do not hesitate to contact us if you have any questions.
+        <t t-if="not is_html_empty(object.invoice_user_id.signature)">
+            <br /><br />
+            <div>--<br/><t t-out="object.invoice_user_id.signature or ''">Mitchell Admin</t></div>
+        </t>
+    </p>
+</div>
+            </field>
+            <field name="report_template_ids" eval="[]"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="mail_template_data_payment_receipt" model="mail.template">
+            <field name="name">Payment: Payment Receipt</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="subject">{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})</field>
+            <field name="partner_to" eval="False"/>
+            <field name="use_default_to" eval="True"/>
+            <field name="description">Sent manually to customer when clicking on 'Send receipt by email' in payment action</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear <t t-out="object.partner_id.name or ''">Azure Interior</t><br/><br/>
+        Thank you for your payment.
+        Here is your payment receipt <span style="font-weight:bold;" t-out="(object.name or '').replace('/','-') or ''">BNK1-2021-05-0002</span> amounting
+        to <span style="font-weight:bold;" t-out="format_amount(object.amount, object.currency_id) or ''">$ 10.00</span> from <t t-out="object.company_id.name or ''">YourCompany</t>.
+        <br/><br/>
+        Do not hesitate to contact us if you have any questions.
+        <br/><br/>
+        Best regards,
+        <t t-if="not is_html_empty(user.signature)">
+            <br/><br/>
+            <div>--<br/><t t-out="user.signature or ''">Mitchell Admin</t></div>
+        </t>
+    </p>
+</div>
+</field>
+            <field name="report_template_ids" eval="[(4, ref('account.action_report_payment_receipt'))]"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+        <!-- Credit note template -->
+        <record id="email_template_edi_credit_note" model="mail.template">
+            <field name="name">Credit Note: Sending</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="email_from">{{ (object.invoice_user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to" eval="False"/>
+            <field name="use_default_to" eval="True"/>
+            <field name="subject">{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})</field>
+            <field name="description">Sent to customers with the credit note in attachment</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear
+        <t t-if="object.partner_id.parent_id">
+            <t t-out="object.partner_id.name or ''">Brandon Freeman</t> (<t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>),
+        </t>
+        <t t-else="">
+            <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,
+        </t>
+        <br /><br />
+        Here is your
+        <t t-if="object.name">
+            credit note <span style="font-weight:bold;" t-out="object.name or ''">RINV/2021/05/0001</span>
+        </t>
+        <t t-else="">
+            credit note
+        </t>
+        <t t-if="object.invoice_origin">
+            (with reference: <t t-out="object.invoice_origin or ''">SUB003</t>)
+        </t>
+        amounting in <span style="font-weight:bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 143,750.00</span>
+        from <t t-out="object.company_id.name or ''">YourCompany</t>.
+        <br /><br />
+        Do not hesitate to contact us if you have any questions.
+        <t t-if="not is_html_empty(object.invoice_user_id.signature)">
+            <br /><br />
+            <div>--<br/><t t-out="object.invoice_user_id.signature or ''">Mitchell Admin</t></div>
+        </t>
+    </p>
+</div>
+            </field>
+            <field name="report_template_ids" eval="[]"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Self billing invoice template -->
+        <record id="email_template_edi_self_billing_invoice" model="mail.template">
+            <field name="name">Self-billing invoice: Sending</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="email_from">{{ (object.invoice_user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to" eval="False"/>
+            <field name="use_default_to" eval="True"/>
+            <field name="subject">{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/a' }})</field>
+            <field name="description">Sent to customers with their self-billing invoices in attachment</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear
+        <t t-if="object.partner_id.parent_id">
+            <t t-if="object.partner_id.name">
+                <t t-out="object.partner_id.name">Brandon Freeman</t> (<t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>),
+            </t>
+            <t t-else="">
+                <t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>,
+            </t>
+        </t>
+        <t t-else="">
+            <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,
+        </t>
+        <br /><br />
+        Here is your
+        <t t-if="object.name">
+            self-billing invoice <span style="font-weight:bold;" t-out="object.name or ''">INV/2021/05/0005</span>
+        </t>
+        <t t-else="">
+            self-billing invoice
+        </t>
+        <t t-if="object.invoice_origin">
+            (with reference: <t t-out="object.invoice_origin or ''">SUB003</t>)
+        </t>
+        amounting in <span style="font-weight:bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 143,750.00</span>
+        from <t t-out="object.company_id.name or ''">YourCompany</t>.
+        <t t-if="object.payment_state in ('paid', 'in_payment')">
+            This self-billing invoice has already been paid.
+        </t>
+        <t t-if="hasattr(object, 'timesheet_count') and object.timesheet_count">
+            <br /><br />
+            PS: you can review your timesheets <a t-att-href="'/my/timesheets?search_in=invoice&amp;search=%s' % object.name">from the portal.</a>
+        </t>
+        <br /><br />
+        Do not hesitate to contact us if you have any questions.
+        <t t-if="not is_html_empty(object.invoice_user_id.signature)">
+            <br /><br />
+            <div>--<br/><t t-out="object.invoice_user_id.signature or ''">Mitchell Admin</t></div>
+        </t>
+    </p>
+</div>
+            </field>
+            <field name="report_template_ids" eval="[]"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Self billing credit note template -->
+        <record id="email_template_edi_self_billing_credit_note" model="mail.template">
+            <field name="name">Self-billing credit note: Sending</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="email_from">{{ (object.invoice_user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to" eval="False"/>
+            <field name="use_default_to" eval="True"/>
+            <field name="subject">{{ object.company_id.name }} Self-billing credit note (Ref {{ object.name or 'n/a' }})</field>
+            <field name="description">Sent to customers with the self-billing credit note in attachment</field>
+            <field name="body_html" type="html">
+        <div style="margin: 0px; padding: 0px;">
+            <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                Dear
+                <t t-if="object.partner_id.parent_id">
+                    <t t-out="object.partner_id.name or ''">Brandon Freeman</t> (<t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>),
+                </t>
+                <t t-else="">
+                    <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,
+                </t>
+                <br /><br />
+                Here is your
+                <t t-if="object.name">
+                    self-billing credit note <span style="font-weight:bold;" t-out="object.name or ''">RINV/2021/05/0001</span>
+                </t>
+                <t t-else="">
+                    self-billing credit note
+                </t>
+                <t t-if="object.invoice_origin">
+                    (with reference: <t t-out="object.invoice_origin or ''">SUB003</t>)
+                </t>
+                amounting in <span style="font-weight:bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 143,750.00</span>
+                from <t t-out="object.company_id.name or ''">YourCompany</t>.
+                <br /><br />
+                Do not hesitate to contact us if you have any questions.
+                <t t-if="not is_html_empty(object.invoice_user_id.signature)">
+                    <br /><br />
+                    <div>--<br/><t t-out="object.invoice_user_id.signature or ''">Mitchell Admin</t></div>
+                </t>
+            </p>
+        </div>
+                    </field>
+                    <field name="report_template_ids" eval="[]"/>
+                    <field name="auto_delete" eval="True"/>
+                </record>
+
+        <!-- Invoice mail gateway failed -->
+        <template id="email_template_mail_gateway_failed">
+<p>
+    Hi,
+    <br/><br/>
+    Your email has been discarded. the e-mail address you have used only accepts new invoices:
+    <ul>
+        <li>For new invoices, please ensure a PDF or electronic invoice file is attached</li>
+        <li>To add information to a previously sent invoice, reply to your "sent" email</li>
+    </ul>
+    For any other question, write to <t t-esc="company_email"/>.
+    <br/>
+    --
+    <br/>
+    <t t-esc="company_name"/>
+</p>
+        </template>
+       <record id="mail_template_einvoice_notification" model="mail.template">
+            <field name="name">New eInvoices Notification</field>
+            <field name="subject">New Electronic Invoices Received</field>
+            <field name="email_from">{{ object.company_id.email_formatted }}</field>
+            <field name="email_to">{{ object.incoming_einvoice_notification_email }}</field>
+            <field name="use_default_to" eval="False"/>
+            <field name="model_id" ref="account.model_account_journal"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="description">Notification email for newly received eInvoices</field>
+            <field name="body_html" type="html">
+
+<t t-set="invoices" t-value="ctx.get('einvoices', [])"/>
+<t t-set="invoice_preview_ids" t-value="','.join([str(i) for i in invoices.ids]) if invoices else ''"/>
+<t t-set="invoice_count" t-value="len(invoices)"/>
+<t t-set="MAX_INVOICES_TO_DISPLAY" t-value="5"/>
+
+<div style="margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-serif; color: #454748;">
+    <table border="0" cellpadding="0" cellspacing="0"
+           style="padding-top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;">
+        <tr>
+            <td align="center">
+                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                       style="background-color: white; border-collapse:separate;">
+                    <!-- HEADER -->
+                    <tr>
+                        <td align="center">
+                            <table width="100%" cellpadding="0" cellspacing="0"
+                                   style="background-color: #875A7B; color: #FFFFFF; font-size: 14px; padding: 14px 0; border-radius: 3px;">
+                                <tr>
+                                    <td align="left" style="padding-left: 16px;">
+                                        You have received <t t-if="invoice_count > 1">new electronic invoices!</t><t t-else="">a new electronic invoice!</t>
+                                    </td>
+                                    <td align="right" style="padding-right: 16px;">
+                                        <img alt="Odoo" src="/web/static/img/logo_inverse_white_206px.png" style="height: 2em; object-fit: contain;" class="align-baseline w-auto"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- BODY -->
+                    <tr>
+                        <td align="center">
+                            <table width="590" cellpadding="0" cellspacing="0"
+                                   style="padding: 16px 32px; background-color: white; border-collapse:separate;">
+                                <tr>
+                                    <td style="font-size: 14px;">
+                                        <h3 style="font-size: 20px; margin-bottom: 20px;">
+                                            <t t-if="object.company_id.name">
+                                                Hi <t t-out="object.company_id.name"/>,
+                                            </t>
+                                            <t t-else="">
+                                                Hi,
+                                            </t>
+                                        </h3>
+                                        <p style="margin-top: 12px;">
+                                            You have recieved <t t-if="invoice_count > 1">new electronic invoices</t><t t-else="">a new electronic invoice</t>!
+                                        </p>
+                                        <t t-set="MAX_INVOICES_TO_DISPLAY" t-value="5"/>
+                                        <t t-foreach="invoices[:MAX_INVOICES_TO_DISPLAY]" t-as="inv">
+                                            <t t-if="not inv_first">
+                                                <div style="background-color:#EEEEEE; height:1px; width: 60%; margin: 16px auto; border:none;"></div>
+                                            </t>
+                                            <p style="line-height: 1.7em; padding-top: 16px;">
+                                                <t t-if="inv.name or inv.ref">
+                                                    <span style="font-weight:bold;">Invoice Ref:</span> <t t-out="inv.name or inv.ref"/><br/>
+                                                </t>
+                                                <t t-if="inv.partner_id.name">
+                                                    <span style="font-weight:bold;">Vendor:</span> <t t-out="inv.partner_id.name"/><br/>
+                                                </t>
+                                                <t t-if="inv.amount_total">
+                                                    <span style="font-weight:bold;">Amount:</span> <t t-out="inv.amount_total" t-options="{'widget': 'monetary', 'display_currency': inv.currency_id or object.company_id.currency_id}"/><br/>
+                                                </t>
+                                                <t t-if="inv.invoice_date_due">
+                                                    <span style="font-weight:bold;">Due date:</span> <t t-out="inv.invoice_date_due"/>
+                                                </t>
+                                            </p>
+                                        </t>
+
+                                        <div style="text-align: center; padding-top: 24px;">
+                                            <a t-if="invoice_count != 1" t-attf-href="/odoo/accounting/action-account.action_account_moves_email_preview?active_ids={{ invoice_preview_ids }}"
+                                               target="_blank"
+                                               t-attf-style="padding: 12px 24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: none !important; background-color: #008384; border-radius:3px; display: inline-block;">
+                                               Consult Invoices
+                                            </a>
+                                            <a t-else="" t-attf-href="/odoo/accounting/{{ object.id }}/account.move/{{ invoices.id }}"
+                                               target="_blank"
+                                               t-attf-style="padding: 12px 24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: none !important; background-color: #008384; border-radius:3px; display: inline-block;">
+                                               Consult Invoice
+                                            </a>
+                                            <p style="font-size: 11px; margin-top: 8px; color: #777;">Time to crunch some numbers</p>
+                                        </div>
+                                        <br/>
+                                        <p style="text-align: center; margin-top: 16px;">
+                                            If you'd like to unsubscribe from receiving emails for incoming invoices click <a t-attf-href="/my/journal/{{ object.id }}/unsubscribe">here</a>.
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+            </field>
+        </record>
+        <record id="mail_template_invoice_subscriber" model="mail.template" forcecreate="1">
+            <field name="name">Journal Notification</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="subject">{{ object.company_id.name }} - New invoice in {{ object.journal_id.display_name or 'Invoices' }} journal</field>
+            <field name="email_from">{{ object.invoice_user_id.email_formatted or object.company_id.email_formatted or user.email_formatted }}</field>
+            <field name="use_default_to" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+<t t-set="portal_url" t-value="object.get_portal_url()"/>
+<t t-set="unsubscribe_url" t-value="ctx.get('unsubscribe_url', False)"/>
+
+<div style="margin:0; padding:0; color:#2c2431;">
+    <table cellpadding="0" cellspacing="0" border="0" style="width:100%; background:#f7f4f8; padding:40px 0;">
+        <tr>
+            <td align="center">
+                <table cellpadding="0" cellspacing="0" border="0" width="640" style="width:100%; max-width:640px; background:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 20px 45px rgba(56, 37, 60, 0.12);">
+                    <tr>
+                        <td colspan="2" style="background:linear-gradient(140deg,#714B67 0%,#8a6381 55%,#bfa8c2 100%); color:#ffffff; padding:38px;">
+                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+                                <tr>
+                                    <td style="font-size:13px; letter-spacing:0.3px; text-transform:uppercase; opacity:0.78;">
+                                        <t t-if="object.is_sale_document(include_receipts=True)">Outbound Invoice</t>
+                                        <t t-else="">Incoming Bill</t>
+                                    </td>
+                                    <td align="right">
+                                        <img alt="Odoo" src="/web/static/img/logo_inverse_white_206px.png" style="height:30px; width:92px; object-fit:contain;"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="padding-top:22px; font-size:26px; line-height:1.45; font-weight:600; color:#ffffff;">
+                                        New invoice in <t t-out="object.journal_id.display_name"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="padding-top:18px; font-size:14px; opacity:0.85; line-height:1.6; color:#ffffff;">
+                                        A new invoice was created in <t t-out="object.journal_id.display_name"/> journal of <t t-out="object.company_id.name"/>!
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding:34px 38px;">
+                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%; border-collapse:separate; border-spacing:0 16px;">
+                                <tr>
+                                    <td colspan="2" style="padding:0;">
+                                        <table cellpadding="0" cellspacing="0" border="0" style="width:100%; background:#fbf7fc; border-radius:16px;">
+                                            <tr>
+                                                <td style="padding:24px 26px;">
+                                                    <div style="font-size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;">Document</div>
+                                                    <div style="margin-top:8px; font-size:20px; font-weight:600; color:#2c2431; word-break:break-word;">
+                                                        <t t-out="object._get_move_display_name()"/>
+                                                    </div>
+                                                    <t t-if="object.ref">
+                                                        <div style="margin-top:6px; color:#7f6c84;">Ref: <t t-out="object.ref"/></div>
+                                                    </t>
+                                                </td>
+                                                <t t-if="not object.currency_id.is_zero(object.amount_total)">
+                                                    <td style="padding:24px 26px; border-left:1px solid #efe6f3;" align="right">
+                                                        <div style="font-size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;">Total</div>
+                                                        <div style="margin-top:8px; font-size:22px; font-weight:600; color:#2c2431;">
+                                                            <t t-out="format_amount(object.amount_total, object.currency_id)"/>
+                                                        </div>
+                                                    </td>
+                                                </t>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="padding:0;">
+                                        <table cellpadding="0" cellspacing="0" border="0" style="width:100%; margin-top:18px;">
+                                            <tr>
+                                                <td style="padding:0;">
+                                                    <div style="display:flex; flex-wrap:wrap; gap:12px; justify-content:flex-start;">
+                                                        <t t-if="object.partner_id">
+                                                            <div style="flex:0 1 180px; min-width:160px; background:#fff; border:1px solid #efe6f3; border-radius:12px; padding:12px 16px;">
+                                                                <div style="font-size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;">Partner</div>
+                                                                <div style="margin-top:6px; font-size:15px; font-weight:500; color:#2c2431; word-break:break-word;">
+                                                                    <t t-out="object.partner_id.display_name"/>
+                                                                </div>
+                                                            </div>
+                                                        </t>
+                                                        <div style="flex:0 1 150px; min-width:140px; background:#fff; border:1px solid #efe6f3; border-radius:12px; padding:12px 16px;">
+                                                            <div style="font-size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;">Invoice Date</div>
+                                                            <div style="margin-top:6px; font-size:15px; color:#2c2431;">
+                                                                <t t-out="format_date(object.invoice_date or object.date)"/>
+                                                            </div>
+                                                        </div>
+                                                        <t t-if="object.invoice_date_due">
+                                                            <div style="flex:0 1 150px; min-width:140px; background:#fff; border:1px solid #efe6f3; border-radius:12px; padding:12px 16px;">
+                                                                <div style="font-size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;">Due Date</div>
+                                                                <div style="margin-top:6px; font-size:15px; color:#2c2431;">
+                                                                    <t t-out="format_date(object.invoice_date_due)"/>
+                                                                </div>
+                                                            </div>
+                                                        </t>
+                                                        <t t-if="object.payment_state in ('paid', 'in_payment')">
+                                                            <div style="flex:0 1 180px; min-width:160px; background:#fff; border:1px solid #efe6f3; border-radius:12px; padding:12px 16px;">
+                                                                <div style="font-size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;">Payment Status</div>
+                                                                <div style="margin-top:6px; font-size:15px; color:#2c2431; text-transform:capitalize;">
+                                                                    This invoice is already paid
+                                                                </div>
+                                                            </div>
+                                                        </t>
+                                                        <t t-if="object.currency_id != object.company_currency_id">
+                                                            <div style="flex:0 1 150px; min-width:140px; background:#fff; border:1px solid #efe6f3; border-radius:12px; padding:12px 16px;">
+                                                                <div style="font-size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;">Currency</div>
+                                                                <div style="margin-top:6px; font-size:15px; color:#2c2431;">
+                                                                    <t t-out="object.currency_id.display_name"/>
+                                                                </div>
+                                                            </div>
+                                                        </t>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <div style="margin:18px 0 0; padding:18px 22px; background:#f9f2f9; border-radius:12px; border:1px solid #eadff0; font-size:13px; color:#6f5c73; line-height:1.6;">
+                                <strong style="color:#2c2431;">Files included:</strong> the original document(s) are attached for your convenience.
+                            </div>
+
+                            <div style="margin-top:32px; text-align:center;" t-if="object.move_type != 'in_invoice'">
+                                <a t-if="portal_url" t-attf-href="{{ portal_url }}"
+                                   style="display:inline-block; margin:0 10px 14px; padding:13px 30px; min-width:210px; background:linear-gradient(135deg,#714B67 0%,#9b77a3 100%); color:#FFFFFF; text-decoration:none; border-radius:12px; font-weight:600; font-size:14px;"
+                                   target="_blank">
+                                    View on Portal
+                                </a>
+                            </div>
+
+                            <p style="margin:28px 0 0; font-size:12px; color:#8f8596; text-align:center;">
+                                You receive this message because you are listed as a watcher on
+                                <strong t-out="object.journal_id.display_name or 'this journal'"/>.
+                                <span style="display:block; margin:18px auto; height:1px; max-width:420px; background:#ece3ed;"></span>
+                                <t t-if="unsubscribe_url">
+                                    Prefer to stop receiving these? <a t-attf-href="{{ unsubscribe_url }}" style="color:#8f8596; text-decoration:underline;" target="_blank">Unsubscribe here</a>.
+                                </t>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+            </field>
+        </record>
+    </data>
+</odoo>

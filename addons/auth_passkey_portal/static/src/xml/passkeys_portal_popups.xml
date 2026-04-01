@@ -1,0 +1,14 @@
+<templates>
+    <t t-name="auth_passkey_portal.create">
+        <form string="Key Create">
+            <h3><strong>Name your key</strong></h3>
+            <input type="text" class="form-control col-10 col-md-6" name="keyname" required="required" placeholder="Name"/>
+        </form>
+    </t>
+    <t t-name="auth_passkey_portal.rename">
+        <form string="Key Rename">
+            <h3><strong>Rename your key</strong></h3>
+            <input type="text" class="form-control col-10 col-md-6" name="keyname" required="required" t-attf-value="{{oldname}}" placeholder="Name"/>
+        </form>
+    </t>
+</templates>

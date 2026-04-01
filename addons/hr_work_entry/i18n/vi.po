@@ -1,0 +1,1449 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_work_entry
+#
+# Translators:
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2023
+# Thi Huong Nguyen, 2023
+# Martin Trigaux, 2023
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-30 18:36+0000\n"
+"PO-Revision-Date: 2025-12-03 10:32+0000\n"
+"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
+"hr_work_entry/vi/>\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_employee__work_entry_source
+#: model:ir.model.fields,help:hr_work_entry.field_hr_version__work_entry_source
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__work_entry_source
+msgid ""
+"\n"
+"        Defines the source for work entries generation\n"
+"\n"
+"        Working Schedule: Work entries will be generated from the working "
+"hours below.\n"
+"        Attendances: Work entries will be generated from the employee's "
+"attendances. (requires Attendance app)\n"
+"        Planning: Work entries will be generated from the employee's "
+"planning. (requires Planning app)\n"
+"    "
+msgstr ""
+"\n"
+"        Xác định nguồn tạo công\n"
+"\n"
+"Lịch làm việc: Công sẽ được tạo từ giờ làm việc sau đây.\n"
+"Chấm công: Công sẽ được tạo ra từ dữ liệu chấm công của nhân viên. (cần có "
+"ứng dụng Chấm công)\n"
+"Kế hoạch: Công sẽ được tạo từ kế hoạch của nhân viên. (cần có ứng dụng Kế "
+"hoạch)\n"
+"    "
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_employee.py:0
+msgid "%s work entries"
+msgstr "%s công"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>Employees in "
+"red will be skipped because they have at least one validated work entry."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Cảnh báo\"/>Nhân viên "
+"hiển thị màu đỏ sẽ bị bỏ qua vì họ đã có ít nhất một công đã được xác thực."
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+msgid "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
+msgstr "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                            Work Entries\n"
+"                            </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Công\n"
+"                            </span>"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+msgid ""
+"<span class=\"text-muted\">Warning: The work entry regeneration will delete "
+"all manual changes on the selected period.</span>"
+msgstr ""
+"<span class=\"text-muted\">Cảnh báo: Việc tạo lại công sẽ xóa tất cả các "
+"thay đổi thủ công trong giai đoạn đã chọn.</span>"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "<span>Hours</span>"
+msgstr "<span>Giờ</span>"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__active
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__active
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__active
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Active"
+msgstr "Đang hoạt động"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_selection_buttons.xml:0
+msgid "Add"
+msgstr "Thêm"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__is_extra_hours
+msgid "Added to Monthly Pay"
+msgstr ""
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "Additional Description..."
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_additional_paid
+msgid "Additional Time (Paid)"
+msgstr "Giờ làm thêm (có lương)"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__is_leave
+msgid "Allow the work entry type to be linked with time off types."
+msgstr "Cho phép loại mục công việc liên kết với loại ngày nghỉ."
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_defence
+msgid "Ancillary and Defence Leave"
+msgstr "Nghỉ nghĩa vụ quốc phòng"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Archived"
+msgstr "Đã lưu trữ"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance
+msgid "Attendance"
+msgstr "Chấm công"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_bereavement_leave
+msgid "Bereavement Leave"
+msgstr "Nghỉ tang lễ"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_breast_feeding
+msgid "Breastfeeding Break"
+msgstr "Nghỉ giải lao để cho con bú"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_small_unemployment_birth
+msgid "Brief Holiday (Birth)"
+msgstr "Nghỉ ngắn hạn (sinh con)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_compensatory
+msgid "CTO"
+msgstr "CTO"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+msgid "Cancel"
+msgstr "Huỷ"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__cancelled
+msgid "Cancelled"
+msgstr "Đã hủy"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__code
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__code
+msgid ""
+"Careful, the Code is used in many references, changing it could lead to "
+"unwanted changes."
+msgstr ""
+"Hãy cẩn thận, Quy tắc được sử dụng trong nhiều tài liệu tham khảo, việc thay "
+"đổi nó có thể dẫn đến những thay đổi không mong muốn."
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_cash_out
+msgid "Cash Out of Leave in Service"
+msgstr "Chi trả ngày nghỉ chưa dùng"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__is_extra_hours
+msgid ""
+"Check this setting if you want the hours to be considered as extra time and "
+"added as a bonus to the basic salary."
+msgstr ""
+"Kiểm tra cài đặt này nếu bạn muốn các giờ làm được tính là thời gian làm "
+"thêm và cộng thêm vào lương cơ bản."
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__color
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__color
+msgid "Color"
+msgstr "Màu sắc"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__company_id
+msgid "Company"
+msgstr "Công ty"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_compassionate_leave
+msgid "Compassionate Leave"
+msgstr "Nghỉ vì vấn đề gia đình"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_compensatory
+msgid "Compensatory Time Off"
+msgstr "Ngày nghỉ bù"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Conflicting"
+msgstr "Xung đột"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__conflict
+msgid "Conflicts"
+msgstr "Xung đột"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_corona
+msgid "Corona Unemployment"
+msgstr "Thất nghiệp do dịch Covid-19"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__country_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_id
+msgid "Country"
+msgstr "Quốc gia"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_code
+msgid "Country Code"
+msgstr "Mã Quốc gia"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_type_action
+msgid "Create a new work entry type"
+msgstr "Tạo một loại công mới"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__create_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__create_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_uid
+msgid "Created by"
+msgstr "Được tạo bởi"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__create_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__create_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_date
+msgid "Created on"
+msgstr "Được tạo vào"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_credit_time
+msgid "Credit Time"
+msgstr "Thời gian tính lương"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Current Month"
+msgstr "Tháng này"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Date"
+msgstr "Ngày"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_selection_buttons.xml:0
+msgid "Delete"
+msgstr "Xoá"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__department_id
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Department"
+msgstr "Phòng ban"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "Description"
+msgstr "Mô tả"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_disability_due_to_illness_imss
+msgid "Disability due to illness (IMSS)"
+msgstr "Khuyết tật do bệnh (IMSS)"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_code
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_code
+msgid "Display Code"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_double
+msgid "Double Time Hours"
+msgstr "Giờ làm lương nhân đôi"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Draft"
+msgstr "Nháp"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__duration
+msgid "Duration"
+msgstr "Thời hạn"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "Duration must be positive and cannot exceed 24 hours."
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__earliest_available_date_message
+msgid "Earliest Available Date Message"
+msgstr "Tin nhắn ngày trống lịch sớm nhất"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__earliest_available_date
+msgid "Earliest date"
+msgstr "Ngày sớm nhất"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_economic_unemployment
+msgid "Economic Unemployment"
+msgstr "Thất nghiệp do tình hình kinh tế"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_training_time_off
+msgid "Educational Time Off"
+msgstr "Nghỉ đi học"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_emergency
+msgid "Emergency Leave"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_employee
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__employee_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Employee"
+msgstr "Nhân viên"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_version
+msgid "Employee Contract"
+msgstr "Hợp đồng nhân viên"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__version_id
+msgid "Employee Record"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__employee_ids
+msgid "Employees"
+msgstr "Nhân viên"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_european
+msgid "European Time Off"
+msgstr "Ngày nghỉ theo chuẩn Châu Âu"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_examination_leave
+msgid "Examination Leave"
+msgstr "Nghỉ thi"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__external_code
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__external_code
+msgid "External Code"
+msgstr "Mã bên ngoài"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_extra_hours
+msgid "Extra Hours"
+msgstr "Giờ làm thêm"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_extra_legal
+msgid "Extra Legal Time Off"
+msgstr "Ngày nghỉ thêm theo luật định"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_flemish_training_time_off
+msgid "Flemish Educational Time Off"
+msgstr "Flemish - Nghỉ đi học"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__date_from
+msgid "From"
+msgstr "Từ"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_leave
+msgid "GTO"
+msgstr "GTO"
+
+#. module: hr_work_entry
+#: model:ir.actions.server,name:hr_work_entry.ir_cron_generate_missing_work_entries_ir_actions_server
+msgid "Generate Missing Work Entries"
+msgstr "Tạo công bị thiếu"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__date_generated_from
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__date_generated_from
+msgid "Generated From"
+msgstr "Tạo từ"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__date_generated_to
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__date_generated_to
+msgid "Generated To"
+msgstr "Tạo đến"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_leave
+msgid "Generic Time Off"
+msgstr "Ngày nghỉ chung"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_work_entry
+msgid "HR Work Entry"
+msgstr "HR Công"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_work_entry_type
+msgid "HR Work Entry Type"
+msgstr "HR Loại công"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_home_working
+msgid "HW"
+msgstr "HW"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__has_work_entries
+msgid "Has Work Entries"
+msgstr "Có công"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_home_working
+msgid "Home Working"
+msgstr "Home Working"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_hourly_wt
+msgid "Hourly Salary"
+msgstr "Lương theo giờ"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_accident_wt_hourly
+msgid "Hourly Salary in case of Accident"
+msgstr "Lương theo giờ khi xảy ra tai nạn"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_illness_wt_hourly
+msgid "Hourly Salary in case of Illness"
+msgstr "Lương theo giờ khi bị ốm"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_maternity_wt_hourly
+msgid "Hourly Salary in case of Maternity / Paternity Leave"
+msgstr "Lương theo giờ khi nghỉ thai sản/chăm sóc con cái"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_military_wt_hourly
+msgid "Hourly Salary in case of Military Leave"
+msgstr "Lương theo giờ khi nghỉ nhập ngũ"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__is_work
+msgid ""
+"If checked, the work entry is counted as work time in the working schedule"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the work "
+"entry type without removing it."
+msgstr ""
+"Nếu trường hoạt động được đặt là sai, bạn sẽ được phép ẩn loại công mà không "
+"cần xóa nó."
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__amount_rate
+msgid "If you want the hours should be paid double, the rate should be 200%."
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__conflict
+msgid "In Conflict"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__validated
+msgid "In Payslip"
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_work_entry_regeneration_wizard.py:0
+msgid ""
+"In order to regenerate the work entries, you need to provide the wizard with "
+"an employee_id, a date_from and a date_to."
+msgstr ""
+"Để tạo lại công, bạn cần cung cấp employee_id, date_from và date_to cho "
+"wizard."
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_interruption_wt
+msgid "Interruption of Work"
+msgstr "Gián đoạn công việc"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/components/work_entry_source_field/work_entry_source_field.js:0
+msgid ""
+"Invalid option: For fully flexible calendars, the work entry source cannot "
+"be 'Working Hours'."
+msgstr ""
+"Tùy chọn không hợp lệ: Đối với lịch hoàn toàn linh hoạt, nguồn công không "
+"thể là 'Giờ làm việc'."
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__is_checked
+msgid "Is Checked"
+msgstr "Đã đánh dấu"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__last_generation_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__last_generation_date
+msgid "Last Generation Date"
+msgstr "Ngày tạo cuối cùng"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__write_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__write_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_uid
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__write_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__write_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_date
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối vào"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__latest_available_date_message
+msgid "Latest Available Date Message"
+msgstr "Tin nhắn ngày trống gần nhất"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__latest_available_date
+msgid "Latest date"
+msgstr "Ngày gần nhất"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_lesson_wt
+msgid "Lesson Salary"
+msgstr "Lương giảng dạy"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_long_service_leave
+msgid "Long Service Leave"
+msgstr "Nghỉ thâm niên"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_long_sick
+msgid "Long Term Sick"
+msgstr "Nghỉ ốm dài hạn"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_long_leave
+msgid "Long Term Time Off"
+msgstr "Ngày nghỉ dài hạn"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_marriage_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_marriage_leave
+msgid "Marriage Leave"
+msgstr "Nghỉ kết hôn"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_maternity_imss
+msgid "Maternity (IMSS)"
+msgstr "Thai sản (IMSS)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_maternity_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_maternity_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_maternity
+msgid "Maternity Leave"
+msgstr "Nghỉ thai sản"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_maternity_leave_80
+msgid "Maternity Leave 80%"
+msgstr "Nghỉ thai sản 80%"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_maternity
+msgid "Maternity Time Off"
+msgstr "Nghỉ thai sản"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_maternity
+msgid "Maternity Time Off (Paid at 75%)"
+msgstr "Nghỉ thai sản (Có 75% lương)"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__user_id
+msgid "Me"
+msgstr "Tôi"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_medical_assistance
+msgid "Medical Assistance"
+msgstr "Hỗ trợ y tế"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_care_children_with_cancer_imss
+msgid "Medical Leave for Care of Children Diagnosed with Cancer (IMSS)"
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_version.py:0
+msgid "Missing date or duration on work entry"
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_version.py:0
+msgid "Missing timezone for work entries generation."
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_monthly_wt
+msgid "Monthly Salary"
+msgstr "Lương hàng tháng"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__name
+msgid "Name"
+msgstr "Tên"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__draft
+msgid "New"
+msgstr "Mới"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid "No data to display"
+msgstr "Không có dữ liệu để hiển thị"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_work_entry_regeneration_wizard.py:0
+msgid ""
+"No work entry can be regenerated in this range of dates and these employees."
+msgstr ""
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "Note: Validated work entries cannot be modified."
+msgstr "Ghi chú: Không thể sửa đổi công đã xác nhận."
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_notice
+msgid "Notice (Unprovided)"
+msgstr "Thời gian báo trước (chưa có)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_overtime
+msgid "OT"
+msgstr "OT"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.hr_work_entry_type_out_of_contract
+msgid "OoC"
+msgstr "OoC"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_other
+msgid "Other Paid Leave"
+msgstr "Nghỉ phép có lương khác"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.hr_work_entry_type_out_of_contract
+msgid "Out of Contract"
+msgstr "Không có hợp đồng"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_overtime_wt
+msgid "Overtime 100%"
+msgstr "Làm thêm 100%"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_overtime_125_wt
+msgid "Overtime 125%"
+msgstr "Làm thêm 125%"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_overtime
+msgid "Overtime Hours"
+msgstr "Giờ làm thêm"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_overtime
+msgid "Overtime Hours (Paid at 150%)"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_pto
+msgid "Overtime: Public Time Off"
+msgstr "Làm thêm: Ngày lễ"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_regular
+msgid "Overtime: Regular"
+msgstr "Làm thêm: Thông thường"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_saturday
+msgid "Overtime: Saturday"
+msgstr "Làm thêm: Thứ Bảy"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_saturday_pto
+msgid "Overtime: Saturday & Public Time Off"
+msgstr "Làm thêm: Thứ 7 & Ngày lễ"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_sunday
+msgid "Overtime: Sunday"
+msgstr "Làm thêm: Chủ Nhật"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_sunday_pto
+msgid "Overtime: Sunday & Public Time Off"
+msgstr "Làm thêm: Chủ nhật & Ngày lễ"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_legal_leave
+msgid "PTO"
+msgstr "PTO"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_parental
+msgid "Paid Parental Leave"
+msgstr "Nghỉ chăm sóc con cái có lương"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_paid_sick_leave
+msgid "Paid Sick Time off"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_paid_time_off
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_legal_leave
+msgid "Paid Time Off"
+msgstr "Ngày nghỉ có lương"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_parental_time_off
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_parental_time_off
+msgid "Parental Time Off"
+msgstr "Nghỉ chăm sóc con cái"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_partial_incapacity
+msgid "Partial Incapacity (due to illness)"
+msgstr "Mất sức lao động một phần (do bệnh)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_paternity_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_paternity_leave
+msgid "Paternity Leave"
+msgstr "Nghỉ chăm sóc con cái"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_paternity_leave_80
+msgid "Paternity Leave 80%"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paternity_legal
+msgid "Paternity Time Off (Legal)"
+msgstr "Nghỉ chăm sóc con cái (Theo luật)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paternity_company
+msgid "Paternity Time Off (Paid by Company)"
+msgstr "Nghỉ chăm sóc con cái (Công ty trả lương)"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__amount_rate
+msgid "Pay rate"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__code
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__code
+msgid "Payroll Code"
+msgstr "Mã lương"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+msgid "Period"
+msgstr "Giai đoạn"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_personal_leave
+msgid "Personal Leave"
+msgstr "Nghỉ vì lý do cá nhân"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_bank_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_work_entry_type_bank_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.uae_public_holiday_entry_type
+msgid "Public Holiday"
+msgstr "Nghỉ lễ"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_phc
+msgid "Public Holiday Compensation"
+msgstr "Nghỉ bù ngày lễ"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__amount_rate
+msgid "Rate"
+msgstr "Tỷ lệ"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_recovery_additional
+msgid "Recovery Additional Time"
+msgstr "Nghỉ bù"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_recovery
+msgid "Recovery Bank Holiday"
+msgstr "Ngày nghỉ bù"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_work_entry_regeneration_wizard
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+msgid "Regenerate Employee Work Entries"
+msgstr "Tạo lại mục công việc nhân viên"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+msgid "Regenerate Work Entries"
+msgstr "Tạo lại mục công việc"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_create_popover.xml:0
+msgid "Replace"
+msgstr "Thay thế"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_calendar.xml:0
+msgid "Reset"
+msgstr "Đặt lại"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_selection_buttons.xml:0
+msgid "Reset Selected Work Entries"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "Chi tiết ngày nghỉ của tài nguyên"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_resource_calendar
+msgid "Resource Working Time"
+msgstr "Nhân lực thời gian làm việc"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_retro_overtime
+msgid "Retro Overtime Hours"
+msgstr "Giờ làm thêm được tính bổ sung"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_retro_regular
+msgid "Retro Regular Pay Hours"
+msgstr "Giờ làm thông thường được tính bổ sung"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_sick_leave
+msgid "STO"
+msgstr "STO"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_accident_wt
+msgid "Salary in case of Accident"
+msgstr "Lương khi xảy ra tai nạn"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_illness_wt
+msgid "Salary in case of Illness"
+msgstr "Lương khi bị ốm"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_maternity_wt
+msgid "Salary in case of Maternity / Paternity Leave"
+msgstr "Lương khi nghỉ thai sản/chăm sóc con cái"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_military_wt
+msgid "Salary in case of Military Leave"
+msgstr "Lương khi nghỉ nhập ngũ"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__search_criteria_completed
+msgid "Search Criteria Completed"
+msgstr "Tìm kiếm tiêu chí đã hoàn thành"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Search Work Entry"
+msgstr "Tìm kiếm công"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
+msgid "Search Work Entry Type"
+msgstr "Tìm kiếm loại công"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__sequence
+msgid "Sequence"
+msgstr "Trình tự"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_selection_buttons.xml:0
+msgid "Set"
+msgstr "Thiết lập"
+
+#. module: hr_work_entry
+#: model:ir.actions.server,name:hr_work_entry.action_hr_work_entry_set_to_draft
+msgid "Set to Draft"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_100
+msgid "Sick Leave (100% Paid)"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_75
+msgid "Sick Leave (75% Paid)"
+msgstr "Nghỉ ốm (Nhận 75% lương)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_sick_leave_unpaid
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_0
+msgid "Sick Leave (Unpaid)"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.uae_sick_leave_0_entry_type
+msgid "Sick Leave 0"
+msgstr "Nghỉ ốm 0"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.uae_sick_leave_50_entry_type
+msgid "Sick Leave 50"
+msgstr "Nghỉ ốm 50"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_sick_leave_80
+msgid "Sick Leave 80%"
+msgstr "Nghỉ ốm 80%"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_sick_leave
+msgid "Sick Time Off"
+msgstr "Nghỉ ốm"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_pl_work_entry_type_sick_leave
+msgid "Sick Time Off (Paid at 80%)"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_part_sick
+msgid "Sick Time Off (Without Guaranteed Salary)"
+msgstr "Nghỉ ốm (không đảm bảo có lương)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_25
+msgid "Sick Time Off Day 1-3 (Paid at 25%)"
+msgstr "Nghỉ ốm ngày 1-3 (Có 25% lương)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_55
+msgid "Sick Time Off Day 4-10 (Paid at 55%)"
+msgstr "Nghỉ ốm ngày 4-10 (Có 55% lương)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_0
+msgid "Sick Time Off Day up to 52 weeks (Paid at 55% by social security)"
+msgstr "Nghỉ ốm đến 52 tuần (bảo hiểm xã hội trả 55% lương)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_sick_leave_75
+msgid "Sick Time off (75% Paid)"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_sick_leave_unpaid
+msgid "Sick Time off (Unpaid)"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_simple_holiday_pay_variable_salary
+msgid "Simple Holiday Pay - Variable Salary"
+msgstr "Lương phép cơ bản – Lương không cố định"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_situational_unemployment
+msgid "Situational Unemployment"
+msgstr "Thất nghiệp do yếu tố khách quan"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_small_unemployment
+msgid "Small Unemployment (Brief Holiday)"
+msgstr "Thất nghiệp ngắn hạn (Nghỉ ngắn)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_solicitation_time_off
+msgid "Solicitation Time Off"
+msgstr "Nghỉ quyên góp"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/xml/work_entry_templates.xml:0
+msgid "Solve conflicts first"
+msgstr "Trước tiên hãy xử lý xung đột"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/calendar_common/work_entry_calendar_common_popover.xml:0
+msgid "Split"
+msgstr "Tách"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_calendar_controller.js:0
+msgid "Split Work Entry"
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid ""
+"Split work entry duration has to be less than the existing work entry "
+"duration."
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
+msgid "State"
+msgstr "Trạng thái"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_statutory_holiday
+msgid "Statutory Holiday"
+msgstr "Nghỉ lễ theo luật"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_strike
+msgid "Strike"
+msgstr "Đình công"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"Mã quốc gia ISO với hai ký tự.\n"
+"Bạn có thể sử dụng trường này để tìm kiếm nhanh."
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "The amount of work on the day should not exceed 24 hours."
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_work_entry_regeneration_wizard.py:0
+msgid ""
+"The from date must be >= '%(earliest_available_date)s' and the to date must "
+"be <= '%(latest_available_date)s', which correspond to the generated work "
+"entries time interval."
+msgstr ""
+"Từ ngày phải >= '%(earliest_available_date)s' và đến ngày phải <= '%"
+"(latest_available_date)s', tương ứng với khoảng thời gian của các mục công "
+"việc đã tạo."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+msgid "The same code cannot be associated to multiple work entry types (%s)"
+msgstr "Không thể liên kết cùng một mã với nhiều loại công (%s)"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__display_code
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__display_code
+msgid ""
+"This code can be changed, it is only for a display purpose (3 letters max)"
+msgstr ""
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "This work entry cannot be validated. The work entry type is undefined."
+msgstr ""
+"Mục công việc này không thể được xác nhận. Loại mục công việc không được xác "
+"định."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "This work entry is validated. You can't delete it."
+msgstr "Công này đã được xác thực, nên bạn không thể xóa."
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__is_leave
+msgid "Time Off"
+msgstr "Ngày nghỉ"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid "Time Off Options"
+msgstr "Tùy chọn ngày nghỉ"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__date_to
+msgid "To"
+msgstr "Đến"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_training
+msgid "Training"
+msgstr "Đào tạo"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid ""
+"Try to add some records, or make sure that there is no active filter in the "
+"search bar."
+msgstr ""
+"Hãy thử thêm một số bản ghi hoặc đảm bảo rằng không có bộ lọc đang hoạt động "
+"nào trên thanh tìm kiếm."
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Type"
+msgstr "Loại"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_unpaid_leave
+msgid "UN"
+msgstr "UN"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "Undefined"
+msgstr "Không xác định"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "Undefined Type"
+msgstr "Loại không xác định"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_unjustified_reason
+msgid "Unjustified Reason"
+msgstr "Lý do không chính đáng"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_unpaid_leave
+msgid "Unpaid"
+msgstr "Chưa thanh toán"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_unpaid_wt
+msgid "Unpaid Salary"
+msgstr "Lương không được chi trả"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_unpredictable
+msgid "Unpredictable Reason"
+msgstr "Lý do đột xuất"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_termination
+msgid "Unused Leave on Termination"
+msgstr "Ngày nghỉ phép còn dư khi nghỉ việc"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__external_code
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__external_code
+msgid "Use this code to export your data to a third party"
+msgstr "Sử dụng mã này để xuất dữ liệu của bạn cho bên thứ ba"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__valid
+msgid "Valid"
+msgstr "Hợp lệ"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Validated"
+msgstr "Đã xác nhận"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_weekend
+msgid "Weekend"
+msgstr "Cuối tuần"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident
+msgid "Work Accident"
+msgstr "Tai nạn lao động"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_resource_calendar_attendance
+msgid "Work Detail"
+msgstr "Chi tiết Công việc"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_pivot
+msgid "Work Entries"
+msgstr "Công"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_user_work_entry_employee
+msgid "Work Entries Employees"
+msgstr "Công Nhân viên"
+
+#. module: hr_work_entry
+#: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_action
+#: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_action_conflict
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "Work Entry"
+msgstr "Công"
+
+#. module: hr_work_entry
+#: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_regeneration_wizard_action
+msgid "Work Entry Regeneration"
+msgstr "Tạo lại mục công việc"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__work_entry_source
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__work_entry_source
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__work_entry_source
+msgid "Work Entry Source"
+msgstr "Nguồn công"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__work_entry_source_calendar_invalid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__work_entry_source_calendar_invalid
+msgid "Work Entry Source Calendar Invalid"
+msgstr "Lịch nguồn công không hợp lệ"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__work_entry_type_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__work_entry_type_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__work_entry_type_id
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.resource_calendar_leaves_view_search_inherit
+msgid "Work Entry Type"
+msgstr "Loại công"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid "Work Entry Type Name"
+msgstr "Tên loại công"
+
+#. module: hr_work_entry
+#: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_type_action
+msgid "Work Entry Types"
+msgstr "Loại công"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_work_risk_imss
+msgid "Work risk (IMSS)"
+msgstr "Rủi ro lao động (IMSS)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_compensation
+msgid "Workers Compensation"
+msgstr "Bồi thường cho người lao động"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_version__work_entry_source__calendar
+msgid "Working Schedule"
+msgstr "Thời gian làm việc"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__is_work
+msgid "Working Time"
+msgstr "Thời gian làm việc"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+msgid ""
+"You can't change the Country of this work entry type cause it's currently "
+"used by the system. You need to delete related working entries first."
+msgstr ""
+"Bạn không thể thay đổi Quốc gia của loại công này vì nó hiện đang được hệ "
+"thống sử dụng. Trước tiên, bạn cần xóa các công liên quan."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+msgid "You can't change the country of this specific work entry type."
+msgstr "Bạn không thể thay đổi quốc gia của loại công cụ thể này."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "You can't split a work entry with less than 1 hour."
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/calendar_common/work_entry_calendar_common_popover.xml:0
+msgid "You cannot edit a validated work entry"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique
+msgid "You cannot have the same employee twice."
+msgstr "Bạn không thể tạo một nhân viên hai lần."
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_youth_time_off
+msgid "Youth Time Off"
+msgstr "Ngày nghỉ dành cho lao động trẻ"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
+msgid "hours"
+msgstr "giờ"
+
+#~ msgid "Beginning"
+#~ msgstr "Beginning"
+
+#~ msgid "Conflict"
+#~ msgstr "Xung đột"
+
+#~ msgid "End"
+#~ msgstr "Kết thúc"
+
+#~ msgid "Start Date"
+#~ msgstr "Ngày bắt đầu"
+
+#~ msgid "Starting time should be before end time."
+#~ msgstr "Starting time should be before end time."
+
+#~ msgid "The same code cannot be associated to multiple work entry types."
+#~ msgstr "The same code cannot be associated to multiple work entry types."
+
+#~ msgid "Validated work entries cannot overlap"
+#~ msgstr "Mục công việc đã xác nhận không thể trùng lặp"
+
+#~ msgid "Work Entry Name"
+#~ msgstr "Work Entry Name"
+
+#~ msgid "Work entry must end. Please define an end date or a duration."
+#~ msgstr "Work entry must end. Please define an end date or a duration."

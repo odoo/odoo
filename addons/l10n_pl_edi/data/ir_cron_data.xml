@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="cron_auto_checks_the_polish_invoice_status" model="ir.cron">
+            <field name="name">Polish eInvoice: automatically check the status of the invoice in ksef</field>
+            <field name="model_id" ref="l10n_pl_edi.model_account_move"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_l10n_pl_edi_check_invoice_status()</field>
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 22:00:00')"/>
+        </record>
+
+        <record id="cron_l10n_pl_edi_ksef_download_bills" model="ir.cron">
+            <field name="name">Polish eInvoice: Download vendor bills from KSeF</field>
+            <field name="model_id" ref="l10n_pl_edi.model_account_move"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_l10n_pl_edi_download_bills()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">3</field>
+            <field name="interval_type">hours</field>
+        </record>
+    </data>
+</odoo>

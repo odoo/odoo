@@ -1,0 +1,24 @@
+<odoo>
+    <record id="vpicktree" model="ir.ui.view">
+        <field name="name">stock.picking.list.inherit.stock.fleet</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <field name="picking_type_id" position="after">
+                <field name="zip" optional="hide"/>
+                <field name="shipping_weight" sum="Total Shipping Weight" string="Shipping Weight" optional="hide"/>
+                <field name="shipping_volume" sum="Total Shipping Volume" string="Shipping Volume" optional="hide"/>
+            </field>
+        </field>
+    </record>
+    <record id="stock_picking_tree_inherit_stock_fleet" model="ir.ui.view">
+        <field name="name">stock.picking.list.inherit.stock.transport</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_view_batch_tree_ref"/>
+        <field name="arch" type="xml">
+            <field name="zip" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

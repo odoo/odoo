@@ -1,0 +1,186 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_mrp
+#
+# Translators:
+# Murat Durmuş <muratd@projetgrup.com>, 2022
+# Murat Kaplan <muratk@projetgrup.com>, 2022
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
+# Umur Akın <umura@projetgrup.com>, 2022
+# Ediz Duman <neps1192@gmail.com>, 2022
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
+# Martin Trigaux, 2022
+# İlknur Gözütok, 2023
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~15.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-11-21 14:45+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/sale_mrp/"
+"tr/>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: sale_mrp
+#: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Manufactured</b>"
+msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Üretilen</b>"
+
+#. module: sale_mrp
+#: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Confirmed</b>"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>Doğruladı</b>"
+
+#. module: sale_mrp
+#: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>In progress</b>"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>Devam ediyor</b>"
+
+#. module: sale_mrp
+#: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
+msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
+msgstr "<i class=\"fa fa-fw fa-times\"/> <b>İptal edildi</b>"
+
+#. module: sale_mrp
+#: model_terms:ir.ui.view,arch_db:sale_mrp.mrp_production_form_view_sale
+msgid "<span class=\"o_stat_text\">Sale</span>"
+msgstr "<span class=\"o_stat_text\">Satış</span>"
+
+#. module: sale_mrp
+#: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
+msgid "<strong>Manufacturing Orders</strong>"
+msgstr "<strong>Üretim Siparişleri</strong>"
+
+#. module: sale_mrp
+#. odoo-python
+#: code:addons/sale_mrp/models/mrp_bom.py:0
+msgid ""
+"As long as there are some sale order lines that must be delivered/invoiced "
+"and are related to these bills of materials, you can not remove them.\n"
+"The error concerns these products: %s"
+msgstr ""
+"Teslim edilmesi/faturalandırılması gereken ve bu ürün reçeteleri ile ilgili "
+"bazı satış siparişi satırları olduğu sürece, bunları kaldıramazsınız.\n"
+"Hata bu ürünlerle ilgilidir: %s"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_mrp_bom
+msgid "Bill of Material"
+msgstr "Ürün Reçetesi"
+
+#. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order__mrp_production_count
+msgid "Count of MO generated"
+msgstr "Üretilen MO sayısı"
+
+#. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_production__sale_order_count
+msgid "Count of Source SO"
+msgstr "SO Kaynak Sayısı"
+
+#. module: sale_mrp
+#: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
+msgid "Date:"
+msgstr "Tarih:"
+
+#. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_bom__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_production__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_move__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_rule__display_name
+msgid "Display Name"
+msgstr "İsim Göster"
+
+#. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_bom__id
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_production__id
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_move__id
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_move_line__id
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_account_move_line
+msgid "Journal Item"
+msgstr "Yevmiye Kalemi"
+
+#. module: sale_mrp
+#: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_form_mrp
+msgid "Manufacturing"
+msgstr "Üretim"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Üretim Emri"
+
+#. module: sale_mrp
+#. odoo-python
+#: code:addons/sale_mrp/models/sale_order.py:0
+msgid "Manufacturing Orders Generated by %s"
+msgstr "%s Tarafından Oluşturulan Üretim Siparişleri"
+
+#. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order__mrp_production_ids
+msgid "Manufacturing orders associated with this sales order."
+msgstr "Bu satış siparişiyle ilişkili üretim siparişleri."
+
+#. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_production__sale_line_id
+msgid "Origin sale order line"
+msgstr "Kaynak Satış Siparişi Satırı"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Ürün Harketleri (Stok Hareket Satırları)"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_sale_order
+msgid "Sales Order"
+msgstr "Satış Siparişi"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Satış Sipariş Satırı"
+
+#. module: sale_mrp
+#. odoo-python
+#: code:addons/sale_mrp/models/mrp_production.py:0
+msgid "Sources Sale Orders of %s"
+msgstr "%s Kaynak Satış Siparişleri"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_stock_move
+msgid "Stock Move"
+msgstr "Stok Hareketi"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_stock_rule
+msgid "Stock Rule"
+msgstr "Stok Kuralı"
+
+#~ msgid "<span class=\"o_stat_text\">Manufacturing</span>"
+#~ msgstr "<span class=\"o_stat_text\">Üretim</span>"
+
+#~ msgid "Production Order"
+#~ msgstr "Üretim Emri"

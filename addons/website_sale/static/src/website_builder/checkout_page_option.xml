@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale.checkoutPageOption">
+    <BuilderRow label.translate="Extra Step">
+        <BuilderCheckbox action="'setExtraStep'" actionParam="{views: ['website_sale.extra_info']}"/>
+    </BuilderRow>
+    <BuilderContext action="'websiteConfig'">
+        <BuilderRow label.translate="Suggested Accessories">
+            <BuilderCheckbox actionParam="{views: ['website_sale.suggested_products_list']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Promo Code">
+            <BuilderCheckbox actionParam="{views: ['website_sale.reduction_code']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Accept Terms">
+            <BuilderCheckbox actionParam="{views: ['website_sale.accept_terms_and_conditions']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Show B2B Fields">
+            <BuilderCheckbox actionParam="{views: ['website_sale.address_b2b']}"/>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+</templates>

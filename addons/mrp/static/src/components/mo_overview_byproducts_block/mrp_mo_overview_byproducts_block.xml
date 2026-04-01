@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp.MoOverviewByproductsBlock">
+        <t t-if="hasByproducts">
+            <tr>
+                <td class="text-start">
+                    <span t-attf-style="margin-left: {{ level * 20 }}px"/>
+                    <button t-on-click="toggleFolded" class="btn btn-light ps-0 py-0" t-attf-aria-label="{{ state.isFolded ? 'Unfold' : 'Fold' }}" t-attf-title="{{ state.isFolded ? 'Unfold' : 'Fold' }}">
+                        <i t-attf-class="fa fa-fw fa-caret-{{ state.isFolded ? 'right' : 'down' }}" role="img"/>
+                        By-Products
+                    </button>
+                </td>
+                <td class="text-center" t-if="props.showOptions.replenishments"/>
+                <td class="text-end"/>
+                <td class="text-start" t-if="props.showOptions.uom"/>
+                <td class="text-end" t-if="props.showOptions.availabilities"/>
+                <td class="text-end" t-if="props.showOptions.availabilities"/>
+                <td class="text-end" t-if="props.showOptions.receipts"/>
+                <td class="text-end" t-if="props.showOptions.unitCosts"/>
+                <td t-attf-class="text-end {{ getColorClass(props.summary.mo_cost_decorator) }}" t-if="props.showOptions.moCosts" t-out="formatMonetary(props.summary.mo_cost)"/>
+                <td class="text-end" t-if="props.showOptions.bomCosts" t-out="formatMonetary(props.summary.bom_cost)"/>
+                <td t-attf-class="text-end {{ getColorClass(props.summary.real_cost_decorator) }}" t-if="props.showOptions.realCosts" t-out="formatMonetary(props.summary.real_cost)"/>
+            </tr>
+            <t t-if="!state.isFolded" t-foreach="props.byproducts" t-as="byproduct" t-key="byproduct.index">
+                <MoOverviewLine data="byproduct" showOptions="props.showOptions"/>
+            </t>
+        </t>
+    </t>
+
+</templates>

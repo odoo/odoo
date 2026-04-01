@@ -1,0 +1,150 @@
+// ============================
+// Mass Mailing "Theme Default"
+// ============================
+
+div.col:not([align]) {
+    // Default browser style but needed so that alignment works on some mail
+    // clients (see convert_inline)
+    text-align: inherit;
+}
+
+.btn {
+    &.rounded-circle {
+        border-radius: 100px !important;
+        padding: 0.45rem 1.35rem;
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    &.flat {
+        border: 0;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0;
+    }
+}
+
+// ===== Layout =====
+.o_layout {
+    overflow: hidden;
+
+    > .o_mail_wrapper {
+        width: 100%;
+        margin: 0 auto;
+        max-width: 1320px; // container max-width for xxl dimensions
+
+        &.o_mail_small {
+            max-width: 600px;
+        }
+        &.o_mail_regular {
+            max-width: 720px;
+        }
+
+        .o_mail_wrapper_td {
+            flex: none;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+    }
+}
+
+// ===== Snippets (general) =====
+.o_mail_snippet_general {
+    width: 100%;
+    box-sizing: border-box;
+
+    .container > div.row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    a:not(.btn), .btn.btn-link {
+        border: none!important;
+    }
+
+    // Icons
+    .fa {
+        @mixin size($width, $height: $width) {
+          width: $width;
+          height: $height;
+        }
+    }
+    // Background Images
+    .oe_img_bg {
+        // Compatibility <= 13.0, TODO remove?
+        // -----------------------------------
+        &.o_bg_img_opt_contain {
+            background-size: contain;
+            background-position: center center;
+        }
+        &.o_bg_img_opt_custom {
+            background-size: auto;
+        }
+        &.o_bg_img_opt_repeat_x {
+            background-repeat: repeat-x;
+        }
+        &.o_bg_img_opt_repeat_y {
+            background-repeat: repeat-y;
+        }
+    }
+}
+
+// ===== Snippets (specific) =====
+.o_mail_block_header_social, .o_mail_block_header_text_social, .o_mail_block_header_logo {
+    .o_mail_header_social {
+        a:not(.btn), .btn.btn-link {
+            display: inline-block;
+        }
+    }
+    div .col, div[class*="col-"] {
+        align-self: center;
+    }
+}
+
+.o_mail_block_footer_social {
+    .btn-link{
+        padding: 0;
+    }
+}
+
+// -- Bootstrap overrides for transparent colors -- //
+
+.list-group .list-group-item {
+    border-color: #d2d2d2;
+
+}
+
+// ===== Misc =====
+
+.o_mail_snippet_general .container {
+    border-collapse:separate;
+}
+
+// Compatibility: mb/mt classes on <td/> elements were interpreted as paddings
+// instead of margins before the introduction of pb/pt classes. As thoses mb/mt
+// classes may remain on clients' templates, <td/> are forced to 0 margin to
+// be sure (normally <td/> should not consider margin properties but some mail
+// clients might make the mistake to do so).
+div.col[class*="mb"], div.col[class*="mt"] {
+    margin: 0!important;
+}
+
+// DEFAULT_CSS styles
+
+.o_mail_wrapper {
+    --h1-font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+    --h2-font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+    --h3-font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+    --text-font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+    --btn-primary-color: #FFFFFF;
+    --btn-primary-background-color: #35979c;
+    --btn-primary-border-color: #35979c;
+    --btn-secondary-color: #FFFFFF;
+    --btn-secondary-background-color: #685563;
+    --btn-secondary-border-color: #685563;
+    --separator-border-color: #212529;
+    --separator-width: 100%;
+}

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_milestone_view_form" model="ir.ui.view">
+        <field name="name">project.milestone.view.form</field>
+        <field name="model">project.milestone</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(project.action_view_task_from_milestone)d"
+                                type="action"
+                                class="oe_stat_button"
+                                icon="fa-tasks"
+                                context="{'default_project_id': project_id}"
+                                groups="project.group_project_milestone"
+                                close="1"
+                                invisible="not project_allow_milestones"
+                        >
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="task_count" nolabel="1"/>
+                                    <span class="fw-normal"> Tasks</span>
+                                </span>
+                                <span class="o_stat_value" invisible="done_task_count == 0">
+                                    <field name="done_task_count" nolabel="1"/>
+                                    <span class="fw-normal"> Done</span>
+                                </span>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group name="main_details">
+                            <field name="project_id" invisible="1"/>
+                            <field name="name" placeholder="e.g: Product Launch"/>
+                            <field name="deadline"/>
+                            <field name="is_reached"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_milestone_view_tree" model="ir.ui.view">
+        <field name="name">project.milestone.view.list</field>
+        <field name="model">project.milestone</field>
+        <field name="arch" type="xml">
+            <list decoration-success="can_be_marked_as_done" decoration-danger="is_deadline_exceeded and not can_be_marked_as_done" decoration-muted="is_reached" editable="bottom" sample="1" default_order="sequence, deadline, is_reached desc, name">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="deadline" optional="show"/>
+                <field name="project_id" column_invisible="1"/>
+                <field name="is_reached" optional="show"/>
+                <button name="action_view_tasks"
+                        type="object"
+                        title="View Tasks"
+                        string="View Tasks"
+                        class="btn btn-link float-end"
+                        invisible="task_count == 0 or not project_allow_milestones"
+                        groups="project.group_project_milestone"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="project_milestone_view_kanban" model="ir.ui.view">
+        <field name="name">project.milestone.view.kanban</field>
+        <field name="model">project.milestone</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="can_be_marked_as_done"/>
+                <field name="is_deadline_exceeded"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex">
+                            <field name="is_reached" widget="task_done_checkmark" class="oe_inline"/>
+                            <strong>
+                                <field name="name" class="oe_inline"/>
+                                <t t-set="badge" t-value="'text-success'" t-if="record.can_be_marked_as_done.raw_value"/>
+                                <t t-set="badge" t-value="'text-danger'" t-if="record.is_deadline_exceeded.raw_value"/>
+                                <t t-if="record.deadline.raw_value">
+                                    - <span t-attf-class="{{ badge }}"><field name="deadline"/></span>
+                                </t>
+                            </strong>
+                        </div>
+                    </t>
+                </templates>
+           </kanban>
+        </field>
+    </record>
+
+    <record id="project_milestone_action" model="ir.actions.act_window">
+        <field name="name">Milestones</field>
+        <field name="res_model">project.milestone</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('project_id', '=', active_id)]</field>
+        <field name="context">{'default_project_id': active_id}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No milestones found. Let's create one!
+            </p>
+            <p>Track major progress points that must be reached to achieve success.</p>
+        </field>
+    </record>
+
+    <record id="action_view_project_milestone_list" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="project_milestone_action"/>
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="project.project_milestone_view_tree"/>
+    </record>
+
+    <record id="action_view_project_milestone_kanban" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="project_milestone_action"/>
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="project_milestone_view_kanban"/>
+    </record>
+
+    <record id="action_view_project_milestone_form" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="project_milestone_action"/>
+        <field name="sequence" eval="30"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project_milestone_view_form"/>
+    </record>
+
+    <record id="project_embedded_action_project_milestones" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">10</field>
+        <field name="name">Milestones</field>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="action_id" ref="project.project_milestone_action"/>
+        <field name="domain">[('allow_milestones', '=', True)]</field>
+        <field name="groups_ids" eval="[(4, ref('project.group_project_milestone'))]" />
+    </record>
+
+    <record id="project_embedded_action_update_milestones" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">25</field>
+        <field name="name">Milestones</field>
+        <field name="parent_action_id" ref="project.project_update_all_action"/>
+        <field name="action_id" ref="project.project_milestone_action"/>
+        <field name="domain">[('allow_milestones', '=', True)]</field>
+        <field name="groups_ids" eval="[(4, ref('project.group_project_milestone'))]" />
+    </record>
+</odoo>

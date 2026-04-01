@@ -1,0 +1,642 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp_account
+#
+# Translators:
+# Martin Trigaux, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-06 09:13+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"mrp_account/ja/>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "$1000"
+msgstr "$1000"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "$5000"
+msgstr "$5000"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/stock_move.py:0
+msgid "%(value)s for %(quantity)s %(unit)s from %(production)s"
+msgstr "%(value)s 、 %(quantity)s %(unit)s %(production)sより"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/mrp_production.py:0
+msgid "%s - Labour"
+msgstr "%s - 労働"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "2023-08-15"
+msgstr "2023-08-15"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_move_form_inherit_mrp_account
+msgid "<span class=\"o_stat_text\">Manufacturing</span>"
+msgstr "<span class=\"o_stat_text\">製造</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
+msgid "<span class=\"o_stat_text\">WIP</span>"
+msgstr "<span class=\"o_stat_text\">仕掛品</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span style=\"margin-right: 15px;\">Total</span>"
+msgstr "<span style=\"margin-right: 15px;\">合計</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span>Amount</span>"
+msgstr "<span>金額</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span>Date</span>"
+msgstr "<span>日付</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span>Product</span>"
+msgstr "<span>プロダクト</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span>Quantity</span>"
+msgstr "<span>数量</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span>Ref.</span>"
+msgstr "<span>参照</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span>Unit of Measure</span>"
+msgstr "<span>単位</span>"
+
+#. module: mrp_account
+#: model:ir.model.constraint,message:mrp_account.constraint_mrp_account_wip_accounting_line_check_debit_credit
+msgid "A single line cannot be both credit and debit."
+msgstr "単一の明細を同時にクレジットとデビットにすることはできません。"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__account_id
+msgid "Account"
+msgstr "勘定科目"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__account_move_line_id
+msgid "Account Move Line"
+msgstr "勘定科目仕訳明細"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
+msgid "Account move line to be created when posting WIP account move"
+msgstr "WIP勘定の仕訳時に作成される移動仕訳明細"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "Acme Corp."
+msgstr "Acme Corp."
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "分析勘定"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__analytic_distribution
+msgid "Analytic Distribution"
+msgstr "分析分配"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "分析明細"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_account_analytic_applicability
+msgid "Analytic Plan's Applicabilities"
+msgstr "分析プランの適用範囲"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__analytic_precision
+msgid "Analytic Precision"
+msgstr "分析精度"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/analytic_account.py:0
+#: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
+msgid "Bills of Materials"
+msgstr "部品表"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_count
+msgid "BoM Count"
+msgstr "部品表数"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
+msgid "Bom"
+msgstr "部品表"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__category
+msgid "Category"
+msgstr "カテゴリー"
+
+#. module: mrp_account
+#: model:ir.actions.server,name:mrp_account.action_compute_price_bom_product
+#: model:ir.actions.server,name:mrp_account.action_compute_price_bom_template
+#: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
+#: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
+#: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
+msgid "Compute Price from BoM"
+msgstr "部品表から価格を計算"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
+#: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
+#: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
+msgid ""
+"Compute the price of the product using products and operations of related "
+"bill of materials, for manufactured products only."
+msgstr ""
+"製造された製品のみに関連する部品表の製品および操作を使用して、製品の価格を計"
+"算します。"
+
+#. module: mrp_account
+#. odoo-javascript
+#. odoo-python
+#: code:addons/mrp_account/report/stock_valuation_report.py:0
+#: code:addons/mrp_account/static/src/stock_valuation/stock_valuation_report.js:0
+#: code:addons/mrp_account/static/src/stock_valuation/stock_valuation_report.xml:0
+msgid "Cost of Production"
+msgstr "製造原価"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_ids
+msgid "Costs Hour Account"
+msgstr "原価時間勘定"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__create_uid
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__create_date
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__credit
+msgid "Credit"
+msgstr "貸方"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__currency_id
+msgid "Currency"
+msgstr "通貨"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__date
+msgid "Date"
+msgstr "日付"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__debit
+msgid "Debit"
+msgstr "借方"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Discard"
+msgstr "破棄"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_applicability__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_account_move__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_product_category__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_product_product__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_product_template__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_stock_account_stock_valuation_report__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_stock_move__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "分配分析勘定"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_applicability__business_domain
+msgid "Domain"
+msgstr "ドメイン"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__expense_account_id
+msgid "Expense Account"
+msgstr "費用勘定"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
+msgid "Extra Unit Cost"
+msgstr "追加単位原価"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__id
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_applicability__id
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:mrp_account.field_account_move__id
+#: model:ir.model.fields,field_description:mrp_account.field_account_move_line__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__id
+#: model:ir.model.fields,field_description:mrp_account.field_product_category__id
+#: model:ir.model.fields,field_description:mrp_account.field_product_product__id
+#: model:ir.model.fields,field_description:mrp_account.field_product_template__id
+#: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__id
+#: model:ir.model.fields,field_description:mrp_account.field_stock_account_stock_valuation_report__id
+#: model:ir.model.fields,field_description:mrp_account.field_stock_move__id
+msgid "ID"
+msgstr "ID"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__journal_id
+msgid "Journal"
+msgstr "仕訳帳"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_account_move
+msgid "Journal Entry"
+msgstr "仕訳"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_account_move_line
+msgid "Journal Item"
+msgstr "仕訳明細"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__label
+msgid "Label"
+msgstr "ラベル"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "Laptop"
+msgstr "ノートパソコン"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__write_uid
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__write_date
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_report_mrp_report_mo_overview
+msgid "MO Overview Report"
+msgstr "製造オーダ概要レポート"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "Manual Entry"
+msgstr "手動仕訳"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_production
+#: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_applicability__business_domain__manufacturing_order
+#: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_line__category__manufacturing_order
+msgid "Manufacturing Order"
+msgstr "製造オーダ"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/analytic_account.py:0
+#: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
+msgid "Manufacturing Orders"
+msgstr "製造オーダ"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_count
+#: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_count
+#: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_count
+msgid "Manufacturing Orders Count"
+msgstr "製造オーダ数"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "Manufacturing WIP - %(orders_list)s"
+msgstr "製造WIP - %(orders_list)s"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__mo_ids
+msgid "Mo"
+msgstr "製造オーダ"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_ids
+msgid "Mo Analytic Account Line"
+msgstr "製造オーダ分析勘定明細"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "Please make sure the total credit amount equals the total debit amount."
+msgstr "合計のクレジット額と合計のデビット額が一致していることをご確認下さい。"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Post Manufacturing WIP"
+msgstr "製造WIPを記帳"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Post WIP"
+msgstr "WIPを記帳"
+
+#. module: mrp_account
+#: model:ir.actions.act_window,name:mrp_account.action_wip_accounting
+msgid "Post WIP Accounting Entry"
+msgstr "WIP会計仕訳を記帳"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_product_template
+msgid "Product"
+msgstr "プロダクト"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_product_category
+msgid "Product Category"
+msgstr "プロダクトカテゴリ"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_product_product
+msgid "Product Variant"
+msgstr "プロダクトバリアント"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_ids
+msgid "Production"
+msgstr "生産"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_product_category__property_stock_account_production_cost_id
+msgid "Production Account"
+msgstr "生産勘定"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "REF123"
+msgstr "REF123"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reference
+msgid "Reference"
+msgstr "参照"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_ids
+#: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_ids
+msgid "Relevant WIP MOs"
+msgstr "関連WIP製造オーダ"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reversal_date
+msgid "Reversal Date"
+msgstr "逆仕訳日"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "Reversal date must be after the posting date."
+msgstr "逆仕訳日は、仕訳日以降の日付である必要があります。"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "Reversal of: %s"
+msgstr "次の逆仕訳: %s"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
+msgid "Show Valuation"
+msgstr "評価を表示"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_stock_move
+msgid "Stock Move"
+msgstr "在庫移動"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_stock_account_stock_valuation_report
+msgid "Stock Valuation"
+msgstr "在庫評価"
+
+#. module: mrp_account
+#: model:ir.model.fields,help:mrp_account.field_account_bank_statement_line__wip_production_ids
+#: model:ir.model.fields,help:mrp_account.field_account_move__wip_production_ids
+msgid ""
+"The MOs that this WIP entry was based on. Expected to be set at time of WIP "
+"entry creation."
+msgstr ""
+"このWIP仕訳の元になっている製造オーダ。仕訳作成時に設定される予定です。"
+
+#. module: mrp_account
+#: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
+msgid ""
+"The expense is accounted for when the manufacturing order is marked as done. "
+"If not set, it is the expense account of the final product that will be used "
+"instead."
+msgstr ""
+"この費用は、製造オーダが完了とマークされたときに計上されます。設定されていな"
+"い場合は、最終プロダクトの費用勘定が代わりに使用されます。"
+
+#. module: mrp_account
+#: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
+msgid ""
+"This account will be used as a valuation counterpart for both components and "
+"final products for manufacturing orders.\n"
+"                If there are any workcenter/employee costs, this value will "
+"remain on the account once the production is completed."
+msgstr ""
+"この勘定は、製造オーダの構成品と最終プロダクトの両方の評価対象として使用され"
+"ます。\n"
+"　　　　作業区/従業員原価がある場合、この値は生産が完了した後も勘定に残りま"
+"す。"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Total Credit"
+msgstr "貸方合計"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Total Debit"
+msgstr "借方合計"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "Units"
+msgstr "個"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "WIP - Component Value"
+msgstr "WIP - 構成品金額"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "WIP - Overhead"
+msgstr "WIP - 間接費"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/mrp_production.py:0
+msgid "WIP Entries of %s"
+msgstr "%sの仕掛品仕訳"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__wip_move_count
+msgid "WIP Journal Entry Count"
+msgstr "WIP仕訳エントリ数"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/account_move.py:0
+msgid "WIP MOs of %s"
+msgstr "%sのWIP製造オーダ"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "WIP Report for"
+msgstr "以下のための仕掛品(WIP)レポート:"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__line_ids
+msgid "WIP accounting lines"
+msgstr "WIP会計明細"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__wip_accounting_id
+msgid "WIP accounting wizard"
+msgstr "WIP会計ウィザード"
+
+#. module: mrp_account
+#: model:ir.actions.report,name:mrp_account.wip_report
+msgid "WIP report"
+msgstr "仕掛品(WIP)レポート:"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_ids
+msgid "Wc Analytic Account Line"
+msgstr "運転資本(WC)勘定明細"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__wip_move_ids
+msgid "Wip Move"
+msgstr "仕掛品移動"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting
+msgid "Wizard to post Manufacturing WIP account move"
+msgstr "製造のWIP勘定の仕訳を投稿するウィザード"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_workcenter
+msgid "Work Center"
+msgstr "作業区"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_workorder
+msgid "Work Order"
+msgstr "作業オーダ"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workorder_count
+msgid "Work Order Count"
+msgstr "作業オーダ数"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/analytic_account.py:0
+msgid "Work Orders"
+msgstr "作業オーダ"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workcenter_ids
+msgid "Workcenter"
+msgstr "作業区"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
+msgid "Workcenter Productivity Log"
+msgstr "作業区 生産記録"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/mrp_production.py:0
+#: code:addons/mrp_account/models/mrp_workorder.py:0
+msgid "[WC] %s"
+msgstr "[WC] %s"
+
+#~ msgid "Bill of Material"
+#~ msgstr "部品表"
+
+#~ msgid "Production Order"
+#~ msgstr "製造オーダ"
+
+#~ msgid "Stock Rule"
+#~ msgstr "在庫規則"
+
+#~ msgid "Work Center Usage"
+#~ msgstr "作業区用途"

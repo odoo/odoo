@@ -1,0 +1,16 @@
+.o-mail-DiscussContent-header {
+    background-color: var(--mail-Discuss-surface-dark);
+}
+
+.o-mail-DiscussContent-headerActions button {
+
+    &:not(.o-isActive):hover {
+        background-color: mix($gray-200, $gray-300) !important;
+    }
+    &.o-isActive {
+        background-color: $gray-300 !important;
+    }
+    &.o-isActive:hover {
+        background-color: mix($gray-300, $gray-400) !important;
+    }
+}

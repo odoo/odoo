@@ -1,0 +1,394 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_recruitment_survey
+#
+# Translators:
+# Pedro Castro Silva <pedrocs@exo.pt>, 2022
+# Manuela Silva <mmsrs@sky.com>, 2022
+# Martin Trigaux, 2022
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-10 13:16+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-19/"
+"hr_recruitment_survey/pt/>\n"
+"Language: pt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: hr_recruitment_survey
+#: model:mail.template,body_html:hr_recruitment_survey.mail_template_applicant_interview_invite
+msgid ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or 'applicant'\">[applicant "
+"name]</t><br/><br/>\n"
+"        <t>\n"
+"            You've progressed through the recruitment process and we would "
+"like you to answer some questions.\n"
+"        </t>\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"                <t>\n"
+"                    Start the written interview\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            Please answer the interview for <t t-"
+"out=\"format_date(object.deadline)\">[deadline date]</t>.<br/><br/>\n"
+"        </t>\n"
+"        <t>\n"
+"            We wish you good luck! Thank you in advance for your "
+"participation.\n"
+"        </t>\n"
+"    \n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_recruitment_survey_button_form_view
+msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Go to Recruitment"
+msgstr ""
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
+msgid ""
+"<span class=\"o_stat_text\">Consult</span>\n"
+"                        <span class=\"o_stat_text\">Interview</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Consultar</span>\n"
+"                        <span class=\"o_stat_text\">Entrevista</span>"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1
+msgid "About you"
+msgstr "Sobre você"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q7
+msgid "Activities"
+msgstr "Atividades"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid "Add a new survey"
+msgstr "Adicionar nova pesquisa"
+
+#. module: hr_recruitment_survey
+#: model:ir.model,name:hr_recruitment_survey.model_hr_applicant
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__applicant_id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__applicant_id
+msgid "Applicant"
+msgstr "Candidato"
+
+#. module: hr_recruitment_survey
+#: model:mail.template,name:hr_recruitment_survey.mail_template_applicant_interview_invite
+msgid "Applicant: Interview"
+msgstr "Candidato: entrevista"
+
+#. module: hr_recruitment_survey
+#: model:ir.model,website_form_label:hr_recruitment_survey.model_hr_applicant
+msgid "Apply for a Job"
+msgstr "Candidatar-se a uma vaga"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
+#: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
+msgid ""
+"Choose an interview form for this job position and you will be able to print/"
+"answer this interview from all applicants who apply for this job"
+msgstr ""
+"Escolha um formulário de entrevista para este posto de trabalho e será capaz "
+"de imprimir / responder a esta entrevista de todos os candidatos que se "
+"candidatam a este trabalho"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+msgid "Display Interview Form"
+msgstr "Exibir Formulário de Entrevista"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__display_name
+msgid "Display Name"
+msgstr "Nome"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q4
+msgid "Education"
+msgstr "Educação"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
+msgid "From which university did or will you graduate?"
+msgstr "Em qual universidade você se formou ou se formará?"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row2
+msgid "Getting on with colleagues"
+msgstr "Ficar com colegas"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row8
+msgid "Getting perks such as free parking, gym passes"
+msgstr "Obter vantagens como estacionamento gratuito, passes para academia"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row1
+msgid "Having a good pay"
+msgstr "Ter um bom salário"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row3
+msgid "Having a nice office environment"
+msgstr "Ter um ambiente de escritório agradável"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row7
+msgid "Having freebies such as tea, coffee and stationery"
+msgstr "Oferecer brindes como chá, café e artigos de papelaria"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col2
+msgid "Important"
+msgstr "Importante"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__survey_id
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+msgid "Interview Form"
+msgstr "Formulário da Entrevista"
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/hr_job.py:0
+msgid "Interview Form: %s"
+msgstr "Formulário de entrevista: %s"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
+msgid "Interview Survey"
+msgstr "Pesquisa sobre entrevista"
+
+#. module: hr_recruitment_survey
+#: model:ir.actions.act_window,name:hr_recruitment_survey.survey_survey_action_recruitment
+#: model:ir.ui.menu,name:hr_recruitment_survey.menu_hr_recruitment_config_surveys
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+msgid "Interviews"
+msgstr "Entrevistas"
+
+#. module: hr_recruitment_survey
+#: model:ir.model,name:hr_recruitment_survey.model_hr_job
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__hr_job_ids
+msgid "Job Position"
+msgstr "Posição do Cargo"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q6
+msgid "Knowledge"
+msgstr "Conhecimento"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row6
+msgid "Management quality"
+msgstr "Qualidade da gestão"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col1
+msgid "Not important"
+msgstr "Não é importante"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row5
+msgid "Office location"
+msgstr "Local de Trabalho"
+
+#. module: hr_recruitment_survey
+#: model:mail.template,subject:hr_recruitment_survey.mail_template_applicant_interview_invite
+msgid "Participate to {{ object.survey_id.display_name }} interview"
+msgstr "Participar da entrevista de {{ object.survey_id.display_name }}"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q5
+msgid "Past work experiences"
+msgstr "Experiências profissionais anteriores"
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.survey,description:hr_recruitment_survey.survey_recruitment_form
+msgid ""
+"Please answer those questions to help recruitment officers to preprocess "
+"your application."
+msgstr ""
+"Responda a essas perguntas para ajudar a equipe de recrutamento a pré-"
+"processar sua candidatura."
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
+msgid ""
+"Please fill information about you: who you are, what are your education, "
+"experience, and activities.\n"
+"    It will help us managing your application."
+msgstr ""
+"Preencha informações sobre você: quem você é, qual é sua formação, "
+"experiência e atividades.\n"
+"Isso nos ajudará a gerenciar sua candidatura."
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
+msgid "Please provide an applicant name."
+msgstr "Forneça o nome do candidato."
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
+msgid ""
+"Please summarize your education history: schools, location, diplomas, ..."
+msgstr ""
+"Faça um resumo de seu histórico acadêmico: faculdades, local, diplomas..."
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
+msgid ""
+"Please tell us a bit more about yourself: what are your main activities, ..."
+msgstr ""
+"Conte-nos um pouco mais sobre você: quais são suas principais atividades..."
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields.selection,name:hr_recruitment_survey.selection__survey_survey__survey_type__recruitment
+msgid "Recruitment"
+msgstr "Recrutamento"
+
+#. module: hr_recruitment_survey
+#: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
+msgid "Recruitment Form"
+msgstr "Formulário de Recrutamento"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_ids
+msgid "Responses"
+msgstr "Respostas"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
+msgid "See interview report"
+msgstr "Ver relatório da entrevista"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
+msgid "Send Interview"
+msgstr "Enviar entrevista"
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
+msgid "Send an interview"
+msgstr "Enviar uma entrevista"
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/hr_job.py:0
+#: model:ir.model,name:hr_recruitment_survey.model_survey_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__survey_id
+msgid "Survey"
+msgstr "Questionário"
+
+#. module: hr_recruitment_survey
+#: model:ir.model,name:hr_recruitment_survey.model_survey_invite
+msgid "Survey Invitation Wizard"
+msgstr "Assistente de convite para pesquisa"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__survey_type
+msgid "Survey Type"
+msgstr "Tipo da pesquisa"
+
+#. module: hr_recruitment_survey
+#: model:ir.model,name:hr_recruitment_survey.model_survey_user_input
+msgid "Survey User Input"
+msgstr "Opinião do usuário da pesquisa"
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.survey,description_done:hr_recruitment_survey.survey_recruitment_form
+msgid "Thank you for answering this survey. We will come back to you soon."
+msgstr ""
+"Agradecemos por responder a esta pesquisa. Entraremos em contato com você em "
+"breve."
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/models/survey_user_input.py:0
+msgid "The applicant \"%s\" has finished the survey."
+msgstr "O candidato \"%s\" concluiu a pesquisa."
+
+#. module: hr_recruitment_survey
+#. odoo-python
+#: code:addons/hr_recruitment_survey/wizard/survey_invite.py:0
+msgid "The survey %(survey_link)s has been sent to %(partner_link)s"
+msgstr "A pesquisa %(survey_link)s foi enviada para %(partner_link)s"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col3
+msgid "Very important"
+msgstr "Muito importante"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q3
+msgid "Were you referred by an employee?"
+msgstr "Você foi indicado por um funcionário?"
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
+msgid "What are your main knowledge regarding the job you are applying to?"
+msgstr ""
+"Quais são os seus principais conhecimentos sobre a vaga à qual está se "
+"candidatando?"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8
+msgid "What is important for you?"
+msgstr "O que é importante para você?"
+
+#. module: hr_recruitment_survey
+#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q1
+msgid "Which country are you from?"
+msgstr "De que país você é?"
+
+#. module: hr_recruitment_survey
+#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4
+msgid "Working with state of the art technology"
+msgstr "Trabalhar com tecnologia de ponta"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid ""
+"You can create surveys used for recruitments. Design easily your interview,\n"
+"                send invitations and analyze answers."
+msgstr ""

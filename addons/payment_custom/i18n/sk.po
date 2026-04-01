@@ -1,0 +1,175 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_transfer
+#
+# Translators:
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
+# Miroslav Fic <mirko.fic@gmail.com>, 2018
+# gebri <gebri@inmail.sk>, 2018
+# Tomáš Píšek <Tomas.Pisek@seznam.cz>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2026-02-11 17:45+0000\n"
+"Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
+"Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/"
+"payment_custom/sk/>\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
+">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+msgid ""
+"<small class=\"text-center text-wrap lh-sm\">Scan me in your banking app</"
+"small>"
+msgstr ""
+"<small class=\"text-center text-wrap lh-sm\">Naskenujte ma vo svojej "
+"bankovej aplikácii</small>"
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+msgid "<strong class=\"mt-auto\">Communication: </strong>"
+msgstr "<strong class=\"mt-auto\">Komunikácia: </strong>"
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_provider.py:0
+msgid "Bank Account"
+msgstr "Bankový účet"
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_provider.py:0
+msgid "Bank Accounts"
+msgstr "Bankové účty"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__code
+msgid "Code"
+msgstr "Kód"
+
+#. module: payment_custom
+#: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__code__custom
+msgid "Custom"
+msgstr "Vlastné"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__custom_mode
+msgid "Custom Mode"
+msgstr "Vlastný mód"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_custom.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Zobrazovaný názov"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__qr_code
+msgid "Enable QR Codes"
+msgstr "Povoliť QR kódy"
+
+#. module: payment_custom
+#: model:ir.model.fields,help:payment_custom.field_payment_provider__qr_code
+msgid "Enable the use of QR-codes when paying by wire transfer."
+msgstr "Povoliť používanie QR kódov pri platbe bankovým prevodom."
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+msgid "Finalize your payment"
+msgstr "Dokončite platbu"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_custom.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+msgid "OR"
+msgstr "ALEBO"
+
+#. module: payment_custom
+#: model:ir.model.constraint,message:payment_custom.constraint_payment_provider_custom_providers_setup
+msgid "Only custom providers should have a custom mode."
+msgstr "Iba vlastní poskytovatelia by mali mať vlastný režim."
+
+#. module: payment_custom
+#: model:ir.model,name:payment_custom.model_payment_provider
+msgid "Payment Provider"
+msgstr "Poskytovateľ platieb"
+
+#. module: payment_custom
+#: model:ir.model,name:payment_custom.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Platobná transakcia"
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_provider.py:0
+msgid "Please use the following transfer details"
+msgstr "Na prevod použite nasledujúce údaje"
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.payment_provider_form
+msgid "Reload Pending Message"
+msgstr "Správa pri opätovnom načítaní"
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_transaction.py:0
+msgid "The customer has selected %(provider_name)s to make the payment."
+msgstr "Zákazník si vybral %(provider_name)s na vykonanie platby."
+
+#. module: payment_custom
+#: model:ir.model.fields,help:payment_custom.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Technický kód tohto poskytovateľa platieb."
+
+#. module: payment_custom
+#: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__custom_mode__wire_transfer
+#: model:payment.method,name:payment_custom.payment_method_wire_transfer
+msgid "Wire Transfer"
+msgstr "Prevodný príkaz"
+
+#~ msgid "; multiple order found"
+#~ msgstr "; viacnásobná objednávka nájdená"
+
+#~ msgid "; no order found"
+#~ msgstr "; žiadna objednávka nájdená"
+
+#~ msgid "Adyen"
+#~ msgstr "Adyen"
+
+#~ msgid "Authorize.Net"
+#~ msgstr "Authorize.Net "
+
+#~ msgid "Buckaroo"
+#~ msgstr "Buckaroo"
+
+#~ msgid "Ogone"
+#~ msgstr "Ogone"
+
+#~ msgid "Payment Acquirer"
+#~ msgstr "Príjemca platby "
+
+#~ msgid "Paypal"
+#~ msgstr "Paypal"
+
+#~ msgid "Provider"
+#~ msgstr "Poskytovateľ"
+
+#~ msgid "Sips"
+#~ msgstr "Sips"
+
+#~ msgid "received data for reference %s"
+#~ msgstr "prijaté dáta pre referenciu %s"

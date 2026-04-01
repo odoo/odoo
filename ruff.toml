@@ -1,0 +1,84 @@
+# automatically generated file by the runbot nightly ruff checks, do not modify
+# for ruff version 0.15.0 (or higher)
+# note: 'E241', 'E272', 'E201', 'E221' are ignored on runbot in test files when formating a table like structure (more than two space)
+# some rules present here are not enabled on runbot (yet) but are still advised to follow when possible : ["B904", "COM812", "E741", "EM101", "I001", "RET", "RUF021", "RUF102", "TRY002", "UP006", "UP007"]
+
+
+target-version = "py310"
+
+[lint]
+preview = true
+external = ["OLS"]
+select = [
+    "BLE",        # flake8-blind-except
+    "C",          # flake8-comprehensions
+    "COM",        # flake8-commas
+    "E",          # pycodestyle Error
+    "EM",         # flake8-errmsg
+    "EXE",        # flake8-executable
+    "F",          # Pyflakes
+    "FA",         # flake8-future-annotations
+    "FLY",        # flynt
+    "G",          # flake8-logging-format
+    "I",          # isort
+    "ICN",        # flake8-import-conventions
+    "INT",        # flake8-gettext
+    "ISC",        # flake8-implicit-str-concat
+    "LOG",        # flake8-logging
+    "PGH",        # pygrep-hooks
+    "PIE",        # flake8-pie
+    "PLC",        # Pylint Convention
+    "PLE",        # Pylint Error
+    "PLW",        # Pylint Warning
+    "PYI",        # flake8-pyi
+    "RET",        # flake8-return
+    "RUF",        # Ruff-specific rules
+    "SIM",        # flake8-simplify
+    "SLOT",       # flake8-slots
+    "T",          # flake8-print
+    "TC",         # flake8-type-checking
+    "TID",        # flake8-tidy-imports
+    "TRY",        # tryceratops
+    "UP",         # pyupgrade
+    "W",          # pycodestyle Warning
+    "YTT",        # flake8-2020
+]
+ignore = [
+    "C408",       # unnecessary-collection-call
+    "C420",       # unnecessary-dict-comprehension-for-iterable
+    "C901",       # complex-structure
+    "E266",       # multiple-leading-hashes-for-block-comment
+    "E501",       # line-too-long
+    "E713",       # not-in-test
+    "EM102",      # f-string-in-exception
+    "FA100",      # future-rewritable-type-annotation
+    "PGH003",     # blanket-type-ignore
+    "PIE790",     # unnecessary-placeholder
+    "PIE808",     # unnecessary-range-start
+    "PLC2701",    # import-private-name
+    "PLW2901",    # redefined-loop-name
+    "RUF001",     # ambiguous-unicode-character-string
+    "RUF005",     # collection-literal-concatenation
+    "RUF012",     # mutable-class-default
+    "RUF067",     # non-empty-init-module
+    "RUF100",     # unused-noqa
+    "SIM102",     # collapsible-if
+    "SIM108",     # if-else-block-instead-of-if-exp
+    "SIM117",     # multiple-with-statements
+    "TID252",     # relative-imports
+    "TRY003",     # raise-vanilla-args
+    "TRY300",     # try-consider-else
+    "TRY400",     # error-instead-of-exception
+    "UP031",      # printf-string-formatting
+]
+
+[lint.per-file-ignores]
+"**/__init__.py" = [
+    "F401",       # unused-import
+]
+
+[lint.isort]
+# https://www.odoo.com/documentation/latest/contributing/development/coding_guidelines.html#imports
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+known-first-party = ["odoo"]
+known-local-folder = ["odoo.addons"]

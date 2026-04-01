@@ -1,0 +1,23 @@
+<templates>
+    <t t-name="event.EventStateSelection" t-inherit="web.StateSelectionField" t-inherit-mode="primary">
+        <xpath expr="//Dropdown/button/div" position="replace">
+            <div class="d-flex align-items-center">
+                <i t-attf-class="{{ stateIcon(currentValue) }} {{ statusColor(currentValue) }} "/>
+            </div>
+        </xpath>
+        <!-- Dropdown Selection-->
+        <xpath expr="//Dropdown" position="attributes">
+            <attribute name="menuClass" separator=" + " add="' event_state_selection_menu'"></attribute>
+        </xpath>
+        <xpath expr="//CheckboxItem/span[1]" position="attributes">
+            <attribute name="t-attf-class" separator=" " add="{{ stateIcon(option[0]) }}" remove="o_status"></attribute>
+        </xpath>
+        <xpath expr="//CheckboxItem/span[2]" position="attributes">
+            <attribute name="t-attf-class">{{ statusColor(option[0]) }}</attribute>
+        </xpath>
+        <!-- Dropdown Divider -->
+        <xpath expr="//CheckboxItem" position="before">
+            <div t-if="option[0] == 'cancel'" role="separator" class="dropdown-divider"/>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_lu_tax_report_sections_3_4" model="account.report">
+        <field name="name">Sections III, IV</field>
+        <field name="name@fr">Sections III, IV</field>
+        <field name="name@de">Abschnitte III, IV</field>
+        <field name="name@lb">Abschnitt III, IV</field>
+        <field name="sequence">3</field>
+        <field name="country_id" ref="base.lu"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_sections_3_4_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@fr">Solde</field>
+                <field name="name@de">Saldo</field>
+                <field name="name@lb">Sold</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_tax_report_line_3_assessment_deducible_tax" model="account.report.line">
+                <field name="name">III. ASSESSMENT OF DEDUCTIBLE TAX (input tax)</field>
+                <field name="name@fr">III. CALCUL DE LA TAXE DEDUCTIBLE (taxe en amont)</field>
+                <field name="name@de">III. BERECHNUNG DER ABZIEHBAREN VORSTEUER</field>
+                <field name="name@lb">III. ASSESSMENT VUN DEDUCTIBLE TAX (Input Steier)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_3a_total_input_tax" model="account.report.line">
+                        <field name="name">093 - Total input tax</field>
+                        <field name="name@fr">093 - Total de la taxe en amont</field>
+                        <field name="name@de">093 - Gesamtbetrag Vorsteuer</field>
+                        <field name="name@lb">093 - Ganzen Input Steier</field>
+                        <field name="code">LUTAX_093</field>
+                        <field name="aggregation_formula">LUTAX_090.balance + LUTAX_092.balance + LUTAX_228.balance + LUTAX_458.balance + LUTAX_459.balance + LUTAX_460.balance + LUTAX_461.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_3a_1_invoiced_by_other_taxable_person" model="account.report.line">
+                                <field name="name">458 - Invoiced by other taxable persons for goods or services supplied</field>
+                                <field name="name@fr">458 - Taxe facturée par d'autres assujettis pour des biens et des services fournis</field>
+                                <field name="name@de">458 - Von anderen Steuerpflichtigen für Warenlieferungen und Dienstleistungen in Rechnung gestellte Mehrwertsteuer</field>
+                                <field name="name@lb">458 - Rechnung vun anere besteierbaren Persoune fir geliwwert Wueren oder Servicer</field>
+                                <field name="code">LUTAX_458</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_3a_1_invoiced_by_other_taxable_person_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">458</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_3a_2_due_respect_intra_comm_goods" model="account.report.line">
+                                <field name="name">459 - Due in respect of intra-Community acquisitions of goods</field>
+                                <field name="name@fr">459 - Taxe déclarée ou payée sur des acquisitions intracommunautaires de biens</field>
+                                <field name="name@de">459 - Erklärte oder bezahlte Mehrwertsteuer für innergemeinschaftliche Erwerbe von Gegenständen</field>
+                                <field name="name@lb">459 - Wéinst am Respekt vun intra-Gemeinschaft Acquisitioun vu Wueren</field>
+                                <field name="code">LUTAX_459</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_3a_2_due_respect_intra_comm_goods_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">459</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_3a_3_due_paid_respect_importation_goods" model="account.report.line">
+                                <field name="name">460 - Due or paid in respect of importation of goods</field>
+                                <field name="name@fr">460 - Taxe déclarée ou payée sur des biens importés</field>
+                                <field name="name@de">460 - Erklärte oder bezahlte Mehrwertsteuer für eingeführte Waren</field>
+                                <field name="name@lb">460 - Wéinst oder bezuelt am Bezuch op den Import vu Wueren</field>
+                                <field name="code">LUTAX_460</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_3a_3_due_paid_respect_importation_goods_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">460</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_3a_4_due_respect_application_goods" model="account.report.line">
+                                <field name="name">090 - Due in respect of the application of goods for business purposes</field>
+                                <field name="name@fr">090 - Taxe déclarée pour l'affectation de biens à l'entreprise</field>
+                                <field name="name@de">090 - Erklärte Mehrwertsteuer für die Zuordnung von Gegenständen zu Zwecken des Unternehmens</field>
+                                <field name="name@lb">090 - Wéinst am Respekt vun der Uwendung vu Wueren fir Geschäftszwecker</field>
+                                <field name="code">LUTAX_090</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_3a_4_due_respect_application_goods_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">090</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_3a_5_due_under_reverse_charge" model="account.report.line">
+                                <field name="name">461 - Due under the reverse charge (see points II.E and F)</field>
+                                <field name="name@fr">461 - Taxe déclarée comme débiteur (cf points II.E et F)</field>
+                                <field name="name@de">461 - Als Schuldner erklärte Mehrwertsteuer (Siehe Punkte II.E und F)</field>
+                                <field name="name@lb">461 - Wéinst ënner der ëmgedréint Charge (kuckt Punkten II.E an F)</field>
+                                <field name="code">LUTAX_461</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_3a_5_due_under_reverse_charge_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">461</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_3a_6_paid_joint_several_guarantee" model="account.report.line">
+                                <field name="name">092 - Paid as joint and several guarantee</field>
+                                <field name="name@fr">092 - Taxe acquittée comme caution solidaire</field>
+                                <field name="name@de">092 - Als solidarisch haftender Bürge bezahlte MwSt.</field>
+                                <field name="name@lb">092 - Bezuelt als gemeinsame Garantie</field>
+                                <field name="code">LUTAX_092</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_3a_6_paid_joint_several_guarantee_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">092</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_3a_7_adjusted_tax_special_arrangement" model="account.report.line">
+                                <field name="name">228 - Adjusted tax - special arrangement for tax suspension</field>
+                                <field name="name@fr">228 - Taxe régularisée - régime particulier suspensif</field>
+                                <field name="name@de">228 - Berichtigte Steuer - Sonderregelung zur Steueraussetzung</field>
+                                <field name="name@lb">228 - Ajustéiert Steier - speziell Arrangement fir Steier Suspensioun</field>
+                                <field name="code">LUTAX_228</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_3a_7_adjusted_tax_special_arrangement_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">228</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_3b_total_input_tax_nd" model="account.report.line">
+                        <field name="name">097 - Total input tax non-deductible</field>
+                        <field name="name@fr">097 - Total de la taxe en amont non déductible</field>
+                        <field name="name@de">097 - Gesamtbetrag der nicht abziehbaren Vorsteuer</field>
+                        <field name="name@lb">097 - Ganzen Input Steier net ofgezu</field>
+                        <field name="code">LUTAX_097</field>
+                        <field name="aggregation_formula">LUTAX_094.balance + LUTAX_095.balance + LUTAX_096.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_3b1_rel_trans" model="account.report.line">
+                                <field name="name">094 - relating to transactions which are exempt pursuant to articles 44 and 56quater</field>
+                                <field name="name@fr">094 - Taxe non déductible en rapport avec des opérations exonérées en vertu des articles 44 et 56quater</field>
+                                <field name="name@de">094 - Nicht abziehbare Vorsteuer betreffend die gemäß Art. 44 und Art. 56quater steuerfreien Umsätze</field>
+                                <field name="name@lb">094 - betreffend Transaktiounen déi befreit sinn no den Artikelen 44 a 56quater</field>
+                                <field name="code">LUTAX_094</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_3b1_rel_trans_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">094</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_3b2_ded_prop" model="account.report.line">
+                                <field name="name">095 - where the deductible proportion determined in accordance to article 50 is applied</field>
+                                <field name="name@fr">095 - Taxe non déductible en application du prorata visé à l'article 50</field>
+                                <field name="name@de">095 - Nicht abziehbare Vorsteuer in Anwendung der in Art. 50 vorgesehenen Prorata-Regel</field>
+                                <field name="name@lb">095 - wou den ofzuchbaren Undeel, deen am Aklang mam Artikel 50 bestëmmt ass, applizéiert gëtt</field>
+                                <field name="code">LUTAX_095</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_3b2_ded_prop_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">095</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_3b2_input_tax_margin" model="account.report.line">
+                                <field name="name">096 - Non recoverable input tax in accordance with Art. 56ter-1(7) and 56ter-2(7) (when applying the margin scheme)</field>
+                                <field name="name@fr">096 - Taxe non déductible en application des articles 56ter-1/7 et 56ter-2/7 (en cas d'option pour le régime d'imposition de la marge bénéficiaire)</field>
+                                <field name="name@de">096 - Nicht abziehbare Vorsteuer in Anwendung von Art. 56ter-1/7 und 56ter-2/7 </field>
+                                <field name="name@lb">096 - Net recuperable Input Steier am Aklang mat Art. 56ter-1 (7) an 56ter-2 (7) (wann Dir de Marginschema applizéiert)</field>
+                                <field name="code">LUTAX_096</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_3b2_input_tax_margin_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">096</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_3c_total_input_tax_deductible" model="account.report.line">
+                        <field name="name">102 - Total input tax deductible</field>
+                        <field name="name@fr">102 - Total de la taxe en amont déductible</field>
+                        <field name="name@de">102 - Gesamtbetrag der abziehbaren Vorsteuer</field>
+                        <field name="name@lb">102 - Ganzen Input Steier ofgezu</field>
+                        <field name="code">LUTAX_102</field>
+                        <field name="aggregation_formula">LUTAX_093.balance - LUTAX_097.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_4_tax_tobe_paid_or_reclaimed" model="account.report.line">
+                <field name="name">IV. TAX TO BE PAID OR TO BE RECLAIMED</field>
+                <field name="name@fr">IV. CALCUL DE L'EXCEDENT</field>
+                <field name="name@de">IV. BERECHNUNG DES ÜBERSCHUSSES</field>
+                <field name="name@lb">IV. STEIER ZE BEZUELT ODER ZE RECLAIMED</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_4a_total_tax_due" model="account.report.line">
+                        <field name="name">103 - Total tax due</field>
+                        <field name="name@fr">103 - Total de la taxe en aval</field>
+                        <field name="name@de">103 - Gesamtbetrag der Steuer</field>
+                        <field name="name@lb">103 - Ganzen Steier wéinst</field>
+                        <field name="code">LUTAX_103</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_4a_total_tax_due_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LUTAX_076.balance</field>
+                                <field name="subformula">cross_report(l10n_lu.l10n_lu_tax_report_section_2)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_4a_total_input_tax_deductible" model="account.report.line">
+                        <field name="name">104 - Total input tax deductible</field>
+                        <field name="name@fr">104 - Total de la taxe en amont déductible</field>
+                        <field name="name@de">104 - Gesamtbetrag der abziehbaren Vorsteuer</field>
+                        <field name="name@lb">104 - Ganzen Input Steier ofgezu</field>
+                        <field name="code">LUTAX_104</field>
+                        <field name="aggregation_formula">LUTAX_102.balance</field>
+                    </record>
+                    <record id="account_tax_report_line_4c_exceeding_amount" model="account.report.line">
+                        <field name="name">105 - Exceeding amount</field>
+                        <field name="name@fr">105 - Excédent</field>
+                        <field name="name@de">105 - Überschuss</field>
+                        <field name="name@lb">105 - Iwwerschreiden Betrag</field>
+                        <field name="code">LUTAX_105</field>
+                        <field name="aggregation_formula">LUTAX_103.balance - LUTAX_102.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

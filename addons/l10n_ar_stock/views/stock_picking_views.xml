@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="stock_picking_form_inherit_l10n_ar_stock" model="ir.ui.view">
+            <field name="name">stock.picking.form.inherit.l10n_ar_stock</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <field name="origin" position="after">
+                    <field name="l10n_ar_delivery_guide_number"
+                           string="Delivery Guide Number"
+                           invisible="country_code != 'AR'"/>
+                </field>
+                <xpath expr="//header//button[@name='action_cancel']" position="after">
+                    <button name="l10n_ar_action_create_delivery_guide"
+                            type="object"
+                            string="Generate Delivery Guide"
+                            invisible="country_code != 'AR' or not l10n_ar_allow_generate_delivery_guide"/>
+                    <button name="l10n_ar_action_send_delivery_guide"
+                            type="object"
+                            class="btn-primary"
+                            string="Send Delivery Guide"
+                            invisible="country_code != 'AR' or not l10n_ar_allow_send_delivery_guide"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

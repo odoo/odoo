@@ -1,0 +1,1216 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * delivery
+#
+# Translators:
+# Martin Trigaux, 2022
+# Vo Thanh Thuy, 2022
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2023
+# Thi Huong Nguyen, 2023
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-01-05 08:55+0000\n"
+"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
+"delivery/vi/>\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/wizard/choose_delivery_carrier.py:0
+msgid "%(carrier)s Error"
+msgstr "Lỗi %(carrier)s"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/sale_order.py:0
+msgid ""
+"%s\n"
+"Free Shipping"
+msgstr ""
+"%s\n"
+"Miễn phí vận chuyển"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+msgid "%s (copy)"
+msgstr "%s (sao chép)"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
+msgid "<i class=\"oi oi-arrow-right me-1\"/>Get rate"
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Nhận giá cước"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+msgid ""
+"<p class=\"o_view_nocontent\">\n"
+"                    Buy Odoo Enterprise now to get more providers.\n"
+"                </p>"
+msgstr ""
+"<p class=\"o_view_nocontent\">\n"
+"                    Hãy dùng gói Odoo doanh nghiệp để tính hợp với nhiều nhà "
+"cung cấp hơn.\n"
+"                </p>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid ""
+"<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
+msgstr ""
+"<span class=\"o_stat_text o_warning_text fw-bold\">Môi trường</span>\n"
+"                                <span class=\"o_stat_text\">kiểm thử</span>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "<span class=\"o_stat_text text-danger\">No debug</span>"
+msgstr "<span class=\"o_stat_text text-danger\">Không có gỡ lỗi</span>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "<span class=\"text-success\">Debug requests</span>"
+msgstr "<span class=\"text-success\">Yêu cầu gỡ lỗi</span>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid ""
+"<span class=\"text-success\">Production</span>\n"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
+msgstr ""
+"<span class=\"text-success\">Môi trường</span>\n"
+"                                <span class=\"o_stat_text\">production</span>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
+msgid "<strong>Shipping Description</strong>"
+msgstr "<strong>Mô tả vận chuyển</strong>"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
+msgid ""
+"A description of the delivery method that you want to communicate to your "
+"customers on the Sales Order and sales confirmation email.E.g. instructions "
+"for customers to follow."
+msgstr ""
+"Mô tả về phương thức giao hàng mà bạn muốn đưa ra cho khách hàng của mình "
+"trên Đơn bán hàng và email xác nhận bán hàng. Ví dụ: hướng dẫn dành cho "
+"khách hàng."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
+msgid "Action while validating Delivery Orders"
+msgstr "Tác vụ trong khi xác thực Đơn giao hàng"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
+msgid "Active"
+msgstr "Đang hoạt động"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
+msgid "Add"
+msgstr "Thêm"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/sale_order.py:0
+#: code:addons/delivery/wizard/choose_delivery_carrier.py:0
+msgid "Add a shipping method"
+msgstr "Thêm phương thức vận chuyển"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "Add shipping"
+msgstr "Thêm vận chuyển"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Additional margin"
+msgstr "Phí bổ sung"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__allow_cash_on_delivery
+msgid "Allow customers to choose Cash on Delivery as their payment method."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__amount
+msgid "Amount"
+msgstr "Số tiền"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__amount
+msgid ""
+"Amount of the order to benefit from a free shipping, expressed in the "
+"company currency"
+msgstr ""
+"Tổng giá trị của lợi nhuận thu được từ một vận chuyển miễn phí, tính theo "
+"tiền tệ công ty"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Archived"
+msgstr "Đã lưu trữ"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
+msgid ""
+"Are you sure you want the delivery to be free for this order? You might have "
+"forgotten to compute the rates."
+msgstr ""
+"Bạn có chắc chắn muốn miễn phí giao hàng cho đơn hàng này không? Có thể bạn "
+"đã quên tính phí vận chuyển."
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Availability"
+msgstr "Tình trạng còn hàng"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
+msgid "Available Carriers"
+msgstr "Đơn vị vận chuyển hiện có"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__base_on_rule
+msgid "Based on Rules"
+msgstr "Dựa trên quy tắc"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__can_generate_return
+msgid "Can Generate Return"
+msgstr "Có thể tạo phiếu trả hàng"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
+msgid "Carrier"
+msgstr "Đơn vị vận chuyển"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+msgid ""
+"Carrier %s cannot have the same tag in both Must Have Tags and Excluded Tags."
+msgstr ""
+"Đơn vị vận chuyển %s không thể có cùng một thẻ nằm trong cả Thẻ phải có và "
+"Thẻ bị loại trừ."
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
+msgid "Carrier Description"
+msgstr "Mô tả đơn vị vận chuyển"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__payment_provider__custom_mode__cash_on_delivery
+msgid "Cash On Delivery"
+msgstr "Thanh toán khi nhận hàng"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__allow_cash_on_delivery
+#: model:payment.method,name:delivery.payment_method_cash_on_delivery
+#: model:payment.provider,name:delivery.payment_provider_cod
+msgid "Cash on Delivery"
+msgstr "Thanh toán khi nhận hàng"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "Choose a pick-up point"
+msgstr "Chọn điểm nhận hàng"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
+msgid "Choose this location"
+msgstr "Chọn vị trí này"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location_schedule/location_schedule.js:0
+msgid "Closed"
+msgstr "Đã chốt"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__company_id
+msgid "Company"
+msgstr "Công ty"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+msgid "Condition"
+msgstr "Điều kiện"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_res_partner
+msgid "Contact"
+msgstr "Liên hệ"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Content"
+msgstr "Nội dung"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_price
+msgid "Cost"
+msgstr "Chi phí"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__country_ids
+msgid "Countries"
+msgstr "Quốc gia"
+
+#. module: delivery
+#: model:ir.model,website_form_label:delivery.model_res_partner
+msgid "Create a Customer"
+msgstr "Tạo một khách hàng"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__create_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__create_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__create_uid
+msgid "Created by"
+msgstr "Được tạo bởi"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__create_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__create_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__create_date
+msgid "Created on"
+msgstr "Được tạo vào"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__currency_id
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__currency_id
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__currency_id
+msgid "Currency"
+msgstr "Tiền tệ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_payment_provider__custom_mode
+msgid "Custom Mode"
+msgstr "Chế độ tùy chỉnh"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__partner_id
+msgid "Customer"
+msgstr "Khách hàng"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
+msgid "Debug logging"
+msgstr "Gỡ lỗi đăng nhập"
+
+#. module: delivery
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid "Define a new delivery method"
+msgstr "Xác định phương thức giao hàng mới"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Delivery Carrier"
+msgstr "Dịch vụ giao hàng"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_choose_delivery_carrier
+msgid "Delivery Carrier Selection Wizard"
+msgstr "Công cụ chọn đơn vị giao hàng"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+msgid "Delivery Cost"
+msgstr "Phí vận chuyển"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_message
+#: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_message
+msgid "Delivery Message"
+msgstr "Tin nhắn vận chuyển"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
+#: model:ir.model.fields,field_description:delivery.field_res_partner__property_delivery_carrier_id
+#: model:ir.model.fields,field_description:delivery.field_res_users__property_delivery_carrier_id
+#: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Delivery Method"
+msgstr "Phương thức giao hàng"
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
+#: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.delivery_provider_module_kanban
+msgid "Delivery Methods"
+msgstr "Phương thức giao hàng"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
+msgid "Delivery Price"
+msgstr "Giá giao hàng"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_price_rule
+msgid "Delivery Price Rules"
+msgstr "Quy tắc phí vận chuyển"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__product_id
+msgid "Delivery Product"
+msgstr "Sản phẩm phí giao hàng"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_set
+msgid "Delivery Set"
+msgstr "Bộ giao hàng"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_zip_prefix
+msgid "Delivery Zip Prefix"
+msgstr "Tiền tố zip giao hàng"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line__recompute_delivery_price
+msgid "Delivery cost should be recomputed"
+msgstr "Phí giao hàng phải được tính toán lại"
+
+#. module: delivery
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
+msgid ""
+"Delivery zip prefixes are assigned to delivery carriers to restrict\n"
+"            which zips it is available to."
+msgstr ""
+"Tiền tố zip giao hàng được chỉ định cho các đơn vị vận chuyển để giới hạn\n"
+"            cho những zip mà hãng này khả dụng."
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Description"
+msgstr "Mô tả"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Destination"
+msgstr "Điểm đến"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
+msgid "Determine the display order"
+msgstr "Xác định thứ tự hiển thị"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
+msgid "Discard"
+msgstr "Huỷ bỏ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__display_name
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__display_name
+#: model:ir.model.fields,field_description:delivery.field_ir_http__display_name
+#: model:ir.model.fields,field_description:delivery.field_ir_module_module__display_name
+#: model:ir.model.fields,field_description:delivery.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:delivery.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:delivery.field_product_category__display_name
+#: model:ir.model.fields,field_description:delivery.field_res_partner__display_name
+#: model:ir.model.fields,field_description:delivery.field_sale_order__display_name
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: delivery
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
+"            UPS Express, UPS Standard) with a set of pricing rules attached\n"
+"            to each method."
+msgstr ""
+"Mỗi đơn vị vận chuyển (vd: UPS) có thể có nhiều phương thức vận chuyển (VD:\n"
+"             UPS Express, UPS Standard) với những quy tắc tính phí vận "
+"chuyển được đính kèm\n"
+"             cho mỗi phương thức."
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
+msgid "Environment"
+msgstr "Môi trường"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+msgid "Error: this delivery method is not available for this address."
+msgstr "Lỗi: phương thức vận chuyển không hỗ trợ cho địa chỉ này."
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+msgid "Error: this delivery method is not available."
+msgstr "Lỗi: phương thức vận chuyển này không khả dụng."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
+msgid ""
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
+msgstr ""
+"Phí dự tính: khách hàng sẽ nhận được hóa đơn phí giao hàng dự tính.\n"
+"Phí thực tế: khách hàng sẽ nhận được hóa đơn phí giao hàng thực tế, phí vận "
+"chuyển sẽ được cập nhật trong đơn bán hàng sau khi giao hàng."
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
+msgid "Estimated cost"
+msgstr "Phí dự tính"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__excluded_tag_ids
+msgid "Excluded Tags"
+msgstr "Thẻ bị loại trừ"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
+msgid "Fill this field if you plan to invoice the shipping based on picking."
+msgstr "Điền vào trường này nếu bạn muốn lập hoá đơn vận chuyển khi giao hàng."
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid ""
+"Filling this form allows you to make the shipping method available according "
+"to the content of the order or its destination."
+msgstr ""
+"Việc điền vào biểu mẫu này cho phép bạn lựa chọn phương thức vận chuyển phù "
+"hợp với thành phần đơn hàng hoặc địa điểm nhận hàng."
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
+msgid "Fixed Margin"
+msgstr "Phí cố định"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__fixed
+msgid "Fixed Price"
+msgstr "Giá cố định"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__free_over
+msgid "Free if order amount is above"
+msgstr "Miễn phí nếu giá trị đặt hàng lớn hơn"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__return_label_on_delivery
+msgid "Generate Return Label"
+msgstr "Tạo nhãn trả hàng"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate
+msgid "Get Rate"
+msgstr "Lấy đánh giá"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate_and_ship
+msgid "Get Rate and Create Shipment"
+msgstr "Nhận tỷ lệ và tạo lô hàng"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_ir_http
+msgid "HTTP Routing"
+msgstr "Định tuyến HTTP"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__id
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__id
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__id
+#: model:ir.model.fields,field_description:delivery.field_ir_http__id
+#: model:ir.model.fields,field_description:delivery.field_ir_module_module__id
+#: model:ir.model.fields,field_description:delivery.field_payment_provider__id
+#: model:ir.model.fields,field_description:delivery.field_payment_transaction__id
+#: model:ir.model.fields,field_description:delivery.field_product_category__id
+#: model:ir.model.fields,field_description:delivery.field_res_partner__id
+#: model:ir.model.fields,field_description:delivery.field_sale_order__id
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__free_over
+msgid ""
+"If the order total amount (shipping excluded) is above or equal to this "
+"value, the customer benefits from a free shipping"
+msgstr ""
+"Nếu tổng số tiền đơn hàng (trừ phí vận chuyển) lớn hơn hoặc bằng giá trị "
+"này, khách hàng sẽ không cần trả phí vận chuyển"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__max_volume
+msgid ""
+"If the total volume of the order is over this volume, the method won't be "
+"available."
+msgstr ""
+"Nếu tổng thể tích của đơn hàng vượt quá mức này, phương thức này sẽ không "
+"khả dụng."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__max_weight
+msgid ""
+"If the total weight of the order is over this weight, the method won't be "
+"available."
+msgstr ""
+"Nếu tổng khối lượng của đơn hàng vượt quá mức này, phương thức này sẽ không "
+"khả dụng."
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Install more Providers"
+msgstr "Cài đặt thêm nhà cung cấp"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__shipping_insurance
+msgid "Insurance Percentage"
+msgstr "Phần trăm bảo hiểm"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__integration_level
+msgid "Integration Level"
+msgstr "Cấp độ tích hợp"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+msgid "Invalid source document type"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__invoicing_message
+msgid "Invoicing Message"
+msgstr "Nội dung hóa đơn"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__invoice_policy
+msgid "Invoicing Policy"
+msgstr "Chính sách xuất hóa đơn"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_res_partner__is_pickup_location
+#: model:ir.model.fields,field_description:delivery.field_res_users__is_pickup_location
+msgid "Is Pickup Location"
+msgstr "Là vị trí nhận hàng"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
+msgid "Is a Delivery"
+msgstr "Là kiểu giao hàng"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__write_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__write_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__write_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__write_uid
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__write_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__write_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__write_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__write_date
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối vào"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "List view"
+msgstr "Xem danh sách"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "Loading..."
+msgstr "Đang tải..."
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_local_delivery
+msgid "Local Delivery"
+msgstr "Giao hàng trong nước"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
+msgid "Log requests in order to ease debugging"
+msgstr "Ghi nhận yêu cầu để dễ dàng tìm kiếm"
+
+#. module: delivery
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
+msgid "Manage delivery zip prefixes"
+msgstr "Quản lý tiền tố zip giao hàng"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "Map view"
+msgstr "Chế độ xem bản đồ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
+msgid "Margin"
+msgstr "Phí"
+
+#. module: delivery
+#: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_margin_not_under_100_percent
+msgid "Margin cannot be lower than -100%"
+msgstr "Phí quỹ không thể thấp hơn -100%"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Margin on Rate"
+msgstr "Phí theo tỷ lệ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_volume
+msgid "Max Volume"
+msgstr "Thể tích tối đa"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_weight
+msgid "Max Weight"
+msgstr "Khối lượng tối đa"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__max_value
+msgid "Maximum Value"
+msgstr "Giá trị tối đa"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_ir_module_module
+msgid "Module"
+msgstr "Phân hệ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__must_have_tag_ids
+msgid "Must Have Tags"
+msgstr "Phải có thẻ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
+msgid "Name"
+msgstr "Tên"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+msgid "New Providers"
+msgstr "Nhà cung cấp mới"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/sale_order.py:0
+msgid "No pick-up points are available for this delivery address."
+msgstr "Không có điểm nhận hàng khả dụng cho địa chỉ giao hàng này."
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "No result"
+msgstr "Không kết quả"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+msgid "Not available for current order"
+msgstr "Không khả dụng cho đơn hàng hiện tại"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location/location.js:0
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
+msgid "Opening hours"
+msgstr "Giờ mở cửa"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
+msgid "Operator"
+msgstr "Người phụ trách"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__order_id
+msgid "Order"
+msgstr "Đơn hàng"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_payment_provider
+msgid "Payment Provider"
+msgstr "Nhà cung cấp dịch vụ thanh toán"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Giao dịch thanh toán"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "Pickup Location"
+msgstr "Vị trí nhận hàng"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order__pickup_location_data
+msgid "Pickup Location Data"
+msgstr "Dữ liệu vị trí nhận hàng"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Please select a country before choosing a state or a zip prefix."
+msgstr "Vui lòng chọn quốc gia trước khi chọn tỉnh/TP hoặc tiền tố zip."
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__name
+msgid "Prefix"
+msgstr "Tiền tố"
+
+#. module: delivery
+#: model:ir.model.constraint,message:delivery.constraint_delivery_zip_prefix_name_uniq
+msgid "Prefix already exists!"
+msgstr "Tiền tố này đã tồn tại!"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
+msgid ""
+"Prefixes of zip codes that this carrier applies to. Note that regular "
+"expressions can be used to support countries with varying zip code lengths, "
+"i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
+"will only match '100' and not '1000')"
+msgstr ""
+"Tiền tố của mã zip mà nhà đơn vị vận chuyển này áp dụng. Lưu ý rằng biểu "
+"thức thông thường có thể được sử dụng để hỗ trợ các quốc gia có độ dài mã "
+"zip khác nhau, tức là có thể thêm '$' vào cuối tiền tố để khớp với mã zip "
+"chính xác (ví dụ: '100$' sẽ chỉ khớp với '100' chứ không phải '1000')"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__price
+msgid "Price"
+msgstr "Giá"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
+msgid "Price Rules"
+msgstr "Quy tắc giá"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Pricing"
+msgstr "Định giá"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
+msgid "Pricing Rules"
+msgstr "Quy tắc giá"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_product_category
+msgid "Product Category"
+msgstr "Danh mục sản phẩm"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
+msgid "Product Qty"
+msgstr "SL sản phẩm"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_type
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_type
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Provider"
+msgstr "Nhà cung cấp"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__quantity
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__quantity
+msgid "Quantity"
+msgstr "Số lượng"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
+msgid "Return Label Accessible from Customer Portal"
+msgstr "Có thể truy cập nhãn trả hàng từ cổng thông tin khách hàng"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
+msgid "Sale Base Price"
+msgstr "Giá bán cơ bản"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_price
+msgid "Sale Price"
+msgstr "Giá bán"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_sale_order
+msgid "Sales Order"
+msgstr "Đơn bán hàng"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Dòng đơn bán hàng"
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+msgid "Search"
+msgstr "Tìm kiếm"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__sequence
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__sequence
+msgid "Sequence"
+msgstr "Trình tự"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order__is_all_service
+msgid "Service Product"
+msgstr "Sản phẩm dịch vụ"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
+msgid "Set to True if your credentials are certified for production."
+msgstr ""
+"Đặt thành Đúng nếu thông tin xác thực của bạn được chứng nhận để sản xuất."
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
+msgid "Shipping Method"
+msgstr "Phương thức vận chuyển"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_carrier
+#: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
+msgid "Shipping Methods"
+msgstr "Phương thức vận chuyển"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order__shipping_weight
+msgid "Shipping Weight"
+msgstr "Khối lượng vận chuyển"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__shipping_insurance
+msgid ""
+"Shipping insurance is a service which may reimburse senders whose parcels "
+"are lost, stolen, and/or damaged in transit."
+msgstr ""
+"Bảo hiểm vận chuyển là một dịch vụ có thể bồi hoàn cho người gửi có bưu kiện "
+"bị mất, bị đánh cắp và/hoặc bị hư hỏng trong quá trình vận chuyển."
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid ""
+"Shipping method details to be included at bottom sales orders and their "
+"confirmation emails. E.g. Instructions for customers to follow."
+msgstr ""
+"Chi tiết về phương thức vận chuyển sẽ được đưa vào cuối đơn bán hàng và "
+"email xác nhận đơn bán hàng đó. Ví dụ: Hướng dẫn dành cho khách hàng."
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.free_delivery_carrier
+#: model:product.template,name:delivery.product_product_delivery_product_template
+msgid "Standard delivery"
+msgstr "Giao hàng tiêu chuẩn"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
+msgid "States"
+msgstr "Tỉnh/TP"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
+msgid "Supports Shipping Insurance"
+msgstr "Hỗ trợ bảo hiểm vận chuyển"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.template,name:delivery.product_product_delivery_poste_product_template
+msgid "The Poste"
+msgstr "The Poste"
+
+#. module: delivery
+#: model_terms:payment.provider,pending_msg:delivery.payment_provider_cod
+msgid "The delivery staff will collect payment upon delivery."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__excluded_tag_ids
+msgid ""
+"The method is NOT available if at least one product of the order has one of "
+"these tags."
+msgstr ""
+"Phương thức này KHÔNG khả dụng nếu ít nhất một sản phẩm trong đơn hàng có "
+"một trong những thẻ này."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__must_have_tag_ids
+msgid ""
+"The method is available only if at least one product of the order has one of "
+"these tags."
+msgstr ""
+"Phương thức này chỉ khả dụng nếu ít nhất một sản phẩm trong đơn hàng có một "
+"trong những thẻ này."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
+msgid ""
+"The return label can be downloaded by the customer from the customer portal."
+msgstr "Khách hàng có thể tải nhãn trả hàng từ cổng thông tin khách hàng."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
+msgid "The return label is automatically generated at the delivery."
+msgstr "Nhãn trả hàng được tạo tự động khi giao hàng."
+
+#. module: delivery
+#: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
+msgid "The shipping insurance must be a percentage between 0 and 100."
+msgstr "Bảo hiểm vận chuyển phải là tỷ lệ phần trăm từ 0 đến 100."
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+msgid "The shipping is free since the order amount exceeds %.2f."
+msgstr "Giao hàng miễn phí vì giá trị đơn hàng trên %.2f."
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
+msgid "There was an error loading the map"
+msgstr "Đã xảy ra lỗi khi tải bản đồ"
+
+#. module: delivery
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"These methods allow to automatically compute the delivery price\n"
+"            according to your settings; on the sales order (based on the\n"
+"            quotation) or the invoice (based on the delivery orders)."
+msgstr ""
+"Các phương thức này cho phép tự động tính toán phí giao hàng\n"
+"                dựa theo cài đặt của bạn; cho đơn bán hàng (dựa theo\n"
+"                báo giá) hoặc hóa đơn (dựa theo lệnh giao hàng)."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
+msgid "This fixed amount will be added to the shipping price."
+msgstr "Số tiền cố định này sẽ được thêm vào phí vận chuyển."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__tracking_url
+msgid ""
+"This option adds a link for the customer in the portal to track their "
+"package easily. Use <shipmenttrackingnumber> as a placeholder in your URL."
+msgstr ""
+"Tùy chọn này thêm liên kết trong cổng thông tin để khách hàng có thể dễ dàng "
+"theo dõi kiện hàng của họ. Sử dụng <shipmenttrackingnumber> làm phần giữ chỗ "
+"trong URL của bạn."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
+msgid "This percentage will be added to the shipping price."
+msgstr "Tỷ lệ phần trăm này sẽ được thêm vào phí vận chuyển."
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__total_weight
+msgid "Total Order Weight"
+msgstr "Tổng khối lượng đơn hàng"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__tracking_url
+msgid "Tracking Link"
+msgstr "Liên kết theo dõi"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
+msgid "Update"
+msgstr "Cập nhật"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/sale_order.py:0
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "Update shipping cost"
+msgstr "Cập nhật phí vận chuyển"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
+#: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
+msgid "Used in sales orders."
+msgstr "Đã sử dụng trong đơn bán hàng."
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable
+msgid "Variable"
+msgstr "Biến"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable_factor
+msgid "Variable Factor"
+msgstr "Hệ số biến thiên"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Visible to all"
+msgstr "Hiển thị với tất cả"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__volume
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__volume
+msgid "Volume"
+msgstr "Thể tích"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__volume_uom_name
+msgid "Volume unit of measure label"
+msgstr "Nhãn đơn vị đo thể tích"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__weight
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__weight
+msgid "Weight"
+msgstr "Khối lượng"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__wv
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__wv
+msgid "Weight * Volume"
+msgstr "Khối lượng * Thể tích"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__weight_uom_name
+msgid "Weight Uom Name"
+msgstr "Tên đơn vị tính khối lượng"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__weight_uom_name
+msgid "Weight unit of measure label"
+msgstr "Nhãn đơn vị tính khối lượng"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/sale_order.py:0
+msgid ""
+"You can not update the shipping costs on an order where it was already "
+"invoiced!\n"
+"\n"
+"The following delivery lines (product, invoiced quantity and price) have "
+"already been processed:\n"
+"\n"
+msgstr ""
+"Bạn không thể cập nhật phí vận chuyển của đơn hàng đã được xuất hóa đơn!\n"
+"\n"
+"Dòng giao hàng sau (sản phẩm, số lượng xuất hóa đơn và giá) đã được xử lý:\n"
+"\n"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/product_category.py:0
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr ""
+"Bạn không thể xóa danh mục sản phẩm vận chuyển vì nó được sử dụng cho các "
+"sản phẩm của đơn vị vận chuyển."
+
+#. module: delivery
+#: model_terms:payment.provider,auth_msg:delivery.payment_provider_cod
+msgid "Your payment has been authorized."
+msgstr "Thanh toán của bạn đã được chứng thực."
+
+#. module: delivery
+#: model_terms:payment.provider,cancel_msg:delivery.payment_provider_cod
+msgid "Your payment has been cancelled."
+msgstr "Thanh toán của bạn đã bị hủy."
+
+#. module: delivery
+#: model_terms:payment.provider,done_msg:delivery.payment_provider_cod
+msgid "Your payment has been processed."
+msgstr "Thanh toán của bạn đã được xử lý."
+
+#. module: delivery
+#. odoo-javascript
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "Your postal code"
+msgstr "Mã bưu điện của bạn"
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
+msgid "Zip Prefix"
+msgstr "Tiền tố mã bưu chính"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
+msgid "Zip Prefixes"
+msgstr "Tiền tố zip"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/payment_provider.py:0
+msgid "cash on delivery not allowed by selected delivery method"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "e.g. UPS Express"
+msgstr "VD: UPS Express"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "i.e. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
+msgstr "VD: https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
+
+#~ msgid "Default delivery method used in sales orders."
+#~ msgstr "Default delivery method used in sales orders."
+
+#~ msgid "Delivery Rating Success"
+#~ msgstr "Tỉ lệ giao thành công"
+
+#~ msgid "Destination Availability"
+#~ msgstr "Đang có tại điểm đến"
+
+#~ msgid ""
+#~ "Filling this form allows you to filter delivery carriers according to the "
+#~ "delivery address of your customer."
+#~ msgstr ""
+#~ "Điền thông tin ở đây sẽ giúp lọc ra những đơn vị vận chuyển dựa theo địa "
+#~ "chỉ giao hàng của khách hàng của bạn."
+
+#~ msgid "Free Shipping"
+#~ msgstr "Miễn phí giao hàng"
+
+#~ msgid "Group By"
+#~ msgstr "Nhóm theo"

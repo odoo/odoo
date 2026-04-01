@@ -1,0 +1,309 @@
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Odoo</title>
+    <link rel="shortcut icon" href="/web/static/img/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/web/static/src/libs/fontawesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="/web/static/lib/bootstrap/dist/css/bootstrap.css" />
+    <script src="/web/static/lib/bootstrap/js/dist/util/index.js" ></script>
+    <script src="/web/static/lib/bootstrap/js/dist/dom/data.js" ></script>
+    <script src="/web/static/lib/bootstrap/js/dist/dom/event-handler.js" ></script>
+    <script src="/web/static/lib/bootstrap/js/dist/dom/manipulator.js" ></script>
+    <script src="/web/static/lib/bootstrap/js/dist/dom/selector-engine.js" ></script>
+    <script src="/web/static/lib/bootstrap/js/dist/util/config.js" ></script>
+    <script src="/web/static/lib/bootstrap/js/dist/util/component-functions.js" ></script>
+    <script src="/web/static/lib/bootstrap/js/dist/util/backdrop.js" ></script>
+    <script src="/web/static/lib/bootstrap/js/dist/util/focustrap.js" ></script>
+    <script src="/web/static/lib/bootstrap/js/dist/util/scrollbar.js" ></script>
+    <script src="/web/static/lib/bootstrap/js/dist/base-component.js" ></script>
+    <script src="/web/static/lib/bootstrap/js/dist/modal.js" ></script>
+
+    <script src="/web/static/src/public/database_manager.js" ></script>
+    <style>
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Database List -->
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3 o_database_list">
+                <img src="/web/static/img/logo2.png" class="img-fluid d-block mx-auto"/>
+                <t t-if="not list_db">
+                    <div class="alert alert-danger text-center">The database manager has been disabled by the administrator</div>
+                </t>
+                <t t-elif="insecure and databases">
+                    <div class="alert alert-warning">
+                        Warning, your Odoo database manager is not protected.<br/>
+                        Please <a href="#" data-bs-toggle="modal" data-bs-target=".o_database_master">set a master password</a> to secure it.
+                    </div>
+                </t>
+                <t t-if="error">
+                    <div class="alert alert-danger" t-out="error"></div>
+                </t>
+                <t t-if="list_db and databases">
+                    <div class="list-group">
+
+                        <t t-foreach="databases" t-as="db">
+                            <div class="list-group-item d-flex align-items-center">
+                                <a t-attf-href="/odoo?db={{ db }}" class="d-block flex-grow-1">
+                                    <t t-if="db in incompatible_databases">
+                                        <i class="icon fa fa-warning float-end text-warning" title="This database may not be compatible"></i>
+                                    </t>
+                                    <t t-out="db" />
+                                </a>
+                                <t t-if="manage">
+                                    <div class="btn-group btn-group-sm float-end">
+                                        <button type="button" t-att-data-db="db" data-bs-target=".o_database_backup" class="o_database_action btn btn-primary">
+                                            <i class="fa fa-floppy-o fa-fw"></i> Backup
+                                        </button>
+                                        <button type="button" t-att-data-db="db" data-bs-target=".o_database_duplicate" class="o_database_action btn btn-secondary">
+                                            <i class="fa fa-files-o fa-fw"></i> Duplicate
+                                        </button>
+                                        <button type="button" t-att-data-db="db" data-bs-target=".o_database_delete" class="o_database_action btn btn-danger">
+                                            <i class="fa fa-trash-o fa-fw"></i> Delete
+                                        </button>
+                                    </div>
+                                </t>
+                            </div>
+                        </t>
+                    </div>
+                    <t t-if="manage">
+                        <div class="d-flex mt-2">
+                            <button type="button" data-bs-toggle="modal" data-bs-target=".o_database_create" class="btn btn-primary flex-grow-1">Create Database</button>
+                            <button type="button" data-bs-toggle="modal" data-bs-target=".o_database_restore" class="btn btn-primary flex-grow-1 ms-2">Restore Database</button>
+                            <button type="button" data-bs-toggle="modal" data-bs-target=".o_database_master" class="btn btn-primary flex-grow-1 ms-2">Set Master Password</button>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="text-center mt-2">
+                            <a href="/web/database/manager">Manage databases</a>
+                        </div>
+                    </t>
+                </t>
+                <t t-elif="list_db">
+                    <form role="form" action="/web/database/create" method="post">
+                        <t t-call="create_form" />
+                        <input type="submit" value="Create database" class="btn btn-primary float-start"/>
+                    </form>
+                    <a role="button" data-bs-toggle="modal" data-bs-target=".o_database_restore" class="btn btn-link">or restore a database</a>
+                </t>
+            </div>
+        </div>
+
+        <!-- Create -->
+        <div class="modal fade o_database_create" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form role="form" action="/web/database/create" method="post">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Create Database</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <t t-call="create_form" />
+                            <small class="text-muted">
+                                To enhance your experience, some data may be sent to Odoo online services. See our <a href="https://www.odoo.com/privacy" target="_blank">Privacy Policy</a>.
+                            </small>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" value="Continue" class="btn btn-primary float-end"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Restore -->
+        <div class="modal fade o_database_restore" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Restore Database</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="form_restore_db" role="form" action="/web/database/restore" method="post" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <t t-call="master_input" />
+                            <div class="row mb-3">
+                                <label for="backup_file" class="col-md-4 col-form-label">File</label>
+                                <div class="col-md-8">
+                                    <input id="backup_file" type="file" name="backup_file" class="required"/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="dbname_restore" class="col-md-4 col-form-label">Database Name</label>
+                                <div class="col-md-8">
+                                    <input id="dbname_restore" type="text" name="name" class="form-control" required="required" t-att-pattern="pattern" title="Only alphanumerical characters, underscore, hyphen and dot are allowed"/>
+                                </div>
+                            </div>
+                              <div class="row mb-3">
+                                  <label for="neutralize_database_restore" class="col-md-4 col-form-label" >Neutralize</label>
+                                   <div class="col-md-8">
+                                <input id="neutralize_database_restore" type="checkbox" name="neutralize_database" class="form-check-input" />
+                                   </div>
+                              </div>
+                            <label for="radio_copy_true">This database might have been moved or copied.</label>
+                            <p class="form-text">
+                                In order to avoid conflicts between databases, Odoo needs to know if this database was moved or copied.<br/>
+                                If you don't know, answer "This database is a copy".
+                            </p>
+                            <div class="form-check">
+                                <input id="radio_copy_true" name="copy" type="radio" class="form-check-input" value="true" checked="1" />
+                                <label for="radio_copy_true" class="form-check-label">This database is a copy</label>
+                            </div>
+                            <div class="form-check">
+                                <input id="radio_copy_false" name="copy" type="radio" class="form-check-input" value="false" />
+                                <label for="radio_copy_false" class="form-check-label">This database was moved</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" value="Continue" class="btn btn-primary float-end"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Master password -->
+        <div class="modal fade o_database_master" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Set Master Password</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="form_change_pwd" role="form" action="/web/database/change_password" method="post">
+                        <div class="modal-body">
+                            <p>The master password is required to create, delete, dump or restore databases.</p>
+                            <t t-set="set_master_pwd" t-value="True" />
+                            <t t-call="master_input" />
+                            <div class="row mb-3">
+                                <label for="master_pwd_new" class="col-md-5 col-form-label">New Master Password</label>
+                                <div class="col-md-7">
+                                    <div class="input-group">
+                                        <input id="master_pwd_new" type="password" name="master_pwd_new" class="form-control" required="required" autocomplete="new-password"/>
+                                        <span class="fa fa-eye o_little_eye input-group-text" aria-hidden="true" style="cursor: pointer;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" value="Continue" class="btn btn-primary float-end"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Duplicate DB -->
+        <div class="modal fade o_database_duplicate" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Duplicate Database</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="form-duplicate-db" role="form" action="/web/database/duplicate" method="post">
+                        <div class="modal-body">
+                            <t t-set="set_master_pwd" t-value="False" />
+                            <t t-call="master_input" />
+                            <div class="row mb-3">
+                                <label for="dbname_duplicate" class="col-md-4 col-form-label">Database Name</label>
+                                <div class="col-md-8">
+                                    <input id="dbname_duplicate" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="new_name" class="col-md-4 col-form-label">New Name</label>
+                                <div class="col-md-8">
+                                    <input id="new_name" type="text" name="new_name" class="form-control" required="required" t-att-pattern="pattern" title="Only alphanumerical characters, underscore, hyphen and dot are allowed"/>
+                                </div>
+                            </div>
+                              <div class="row mb-3">
+                                  <label for="neutralize_database" class="col-md-4 col-form-label" >Neutralize</label>
+                                   <div class="col-md-8">
+                                <input id="neutralize_database" type="checkbox" name="neutralize_database" class="form-check-input" />
+                                   </div>
+                              </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" value="Continue" class="btn btn-primary float-end"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drop DB -->
+        <div class="modal fade o_database_delete" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Delete Database</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="form_drop_db" role="form" action="/web/database/drop" method="post">
+                        <div class="modal-body">
+                            <t t-call="master_input" />
+                            <div class="row mb-3">
+                                <label for="dbname_delete" class="col-md-4 col-form-label">Database</label>
+                                <div class="col-md-8">
+                                    <input id="dbname_delete" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" value="Delete" class="btn btn-primary float-end"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Backup DB -->
+        <div class="modal fade o_database_backup" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Backup Database</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="form_backup_db" role="form" action="/web/database/backup" method="post">
+                        <div class="modal-body">
+                            <t t-call="master_input" />
+                            <div class="row mb-3">
+                                <label for="dbname_backup" class="col-md-4 col-form-label">Database Name</label>
+                                <div class="col-md-8">
+                                    <input id="dbname_backup" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="backup_format" class="col-md-4 col-form-label">Backup Format</label>
+                                <div class="col-md-8">
+                                    <select id="backup_format" name="backup_format" class="form-select" required="required">
+                                        <option value="zip">zip</option>
+                                        <option value="dump">pg_dump custom format (without filestore)</option>
+                                    </select>
+                                </div>
+                            </div>
+                             <div class="row mb-3" id="filestore_div">
+                                <label for="filestore" class="col-md-4 col-form-label">Include filestore</label>
+                                <div class="col-md-8">
+                                     <input id="filestore" type="checkbox" name="filestore" value="1" checked class="form-check-input" />
+                                     <input type="hidden" name="filestore" value="0"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" value="Backup" class="btn btn-primary float-end"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

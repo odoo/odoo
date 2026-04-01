@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.LanguagePopup">
+        <div class="self_order_language_popup o_dialog" t-att-id="id">
+            <div role="dialog" class="modal d-block" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body p-4">
+                            <div class="btn-group-vertical w-100 pb-4">
+                                <t t-foreach="languages" t-as="lang" t-key="lang.id" >
+                                    <button class="btn btn-lg btn-light d-flex align-items-center gap-3" t-on-click="() => this.onClickLanguage(lang)">
+                                        <img class="rounded-2" t-attf-src="{{lang.flag_image_url}}" />
+                                        <t t-esc="lang.display_name" />
+                                    </button>
+                                </t>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center w-100">
+                                <button type="button" class="btn w-100 w-sm-auto btn-secondary kiosk-p-btn-lg popup_button" t-on-click="() => this.props.close()">Discard</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

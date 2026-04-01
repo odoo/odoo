@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.CalendarSidePanel">
+        <div class="o_calendar_sidebar_container d-print-none position-relative w-100 w-md-auto bg-view overflow-x-hidden overflow-y-auto">
+            <div class="o_calendar_sidebar">
+                <DatePicker t-if="showDatePicker" t-props="datePickerProps" />
+                <t t-foreach="props.model.filterSections" t-as="section" t-key="section.fieldName">
+                    <FilterSection model="props.model" section="section"/>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,56 @@
+.o_overlay_options {
+    display: flex;
+    gap: 2px;
+
+    .btn {
+        --btn-padding-x: #{o-to-rem(7px)};
+        --btn-padding-y: #{o-to-rem(5px)};
+
+        @include button-variant(
+            $background: $o-we-item-clickable-bg,
+            $border: transparent,
+            $color: $o-we-item-clickable-color,
+            $hover-background: $o-we-item-clickable-hover-bg,
+            $hover-border: transparent,
+            $hover-color: $o-we-item-clickable-color,
+            $active-background: mix($o-we-item-clickable-hover-bg, rgba($o-we-color-accent, 0.4)),
+            $active-border: transparent,
+            $active-color: $o-we-fg-lighter,
+            $disabled-background: rgba($o-we-item-clickable-hover-bg, 0.5),
+            $disabled-border: transparent,
+            $disabled-color: $o-we-item-clickable-color,
+        );
+    }
+
+    &:has(span:hover .btn:not(:disabled)) > span:not(:hover) .btn:not(:disabled) {
+        @include o-hover-opacity(.6);
+    }
+
+    button {
+        &.fa, &.oi {
+            min-width: min-content;
+        }
+    }
+
+    button.o_move_handle {
+        cursor: move;
+    }
+
+    button.o_send_back, button.o_bring_front {
+        background-position: center;
+        background-repeat: no-repeat;
+
+        &::before {
+            // Hack to give a width to the buttons and apply paddings.
+            content: "\00a0\00a0\00a0";
+        }
+    }
+
+    button.o_send_back {
+        background-image: url('/html_builder/static/img/options/bring-backward.svg');
+    }
+
+    button.o_bring_front {
+        background-image: url('/html_builder/static/img/options/bring-forward.svg');
+    }
+}

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.shapeSelector">
+    <header class="o_pager_nav d-flex flex-column flex-wrap flex-shrink-0 mh-100">
+        <div class="d-flex align-items-center p-2">
+            <button class="o_pager_nav_angle btn btn-secondary bg-transparent border-0"
+                    t-on-click="this.props.onClose" t-ref="backButton">
+                    <i class="fa fa-angle-left" aria-hidden="true"/>
+                    <span class="visually-hidden">Back</span>
+                    <span class="ps-2" t-out="props.selectorTitle"/>
+            </button>
+        </div>
+        <div class="o-hb-select-pager-tab-container d-flex" t-ref="tabs">
+            <t t-foreach="Object.entries(this.props.shapeGroups)" t-as="group" t-key="group_index">
+                <button type="button" class="o-hb-select-pager-tab p-0 text-uppercase" t-att-class="{ 'active': state.activeGroup === group[0] }" t-on-click="() => this.scrollToShapes(group[0])" t-att-data-group-id="group[0]">
+                    <span class="w-100" t-out="group[1].label"/>
+                </button>
+            </t>
+        </div>
+    </header>
+    <div class="o_pager_container" t-ref="root" t-on-scroll="onScroll">
+        <t t-foreach="Object.entries(this.props.shapeGroups)" t-as="group" t-key="group_index">
+            <div t-att-data-shape-group-id="group[0]">
+                <t t-foreach="Object.entries(group[1].subgroups)" t-as="subgroup" t-key="subgroup_index">
+                    <div class="ms-3 py-2" t-out="subgroup[1].label"/>
+                    <div class="builder_select_page my-2">
+                        <ImgGroup>
+                            <t t-foreach="Object.entries(subgroup[1].shapes)" t-as="shape" t-key="shape_index">
+                                <div t-att-class="this.props.buttonWrapperClassName" t-on-click="this.props.onClose" t-if="!shape[1].isTechnical">
+                                    <BuilderButton type="''" action="this.props.shapeActionId" actionValue="shape[0]">
+                                        <div t-att-class="props.imgThroughDiv ? 'o_we_shape_btn_content' : ''">
+                                            <t t-if="props.imgThroughDiv">
+                                                <div class="o_we_shape" t-att-class="this.getShapeClass(shape[0])"/>
+                                            </t>
+                                            <t t-else="" >
+                                                <Img src="this.getShapeUrl(shape[0])" svgCheck="false"/>
+                                            </t>
+                                            <span t-if="shape[1].imgSize" class="o_we_shape_animated_label">
+                                                <i class="fa fa-expand"></i>
+                                                <span t-out="shape[1].imgSize"/>
+                                            </span>
+                                            <span t-elif="shape[1].animated" class="o_we_shape_animated_label">A<span>nimated</span></span>
+                                        </div>
+                                    </BuilderButton>
+                                </div>
+                            </t>
+                        </ImgGroup>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </div>
+</t>
+
+
+</templates>

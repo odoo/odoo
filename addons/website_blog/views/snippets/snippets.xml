@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="website_blog" inherit_id="website.snippets" name="Snippet Blog">
+    <xpath expr="//t[@id='installed_snippets_hook']" position="after">
+        <t snippet-group="blogs" t-snippet="website.s_snippet_group" string="Blogs"
+            t-thumbnail="/website/static/src/img/snippets_thumbs/s_blog_posts.svg"/>
+    </xpath>
+    <xpath expr="//t[@id='blog_posts_hook']" position="replace">
+        <t t-snippet="website_blog.s_blog_posts_big_picture" string="Blog Posts" group="blogs"/>
+        <t t-snippet="website_blog.s_blog_posts_card" string="Blog Posts" group="blogs"/>
+        <t t-snippet="website_blog.s_blog_posts_horizontal" string="Blog Posts" group="blogs"/>
+        <t t-snippet="website_blog.s_blog_posts_list" string="Blog Posts" group="blogs"/>
+        <t t-snippet="website_blog.s_blog_posts_single_aside" string="Blog Post" group="blogs"/>
+        <t t-snippet="website_blog.s_blog_posts_single_full" string="Blog Post" group="blogs"/>
+        <t t-snippet="website_blog.s_blog_posts_single_circle" string="Blog Post" group="blogs"/>
+        <t t-snippet="website_blog.s_blog_posts_single_badge" string="Blog Post" group="blogs"/>
+    </xpath>
+</template>
+
+</odoo>

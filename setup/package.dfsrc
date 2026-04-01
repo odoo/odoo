@@ -1,0 +1,38 @@
+# Please note that this Dockerfile is used for testing nightly builds and should
+# not be used to deploy Odoo
+FROM ubuntu:noble
+MAINTAINER Odoo S.A. <info@odoo.com>
+
+RUN userdel -r ubuntu
+
+RUN apt-get update && \
+	apt-get install -y locales && \
+	rm -rf /var/lib/apt/lists/*
+
+# Reconfigure locales such that postgresql uses UTF-8 encoding
+RUN dpkg-reconfigure locales && \
+    locale-gen C.UTF-8 && \
+    /usr/sbin/update-locale LANG=C.UTF-8
+ENV LC_ALL C.UTF-8
+
+RUN apt-get update -qq &&  \
+	apt-get upgrade -qq -y && \
+	apt-get install \
+		postgresql \
+		postgresql-server-dev-all \
+		postgresql-client \
+		adduser \
+		libldap2-dev \
+		libsasl2-dev \
+		python3-pip \
+		python3-venv \
+		python3-wheel \
+		build-essential \
+		python3 -y && \
+	rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt /opt/release/requirements.txt
+
+RUN echo "PS1=\"[\u@nightly-tests] # \"" > ~/.bashrc
+
+USER odoo

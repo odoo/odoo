@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="website.MobilePreviewSystrayItem">
+    <div class="o_mobile_preview o_menu_systray_item d-none d-md-flex"
+         t-att-class="{ 'o_mobile_preview_active': this.state.isMobile }">
+        <a href="#" accesskey="v" class="o_nav_entry mx-1 px-3"
+           t-on-click="onClick">
+            <span title="Mobile preview" role="img" aria-label="Mobile preview" class="fa fa-2x fa-mobile"/>
+        </a>
+    </div>
+</t>
+</templates>

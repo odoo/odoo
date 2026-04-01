@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="account_payment_method_check" model="account.payment.method">
+            <field name="name">Checks</field>
+            <field name="code">check_printing</field>
+            <field name="payment_type">outbound</field>
+        </record>
+
+        <record model="ir.actions.server" id="action_account_print_checks">
+            <field name="name">Print Checks</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="binding_model_id" ref="account.model_account_payment" />
+            <field name="binding_view_types">list,kanban</field>
+            <field name="group_ids" eval="[(4, ref('account.group_account_user'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+if records:
+    action = records.print_checks()
+            </field>
+        </record>
+
+    </data>
+</odoo>

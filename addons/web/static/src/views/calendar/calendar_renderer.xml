@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CalendarRenderer">
+        <div class="o_calendar_renderer h-100 flex-grow-1">
+            <ActionSwiper t-props="actionSwiperProps">
+                <t
+                    t-component="concreteRenderer"
+                    t-props="concreteRendererProps"
+                    t-key="calendarKey"
+                />
+            </ActionSwiper>
+        </div>
+    </t>
+
+</templates>

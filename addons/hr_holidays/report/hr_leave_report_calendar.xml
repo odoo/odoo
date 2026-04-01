@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <record id="hr_leave_report_calendar_view" model="ir.ui.view">
+        <field name="name">hr.leave.report.calendar.view</field>
+        <field name="model">hr.leave.report.calendar</field>
+        <field name="arch" type="xml">
+            <calendar
+                string="Time Off"
+                date_start="start_datetime"
+                date_stop="stop_datetime"
+                mode="month"
+                quick_create="0"
+                color="employee_id"
+                event_open_popup="True"
+                js_class="time_off_report_calendar"
+                create="0"
+                show_unusual_days="True">
+                <field name="name"/>
+                <field name="employee_id" filters="1" invisible="1"/>
+                <field name="is_hatched" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <field name="leave_manager_id" invisible="1"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="hr_leave_report_calendar_year_view" model="ir.ui.view">
+        <field name="name">hr.leave.report.calendar.year.view</field>
+        <field name="model">hr.leave.report.calendar</field>
+        <field name="arch" type="xml">
+            <calendar
+                string="Time Off"
+                date_start="start_datetime"
+                date_stop="stop_datetime"
+                mode="year"
+                quick_create="0"
+                color="employee_id"
+                event_open_popup="True"
+                js_class="time_off_report_calendar"
+                show_unusual_days="True">
+                <field name="name"/>
+                <field name="employee_id" filters="1" invisible="1"/>
+                <field name="is_hatched" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <field name="leave_manager_id" invisible="1"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="hr_leave_report_calendar_view_form" model="ir.ui.view">
+        <field name="name">hr.leave.report.calendar.view.form</field>
+        <field name="model">hr.leave.report.calendar</field>
+        <field name="arch" type="xml">
+            <form string="Time Off">
+                <sheet class="pt-2" style="min-height: 10rem">
+                    <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="state != 'cancel'"/>
+                    <widget name="web_ribbon" title="Refused" bg_color="bg-danger" invisible="state != 'refuse'"/>
+                    <widget name="web_ribbon" title="Approved" bg_color="bg-success" invisible="state != 'validate'"/>
+                    <group class="py-0 pe-0 overflow-hidden">
+                        <field name="employee_id" widget="many2one_avatar_employee"/>
+                        <field name="holiday_status_id"/>
+                        <label for="start_datetime" string="Dates" />
+                        <div id="full_date" class="o_row">
+                            <field
+                                string='dates'
+                                name="start_datetime"
+                                widget="daterange"
+                                readonly='1'
+                                options="{'end_date_field': 'stop_datetime', 'show_time': false}"/>
+                            <field name="start_datetime" invisible="1"/>
+                            <div style="margin-left: 4.82rem;">
+                            ( <field name="duration_display" readonly="1" class="w-auto"/> )
+                            </div>
+                        </div>
+                    </group>
+                    <field name="description"/>
+                    <footer class="d-flex justify-content-end gap-1">
+                        <button name="action_approve" string="Approve" type="object" close="1" invisible="state not in ['confirm', 'refuse'] or not is_manager"/>
+                        <button name="action_refuse" string="Refuse" type="object" close="1" invisible="state == 'refuse' or not is_manager"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_leave_report_calendar_view_search" model="ir.ui.view">
+        <field name="name">hr.leave.report.calendar.view.search</field>
+        <field name="model">hr.leave.report.calendar</field>
+        <field name="arch" type="xml">
+            <search string="Department search">
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="job_id"/>
+                <filter name="my_team" string="My Team" domain="['|', ('employee_id.user_id', '=', uid), ('employee_id.parent_id.user_id', '=', uid)]"/>
+                <filter string="My Department" name="department"
+                        domain="[('member_of_department', '=', True)]"
+                        help="My Department"/>
+                <separator/>
+                <filter string="Off Today" name="off_today" domain="[('is_absent', '=', True)]" help="Employees Off Today"/>
+                <separator/>
+                <filter string="Approved" name="validate" domain="[('state', '=', 'validate')]" help="validate"/>
+                <filter name="refused_leaves" string="Refused" domain="[('state', '=', 'refuse')]"/>
+                <filter string="Waiting for Approval" name="approve" domain="[('state','in',('confirm','validate1'))]"/>
+                <filter name="groupby_job_id" string="Job Position" context="{'group_by': 'job_id'}"/>
+                <filter name="groupby_time_off_type" string="Time Off Type" context="{'group_by': 'holiday_status_id'}"/>
+                <filter name="groupby_company_id" string="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                <filter name="groupby_department_id" context="{'group_by': 'department_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hr_holidays_dashboard" model="ir.actions.act_window">
+        <field name="name">All Time Off</field>
+        <field name="res_model">hr.leave.report.calendar</field>
+        <field name="path">time-off-overview</field>
+        <field name="view_mode">calendar</field>
+        <field name="search_view_id" ref="hr_leave_report_calendar_view_search"/>
+        <field name="domain">[('employee_id.active','=',True)]</field>
+        <field name="context">{'hide_employee_name': 1, 'search_default_my_team': 1, 'search_default_current_year': 1,
+            'search_default_validate': 1, 'search_default_approve': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Nobody here ? All of the people you're looking for will be working at that time.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_my_days_off_dashboard_calendar" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">hr.leave.report.calendar</field>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="hr_leave_report_calendar_year_view"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                You have no time off yet!
+            </p>
+        </field>
+    </record>
+</odoo>

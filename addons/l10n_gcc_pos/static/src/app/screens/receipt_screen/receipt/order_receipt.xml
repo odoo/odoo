@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="after">
+            <t t-set="show_title" t-value="false"/>
+            <t t-set="show_simplified_title" t-value="false"/>
+            <t t-if="order.isGccCountry and show_title">
+                <br/>
+                <br/>
+                <div class="pos-receipt-header">
+                    <t t-if="!show_simplified_title">
+                        <t t-if="order.config_id.l10n_gcc_dual_language_receipt">
+                            <span id="title_en" t-translation="off">Tax Invoice</span> / 
+                            <span id="title_ar" t-translation="off">الفاتورة الضريبية</span>
+                        </t>
+                        <t t-else="">
+                            <t t-if="order.user_id.partner_id.lang != 'ar_001'">
+                                <span name="title" t-translation="off">Tax Invoice</span>
+                            </t>
+                            <t t-else="">
+                                <span name="title" t-translation="off">الفاتورة الضريبية</span>
+                            </t>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <t t-if="order.config_id.l10n_gcc_dual_language_receipt">
+                            <span name="title_simplified_en" t-translation="off">Simplified Tax Invoice</span> / 
+                            <span name="title_simplified_ar" t-translation="off">فاتورة ضريبية مبسطة</span>
+                        </t>
+                        <t t-else="">
+                            <t t-if="order.user_id.partner_id.lang != 'ar_001'">
+                                <span name="title_simplified" t-translation="off">Simplified Tax Invoice</span>
+                            </t>
+                            <t t-else="">
+                                <span name="title_simplified" t-translation="off">فاتورة ضريبية مبسطة</span>
+                            </t>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('cashier')]" position="attributes">
+            <attribute name="t-if">!order.isGccCountry or !order.config_id.l10n_gcc_dual_language_receipt</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('cashier')]" position="after">
+            <div t-elif="order.isGccCountry and order.config_id.l10n_gcc_dual_language_receipt" t-translation="off">
+                <div>Served by / خدم بواسطة <t t-esc="order.getCashierName()"/></div>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//t[@t-as='subtotal']//span" position="attributes">
+            <attribute name="t-if">!order.isGccCountry or !order.config_id.l10n_gcc_dual_language_receipt</attribute>
+        </xpath>
+        <xpath expr="//t[@t-as='subtotal']//span" position="after">
+            <span name="subtotal_span_dual" t-elif="order.isGccCountry and order.config_id.l10n_gcc_dual_language_receipt" class="text-nowrap mw-100" t-translation="off">Subtotal / الإجمالي الفرعي</span>
+        </xpath>
+        <xpath expr="//span[hasclass('label-rounding')]" position="attributes">
+            <attribute name="t-if">!order.isGccCountry or !order.config_id.l10n_gcc_dual_language_receipt</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('label-rounding')]" position="after">
+            <span name="rounding_span_dual" t-elif="order.isGccCountry and order.config_id.l10n_gcc_dual_language_receipt" class="label-rounding" t-translation="off">Rounding / التقريب</span>
+        </xpath>
+        <xpath expr="//span[hasclass('label-total')]" position="attributes">
+            <attribute name="t-if">!order.isGccCountry or !order.config_id.l10n_gcc_dual_language_receipt</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('label-total')]" position="after">
+            <span name="total_span_dual" t-elif="order.isGccCountry and order.config_id.l10n_gcc_dual_language_receipt" class="label-total" t-translation="off">Total / اﻹجمالي</span>
+        </xpath>
+        <xpath expr="//span[hasclass('label-discount')]" position="attributes">
+            <attribute name="t-if">!order.isGccCountry or !order.config_id.l10n_gcc_dual_language_receipt</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('label-discount')]" position="after">
+            <span name="discounts_span_dual" t-elif="order.isGccCountry and order.config_id.l10n_gcc_dual_language_receipt" class="label-discount" t-translation="off">Discounts / الخصومات</span>
+        </xpath>
+        <xpath expr="//span[hasclass('label-change')]" position="attributes">
+            <attribute name="t-if">!order.isGccCountry or !order.config_id.l10n_gcc_dual_language_receipt</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('label-change')]" position="after">
+            <span name="change_span_dual" t-elif="order.isGccCountry and order.config_id.l10n_gcc_dual_language_receipt" class="label-change" t-translation="off">Change / الباقي</span>
+        </xpath>
+    </t>
+</templates>

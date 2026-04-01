@@ -1,0 +1,79 @@
+/* static stars */
+// portal_rating
+$o-w-rating-star-color: #FACC2E;
+
+.o_website_rating_static {
+    color: var(--WebsiteRating__star-color,  #{$o-w-rating-star-color});
+}
+
+// website_sale
+#product_details {
+    --WebsiteRating__star-color: currentColor;
+}
+
+.o_website_rating_card_container {
+
+    .o_message_counter {
+        color: map-get($grays, '700');
+    }
+
+    /* progress bars */
+    table.o_website_rating_table {
+        width: 100%;
+        overflow: visible;
+
+        .o_website_rating_table_star_num {
+            min-width: 50px;
+            white-space: nowrap;
+        }
+        .o_website_rating_table_progress{
+            min-width: 120px;
+            > .progress {
+                margin-bottom: 2px;
+                margin-left: 5px;
+                margin-right: 5px;
+            }
+            .o_rating_progressbar{
+                background-color: $o-w-rating-star-color;
+            }
+        }
+        .o_website_rating_table_percent {
+            text-align: right;
+            padding-left: 5px;
+            @include font-size($font-size-sm);
+        }
+        .o_website_rating_table_reset {
+            .o_website_rating_selection_reset {
+                color: $red;
+            }
+        }
+        .o_website_rating_table_row:not(.o_website_rating_table_row_selected) {
+            cursor: pointer;
+        }
+        .o_website_rating_table_row td {
+            padding-bottom: 0.4rem;
+        }
+    }
+}
+
+/* Star Widget */
+.o-mail-Composer-starCard{
+    width: max-content;
+    .o-mail-Composer-stars {
+        display: inline-flex;
+        color: #FACC2E;
+        margin-right: 15px;
+    }
+}
+
+/* Rating Popup Composer */
+.o_rating_popup_composer {
+
+    .o_rating_clickable {
+        cursor: pointer;
+    }
+
+    .o_portal_chatter_avatar {
+        margin-right: 10px;
+    }
+}

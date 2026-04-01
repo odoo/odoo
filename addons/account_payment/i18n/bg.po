@@ -1,0 +1,798 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_payment
+#
+# Translators:
+# Nikola Iliev, 2023
+# aleksandar ivanov, 2023
+# Георги Пехливанов <sonaris@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023
+# Maria Boyadjieva <marabo2000@gmail.com>, 2023
+# Albena Mincheva <albena_vicheva@abv.bg>, 2023
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 21:51+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
+"account_payment/bg/>\n"
+"Language: bg\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/wizards/payment_link_wizard.py:0
+msgid ""
+"#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong "
+"class=\"text-primary\">%(date)s</strong>"
+msgstr ""
+"#%(number)s - Вноски от <strong>%(amount)s</strong> дължими на <strong "
+"class=\"text-primary\">%(date)s</strong>"
+
+#. module: account_payment
+#. odoo-javascript
+#: code:addons/account_payment/static/src/interactions/portal_my_invoices_payment_list.js:0
+msgid "%s day(s) overdue"
+msgstr "%s ден(и) просрочие"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
+msgid "<b>Communication: </b>"
+msgstr "<b>Комуникация: </b>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
+"Pay Now</span>"
+msgstr ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
+"Плати сега</span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-arrow-circle-right\"/> Pay Now"
+msgstr "<i class=\"fa fa-fw fa-arrow-circle-right\"/> Плати сега"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Authorized</span>"
+msgstr ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Оторизирано</span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Paid</span>"
+msgstr ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Платено</span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-check-circle\"/> Paid"
+msgstr "Платено"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-check-circle\"/> Pending"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Чакащо"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-check-circle\"/> Processing Payment"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Плащане в процес на обработка"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "<span class=\"d-none d-md-inline\"> Pending</span>"
+msgstr "<span class=\"d-none d-md-inline\"> В очакване</span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "<strong>Full Amount</strong><br/>"
+msgstr "<strong>Пълна сума</strong><br/>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid ""
+"<strong>Installment</strong>\n"
+"                                        <br/>"
+msgstr ""
+"<strong>Вноска</strong>\n"
+"                                        <br/>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
+msgid ""
+"<strong>Warning!</strong> There is a refund pending for this payment.\n"
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
+msgstr ""
+"<strong>Внимание!</strong> По това плащане има сума за възстановяване в "
+"процес на изчакване.\n"
+"                        Изчакване възстановяването да бъде обработено. Ако "
+"до няколко минути възстановяването все още е в процес на изчакване, "
+"проверяване с вашия доставчик на плащания."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/wizards/payment_link_wizard.py:0
+msgid "A discount will be applied if the customer pays before %s included."
+msgstr "Вклщючена опция за прилагане на отстъпка ако клиента плати преди %s ."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid ""
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
+msgstr ""
+"Плащането по тази фактура вече е направено, проверяване да не се дублира."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_payment.py:0
+msgid "A payment transaction with reference %s already exists."
+msgstr "Платежна транзакция с номер %s вече съществува."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_payment.py:0
+msgid "A token is required to create a new payment transaction."
+msgstr "За създаване на нова платежна транзакция е необходим токен."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_overdue_invoices_page
+msgid "Amount"
+msgstr "Количество"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_available_for_refund
+msgid "Amount Available For Refund"
+msgstr "Налична сума за възстановяване"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__invoice_amount_due
+msgid "Amount Due"
+msgstr "Сума за Плащане"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
+#: model:ir.model.fields,field_description:account_payment.field_account_move__amount_paid
+msgid "Amount paid"
+msgstr "Платена сума"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
+msgid ""
+"Are you sure you want to void the authorized transaction? This action can't "
+"be undone."
+msgstr ""
+"Сигурни ли сте, че искате да анулирате оторизираната транзакция? Това "
+"действие не може да бъде отменено."
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__authorized_transaction_ids
+#: model:ir.model.fields,field_description:account_payment.field_account_move__authorized_transaction_ids
+msgid "Authorized Transactions"
+msgstr "Оторизирани транзакции"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
+msgid "Capture Transaction"
+msgstr "Уловете тразакция"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
+msgid "Close"
+msgstr "Затвори"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_res_config_settings
+msgid "Config Settings"
+msgstr "Настройки"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__create_uid
+msgid "Created by"
+msgstr "Създадено от"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__create_date
+msgid "Created on"
+msgstr "Създадено на"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__currency_id
+msgid "Currency"
+msgstr "Валута"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__discount_date
+msgid "Discount Date"
+msgstr "Дата на отстъпката"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_move__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:account_payment.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Име за показване"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__display_open_installments
+msgid "Display Open Installments"
+msgstr "Показване на отворените вноски"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
+msgid ""
+"Done, your online payment has been successfully processed. Thank you for "
+"your order."
+msgstr "Готово! Онлайн плащането е вече обработено. Благодаря за поръчката!"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__epd_info
+msgid "Early Payment Discount Information"
+msgstr "Информация за отстъпка за ранно плащане"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "Early Payment Discount of"
+msgstr "Отстъпка за ранно плащане от"
+
+#. module: account_payment
+#: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
+msgid "Full Only"
+msgstr ""
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_payment_link_wizard
+msgid "Generate Sales Payment Link"
+msgstr "Генериране на връзка за плащане на продажбите"
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_invoice_order_generate_link
+msgid "Generate a Payment Link"
+msgstr "Генериране на линк за плащане"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__has_eligible_epd
+msgid "Has Eligible Epd"
+msgstr ""
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__has_pending_refund
+msgid "Has a pending refund"
+msgstr "Има предстоящо възстановяване"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_journal__id
+#: model:ir.model.fields,field_description:account_payment.field_account_move__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_provider__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__id
+#: model:ir.model.fields,field_description:account_payment.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+msgid ""
+"Impossible to pay all the overdue invoices if they don't share the same "
+"currency."
+msgstr ""
+"Невъзможност за плащане на всички просрочени фактури ако те не са в една и "
+"съща валута."
+
+#. module: account_payment
+#: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
+msgid ""
+"In test mode, a fake payment is processed through a test payment interface.\n"
+"This mode is advised when setting up the provider."
+msgstr ""
+"В тестов режим фалшиво плащане се обработва чрез тестов интерфейс за "
+"плащане.\n"
+"Този режим се препоръчва при настройване на доставчика."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
+msgid "Invoice Online Payment"
+msgstr "Онлайн плащане на фактури"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
+msgid "Invoice(s)"
+msgstr "Фактура(и)"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_transaction.py:0
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoice_ids
+msgid "Invoices"
+msgstr "Фактури"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_overdue_invoice
+msgid "Invoices &amp; Bills"
+msgstr "Фактури &amp; Сметки"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoices_count
+msgid "Invoices Count"
+msgstr "Брой фактури"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_account_payment
+msgid "Invoices to pay"
+msgstr "Фактури за плащане"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_journal
+msgid "Journal"
+msgstr "Дневник"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_move
+msgid "Journal Entry"
+msgstr "Записи в Дневника"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Последно актуализирано от"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__write_date
+msgid "Last Updated on"
+msgstr "Последно актуализирано на"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_available_for_refund
+msgid "Maximum Refund Allowed"
+msgstr "Максимално позволено възстановяване"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_link_wizard__form_inherit_account_payment
+msgid "Next Installments"
+msgstr "Следващи вноски"
+
+#. module: account_payment
+#: model:ir.model.fields,help:account_payment.field_account_payment__payment_token_id
+msgid ""
+"Note that only tokens from providers allowing to capture the amount are "
+"available."
+msgstr "Налични са само токени от доставчици, позволяващи улавяне на сумата."
+
+#. module: account_payment
+#: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
+msgid ""
+"Note that tokens from providers set to only authorize transactions (instead "
+"of capturing the amount) are not available."
+msgstr ""
+"Токените от доставчици, настроени само да разрешават транзакции (вместо да "
+"потвърждават сумата), не са налични."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/wizards/payment_link_wizard.py:0
+msgid "Online payment option is not enabled in Configuration."
+msgstr ""
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/portal.py:0
+msgid "Overdue invoices should share the same company."
+msgstr "Просрочените фактури трябва да споделят една и съща компания."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/portal.py:0
+msgid "Overdue invoices should share the same currency."
+msgstr "Просрочените фактури трябва да споделят една и съща валута."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/portal.py:0
+msgid "Overdue invoices should share the same partner."
+msgstr "Просрочените фактури трябва да споделят един и същ партньор."
+
+#. module: account_payment
+#: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__partial
+msgid "Partial"
+msgstr "Частичен"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_payment_register
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "Pay"
+msgstr "Плати"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
+msgid "Pay Invoice"
+msgstr "Плащане на фактура"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_res_config_settings__pay_invoices_online
+msgid "Pay Invoices Online"
+msgstr "Плащане на фактури онлайн"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_docs_entry
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "Pay Now"
+msgstr "Платете сега"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "Pay now"
+msgstr "Завърши поръчката"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_overdue_invoice
+msgid "Pay overdue"
+msgstr "Плащане на просрочие"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_id
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__payment_id
+msgid "Payment"
+msgstr "Плащане"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_amount
+msgid "Payment Amount"
+msgstr "Сума за плащане"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_provider__journal_id
+msgid "Payment Journal"
+msgstr "Отчет за плащанията"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_payment_method
+#: model:ir.model,name:account_payment.model_account_payment_method_line
+#: model:ir.ui.menu,name:account_payment.payment_method_menu
+msgid "Payment Methods"
+msgstr "Методи на плащане"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_payment_provider
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_id
+msgid "Payment Provider"
+msgstr "Доставчик на разплащания"
+
+#. module: account_payment
+#: model:ir.ui.menu,name:account_payment.payment_provider_menu
+msgid "Payment Providers"
+msgstr "Доставчици на плащания"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_payment_refund_wizard
+msgid "Payment Refund Wizard"
+msgstr ""
+
+#. module: account_payment
+#: model:ir.ui.menu,name:account_payment.payment_token_menu
+msgid "Payment Tokens"
+msgstr "Платежни токени"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_payment_transaction
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_transaction_id
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__transaction_id
+#: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
+msgid "Payment Transaction"
+msgstr "Платежна транзакция"
+
+#. module: account_payment
+#: model:ir.ui.menu,name:account_payment.payment_transaction_menu
+msgid "Payment Transactions"
+msgstr "Платежни транзакции"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_payment
+msgid "Payments"
+msgstr "Плащания"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+msgid "Please log in to pay your overdue invoices"
+msgstr "Влизане в системата за плащане на просрочените фактури"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_payment_method_line.py:0
+msgid "Provider"
+msgstr "Доставчик"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_overdue_invoices_page
+msgid "Reference"
+msgstr "Индетификатор"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_payment.py:0
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__support_refund
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
+msgid "Refund"
+msgstr "Кредитно известие"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_to_refund
+msgid "Refund Amount"
+msgstr "Сума за възстановяване"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__refunded_amount
+msgid "Refunded Amount"
+msgstr "Възстановена сума"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
+msgid "Refunds"
+msgstr "Кредитни известия"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__refunds_count
+msgid "Refunds Count"
+msgstr "Брой възстановявания"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.view_account_journal_form
+msgid "SETUP"
+msgstr "Настройване"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_token_id
+msgid "Saved Payment Token"
+msgstr "Запазен токен за плащане"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_token_id
+msgid "Saved payment token"
+msgstr "Запазен платежен токен"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__source_payment_id
+msgid "Source Payment"
+msgstr "Източник на плащането"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
+msgid "State"
+msgstr "Област"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
+msgid "Suitable Payment Token"
+msgstr "Подходящ платежен токен"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+msgid "The access token is invalid."
+msgstr "Токенът за достъп е невалиден."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/wizards/payment_refund_wizard.py:0
+msgid ""
+"The amount to be refunded must be positive and cannot be superior to %s."
+msgstr ""
+"Сумата за възстановяване трябва да е положителна и не може да бъде по-голяма "
+"от %s."
+
+#. module: account_payment
+#: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
+msgid "The journal in which the successful transactions are posted."
+msgstr "Дневник, в който се запиват успешните транзакции."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_transaction.py:0
+msgid "The payment related to transaction %(ref)s has been posted: %(link)s"
+msgstr ""
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+msgid "The provided parameters are invalid."
+msgstr "Предоставените параметри са невалидни."
+
+#. module: account_payment
+#: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id
+msgid "The source payment of related refund payments"
+msgstr "Плащане източник на свързани плащания за възстановяване"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_move.py:0
+msgid "There are pending transactions for this invoice."
+msgstr ""
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_move.py:0
+msgid "There is no amount to be paid."
+msgstr ""
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid "There was an error processing your payment: invalid invoice."
+msgstr "При обработването на плащането възникна грешка: невалидна фактура."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid ""
+"There was an error processing your payment: issue with credit card ID "
+"validation."
+msgstr ""
+"При обработването на плащането ви възникна грешка: издаване с потвърждаване "
+"на идентификацията на кредитна карта."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid "There was an error processing your payment: transaction failed.<br/>"
+msgstr ""
+"При обработването на плащането възникна грешка: транзакцията не бе успешна."
+"<br/>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid "There was en error processing your payment: invalid credit card ID."
+msgstr ""
+"Имаше грешка при обработката на плащането Ви: невалиден идентификационен "
+"номер на кредитната карта."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_move.py:0
+msgid "This invoice cannot be paid online."
+msgstr ""
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_move.py:0
+msgid "This invoice has already been paid."
+msgstr "Тази фактура вече е платена."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_move.py:0
+msgid "This invoice isn't posted."
+msgstr ""
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_move.py:0
+msgid "This is not an outgoing invoice."
+msgstr ""
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_count
+#: model:ir.model.fields,field_description:account_payment.field_account_move__transaction_count
+msgid "Transaction Count"
+msgstr "Брой транзакции"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_ids
+#: model:ir.model.fields,field_description:account_payment.field_account_move__transaction_ids
+msgid "Transactions"
+msgstr "Транзакции"
+
+#. module: account_payment
+#: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__none
+msgid "Unsupported"
+msgstr "Не се поддържа"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__use_electronic_payment_method
+msgid "Use Electronic Payment Method"
+msgstr "Използване на електронни методи за плащане"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
+msgid "Void Transaction"
+msgstr "Невалидна транзакция"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_payment_method_line.py:0
+msgid ""
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
+"Linked providers(s): %s"
+msgstr ""
+"Не е възможно изтриването на метод на плащане, който е свързан с доставчик в "
+"активирано или тестово състояние.Свързани доставчици%s"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+msgid ""
+"You cannot uninstall this module as payments using this payment method "
+"already exist."
+msgstr ""
+"Този модул не може да се деинсталира, тъй като вече съществуват плащания с "
+"този метод на плащане."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_journal.py:0
+msgid ""
+"You must first deactivate a payment provider before deleting its journal.\n"
+"Linked providers: %s"
+msgstr ""
+"Първо трябва да деактивирате доставчик на плащания, преди да изтриете "
+"неговия дневник.\n"
+"Свързани доставчици: %s"
+
+#. module: account_payment
+#. odoo-javascript
+#: code:addons/account_payment/static/src/interactions/portal_my_invoices_payment_list.js:0
+msgid "due in %s day(s)"
+msgstr "дължимо след %s ден(и)"
+
+#. module: account_payment
+#. odoo-javascript
+#: code:addons/account_payment/static/src/interactions/portal_my_invoices_payment_list.js:0
+msgid "due today"
+msgstr "дължимо днес"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "has been applied."
+msgstr "вече е приложено"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "overdue"
+msgstr "просрочено"
+
+#~ msgid "Code"
+#~ msgstr "Код"
+
+#~ msgid "Pay with"
+#~ msgstr "Плати с"
+
+#~ msgid "Register Payment"
+#~ msgstr "Регистрирай плащания"

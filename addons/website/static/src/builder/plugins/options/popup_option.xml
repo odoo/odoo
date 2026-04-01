@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.base_popup_options">
+    <!-- For the cookies popup, only display this for popup mode. -->
+    <BuilderRow label.translate="Position" t-if="!isCookiesOption or isActiveItem('layout_popup_opt')">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="'s_popup_top'">Top</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_popup_middle'">Middle</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_popup_bottom'">Bottom</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Size">
+        <BuilderSelect applyTo="'.modal-dialog'">
+            <BuilderSelectItem classAction="'modal-sm'">Small</BuilderSelectItem>
+            <BuilderSelectItem classAction="''">Medium</BuilderSelectItem>
+            <BuilderSelectItem classAction="'modal-lg'">Large</BuilderSelectItem>
+            <BuilderSelectItem classAction="'modal-xl'">Extra Large</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_popup_size_full'">Full</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Backdrop">
+        <BuilderCheckbox id="'popup_backdrop_opt'" action="'setBackdrop'" preview="false"/>
+        <BuilderColorPicker t-if="isActiveItem('popup_backdrop_opt')" styleAction="'background-color'" enabledTabs="['solid', 'custom']"/>
+    </BuilderRow>
+</t>
+
+<t t-name="website.PopupOption">
+    <t t-call="website.base_popup_options"/>
+    <BuilderRow label.translate="Close Button Color">
+        <BuilderColorPicker styleAction="'color'" applyTo="'.s_popup_close'" enabledTabs="['solid', 'custom']"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Display">
+        <BuilderSelect dataAttributeAction="'display'" preview="false">
+            <BuilderSelectItem dataAttributeActionValue="'afterDelay'" id="'show_delay'" title.translate="Automatically opens the pop-up if the user stays on a page longer than the specified time.">Delay</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'mouseExit'" title.translate="Pop-up appears when a user is about to leave the website.">On Exit</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'onClick'" id="'onclick_opt'" action="'copyAnchor'" title.translate="Use the generated link to open the pop-up.">On Click (via link)</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow level="1" label.translate="Delay">
+        <BuilderNumberInput t-if="isActiveItem('show_delay')"
+                action="'setPopupDelay'" unit="'s'" saveUnit="''"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Hide For" t-if="!isActiveItem('onclick_opt')">
+        <BuilderNumberInput tooltip.translate="Once the user closes the popup, it won't be shown again for that period of time."
+                inputClasses="'o_we_large'"
+                dataAttributeAction="'consentsDuration'"
+                default="7"
+                unit.translate="days"
+                saveUnit="''"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Show on">
+        <BuilderSelect action="'moveBlock'" preview="false">
+            <BuilderSelectItem actionValue="'currentPage'">This page</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'allPages'">All pages</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+<t t-name="website.PopupCookiesOption">
+    <t t-call="website.base_popup_options">
+        <t t-set="isCookiesOption" t-value="true"/>
+    </t>
+</t>
+</templates>

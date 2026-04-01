@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussSidebarChannel.main" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('o-mail-DiscussSidebarChannel-itemName')]" position="inside">
+            <div t-if="thread.correspondent?.partner_id?.outOfOfficeDateEndText" class="text-warning smaller" t-out="thread.correspondent.persona.outOfOfficeDateEndText"/>
+        </xpath>
+    </t>
+</templates>

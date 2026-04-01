@@ -1,0 +1,986 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_tw_edi_ecpay
+#
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-30 19:09+0000\n"
+"PO-Revision-Date: 2026-02-07 09:50+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-19-l10n/l10n_tw_edi_ecpay/zh_Hant/>\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,help:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_carrier_type
+#: model:ir.model.fields,help:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_carrier_type
+msgid ""
+"\n"
+"    - Citizen Digital Certificate: The carrier number format is 2 capital "
+"letters following 14 digits.\n"
+"    - Mobile Barcode: The carrier number format is / following 7 "
+"alphanumeric or +-. string.\n"
+"    - EasyCard or iPass: The carrier number is the card hidden code, the "
+"carrier number 2 is the card visible code.\n"
+"        "
+msgstr ""
+"\n"
+"    - 自然人憑證：電信商號碼格式為 2 個大寫字母，後接 14 位數字。\n"
+"    - 流動裝置條碼：電信商號碼格式為 /（斜線）後接 7 個英數或 +-. 字元的字串"
+"。\n"
+"    - 悠遊卡 EasyCard 或 iPass 一卡通：電信商號碼是卡的隱藏代碼，電信商號碼 "
+"2 是卡的可見代碼。\n"
+"        "
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_zero_tax_rate_reason__71
+msgid "71: No.1 export goods"
+msgstr "71：第 1 條的出口貨物。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_zero_tax_rate_reason__72
+msgid ""
+"72: No.2 Services related to export sales, or services provided domestically "
+"but used abroad"
+msgstr "72：第 2 條的與出口銷售相關的服務，或在國內/本地提供但在國外/外地使用的服務。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_zero_tax_rate_reason__73
+msgid ""
+"73: No.3 Duty-free shops established by law for the sale and transit or "
+"departure of passengers"
+msgstr "73：第 3 條的依法設立、用於銷售及過境或離境旅客商品的免稅店。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_zero_tax_rate_reason__74
+msgid ""
+"74: No.4 Sale of goods or services for operation by the operator of the FREE "
+"Trade Zone"
+msgstr "74：第 4 條的自由貿易區經營者經營業務所需的貨物或服務的銷售"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_zero_tax_rate_reason__75
+msgid ""
+"75: No.5 International transportation. However, foreign transport "
+"undertakings operating international transport business in Taiwan shall be "
+"limited to those whose countries shall give equal treatment to Taiwan's "
+"international transport undertakings or be exempt from similar taxes"
+msgstr ""
+"75：第 5 條的國際運輸。但是，若是在台灣境內經營國際運輸業務的外國運輸企業，則"
+"只限於其所屬國家/地區給予台灣國際運輸企業同等待遇，或免徵類似稅項的企業。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_zero_tax_rate_reason__76
+msgid ""
+"76: No.6 Ships, aircraft and distant-water fishing vessels for international "
+"transportation"
+msgstr "76：第 6 條的國際運輸業務所用船舶、飛機/航空器，以及遠洋漁船。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_zero_tax_rate_reason__77
+msgid ""
+"77: No.7 Goods or repair services used by ships, aircraft and distant-water "
+"fishing vessels for sale and international transport"
+msgstr "77：第 7 條的船舶、飛機/航空器，以及遠洋漁船用於銷售及國際運輸業務的貨物或維"
+"修服務。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_zero_tax_rate_reason__78
+msgid ""
+"78: No.8 The bonded area operator sells goods that are not directly exported "
+"by the taxable area operator and the taxable area operator is not exported "
+"to the taxation area"
+msgstr "78：第 8 條的保稅區域經營者出售的貨物並非應稅區域經營者直接出口的貨物，而且應"
+"稅區域經營者本身亦不向該稅區出口貨物。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_zero_tax_rate_reason__79
+msgid ""
+"79: No.9 The bonded area operator sells the goods that the taxable area "
+"operator deposits into the bonded warehouse or logistics center managed by "
+"the free port area or customs administration for export"
+msgstr "79：第 9 條的保稅區域經營者出售應稅區域經營者存放在自由港區域或海關管理的保稅"
+"倉庫或物流中心的出口貨物。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid ""
+"A tax ID is required for company contact or individual contact under a "
+"company."
+msgstr "公司聯絡人，或公司名下的個人聯絡人，必須有稅務識別碼/統一編號。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__l10n_tw_edi_invoice_print__print_format_b2b__1
+msgid "A4 printing "
+msgstr "A4 列印本 "
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__l10n_tw_edi_invoice_print__print_format_b2b__2
+msgid "A5 printing "
+msgstr "A5 列印本 "
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model,name:l10n_tw_edi_ecpay.model_account_move_reversal
+msgid "Account Move Reversal"
+msgstr "會計憑證逆轉"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model,name:l10n_tw_edi_ecpay.model_account_move_send
+msgid "Account Move Send"
+msgstr "賬戶分錄傳送"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_refund_state__agreed
+msgid "Agreed"
+msgstr "已同意"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move_reversal__l10n_tw_edi_refund_agreement_type
+msgid "Agreement Type"
+msgstr "協議類型"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_allowance_notify_way
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_allowance_notify_way
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move_reversal__l10n_tw_edi_allowance_notify_way
+msgid "Allowance Notify Way"
+msgstr "補貼通知方式"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid "Amount for Taxable tax type must be 5%."
+msgstr "應課稅稅種的金額，必須為 5%。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_tax__l10n_tw_edi_special_tax_type__3
+msgid ""
+"Banking businesses, insurance businesses, trust investment businesses, "
+"securities businesses, futures businesses, commercial paper businesses and "
+"pawn-broking businesses: Tax rate is 2%"
+msgstr "銀行業務、保險業務、信託投資業務、證券業務、期貨業務、商業票據及文件業務，以"
+"及當押業務：稅率為 2%。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_tax__l10n_tw_edi_special_tax_type__5
+msgid ""
+"Banking businesses, insurance businesses, trust investment businesses, "
+"securities businesses, futures businesses, commercial paper businesses and "
+"pawn-broking businesses: Tax rate is 5%"
+msgstr "銀行業務、保險業務、信託投資業務、證券業務、期貨業務、商業票據及文件業務，以"
+"及當押業務：稅率為 5%。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid "Cancel Ecpay Invoice"
+msgstr "取消 ECPay 發票"
+
+#. module: l10n_tw_edi_ecpay
+#: model_terms:ir.ui.view,arch_db:l10n_tw_edi_ecpay.l10n_tw_edi_invoice_cancel_form
+msgid "Cancel Invoice"
+msgstr "取消發票"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_carrier_number
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_carrier_number
+msgid "Carrier Number"
+msgstr "電信商號碼"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_carrier_number_2
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_carrier_number_2
+msgid "Carrier Number 2"
+msgstr "電信商號碼 2"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_carrier_type
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_carrier_type
+msgid "Carrier Type"
+msgstr "電信商類型"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_carrier_type__2
+msgid "Citizen Digital Certificate"
+msgstr "自然人憑證"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_clearance_mark
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_clearance_mark
+msgid "Clearance Mark"
+msgstr "清關標記"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid ""
+"Clearance mark and zero tax rate reason are required for a zero tax rate "
+"invoice."
+msgstr "零稅率發票必須有清關標記及註明零稅率理由。"
+
+#. module: l10n_tw_edi_ecpay
+#: model_terms:ir.ui.view,arch_db:l10n_tw_edi_ecpay.l10n_tw_edi_invoice_cancel_form
+#: model_terms:ir.ui.view,arch_db:l10n_tw_edi_ecpay.l10n_tw_edi_invoice_print_form
+msgid "Close"
+msgstr "關閉"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model,name:l10n_tw_edi_ecpay.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model,name:l10n_tw_edi_ecpay.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設定"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model,name:l10n_tw_edi_ecpay.model_res_partner
+msgid "Contact"
+msgstr "聯絡人"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_tax__l10n_tw_edi_special_tax_type__6
+msgid ""
+"Core business revenues from the banking and insurance business of the "
+"banking and insurance industries (Applicable to sales after July 2014): Tax "
+"rate is 5%"
+msgstr "銀行業及保險業的銀行業務及保險業務的核心業務收入（適用於 2014 年 7 月起的銷售"
+"）：稅率為 5%。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_tax__l10n_tw_edi_special_tax_type__7
+msgid ""
+"Core business revenues from the banking and insurance business of the "
+"banking and insurance industries (Applicable to sales after June 2014): Tax "
+"rate is 5%"
+msgstr "銀行業及保險業的銀行業務及保險業務的核心業務收入（適用於 2014 年 6 月起的銷售"
+"）：稅率為 5%。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model,website_form_label:l10n_tw_edi_ecpay.model_res_partner
+msgid "Create a Customer"
+msgstr "建立客戶"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_cancel__create_uid
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_print__create_uid
+msgid "Created by"
+msgstr "建立者"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_cancel__create_date
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_print__create_date
+msgid "Created on"
+msgstr "建立日期"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_invoice_create_date
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_invoice_create_date
+msgid "Creation Date"
+msgstr "建立日期"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid "Customer %(notify_way)s is needed for notification"
+msgstr "需要填寫客戶的 %(notify_way)s，用作發送通知。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid "Customer email is needed for notification"
+msgstr "需要填寫客戶的電郵地址，用作發送通知。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_refund_state__disagreed
+msgid "Disagreed"
+msgstr "已拒絕"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move_reversal__display_name
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_tax__display_name
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_cancel__display_name
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_print__display_name
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_partner__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_cancel__invoice_id
+msgid "Document To Cancel"
+msgstr "要取消的文件"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_print__invoice_id
+msgid "Document To Print"
+msgstr "要列印的文件"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_tax__l10n_tw_edi_tax_type__3
+msgid "Duty free"
+msgstr "免稅"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_tax__l10n_tw_edi_special_tax_type__8
+msgid "Duty free or non-output data"
+msgstr "免稅，或非輸出數據"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid ""
+"Duty free with special tax type cannot be mixed with duty free without "
+"special tax type or having more than one special tax type."
+msgstr "設定為特別稅種的免稅商品，不可與未設定為特別稅種的免稅商品混合使用，亦不可具"
+"有多於一類特別稅種。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid "Duty free with special tax type cannot be mixed with other tax types."
+msgstr "設定為特別稅種的免稅商品，不可與其他稅種混合使用。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__res_partner__invoice_edi_format__tw_ecpay
+msgid "ECPay"
+msgstr "ECPay"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/utils.py:0
+msgid "ECPay API Error: %(error_message)s"
+msgstr "ECPay API 錯誤：%(error_message)s"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/utils.py:0
+msgid "ECPay API Error: %(error_message)s, Error Code: %(error_code)s"
+msgstr "ECPay API 錯誤：%(error_message)s，錯誤代碼：%(error_code)s"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/utils.py:0
+msgid "ECPay API Error: %(error_message)s."
+msgstr "ECPay API 錯誤：%(error_message)s。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/utils.py:0
+msgid "ECPay API Error: Invalid HashIV. Please check your ECPay configuration."
+msgstr "ECPay API 錯誤：HashIV 無效。請檢查你的 ECPay 配置。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/utils.py:0
+msgid ""
+"ECPay API Error: Invalid Hashkey. Please check your ECPay configuration."
+msgstr "ECPay API 錯誤：HashKey 無效。請檢查你的 ECPay 配置。"
+
+#. module: l10n_tw_edi_ecpay
+#: model_terms:ir.ui.view,arch_db:l10n_tw_edi_ecpay.view_move_form_inherit_ecpay
+msgid "ECpay E-invoice Refund"
+msgstr "ECPay 電子發票退款"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_carrier_type__1
+msgid "ECpay e-invoice carrier"
+msgstr "ECpay 電子發票電信商"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model,name:l10n_tw_edi_ecpay.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr "ETA 稅務代碼混入程式"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_carrier_type__4
+msgid "EasyCard"
+msgstr "悠遊卡 EasyCard"
+
+#. module: l10n_tw_edi_ecpay
+#: model_terms:ir.ui.view,arch_db:l10n_tw_edi_ecpay.view_move_form_inherit_ecpay
+msgid "Ecpay"
+msgstr "ECPay"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_ecpay_invoice_id
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_ecpay_invoice_id
+msgid "Ecpay Invoice Number"
+msgstr "ECPay 發票號碼"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_invoice_type
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_invoice_type
+msgid "Ecpay Invoice Type"
+msgstr "ECPay 發票類型"
+
+#. module: l10n_tw_edi_ecpay
+#: model_terms:ir.ui.view,arch_db:l10n_tw_edi_ecpay.res_config_settings_view_form
+msgid "Ecpay Setting"
+msgstr "ECPay 設定"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_tax__l10n_tw_edi_special_tax_type
+msgid "Ecpay Special Tax Type"
+msgstr "ECPay 特別稅種"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_tax__l10n_tw_edi_tax_type
+msgid "Ecpay Tax Type"
+msgstr "ECPay 稅種類型"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid ""
+"Ecpay invoice number %(invoice_number)s has been invalidated successfully."
+msgstr "成功將 ECPay 發票（號碼 %(invoice_number)s）設定為無效。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid ""
+"Ecpay invoice number %(invoice_number)s has been issued allowance "
+"successfully."
+msgstr "成功向 ECPay 發票（號碼 %(invoice_number)s）發放補貼。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_allowance_notify_way__email
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move_reversal__l10n_tw_edi_allowance_notify_way__email
+msgid "Email"
+msgstr "電郵"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move_send.py:0
+msgid "Error when getting the invoice data from ECPay."
+msgstr "從 ECPay 獲取發票數據時，發生錯誤。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move_send.py:0
+msgid "Error when sending the allowances to ECPay."
+msgstr "向 ECPay 傳送補貼時，發生錯誤。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move_send.py:0
+msgid "Error when sending the invoices to ECPay."
+msgstr "向 ECPay 傳送發票時，發生錯誤。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/wizard/l10n_tw_edi_invoice_print.py:0
+msgid "Error: %(error)s"
+msgstr "錯誤：%(error)s"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid "Fail to invalidate invoice. Error message: %(error_message)s"
+msgstr "未能將發票設定為無效。錯誤訊息：%(error_message)s"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid ""
+"Fail to issue allowance for ECpay invoice. Error message: %(error_message)s"
+msgstr "未能為 ECPay 發票發放補貼。錯誤訊息：%(error_message)s"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_invoice_type__07
+msgid "General Invoice"
+msgstr "一般發票"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_is_print
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_is_print
+msgid "Get Printed Version"
+msgstr "取得列印紙本"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_company__l10n_tw_edi_ecpay_hashIV
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_config_settings__l10n_tw_edi_ecpay_hashIV
+msgid "HashIV"
+msgstr "HashIV"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_company__l10n_tw_edi_ecpay_hashkey
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_config_settings__l10n_tw_edi_ecpay_hashkey
+msgid "Hashkey"
+msgstr "HashKey"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move_line__id
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move_reversal__id
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move_send__id
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_tax__id
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_cancel__id
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_print__id
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_config_settings__id
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_partner__id
+msgid "ID"
+msgstr "識別碼"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model,name:l10n_tw_edi_ecpay.model_l10n_tw_edi_invoice_cancel
+msgid "Implements cancelling an ecpay invoice."
+msgstr "會執行取消 ECPay 發票的操作。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model,name:l10n_tw_edi_ecpay.model_l10n_tw_edi_invoice_print
+msgid "Implements printingan ecpay invoice."
+msgstr "會執行列印 ECPay 發票的操作。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_state__invalid
+msgid "Invalid"
+msgstr "無效"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_tax.py:0
+msgid "Invalid special tax type for Duty free tax type."
+msgstr "此特別稅種不適用於免稅稅種類型。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_invalidate_reason
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_invalidate_reason
+msgid "Invalidate Reason"
+msgstr "將原因設定為無效"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_state
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_state
+msgid "Invoice Status"
+msgstr "發票狀態"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid "Invoice lines with different tax include/exclude are not allowed."
+msgstr "發票資料行不可同時包含/排除不同的稅項。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid "Invoice lines without taxes or more than one tax are not allowed."
+msgstr "發票資料行不可不設定稅項，或包含多於一個稅項。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid ""
+"Invoice type 07 must be used with tax type 1, 2, 3 or 9. Please check the "
+"tax type on the invoice lines."
+msgstr "發票類型 07 必須與稅種 1、2、3 或 9 一起使用。請檢查發票資料行的稅種資料。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid ""
+"Invoice type 08 must be used with tax type 3 or 4. Please check the tax type "
+"on the invoice lines."
+msgstr "發票類型 08 必須與稅種 3 或 4 一起使用。請檢查發票資料行的稅種資料。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_state__invoiced
+msgid "Invoiced"
+msgstr "已開立發票"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_is_b2b
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_is_b2b
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_print__l10n_tw_edi_is_b2b
+msgid "Is B2B"
+msgstr "是 B2B"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_is_zero_tax_rate
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_is_zero_tax_rate
+msgid "Is Zero Tax Rate"
+msgstr "是零稅率"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move_line__l10n_tw_edi_ecpay_item_sequence
+msgid "Item Sequence"
+msgstr "項目次序"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model,name:l10n_tw_edi_ecpay.model_account_move
+msgid "Journal Entry"
+msgstr "日記賬記項"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model,name:l10n_tw_edi_ecpay.model_account_move_line
+msgid "Journal Item"
+msgstr "日記賬項目"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move_reversal__l10n_tw_edi_ecpay_invoice_id
+msgid "L10N Tw Edi Ecpay Invoice"
+msgstr "台灣本地化 Edi Ecpay 發票"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move_reversal__l10n_tw_edi_is_b2b
+msgid "L10N Tw Edi Is B2B"
+msgstr "台灣本地化 Edi 是 B2B"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_cancel__write_uid
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_print__write_uid
+msgid "Last Updated by"
+msgstr "最後更新者"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_cancel__write_date
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_print__write_date
+msgid "Last Updated on"
+msgstr "最後更新日期"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_love_code
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_love_code
+msgid "Love Code"
+msgstr "捐贈碼 Love Code"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_company__l10n_tw_edi_ecpay_merchant_id
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_config_settings__l10n_tw_edi_ecpay_merchant_id
+msgid "MerchantID"
+msgstr "商戶識別碼"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_carrier_type__3
+msgid "Mobile Barcode"
+msgstr "流動裝置條碼"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_clearance_mark__1
+msgid "NOT via the customs"
+msgstr "非經由海關"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_tax__l10n_tw_edi_special_tax_type__2
+msgid ""
+"Night clubs or restaurants providing entertaining show programs: Tax rate is "
+"15%"
+msgstr "提供娛樂表演節目的夜總會或餐廳：稅率為 15%。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move_reversal__l10n_tw_edi_refund_agreement_type__offline
+msgid "Offline"
+msgstr "離線"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_refund_agreement_type__offline
+msgid "Offline Agreement"
+msgstr "離線協議"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move_reversal__l10n_tw_edi_refund_agreement_type__online
+msgid "Online"
+msgstr "線上"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_refund_agreement_type__online
+msgid "Online Agreement"
+msgstr "線上協議"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_allowance_notify_way__phone
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move_reversal__l10n_tw_edi_allowance_notify_way__phone
+msgid "Phone"
+msgstr "電話"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid ""
+"Phone number contains invalid characters! It should be in the format: '+886 "
+"0997624293'."
+msgstr "電話號碼包含無效字元。格式應如下：+886 0997624293。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid "Please fill in the ECpay API information in the Setting!"
+msgstr "請在設定頁面填寫 ECPay API 資料。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid "Please fill in the customer address for printing Ecpay invoice."
+msgstr "請填寫客戶地址，以供列印 ECPay 發票之用。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid ""
+"Please fill in the customer email or phone number for Ecpay invoice creation."
+msgstr "請填寫客戶電郵地址或電話號碼，以便建立 ECPay 發票。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid ""
+"Please fill in the tax on the invoice lines and select the Ecpay tax type "
+"for taxes."
+msgstr "請在發票資料行填寫稅項，並為稅項選擇 ECPay 稅種。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid "Print Ecpay Invoice"
+msgstr "列印 ECPay 發票"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.actions.server,name:l10n_tw_edi_ecpay.action_print_ecpay_invoice
+msgid "Print Ecpay invoice"
+msgstr "列印 ECPay 發票"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_print__print_format_b2b
+msgid "Print Format (B2B)"
+msgstr "列印格式（B2B）"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_print__print_format_b2c
+msgid "Print Format (B2C)"
+msgstr "列印格式（B2C）"
+
+#. module: l10n_tw_edi_ecpay
+#: model_terms:ir.ui.view,arch_db:l10n_tw_edi_ecpay.l10n_tw_edi_invoice_print_form
+msgid "Print Invoice"
+msgstr "列印發票"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_cancel__reason
+msgid "Reason"
+msgstr "原因"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,help:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_cancel__reason
+msgid "Reason for cancelling the document."
+msgstr "取消文件的理由。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_refund_invoice_number
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_refund_invoice_number
+msgid "Refund Invoice Number"
+msgstr "退款發票號碼"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_refund_state
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_refund_state
+msgid "Refund State"
+msgstr "退款狀態"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_refund_agreement_type
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_refund_agreement_type
+msgid "Refund invoice Agreement Type"
+msgstr "退款發票協議類型"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_related_number
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_related_number
+msgid "Related Number"
+msgstr "相關號碼"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_tax__l10n_tw_edi_special_tax_type__1
+msgid ""
+"Saloons and tea rooms, coffee shops and bars offering companionship "
+"services: Tax rate is 25%"
+msgstr "提供陪伴服務的沙龍、茶室、咖啡店、酒吧：稅率為 25%。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move_send.py:0
+msgid "Send to Ecpay"
+msgstr "傳送至 ECPay"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move_send.py:0
+msgid "Send to Ecpay (Issue Allowance)"
+msgstr "傳送至 ECPay（發放補貼）"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_invoice_type__08
+msgid "Special Invoice"
+msgstr "特別發票"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid "Special tax type cannot be mixed with other special tax types."
+msgstr "特別稅種不可與其他特別稅種混合使用。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid "Special tax type cannot be mixed with other tax types."
+msgstr "特別稅種不可與其他稅種混合使用。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_company__l10n_tw_edi_ecpay_staging_mode
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_config_settings__l10n_tw_edi_ecpay_staging_mode
+msgid "Staging mode"
+msgstr "測試模式"
+
+#. module: l10n_tw_edi_ecpay
+#: model_terms:ir.ui.view,arch_db:l10n_tw_edi_ecpay.res_config_settings_view_form
+msgid "Taiwan Electronic Invoicing"
+msgstr "台灣電子發票"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid ""
+"Tax type 2 (Zero tax rate) and type 3 (Duty free) cannot be used together."
+msgstr "稅種 2（零稅率）及稅種 3（免稅）不可同時使用。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_tax__l10n_tw_edi_tax_type__1
+msgid "Taxable"
+msgstr "應課稅"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_tax__l10n_tw_edi_tax_type__4
+msgid "Taxable (special tax rate)"
+msgstr "應課稅（特別稅率）"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid ""
+"The invoice has been successfully sent to Ecpay with Ecpay invoice number %"
+"(invoice_number)s."
+msgstr "發票已成功傳送至 ECPay，其 ECPay 發票號碼為 %(invoice_number)s。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid "The invoice: %(invoice_id)s has already been invalidated"
+msgstr "發票（識別碼：%(invoice_id)s）已設定為無效。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid "The invoice: %(invoice_name)s has no related number"
+msgstr "發票「%(invoice_name)s」沒有相關號碼"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_tax__l10n_tw_edi_special_tax_type__4
+msgid "The sales amounts from reinsurance premiums shall be taxed at 1%"
+msgstr "再保險的保費，銷售金額將以 1% 稅率徵稅。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid "The tax ID is invalid. It should be in the format: '12345678'."
+msgstr "稅務識別碼無效。正確格式應為：12345678。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_refund_state__to_be_agreed
+msgid "To be agreed"
+msgstr "有待達成協議"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_state__valid
+msgid "Valid"
+msgstr "有效"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_clearance_mark__2
+msgid "Via the customs"
+msgstr "經由海關"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid "You cannot invalidate an invoice that was not sent to Ecpay."
+msgstr "未傳送至 ECPay 的發票，不可設定為無效。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid ""
+"You cannot issue an allowance for invoice %(invoice_number)s as it was not "
+"sent to Ecpay. "
+msgstr "未能為發票 %(invoice_number)s 發放補貼，因為發票未傳送至 ECPay。 "
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid ""
+"You cannot print an invoice that was not sent to Ecpay, without the print "
+"flag, or that is invalid."
+msgstr "未傳送至 ECPay、沒有列印標幟或無效的發票，都不可列印。"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/wizard/l10n_tw_edi_invoice_cancel.py:0
+msgid "You must provide a reason for canceling the invoice."
+msgstr "你必須提供取消發票的理由。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_zero_tax_rate_reason
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__l10n_tw_edi_zero_tax_rate_reason
+msgid "Zero Tax Rate Reason"
+msgstr "零稅率理由"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_tax__l10n_tw_edi_tax_type__2
+msgid "Zero tax rate"
+msgstr "零稅率"
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_tax.py:0
+msgid "Zero tax rate and Duty free tax type must have a tax amount of 0."
+msgstr "零稅率及免稅稅種，稅額必須為零。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__l10n_tw_edi_invoice_print__print_format_b2c__2
+msgid "double-sided printing"
+msgstr "雙面列印"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_partner__invoice_edi_format
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_users__invoice_edi_format
+msgid "eInvoice format"
+msgstr "電子發票格式"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_carrier_type__5
+msgid "iPass"
+msgstr "iPass 一卡通"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__l10n_tw_edi_invoice_print__print_format_b2c__3
+msgid "printing with thermal paper"
+msgstr "使用熱敏紙列印"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__l10n_tw_edi_invoice_print__print_format_b2c__1
+msgid "single-sided printing"
+msgstr "單面列印"

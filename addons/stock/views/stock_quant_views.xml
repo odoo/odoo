@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.actions.server" id="action_view_inventory_tree"> <!-- Menu + python -->
+        <field name="name">Inventory</field>
+        <field name="model_id" ref="model_stock_quant"/>
+        <field name="path">physical-inventory</field>
+        <field name="state">code</field>
+        <field name="group_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
+        <field name="code">
+            action = model.action_view_inventory()
+        </field>
+    </record>
+
+    <record id="quant_search_view" model="ir.ui.view">
+        <field name="name">stock.quant.search</field>
+        <field name="model">stock.quant</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <search string="Quants">
+                <field name="product_id"/>
+                <field name="location_id"/>
+                <field name="warehouse_id"/>
+                <field name="storage_category_id" groups="stock.group_stock_multi_locations" />
+                <field name="user_id"/>
+                <field name="inventory_date"/>
+                <field name="product_categ_id"/>
+                <field name="product_tmpl_id"/>
+                <field name="package_id" groups="stock.group_tracking_lot"/>
+                <field name="lot_id" groups="stock.group_production_lot"/>
+                <field name="owner_id" groups="stock.group_tracking_owner"/>
+                <field name="lot_properties"/>
+                <group>
+                    <filter name="my_count" string="My Counts" domain="[('user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal'), ('location_id.warehouse_id', '!=', False)]"/>
+                    <filter name='transit_loc' string="Transit Locations" domain="[('location_id.usage' ,'=', 'transit')]"/>
+                    <separator/>
+                    <filter name="to_count" string="To Count" domain="[('inventory_date', '&lt;=', 'today')]"/>
+                    <filter name="to_apply" string="To Apply" domain="[('inventory_quantity_set', '=', True)]"/>
+                    <separator/>
+                    <filter name="conflicts" string="Conflicts" domain="[('is_outdated', '=', True)]"/>
+                    <separator/>
+                    <filter name="negative" string="Negative Stock" domain="[('quantity', '&lt;', 0.0)]"/>
+                    <separator/>
+                    <filter name="filter_in_date" date="in_date"/>
+                </group>
+                <group>
+                    <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>
+                    <filter string='Product Category' name="productcategorygroup" context="{'group_by': 'product_categ_id'}"/>
+                    <filter string='Location' name="locationgroup" domain="[]" context="{'group_by': 'location_id'}"/>
+                    <filter string='Storage Category' name="storagecategorygroup" domain="[]" context="{'group_by': 'storage_category_id'}"/>
+                    <filter string='Owner' name="owner" context="{'group_by': 'owner_id'}" groups="stock.group_tracking_owner"/>
+                    <filter string='Lot/Serial Number' name="Lot_Serial_number" context="{'group_by': 'lot_id'}" groups="stock.group_production_lot"/>
+                    <filter string='Package' name="package" domain="[]" context="{'group_by': 'package_id'}" groups="stock.group_tracking_lot"/>
+                    <filter string='Company' name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+               </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_stock_quant_form_editable">
+        <field name="name">stock.quant.form.editable</field>
+        <field name="model">stock.quant</field>
+        <field eval="11" name="priority"/>
+        <field name="arch" type="xml">
+            <form string="Inventory Valuation" create="false" edit="false" delete="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="tracking" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="product_id" readonly="0" options="{'no_create': True}"/>
+                            <field name="location_id" readonly="0" options="{'no_create': True}"/>
+                            <field name="lot_id" groups="stock.group_production_lot"
+                                readonly="tracking not in ['serial', 'lot']"
+                                required="tracking != 'none'"
+                                context="{'default_product_id': product_id}"/>
+                            <field name="package_id" readonly="0" groups="stock.group_tracking_lot" context="{'show_src_package': 1}"/>
+                            <field name="owner_id" readonly="0" groups="stock.group_tracking_owner" options="{'no_create': True}"/>
+                            <field name='company_id' groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <label for="quantity" string="Quantity On Hand"/>
+                            <div class="o_row">
+                                <field name="quantity"/>
+                                <field name="product_uom_id" groups="uom.group_uom" options="{'no_open': True}"/>
+                            </div>
+                            <label for="available_quantity" string="Available Quantity"/>
+                            <div class="o_row">
+                                <field name="available_quantity"/>
+                                <field name="product_uom_id" groups="uom.group_uom" options="{'no_open': True}"/>
+                            </div>
+                            <label for="reserved_quantity" string="Quantity Reserved"/>
+                            <div class="o_row">
+                                <field name="reserved_quantity"/>
+                                <field name="product_uom_id" groups="uom.group_uom" options="{'no_open': True}"/>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Location Report view -->
+    <record model="ir.ui.view" id="view_stock_quant_tree_editable">
+        <field name="name">stock.quant.list.editable</field>
+        <field name="model">stock.quant</field>
+        <field eval="5" name="priority"/>
+        <field name="arch" type="xml">
+            <list editable="bottom"
+                  create="1" edit="1" js_class="inventory_report_list"
+                  sample="1" duplicate="0">
+                <header>
+                    <button name="action_stock_quant_relocate" string="Relocate" type="object" groups="stock.group_stock_manager" invisible="context.get('hide_location', False)" context="{'action_ref': 'stock.action_view_quants'}"/>
+                </header>
+                <field name="create_date" column_invisible="True"/>
+                <field name="write_date" column_invisible="True"/>
+                <field name="id" column_invisible="True"/>
+                <field name="tracking" column_invisible="True"/>
+                <field name="company_id" column_invisible="True"/>
+                <field name="location_id"
+                       column_invisible="context.get('hide_location', False)"
+                       readonly="id"
+                       options="{'no_create': True}"/>
+                <field name="storage_category_id" optional="hide"/>
+                <field name="product_id"
+                       readonly="context.get('single_product', False) or id" force_save="1"
+                       options="{'no_create': True}" widget="many2one"/>
+                <field name="product_categ_id" optional="hide"/>
+                <field name='company_id' groups="base.group_multi_company" optional="hidden"/>
+                <field name="package_id" groups="stock.group_tracking_lot"
+                       readonly="id" widget="package_m2o" context="{'show_src_package': 1}"/>
+                <field name="lot_id" groups="stock.group_production_lot"
+                       column_invisible="context.get('hide_lot', False)"
+                       readonly="id or tracking not in ['serial', 'lot']"
+                       context="{'default_product_id': product_id}"/>
+                <field name="owner_id" groups="stock.group_tracking_owner"
+                       readonly="id"
+                       options="{'no_create': True}"/>
+                <field name="inventory_quantity_auto_apply" readonly="0" sum="Total On Hand"/>
+                <field name="reserved_quantity" optional="show" sum="Total Reserved"/>
+                <field name="available_quantity" optional="hide" sum="Total Available"/>
+                <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
+                <field name="lot_properties" optional="hide"/>
+                <button name="action_view_stock_moves" string="History" type="object" class="btn-link" icon="fa-history"/>
+                <button name="action_view_orderpoints" string="Replenishment" type="object" context="{'default_product_id': product_id, 'search_default_location_id': location_id}" class="btn-link" icon="fa-refresh"/>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_stock_quant_tree_simple">
+        <field name="name">stock.quant.list</field>
+        <field name="model">stock.quant</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <list export_xlsx="0">
+                <field name="product_id" column_invisible="context.get('single_product', False)"/>
+                <field name="location_id" column_invisible="context.get('hide_location', False)"/>
+                <field name="lot_id" groups="stock.group_production_lot"
+                       column_invisible="context.get('hide_lot', False)"/>
+                <field name="lot_properties"/>
+                <field name="package_id" groups="stock.group_tracking_lot" widget="package_m2o" context="{'show_src_package': 1}"/>
+                <field name="owner_id" groups="stock.group_tracking_owner"/>
+                <field name="quantity" string="On Hand"/>
+                <field name="available_quantity" string="Available" column_invisible="context.get('hide_available', False)"/>
+                <field name="product_uom_id" groups="uom.group_uom"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hidden"/>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_stock_quant_tree">
+        <field name="name">stock.quant.list</field>
+        <field name="model">stock.quant</field>
+        <field eval="10" name="priority"/>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="stock.view_stock_quant_tree_simple"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="js_class">inventory_report_list</attribute>
+                <attribute name="create">0</attribute>
+                <attribute name="delete">0</attribute>
+                <attribute name="export_xlsx">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_stock_quant_pivot">
+        <field name="name">stock.quant.pivot</field>
+        <field name="model">stock.quant</field>
+        <field name="arch" type="xml">
+            <pivot string="Inventory" sample="1">
+                <field name="product_id" type="row"/>
+                <field name="location_id" type="col"/>
+                <field name="quantity" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="stock_quant_view_graph" model="ir.ui.view">
+        <field name="name">stock.quant.graph</field>
+        <field name="model">stock.quant</field>
+        <field name="arch" type="xml">
+            <graph string="Stock Quant" sample="1">
+                <field name="location_id"/>
+                <field name="quantity" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_view_quants"> <!-- Menu + python -->
+        <field name="name">Inventory</field>
+        <field name="model_id" ref="model_stock_quant"/>
+        <field name="state">code</field>
+        <field name="path">stock-locations</field>
+        <field name="group_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
+        <field name="code">
+            action = model.with_context(
+                search_default_internal_loc=1,
+                always_show_loc=1,
+            ).action_view_quants()
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="stock_quant_action"> <!-- Used in dashboard -->
+        <field name="name">Locations</field>
+        <field name="context">
+        {
+            'search_default_internal_loc': 1,
+            'inventory_mode':True,
+        }
+        </field>
+        <field name="res_model">stock.quant</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+No Stock On Hand. This analysis gives you an overview of the current stock level of your products.
+            </p>
+        </field>
+    </record>
+
+    <record id="view_stock_quant_form" model="ir.ui.view">
+        <field name="name">view.stock.quant.form</field>
+        <field name="priority">100</field>
+        <field name="model">stock.quant</field>
+        <field name="arch" type="xml">
+            <form string="Create Stock">
+                <div class="alert alert-warning" role="alert" invisible="context.get('readonly_form')">
+                You are going to pick products that are not referenced
+in this location. That leads to a negative stock.
+                </div>
+                <group>
+                    <group>
+                        <field name="location_id" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="product_id" invisible="1"/>
+                        <field name="product_id" force_save="1" invisible="1"/>
+                        <field name="lot_id" domain="[('product_id', '=', product_id)]"
+                            groups="stock.group_production_lot" readonly="context.get('readonly_form')"
+                            context="{'default_product_id': product_id, 'active_picking_id': context.get('active_picking_id')}"/>
+                        <field name="location_id" groups="stock.group_stock_multi_locations" readonly="context.get('readonly_form')"/>
+                        <field name="package_id" groups="stock.group_tracking_lot" invisible="context.get('readonly_form')"/>
+                        <field name="owner_id" groups="stock.group_tracking_owner" invisible="context.get('readonly_form')"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- Inventory Adjustments + Update Quantity (via product) view -->
+    <record model="ir.ui.view" id="view_stock_quant_tree_inventory_editable">
+        <field name="name">stock.quant.inventory.list.editable</field>
+        <field name="model">stock.quant</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <list default_order="location_id, inventory_date, product_id, package_id, lot_id, owner_id" decoration-warning='is_outdated' multi_edit="1" editable="bottom" create="1" edit="1" import="1" js_class="inventory_report_list" sample="1">
+                <header>
+                    <button name="action_apply_all" string="Apply All" type="object"
+                            class="btn btn-primary"
+                            invisible="not context.get('inventory_mode') or context.get('inventory_report_mode')"
+                            display="always"
+                        />
+                    <button name="stock.action_stock_inventory_adjustement_name" type="action" string="Apply"/>
+                    <button name="action_reset" type="object" string="Clear" groups="stock.group_stock_manager"/>
+                    <button name="stock.action_stock_request_count" groups="stock.group_stock_manager" type="action" string="Request a Count"/>
+                </header>
+                <field name="create_date" column_invisible="True"/>
+                <field name="write_date" column_invisible="True"/>
+                <field name="id" column_invisible="True"/>
+                <field name="is_outdated" column_invisible="True"/>
+                <field name="sn_duplicated" column_invisible="True"/>
+                <field name="tracking" column_invisible="True"/>
+                <field name="inventory_quantity_set" column_invisible="True"/>
+                <field name="company_id" column_invisible="True"/>
+                <field name="location_id" domain="[('usage', 'in', ['internal', 'transit'])]" column_invisible="context.get('hide_location', False)" readonly="id" options="{'no_create': True}"/>
+                <field name="cyclic_inventory_frequency" column_invisible="context.get('hide_location', False)" options="{'no_create': True}" optional="hidden"/>
+                <field name="product_id" readonly="context.get('single_product', False) or id" force_save="1" options="{'no_create': True}"/>
+                <field name="product_categ_id" optional="hide"/>
+                <field name="lot_id" groups="stock.group_production_lot"
+                    column_invisible="context.get('hide_lot', False)"
+                    readonly="tracking not in ['serial', 'lot'] or (id and (lot_id or quantity != 0))"
+                    context="{'default_product_id': product_id}"
+                    decoration-danger="sn_duplicated"
+                    force_save="1"/>
+                <field name="package_id" groups="stock.group_tracking_lot" widget="package_m2o" context="{'show_src_package': 1}" readonly="id"/>
+                <field name="owner_id" groups="stock.group_tracking_owner" readonly="id" options="{'no_create': True}"/>
+                <field name="last_count_date" optional='hidden' readonly='1'/>
+                <field name="inventory_date" decoration-info="inventory_date &lt;= context_today().strftime('%Y-%m-%d')" decoration-bf="inventory_date &lt;= context_today().strftime('%Y-%m-%d')" optional="show"/>
+                <field name="user_id" string="User" optional="show"/>
+                <field name="quantity" optional="show" decoration-warning="quantity &lt; 0" string="On Hand"/>
+                <field name="inventory_quantity" widget="counted_quantity_widget"/>
+                <field name="inventory_diff_quantity" string="Difference"  invisible="not inventory_quantity_set" decoration-muted="inventory_diff_quantity == 0" decoration-danger="inventory_diff_quantity &lt; 0" decoration-success="inventory_diff_quantity &gt; 0" decoration-bf="inventory_diff_quantity != 0"/>
+                <field name="product_uom_id" groups="uom.group_uom"/>
+                <field name='company_id' groups="base.group_multi_company" optional="hide"/>
+                <field name="lot_properties" optional="hide"/>
+                <button name="action_inventory_history" type="object" class="btn btn-link text-info" icon="fa-history" string="History"/>
+                <button name="action_apply_inventory" type="object" string="Apply" class="btn btn-link" icon="fa-save" invisible="not inventory_quantity_set"/>
+                <button name="action_clear_inventory_quantity" type="object" string="Clear" class="btn text-warning" icon="fa-times" invisible="not inventory_quantity_set"/>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_view_set_quants_tree">
+        <field name="name">Set to quantity on hand</field>
+        <field name="model_id" ref="model_stock_quant"/>
+        <field name="binding_model_id" ref="stock.model_stock_quant"/>
+        <field name="binding_view_types">list,kanban</field>
+        <field name="state">code</field>
+        <field name="group_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
+        <field name="code">
+            action = records.action_set_inventory_quantity()
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_view_set_to_zero_quants_tree">
+        <field name="name">Set to 0</field>
+        <field name="model_id" ref="model_stock_quant"/>
+        <field name="binding_model_id" ref="stock.model_stock_quant"/>
+        <field name="binding_view_types">list,kanban</field>
+        <field name="state">code</field>
+        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager'))]"/>
+        <field name="code">
+            action = records.action_set_inventory_quantity_zero()
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_stock_quant_relocate">
+        <field name="name">Relocate</field>
+        <field name="model_id" ref="model_stock_quant"/>
+        <field name="binding_model_id" ref="stock.model_stock_quant"/>
+        <field name="binding_view_types">list,kanban</field>
+        <field name="state">code</field>
+        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager'))]"/>
+        <field name="code">
+            action = records.with_context(action_ref='stock.action_view_inventory_tree').action_stock_quant_relocate()
+        </field>
+    </record>
+
+    <menuitem id="menu_action_inventory_tree" name="Physical Inventory" parent="menu_stock_adjustments" sequence="10" action="action_view_inventory_tree"/>
+    <menuitem id="menu_valuation" name="Locations"
+              parent="stock.menu_warehouse_report" sequence="150"
+              action="action_view_quants" groups="stock.group_stock_multi_locations,stock.group_tracking_owner,base.group_no_one"/>
+</odoo>

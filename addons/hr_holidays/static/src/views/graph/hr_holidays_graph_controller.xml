@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_holidays.HrHolidaysGraphView.Buttons" t-inherit="web.GraphView.Buttons">
+        <!--Remove the line and pie chart views-->
+        <xpath expr="//button[@data-mode='line']" position="replace"/>
+        <xpath expr="//button[@data-mode='pie']" position="replace"/>
+        <!--The bar chart will always be stacked. So the stack button is of no use-->
+        <xpath expr="//div[hasclass('btn-group')][3]" position="replace"/>
+    </t>
+
+</templates>

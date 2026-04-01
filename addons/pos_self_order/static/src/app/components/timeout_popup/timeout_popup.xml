@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.TimeoutPopup">
+        <div class="self_order_timeout_popup o_dialog" t-att-id="id">
+            <div role="dialog" class="modal d-block" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body p-4 overflow-visible">
+                            <div class="position-absolute top-0 start-50 translate-middle px-4 py-3 rounded-4 text-bg-warning border border-white border-5">
+                                <i class="fa fa-exclamation-triangle" aria-hidden="true"/>
+                            </div>
+                            <div class="mt-4 text-center">
+                                <h1>Session Inactive</h1>
+                                <span class="text-muted">Would you like to continue?</span>
+                                <div class="display-1 my-3 pb-3 fw-bold text-center text-danger">
+                                    <t t-esc="this.state.time"/>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center w-100">
+                                <button type="button" class="btn btn-primary btn-lg popup_button" t-on-click="() => this.props.close()">Continue</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

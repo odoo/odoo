@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="resource.SectionListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow">
+        <xpath expr="//t[@t-if='displayOptionalFields or props.list.isGrouped or hasX2ManyAction']" position="attributes">
+            <attribute name="t-if">(displayOptionalFields or hasX2ManyAction) and !isSection(record)</attribute>
+        </xpath>
+    </t>
+
+</templates>

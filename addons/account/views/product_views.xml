@@ -1,0 +1,31 @@
+<odoo>
+     <record id="product_view_search_catalog" model="ir.ui.view">
+         <field name="name">product.view.search.catalog.inherit.account</field>
+         <field name="model">product.product</field>
+         <field name="mode">primary</field>
+         <field name="inherit_id" ref="product.product_view_search_catalog"/>
+         <field name="arch" type="xml">
+             <xpath expr="//field[@name='product_tmpl_id']" position="after">
+                 <field name="seller_ids" string="Vendor"/>
+             </xpath>
+         </field>
+     </record>
+
+     <record id="product_product_view_form_normalized_account" model="ir.ui.view">
+         <field name="name">product.product.view.form.normalized.account.inherit</field>
+         <field name="model">product.product</field>
+         <field name="inherit_id" ref="product.product_product_view_form_normalized"/>
+         <field name="arch" type="xml">
+            <field name="list_price" position="after">
+                <label for="taxes_id"/>
+                <div name="tax_info" class="o_row">
+                    <field name="taxes_id" widget="many2many_tags"
+                        context="{'search_default_sale': 1}"
+                        options="{'create': false, 'create_edit': false}"/>
+                    <field name="tax_string"/>
+                </div>
+            </field>
+         </field>
+     </record>
+
+</odoo>

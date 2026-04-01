@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_put_in_pack_form" model="ir.ui.view">
+        <field name="name">stock.put.in.pack.form</field>
+        <field name="model">stock.put.in.pack</field>
+        <field name="inherit_id" ref="stock.stock_put_in_pack_form"/>
+        <field name="arch" type="xml">
+            <field name="result_package_id" position="after">
+                <!-- Required for weight onchange -->
+                <field name="move_line_ids" invisible="1"/>
+                <field name="package_ids" invisible="1"/>
+                <field name="package_carrier_type" invisible="1"/>
+
+                <label for="shipping_weight" invisible="not package_carrier_type or (not package_type_id and not result_package_id)"/>
+                <div class="o_row" invisible="not package_carrier_type or (not package_type_id and not result_package_id)" name="package_weight">
+                    <field name="shipping_weight"/>
+                    <field name="weight_uom_name"/>
+                </div>
+            </field>
+            <field name="package_type_id" position="attributes">
+                <attribute name="domain">[('package_carrier_type', '=?', package_carrier_type)]</attribute>
+            </field>
+            <field name="result_package_id" position="attributes">
+                <attribute name="domain">
+                    [('package_carrier_type', '=?', package_carrier_type), ('package_type_id', '=?', package_type_id), '|', '|', ('location_id', '=', location_dest_id), ('id', 'in', origin_package_ids), '&amp;', ('location_id', '=', False), '|', ('move_line_ids', '=', False), ('move_line_ids.location_dest_id', '=', location_dest_id)]
+                </attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

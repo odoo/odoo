@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussCommand" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('o-mail-DiscussCommand-nameContainer')]" position="inside">
+            <span t-if="props.persona?.outOfOfficeDateEndText" class="text-warning smaller ms-2 fw-bold opacity-75" t-out="props.persona.outOfOfficeDateEndText"/>
+        </xpath>
+    </t>
+</templates>
+

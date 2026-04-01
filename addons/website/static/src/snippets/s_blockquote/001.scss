@@ -1,0 +1,20 @@
+.s_blockquote[data-vcss="001"] {
+    border: 0;
+    border-radius: $border-radius;
+
+    &.s_blockquote_with_line {
+        overflow: hidden;
+    }
+
+    .s_blockquote_avatar {
+        width: map-get($spacers, 5);
+    }
+
+    .s_blockquote_line_elt {
+        width: map-get($spacers, 1);
+    }
+
+    &:not(.s_blockquote_with_line) > .s_blockquote_line_elt, &:not(.s_blockquote_with_icon) > .s_blockquote_wrap_icon, .s_blockquote_infos {
+        display: none;
+    }
+}

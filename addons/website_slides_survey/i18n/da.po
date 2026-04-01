@@ -1,0 +1,757 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_slides_survey
+#
+# Translators:
+# Martin Trigaux, 2022
+# Lucas Holm, 2023
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-11-08 19:05+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/"
+"website_slides_survey/da/>\n"
+"Language: da\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__members_certified_count
+msgid "# Certified Attendees"
+msgstr "# Certificerede deltagere"
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/models/survey_survey.py:0
+msgid "- %(certification)s (Courses - %(courses)s)"
+msgstr "- %(certification)s (Kurser – %(courses)s)"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_kanban
+msgid ""
+"<br/>\n"
+"                        <span class=\"text-muted\">Courses</span>"
+msgstr ""
+"<br/>\n"
+"                        <span class=\"text-muted\">Kurser</span>"
+
+#. module: website_slides_survey
+#: model:mail.template,body_html:website_slides_survey.mail_template_user_input_certification_failed
+msgid ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant' or "
+"''\">participant</t><br/><br/>\n"
+"        Unfortunately, you have failed the certification and are no longer a "
+"member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or "
+"''\">Basics of Gardening</t>.<br/><br/>\n"
+"        Don't hesitate to enroll again!\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-"
+"href=\"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"                Enroll now\n"
+"            </a>\n"
+"        </div>\n"
+"        Thank you for your participation.\n"
+"    \n"
+"</div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Kære <t t-out=\"object.partner_id.name or 'participant' or "
+"''\">deltager</t><br/><br/>\n"
+"        Du har desværre ikke bestået certificeringen og kan derfor ikke "
+"længere deltage i kurset. <t t-out=\"object.slide_partner_id.channel_id.name "
+"or ''\">Grundprincipperne for havearbejde</t>.<br/><br/>\n"
+"        Du må gerne tilmelde dig igen!\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-"
+"href=\"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"                Tilmeld dig\n"
+"            </a>\n"
+"        </div>\n"
+"        Tak for din deltagelse.\n"
+"    \n"
+"</div>\n"
+"            "
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+msgid "<i class=\"fa fa-arrow-right\"/> Get Certified"
+msgstr "<i class=\"fa fa-arrow-right\"/> Bliv certificeret"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+msgid ""
+"<i class=\"fa fa-download\" aria-label=\"Download certification\" "
+"title=\"Download Certification\"/>"
+msgstr ""
+"<i class=\"fa fa-download\" aria-label=\"Download certificering\" "
+"title=\"Download Certificering\"/>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+msgid ""
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download "
+"certification\" title=\"Download certification\"/> Download certification"
+msgstr ""
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download "
+"certificering\" title=\"Download certificering\"/> Download certificering"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_fill_form_done_inherit_website_slides
+msgid ""
+"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" "
+"title=\"Share certification\"/>\n"
+"                        Share your certification"
+msgstr ""
+"<i class=\"fa fa-share-alt\" aria-label=\"Del certificering\" title=\"Del "
+"certificering\"/>\n"
+"                        Del din certificering"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+msgid "<i class=\"fa fa-share-alt\" aria-label=\"Share\" title=\"Share\"/>"
+msgstr "<i class=\"fa fa-share-alt\" aria-label=\"Del\" title=\"Del\"/>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+msgid "<i class=\"oi oi-arrow-right me-1\"/>Add Questions to this Survey"
+msgstr ""
+"<i class=\"oi oi-arrow-right me-1\"/>Føj spørgsmål til denne undersøgelse"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+msgid "<i class=\"oi oi-arrow-right me-1\"/>All Certifications"
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Alle certificeringer"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+msgid "<i class=\"oi oi-arrow-right\"/> See Certifications"
+msgstr "<i class=\"oi oi-arrow-right\"/> Se certificeringer"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
+msgid "<i class=\"text-muted\"> awarded users</i>"
+msgstr "<i class=\"text-muted\"> brugere med udmærkelse</i>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.courses_search_bar_inherit_survey
+msgid "<span class=\"ms-1\">Certifications</span>"
+msgstr "<span class=\"ms-1\">Certificeringer</span>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
+msgid "<span class=\"o_stat_text\">Certified</span>"
+msgstr "<span class=\"o_stat_text\">Certificeret</span>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.all_user_card
+msgid "<span class=\"text-muted small fw-bold\">Certifications</span>"
+msgstr "<span class=\"text-muted small fw-bold\">Certificeringer</span>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.top3_user_card
+msgid "<span class=\"text-muted\">Certifications</span>"
+msgstr "<span class=\"text-muted\">Certificeringer</span>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
+msgid ""
+"<span>Start Now</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
+msgstr ""
+"<span>Start nu</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
+
+#. module: website_slides_survey
+#: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_survey_id
+msgid "A slide of type 'certification' requires a certification."
+msgstr "En slide af typen 'certificering' kræver en certificering."
+
+#. module: website_slides_survey
+#: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_certification_preview
+msgid "A slide of type certification cannot be previewed."
+msgstr "En slide af typen certificering kan ikke forhåndsvises."
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.js:0
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
+msgid "Add Certification"
+msgstr "Tilføj certificering"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+msgid "Add Questions to this Survey"
+msgstr "Føj spørgsmål til denne undersøgelse"
+
+#. module: website_slides_survey
+#: model_terms:ir.actions.act_window,help:website_slides_survey.slide_slide_action_certification
+msgid "Add a new certification"
+msgstr "Tilføj en ny certificering"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__is_preview
+msgid "Allow Preview"
+msgstr "Tillad forhåndsvisning"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_3
+msgid "Ash"
+msgstr "Aske"
+
+#. module: website_slides_survey
+#: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides
+msgid ""
+"Assess the level of understanding of your attendees\n"
+"                <br>and send them a document if they pass the test."
+msgstr ""
+"Test dine deltageres forståelse,\n"
+"                <br>og send dem et dokument, hvis de består."
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+msgid "Attempt n°"
+msgstr "Forsøg nr."
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_tree_slides
+msgid "Avg Score (%)"
+msgstr "Gns. score (%)"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_5
+msgid "Bed"
+msgstr "Seng"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_4
+msgid "Beech"
+msgstr "Bøg"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+msgid "Begin Certification"
+msgstr "Begynd certificering"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
+msgid "Begin your <b>certification</b> today!"
+msgstr "Påbegynd din <b>certificering</b> i dag!"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__slide_category
+msgid "Category"
+msgstr "Kategori"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.js:0
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__survey_id
+#: model:ir.model.fields.selection,name:website_slides_survey.selection__slide_slide__slide_category__certification
+#: model:ir.model.fields.selection,name:website_slides_survey.selection__slide_slide__slide_type__certification
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.courses_search_results_inherit_survey
+msgid "Certification"
+msgstr "Certificering"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+msgid "Certification Attempts"
+msgstr "Certificeringsforsøg"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
+msgid "Certification Badges"
+msgstr "Certificeringsbadges"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__slide_channel_ids
+msgid "Certification Courses"
+msgstr "Certificeringskurser"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_slide_partner_view_search
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_slide_partner_view_tree
+msgid "Certification Passed"
+msgstr "Certificering bestået"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__slide_ids
+msgid "Certification Slides"
+msgstr "Certificeringsslides"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__survey_scoring_success
+msgid "Certification Succeeded"
+msgstr "Certificering bestået"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_tree_slides
+msgid "Certification Title"
+msgstr "Navn på certificering"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__user_input_ids
+msgid "Certification attempts"
+msgstr "Certificeringsforsøg"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.o_wss_certification_icon
+msgid "Certification icon"
+msgstr "Certificeringsikon"
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/controllers/slides.py:0
+msgid "Certification slides are completed when the survey is succeeded."
+msgstr ""
+"Certificeringsslides fuldføres, når undersøgelsen er gennemført med succes."
+
+#. module: website_slides_survey
+#: model:ir.actions.act_window,name:website_slides_survey.slide_slide_action_certification
+#: model:ir.actions.act_window,name:website_slides_survey.survey_survey_action_slides
+#: model:ir.ui.menu,name:website_slides_survey.website_slides_menu_courses_certification
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+msgid "Certifications"
+msgstr "Certificeringer"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+msgid "Certifications are exams that you successfully passed. <br/>"
+msgstr "Certificeringer er eksamener, som du har bestået. <br/>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_sidebar_done_button
+msgid "Certifications you have passed cannot be marked as not done"
+msgstr "Certificeringer, du har bestået, kan ikke markeres som ikke udført"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel_partner__survey_certification_success
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_partner_view_search
+msgid "Certified"
+msgstr "Certificeret"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_1
+msgid "Chair"
+msgstr "Stol"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_slide_channel_partner
+msgid "Channel / Partners (Members)"
+msgstr "Kanal/partnere (medlemmer)"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+msgid "Congratulations, you passed the Certification!"
+msgstr "Tillykke, du bestod certificeringen!"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_slide_channel
+msgid "Course"
+msgstr "Kursus"
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/models/survey_survey.py:0
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_form
+msgid "Courses"
+msgstr "Kurser"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__slide_channel_count
+msgid "Courses Count"
+msgstr "Antal kurser"
+
+#. module: website_slides_survey
+#: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides
+msgid "Create a Certification"
+msgstr "Opret en certificering"
+
+#. module: website_slides_survey
+#: model:slide.slide,name:website_slides_survey.slide_slide_demo_6_0
+msgid "DIY Furniture Certification"
+msgstr "DIY-møbelcertificering"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_3
+msgid "Desk"
+msgstr "Skrivebord"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__display_name
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel_partner__display_name
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__display_name
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__display_name
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__display_name
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__display_name
+msgid "Display Name"
+msgstr "Vis navn"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+msgid "Download certification"
+msgstr "Hent certificering"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_1
+msgid "Fir"
+msgstr "Fyr"
+
+#. module: website_slides_survey
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1
+msgid "Furniture"
+msgstr "Møbler"
+
+#. module: website_slides_survey
+#: model:slide.slide,name:website_slides_survey.slide_slide_demo_5_4
+#: model:survey.survey,title:website_slides_survey.furniture_certification
+msgid "Furniture Creation Certification"
+msgstr "Certificering i møbelproduktion"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_fill_form_done_inherit_website_slides
+msgid "Go back to course"
+msgstr "Gå tilbage til kursus"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
+msgid "How to upload a certification on your course?"
+msgstr "Hvordan uploader jeg en certificering til mit kursus?"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__id
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel_partner__id
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__id
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__id
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__id
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_slides_survey
+#: model_terms:slide.slide,description:website_slides_survey.slide_slide_demo_6_0
+msgid "It's time to test your knowledge!"
+msgstr "Det er tid til at afprøve din viden!"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.res_config_settings_view_form
+msgid "Manage Certifications"
+msgstr "Administrér certificeringer"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+msgid "Mark To Do"
+msgstr "Markér som opgave"
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/models/slide_channel.py:0
+msgid "No Attendee passed this course certification yet!"
+msgstr "Ingen deltagere har bestået denne kursuscertificering endnu!"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+msgid "No certification found for the given search term."
+msgstr "Vi kunne ikke finde nogen certificeringer, der matcher din søgning."
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+msgid "No certifications yet!"
+msgstr "Ingen certificeringer endnu!"
+
+#. module: website_slides_survey
+#: model_terms:slide.slide,description:website_slides_survey.slide_slide_demo_5_4
+msgid ""
+"Now that you have completed the course, it's time to test your knowledge!"
+msgstr "Nu, hvor du har fuldført kurset, er det tid til at teste din viden!"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__nbr_certification
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel_partner__nbr_certification
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__nbr_certification
+msgid "Number of Certifications"
+msgstr "Antal certificeringer"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_2
+msgid "Oak"
+msgstr "Eg"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
+msgid "Please select a certification."
+msgstr "Vælg venligst en certificering."
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__slide_id
+msgid "Related course slide"
+msgstr "Relaterede kursslides"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+msgid "Score:"
+msgstr "Score:"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+msgid "Search"
+msgstr "Søg"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+msgid "Search Attempts..."
+msgstr "Søg forsøg ..."
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
+msgid "Select a certification"
+msgstr "Vælg en certificering"
+
+#. module: website_slides_survey
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_2
+msgid "Select all the furniture shown in the video"
+msgstr "Vælg alle møbler vist i videon"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
+msgid ""
+"Select an existing certification from the list. Creating or editing a "
+"certification can be done from the backend."
+msgstr ""
+"Vælg en certificering fra listen. Nye certificeringer eller ændringer kan "
+"laves i backend."
+
+#. module: website_slides_survey
+#: model:mail.template,description:website_slides_survey.mail_template_user_input_certification_failed
+msgid "Sent to participant if they failed the certification"
+msgstr "Sendt til deltageren, hvis de ikke bestod certificeringen"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_4
+msgid "Shelf"
+msgstr "Hylde"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_slide_slide_partner
+msgid "Slide / Partner decorated m2m"
+msgstr "Slide/partner dekoreret m2m"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__slide_type
+msgid "Slide Type"
+msgstr "Slidetype"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_partner_id
+msgid "Slide membership information for the logged in user"
+msgstr "Oplysninger om den registrerede brugers medlemskab"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_slide_slide
+msgid "Slides"
+msgstr "Slides"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__slide_partner_id
+msgid "Subscriber information"
+msgstr "Abonnementsoplysninger"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_slide_slide__slide_type
+msgid ""
+"Subtype of the slide category, allows more precision on the actual file "
+"type / source type."
+msgstr ""
+"Undertype for slidekategorien specificerer fil- eller kildetypen mere "
+"præcist."
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_tree_slides
+msgid "Success Ratio (%)"
+msgstr "Succesforhold (%)"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_survey_survey
+msgid "Survey"
+msgstr "Undersøgelse"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_survey_user_input
+msgid "Survey User Input"
+msgstr "Brugerinput til undersøgelsen"
+
+#. module: website_slides_survey
+#: model:mail.template,name:website_slides_survey.mail_template_user_input_certification_failed
+msgid "Survey: Certification Failure"
+msgstr "Undersøgelse: Certificeringsfejl"
+
+#. module: website_slides_survey
+#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_2
+msgid "Table"
+msgstr "Tabel"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+msgid "Take Quiz"
+msgstr "Tag quiz"
+
+#. module: website_slides_survey
+#. odoo-javascript
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+msgid "Test Certification"
+msgstr "Testcertificering"
+
+#. module: website_slides_survey
+#: model_terms:survey.question,description:website_slides_survey.furniture_certification_page_1
+#: model_terms:survey.survey,description:website_slides_survey.furniture_certification
+msgid "Test your furniture knowledge!"
+msgstr "Test din møbelviden!"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_slide_slide__is_preview
+msgid ""
+"The course is accessible by anyone : the users don't need to join the "
+"channel to access the content of the course."
+msgstr ""
+"Kurset er tilgængeligt for alle: Brugerne behøver ikke deltage i kanalen for "
+"at få adgang til kursets indhold."
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_channel_ids
+msgid "The courses this survey is linked to through the e-learning application"
+msgstr "Kurset denne undersøgelse er tilknyttet via e-læringsappen"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_id
+msgid "The related course slide when there is no membership information"
+msgstr ""
+"Den relaterede kursusslide, når der ikke er nogen oplysninger om medlemsskab"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_ids
+msgid "The slides this survey is linked to through the e-learning application"
+msgstr "Slide til denne undersøgelse er tilknyttet via e-læringsappen"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__name
+msgid "Title"
+msgstr "Titel"
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/models/survey_survey.py:0
+msgid ""
+"Uh-oh! You can’t delete surveys used as a Course Certification! Otherwise, "
+"students might think diplomas just grow on trees.\n"
+"The courses that need them are:\n"
+"%s"
+msgstr ""
+"OBS! Spørgeskemaer, der bruges til kursuscertificering, kan ikke slettes, da "
+"deltagerne ellers kunne få det indtryk, at diplomerne bliver udstedt uden "
+"grund.\n"
+"Dette gælder for følgende kurser:\n"
+"%s"
+
+#. module: website_slides_survey
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_3
+msgid "What do you think about the content of the course? (not rated)"
+msgstr "Hvad synes du om indholdet af dette kursus? (ikke bedømt)"
+
+#. module: website_slides_survey
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_1
+msgid "What type of wood is the best for furniture?"
+msgstr "Hvilken type træ er bedst til møbler?"
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/controllers/slides.py:0
+msgid "You are not allowed to create a survey."
+msgstr "Du har ikke tilladelse til at oprette en undersøgelse."
+
+#. module: website_slides_survey
+#. odoo-python
+#: code:addons/website_slides_survey/controllers/slides.py:0
+msgid "You are not allowed to link a certification."
+msgstr "Du har ikke tilladelse til at tilknytte en certificering."
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
+msgid ""
+"You can gain badges by passing certifications. Here is a list of all "
+"available certification badges.\n"
+"                            <br/>Follow the links to reach new heights and "
+"skill up!"
+msgstr ""
+"Du kan modtage badges ved at bestå certificeringer. Her er en oversigt over "
+"alle tilgængelige certificeringsbadges.\n"
+"                             <br/>Følg linkene for at udvikle dine "
+"færdigheder og nå nye højder!"
+
+#. module: website_slides_survey
+#: model:mail.template,subject:website_slides_survey.mail_template_user_input_certification_failed
+msgid ""
+"You have failed the course: {{ object.slide_partner_id.channel_id.name }}"
+msgstr "Du bestod ikke kurset: {{ object.slide_partner_id.channel_id.name }}"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+msgid "You have not taken any certification yet."
+msgstr "Du har ikke taget nogen certificering endnu."
+
+#~ msgid "- %s (Courses - %s)"
+#~ msgstr "- %s (Kurser - %s)"
+
+#~ msgid ""
+#~ "<span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', "
+#~ "'&gt;', 0)]}\">Finished</span>\n"
+#~ "                <span class=\"o_stat_text\" attrs=\"{'invisible': "
+#~ "[('nbr_certification', '=', 0)]}\">Certified</span>"
+#~ msgstr ""
+#~ "<span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', "
+#~ "'&gt;', 0)]}\">Afsluttede</span>\n"
+#~ "                <span class=\"o_stat_text\" attrs=\"{'invisible': "
+#~ "[('nbr_certification', '=', 0)]}\">Certificeret</span>"
+
+#~ msgid "<span class=\"text-muted\">Certified</span>"
+#~ msgstr "<span class=\"text-muted\">Certificeret</span>"
+
+#~ msgid "<span class=\"text-muted\">Finished</span>"
+#~ msgstr "<span class=\"text-muted\">Afsluttet</span>"
+
+#~ msgid ""
+#~ "You can create your certification from here or use an existing one. Once "
+#~ "your certification is created, you can still edit it in backend."
+#~ msgstr ""
+#~ "Du kan oprette din certificering herfra eller bruge en eksisterende "
+#~ "certificering. Når din certificering er oprettet, kan du stadig redigere "
+#~ "den i back-end."

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="0">
+    <record id="account_edi_proxy_client_user_comp_rule" model="ir.rule">
+        <field name="name">Account EDI Proxy Client User</field>
+        <field name="model_id" ref="model_account_edi_proxy_client_user"/>
+        <field name="domain_force">[('company_id', 'parent_of', company_ids)]</field>
+    </record>
+</data>
+</odoo>

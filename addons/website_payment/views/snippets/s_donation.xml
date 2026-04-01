@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_donation_button" name="Donation Button">
+    <div class="s_donation"
+            data-name="Donation Button"
+            data-donation-email="info@yourcompany.example.com"
+            data-custom-amount="freeAmount"
+            t-att-data-display-options="display_options"
+            data-prefilled-options="true"
+            data-descriptions="true"
+            data-donation-amounts='["10", "25", "50", "100"]'
+            data-minimum-amount="5"
+            data-maximum-amount="100"
+            data-slider-step="5"
+            data-default-amount="25">
+        <form class="s_donation_form" action="/donation/pay" method="post" enctype="multipart/form-data">
+            <span id="s_donation_description_inputs">
+                <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" name="donation_descriptions" value="A year of cultural awakening."/>
+                <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" name="donation_descriptions" value="Caring for a baby for 1 month."/>
+                <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" name="donation_descriptions" value="One year in elementary school."/>
+                <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" name="donation_descriptions" value="One year in high school."/>
+            </span>
+            <div t-if="display_options" class="s_donation_prefilled_buttons my-4">
+                <div class="s_donation_btn_description d-sm-flex align-items-center my-3 o_not_editable o_translate_mode_hidden" contenteditable="false">
+                    <button class="s_donation_btn btn btn-outline-primary btn-lg me-3" type="button" data-donation-value="10">
+                        <span class="s_donation_currency pe-1">$</span>10
+                    </button>
+                    <p class="s_donation_description mt-2 my-sm-auto text-muted fst-italic">A year of cultural awakening.</p>
+                </div>
+                <div class="s_donation_btn_description d-sm-flex align-items-center my-3 o_not_editable o_translate_mode_hidden" contenteditable="false">
+                    <button class="s_donation_btn btn btn-outline-primary btn-lg me-3" type="button" data-donation-value="25">
+                        <span class="s_donation_currency pe-1">$</span>25
+                    </button>
+                    <p class="s_donation_description mt-2 my-sm-auto text-muted fst-italic">Caring for a baby for 1 month.</p>
+                </div>
+                <div class="s_donation_btn_description d-sm-flex align-items-center my-3 o_not_editable o_translate_mode_hidden" contenteditable="false">
+                    <button class="s_donation_btn btn btn-outline-primary btn-lg me-3" type="button" data-donation-value="50">
+                        <span class="s_donation_currency pe-1">$</span>50
+                    </button>
+                    <p class="s_donation_description mt-2 my-sm-auto text-muted fst-italic">One year in elementary school.</p>
+                </div>
+                <div class="s_donation_btn_description d-sm-flex align-items-center my-3 o_not_editable o_translate_mode_hidden" contenteditable="false">
+                    <button class="s_donation_btn btn btn-outline-primary btn-lg me-3" type="button" data-donation-value="100">
+                        <span class="s_donation_currency pe-1">$</span>100
+                    </button>
+                    <p class="s_donation_description mt-2 my-sm-auto text-muted fst-italic">One year in high school.</p>
+                </div>
+                <div class="d-sm-flex align-items-center my-3">
+                    <span class="s_donation_btn s_donation_custom_btn btn btn-outline-primary btn-lg">
+                        <span class="s_donation_currency pe-1">$</span>
+                        <input id="s_donation_amount_input" type="number" placeholder="Custom Amount" aria-label="Amount" min="5" style="max-width: 156px;"/>
+                    </span>
+                </div>
+            </div>
+            <a href="#" type="button" class="s_donation_donate_btn btn btn-secondary btn-lg mb-2">Donate Now</a>
+        </form>
+    </div>
+</template>
+
+<template id="s_donation" name="Donation">
+    <section class="pt32 pb32 o_cc o_cc1">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7 pt16 pb16">
+                    <h2>Make a Donation</h2>
+                    <p>Small or large, your contribution is essential.</p>
+                    <t t-snippet-call="website_payment.s_donation_button">
+                        <t t-set="display_options" t-value="'true'"/>
+                    </t>
+                </div>
+                <div class="col-lg-5 pt16 pb16 d-none d-md-block">
+                    <img src="/html_editor/shape/website_payment/s_donation_gift.svg?c1=o-color-1" class="img img-fluid mx-auto" style="width: 75%;" alt=""/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<asset id="website_payment.s_donation_000_scss" name="Donation 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website_payment/static/src/snippets/s_donation/000.scss</path>
+</asset>
+
+</odoo>

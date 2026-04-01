@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <!-- Alias Form View -->
+        <record  model="ir.ui.view" id="mail_alias_view_form">
+            <field name="name">mail.alias.view.form</field>
+            <field name="model">mail.alias</field>
+            <field name="arch" type="xml">
+                <form string="Alias">
+                    <field name="alias_status" invisible="1"/>
+                    <div invisible="alias_status != 'invalid'"
+                         class="alert alert-danger text-center" role="alert">
+                        The last message received on this alias has caused an error.
+                    </div>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="open_document" string="Open Document"
+                                    type="object" class="oe_link" icon="fa-sitemap"
+                                    invisible="not alias_model_id or alias_force_thread_id == 0"/>
+                            <button name="open_parent_document"
+                                    type="object" class="oe_link" icon="fa-sitemap"
+                                    invisible="not alias_parent_model_id or alias_parent_thread_id == 0">
+                                    <div class="o_field_widget o_stat_info">
+                                        <span class="o_stat_text">Open Parent Document</span>
+                                    </div>
+                            </button>
+                        </div>
+                        <div class="d-flex">
+                            <h2 class="flex-grow-1" dir="ltr">
+                                <field name="alias_name" placeholder="alias" class="oe_inline"/>@
+                                <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
+                                       options="{'no_create': True, 'no_open': True}"/>
+                            </h2>
+                            <field name="alias_status" widget="badge"
+                                   decoration-success="alias_status == 'valid'"
+                                   decoration-warning="alias_status == 'not_tested'"
+                                   decoration-danger="alias_status == 'invalid'"/>
+                        </div>
+                        <group>
+                            <field name="alias_model_id"/>
+                            <field name="alias_force_thread_id"/>
+                            <field name="alias_defaults"/>
+                            <field name="alias_contact"/>
+                            <field name="alias_incoming_local"/>
+                            <field name="alias_parent_model_id"/>
+                            <field name="alias_parent_thread_id"/>
+                        </group>
+                        <label for="alias_bounced_content" invisible="alias_contact == 'everyone'"/>
+                        <field name="alias_bounced_content" invisible="alias_contact == 'everyone'"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Alias List View -->
+        <record  model="ir.ui.view" id="mail_alias_view_tree">
+            <field name="name">mail.alias.view.list</field>
+            <field name="model">mail.alias</field>
+            <field name="arch" type="xml">
+                <list string="Alias">
+                    <field name="alias_name"/>
+                    <field name="alias_domain_id"/>
+                    <field name="alias_model_id"/>
+                    <field name="alias_force_thread_id" optional="hide"/>
+                    <field name="alias_parent_model_id"/>
+                    <field name="alias_parent_thread_id" optional="hide"/>
+                    <field name="alias_defaults" optional="hide"/>
+                    <field name="alias_contact"/>
+                    <field name="alias_incoming_local" optional="hide"/>
+                    <field name="alias_status" widget="badge"
+                           decoration-success="alias_status == 'valid'"
+                           decoration-warning="alias_status == 'not_tested'"
+                           decoration-danger="alias_status == 'invalid'"/>
+                    <button name="open_document" type="object"
+                            string="Open Document" icon="fa-sitemap"
+                            invisible="not alias_model_id or alias_force_thread_id == 0"/>
+                    <button name="open_parent_document" type="object"
+                            string="Open Owner" icon="fa-sitemap"
+                            invisible="not alias_parent_model_id or alias_parent_thread_id == 0"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Alias Search View -->
+        <record  model="ir.ui.view" id="mail_alias_view_search">
+            <field name="name">mail.alias.view.search</field>
+            <field name="model">mail.alias</field>
+            <field name="arch" type="xml">
+                <search string="Search Alias">
+                    <field name="alias_name"/>
+                    <field name="alias_domain_id"/>
+                    <field name="alias_model_id"/>
+                    <field name="create_uid"/>
+                    <field name="alias_force_thread_id"/>
+                    <field name="alias_parent_model_id"/>
+                    <field name="alias_parent_thread_id"/>
+                    <separator/>
+                    <filter string="Active" name="active" domain="[('alias_name', '!=', False)]"/>
+                    <group>
+                        <filter string="Creator" name="groupby_create_uid"
+                                context="{'group_by': 'create_uid'}"/>
+                        <filter string="Alias Domain" name="groupby_alias_domain_id"
+                                context="{'group_by': 'alias_domain_id'}"/>
+                        <filter string="Document Model" name="groupby_alias_model_id"
+                                context="{'group_by': 'alias_model_id'}"/>
+                        <filter string="Container Model" name="groupby_alias_model_id"
+                                context="{'group_by': 'alias_parent_model_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="mail_alias_action" model="ir.actions.act_window">
+            <field name="name">Aliases</field>
+            <field name="res_model">mail.alias</field>
+            <field name="context">{
+                    'search_default_active': True,
+                }
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_prepare_wave_for_picking_type" model="ir.actions.act_window">
+        <field name="name">Prepare Wave</field>
+        <field name="res_model">stock.move.line</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_move_line_tree_detailed_wave"/>
+        <field name="target">new</field>
+        <field name="domain">[('state', '!=', 'done'), ('picking_type_id', '=', active_id), ('picking_id', '!=', False)]</field>
+        <field name="context">{'active_wave_id': False, 'search_default_by_location': True}</field>
+    </record>
+    <record id="action_prepare_wave" model="ir.actions.act_window">
+        <field name="name">Prepare Wave</field>
+        <field name="res_model">stock.move.line</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_move_line_tree_detailed_wave"/>
+        <field name="target">new</field>
+        <field name="domain">[('state', '!=', 'done'), ('picking_id', '!=', False)]</field>
+        <field name="context">{'active_wave_id': False, 'search_default_by_location': True}</field>
+    </record>
+    <record id="stock_picking_wave_tree" model="ir.ui.view">
+        <field name="name">stock.picking.wave.list</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="priority">25</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="create">0</attribute>
+            </xpath>
+            <xpath expr="//list" position="inside">
+                <header>
+                    <button string="Prepare Wave" class="btn btn-primary" type="action" display="always"
+                     name="stock_picking_batch.action_prepare_wave"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+    <record id="stock_picking_wave_kanban" model="ir.ui.view">
+        <field name="name">stock.picking.wave.kanban</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="priority">25</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="create">0</attribute>
+            </xpath>
+            <xpath expr="//kanban" position="inside">
+                <header>
+                    <button string="Prepare Wave" class="btn btn-primary" type="action" display="always"
+                     name="stock_picking_batch.action_prepare_wave"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+    <record id="action_picking_tree_wave" model="ir.actions.act_window">
+        <field name="name">Wave Transfers</field>
+        <field name="res_model">stock.picking.batch</field>
+        <field name="path">wave-transfers</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="context">{'search_default_draft': True, 'search_default_in_progress': True}</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('stock_picking_batch.stock_picking_wave_tree')}),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('stock_picking_batch.stock_picking_wave_kanban')})]"/>
+        <field name="domain">[('is_wave', '=', True)]</field>
+        <field name="search_view_id" ref="stock_picking_batch_filter"/>
+        <field name="help" type="html">
+            <div class="container mt-5">
+                <div class="row g-5">
+                    <div class="col-lg-4">
+                        <img src="/stock_picking_batch/static/shapes/wave-picking.svg" class="shadow rounded-3 w-100 mb-4"/>
+                        <h5>Wave transfers</h5>
+                        <p class="small">Launch picking orders by aisle or area and regroup at packing zone. Ideal for large warehouses.</p>
+                    </div>
+                    <div class="col-lg-4" style="opacity: 0.5;">
+                        <img src="/stock_picking_batch/static/shapes/batch-picking.svg" class="shadow rounded-3 w-100 mb-4"/>
+                        <h5>Batch transfers</h5>
+                        <p class="small">Regroup multiple orders into one picking and consolidate at the packing zone.</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <img src="/stock_picking_batch/static/shapes/cluster-picking.svg" class="shadow rounded-3 w-100 mb-4"/>
+                        <h5>Cluster transfers</h5>
+                        <p class="small">Pick multiple orders in one trip and prepare orders as you pick. This reduces packing time and is ideal for small products.</p>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="stock_picking_type_kanban_batch" model="ir.ui.view">
+        <field name="name">picking.type.kanban.batch</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='kanban_menu_section']" position="inside">
+                <div role="menuitem">
+                    <a name="action_batch" type="object" context="{'view_mode':'form'}">
+                        Prepare Batch
+                    </a>
+                </div>
+                <div role="menuitem">
+                    <a name="stock_picking_batch.action_prepare_wave_for_picking_type" type="action">
+                        Prepare Wave
+                    </a>
+                </div>
+            </xpath>
+            <xpath expr="//button[@name='get_action_picking_tree_ready']" position="before">
+                <button t-if="record.count_picking_batch.raw_value > 0" class="btn btn-primary me-2" name="action_batch" type="object">
+                    <field name="count_picking_batch"/> Batches
+                </button>
+            </xpath>
+            <xpath expr="//button[@name='get_action_picking_tree_ready']" position="attributes">
+                <attribute
+                    name="t-attf-class"
+                    remove="btn-primary"
+                    add="{{ record.count_picking_batch.raw_value > 0 ? 'btn-secondary' : 'btn-primary'}}"
+                    separator=" "
+                />
+            </xpath>
+            <xpath expr="//div[@name='picking_type_backorder_count']" class="row" position="after">
+                <div class="row">
+                    <a class="col-8 offset-4 text-truncate" name="action_wave" type="object">
+                        <div t-if="record.count_picking_wave.raw_value > 0"  class="row">
+                            <span class="col-6">Waves</span>
+                            <field name="count_picking_wave" class="col-2 text-end"/>
+                        </div>
+                    </a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem
+        action="action_picking_tree_wave"
+        id="stock_picking_wave_menu"
+        parent="menu_stock_jobs"
+        sequence="31"/>
+
+</odoo>

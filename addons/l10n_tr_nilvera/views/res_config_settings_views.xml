@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n.tr.nilvera</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='peppol']" position="after">
+                <block title="Türkiye Electronic Integrations" id="l10n_tr_nilvera_settings" invisible="country_code != 'TR'">
+                    <div class="col-12 col-lg-12 o_setting_box">
+                        <div class="o_setting_right_pane border-0">
+                            <div class="mb-2">
+                                <span class="o_form_label">
+                                    Nilvera Details
+                                </span>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                            </div>
+                            <div class="text-muted oe_inline mb-3">
+                                <div>
+                                    You are sending and receiving e-documents using the following Tax ID:
+                                    <strong><field class="d-inline" name="l10n_tr_nilvera_vat" nolabel="1"/></strong>
+                                </div>
+                                <div class="mb-1">
+                                    <div>
+                                        Configure your Nilvera integration settings below to securely send and
+                                        receive e-documents directly within Odoo.
+                                    </div>
+                                </div>
+                                <ul>
+                                    <li>API Key: Your Nilvera API key for authenticating with the platform.</li>
+                                    <li>Incoming Invoices Journal: Incoming documents will be auto-recorded as journal entries</li>
+                                    <li>Nilvera Portal: Link to the Nilvera dashboard.</li>
+                                    <li>Test Connection: Validates the API connection to Nilvera with the provided credentials.</li>
+                                    <li>Test Environment: Enable to test the integration in sandbox</li>
+                                </ul>
+                            </div>
+                            <div class="row">
+                                <label string="API Key" for="l10n_tr_nilvera_api_key" class="col-lg-3 o_light_label" />
+                                <field name="l10n_tr_nilvera_api_key"/>
+                            </div>
+                            <div class="row">
+                                <label string="Incoming Invoices Journal" for="l10n_tr_nilvera_purchase_journal_id"
+                                    class="col-lg-3 o_light_label"/>
+                                <field name="l10n_tr_nilvera_purchase_journal_id"/>
+                            </div>
+                            <div class="mt16" invisible="not l10n_tr_nilvera_api_key">
+                                <a href="https://portal.nilvera.com/" target="_new" invisible="l10n_tr_nilvera_use_test_env">
+                                    <i title="Go to Nilvera portal" role="img" aria-label="Go to Nilvera portal"
+                                        class="fa fa-external-link-square fa-fw"/>
+                                    Nilvera portal
+                                </a>
+                                <a href="https://portaltest.nilvera.com/" target="_new" invisible="not l10n_tr_nilvera_use_test_env">
+                                    <i title="Go to Nilvera portal" role="img" aria-label="Go to Nilvera portal"
+                                    class="fa fa-external-link-square fa-fw"/>
+                                    Nilvera portal (Test)
+                                </a>
+                                <button name="nilvera_ping" type="object" class="btn-link">
+                                    <i title="Test connection" role="img" aria-label="Test connection" class="fa fa-plug fa-fw"/>
+                                    Test connection
+                                </button>
+                            </div>
+                            <setting id="l10n_tr_nilvera_use_test_env" class="mt-3"
+                                    help="Activate to send e-documents to sandbox">
+                                <field name="l10n_tr_nilvera_use_test_env"/>
+                            </setting>
+                        </div>
+                    </div>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

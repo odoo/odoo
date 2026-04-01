@@ -1,0 +1,34 @@
+.subtask_list {
+    margin-top: 6px;
+
+    .subtask_list_row {
+        display: grid;
+        grid-template-columns: auto auto 22px;
+        padding: 4px 0px;
+
+        .subtask_name_col {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            align-self: center;
+            color: inherit;
+        }
+    }
+
+    .subtask_list_row {
+        @include media-breakpoint-up(sm) {
+            .o_field_widget.o_field_many2many_tags_avatar .o_quick_assign {
+                visibility: hidden !important;
+            }
+        }
+    }
+
+    .subtask_list_row:hover {
+        background-color: $table-hover-bg;
+        @include media-breakpoint-up(sm) {
+            .o_field_widget.o_field_many2many_tags_avatar .o_quick_assign {
+                visibility: visible !important;
+            }
+        }
+    }
+}

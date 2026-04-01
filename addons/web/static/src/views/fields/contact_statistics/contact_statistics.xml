@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ContactStatisticsField">
+        <div class="d-flex flex-wrap gap-1">
+            <span t-foreach="list" t-as="data" t-key="data_index"
+                t-attf-class="badge bg-secondary rounded-pill smaller #{data.tagClass ? 'o_tag ' + data.tagClass : ''}" t-att-aria-label="data.label" t-att-title="data.label">
+                <i t-attf-class="fa me-1 {{data.iconClass}}" role="img"/>
+                <t t-out="data.value"/>
+            </span>
+        </div>
+    </t>
+
+</templates>

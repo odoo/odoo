@@ -1,0 +1,71 @@
+<?xml version="1.0" ?>
+<odoo>
+        <record model="res.groups.privilege" id="res_groups_privilege_fleet">
+            <field name="name">Fleet</field>
+            <field name="sequence">17</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+        </record>
+        <record id="fleet_group_user" model="res.groups">
+            <field name="name">Officer: Manage all vehicles</field>
+            <field name="sequence">10</field>
+            <field name="privilege_id" ref="res_groups_privilege_fleet"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+        <record id="fleet_group_manager" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="sequence">20</field>
+            <field name="implied_ids" eval="[(4, ref('fleet_group_user'))]"/>
+            <field name="privilege_id" ref="res_groups_privilege_fleet"/>
+            <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+
+    <data noupdate="1">
+        <record id="fleet_rule_contract_visibility_manager" model="ir.rule">
+            <field name="name">Administrator has all rights on vehicle's contracts</field>
+            <field name="model_id" ref="model_fleet_vehicle_log_contract"/>
+            <field name="groups" eval="[Command.link(ref('fleet_group_manager'))]"/>
+        </record>
+        <record id="fleet_rule_service_visibility_manager" model="ir.rule">
+            <field name="name">Administrator has all rights on vehicle's services</field>
+            <field name="model_id" ref="model_fleet_vehicle_log_services"/>
+            <field name="groups" eval="[Command.link(ref('fleet_group_manager'))]"/>
+        </record>
+        <record id="fleet_rule_odometer_visibility_manager" model="ir.rule">
+            <field name="name">Administrator has all rights on vehicle's vehicle's odometer</field>
+            <field name="model_id" ref="model_fleet_vehicle_odometer"/>
+            <field name="groups" eval="[Command.link(ref('fleet_group_manager'))]"/>
+        </record>
+        <record id="fleet_rule_vehicle_visibility_manager" model="ir.rule">
+            <field name="name">Administrator has all rights on vehicle</field>
+            <field name="model_id" ref="model_fleet_vehicle"/>
+            <field name="groups" eval="[Command.link(ref('fleet_group_manager'))]"/>
+        </record>
+        <record id="ir_rule_fleet_vehicle" model="ir.rule">
+            <field name="name">Fleet vehicle: Multi Company</field>
+            <field name="model_id" ref="model_fleet_vehicle"/>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        </record>
+        <record id="ir_rule_fleet_vehicle_log_contract" model="ir.rule">
+            <field name="name">Fleet vehicle log contract: Multi Company</field>
+            <field name="model_id" ref="model_fleet_vehicle_log_contract"/>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        </record>
+        <record id="ir_rule_fleet_report" model="ir.rule">
+            <field name="name">Costs Analysis: Multi Company</field>
+            <field name="model_id" ref="model_fleet_vehicle_cost_report"/>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        </record>
+        <record id="ir_rule_fleet_odometer" model="ir.rule">
+            <field name="name">Fleet odometer: Multi Company</field>
+            <field name="model_id" ref="model_fleet_vehicle_odometer"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('vehicle_id.company_id', 'in', company_ids + [False])]</field>
+        </record>
+        <record id="ir_rule_fleet_log_services" model="ir.rule">
+            <field name="name">Fleet log services: Multi Company</field>
+            <field name="model_id" ref="model_fleet_vehicle_log_services"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        </record>
+    </data>
+</odoo>

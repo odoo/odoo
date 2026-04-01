@@ -1,0 +1,218 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_address_extended
+#
+# Translators:
+# Dawid Prus, 2022
+# Martin Trigaux, 2022
+# Wojciech Warczakowski <w.warczakowski@gmail.com>, 2022
+# IT WEDOO, 2022
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2022
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2022
+# Tomasz Leppich <t.leppich@gmail.com>, 2022
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
+# Patryk Openglobe <patryk.walentowicz@openglobe.pl>, 2022
+# Dariusz Żbikowski <darek@krokus.com.pl>, 2022
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~15.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-10-17 12:45+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
+"base_address_extended/pl/>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_city_extended_form
+msgid "<span class=\"o_stat_text\">Cities</span>"
+msgstr "<span class=\"o_stat_text\">Miasta</span>"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "<span> - </span>"
+msgstr "<span> - </span>"
+
+#. module: base_address_extended
+#: model:ir.model.fields,help:base_address_extended.field_res_country__enforce_cities
+#: model:ir.model.fields,help:base_address_extended.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,help:base_address_extended.field_res_users__country_enforce_cities
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+"Zaznacz to pole, aby upewnić się, że każdy adres utworzony w tym kraju ma "
+"\"Miasto\" wybrane na liście miast kraju."
+
+#. module: base_address_extended
+#: model:ir.actions.act_window,name:base_address_extended.action_res_city_tree
+#: model:ir.ui.menu,name:base_address_extended.menu_res_city
+msgid "Cities"
+msgstr "Miasta"
+
+#. module: base_address_extended
+#: model:ir.model,name:base_address_extended.model_res_city
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_city_form
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_filter
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_tree
+msgid "City"
+msgstr "Miasto"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__city_id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__city_id
+msgid "City ID"
+msgstr "ID Miasta"
+
+#. module: base_address_extended
+#: model:ir.model,name:base_address_extended.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: base_address_extended
+#: model:ir.model,name:base_address_extended.model_res_country
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__country_id
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "Country"
+msgstr "Kraj"
+
+#. module: base_address_extended
+#: model:ir.model,website_form_label:base_address_extended.model_res_partner
+msgid "Create a Customer"
+msgstr "Utwórz klienta"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_uid
+msgid "Created by"
+msgstr "Utworzył(a)"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_date
+msgid "Created on"
+msgstr "Data utworzenia"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__display_name
+msgid "Display Name"
+msgstr "Nazwa wyświetlana"
+
+#. module: base_address_extended
+#: model_terms:ir.actions.act_window,help:base_address_extended.action_res_city_tree
+msgid ""
+"Display and manage the list of all cities that can be assigned to\n"
+"                your partner records. Note that an option can be set on each "
+"country separately\n"
+"                to enforce any address of it to have a city in this list."
+msgstr ""
+"Wyświetl i zarządzaj listą wszystkich miast, do których można przypisać\n"
+"                 Twoje rekordy partnera. Zwróć uwagę, że opcję można ustawić "
+"oddzielnie dla każdego kraju\n"
+"                 wymusić dowolny jego adres, aby miasto znalazło się na tej "
+"liście."
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number2
+msgid "Door"
+msgstr "Nr lokalu"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "Door #"
+msgstr "Nr lokalu #"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__enforce_cities
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__country_enforce_cities
+msgid "Enforce Cities"
+msgstr "Wymuś miasta"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number
+msgid "House"
+msgstr "Nr budynku"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "House #"
+msgstr "Nr budynku #"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_uid
+msgid "Last Updated by"
+msgstr "Ostatnio aktualizowane przez"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_date
+msgid "Last Updated on"
+msgstr "Data ostatniej aktualizacji"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__name
+msgid "Name"
+msgstr "Nazwa"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_filter
+msgid "Search City"
+msgstr "Szukaj miast"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__state_id
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "State"
+msgstr "Stan"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "Street"
+msgstr "Ulica"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "Street 2..."
+msgstr "Ulica 2..."
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_name
+msgid "Street Name"
+msgstr "Nazwa ulicy"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "Street..."
+msgstr "Ulica..."
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "ZIP"
+msgstr "Kod pocztowy"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__zipcode
+msgid "Zip"
+msgstr "Kod pocztowy"

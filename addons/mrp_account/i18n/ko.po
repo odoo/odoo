@@ -1,0 +1,643 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp_account
+#
+# Translators:
+# Sarah Park, 2023
+# Martin Trigaux, 2023
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 21:53+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"mrp_account/ko/>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "$1000"
+msgstr "$1000"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "$5000"
+msgstr "$5000"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/stock_move.py:0
+msgid "%(value)s for %(quantity)s %(unit)s from %(production)s"
+msgstr ""
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/mrp_production.py:0
+msgid "%s - Labour"
+msgstr "%s - 업무"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "2023-08-15"
+msgstr "2023-08-15"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_move_form_inherit_mrp_account
+msgid "<span class=\"o_stat_text\">Manufacturing</span>"
+msgstr "<span class=\"o_stat_text\">제조</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
+msgid "<span class=\"o_stat_text\">WIP</span>"
+msgstr "<span class=\"o_stat_text\">WIP</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span style=\"margin-right: 15px;\">Total</span>"
+msgstr "<span style=\"margin-right: 15px;\">총계</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span>Amount</span>"
+msgstr "<span>금액</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span>Date</span>"
+msgstr "<span>날짜</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span>Product</span>"
+msgstr "<span>품목</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span>Quantity</span>"
+msgstr "<span>수량</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span>Ref.</span>"
+msgstr "<span>참조</span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "<span>Unit of Measure</span>"
+msgstr "<span>단위</span>"
+
+#. module: mrp_account
+#: model:ir.model.constraint,message:mrp_account.constraint_mrp_account_wip_accounting_line_check_debit_credit
+msgid "A single line cannot be both credit and debit."
+msgstr "한 줄에 대변과 차변 값을 모두 포함할 수 없습니다."
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__account_id
+msgid "Account"
+msgstr "계정"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__account_move_line_id
+msgid "Account Move Line"
+msgstr "계정 이동 항목"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
+msgid "Account move line to be created when posting WIP account move"
+msgstr "WIP 계정 이동을 게시할 때 생성되는 계정 이동 항목"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "Acme Corp."
+msgstr "Acme Corp."
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "분석 계정"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__analytic_distribution
+msgid "Analytic Distribution"
+msgstr "분석 분포"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "분석 내역"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_account_analytic_applicability
+msgid "Analytic Plan's Applicabilities"
+msgstr "분석 계획의 적용 가능성"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__analytic_precision
+msgid "Analytic Precision"
+msgstr "분석의 정확성"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/analytic_account.py:0
+#: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
+msgid "Bills of Materials"
+msgstr "자재명세서"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_count
+msgid "BoM Count"
+msgstr "자재명세서 수"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
+msgid "Bom"
+msgstr "자재명세서"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__category
+msgid "Category"
+msgstr "카테고리"
+
+#. module: mrp_account
+#: model:ir.actions.server,name:mrp_account.action_compute_price_bom_product
+#: model:ir.actions.server,name:mrp_account.action_compute_price_bom_template
+#: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
+#: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
+#: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
+msgid "Compute Price from BoM"
+msgstr "BoM에서 가격 계산"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
+#: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
+#: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
+msgid ""
+"Compute the price of the product using products and operations of related "
+"bill of materials, for manufactured products only."
+msgstr ""
+"제조된 품목에 대해서만 자재명세서의 품목 및 작업 내용을 바탕으로 제품 가격을 "
+"계산합니다."
+
+#. module: mrp_account
+#. odoo-javascript
+#. odoo-python
+#: code:addons/mrp_account/report/stock_valuation_report.py:0
+#: code:addons/mrp_account/static/src/stock_valuation/stock_valuation_report.js:0
+#: code:addons/mrp_account/static/src/stock_valuation/stock_valuation_report.xml:0
+msgid "Cost of Production"
+msgstr "생산원가"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_ids
+msgid "Costs Hour Account"
+msgstr "시간당 비용 계정"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__create_uid
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__create_date
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__credit
+msgid "Credit"
+msgstr "대변"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__currency_id
+msgid "Currency"
+msgstr "통화"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__date
+msgid "Date"
+msgstr "날짜"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__debit
+msgid "Debit"
+msgstr "차변"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Discard"
+msgstr "취소"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_applicability__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_account_move__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_product_category__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_product_product__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_product_template__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_stock_account_stock_valuation_report__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_stock_move__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "분포 분석 계정"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_applicability__business_domain
+msgid "Domain"
+msgstr "도메인"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__expense_account_id
+msgid "Expense Account"
+msgstr "비용 계정"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
+msgid "Extra Unit Cost"
+msgstr "추가 단위 비용"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__id
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_applicability__id
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:mrp_account.field_account_move__id
+#: model:ir.model.fields,field_description:mrp_account.field_account_move_line__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__id
+#: model:ir.model.fields,field_description:mrp_account.field_product_category__id
+#: model:ir.model.fields,field_description:mrp_account.field_product_product__id
+#: model:ir.model.fields,field_description:mrp_account.field_product_template__id
+#: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__id
+#: model:ir.model.fields,field_description:mrp_account.field_stock_account_stock_valuation_report__id
+#: model:ir.model.fields,field_description:mrp_account.field_stock_move__id
+msgid "ID"
+msgstr "ID"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__journal_id
+msgid "Journal"
+msgstr "전표"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_account_move
+msgid "Journal Entry"
+msgstr "전표 입력"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_account_move_line
+msgid "Journal Item"
+msgstr "전표 항목"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__label
+msgid "Label"
+msgstr "라벨"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "Laptop"
+msgstr "노트북"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__write_uid
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__write_date
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_report_mrp_report_mo_overview
+msgid "MO Overview Report"
+msgstr "제조요청서 전체 보고서"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "Manual Entry"
+msgstr "수동 입력"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_production
+#: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_applicability__business_domain__manufacturing_order
+#: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_line__category__manufacturing_order
+msgid "Manufacturing Order"
+msgstr "제조 주문"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/analytic_account.py:0
+#: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
+msgid "Manufacturing Orders"
+msgstr "제조 주문"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_count
+#: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_count
+#: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_count
+msgid "Manufacturing Orders Count"
+msgstr "제조 주문 수"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "Manufacturing WIP - %(orders_list)s"
+msgstr "제조 WIP - %(orders_list)s"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__mo_ids
+msgid "Mo"
+msgstr "월"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_ids
+msgid "Mo Analytic Account Line"
+msgstr "제조 주문서 분석 계정 내역"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "Please make sure the total credit amount equals the total debit amount."
+msgstr "총 크레딧 금액이 총 차변 금액과 일치하는지 확인합니다."
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Post Manufacturing WIP"
+msgstr "제조 후 WIP"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Post WIP"
+msgstr "포스트 WIP"
+
+#. module: mrp_account
+#: model:ir.actions.act_window,name:mrp_account.action_wip_accounting
+msgid "Post WIP Accounting Entry"
+msgstr "WIP 후 계정 항목 입력"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_product_template
+msgid "Product"
+msgstr "품목"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_product_category
+msgid "Product Category"
+msgstr "품목 카테고리"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_product_product
+msgid "Product Variant"
+msgstr "품목 세부선택"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_ids
+msgid "Production"
+msgstr "생산"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_product_category__property_stock_account_production_cost_id
+msgid "Production Account"
+msgstr "생산 계정"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "REF123"
+msgstr "REF123"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reference
+msgid "Reference"
+msgstr "참조"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_ids
+#: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_ids
+msgid "Relevant WIP MOs"
+msgstr "관련 WIP MO"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reversal_date
+msgid "Reversal Date"
+msgstr "역분개 기준일"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "Reversal date must be after the posting date."
+msgstr "취소 날짜는 게시 날짜 이후여야 합니다."
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "Reversal of: %s"
+msgstr "역분개 대상: %s"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
+msgid "Show Valuation"
+msgstr "평가 표시"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_stock_move
+msgid "Stock Move"
+msgstr "재고 이동"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_stock_account_stock_valuation_report
+msgid "Stock Valuation"
+msgstr "재고 평가"
+
+#. module: mrp_account
+#: model:ir.model.fields,help:mrp_account.field_account_bank_statement_line__wip_production_ids
+#: model:ir.model.fields,help:mrp_account.field_account_move__wip_production_ids
+msgid ""
+"The MOs that this WIP entry was based on. Expected to be set at time of WIP "
+"entry creation."
+msgstr ""
+"이 WIP 항목과 관련된 MO입니다. 이는 WIP 항목을 생성할 때 정의해야 합니다."
+
+#. module: mrp_account
+#: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
+msgid ""
+"The expense is accounted for when the manufacturing order is marked as done. "
+"If not set, it is the expense account of the final product that will be used "
+"instead."
+msgstr ""
+"제조 주문이 완료됨으로 표시되면 비용이 기록됩니다. 이 설정을 구성하지 않으면 "
+"최종 제품의 계정으로 비용이 대신 청구됩니다."
+
+#. module: mrp_account
+#: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
+msgid ""
+"This account will be used as a valuation counterpart for both components and "
+"final products for manufacturing orders.\n"
+"                If there are any workcenter/employee costs, this value will "
+"remain on the account once the production is completed."
+msgstr ""
+"제조 주문에 포함되는 부품과 완제품 모두에 대한 평가액으로 사용되는 계정입니"
+"다.\n"
+"                작업장/인건비가 있는 경우, 생산이 완료된 후에도 이 값은 계정"
+"에 남게 됩니다."
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Total Credit"
+msgstr "대변 총액"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Total Debit"
+msgstr "차변 총액"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "Units"
+msgstr "단위"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "WIP - Component Value"
+msgstr "WIP - 구성 요소 값"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "WIP - Overhead"
+msgstr "WIP - 간접 비용"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/mrp_production.py:0
+msgid "WIP Entries of %s"
+msgstr "%s의 진행 중인 작업 항목"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__wip_move_count
+msgid "WIP Journal Entry Count"
+msgstr "진행 중인 작업 항목 수"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/account_move.py:0
+msgid "WIP MOs of %s"
+msgstr "WIP MO의 %s"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "WIP Report for"
+msgstr "WIP 보고서"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__line_ids
+msgid "WIP accounting lines"
+msgstr "WIP 회계 항목"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__wip_accounting_id
+msgid "WIP accounting wizard"
+msgstr "WIP 회계 마법사"
+
+#. module: mrp_account
+#: model:ir.actions.report,name:mrp_account.wip_report
+msgid "WIP report"
+msgstr "WIP 보고서"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_ids
+msgid "Wc Analytic Account Line"
+msgstr "Wc 분석 계정 내역"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__wip_move_ids
+msgid "Wip Move"
+msgstr "진행 중인 작업 이동"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting
+msgid "Wizard to post Manufacturing WIP account move"
+msgstr "제조 WIP 계정 이동 게시 마법사"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_workcenter
+msgid "Work Center"
+msgstr "작업장"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_workorder
+msgid "Work Order"
+msgstr "작업 지시"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workorder_count
+msgid "Work Order Count"
+msgstr "작업 지시 수"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/analytic_account.py:0
+msgid "Work Orders"
+msgstr "작업지시서"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workcenter_ids
+msgid "Workcenter"
+msgstr "작업장"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
+msgid "Workcenter Productivity Log"
+msgstr "작업장의 생산성 기록"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/mrp_production.py:0
+#: code:addons/mrp_account/models/mrp_workorder.py:0
+msgid "[WC] %s"
+msgstr "[WC] %s"
+
+#~ msgid "Bill of Material"
+#~ msgstr "재료 명세서"
+
+#~ msgid "Production Order"
+#~ msgstr "생산 주문"
+
+#~ msgid "Stock Rule"
+#~ msgstr "재고 규칙"
+
+#~ msgid "Work Center Usage"
+#~ msgstr "작업장 사용율"

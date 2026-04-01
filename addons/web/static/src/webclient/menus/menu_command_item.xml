@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="web.AppIconCommand">
+    <div class="o_command_default position-relative d-flex align-items-center px-4 py-2 cursor-pointer">
+      <img t-if="props.webIconData" class="me-2 o_app_icon position-relative rounded-1" t-attf-src="{{props.webIconData}}"/>
+      <div t-else="" class="me-2 o_app_icon d-flex align-items-center justify-content-center" t-attf-style="background-color:{{props.webIcon.backgroundColor}}" >
+        <i t-att-class="props.webIcon.iconClass" t-attf-style="color:{{props.webIcon.color}}"></i>
+      </div>
+      <t t-slot="name"/>
+      <span class="ms-auto flex-shrink-0">
+        <t t-slot="focusMessage"/>
+      </span>
+    </div>
+  </t>
+
+</templates>

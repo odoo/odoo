@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_job_form" model="ir.ui.view">
+        <field name="name">hr.job.view.form.inherit.hr.skills</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <page name="recruitment_page" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </page>
+            <div class="oe_title" position="after">
+                <group id="job_skills">
+                    <field
+                        name="current_job_skill_ids"
+                        widget="many2many_tags"
+                        options="{'color_field': 'color'}"
+                        readonly="True"
+                        string="Expected Skills"
+                        groups="!hr.group_hr_user"
+                    />
+                </group>
+            </div>
+            <div name="recruitment_target" position="after">
+                <field
+                    name="current_job_skill_ids"
+                    mode="list"
+                    widget="many2one_tags_skills"
+                    context="{'default_job_id': id}"
+                    string="Expected Skills"
+                >
+                    <list>
+                        <field name="skill_id"/> <!--This is needed for the UI to update smoothly -->
+                        <field name="skill_level_id"/> <!--This is needed for the UI to update smoothly -->
+                        <field name="display_name"/>
+                        <field name="color"/>
+                    </list>
+                </field>
+            </div>
+        </field>
+    </record>
+</odoo>

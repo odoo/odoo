@@ -1,0 +1,154 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_dropshipping
+#
+# Translators:
+# Paweł Wodyński <pw@myodoo.pl>, 2022
+# Maksym <ms@myodoo.pl>, 2022
+# Martin Trigaux, 2022
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-09-16 10:07+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
+"stock_dropshipping/pl/>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_res_company
+msgid "Companies"
+msgstr "Firmy"
+
+#. module: stock_dropshipping
+#: model:ir.model.fields,field_description:stock_dropshipping.field_product_product__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_res_company__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_lot__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking_type__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_replenish_mixin__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_rule__display_name
+msgid "Display Name"
+msgstr "Nazwa wyświetlana"
+
+#. module: stock_dropshipping
+#: model:ir.model.fields.selection,name:stock_dropshipping.selection__stock_picking_type__code__dropship
+#: model:stock.route,name:stock_dropshipping.route_drop_shipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.purchase_order_form_inherit_stock_dropshipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.view_order_form_inherit_sale_stock
+msgid "Dropship"
+msgstr "Dropship"
+
+#. module: stock_dropshipping
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order__dropship_picking_count
+#: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order__dropship_picking_count
+msgid "Dropship Count"
+msgstr "Liczba dropshipów"
+
+#. module: stock_dropshipping
+#: model:ir.actions.act_window,name:stock_dropshipping.action_picking_tree_dropship
+#: model:ir.ui.menu,name:stock_dropshipping.dropship_picking
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.view_picking_internal_search_inherit_stock_dropshipping
+msgid "Dropships"
+msgstr "Dropshipy"
+
+#. module: stock_dropshipping
+#: model:ir.model.fields,field_description:stock_dropshipping.field_product_product__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_res_company__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_lot__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking_type__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_replenish_mixin__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_dropshipping
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking__is_dropship
+msgid "Is a Dropship"
+msgstr "Jest dropshippingiem"
+
+#. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_stock_lot
+msgid "Lot/Serial"
+msgstr "Partia/Numer seryjny"
+
+#. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_stock_picking_type
+msgid "Picking Type"
+msgstr "Typ pobrania"
+
+#. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_stock_replenish_mixin
+msgid "Product Replenish Mixin"
+msgstr "Mixin uzupełniania produktu"
+
+#. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_product_product
+msgid "Product Variant"
+msgstr "Wariant produktu"
+
+#. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_purchase_order
+msgid "Purchase Order"
+msgstr "Zamówienie zakupu"
+
+#. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Pozycja zamówienia zakupu"
+
+#. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_sale_order
+msgid "Sales Order"
+msgstr "Zamówienie sprzedaży"
+
+#. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Pozycja zamówienia sprzedaży"
+
+#. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_stock_rule
+msgid "Stock Rule"
+msgstr "Reguła zasobów"
+
+#. module: stock_dropshipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.stock_picking_type_kanban
+msgid "To Validate"
+msgstr "Do zatwierdzenia"
+
+#. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_stock_picking
+msgid "Transfer"
+msgstr "Przekaz"
+
+#. module: stock_dropshipping
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking_type__code
+msgid "Type of Operation"
+msgstr "Typ operacji"
+
+#~ msgid "Stock Move"
+#~ msgstr "Przesunięcie"
+
+#~ msgid "Procurement Group"
+#~ msgstr "Grupa zapotrzebowań"

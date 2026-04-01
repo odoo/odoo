@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+        <record id="ir_rule_hr_expense_manager" model="ir.rule">
+            <field name="name">Manager Expense</field>
+            <field name="model_id" ref="model_hr_expense"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[
+                (4, ref('account.group_account_user')),
+                (4, ref('hr_expense.group_hr_expense_user'))]"/>
+        </record>
+
+        <record id="ir_rule_hr_expense_approver" model="ir.rule">
+            <field name="name">Team Approver Expense</field>
+            <field name="model_id" ref="model_hr_expense"/>
+            <field name="domain_force">['|', '|', '|', '|',
+                ('employee_id.user_id', '=', user.id),
+                ('employee_id.department_id.manager_id.user_id', '=', user.id),
+                ('employee_id', 'child_of', user.employee_ids.ids),
+                ('employee_id.expense_manager_id', '=', user.id),
+                ('manager_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('hr_expense.group_hr_expense_team_approver'))]"/>
+        </record>
+        <record id="ir_rule_hr_expense_employee" model="ir.rule">
+            <field name="name">Employee Expense</field>
+            <field name="model_id" ref="model_hr_expense"/>
+            <field name="domain_force">[
+                '|', '&amp;', ('employee_id.expense_manager_id', '=', user.id), ('state', 'in', ['draft', 'submitted', 'approved', 'refused']),
+                     '&amp;', ('employee_id.user_id', '=', user.id), ('state', '=', 'draft')
+            ]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="ir_rule_hr_expense_employee_not_draft" model="ir.rule">
+            <field name="name">Employees can't modify an expense that is not in draft state</field>
+            <field name="model_id" ref="model_hr_expense"/>
+            <field name="domain_force">[
+                '|', '&amp;', ('employee_id.user_id', '=', user.id), ('state', '!=', 'draft'),
+                     '&amp;', ('employee_id.expense_manager_id', '=', user.id), ('state', 'in', ['submitted', 'approved', 'refused'])
+            ]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="hr_expense_comp_rule" model="ir.rule">
+            <field name="name">Expense multi company rule</field>
+            <field name="model_id" ref="model_hr_expense"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="hr_expense_team_approver_account_move_rule" model="ir.rule">
+            <field name="name">Expense Team Approver Account Move</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="domain_force">[('expense_ids', '!=', False)]</field>
+            <field name="groups" eval="[(4, ref('hr_expense.group_hr_expense_team_approver'))]"/>
+        </record>
+
+        <record id="hr_expense_team_approver_account_move_line_rule" model="ir.rule">
+            <field name="name">Expense Team Approver Account Move Line</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="domain_force">[('expense_id', '!=', False)]</field>
+            <field name="groups" eval="[(4, ref('hr_expense.group_hr_expense_team_approver'))]"/>
+        </record>
+
+        <record id="ir_rule_hr_expense_split_employee" model="ir.rule">
+            <field name="name">Employee Expense Split</field>
+            <field name="model_id" ref="model_hr_expense_split_wizard"/>
+            <field name="domain_force">[
+                ('expense_id.state', '=', 'draft'),
+                '|', ('expense_id.employee_id.user_id', '=', user.id), ('expense_id.manager_id', '=', user.id),
+            ]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+        <record id="ir_rule_hr_expense_split_approver" model="ir.rule">
+            <field name="name">Approver Expense Split</field>
+            <field name="model_id" ref="model_hr_expense_split_wizard"/>
+            <field name="domain_force">[
+                ('expense_id.state', 'in', ['draft', 'submitted']),
+                ('expense_id.manager_id', 'in', [user.id, False])
+            ]</field>
+            <field name="groups" eval="[(4, ref('hr_expense.group_hr_expense_team_approver'))]"/>
+        </record>
+        <record id="ir_rule_hr_expense_split_user" model="ir.rule">
+            <field name="name">All approver Expense Split</field>
+            <field name="model_id" ref="model_hr_expense_split_wizard"/>
+            <field name="domain_force">[
+                ('expense_id.state', 'in', ['draft', 'submitted']),
+                '|', ('expense_id.employee_id.user_id', '!=', user.id), ('expense_id.manager_id', 'in', [user.id, False])
+            ]</field>
+            <field name="groups" eval="[(4, ref('hr_expense.group_hr_expense_user'))]"/>
+        </record>
+        <record id="ir_rule_hr_expense_split_manager" model="ir.rule">
+            <field name="name">Manager Expense Split</field>
+            <field name="model_id" ref="model_hr_expense_split_wizard"/>
+            <field name="domain_force">[('expense_id.state', 'in', ['draft', 'submitted'])]</field>
+            <field name="groups" eval="[(4, ref('hr_expense.group_hr_expense_manager'))]"/>
+        </record>
+        <record id="ir_rule_hr_expense_split_accountant" model="ir.rule">
+            <field name="name">Accountant Expense Split</field>
+            <field name="model_id" ref="model_hr_expense_split_wizard"/>
+            <field name="domain_force">[('expense_id.state', 'in', ('draft', 'submitted', 'approved'))]</field>
+            <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
+        </record>
+</odoo>

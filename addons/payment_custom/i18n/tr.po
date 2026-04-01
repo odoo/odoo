@@ -1,0 +1,178 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_transfer
+#
+# Translators:
+# Ediz Duman <neps1192@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Murat Kaplan <muratk@projetgrup.com>, 2019
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
+# Umur Akın <umura@projetgrup.com>, 2019
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~12.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-11-20 13:21+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
+"payment_custom/tr/>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+msgid ""
+"<small class=\"text-center text-wrap lh-sm\">Scan me in your banking app</"
+"small>"
+msgstr ""
+"<small class=\"text-center text-wrap lh-sm\">Bankacılık uygulamanızda beni "
+"tarayın</small>"
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+msgid "<strong class=\"mt-auto\">Communication: </strong>"
+msgstr "<strong class=\"mt-auto\">İletişim:</strong>"
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_provider.py:0
+msgid "Bank Account"
+msgstr "Banka Hesabı"
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_provider.py:0
+msgid "Bank Accounts"
+msgstr "Banka Hesapları"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__code
+msgid "Code"
+msgstr "Kod"
+
+#. module: payment_custom
+#: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__code__custom
+msgid "Custom"
+msgstr "Özel"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__custom_mode
+msgid "Custom Mode"
+msgstr "Özel mod"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_custom.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "İsim Göster"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__qr_code
+msgid "Enable QR Codes"
+msgstr "QR Kodlarını Etkinleştir"
+
+#. module: payment_custom
+#: model:ir.model.fields,help:payment_custom.field_payment_provider__qr_code
+msgid "Enable the use of QR-codes when paying by wire transfer."
+msgstr ""
+"Banka havalesiyle ödeme yaparken QR kodlarının kullanılmasını etkinleştirin."
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+msgid "Finalize your payment"
+msgstr "Ödemenizi tamamlayın"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_custom.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+msgid "OR"
+msgstr "VEYA"
+
+#. module: payment_custom
+#: model:ir.model.constraint,message:payment_custom.constraint_payment_provider_custom_providers_setup
+msgid "Only custom providers should have a custom mode."
+msgstr "Yalnızca özel sağlayıcıların özel bir modu olmalıdır."
+
+#. module: payment_custom
+#: model:ir.model,name:payment_custom.model_payment_provider
+msgid "Payment Provider"
+msgstr "Ödeme Sağlayıcı"
+
+#. module: payment_custom
+#: model:ir.model,name:payment_custom.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Ödeme İşlemi"
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_provider.py:0
+msgid "Please use the following transfer details"
+msgstr "Lütfen aşağıdaki transfer bilgilerini kullanın"
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.payment_provider_form
+msgid "Reload Pending Message"
+msgstr "Bekleyen Mesajı Yeniden Yükle"
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_transaction.py:0
+msgid "The customer has selected %(provider_name)s to make the payment."
+msgstr "Müşteri ödemeyi yapmak için %(provider_name)s adresini seçmiştir."
+
+#. module: payment_custom
+#: model:ir.model.fields,help:payment_custom.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Bu ödeme sağlayıcısının teknik kodu."
+
+#. module: payment_custom
+#: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__custom_mode__wire_transfer
+#: model:payment.method,name:payment_custom.payment_method_wire_transfer
+msgid "Wire Transfer"
+msgstr "Manuel Transfer"
+
+#~ msgid "; multiple order found"
+#~ msgstr "; birden çok emir bulundu"
+
+#~ msgid "; no order found"
+#~ msgstr "; sipariş bulunmadı"
+
+#~ msgid ""
+#~ "<div>\n"
+#~ "<h3>Please use the following transfer details</h3>\n"
+#~ "<h4>%(bank_title)s</h4>\n"
+#~ "%(bank_accounts)s\n"
+#~ "<h4>Communication</h4>\n"
+#~ "<p>Please use the order name as communication reference.</p>\n"
+#~ "</div>"
+#~ msgstr ""
+#~ "<div>\n"
+#~ "<h3>Lütfen aşağıdaki transfer detaylarını kullanın</h3>\n"
+#~ "<h4>%(bank_title)s</h4>\n"
+#~ "%(bank_accounts)s\n"
+#~ "<h4>İletişim</h4>\n"
+#~ "<p>İletişim referansı olarak lütfen sipariş adınızı kullanın.</p>\n"
+#~ "</div>"
+
+#~ msgid "Payment Acquirer"
+#~ msgstr "Ödeme Alıcısı"
+
+#~ msgid "Provider"
+#~ msgstr "Sağlayıcı"
+
+#~ msgid "received data for reference %s"
+#~ msgstr "referans için alınan veri %s"

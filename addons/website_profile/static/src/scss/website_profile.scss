@@ -1,0 +1,288 @@
+// Retrive the tab's height by summ its properties
+$owprofile-tabs-height: ($nav-link-padding-y*2) + ($font-size-base * $line-height-base);
+
+// Overal page bg-color: Blend it 'over' the color chosen by the user
+// ($body-bg), rather than force it replacing the variable's value.
+$owprofile-color-bg: mix($body-bg, #efeff4);
+
+.o_wprofile_body {
+    background-color: $owprofile-color-bg;
+}
+
+.o_wprofile_gradient {
+    background-image: linear-gradient(120deg, #875A7B, darken(#875A7B, 10%));
+}
+
+.o_wprofile_pict {
+    width: 100%;
+    height: 100%;
+    padding-top: 30%;
+    background-size: cover;
+    background-position: center;
+
+    @include media-breakpoint-up(md)  {
+        padding-top: 70%;
+        border: 1px solid darken(#875A7B, 10%);
+        border-bottom-width: 0;
+    }
+}
+
+.o_wprofile_header {
+    @include media-breakpoint-up(md)  {
+        &:before {
+            content: "";
+            @include o-position-absolute(auto, 0, 0, 0);
+            height: $owprofile-tabs-height;
+            background: rgba(black, 0.2);
+        }
+    }
+}
+
+.o_wprofile_sidebar {
+    border: 1px solid $border-color;
+
+    @include media-breakpoint-up(md) {
+        border-top-width: 0;
+    }
+}
+
+.o_wprofile_nav_tabs {
+    @include media-breakpoint-up(md)  {
+        margin-top: $owprofile-tabs-height * -1;
+        border-bottom: 0;
+
+        .nav-link {
+            border-radius: 0;
+            border-width: 0 1px;
+            line-height: $line-height-base;
+            @include o-hover-text-color(rgba(white, 0.8), white);
+
+            & {
+                border-color: transparent;
+            }
+    
+            &:hover {
+                border-color: transparent;
+                background: #3d2938;
+            }
+
+            &.active {
+                color: color-contrast($owprofile-color-bg);
+                background: $owprofile-color-bg;
+                border-color: $owprofile-color-bg;
+            }
+        }
+    }
+
+    @include media-breakpoint-only(xs) {
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        li {
+            white-space: nowrap;
+        }
+    }
+}
+
+.o_wprofile_tabs_content {
+    @include media-breakpoint-down(md) {
+        background-color: $nav-tabs-link-active-bg;
+        padding:0 ($grid-gutter-width * 0.5);
+    }
+
+    @include media-breakpoint-only(xs) {
+        margin: 0 ($grid-gutter-width * -0.5);
+    }
+}
+
+/// Progress Circle
+.o_wprofile_progress_circle {
+    position: relative;
+    max-width: 300px;
+
+    svg.o_pc_circular_chart {
+        // Allow hover effect on svg paths in order to display bootstrap tooltip,
+        // by pushing the circular chart above the next rank info.
+        z-index: 1;
+        position: relative;
+        display: block;
+        max-width: 100%;
+
+        .o_pc_circle_bg, .o_pc_circle {
+            fill: none;
+            stroke-width: 1.5px;
+            stroke-linecap: round;
+        }
+
+        .o_pc_circle_bg {
+            stroke: rgba(black, 0.1);
+        }
+
+        .o_pc_circle {
+            animation: progress 1s ease-out forwards;
+        }
+
+        #gradient {
+            --o-pc-color-stop-1: #{lighten(map-get($theme-colors, 'primary'), 10%)};
+            --o-pc-color-stop-2: #{map-get($theme-colors, 'primary')};
+        }
+    }
+
+    .o_pc_overlay {
+        @include o-position-absolute(0,0,0,0);
+        h4 {
+            width: 60%;
+            // only apply ellipsis when in non-edit mode, that way the editor can see the full value
+            &:not(.o_editable) {
+                @include o-text-overflow();
+            }
+            margin-bottom: 0 !important;
+        }
+
+        small.text-center {
+            display: -webkit-box;
+            line-height: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 75% !important;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+    }
+
+    @keyframes progress {
+        0% {
+            stroke-dasharray: 0 100;
+        }
+    }
+}
+
+// All Users Page
+.o_wprofile_all_users_nav {
+    border-width: 1px 0;
+
+    &, .o_wprofile_course_nav_search, .o_wprofile_all_users_nav_btn {
+        background-color: rgba(white, 0.05);
+        border-color: rgba(white, 0.1);
+        border-style: solid;
+    }
+
+    .o_wprofile_course_nav_search, .o_wprofile_all_users_nav_btn {
+        border-width: 0 1px;
+    }
+
+    .o_wprofile_all_users_nav_btn {
+        @include media-breakpoint-up(md) {
+            @include o-hover-text-color(white, $gray-800);
+            margin-top: -1px;
+            border-radius: 0;
+            min-height: 35px;
+
+            &:hover {
+                background-color: white;
+            }
+        }
+    }
+
+    .o_wprofile_all_users_nav_btn_container {
+        @include media-breakpoint-down(md) {
+            ~ .o_wprofile_user_profile_sub_nav_mobile_col {
+                padding-left: 0;
+            }
+
+            .o_wprofile_all_users_nav_btn {
+                @include o-hover-text-color(white, white);
+                border-radius: $btn-border-radius;
+                background-color: rgba(black, 0.25);
+            }
+        }
+    }
+
+    .breadcrumb-item.active a, .breadcrumb-item a:hover {
+        color: white;
+    }
+
+    .breadcrumb-item a, .breadcrumb-item + .breadcrumb-item::before, .o_wprofile_course_nav_search input::placeholder {
+        color: rgba(white, 0.8);
+    }
+}
+
+.o_wprofile_top3_card_footer div {
+    border-color: $border-color;
+    border-style: solid;
+    border-width: 1px 0;
+    margin-top: -1px;
+
+    + div {
+        border-left-width: 1px;
+        margin-left: -1px;
+    }
+}
+
+.o_wprofile_pager {
+    li.page-item {
+        a.page-link {
+            background-color: transparent;
+            border: 0;
+            color: $gray-600;
+            transition-duration: .3s;
+
+            &:hover {
+                color: $primary;
+            }
+        }
+
+        &.active {
+            a.page-link {
+                color: $white;
+            }
+        }
+
+        &.o_wprofile_pager_arrow a {
+            color: $primary;
+
+            &:hover {
+                transform: scaleX(1.50) scaleY(1.50);
+            }
+        }
+
+        &.o_wprofile_pager_arrow.disabled a {
+            color: $gray-600;
+        }
+
+        .page-link:focus {
+            box-shadow: 0 0 0 0;
+        }
+    }
+}
+
+.wprofile_badge_img {
+    height: 2.5em;
+}
+
+
+// Other stuffs
+.country_flag {
+    display: inline-block;
+    margin-left: 2px;
+    max-height: 13px;
+    width: auto !important;
+}
+
+// Tools
+.o_wprofile_pointer {
+    cursor: pointer;
+}
+
+// Own profile border
+.o_wprofile_border_focus {
+    border-left: 4px solid map-get($theme-colors, 'secondary');
+}
+
+// Edition mode
+.editor_enable {
+    // Allow to edit rank picture in edit mode
+    .o_wprofile_progress_circle .o_pc_overlay {
+        z-index: initial;
+    }
+}

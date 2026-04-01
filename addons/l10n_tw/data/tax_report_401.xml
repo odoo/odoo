@@ -1,0 +1,787 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_tw_tax_report_401" model="account.report">
+        <field name="name">401 Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.tw"/>
+        <field name="filter_multi_company">tax_units</field>
+        <field name="default_opening_date_filter">previous_return_period</field>
+        <field name="only_tax_exigible" eval="True"/>
+        <field name="column_ids">
+            <record id="l10n_tw_tax_report_401_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+            <record id="l10n_tw_tax_report_401_tax" model="account.report.column">
+                <field name="name">Tax</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_tw_tax_report_401_tw_401_s" model="account.report.line">
+                <field name="name">Sales</field>
+                <field name="name@zh_TW">銷項</field>
+                <field name="code">TW_401_S</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="children_ids">
+                    <record id="l10n_tw_tax_report_401_tw_401_ot" model="account.report.line">
+                        <field name="name">Output - Sales &amp; Tax</field>
+                        <field name="name@zh_TW">產出 - 銷售和稅收</field>
+                        <field name="code">TW_401_OT</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="children_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_5_vat" model="account.report.line">
+                                <field name="name">5% VAT Sales</field>
+                                <field name="name@zh_TW">5% 增值稅銷售額</field>
+                                <field name="code">TW_401_5_VAT</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="children_ids">
+                                    <record id="l10n_tw_tax_report_401_tw_401_1" model="account.report.line">
+                                        <field name="name">1 Triplicate Invoices / E-Invoices</field>
+                                        <field name="name@zh_TW">1 三聯式發票、電子計算機發票</field>
+                                        <field name="code">TW_401_1</field>
+                                        <field name="hierarchy_level">5</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_tw_tax_report_401_tw_401_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-T VAT 1</field>
+                                            </record>
+                                            <record id="l10n_tw_tax_report_401_tw_401_1_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-T VAT 2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_tw_tax_report_401_tw_401_5" model="account.report.line">
+                                        <field name="name">5 Cash Register (Triplicate) / E-Invoices</field>
+                                        <field name="name@zh_TW">5 收銀機發票(三聯式)及電子發票</field>
+                                        <field name="code">TW_401_5</field>
+                                        <field name="hierarchy_level">5</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_tw_tax_report_401_tw_401_5_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-CR T VAT 5</field>
+                                            </record>
+                                            <record id="l10n_tw_tax_report_401_tw_401_5_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-CR T VAT 6</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_tw_tax_report_401_tw_401_9" model="account.report.line">
+                                        <field name="name">9 Duplicate Invoices / Cash Register (Duplicate)</field>
+                                        <field name="name@zh_TW">9 二聯式發票、收銀機發票(二聯式)</field>
+                                        <field name="code">TW_401_9</field>
+                                        <field name="hierarchy_level">5</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_tw_tax_report_401_tw_401_9_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-D VAT 9</field>
+                                            </record>
+                                            <record id="l10n_tw_tax_report_401_tw_401_9_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-D VAT 10</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_tw_tax_report_401_tw_401_13" model="account.report.line">
+                                        <field name="name">13 Non-invoice Sales</field>
+                                        <field name="name@zh_TW">13 免用發票</field>
+                                        <field name="code">TW_401_13</field>
+                                        <field name="hierarchy_level">5</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_tw_tax_report_401_tw_401_13_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-NI VAT 13</field>
+                                            </record>
+                                            <record id="l10n_tw_tax_report_401_tw_401_13_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-NI VAT 14</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_tw_tax_report_401_tw_401_17" model="account.report.line">
+                                        <field name="name">17 Less: Return &amp; Allowances</field>
+                                        <field name="name@zh_TW">17 減：退回及折讓</field>
+                                        <field name="code">TW_401_17</field>
+                                        <field name="hierarchy_level">5</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_tw_tax_report_401_tw_401_17_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">T VAT 17</field>
+                                            </record>
+                                            <record id="l10n_tw_tax_report_401_tw_401_17_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">T VAT 18</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_tw_tax_report_401_tw_401_21" model="account.report.line">
+                                        <field name="name">21 Total Sales ①</field>
+                                        <field name="name@zh_TW">21 合計 ①</field>
+                                        <field name="code">TW_401_21</field>
+                                        <field name="hierarchy_level">7</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_tw_tax_report_401_tw_401_21_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">TW_401_1.balance + TW_401_5.balance + TW_401_9.balance + TW_401_13.balance - TW_401_17.balance</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_tw_tax_report_401_tw_401_22" model="account.report.line">
+                                        <field name="name">22 Total Output Tax ②</field>
+                                        <field name="name@zh_TW">22 合計稅額 ②</field>
+                                        <field name="code">TW_401_22</field>
+                                        <field name="hierarchy_level">7</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_tw_tax_report_401_tw_401_22_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">TW_401_1.tax + TW_401_5.tax + TW_401_9.tax + TW_401_13.tax - TW_401_17.tax</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_tw_tax_report_401_tw_401_zs" model="account.report.line">
+                                <field name="name">Zero-rated Sales</field>
+                                <field name="name@zh_TW">零稅率銷售額</field>
+                                <field name="code">TW_401_ZS</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="children_ids">
+                                    <record id="l10n_tw_tax_report_401_tw_401_3" model="account.report.line">
+                                        <field name="name">3 Triplicate Invoices / E-Invoices</field>
+                                        <field name="name@zh_TW">3 三聯式發票、電子計算機發票</field>
+                                        <field name="code">TW_401_3</field>
+                                        <field name="hierarchy_level">5</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_tw_tax_report_401_tw_401_3_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-T VAT 3</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_tw_tax_report_401_tw_401_7" model="account.report.line">
+                                        <field name="name">7 Cash Register (Triplicate) / E-Invoices</field>
+                                        <field name="name@zh_TW">7 收銀機發票(三聯式)及電子發票</field>
+                                        <field name="code">TW_401_7</field>
+                                        <field name="hierarchy_level">5</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_tw_tax_report_401_tw_401_7_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-CR T VAT 7</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_tw_tax_report_401_tw_401_11" model="account.report.line">
+                                        <field name="name">11 Duplicate Invoices / Cash Register (Duplicate)</field>
+                                        <field name="name@zh_TW">11 二聯式發票、收銀機發票(二聯式)</field>
+                                        <field name="code">TW_401_11</field>
+                                        <field name="hierarchy_level">5</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_tw_tax_report_401_tw_401_11_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-D VAT 11</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_tw_tax_report_401_tw_401_15" model="account.report.line">
+                                        <field name="name">15 Non-invoice Sales</field>
+                                        <field name="name@zh_TW">15 免用發票</field>
+                                        <field name="code">TW_401_15</field>
+                                        <field name="hierarchy_level">5</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_tw_tax_report_401_tw_401_15_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-NI VAT 15</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_tw_tax_report_401_tw_401_19" model="account.report.line">
+                                        <field name="name">19 Less: Return &amp; Allowances</field>
+                                        <field name="name@zh_TW">19 減：退回及折讓</field>
+                                        <field name="code">TW_401_19</field>
+                                        <field name="hierarchy_level">5</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_tw_tax_report_401_tw_401_19_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">Z VAT 19</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_tw_tax_report_401_tw_401_23" model="account.report.line">
+                                        <field name="name">23 Total Zero-rated Sales ③</field>
+                                        <field name="name@zh_TW">23 合計 ③</field>
+                                        <field name="code">TW_401_23</field>
+                                        <field name="hierarchy_level">7</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_tw_tax_report_401_tw_401_23_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">TW_401_3.balance + TW_401_7.balance + TW_401_11.balance + TW_401_15.balance - TW_401_19.balance</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_25" model="account.report.line">
+                        <field name="name">25 Total Sales (①＋③) ⑦</field>
+                        <field name="name@zh_TW">25 銷售額總計 (①＋③) ⑦</field>
+                        <field name="code">TW_401_25</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_25_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_401_21.balance + TW_401_23.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_27" model="account.report.line">
+                        <field name="name">27 Total Sales (Other Fixed Assets)</field>
+                        <field name="name@zh_TW">27 元(內含銷售固定資產)</field>
+                        <field name="code">TW_401_27</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_27_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-T VAT FA 27</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_tw_tax_report_401_tw_401_p" model="account.report.line">
+                <field name="name">Purchase / Business Inputs</field>
+                <field name="name@zh_TW">進項</field>
+                <field name="code">TW_401_P</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="children_ids">
+                    <record id="l10n_tw_tax_report_401_tw_401_28" model="account.report.line">
+                        <field name="name">28 Unified Invoice Deduction / Standard Invoice Credit - Purchase &amp; Costs</field>
+                        <field name="name@zh_TW">28 統一發票扣抵聯(包括一般稅額計算之電子計算機發票扣抵聯) - 進貨及費用</field>
+                        <field name="code">TW_401_28</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_28_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">P VAT 28</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_401_tw_401_28_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">P VAT 29</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_30" model="account.report.line">
+                        <field name="name">30 Unified Invoice Deduction / Standard Invoice Credit - Fixed Assets</field>
+                        <field name="name@zh_TW">30 統一發票扣抵聯(包括一般稅額計算之電子計算機發票扣抵聯) - 固 定 資 產</field>
+                        <field name="code">TW_401_30</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_30_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">P VAT 30</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_401_tw_401_30_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">P VAT 31</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_32" model="account.report.line">
+                        <field name="name">32 Triplicate Cash Register Invoice Credit - Purchase &amp; Costs</field>
+                        <field name="name@zh_TW">32 三聯式收銀機發票扣抵聯及一般稅額計算之電子發票 - 進貨及費用</field>
+                        <field name="code">TW_401_32</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_32_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">P VAT 32</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_401_tw_401_32_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">P VAT 33</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_34" model="account.report.line">
+                        <field name="name">34 Triplicate Cash Register Invoice Credit - Fixed Assets</field>
+                        <field name="name@zh_TW">34 三聯式收銀機發票扣抵聯及一般稅額計算之電子發票 - 固定資產</field>
+                        <field name="code">TW_401_34</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_34_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">P VAT 34</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_401_tw_401_34_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">P VAT 35</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_36" model="account.report.line">
+                        <field name="name">36 Other Tax Bearing Documents - Purchase &amp; Costs</field>
+                        <field name="name@zh_TW">36 載有稅額之其他憑證(包括二聯式收銀機發票) - 進貨及費用</field>
+                        <field name="code">TW_401_36</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_36_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">P VAT 36</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_401_tw_401_36_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">P VAT 37</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_38" model="account.report.line">
+                        <field name="name">38 Other Tax Bearing Documents - Fixed Assets</field>
+                        <field name="name@zh_TW">38 載有稅額之其他憑證(包括二聯式收銀機發票) - 固定資產</field>
+                        <field name="code">TW_401_38</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_38_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">P VAT 38</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_401_tw_401_38_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">P VAT 39</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_78" model="account.report.line">
+                        <field name="name">78 Customs VAT Certificate - Purchase &amp; Costs</field>
+                        <field name="name@zh_TW">78 海關代徵營業稅繳納證扣抵聯 - 進貨及費用</field>
+                        <field name="code">TW_401_78</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_78_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">P VAT 78</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_401_tw_401_78_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">P VAT 79</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_80" model="account.report.line">
+                        <field name="name">80 Customs VAT Certificate - Fixed Assets</field>
+                        <field name="name@zh_TW">80 海關代徵營業稅繳納證扣抵聯 - 固定資產</field>
+                        <field name="code">TW_401_80</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_80_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">P VAT 80</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_401_tw_401_80_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">P VAT 81</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_40" model="account.report.line">
+                        <field name="name">40 Less: Refunds, Discounts and Customs Refunds of Overpaid Taxes - Purchase &amp; Costs</field>
+                        <field name="name@zh_TW">40 減：退出、折讓及海關退還溢繳稅款 - 進貨及費用</field>
+                        <field name="code">TW_401_40</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_40_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-P VAT 40</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_401_tw_401_40_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-P VAT 41</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_42" model="account.report.line">
+                        <field name="name">42 Less: Refunds, Discounts and Customs Refunds of Overpaid Taxes - Fixed Assets</field>
+                        <field name="name@zh_TW">42 減：退出、折讓及海關退還溢繳稅款 - 固定資產</field>
+                        <field name="code">TW_401_42</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_42_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-P VAT 42</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_401_tw_401_42_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-P VAT 43</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_44" model="account.report.line">
+                        <field name="name">44 Total - Purchase &amp; Costs</field>
+                        <field name="name@zh_TW">44 合計 - 進貨及費用</field>
+                        <field name="code">TW_401_44</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_44_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_401_28.balance + TW_401_32.balance + TW_401_36.balance + TW_401_38.balance + TW_401_78.balance - TW_401_40.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_45" model="account.report.line">
+                        <field name="name">45 Total - Tax on Purchase &amp; Costs ⑨</field>
+                        <field name="name@zh_TW">45 合計稅額 - 進貨及費用 ⑨</field>
+                        <field name="code">TW_401_45</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_45_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_401_28.tax + TW_401_32.tax + TW_401_36.tax +TW_401_38.tax +TW_401_78.tax - TW_401_40.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_46" model="account.report.line">
+                        <field name="name">46 Total - Fixed Assets</field>
+                        <field name="name@zh_TW">46 合計 - 固定資產</field>
+                        <field name="code">TW_401_46</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_46_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_401_30.balance + TW_401_34.balance + TW_401_38.balance +TW_401_80.balance -TW_401_42.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_47" model="account.report.line">
+                        <field name="name">47 Total - Tax on Fixed Assets ⑩</field>
+                        <field name="name@zh_TW">47 合計稅額 - 固定資產 ⑩</field>
+                        <field name="code">TW_401_47</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_47_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_401_30.tax + TW_401_34.tax + TW_401_38.tax +TW_401_80.tax -TW_401_42.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_48" model="account.report.line">
+                        <field name="name">48 Total Input Amount - Purchase &amp; Costs</field>
+                        <field name="name@zh_TW">48 進項總金額 (包括不得扣抵憑證及普通收據) - 進貨及費用</field>
+                        <field name="code">TW_401_48</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_48_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_401_44.balance + TW_401_48.sub_balance_b + TW_401_48.sub_balance_b + TW_401_48.sub_balance_c</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_401_tw_401_48_sub_balance_a" model="account.report.expression">
+                                <field name="label">sub_balance_a</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">EX DOM PC</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_401_tw_401_48_sub_balance_b" model="account.report.expression">
+                                <field name="label">sub_balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula"> P VAT EX 73</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_401_tw_401_48_sub_balance_c" model="account.report.expression">
+                                <field name="label">sub_balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ND VAT PC</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_49" model="account.report.line">
+                        <field name="name">49 Total Input Amount - Fixed Assets</field>
+                        <field name="name@zh_TW">49 進項總金額 (包括不得扣抵憑證及普通收據) - 固定資產</field>
+                        <field name="code">TW_401_49</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_49_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_401_46.balance + TW_401_49.sub_balance_a + TW_401_49.sub_balance_b</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_401_tw_401_49_sub_balance_a" model="account.report.expression">
+                                <field name="label">sub_balance_a</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">EX DOM FA</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_401_tw_401_49_sub_balance_b" model="account.report.expression">
+                                <field name="label">sub_balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ND VAT FA</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_tw_tax_report_401_tw_401_73" model="account.report.line">
+                <field name="name">73 Imported Tax Free Goods</field>
+                <field name="name@zh_TW">73 進口免稅貨物</field>
+                <field name="code">TW_401_73</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_tw_tax_report_401_tw_401_73_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">P VAT EX 73</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_tw_tax_report_401_tw_401_74" model="account.report.line">
+                <field name="name">74 Amount Paid for Purchase of Foreign Services ⑬</field>
+                <field name="name@zh_TW">74 購買國外勞務給付額 ⑬</field>
+                <field name="code">TW_401_74</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_tw_tax_report_401_tw_401_74_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">P VAT EX 74</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_tw_tax_report_401_tw_401_tc" model="account.report.line">
+                <field name="name">Tax Calculation</field>
+                <field name="name@zh_TW">稅額計算</field>
+                <field name="code">TW_401_TC</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="True"/>
+                <field name="children_ids">
+                    <record id="l10n_tw_tax_report_401_tw_401_101" model="account.report.line">
+                        <field name="name">101 Total Output Tax for the Current Period (Month) (2)</field>
+                        <field name="name@zh_TW">101 稅額計算 ②</field>
+                        <field name="code">TW_401_101</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_101_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_401_1.tax + TW_401_5.tax + TW_401_9.tax + TW_401_13.tax - TW_401_17.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_107" model="account.report.line">
+                        <field name="name">107 Total Deductible Input Tax (12)</field>
+                        <field name="name@zh_TW">107 得扣抵進項稅額合計 ⑫</field>
+                        <field name="code">TW_401_107</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_107_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_401_45.tax + TW_401_47.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_108" model="account.report.line">
+                        <field name="name">108 Accumulated Unused Input Tax from Prior Period (Month)</field>
+                        <field name="name@zh_TW">108 上期(月)累積留抵稅額</field>
+                        <field name="code">TW_401_108</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_108_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">1486</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_110" model="account.report.line">
+                        <field name="name">110 Subtotal (Line 7+8)</field>
+                        <field name="name@zh_TW">110 小計(7.+8.)</field>
+                        <field name="code">TW_401_110</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_110_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_401_107.balance + TW_401_108.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_111" model="account.report.line">
+                        <field name="name">111 Tax Payable for the Current Period (Month) (Line 1 - 10)</field>
+                        <field name="name@zh_TW">111 本期(月)應實繳稅額(1.－10.)</field>
+                        <field name="code">TW_401_111</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_111_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_401_101.tax - TW_401_110.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_112" model="account.report.line">
+                        <field name="name">112 Input Tax Credit Carried Forward for the Current Period (Month) (Line 10 - 1)</field>
+                        <field name="name@zh_TW">112 本期(月)申報留抵稅額(10.－1.)</field>
+                        <field name="code">TW_401_112</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_112_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_401_110.balance - TW_401_101.tax</field>
+                                <field name="subformula">if_above(TWD(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_113" model="account.report.line">
+                        <field name="name">113 Total Maximum Refundable Tax Limit (③×5%＋⑩)</field>
+                        <field name="name@zh_TW">113 得退稅限額合計③×5%＋⑩</field>
+                        <field name="code">TW_401_113</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_113_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">(TW_401_23.balance * 0.05) + TW_401_47.tax</field>
+                                <field name="subformula">if_above(TWD(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_114" model="account.report.line">
+                        <field name="name">114 Tax refundable for this period (month) (If 12. &gt; 13., then 13. / If 13. &gt; 12., then 12.)</field>
+                        <field name="name@zh_TW">114 本期(月)應退稅額(如 12.＞13. 則為 13. / 13.＞12. 則為 12.)</field>
+                        <field name="code">TW_401_114</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_114_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_401_112.balance - TW_401_114.excess_credit</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_401_tw_401_114_excess_credit" model="account.report.expression">
+                                <field name="label">excess_credit</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_401_112.balance - TW_401_113.balance</field>
+                                <field name="subformula">if_above(TWD(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_401_tw_401_115" model="account.report.line">
+                        <field name="name">115 Accumulated Unused Input Tax for the Current Period (Month) (Line 12 - 14)</field>
+                        <field name="name@zh_TW">115 本期(月)累積留抵稅額(12.－14.)</field>
+                        <field name="code">TW_401_115</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_401_tw_401_115_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_401_112.balance - TW_401_114.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_tw_tax_report_401_tw_401_82" model="account.report.line">
+                <field name="name">82 Total Sales Revenue (Bonded Area)</field>
+                <field name="name@zh_TW">82 保稅區營業人按進口報關程序銷售貨物至固定資產我國境內課稅區之免開立統一發票銷售額</field>
+                <field name="code">TW_401_82</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_tw_tax_report_401_tw_401_82_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-VAT 82</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

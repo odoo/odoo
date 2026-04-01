@@ -1,0 +1,761 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * event_sale
+#
+# Translators:
+# Tamás Dombos, 2022
+# sixsix six, 2022
+# Kovács Tibor <kovika@gmail.com>, 2022
+# Ákos Nagy <akos.nagy@oregional.hu>, 2022
+# Tamás Németh <ntomasz81@gmail.com>, 2022
+# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
+# gezza <geza.nagy@oregional.hu>, 2022
+# krnkris, 2022
+# Martin Trigaux, 2022
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-14 15:21+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/"
+"event_sale/hu/>\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
+msgid ""
+".\n"
+"            <span>Manual actions may be needed.</span>"
+msgstr ""
+".\n"
+"            <span>Manuális műveletekre lehet szükség.</span>"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Configure Events &amp; Tickets"
+msgstr "<i class=\"fa fa-arrow-right\"/> Események és jegyek beállítása"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
+msgid "<span class=\"o_stat_text\">Sale Order</span>"
+msgstr "<span class=\"o_stat_text\">Vevői rendelés</span>"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "<span class=\"o_stat_text\">Sales</span>"
+msgstr "<span class=\"o_stat_text\">Értékesítések</span>"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
+msgid "<span>Registration modification for attendee:</span>"
+msgstr "<span>Regisztráció módosítása a résztvevők számára:</span>"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "Add"
+msgstr "Hozzáadás"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
+#: model_terms:ir.ui.view,arch_db:event_sale.sale_order_view_form
+msgid "All Events"
+msgstr "Minden esemény"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event__sale_order_lines_ids
+msgid "All sale order lines pointing to this event"
+msgstr "Az erre az eseményre mutató összes vevői rendelés sora"
+
+#. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_event_event_configurator__is_multi_slots
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__is_multi_slots
+msgid ""
+"Allow multiple time slots. The communications, the maximum number of "
+"attendees and the maximum number of tickets registrations are defined for "
+"each time slot instead of the whole event."
+msgstr ""
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__done
+msgid "Attended"
+msgstr "Részt vett"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_sale_order__attendee_count
+msgid "Attendee Count"
+msgstr "Résztvevők száma"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_name
+msgid "Attendee Name"
+msgstr "Résztvevő neve"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.sale_order_view_form
+msgid "Attendees"
+msgstr "Résztvevők"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+msgid "Before updating the linked registrations of"
+msgstr "Ezzel kapcsolt regisztrációk frissítése előtt"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Booked by"
+msgstr "Foglalta"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_campaign_id
+msgid "Campaign"
+msgstr "Kampány"
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__cancel
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__cancel
+msgid "Cancelled"
+msgstr "Visszavont"
+
+#. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_id
+msgid ""
+"Choose an event and it will automatically create a registration for this "
+"event."
+msgstr ""
+"Válasszon egy eseményt, ami automatikusan regsiztrációt hoz létre az "
+"eseményhez."
+
+#. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_slot_id
+msgid ""
+"Choose an event slot and it will automatically create a registration for "
+"this event slot."
+msgstr ""
+
+#. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
+msgid ""
+"Choose an event ticket and it will automatically create a registration for "
+"this event ticket."
+msgstr ""
+"Válasszon egy esemény jegyet, ami automatikusan regisztrációt hoz létre az "
+"eseményhez."
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "Close"
+msgstr "Bezárás"
+
+#. module: event_sale
+#: model_terms:ir.actions.act_window,help:event_sale.event_sale_report_action
+msgid "Come back once tickets have been sold to overview your sales income."
+msgstr ""
+"Jöjjön vissza, amint a jegyeket eladták, hogy áttekinthesse az értékesítési "
+"bevételt."
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__company_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__company_id
+msgid "Company"
+msgstr "Vállalat"
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__open
+msgid "Confirmed"
+msgstr "Megerősített"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/product_template.py:0
+msgid "Create an Attendee for the selected Event."
+msgstr "Hozzon létre egy résztvevőt a kiválasztott eseményhez."
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+msgid "Create/Update registrations"
+msgstr "Regisztrációk létrehozása/frissítése"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__create_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_uid
+msgid "Created by"
+msgstr "Létrehozta"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__create_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_date
+msgid "Created on"
+msgstr "Létrehozva"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_partner_id
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Customer"
+msgstr "Vevő"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "Discard"
+msgstr "Elvetés"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event__display_name
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__display_name
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__display_name
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__display_name
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__display_name
+#: model:ir.model.fields,field_description:event_sale.field_product_template__display_name
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__display_name
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__display_name
+#: model:ir.model.fields,field_description:event_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr "Megjelenített név"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_registration_editor
+msgid "Edit Attendee Details on Sales Confirmation"
+msgstr "Részvevők adatainak szerkesztése az értékesítési visszaigazoláson"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_registration_editor_line
+msgid "Edit Attendee Line on Sales Confirmation"
+msgstr "Részvevők sorának szerkesztése az értékesítési visszaigazoláson"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__editor_id
+msgid "Editor"
+msgstr "Szerkesztő"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__email
+msgid "Email"
+msgstr "Email"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_event_event
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__event_id
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_id
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Event"
+msgstr "Esemény"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_event_event_configurator
+msgid "Event Configurator"
+msgstr "Esemény konfigurátor"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_end
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Event End Date"
+msgstr "Esemény vége"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_event_registration
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_id
+msgid "Event Registration"
+msgstr "Esemény regisztráció"
+
+#. module: event_sale
+#: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
+msgid "Event Registrations"
+msgstr "Esemény regisztrációk"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Event Sales Analysis"
+msgstr "Esemény értékesítési elemzése"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_event_sale_report
+msgid "Event Sales Report"
+msgstr "Esemény értékesítési jelentés"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_slot_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_slot_id
+msgid "Event Slot"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_begin
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Event Start Date"
+msgstr "Esemény kezdete"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_event_event_ticket
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_ticket_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_ticket_id
+msgid "Event Ticket"
+msgstr "Esemény jegy"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_type_id
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Event Type"
+msgstr "Esemény típusa"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Events that have ended"
+msgstr "Események, melyek véget értek"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
+msgid "Exception:"
+msgstr "Kivétel:"
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__free
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Free"
+msgstr "Ingyenes"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__has_available_tickets
+msgid "Has Available Tickets"
+msgstr "Vannak elérhető jegyek"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event__id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__id
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__id
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__id
+#: model:ir.model.fields,field_description:event_sale.field_product_template__id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/wizard/event_configurator.py:0
+msgid "Invalid slot choice \"%(slot_name)s\" for event \"%(event_name)s\"."
+msgstr ""
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/wizard/event_configurator.py:0
+msgid "Invalid ticket choice \"%(ticket_name)s\" for event \"%(event_name)s\"."
+msgstr ""
+"Érvénytelen \"%(ticket_name)s\" jegyválasztás \"%(event_name)s\"eseményre."
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__invoice_partner_id
+msgid "Invoice Address"
+msgstr "Számlázási cím"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__is_multi_slots
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__is_multi_slots
+msgid "Is Multi Slots"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__active
+msgid "Is registration active (not archived)?"
+msgstr "A regisztráció aktív (nem archivált)?"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_uid
+msgid "Last Updated by"
+msgstr "Frissítette"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_date
+msgid "Last Updated on"
+msgstr "Frissítve"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_medium_id
+msgid "Medium"
+msgstr "Médium"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__name
+msgid "Name"
+msgstr "Név"
+
+#. module: event_sale
+#: model_terms:ir.actions.act_window,help:event_sale.event_sale_report_action
+msgid "No Event Revenues yet!"
+msgstr "Az eseménynek még nincs bevétele!"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Non-free tickets"
+msgstr "Nem ingyenes jegyek"
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__to_pay
+msgid "Not Sold"
+msgstr "Nincs eladva"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_date
+msgid "Order Date"
+msgstr "Megrendelés dátuma"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__registration_id
+msgid "Original Registration"
+msgstr "Eredeti regisztráció"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Participant"
+msgstr "Résztvevő"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Past Events"
+msgstr "Elmúlt események"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_status
+msgid "Payment Status"
+msgstr "Fizetés állapota"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Pending payment"
+msgstr "Fizetés folyamatban"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__phone
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/sale_order.py:0
+msgid ""
+"Please make sure all your event related lines are configured before "
+"confirming this order:%s"
+msgstr ""
+"Kérjük, a rendelés megerősítése előtt győződjön meg arról, hogy az összes "
+"eseményhez kapcsolódó sor be van-e állítva:%s"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_product_template
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__product_id
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__product_id
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Product"
+msgstr "Termék"
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__draft
+msgid "Quotation"
+msgstr "Árajánlat"
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__sent
+msgid "Quotation Sent"
+msgstr "Árajánlat elküldve"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+msgid "Registration"
+msgstr "Regisztráció"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_create_date
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Registration Date"
+msgstr "Regisztráció dátuma"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_state
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Registration Status"
+msgstr "Regisztráció állapota"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
+msgid "Registration revenues"
+msgstr "Regisztrációs bevételek"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__registration_ids
+msgid "Registrations"
+msgstr "Regisztrációk"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__event_registration_ids
+msgid "Registrations to Edit"
+msgstr "Szerkesztendő regisztráció"
+
+#. module: event_sale
+#: model:ir.actions.act_window,name:event_sale.event_sale_report_action
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_price
+#: model:ir.ui.menu,name:event_sale.menu_action_show_revenues
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_graph
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_pivot
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_tree
+msgid "Revenues"
+msgstr "Bevételek"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_id
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
+msgid "Sale Order"
+msgstr "Vevői rendelés"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_line_id
+msgid "Sale Order Line"
+msgstr "Vevői rendelés sor"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_state
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Sale Order Status"
+msgstr "Vevői rendelés státusz"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "Sales"
+msgstr "Értékesítés"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event__sale_price_total
+msgid "Sales (Tax Included)"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_sale_order
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__sale_order_id
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__sale
+msgid "Sales Order"
+msgstr "Vevői rendelés"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_sale_order_line
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_line_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__sale_order_line_id
+msgid "Sales Order Line"
+msgstr "Vevői rendelés sor"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_user_id
+msgid "Salesperson"
+msgstr "Értékesítő"
+
+#. module: event_sale
+#: model:ir.actions.act_window,name:event_sale.event_configurator_action
+msgid "Select an Event"
+msgstr "Válasszon egy eseményt"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/event_registration.py:0
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__event_slot_id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_slot_id
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Slot"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__sold
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Sold"
+msgstr "Eladva"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_source_id
+msgid "Source"
+msgstr "Forrás"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__state
+msgid "Status"
+msgstr "Státusz"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/sale_order_line.py:0
+msgid ""
+"The sale order line with the product %(product_name)s needs an event, a "
+"ticket and a slot in case the event has multiple time slots."
+msgstr ""
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/event_registration.py:0
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Ticket"
+msgstr "Jegy"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__event_ticket_id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ticket_id
+msgid "Ticket Type"
+msgstr "Jegy típusa"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_ticket_price
+msgid "Ticket price"
+msgstr "Jegyár"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "Total sales for this event"
+msgstr "Az esemény összes értékesítése"
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__draft
+msgid "Unconfirmed"
+msgstr "Nincs megerősítve"
+
+#. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_event_registration__state
+msgid ""
+"Unconfirmed: registrations in a pending state waiting for an action "
+"(specific case, notably with sale status)\n"
+"Registered: registrations considered taken by a client\n"
+"Attended: registrations for which the attendee attended the event\n"
+"Cancelled: registrations cancelled manually"
+msgstr ""
+"Meg nem erősített: függőben lévő, intézkedésre váró regisztrációk (speciális "
+"eset, nevezetesen értékesítés státusszal)\n"
+"Regisztrált: a vevő által foglaltnak tekintett regisztrációk\n"
+"Részt vett: olyan regisztrációk, amelyek esetében a résztvevő részt vett az "
+"eseményen\n"
+"Törölt: manuálisan törölt regisztrációk."
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_price_untaxed
+msgid "Untaxed Revenues"
+msgstr "Bevételek adó nélk."
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Upcoming events from today"
+msgstr "Jövőbeni események a mai naptól"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Upcoming/Running"
+msgstr "Jövőbeni/Futó"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "We could not find a matching event ticket for this product. <br/>"
+msgstr "Nem találtunk megfelelő eseményjegyet ehhez a termékhez. <br/>"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
+msgid "changed from"
+msgstr ""
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+msgid "please provide attendee details."
+msgstr "kérjük, adja meg a résztvevők adatait."
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
+msgid "to"
+msgstr "erre"
+
+#~ msgid ""
+#~ "A storable product is a product for which you manage stock. The Inventory "
+#~ "app has to be installed.\n"
+#~ "A consumable product is a product for which stock is not managed.\n"
+#~ "A service is a non-material product you provide."
+#~ msgstr ""
+#~ "A készletezett termék olyan materiális termék, mely készletre kerül. "
+#~ "Ehhez telepíteni kell a Készlet app-ot.\n"
+#~ "A fogyóeszköz termék olyan materiális termék, mely nem kerül készletre.\n"
+#~ "A szolgálatás immateriális termék."
+
+#~ msgid "Cancel"
+#~ msgstr "Mégse"
+
+#~ msgid "Configure an event"
+#~ msgstr "Esemény konfigurálása"
+
+#~ msgid "Currency"
+#~ msgstr "Pénznem"
+
+#~ msgid "Description"
+#~ msgstr "Leírás"
+
+#~ msgid "Event Tickets"
+#~ msgstr "Jegyek a rendezvényre"
+
+#~ msgid "Group By"
+#~ msgstr "Csoportosítás"
+
+#~ msgid "Journal Entry"
+#~ msgstr "Könyvelési tétel"
+
+#~ msgid "Locked"
+#~ msgstr "Zárolt"
+
+#~ msgid "Mobile"
+#~ msgstr "Mobil"
+
+#~ msgid "Not Paid"
+#~ msgstr "Nincs fizetve"
+
+#~ msgid "Ok"
+#~ msgstr "Ok"
+
+#~ msgid "Order Ref"
+#~ msgstr "Rendelési hiv."
+
+#~ msgid "Paid"
+#~ msgstr "Kifizetve"
+
+#~ msgid "Price"
+#~ msgstr "Ár"
+
+#~ msgid "Price Reduce"
+#~ msgstr "Árcsökkentés"
+
+#~ msgid "Price Reduce Tax inc"
+#~ msgstr "Árcsökkentés adóval"
+
+#~ msgid "Product Type"
+#~ msgstr "Terméktípus"
+
+#~ msgid "Product Variant"
+#~ msgstr "Termékváltozat"
+
+#~ msgid "Sales End"
+#~ msgstr "Vevői megrendelések lezárva"
+
+#~ msgid "Skip"
+#~ msgstr "Kihagy"
+
+#~ msgid "Transaction"
+#~ msgstr "Tranzakció"

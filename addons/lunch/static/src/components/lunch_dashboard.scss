@@ -1,0 +1,25 @@
+.o_lunch_content {
+    .o-autocomplete--input {
+        cursor: pointer;
+    }
+}
+
+.o_lunch_banner {
+    @include media-breakpoint-up(md) {
+        min-width: 18rem;
+    }
+
+    .o_lunch_order_line_quantity {
+        input {
+            max-width: 3rem;
+        }
+
+        .o_lunch_qty_btn.disabled .oi{
+            opacity: $btn-disabled-opacity;
+        }
+
+        &.o_lunch_order_line_input_disabled {
+            opacity: $btn-disabled-opacity;
+        }
+    }
+}

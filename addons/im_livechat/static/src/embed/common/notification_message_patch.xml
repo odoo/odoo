@@ -1,0 +1,5 @@
+<t t-inherit="mail.NotificationMessage" t-inherit-mode="extension">
+    <xpath expr="//*[hasclass('o-mail-NotificationMessage')]" position="attributes">
+        <attribute name="t-attf-class" add="{{ props.thread.channel_type === 'livechat' ? 'o-livechat-NoPinMenu' : '' }}" separator=" "/>
+    </xpath>
+</t>

@@ -1,0 +1,711 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * product_expiry
+#
+# Translators:
+# Martin Trigaux, 2022
+# Sarah Park, 2023
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-01-13 15:32+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"product_expiry/ko/>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: product_expiry
+#. odoo-python
+#: code:addons/product_expiry/models/production_lot.py:0
+msgid "\t--Expire on %(date)s--"
+msgstr "\t--만료일: %(date)s--"
+
+#. module: product_expiry
+#. odoo-python
+#: code:addons/product_expiry/models/production_lot.py:0
+msgid "\t--Expired--"
+msgstr "\t--만료됨--"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+msgid ""
+"<span class=\"badge rounded-pill float-end text-bg-warning\" invisible=\"not "
+"(alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; expiration_date)"
+"\">Expiring</span>\n"
+"            <span class=\"badge rounded-pill float-end text-bg-danger\" "
+"invisible=\"not product_expiry_alert\">Expired</span>"
+msgstr ""
+"<span class=\"badge rounded-pill float-end text-bg-warning\" invisible=\"not "
+"(alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; expiration_date)\">"
+"만료 예정</span>\n"
+"            <span class=\"badge rounded-pill float-end text-bg-danger\" "
+"invisible=\"not product_expiry_alert\">만료됨</span>"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
+msgid ""
+"<span title=\"Alert\" class=\"fa fa-exclamation-triangle text-danger me-2\" "
+"invisible=\"product_qty &lt;= 0 or not product_expiry_alert or not "
+"expiration_date\"/>"
+msgstr ""
+"<span title=\"Alert\" class=\"fa fa-exclamation-triangle text-danger me-2\" "
+"invisible=\"product_qty &lt;= 0 or not product_expiry_alert or not "
+"expiration_date\"/>"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "<span> days after receipt</span>"
+msgstr "<span> 일이 입고 후 경과함</span>"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "<span> days before expiration date</span>"
+msgstr "<span> 일이 만료일까지 남음</span>"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__alert_date
+msgid "Alert Date"
+msgstr "경고 날짜"
+
+#. module: product_expiry
+#. odoo-python
+#: code:addons/product_expiry/models/production_lot.py:0
+msgid "Alert Date Reached"
+msgstr "도래한 경고 날짜"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
+msgid "Alert Lots"
+msgstr "로트 알림"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+msgid "Alert from"
+msgstr "알림 시작일"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__available_quantity
+msgid "Available Quantity"
+msgstr "가용수량"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__free_qty
+msgid ""
+"Available quantity (computed as Quantity On Hand - reserved quantity - "
+"quantity to remove)\n"
+"In a context with a single Stock Location, this includes goods stored in "
+"this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
+msgstr ""
+"가용 수량(보유 수량 - 출고 + 입고 - 예약 수량- 반출 수량으로 계산)단일 재고 "
+"위치인 상황에서는 해당 위치 또는 그 하위 위치에 보관되어 있는 품목까지 포함합"
+"니다.단일 창고인 상황에서는 해당 창고 또는 그 하위 위치에 보관 되어 있는 품목"
+"까지 포함합니다.기타의 경우, '내부' 유형으로 모든 재고 위치에 보관 중인 품목"
+"이 포함됩니다."
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
+msgid "B.b."
+msgstr "B.b."
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
+msgid "Best Before Date"
+msgstr "유효 기간"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+msgid "Best before"
+msgstr "유통기한"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__use_date
+msgid "Best before Date"
+msgstr "유효 기간"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_res_config_settings
+msgid "Config Settings"
+msgstr "환경설정"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Confirm"
+msgstr "승인"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_expiry_picking_confirmation
+msgid "Confirm Expiry"
+msgstr "유효기간 승인"
+
+#. module: product_expiry
+#. odoo-python
+#: code:addons/product_expiry/models/stock_picking.py:0
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Confirmation"
+msgstr "확인"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__alert_date
+msgid ""
+"Date to determine the expired lots and serial numbers using the filter "
+"\"Expiration Alerts\"."
+msgstr ""
+"\"만료 경고\" 필터를 사용하여 만료된 로트 및 일련번호를 확인하는 날짜입니다."
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "Dates"
+msgstr "날짜"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__description
+msgid "Description"
+msgstr "설명"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Discard"
+msgstr "취소"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__group_expiry_date_on_delivery_slip
+msgid "Display Expiration Dates on Delivery Slips"
+msgstr "송장에 유통기한 표시"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_report_stock_quantity__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_forecasted_product_product__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_rule__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
+msgid "Exp."
+msgstr "예상"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+msgid "Expiration"
+msgstr "만료일"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
+msgid "Expiration Alerts"
+msgstr "만료 경고"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__expiration_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__expiration_time
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__expiration_date
+#: model_terms:ir.ui.view,arch_db:product_expiry.stock_report_delivery_document_inherit_product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "Expiration Date"
+msgstr "만료일"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.res_config_settings_view_form_stock
+msgid "Expiration dates will appear on the delivery slip"
+msgstr "송장에 만료일 표시"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
+msgid "Expiration:"
+msgstr "만료일:"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Expired Lot(s)"
+msgstr "만료 Lot(s)"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
+msgid "Expired Lots"
+msgstr "로트 만료"
+
+#. module: product_expiry
+#. odoo-javascript
+#: code:addons/product_expiry/static/src/forecasted_details.xml:0
+msgid "Expired Stock"
+msgstr "유통기한 만료 재고"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_reminded
+msgid "Expiry has been reminded"
+msgstr "만료 알림 전송됨"
+
+#. module: product_expiry
+#: model:product.removal,name:product_expiry.removal_fefo
+msgid "First Expiry First Out (FEFO)"
+msgstr "선한선출 (FEFO)"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__virtual_available
+msgid ""
+"Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming - "
+"Quantity to Remove)\n"
+"In a context with a single Stock Location, this includes goods stored in "
+"this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
+msgstr ""
+"예측 수량(보유 수량 - 출고 + 입고 - 반출 수량으로 계산)단일 재고 위치인 상황"
+"에서는 해당 위치 또는 그 하위 위치에 보관되어 있는 품목까지 포함합니다.단일 "
+"창고인 상황에서는 해당 창고 또는 그 하위 위치에 보관 되어 있는 품목까지 포함"
+"합니다.기타의 경우, '내부' 유형으로 모든 재고 위치에 보관 중인 품목이 포함됩"
+"니다."
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__virtual_available
+msgid "Forecasted Quantity"
+msgstr "예상 수량"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__free_qty
+msgid "Free To Use Quantity "
+msgstr "수량 사용 가능 "
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__id
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__id
+#: model:ir.model.fields,field_description:product_expiry.field_report_stock_quantity__id
+#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_forecasted_product_product__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_picking__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: product_expiry
+#: model:res.groups,name:product_expiry.group_expiry_date_on_delivery_slip
+msgid "Include expiration dates on delivery slip"
+msgstr "송장에 만료일자 포함"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__lot_ids
+msgid "Lot"
+msgstr "LOT"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_lot
+msgid "Lot/Serial"
+msgstr "LOT/일련번호"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__expiration_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__expiration_time
+msgid ""
+"Number of days after the receipt of the products (from the vendor or in "
+"stock after production) after which the goods may become dangerous and must "
+"not be consumed. It will be computed on the lot/serial number."
+msgstr ""
+"품목이 위험해질 수 있고 반드시 소모할 품목이 아닐 경우 품목을 입고할 기간(공"
+"급업체 또는 생산 후의 재고)입니다. Lot/일련번호에 계산됩니다."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__alert_time
+msgid ""
+"Number of days before the Expiration Date after which an alert should be "
+"raised on the lot/serial number. It will be computed on the lot/serial "
+"number."
+msgstr ""
+"로트 및 일련번호 기준으로 경고를 안내해야 하는 만료일까지 남은 날짜입니다. 로"
+"트 및 일련번호를 기준으로 계산합니다."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__removal_time
+msgid ""
+"Number of days before the Expiration Date after which the goods should be "
+"removed from the stock and not be counted in the Fresh On Hand Stock "
+"anymore.It will be computed on the lot/serial number."
+msgstr ""
+"유통기한까지 남은 날짜 기준 기간이며 품목이 재고에서 제거되어 더 이상 신선 보"
+"유 재고로 포함되지 않는 기간입니다. 로트번호 및 일련번호를 기준으로 계산됩니"
+"다."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__use_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__use_time
+msgid ""
+"Number of days before the Expiration Date after which the goods starts "
+"deteriorating, without being dangerous yet. It will be computed on the lot/"
+"serial number."
+msgstr ""
+"아직 위험 상태까지는 아니지만, 품목 상태가 악화되기 시작하는 만료일까지 남은 "
+"날짜입니다. 로트 및 일력번호를 기준으로 계산합니다."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_quant__available_quantity
+msgid ""
+"On hand quantity which hasn't been reserved on a transfer and is still "
+"fresh, in the default unit of measure of the product"
+msgstr ""
+"보유 중인 수량으로 이동 예약이 되지 않고 아직 유효하며, 품목의 기본 측정 단위"
+"로 표시되어 있는 수량"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
+msgid "Picking"
+msgstr "선별"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Proceed except expired"
+msgstr "만료된 항목은 제외하고 진행"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_template
+msgid "Product"
+msgstr "품목"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_alert
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__is_expired
+msgid "Product Expiry Alert"
+msgstr "품목 만료 경고"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "품목 이동 (재고 이동 상세)"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_product
+msgid "Product Variant"
+msgstr "품목 세부선택"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_quant
+msgid "Quants"
+msgstr "수량"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__removal_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__removal_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__removal_date
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+msgid "Removal Date"
+msgstr "제거 날짜"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
+msgid "Removal:"
+msgstr "제거:"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
+msgid "Show Lots"
+msgstr "Lot 표시"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_move
+msgid "Stock Move"
+msgstr "재고 이동"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_report_stock_quantity
+msgid "Stock Quantity Report"
+msgstr "재고 수량 보고서"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_forecasted_product_product
+msgid "Stock Replenishment Report"
+msgstr "재고 재보충 보고서"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_rule
+msgid "Stock Rule"
+msgstr "재고 규칙"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__product_expiry_alert
+#: model:ir.model.fields,help:product_expiry.field_stock_move_line__is_expired
+msgid "The Expiration Date has been reached."
+msgstr "유통기한이 임박했습니다."
+
+#. module: product_expiry
+#. odoo-python
+#: code:addons/product_expiry/models/production_lot.py:0
+msgid "The alert date has been reached for this lot/serial number"
+msgstr "LOT/일련번호에 대한 경고 날짜가 임박했습니다."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_move_line__expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant__expiration_date
+msgid ""
+"This is the date on which the goods with this Serial Number may become "
+"dangerous and must not be consumed."
+msgstr ""
+"이 일련번호를 가진 상품이 위험해질 수 있거나 사용해서는 안되는 날짜입니다."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__removal_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant__removal_date
+msgid ""
+"This is the date on which the goods with this Serial Number should be "
+"removed from the stock and not be counted in the Fresh On Hand Stock "
+"anymore. This date will be used in FEFO removal strategy."
+msgstr ""
+"이 날짜는 해당 일련번호의 품목이 재고에서 제거되어 더 이상 신선 보유 재고로 "
+"포함되지 않는 날짜입니다. 이 날짜는 FEFO 처리 방식에서 사용됩니다."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__use_date
+msgid ""
+"This is the date on which the goods with this Serial Number start "
+"deteriorating, without being dangerous yet."
+msgstr ""
+"이 일련번호를 가진 상품이 아직 위험하진 않지만 상태가 악화되기 시작하는 날짜"
+"입니다."
+
+#. module: product_expiry
+#. odoo-javascript
+#: code:addons/product_expiry/static/src/forecasted_header.xml:0
+msgid "To Remove"
+msgstr "제거"
+
+#. module: product_expiry
+#. odoo-javascript
+#: code:addons/product_expiry/static/src/forecasted_details.xml:0
+msgid "To remove now"
+msgstr "지금 제거"
+
+#. module: product_expiry
+#. odoo-javascript
+#: code:addons/product_expiry/static/src/forecasted_details.xml:0
+msgid "To remove on"
+msgstr "다음 날짜에 제거:"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_picking
+msgid "Transfer"
+msgstr "전송"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__use_expiration_date
+msgid "Use Expiration Date"
+msgstr "유통기한 사용"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_product_template__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_move__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_move_line__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant__use_expiration_date
+msgid ""
+"When this box is ticked, you have the possibility to specify dates to manage "
+"product expiration, on the product and on the corresponding lot/serial "
+"numbers"
+msgstr ""
+"체크박스가 선택되면, 품목과 관련된 lot/일련번호에 품목이 유효기간을 관리할 특"
+"정날짜가 생성됩니다."
+
+#. module: product_expiry
+#. odoo-python
+#: code:addons/product_expiry/wizard/confirm_expiry.py:0
+msgid ""
+"You are going to deliver some product expired lots.\n"
+"Do you confirm you want to proceed?"
+msgstr ""
+"로트 유효 기간이 만료된 품목을 배송하려고 합니다.\n"
+"계속 진행하시겠습니까?"
+
+#. module: product_expiry
+#. odoo-python
+#: code:addons/product_expiry/wizard/confirm_expiry.py:0
+msgid ""
+"You are going to deliver the product %(product_name)s, %(lot_name)s which is "
+"expired or should at least be removed from stock.\n"
+"Do you confirm you want to proceed?"
+msgstr ""
+"배송하려는 %(product_name)s, %(lot_name)s 품목은 유통기한이 만료되어 최소한 "
+"재고에서 제거해야 하는 품목입니다.\n"
+"계속 진행할까요?"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid "^A0N,44,33^FDUse by:"
+msgstr "^A0N,44,33^FDUse by:"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^BCN,100,Y,N,N\n"
+"^FD"
+msgstr ""
+"^BCN,100,Y,N,N\n"
+"^FD"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid "^FO100,150"
+msgstr "^FO100,150"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FO100,150\n"
+"^A0N,44,33^FDBest before:"
+msgstr ""
+"^FO100,150\n"
+"^A0N,44,33^FD유효 기간:"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FO100,150\n"
+"^A0N,44,33^FDUse by:"
+msgstr ""
+"^FO100,150\n"
+"^A0N,44,33^FD사용 기간:"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid "^FO100,200"
+msgstr "^FO100,200"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FO100,200\n"
+"^A0N,44,33^FDUse by:"
+msgstr ""
+"^FO100,200\n"
+"^A0N,44,33^FD사용 기간:"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid "^FO100,200^BY3"
+msgstr "^FO100,200^BY3"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FO100,50\n"
+"^A0N,44,33^FD"
+msgstr ""
+"^FO100,50\n"
+"^A0N,44,33^FD"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid "^FS"
+msgstr "^FS"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FS\n"
+"^FO100,100\n"
+"^A0N,44,33^FDLN/SN:"
+msgstr ""
+"^FS\n"
+"^FO100,100\n"
+"^A0N,44,33^FDLN/SN:"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FS\n"
+"^FO100,200^BY3\n"
+"^BCN,100,Y,N,N\n"
+"^FD"
+msgstr ""
+"^FS\n"
+"^FO100,200^BY3\n"
+"^BCN,100,Y,N,N\n"
+"^FD"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FS\n"
+"^FO100,250^BY3"
+msgstr ""
+"^FS\n"
+"^FO100,250^BY3"
+
+#. module: product_expiry
+#: model:product.removal,method:product_expiry.removal_fefo
+msgid "fefo"
+msgstr "선한선출"
+
+#~ msgid "Fresh Free Stock"
+#~ msgstr "신선 여유 재고"
+
+#~ msgid "Procurement Group"
+#~ msgstr "조달 그룹"
+
+#~ msgid ""
+#~ "This is the date on which the goods with this Serial Number should be "
+#~ "removed from the stock. This date will be used in FEFO removal strategy."
+#~ msgstr ""
+#~ "이 일련번호가있는 상품을 재고에서 제거해야하는 날짜입니다. 이 날짜는 FEFO "
+#~ "제거 전략에 사용됩니다."

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.ActionpadWidget" t-inherit="point_of_sale.ActionpadWidget" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('actionpad')]//button[hasclass('mobile-more-button')]" position="before">
+            <button t-if="pos.config.module_pos_restaurant and !this.currentOrder.isRefund"
+                    class="btn btn-secondary btn-lg flex-shrink-0 border-0" t-on-click="()=>this.pos.addCourse()">
+                <span>Course</span>
+            </button>
+        </xpath>
+        <xpath expr="//div[hasclass('validation')]" position="attributes">
+            <!-- Check availability for all children, needed due to condition based pay button. Skip rendering if none are available. -->
+            <attribute name="t-if">!this.swapButton or showFastPaymentMethods or (pos.showBackButton() and !pos.config.module_pos_restaurant)</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('validation')]//button[hasclass('pay-order-button')]" position="attributes">
+            <attribute name="t-if">!this.swapButton</attribute>
+        </xpath>
+        <!-- Replace the payment button by the order button -->
+        <xpath expr="//div[hasclass('validation')]" position="before">
+            <div t-if="this.swapButton and currentOrder" class="d-flex gap-2 flex-fill">
+                <BackButton t-if="pos.showBackButton() and pos.config.module_pos_restaurant" class="{'col-3': showFastPaymentMethods}" onClick="() => pos.onClickBackButton()"/>
+                <button
+                    class="submit-order h-100 button btn btn-lg d-flex align-items-center w-50 flex-fill position-relative px-3 highlight btn-primary justify-content-between"
+                    t-on-click="() => doSubmitOrder.call()"
+                    t-if="!this.currentOrder.isDirectSale and this.displayCategoryCount.length"
+                    t-att-disabled="doSubmitOrder.status === 'loading'"
+                >
+                    <div t-if="!(ui.isSmall or displayCategoryCount.length > 2) or (!displayCategoryCount.length and ui.isSmall)" class="text-truncate text-start">Send</div>
+                    <div t-attf-class="{{ !(displayCategoryCount.length > 2) ? 'd-flex flex-column align-items-end gap-1' : 'row row-cols-2 g-1 gx-2' }} {{ isCategoryCountOverflow ? 'mt-n3' : ''}}">
+                        <t t-if="displayCategoryCount.length">
+                            <t t-foreach="displayCategoryCount" t-as="categoryCountLine"  t-key="categoryCountLine_index">
+                                <div class="d-flex align-items-center justify-content-between small" t-att-class="{ 'gap-2' : !(displayCategoryCount.length > 2) }">
+                                    <div class="flex-grow-1"/>
+                                    <label class="product-category-label px-2"><t t-esc="categoryCountLine.name"/></label>
+                                    <label class="rounded px-2 py-0" style="background-color:rgba(0, 0, 0, 0.3);"><t t-esc="this.env.utils.formatProductQty(categoryCountLine.count, false)"/></label>
+                                </div>
+                            </t>
+                        </t>
+                        <t t-if="isCategoryCountOverflow">
+                            <div class="position-absolute bottom-0 start-50 translate-middle-x">...</div>
+                        </t>
+                    </div>
+                </button>
+                <button
+                    class="fire-btn button btn btn-primary btn-lg d-flex flex-row align-items-center justify-content-center w-50"
+                    t-on-click="() => this.clickFireCourse()"
+                    t-elif="this.displayFireCourseBtn"
+                >
+                    <span t-esc="this.fireCourseBtnText"></span>
+                </button>
+                <button
+                    class="button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
+                    t-on-click="() => doReprintOrder.call()"
+                    t-elif="this.pos.unwatched.printers.length and this.currentOrder.uiState.lastPrints.length"
+                    t-att-disabled="doReprintOrder.status === 'loading'">
+                    <i class="fa fa-cutlery" aria-hidden="true"></i>
+                </button>
+                <button
+                    class="button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center w-50"
+                    t-on-click="() => this.pos.showDefault()"
+                    t-elif="!this.currentOrder.isDirectSale and !this.displayCategoryCount.length and !this.currentOrder.isEmpty()"
+                >
+                    <span>New</span>
+                </button>
+                <t t-elif="this.currentOrder.isDirectSale and this.pos.numpadMode != 'table'">
+                    <button
+                        class="set-table h-100 button btn btn-lg d-flex align-items-center flex-fill position-relative px-3 btn-primary justify-content-center"
+                        t-att-class="{'o_catch_attention_vibrate': this.pos.shouldSetTable}"
+                        t-on-click="() => this.props.setTable()"
+                    >
+                        Set Table
+                    </button>
+                    <button
+                        class="new-tab h-100 button btn btn-lg d-flex align-items-center flex-fill position-relative px-3 btn-primary justify-content-center"
+                        t-on-click="() => this.pos.editFloatingOrderName(this.currentOrder)"
+                    >
+                        Set Tab
+                    </button>
+                </t>
+                <t t-elif="this.currentOrder.isDirectSale and this.pos.numpadMode == 'table'">
+                    <BackButton onClick="() => this.pos.numpadMode = 'quantity'"/>
+                    <button
+                        class="h-100 assign-button button btn-primary btn btn-lg d-flex flex-row align-items-center justify-content-center w-50"
+                        t-on-click="() => this.props.assignOrder()"
+                    >
+                        <span>Assign</span>
+                    </button>
+                    <button
+                        class="h-100 plan-button button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center w-50"
+                        t-on-click="() => this.pos.navigate('FloorScreen')"
+                    >
+                        <span>Plan</span>
+                    </button>
+                </t>
+                <button t-if="!currentOrder.isEmpty() and this.pos.numpadMode != 'table'"
+                    t-on-click="() => pos.pay()" 
+                    class="button pay-order-button pay-order-button-restaurant btn btn-lg w-50"
+                    t-attf-class="{{ this.highlightPay ? 'highlight btn-primary' : 'btn-secondary' }}"
+                >
+                    Payment
+                </button>
+            </div>
+        </xpath>
+    </t>
+</templates>

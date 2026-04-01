@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.InputConfirmationDialog">
+    <Dialog size="'md'" title="props.title" modalRef="modalRef">
+        <div class="row">
+            <label class="col-form-label col-md-2" for="inputConfirmation" t-esc="props.inputLabel"/>
+            <div class="col-md-10">
+                <input id="inputConfirmation" type="text" class="form-control" t-model="inputState.value"/>
+            </div>
+        </div>
+
+        <t t-set-slot="footer">
+          <button class="btn" t-att-class="props.confirmClass" t-on-click="_confirm" t-esc="props.confirmLabel" data-hotkey="q"/>
+          <button t-if="props.cancel" class="btn btn-secondary" t-on-click="_cancel" t-esc="props.cancelLabel" data-hotkey="x"/>
+        </t>
+    </Dialog>
+</t>
+
+</templates>

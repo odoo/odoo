@@ -1,0 +1,209 @@
+from unittest import skip
+
+from odoo.exceptions import ValidationError
+from odoo.tests import Form, tagged
+from odoo import Command
+
+from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
+
+
+@tagged('post_install', '-at_install')
+class TestSubcontractingLandedCosts(TestMrpSubcontractingCommon):
+
+    @skip('Temporary to fast merge new valuation')
+    def test_subcontracting_landed_cost_receipts_flow(self):
+        """
+            This test verifies that landed costs can be applied to subcontracting receipts
+            rather than being added directly to the manufacturing order.
+        """
+        self.product_category.property_cost_method = 'fifo'
+        self.product_category.property_valuation = 'real_time'
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [(0, 0, {
+                'name': self.finished.name,
+                'product_id': self.finished.id,
+                'product_uom_qty': 10,
+                'product_uom_id': self.finished.uom_id.id,
+                'price_unit': 10,
+            })],
+        })
+        po.button_confirm()
+
+        mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
+        self.assertTrue(mo)
+
+        action = po.action_view_picking()
+        in_picking = self.env[action['res_model']].browse(action['res_id'])
+        in_picking.move_ids.quantity = 10
+        in_picking.move_ids.picked = True
+        in_picking.button_validate()
+
+        # create a landed cost for the incoming picking
+        default_vals = self.env['stock.landed.cost'].default_get(list(self.env['stock.landed.cost'].fields_get()))
+        freight_charges = self.env['product.product'].create({
+            'name': 'Freight Charges',
+            'categ_id': self.product_category.id,
+        })
+        default_vals.update({
+            'picking_ids': [in_picking.id],
+            'cost_lines': [(0, 0, {
+                'product_id': freight_charges.id,
+                'name': 'equal split',
+                'split_method': 'equal',
+                'price_unit': 99,
+            })],
+        })
+        stock_landed_cost = self.env['stock.landed.cost'].create(default_vals)
+
+        # compute the landed cost using compute button
+        stock_landed_cost.compute_landed_cost()
+
+        # check the valuation adjustment lines
+        for valuation in stock_landed_cost.valuation_adjustment_lines:
+            if valuation.cost_line_id.name == 'equal split':
+                self.assertEqual(valuation.former_cost, 100)
+                self.assertEqual(valuation.additional_landed_cost, 99, 'Additional Landed Cost should be 99 instead of %s' % (valuation.additional_landed_cost))
+                self.assertEqual(valuation.final_cost, 199)
+            else:
+                raise ValidationError('unrecognized valuation adjustment line')
+
+        # confirm the landed cost
+        stock_landed_cost.button_validate()
+        self.assertEqual(stock_landed_cost.state, "done")
+
+        self.assertEqual(len(in_picking.move_ids.stock_valuation_layer_ids), 1)
+        self.assertEqual(in_picking.move_ids.stock_valuation_layer_ids.value, 99)
+
+        new_po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [(0, 0, {
+                'name': self.finished.name,
+                'product_id': self.finished.id,
+                'product_uom_qty': 10,
+                'product_uom_id': self.finished.uom_id.id,
+                'price_unit': 10,
+            })],
+        })
+
+        # The following checks ensure that the landed cost is distributed uniformly between standard product and subcontracting product
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'is_storable': True,
+            'categ_id': self.product_category.id,
+        })
+        with Form(new_po) as po_form:
+            with po_form.order_line.new() as new_line:
+                new_line.product_id = product
+                new_line.product_qty = 10
+                new_line.price_unit = 20
+        new_po.button_confirm()
+
+        new_mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
+        self.assertTrue(new_mo)
+
+        action = new_po.action_view_picking()
+        in_picking = self.env[action['res_model']].browse(action['res_id'])
+        in_picking.move_ids.quantity = 10
+        in_picking.move_ids.picked = True
+        in_picking.button_validate()
+
+        # create a landed cost for the incoming picking
+        default_vals = self.env['stock.landed.cost'].default_get(list(self.env['stock.landed.cost'].fields_get()))
+        default_vals.update({
+            'picking_ids': [in_picking.id],
+            'cost_lines': [(0, 0, {
+                'product_id': freight_charges.id,
+                'name': 'equal split',
+                'split_method': 'equal',
+                'price_unit': 99,
+            })],
+        })
+        stock_landed_cost = self.env['stock.landed.cost'].create(default_vals)
+
+        # compute the landed cost using compute button
+        stock_landed_cost.compute_landed_cost()
+
+        # check the valuation adjustment lines
+        self.assertEqual(len(stock_landed_cost.valuation_adjustment_lines), 2)
+        for valuation in stock_landed_cost.valuation_adjustment_lines:
+            if valuation.cost_line_id.name == 'equal split':
+                self.assertEqual(valuation.additional_landed_cost, 49.5, 'Additional Landed Cost should be 49.5 instead of %s' % (valuation.additional_landed_cost))
+            else:
+                raise ValidationError('unrecognized valuation adjustment line')
+
+        # confirm the landed cost
+        stock_landed_cost.button_validate()
+        self.assertEqual(stock_landed_cost.state, "done")
+
+    def test_subcontracting_landed_cost_valuation_and_amls(self):
+        """
+            This test verifies that the account move line created after the validation
+            of a landed cost applied to the receipt of  subcontracted product take into
+            account the pro rata of the products still in stock.
+        """
+        warehouse = self.env['stock.warehouse'].search([
+            ('company_id', '=', self.env.company.id),
+        ], limit=1)
+        product_category_all = self.env.ref('product.product_category_goods')
+        self._setup_category_stock_journals()
+        product_category_all.property_cost_method = 'average'
+        product_category_all.property_valuation = 'real_time'
+        self.finished.categ_id = product_category_all
+
+        # create and confirm PO
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [(0, 0, {
+                'name': self.finished.name,
+                'product_id': self.finished.id,
+                'product_qty': 10,
+                'product_uom_id': self.finished.uom_id.id,
+                'price_unit': 10,
+            })],
+        })
+        po.button_confirm()
+
+        # validate outgoing move to have only partial quantity remaining
+        receipt = po.picking_ids[0]
+        receipt.button_validate()
+        move = self.env['stock.move'].create({
+            'product_id': self.finished.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'product_uom_qty': 3,
+            'picking_type_id': warehouse.out_type_id.id,
+            'move_line_ids': [Command.create({
+                'quantity': 3,
+                'product_id': self.finished.id,
+            })]
+        })
+        move.picked = True
+        move._action_done()
+        self.assertEqual(self.finished.standard_price, 10)
+
+        # create a landed cost for the incoming picking and validate it
+        freight_charges = self.env['product.product'].create({
+            'name': 'Freight Charges',
+            'categ_id': self.product_category.id,
+        })
+        stock_landed_cost = self.env['stock.landed.cost'].create({
+            'picking_ids': [receipt.id],
+            'cost_lines': [(0, 0, {
+                'product_id': freight_charges.id,
+                'name': 'equal split',
+                'split_method': 'equal',
+                'price_unit': 10,
+            })],
+        })
+        stock_landed_cost.compute_landed_cost()
+        stock_landed_cost.button_validate()
+
+        # check the amls created and price post landed cost
+        self.assertEqual(self.finished.standard_price, 11)
+        stock_valu_acc_id = product_category_all.property_stock_valuation_account_id.id
+        expense_acc_id = product_category_all.property_account_expense_categ_id.id
+        self.assertRecordValues(stock_landed_cost.account_move_id.line_ids, [
+            {'account_id': stock_valu_acc_id,   'product_id': self.finished.id,    'debit': 7.0,  'credit': 0.0},
+            {'account_id': expense_acc_id,     'product_id': self.finished.id,    'debit': 0.0,   'credit': 7.0},
+        ])

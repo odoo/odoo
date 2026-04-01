@@ -1,0 +1,1677 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mail_group
+#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-12-12 09:28+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/mail_group/"
+"cs/>\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+msgid "#Members"
+msgstr "#Členové"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+msgid "#Messages"
+msgstr "#Zprávy"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+msgid "#To Review"
+msgstr "#K prověření"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid ") <span invisible=\"not send_email\">and send them an email</span>."
+msgstr ""
+") <span invisible=\"not send_email\">a pošlete jim e-mail na adresu</span>."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid ""
+"<br/>\n"
+"                    Get the conversation started by sending an email to"
+msgstr ""
+"<br/>\n"
+"                    Začněte konverzaci zasláním e-mailu na adresu"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "<br/> You'll be notified as soon as some new content is posted."
+msgstr "<br/> Jakmile bude zveřejněn nový obsah, budete o tom informováni."
+
+#. module: mail_group
+#: model:mail.template,body_html:mail_group.mail_template_list_subscribe
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hello,<br/><br/>\n"
+"                You have requested to be subscribed to the mailing list "
+"<strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                To confirm, please visit the following link: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"                If this was a mistake or you did not requested this action, "
+"please ignore this message.\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Dobrý den,<br/><br/>\n"
+"                Požádali jste o zařazení do mailing listu <strong t-"
+"out=\"object.name or ''\"/>.\n"
+"               <br/><br/> \n"
+"                Pro potvrzení prosím navštivte následující odkaz: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a> </strong>\n"
+"                <br/> <br/> \n"
+"                Pokud se jedná o omyl nebo jste o tuto akci nepožádali, "
+"prosím tuto zprávu ignorujte.\n"
+"           </div>\n"
+"        "
+
+#. module: mail_group
+#: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hello,<br/><br/>\n"
+"                You have requested to be unsubscribed to the mailing list "
+"<strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                To confirm, please visit the following link: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"                <br/><br/>\n"
+"                If this was a mistake or you did not requested this action, "
+"please ignore this message.\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Dobrý den,<br/><br/>\n"
+"                Požádali jste o odhlášení ze seznamu adresátů <strong t-"
+"out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                Pro potvrzení prosím navštivte následující odkaz: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"                <br/><br/>\n"
+"                Pokud se jedná o chybu nebo jste o tuto akci nežádali, tuto "
+"zprávu prosím ignorujte.\n"
+"            </div>\n"
+"        "
+
+#. module: mail_group
+#: model:mail.template,body_html:mail_group.mail_template_guidelines
+msgid ""
+"<div>\n"
+"                <p>Hello <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
+"                <p>Please find below the guidelines of the <t t-"
+"out=\"object.mail_group_id.name\"/> mailing list.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
+"or ''\"/></p>\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div>\n"
+"                <p>Dobrý den, <t t-out=\"object.partner_id.name or ''\"/>,</"
+"p>\n"
+"                <p>níže naleznete pokyny pro používání mailingového seznamu "
+"<t t-out=\"object.mail_group_id.name\"/>.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
+"or ''\"/></p> \n"
+"           </div>\n"
+"        "
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_footer
+msgid ""
+"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr ""
+"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_name
+msgid ""
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
+"title=\"Traffic\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Návštěvnost\" "
+"title=\"Návštěvnost\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
+"title=\"Recipients\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Odběratelé\" "
+"title=\"Odběratelé\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid ""
+"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
+"title=\"Previous message\"/>"
+msgstr ""
+"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Předchozí zpráva\" "
+"title=\"Předchozí zpráva\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid ""
+"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Next message\" "
+"title=\"Next message\"/>"
+msgstr ""
+"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Další zpráva\" "
+"title=\"Další zpráva\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+msgid ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show attachments\" "
+"title=\"Show attachments\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Zobrazit přílohy\" "
+"title=\"Zobrazit přílohy\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
+"title=\"Show replies\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Zobrazit "
+"odpovědi\" title=\"Zobrazit odpovědi\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+msgid ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide "
+"attachments\" title=\"Hide attachments\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Skrýt přílohy\" "
+"title=\"Skrýt přílohy\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
+"title=\"Hide replies\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Skrýt odpovědi\" "
+"title=\"Skrýt odpovědi\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid "<span class=\"bg-warning\">Pending</span>"
+msgstr "<span class=\"bg-warning\">Čeká na vyřízení</span>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid ""
+"<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != "
+"'allow'\">Whitelisted</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" "
+"invisible=\"author_moderation != 'ban'\">Banned</span>"
+msgstr ""
+"<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != "
+"'allow'\">Povoleno</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" "
+"invisible=\"author_moderation != 'ban'\">Zablokovano</span>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_footer
+msgid "<span class=\"mx-2\">-</span>"
+msgstr "<span class=\"mx-2\">-</span>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
+msgid "<span>By thread</span>"
+msgstr "<span>Podle vlákna</span>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"<span>No Mail Group yet.</span>\n"
+"                    <br/>"
+msgstr ""
+"<span>Zatím žádná poštovní skupina.</span>\n"
+"                    <br/>"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_defaults
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr ""
+"Slovník Pythonu, který bude vyhodnocen tak, aby poskytoval výchozí hodnoty "
+"při vytváření nových záznamů pro tento alias."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Accept"
+msgstr "Přijmout"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__accepted
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid "Accepted"
+msgstr "Přijato"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__action
+msgid "Action"
+msgstr "Akce"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__active
+msgid "Active"
+msgstr "Aktivní"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid ""
+"Add this email address to white list of people and accept all pending "
+"messages from the same author."
+msgstr ""
+"Přidejte tuto e-mailovou adresu do seznamu povolených osob a přijímejte "
+"všechny čekající zprávy od stejného autora."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_id
+msgid "Alias"
+msgstr "Alias"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_contact
+msgid "Alias Contact Security"
+msgstr "Zabezpečení aliasu kontaktu"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain_id
+msgid "Alias Domain"
+msgstr "Alias domény"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain
+msgid "Alias Domain Name"
+msgstr "Alias domény"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_full_name
+msgid "Alias Email"
+msgstr "E-mailový alias"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_name
+msgid "Alias Name"
+msgstr "Název aliasu"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_status
+msgid "Alias Status"
+msgstr "Stav aliasu"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_status
+msgid "Alias status assessed on the last message received."
+msgstr "Stav aliasu při poslední doručené zprávě."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_model_id
+msgid "Aliased Model"
+msgstr "Model aliasu"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "All messages of this group"
+msgstr "Všechny zprávy této skupiny"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Allowed Emails"
+msgstr "Povolené e-maily"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Alone we can do so little, together we can do so much"
+msgstr "Sami toho můžeme udělat málo, společně můžeme udělat tolik"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__allow
+msgid "Always Allow"
+msgstr "Vždy povolit"
+
+#. module: mail_group
+#. odoo-javascript
+#: code:addons/mail_group/static/src/interactions/mail_group.js:0
+msgid "An email with instructions has been sent."
+msgstr "E-mail s pokyny byl odeslán."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+msgid "Archived"
+msgstr "Archivováno"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
+msgid "Archives"
+msgstr "Archivy"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__attachment_ids
+msgid "Attachments"
+msgstr "Přílohy"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_id
+msgid "Author"
+msgstr "Autor"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_moderation
+msgid "Author Moderation Status"
+msgstr "Stav moderování autora"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group_message__author_id
+msgid ""
+"Author of the message. If not set, email_from may hold an email address that "
+"did not match any partner."
+msgstr ""
+"Autor zprávy. Pokud není nastaven, email_from může obsahovat e-mailovou "
+"adresu, která neodpovídá žádnému partnerovi."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__access_group_id
+msgid "Authorized Group"
+msgstr "Autorizovaná skupina"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify
+msgid "Automatic notification"
+msgstr "Automatické oznámení"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message_reject__action__ban
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Ban"
+msgstr "Ban (zákaz)"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Ban the author of the message ("
+msgstr "Zablokovat autora zprávy ("
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid ""
+"Ban this email address and reject all pending messages from the same author "
+"and send an email to the author"
+msgstr ""
+"Zablokovat tuto e-mailovou adresu, odmítněte všechny nevyřízené zprávy od "
+"stejného autora a pošlete mu e-mail."
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__ban
+msgid "Banned"
+msgstr "Zakázáno"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Banned Emails"
+msgstr "Zakázané e-maily"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
+msgid "By date"
+msgstr "Podle data"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__can_manage_group
+msgid "Can Manage"
+msgstr "Může spravovat"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__can_manage_group
+msgid "Can manage the members"
+msgstr "Může spravovat členy"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_child_ids
+msgid "Children"
+msgstr "Potomci"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Choose or configure a custom domain"
+msgstr "Vyberte nebo nakonfigurujte vlastní doménu"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_name
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Closed"
+msgstr "Zavřeno"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__is_closed
+msgid ""
+"Closed groups might still be accessed, but emails sent to it will bounce"
+msgstr ""
+"Uzavřené skupiny mohou být stále přístupné, ale e-maily zaslané do nich "
+"budou vráceny."
+
+#. module: mail_group
+#: model:mail.template,subject:mail_group.mail_template_list_subscribe
+msgid "Confirm subscription to {{ object.name }}"
+msgstr "Potvrďte předplatné {{ object.name }}"
+
+#. module: mail_group
+#: model:mail.template,subject:mail_group.mail_template_list_unsubscribe
+msgid "Confirm unsubscription to {{ object.name }}"
+msgstr "Potvrďte zrušení předplatného {{ object.name }}"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__body
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__body
+msgid "Contents"
+msgstr "Obsah"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
+msgid "Create a Mail Group"
+msgstr "Vytvořit poštovní skupinu"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Create a new group"
+msgstr "Vytvořit novou skupinu"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_uid
+msgid "Created by"
+msgstr "Vytvořeno uživatelem"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__create_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__create_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_date
+msgid "Created on"
+msgstr "Vytvořeno dne"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__is_moderator
+msgid "Current user is a moderator of the group"
+msgstr "Aktuální uživatel je moderátorem skupiny."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_bounced_content
+msgid "Custom Bounced Message"
+msgstr "Vlastní odrazená zpráva"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_defaults
+msgid "Default Values"
+msgstr "Výchozí hodnoty"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__description
+msgid "Description"
+msgstr "Popis"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Discard"
+msgstr "Zrušit"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__display_name
+msgid "Display Name"
+msgstr "Zobrazovací název"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__email
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_tree
+msgid "Email"
+msgstr "Email"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Email %s is invalid"
+msgstr "Email %s je neplatný"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_email
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Email Alias"
+msgstr "Emailový alias"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__email_from_normalized
+msgid "Email From"
+msgstr "E-mail od"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group_message__email_from
+msgid ""
+"Email address of the sender. This field is set when no matching partner is "
+"found and replaces the author_id field in the chatter."
+msgstr ""
+"E-mailová adresa odesílatele. Toto pole je nastaveno, pokud nebyl nalezen "
+"žádný odpovídající partner a nahrazuje pole autor_id v chatu."
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "E-mailová doména, např. 'example.com' v 'odoo@example.com'"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Emails"
+msgstr "Emaily"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Emails waiting an action for this group"
+msgstr "E-maily čekající na akci pro tuto skupinu"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__public
+msgid "Everyone"
+msgstr "Každý"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid "Follow-Ups"
+msgstr "Následné kroky"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid "From"
+msgstr "Od"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__mail_group_id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__mail_group_id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__mail_group_id
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Group"
+msgstr "Skupina"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid "Group Message"
+msgstr "Skupinová zpráva"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Group Name"
+msgstr "Název Skupiny"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+msgid "Group message can only be linked to mail group. Current model is %s."
+msgstr ""
+"Skupinová zpráva může být propojena pouze s poštovní skupinou. Aktuální "
+"model je %s."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/controllers/portal.py:0
+msgid "Groups"
+msgstr "Skupiny"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Guidelines"
+msgstr "Pokyny"
+
+#. module: mail_group
+#: model:mail.template,subject:mail_group.mail_template_guidelines
+msgid "Guidelines of group {{ object.mail_group_id.name }}"
+msgstr "Směrnice skupiny {{ object.mail_group_id.name }}"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+msgid "Hello"
+msgstr "Dobrý den,"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.email_template_mail_group_closed
+msgid ""
+"Hello there,\n"
+"    <br/><br/>\n"
+"    The mailing list you are trying to reach has been closed, and will not "
+"accept new messages.\n"
+"    <br/><br/>\n"
+"    Kind Regards,"
+msgstr ""
+"Dobrý den, <br/><br/>Seznam adresátů, který se snažíte kontaktovat, byl "
+"uzavřen a nepřijímá nové zprávy. <br/><br/>S pozdravem,"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__id
+msgid "ID"
+msgstr "ID"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_thread_id
+msgid ""
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
+msgstr ""
+"ID rodičovského záznamu obsahující alias (například: Projekt obsahující "
+"alias pro vytváření úkolů)"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_bounced_content
+msgid ""
+"If set, this content will automatically be sent out to unauthorized users "
+"instead of the default message."
+msgstr ""
+"Pokud je nastaveno, bude tento obsah místo výchozí zprávy automaticky "
+"odeslán neoprávněným uživatelům."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__image_128
+msgid "Image"
+msgstr "Obrázek"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Invalid action for URL generation (%s)"
+msgstr "Neplatná akce pro generování URL (%s)"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_moderation.py:0
+msgid "Invalid email address “%s”"
+msgstr "neplatná emailová adresa “%s”"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.invalid_token_subscription
+msgid "Invalid or expired confirmation link."
+msgstr "Neplatný odkaz nebo vypršení potvrzovacího odkazu."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Is Allowed"
+msgstr "je povoleno"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Is Banned"
+msgstr "Je zakázán"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__is_closed
+msgid "Is Closed"
+msgstr "Uzavřeno"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__is_group_moderated
+msgid "Is Group Moderated"
+msgstr "Skupina moderována"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__is_member
+msgid "Is Member"
+msgstr "Je člen"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+msgid "Join"
+msgstr "Připojit"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__write_uid
+msgid "Last Updated by"
+msgstr "Naposledy upraveno uživatelem"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__write_date
+msgid "Last Updated on"
+msgstr "Naposledy upraveno dne"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+msgid "Leave"
+msgstr "Uvolnit"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
+msgid "Let people subscribe to your list online or manually add them here."
+msgstr ""
+"Nechte lidi přihlásit se k odběru vašeho seznamu online nebo je sem přidejte "
+"ručně."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_incoming_local
+msgid "Local-part based incoming detection"
+msgstr "Detekce příchozích na základě místní části"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Mail Group"
+msgstr "Emailová skupina"
+
+#. module: mail_group
+#: model:res.groups,name:mail_group.group_mail_group_manager
+msgid "Mail Group Administrator"
+msgstr "Správce poštovní skupiny"
+
+#. module: mail_group
+#: model:mail.template,name:mail_group.mail_template_list_subscribe
+msgid "Mail Group: Mailing List Subscription"
+msgstr "Poštovní skupina: Přihlášení k odběru poštovního seznamu"
+
+#. module: mail_group
+#: model:mail.template,name:mail_group.mail_template_list_unsubscribe
+msgid "Mail Group: Mailing List Unsubscription"
+msgstr "Poštovní skupina: Odhlášení z mailingového seznamu"
+
+#. module: mail_group
+#: model:mail.template,name:mail_group.mail_template_guidelines
+msgid "Mail Group: Send Guidelines"
+msgstr "Poštovní skupina: Odeslat pokyny"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_action
+#: model:ir.ui.menu,name:mail_group.mail_group_menu
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+msgid "Mail Groups"
+msgstr "Emailové skupiny"
+
+#. module: mail_group
+#: model:ir.actions.server,name:mail_group.ir_cron_mail_notify_group_moderators_ir_actions_server
+msgid "Mail List: Notify group moderators"
+msgstr "Seznam adresátů: Upozornit moderátory skupiny"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__mail_message_id
+msgid "Mail Message"
+msgstr "E-mailová zpráva"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_member
+msgid "Mailing List Member"
+msgstr "Člen emailového seznamu"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_message
+msgid "Mailing List Message"
+msgstr "Zpráva emailovému seznamu"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_moderation
+msgid "Mailing List black/white list"
+msgstr "Black/whilelist emailového seznamu"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.portal_breadcrumbs_group
+msgid "Mailing Lists"
+msgstr "Emailové seznamy"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
+msgid ""
+"Mailing groups are communities that like to discuss a specific topic "
+"together."
+msgstr ""
+"Poštovní skupiny jsou komunity, které rády společně diskutují o konkrétním "
+"tématu."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+msgid "Mailing-List:"
+msgstr "Seznam adresátů:"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_member_action
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__member_ids
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Members"
+msgstr "Členové"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__member_count
+msgid "Members Count"
+msgstr "Počet členů"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Members of this group"
+msgstr "Členové této skupiny"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__members
+msgid "Members only"
+msgstr "Pouze pro členy"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__mail_group_message_id
+msgid "Message"
+msgstr "Zpráva"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_message_reject_action
+msgid "Message Rejection Explanation"
+msgstr "Vysvětlení odmítnutí zprávy"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_message_action
+msgid "Messages"
+msgstr "Zprávy"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_count
+msgid "Messages Count"
+msgstr "Počet zpráv"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_last_month_count
+msgid "Messages Per Month"
+msgstr "Zpráv na měsíc"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Messages are pending moderation"
+msgstr "Zprávy čekají na schválení"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_moderation_count
+msgid "Messages that need an action"
+msgstr "Zprávy, které vyžadují akci"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
+msgid "Moderate"
+msgstr "Moderujte"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+msgid "Moderate Messages"
+msgstr "Moderovat zprávy"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+msgid "Moderated"
+msgstr "Moderované"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderator_id
+msgid "Moderated By"
+msgstr "Moderováno od"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_ids
+msgid "Moderated Emails"
+msgstr "Moderované e-maily"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_count
+msgid "Moderated emails count"
+msgstr "Počet moderovaných e-mailů"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Moderated emails in this group"
+msgstr "Moderované e-maily v této skupině"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Moderated group must have moderators."
+msgstr "Moderovaná skupina musí mít moderátory."
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_moderation_action
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+msgid "Moderation"
+msgstr "Umírněnost"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_tree
+msgid "Moderation Lists"
+msgstr "Seznam moderování"
+
+#. module: mail_group
+#: model:ir.ui.menu,name:mail_group.mail_group_moderation_menu
+msgid "Moderation Rules"
+msgstr "Moderační pravidla"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Moderations"
+msgstr "Moderování"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__is_moderator
+msgid "Moderator"
+msgstr "Moderátor"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderator_ids
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Moderators"
+msgstr "Moderátoři"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Moderators must have an email address."
+msgstr "Moderátoři musí mít e-mailovou adresu."
+
+#. module: mail_group
+#: model:mail.group,name:mail_group.mail_group_1
+msgid "My Company News"
+msgstr "Novinky z mé společnosti"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__name
+msgid "Name"
+msgstr "Název"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"Need to unsubscribe? <br/>It's right here! <span class=\"oi fa-2x oi-arrow-"
+"down float-end\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
+msgstr ""
+"Chcete se odhlásit? <br/>Je to právě tady! <span class=\"oi fa-2x oi-arrow-"
+"down float-end\" role=\"img\" aria-label=\"\" title=\"Přečtete si to!\"/>"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__moderation_guidelines
+msgid ""
+"Newcomers on this moderated group will automatically receive the guidelines."
+msgstr "Noví členové této moderované skupiny automaticky obdrží pokyny."
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
+msgid "No Members in this list yet!"
+msgstr "V tomto seznamu zatím nejsou žádní členové!"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
+msgid "No Messages in this list yet!"
+msgstr "V tomto seznamu zatím nejsou žádné zprávy!"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email_normalized
+msgid "Normalized Email"
+msgstr "Normalizovaný e-mail"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from_normalized
+msgid "Normalized From"
+msgstr "Normalizováno z"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify_msg
+msgid "Notification message"
+msgstr "Zpráva o oznámení"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Notify Members"
+msgstr "Upozornit členy"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_count
+msgid "Number of message in this group"
+msgstr "Počet zpráv v této skupině"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid ""
+"Only an administrator or a moderator can send guidelines to group members."
+msgstr "Pouze správce nebo moderátor může zasílat pokyny členům skupiny."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Only members can send email to the mailing list."
+msgstr "E-maily na seznam adresátů mohou posílat pouze členové."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "Only selected groups of users can send email to the mailing list."
+msgstr ""
+"E-maily na seznam adresátů mohou odesílat pouze vybrané skupiny uživatelů."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid "Oops, there are no messages here."
+msgstr "Oops, zde nejsou žádné zprávy."
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
+msgid ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
+msgstr ""
+"Volitelné ID vlákna (záznamu), ke kterému budou připojeny všechny příchozí "
+"zprávy, i když na něj neodpověděly. Je-li nastaveno, zakáže se úplné "
+"vytvoření nových záznamů."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_parent_id
+msgid "Parent"
+msgstr "Nadřazená"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_model_id
+msgid "Parent Model"
+msgstr "Nadřazený model"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_thread_id
+msgid "Parent Record Thread ID"
+msgstr "ID vlákna nadřazeného záznamu"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_model_id
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+"Nadřazený model s aliasem. Model obsahující odkaz na alias nemusí být nutně "
+"modelem daným od alias_model_id (příklad: project (parent_model) a task "
+"(model))"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__partner_id
+msgid "Partner"
+msgstr "Partner"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__member_partner_ids
+msgid "Partners Member"
+msgstr "Člen partnerů"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_ids
+msgid "Pending Messages"
+msgstr "Čekající zprávy"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_moderation_count
+msgid "Pending Messages Count"
+msgstr "Počet čekajících zpráv"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__pending_moderation
+msgid "Pending Moderation"
+msgstr "Čekání na moderování"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__moderation_notify
+msgid ""
+"People receive an automatic notification about their message being waiting "
+"for moderation."
+msgstr ""
+"Lidé dostávají automatické oznámení o tom, že jejich zpráva čeká na "
+"moderování."
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__ban
+msgid "Permanent Ban"
+msgstr "trvalý ban"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
+msgstr ""
+"Zásady zveřejňování zpráv v dokumentu pomocí poštovní brány.\n"
+"- každý: každý může psát\n"
+"- partneři: pouze ověření partneři\n"
+"- sledující: pouze sledující související dokument nebo členové následujících "
+"kanálů\n"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+msgid "Post to:"
+msgstr "Odeslat na:"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_date
+msgid "Posted"
+msgstr "Zaúčtované"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__access_mode
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Privacy"
+msgstr "Osobní údaje"
+
+#. module: mail_group
+#: model:mail.group,name:mail_group.mail_group_2
+msgid "Public Mailing List"
+msgstr "Veřejný seznam adresářů"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/wizard/mail_group_message_reject.py:0
+msgid "Re: %s"
+msgstr "Re: %s"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_force_thread_id
+msgid "Record Thread ID"
+msgstr "ID vlákna záznamu"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid "Reference"
+msgstr "Reference"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message_reject__action__reject
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Reject"
+msgstr "Odmítnout"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_message_reject
+msgid "Reject Group Message"
+msgstr "Zpráva odmítnutí skupiny"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Reject Silently"
+msgstr "Tiše odmítnout"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Reject the message"
+msgstr "Odmítnout zprávu"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__rejected
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid "Rejected"
+msgstr "Odmítnuto"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Remove message with explanation"
+msgstr "Odebrat zprávu s vysvětlením"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Responsibles"
+msgstr "Odpovědní"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
+msgid "Search Group Message"
+msgstr "Hledat skupinovou zprávu"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_search
+msgid "Search Mail Group Member"
+msgstr "Vyhledat člena poštovní skupiny"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+msgid "Search Mail group"
+msgstr "Hledat poštovní skupinu"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Search Moderation List"
+msgstr "Prohledat seznam moderování"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Select users"
+msgstr "Vybrat uživatele"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
+msgid "Selected group of users"
+msgstr "Vybraná skupina uživatelů"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Send"
+msgstr "Odeslat"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Send & Ban"
+msgstr "Odeslat a zakázat"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Send & Reject"
+msgstr "Odeslat a odmítnout"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__send_email
+msgid "Send Email"
+msgstr "Poslat email"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group_message_reject__send_email
+msgid "Send an email to the author of the message"
+msgstr "Odeslat e-mail autorovi zprávy"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_compose_message_action_mail_group
+msgid "Send email"
+msgstr "Odeslat e-mail"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
+msgid "Send guidelines to new members"
+msgstr "Poslat pokyny novým členům"
+
+#. module: mail_group
+#: model:mail.template,description:mail_group.mail_template_guidelines
+msgid "Sent to people who subscribed to a mailing group with group guidelines"
+msgstr ""
+"Odesláno lidem, kteří se přihlásili k odběru mailingové skupiny s pokyny pro "
+"skupinu"
+
+#. module: mail_group
+#: model:mail.template,description:mail_group.mail_template_list_unsubscribe
+msgid "Sent to people who unsubscribed from a mailing group"
+msgstr "Odesláno lidem, kteří se odhlásili z mailingové skupiny"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__status
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Status"
+msgstr "Stav"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Stay in touch with our Community"
+msgstr "Buďte v kontaktu s naší komunitou"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__subject
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__subject
+msgid "Subject"
+msgstr "Předmět"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Subscribe"
+msgstr "Odebírat"
+
+#. module: mail_group
+#: model:mail.template,description:mail_group.mail_template_list_subscribe
+msgid "Subscription confirmation to a mailing group"
+msgstr "Potvrzení přihlášení do mailingové skupiny"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid ""
+"Template \"mail_group.mail_template_guidelines\" was not found. No email has "
+"been sent. Please contact an administrator to fix this issue."
+msgstr ""
+"Šablona „mail_group.mail_template_guidelines“ nebyla nalezena. E-mail nebyl "
+"odeslán. Kontaktujte správce, aby tento problém vyřešil."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+msgid "Thank you!"
+msgstr "Děkujeme"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "The \"Authorized Group\" is missing."
+msgstr "Chybí „Autorizovaná skupina“."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "The email"
+msgstr "E-mail"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+msgid "The email \"%s\" is not valid."
+msgstr "E-mailová adresa „%s “ není platná."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "The group of the message do not match."
+msgstr "Skupina zpráv se neshoduje."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "The guidelines description is empty."
+msgstr "Popis pokynů je prázdný."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "The guidelines description is missing."
+msgstr "Chybí popis pokynů."
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_model_id
+msgid ""
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
+msgstr ""
+"Model (Odoo Document Kind), ke kterému odpovídá tento alias. Jakýkoli "
+"příchozí e-mail, který neodpovídá stávajícímu záznamu, způsobí vytvoření "
+"nového záznamu tohoto modelu (například projektové úlohy)"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_name
+msgid ""
+"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
+"<jobs@example.odoo.com>"
+msgstr ""
+"Název aliasu e-mailu, např. 'jobs', pokud chcete zachytit e-maily pro "
+"<jobs@example.odoo.com>"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "The notification message is missing."
+msgstr "Chybí oznámení."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "The partner can not be found."
+msgstr "Partner nebyl nalezen."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+msgid "The record of the message should be the group."
+msgstr "Záznam zprávy by měl být skupina."
+
+#. module: mail_group
+#. odoo-javascript
+#: code:addons/mail_group/static/src/interactions/mail_group.js:0
+msgid "This email is already subscribed."
+msgstr "Tento e-mail je již přihlášen k odběru."
+
+#. module: mail_group
+#. odoo-javascript
+#: code:addons/mail_group/static/src/interactions/mail_group.js:0
+msgid "This email is not subscribed."
+msgstr "Tento e-mail není přihlášen k odběru."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+msgid "This message can not be moderated"
+msgstr "Tuto zprávu nelze moderovat."
+
+#. module: mail_group
+#: model:ir.model.constraint,message:mail_group.constraint_mail_group_member_unique_partner
+msgid "This partner is already subscribed to the group"
+msgstr "Tento partner je již přihlášen do skupiny."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+msgid "Those messages can not be moderated: %s."
+msgstr "Tyto zprávy nelze moderovat: %s."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "To Review"
+msgstr "Ke kontrole"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Unsubscribe"
+msgstr "Odhlásit odběr"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+msgid "Unsubscribe:"
+msgstr "Odhlásit odběr:"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
+msgid ""
+"When people send an email to the alias of the list, they will appear here."
+msgstr "Když lidé pošlou e-mail na alias seznamu, objeví se zde."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Whitelist"
+msgstr "Seznam povolených"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__allow
+msgid "Whitelisted"
+msgstr "Na seznamu povolených"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+msgid "Wrong status (%s)"
+msgstr "Nesprávný stav (%s)"
+
+#. module: mail_group
+#: model:ir.model.constraint,message:mail_group.constraint_mail_group_moderation_mail_group_email_uniq
+msgid "You can create only one rule for a given email address in a group."
+msgstr ""
+"Pro danou e-mailovou adresu ve skupině můžete vytvořit pouze jedno pravidlo."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "You can not join a closed group."
+msgstr "Do uzavřené skupiny se nelze připojit."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "You can not send guidelines for a closed group."
+msgstr "Pro uzavřenou skupinu nelze zasílat pokyny."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+msgid "You have messages to moderate, please go for the proceedings."
+msgstr "Máte zprávy k moderování, prosím, jděte je zpracovat."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+msgid "_______________________________________________"
+msgstr "_______________________________________________"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "alias"
+msgstr "alias"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "and send an email to the author ("
+msgstr "a pošlete e-mail autorovi ("
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+msgid "attachments"
+msgstr "příloh"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_footer
+msgid "by"
+msgstr "od"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "e.g. \"Newsletter\""
+msgstr "např. „Newsletter“"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "e.g. \"This group is about ...\""
+msgstr "např. „Tato skupina se zabývá ...“"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "e.g. mycompany.com"
+msgstr "např. \"mycompany.com\""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "e.g.\"Please be polite and ...\""
+msgstr "např. „Buďte prosím zdvořilí a ...“"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
+msgid "group"
+msgstr "skupina"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "has been"
+msgstr "byl"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "members<br/>"
+msgstr "členové<br/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "messages / month"
+msgstr "zpráv / měsíc"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+msgid "messages to review"
+msgstr "zprávy k přezkoumání"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid "more replies"
+msgstr "více odpovědí"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid "replies"
+msgstr "odpovědi"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "subscribed to"
+msgstr "přihlášený k odběru"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "the list"
+msgstr "seznam"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "unsubscribed from"
+msgstr "odhlásil se z odběru"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "your email..."
+msgstr "váš e-mail..."
+
+#~ msgid "Group By"
+#~ msgstr "Seskupit podle"

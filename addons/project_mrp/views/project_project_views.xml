@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_embedded_action_bills_of_materials" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">95</field>
+        <field name="name">Bills of Materials</field>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="python_method">action_view_mrp_bom</field>
+        <field name="context">{"from_embedded_action": true}</field>
+        <field name="groups_ids" eval="[(4, ref('mrp.group_mrp_user'))]"/>
+    </record>
+
+    <record id="project_embedded_action_bills_of_materials_dashboard" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">95</field>
+        <field name="name">Bills of Materials</field>
+        <field name="parent_action_id" ref="project.project_update_all_action"/>
+        <field name="python_method">action_view_mrp_bom</field>
+        <field name="context">{"from_embedded_action": true}</field>
+        <field name="groups_ids" eval="[(4, ref('mrp.group_mrp_user'))]"/>
+    </record>
+
+    <record id="project_embedded_action_manufacturing_orders" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">100</field>
+        <field name="name">Manufacturing Orders</field>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="python_method">action_view_mrp_production</field>
+        <field name="context">{"from_embedded_action": true}</field>
+        <field name="groups_ids" eval="[(4, ref('mrp.group_mrp_user'))]"/>
+    </record>
+
+    <record id="project_embedded_action_manufacturing_orders_dashboard" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">100</field>
+        <field name="name">Manufacturing Orders</field>
+        <field name="parent_action_id" ref="project.project_update_all_action"/>
+        <field name="python_method">action_view_mrp_production</field>
+        <field name="context">{"from_embedded_action": true}</field>
+        <field name="groups_ids" eval="[(4, ref('mrp.group_mrp_user'))]"/>
+    </record>
+</odoo>

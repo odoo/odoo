@@ -1,0 +1,79 @@
+{
+    "Cabecera": {
+        "ObligadoEmision": {
+            "NombreRazon": "company_1_data",
+            "NIF": "A39200019"
+        },
+        "RemisionVoluntaria": {
+            "Incidencia": "N"
+        }
+    },
+    "RegistroFactura": [{
+        "RegistroAlta": {
+            "IDVersion": "1.0",
+            "IDFactura": {
+                "IDEmisorFactura": "A39200019",
+                "NumSerieFactura": "INV/2019/00001",
+                "FechaExpedicionFactura": "30-01-2019"
+            },
+            "NombreRazonEmisor": "company_1_data",
+            "Subsanacion": "N",
+            "TipoFactura": "F1",
+            "FechaOperacion": "01-02-2019",
+            "DescripcionOperacion": "manual",
+            "Destinatarios": {
+                "IDDestinatario": [{
+                    "NombreRazon": "partner_b",
+                    "NIF": "F35999705"
+                }]
+            },
+            "Desglose": {
+                "DetalleDesglose": [
+                    {
+                        "Impuesto": "01",
+                        "ClaveRegimen": "18",
+                        "CalificacionOperacion": "S1",
+                        "TipoImpositivo": "10.00",
+                        "BaseImponibleOimporteNoSujeto": "100.00",
+                        "CuotaRepercutida": "10.00",
+                        "TipoRecargoEquivalencia": "1.40",
+                        "CuotaRecargoEquivalencia": "1.40"
+                    },
+                    {
+                        "Impuesto": "01",
+                        "ClaveRegimen": "18",
+                        "CalificacionOperacion": "S1",
+                        "TipoImpositivo": "21.00",
+                        "BaseImponibleOimporteNoSujeto": "200.00",
+                        "CuotaRepercutida": "42.00",
+                        "TipoRecargoEquivalencia": "5.20",
+                        "CuotaRecargoEquivalencia": "10.40"
+                    }
+                ]
+            },
+            "CuotaTotal": "63.80",
+            "ImporteTotal": "363.80",
+            "Encadenamiento": {
+                "PrimerRegistro": "S"
+            },
+            "SistemaInformatico": {
+                "NombreRazon": "Odoo SA",
+                "IDOtro": {
+                    "CodigoPais": "BE",
+                    "IDType": "02",
+                    "ID": "BE0477472701"
+                },
+                "NombreSistemaInformatico": "Odoo",
+                "IdSistemaInformatico": "00",
+                "Version": "17.0+e",
+                "NumeroInstalacion": "7244834601315494189",
+                "TipoUsoPosibleSoloVerifactu": "S",
+                "TipoUsoPosibleMultiOT": "S",
+                "IndicadorMultiplesOT": "S"
+            },
+            "FechaHoraHusoGenRegistro": "2024-12-05T01:00:00+01:00",
+            "TipoHuella": "01",
+            "Huella": "6209A475057BC1E57EC531BEA8F2A1DF76BAA5CC701C12BB4C58C801B81D027E"
+        }
+    }]
+}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.DiscussNotificationSettings">
+        <div class="o-mail-DiscussNotificationSettings d-flex flex-column">
+            <div class="d-flex flex-column my-1">
+                <h5>Channel Notifications</h5>
+                <span class="mb-1 text-muted small">This setting will be applied to all channels using the default notification settings.</span>
+                <t t-foreach="store.settings.NOTIFICATIONS" t-as="notif" t-key="notif.label">
+                    <button class="btn d-flex my-1" t-att-class="{'o-selected' : notif.label === store.settings.channel_notifications}" t-on-click="()=> this.store.settings.setCustomNotifications(notif.label)">
+                        <input class="form-check-input" type="radio" t-att-checked="notif.label === store.settings.channel_notifications"/>
+                        <div class="d-flex flex-column text-start flex-grow-1 mx-3">
+                            <span t-esc="notif.name"/>
+                        </div>
+                    </button>
+                </t>
+            </div>
+            <hr class="o-discuss-separator my-1"/>
+            <label class="cursor-pointer d-flex align-items-center my-1">
+                <h5>Message sound</h5>
+                <div class="flex-grow-1"/>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" t-att-checked="store.settings.messageSound" t-on-change="(ev) => ev.target.checked ? this.enableMessageSound() : this.disableMessageSound()"/>
+                </div>
+            </label>
+        </div>
+    </t>
+</templates>

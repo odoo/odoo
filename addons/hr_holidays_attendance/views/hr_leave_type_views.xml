@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_leave_type_view_form" model="ir.ui.view">
+        <field name="name">hr.leave.type.view.form.inherit</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+            <label for="support_document" position="after">
+                <label for="overtime_deductible" class="fw-bold me-4"/>
+            </label>
+            <field name="support_document" nolabel="1" position="after">
+                <field name="overtime_deductible" nolabel="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

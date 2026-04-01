@@ -1,0 +1,242 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * crm_livechat
+#
+# Translators:
+# Karol Rybak <karolrybak85@gmail.com>, 2022
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
+# Tomasz Leppich <t.leppich@gmail.com>, 2022
+# Maksym <ms@myodoo.pl>, 2023
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~15.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-10-23 12:26+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
+"crm_livechat/pl/>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/chatbot_script_step.py:0
+msgid "%s's New Lead"
+msgstr "Nowy lead %s"
+
+#. module: crm_livechat
+#: model_terms:ir.ui.view,arch_db:crm_livechat.crm_lead_view_form
+msgid "<span class=\"o_stat_text\">View chat</span>"
+msgstr "<span class=\"o_stat_text\">Zobacz czat</span>"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_chatbot_script
+msgid "Chatbot Script"
+msgstr "Skrypt czatbota"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_chatbot_script_step
+msgid "Chatbot Script Step"
+msgstr "Krok skryptu czatbota"
+
+#. module: crm_livechat
+#. odoo-javascript
+#: code:addons/crm_livechat/static/src/core/thread_actions.js:0
+#: model:ir.model.fields.selection,name:crm_livechat.selection__chatbot_script_step__step_type__create_lead
+msgid "Create Lead"
+msgstr "Utwórz lead"
+
+#. module: crm_livechat
+#: model:ir.model.fields.selection,name:crm_livechat.selection__chatbot_script_step__step_type__create_lead_and_forward
+msgid "Create Lead & Forward"
+msgstr "Stwórz lead i przekaż"
+
+#. module: crm_livechat
+#. odoo-javascript
+#: code:addons/crm_livechat/static/src/core/channel_commands.js:0
+msgid "Create a new lead (/lead lead title)"
+msgstr "Utwórz nowy Lead (/lead tytuł leadu)"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/discuss_channel.py:0
+msgid ""
+"Create a new lead with: %(pre_start)s%(lead_command)s %(i_start)slead title%"
+"(i_end)s%(pre_end)s"
+msgstr ""
+"Stwórz nowy lead z: %(pre_start)s%(lead_command)s%(i_start)stytuł leada%"
+"(i_end)s%(pre_end)s"
+
+#. module: crm_livechat
+#: model:ir.model,website_form_label:crm_livechat.model_crm_lead
+msgid "Create an Opportunity"
+msgstr "Utwórz okazję"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/chatbot_script_step.py:0
+#: code:addons/crm_livechat/models/discuss_channel.py:0
+msgid "Created a new lead: %s"
+msgstr "Utwórz nowy lead: %s"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_discuss_channel
+msgid "Discussion Channel"
+msgstr "Kanał dyskusyjny"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__display_name
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__display_name
+#: model:ir.model.fields,field_description:crm_livechat.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:crm_livechat.field_discuss_channel__display_name
+#: model:ir.model.fields,field_description:crm_livechat.field_im_livechat_report_channel__display_name
+#: model:ir.model.fields,field_description:crm_livechat.field_res_users__display_name
+msgid "Display Name"
+msgstr "Nazwa wyświetlana"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__lead_count
+msgid "Generated Lead Count"
+msgstr "Ilość wygenerowanych leadów"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_discuss_channel__has_crm_lead
+msgid "Has Crm Lead"
+msgstr "Ma lead CRM"
+
+#. module: crm_livechat
+#: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_welcome
+msgid "Hi there, what brings you to our website today? 👋"
+msgstr "Cześć, co Cię dzisiaj sprowadza na naszą stronę? 👋"
+
+#. module: crm_livechat
+#: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_noone_available
+msgid "Hu-ho, it looks like none of our operators are available 🙁"
+msgstr "Oho! Wygląda na to, że żaden z naszych operatorów nie jest dostępny 🙁"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__id
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__id
+#: model:ir.model.fields,field_description:crm_livechat.field_crm_lead__id
+#: model:ir.model.fields,field_description:crm_livechat.field_discuss_channel__id
+#: model:ir.model.fields,field_description:crm_livechat.field_im_livechat_report_channel__id
+#: model:ir.model.fields,field_description:crm_livechat.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_crm_lead
+msgid "Lead"
+msgstr "Lead"
+
+#. module: crm_livechat
+#: model:chatbot.script,title:crm_livechat.chatbot_script_lead_generation_bot
+msgid "Lead Generation Bot"
+msgstr "Bot do generowania leadów"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_discuss_channel__lead_ids
+#: model_terms:ir.ui.view,arch_db:crm_livechat.chatbot_script_view_form
+msgid "Leads"
+msgstr "Leady"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_im_livechat_report_channel__leads_created
+msgid "Leads created"
+msgstr "Utworzonych leadów"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_crm_lead__origin_channel_id
+msgid "Live chat from which the lead was created"
+msgstr "Czat na żywo, z którego został utworzony lead"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_im_livechat_report_channel
+msgid "Livechat Support Channel Report"
+msgstr "Raport o kanale wsparcia dla czatu"
+
+#. module: crm_livechat
+#. odoo-javascript
+#: code:addons/crm_livechat/static/src/core/web/livechat_channel_info_list_patch.xml:0
+msgid "Open leads"
+msgstr "Otwarte leady"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__crm_team_id
+msgid "Sales Team"
+msgstr "Zespół sprzedaży"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__step_type
+msgid "Step Type"
+msgstr "Typ kroku"
+
+#. module: crm_livechat
+#: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_just_looking
+msgid "Thank you, you should hear back from us very soon!"
+msgstr "Dziękujemy, odezwiemy się do Ciebie wkrótce!"
+
+#. module: crm_livechat
+#: model:ir.model.fields,help:crm_livechat.field_discuss_channel__lead_ids
+msgid "The channel becomes accessible to sales users when leads are set."
+msgstr ""
+"Kanał staje się dostępny dla użytkowników sprzedaży po utworzeniu leadów."
+
+#. module: crm_livechat
+#: model:ir.model.fields,help:crm_livechat.field_chatbot_script_step__crm_team_id
+msgid ""
+"Used in combination with 'create_lead' step type in order to automatically "
+"assign the created lead/opportunity to the defined team"
+msgstr ""
+"Używane w połączeniu z typem kroku \"create_lead\" do automatycznego "
+"przypisywania utworzonego leada/okazji do zdefiniowanego zespołu"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_res_users
+msgid "User"
+msgstr "Użytkownik"
+
+#. module: crm_livechat
+#: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_pricing_email
+msgid ""
+"Would you mind leaving your email address so that we can reach you back?"
+msgstr ""
+"Czy możesz zostawić swój adres e-mail, abyśmy mogli się do Ciebie odezwać?"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/crm_lead.py:0
+msgid "You cannot create leads linked to channels you don't have access to."
+msgstr ""
+"Nie możesz tworzyć leadów powiązanych z kanałami, do których nie masz "
+"dostępu."
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/crm_lead.py:0
+msgid ""
+"You cannot update a lead and link it to a channel you don't have access to."
+msgstr ""
+"Nie możesz zaktualizować leada i powiązać go z kanałem, do którego nie masz "
+"dostępu."
+
+#. module: crm_livechat
+#. odoo-javascript
+#: code:addons/crm_livechat/static/src/core/thread_actions.js:0
+msgid "e.g. Product pricing"
+msgstr "np. Cennik produktów"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/chatbot_script_step.py:0
+msgid "livechat discussion"
+msgstr "dyskusje czatu na żywo"

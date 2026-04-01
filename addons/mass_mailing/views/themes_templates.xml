@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Theme "Basic" template -->
+    <template id="theme_basic_template">
+        <div class="o_mail_no_options">
+            <p><br/></p>
+            <p><br/></p>
+            <p>
+                <br/>
+                <a href="/unsubscribe_from_list">Unsubscribe</a>
+            </p>
+        </div>
+    </template>
+
+    <template id="theme_empty_template">
+    </template>
+
+    <!-- Default Theme -->
+    <template id="theme_default_template">
+        <style id="design-element">
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h2-font-weight: bolder;
+                --text-color: #6c757d;
+                --link-font-weight: bolder;
+                --separator-border-color: #ced4da !important;
+            }
+        </style>
+        <section class="s_header_logo o_mail_block_header_logo o_mail_snippet_general pt16 pb16" data-snippet="s_header_logo" data-name="Centered Logo" data-vxml="001">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4"/>
+                    <div class="col-md-4" style="text-align: center;">
+                        <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;" target="_blank">
+                            <img border="0" src="/mass_mailing/static/src/img/theme_default/s_default_image_header_logo.png" data-original-src="/mass_mailing/static/src/img/theme_default/s_default_image_header_logo.png" style="height:auto; max-width:100%;" width="180" class="img-fluid"/>
+                        </a>
+                    </div>
+                    <div class="col-md-4" style="text-align: right;"/>
+                </div>
+            </div>
+        </section>
+        <section class="s_text_block o_mail_snippet_general pt40 pb16" style="padding-left: 15px; padding-right: 15px;" data-snippet="s_text_block" data-name="Text" data-vxml="001">
+            <div class="container s_allow_columns">
+                <h2>Thank you for joining us!</h2>
+                <p><br/>We want to take this opportunity to welcome you to our ever-growing community!
+                <br/>Your platform is ready for work, it will help you reduce the costs of digital signatures, attract new customers and increase sales.</p>
+                <p><img src="/mass_mailing/static/src/img/theme_default/signature.png" data-original-src="/mass_mailing/static/src/img/theme_default/signature.png" style="width:125px; margin-top:8px;margin-bottom:-25px;" alt="Signature" class="img-fluid"/></p>
+                <p>Michael Fletcher<br/>
+                   <span style="font-size: 12px; font-weight: bolder;">Customer Service</span>
+                </p>
+                <p style="text-align: center;">
+                    <a role="button" href="#" class="btn btn-primary">LOGIN</a>
+                </p>
+            </div>
+        </section>
+        <div class="s_hr pt16 pb16" data-snippet="s_hr" data-name="Separator" data-vxml="001">
+            <hr class="s_hr_1px s_hr_solid"/>
+        </div>
+        <t t-call="mass_mailing.s_mail_block_footer_social_left"/>
+    </template>
+</odoo>

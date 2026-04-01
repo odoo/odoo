@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="peppol_registration_form" model="ir.ui.view">
+        <field name="name">peppol.registration.form</field>
+        <field name="model">peppol.registration</field>
+        <field name="group_ids" eval="[Command.link(ref('account.group_account_manager'))]"/>
+        <field name="arch" type="xml">
+            <form class="form_peppol_registration">
+                <sheet>
+                    <div class="m-0" name="warnings" invisible="not peppol_warnings">
+                        <field name="peppol_warnings" class="o_field_html" widget="actionable_errors"/>
+                    </div>
+
+                    <div name="peppol_registration">
+                        <p class="text-muted" invisible="not use_parent_connection">
+                            This branch company will use the active Peppol connection found on
+                            <field name="parent_company_name" class="oe_inline o_form_label" readonly="1"/>
+                            and send invoices via Peppol on their behalf.
+                        </p>
+                        <p class="text-muted" invisible="use_parent_connection">
+                            Send electronic invoices, and receive bills automatically via Peppol.
+                        </p>
+
+                        <div class="mb-3" invisible="not display_use_parent_connection_selection">
+                            <field name="use_parent_connection_selection" widget="radio"/>
+                        </div>
+
+                        <group col="1">
+                            <group>
+                                <field name="peppol_eas"
+                                       placeholder="Peppol ID"
+                                       nolabel="1"
+                                       readonly="use_parent_connection"
+                                       widget="peppol_non_focusable_selection"
+                                       class="o_field_peppol_eas_selection"/>
+                                <field name="peppol_endpoint"
+                                       nolabel="1"
+                                       default_focus="1"
+                                       readonly="use_parent_connection"/>
+                                <field name="contact_email"
+                                       readonly="use_parent_connection"
+                                       string="Email"/>
+                                <field name="phone_number"
+                                       required="edi_mode not in ('demo', 'test')"
+                                       readonly="use_parent_connection"
+                                       string="Phone"/>
+                            </group>
+                        </group>
+                        <div class="text-muted col" invisible="edi_mode != 'prod'">
+                            By clicking the button below:
+                            <ul>
+                                <li>I accept that Odoo may process my e-invoices,</li>
+                                <li>I reckon I'm allowed to register this company.</li>
+                            </ul>
+                        </div>
+                        <div class="text-muted col" invisible="not display_itsme_login">
+                            If you don't have Itsme, please contact
+                            <a href="https://www.odoo.com/help" target="_blank">support</a>.
+                        </div>
+                        <div class="text-muted col" invisible="edi_mode != 'test'">
+                            Test mode allows sending e-invoices through the test Peppol network.<br/>
+                            By clicking the button below I accept that Odoo may process my e-invoices.
+                        </div>
+                    </div>
+                </sheet>
+                <footer>
+
+                    <!-- itsme auth button -->
+                    <button class="btn btn-secondary itsme_button"
+                            name="button_register_with_itsme"
+                            type="object"
+                            invisible="not display_itsme_login">
+                            <img src="/account_peppol/static/img/itsme.svg"
+                                 id="itsme_logo"
+                                 alt="Itsme"
+                            />
+                        <b>Authentify with itsme</b>
+                    </button>
+
+                    <!-- No auth buttons -->
+                    <button string="Activate Peppol" name="button_register_peppol_participant" type="object"
+                            class="btn-primary" data-hotkey="q" invisible="edi_mode != 'prod' or not display_no_auth_buttons"/>
+                    <button string="Activate Peppol (Test)" name="button_register_peppol_participant" type="object"
+                            class="btn-primary" data-hotkey="q" invisible="edi_mode != 'test' or not display_no_auth_buttons"/>
+                    <button string="Activate Peppol (Demo)" name="button_register_peppol_participant" type="object"
+                            class="btn-primary" data-hotkey="q" invisible="edi_mode != 'demo' or not display_no_auth_buttons"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

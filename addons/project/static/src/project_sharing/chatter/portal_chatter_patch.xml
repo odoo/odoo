@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="portal.Chatter" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-Chatter-top')]" position="before">
+            <div class="d-flex justify-content-end">
+                <button t-if="props.displayFollowButton and props.threadId" class="btn btn-link w-auto" t-on-click="toggleIsFollower">
+                    <t t-if="state.isFollower">
+                        Unfollow
+                    </t>
+                    <t t-else="">
+                        Follow
+                    </t>
+                </button>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

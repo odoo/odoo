@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_shipping2" inherit_id="stock.report_picking">
+        <xpath expr="//div[@name='div_picking_date']" position="after">
+            <div t-if="o.carrier_id">
+                <strong>Carrier:</strong>
+                <p t-field="o.carrier_id"/>
+            </div>
+            <div t-if="o.shipping_weight">
+                <strong>Weight:</strong>
+                <br/>
+                <span t-field="o.shipping_weight"/>
+                <span t-field="o.weight_uom_name"/>
+            </div>
+            <div t-if="o.carrier_id" class="col" name="div_shipping_method">
+                <strong>Shipping Method:</strong>
+                <p t-field="o.carrier_id">FedEx</p>
+            </div>
+        </xpath>
+    </template>
+</odoo>

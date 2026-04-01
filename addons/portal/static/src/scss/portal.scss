@@ -1,0 +1,509 @@
+///
+/// This file regroups the frontend general design rules and portal design
+/// rules.
+///
+
+// ======  Variables =========
+$o-theme-navbar-logo-height: $nav-link-height !default;
+$o-theme-navbar-fixed-logo-height: $nav-link-height !default;
+
+// Portal toolbar (filters, search bar)
+$o-portal-mobile-toolbar: true; // Enable/Disable custom design
+$o-portal-mobile-toolbar-border: $border-color;
+$o-portal-mobile-toolbar-bg: $gray-200;
+
+// Portal Tables
+$o-portal-table-th-pt: map-get($spacers, 1) !default;
+$o-portal-table-th-pb: map-get($spacers, 1) !default;
+$o-portal-table-td-pt: map-get($spacers, 2) !default;
+$o-portal-table-td-pb: map-get($spacers, 2) !default;
+
+// Frontend general
+body {
+    // Set frontend direction that will be flipped with
+    // rtlcss for right-to-left text direction.
+    direction: ltr;
+}
+
+.o_skip_to_content {
+    // We require the z-index property to ensure that the "Skip to Content"
+    // button appears above the header.
+    z-index: $zindex-fixed + 1;
+}
+
+header {
+    .navbar-brand {
+        flex: 0 0 auto;
+        max-width: 75%;
+
+        &.logo {
+            padding-top: 0;
+            padding-bottom: 0;
+
+            img {
+                // object-fit does not work on IE but is only used as a fallback
+                object-fit: contain;
+                display: block;
+                width: auto;
+                height: $o-theme-navbar-logo-height;
+
+                @include media-breakpoint-down(md) {
+                    max-height: min($o-theme-navbar-logo-height, 5rem);
+                }
+            }
+        }
+    }
+    .nav-link {
+        white-space: nowrap;
+    }
+}
+.navbar {
+    margin-bottom: 0;
+    .nav.navbar-nav.float-end {
+        @include media-breakpoint-down(md) {
+            float: none!important;
+        }
+    }
+}
+@include media-breakpoint-up(md) {
+    .navbar-expand-md ul.nav > li.divider {
+        display: list-item;
+    }
+}
+ul.flex-column > li > a {
+    padding: 2px 15px;
+}
+
+// Link without text but an icon
+a, .btn-link {
+    &.fa:hover {
+        text-decoration: $o-theme-btn-icon-hover-decoration;
+    }
+}
+
+// Odoo options classes
+.jumbotron {
+    margin-bottom: 0;
+}
+
+// Typography
+li > p {
+    margin: 0;
+}
+
+// Bootstrap hacks
+%o-double-container-no-padding {
+    padding-right: 0;
+    padding-left: 0;
+}
+.container {
+    .container, .container-fluid {
+        @extend %o-double-container-no-padding;
+    }
+}
+.container-fluid .container-fluid {
+    @extend %o-double-container-no-padding;
+}
+#wrap {
+    .container, .container-fluid {
+        // BS3 used to do this on all containers so that margins and floats are
+        // cleared inside containers. As lots of current odoo layouts may rely
+        // on this for some alignments, this is restored (at least for a while)
+        // here only for main containers of the frontend.
+        &::before, &::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    }
+    .navbar %container-flex-properties {
+        // Bootstrap set-up flex alignment to "space-between" here. The hack
+        // made above to restore the BS3 protection has to be disabled.
+        &::before, &::after {
+            display: none;
+        }
+    }
+}
+[class^="col-lg-"] {
+    min-height: 24px;
+}
+// TODO this was added a compatibility layer for old layouts when we switched
+// to Bootstrap 4. It should be removed at some point, to not have to support
+// invalid-feedback with that awful :where selector.
+.input-group:where(:not(:has(.was-validated :invalid ~ .invalid-feedback, .is-invalid ~ .invalid-feedback))) {
+    flex-flow: row nowrap;
+}
+
+.list-group-item:not([class*="list-group-item-"]):not(.active) {
+    color: color-contrast($list-group-bg);
+}
+
+%o-portal-breadcrumbs {
+    background-color: inherit;
+}
+
+// Replaces old BS3 page-header class
+%o-page-header {
+    margin-bottom: $headings-margin-bottom * 2;
+    padding-bottom: $headings-margin-bottom;
+    border-bottom-width: $border-width;
+    border-bottom-style: solid;
+    border-bottom-color: $border-color;
+}
+.o_page_header {
+    @extend %o-page-header;
+}
+
+// Images spacing
+img, .media_iframe_video, .o_image {
+    &.float-end {
+        margin-left: $grid-gutter-width / 2;
+    }
+    &.float-start {
+        margin-right: $grid-gutter-width / 2;
+    }
+}
+
+// Others
+::-moz-selection {
+    background: rgba(150, 150, 220, 0.3);
+}
+::selection {
+    background: rgba(150, 150, 220, 0.3);
+}
+.oe_search_box {
+    padding-right: 23px;
+    text-overflow: ellipsis;
+}
+
+// Kept for (up to) saas-12 compatibility
+.para_large {
+    font-size: 120%;
+}
+.jumbotron .para_large p {
+    font-size: 150%;
+}
+.readable {
+    font-size: 120%;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+
+    .container {
+        padding-left: 0;
+        padding-right: 0;
+        width: auto;
+    }
+}
+
+//  Background (kept for 8.0 compatibility) (! some are still used by website_blog)
+.oe_dark {
+    background-color: rgba(200, 200, 200, 0.14);
+}
+.oe_black {
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+}
+.oe_green {
+    background-color: #169C78;
+    color: white;
+    .text-muted {
+        color: #ddd !important;
+    }
+}
+.oe_blue_light {
+    background-color: #41b6ab;
+    color: white;
+    .text-muted {
+        color: #ddd !important;
+    }
+}
+.oe_blue {
+    background-color: #34495e;
+    color: white;
+}
+.oe_orange {
+    background-color: #f05442;
+    color: white;
+    .text-muted {
+        color: #ddd !important;
+    }
+}
+.oe_purple {
+    background-color: #b163a3;
+    color: white;
+    .text-muted {
+        color: #ddd !important;
+    }
+}
+.oe_red {
+    background-color: #9C1b31;
+    color: white;
+    .text-muted {
+        color: #ddd !important;
+    }
+}
+.oe_none {
+    background-color: #FFFFFF;
+}
+.oe_yellow {
+    background-color: #A2A51B;
+}
+.oe_green {
+    background-color: #149F2C;
+}
+
+.o_portal {
+    .breadcrumb {
+        @extend %o-portal-breadcrumbs;
+    }
+
+    > tbody.o_portal_report_tbody {
+        vertical-align: middle;
+    }
+}
+
+.o_portal_wrap {
+    .o_portal_my_home > .o_page_header > a:hover {
+        text-decoration: none;
+    }
+
+    .o_portal_navbar {
+        .breadcrumb {
+            padding-left: 0;
+            padding-right: 0;
+            @extend %o-portal-breadcrumbs;
+        }
+    }
+
+    .o_portal_my_doc_table {
+        th {
+            padding-top: $o-portal-table-th-pt;
+            padding-bottom: $o-portal-table-th-pb;
+            max-width: 500px;
+        }
+
+        td {
+            padding-top: $o-portal-table-td-pt;
+            padding-bottom: $o-portal-table-td-pb;
+            max-width: 10rem;
+
+        }
+
+        td, th {
+            vertical-align: middle;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    .o_my_sidebar div[itemprop="address"] > div {
+        margin-top: 0.5em;
+    }
+
+    @if ($o-portal-mobile-toolbar) {
+        #o_portal_navbar_content {
+            @include media-breakpoint-down(lg) {
+                margin: $navbar-padding-y 0 0;
+                padding: $navbar-padding-y ($grid-gutter-width / 2);
+                border-top: $border-width solid $o-portal-mobile-toolbar-border;
+                background-color: $o-portal-mobile-toolbar-bg;
+            }
+        }
+    }
+
+    table.table tr {
+        word-wrap: break-word;
+    }
+}
+
+.o_portal_address {
+    span[itemprop="name"] {
+        display: inline-block;
+        margin-bottom: map-get($spacers, 1);
+        font-weight: $font-weight-bold;
+    }
+
+    div[itemprop="address"] > div {
+        position: relative;
+
+        span[itemprop="streetAddress"] {
+            line-height: 1.2;
+            margin-bottom: 0.3em;
+        }
+
+        .fa {
+            line-height: $line-height-base;
+            color: $o-gray-500;
+
+            + span, + div {
+                display: block;
+            }
+        }
+    }
+}
+
+.o_address_card {
+    .o_portal_address {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: map-get($spacers, 2);
+    }
+
+    span[itemprop="streetAddress"] {
+        color: var(--#{$prefix}secondary-color);
+    }
+}
+
+.oe_attachments .o_image_small {
+    height: 40px;
+    width: 50px;
+    background-repeat: no-repeat;
+}
+
+.o_portal_sidebar .o_portal_html_view .o_portal_html_loader {
+    @include o-position-absolute(45%, 0, auto, 0);
+}
+
+.o_portal_sidebar .o_portal_sidebar_content span.oe_currency_value {
+    word-break: break-word !important;
+    white-space: normal !important;
+}
+
+// ------------------------------------------------------------
+// Frontend Discuss widget
+// ------------------------------------------------------------
+
+// Readonly display
+.o_portal_chatter {
+    padding: 10px;
+
+    .o_portal_chatter_avatar{
+        --Avatar-size: 45px;
+    }
+
+    .o_portal_chatter_header {
+        margin-bottom: 15px;
+    }
+
+    .o_portal_chatter_composer {
+        margin-bottom: 15px;
+    }
+
+    .o_portal_chatter_messages {
+        margin-bottom: 15px;
+        overflow-wrap: break-word;
+        word-break: break-word;
+
+        .o_portal_chatter_message {
+            div.flex-grow-1 > p:not(.o_portal_chatter_puslished_date):last-of-type {
+                margin-bottom: 5px;
+            }
+        }
+
+        .o_portal_chatter_message_title {
+            p {
+                font-size: 85%;
+                color: $text-muted;
+                margin: 0px;
+            }
+        }
+    }
+
+    .o_portal_chatter_pager {
+        text-align: center;
+    }
+
+
+}
+
+// Readonly / Composer mix display
+.o_portal_chatter,
+.o_portal_chatter_composer {
+    .o_portal_chatter_attachment {
+        .o_portal_chatter_attachment_name {
+            max-width: 200px;
+        }
+
+        .o_portal_chatter_attachment_delete {
+            @include o-position-absolute($top: 0, $right: 0);
+            opacity: 0;
+        }
+
+        &:hover .o_portal_chatter_attachment_delete {
+            opacity: 1;
+        }
+    }
+
+    .o_portal_message_internal_off {
+        .o_portal_chatter_visibility_on {
+            display: none;
+        }
+    }
+
+    .o_portal_message_internal_on {
+        .o_portal_chatter_visibility_off {
+            display: none;
+        }
+    }
+}
+
+.o_portal_security_body {
+    section {
+        margin-top: map-get($spacers, 5);
+        border-top: $border-width solid $border-color;
+        padding-top: map-get($spacers, 4);
+
+        form.oe_reset_password_form {
+            max-width: initial;
+            margin: initial;
+        }
+        label, button {
+            white-space: nowrap;
+        }
+    }
+    section[name="portal_deactivate_account"] {
+        label {
+            white-space: normal!important;
+        }
+    }
+}
+
+// Address
+.o_portal .o_portal_addresses {
+    max-width: map-get($grid-breakpoints, xxl) / 2;
+}
+
+.o_customer_address_fill {
+    .col-form-label:not(.label-optional)::after {
+        content: " *";
+        font-weight: normal;
+    }
+}
+
+.oe_clear_stucture {
+
+    > .oe_structure {
+        clear: both;
+    }
+}
+
+// Copyright
+.o_footer_copyright {
+    .o_footer_copyright_name {
+        vertical-align: middle;
+    }
+    .js_language_selector {
+        display: inline-block;
+    }
+    @include media-breakpoint-up(md) {
+        .row {
+            display: flex;
+            > div {
+                margin: auto 0;
+            }
+        }
+    }
+}

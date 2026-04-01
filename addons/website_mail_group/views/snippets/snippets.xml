@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="remove_external_snippets" inherit_id="website.external_snippets">
+        <xpath expr="//t[@t-install='website_mail_group']" position="replace"/>
+    </template>
+
+    <template id="snippets" inherit_id="website.snippets" name="Snippet Subscribe">
+        <xpath expr="//t[@id='mail_group_hook']" position="replace">
+            <t t-snippet="website_mail_group.s_group" string="Discussion Group" t-thumbnail="/website/static/src/img/snippets_thumbs/s_group.svg" t-grid-column-span="5"/>
+        </xpath>
+    </template>
+</odoo>

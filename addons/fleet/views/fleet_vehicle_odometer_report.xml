@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet_vehicle_odometer_report_view_search" model="ir.ui.view">
+        <field name="name">fleet.vehicle.odometer.report.view.search</field>
+        <field name="model">fleet.vehicle.odometer.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Date" name="groupby_date" context="{'group_by': 'recorded_date:month'}"/>
+                <filter string="Vehicle" name="groupby_vehicle" context="{'group_by': 'vehicle_id'}"/>
+                <filter string="Category" name="groupby_category" context="{'group_by': 'category_id'}"/>
+                <filter string="Fuel Type" name="groupby_fuel_type" context="{'group_by': 'fuel_type'}"/>
+                <filter string="Model" name="groupby_model" context="{'group_by': 'model_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_odometer_report_view_graph" model="ir.ui.view">
+        <field name="name">fleet.vehicle.odometer.report.view.graph</field>
+        <field name="model">fleet.vehicle.odometer.report</field>
+        <field name="arch" type="xml">
+            <graph string="Vehicle Odometer Timeline" stacked="0" type="line" sample="1" disable_linking="1">
+                <field name="mileage_delta" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_odometer_reporting_action" model="ir.actions.act_window">
+        <field name="name">Odometer Analysis</field>
+        <field name="res_model">fleet.vehicle.odometer.report</field>
+        <field name="view_mode">graph</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+              No data for odometer analysis
+            </p>
+            <p>
+              Manage efficiently your vehicle Odometers with Odoo.
+            </p>
+        </field>
+        <field name="domain">[('vehicle_id.active', '=', True)]</field>
+        <field name="context">{'search_default_groupby_date': 1, 'search_default_groupby_category': 1}</field>
+    </record>
+
+    <menuitem
+        id="menu_fleet_odometer_reporting_odometer"
+        name="Odometers"
+        parent="menu_fleet_reporting"
+        action="fleet_vehicle_odometer_reporting_action"
+        sequence="2"
+        groups="fleet_group_manager"
+    />
+</odoo>

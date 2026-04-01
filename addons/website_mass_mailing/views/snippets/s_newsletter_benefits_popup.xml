@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_newsletter_benefits_popup" name="Newsletter Benefits">
+    <div class="s_popup o_newsletter_popup o_snippet_invisible s_newsletter_benefits_popup" data-vcss="001" data-invisible="1">
+        <div class="modal fade s_popup_middle o_newsletter_modal"
+             style="background-color: var(--black-50) !important;"
+             data-show-after="5000" data-display="afterDelay" data-consents-duration="7"
+             data-bs-focus="false" data-bs-backdrop="false" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg d-flex">
+                <div class="modal-content oe_structure">
+                    <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable shadow-none" aria-label="Close">&#215;</div>
+                    <section class="s_text_image pt0 pb0" data-snippet="s_text_image" data-name="Box">
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col-lg-6 pt24 pb0">
+                                    <img src="/html_editor/shape/website_mass_mailing/s_newsletter_benefits_popup.svg" class="img img-fluid mx-auto" alt=""/>
+                                </div>
+                                <div class="col-lg-6 pt24 pb24">
+                                    <h2 class="h3-fs">Stay Ahead with weekly insights &amp; updates</h2>
+                                    <p class="lead">Join our mailing list to receive carefully curated resources, tips, and updates straight to your inbox.</p>
+                                    <p><i class="fa fa-check text-o-color-1" role="img"/>&#160;&#160;Curated Industry Insights</p>
+                                    <p><i class="fa fa-check text-o-color-1" role="img"/>&#160;&#160;Expert Tips &amp; How-Tos</p>
+                                    <p><i class="fa fa-check text-o-color-1" role="img"/>&#160;&#160;Guides &amp; Resources</p>
+                                    <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form">
+                                        <t t-set="thank_you_message">
+                                            <p class="h6-fs text-success">Thanks for registering!</p>
+                                        </t>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+</odoo>

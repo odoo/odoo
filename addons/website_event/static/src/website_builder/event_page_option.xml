@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_event.EventPageOption">
+    <BuilderRow label.translate="Sub-menu (Specific)">
+        <BuilderCheckbox action="'displaySubMenu'"/>
+    </BuilderRow>
+</t>
+
+<t t-name="website_event.EventMainPageOption">
+    <BuilderRow label.translate="Cover Position">
+        <BuilderSelect action="'websiteConfig'">
+            <BuilderSelectItem actionParam="{views: []}">Inside content</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{views: ['website_event.opt_event_description_cover_top']}">Top</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{views: ['website_event.opt_event_description_cover_hidden']}">Hidden (visitor only)</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Fixed Sidebar">
+        <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_event.opt_event_fixed_sidebar']}"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Sidebar Blocks"> </BuilderRow>
+    <BuilderContext action="'websiteConfig'">
+        <BuilderRow label.translate="Registration" level="1">
+            <BuilderCheckbox actionParam="{views: ['website_event.opt_event_registration_block']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Dates" level="1">
+            <BuilderCheckbox actionParam="{views: ['website_event.opt_event_dates_block']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Calendar links" level="1">
+            <BuilderCheckbox actionParam="{views: ['website_event.opt_event_calendar_block']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Location" level="1">
+            <BuilderCheckbox actionParam="{views: ['website_event.opt_event_location_block']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Organizer" level="1">
+            <BuilderCheckbox actionParam="{views: ['website_event.opt_event_organizer_block']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Share" level="1">
+            <BuilderCheckbox actionParam="{views: ['website_event.opt_event_share_block']}"/>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+</templates>

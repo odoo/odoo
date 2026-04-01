@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_payment.s_supported_payment_methods.icons">
+        <div name="container" class="d-flex flex-wrap gap-1">
+            <t t-foreach="payment_methods" t-as="pm" t-key="pm.id">
+                <!-- The `image` field on the payment method has a max height of 64px. -->
+                <img
+                    t-att-src="pm.image_url"
+                    t-att-title="pm.name"
+                    t-att-alt="pm.name"
+                    class="img img-fluid rounded"
+                    t-attf-style="height: #{Math.min(height, 64)}px;"
+                    loading="lazy"
+                />
+            </t>
+        </div>
+    </t>
+
+</templates>

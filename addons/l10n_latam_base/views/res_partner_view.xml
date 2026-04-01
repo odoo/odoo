@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_partner_latam_form" model="ir.ui.view">
+        <field name="name">view_partner_latam_form</field>
+        <field name="inherit_id" ref="base_vat.view_partner_base_vat_form"/>
+        <field name="model">res.partner</field>
+        <field name="priority">100</field>
+        <field type="xml" name="arch">
+            <xpath expr="//label[@for='vat']" position="replace">
+                <label for="l10n_latam_identification_type_id" string="Identification Number" invisible="is_vat and 'LATAMID' not in fiscal_country_group_codes"/>
+                <label for="vat" string="Tax ID" invisible="not is_vat or 'LATAMID' in fiscal_country_group_codes"/>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="replace">
+                <field name="l10n_latam_identification_type_id" options="{'no_open': True, 'no_create': True}"
+                       placeholder="Type" class="oe_inline" required="True" readonly="parent_id"
+                       domain="country_id and ['|', ('country_id', '=', False), ('country_id', '=', country_id)] or []"
+                       invisible="is_vat and 'LATAMID' not in fiscal_country_group_codes"/>
+                <span class="oe_read_only" invisible="is_vat and 'LATAMID' not in fiscal_country_group_codes"> - </span>
+                <field name="vat" placeholder="Number" class="oe_inline" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

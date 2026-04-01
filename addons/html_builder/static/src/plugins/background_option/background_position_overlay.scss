@@ -1,0 +1,32 @@
+.o_we_background_position_overlay {
+    pointer-events: auto;
+    display: block;
+    z-index: 1;
+
+    .o_we_overlay_mask {
+        background-color: rgba(0,0,0,.7);
+        width: 100%;
+        height: 100%;
+    }
+
+    &:not(.o_we_grabbing) .o_we_overlay_content {
+        @include o-grab-cursor;
+    }
+
+    &.o_we_grabbing {
+        cursor: grabbing;
+
+        .o_we_overlay_buttons {
+            visibility: hidden;
+        }
+    }
+
+    .o_we_overlay_buttons {
+        .btn-primary {
+            @include button-variant($o-brand-primary, $o-brand-primary);
+        }
+        .btn-secondary {
+            @include button-variant($o-we-color-danger, $o-we-color-danger);
+        }
+    }
+}

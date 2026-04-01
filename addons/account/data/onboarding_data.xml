@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ONBOARDING STEPS -->
+        <!-- INVOICING -->
+        <record id="onboarding_onboarding_step_company_data" model="onboarding.onboarding.step">
+            <field name="title">Set Company Data</field>
+            <field name="description">Set your company's data for documents header/footer.</field>
+            <field name="button_text">Let's start!</field>
+            <field name="done_text">Looks great!</field>
+            <field name="panel_step_open_action_name">action_open_step_company_data</field>
+            <field name="step_image" type="base64" file="base/static/img/onboarding_company-data.png"></field>
+            <field name="step_image_filename">onboarding_company-data.png</field>
+            <field name="step_image_alt">Onboarding Company Data</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="onboarding_onboarding_step_base_document_layout" model="onboarding.onboarding.step">
+            <field name="title">Documents Layout</field>
+            <field name="description">Customize the look of your documents.</field>
+            <field name="button_text">Customize</field>
+            <field name="done_text">Looks great!</field>
+            <field name="panel_step_open_action_name">action_open_step_base_document_layout</field>
+            <field name="step_image" type="base64" file="base/static/img/onboarding_quotation-layout.png"></field>
+            <field name="step_image_filename">onboarding_quotation-layout.png</field>
+            <field name="step_image_alt">Onboarding Documents Layout</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <!-- DASHBOARD -->
+        <record id="onboarding_onboarding_step_fiscal_year" model="onboarding.onboarding.step">
+            <field name="title">Set Periods</field>
+            <field name="description">Define your fiscal years &amp; tax returns periodicity.</field>
+            <field name="button_text">Configure</field>
+            <field name="done_text">Step completed!</field>
+            <field name="panel_step_open_action_name">action_open_step_fiscal_year</field>
+            <field name="step_image" type="base64" file="base/static/img/onboarding_accounting-periods.png"></field>
+            <field name="step_image_filename">onboarding_accounting-periods.png</field>
+            <field name="step_image_alt">Onboarding Accounting Periods</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="onboarding_onboarding_step_chart_of_accounts" model="onboarding.onboarding.step">
+            <field name="title">Review Chart of Accounts</field>
+            <field name="description">Set up your chart of accounts and record initial balances.</field>
+            <field name="button_text">Review Accounts</field>
+            <field name="done_text">Chart of accounts set!</field>
+            <field name="panel_step_open_action_name">action_open_step_chart_of_accounts</field>
+            <field name="step_image" type="base64" file="base/static/img/onboarding_chart-of-accounts.png"></field>
+            <field name="step_image_filename">onboarding_chart-of-accounts.png</field>
+            <field name="step_image_alt">Onboarding Bank Account</field>
+            <field name="sequence">4</field>
+        </record>
+
+        <!-- WITHOUT PANEL -->
+        <record id="onboarding_onboarding_step_sales_tax" model="onboarding.onboarding.step">
+            <field name="title">Taxes</field>
+            <!-- Fields values used if/when added in a panel within other modules -->
+            <field name="description">Choose a default sales tax for your products.</field>
+            <field name="button_text">Set taxes</field>
+            <field name="done_text">Step Completed!</field>
+            <field name="panel_step_open_action_name">action_open_step_sales_tax</field>
+            <field name="step_image" type="base64" file="base/static/img/onboarding_puzzle.png"></field>
+            <field name="step_image_filename">onboarding_puzzle.png</field>
+            <field name="step_image_alt">Onboarding Bank Account</field>
+            <field name="sequence">100</field> <!-- after "Online Payment" -->
+        </record>
+
+        <record id="onboarding_onboarding_account_dashboard" model="onboarding.onboarding">
+            <field name="name">Account Dashboard Onboarding</field>
+            <field name="step_ids" eval="[
+                Command.link(ref('account.onboarding_onboarding_step_company_data')),
+                Command.link(ref('account.onboarding_onboarding_step_fiscal_year')),
+                Command.link(ref('account.onboarding_onboarding_step_chart_of_accounts')),
+            ]"/>
+            <field name="route_name">account_dashboard</field>
+        </record>
+    </data>
+</odoo>

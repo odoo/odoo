@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ScrollButtonOption">
+    <BuilderRow label="this.state.heightLabel">
+        <BuilderButtonGroup action="'scrollButtonSectionHeightClass'">
+            <BuilderButton id="'minheight_auto_opt'" actionParam="''" title.translate="Fit content">Auto</BuilderButton>
+            <BuilderButton actionParam="'o_half_screen_height'" title.translate="Half screen">50%</BuilderButton>
+            <BuilderButton id="'full_height_opt'" actionParam="'o_full_screen_height'" title.translate="Full screen">100%</BuilderButton>
+        </BuilderButtonGroup>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Height" level="1" t-if="this.showHeightField()">
+        <BuilderNumberInput styleAction="{ mainParam: 'height', force: true, allowImportant: false }" unit="'px'" min="0"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Scroll Down Button" t-if="this.isActiveItem('full_height_opt')">
+        <BuilderCheckbox id="'scroll_button_opt'" action="'addScrollButton'"/>
+    </BuilderRow>
+
+    <t t-if="this.isActiveItem('scroll_button_opt')">
+        <BuilderRow label.translate="Colors" level="1" applyTo="':scope > .o_scroll_button'">
+            <BuilderColorPicker styleAction="'background-color'" title.translate="Apply a background color"/>
+            <BuilderColorPicker styleAction="'color'" title.translate="Apply an icon color"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Spacing" level="1" applyTo="':scope > .o_scroll_button'">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="''">None</BuilderSelectItem>
+                <BuilderSelectItem classAction="'mb-1'">Extra-Small</BuilderSelectItem>
+                <BuilderSelectItem classAction="'mb-2'">Small</BuilderSelectItem>
+                <BuilderSelectItem classAction="'mb-3'">Medium</BuilderSelectItem>
+                <BuilderSelectItem classAction="'mb-4'">Large</BuilderSelectItem>
+                <BuilderSelectItem classAction="'mb-5'">Extra-Large</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </t>
+</t>
+
+</templates>

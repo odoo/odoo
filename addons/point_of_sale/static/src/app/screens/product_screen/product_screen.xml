@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ProductScreen">
+        <div class="product-screen d-flex h-100">
+            <div t-att-class="{'flex-grow-1 w-100 mw-100': ui.isSmall, 'flex-shrink-0': !ui.isSmall, 'd-none': ui.isSmall and pos.mobile_pane !== 'left'}"
+                class="leftpane d-flex flex-column pb-2 border-end bg-view">
+                <OrderSummary />
+                <div class="pads px-2">
+                    <t t-if="!ui.isSmall">
+                        <div class="control-buttons d-flex justify-content-between gap-2 w-100 pt-2">
+                            <ControlButtons onClickMore.bind="displayAllControlPopup"/>
+                        </div>
+                    </t>
+                    <div class="subpads d-flex flex-column gap-2 pt-2">
+                        <Numpad t-if="!currentOrder?.isEmpty() and pos.getOrder()?.uiState.selected_orderline_uuid" class="'d-grid'" buttons="getNumpadButtons()" onClick.bind="onNumpadClick"/>
+                        <ActionpadWidget 
+                            partner="currentOrder?.getPartner()" 
+                            onClickMore.bind="displayAllControlPopup"
+                            actionName.translate="Payment"
+                            actionToTrigger="() => pos.pay()"
+                            showActionButton="!currentOrder?.isEmpty()"
+                            fastValidate="(paymentMethod) => this.fastValidate(paymentMethod)"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="rightpane d-flex flex-grow-1 flex-column bg-secondary" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
+                <div class="position-relative d-flex flex-column flex-grow-1 overflow-hidden">
+                    <CategorySelector t-if="!ui.isSmall || !pos.scanning" />
+                    <BarcodeVideoScanner t-if="pos.scanning" t-props="barcodeVideoScannerProps" />
+                    <div t-elif="pos.productToDisplayByCateg.length > 0" class="overflow-y-auto" t-on-scroll="onScroll">
+                        <div t-foreach="pos.productToDisplayByCateg" t-as="productCateg" t-key="productCateg[0]" class="product-list d-grid gap-1 gap-lg-2 px-2 pt-0 pb-2">
+                            <ProductCard
+                                t-foreach="productCateg[1]" t-as="product" t-key="product.id"
+                                productId="product.id"
+                                product="product"
+                                class="pos.productViewMode"
+                                name="getProductName(product)"
+                                color="product.color || product.pos_categ_ids?.at(-1)?.color"
+                                imageUrl="pos.config.show_product_images and this.getProductImage(product)"
+                                onClick.bind="() => this.addProductToOrder(product)"
+                                t-on-mousedown="(event) => this.onMouseDown(event, product)"
+                                t-on-mouseup="longPressHandlers.onMouseUp"
+                                t-on-touchstart="(event) => this.onTouchStart(product)"
+                                t-on-touchend="longPressHandlers.onTouchEnd"
+                                productCartQty="this.state.quantityByProductTmplId[product.id]" />
+                        </div>
+                    </div>
+                    <div t-else="" class="flex-grow-1 text-center mt-5">
+                        <p t-if="searchWord">No products found for <b>"<t t-esc="searchWord"/>"</b> in this category.</p>
+                         <div t-elif="!pos.selectedCategory" class="o_view_nocontent">
+                            <div class="o_nocontent_help">
+                                <p class="o_view_nocontent_smiling_face">No Product Yet?</p>
+                                <p>Scan a barcode to create automatically, or load our sample data.</p>
+                                <p >
+                                    <button class="btn btn-lg btn-primary me-2" t-on-click="()=> doLoadSampleData.call()" t-att-disabled="doLoadSampleData.status === 'loading' ? 'disabled' : null">
+                                        <t t-if="doLoadSampleData.status === 'loading'">Loading...</t>
+                                        <t t-else="">Load Sample</t>
+                                     </button>
+                                    <button role="button" class="btn btn-lg btn-secondary" t-on-click="()=>pos.editProduct()">Create Manually</button>
+                                </p>
+                            </div>
+                        </div>
+                        <p t-else="">There are no products in this category.</p>
+                    </div>
+                    <div t-if="searchWord" class="search-more-button d-flex justify-content-center m-2">
+                        <button class="btn btn-primary btn-lg lh-lg" t-on-click="onPressEnterKey">Search more</button>
+                    </div>
+                </div>
+                <t t-if="ui.isSmall">
+                    <div class="switchpane d-flex gap-2 p-2 border-top bg-view">
+                        <button t-if="!pos.scanning" class="btn-switchpane pay-button btn btn-lg flex-grow-1" t-attf-class="{{ currentOrder.isEmpty() ? 'btn-secondary' : 'btn-primary' }}" t-on-click="() => this.pos.pay()">
+                            <span class="d-block">Pay</span>
+                            <span t-esc="total" />
+                        </button>
+                        <button class="btn-switchpane btn btn-secondary review-button flex-grow-1" t-on-click="switchPane">
+                            <span class="d-block">Cart</span>
+                            <small><t t-esc="items"/> items</small>
+                        </button>
+                        <button t-if="pos.scanning" class="btn-switchpane btn btn-secondary btn-lg flex-grow-1" t-on-click="() => this.pos.scanning = false">
+                            <span class="d-block">Products</span>
+                        </button>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

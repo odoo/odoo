@@ -1,0 +1,15 @@
+<odoo>
+    <data>
+        <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+            <xpath expr="//div[@id='qrcode']" position="after">
+                <div id="verifactu_qr_code" t-if="o.l10n_es_edi_verifactu_required and o.l10n_es_edi_verifactu_qr_code">
+                    <page>
+                        <strong class="text-center">QR tributario:</strong>
+                        <img style="display:block;" t-att-src="o.l10n_es_edi_verifactu_qr_code"/>
+                        <strong class="text-center">VERI*FACTU</strong>
+                    </page>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

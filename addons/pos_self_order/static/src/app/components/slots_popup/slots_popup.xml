@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.SlotsPopup">
+        <div class="position-absolute bg-dark bg-opacity-25 w-100 h-100 fixed-top" />
+        <div class="self_order_popup_table shadow-lg position-absolute fixed-bottom bg-white w-100 p-4 flex-column d-flex justify-content-between">
+            <div class="mb-5 d-flex justify-content-between align-items-start">
+                <div>
+                    <h3>When would you like to receive your orders ?</h3>
+                    <span>We'll do everything to be on time!<br/>Thanks a lot!</span>
+                </div>
+                <button class="btn btn-close" t-on-click="close"/>
+            </div>
+            <select class="form-select form-select-lg mb-5" t-model="state.selectedSlot">
+                <option value="0">
+                    Select a hour
+                </option>
+                <t t-foreach="slots" t-as="slot" t-key="slot_index">
+                    <option t-att-value="slot[0]" t-esc="slot[0]" disabled="1" />
+                    <option t-foreach="Object.values(slot[1])" t-as="s" t-key="s_index" t-att-value="s.datetime.ts" t-esc="s.toFormat('HH:mm')" />
+                </t>
+            </select>
+            <a
+                type="button"
+                t-on-click="() => this.setTime()"
+                t-att-class="{'disabled': !this.validSelection}"
+                class="btn btn-primary btn-lg py-3 my-2">
+                    <t t-if="this.validSelection">
+                        Continue
+                    </t>
+                    <t t-else="">
+                        Select a hour
+                    </t>
+            </a>
+        </div>
+    </t>
+</templates>

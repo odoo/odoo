@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="test.translation.import.model1" id="test_translation_import_model1_record1">
+        <field name="name">Tableware</field>
+        <field name="xml" type="xml"><form string="Fork"><div>Knife</div><div>Spoon</div></form></field>
+    </record>
+    <record model="test.translation.import.model1" id="test_translation_import_model1_record2">
+        <field name="name">Furniture</field>  <!-- this shoulnd't appear in the .pot because it is translated in this file-->
+        <field name="name@fr_FR">Meuble</field>
+    </record>
+    <record model="test.translation.import.model2" id="test_translation_import_model2_record1">
+        <field name="model1_id" ref="test_translation_import.test_translation_import_model1_record1"/>
+    </record>
+</odoo>

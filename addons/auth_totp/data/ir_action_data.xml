@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action called from the contextual menu -->
+    <record model="ir.actions.server" id="action_disable_totp">
+        <field name="name">Disable two-factor authentication</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="binding_model_id" ref="base.model_res_users"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_totp_disable()
+        </field>
+        <field name="group_ids" eval="[(4, ref('base.group_erp_manager'))]"/>
+    </record>
+</odoo>

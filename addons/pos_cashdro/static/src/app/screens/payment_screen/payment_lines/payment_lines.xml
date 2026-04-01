@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.PaymentScreenPaymentLines" t-inherit-mode="extension">
+        <xpath expr="//div[contains(text(), 'Request sent')]" position="replace">
+            <div class="electronic_status d-flex gap-2">
+                Request sent
+                <t t-if="line.payment_method_id.payment_method_type === 'cashdro' and line.payment_status !== 'waitingCancel' and line.amount > 0">
+                    <strong class="ms-auto">Cash inserted:</strong>
+                    <t t-out="env.utils.formatCurrency(line.payment_method_id.payment_terminal.amountInserted)"/>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>

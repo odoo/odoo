@@ -1,0 +1,496 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_check_printing
+#
+# Translators:
+# Wichanon Jamwutthipreecha, 2022
+# Martin Trigaux, 2022
+#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-09-16 21:37+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
+"account_check_printing/th/>\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_journal.py:0
+msgid "%(journal)s: Check Number Sequence"
+msgstr "%(journal)s: ตรวจสอบลำดับหมายเลข"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid "%(number)s in journal %(journal)s"
+msgstr ""
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
+msgid "<span>&amp;nbsp;</span>"
+msgstr "<span>&amp;nbsp;</span>"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
+#: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_right
+#: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_top
+#: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_left
+#: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_right
+#: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_top
+msgid ""
+"Adjust the margins of generated checks to make it fit your printer's "
+"settings."
+msgstr "ปรับระยะขอบของเช็คที่สร้างขึ้นเพื่อให้พอดีกับการตั้งค่าเครื่องพิมพ์ของคุณ"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
+msgid "Amount in Words"
+msgstr "จํานวนเงินเป็นตัวอักษร"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid "Bills"
+msgstr "บิล"
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__bank_check_printing_layout
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_layout
+msgid "Check Layout"
+msgstr "เค้าโครงของเช็ค"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_left
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_left
+msgid "Check Left Margin"
+msgstr "ระยะขอบด้านซ้ายของเช็ค"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_number
+msgid "Check Number"
+msgstr "หมายเลขเช็ค"
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
+msgid "Check Printing"
+msgstr "การพิมพ์เช็ค"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
+msgid "Check Right Margin"
+msgstr "ระยะขอบด้านขวาของเช็ค"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_sequence_id
+msgid "Check Sequence"
+msgstr "ลำดับเช็ค"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_top
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_top
+msgid "Check Top Margin"
+msgstr "ระยะขอบด้านบนของเช็ค"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid "Check numbers can only consist of digits"
+msgstr "หมายเลขเช็คต้องประกอบด้วยตัวเลขเท่านั้น"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
+#: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
+msgid "Check this option if your pre-printed checks are not numbered."
+msgstr "เลือกตัวเลือกนี้ หากเช็คที่พิมพ์ไว้ล่วงหน้าของคุณไม่มีหมายเลขกำกับ"
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
+msgid "Check to print"
+msgstr "เช็คที่จะพิมพ์"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+#: model:account.payment.method,name:account_check_printing.account_payment_method_check
+msgid "Checks"
+msgstr "ตรวจสอบ"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
+msgid "Checks numbering sequence."
+msgstr "ลำดับหมายเลขของเช็ค"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_journal.py:0
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_payment_check_printing_search
+msgid "Checks to Print"
+msgstr "เช็คที่จะพิมพ์"
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
+msgid "Checks to print"
+msgstr "เช็คที่จะพิมพ์"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_res_company
+msgid "Companies"
+msgstr "บริษัท"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_res_config_settings
+msgid "Config Settings"
+msgstr "ตั้งค่าการกำหนดค่า"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
+msgid "Default"
+msgstr "เริ่มต้น"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment_method__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid "Go to the configuration panel"
+msgstr "ไปยังหน้าการตั้งค่า"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_layout_available
+msgid "Has Check Layout"
+msgstr ""
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment_method__id
+#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__id
+msgid "ID"
+msgstr "ไอดี"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid ""
+"In order to print multiple checks at once, they must belong to the same bank "
+"journal."
+msgstr ""
+"หากต้องการพิมพ์เช็คหลายรายการในคราวเดียว เช็คเหล่านั้นจะต้องอยู่ในสมุดรายวันของธนาคารเดียวกัน"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_journal
+msgid "Journal"
+msgstr "สมุดบันทึก"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
+msgid "Last Updated by"
+msgstr "อัปเดตครั้งล่าสุดโดย"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_date
+msgid "Last Updated on"
+msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_manual_sequencing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_manual_sequencing
+msgid "Manual Numbering"
+msgstr "การกำหนดหมายเลขด้วยตนเอง"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
+msgid ""
+"Manual: Pay or Get paid by any method outside of Odoo.\n"
+"Payment Providers: Each payment provider has its own Payment Method. Request "
+"a transaction on/to a card thanks to a payment token saved by the partner "
+"when buying or subscribing online.\n"
+"Check: Pay bills by check and print it from Odoo.\n"
+"Batch Deposit: Collect several customer checks at once generating and "
+"submitting a batch deposit to your bank. Module account_batch_payment is "
+"necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit "
+"Transfer file to your bank. Module account_iso20022 is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your "
+"partner will have granted to you. Module account_iso20022 is necessary.\n"
+"U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
+"Module account_iso20022 is necessary.\n"
+msgstr ""
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
+msgid "Multi-Pages Check Stub"
+msgstr "เช็คต้นขั้วแบบหลายหน้า"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_next_number
+#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__next_check_number
+msgid "Next Check Number"
+msgstr "หมายเลขเช็คถัดไป"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_journal.py:0
+#: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
+msgid "Next Check Number should only contains numbers."
+msgstr "หมายเลขเช็คถัดไปควรมีเฉพาะตัวเลขเท่านั้น"
+
+#. module: account_check_printing
+#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
+msgid "None"
+msgstr "ไม่มี"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_line_id
+msgid "Payment Method"
+msgstr "วิธีการชำระเงิน"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_payment_method
+msgid "Payment Methods"
+msgstr "วิธีการชำระเงิน"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_payment
+msgid "Payments"
+msgstr "การชำระเงิน"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid ""
+"Payments to print as a checks must have 'Check' selected as payment method "
+"and not have already been reconciled"
+msgstr ""
+"การชำระเงินที่จะพิมพ์เป็นเช็คจะต้องเลือก \"เช็ค\" เป็นวิธีการชำระเงินและยังไม่ได้รับการกระทบยอด"
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
+msgid ""
+"Please enter the number of the first pre-printed check that you are about to "
+"print on."
+msgstr "โปรดป้อนหมายเลขเช็คที่พิมพ์ไว้ล่วงหน้าฉบับแรกที่คุณกำลังจะพิมพ์"
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
+msgid "Print"
+msgstr "พิมพ์"
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
+msgid "Print Check"
+msgstr "พิมพ์เช็ค"
+
+#. module: account_check_printing
+#: model:ir.actions.server,name:account_check_printing.action_account_print_checks
+msgid "Print Checks"
+msgstr "พิมพ์เช็ค"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_date_label
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_date_label
+msgid "Print Date Label"
+msgstr "พิมพ์ป้ายวันที่"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+#: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
+#: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
+msgid "Print Pre-numbered Checks"
+msgstr "พิมพ์เช็คที่กำหนดหมายเลขล่วงหน้า"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid "Refunds"
+msgstr "การคืนเงิน"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
+msgid "Right Margin"
+msgstr "ขอบด้านขวา"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
+#: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_layout
+msgid ""
+"Select the format corresponding to the check paper you will be printing your "
+"checks on.\n"
+"In order to disable the printing feature, select 'None'."
+msgstr ""
+"เลือกรูปแบบที่สอดคล้องกับกระดาษเช็คที่คุณจะพิมพ์เช็ค\n"
+"หากต้องการปิดใช้งานฟีเจอร์การพิมพ์ ให้เลือก 'ไม่มี'"
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
+msgid "Sent"
+msgstr "ส่งแล้ว"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
+msgid "Sequence number of the next printed check."
+msgstr "หมายเลขลำดับของเช็คที่พิมพ์ครั้งถัดไป"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__show_check_number
+msgid "Show Check Number"
+msgstr "แสดงหมายเลขเช็ค"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid ""
+"Something went wrong with Check Layout, please select another layout in "
+"Invoicing/Accounting Settings and try again."
+msgstr ""
+"มีข้อผิดพลาดเกิดขึ้นกับเค้าโครงของเช็ค โปรดเลือกเค้าโครงอื่นในการตั้งค่าการออกใบแจ้งหนี้/"
+"การบัญชีแล้วลองอีกครั้ง"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_journal.py:0
+msgid ""
+"The check number you entered (%(num)s) exceeds the maximum allowed value of %"
+"(max)d. Please enter a smaller number."
+msgstr ""
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid ""
+"The following numbers are already used:\n"
+"%s"
+msgstr ""
+"มีการใช้หมายเลขต่อไปนี้แล้ว:\n"
+"%s"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_journal.py:0
+msgid ""
+"The last check number was %s. In order to avoid a check being rejected by "
+"the bank, you can only use a greater number."
+msgstr ""
+"หมายเลขเช็คล่าสุดคือ %s เพื่อหลีกเลี่ยงไม่ให้ธนาคารปฏิเสธเช็ค "
+"คุณสามารถใช้ตัวเลขที่มากกว่าได้เท่านั้น"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
+msgid ""
+"The selected journal is configured to print check numbers. If your pre-"
+"printed check paper already has numbers or if the current numbering is "
+"wrong, you can change it in the journal configuration page."
+msgstr ""
+"สมุดรายวันที่เลือกได้รับการกำหนดค่าให้พิมพ์หมายเลขเช็ค "
+"หากกระดาษเช็คที่พิมพ์ไว้ล่วงหน้าของคุณมีตัวเลขอยู่แล้ว หรือหากหมายเลขปัจจุบันไม่ถูกต้อง "
+"คุณสามารถเปลี่ยนได้ในหน้าการกำหนดค่าสมุดรายวัน"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
+#: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
+msgid ""
+"This option allows you to print check details (stub) on multiple pages if "
+"they don't fit on a single page."
+msgstr ""
+"ตัวเลือกนี้ช่วยให้คุณสามารถพิมพ์รายละเอียดเช็ค (ต้นขั้ว) บนหลายหน้าได้ หากไม่พอดีกับหน้าเดียว"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
+#: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_date_label
+msgid ""
+"This option allows you to print the date label on the check as per CPA.\n"
+"Disable this if your pre-printed check includes the date label."
+msgstr ""
+"ตัวเลือกนี้ช่วยให้คุณสามารถพิมพ์ป้ายกำกับวันที่บนเช็คตาม CPA\n"
+"ปิดการใช้งานนี้หากเช็คที่พิมพ์ไว้ล่วงหน้าของคุณมีป้ายกำกับวันที่อยู่แล้ว"
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
+msgid ""
+"This will allow to save on payments the number of the corresponding check."
+msgstr "ซึ่งจะช่วยให้สามารถประหยัดการชำระเงินตามจำนวนเช็คที่เกี่ยวข้อง"
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
+msgid "Unmark Sent"
+msgstr "ยกเลิกการทำเครื่องหมายว่าส่งแล้ว"
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
+msgid "Void Check"
+msgstr "ยกเลิกเช็ค"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid ""
+"You have to choose a check layout. For this, go in Invoicing/Accounting "
+"Settings, search for 'Checks layout' and set one."
+msgstr ""
+"คุณต้องเลือกเค้าโครงเช็ค สำหรับการดำเนินการนี้ ให้ไปที่การตั้งค่าการออกใบแจ้งหนี้/การบัญชี ค้นหา "
+"'เค้าโครงเช็ค' และตั้งค่าหนึ่งรายการ"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid "check_number"
+msgstr ""
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid "out_refund"
+msgstr ""
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid "sep"
+msgstr ""
+
+#~ msgid "Contact"
+#~ msgstr "ติดต่อ"
+
+#~ msgid "Journal Entry"
+#~ msgstr "รายการบันทึกประจำวัน"
+
+#~ msgid "Register Payment"
+#~ msgstr "ลงทะเบียนการชำระเงิน"

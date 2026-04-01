@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="hr_skills.FormattedDate">
+        <span t-out="this.value.toLocaleString({day: this.props.dayFormat, month: this.props.monthFormat, year: this.props.yearFormat})" t-if="this.value" t-att-class="this.colorClass"/>
+        <span t-else="" t-out="this.placeholder" class='text-muted opacity-50'/>
+    </t>
+</templates>

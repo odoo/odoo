@@ -1,0 +1,556 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_sale
+#
+# Translators:
+# Martin Trigaux, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"PO-Revision-Date: 2026-02-16 13:50+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/pos_sale/"
+"it/>\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/sale_order.py:0
+msgid "%(line_description)s (Cancelled)"
+msgstr "%(line_description)s (Annullato)"
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/account_move.py:0
+msgid "%(old_name)s (Cancelled)"
+msgstr "%(old_name)s (Annullato)"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
+msgid "(tax incl.)"
+msgstr "(tasse incluse)"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
+msgid "<span style=\"margin: 0px 5px;\">:</span>"
+msgstr "<span style=\"margin: 0px 5px;\">:</span>"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "A new order has been created."
+msgstr "È stato creato un nuovo ordine."
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
+msgid "Amount To Pay In POS"
+msgstr "Importo da pagare nel POS"
+
+#. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
+msgid "Amount left to pay in POS to avoid double payment or double invoicing."
+msgstr ""
+"Importo da pagare nel POS per evitare la doppia fatturazione o il doppio "
+"pagamento."
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "Apply a down payment (fixed amount)"
+msgstr "Applica un anticipo (importo fisso)"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "Apply a down payment (percentage)"
+msgstr "Applica un acconto (percentuale)"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_res_config_settings
+msgid "Config Settings"
+msgstr "Impostazioni di configurazione"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_res_partner
+msgid "Contact"
+msgstr "Contatto"
+
+#. module: pos_sale
+#: model:ir.model,website_form_label:pos_sale.model_res_partner
+msgid "Create a Customer"
+msgstr "Crea cliente"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
+msgid "Currency Rate"
+msgstr "Tasso di cambio"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.message_body
+msgid "Delivered from"
+msgstr "Consegnato da"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__qty_delivered
+msgid "Delivery Quantity"
+msgstr "Quantità di consegna"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_product_template__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_res_partner__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_stock_picking__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "Do you want to load the SN/Lots linked to the Sales Order?"
+msgstr "Vuoi caricare i NS/Lotti collegati all'ordine di vendita?"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "Down Payment"
+msgstr "Anticipo"
+
+#. module: pos_sale
+#: model:product.template,name:pos_sale.default_downpayment_product_product_template
+msgid "Down Payment (POS)"
+msgstr "Acconto (POS)"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__down_payment_details
+msgid "Down Payment Details"
+msgstr "Dettagli anticipo"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__down_payment_product_id
+#: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_down_payment_product_id
+#: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
+msgid "Down Payment Product"
+msgstr "Prodotto anticipo"
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/sale_order.py:0
+msgid ""
+"Down payment (ref: %(order_reference)s on \n"
+" %(date)s)"
+msgstr ""
+"Acconto (rif: %(order_reference)s il \n"
+" %(date)s)"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "Due balance: %s"
+msgstr "Saldo dovuto: %s"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
+msgid "From"
+msgstr "Da"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_account_move__id
+#: model:ir.model.fields,field_description:pos_sale.field_account_move_line__id
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_sale.field_product_template__id
+#: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__id
+#: model:ir.model.fields,field_description:pos_sale.field_res_partner__id
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__id
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__id
+#: model:ir.model.fields,field_description:pos_sale.field_stock_picking__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_sale
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
+msgid "Invoiced"
+msgstr "Fatturato"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid ""
+"It seems that you didn't configure a down payment product in your point of "
+"sale. You can go to your point of sale configuration to choose one."
+msgstr ""
+"Non sembra che tu abbia configurato un prodotto di acconto nel tuo punto "
+"vendita. Ne puoi selezionare uno nella configurazione del punto vendita."
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_account_move
+msgid "Journal Entry"
+msgstr "Registrazione contabile"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_account_move_line
+msgid "Journal Item"
+msgstr "Movimento contabile"
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/sale_order.py:0
+msgid "Linked POS Orders"
+msgstr "Ordini di punto vendita collegati"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_origin_id
+msgid "Linked Sale Order"
+msgstr "Ordine di vendita collegato"
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/pos_order.py:0
+msgid "Linked Sale Orders"
+msgstr "Ordini di vendita collegati"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "No down payment product"
+msgstr "Nessun prodotto anticipo"
+
+#. module: pos_sale
+#: model:ir.actions.act_window,name:pos_sale.pos_session_action_from_crm_team
+msgid "Open Sessions"
+msgstr "Apri sessioni"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__order_reference
+msgid "Order"
+msgstr "Ordina"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_line_ids
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__pos_order_line_ids
+msgid "Order lines Transfered to Point of Sale"
+msgstr "Righe ordine trasferite al punto vendita"
+
+#. module: pos_sale
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
+msgid "POS Order"
+msgstr "Ordine POS"
+
+#. module: pos_sale
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
+msgid "Paid"
+msgstr "Pagato"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Configurazione punto vendita"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr "Righe ordine del punto vendita"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Ordini punto vendita"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sessione punto vendita"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_config_ids
+msgid "Point of Sales"
+msgstr "Punti vendita"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_count
+msgid "Pos Order Count"
+msgstr "Numero ordini POS"
+
+#. module: pos_sale
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__done
+msgid "Posted"
+msgstr "Confermato"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_product_template
+msgid "Product"
+msgstr "Prodotto"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/components/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "Quotation/Order"
+msgstr "Preventivo/Ordine"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "SN/Lots Loading"
+msgstr "Caricamento NS/Lotti"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
+msgid "SO"
+msgstr "OdV"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__sale_order_count
+msgid "Sale Order Count"
+msgstr "Numero ordini di vendita"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
+msgid "Sales"
+msgstr "Vendite"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_sale_report
+msgid "Sales Analysis Report"
+msgstr "Resoconto di analisi vendite"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Ordine di vendita"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Riga ordine di vendita"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_crm_team
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__crm_team_id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__crm_team_id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session__crm_team_id
+#: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
+msgid "Sales Team"
+msgstr "Team di vendita"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_crm_team_id
+msgid "Sales Team (PoS)"
+msgstr "Team vendite (POS)"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
+msgid "Sales are reported to the following sales team"
+msgstr "Le vendite vengono riportate ai seguenti team"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/components/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "Set Sale Order"
+msgstr "Configura ordine di vendita"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "Settle the order"
+msgstr "Regola l'ordine"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_id
+msgid "Source Sale Order Line"
+msgstr "Riga ordine di vendita di origine"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__state
+msgid "Status"
+msgstr "Stato"
+
+#. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
+msgid ""
+"The rate of the currency to the currency of rate applicable at the date of "
+"the order"
+msgstr ""
+"Il tasso di cambio per la valuta con tasso applicabile alla data dell'ordine"
+
+#. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
+#: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
+#: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_crm_team_id
+msgid "This Point of sale's sales will be related to this Sales Team."
+msgstr "Le vendite del POS verranno collegate al team."
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
+msgid "This product will be applied when down payment is made"
+msgstr "Questo prodotto sarà applicato al momento del pagamento dell'acconto"
+
+#. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
+#: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_down_payment_product_id
+msgid "This product will be used as down payment on a sale order."
+msgstr "Questo prodotto sarà utilizzato come acconto su un ordine di vendita."
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_stock_picking
+msgid "Transfer"
+msgstr "Trasferisci"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
+msgid ""
+"Transferred<br/>\n"
+"                                from Sale"
+msgstr ""
+"Trasferito<br/>\n"
+"                                da Vendite"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
+msgid ""
+"Transferred<br/>\n"
+"                            to POS"
+msgstr ""
+"Trasferito<br/>\n"
+"                            al POS"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "Warning for %s"
+msgstr "Avviso per %s"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "What do you want to do?"
+msgstr "Come procedere?"
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/pos_order.py:0
+#: code:addons/pos_sale/models/sale_order.py:0
+msgid "id"
+msgstr "ID"
+
+#~ msgid "(left:"
+#~ msgstr "(sinistra:"
+
+#~ msgid "Back"
+#~ msgstr "Indietro"
+
+#~ msgid "Back to list"
+#~ msgstr "Ritorna all'elenco"
+
+#~ msgid "Cancelled"
+#~ msgstr "Annullata"
+
+#~ msgid "Customer"
+#~ msgstr "Cliente"
+
+#~ msgid "Date"
+#~ msgstr "Data"
+
+#~ msgid "E.g. customer: Steward, date: 2020-05-09"
+#~ msgstr "Es. cliente: assistente di volo, data: 2020-05-09"
+
+#~ msgid ""
+#~ "It seems that you didn't configure a down payment product in your point "
+#~ "of sale.\n"
+#~ "                        You can go to your point of sale configuration to "
+#~ "choose one."
+#~ msgstr ""
+#~ "Non sembra che tu abbia configurato un prodotto di acconto nel tuo punto "
+#~ "vendita.\n"
+#~ "Ne puoi selezionare uno nella configurazione del punto vendita."
+
+#~ msgid "Locked"
+#~ msgstr "Bloccato"
+
+#~ msgid "New"
+#~ msgstr "Nuovo"
+
+#~ msgid "Next Order List"
+#~ msgstr "Elenco ordini successivi"
+
+#~ msgid "No"
+#~ msgstr "No"
+
+#~ msgid "Open POS Sessions"
+#~ msgstr "Apri Sessioni POS"
+
+#~ msgid "Previous Order List"
+#~ msgstr "Elenco ordini precedente"
+
+#~ msgid "Products not available in POS"
+#~ msgstr "Prodotti non disponibili nel Punto Vendita"
+
+#~ msgid "Quotation"
+#~ msgstr "Preventivo"
+
+#~ msgid "Quotation Sent"
+#~ msgstr "Preventivo inviato"
+
+#~ msgid "Salesman"
+#~ msgstr "Addetto vendite"
+
+#~ msgid "Salesperson"
+#~ msgstr "Addetto vendite"
+
+#~ msgid "Session Running"
+#~ msgstr "Sessione in esecuzione"
+
+#~ msgid "Session Sale Amount"
+#~ msgstr "Importo vendite sessione"
+
+#~ msgid "Sessions Running"
+#~ msgstr "Sessioni in esecuzione"
+
+#~ msgid "State"
+#~ msgstr "Provincia"
+
+#~ msgid "Total"
+#~ msgstr "Totale"
+
+#~ msgid ""
+#~ "Transfered<br/>\n"
+#~ "                                from Sale"
+#~ msgstr ""
+#~ "Trasferito<br/>\n"
+#~ "                                da vendite"
+
+#~ msgid ""
+#~ "Transfered<br/>\n"
+#~ "                                to POS"
+#~ msgstr ""
+#~ "Trasferimento<br/>\n"
+#~ "                                a Punto Vendita"
+
+#~ msgid "Yes"
+#~ msgstr "Sì"

@@ -1,0 +1,13 @@
+<templates>
+    <t t-name="purchase.ListRenderer" t-inherit="account.FileUploadListRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="before">
+            <PurchaseDashBoard list="props.list"/>
+        </xpath>
+    </t>
+
+    <t t-name="purchase.ListView" t-inherit="web.ListView" t-inherit-mode="primary">
+        <xpath expr="//SelectionBox" position="after">
+            <PurchaseFileUploader list="model.root"/>
+        </xpath>
+    </t>
+</templates>

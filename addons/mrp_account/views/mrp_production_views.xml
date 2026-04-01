@@ -1,0 +1,32 @@
+<odoo>
+    <record id="mrp_production_form_view_inherited" model="ir.ui.view">
+        <field name="name">mrp.production.view.inherited</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="before">
+                <field name="show_valuation" invisible="1" groups="stock.group_stock_manager"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_move_wip" type="object" class="oe_stat_button" icon="fa-book"
+                        groups="account.group_account_user" invisible="wip_move_count == 0">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="wip_move_count"/></span>
+                        <span class="o_stat_text">WIP</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_production_graph_inherit_mrp_account" model="ir.ui.view">
+        <field name="name">mrp.production.graph.inherited.mrp.account</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.view_production_graph"/>
+        <field name="arch" type="xml">
+            <xpath expr="//graph" position="inside">
+                <field name="extra_cost" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

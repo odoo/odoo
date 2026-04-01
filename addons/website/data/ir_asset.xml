@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <asset id="website.user_custom_bootstrap_overridden_scss" name="User custom bootstrap overridden SCSS">
+            <bundle directive="prepend">web._assets_frontend_helpers</bundle>
+            <path>website/static/src/scss/user_custom_bootstrap_overridden.scss</path>
+            <field name="sequence" eval="99"/>
+        </asset>
+
+        <asset id="website.user_custom_rules_scss" name="User custom rules SCSS">
+            <bundle>web.assets_frontend</bundle>
+            <path>website/static/src/scss/user_custom_rules.scss</path>
+            <field name="sequence" eval="99"/>
+        </asset>
+
+        <asset id="website.configurator_tour" name="Website Configurator Tour" active="False">
+            <field name="key">website.configurator_tour</field>
+            <bundle>website.assets_editor</bundle>
+            <path>website/static/src/js/tours/configurator_tour.js</path>
+        </asset>
+    </data>
+</odoo>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice
+	xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+	xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+	xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+	xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2">
+	<cbc:ProfileID>reporting:1.0</cbc:ProfileID>
+	<cbc:ID>TestEIN022R</cbc:ID>
+	<cbc:UUID>___ignore___</cbc:UUID>
+	<cbc:IssueDate>2023-11-10</cbc:IssueDate>
+	<cbc:InvoiceTypeCode name="022">381</cbc:InvoiceTypeCode>
+	<cbc:DocumentCurrencyCode>USD</cbc:DocumentCurrencyCode>
+	<cbc:TaxCurrencyCode>USD</cbc:TaxCurrencyCode>
+	<cac:BillingReference>
+		<cac:InvoiceDocumentReference>
+			<cbc:ID>TestEIN022</cbc:ID>
+			<cbc:UUID>___ignore___</cbc:UUID>
+			<cbc:DocumentDescription>990.000</cbc:DocumentDescription>
+		</cac:InvoiceDocumentReference>
+	</cac:BillingReference>
+	<cac:AdditionalDocumentReference>
+		<cbc:ID>ICV</cbc:ID>
+		<cbc:UUID>___ignore___</cbc:UUID>
+	</cac:AdditionalDocumentReference>
+	<cac:AccountingSupplierParty>
+		<cac:Party>
+			<cac:PostalAddress>
+				<cac:Country>
+					<cbc:IdentificationCode>JO</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:CompanyID>8000514</cbc:CompanyID>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>Jordan Company</cbc:RegistrationName>
+			</cac:PartyLegalEntity>
+		</cac:Party>
+	</cac:AccountingSupplierParty>
+	<cac:AccountingCustomerParty>
+		<cac:Party>
+			<cac:PostalAddress>
+				<cac:Country>
+					<cbc:IdentificationCode>JO</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+		</cac:Party>
+	</cac:AccountingCustomerParty>
+	<cac:SellerSupplierParty>
+		<cac:Party>
+			<cac:PartyIdentification>
+				<cbc:ID>16683693</cbc:ID>
+			</cac:PartyIdentification>
+		</cac:Party>
+	</cac:SellerSupplierParty>
+	<cac:PaymentMeans>
+		<cbc:PaymentMeansCode listID="UN/ECE 4461">10</cbc:PaymentMeansCode>
+		<cbc:InstructionNote>Reversal of: TestEIN022, Test_Return</cbc:InstructionNote>
+	</cac:PaymentMeans>
+	<cac:AllowanceCharge>
+		<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+		<cbc:AllowanceChargeReason>discount</cbc:AllowanceChargeReason>
+		<cbc:Amount currencyID="JO">100.000</cbc:Amount>
+	</cac:AllowanceCharge>
+	<cac:TaxTotal>
+		<cbc:TaxAmount currencyID="JO">90.000</cbc:TaxAmount>
+		<cac:TaxSubtotal>
+			<cbc:TaxableAmount currencyID="JO">900.000</cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID="JO">90.000</cbc:TaxAmount>
+			<cac:TaxCategory>
+				<cbc:ID schemeAgencyID="6" schemeID="UN/ECE 5305">S</cbc:ID>
+				<cbc:Percent>10.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID schemeAgencyID="6" schemeID="UN/ECE 5153">VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:TaxCategory>
+		</cac:TaxSubtotal>
+	</cac:TaxTotal>
+	<cac:LegalMonetaryTotal>
+		<cbc:TaxExclusiveAmount currencyID="JO">1000.000</cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID="JO">990.000</cbc:TaxInclusiveAmount>
+		<cbc:AllowanceTotalAmount currencyID="JO">100.000</cbc:AllowanceTotalAmount>
+		<cbc:PrepaidAmount currencyID="JO">0.000</cbc:PrepaidAmount>
+		<cbc:PayableAmount currencyID="JO">990.000</cbc:PayableAmount>
+	</cac:LegalMonetaryTotal>
+	<cac:InvoiceLine>
+		<cbc:ID>1</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="PCE">100.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="JO">900.000</cbc:LineExtensionAmount>
+		<cac:TaxTotal>
+			<cbc:TaxAmount currencyID="JO">90.000</cbc:TaxAmount>
+			<cbc:RoundingAmount currencyID="JO">990.000</cbc:RoundingAmount>
+			<cac:TaxSubtotal>
+				<cbc:TaxableAmount currencyID="JO">900.000</cbc:TaxableAmount>
+				<cbc:TaxAmount currencyID="JO">90.000</cbc:TaxAmount>
+				<cac:TaxCategory>
+					<cbc:ID schemeAgencyID="6" schemeID="UN/ECE 5305">S</cbc:ID>
+					<cbc:Percent>10.0</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID schemeAgencyID="6" schemeID="UN/ECE 5153">VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+			</cac:TaxSubtotal>
+		</cac:TaxTotal>
+		<cac:Item>
+			<cbc:Name>product_a</cbc:Name>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="JO">10.000</cbc:PriceAmount>
+			<cac:AllowanceCharge>
+				<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+				<cbc:AllowanceChargeReason>DISCOUNT</cbc:AllowanceChargeReason>
+				<cbc:Amount currencyID="JO">100.000</cbc:Amount>
+			</cac:AllowanceCharge>
+		</cac:Price>
+	</cac:InvoiceLine>
+</Invoice>

@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="project.milestone_deadline">
+<t t-if="milestone['deadline']">
+(due <t t-out="milestone['deadline']" t-options='{"widget": "date"}'/><t t-if="not milestone['is_reached'] or not milestone['reached_date']">
+<t t-if="milestone['can_be_marked_as_done']"> - <font t-att-style="'color: rgb(0, ' + str(color_level) + ', 0)'">ready to be marked as reached</font></t>)</t><t t-else=""> - reached on<t t-if="milestone['reached_date'] &gt; milestone['deadline']">
+<font style="color: rgb(255, 0, 0)"><t t-out="milestone['reached_date']" t-options='{"widget": "date"}'/></font>)</t><t t-else="">
+<font style="color: rgb(0, 128, 0)"><t t-out="milestone['reached_date']" t-options='{"widget": "date"}'/></font>)</t></t>
+</t>
+<t t-elif="milestone['can_be_marked_as_done']">
+(<font t-att-style="'color: rgb(0, ' + str(color_level) + ', 0)'">ready to be marked as reached</font>)
+</t>
+    </template>
+
+    <template id="project_update_default_description" name="Project Update Description">
+<!--As this template is rendered in an html field, the spaces may be interpreted as nbsp while editing. -->
+<div name="summary">
+<br/><h1 style="font-weight: bolder;">Summary</h1>
+<br/><p>How’s this project going?</p><br/><br/>
+</div>
+
+<div name="activities" t-if="show_activities">
+<h1 style="font-weight: bolder;">Activities</h1>
+</div>
+
+<div name="profitability" t-if="show_profitability">
+<t t-if="project.account_id" name="costs">
+<h3 style="font-weight: bolder"><u>Profitability</u></h3>
+
+<div name="profitability_detail" class="mt-4">
+<table class="table table-striped" t-if="profitability['revenues']['data']">
+<thead class="border-2 border-start-0 border-end-0">
+<tr>
+<th class="fw-bolder" style="width: 55%">Revenues</th>
+<th class="fw-bolder text-end" style="width: 15%">Expected</th>
+<th class="fw-bolder text-end" style="width: 15%">To Invoice</th>
+<th class="fw-bolder text-end" style="width: 15%">Invoiced</th>
+</tr>
+</thead>
+<tbody>
+<tr t-foreach="profitability['revenues']['data']" t-as="revenue">
+<tr class="revenue_data">
+<td t-out="profitability['labels'][revenue['id']]"/>
+<td class="text-end" t-out="format_monetary(revenue['invoiced'] + revenue['to_invoice'])"/>
+<td class="text-end" t-out="format_monetary(revenue['to_invoice'])"/>
+<td class="text-end" t-out="format_monetary(revenue['invoiced'])"/>
+</tr>
+</tr>
+<tfoot>
+<td class="fw-bolder">Total Revenues</td>
+<td class="fw-bolder text-end" t-out="format_monetary(profitability['revenues']['total']['invoiced'] + profitability['revenues']['total']['to_invoice'])"/>
+<td class="fw-bolder text-end" t-out="format_monetary(profitability['revenues']['total']['to_invoice'])"/>
+<td class="fw-bolder text-end" t-out="format_monetary(profitability['revenues']['total']['invoiced'])"/>
+</tfoot>
+</tbody>
+</table>
+
+<table class="table table-striped mt-4 table-bordered" t-if="profitability['costs']['data']">
+<thead>
+<tr>
+<th class="fw-bolder" style="width: 55%">Costs</th>
+<th class="fw-bolder text-end" style="width: 15%">Expected</th>
+<th class="fw-bolder text-end" style="width: 15%">To Bill</th>
+<th class="fw-bolder text-end" style="width: 15%">Billed</th>
+</tr>
+</thead>
+<tbody>
+<tr t-foreach="profitability['costs']['data']" t-as="cost">
+<td t-out="profitability['labels'][cost['id']]"/>
+<td class="text-end" t-out="format_monetary(cost['billed'] + cost['to_bill'])"/>
+<td class="text-end" t-out="format_monetary(cost['to_bill'])"/>
+<td class="text-end" t-out="format_monetary(cost['billed'])"/>
+</tr>
+</tbody>
+<tr>
+<td class="fw-bolder">Total Costs</td>
+<td class="fw-bolder text-end" t-out="format_monetary(profitability['costs']['total']['billed'] + profitability['costs']['total']['to_bill'])"/>
+<td class="fw-bolder text-end" t-out="format_monetary(profitability['costs']['total']['to_bill'])"/>
+<td class="fw-bolder text-end" t-out="format_monetary(profitability['costs']['total']['billed'])"/>
+</tr>
+<tr t-if="profitability['costs']['data'] and profitability['revenues']['data']">
+<td class="fw-bolder align-middle">Total</td>
+<td t-attf-class="#{'text-danger' if profitability['total']['margin'] &lt; 0 else 'text-success'}" style="text-align: right">
+<t t-out="format_monetary(profitability['total']['margin'])"/><br/>
+<t t-if="profitability['expected_percentage']">
+<t t-out="profitability['expected_percentage']"/><t>%</t>
+</t>
+</td>
+<td t-attf-class="#{'text-danger' if profitability['total']['revenues'] &lt; 0 else 'text-success'}" style="text-align: right">
+<t t-out="format_monetary(profitability['total']['revenues'])"/><br/>
+<t t-if="profitability['to_bill_to_invoice_percentage']">
+<t t-out="profitability['to_bill_to_invoice_percentage']"/><t>%</t>
+</t>
+</td>
+<td t-attf-class="#{'text-danger' if profitability['total']['costs'] &lt; 0 else 'text-success'}" style="text-align: right">
+<t t-out="format_monetary(profitability['total']['costs'])"/><br/>
+<t t-if="profitability['billed_invoiced_percentage']">
+<t t-out="profitability['billed_invoiced_percentage']"/><t>%</t>
+</t>
+</td>
+</tr>
+</table>
+</div>
+</t>
+</div>
+
+<div name="milestone" t-if="milestones['show_section']">
+<br/>
+<h3 style="font-weight: bolder"><u>Milestones</u></h3>
+
+<ul class="o_checklist" t-if="milestones['list']">
+<t t-foreach="milestones['list']" t-as="milestone">
+<li t-att-class="milestone['is_reached'] and 'o_checked'" t-attf-id="checkId-{{milestone_index}}">
+<t t-out="milestone['name']"/>
+<span t-if="milestone['is_deadline_exceeded']"><font style="color: rgb(255, 0, 0);"><t t-call="project.milestone_deadline"/></font></span>
+<span t-elif="not milestone['can_be_marked_as_done']"><font style="color: rgb(190, 190, 190);"><t t-set="color_level" t-value="64"/><t t-call="project.milestone_deadline"/></font></span>
+<span t-else=""><t t-set="color_level" t-value="128"/><t t-call="project.milestone_deadline"/></span>
+</li>
+</t>
+</ul>
+
+<t t-if="milestones['updated']">
+<t t-if="milestones['last_update_date']">Since <t t-out="milestones['last_update_date']" t-options='{"widget": "date"}'/> (last project update), </t>
+<t t-if="len(milestones['updated']) > 1">the deadline for the following milestones has been updated:</t>
+<t t-else="">the deadline for the following milestone has been updated:</t>
+<ul>
+<t t-foreach="milestones['updated']" t-as="milestone">
+<li>
+<t t-out="milestone['name']"/> (<t t-out="milestone['old_value']" t-options='{"widget": "date"}'/> =&gt; <t t-out="milestone['new_value']"  t-options='{"widget": "date"}'/>)
+</li>
+</t>
+</ul>
+</t>
+
+<t t-if="milestones['created']">
+<t t-if="len(milestones['created']) > 1">The following milestones have been added:</t>
+<t t-else="">The following milestone has been added:</t>
+<ul>
+<t t-foreach="milestones['created']" t-as="milestone">
+<li>
+<t t-out="milestone['name']"/>
+<span t-if="milestone['is_deadline_exceeded']"><font style="color: rgb(255, 0, 0);"><t t-call="project.milestone_deadline"/></font></span>
+<span t-else=""><font style="color: rgb(190, 190, 190);"><t t-set="color_level" t-value="128"/><t t-call="project.milestone_deadline"/></font></span>
+</li>
+</t>
+</ul>
+</t>
+</div>
+    </template>
+</odoo>

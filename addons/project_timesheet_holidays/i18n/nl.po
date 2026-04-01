@@ -1,0 +1,265 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * project_timesheet_holidays
+#
+# Translators:
+# Martin Trigaux, 2022
+# Jolien De Paepe, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-18 08:17+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
+"project_timesheet_holidays/nl/>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Analytische boeking"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__timesheet_ids
+msgid "Analytic Lines"
+msgstr "Analytische boekingen"
+
+#. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_res_company
+msgid "Companies"
+msgstr "Bedrijven"
+
+#. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuratie-instellingen"
+
+#. module: project_timesheet_holidays
+#: model:ir.model,website_form_label:project_timesheet_holidays.model_project_task
+msgid "Create a Task"
+msgstr "Taak aanmaken"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_resource_calendar_leaves__display_name
+msgid "Display Name"
+msgstr "Weergavenaam"
+
+#. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_hr_employee
+msgid "Employee"
+msgstr "Werknemer"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_employee__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_resource_calendar_leaves__id
+msgid "ID"
+msgstr "ID"
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/__init__.py:0
+msgid "Internal"
+msgstr "Intern"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__internal_project_id
+msgid "Internal Project"
+msgstr "Intern project"
+
+#. module: project_timesheet_holidays
+#: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
+msgid "Project"
+msgstr "Project"
+
+#. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "Resource verlof detail"
+
+#. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_project_task
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__task_id
+#: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
+msgid "Task"
+msgstr "Taak"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
+msgid ""
+"The default project used when automatically generating timesheets via time "
+"off requests. You can specify another project on each time off type "
+"individually."
+msgstr ""
+"Het standaardproject dat wordt gebruikt bij het automatisch genereren van "
+"urenstaten via verlofaanvragen. Je kunt voor elk verlofsoort afzonderlijk "
+"een ander project bepalen."
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
+msgid ""
+"The default task used when automatically generating timesheets via time off "
+"requests. You can specify another task on each time off type individually."
+msgstr ""
+"De standaardtaak die wordt gebruikt bij het automatisch genereren van "
+"urenstaten via verlofaanvragen. Je kunt voor elk verlofsoort afzonderlijk "
+"een andere taak bepalen."
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/__init__.py:0
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+#: code:addons/project_timesheet_holidays/models/res_company.py:0
+#: model:ir.model,name:project_timesheet_holidays.model_hr_leave
+msgid "Time Off"
+msgstr "Verlof"
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/hr_leave.py:0
+#: code:addons/project_timesheet_holidays/models/resource_calendar_leaves.py:0
+msgid "Time Off (%(index)s/%(total)s)"
+msgstr "Verlof (%(index)s/%(total)s)"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
+msgid "Time Off Task"
+msgstr "Taak verlof"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
+msgid "Time Off Types Count"
+msgstr "Aantal verlofsoorten"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,help:project_timesheet_holidays.field_project_task__display_name
+msgid ""
+"Use these keywords in the title to set new tasks:\n"
+"\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a medium priority\n"
+"        !! Set the task a high priority\n"
+"        !!! Set the task a urgent priority\n"
+"\n"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
+msgstr ""
+"Gebruik deze trefwoorden in de titel om nieuwe taken in te stellen:\n"
+"\n"
+"        30h Wijs 30 uur toe aan de taak\n"
+"        #label Stel labels in op de taak\n"
+"        @user Wijs de taak toe aan een gebruiker\n"
+"        ! Geef de taak een gemiddelde prioriteit\n"
+"        !! Geef de taak een hoge prioriteit\n"
+"        !!! Geef de taak een urgente prioriteit\n"
+"\n"
+"        Zorg ervoor dat je de juiste indeling en volgorde gebruikt, bv.: "
+"Verbeter het configuratiescherm 5h #feature #v16 @Mitchell !"
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid "View Time Off"
+msgstr "Bekijk het verlof"
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid ""
+"You cannot create timesheets for a task that is linked to a time off type. "
+"Please use the Time Off application to request new time off instead."
+msgstr ""
+"Je kunt geen urenstaten aanmaken voor een taak die aan een verlofsoort "
+"gekoppeld is. Gebruik liever de Verlof applicatie om een nieuw verlof aan te "
+"vragen."
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid "You cannot delete timesheets that are linked to global time off."
+msgstr ""
+"Je kunt geen timesheets verwijderen die gekoppeld zijn aan een algemene "
+"verlofregistratie."
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid ""
+"You cannot delete timesheets that are linked to time off requests. Please "
+"cancel your time off request from the Time Off application instead."
+msgstr ""
+"Je kunt urenstaten die aan verlofaanvragen gekoppeld zijn niet verwijderen. "
+"Annuleer liever je verlofaanvraag in de Verlof applicatie."
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid ""
+"You cannot modify timesheets that are linked to time off requests. Please "
+"use the Time Off application to modify your time off requests instead."
+msgstr ""
+"Je kunt urenstaten die aan verlofaanvragen gekoppeld zijn niet wijzigen. "
+"Gebruik liever de Verlof applicatie om je verlofaanvragen te wijzingen."
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/__init__.py:0
+msgid "allow_timesheets"
+msgstr "allow_timesheets"
+
+#~ msgid ""
+#~ "Both the internal project and task are required to generate a timesheet "
+#~ "for the time off %s. If you don't want a timesheet, you should leave the "
+#~ "internal project and task empty."
+#~ msgstr ""
+#~ "Zowel het interne project als de taak zijn vereist om een urenstaat voor "
+#~ "het verlof %s te genereren. Als je geen urenstaat wilt, moet je het "
+#~ "interne project en de taak leeg laten."
+
+#~ msgid "Generate Timesheet"
+#~ msgstr "Urenstaat genereren"
+
+#~ msgid "Global Time Off"
+#~ msgstr "Algemene verlof"
+
+#~ msgid ""
+#~ "If checked, when validating a time off, timesheet will be generated in "
+#~ "the Vacation Project of the company."
+#~ msgstr ""
+#~ "Indien aangevinkt wordt er een urenstaat gegenereerd in het verlofproject "
+#~ "van het bedrijf wanneer de verlofaanvraag bevestigd wordt."
+
+#~ msgid "Is Time off Task"
+#~ msgstr "Is een verloftaak"
+
+#~ msgid "Operation not supported"
+#~ msgstr "Bewerking niet ondersteund"
+
+#~ msgid "Time Off (%s/%s)"
+#~ msgstr "Verlof (%s/%s)"
+
+#~ msgid "Time Off Type"
+#~ msgstr "Soort verlof"

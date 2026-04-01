@@ -1,0 +1,286 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_tax_python
+#
+# Translators:
+# Martin Trigaux, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-12-20 09:32+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
+"account_tax_python/it/>\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
+msgid ""
+"\n"
+"    - Group of Taxes: The tax is a set of sub taxes.\n"
+"    - Fixed: The tax amount stays the same whatever the price.\n"
+"    - Percentage: The tax amount is a % of the price:\n"
+"        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+"        e.g 110 / (1 + 10%) = 100 (price included)\n"
+"    - Percentage Tax Included: The tax amount is a division of the price:\n"
+"        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+"        e.g 200 * (1 - 10%) = 180 (price included)\n"
+"        "
+msgstr ""
+"\n"
+"    - Gruppo di imposte: l'imposta corrisponde a una serie di sotto "
+"imposte.\n"
+"    - Fisso: l'importo imposta rimane uguale e indipendente dal prezzo.\n"
+"    - Percentuale: l'importo dell'imposta è una % del prezzo:\n"
+"        es. 100 * (1 + 10%) = 110 (prezzo non incluso)\n"
+"        es. 110 / (1 + 10%) = 100 (prezzo incluso)\n"
+"    - Percentuale imposta inclusa: l'importo dell'imposta è una frazione del "
+"prezzo:\n"
+"        es. 180 / (1 - 10%) = 200 (prezzo non incluso)\n"
+"        es. 200 * (1 - 10%) = 180 (prezzo incluso)\n"
+"        "
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
+msgid ""
+"Compute the amount of the tax.\n"
+"\n"
+":param base: float, actual amount on which the tax is applied\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: A object representing the product\n"
+msgstr ""
+"Calocla l'importo dell'imposta.\n"
+"\n"
+":param base: float, importo corrente a cui è applicata l'imposta\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: un oggetto che rappresenta il prodotto\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
+msgid "Custom Formula"
+msgstr "Formula personalizzata"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Field '%s' is not accessible"
+msgstr "Il campo '%s' non è accessibile"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
+msgid "Formula"
+msgstr "Formula"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
+msgid "Formula Decoded Info"
+msgstr "Info formula decifrata"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Invalid AST node: %s"
+msgstr "Nodo AST non valido: %s"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Invalid formula"
+msgstr "Formula non valida"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Kwargs are not allowed"
+msgstr "Kwarg non ammessi"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only int, float or None are allowed as constant values"
+msgstr "Come valori costanti sono ammessi solo int, float o None."
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/models/account_tax.py:0
+msgid "Only primitive types are allowed in python tax formula context."
+msgstr ""
+"Nel contesto della formula fiscale di python sono ammessi solo tipi "
+"primitivi."
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only product['string'] or uom['string'] read-access is allowed"
+msgstr ""
+"È consentito solo l'accesso in lettura al prodotto['string'] o all'unità di "
+"misura['string']"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only read access to identifiers is allowed"
+msgstr "Agli identificatori è consentito solo l'accesso in lettura"
+
+#. module: account_tax_python
+#: model:ir.model,name:account_tax_python.model_account_tax
+msgid "Tax"
+msgstr "Imposta"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
+msgid "Tax Computation"
+msgstr "Calcolo imposta"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Unknown function call"
+msgstr "Chiamata funzione sconosciuta"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Unknown identifier: %s"
+msgstr "Identificatore sconosciuto: %s"
+
+#~ msgid "Only product['string'] read-access is allowed"
+#~ msgstr "È consentito solo l'accesso in lettura a product['string']"
+
+#~ msgid ""
+#~ "\n"
+#~ "    - Group of Taxes: The tax is a set of sub taxes.\n"
+#~ "    - Fixed: The tax amount stays the same whatever the price.\n"
+#~ "    - Percentage of Price: The tax amount is a % of the price:\n"
+#~ "        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+#~ "        e.g 110 / (1 + 10%) = 100 (price included)\n"
+#~ "    - Percentage of Price Tax Included: The tax amount is a division of "
+#~ "the price:\n"
+#~ "        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+#~ "        e.g 200 * (1 - 10%) = 180 (price included)\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "    - Gruppo di imposte: l'imposta corrisponde a una serie di "
+#~ "sottoimposte.\n"
+#~ "    - Fisso: l'importo imposta rimane uguale e indipendente dal prezzo.\n"
+#~ "    - Percentuale sul prezzo: l'importo imposta è una % del prezzo:\n"
+#~ "        es. 100 * (1 + 10%) = 110 (prezzo non incluso)\n"
+#~ "        es. 110 / (1 + 10%) = 100 (prezzo incluso)\n"
+#~ "    - Percentuale sul prezzo imposta inclusa: l'importa imposta è una "
+#~ "frazione del prezzo:\n"
+#~ "        es. 180 / (1 - 10%) = 200 (prezzo non incluso)\n"
+#~ "        es. 200 * (1 - 10%) = 180 (prezzo incluso)\n"
+#~ "        "
+
+#~ msgid "Applicable Code"
+#~ msgstr "Codice applicabile"
+
+#~ msgid ""
+#~ "Compute the amount of the tax by setting the variable 'result'.\n"
+#~ "\n"
+#~ ":param base_amount: float, actual amount on which the tax is applied\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res.company recordset singleton\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "Calcola l'importo dell'imposta impostando la variabile \"risultato\".\n"
+#~ "\n"
+#~ ":param base_amount: a virgola mobile, importo effettivo a cui viene "
+#~ "applicata l'imposta\n"
+#~ ":param price_unit: a virgola mobile\n"
+#~ ":param quantity: a virgola mobile\n"
+#~ ":param company: singolo elemento di un insieme di record res.company\n"
+#~ ":param product: singolo elemento di un insieme di record product.product "
+#~ "oppure nessuno\n"
+#~ ":param partner: singolo elemento di un insieme di record res.partner "
+#~ "oppure nessuno"
+
+#~ msgid ""
+#~ "Compute the amount of the tax by setting the variable 'result'.\n"
+#~ "\n"
+#~ ":param base_amount: float, actual amount on which the tax is applied\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "Calcola l'importo dell'imposta impostando la variabile \"risultato\".\n"
+#~ "\n"
+#~ ":param base_amount: a virgola mobile, importo effettivo a cui viene "
+#~ "applicata l'imposta\n"
+#~ ":param quantity: a virgola mobile\n"
+#~ ":param product: singolo elemento di un insieme di record product.product "
+#~ "oppure nessuno\n"
+#~ ":param partner: singolo elemento di un insieme di record res.partner "
+#~ "oppure nessuno"
+
+#~ msgid ""
+#~ "Determine if the tax will be applied by setting the variable 'result' to "
+#~ "True or False.\n"
+#~ "\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res.company recordset singleton\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "Determina se l'imposta viene applicata impostando la variabile "
+#~ "\"risultato\" a vero o falso.\n"
+#~ "\n"
+#~ ":param price_unit: a virgola mobile\n"
+#~ ":param quantity: a virgola mobile\n"
+#~ ":param company: singolo elemento di un insieme di record res.company\n"
+#~ ":param product: singolo elemento di un insieme di record product.product "
+#~ "oppure nessuno\n"
+#~ ":param partner: singolo elemento di un insieme di record res.partner "
+#~ "oppure nessuno"
+
+#~ msgid ""
+#~ "Determine if the tax will be applied by setting the variable 'result' to "
+#~ "True or False.\n"
+#~ "\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "Determina se l'imposta viene applicata impostando la variabile "
+#~ "\"risultato\" a vero o falso.\n"
+#~ "\n"
+#~ ":param price_unit: a virgola mobile\n"
+#~ ":param quantity: a virgola mobile\n"
+#~ ":param product: singolo elemento di un insieme di record product.product "
+#~ "oppure nessuno\n"
+#~ ":param partner: singolo elemento di un insieme di record res.partner "
+#~ "oppure nessuno"
+
+#~ msgid "Python Code"
+#~ msgstr "Codice Python"
+
+#~ msgid "Templates for Taxes"
+#~ msgstr "Modelli per imposte"

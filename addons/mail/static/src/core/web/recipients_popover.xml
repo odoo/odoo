@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.RecipientsPopover">
+        <div class="o_avatar_card card border-0 rounded">
+            <div class="card-body bg-inherit rounded">
+                <div class="d-flex align-items-start gap-2 bg-inherit">
+                    <span class="o_avatar pt-1 position-relative o_card_avatar bg-inherit">
+                        <img t-if="props.id"
+                            t-attf-src="/web/image/res.partner/{{props.id}}/avatar_128"
+                            class="rounded object-fit-contain"
+                        />
+                    </span>
+                    <div class="d-flex flex-column o_card_user_infos overflow-hidden">
+                        <span class="fw-bold" t-out="name"/>
+                        <a t-if="email" t-attf-href="mailto:{{email}}" t-att-title="email" class="text-truncate">
+                            <i class="fa fa-fw fa-envelope me-1"/><t t-out="email"/>
+                        </a>
+                        <a t-if="phone" class="o-mail-avatar-card-tel text-truncate" t-att-title="phone" t-attf-href="tel:{{phone}}">
+                            <i class="fa fa-fw fa-phone me-1"/><t t-out="phone"/>
+                        </a>
+                        <div class="o_avatar_card_buttons d-flex gap-2 mt-2">
+                            <a role="button" class="btn btn-primary btn-sm" t-attf-href="mailto:{{email}}">
+                                Send Email
+                            </a>
+                            <button class="btn btn-secondary btn-sm" t-on-click.stop="onClickViewProfile">View Profile</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

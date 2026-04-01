@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ProgressBarOption">
+    <BuilderRow label.translate="Value">
+        <BuilderNumberInput action="'progressBarValue'" unit="'%'" saveUnit="'%'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Label">
+        <BuilderSelect>
+            <BuilderSelectItem action="'display'" actionParam="'inline'" classAction="'s_progress_bar_label_inline'">Display Inside</BuilderSelectItem>
+            <BuilderSelectItem action="'display'" actionParam="'below'" classAction="'s_progress_bar_label_below'">Display Below</BuilderSelectItem>
+            <BuilderSelectItem action="'display'" actionParam="'after'" classAction="'s_progress_bar_label_after'">Display After</BuilderSelectItem>
+            <BuilderSelectItem action="'display'" actionParam="'none'" classAction="'s_progress_bar_label_hidden'">Hide</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Colors">
+        <BuilderColorPicker applyTo="'.progress-bar'" styleAction="'background-color'" enabledTabs="['solid', 'custom']"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Striped">
+        <BuilderCheckbox id="'progress_striped_opt'" classAction="'progress-bar-striped'" applyTo="'.progress-bar'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Animated" level="1">
+        <BuilderCheckbox classAction="'progress-bar-animated'" t-if="this.isActiveItem('progress_striped_opt')" applyTo="'.progress-bar'"/>
+    </BuilderRow>
+</t>
+
+</templates>

@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_report" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="name@th">รายงานภาษี</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.th"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@th">ยอดคงเหลือ</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_out_tax_title" model="account.report.line">
+                <field name="name">Output Tax</field>
+                <field name="name@th">ภาษีขาย</field>
+                <field name="aggregation_formula">OUTPUTTAX_SALEAMOUNT.balance + OUTPUTTAX_SALE_ZERO.balance + OUTPUTTAX_EXEMPTED.balance + OUTPUTTAX_TAX.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_out_tax_sale" model="account.report.line">
+                        <field name="name">1. Sales amount</field>
+                        <field name="name@th">1. ยอดขาย</field>
+                        <field name="code">OUTPUTTAX_SALEAMOUNT</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_out_tax_sale_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-1. Sales amount</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_out_tax_less_sales_0_rate" model="account.report.line">
+                        <field name="name">2. Less sales subject to 0% tax rate </field>
+                        <field name="name@th">2. หักยอดขายโดยคิดอัตราภาษี 0% </field>
+                        <field name="code">OUTPUTTAX_SALE_ZERO</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_out_tax_less_sales_0_rate_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-2. Less sales subject to 0% tax rate </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_out_tax_less_exempted_sales" model="account.report.line">
+                        <field name="name">3. Less exempted sales</field>
+                        <field name="name@th">3. หักยอดขายที่ได้รับการยกเว้น</field>
+                        <field name="code">OUTPUTTAX_EXEMPTED</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_out_tax_less_exempted_sales_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-3. Less exempted sales</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_out_tax_taxable_sales_amount" model="account.report.line">
+                        <field name="name">4. Taxable sales amount(1. -2. -3.)</field>
+                        <field name="name@th">4. ยอดขายที่ต้องเสียภาษี(1. -2. -3.)</field>
+                        <field name="aggregation_formula">OUTPUTTAX_SALEAMOUNT.balance-(OUTPUTTAX_SALE_ZERO.balance+OUTPUTTAX_EXEMPTED.balance)</field>
+                    </record>
+                    <record id="tax_report_out_tax" model="account.report.line">
+                        <field name="name">5. Output tax</field>
+                        <field name="name@th">5. ภาษีขาย</field>
+                        <field name="code">OUTPUTTAX_TAX</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_out_tax_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-5. Output tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_input_tax_title" model="account.report.line">
+                <field name="name">Input Tax</field>
+                <field name="name@th">ภาษีซื้อ</field>
+                <field name="code">INPUTTAX</field>
+                <field name="aggregation_formula">6_PURCHASE_AMOUNT_THAT_IS_ENTITLED_TO_DEDUCTION_OF_INPUT_TAX_FROM_OUTPUT_TAX_IN_TAX_COMPUTATION.balance + INPUTTAX_TAX.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_input_tax_purchase_from_out_tax" model="account.report.line">
+                        <field name="name">6. Purchase amount that is entitled to deduction of input tax from output tax in tax computation</field>
+                        <field name="name@th">6. จำนวนเงินซื้อที่มีสิทธิ์ได้รับการหักภาษีซื้อ จากภาษีขายในการคำนวณภาษี</field>
+                        <field name="code">6_PURCHASE_AMOUNT_THAT_IS_ENTITLED_TO_DEDUCTION_OF_INPUT_TAX_FROM_OUTPUT_TAX_IN_TAX_COMPUTATION</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_input_tax_purchase_from_out_tax_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">6. Purchase amount that is entitled to deduction of input tax from output tax in tax computation</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_input_tax" model="account.report.line">
+                        <field name="name">7. Input tax (according to invoice of purchase amount in 6.)</field>
+                        <field name="name@th">7. ภาษีซื้อ (ตามใบแจ้งหนี้ของจำนวนการซื้อในข้อ 6. )</field>
+                        <field name="code">INPUTTAX_TAX</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_input_tax_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">7. Input tax (according to invoice of purchase amount in 6.)</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_vat" model="account.report.line">
+                <field name="name">Value Added Tax</field>
+                <field name="name@th">ภาษีมูลค่าเพิ่ม</field>
+                <field name="aggregation_formula">10_EXCESS_CARRIED_FORWARD.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_vat_payable" model="account.report.line">
+                        <field name="name">8. Tax payable (if 5. is greater than 7.)</field>
+                        <field name="name@th">8. ภาษีที่ต้องชำระ (ถ้า 5. มากกว่า 7. )</field>
+                        <field name="code">8_TAX_PAYABLE</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_payable_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">OUTPUTTAX_TAX.balance - INPUTTAX_TAX.balance</field>
+                                <field name="subformula">if_above(THB(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_excess" model="account.report.line">
+                        <field name="name">9. Excess tax payable (if 5. is less than 7.)</field>
+                        <field name="name@th">9. ภาษีเกินที่ต้องชำระ (ถ้า 5. น้อยกว่า 7.)</field>
+                        <field name="code">9_VAT_EXCESS</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_excess_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">INPUTTAX_TAX.balance - OUTPUTTAX_TAX.balance</field>
+                                <field name="subformula">if_above(THB(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_payment_last_period" model="account.report.line">
+                        <field name="name">10. Excess tax payment carried forward from last period</field>
+                        <field name="name@th">10. ภาษีส่วนเกินถูกยกมาจากงวดก่อน</field>
+                        <field name="code">10_EXCESS_CARRIED_FORWARD</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_payment_last_period_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_return_period</field>
+                            </record>
+                            <record id="tax_report_vat_payment_last_period_tag" model="account.report.expression">
+                                <field name="label">tag</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">10. Excess tax payment carried forward from last period</field>
+                            </record>
+                            <record id="tax_report_vat_payment_last_period_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">10_EXCESS_CARRIED_FORWARD._applied_carryover_balance + 10_EXCESS_CARRIED_FORWARD.tag</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_net_vat" model="account.report.line">
+                <field name="name">Net Tax</field>
+                <field name="name@th">ภาษีสุทธิ</field>
+                <field name="aggregation_formula">11_NET_TAX_PAYABLE_IF_8_IS_GREATER_THAN_10.balance + 12_NET_VAT_EXCESS.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_net_vat_payable" model="account.report.line">
+                        <field name="name">11. Net tax payable (if 8. is greater than 10.)</field>
+                        <field name="name@th">11. ภาษีสุทธิที่ต้องชำระ (ถ้า 8. มากกว่า 10.)</field>
+                        <field name="code">11_NET_TAX_PAYABLE_IF_8_IS_GREATER_THAN_10</field>
+                        <!-- If 8 > 10, this should be filled with 8 - 10 -->
+                        <field name="expression_ids">
+                            <record id="tax_report_net_vat_payable_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">8_TAX_PAYABLE.balance - 10_EXCESS_CARRIED_FORWARD.balance</field>
+                                <field name="subformula">if_above(THB(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_net_vat_excess" model="account.report.line">
+                        <field name="name">12. Net excess tax payable ((if 10. is greater than 8.) or (9. plus 10.))</field>
+                        <field name="name@th">12. ภาษีสุทธิส่วนเกินที่ต้องชำระ ((ถ้า 10. มากกว่า 8.) หรือ (9. บวก 10.))</field>
+                        <field name="code">12_NET_VAT_EXCESS</field>
+                        <field name="expression_ids">
+                            <!-- First part. If 10 - 8 > 0 we use this value -->
+                            <record id="tax_report_net_vat_payable_and_carried_forward" model="account.report.expression">
+                                <field name="label">net_vat_payable</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">10_EXCESS_CARRIED_FORWARD.balance - 8_TAX_PAYABLE.balance</field>
+                                <field name="subformula">if_above(THB(0))</field>
+                            </record>
+                            <!-- If 9 is set we also want to use it. -->
+                            <record id="tax_report_net_vat_excess_exp" model="account.report.expression">
+                                <field name="label">net_vat_excess</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">9_VAT_EXCESS.balance</field>
+                                <field name="subformula">if_other_expr_above(9_VAT_EXCESS.balance, THB(0))</field>
+                            </record>
+                            <!-- 10 - 8 or 10 + 9 (you will never have both 8 and 9)-->
+                            <record id="tax_report_net_vat_excess_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">12_NET_VAT_EXCESS.net_vat_payable + 12_NET_VAT_EXCESS.net_vat_excess</field>
+                            </record>
+                            <record id="tax_report_net_vat_excess_carryover" model="account.report.expression">
+                                <field name="label">_carryover_balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">12_NET_VAT_EXCESS.balance</field>
+                                <field name="carryover_target">10_EXCESS_CARRIED_FORWARD._applied_carryover_balance</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+    <record id="tax_report_pnd53" model="account.report">
+        <field name="name">PND53</field>
+        <field name="name@th">ภ.ง.ด. 53</field>
+        <field name="root_report_id" ref="account.generic_tax_report" />
+        <field name="country_id" ref="base.th" />
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_pnd53_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@th">ยอดคงเหลือ</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_total_income_pnd53_line" model="account.report.line">
+                <field name="name">Total Income</field>
+                <field name="name@th">รวมยอดเงินได้ทั้งสิ้น</field>
+                <field name="code">INCOME_PND53</field>
+                <field name="expression_ids">
+                    <record id="tax_report_total_income_pnd53" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">Income PND53</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_total_remittance_pnd53_line" model="account.report.line">
+                <field name="name">Total Remittance</field>
+                <field name="name@th">รวมยอดภาษีที่นำส่งทั้งสิ้น</field>
+                <field name="code">P53</field>
+                <field name="expression_ids">
+                    <record id="tax_report_total_remittance_pnd53" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">PND53</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_surcharge_pnd53_line" model="account.report.line">
+                <field name="name">Surcharge</field>
+                <field name="name@th">ค่าธรรมเนียมเพิ่มเติม</field>
+                <field name="code">S53</field>
+                <field name="expression_ids">
+                    <record id="tax_report_surcharge_pnd53" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">SUR53</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_total_pnd53_line" model="account.report.line">
+                <field name="name">Total</field>
+                <field name="name@th">รวมยอดภาษีที่นำส่งทั้งสิ้น และเงินเพิ่ม (2. + 3.)</field>
+                <field name="expression_ids">
+                    <record id="tax_report_total_pnd53" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">P53.balance + S53.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+    <record id="tax_report_pnd3" model="account.report">
+        <field name="name">PND3</field>
+        <field name="name@th">ภ.ง.ด. 3</field>
+        <field name="root_report_id" ref="account.generic_tax_report" />
+        <field name="country_id" ref="base.th" />
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_pnd3_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@th">ยอดคงเหลือ</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_total_income_pnd3_line" model="account.report.line">
+                <field name="name">Total Income</field>
+                <field name="name@th">รวมยอดเงินได้ทั้งสิ้น</field>
+                <field name="code">INCOME_PND3</field>
+                <field name="expression_ids">
+                    <record id="tax_report_total_income_pnd3" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">Income PND3</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_total_remittance_pnd3_line" model="account.report.line">
+                <field name="name">Total Remittance</field>
+                <field name="name@th">รวมยอดภาษีที่นำส่งทั้งสิ้น</field>
+                <field name="code">P3</field>
+                <field name="expression_ids">
+                    <record id="tax_report_total_remittance_pnd3" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">PND3</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_surcharge_pnd3_line" model="account.report.line">
+                <field name="name">Surcharge</field>
+                <field name="name@th">ค่าธรรมเนียมเพิ่มเติม</field>
+                <field name="code">S3</field>
+                <field name="expression_ids">
+                    <record id="tax_report_surcharge_pnd3" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">SUR3</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_total_pnd3_line" model="account.report.line">
+                <field name="name">Total</field>
+                <field name="name@th">รวมยอดภาษีที่นำส่งทั้งสิ้น และเงินเพิ่ม (2. + 3.)</field>
+                <field name="expression_ids">
+                    <record id="tax_report_total_pnd3" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">P3.balance + S3.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+</odoo>

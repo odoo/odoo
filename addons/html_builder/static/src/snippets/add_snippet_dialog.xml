@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.AddSnippetDialog">
+    <Dialog
+        title.translate="Insert a block"
+        contentClass="'o_add_snippet_dialog h-100'"
+        footer="false"
+        size="'xl'"
+        modalRef="modalRef">
+        <div class="overflow-hidden w-100">
+            <div class="d-flex w-100 h-100 vertical flex-row">
+                <aside class="border-end overflow-auto">
+                    <div class="d-block position-relative p-2 border-bottom">
+                        <input type="search" class="o_add_snippet_dialog_search form-control pe-4" placeholder="Search for a block"
+                            aria-label="Search for a block" t-model="state.search"/>
+                        <span class="input-group-text position-absolute top-50 end-0 translate-middle-y me-2 border-0 bg-transparent text-muted">
+                            <i class="oi oi-search" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <div class="list-group list-group-flush flex-column flex-nowrap overflow-y-auto"
+                         role="tablist"
+                         aria-orientation="vertical"
+                         aria-label="Block Categories">
+                        <t t-if="!state.search" t-foreach="snippetGroups" t-as="snippetGroup" t-key="snippetGroup.id">
+                            <t t-set="isActive" t-value="state.groupSelected === snippetGroup.groupName"/>
+                            <button class="list-group-item list-group-item-action p-3"
+                                    role="tab"
+                                    t-att-class="{ 'active': isActive }"
+                                    t-att-id="'tab_' + snippetGroup.groupName"
+                                    t-att-aria-controls="'tabpanel_' + snippetGroup.groupName"
+                                    t-att-aria-selected="isActive ? 'true' : 'false'"
+                                    t-att-tabindex="isActive ? '0' : '-1'"
+                                    t-on-click="() => this.selectGroup(snippetGroup)"
+                                    t-on-keydown="onTabKeydown">
+                                <t t-out="snippetGroup.title"/>
+                            </button>
+                        </t>
+                    </div>
+                </aside>
+                <div class="position-relative flex-grow-1 flex-shrink-1">
+                    <t t-if="state.hasNoSearchResults">
+                        <div class="d-flex flex-column justify-content-center text-center h-100 p-4" role="status">
+                            <img src="/web/static/img/smiling_face.svg" alt="No snippets found" class="h-25 mb-3"/>
+                            <p class="h2 mb-2">Oops! No snippets found.</p>
+                            <p class="h4">Take a look at the search bar, there might be a small typo!</p>
+                        </div>
+                    </t>
+                    <t t-elif="!state.showIframe">
+                        <div class="o_add_snippet_dialog_iframe_loader d-flex flex-column justify-content-center text-center h-100 p-4" role="status">
+                            <i class="fa fa-3x fa-circle-o-notch fa-spin"></i>
+                            <p class="h3 mt-3">
+                                Almost there! Snippets are incoming, grab a coffee and relax!
+                            </p>
+                        </div>
+                    </t>
+                    <iframe class="border-0 fade bg-200 position-relative o_add_snippet_iframe"
+                            t-ref="iframe"
+                            role="tabpanel"
+                            t-att-aria-labelledby="'tab_' + state.groupSelected"
+                            t-att-id="'tabpanel_' + state.groupSelected"
+                            t-att-class="state.showIframe ? 'show' : '' "
+                            src="about:blank"
+                            height="333%" width="333%"/>
+                </div>
+            </div>
+        </div>
+    </Dialog>
+</t>
+
+</templates>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_sale_comparison.ProductComparisonBottomBar">
+        <div class="o_not_editable position-absolute top-0 start-0 bottom-0 end-0 d-flex align-items-end justify-content-end p-0 pe-none">
+            <div
+                t-if="state.products.size"
+                class="o_wsale_comparison_bottom_bar sticky-bottom flex-shrink-0 w-100 bg-body pe-auto"
+                name="comparison_bottom_bar"
+            >
+                <div class="container">
+                    <div class="collapse d-xl-none" id="comparisonCollapse">
+                        <ul class="list-group list-group-flush">
+                            <li
+                                t-foreach="state.products.values()"
+                                t-as="product"
+                                t-key="product.id"
+                                class="list-group-item d-flex align-items-start justify-content-between gap-2 px-0 py-3"
+                            >
+                                <ProductRow t-props="product"/>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 py-3">
+                        <button
+                            class="btn btn-light d-xl-none me-auto"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#comparisonCollapse"
+                            aria-expanded="false"
+                            aria-controls="comparisonCollapse"
+                            aria-label="Show products added to comparison"
+                        >
+                            <i class="oi oi-chevron-up" role="presentation"/>
+                        </button>
+                        <ul class="list-unstyled d-none d-xl-flex flex-grow-1 flex-shrink-1 gap-3 overflow-hidden me-auto mb-0">
+                            <li
+                                t-foreach="state.products.values()"
+                                t-as="product"
+                                t-key="product.id"
+                                class="flex-basis-25 overflow-hidden"
+                                t-att-class="{'border-end pe-3': !product_last}"
+                            >
+                                <ProductRow t-props="product"/>
+                            </li>
+                        </ul>
+
+                        <div class="d-flex gap-2 justify-content-end flex-grow-1 flex-xl-grow-0 flex-shrink-0">
+                            <t t-call="website_sale_comparison.ProductComparisonBottomBar.Actions"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website_sale_comparison.ProductComparisonBottomBar.Actions">
+        <a
+            t-att-href="comparisonUrl"
+            t-att-disabled="productCount lt 2"
+            class="btn btn-primary flex-grow-1 flex-md-grow-0"
+            t-att-class="{ 'disabled': productCount lt 2 }"
+            role="button"
+            title="Compare products"
+        >
+            Compare
+            <span t-if="productCount" t-out="productCount" class="badge ms-2"/>
+        </a>
+        <button
+            t-on-click="clearAllProducts"
+            class="btn btn-light d-none d-sm-block"
+            aria-label="Remove all products from comparison"
+        >
+            Remove All
+        </button>
+    </t>
+</templates>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Thread" t-inherit-mode="extension">
+        <xpath expr="//*[@name='empty-message']" position="replace">
+            <t t-if="props.thread.isEmpty and props.thread.model === 'mail.box'">
+                <t t-if="props.thread.id === 'inbox' and state.mountedAndLoaded">
+                    <div class="align-items-center text-center">
+                        <h4 class="mb-3 fw-bolder">Congratulations, your inbox is empty</h4>
+                        New messages appear here.
+                    </div>
+                </t>
+                <t t-if="props.thread.id === 'starred'">
+                    <h4 class="mb-3 fw-bolder">No starred messages</h4>
+                    You can mark any message as 'starred', and it shows up in this mailbox.
+                </t>
+                <t t-if="props.thread.id === 'history'">
+                    <img src="/web/static/img/neutral_face.svg" alt="History"/>
+                    <h4 class="mb-3 fw-bolder">No history messages</h4>
+                    Messages marked as read will appear in the history.
+                </t>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>

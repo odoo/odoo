@@ -1,0 +1,81 @@
+// Variables
+$o-cw-filter-avatar-size: 20px;
+
+// Animations
+@keyframes backgroundfade {
+    from {
+        background-color: rgba($info, 0.5);
+    }
+    to {
+        background-color: rgba($info, 0.1);
+    }
+}
+
+.o_calendar_container {
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-columns: 1fr auto auto;
+
+    .o_calendar_header {
+        grid-area: 1 / 1 / 2 / 3;
+    }
+
+    .o_sidebar_toggler {
+        grid-area: 1 / 3;
+    }
+
+    .o_calendar_wrapper {
+        grid-area: 3 / 1 / 3 / 4;
+
+        &:has(.fc-popover) {
+            overflow: auto !important;
+
+            @include media-breakpoint-down(md) {
+                .o_actionswiper_overflow_container {
+                    overflow: visible !important;
+                }
+            }
+        }
+    }
+}
+
+.o_calendar_sidebar_container {
+    --Avatar-size: #{$o-cw-filter-avatar-size};
+
+    flex: 0 0 auto;
+
+    .o_calendar_sidebar {
+        @include o-webclient-padding($top: $o-horizontal-padding/2);
+        width: calc(#{$o-datetime-picker-width} + 2 * #{map-get($spacers, 3)});
+
+        .o_datetime_picker {
+            padding-right: 0 !important;
+            padding-left: 0 !important;
+        }
+
+        // sync buttons are only displayed on calendar.event views
+        .o_calendar_sync {
+            padding-bottom: 0.5em;
+        }
+    }
+}
+
+//  Print
+@include media-only(print) {
+    html:has(.o_action_manager .o_calendar_view.o_view_controller.o_action) {
+        @extend %o-html-layout-fill;
+
+        .o_calendar_renderer {
+            .fc-theme-standard .fc-scrollgrid {
+                border-top: 0;
+            }
+
+            .o_actionswiper, .o_actionswiper_overflow_container, .o_actionswiper_target_container, .o_calendar_widget, .fc .fc-daygrid-body, .fc-daygrid-body, .fc-scrollgrid-sync-table {
+                height: 100% !important;
+            }
+
+            .fc-col-header, .fc-daygrid-body, .fc-scrollgrid-sync-table {
+                width: 100% !important;
+            }
+        }
+    }
+}

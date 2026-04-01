@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Dialog">
+        <div class="o_dialog" t-att-id="id" t-att-class="{ o_inactive_modal: !data.isActive }">
+            <div role="dialog" class="modal d-block"
+                tabindex="-1"
+                t-att-class="{ o_technical_modal: props.technical, o_modal_full: isFullscreen, o_inactive_modal: !data.isActive }"
+                t-ref="modalRef"
+                >
+                <div class="modal-dialog modal-dialog-centered" t-attf-class="modal-{{props.size}}">
+                    <div class="modal-content" t-att-class="props.contentClass" t-att-style="contentStyle">
+                        <header t-if="props.header" class="modal-header">
+                            <t t-slot="header" close="data.close" isFullscreen="isFullscreen">
+                                <t t-call="web.Dialog.header">
+                                    <t t-set="fullscreen" t-value="isFullscreen"/>
+                                    <t t-set="onExpand" t-value="props.onExpand"/>
+                                </t>
+                            </t>
+                        </header>
+                        <main class="modal-body" t-attf-class="{{ props.bodyClass }} {{ !props.withBodyPadding ? 'p-0': '' }}">
+                            <t t-slot="default" close="() => this.data.close()" />
+                        </main>
+                        <footer t-if="props.footer" class="modal-footer d-empty-none justify-content-around justify-content-md-start flex-wrap gap-1 w-100">
+                            <t t-slot="footer" close="() => this.data.close()"/>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web.Dialog.header">
+        <t t-if="fullscreen">
+            <button class="btn oi oi-arrow-left" aria-label="Close" tabindex="-1" t-on-click="dismiss" />
+        </t>
+        <h4 class="modal-title text-break flex-grow-1" t-att-class="{ 'me-auto': fullscreen }">
+            <t t-esc="props.title"/>
+        </h4>
+        <t t-if="onExpand">
+            <button type="button" class="fa fa-expand btn opacity-75 opacity-100-hover o_expand_button" aria-label="Expand" tabindex="-1" t-on-click="onExpand"/>
+        </t>
+        <t t-if="!fullscreen">
+            <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="dismiss"></button>
+        </t>
+    </t>
+</templates>

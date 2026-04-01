@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="stock.TraceabilityReport">
+        <div class="o_action">
+            <Layout display="display">
+                <t t-set-slot="layout-buttons">
+                    <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
+                        <button type="button" class="btn btn-primary" t-on-click="() => this.onClickPrint()">Print</button>
+                    </div>
+                </t>
+
+                <div class="container-fluid o_stock_reports_page o_stock_reports_no_print">
+                    <t t-if="state.lines.length">
+                        <h1 class="o_report_heading text-start">Traceability Report</h1>
+                        <div class="o_stock_reports_table table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr class="o_report_header">
+                                        <th class="o_report_line_header">Reference</th>
+                                        <th class="o_report_line_header">Product</th>
+                                        <th class="o_report_line_header">Date</th>
+                                        <th class="o_report_line_header">Lot/Serial #</th>
+                                        <th class="o_report_line_header">From</th>
+                                        <th class="o_report_line_header">To</th>
+                                        <th class="o_report_line_header">Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-call="stock.ReportMRPLines">
+                                        <t t-set="lines" t-value="state.lines"/>
+                                        <t t-set="hasUpDown" t-value="true"/>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                    <h1 t-else="" class="text-center">No operation made on this lot.</h1>
+                </div>
+            </Layout>
+        </div>
+    </t>
+
+    <t t-name="stock.ReportMRPLines">
+        <t t-foreach="lines" t-as="line" t-key="line.id">
+            <t t-set="column" t-value="0" />
+            <tr t-att-class="line.model === 'stock.move.line' ? 'o_stock_reports_level0' : 'o_stock_reports_default_style'">
+                <t t-foreach="line.columns" t-as="col" t-key="col_index">
+                    <td t-att-class="line.unfoldable ? 'o_stock_reports_unfoldable' : ''">
+                        <t t-if="col_first">
+                            <span t-attf-style="margin-left: {{line.level}}px"/>
+                            <t t-if="hasUpDown and line.is_used ">
+                                <span role="img" title="Traceability Report" aria-label="Traceability Report" t-on-click.prevent="() => this.onClickUpDownStream(line)">
+                                    <i class="fa fa-fw fa-level-up fa-rotate-270"/>
+                                </span>
+                            </t>
+                            <t t-elif="line.unfoldable">
+                                <span class="o_stock_reports_unfoldable o_stock_reports_caret_icon" t-on-click="() => this.toggleLine(line)">
+                                    <i class="fa fa-fw" t-att-class="line.isFolded ? 'fa-caret-right' : 'fa-caret-down'" role="img" aria-label="Unfold" title="Unfold"/>
+                                </span>
+                            </t>
+                        </t>
+
+                        <span t-if="col and line.reference === col" t-att-class="!line.unfoldable ? 'o_stock_reports_nofoldable' : ''">
+                            <a class="o_stock_reports_web_action" href="#" t-on-click.prevent="() => this.onClickBoundLink(line)" t-esc="col"/>
+                        </span>
+                        <span t-elif="col and ((line.picking_type_code == 'incoming' and line.location_source === col) or (line.picking_type_code == 'outgoing' and line.location_destination === col))">
+                            <a class="o_stock_report_partner_action" href="#" t-on-click.prevent="() => this.onClickPartner(line)" t-esc="col"/>
+                        </span>
+                        <span t-elif="col and line.lot_name === col">
+                            <a class="o_stock_report_lot_action" href="#" t-on-click.prevent="() => this.onClickOpenLot(line)" t-esc="col"/>
+                        </span>
+                        <t t-elif="col" t-esc="col"/>
+                    </td>
+                </t>
+            </tr>
+
+            <t t-if="!line.isFolded and line.lines.length" t-call="stock.ReportMRPLines">
+                <t t-set="lines" t-value="line.lines"/>
+                <t t-set="hasUpDown" t-value="false"/>
+            </t>
+        </t>
+    </t>
+
+</templates>

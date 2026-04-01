@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.FacebookOption">
+    <BuilderRow label.translate="URL">
+        <BuilderTextInput dataAttributeAction="'href'" action="'checkFacebookLink'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Cover Photo">
+        <BuilderCheckbox dataAttributeAction="'hide_cover'" dataAttributeActionValue="'true'" inverseAction="true"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Timeline">
+        <BuilderCheckbox action="'dataAttributeList'" actionParam="'tabs'" actionValue="'timeline'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Events">
+        <BuilderCheckbox action="'dataAttributeList'" actionParam="'tabs'" actionValue="'events'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Messages">
+        <BuilderCheckbox action="'dataAttributeList'" actionParam="'tabs'" actionValue="'messages'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Small Header">
+        <BuilderCheckbox dataAttributeAction="'small_header'" dataAttributeActionValue="'true'"/>
+    </BuilderRow>
+</t>
+
+</templates>

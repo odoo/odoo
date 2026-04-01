@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="section_CD" model="account.report">
+        <field name="name">Sections C and D</field>
+        <field name="country_id" ref="base.ug"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="section_CD_base" model="account.report.column">
+                <field name="name">Amounts</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="section_CD_tax" model="account.report.column">
+                <field name="name">VAT Charged</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="C" model="account.report.line">
+                <field name="name">Section C - Sales (Goods and Services)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="C1" model="account.report.line">
+                        <field name="name">1. Zero Rated Sales Local</field>
+                        <field name="code">UG_TAX_C1</field>
+                        <field name="expression_ids">
+                            <record id="C1_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-C1_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="C2" model="account.report.line">
+                        <field name="name">2. Zero Rated Sales Export</field>
+                        <field name="code">UG_TAX_C2</field>
+                        <field name="expression_ids">
+                            <record id="C2_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-C2_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="C3" model="account.report.line">
+                        <field name="name">3. Exempt Local Sales</field>
+                        <field name="code">UG_TAX_C3</field>
+                        <field name="expression_ids">
+                            <record id="C3_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-C3_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="C4" model="account.report.line">
+                        <field name="name">4. Standard Rated Sales Charged</field>
+                        <field name="code">UG_TAX_C4</field>
+                        <field name="expression_ids">
+                            <record id="C4_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-C4_base</field>
+                            </record>
+                            <record id="C4_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-C4_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="C5" model="account.report.line">
+                        <field name="name">5. Standard Rated Sales Deemed</field>
+                        <field name="code">UG_TAX_C5</field>
+                        <field name="expression_ids">
+                        <record id="C5_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-C5_base</field>
+                            </record>
+                            <record id="C5_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-C5_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="C6" model="account.report.line">
+                        <field name="name">6. Capital goods sold (Business Assets) Charged</field>
+                        <field name="code">UG_TAX_C6</field>
+                        <field name="expression_ids">
+                            <record id="C6_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-C6_base</field>
+                            </record>
+                            <record id="C6_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-C6_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="C7" model="account.report.line">
+                        <field name="name">7. Capital goods sold (Business Assets) Deemed</field>
+                        <field name="code">UG_TAX_C7</field>
+                        <field name="expression_ids">
+                            <record id="C7_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-C7_base</field>
+                            </record>
+                            <record id="C7_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-C7_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="C8" model="account.report.line">
+                        <field name="name">8. Total Output tax</field>
+                        <field name="code">UG_TAX_C8</field>
+                        <field name="expression_ids">
+                            <record id="C8_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_C4.tax + UG_TAX_C6.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="C9" model="account.report.line">
+                        <field name="name">9. Adjustments to Output tax</field>
+                        <field name="children_ids">
+                            <record id="C9_i" model="account.report.line">
+                                <field name="name">i. Imported Services</field>
+                                <field name="code">UG_TAX_C9_i</field>
+                                <field name="expression_ids">
+                                    <record id="C9_i_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-C9_i_base</field>
+                                    </record>
+                                    <record id="C9_i_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-C9_i_tax</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="C9_ii" model="account.report.line">
+                                <field name="name">ii. VAT deferred at Importation</field>
+                                <field name="code">UG_TAX_C9_ii</field>
+                                <field name="expression_ids">
+                                    <record id="C9_ii_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-C9_ii_base</field>
+                                    </record>
+                                    <record id="C9_ii_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-C9_ii_tax</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="C9_iii" model="account.report.line">
+                                <field name="name">iii. Tax Charge due to bad debts recovered</field>
+                                <field name="code">UG_TAX_C9_iii</field>
+                                <field name="expression_ids">
+                                    <record id="C9_iii_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="C9_iv" model="account.report.line">
+                                <field name="name">iv. Tax Charge due to change of Accounting method</field>
+                                <field name="code">UG_TAX_C9_iv</field>
+                                <field name="expression_ids">
+                                    <record id="C9_iv_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="C9_v" model="account.report.line">
+                                <field name="name">v. Tax Charge due to end of year apportionment of input tax</field>
+                                <field name="code">UG_TAX_C9_v</field>
+                                <field name="expression_ids">
+                                    <record id="C9_v_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="C10" model="account.report.line">
+                        <field name="name">10. Total Tax Charged for the Period</field>
+                        <field name="code">UG_TAX_C10</field>
+                        <field name="expression_ids">
+                            <record id="C10_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_C8.tax + UG_TAX_C9_i.tax + UG_TAX_C9_ii.tax + UG_TAX_C9_iii.tax + UG_TAX_C9_iv.tax + UG_TAX_C9_v.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="D" model="account.report.line">
+                <field name="name">Section D - Purchases (Goods and Services)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="D11" model="account.report.line">
+                        <field name="name">11. Zero Rated Purchases Local</field>
+                        <field name="code">UG_TAX_D11</field>
+                        <field name="expression_ids">
+                            <record id="D11_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">D11_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="D12" model="account.report.line">
+                        <field name="name">12. Zero Rated Purchases Export</field>
+                        <field name="code">UG_TAX_D12</field>
+                        <field name="expression_ids">
+                            <record id="D12_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">D12_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="D13" model="account.report.line">
+                        <field name="name">13. Standard Rated Purchases Local VAT Incurred</field>
+                        <field name="code">UG_TAX_D13</field>
+                        <field name="expression_ids">
+                            <record id="D13_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">D13_base</field>
+                            </record>
+                            <record id="D13_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">D13_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="D14" model="account.report.line">
+                        <field name="name">14. Standard Rated Purchases Local VAT Deemed</field>
+                        <field name="code">UG_TAX_D14</field>
+                        <field name="expression_ids">
+                            <record id="D14_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">D14_base</field>
+                            </record>
+                            <record id="D14_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">D14_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="D15" model="account.report.line">
+                        <field name="name">15. Standard Rated Imports (Goods) VAT Incurred</field>
+                        <field name="code">UG_TAX_D15</field>
+                        <field name="expression_ids">
+                            <record id="D15_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">D15_base</field>
+                            </record>
+                            <record id="D15_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">D15_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="D16" model="account.report.line">
+                        <field name="name">16. Standard Rated Imports (Goods) VAT Deferred</field>
+                        <field name="code">UG_TAX_D16</field>
+                        <field name="expression_ids">
+                            <record id="D16_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">D16_base</field>
+                            </record>
+                            <record id="D16_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">D16_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="D17" model="account.report.line">
+                        <field name="name">17. Administrative Expenses VAT Incurred</field>
+                        <field name="code">UG_TAX_D17</field>
+                        <field name="expression_ids">
+                            <record id="D17_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">D17_base</field>
+                            </record>
+                            <record id="D17_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">D17_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="D18" model="account.report.line">
+                        <field name="name">18. Capital goods bought (Business Assets) VAT Incurred</field>
+                        <field name="code">UG_TAX_D18</field>
+                        <field name="expression_ids">
+                            <record id="D18_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">D18_base</field>
+                            </record>
+                            <record id="D18_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">D18_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="D19" model="account.report.line">
+                        <field name="name">19. Capital goods bought (Business Assets) VAT Deemed</field>
+                        <field name="code">UG_TAX_D19</field>
+                        <field name="expression_ids">
+                        <record id="D19_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">D19_base</field>
+                            </record>
+                            <record id="D19_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">D19_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="D20" model="account.report.line">
+                        <field name="name">20. Total Input tax</field>
+                        <field name="code">UG_TAX_D20</field>
+                        <field name="expression_ids">
+                            <record id="D20_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_D13.tax + UG_TAX_D15.tax + UG_TAX_D17.tax + UG_TAX_D18.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="D21" model="account.report.line">
+                        <field name="name">21. Adjustment of input tax</field>
+                        <field name="children_ids">
+                            <record id="D21_i" model="account.report.line">
+                                <field name="name">i. Imported Services</field>
+                                <field name="code">UG_TAX_D21_i</field>
+                                <field name="expression_ids">
+                                    <record id="D21_i_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">D21_i_base</field>
+                                    </record>
+                                    <record id="D21_i_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">D21_i_tax</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="D21_ii" model="account.report.line">
+                                <field name="name">ii. Deferred VAT discharged (permitted by Commissioner General)</field>
+                                <field name="code">UG_TAX_D21_ii</field>
+                                <field name="expression_ids">
+                                    <record id="D21_ii_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                    <record id="D21_ii_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">UG_TAX_D21_ii.base * 0.18</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="D21_iii" model="account.report.line">
+                                <field name="name">iii. Tax Claim due to bad debts written off</field>
+                                <field name="code">UG_TAX_D21_iii</field>
+                                <field name="expression_ids">
+                                    <record id="D21_iii_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="D21_iv" model="account.report.line">
+                                <field name="name">iv. Tax Credit due to change of Accounting method</field>
+                                <field name="code">UG_TAX_D21_iv</field>
+                                <field name="expression_ids">
+                                    <record id="D21_iv_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="D22" model="account.report.line">
+                        <field name="name">22. Total Input Tax for the Period</field>
+                        <field name="code">UG_TAX_D22</field>
+                        <field name="expression_ids">
+                            <record id="D22_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_D20.tax + UG_TAX_D21_i.tax - UG_TAX_D21_ii.tax + UG_TAX_D21_iii.tax + UG_TAX_D21_iv.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+    <record id="section_F" model="account.report">
+        <field name="name">Section F</field>
+        <field name="country_id" ref="base.ug"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="section_F_base" model="account.report.column">
+                <field name="name">Input tax disallowed</field>
+                <field name="expression_label">disallowed</field>
+            </record>
+            <record id="section_F_tax" model="account.report.column">
+                <field name="name">Input tax credit Allowed</field>
+                <field name="expression_label">allowed</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="F" model="account.report.line">
+                <field name="name">Section F - Calculation Input tax Credit Allowed</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="FM" model="account.report.line">
+                        <field name="name">Use Standard Alternative Method of Apportionment (Default is Normal method)?</field>
+                        <field name="code">UG_TAX_FM</field>
+                        <field name="expression_ids">
+                            <record id="FM_tax" model="account.report.expression">
+                                <field name="label">allowed</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable</field>
+                                <field name="figure_type">boolean</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="F29" model="account.report.line">
+                        <field name="name">29. Input tax directly attributable to Taxable Sales</field>
+                        <field name="code">UG_TAX_F29</field>
+                        <field name="expression_ids">
+                            <record id="F29_tax" model="account.report.expression">
+                                <field name="label">allowed</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="F30" model="account.report.line">
+                        <field name="name">30. Input tax directly attributable to Exempt Sales (Disallowed) and non-creditable input tax</field>
+                        <field name="code">UG_TAX_F30</field>
+                        <field name="expression_ids">
+                            <record id="F30_base" model="account.report.expression">
+                                <field name="label">disallowed</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="F31" model="account.report.line">
+                        <field name="name">31.Input tax apportioned to Taxable Sales using selected formula</field>
+                        <field name="code">UG_TAX_F31</field>
+                        <field name="expression_ids">
+                            <record id="F31_tax" model="account.report.expression">
+                                <field name="label">allowed</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">
+                                    (1 - UG_TAX_FM.allowed) * UG_TAX_F31.hidden_computation_of_F31_using_normal_formula
+                                    + UG_TAX_FM.allowed * UG_TAX_F31.hidden_computation_of_F31_using_sam_formula
+                                </field>
+                            </record>
+                            <record id="F31_normal_tax" model="account.report.expression">
+                                <field name="label">hidden_computation_of_F31_using_normal_formula</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_F31.normal_formula_part1 * UG_TAX_F31.normal_formula_part2 / UG_TAX_F31.normal_formula_part3</field>
+                                <field name="subformula">ignore_zero_division</field>
+                            </record>
+                            <record id="F31_normal_tax_part1" model="account.report.expression">
+                                <field name="label">normal_formula_part1</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_F31.result_cross_normal_formula_part1 - UG_TAX_F30.disallowed</field>
+                            </record>
+                            <record id="F31_normal_tax_result_cross_part1" model="account.report.expression">
+                                <field name="label">result_cross_normal_formula_part1</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_D20.tax - UG_TAX_F30.disallowed</field>
+                                <field name="subformula">cross_report(l10n_ug.section_CD)</field>
+                            </record>
+                            <record id="F31_normal_tax_part2" model="account.report.expression">
+                                <field name="label">normal_formula_part2</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_C1.base + UG_TAX_C2.base + UG_TAX_C4.base + UG_TAX_C5.base + UG_TAX_C6.base + UG_TAX_C7.base</field>
+                                <field name="subformula">cross_report(l10n_ug.section_CD)</field>
+                            </record>
+                            <record id="F31_normal_tax_part3" model="account.report.expression">
+                                <field name="label">normal_formula_part3</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_C1.base + UG_TAX_C2.base + UG_TAX_C3.base + UG_TAX_C4.base + UG_TAX_C5.base + UG_TAX_C6.base + UG_TAX_C7.base</field>
+                                <field name="subformula">cross_report(l10n_ug.section_CD)</field>
+                            </record>
+                            <record id="F31_sam_tax" model="account.report.expression">
+                                <field name="label">hidden_computation_of_F31_using_sam_formula</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_F31.sam_formula_part1 * UG_TAX_F31.sam_formula_part2 / UG_TAX_F31.sam_formula_part3</field>
+                                <field name="subformula">ignore_zero_division</field>
+                            </record>
+                            <record id="F31_sam_tax_part1" model="account.report.expression">
+                                <field name="label">sam_formula_part1</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_F31.result_cross_sam_formula_part1 - UG_TAX_F29.allowed - UG_TAX_F30.disallowed</field>
+                            </record>
+                            <record id="F31_sam_tax_result_cross_part1" model="account.report.expression">
+                                <field name="label">result_cross_sam_formula_part1</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_D20.tax</field>
+                                <field name="subformula">cross_report(l10n_ug.section_CD)</field>
+                            </record>
+                            <record id="F31_sam_tax_part2" model="account.report.expression">
+                                <field name="label">sam_formula_part2</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_C1.base + UG_TAX_C2.base + UG_TAX_C4.base + UG_TAX_C5.base + UG_TAX_C6.base + UG_TAX_C7.base</field>
+                                <field name="subformula">cross_report(l10n_ug.section_CD)</field>
+                            </record>
+                            <record id="F31_sam_tax_part3" model="account.report.expression">
+                                <field name="label">sam_formula_part3</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_C1.base + UG_TAX_C2.base + UG_TAX_C3.base + UG_TAX_C4.base + UG_TAX_C5.base + UG_TAX_C6.base + UG_TAX_C7.base</field>
+                                <field name="subformula">cross_report(l10n_ug.section_CD)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="F32" model="account.report.line">
+                        <field name="name">32. Input tax credit for the period</field>
+                        <field name="code">UG_TAX_F32</field>
+                        <field name="expression_ids">
+                            <record id="F32_tax" model="account.report.expression">
+                                <field name="label">allowed</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_F29.allowed + UG_TAX_F31.allowed</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="F33" model="account.report.line">
+                        <field name="name">33. Adjustments to Input tax credit</field>
+                        <field name="code">UG_TAX_F33</field>
+                        <field name="children_ids">
+                            <record id="F33_a" model="account.report.line">
+                                <field name="name">a. Adjustments to Input tax credit</field>
+                                <field name="code">UG_TAX_F33_a</field>
+                                <field name="expression_ids">
+                                    <record id="F33_a_tax" model="account.report.expression">
+                                        <field name="label">allowed</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="F34" model="account.report.line">
+                        <field name="name">Total Input tax credit Allowed for the period</field>
+                        <field name="code">UG_TAX_F34</field>
+                        <field name="expression_ids">
+                            <record id="F34_tax" model="account.report.expression">
+                                <field name="label">allowed</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_F32.allowed + UG_TAX_F33_a.allowed + UG_TAX_F34.result_cross</field>
+                            </record>
+                            <record id="F34_tax_result_cross" model="account.report.expression">
+                                <field name="label">result_cross</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UG_TAX_D21_i.tax + UG_TAX_D21_iii.tax + UG_TAX_D21_iv.tax</field>
+                                <field name="subformula">cross_report(l10n_ug.section_CD)</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+    <record id="tax_report_ug" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.ug"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="use_sections" eval="True"/>
+        <field name="section_report_ids" eval="[Command.set([ref('section_CD'), ref('section_F')])]"/>
+    </record>
+</odoo>

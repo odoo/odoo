@@ -1,0 +1,39 @@
+.o_wsale_editor_overlay {
+    background: $o-we-bg-darker;
+    z-index: $zindex-offcanvas;
+
+    @keyframes fromLeft {
+        from {
+            transform: translateX(100%);
+        }
+    }
+    animation: fromLeft .2s ease-in-out;
+
+    .o_wsale_design_panel {
+        background-color: $o-we-bg-lighter;
+        --o-hb-row-bg-color: #{$o-we-bg-lighter};
+        --o-snippets-tabs-accent-color: #{$primary};
+
+        .options-container-header {
+            @include o-position-sticky(0px);
+            z-index: 10;
+            background: linear-gradient(40deg, $o-we-bg-darker, $o-we-bg-light);
+        }
+
+        .options-container-label {
+            color: $o-we-fg-lighter;
+        }
+
+        .o_wsale_design_panel_section_title {
+            color: $o-we-fg-lighter;
+        }
+    }
+}
+
+.o-tab-content:has(.o_wsale_editor_overlay.d-block) {
+    position: relative;
+
+    .options-container:not(:has(.o_wsale_editor_overlay.d-block)) {
+        display: none;
+    }
+}

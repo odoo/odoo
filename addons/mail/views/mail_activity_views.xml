@@ -1,0 +1,461 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="mail_activity_type_view_form" model="ir.ui.view">
+        <field name="name">mail.activity.type.view.form</field>
+        <field name="model">mail.activity.type</field>
+        <field name="arch" type="xml">
+            <form string="Activities">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="e.g. Schedule a meeting" options="{'line_breaks': False}" widget="text"/></h1>
+                    </div>
+                    <group>
+                        <group name="activity_details" string="Activity Settings">
+                            <field name="active" invisible="1"/>
+                            <field name="category"/>
+                            <field name="default_user_id" options="{'no_create': True}" domain="[('share', '=', False)]"
+                                   widget="many2one_avatar_user"/>
+                            <field name="res_model" invisible="context.get('default_res_model')"
+                                placeholder="Available everywhere"/>
+                            <field name="summary" placeholder="e.g. &quot;Discuss proposal&quot;"/>
+                            <field name="icon" groups="base.group_no_one"/>
+                            <field name="decoration_type" groups="base.group_no_one"/>
+                            <label for="delay_count"/>
+                            <div>
+                                <field class="oe_inline pe-1 o_input_3ch" name="delay_count"/>
+                                <field class="oe_inline ps-1 pe-2" name="delay_unit"/>
+                                <field class="oe_inline" name="delay_from"/>
+                            </div>
+                        </group>
+                        <group name="activity_planning" string="Next Activity">
+                            <field name="chaining_type" invisible="category == 'upload_file'"/>
+                            <field name="triggered_next_type_id" options="{'no_open': True}" context="{'default_res_model': res_model}"
+                                invisible="chaining_type == 'suggest' and category != 'upload_file'"
+                                required="chaining_type == 'trigger' and category != 'upload_file'"/>
+                            <field name="suggested_next_type_ids" widget="many2many_tags" context="{'default_res_model': res_model}"
+                                invisible="chaining_type == 'trigger' or category == 'upload_file'"/>
+                            <field name="mail_template_ids" widget="many2many_tags"
+                                domain="[('model_id.model', '=', res_model)]"
+                                invisible="not res_model"
+                                context="{'default_model': res_model}"/>
+                        </group>
+                    </group>
+                    <label for="default_note" class="fw-bold"/>
+                    <field nolabel="1" name="default_note" placeholder="e.g. &quot;Go over the offer and discuss details&quot;" class="oe-bordered-editor"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mail_activity_type_view_search" model="ir.ui.view">
+        <field name="name">mail.activity.type.search</field>
+        <field name="model">mail.activity.type</field>
+        <field name="arch" type="xml">
+            <search string="Activities">
+                <field name="name"/>
+                <filter string="Archived" domain="[('active', '=', False)]" name="archived"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="mail_activity_type_view_tree" model="ir.ui.view">
+        <field name="name">mail.activity.type.view.list</field>
+        <field name="model">mail.activity.type</field>
+        <field name="arch" type="xml">
+            <list string="Activities" sample="1">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="summary"/>
+                <field name="delay_label" string="Planned in" class="text-end"/>
+                <field name="delay_from" string="Type"/>
+                <field name="res_model" column_invisible="context.get('default_res_model')"/>
+                <field name="icon" groups="base.group_no_one"/>
+                <field name="triggered_next_type_id" optional="hide"
+                    string="Triggered Next"/>
+                <field name="suggested_next_type_ids" optional="hide" widget="many2many_tags"
+                    string="Suggested Next"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mail_activity_type_view_kanban" model="ir.ui.view" >
+        <field name="name">mail.activity.type.view.kanban</field>
+        <field name="model">mail.activity.type</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="icon"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="fw-bold fs-5">
+                            <i t-if="record.icon.value" t-attf-class="fa #{record.icon.value} fa-fw"
+                               role="img" aria-label="Activity Type Name" title="Activity Type Name"/>
+                            <field name="name"/>
+                        </div>
+                        <field t-if="record.res_model.value" name="res_model"/>
+                        <div t-if="record.summary.raw_value">
+                            Default Summary: <field name="summary"/>
+                        </div>
+                        <footer>
+                            <field class="ms-auto" name="default_user_id"
+                                   widget="many2one_avatar_user" readonly="1"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="mail_activity_type_action" model="ir.actions.act_window">
+        <field name="name">Activity Types</field>
+        <field name="res_model">mail.activity.type</field>
+        <field name="view_mode">list,kanban,form</field>
+    </record>
+
+
+    <record id="mail_activity_action" model="ir.actions.act_window">
+        <field name="name">Activity Overview</field>
+        <field name="res_model">mail.activity</field>
+        <field name="view_mode">list,form</field>
+        <!-- ensure pagination works even if _search removes records after fetching -->
+        <field name="context">{
+            'force_search_count': 1,
+        }</field>
+    </record>
+
+    <record id="mail_activity_view_form_popup" model="ir.ui.view">
+        <field name="name">mail.activity.view.form.popup</field>
+        <field name="model">mail.activity</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <form string="Log an Activity" create="false">
+                <sheet string="Activity">
+                    <div class="oe_button_box" name="button_box" invisible="1">
+                        <button name="action_open_document"
+                                type="object" class="oe_link" icon="fa-file-text-o"
+                                invisible="not res_model or res_id == 0">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Open Document</span>
+                                </div>
+                        </button>
+                    </div>
+                    <group invisible="1">
+                        <field name="activity_category" invisible="1" />
+                        <field name="res_model" invisible="1"/>
+                        <field name="res_model_id" invisible="1"/>
+                        <field name="res_id" invisible="1"/>
+                        <field name="chaining_type" invisible="1"/>
+                        <field name="previous_activity_type_id"/>
+                        <field name="has_recommended_activities"/>
+                    </group>
+                    <group invisible="not has_recommended_activities">
+                        <field name="recommended_activity_type_id" widget="selection_badge"
+                            domain="[('previous_type_ids', '=', previous_activity_type_id)]"
+                            string="Recommended Activities"/>
+                    </group>
+
+                    <group>
+                        <field name="activity_type_id" required="1" widget="selection_badge_icons" iconField="icon" nolabel="1"/>
+                        <field name="summary" placeholder="e.g. Discuss Proposal" class="fs-3 pb-2"/>
+                        <group>
+                            <field name="date_deadline"/>
+                        </group>
+                        <field name="user_id" widget="many2one_avatar_user"/>
+                    </group>
+                    <field name="note" class="oe-bordered-editor embedded-editor-height-4" placeholder="Log a note..." widget="html_mail"/>
+                    <footer>
+                        <field name="id" invisible="1"/>
+                        <button id="mail_activity_schedule" string="Schedule" close="1" name="action_close_dialog" type="object" class="btn-primary"
+                            invisible="id" data-hotkey="q"/>
+                        <button id="mail_activity_save" string="Save" name="action_close_dialog" type="object" class="btn-primary"
+                            invisible="not id" data-hotkey="q"/>
+                        <button invisible="chaining_type == 'trigger'" string="Mark Done" name="action_done"
+                            type="object" class="btn-secondary" data-hotkey="w"
+                            context="{'mail_activity_quick_update': True}"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mail_activity_view_form" model="ir.ui.view">
+        <field name="name">mail.activity.view.form</field>
+        <field name="model">mail.activity</field>
+        <field name="priority">21</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_form_popup"/>
+        <field name="arch" type="xml">
+            <field name="activity_type_id" position="before">
+                <field name="res_name" readonly="1" string="Document"/>
+            </field>
+            <footer position="replace"/>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mail_activity_view_form_without_record_access" model="ir.ui.view">
+        <field name="name">mail.activity.view.form.without.record.access</field>
+        <field name="model">mail.activity</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <form string="Log an Activity" create="false" delete="false">
+                <header>
+                    <button string="Mark Done" class="btn-primary"
+                            name="action_done_redirect_to_other" type="object"/>
+                </header>
+                <sheet string="Activity">
+                    <field name="display_name" invisible="1"/>
+                    <group>
+                        <field name="activity_type_id" required="1"
+                        widget="selection_badge_icons" iconField="icon" nolabel="1"/>
+                        <field name="summary" placeholder="e.g. Discuss proposal"/>
+                        <group>
+                            <field name="date_deadline"/>
+                        </group>
+                    </group>
+                    <field name="note" class="oe-bordered-editor embedded-editor-height-4" placeholder="Log a note..." widget="html_mail"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mail_activity_view_search" model="ir.ui.view">
+        <field name="name">mail.activity.view.search</field>
+        <field name="model">mail.activity</field>
+        <field name="arch" type="xml">
+            <search string="Activity">
+                <field name="res_name" string="Name" filter_domain="[
+                    '|',
+                        ('res_name', 'ilike', self),
+                        ('summary', 'ilike', self),
+                ]"/>
+                <field name="user_id"/>
+                <field name="activity_type_id"/>
+                <filter name="filter_user_id_uid" string="My Activities" domain="[('user_id', '=', uid)]"/>
+                <filter name="filter_user_id_no_user" string="Unassigned Activities" domain="[('user_id', '=', False)]"/>
+                <separator/>
+                <separator invisible="1"/>
+                <filter string="Overdue" name="filter_date_deadline_past"
+                        domain="[('date_deadline', '&lt;', 'today')]"
+                        help="Show all records whose next activity date is past"/>
+                <filter string="Today" name="filter_date_deadline_today"
+                        domain="[('date_deadline', '=', 'today')]"/>
+                <filter string="Tomorrow" name="filter_date_deadline_tomorrow"
+                        help="Show all records whose next action date is tomorrow"
+                        domain="[('date_deadline', '=', 'today +1d')]"/>
+                <filter string="This week" name="filter_date_deadline_week"
+                        help="Show all records whose next action date is this week"
+                        domain="[
+                            ('date_deadline', '&gt;=', '=week_start'),
+                            ('date_deadline', '&lt;', '=week_start +1w')
+                        ]"/>
+                <filter string="Future" name="filter_date_deadline_future"
+                        domain="[('date_deadline', '&gt;', 'today')
+                        ]"/>
+                <separator/>
+                <filter string="Done" name="filter_archived" domain="[('active', '=', False)]"/>
+                <separator />
+                <group>
+                    <filter string="Deadline" name="date_deadline" context="{'group_by': 'date_deadline'}"/>
+                    <filter string="Document Model" name="group_by_res_model_id" context="{'group_by': 'res_model_id'}"/>
+                    <filter string="Assigned To" name="group_by_user_id" context="{'group_by': 'user_id'}"/>
+                    <filter string="Created By" name="createdby" context="{'group_by': 'create_uid'}"/>
+                    <filter string="Activity Type" name="activittype" context="{'group_by': 'activity_type_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="mail_activity_view_tree" model="ir.ui.view">
+        <field name="name">mail.activity.view.list</field>
+        <field name="model">mail.activity</field>
+        <field name="arch" type="xml">
+            <list string="Next Activities"
+                    default_order="date_deadline" create="true">
+                <header>
+                    <button name="action_done" type="object" string="Done" icon="fa-check"/>
+                    <button name="action_cancel" type="object" string="Cancel" icon="fa-times"/>
+                    <button name="action_reschedule_today" type="object" string="Today" icon="fa-arrow-down"/>
+                    <button name="action_reschedule_tomorrow" type="object" string="Tomorrow" icon="fa-calendar-plus-o"/>
+                    <button name="action_reschedule_nextweek" type="object" string="Next Week" icon="fa-calendar-o"/>
+                </header>
+                <field name="summary" string="Summary"/>
+                <field name="activity_type_id"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="res_name" string="Linked to"/>
+                <field name="date_deadline" widget="remaining_days"/>
+                <field name="date_done" string="Done Date" optional="hide"/>
+                <field name="feedback" optional="hide"/>
+                <widget name="mail_activity_list_reschedule_dropdown"/>
+                <button name="action_done" type="object" string="Done" icon="fa-check" invisible="active == False"/>
+                <button name="unlink" type="object" string="Cancel" icon="fa-times" class="text-danger" invisible="active == False"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mail_activity_view_tree_without_record_access" model="ir.ui.view">
+        <field name="name">mail.activity.view.list.without.record.access</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail_activity_view_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="delete">0</attribute>
+                <attribute name="edit">0</attribute>
+                <attribute name="duplicate">0</attribute>
+                <attribute name="js_class">archive_disabled_activity_list</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mail_activity_view_tree_open_target" model="ir.ui.view">
+        <field name="name">mail.activity.view.list.open.target</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail_activity_view_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="action">action_open_document</attribute>
+                <attribute name="type">object</attribute>
+                <attribute name="js_class">archive_disabled_activity_list</attribute>
+                <attribute name="multi_edit">1</attribute>
+            </xpath>
+            <xpath expr="//list//field[@name='activity_type_id']" position="attributes">
+                <attribute name="domain">[('res_model', '=', False)]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mail_activity_view_kanban_open_target" model="ir.ui.view">
+        <field name="name">mail.activity.view.kanban.open.target</field>
+        <field name="model">mail.activity</field>
+        <field name="arch" type="xml">
+            <kanban string="Activity" action="action_open_document" type="object" js_class="mail_activity_my_kanban">
+                <templates>
+                    <field name="active" invisible="1"/>
+                    <field name="icon" invisible="1"/>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-truncate" invisible="not res_name">
+                                <field name="res_name" class="fw-bold" />
+                                (<field class="text-muted" name="res_model_id" />)
+                            </span>
+                            <field name="summary" class="text-truncate" invisible="res_name"/>
+                            <span class="badge rounded-pill text-bg-300">
+                                <i t-if="record.icon" t-attf-class="fa {{record.icon.raw_value}} me-1"/>
+                                <field name="activity_type_id"/>
+                            </span>
+                        </div>
+                        <field class="text-truncate" name="summary" invisible="not res_name"/>
+                        <footer class="align-items-center">
+                            <field name="user_id" widget="many2one_avatar_user" />
+                            <field name="date_deadline" widget="remaining_days" class="ms-2"/>
+                            <button type="object" name="action_done" class="btn btn-link btn-sm ms-auto me-1" invisible="active == False">
+                                <i class="fa fa-check" /> Done
+                            </button>
+                            <button type="object" name="unlink" class="btn btn-link text-danger btn-sm">
+                                <i class="fa fa-times" /> Cancel
+                            </button>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="mail_activity_action_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="act_window_id" ref="mail.mail_activity_action"/>
+    </record>
+    <record id="mail_activity_action_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="mail.mail_activity_view_form"/>
+        <field name="act_window_id" ref="mail.mail_activity_action"/>
+    </record>
+
+    <record id="mail_activity_without_access_action" model="ir.actions.act_window">
+        <field name="name">Other activities</field>
+        <field name="res_model">mail.activity</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="mail.mail_activity_view_search"/>
+        <field name="domain">['|', ('id', 'in', context.get('active_ids')), '&amp;', ('res_model', '=', False), ('user_id', '=', uid)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No activities.
+            </p>
+        </field>
+        <field name="target">main</field>
+    </record>
+
+    <record id="mail_activity_action_without_access_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="mail.mail_activity_view_tree_without_record_access"/>
+        <field name="act_window_id" ref="mail.mail_activity_without_access_action"/>
+    </record>
+
+    <record id="mail_activity_action_without_access_view_form" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="mail.mail_activity_view_form_without_record_access"/>
+        <field name="act_window_id" ref="mail.mail_activity_without_access_action"/>
+    </record>
+
+    <record id="mail_activity_view_calendar" model="ir.ui.view">
+        <field name="name">mail.activity.view.calendar</field>
+        <field name="model">mail.activity</field>
+        <field name="priority" eval="2"/>
+        <field name="arch" type="xml">
+            <calendar string="Activity" date_start="date_deadline" color="activity_type_id" js_class="activity_calendar" create="0" mode="month">
+                <field name="user_id" avatar_field="avatar_128"/>
+                <field name="res_name" string="Name"/>
+                <field name="date_deadline"/>
+                <field name="summary"/>
+                <field name="activity_type_id" filters="1" invisible="1"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="mail_activity_action_my" model="ir.actions.act_window">
+        <field name="name">My Activities</field>
+        <field name="res_model">mail.activity</field>
+        <field name="view_mode">list,kanban,calendar</field>
+        <field name="search_view_id" ref="mail.mail_activity_view_search"/>
+        <!-- ensure pagination works even if _search removes records after fetching -->
+        <field name="context">{
+            'force_search_count': 1,
+            'search_default_filter_user_id_uid': 1,
+            'search_default_filter_date_deadline_past': 1,
+            'search_default_filter_date_deadline_today': 1,
+        }</field>
+    </record>
+
+    <record id="mail_activity_action_my_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="act_window_id" ref="mail.mail_activity_action_my"/>
+        <field name="view_id" ref="mail.mail_activity_view_tree_open_target"/>
+    </record>
+
+    <record id="mail_activity_action_my_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">kanban</field>
+        <field name="act_window_id" ref="mail.mail_activity_action_my"/>
+        <field name="view_id" ref="mail.mail_activity_view_kanban_open_target"/>
+    </record>
+
+    <record id="mail_activity_action_my_view_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">calendar</field>
+        <field name="act_window_id" ref="mail.mail_activity_action_my"/>
+        <field name="view_id" ref="mail.mail_activity_view_calendar"/>
+    </record>
+
+</odoo>

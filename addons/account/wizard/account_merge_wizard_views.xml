@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_merge_wizard_form" model="ir.ui.view">
+            <field name="name">account.merge.wizard.form</field>
+            <field name="model">account.merge.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="disable_merge_button" invisible="1"/>
+                    <group>
+                        <field name="is_group_by_name"/>
+                        <field name="wizard_line_ids"
+                               colspan="4"
+                               nolabel="1"
+                               widget="account_merge_wizard_lines_one2many">
+                            <list editable="bottom" create="0" delete="0">
+                                <field name="is_selected" nolabel="1" invisible="display_type == 'line_section' or display_type == 'line_subsection'"/>
+                                <field name="account_id" force_save="1"/>
+                                <field name="company_ids" widget="many2many_tags"/>
+                                <field name="info" decoration-danger="display_type == 'account'"/>
+                                <!-- needed to make onchange work -->
+                                <field name="sequence" column_invisible="1"/>
+                                <field name="grouping_key" column_invisible="1"/>
+                                <field name="display_type" column_invisible="1"/>
+                                <field name="account_has_hashed_entries" column_invisible="1"/>
+                            </list>
+                        </field>
+                    </group>
+                    <footer>
+                        <button string="Merge" name="action_merge" type="object" class="oe_highlight" data-hotkey="q" invisible="disable_merge_button"/>
+                        <button string="Merge" name="action_merge" type="object" class="oe_highlight disabled" data-hotkey="q" invisible="not disable_merge_button"/>
+                        <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_merge_wizard_action" model="ir.actions.act_window">
+            <field name="name">Merge accounts</field>
+            <field name="group_ids" eval="[(6, 0, [ref('account.group_account_manager')])]"/>
+            <field name="res_model">account.merge.wizard</field>
+            <field name="binding_model_id" ref="account.model_account_account"/>
+            <field name="binding_type">action</field>
+            <field name="binding_view_types">list,kanban</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" eval="ref('account.account_merge_wizard_form')"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

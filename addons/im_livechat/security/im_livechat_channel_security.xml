@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<odoo>
+        <record model="res.groups.privilege" id="res_groups_privilege_live_chat">
+            <field name="name">Live Chat</field>
+            <field name="sequence">20</field>
+            <field name="category_id" ref="base.module_category_website"/>
+        </record>
+
+        <record id="im_livechat_group_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="sequence">10</field>
+            <field name="privilege_id" ref="res_groups_privilege_live_chat"/>
+            <field name="comment">The user will be able to join support channels.</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="im_livechat_group_manager" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="sequence">20</field>
+            <field name="comment">The user will be able to delete support channels.</field>
+            <field name="privilege_id" ref="res_groups_privilege_live_chat"/>
+            <field name="implied_ids" eval="[(4, ref('im_livechat.im_livechat_group_user')), (4, ref('mail.group_mail_canned_response_admin'))]"/>
+            <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+
+    <data noupdate="1">
+        <record id="ir_rule_discuss_channel_im_livechat_group_user" model="ir.rule">
+            <field name="name">discuss.channel: livechat users can read all livechat channels</field>
+            <field name="model_id" ref="mail.model_discuss_channel"/>
+            <field name="groups" eval="[(4, ref('im_livechat_group_user'))]"/>
+            <field name="domain_force">[('channel_type', '=', 'livechat')]</field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="ir_rule_discuss_channel_member_im_livechat_group_user" model="ir.rule">
+            <field name="name">discuss.channel.member: livechat users can read all livechat channel members and can invite anyone</field>
+            <field name="model_id" ref="mail.model_discuss_channel_member"/>
+            <field name="groups" eval="[(4, ref('im_livechat_group_user'))]"/>
+            <field name="domain_force">[('channel_id.channel_type', '=', 'livechat')]</field>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="ir_rule_discuss_call_history_im_livechat_group_user" model="ir.rule">
+            <field name="name">discuss.call.history: livechat users can access all call histories</field>
+            <field name="model_id" ref="mail.model_discuss_call_history"/>
+            <field name="groups" eval="[(4, ref('im_livechat_group_user'))]"/>
+            <field name="domain_force">[('channel_id.channel_type', '=', 'livechat')]</field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+    </data>
+</odoo>

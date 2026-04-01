@@ -1,0 +1,402 @@
+<odoo>
+<template id="s_text_block" name="Text">
+    <section class="s_text_block o_mail_snippet_general pt24 pb24" style="padding-left: 15px; padding-right: 15px;" data-vxml="001">
+        <div class="container s_allow_columns">
+            <p>Great stories have a <strong>personality</strong>. Consider telling a great story that provides personality. Writing a story with personality for potential clients will assist with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.</p>
+            <p>Great stories are <strong>for everyone</strong> even when only written <strong>for just one person</strong>. If you try to write with a wide, general audience in mind, your story will sound fake and lack emotion. No one will be interested. Write for one person. If it's genuine for the one, it's genuine for the rest.</p>
+        </div>
+    </section>
+</template>
+
+<template id="s_link_list" name="Link List">
+    <section class="s_link_list o_mail_snippet_general pt16 pb16" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-12">
+                    <h1>Popular Links</h1>
+                    <ul>
+                        <li><a href="#" target="_blank" data-original-title="" title="">7 Design Secrets of the World's Most Beautiful Homes</a></li>
+                        <li><a href="#" target="_blank" data-original-title="" title="">The Interior Trend You Can't Afford to Miss</a></li>
+                        <li><a href="#" target="_blank" data-original-title="" title="">Why Your Living Room Feels Unfinished (And How to Fix It)</a></li>
+                        <li><a href="#" target="_blank" data-original-title="" title="">5 Color Mistakes That Are Ruining Your Home's Vibe</a></li>
+                        <li><a href="#" target="_blank" data-original-title="" title="">The Essential Guide to Timeless Furniture Investing</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+<template id="s_schedule" name="Schedule">
+    <section class="s_schedule o_mail_snippet_general pt16 pb16">
+        <div class="container">
+            <div class="row s_nb_column_fixed">
+                <div class="col-md-12 col-12">
+                    <h3 class="text-center">Schedule</h3>
+                    <div class="s_hr o_mail_snippet_general o_not_editable pt4 pb16 o_colored_level" data-name="Separator">
+                        <hr class="w-50 mx-auto"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-12">
+                    <table class="mx-auto">
+                        <tr style="vertical-align:top">
+                            <td style="text-align:right;" class="p-2">
+                                <p><strong>8h:</strong></p>
+                            </td>
+                            <td class="p-2">
+                                <p><strong>Welcome</strong></p>
+                            </td>
+                        </tr>
+                        <tr style="vertical-align:top">
+                            <td style="text-align:right;" class="p-2">
+                                <p><strong>18h30:</strong></p>
+                            </td>
+                            <td class="p-2">
+                                <p><strong>[speaker] &amp; [speaker]'s conference</strong></p>
+                                <ul>
+                                    <li>Interactive Odoo demo</li>
+                                    <li>Best practices to digitize your company</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr style="vertical-align:top">
+                            <td style="text-align:right;" class="p-2">
+                                <p><strong>19h00:</strong></p>
+                            </td>
+                            <td class="p-2">
+                                <p><strong>Table Ronde</strong></p>
+                                <ul>
+                                    <li>Business Case</li>
+                                    <li>Client Testimonials</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr style="vertical-align:top">
+                            <td style="text-align:right;" class="p-2">
+                                <p><strong>19h30: </strong></p>
+                            </td>
+                            <td class="p-2">
+                                <p><strong>Networking: Walking Dinner &amp; Drinks</strong></p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_pricelist_boxed" name="Pricelist Boxed">
+    <section class="s_pricelist_boxed o_mail_snippet_general pt72 pb72 o_colored_level">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 px-3 pt48 pb48 o_cc col-12" data-name="Menu">
+                    <div class="row mx-auto">
+                        <div class="col-md-12" data-name="Menu Heading">
+                            <h2 style="text-align:center;">Our Menu</h2>
+                            <p style="text-align:center;">Savor our fresh, local cuisine with a modern twist.<br/>Deliciously crafted for every taste!</p>
+                        </div>
+                        <div class="s_pricelist_boxed_section col-md-12 pt48 col-12" data-name="Menu Section">
+                            <h3>✽&#160;&#160;Pizzas</h3>
+                            <t t-call="mass_mailing.s_pricelist_boxed_item">
+                                <t t-set="name">Margherita</t>
+                                <t t-set="mobileSize" t-value="4"/>
+                                <t t-set="size" t-value="3"></t>
+                                <t t-set="price">$12.00</t>
+                                <t t-set="description">Classic pizza with fresh mozzarella, San Marzano tomatoes, and basil leaves, drizzled with extra virgin olive oil.</t>
+                            </t>
+                            <t t-call="mass_mailing.s_pricelist_boxed_item">
+                                <t t-set="name">Quattro Stagioni</t>
+                                <t t-set="mobileSize" t-value="6"/>
+                                <t t-set="size" t-value="4"></t>
+                                <t t-set="price">$14.50</t>
+                                <t t-set="description">A delicious mix of four toppings: mushrooms, artichokes, ham, and olives, all on a bed of mozzarella and tomato sauce.</t>
+                            </t>
+                            <t t-call="mass_mailing.s_pricelist_boxed_item">
+                                <t t-set="name">Diavola</t>
+                                <t t-set="mobileSize" t-value="4"/>
+                                <t t-set="size" t-value="3"></t>
+                                <t t-set="price">$13.50</t>
+                                <t t-set="description">Spicy pepperoni paired with fiery chili flakes, mozzarella, and tomato sauce for a flavorful kick.</t>
+                            </t>
+                        </div>
+                        <div class="s_pricelist_boxed_section col-md-12 pt48 col-12" data-name="Menu Section">
+                            <h3>✽&#160;&#160;Pastas</h3>
+                            <t t-call="mass_mailing.s_pricelist_boxed_item">
+                                <t t-set="name">Spaghetti Carbonara</t>
+                                <t t-set="mobileSize" t-value="7"/>
+                                <t t-set="size" t-value="5"></t>
+                                <t t-set="price">$15.00</t>
+                                <t t-set="description">Traditional Roman dish with creamy egg, crispy pancetta, and Pecorino Romano, topped with black pepper.</t>
+                            </t>
+                            <t t-call="mass_mailing.s_pricelist_boxed_item">
+                                <t t-set="name">Penne all'Arrabbiata</t>
+                                <t t-set="mobileSize" t-value="7"/>
+                                <t t-set="size" t-value="5"></t>
+                                <t t-set="price">$13.00</t>
+                                <t t-set="description">Penne pasta tossed in a spicy tomato and garlic sauce with a hint of chili peppers, finished with fresh parsley.</t>
+                            </t>
+                            <t t-call="mass_mailing.s_pricelist_boxed_item">
+                                <t t-set="name">Lasagna al Forno</t>
+                                <t t-set="mobileSize" t-value="6"/>
+                                <t t-set="size" t-value="5"></t>
+                                <t t-set="price">$16.00</t>
+                                <t t-set="description">Layers of pasta, rich meat ragu, béchamel sauce, and melted mozzarella, baked to perfection.</t>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_pricelist_boxed_item">
+    <div class="container">
+        <div class="row">
+            <div t-attf-class="col-md-{{size}} col-{{mobileSize}}" style="padding-right: 0px;">
+                <p t-out="name"></p>
+            </div>
+            <div t-attf-class="col-md-{{10 - size}} col-{{9 - mobileSize}}" style="padding-left: 0px; padding-right: 0px;">
+                <div class="s_hr o_mail_snippet_general o_not_editable pt8 pb8 o_colored_level" data-name="Separator">
+                    <hr class="w-100 mx-auto" style="border-top-color: rgb(206, 198, 206);"/>
+                </div>
+            </div>
+            <div class="col-md-2 col-3">
+                <p t-out="price" style="text-align: right;"></p>
+            </div>
+        </div>
+        <div t-if="description" class="row">
+            <div class="col-md-12 col-12">
+                <p t-out="description"/>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="s_text_describing_benefits" name="Benefits">
+    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-12">
+                    <p><span class="fa fa-asterisk me-2" contenteditable="false"/>What We Offer</p>
+                    <h1><span class="display-3-fs">Discover our main three benefits</span></h1>
+                </div>
+                <div class="col-md-4 col-12">
+                    <p><span class="display-4-fs">1</span></p>
+                    <hr class="s_hr" style="border-top-color: rgb(156, 156, 148);" />
+                    <h3>Fair pricing</h3>
+                    <p>We provide transparent pricing that offers great value, ensuring you always get the best deal without hidden costs.</p>
+                </div>
+                <div class="col-md-4 col-12">
+                    <p><span class="display-4-fs">2</span></p>
+                    <hr class="s_hr" style="border-top-color: rgb(156, 156, 148);" />
+                    <h3>24/7 Support</h3>
+                    <p>Our support team is available 24/7 to assist with any inquiries or issues, ensuring you get help whenever you need it.</p>
+                </div>
+                <div class="col-md-4 col-12">
+                    <p><span class="display-4-fs">3</span></p>
+                    <hr class="s_hr" style="border-top-color: rgb(156, 156, 148);" />
+                    <h3>Tax free</h3>
+                    <p>Benefit from tax-free shopping, simplifying your purchase and enhancing your savings without any extra costs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_title_with_side_text" name="Title with Side Text">
+    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-12">
+                    <h1><strong>Unveil Our Exclusive Collections</strong></h1>
+                </div>
+                <div class="col-md-6 col-12">
+                    <p>Write one or two paragraphs describing your product or services. To be successful your content needs to be useful to your readers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_text_card" name="Card with Text">
+    <section class="o_mail_snippet_general pt16 pb16 bg-light" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-12">
+                    <h1>Unlock your full potential</h1>
+                    <p><strong>Why settle for a generic solution?</strong><br/>We don't just offer tools; we provide a competitive advantage. Our platform is engineered to streamline your workflow, eliminate bottlenecks, and help you scale faster than ever before.</p>
+                    <ul>
+                        <li>Automate your daily tasks. <a href="#">See how</a></li>
+                        <li>Gain real-time insights. <a href="#">Learn More</a></li>
+                        <li>Integrate with your favorite apps. <a href="#">Browse our documentation</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_text_need_help" name="Need Help?">
+    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-12">
+                    <h1>Need help?</h1>
+                    <p>In this section, you can address common questions efficiently.</p>
+                </div>
+                <div class="col-md-6 col-12">
+                    <h3>What sets us apart?</h3>
+                    <p>We deliver personalized solutions, ensuring that every customer receives top-tier service tailored to their needs.</p>
+                </div>
+                <div class="col-md-6 col-12">
+                    <h3>Is the website user-friendly?</h3>
+                    <p>Our website is designed for easy navigation, allowing you to find the information you need quickly and efficiently.</p>
+                </div>
+                <div class="col-md-6 col-12">
+                    <h3>What support do we offer?</h3>
+                    <p>We provide 24/7 support through various channels, including live chat, email, and phone, to assist with any queries.</p>
+                </div>
+                <div class="col-md-6 col-12">
+                    <h3>How is your data secured?</h3>
+                    <p>Your data is protected by advanced encryption and security protocols, keeping your personal information safe.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_text_product_description" name="Product Description">
+    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-12">
+                    <h1>A great product</h1>
+                    <p>Starting from $29.99</p>
+                    <p><strong>Replace this block with the authentic, singular story of your product.</strong> Focus on the unique spark that gave it personality. <strong>Be short, be specific, and let your brand's voice shine</strong> through unique work choices. This explains the <em>soul</em> behind the product, inspiring a deeper connection beyond simple features.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_text_product_showcase" name="Product Showcase">
+    <section class="o_mail_snippet_general" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-12 pt16 pb16">
+                    <h2>Design for the Soul: Why Your Home Should Be a Reflection of Your Best Self</h2>
+                    <p>Great design is about more than just filling a room; it is about creating a lifestyle that feels both luxurious and meaningful. Our pieces are carefully made to bring soul to your space, blending modern ideas with the warmth of traditional craftsmanship. Every detail is a deliberate choice, intended to turn your house into a personal gallery where you can truly relax in style.</p>
+                    <a href="#">Read More</a>
+                </div>
+                <div class="col-md-6 col-12 pt16 pb16">
+                    <h2>Built to Last: The Beauty of Choosing Quality Materials</h2>
+                    <p>True elegance is something you can feel, rooted in high-quality materials that only get better with time. By using the finest woods and textiles, we create furniture that doesn't just sit in a room—it grows with it. These pieces are designed to be your home's future heirlooms, crafted with such care that they will remain as beautiful and relevant years from now as they are today.</p>
+                    <a href="#">Read More</a>
+                </div>
+                <div class="col-md-6 col-12 pt16 pb16">
+                    <h2>The Art of the Escape: Creating a Quiet Sanctuary in a Busy World</h2>
+                    <p>In a fast-paced world, your home should be your ultimate escape—a private place that brings you a sense of calm and clarity. Our collection focuses on clean lines and comfortable shapes, providing a sophisticated backdrop for your most important moments. We believe your surroundings should be a testament to your taste, offering the perfect l ease you need to unwind.</p>
+                    <a href="#">Read More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_text_contact" name="Contact and Schedule">
+    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-12">
+                    <h1>Let's get in touch</h1>
+                    <p t-if="env.company.email"><a t-if="env.company.email" t-attf-href="mailto:#{env.company.email}" t-out="env.company.email"/></p>
+                    <p><a href="#" class="btn btn-primary">Contact us</a></p>
+                </div>
+                <div class="col-md-3 col-12">
+                    <u>Monday</u>
+                    <p>8.00am - 6.00pm</p>
+                    <u>Tuesday</u>
+                    <p>8.00am - 6.00pm</p>
+                    <u>Wednesday</u>
+                    <p>8.00am - 12.00am</p>
+                    <u>Thursday</u>
+                    <p>8.00am - 6.00pm</p>
+                </div>
+                <div class="col-md-3 col-12">
+                    <u>Friday</u>
+                    <p>8.00am - 6.00pm</p>
+                    <u>Saturday</u>
+                    <p>8.00am - 6.00pm</p>
+                    <u>Sunday</u>
+                    <p>Closed</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_text_signature" name="Mail Structure">
+    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-12">
+                    <p>Best,</p>
+                    <p t-out="env.user.name"/>
+                    <p><em>Customer Service</em></p>
+                    <p><img src="/mass_mailing/static/src/img/theme_default/signature.png"
+                            class="img img-fluid o_we_custom_image o_mail_signature_image"
+                            data-original-src="/mass_mailing/static/src/img/theme_default/signature.png"
+                            style="width: 50% !important"/></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_text_left_cta" name="Call To Action with Text">
+    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-12">
+                    <h3>The Mastery of Making</h3>
+                    <p>Don't settle for the ordinary. Our artisans obsess over every detail to create the perfection your home demands. Own a masterpiece today.</p>
+                    <a href="#" class="btn btn-primary">Buy Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_text_center_cta" name="Call To Action with Centered Text">
+    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-12">
+                    <h3 style="text-align: center">Invest in the Future</h3>
+                    <p style="text-align: center">True luxury is measured in decades.<br/>We blend heritage craft with the finest materials.<br/>Discover pieces that age beautifully.</p>
+                    <p style="text-align: center"><a href="#" class="btn btn-primary">Shop now</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_text_cta_card" name="Call To Action Card">
+    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-12 pt16 pb16 border">
+                    <h3 style="text-align: center">Designed for You</h3>
+                    <p style="text-align: center">True luxury is more rewarding as a member.<br/>Join our inner circle for exclusive benefits and early access.<br/>Elevate your home today.</p>
+                    <p style="text-align: center"><a href="#" class="btn btn-primary">Become a Member</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+</odoo>

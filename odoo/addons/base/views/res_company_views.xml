@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_company_form" model="ir.ui.view">
+            <field name="name">res.company.form</field>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+                <form string="Company" duplicate="0">
+                  <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button"
+                                name="action_all_company_branches"
+                                type="object"
+                                invisible="not all_child_ids"
+                                icon="fa-sitemap"
+                                string="Branches"/>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <field name="logo" widget="contact_image" class="oe_avatar text-start float-none" nolabel="1" options="{'size': [100,100], 'img_class': 'rounded-4'}"/>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. My Company"/>
+                            </h1>
+                        </div>
+                    </div>
+                    <notebook colspan="4">
+                        <page string="General Information" name="general_info">
+                            <group>
+                                <group>
+                                    <field name="partner_id" string="Contact" readonly="1" required="0" groups="base.group_no_one"/>
+                                    <label for="street" string="Address"/>
+                                    <div class="o_address_format">
+                                        <field name="street" placeholder="Street..." class="o_address_street"/>
+                                        <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                        <field name="city" placeholder="City" class="o_address_city"/>
+                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                                        <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                    </div>
+                                    <field name="vat"/>
+                                    <field name="company_registry_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
+                                    <field name="company_registry" options="{'placeholder_field': 'company_registry_placeholder'}"/>
+                                    <field name="currency_id" options="{'no_create': True, 'no_open': True}" id="company_currency" context="{'active_test': False}"/>
+                                </group>
+                                <group>
+                                    <field name="phone" class="o_force_ltr"/>
+                                    <field name="email"/>
+                                    <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
+                                    <field name="parent_id" groups="base.group_no_one"/>
+                                    <field name="color" widget="color_picker"/>
+                                </group>
+                                <group name="social_media"/>
+                            </group>
+                        </page>
+                        <page string="Branches" name="branches">
+                            <field name="child_ids" nolabel="1" context="{'default_parent_id': id}"/>
+                        </page>
+                    </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_company_tree" model="ir.ui.view">
+            <field name="name">res.company.list</field>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+                <list string="Companies" decoration-muted="not active">
+                    <field name="sequence" widget="handle"/>
+                    <field name="logo" invisible="not logo" widget="image" options="{'size': [24, 24], 'img_class': 'o_avatar rounded'}" width="30" nolabel="1"/>
+                    <field name="name"/>
+                    <field name="partner_id" required="0"/>
+                    <field name="child_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                </list>
+            </field>
+        </record>
+        <record id="view_res_company_kanban" model="ir.ui.view">
+            <field name="name">res.company.kanban</field>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <templates>
+                        <t t-name="card">
+                            <div t-attf-class="#{!selection_mode ? 'text-center' : ''}">
+                                <i class="fa fa-building" role="img" aria-label="Enterprise" title="Enterprise"></i> <field class="fw-bold fs-5" name="name"/>
+                            </div>
+                            <hr class="mt4 mb4"/>
+                            <div class="row" t-if="!selection_mode">
+                                <div t-if="record.email.value" class="col-6 text-center">
+                                    <strong>Email:</strong>
+                                </div>
+                                <div t-if="record.phone.value" class="col-6 text-center">
+                                    <strong>Phone</strong>
+                                </div>
+                                <div t-if="record.email.value" class="col-6 text-center">
+                                    <field name="email"/>
+                                </div>
+                                <div t-if="record.phone.value" class="col-6 text-center o_force_ltr">
+                                    <field name="phone"/>
+                                </div>
+                            </div>
+                            <div t-else="">
+                                <div t-if="record.email.value">
+                                    <strong>Email:</strong>
+                                    <field name="email"/>
+                                </div>
+                                <div t-if="record.phone.value" class="o_force_ltr">
+                                    <strong>Phone:</strong>
+                                    <field name="phone"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record id="action_res_company_form" model="ir.actions.act_window">
+            <field name="name">Companies</field>
+            <field name="res_model">res.company</field>
+            <field name="path">companies</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="domain">[('parent_id', '=', False)]</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new company
+              </p><p>
+                Create and manage the companies that will be managed by Odoo from here. Shops or subsidiaries can be created and maintained from here.
+              </p>
+            </field>
+        </record>
+        <menuitem action="action_res_company_form" id="menu_action_res_company_form" parent="base.menu_users"/>
+    </data>
+</odoo>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.AvatarCardPopover" t-inherit-mode="extension">
+        <xpath expr="//a[hasclass('o-mail-avatar-card-tel')]" position="after">
+            <span t-if="employeeId?.work_location_id" class="text-muted" data-tooltip="Work Location">
+                <i t-if="employeeId.work_location_id.location_type === 'office'" class="me-1 fa fa-fw fa-building-o"/>
+                <i t-elif="employeeId.work_location_id.location_type === 'home'" class="me-1 fa fa-fw fa-home"/>
+                <i t-else="" class="me-1 fa fa-fw fa-map-marker"/>
+                <t t-esc="employeeId.work_location_id.name"/>
+            </span>
+        </xpath>
+    </t>
+
+    <t t-name="hr.avatarCardUserInfos">
+        <small class="text-muted text-truncate" t-if="employeeId?.job_title" t-att-title="employeeId.job_title" t-esc="employeeId.job_title"/>
+        <span class="text-muted text-truncate" t-if="employeeId?.department_id" data-tooltip="Department" t-att-title="employeeId.department_id.name" t-esc="employeeId.department_id.name"/>
+    </t>
+</templates>

@@ -1,0 +1,195 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_tax_python
+#
+# Translators:
+# Martin Trigaux, 2022
+#
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-03 07:25+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"account_tax_python/ja/>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
+msgid ""
+"\n"
+"    - Group of Taxes: The tax is a set of sub taxes.\n"
+"    - Fixed: The tax amount stays the same whatever the price.\n"
+"    - Percentage: The tax amount is a % of the price:\n"
+"        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+"        e.g 110 / (1 + 10%) = 100 (price included)\n"
+"    - Percentage Tax Included: The tax amount is a division of the price:\n"
+"        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+"        e.g 200 * (1 - 10%) = 180 (price included)\n"
+"        "
+msgstr ""
+"\n"
+"    - 税グループ: この税は複数の下位税(サブタックス)で構成されています。\n"
+"    - 固定: 価格に関係なく、税額は常に一定です。\n"
+"    - パーセンテージ: 税額は価格に対する %で加算されます:\n"
+"        例 100 * (1 + 10%) = 110 (税別)\n"
+"        例 110 / (1 + 10%) = 100 (税込)\n"
+"    - パーセンテージ税込: 税額は価格に含まれ、その割合で分割されます:\n"
+"        例 180 / (1 - 10%) = 200 (税別)\n"
+"        例 200 * (1 - 10%) = 180 (税込)\n"
+"        "
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
+msgid ""
+"Compute the amount of the tax.\n"
+"\n"
+":param base: float, actual amount on which the tax is applied\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: A object representing the product\n"
+msgstr ""
+"税金額を計算します。\n"
+"\n"
+":param base: float、実際に課税される金額\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: プロダクトを表すオブジェクト\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
+msgid "Custom Formula"
+msgstr "カスタム計算式"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Field '%s' is not accessible"
+msgstr "フィールド%sはアクセスできません"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
+msgid "Formula"
+msgstr "計算式"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
+msgid "Formula Decoded Info"
+msgstr "計算式デコード済情報"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Invalid AST node: %s"
+msgstr "無効なASTノード: %s"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Invalid formula"
+msgstr "無効な数式"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Kwargs are not allowed"
+msgstr "キーワード引数(kwargs)は許可されていません"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only int, float or None are allowed as constant values"
+msgstr "定数値として許可されているのは、int、float、または Noneのみです"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/models/account_tax.py:0
+msgid "Only primitive types are allowed in python tax formula context."
+msgstr ""
+"Pythonの税計算式の文脈では、プリミティブタイプ(基本型)のみが許可されていま"
+"す。"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only product['string'] or uom['string'] read-access is allowed"
+msgstr "プロダクト['string'] または 単位['string'] の読取権限のみ許可されます"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only read access to identifiers is allowed"
+msgstr "識別子への読み取り専用アクセスのみが許可されています"
+
+#. module: account_tax_python
+#: model:ir.model,name:account_tax_python.model_account_tax
+msgid "Tax"
+msgstr "税"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
+msgid "Tax Computation"
+msgstr "税計算"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Unknown function call"
+msgstr "不明な関数呼び出し"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Unknown identifier: %s"
+msgstr "不明な識別子: %s"
+
+#~ msgid "Only product['string'] read-access is allowed"
+#~ msgstr ""
+#~ "product['string'] 形式による読み取り専用アクセスのみが許可されています"
+
+#~ msgid ""
+#~ "\n"
+#~ "    - Group of Taxes: The tax is a set of sub taxes.\n"
+#~ "    - Fixed: The tax amount stays the same whatever the price.\n"
+#~ "    - Percentage of Price: The tax amount is a % of the price:\n"
+#~ "        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+#~ "        e.g 110 / (1 + 10%) = 100 (price included)\n"
+#~ "    - Percentage of Price Tax Included: The tax amount is a division of "
+#~ "the price:\n"
+#~ "        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+#~ "        e.g 200 * (1 - 10%) = 180 (price included)\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "-税金のグループ：より細かい税のひとまとまりです。\n"
+#~ "-固定：税額は価格に関係なく同額です。\n"
+#~ "-外税率：税額は価格に基づき比率で加算されます：\n"
+#~ "例：100 *（1 + 10％）= 110（課税後の価格）\n"
+#~ "例：110 /（1 + 10％）= 100（課税前の価格）\n"
+#~ "-内税率：税額は価格に含まれています：\n"
+#~ "例：180 /（1-10％）= 200（課税後の価格）\n"
+#~ "例：200 *（1-10％）= 180（課税前の価格）"
+
+#~ msgid "Python Code"
+#~ msgstr "Pythonコード"
+
+#~ msgid "Templates for Taxes"
+#~ msgstr "税テンプレート"

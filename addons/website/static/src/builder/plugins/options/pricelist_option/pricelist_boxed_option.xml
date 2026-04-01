@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.PriceListBoxedDescriptionOption">
+    <BuilderRow label.translate="Descriptions">
+        <BuilderCheckbox
+            action="'togglePriceListDescription'"
+            actionParam="{ itemClass:'s_pricelist_boxed_item', descriptionClass: 's_pricelist_boxed_item_description', descriptionExtraClass: 'o_small' }"/>
+    </BuilderRow>
+    <BuilderContext applyTo="'.s_pricelist_boxed_item_line'">
+        <BorderConfigurator withRoundCorner="false" withBSClass="false" label.translate="Separator" direction="'top'"/>
+    </BuilderContext>
+</t>
+
+</templates>

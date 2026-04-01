@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="website.NavTabsStyleOption">
+    <BuilderRow label.translate="Style">
+        <BuilderSelect action="'setStyle'">
+            <BuilderSelectItem actionValue="'nav-underline'" id="'underline_opt'">Underline</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'nav-tabs'" id="'tabs_opt'">Tabs</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'nav-buttons'" id="'buttons_opt'">Buttons</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'nav-pills'" classAction="'s_tabs_pills_template'" id="'pills_opt'">Pills</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <t t-if="isActiveItem('tabs_opt') or isActiveItem('buttons_opt')">
+        <BuilderRow label.translate="Background" level="1">
+            <BuilderColorPicker noTransparency="true" applyTo="'.s_tabs_nav'" styleAction="'--tabs-bg-color'" />
+        </BuilderRow>
+        <BuilderRow label.translate="Links Color" level="1">
+            <BuilderColorPicker noTransparency="true" applyTo="'.s_tabs_nav .nav-link'" styleAction="'--tabs-link-color'" />
+        </BuilderRow>
+    </t>
+    <BuilderRow t-if="isActiveItem('pills_opt') or isActiveItem('underline_opt')"
+            label.translate="Direction">
+        <BuilderSelect action="'setDirection'">
+            <BuilderSelectItem actionValue="'horizontal'" id="'horizontal_opt'">Horizontal</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'vertical'">Vertical</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <t t-if="isActiveItem('horizontal_opt') or !(isActiveItem('pills_opt') or isActiveItem('underline_opt'))">
+        <BuilderRow label.translate="Fill and Justify">
+            <BuilderSelect applyTo="'.s_tabs_nav .nav'">
+                <BuilderSelectItem classAction="''" id="'regular_opt'">Regular</BuilderSelectItem>
+                <BuilderSelectItem classAction="'nav-fill'">Full Width</BuilderSelectItem>
+                <BuilderSelectItem classAction="'nav-justified'">Equal Widths</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow t-if="isActiveItem('regular_opt')" label.translate="Alignment" level="1">
+            <BuilderSelect applyTo="'.s_tabs_nav .nav'">
+                <BuilderSelectItem classAction="''">Left</BuilderSelectItem>
+                <BuilderSelectItem classAction="'justify-content-center mx-auto'">Center</BuilderSelectItem>
+                <BuilderSelectItem classAction="'justify-content-end ms-auto'">Right</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </t>
+    <BuilderRow label.translate="Slide">
+        <BuilderButtonGroup applyTo="'.s_tabs_content'">
+            <BuilderButton className="'fa fa-fw fa-long-arrow-left'" title.translate="Slide to left" classAction="'s_tabs_slide_right'"/>
+            <BuilderButton className="'fa fa-fw fa-long-arrow-up'" title.translate="Slide up" classAction="'s_tabs_slide_down'"/>
+            <BuilderButton className="'fa fa-fw fa-long-arrow-down'" title.translate="Slide down" classAction="'s_tabs_slide_up'"/>
+            <BuilderButton className="'fa fa-fw fa-long-arrow-right'" title.translate="Slide to right" classAction="'s_tabs_slide_left'"/>
+            <BuilderButton className="'fa fa-fw fa-ban'" title.translate="No Slide Effect" classAction="''"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+</templates>

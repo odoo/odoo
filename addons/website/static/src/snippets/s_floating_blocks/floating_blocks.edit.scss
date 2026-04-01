@@ -1,0 +1,17 @@
+// Edit mode
+// =========
+.s_floating_blocks {
+    &:has(.s_floating_blocks_block) .s_floating_blocks_alert_empty {
+        // Hide the empty alert when there are blocks.
+        display: none;
+    }
+    .s_floating_blocks_block {
+        > .container, > .container-fluid, > .o_container_small {
+            // Ensure that grid items cannot be moved outside their cards.
+            overflow: hidden;
+        }
+    }
+    .s_floating_blocks_alert_empty {
+        cursor: pointer;
+    }
+}

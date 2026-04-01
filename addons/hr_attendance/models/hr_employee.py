@@ -1,0 +1,359 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import pytz
+from dateutil.relativedelta import relativedelta
+from collections import defaultdict
+from odoo.tools.intervals import Intervals
+from odoo import models, fields, api, exceptions, _
+
+
+class HrEmployee(models.Model):
+    _inherit = "hr.employee"
+
+    attendance_manager_id = fields.Many2one(
+        'res.users', store=True, readonly=False,
+        string="Attendance Approver",
+        domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
+        groups="hr_attendance.group_hr_attendance_officer",
+        help="The user set in Attendance will access the attendance of the employee through the dedicated app and will be able to edit them.")
+    attendance_ids = fields.One2many(
+        'hr.attendance', 'employee_id', groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
+    last_attendance_id = fields.Many2one(
+        'hr.attendance', compute='_compute_last_attendance_id', store=True,
+        groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
+    last_check_in = fields.Datetime(
+        related='last_attendance_id.check_in', store=True,
+        groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user", tracking=False)
+    last_check_out = fields.Datetime(
+        related='last_attendance_id.check_out', store=True,
+        groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user", tracking=False)
+    attendance_state = fields.Selection(
+        string="Attendance Status", compute='_compute_attendance_state',
+        selection=[('checked_out', "Checked out"), ('checked_in', "Checked in")],
+        groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
+    hours_last_month = fields.Float(compute='_compute_hours_last_month')
+    hours_last_month_overtime = fields.Float(compute='_compute_hours_last_month')
+    hours_today = fields.Float(
+        compute='_compute_hours_today',
+        groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
+    hours_previously_today = fields.Float(
+        compute='_compute_hours_today',
+        groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
+    last_attendance_worked_hours = fields.Float(
+        compute='_compute_hours_today',
+        groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
+    hours_last_month_display = fields.Char(
+        compute='_compute_hours_last_month', groups="hr.group_hr_user")
+    overtime_ids = fields.One2many(
+        'hr.attendance.overtime.line', 'employee_id', groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
+    total_overtime = fields.Float(compute='_compute_total_overtime', compute_sudo=True)
+    display_extra_hours = fields.Boolean(related='company_id.hr_attendance_display_overtime')
+
+    ruleset_id = fields.Many2one(readonly=False, related="version_id.ruleset_id", inherited=True, groups="hr.group_hr_manager")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        officer_group = self.env.ref('hr_attendance.group_hr_attendance_officer', raise_if_not_found=False)
+        group_updates = []
+        for vals in vals_list:
+            if officer_group and vals.get('attendance_manager_id'):
+                group_updates.append((4, vals['attendance_manager_id']))
+        if group_updates:
+            officer_group.sudo().write({'user_ids': group_updates})
+        return super().create(vals_list)
+
+    def write(self, vals):
+        old_officers = self.env['res.users']
+        if 'attendance_manager_id' in vals:
+            old_officers = self.attendance_manager_id
+            # Officer was added
+            if vals['attendance_manager_id']:
+                officer = self.env['res.users'].browse(vals['attendance_manager_id'])
+                officers_group = self.env.ref('hr_attendance.group_hr_attendance_officer', raise_if_not_found=False)
+                if officers_group and not officer.has_group('hr_attendance.group_hr_attendance_officer'):
+                    officer.sudo().write({'group_ids': [(4, officers_group.id)]})
+
+        res = super().write(vals)
+        old_officers.sudo()._clean_attendance_officers()
+
+        return res
+
+    def action_archive(self):
+        res = super().action_archive()
+        open_attendances = self.env['hr.attendance'].search([
+            ('employee_id', 'in', self.ids),
+            ('check_out', '=', False),
+        ])
+        if open_attendances:
+            open_attendances.write({
+                'check_out': fields.Datetime.now(),
+            })
+        return res
+
+    @api.depends('overtime_ids.manual_duration', 'overtime_ids', 'overtime_ids.status')
+    def _compute_total_overtime(self):
+        mapped_validated_overtimes = dict(
+            self.env['hr.attendance.overtime.line']._read_group(
+            domain=[
+                ('status', '=', 'approved'),
+                ('employee_id', 'in', self.ids),
+            ],
+            groupby=['employee_id'],
+            aggregates=['manual_duration:sum']
+        ))
+
+        for employee in self:
+            employee.total_overtime = mapped_validated_overtimes.get(employee, 0)
+
+    def _compute_hours_last_month(self):
+        """
+        Compute hours and overtime hours in the current month, if we are the 15th of october, will compute from 1 oct to 15 oct
+        """
+        now = fields.Datetime.now()
+        now_utc = pytz.utc.localize(now)
+        for timezone, employees in self.grouped('tz').items():
+            tz = pytz.timezone(timezone or 'UTC')
+            now_tz = now_utc.astimezone(tz)
+            start_tz = now_tz.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            start_naive = start_tz.astimezone(pytz.utc).replace(tzinfo=None)
+            end_tz = now_tz
+            end_naive = end_tz.astimezone(pytz.utc).replace(tzinfo=None)
+
+            for employee in employees:
+                current_month_attendances = employee.attendance_ids.filtered(
+                    lambda att: att.check_in >= start_naive and att.check_out and att.check_out <= end_naive
+                )
+                hours = 0
+                overtime_hours = 0
+                for att in current_month_attendances:
+                    hours += att.worked_hours or 0
+                    overtime_hours += att.validated_overtime_hours or 0
+                employee.hours_last_month = round(hours, 2)
+                employee.hours_last_month_display = "%g" % employee.hours_last_month
+                # overtime_adjustments = sum(
+                #     ot.duration or 0
+                #     for ot in employee.overtime_ids.filtered(
+                #         lambda ot: ot.date >= start_tz.date() and ot.date <= end_tz.date() and ot.adjustment
+                #     )
+                # )
+                employee.hours_last_month_overtime = round(overtime_hours, 2)
+
+    def _compute_hours_today(self):
+        now = fields.Datetime.now()
+        now_utc = pytz.utc.localize(now)
+        for timezone, employees in self.grouped('tz').items():
+            # start of day in the employee's timezone might be the previous day in utc
+            tz = pytz.timezone(timezone or 'UTC')
+            start_tz = now_utc.astimezone(tz) + relativedelta(hour=0, minute=0)  # day start in the employee's timezone
+            start_naive = start_tz.astimezone(pytz.utc).replace(tzinfo=None)
+
+            attendances_by_employee = dict(self.env['hr.attendance']._read_group(
+                [
+                    ('employee_id', 'in', employees.ids),
+                    ('check_in', '<=', now),
+                    '|', ('check_out', '>=', start_naive), ('check_out', '=', False),
+                ],
+                ['employee_id'],
+                ['id:recordset'],
+            ))
+
+            for employee in employees:
+                attendances = attendances_by_employee.get(employee, self.env['hr.attendance'])
+                hours_previously_today = 0
+                worked_hours = 0
+                attendance_worked_hours = 0
+                for attendance in attendances:
+                    delta = (attendance.check_out or now) - max(attendance.check_in, start_naive)
+                    attendance_worked_hours = delta.total_seconds() / 3600.0
+                    worked_hours += attendance_worked_hours
+                    hours_previously_today += attendance_worked_hours
+                employee.last_attendance_worked_hours = attendance_worked_hours
+                hours_previously_today -= attendance_worked_hours
+                employee.hours_previously_today = hours_previously_today
+                employee.hours_today = worked_hours
+
+    @api.depends('attendance_ids')
+    def _compute_last_attendance_id(self):
+        current_datetime = fields.Datetime.now()
+        for employee in self:
+            employee.last_attendance_id = self.env['hr.attendance'].search([
+                ('employee_id', 'in', employee.ids),
+                ('check_in', '<=', current_datetime),
+            ], order="check_in desc", limit=1)
+
+    @api.depends('last_attendance_id.check_in', 'last_attendance_id.check_out', 'last_attendance_id')
+    def _compute_attendance_state(self):
+        for employee in self:
+            att = employee.last_attendance_id.sudo()
+            employee.attendance_state = att and not att.check_out and 'checked_in' or 'checked_out'
+
+    def _attendance_action_change(self, geo_information=None):
+        """ Check In/Check Out action
+            Check In: create a new attendance record
+            Check Out: modify check_out field of appropriate attendance record
+        """
+        self.ensure_one()
+        action_date = fields.Datetime.now()
+
+        if self.attendance_state != 'checked_in':
+            if geo_information:
+                vals = {
+                    'employee_id': self.id,
+                    'check_in': action_date,
+                    **{'in_%s' % key: geo_information[key] for key in geo_information}
+                }
+            else:
+                vals = {
+                    'employee_id': self.id,
+                    'check_in': action_date,
+                }
+            return self.env['hr.attendance'].create(vals)
+        attendance = self.env['hr.attendance'].search([('employee_id', '=', self.id), ('check_out', '=', False)], limit=1)
+        if attendance:
+            if geo_information:
+                attendance.write({
+                    'check_out': action_date,
+                    **{'out_%s' % key: geo_information[key] for key in geo_information}
+                })
+            else:
+                attendance.write({
+                    'check_out': action_date
+                })
+        else:
+            raise exceptions.UserError(_(
+                'Cannot perform check out on %(empl_name)s, could not find corresponding check in. '
+                'Your attendances have probably been modified manually by human resources.',
+                empl_name=self.sudo().name))
+        return attendance
+
+    @api.model
+    def get_overtime_data(self, domain=None, employee_id=None):
+        domain = [] if domain is None else domain
+        validated_overtime = {
+            attendance[0].id: attendance[1]
+            for attendance in self.env["hr.attendance"]._read_group(
+                domain=domain,
+                groupby=['employee_id'],
+                aggregates=['validated_overtime_hours:sum']
+            )
+        }
+        return {"validated_overtime": validated_overtime, "overtime_adjustments": {}}
+
+    def action_open_last_month_attendances(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Attendances This Month"),
+            "res_model": "hr.attendance",
+            "views": [[self.env.ref('hr_attendance.hr_attendance_employee_simple_tree_view').id, "list"]],
+            "context": {
+                "create": 0,
+                "search_default_check_in_filter": 1,
+                "employee_id": self.id,
+                "display_extra_hours": self.display_extra_hours,
+            },
+            "domain": [('employee_id', '=', self.id)]
+        }
+
+    @api.depends("user_id.im_status", "attendance_state")
+    def _compute_presence_state(self):
+        """
+        Override to include checkin/checkout in the presence state
+        Attendance has the second highest priority after login
+        """
+        super()._compute_presence_state()
+        employees = self.filtered(lambda e: e.hr_presence_state != "present")
+        employee_to_check_working = self.filtered(lambda e: e.sudo().attendance_state == "checked_out"
+                                                            and e.hr_presence_state == "out_of_working_hour")
+        working_now_list = employee_to_check_working._get_employee_working_now()
+        for employee in employees:
+            if employee.sudo().attendance_state == "checked_out" and employee.hr_presence_state == "out_of_working_hour" and \
+                    employee.id in working_now_list:
+                employee.hr_presence_state = "absent"
+            elif employee.sudo().attendance_state == "checked_in":
+                employee.hr_presence_state = "present"
+
+    def _compute_presence_icon(self):
+        res = super()._compute_presence_icon()
+        # All employee must chek in or check out. Everybody must have an icon
+        for employee in self:
+            employee.show_hr_icon_display = employee.company_id.hr_presence_control_attendance or bool(employee.user_id)
+        return res
+
+    def open_barcode_scanner(self):
+        return {
+            "type": "ir.actions.client",
+            "tag": "employee_barcode_scanner",
+            "name": "Badge Scanner"
+        }
+
+    def _get_schedules_by_employee_by_work_type(self, start, stop, version_periods_by_employee):
+        employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
+        leave_intervals_by_cal_by_resource = defaultdict(lambda: defaultdict(Intervals))
+        attendance_intervals_by_cal = defaultdict(Intervals)
+        lunch_intervals_by_cal = defaultdict(Intervals)
+
+        for employee, intervals in version_periods_by_employee.items():
+            for (_start, _stop, version) in intervals:
+                employees_by_calendar[version.resource_calendar_id] |= employee
+
+        for cal, employees in employees_by_calendar.items():
+            if not cal:  # employees are fully flex
+                continue
+            cal_leave_intervals_by_resource = cal._leave_intervals_batch(
+                start,
+                stop,
+                resources=employees.resource_id,
+            )
+            for resource, leave_intervals in cal_leave_intervals_by_resource.items():
+                naive_leave_intervals = Intervals([(
+                    i_start.replace(tzinfo=None),
+                    i_stop.replace(tzinfo=None),
+                    i_model
+                ) for (i_start, i_stop, i_model) in leave_intervals])
+                leave_intervals_by_cal_by_resource[cal][resource] = naive_leave_intervals
+
+            cal_attendance_intervals = cal._attendance_intervals_batch(
+                start,
+                stop,
+            )[False]
+            attendance_intervals_by_cal[cal] = Intervals([(
+                    i_start.replace(tzinfo=None),
+                    i_stop.replace(tzinfo=None),
+                    i_model
+                ) for (i_start, i_stop, i_model) in cal_attendance_intervals])
+
+            cal_lunch_intervals = cal._attendance_intervals_batch(
+                start,
+                stop,
+                lunch=True
+            )[False]
+            lunch_intervals_by_cal[cal] = Intervals([(
+                    i_start.replace(tzinfo=None),
+                    i_stop.replace(tzinfo=None),
+                    i_model
+                ) for (i_start, i_stop, i_model) in cal_lunch_intervals])
+
+        full_schedule_by_employee = {
+            'leave': defaultdict(Intervals),
+            'schedule': defaultdict(lambda: {
+                'work': Intervals([]),
+                'lunch': Intervals([]),
+            }),
+            'fully_flexible': defaultdict(Intervals)
+        }
+        for employee, intervals in version_periods_by_employee.items():
+            for (p_start, p_stop, version) in intervals:
+                interval = Intervals([(p_start.replace(tzinfo=None), p_stop.replace(tzinfo=None), self.env['resource.calendar'])])
+                calendar = version.resource_calendar_id
+                if not calendar:
+                    full_schedule_by_employee['fully_flexible'][employee] |= interval
+                    continue
+                employee_leaves = leave_intervals_by_cal_by_resource[calendar][employee.resource_id.id]
+                full_schedule_by_employee['leave'][employee] |= employee_leaves & interval
+                employee_attendances = attendance_intervals_by_cal[calendar]
+                full_schedule_by_employee['schedule'][employee]['work'] |= employee_attendances & interval
+                employee_lunches = lunch_intervals_by_cal[calendar]
+                full_schedule_by_employee['schedule'][employee]['lunch'] |= employee_lunches & interval
+
+        return full_schedule_by_employee

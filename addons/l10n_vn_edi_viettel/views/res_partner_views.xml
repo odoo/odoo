@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="res_partner_view_from_inherit_l10n_vn_edi" model="ir.ui.view" >
+        <field name="name">res.partner.form.inherit.l10n_vn_edi</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <group name="general" position="after">
+                <group string="SInvoice" name="sinvoice" invisible="'VN' not in fiscal_country_codes">
+                    <field name="l10n_vn_edi_symbol"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

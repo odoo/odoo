@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-inherit="stock_account.StockValuationReport" t-inherit-mode="extension">
+        <xpath expr="//t[@t-call='stock_account.StockValuationReport.InventoryLoss']" position="after">
+            <t t-if="data.cost_of_production" t-call="mrp_account.StockValuationReport.CostOfProduction"/>
+        </xpath>
+    </t>
+
+    <t t-name="mrp_account.StockValuationReport.CostOfProduction">
+        <StockValuationReportLine
+            label.translate="Cost of Production"
+            level="0"
+            displayDebitCredit="true"
+            onClickMethod.bind="openCostOfProduction"
+            sublines="data.cost_of_production.lines"
+            value="data.cost_of_production.value"/>
+        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
+    </t>
+</templates>

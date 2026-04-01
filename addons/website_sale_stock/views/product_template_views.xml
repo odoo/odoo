@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_inherit_website_sale_stock" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.website.sale.stock</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="website_sale.product_template_form_view" />
+        <field name="arch" type="xml">
+            <field name="website_ribbon_id" position="before">
+                <field name="allow_out_of_stock_order" invisible="not is_storable"/>
+            </field>
+            <field name="website_ribbon_id" position="after">
+                <label for="show_availability" invisible="not is_storable" string="Show Available Qty"/>
+                <div invisible="not is_storable">
+                    <field name="show_availability" class="oe_inline" />
+                    <span invisible="not show_availability">
+                        <label
+                            for="available_threshold"
+                            string="Below"
+                            class="o_light_label me-1"
+                        />
+                        <field name="available_threshold" class="oe_inline col-1" digits="[42, 0]"/>
+                    </span>
+                </div>
+                <field
+                    name="out_of_stock_message"
+                    invisible="not is_storable"
+                    placeholder="e.g. 'Will be back soon'"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ThreadIcon">
+        <div class="o-mail-ThreadIcon d-flex justify-content-center flex-shrink-0" t-att-class="props.className">
+            <t t-set="largeClass" t-value="props.size === 'large' ? 'fa-lg' : ''"/>
+            <t t-if="props.thread.channel_type === 'channel'">
+                <div t-if="props.thread.group_public_id" class="fa fa-fw fa-hashtag" t-att-class="largeClass" t-att-title="props.thread.accessRestrictedToGroupText"/>
+                <div t-else="" class="fa fa-fw fa-globe" t-att-class="largeClass" title="Public Channel"/>
+            </t>
+            <t t-elif="props.thread.channel_type?.includes('chat') and correspondent">
+                <t name="chat">
+                    <t name="chat_static">
+                        <ImStatus t-if="correspondent.im_status" member="correspondent" size="'md'"/>
+                        <div t-else="" class="d-flex rounded-circle bg-inherit">
+                            <i class="fa-fw" t-att-class="largeClass" t-attf-class="#{ defaultChatIcon.class }" t-att-title="defaultChatIcon.title"/>
+                        </div>
+                    </t>
+                </t>
+            </t>
+            <div t-elif="props.thread.channel_type === 'group'" class="o-mail-ThreadIcon oi fa-fw oi-users" t-att-class="largeClass" title="Grouped Chat"/>
+            <t t-elif="props.thread.model === 'mail.box'">
+                <div t-if="props.thread.id === 'inbox'" class="fa fa-fw fa-inbox" t-att-class="largeClass"/>
+                <div t-elif="props.thread.id === 'starred'" class="fa fa-fw fa-star-o" t-att-class="largeClass"/>
+                <div t-elif="props.thread.id === 'history'" class="fa fa-fw fa-history" t-att-class="largeClass"/>
+            </t>
+        </div>
+    </t>
+
+</templates>

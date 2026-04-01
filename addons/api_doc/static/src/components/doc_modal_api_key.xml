@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web.DocApiKeyModal">
+    <div class="modal-bg d-flex flex-nowrap justify-content-center align-items-center">
+        <div class="modal h-auto p-3 d-flex flex-nowrap flex-column mb-2" style="width: 25rem" t-ref="modalRef">
+            <h2 class="mb-2">API key</h2>
+
+            <p class="mb-1">To try the API, please insert your API key here</p>
+            <a href="#" t-on-click="openAPIKeyForm">Generate a new API key here</a>
+            <input
+                class="mt-2 w-100"
+                type="password"
+                name="api-key"
+                autocorrect="off"
+                autocomplete="one-time-code"
+            />
+
+            <div class="d-flex flex-nowrap flex-content-between mt-2">
+                <button class="btn me-1" t-on-click="save">Save</button>
+                <button class="btn" t-on-click="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

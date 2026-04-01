@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_self_order.OrderChangeReceipt">
+        <div class="pos-receipt m-0 p-0 pt-5">
+            <div class="receipt-header text-center">
+                <div class="pos-receipt-title" t-if="changes.preset_name">
+                    <t t-esc="changes.preset_name"/> <t t-if="changes.preset_time">(<t t-esc="changes.preset_time"/>)</t>
+                </div>
+                <div style="font-size: 78%;">
+                    <t t-out="changes.config_name + ' : ' + changes.time.hours + ':' + changes.time.minutes"/>
+                    <br/>
+                </div>
+                <span class="my-4" style="font-size: 150%;">
+                    <strong t-if="changes.table_number">Self-Order T <t t-esc="changes.table_number"/></strong>
+                    <strong t-elif="changes.tracker">Kiosk T <t t-esc="changes.tracker"/></strong>
+                    <strong t-else=""> Order <t t-if="changes.floating_order_name" t-esc="changes.floating_order_name"/></strong>
+                    <strong t-if="changes.trackingNumber" class="fw-light my-3">
+                        # <t t-esc="changes.trackingNumber"/>
+                    </strong>
+                </span>
+                <div class="pos-receipt-order-data" t-esc="changes.name"/>
+            </div>
+            <hr style="border: none; border-top: 4px dashed black;"/>
+            <div class="pos-receipt-title">
+                NEW
+            </div>
+            <t t-foreach="changes.new" t-as="change" t-key="change_index">
+                <div class="product-details d-flex mx-1" t-att-class="{'ms-5': change.combo_parent_id}" style="font-size: 150%;">
+                    <span class="product-quantity me-3" t-esc="change.qty"/>
+                    <span class="product-name" t-esc="change.product_id.name"/>
+                </div>
+                <div class="mx-1" t-att-class="{'ms-5': change.combo_parent_id}" style="font-size: 150%;">
+                   <t t-set="attribute_names" t-value="changes.getLineAttributeNames(change)" />
+                   <div t-if="attribute_names.length" class="ms-5" style="font-size: 91%;">
+                        <div t-foreach="attribute_names" t-as="attr" t-key="attr_index">
+                            - <t t-esc="attr" />
+                        </div>
+                   </div>
+                </div>
+                <t t-if="change.customer_note">
+                    <div>
+                        NOTE
+                        <span class="pos-receipt-right-align">...</span>
+                    </div>
+                    <div><span class="pos-receipt-left-padding">--- <t t-esc="change.customer_note" /></span></div>
+                    <br/>
+                </t>
+            </t>
+            <br />
+            <br />
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,270 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_tax_python
+#
+# Translators:
+# Martin Ondrejka <martin.ondrejka@anuva.eu>, 2022
+# Martin Trigaux, 2022
+# Tomáš Píšek <Tomas.Pisek@seznam.cz>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-01-23 18:28+0000\n"
+"Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
+"Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/"
+"account_tax_python/sk/>\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
+">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
+msgid ""
+"\n"
+"    - Group of Taxes: The tax is a set of sub taxes.\n"
+"    - Fixed: The tax amount stays the same whatever the price.\n"
+"    - Percentage: The tax amount is a % of the price:\n"
+"        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+"        e.g 110 / (1 + 10%) = 100 (price included)\n"
+"    - Percentage Tax Included: The tax amount is a division of the price:\n"
+"        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+"        e.g 200 * (1 - 10%) = 180 (price included)\n"
+"        "
+msgstr ""
+"\n"
+"    - Skupina daní: Daň je súborom čiastkových daní.\n"
+"    - Pevná čiastka: Čiastka dane je vždy rovnaká bez ohľadu na cenu.\n"
+"    - Percento: Daň je percento k cene:\n"
+"        napr. 100 * (1 + 10%) = 110 (nezahrnutá v cene)\n"
+"        napr. 110 / (1 + 10%) = 100 (zahrnutá v cene)\n"
+"    - Percento ceny vrátanie dane: Výška dane je podielom ceny:\n"
+"        napr. 180 / (1 - 10%) = 200 (nezahrnutá v cene)\n"
+"        napr. 200 * (1 - 10%) = 180 (zahrnutá v cene)\n"
+"        "
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
+msgid ""
+"Compute the amount of the tax.\n"
+"\n"
+":param base: float, actual amount on which the tax is applied\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: A object representing the product\n"
+msgstr ""
+"Vypočítajte výšku dane.\n"
+"\n"
+":param base: float, suma, na ktorú sa daň uplatňuje\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: Objekt reprezentujúci produkt\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
+msgid "Custom Formula"
+msgstr "Vlastný vzorec"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
+msgid "Display Name"
+msgstr "Zobrazovaný názov"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Field '%s' is not accessible"
+msgstr "Pole '%s' nie je dostupné"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
+msgid "Formula"
+msgstr "Vzorec"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
+msgid "Formula Decoded Info"
+msgstr "Dekódované informácie vzorca"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Invalid AST node: %s"
+msgstr "Neplatný uzol AST: %s"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Invalid formula"
+msgstr "Neplatný vzorec"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Kwargs are not allowed"
+msgstr "Kwargs nie sú povolené"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only int, float or None are allowed as constant values"
+msgstr "Ako konštanty sú povolené iba int, float alebo None"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/models/account_tax.py:0
+msgid "Only primitive types are allowed in python tax formula context."
+msgstr ""
+"V kontexte daňového vzorca v jazyku Python sú povolené iba primitívne typy."
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only product['string'] or uom['string'] read-access is allowed"
+msgstr ""
+"Prístup k product['string'] alebo uom['string'] je povolený iba prístup na "
+"čítanie"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only read access to identifiers is allowed"
+msgstr "Prístup k identifikátorom je povolený iba na čítanie"
+
+#. module: account_tax_python
+#: model:ir.model,name:account_tax_python.model_account_tax
+msgid "Tax"
+msgstr "Daň"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
+msgid "Tax Computation"
+msgstr "Výpočet dane"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Unknown function call"
+msgstr "Neznáme volanie funkcie"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Unknown identifier: %s"
+msgstr "Neznámy identifikátor: %s"
+
+#~ msgid ""
+#~ "\n"
+#~ "    - Group of Taxes: The tax is a set of sub taxes.\n"
+#~ "    - Fixed: The tax amount stays the same whatever the price.\n"
+#~ "    - Percentage of Price: The tax amount is a % of the price:\n"
+#~ "        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+#~ "        e.g 110 / (1 + 10%) = 100 (price included)\n"
+#~ "    - Percentage of Price Tax Included: The tax amount is a division of "
+#~ "the price:\n"
+#~ "        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+#~ "        e.g 200 * (1 - 10%) = 180 (price included)\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "    - Skupina daní: Daň je skupinou čiastkových daní.\n"
+#~ "    - Fixná: výška dane zostáva rovnaká bez ohľadu na cenu.\n"
+#~ "    - Percento z ceny: Výška dane je % z ceny:\n"
+#~ "        napr. 100 * (1 + 10%) = 110 (nie je zahrnuté v cene)\n"
+#~ "        napr. 110 / (1 + 10%) = 100 (zahrnuté v cene)\n"
+#~ "    - Percento z ceny vrátane dane: Výška dane je podielom z ceny:\n"
+#~ "        napr. 180 / (1 - 10%) = 200 (nie je zahrnuté v cene)\n"
+#~ "        napr. 200 * (1 - 10%) = 180 (zahrnuté v cene)\n"
+#~ "        "
+
+#~ msgid "Applicable Code"
+#~ msgstr "Použiteľný kód"
+
+#~ msgid ""
+#~ "Compute the amount of the tax by setting the variable 'result'.\n"
+#~ "\n"
+#~ ":param base_amount: float, actual amount on which the tax is applied\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res.company recordset singleton\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "Vypočítajte sumu dane nastavením premennej \"výsledok\".\n"
+#~ "\n"
+#~ "\n"
+#~ ":param base_amount: float, aktuálna suma na ktorú sa aplikuje daň\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res. spoločnosť záznam singleton\n"
+#~ ":param product: product.product záznam singleton alebo None\n"
+#~ ":param partner: res.partner záznam singleton alebo None"
+
+#~ msgid ""
+#~ "Compute the amount of the tax by setting the variable 'result'.\n"
+#~ "\n"
+#~ ":param base_amount: float, actual amount on which the tax is applied\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "Vypočítajte sumu dane nastavením premennej \"výsledok\".\n"
+#~ "\n"
+#~ ":param base_amount: float, aktuálna suma na ktorú sa aplikuje daň\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product záznam singleton alebo None\n"
+#~ ":param partner: res.partner záznam singleton alebo None"
+
+#~ msgid ""
+#~ "Determine if the tax will be applied by setting the variable 'result' to "
+#~ "True or False.\n"
+#~ "\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res.company recordset singleton\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "Vypočítajte sumu dane nastavením premennej \"výsledok\" na Pravda alebo "
+#~ "Nepravda.\n"
+#~ "\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res. spoločnosť záznam singleton\n"
+#~ ":param product: product.product záznam singleton alebo None\n"
+#~ ":param partner: res.partner záznam singleton alebo None"
+
+#~ msgid ""
+#~ "Determine if the tax will be applied by setting the variable 'result' to "
+#~ "True or False.\n"
+#~ "\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "Vypočítajte sumu dane nastavením premennej \"výsledok\" na Pravda alebo "
+#~ "Nepravda.\n"
+#~ "\n"
+#~ ":param price_unit: float \n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product záznam singleton alebo None\n"
+#~ ":param partner: res.partner záznam singleton alebo None"
+
+#~ msgid "Python Code"
+#~ msgstr "Kód Pyton"
+
+#~ msgid "Templates for Taxes"
+#~ msgstr "Šablóny pre dane"

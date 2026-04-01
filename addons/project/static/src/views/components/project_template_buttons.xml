@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="project.ProjectTemplateButtons">
+        <div class="btn-group o_template_icon_group ms-auto d-flex ps-1" t-if="isProjectManager">
+            <i role="button" t-on-click.stop="onEditClick" class="btn btn-link fa fa-pencil fs-3"></i>
+            <i role="button" t-on-click.stop="onDeleteClick" class="btn text-danger fa fa-trash fs-3"></i>
+        </div>
+    </t>
+</templates>

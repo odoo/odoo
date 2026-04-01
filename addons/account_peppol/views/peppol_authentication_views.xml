@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+    Action responsible to close the window that was open for authentication.
+    Called by callbacks in the PeppolAuthentication controllers.
+     -->
+    <record id="action_peppol_auth_callback" model="ir.actions.client">
+        <field name="name">Peppol Auth Callback action</field>
+        <field name="tag">action_peppol_auth_callback</field>
+        <field name="path">peppol-auth-callback-action</field>
+    </record>
+
+</odoo>

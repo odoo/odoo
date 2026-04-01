@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_sale.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
+        <xpath
+            expr="//t[@t-if='props.showRemainingButtons']/div/button[hasclass('o_pricelist_button')]"
+            position="before">
+            <button t-if="this.pos.cashier._role != 'minimal'" t-att-class="buttonClass" t-on-click="() => this.onClickQuotation()">
+                <i class="fa fa-link me-1" role="img" aria-label="Set Sale Order" title="Set Sale Order" /> Quotation/Order
+            </button>
+        </xpath>
+    </t>
+</templates>

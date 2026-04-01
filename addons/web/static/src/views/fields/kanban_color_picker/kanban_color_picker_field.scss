@@ -1,0 +1,15 @@
+.o_kanban_colorpicker {
+    @include media-breakpoint-down(md) {
+        grid-template-columns: repeat(auto-fit, minmax(1.25 * $o-bubble-color-size-xl, 1fr));
+    }
+    grid-template-columns: repeat(auto-fit, minmax($o-bubble-color-size-xl, 1fr));
+    padding: var(--dropdown-item-padding-y) var(--dropdown-item-padding-x);
+
+    [class*="col-"]:has(&) {
+        min-width: 150px;
+    }
+
+    .o_field_kanban_color_picker:has(> &) {
+        width: 100%;
+    }
+}

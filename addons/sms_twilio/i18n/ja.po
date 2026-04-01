@@ -1,0 +1,488 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sms_twilio
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-11-24 12:09+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"sms_twilio/ja/>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
+msgid "%(failure_type)s: %(failure_reason)s"
+msgstr "%(failure_type)s: %(failure_reason)s"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/tools/sms_api.py:0
+msgid "'To' and 'From' numbers cannot be the same"
+msgstr "送信元と送信先の番号を同じにすることはできません"
+
+#. module: sms_twilio
+#: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
+msgid "+1 555-123-4567"
+msgstr "+1 555-123-4567"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/tools/sms_api.py:0
+msgid "A 'From' number is required to send a message"
+msgstr "メッセージを送信するには「差出人番号」が必要です"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/tools/sms_api.py:0
+msgid "A 'To' phone number is required"
+msgstr "宛先の電話番号が必要です"
+
+#. module: sms_twilio
+#: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
+msgid "ACabcde12345abcde12345abcde12345ab"
+msgstr "ACabcde12345abcde12345abcde12345ab"
+
+#. module: sms_twilio
+#: model:ir.model.fields,field_description:sms_twilio.field_res_company__sms_twilio_account_sid
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__sms_twilio_account_sid
+msgid "Account SID"
+msgstr "アカウントSID"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
+msgid "An error occurred while fetching the numbers."
+msgstr "数値の取得中にエラーが発生しました。"
+
+#. module: sms_twilio
+#: model:ir.model.fields,field_description:sms_twilio.field_res_company__sms_twilio_auth_token
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__sms_twilio_auth_token
+msgid "Auth Token"
+msgstr "認証トークン"
+
+#. module: sms_twilio
+#: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_authentication
+#: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_authentication
+msgid "Authentication Error\""
+msgstr "認証エラー"
+
+#. module: sms_twilio
+#: model:ir.model,name:sms_twilio.model_res_company
+msgid "Companies"
+msgstr "会社"
+
+#. module: sms_twilio
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_sms__record_company_id
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__company_id
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__company_id
+msgid "Company"
+msgstr "会社"
+
+#. module: sms_twilio
+#: model:ir.model,name:sms_twilio.model_res_config_settings
+msgid "Config Settings"
+msgstr "構成設定"
+
+#. module: sms_twilio
+#: model_terms:ir.ui.view,arch_db:sms_twilio.res_config_settings_view_form
+msgid "Configure Twilio Account"
+msgstr "Twilioアカウントを設定"
+
+#. module: sms_twilio
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__country_id
+msgid "Country"
+msgstr "国"
+
+#. module: sms_twilio
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__country_code
+msgid "Country Code"
+msgstr "国コード"
+
+#. module: sms_twilio
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__create_uid
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: sms_twilio
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__create_date
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: sms_twilio
+#: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
+msgid "Credentials"
+msgstr "認証情報"
+
+#. module: sms_twilio
+#: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
+msgid "Delete"
+msgstr "削除"
+
+#. module: sms_twilio
+#: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
+msgid "Discard"
+msgstr "破棄"
+
+#. module: sms_twilio
+#: model:ir.model.fields,field_description:sms_twilio.field_mail_notification__display_name
+#: model:ir.model.fields,field_description:sms_twilio.field_res_company__display_name
+#: model:ir.model.fields,field_description:sms_twilio.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_composer__display_name
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_sms__display_name
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_tracker__display_name
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__display_name
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
+msgid "Error: %s"
+msgstr "エラー: %s"
+
+#. module: sms_twilio
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_sms__failure_type
+msgid "Failure Type"
+msgstr "失敗種別"
+
+#. module: sms_twilio
+#: model:ir.model.fields,field_description:sms_twilio.field_mail_notification__failure_type
+msgid "Failure type"
+msgstr "失敗種別"
+
+#. module: sms_twilio
+#: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_from_to
+#: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_from_to
+msgid "From / To identic"
+msgstr "送信元と送信先の番号が同一です"
+
+#. module: sms_twilio
+#: model:ir.model.fields,field_description:sms_twilio.field_mail_notification__id
+#: model:ir.model.fields,field_description:sms_twilio.field_res_company__id
+#: model:ir.model.fields,field_description:sms_twilio.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_composer__id
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_sms__id
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_tracker__id
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__id
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sms_twilio
+#: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_callback
+#: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_callback
+msgid "Incorrect callback URL"
+msgstr "不正なコールバックURL"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/models/res_company.py:0
+msgid ""
+"Invalid Twilio Account SID: must only contain alphanumeric characters after "
+"'AC'."
+msgstr ""
+"無効なTwilioアカウントSIDです: 「AC」の後は英数字のみを含める必要があります。"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/models/res_company.py:0
+msgid ""
+"Invalid Twilio Account SID: must start with 'AC' and be 34 characters long."
+msgstr ""
+"TwilioアカウントSIDが無効です。「AC」で始まり、全体で34文字にしてください。"
+
+#. module: sms_twilio
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__write_uid
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: sms_twilio
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__write_date
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: sms_twilio
+#: model:ir.model,name:sms_twilio.model_sms_tracker
+msgid "Link SMS to mailing/sms tracking models"
+msgstr "SMSをメーリング/SMS追跡モデルにリンク"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/models/res_company.py:0
+#: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
+msgid "Manage Twilio SMS"
+msgstr "Twilio SMSを管理"
+
+#. module: sms_twilio
+#: model:ir.model,name:sms_twilio.model_mail_notification
+msgid "Message Notifications"
+msgstr "メッセージ通知"
+
+#. module: sms_twilio
+#: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_from_missing
+#: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_from_missing
+msgid "Missing From Number"
+msgstr "送信元番号が未設"
+
+#. module: sms_twilio
+#: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
+msgid ""
+"Need help ?\n"
+"                            <i class=\"fa fa-external-link\" aria-"
+"hidden=\"true\"/>"
+msgstr ""
+"サポートが必要ですか?\n"
+"                            <i class=\"fa fa-external-link\" aria-"
+"hidden=\"true\"/>"
+
+#. module: sms_twilio
+#: model:ir.model.fields,field_description:sms_twilio.field_res_company__sms_twilio_number_ids
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__sms_twilio_number_ids
+msgid "Numbers"
+msgstr "数字"
+
+#. module: sms_twilio
+#: model:ir.model,name:sms_twilio.model_sms_sms
+msgid "Outgoing SMS"
+msgstr "送信されるSMS"
+
+#. module: sms_twilio
+#: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
+msgid "Phone Numbers"
+msgstr "電話番号"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
+msgid "Please set the number to which you want to send a test SMS."
+msgstr "テストSMSを送信したい番号を設定してください。"
+
+#. module: sms_twilio
+#: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
+msgid "Reload Numbers from Twilio"
+msgstr "Twilioから番号を再ロードする"
+
+#. module: sms_twilio
+#: model:ir.model.fields,field_description:sms_twilio.field_res_company__sms_provider
+#: model:ir.model.fields,field_description:sms_twilio.field_res_config_settings__sms_provider
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__sms_provider
+msgid "SMS Provider"
+msgstr "SMSプロバイダー"
+
+#. module: sms_twilio
+#: model:ir.model,name:sms_twilio.model_sms_twilio_account_manage
+msgid "SMS Twilio Connection Wizard"
+msgstr "SMS Twilio接続ウィザード"
+
+#. module: sms_twilio
+#: model:ir.model,name:sms_twilio.model_sms_composer
+msgid "Send SMS Wizard"
+msgstr "SMS送信ウィザード"
+
+#. module: sms_twilio
+#: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
+msgid "Send test SMS"
+msgstr "テストSMSを送信"
+
+#. module: sms_twilio
+#: model:ir.model.fields.selection,name:sms_twilio.selection__res_company__sms_provider__iap
+msgid "Send via Odoo"
+msgstr "Odoo経由で送信"
+
+#. module: sms_twilio
+#: model:ir.model.fields.selection,name:sms_twilio.selection__res_company__sms_provider__twilio
+msgid "Send via Twilio"
+msgstr "Twilio経由で送信"
+
+#. module: sms_twilio
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__sequence
+msgid "Sequence"
+msgstr "付番"
+
+#. module: sms_twilio
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__test_number
+msgid "Test Number"
+msgstr "テスト番号"
+
+#. module: sms_twilio
+#: model:ir.model.fields,help:sms_twilio.field_sms_twilio_number__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"ISOの国コードを2文字で表します。\n"
+"このフィールドはクイック検索に使用できます。"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
+msgid "The SMS has been sent from %s"
+msgstr "SMSが以下より送信されました：%s"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/tools/sms_api.py:0
+msgid "The number you're trying to reach is not correctly formatted"
+msgstr "連絡しようとしている番号は正しくフォーマットされていません"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
+msgid "This is a test SMS from Odoo"
+msgstr "これはOdooからのSMSテストです"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/tools/sms_api.py:0
+msgid "Trial Account Limitation"
+msgstr "トライアル・アカウントの制限"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/tools/sms_api.py:0
+msgid "Twilio Authentication Error"
+msgstr "Twilio認証エラー"
+
+#. module: sms_twilio
+#: model:ir.model,name:sms_twilio.model_sms_twilio_number
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__number
+msgid "Twilio Number"
+msgstr "Twilio番号"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
+msgid "Twilio SMS"
+msgstr "Twilio SMS"
+
+#. module: sms_twilio
+#: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
+msgid "Twilio SMS Manage Connection"
+msgstr "Twilio SMSの接続管理"
+
+#. module: sms_twilio
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_sms__sms_twilio_sid
+#: model:ir.model.fields,field_description:sms_twilio.field_sms_tracker__sms_twilio_sid
+msgid "Twilio SMS SID"
+msgstr "Twilio SMS SID"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/tools/sms_api.py:0
+msgid "Twilio StatusCallback URL is incorrect"
+msgstr "Twilio StatusCallbackのURLが正しくありません"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/tools/sms_api.py:0
+msgid "Unknown error, please contact Odoo support"
+msgstr "不明なエラーが発生しました。Odooサポートまでご連絡ください"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/tools/sms_api.py:0
+msgid "Unknown failure at sending, please contact Odoo support"
+msgstr "送信時に不明なエラーが発生しました。Odooサポートにご連絡ください"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/tools/sms_api.py:0
+msgid "Unverified recipient on Trial Account"
+msgstr "未認証の受信者(トライアルアカウント)"
+
+#. module: sms_twilio
+#: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
+msgid "Update Account"
+msgstr "アカウント更新"
+
+#. module: sms_twilio
+#: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
+msgid "abcde12345abcde12345abcde12345ab"
+msgstr "abcde12345abcde12345abcde12345ab"
+
+#~ msgid ""
+#~ "Any number here that is not on Twilio will be deleted and the ordering "
+#~ "will be reset to Twilio's."
+#~ msgstr ""
+#~ "Twilioに登録されていない番号はすべて削除され、順序はTwilioの設定にリセット"
+#~ "されます。"
+
+#~ msgid "Authentication error"
+#~ msgstr "認証エラー"
+
+#~ msgid "Cancel"
+#~ msgstr "キャンセル"
+
+#~ msgid "Error message"
+#~ msgstr "エラーメッセージ"
+
+#~ msgid "Manage Twilio Connection"
+#~ msgstr "Twilioコネクションを管理"
+
+#~ msgid "Odoo IAP"
+#~ msgstr "Odoo IAP"
+
+#~ msgid "Save"
+#~ msgstr "保存"
+
+#~ msgid "Success message"
+#~ msgstr "成功メッセージ"
+
+#~ msgid "Testing"
+#~ msgstr "テスト"
+
+#, python-format
+#~ msgid "The Twilio StatusCallback URL is incorrect"
+#~ msgstr "TwilioのStatusCallback URLが正しくありません"
+
+#, python-format
+#~ msgid "The number you're trying to reach is not correctly formatted."
+#~ msgstr "連絡しようとしている番号は正しくフォーマットされていません。"
+
+#~ msgid "To Number"
+#~ msgstr "送信先番号"
+
+#~ msgid "Twilio"
+#~ msgstr "Twilio"
+
+#~ msgid ""
+#~ "When sending an SMS to a partner, Odoo will pick the first number "
+#~ "available\n"
+#~ "                        from the same country as the recipient. If no "
+#~ "number exists for this country,\n"
+#~ "                        Odoo will use the first one available."
+#~ msgstr ""
+#~ "取引先にSMSを送信する際、Odooは受信者と同じ国の番号のうち、最初に利用可能"
+#~ "なものを使用します。\n"
+#~ "                        該当する国の番号が存在しない場合は、\n"
+#~ "                        Odooで最初に利用可能な番号が使用されます。"
+
+#~ msgid "You can access the documentation"
+#~ msgstr "ドキュメントにアクセスできます"
+
+#~ msgid ""
+#~ "by clicking here\n"
+#~ "                        <i class=\"fa fa-external-link\" aria-"
+#~ "hidden=\"true\"/>"
+#~ msgstr ""
+#~ "以下をクリックしてください：\n"
+#~ "                        <i class=\"fa fa-external-link\" aria-"
+#~ "hidden=\"true\"/>"

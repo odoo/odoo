@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_hr_recruitment.CopyJobLinkButton">
+        <CopyButtonJob
+            content="props.record.data[props.name]"
+            copyText="copyText"
+            successText="successText"/>
+    </t>
+
+    <t t-name="website_hr_recruitment.CopyButtonJob">
+        <a
+            t-ref="button"
+            role="button"
+            class="oe_kanban_action"
+            t-on-click.stop="onClick">
+            <span t-esc="props.copyText"/>
+        </a>
+    </t>
+</templates>

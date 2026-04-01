@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_crm_lead2opportunity_partner" model="ir.ui.view">
+        <field name="name">crm.lead2opportunity.partner.form</field>
+        <field name="model">crm.lead2opportunity.partner</field>
+        <field name="arch" type="xml">
+            <form string="Convert to Opportunity">
+                <group name="name">
+                    <field name="name" widget="radio"/>
+                </group>
+                <group string="Assign this opportunity to">
+                    <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
+                    <field name="team_id" options="{'no_open': True, 'no_create': True}" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
+                </group>
+                <group string="Opportunities" invisible="name != 'merge'" col="4">
+                    <field name="lead_id" invisible="1"/>
+                    <field name="duplicated_lead_ids" nolabel="1" colspan="4"
+                        context="{'search_default_filter_won_status_pending': 1, 'crm_lead_view_list_short': 1}">
+                        <list>
+                            <field name="create_date"/>
+                            <field name="name"/>
+                            <field name="type" optional="hide"/>
+                            <field name="contact_name" optional="show"/>
+                            <field name="country_id" column_invisible="context.get('invisible_country', True)" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="email_from" optional="show"/>
+                            <field name="stage_id"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}" optional="hide"/>
+                        </list>
+                    </field>
+                </group>
+                <div name="action" invisible="name != 'convert'" class="row">
+                    <div class="col-3">
+                        <field name="action" nolabel="1" widget="radio"/>
+                    </div>
+                    <div class="col-4">
+                        <div class="row h-50">
+                            <t invisible="lead_partner_name or action != 'create'">
+                                <label for="commercial_partner_id" class="col-3 p-0"/>
+                                <field name="commercial_partner_id" class="col p-0" string="Company" placeholder="Don't link to a company"/>
+                            </t>
+                            <t invisible="not lead_partner_name or not lead_contact_name or action != 'create'">
+                                <label for="lead_partner_name" class="col-3 p-0"/>
+                                <field name="lead_partner_name" class="col p-0" string="Company" placeholder="Don't link to a company"/>
+                            </t>
+                        </div>
+                        <div class="row h-50">
+                            <t invisible="action != 'exist'">
+                                <label for="partner_id" class="col-3 p-0"/>
+                                <field name="partner_id" class="col p-0" widget="res_partner_many2one" 
+                                    context="{'res_partner_search_mode': 'customer', 'show_vat': True}"
+                                    required="action == 'exist'"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                <footer>
+                    <button name="action_apply" string="Create Opportunity" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_crm_lead2opportunity_partner" model="ir.actions.act_window">
+        <field name="name">Convert to opportunity</field>
+        <field name="res_model">crm.lead2opportunity.partner</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_crm_lead2opportunity_partner"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

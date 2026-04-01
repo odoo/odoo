@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanColorPickerField">
+        <div t-if="!props.readonly" class="o_kanban_colorpicker o_colorlist d-grid gap-3 gap-md-2">
+            <t t-foreach="colors" t-as="color" t-key="color_index">
+                <button
+                    role="menuitem"
+                    t-on-click="() => this.selectColor(color_index)"
+                    t-att-class="{ 'active' : props.record.data?.color === color_index}"
+                    t-attf-class="border-0 rounded-circle o_colorlist_item_color_{{ color_index }}"
+                    t-att-title="color"
+                    t-att-aria-label="color"/>
+            </t>
+        </div>
+    </t>
+
+</templates>

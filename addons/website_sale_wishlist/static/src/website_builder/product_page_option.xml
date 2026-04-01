@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale_wishlist.ProductPageOption" t-inherit="website_sale.ProductPageOption" t-inherit-mode="extension">
+    <BuilderRow id="'o_we_actions_opt'" position="inside">
+        <BuilderButton title.translate="Wishlist"
+            action="'websiteConfig'"
+            actionParam="{views:['website_sale_wishlist.product_add_to_wishlist']}"
+        >
+            <i class="fa fa-fw fa-heart"/>
+            Wishlist
+        </BuilderButton>
+    </BuilderRow>
+</t>
+
+</templates>

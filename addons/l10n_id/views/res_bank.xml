@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_bank_form_inherit_account" model="ir.ui.view">
+        <field name="name">res.partner.bank.form.inherit.account</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="base.view_partner_bank_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='allow_out_payment']/parent::group" position="inside">
+                <field name="l10n_id_qris_api_key" invisible="country_code != 'ID'"/>
+                <field name="l10n_id_qris_mid" invisible="country_code != 'ID'" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

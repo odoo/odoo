@@ -1,0 +1,23 @@
+.o_project_update_kanban_view .o_kanban_renderer {
+    overflow: auto;
+
+    &.o_kanban_ungrouped {
+        min-height: auto;
+
+        .o_project_update_card {
+            > div {
+                @include media-breakpoint-up(md) {
+                    flex-basis: 15%;
+                }
+            }
+        }
+    }
+
+    .o_kanban_group {
+        .o_project_update_card {
+            > div {
+                flex-basis: calc(50% - #{map-get($spacers, 3)});
+            }
+        }
+    }
+}

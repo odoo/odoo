@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="html_editor.HistoryDialog">
+        <Dialog size="size" title="title" contentClass="'h-100 html-history-dialog-container'"
+                t-on-close="props.close" t-on-cancel="props.close" t-on-confirm="_onRestoreRevisionClick"
+                t-on-after-render="_onAfterRender">
+            <div t-attf-class="dialog-container html-history-dialog #{state.revisionLoading ? 'html-history-loading' : 'html-history-loaded'}">
+                <div class="revision-list d-flex flex-column align-content-stretch" t-attf-style="max-height: {{state.cssMaxHeight}}px;">
+                    <t t-if="!state.revisionsData.length">
+                        <div class="text-center w-100 pb-2 pt-0 px-0 fw-bolder">No history</div>
+                    </t>
+
+                    <t t-foreach="state.revisionsData" t-as="rev"
+                       t-key="rev.revision_id">
+                        <a type="object" href="#" role="button"
+                           t-attf-title="Show the document submited by #{rev.create_user_name}, on #{this.getRevisionDate(rev)}"
+                           t-att-class="this.getRevisionClasses(rev)"
+                           t-on-click="() => this.updateCurrentRevision(rev.revision_id )">
+                            <small><t t-esc="this.getRevisionDate(rev)" /></small>
+                            <div class="o_avatar">
+                                <img class="rounded" t-att-src="this.getRevisionAuthorAvatar(rev)"
+                                     t-att-alt="rev.create_user_name" t-att-title="rev.create_user_name"/>
+                            </div>
+                        </a>
+                    </t>
+                </div>
+                <div class="history-container" t-attf-style="max-height: {{state.cssMaxHeight}}px;">
+                    <div t-attf-class="history-content-view #{state.currentView === 'content' ? '' : 'd-none'}">
+                        <div class="history-view-top-bar">
+                            <div>
+                                <div class="text-info smaller">
+                                    <i class="fa fa-info-circle me-1" title="Version date"/>
+                                    Showing the document as it was on <t t-esc="this.getRevisionDate(this.currentRevision)" />, submited by <t t-esc="this.currentRevision.create_user_name" />
+                                </div>
+                            </div>
+                            <div>
+                                <a type="object" href="#" role="button" class="btn btn-secondary" t-on-click="() => state.currentView = 'comparison'">
+                                    <i class="fa fa-exchange" title="View comparison" />
+                                    View comparison
+                                </a>
+                            </div>
+                        </div>
+                        <div class="history-view-inner" t-attf-style="max-height: {{state.cssMaxHeight-20}}px;">
+                            <t t-if="state.revisionLoading">
+                                <div class="d-flex flex-column justify-content-center align-items-center">
+                                    <img src="/web/static/img/spin.svg" alt="Loading..." class="me-2"
+                                         style="filter: invert(1); opacity: 0.5; width: 30px; height: 30px;"/>
+                                    <p class="m-0 text-muted loading-text">
+                                        <em>Loading...</em>
+                                    </p>
+                                </div>
+                            </t>
+                            <t t-elif="state.revisionContent?.length">
+                                <div class="pe-none">
+                                    <HtmlViewer config="getConfig('revisionContent')"/>
+                                </div>
+                            </t>
+                            <t t-else="" t-out="props.noContentHelper" />
+                        </div>
+                    </div>
+                    <div t-attf-class="history-comparison-view #{state.currentView === 'comparison' ? '' : 'd-none'}">
+                        <div class="history-view-top-bar">
+                            <t t-if="env.debug">
+                                <div class="toggle-view-btns">
+                                    <div class="btn-group" role="group">
+                                        <input type="radio" class="btn-check" name="vbtn-radio" id="unified-view-btn"
+                                               t-on-click="() => state.isComparisonSplit = false"
+                                               t-att-checked="state.isComparisonSplit ? '' : 'checked'" />
+                                        <label class="btn btn-secondary" for="unified-view-btn">Unified view</label>
+                                        <input type="radio" class="btn-check" name="vbtn-radio" id="split-view-btn"
+                                               t-on-click="() => state.isComparisonSplit = true"
+                                               t-att-checked="state.isComparisonSplit ? 'checked' : ''" />
+                                        <label class="btn btn-secondary" for="split-view-btn">Split view</label>
+                                    </div>
+                                </div>
+                            </t>
+                            <div>
+                                <div class="text-info smaller">
+                                    <i class="fa fa-info-circle me-1" title="Version date"/>
+                                    Showing all differences between the current version and the selected one updated by <t t-esc="this.currentRevision.create_user_name" /> on <t t-esc="this.getRevisionDate(this.currentRevision)" />
+                                </div>
+                            </div>
+                            <div>
+                                <a type="object" href="#" role="button" class="btn btn-secondary" t-on-click="() => state.currentView = 'content'">
+                                    <i class="fa fa-eye" title="View Content"/>
+                                    View content
+                                </a>
+                            </div>
+                        </div>
+                        <div class="history-view-inner" t-attf-style="max-height: {{state.cssMaxHeight-60}}px;">
+                            <t t-if="state.revisionLoading">
+                                <div class="d-flex flex-column justify-content-center align-items-center">
+                                    <img src="/web/static/img/spin.svg" alt="Loading..." class="me-2"
+                                         style="filter: invert(1); opacity: 0.5; width: 30px; height: 30px;"/>
+                                    <p class="m-0 text-muted loading-text">
+                                        <em>Loading...</em>
+                                    </p>
+                                </div>
+                            </t>
+                            <t t-elif="state.revisionComparison?.length">
+                                <div t-attf-class="history-comparison-split #{state.isComparisonSplit ? '' : 'd-none'}">
+                                    <HtmlViewer config="getConfig('revisionComparisonSplit')"/>
+                                </div>
+                                <div t-attf-class="pe-none history-comparison-unified #{state.isComparisonSplit ? 'd-none' : ''}">
+                                    <HtmlViewer config="getConfig('revisionComparison')"/>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <span class="text-muted fst-italic">This is the current version, nothing to compare.</span>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="_onRestoreRevisionClick" t-att-disabled="state.revisionLoading || state.revisionId === -1">Restore history</button>
+                <button class="btn btn-secondary" t-on-click="props.close">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

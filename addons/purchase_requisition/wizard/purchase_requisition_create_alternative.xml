@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="purchase_requisition_create_alternative_form" model="ir.ui.view">
+            <field name="name">Create Alternative</field>
+            <field name="model">purchase.requisition.create.alternative</field>
+            <field name="arch" type="xml">
+                <form string="Create Alternative">
+                    <group>
+                        <field name="origin_po_id" invisible="1"/>
+                        <group>
+                            <field name="partner_ids" widget="many2many_tags" />
+                            <field name="copy_products"/>
+                        </group>
+                        <group groups="purchase.group_warning_purchase" invisible="purchase_warn_msg == ''">
+                            <field name="purchase_warn_msg" decoration-warning="1"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="action_create_alternative" string="Create Alternative" data-hotkey="q" type="object" colspan="1" class="btn-primary"/>
+                        <button string="Cancel"  data-hotkey="x" special="cancel" colspan="1" class="btn-secondary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

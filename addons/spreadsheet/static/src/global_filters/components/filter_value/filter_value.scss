@@ -1,0 +1,27 @@
+.o-filter-value {
+    .o_datepicker_input {
+        color: $o-main-text-color;
+    }
+    .date_filter_values {
+        display: flex;
+        gap: map-get($spacers, 2);
+        align-items: baseline;
+    }
+
+    select:has(option[value="empty"]:checked),
+    select:has(option[value=""]:checked) {
+        color: $input-placeholder-color;
+    }
+
+    select option {
+        color: $o-gray-700;
+    }
+
+    .o_multi_record_selector {
+        .o_record_autocomplete_with_caret {
+            flex: 1 0 50px;
+            min-width: auto;
+            width: 100%;
+        }
+    }
+}

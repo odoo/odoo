@@ -1,0 +1,30 @@
+.o-livechat-ConversationTagEdit {
+    min-height: 0;
+    width: 300px;
+}
+
+.o-livechat-ConversationTagEdit .o-mail-NavigableList-item {
+    &:nth-child(odd) {
+        background-color: $gray-100 !important;;
+    }
+    &:hover {
+        background-color: mix($gray-100, $gray-200) !important;
+    }
+}
+
+.o-livechat-ConversationTagEdit-selectedList {
+    max-height: 100px;
+
+    button {
+        background-color: mix($o-view-background-color, $o-action, 85%);
+
+        &:not(:hover) .oi-close {
+            border-color: transparent !important;
+        }
+
+        &:hover .oi-close {
+            color: $danger;
+            border-color: $danger !important;
+        }
+    }
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_tw_edi_invoice_print_form" model="ir.ui.view">
+        <field name="name">l10n_tw_edi.invoice.print.form</field>
+        <field name="model">l10n_tw_edi.invoice.print</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="invoice_id"/>
+                    <field name="print_format_b2c" invisible="l10n_tw_edi_is_b2b" required="not l10n_tw_edi_is_b2b"/>
+                    <field name="print_format_b2b" invisible="not l10n_tw_edi_is_b2b" required="l10n_tw_edi_is_b2b"/>
+                </group>
+                <footer>
+                    <button string="Print Invoice" name="button_print" type="object" default_focus="1" class="btn-primary"/>
+                    <button string="Close" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

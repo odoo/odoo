@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+  <t t-name="spreadsheet.ShareButton">
+    <Dropdown
+      menuClass="'spreadsheet_share_dropdown d-flex flex-column h-auto'"
+      position="'bottom-end'"
+      onOpened.bind="onOpened"
+      disabled="!props.model"
+    >
+      <button t-att-class="togglerClass">
+        <i class="fa fa-share-alt"/>
+        Share
+      </button>
+      <t t-set-slot="content">
+        <t>
+          <div class="d-flex px-3">
+            <div class="align-self-center d-flex justify-content-center align-items-center flex-shrink-0">
+              <i class="fa fa-globe fa-2x" title="Share to web"></i>
+            </div>
+            <div class="flex-grow-1 px-3">
+              <div class="lead">Spreadsheet published</div>
+              <div>Frozen version - Anyone can view</div>
+            </div>
+          </div>
+          <div class=" px-3 o_field_widget o_readonly_modifier o_field_CopyClipboardChar">
+            <div t-if="state.url" class="d-grid rounded-2 overflow-hidden">
+              <span t-out="state.url"/>
+              <CopyButton className="'o_btn_char_copy btn-sm'" content="state.url" successText="copiedText" icon="'fa-clipboard'"/>
+            </div>
+            <div t-else="" class="o_loading_state d-flex align-items-center justify-content-center">
+              <i class="fa fa-circle-o-notch fa-spin px-2"/><span>Generating sharing link</span>
+            </div>
+          </div>
+        </t>
+      </t>
+    </Dropdown>
+  </t>
+</templates>

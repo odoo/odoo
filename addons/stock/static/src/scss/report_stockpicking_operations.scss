@@ -1,0 +1,32 @@
+.o_report_stockpicking_operations table {
+    thead, tbody, td, th, tr {
+        border: 0;
+    }
+}
+
+/*
+ * Before this PR, col-auto was the closest thing to flex box support.
+ * However, an issue arised at the time of testing: when one of the
+ * fields has long words in it, the spacing fails miserably
+ * (it becomes very elongated on the vertical axis). The only way
+ * to remove this effect and also with wkhtmltopdf outdated CSS support
+ * is to add min-width so that it forces the fields to have a readable
+ * width for this specific report. It can also be seen that this solution is
+ * suggested in base styling for reports.
+*/
+.o_stock_report_header_row {
+    display: -webkit-box;
+    display: flex;
+    flex-wrap: wrap;
+    -webkit-box-pack: center;
+    justify-content: center;
+    flex-direction: row;
+    -webkit-flex-direction: row;
+    -ms-flex-wrap: wrap;
+    > div {
+        flex: 1;
+        -webkit-flex: 1;
+        -webkit-box-flex: 1;
+        min-width: 150px;
+    }
+}

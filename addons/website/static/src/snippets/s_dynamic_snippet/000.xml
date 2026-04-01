@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.s_dynamic_snippet.grid">
+
+        <!-- Default Layout -->
+        <t t-if="!columnClasses">
+            <t t-set="colClass" t-value="'d-flex flex-grow-0 flex-shrink-0 col-' + Math.trunc(12 / chunkSize).toString()"/>
+            <t t-set="rowIndexGenerator" t-value="Array.from(Array(Math.ceil(data.length/chunkSize)).keys())"/>
+            <t t-set="colIndexGenerator" t-value="Array.from(Array(chunkSize).keys())"/>
+            <t t-foreach="rowIndexGenerator" t-as="rowIndex" t-key="rowIndex_index">
+                <div t-attf-class="row mb-4 #{extraClasses}">
+                    <t t-foreach="colIndexGenerator" t-as="colIndex" t-key="colIndex_index">
+                        <t t-if="(rowIndex * chunkSize + colIndex) &lt; data.length">
+                            <div t-attf-class="#{colClass}">
+                                <t t-out="data[rowIndex * chunkSize + colIndex]"/>
+                            </div>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </t>
+
+        <!-- Custom Layout -->
+        <t t-else="">
+            <div t-attf-class="#{is_single_record ? 's_dynamic_snippet_row' : ''} row #{extraClasses}">
+                <t t-foreach="data" t-as="data_entry" t-key="data_entry_index">
+                    <div t-attf-class="#{columnClasses}">
+                        <t t-out="data_entry"/>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </t>
+</templates>

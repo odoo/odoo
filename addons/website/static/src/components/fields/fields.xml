@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+<t t-name="website.PageUrlField" t-inherit="web.UrlField" t-inherit-mode="primary">
+    <xpath expr="//input" position="before">
+        <t t-set="slicingLength" t-value="env.isSmall ? 30 : 45"/>
+        <div
+            class="input-group-text rounded-start text-lowercase border-0"
+            t-esc="serverUrl.length > slicingLength ? serverUrl.slice(0, (slicingLength / 2) - 1) + '..' + serverUrl.slice((-slicingLength / 2) + 1) : serverUrl"
+        />
+    </xpath>
+</t>
+
+<t t-name="website.FieldImageRadio">
+    <fieldset class="o_image_radio d-flex">
+        <t t-foreach="values" t-as="option" t-key="option">
+            <div class="flex-fill text-center">
+                <label t-att-for="option[0]" class="d-inline">
+                    <img t-attf-class="o_image_radio_option w-50 {{option[0] === props.record.data[props.name] ? 'active' : ''}}" t-att-src="option[2]"/>
+                </label>
+                <input type="radio" name="field_image_radio"
+                        class="o_image_radio_option_checkbox visually-hidden"
+                        t-att-id="option[0]"
+                        t-on-change="() => this.onSelectValue(option[0])"/>
+            </div>
+        </t>
+    </fieldset>
+</t>
+
+</templates>

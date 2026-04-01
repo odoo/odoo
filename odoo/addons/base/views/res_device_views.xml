@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="res_device_view_form">
+            <field name="name">res.device.form</field>
+            <field name="model">res.device</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="display_name" string="Name"/>
+                            <field name="ip_address" string="Last IP Address"/>
+                        </group>
+                        <group>
+                            <field name="first_activity"/>
+                            <field name="last_activity"/>
+                        </group>
+                        <group>
+                            <field name="linked_ip_addresses"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="res_device_view_tree">
+            <field name="name">res.device.list</field>
+            <field name="model">res.device</field>
+            <field name="arch" type="xml">
+                <list default_order="last_activity desc">
+                    <field name="user_id"/>
+                    <field name="display_name" string="Name"/>
+                    <field name="ip_address"/>
+                    <field name="first_activity"/>
+                    <field name="last_activity"/>
+                    <field name="country" optional="hidden"/>
+                    <field name="city" optional="hidden"/>
+                    <button type="object" name="revoke" string="Revoke" class="btn btn-secondary"/>
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="res_device_view_kanban">
+            <field name="name">res.device.kanban</field>
+            <field name="model">res.device</field>
+            <field name="arch" type="xml">
+                <kanban create="0" can_open="0" default_order="is_current desc, last_activity desc">
+                    <field name="id"/>
+                    <field name="device_type"/>
+                    <field name="last_activity"/>
+                    <field name="is_current"/>
+                    <templates>
+                        <t t-name="card" class="flex-row">
+                            <span t-if="record.device_type.raw_value === 'computer'" class="fa fa-laptop fs-1 col-1 mx-auto" title="Computer" role="img" aria-label="Computer"/>
+                            <span t-else="" class="fa fa-mobile fs-1 col-1 mx-auto" title="Mobile" role="img" aria-label="Mobile"/>
+                            <div class="d-flex col-11">
+                                <div class="d-flex flex-column ms-2">
+                                    <div class="d-flex align-items-center">
+                                        <field name="display_name" string="Name" class="fw-bolder"/>
+                                        <t t-if="record.is_current.raw_value">
+                                            <span class="ms-2 text-success o_status o_status_green"></span>
+                                        </t>
+                                        <span t-out="luxon.DateTime.fromISO(record.last_activity.raw_value).toRelative()"
+                                           class="ms-2 text-muted"/>
+                                    </div>
+                                    <field name="ip_address"/>
+                                    <field name="country"/>
+                                    <field name="city"/>
+                                </div>
+                                <button name="revoke" type="object" string="Log out" class="btn btn-secondary ms-auto mb-auto my-auto"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="action_user_device" model="ir.actions.act_window">
+            <field name="name">User Devices</field>
+            <field name="res_model">res.device</field>
+            <field name="path">user-device</field>
+            <field name="view_mode">list,kanban,form</field>
+        </record>
+        <menuitem action="action_user_device" id="menu_action_user_device" parent="base.menu_security" sequence="10"/>
+
+    </data>
+</odoo>

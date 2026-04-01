@@ -1,0 +1,74 @@
+html:has(.o_layout, .o_basic_theme) {
+    &:has(body:not(.o_mass_mailing_iframe_fullscreen)) {
+        height: auto !important;
+    }
+
+    body:not(.o_mass_mailing_iframe_fullscreen, .o_mass_mailing_iframe_mobile) {
+        height: auto !important;
+        .note-editable {
+            overflow: visible;
+            height: auto;
+            .o_layout {
+                min-height: 0 !important;
+            }
+        }
+    }
+
+    body {
+        &.o_mass_mailing_iframe_fullscreen, &.o_mass_mailing_iframe_mobile {
+            .note-editable {
+                overflow: auto;
+                height: 100%;
+            }
+        }
+        &.o_mass_mailing_iframe_fullscreen {
+            .o_layout {
+                display: grid;
+                align-items: center;
+            }
+            .o_layout > .container {
+                padding-bottom: 2%;
+            }
+        }
+        &.o_mass_mailing_with_builder {
+            background-color: transparent;
+        }
+        .note-editable {
+            padding: 0;
+            border: none;
+        }
+        .o_mass_mailing_value ~ .o_loading_screen {
+            display: none !important;
+        }
+    }
+
+    .container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+html:has(.o_layout) {
+    .editor_enable .o_mail_wrapper_td.oe_empty:empty {
+        &:not(:focus) {
+            &:before {
+                content: attr(data-editor-message);
+                pointer-events: none;
+                color: white;
+            }
+            background-color: rgba(1, 186, 210, 0.5) !important;
+        }
+        &:focus {
+            color: black;
+        }
+        text-align: center;
+        font-size: 20px;
+        display: block;
+        width: 96%;
+        padding: 12px 0;
+        margin: 20px 2%;
+        border-radius: 0.375rem;
+        outline: 2px dashed #01bad2;
+        outline-offset: -2px;
+    }
+}

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <!-- TAG VIEWS -->
+    <record id="forum_tag_view_list" model="ir.ui.view">
+        <field name="name">forum.tag.view.list</field>
+        <field name="model">forum.tag</field>
+        <field name="arch" type="xml">
+            <list string="Tags" editable="bottom">
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+                <field name="forum_id" options="{'no_create_edit': True}"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="forum_tag_view_form" model="ir.ui.view">
+        <field name="name">forum.tag.view.form</field>
+        <field name="model">forum.tag</field>
+        <field name="arch" type="xml">
+            <form string="Tag">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="color" widget="color_picker"/>
+                        <field name="forum_id" options="{'no_create_edit': True}"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="forum_tag_action" model="ir.actions.act_window">
+        <field name="name">Forum Tags</field>
+        <field name="res_model">forum.tag</field>
+        <field name="path">forum-tags</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new tag
+            </p>
+        </field>
+    </record>
+</data></odoo>

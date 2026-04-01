@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.CallMenu">
+        <div class="dropdown" t-attf-class="{{ className }}" t-ref="root">
+            <button t-if="rtc.channel" class="user-select-none dropdown-toggle o-no-caret o-dropdown--narrow" t-att-title="buttonTitle" role="button" t-on-click="rtc.channel.open">
+                <div class="o-discuss-CallMenu-buttonContent d-flex btn-group rounded-2 opacity-75 opacity-100-hover" t-att-class="{ 'o-is-talking': rtc.selfSession?.isActuallyTalking, 'o-isOdooCommunity': !isEnterprise }">
+                    <div class="o-discuss-CallMenu-channelInfo text-truncate btn btn-group-item border-0 m-0 p-0 d-flex align-items-center o-gap-0_5 ps-1" role="button">
+                        <span class="position-relative small bg-transparent">
+                            <i class="me-2 fa fa-fw" t-att-class="icon" />
+                            <small class="d-flex position-absolute top-0 end-0 smaller bg-inherit">
+                                <i class="o-discuss-CallMenu-animation fa fa-volume-up o-discuss-inCallIconColor bg-inherit" t-att-class="{ 'o-isOdooCommunity': !isEnterprise }"/>
+                            </small>
+                        </span>
+                        <span class="text-truncate fw-bold pe-1" t-esc="rtc.channel.displayName"/>
+                    </div>
+                    <Dropdown>
+                        <button class="o-discuss-CallMenu-dropdownMore btn btn-group-item m-0 pe-1 o-ps-0_5">
+                            <i class="oi oi-chevron-down o-xsmaller"/>
+                        </button>
+                        <t t-set-slot="content">
+                            <ActionList actions="callActions.actions" dropdown="true"/>
+                        </t>
+                    </Dropdown>
+                </div>
+            </button>
+        </div>
+    </t>
+
+</templates>

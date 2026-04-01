@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="lt_tax_report" model="account.report">
+        <field name="name">Value Added Tax Declaration</field>
+        <field name="name@lt">Pridėtinės Vertės Mokesčio Deklaracija</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.lt"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="lt_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@lt">Balansas</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="lt_tax_report_line_1" model="account.report.line">
+                <field name="name">I. Transactions for the supply of goods and services</field>
+                <field name="name@lt">I. Prekių tiekimo ir paslaugų teikimo sandoriai</field>
+                <field name="code">lt_vat_1</field>
+                <field name="children_ids">
+                    <record id="lt_tax_report_line_11" model="account.report.line">
+                        <field name="name">11. VAT-taxable transactions</field>
+                        <field name="name@lt">11. PVM apmokestinami sandoriai</field>
+                        <field name="code">lt_vat_11</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_11_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-11_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_12" model="account.report.line">
+                        <field name="name">12. VAT-taxable transactions, where VAT is deducted by the buyer (in cases specified in Article 96)</field>
+                        <field name="name@lt">12. PVM apmokestinami sandoriai, kai PVM išskaito pirkėjas (96 str. nustatytais atvejais)</field>
+                        <field name="code">lt_vat_12</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_12_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-12_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_13" model="account.report.line">
+                        <field name="name">13. VAT-exempt transactions</field>
+                        <field name="name@lt">13. PVM neapmokestinami sandoriai</field>
+                        <field name="code">lt_vat_13</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_13_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-13_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_14" model="account.report.line">
+                        <field name="name">14. Consumption for private needs</field>
+                        <field name="name@lt">14. Suvartojimas privatiems poreikiams</field>
+                        <field name="code">lt_vat_14</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_14_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-14_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_15" model="account.report.line">
+                        <field name="name">15. Production of fixed assets</field>
+                        <field name="name@lt">15. Ilgalaikio materialiojo turto pasigaminimas</field>
+                        <field name="code">lt_vat_15</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_15_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-15_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_16" model="account.report.line">
+                        <field name="name">16. Margin on transactions subject to special taxation scheme</field>
+                        <field name="name@lt">16. Sandorių, kuriems taikoma spec. apmokestinimo schema, marža</field>
+                        <field name="code">lt_vat_16</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_16_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-16_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_17" model="account.report.line">
+                        <field name="name">17. Exports of goods (0%)</field>
+                        <field name="name@lt">17. Prekių eksportas (0 proc.)</field>
+                        <field name="code">lt_vat_17</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_17_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-17_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_18" model="account.report.line">
+                        <field name="name">18. Goods supplied to EU VAT payers (0%)</field>
+                        <field name="name@lt">18. ES PVM mokėtojams patiektos prekės (0 proc.)</field>
+                        <field name="code">lt_vat_18</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_18_tag" model="account.report.expression">
+                                <field name="label">tax_tag</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-18_base</field>
+                            </record>
+                            <record id="tax_report_line_18_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">lt_vat_18.tax_tag + lt_vat_18.tax_tag_triangular</field>
+                            </record>
+                            <record id="tax_report_line_18_triangular_tag" model="account.report.expression">
+                                <field name="label">tax_tag_triangular</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-18_base_triangular</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_19" model="account.report.line">
+                        <field name="name">19. Other VAT-taxable transactions (0%)</field>
+                        <field name="name@lt">19. Kiti PVM apmokestinami sandoriai (0 proc.)</field>
+                        <field name="code">lt_vat_19</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_19_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-19_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_20" model="account.report.line">
+                        <field name="name">20. Transactions outside Lithuania (not subject to VAT in Lithuania)</field>
+                        <field name="name@lt">20. Už Lietuvos ribų įvykę sandoriai (ne PVM objektas Lietuvoje)</field>
+                        <field name="code">lt_vat_20</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_20_tag" model="account.report.expression">
+                                <field name="label">tax_tag</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-20_base</field>
+                            </record>
+                            <record id="tax_report_line_20_eu_tag" model="account.report.expression">
+                                <field name="label">tax_tag_eu</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-20_base_eu</field>
+                            </record>
+                            <record id="tax_report_line_20_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">lt_vat_20.tax_tag + lt_vat_20.tax_tag_eu</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="lt_tax_report_line_2" model="account.report.line">
+                <field name="name">II. Transactions for the purchase of goods and services</field>
+                <field name="name@lt">II. Prekių ir paslaugų įsigijimo sandoriai</field>
+                <field name="code">lt_vat_2</field>
+                <field name="children_ids">
+                    <record id="lt_tax_report_line_21" model="account.report.line">
+                        <field name="name">21. Goods purchased from the EU</field>
+                        <field name="name@lt">21. Iš ES įsigytos prekės</field>
+                        <field name="code">lt_vat_21</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_21_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">21_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_22" model="account.report.line">
+                        <field name="name">22. Goods purchased from the EU for triangular trade</field>
+                        <field name="name@lt">22. Iš ES įsigytos prekės trikampei prekybai</field>
+                        <field name="code">lt_vat_22</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_22_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">22_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_23" model="account.report.line">
+                        <field name="name">23. Services purchased from foreign countries</field>
+                        <field name="name@lt">23. Iš užsienio valstybių įsigytos paslaugos</field>
+                        <field name="code">lt_vat_23</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_23_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">23_base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_24" model="account.report.line">
+                        <field name="name">24. Of which: purchases from the EU VAT payers</field>
+                        <field name="name@lt">24. Iš jų: įsigytos iš ES PVM mokėtojų</field>
+                        <field name="code">lt_vat_24</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_24_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">24_base</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="lt_tax_report_line_3" model="account.report.line">
+                <field name="name">III. Purchase and import VAT</field>
+                <field name="name@lt">II. Pirkimo ir importo PVM</field>
+                <field name="code">l10n_lt_vat_3</field>
+                <field name="children_ids">
+                    <record id="lt_tax_report_line_25" model="account.report.line">
+                        <field name="name">25. VAT on purchases of goods and services</field>
+                        <field name="name@lt">25. Įsigytų prekių ir paslaugų pirkimo PVM</field>
+                        <field name="code">lt_vat_25</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_25_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">25_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_26" model="account.report.line">
+                        <field name="name">26. Import VAT paid</field>
+                        <field name="name@lt">26. Sumokėtas importo PVM</field>
+                        <field name="code">lt_vat_26</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_26_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">26_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_27" model="account.report.line">
+                        <field name="name">27. Import VAT, the deduction of which is controlled by the VMI</field>
+                        <field name="name@lt">27. Importo PVM, kurio įskaitymą kontroliuoja VMI</field>
+                        <field name="code">lt_vat_27</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_27_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-27_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="lt_tax_report_line_4" model="account.report.line">
+                <field name="name">IV. VAT deductible share (in percentage)</field>
+                <field name="name@lt">IV. PVM atskaitytina dalis (procentais)</field>
+                <field name="code">l10n_lt_vat_4</field>
+                <field name="children_ids">
+                    <record id="lt_tax_report_line_28" model="account.report.line">
+                        <field name="name">28. Calendar year pro rata VAT deduction percentage</field>
+                        <field name="name@lt">28. Importo PVM, kurio įskaitymą kontroliuoja VMI</field>
+                        <field name="code">lt_vat_28</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_28_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="lt_tax_report_line_5" model="account.report.line">
+                <field name="name">V. Sales VAT, VAT deduction, VAT payable (refundable)</field>
+                <field name="name@lt">V. Pardavimo PVM, PVM atskaita, mokėtinas (grąžintinas) PVM</field>
+                <field name="code">l10n_lt_vat_5</field>
+                <field name="children_ids">
+                    <record id="lt_tax_report_line_29" model="account.report.line">
+                        <field name="name">29. Standard rate sales VAT</field>
+                        <field name="name@lt">29. Standartinis tarifo pardavimo PVM</field>
+                        <field name="code">lt_vat_29</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_29_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">29_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_30" model="account.report.line">
+                        <field name="name">30. 9 percent sales VAT</field>
+                        <field name="name@lt">30. 9 proc. pardavimo PVM</field>
+                        <field name="code">lt_vat_30</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_30_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">30_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_31" model="account.report.line">
+                        <field name="name">31. 5 percent sales VAT</field>
+                        <field name="name@lt">31. 5 proc. pardavimo PVM</field>
+                        <field name="code">lt_vat_31</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_31_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">31_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_32" model="account.report.line">
+                        <field name="name">32. Sales VAT (in cases specified in Article 95)</field>
+                        <field name="name@lt">32. Pardavimo PVM (95 str. nustatytais atvejais)</field>
+                        <field name="code">lt_vat_32</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_32_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">32_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_33" model="account.report.line">
+                        <field name="name">33. Sales VAT (in cases specified in Article 96)</field>
+                        <field name="name@lt">33. Pardavimo PVM (96 str. nustatytais atvejais)</field>
+                        <field name="code">lt_vat_33</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_33_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">33_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_34" model="account.report.line">
+                        <field name="name">34. VAT on sales of goods purchased from the EU</field>
+                        <field name="name@lt">34. Iš ES įsigytų prekių pardavimo PVM</field>
+                        <field name="code">lt_vat_34</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_34_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">34_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="lt_tax_report_line_35" model="account.report.line">
+                        <field name="name">35. Deductible VAT</field>
+                        <field name="name@lt">35. Atskaitomas PVM</field>
+                        <field name="code">lt_vat_35</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_35_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">lt_vat_25.balance + lt_vat_26.balance + lt_vat_27.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="lt_tax_report_line_36" model="account.report.line">
+                <field name="name">36. Payable to the budget or refundable from the budget (-) VAT (27+29+30+31+32+33+34-35)</field>
+                <field name="name@lt">36. Mokėtina į biudžetą arba grąžintina iš biudžeto (-) PVM (27+29+30+31+32+33+34-35)</field>
+                <field name="code">lt_vat_36</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_36_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">lt_vat_27.balance + lt_vat_29.balance + lt_vat_30.balance + lt_vat_31.balance + lt_vat_32.balance + lt_vat_33.balance + lt_vat_34.balance - lt_vat_35.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

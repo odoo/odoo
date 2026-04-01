@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_mega_menu_big_icons_subtitles" name="Menu - Big icons &amp; subtitles" groups="base.group_user">
+    <section class="s_mega_menu_big_icons_subtitles pt24 pb24 o_colored_level o_cc o_cc1" data-oe-shape-data="{'shape':'html_builder/Grids/07','colors':{'c5':'o-color-3'},'flip':[]}">
+        <div class="o_we_shape o_html_builder_Grids_07" style="background-image: url('/html_editor/shape/html_builder/Grids/07.svg?c5=o-color-3');"/>
+        <div class="container" >
+            <div class="row">
+                <div class="col-12 col-lg-4">
+                    <nav class="nav flex-column w-100">
+                        <t t-call="website.s_mega_menu_big_icons_subtitles_item"
+                            _icon_classes.f="fa-user bg-o-color-1"
+                            _title.translate="About us"
+                            _text.translate="Discover our culture and our values"/>
+                        <t t-call="website.s_mega_menu_big_icons_subtitles_item"
+                            _icon_classes.f="fa-newspaper-o bg-o-color-2"
+                            _title.translate="Blog"
+                            _text.translate="Latests news and case studies"/>
+                        <t t-call="website.s_mega_menu_big_icons_subtitles_item"
+                            _icon_classes.f="fa-calendar bg-o-color-3"
+                            _title.translate="Events"
+                            _text.translate="Our seminars and trainings for you"/>
+                    </nav>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <nav class="nav flex-column w-100">
+                        <t t-call="website.s_mega_menu_big_icons_subtitles_item"
+                            _icon_classes.f="fa-star bg-o-color-5"
+                            _title.translate="Customers"
+                            _text.translate="They trust us since years"/>
+                        <t t-call="website.s_mega_menu_big_icons_subtitles_item"
+                            _icon_classes.f="fa-handshake-o bg-o-color-3"
+                            _title.translate="Services"
+                            _text.translate="Find the perfect solution for you"/>
+                        <t t-call="website.s_mega_menu_big_icons_subtitles_item"
+                            _icon_classes.f="fa-paint-brush bg-o-color-2"
+                            _title.translate="Portfolio"
+                            _text.translate="Discover our realisations"/>
+                    </nav>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <nav class="nav flex-column w-100">
+                        <t t-call="website.s_mega_menu_big_icons_subtitles_item"
+                            _icon_classes.f="fa-question-circle bg-o-color-1"
+                            _title.translate="F.A.Q."
+                            _text.translate="All informations you need"/>
+                        <t t-call="website.s_mega_menu_big_icons_subtitles_item"
+                            _icon_classes.f="fa-shopping-basket bg-o-color-5"
+                            _title.translate="Points of sale"
+                            _text.translate="Find a store near you"/>
+                        <t t-call="website.s_mega_menu_big_icons_subtitles_item"
+                            _icon_classes.f="fa-legal bg-o-color-3"
+                            _title.translate="Legal Notice"
+                            _text.translate="Discover our legal notice"/>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mega_menu_big_icons_subtitles_item">
+    <a href="#" class="nav-link px-2 my-2 rounded text-wrap" data-name="Menu Item">
+        <div class="d-flex align-items-center">
+            <i t-attf-class="fa rounded rounded-circle me-3 #{_icon_classes}"/>
+            <div class="flex-grow-1">
+                <h4 class="mt-0 mb-0" t-out="_title"/>
+                <span class="small"><t t-out="_text"/></span>
+            </div>
+        </div>
+    </a>
+</template>
+
+<asset id="website.s_mega_menu_big_icons_subtitles_000_scss" name="Menu - Big icons &amp; subtitles 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_mega_menu_big_icons_subtitles/000.scss</path>
+</asset>
+
+</odoo>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanMany2One">
+        <div>
+            <t t-if="props.value">
+                <t t-slot="avatar"/>
+            </t>
+            <t t-elif="!props.readonly">
+                <span class="o_avatar o_m2o_avatar d-flex">
+                    <a class="o_quick_assign btn-link d-flex align-items-center text-dark" href="#" role="button" tabindex="-1" aria-label="Assign" data-tooltip="Assign" t-on-click.stop.prevent="(e) => this.openAssignPopover(e.currentTarget)">
+                        <i class="fa fa-user-plus"/>
+                    </a>
+                </span>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.Many2One">
+        <div class="o_many2one" t-att-class="props.cssClass">
+            <t t-if="props.readonly">
+                <t t-if="props.value">
+                    <t t-if="props.canOpen">
+                        <a class="o_form_uri text-truncate d-inline-block w-100 align-bottom" t-att-class="props.linkCssClass" t-att-href="linkHref" t-on-click.prevent.stop="() => this.openRecord('action')" t-esc="displayName" t-att-title="displayName"/>
+                    </t>
+                    <t t-else="">
+                        <span t-esc="displayName" t-att-title="displayName" class="text-truncate d-inline-block w-100 align-bottom"/>
+                    </t>
+                </t>
+            </t>
+            <t t-else="">
+                <div class="o_field_many2one_selection" t-ref="root">
+                    <Many2XAutocomplete t-props="many2XAutocompleteProps"/>
+                    <t t-if="hasLinkButton">
+                        <button class="o_external_button btn btn-link text-action px-1" draggable="false" tabindex="-1" type="button" aria-label="Internal link" data-tooltip="Internal link" t-custom-click="(_, isMiddleClick) => this.openRecord(isMiddleClick ? 'tab' : env.inDialog ? 'dialog' : 'action')">
+                            <i class="oi" t-att-class="env.inDialog ? 'oi-launch' : 'oi-arrow-right'"/>
+                        </button>
+                    </t>
+                    <t t-if="hasBarcodeButton">
+                        <button class="btn ms-3 o_barcode" draggable="false" tabindex="-1" type="button" aria-label="Scan barcode" data-tooltip="Scan barcode" t-on-click="() => this.openBarcodeScanner()"/>
+                    </t>
+                </div>
+            </t>
+            <t t-set="lines" t-value="extraLines"/>
+            <t t-if="lines.length">
+                <div class="o_field_many2one_extra">
+                    <t t-foreach="lines" t-as="line" t-key="line_index">
+                        <div t-esc="line" t-att-title="line"  class="text-truncate"/>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

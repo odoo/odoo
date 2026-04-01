@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+   <record id="l10n_ro_edi_stock_view_batch_form" model="ir.ui.view">
+      <field name="name">stock.picking.batch.form.inherit.l10n_ro_edi_stock</field>
+      <field name="model">stock.picking.batch</field>
+      <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
+      <field name="arch" type="xml">
+         <xpath expr="//button[@name='action_open_label_layout']" position="after">
+             <field name="l10n_ro_edi_stock_enable_send" invisible="1"/>
+             <field name="l10n_ro_edi_stock_enable_fetch" invisible="1"/>
+             <field name="l10n_ro_edi_stock_enable_amend" invisible="1"/>
+
+             <button name="action_l10n_ro_edi_stock_send_etransport"
+                     string="Send eTransport"
+                     type="object"
+                     context="{'l10n_ro_edi_stock_send_type': 'send'}"
+                     invisible="not l10n_ro_edi_stock_enable_send"/>
+             <button name="action_l10n_ro_edi_stock_send_etransport"
+                     string="Amend eTransport"
+                     type="object"
+                     context="{'l10n_ro_edi_stock_send_type': 'amend'}"
+                     invisible="not l10n_ro_edi_stock_enable_amend"/>
+             <button name="action_l10n_ro_edi_stock_fetch_status" string="Fetch Status" type="object" invisible="not l10n_ro_edi_stock_enable_fetch"/>
+         </xpath>
+
+         <xpath expr="//field[@name='scheduled_date']" position="after">
+             <field name="l10n_ro_edi_stock_state" invisible="1"/>
+             <field name="l10n_ro_edi_stock_state" invisible="state == 'draft' or not l10n_ro_edi_stock_state" readonly="1"/>
+         </xpath>
+
+         <xpath expr="//page[@name='page_transfers']" position="after">
+             <field name="l10n_ro_edi_stock_enable" invisible="1"/>
+
+             <page name="etransport" string="eTransport" invisible="not l10n_ro_edi_stock_enable">
+                 <field name="l10n_ro_edi_stock_available_operation_scopes" invisible="1"/>
+                 <field name="l10n_ro_edi_stock_state" invisible="1"/>
+                 <field name="l10n_ro_edi_stock_fields_readonly" invisible="1"/>
+
+                 <group>
+                     <group string="General">
+                         <field name="l10n_ro_edi_stock_operation_type" readonly="l10n_ro_edi_stock_fields_readonly"/>
+                         <field name="l10n_ro_edi_stock_operation_scope"
+                                widget="dynamic_selection"
+                                options="{'available_field': 'l10n_ro_edi_stock_available_operation_scopes'}"
+                                readonly="l10n_ro_edi_stock_fields_readonly"/>
+                         <field name="l10n_ro_edi_stock_remarks" readonly="l10n_ro_edi_stock_fields_readonly"/>
+                     </group>
+
+                     <group string="Transport">
+                         <field name="l10n_ro_edi_stock_vehicle_number" readonly="l10n_ro_edi_stock_fields_readonly"/>
+                         <field name="l10n_ro_edi_stock_trailer_1_number" readonly="l10n_ro_edi_stock_fields_readonly"/>
+                         <field name="l10n_ro_edi_stock_trailer_2_number" readonly="l10n_ro_edi_stock_fields_readonly"/>
+                     </group>
+
+                     <group string="Start Location">
+                         <field name="l10n_ro_edi_stock_available_start_loc_types" invisible="1"/>
+                         <field name="l10n_ro_edi_stock_start_loc_type"
+                                widget="dynamic_selection"
+                                options="{'available_field': 'l10n_ro_edi_stock_available_start_loc_types'}"
+                                readonly="l10n_ro_edi_stock_fields_readonly"/>
+
+                         <field name="l10n_ro_edi_stock_start_bcp" readonly="l10n_ro_edi_stock_fields_readonly" invisible="l10n_ro_edi_stock_start_loc_type != 'bcp'" />
+                         <field name="l10n_ro_edi_stock_start_customs_office" readonly="l10n_ro_edi_stock_fields_readonly" invisible="l10n_ro_edi_stock_start_loc_type != 'customs'"/>
+                     </group>
+
+                     <group string="End Location">
+                         <field name="l10n_ro_edi_stock_available_end_loc_types" invisible="1"/>
+                         <field name="l10n_ro_edi_stock_end_loc_type"
+                                widget="dynamic_selection"
+                                options="{'available_field': 'l10n_ro_edi_stock_available_end_loc_types'}"
+                                readonly="l10n_ro_edi_stock_fields_readonly"/>
+
+                         <field name="l10n_ro_edi_stock_end_bcp" readonly="l10n_ro_edi_stock_fields_readonly" invisible="l10n_ro_edi_stock_end_loc_type != 'bcp'"/>
+                         <field name="l10n_ro_edi_stock_end_customs_office" readonly="l10n_ro_edi_stock_fields_readonly" invisible="l10n_ro_edi_stock_end_loc_type != 'customs'"/>
+                     </group>
+                 </group>
+             </page>
+
+             <page id="l10n_ro_edi_stock_documents"
+                   name="etransport_documents"
+                   string="eTransport Documents"
+                   invisible="not (l10n_ro_edi_stock_enable and l10n_ro_edi_stock_document_ids)">
+                 <field name="l10n_ro_edi_stock_document_ids">
+                     <list create="false" delete="false" edit="false" no_open="1"
+                           decoration-danger="state == 'stock_sending_failed'"
+                           decoration-warning="state == 'stock_sent'"
+                           decoration-success="state == 'stock_validated'">
+                         <field name="message" column_invisible="1"/>
+                         <field name="attachment" column_invisible="1"/>
+                         <field name="datetime"/>
+                         <field name="state" string="Status" widget="l10n_ro_edi_stock_document_state"/>
+                         <field name="l10n_ro_edi_stock_uit" string="UIT"/>
+                         <field name="l10n_ro_edi_stock_load_id" string="Load Id"/>
+                     </list>
+                 </field>
+             </page>
+         </xpath>
+      </field>
+   </record>
+
+    <record id="l10n_ro_edi_stock_stock_picking_batch_view_tree" model="ir.ui.view">
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_tree"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="before">
+                <header>
+                    <button name="action_l10n_ro_edi_stock_fetch_status" string="Fetch Status" type="object"/>
+                </header>
+            </field>
+            <field name="state" position="before">
+                <field name="l10n_ro_edi_stock_state" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_ro_edi_stock_stock_picking_batch_filter" model="ir.ui.view">
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_filter"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="l10n_ro_edi_stock_state"/>
+            </field>
+
+            <filter name="done" position="after">
+                <filter string="eTransport Error" name="l10n_ro_edi_stock_state_stock_sending_failed"
+                        domain="[('l10n_ro_edi_stock_state', '=', 'stock_sending_failed')]"/>
+                <filter string="eTransport Sent" name="l10n_ro_edi_stock_state_stock_sent"
+                        domain="[('l10n_ro_edi_stock_state', '=', 'stock_sent')]"/>
+                <filter string="eTransport Validated" name="l10n_ro_edi_stock_state_stock_validated"
+                        domain="[('l10n_ro_edi_stock_state', '=', 'stock_validated')]"/>
+            </filter>
+
+            <xpath expr="//group/filter[@name='state']" position="after">
+                <filter string="eTransport Status"
+                        name="l10n_ro_edi_stock_state_group"
+                        domain=""
+                        context="{'group_by': 'l10n_ro_edi_stock_state'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

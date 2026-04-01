@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo >
+    <data>
+        <!-- When refunding an order included in a consolidated invoice, we need to issue the invoice to the general public -->
+        <record model='res.partner' id='general_public'>
+            <field name='name'>General Public</field>
+            <field name='vat'>EI00000000010</field>
+            <field name="country_id" ref="base.my"/>
+            <field name="state_id" ref="base.state_my_jhr"/>
+            <field name='phone'>NA</field>
+            <field name='street'>NA</field>
+            <field name='city'>NA</field>
+            <field name='l10n_my_identification_type'>BRN</field>
+            <field name='l10n_my_identification_number'>NA</field>
+        </record>
+    </data>
+</odoo>

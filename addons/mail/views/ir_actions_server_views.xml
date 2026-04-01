@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_server_action_form_template">
+            <field name="name">ir.actions.server.form</field>
+            <field name="model">ir.actions.server</field>
+            <field name="inherit_id" ref="base.view_server_action_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <chatter/>
+                </xpath>
+                <xpath expr="//t[@name='action_content']//notebook" position="before">
+                    <!-- Create next activity -->
+                    <group invisible="state != 'next_activity'">
+                        <group>
+                            <field name="activity_type_id" options="{'no_create': True, 'no_open': True}"
+                                required="state == 'next_activity'"/>
+                            <field name="activity_summary" placeholder="e.g. Discuss proposal"/>
+                        </group>
+                        <group>
+                            <label for="activity_date_deadline_range"/>
+                            <div class="o_row">
+                                <field name="activity_date_deadline_range" class="oe_inline"/>
+                                <field name="activity_date_deadline_range_type" class="oe_inline" required="state == 'next_activity' and activity_date_deadline_range &gt; 0"/>
+                            </div>
+                            <field name="activity_user_type" required="state == 'next_activity'"/>
+                            <field name="activity_user_field_name"
+                                widget="field_selector" options="{'model': 'model_name'}"
+                                invisible="activity_user_type != 'generic'"
+                                required="state == 'next_activity' and activity_user_type == 'generic'"/>
+                            <field name="activity_user_id"
+                                placeholder="Choose a user..."
+                                invisible="activity_user_type != 'specific'"
+                                required="state == 'next_activity' and activity_user_type == 'specific'"/>
+                            <field name="activity_note" class="oe-bordered-editor" placeholder="Add a description to your activity..."/>
+                        </group>
+                    </group>
+                    <!-- Add/Remove Followers -->
+                    <group invisible="state not in ['followers', 'remove_followers']">
+                        <group>
+                            <field name="followers_type"
+                                required="state in ['followers', 'remove_followers']"/>
+                            <field name="partner_ids" string="Followers to add" widget="many2many_tags"
+                                placeholder="Choose a contact..."
+                                invisible="state != 'followers' or followers_type != 'specific'"
+                                required="state == 'followers' and followers_type == 'specific'"/>
+                            <field name="partner_ids" string="Followers to remove" widget="many2many_tags"
+                                placeholder="Choose a contact..."
+                                invisible="state != 'remove_followers' or followers_type != 'specific'"
+                                required="state == 'remove_followers' and followers_type == 'specific'"/>
+                            <field name="followers_partner_field_name"
+                                widget="field_selector" options="{'model': 'model_name'}"
+                                invisible="followers_type != 'generic'"
+                                required="state in ['followers', 'remove_followers'] and followers_type == 'generic'"/>
+                        </group>
+                    </group>
+                    <!-- Send Email -->
+                    <group invisible="state != 'mail_post'">
+                        <group>
+                            <field name="template_id"
+                                placeholder="Choose a template..."
+                                required="state == 'mail_post'"
+                                context="{'default_model': model_name,
+                                            'default_use_default_to': True}"/>
+                            <label for="mail_post_method"/>
+                            <div class="d-flex flex-column">
+                                <field name="mail_post_method" required="state == 'mail_post'"/>
+                                <div class="text-muted">
+                                    <span invisible="mail_post_method != 'email'">
+                                        The message will be sent as an email to the recipients of the
+                                        template and will not appear in the messaging history.
+                                    </span>
+                                    <span invisible="mail_post_method != 'note'">
+                                        The message will be posted as an internal note visible to internal
+                                        users in the messaging history.
+                                    </span>
+                                    <span invisible="mail_post_method != 'comment'">
+                                        The message will be posted as a message on the record,
+                                        notifying all followers. It will appear in the messaging history.
+                                    </span>
+                                </div>
+                            </div>
+                            <field name="mail_post_autofollow" invisible="1"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

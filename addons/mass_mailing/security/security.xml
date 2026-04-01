@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="properties_base_definition_rule_mailing_user" model="ir.rule">
+            <field name="name">properties.base.definition: mailing user</field>
+            <field name="model_id" ref="base.model_properties_base_definition"/>
+            <field name="groups" eval="[Command.link(ref('mass_mailing.group_mass_mailing_user'))]"/>
+            <field name="domain_force">[('properties_field_id', '=', user.env.ref('mass_mailing.field_mailing_contact__properties').id)]</field>
+        </record>
+    </data>
+</odoo>

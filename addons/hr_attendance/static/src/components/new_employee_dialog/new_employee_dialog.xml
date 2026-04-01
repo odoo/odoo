@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_attendance.NewEmployeeDialog" owl="1">
+        <Dialog title="props.title" footer="props.footer" bodyClass="'overflow-visible'">
+            <div class="p-3">
+                <div class="mb-3">
+                    <label class="form-label">Create the name of the new employee below</label>
+                    <div class="d-flex">
+                        <input type="text" t-model="state.employeeName" class="form-control me-2" placeholder="e.g. John Doe"/>
+                        <button class="btn btn-primary" t-on-click="onCreate">Confirm</button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Select Employee Without Badge</label>
+                    <div class="o_select_employee">
+                        <div class="o_select_employee_display form-control">
+                            <img t-if="state.value" class="d-flex rounded" t-attf-src="/web/image/hr.employee.public/{{state.value.id}}/avatar_128"/>
+                            <div class="o_select_employee_option p-0">
+                                <Many2One value="state.searchName" update.bind="onSelectEmployee" token="props.token"/>
+                            </div>
+                        </div>
+                        <input type="text" t-model="state.badgeId" class="form-control" placeholder="Enter Badge Number"/>
+                        <button class="btn btn-primary" style="min-width: fit-content;" t-on-click="onSetBadge">Set the Badge</button>
+                    </div>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+</templates>

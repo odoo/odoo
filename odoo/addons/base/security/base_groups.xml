@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <!-- Categories created to group generic privileges & groups -->
+        <record model="ir.module.category" id="module_category_master_data">
+            <field name="name">Master Data</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record model="res.groups.privilege" id="res_groups_privilege_export">
+            <field name="name">Export</field>
+            <field name="category_id" ref="module_category_master_data"/>
+        </record>
+
+        <record model="res.groups.privilege" id="res_groups_privilege_contact">
+            <field name="name">Contact</field>
+            <field name="category_id" ref="module_category_master_data"/>
+        </record>
+
+        <!--
+            Users Groups
+            Note that the field 'category_id' is set later in
+            base/data/ir_module_category_data.xml
+        -->
+        <record model="res.groups" id="group_erp_manager">
+            <field name="name">Access Rights</field>
+            <field name="implied_ids" eval="[Command.link(ref('group_user'))]"/>
+        </record>
+
+        <record model="res.groups" id="group_sanitize_override">
+            <field name="name">Bypass HTML Field Sanitize</field>
+        </record>
+
+        <record model="res.groups" id="group_system">
+            <field name="name">Role / Administrator</field>
+            <field name="comment">Access to the settings to configure the apps</field>
+            <field name="implied_ids" eval="[Command.link(ref('group_erp_manager')), Command.link(ref('group_sanitize_override'))]"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
+        </record>
+
+        <record model="res.groups" id="group_user">
+            <field name="name">Role / User</field>
+            <field name="comment">Access to the home menu</field>
+            <field name="api_key_duration">90.0</field>
+        </record>
+
+        <record model="res.groups" id="group_multi_company">
+            <field name="name">Multi Companies</field>
+        </record>
+
+        <record model="res.groups" id="group_multi_currency">
+            <field name="name">Multi Currencies</field>
+        </record>
+
+        <record model="res.groups" id="group_no_one">
+            <field name="name">Technical Features</field>
+            <field name="implied_by_ids" eval="[Command.link(ref('group_user')), Command.link(ref('group_system'))]"/>
+        </record>
+
+        <record model="res.groups" id="group_allow_export">
+            <field name="name">Allowed</field>
+            <field name="user_ids" eval="[Command.link(ref('base.user_root'))]"/>
+            <field name="implied_by_ids" eval="[Command.link(ref('group_system'))]"/>
+            <field name="privilege_id" ref="res_groups_privilege_export"/>
+        </record>
+
+        <record model="res.groups" id="group_partner_manager">
+            <field name="name">Creation</field>
+            <field name="user_ids" eval="[Command.link(ref('base.user_root'))]"/>
+            <field name="implied_by_ids" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="privilege_id" ref="res_groups_privilege_contact"/>
+        </record>
+        <!--
+            A group dedicated to the portal users, making groups
+            restrictions more convenient.
+        -->
+        <record model="res.groups" id="group_portal">
+            <field name="name">Role / Portal</field>
+            <field name="comment">Portal members have specific access rights (such as record rules and restricted menus).
+                They usually do not belong to the usual Odoo groups.</field>
+        </record>
+        <!--
+            A group dedicated to the public user only, making groups
+            restrictions more convenient.
+        -->
+        <record model="res.groups" id="group_public">
+            <field name="name">Role / Public</field>
+            <field name="comment">Public users have specific access rights (such as record rules and restricted menus).
+                They usually do not belong to the usual Odoo groups.</field>
+        </record>
+
+        <record id="public_user" model="res.users">
+            <field name="group_ids" eval="[Command.link(ref('base.group_public'))]"/>
+        </record>
+
+        <!-- Default template user for new users signing in -->
+        <record id="template_portal_user_id" model="res.users">
+            <field name="name">Portal User Template</field>
+            <field name="login">portaltemplate</field>
+            <field name="active" eval="False"/>
+            <field name="group_ids" eval="[Command.set([ref('base.group_portal')])]"/>
+            <field name="signature" /> <!-- Needed for avoiding the _compute_signature triggering on each update -->
+        </record>
+
+        <record id="default_template_user_config" model="ir.config_parameter">
+            <field name="key">base.template_portal_user_id</field>
+            <field name="value" ref="template_portal_user_id"/>
+        </record>
+
+    </data>
+
+    <data noupdate="1">
+        <record id="default_user_group" model="res.groups">
+            <field name="name">Default access for new users</field>
+        </record>
+    </data>
+</odoo>

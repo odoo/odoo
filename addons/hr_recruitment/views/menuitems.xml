@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<odoo>
+    <menuitem
+        name="Recruitment"
+        id="menu_hr_recruitment_root"
+        web_icon="hr_recruitment,static/description/icon.png"
+        groups="hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_interviewer"
+        sequence="210"/>
+
+        <menuitem
+            name="Applications"
+            parent="menu_hr_recruitment_root"
+            id="menu_crm_case_categ0_act_job"
+            sequence="2"/>
+
+            <menuitem
+                name="By Job Positions"
+                id="menu_hr_job_position"
+                parent="menu_crm_case_categ0_act_job"
+                action="action_hr_job"
+                sequence="1"
+                groups="hr_recruitment.group_hr_recruitment_user"/>
+
+            <menuitem
+                name="By Job Positions"
+                id="menu_hr_job_position_interviewer"
+                parent="menu_crm_case_categ0_act_job"
+                action="action_hr_job_interviewer"
+                sequence="1"
+                groups="hr_recruitment.group_hr_recruitment_interviewer"/>
+
+            <menuitem
+                name="By Talent Pools"
+                parent="menu_crm_case_categ0_act_job"
+                id="menu_hr_talent_pools"
+                action="action_hr_talent_pool"
+                sequence="2"/>
+
+            <menuitem
+                name="All Applications"
+                parent="menu_crm_case_categ0_act_job"
+                id="menu_crm_case_categ_all_app"
+                action="crm_case_categ0_act_job"
+                sequence="3"/>
+
+
+        <menuitem
+            name="Reporting"
+            id="report_hr_recruitment"
+            parent="menu_hr_recruitment_root"
+            groups="group_hr_recruitment_user"
+            sequence="99"/>
+
+            <menuitem
+                name="Recruitment Analysis"
+                id="hr_applicant_report_menu"
+                parent="report_hr_recruitment"
+                sequence="50"
+                action="hr_applicant_action_analysis"/>
+
+        <menuitem
+            id="menu_hr_recruitment_configuration"
+            name="Configuration"
+            parent="menu_hr_recruitment_root"
+            groups="group_hr_recruitment_user"
+            sequence="100"/>
+
+            <menuitem
+                id="menu_hr_recruitment_global_settings"
+                name="Settings"
+                parent="menu_hr_recruitment_configuration"
+                sequence="0"
+                action="action_hr_recruitment_configuration"
+                groups="base.group_system"/>
+
+            <menuitem
+                id="menu_hr_recruitment_config_jobs"
+                name="Job Positions"
+                parent="menu_hr_recruitment_configuration"
+                sequence="10"/>
+
+                <menuitem
+                    id="menu_hr_recruitment_stage"
+                    name="Stages"
+                    parent="menu_hr_recruitment_config_jobs"
+                    action="hr_recruitment_stage_act"
+                    groups="base.group_no_one"
+                    sequence="1"/>
+
+                <menuitem
+                    id="menu_hr_recruitment_contract_type"
+                    action="hr.hr_contract_type_action"
+                    parent="menu_hr_recruitment_config_jobs"
+                    sequence="2"
+                    groups="hr.group_hr_user"/>
+
+            <menuitem
+                id="menu_hr_recruitment_utm"
+                parent="menu_hr_recruitment_configuration"
+                name="UTMs"
+                groups="base.group_no_one"
+                sequence="15"/>
+
+                <menuitem
+                    id="menu_hr_recruitment_utm_sources"
+                    parent="menu_hr_recruitment_utm"
+                    name="Sources"
+                    action="utm.utm_source_action"
+                    groups="base.group_no_one"
+                    sequence="15"/>
+
+                <menuitem
+                    id="menu_hr_recruitment_utm_mediums"
+                    parent="menu_hr_recruitment_utm"
+                    name="Mediums"
+                    action="utm.utm_medium_action"
+                    groups="base.group_no_one"
+                    sequence="15"/>
+
+            <menuitem
+                id="menu_hr_recruitment_config_applications"
+                name="Applications"
+                parent="menu_hr_recruitment_configuration"
+                sequence="20"/>
+
+                <menuitem
+                    id="menu_hr_recruitment_degree"
+                    name="Degrees"
+                    parent="menu_hr_recruitment_config_applications"
+                    action="hr_recruitment_degree_action"
+                    sequence="1"
+                    />
+
+                <menuitem
+                    id="menu_hr_applicant_refuse_reason"
+                    action="hr_applicant_refuse_reason_action"
+                    parent="menu_hr_recruitment_config_applications"
+                    sequence="10"/>
+
+                <menuitem
+                    id="hr_applicant_category_menu"
+                    parent="menu_hr_recruitment_config_applications"
+                    action="hr_applicant_category_action"
+                    sequence="20"
+                    />
+
+            <menuitem
+                id="menu_hr_recruitment_config_employees"
+                name="Employees"
+                parent="menu_hr_recruitment_configuration"
+                sequence="30"/>
+
+                <menuitem
+                    name="Departments"
+                    id="menu_hr_department"
+                    parent="menu_hr_recruitment_config_employees"
+                    action="action_hr_department"/>
+
+            <menuitem
+                id="menu_hr_recruitment_config_activities"
+                name="Activities"
+                parent="menu_hr_recruitment_configuration"
+                sequence="40"/>
+
+                <menuitem
+                    id="hr_recruitment_menu_config_activity_type"
+                    action="mail_activity_type_action_config_hr_applicant"
+                    parent="menu_hr_recruitment_config_activities"
+                    sequence="10"/>
+
+                <menuitem
+                    name="Activity Plans"
+                    id="hr_recruitment_menu_config_activity_plan"
+                    parent="menu_hr_recruitment_config_activities"
+                    action="mail_activity_plan_action_config_hr_applicant"
+                    groups="hr_recruitment.group_hr_recruitment_manager"
+                    sequence="20"/>
+
+            <menuitem
+                name="Job Boards"
+                id="menu_hr_job_boards"
+                parent="menu_hr_recruitment_configuration"
+                sequence="50"/>
+
+                <menuitem
+                    name="Emails"
+                    id="menu_hr_recruitment_emails"
+                    parent="menu_hr_job_boards"
+                    action="action_hr_job_platforms"
+                    sequence="50"/>
+
+    <record id="hr.menu_view_hr_contract_type" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+
+</odoo>

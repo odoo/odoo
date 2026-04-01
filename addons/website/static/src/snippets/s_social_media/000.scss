@@ -1,0 +1,86 @@
+
+.s_social_media {
+    user-select: none;
+    $-size: map-get($spacers, 5);
+    > * {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .s_social_media_title {
+        margin: 0 .4rem 0 0;
+    }
+    a {
+        i.fa, span.fa {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            &:not(.fa-2x, .fa-3x, .fa-4x, .fa-5x) {
+                &.rounded-circle,
+                &.rounded {
+                    width: $-size - .5rem;
+                    height: $-size - .5rem;
+                }
+            }
+        }
+        &:has(i:not(.fa-stack)) {
+            margin: .2rem;
+        }
+    }
+    &:not(.no_icon_color) {
+        .s_social_media_facebook {
+            &, &:hover, &:focus {
+                @extend .text-facebook;
+            }
+        }
+        .s_social_media_twitter {
+            &, &:hover, &:focus {
+                @extend .text-twitter;
+            }
+        }
+        .s_social_media_linkedin {
+            &, &:hover, &:focus {
+                @extend .text-linkedin;
+            }
+        }
+        .s_social_media_google {
+            &, &:hover, &:focus {
+                @extend .text-google-plus;
+            }
+        }
+        .s_social_media_whatsapp {
+            &, &:hover, &:focus {
+                @extend .text-whatsapp;
+            }
+        }
+        .s_social_media_pinterest {
+            &, &:hover, &:focus {
+                @extend .text-pinterest;
+            }
+        }
+        .s_social_media_github {
+            &, &:hover, &:focus {
+                @extend .text-github;
+            }
+        }
+        .s_social_media_instagram {
+            &, &:hover, &:focus {
+                @extend .text-instagram;
+            }
+        }
+        .s_social_media_youtube {
+            &, &:hover, &:focus {
+                @extend .text-youtube;
+            }
+        }
+        .s_social_media_tiktok {
+            &, &:hover, &:focus {
+                @extend .text-tiktok;
+            }
+        }
+        .s_social_media_discord {
+            &, &:hover, &:focus {
+                @extend .text-discord;
+            }
+        }
+    }
+}

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_preset_form" model="ir.ui.view">
+        <field name="name">pos.preset.form</field>
+        <field name="model">pos.preset</field>
+        <field name="arch" type="xml">
+            <form string="Preset">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_linked_orders"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-shopping-cart"
+                            invisible="count_linked_orders == 0">
+                            <field string="Order(s)" name="count_linked_orders" widget="statinfo"/>
+                        </button>
+                        <button name="action_open_linked_config"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-share-alt"
+                            invisible="count_linked_config == 0">
+                            <field string="PoS Config" name="count_linked_config" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <field name="image_512" widget="image" class="oe_avatar"/>
+                    <div class="oe_title mb-2">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Dine in"/></h1>
+                    </div>
+                    <group class="w-100" name="Presets">
+                        <group>
+                            <field name="pricelist_id" placeholder="Default"/>
+                            <field name="fiscal_position_id" placeholder="Default"/>
+                            <field name="use_timing" />
+
+                            <label for="resource_calendar_id" string="Schedule based on" class="fw-bold" />
+                            <div>
+                                <field name="resource_calendar_id" readonly="not use_timing" required="use_timing"/>
+                            </div>
+
+                            <label for="slots_per_interval" string="Preparation capacity" class="fw-bold" />
+                            <div class="o_row">
+                                <field name="slots_per_interval" class="text-center" readonly="not use_timing" />
+                                <label for="slots_per_interval" string="orders per" />
+                                <field name="interval_time" class="text-center" readonly="not use_timing" />
+                                <label for="interval_time" string="minutes" />
+                            </div>
+                        </group>
+                        <group>
+                            <field name="identification"/>
+                            <label for="return" string="Return mode"/>
+                            <div>
+                                <field id="return" name="is_return" class="oe_inline"/>
+                                <span invisible="not is_return or pricelist_id" class="oe_inline ps-2 text-info">Tip: add a return pricelist (i.e. 0€)</span>
+                            </div>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Schedule" name="resource" invisible="not use_timing or not resource_calendar_id">
+                            <field name="attendance_ids" widget="section_one2many" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pos_preset_tree" model="ir.ui.view">
+        <field name="name">pos.preset.list</field>
+        <field name="model">pos.preset</field>
+        <field name="arch" type="xml">
+            <list string="Presets">
+                <field name="name"/>
+                <field name="use_timing"/>
+                <field name="identification"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_pos_preset_form" model="ir.actions.act_window">
+        <field name="name">Presets</field>
+        <field name="res_model">pos.preset</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new preset
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_pos_preset" parent="menu_point_config_product" action="action_pos_preset_form" sequence="3" groups="group_pos_preset"/>
+</odoo>

@@ -1,0 +1,56 @@
+<templates>
+
+    <t t-inherit="loyalty.portal_loyalty_card_dialog" t-inherit-mode="extension">
+        <div name="history_lines" position="after">
+            <div
+                t-if="props.program.program_type == 'loyalty'"
+                t-foreach="props.rewards"
+                t-as="reward"
+                t-key="reward_index"
+                class="mb-2 mt-2"
+            >
+                <div class="d-flex border rounded align-items-center justify-content-center p-2">
+                    <div class="flex-fill fs-6">
+                        <t t-out="reward.description"/>
+                    </div>
+                    <span class="text-primary" t-out="reward.points"/>
+                </div>
+            </div>
+            <div t-if="props.rewards.length > 0" class="d-flex justify-content-center">
+                <a
+                    t-if="props.program.program_type == 'loyalty'"
+                    type="button"
+                    href="/shop"
+                    class="btn btn-primary"
+                >
+                    Claim
+                </a>
+            </div>
+            <div
+                t-if="props.program.program_type == 'ewallet'
+                and props.program.trigger_products.length"
+            >
+                <form
+                    method="post"
+                    action="/wallet/top_up"
+                    class="d-flex w-75 w-md-50 m-auto gap-1"
+                >
+                    <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+                    <select name="trigger_product_id" class="form-select">
+                        <t
+                            t-foreach="props.program.trigger_products"
+                            t-as="product"
+                            t-key="product_index"
+                        >
+                            <option t-att-value="product.id">
+                                <t t-esc="product.total_price"/>
+                            </option>
+                        </t>
+                    </select>
+                    <button type="submit" class="btn btn-primary text-nowrap">Top Up</button>
+                </form>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.CallInvitation">
+        <div class="o-discuss-CallInvitation align-self-center o-rounded-bubble overflow-hidden shadow-sm" t-att-class="{'o-preview-open': state.showCameraPreview, 'o-chat': props.thread.channel_type === 'chat', 'border border-light': !store.isOdooWhiteTheme}">
+            <div class="d-flex flex-colum d-flex flex-column">
+                <div class="o-discuss-CallInvitation-main" t-ref="root">
+                    <div class="ms-1 position-relative d-flex justify-content-between p-2">
+                        <div class="d-flex align-items-center" style="min-width: 0;">
+                            <div class="o-mail-CallInvitation-avatar flex-shrink-0 cursor-pointer d-flex align-items-center justify-content-center rounded-circle overflow-hidden" t-att-class="{'bg-primary': !inviter}" t-on-click="() => props.thread.open({ focus: true })" t-att-title="avatarTitle">
+                                <img t-if="inviter" class="object-fit-cover h-100 w-100" t-att-src="inviter.avatarUrl" alt="Avatar"/>
+                                <i t-else="" class="fa fa-phone"/>
+                            </div>
+                            <div class="ms-2 me-3 flex-grow-1 overflow-hidden">
+                                <p class="o-discuss-CallInvitation-channelName m-0 fw-bold small text-truncate" t-esc="props.thread.displayName"/>
+                                <p class="o-discuss-CallInvitation-description m-0 fst-italic smaller text-truncate pe-1" t-esc="incomingCallText"/>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center flex-shrink-0">
+                            <ActionList actions="acceptOrRejectActions" inline="true" hasBtnBg="true"/>
+                            <ActionList actions="otherActions" inline="true"/>
+                        </div>
+                    </div>
+                    <div class="o-discuss-CallInvitation-cameraPreview" t-att-class="{'o-opened': state.showCameraPreview}">
+                        <CallPreview activateCamera="state.activateCamera" activateMicrophone="state.activateMicrophone" onSettingsChanged="(settings) => this.onCallSettingsChanged(settings)"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

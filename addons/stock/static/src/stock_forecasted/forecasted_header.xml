@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="stock.ForecastedHeader">
+        <div class="d-flex flex-wrap pb-1 justify-content-between">
+            <div class="o_product_name">
+                <h3 name="product_name">
+                    <t t-if="props.docs.product_templates">
+                        <t t-foreach="props.docs.product_templates" t-as="product_template" t-key='product_template.id'>
+                            <a href="#"
+                            t-on-click.prevent="() => this.props.openView('product.template', 'form', product_template.id)"
+                            t-out="product_template.display_name"/>
+                        </t>
+                    </t>
+                    <t t-elif="props.docs.product_variants">
+                        <t t-foreach="props.docs.product_variants" t-as="product_variant" t-key="product_variant.id">
+                            <a href="#"
+                            t-on-click.prevent="() => this.props.openView('product.product', 'form', product_variant.id)"
+                            t-out="product_variant.display_name"/>
+                        </t>
+                    </t>
+                </h3>
+            </div>
+            <div class="row">
+                <div class="col-md-auto text-center" name="on_hand">
+                    <div class="h3">
+                        <a href="#"
+                            t-on-click.prevent="() => this._onClickInventory()"
+                           t-out="_formatFloat(this.quantityOnHand)"/>
+                    </div>
+                    <div>On Hand</div>
+                </div>
+                <div class="h3 col-md-auto text-center">+</div>
+                <div t-attf-class="col-md-auto text-center #{props.docs.incoming_qty}">
+                    <div class="h3">
+                        <t t-out="_formatFloat(this.incomingQty)"/>
+                    </div>
+                    <div>Incoming</div>
+                </div>
+                <div class="h3 col-md-auto text-center">-</div>
+                <div t-attf-class="col-md-auto text-center #{props.docs.outgoing_qty}">
+                    <div class="h3">
+                        <t t-out="_formatFloat(this.outgoingQty)"/>
+                    </div>
+                    <div>Outgoing</div>
+                </div>
+                <div class="h3 col-md-auto text-center">=</div>
+                <div t-attf-class="col-md-auto text-center #{props.docs.virtual_available &lt; 0 and 'text-danger'}" name="forecasted_value">
+                    <div class="h3">
+                        <span t-out="_formatFloat(this.virtualAvailable)"/>
+                        <span t-out="' ' + this.uom" groups="uom.group_uom"/>
+                    </div>
+                    <div>Forecasted</div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-wrap pb-1 pt-2 justify-content-end">
+            <div class="row">
+                <h6>Time to replenish:
+                    <span data-tooltip-template="LeadTimeTooltip" t-att-data-tooltip-info="this.toJsonString(this.leadTime)">
+                        <span class="text-info" t-out="this.leadTimeShort"/>
+                    </span>
+                </h6>
+            </div>
+        </div>
+    </t>
+    <t t-name="LeadTimeTooltip">
+        <h6>Lead Time Information</h6>
+        <table>
+            <tr>
+                <td>Today</td>
+                <td><span t-out="today"/></td>
+            </tr>
+            <t t-foreach="details" t-as="detail" t-key="detail[0]">
+                <tr>
+                    <td><span t-out="detail[0]"/></td>
+                    <td><span t-out="detail[1]"/></td>
+                </tr>
+            </t>
+            <tr>
+                <td>Earliest Possible Arrival</td>
+                <td><span t-out="earliestPossibleArrival"/></td>
+            </tr>
+        </table>
+    </t>
+</templates>

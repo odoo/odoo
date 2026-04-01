@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record id="im_livechat_report_channel_view_pivot" model="ir.ui.view">
+            <field name="name">im_livechat.report.channel.pivot</field>
+            <field name="model">im_livechat.report.channel</field>
+            <field name="arch" type="xml">
+                <pivot js_class="im_livechat.report_channel_pivot" string="Livechat Support Statistics" sample="1" display_quantity="1">
+                    <field name="has_call" type="measure" invisible="1"/>
+                    <field name="call_duration_hour" type="measure" widget="float_time" options="{'displaySeconds': True}"/>
+                    <field name="partner_id" type="row"/>
+                    <field name="percentage_of_calls" type="measure" widget="percentage"/>
+                    <field name="time_to_answer" string="Response Time (hh:mm:ss)" type="measure" widget="float_time" options="{'displaySeconds': True}" />
+                    <field name="duration" type="measure"/>
+                    <field name="rating" string="Rating (%)" type="measure" widget="im_livechat.rating_percentage"/>
+                    <field name="number_of_calls" string="# of calls" type="measure" widget="integer"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="im_livechat_report_channel_view_list" model="ir.ui.view">
+            <field name="name">im_livechat.report.channel.list</field>
+            <field name="model">im_livechat.report.channel</field>
+            <field name="arch" type="xml">
+                <list create="false">
+                    <field name="start_date" string="Session Date"/>
+                    <field name="channel_name" string="Participants"/>
+                    <field name="country_id"/>
+                    <field name="lang_id"/>
+                    <field name="session_expertise_ids" string="Expertises" widget="many2many_tags"/>
+                    <field name="duration" widget="float_time"/>
+                    <field name="nbr_message" string="# Messages"/>
+                    <field name="rating_text" string="Rating Text"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="im_livechat_report_channel_view_form" model="ir.ui.view">
+            <field name="name">im_livechat.report.channel.form</field>
+            <field name="model">im_livechat.report.channel</field>
+            <field name="arch" type="xml">
+                <form string="Channel Rule" class="o_livechat_rules_form" js_class="livechat_session_form">
+                    <sheet>
+                        <group>
+                            <field name="channel_name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="im_livechat_report_channel_view_graph" model="ir.ui.view">
+            <field name="name">im_livechat.report.channel.graph</field>
+            <field name="model">im_livechat.report.channel</field>
+            <field name="arch" type="xml">
+                <graph js_class="im_livechat.channel_report_graph_views" string="Livechat Support Statistics" type="line" stacked="1" sample="1">
+                    <field name="call_duration_hour" type="measure" widget="float_time"/>
+                    <field name="has_call" invisible="1"/>
+                    <field name="percentage_of_calls" type="measure" widget="percentage"/>
+                    <field name="start_date" interval="day"/>
+                    <field name="rating_text"/>
+                    <field name="rating" string="Rating (%)" type="measure" widget="im_livechat.rating_percentage"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="im_livechat_report_channel_view_search" model="ir.ui.view">
+            <field name="name">im_livechat.report.channel.search</field>
+            <field name="model">im_livechat.report.channel</field>
+            <field name="arch" type="xml">
+                <search string="Search report">
+                    <field name="partner_id"/>
+                    <field name="agent_requesting_help_history"/>
+                    <field name="agent_requesting_help_history"/>
+                    <field name="livechat_channel_id" string="Channel"/>
+                    <field name="country_id" string="Country"/>
+                    <field name="chatbot_script_id"/>
+                    <field name="chatbot_answers_path_str" string="Chatbot Answers"/>
+                    <field name="session_expertises" string="Expertise"/>
+                    <field name="conversation_tag_ids" string="Tags"/>
+                    <field name="visitor_partner_id"/>
+                    <filter name="my_session" domain="[('partner_id.user_ids', '=', uid)]" string="My Sessions"/>
+                    <separator/>
+                    <filter name="escalated" string="Escalated" domain="[('session_outcome', '=', 'escalated')]"/>
+                    <filter name="no_answer" string="Not Answered" domain="[('session_outcome', '=', 'no_answer')]"/>
+                    <filter name="no_agent" string="No one Available" domain="[('session_outcome', '=', 'no_agent')]"/>
+                    <separator/>
+                    <filter name="rating_happy" string="Happy" domain="[('rating_text','=', 'Happy')]"/>
+                    <filter name="rating_neutral" string="Neutral" domain="[('rating_text','=', 'Neutral')]"/>
+                    <filter name="rating_unhappy" string="Unhappy" domain="[('rating_text','=', 'Unhappy')]"/>
+                    <separator />
+                    <filter name="filter_start_date" string="Date" date="start_date"/>
+                    <filter name="filter_date_last_month" invisible="1" string="Date: Last month"
+                        domain="[('start_date', '&gt;=', 'today -1m')]"/>
+                    <filter name="filter_date_last_week" invisible="1" string="Date: Last week"
+                        domain="[('start_date', '&gt;=', 'today -1w')]"/>
+                    <group>
+                        <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'livechat_channel_id'}"/>
+                        <filter name="group_by_operator" string="Agent" domain="[]" context="{'group_by': 'partner_id'}"/>
+                        <filter name="group_by_agent_requesting_help" domain="[]" context="{'group_by': 'agent_requesting_help_history'}"/>
+                        <filter name="group_by_agent_providing_help" domain="[]" context="{'group_by': 'agent_providing_help_history'}"/>
+                        <filter name="group_by_rating" string="Rating" domain="[]" context="{'group_by':'rating_text'}"/>
+                        <filter name="group_by_country" string="Country" domain="[]" context="{'group_by':'country_id'}"/>
+                        <filter name="group_by_outcome" string="Status" domain="[]" context="{'group_by':'session_outcome'}"/>
+                        <filter name="group_by_chatbot" string="Chatbot" domain="[]" context="{'group_by':'chatbot_script_id'}"/>
+                        <filter name="group_by_chatbot_answers" domain="[]" context="{'group_by':'chatbot_answers_path'}"/>
+                        <filter name="group_by_expertise" string="Expertise" domain="[]" context="{'group_by':'session_expertises'}"/>
+                        <filter name="group_by_conversation_tag" string="Tags" domain="[]" context="{'group_by':'conversation_tag_ids'}"/>
+                        <filter name="group_by_customer" domain="[]" context="{'group_by':'visitor_partner_id'}"/>
+                        <separator orientation="vertical" />
+                        <filter name="group_by_hour" string="Hour of Day" domain="[]" context="{'group_by':'start_hour'}"/>
+                        <filter name="group_by_day_of_week" string="Day of Week" domain="[]" context="{'group_by':'day_number'}"/>
+                        <filter name="group_by_month" string="Date" domain="[]" context="{'group_by':'start_date:month'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="im_livechat_report_channel_action" model="ir.actions.act_window">
+            <field name="name">Sessions</field>
+            <field name="res_model">im_livechat.report.channel</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="context">
+                {
+                    "search_default_filter_date_last_month": 1,
+                    "pivot_measures": ["__count", "time_to_answer", "duration", "rating", "number_of_calls"],
+                    "graph_measure": "__count__",
+                    "im_livechat_hide_partner_company": True,
+                }
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">No data yet!</p>
+                <p>Track and improve live chat performance with insights on session activity, response times, customer ratings, and call interactions.</p>
+            </field>
+        </record>
+
+        <record id="im_livechat_report_channel_time_to_answer_action" model="ir.actions.act_window">
+            <field name="name">Sessions</field>
+            <field name="res_model">im_livechat.report.channel</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="context">{"graph_measure": "time_to_answer", "search_default_filter_date_last_week":1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">No data yet!</p>
+                <p>Track and improve live chat performance with insights on session activity, response times, customer ratings, and call interactions.</p>
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_reporting_livechat_channel"
+            name="Sessions"
+            parent="menu_reporting_livechat"
+            sequence="20"
+            action="im_livechat_report_channel_action"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,290 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_dpopay
+#
+# Busoi Cristina <elena.busoi@capps.ai>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-03 10:36+0000\n"
+"Last-Translator: Busoi Cristina <elena.busoi@capps.ai>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
+"pos_dpopay/ro/>\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : "
+"(n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_bearer_token
+msgid ""
+"Bearer token used for authenticating requests. Automatically refreshed when "
+"expired."
+msgstr ""
+"Token purtător utilizat pentru autentificarea cererilor. Se reînnoiește "
+"automat la expirare."
+
+#. module: pos_dpopay
+#: model:ir.model.fields.selection,name:pos_dpopay.selection__pos_payment_method__dpopay_payment_mode__card
+msgid "Card"
+msgstr "Card"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_test_mode
+msgid "Check this to use DPO Pay's sandbox environment for testing purposes."
+msgstr ""
+"Bifați această opțiune pentru a utiliza mediul sandbox al DPO Pay în scopuri "
+"de testare."
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_payment_mode
+msgid ""
+"Choose allowed payment mode:\n"
+"Card - regular card payments\n"
+"Mobile Money - M-Pesa / Airtel Mobile Money"
+msgstr ""
+"Alegeți modul de plată permis:\n"
+"Card - plăți obișnuite cu cardul\n"
+"Mobile Money - M-Pesa / Airtel Mobile Money"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_mobile_money_phone
+msgid "Customer's phone number used to complete the Mobile Money payment."
+msgstr ""
+"Numărul de telefon al clientului utilizat pentru efectuarea plății Mobile "
+"Money."
+
+#. module: pos_dpopay
+#: model_terms:ir.ui.view,arch_db:pos_dpopay.pos_payment_method_view_form_inherit_pos_dpopay
+msgid "DPO Pay"
+msgstr "DPO Pay"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_chain_id
+msgid "DPO Pay Chain-ID"
+msgstr "ID lanț de plată DPO"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_client_id
+msgid "DPO Pay Client ID"
+msgstr "ID client DPO Pay"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_client_secret
+msgid "DPO Pay Client Secret"
+msgstr "Secretul clientului DPO Pay"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_mid
+msgid "DPO Pay Merchant ID"
+msgstr "ID comerciant DPO Pay"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_tid
+msgid "DPO Pay Terminal ID"
+msgstr "ID terminal de plată DPO"
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "DPO Pay terminal is currently offline."
+msgstr "Terminalul DPO Pay este momentan offline."
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__display_name
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__display_name
+msgid "Display Name"
+msgstr "Nume afişat"
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Dpo Pay Error"
+msgstr "Eroare de plată Dpo"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_bearer_token
+msgid "Dpopay Bearer Token"
+msgstr "Jetonul purtător Dpopay"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_payment_mode
+msgid "Dpopay Payment Mode"
+msgstr "Modul de plată Dpopay"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_test_mode
+msgid "Enable Test Mode"
+msgstr "Activați modul de testare"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_chain_id
+msgid "Enter the Chain-ID header value(e.g., DPO-DTM-Testing)"
+msgstr "Introduceți valoarea antetului Chain-ID (de exemplu, DPO-DTM-Testing)"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_mid
+msgid "Enter the Merchant ID assigned by DPO Pay (e.g., 123456789012)."
+msgstr ""
+"Introduceți ID-ul comerciantului atribuit de DPO Pay "
+"(de exemplu, 123456789012)."
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_tid
+msgid ""
+"Enter the unique Terminal ID (TID) of your DPO Pay POS terminal (e.g., "
+"XXXXXXXX)."
+msgstr ""
+"Introduceți ID-ul unic al terminalului (TID) al terminalului POS DPO Pay "
+"(de exemplu, XXXXXXXX)."
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Failed to cancel payment."
+msgstr "Nu s-a reușit anularea plății."
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Failed to fetch last transaction result."
+msgstr "Nu s-a putut prelua rezultatul ultimei tranzacții."
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Failed to retrieve payment status."
+msgstr "Nu s-a putut recupera starea plății."
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Failed to retrieve transaction result."
+msgstr "Nu s-a putut recupera rezultatul tranzacției."
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__id
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_dpopay
+#. odoo-python
+#: code:addons/pos_dpopay/models/pos_payment_method.py:0
+msgid "Invalid Chain ID. Please verify the configuration. %s"
+msgstr "ID lanț invalid. Vă rugăm să verificați configurația. %s"
+
+#. module: pos_dpopay
+#. odoo-python
+#: code:addons/pos_dpopay/models/pos_payment_method.py:0
+msgid "Invalid endpoint"
+msgstr "Punct final invalid"
+
+#. module: pos_dpopay
+#: model:ir.model.fields.selection,name:pos_dpopay.selection__pos_payment_method__dpopay_payment_mode__momo
+msgid "Mobile Money"
+msgstr "Bani mobili"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_mobile_money_phone
+msgid "Mobile Money Phone Number(Last 4 Digit)"
+msgstr "Număr de telefon pentru Mobile Money (ultimele 4 cifre)"
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Payment is declined by DPO Pay."
+msgstr "Plata este refuzată de DPO Pay."
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Payment is unsuccessful."
+msgstr "Plata nu a fost efectuată cu succes."
+
+#. module: pos_dpopay
+#. odoo-python
+#: code:addons/pos_dpopay/models/pos_payment_method.py:0
+msgid ""
+"Please ensure the device is online and confirm that the Merchant ID (MID) "
+"and Terminal ID (TID) are correct. %s"
+msgstr ""
+"Asigurați-vă că dispozitivul este conectat la internet și confirmați că ID-"
+"ul comerciantului (MID) și ID-ul terminalului (TID) sunt corecte. %s"
+
+#. module: pos_dpopay
+#: model:ir.model,name:pos_dpopay.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Metode de plată Punct de vânzare"
+
+#. module: pos_dpopay
+#: model:ir.model,name:pos_dpopay.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "Plăți Punct de vânzare"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_rrn
+msgid "RRN"
+msgstr "RRN"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_transaction_ref
+msgid "Reference number required for Mobile Money refund transactions."
+msgstr ""
+"Număr de referință necesar pentru tranzacțiile de rambursare Mobile Money."
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_rrn
+msgid "Retrieval Reference Number generated for the DPO Pay transaction."
+msgstr "Număr de referință generat pentru tranzacția DPO Pay."
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_client_id
+msgid "The Client ID provided by DPO Pay for authenticating requests."
+msgstr "ID-ul clientului furnizat de DPO Pay pentru autentificarea cererilor."
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_client_secret
+msgid ""
+"The Client Secret provided by DPO Pay for secure access. Keep it "
+"confidential."
+msgstr ""
+"Secretul clientului furnizat de DPO Pay pentru acces securizat. Păstrați-l "
+"confidențial."
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_transaction_ref
+msgid "Transaction Reference"
+msgstr "Referința tranzacției"
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Transaction amount must be greater than zero."
+msgstr "Suma tranzacției trebuie să fie mai mare decât zero."
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Unable to initiate DPO payment. Please try again."
+msgstr "Nu se poate iniția plata DPO. Vă rugăm să încercați din nou."
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Unable to reach DPO Pay terminal."
+msgstr "Nu se poate accesa terminalul DPO Pay."
+
+#. module: pos_dpopay
+#. odoo-python
+#: code:addons/pos_dpopay/models/pos_payment_method.py:0
+msgid ""
+"Unable to retrieve DPO Pay bearer token: check Client ID and Client Secret."
+msgstr ""
+"Imposibil de recuperat tokenul DPO Pay: verificați ID-ul clientului și "
+"secretul clientului."

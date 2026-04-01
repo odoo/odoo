@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="project.ProjectTemplateDropdown">
+        <button t-if="!state.projectTemplates.length" type="button" t-att-class="props.newButtonClasses" t-att-disabled="props.isDisabled" t-att-data-hotkey="props.hotkey" t-on-click.stop="props.onCreate" data-bounce-button="">New</button>
+        <Dropdown t-else="">
+            <button t-attf-class="{{ props.newButtonClasses }} o-dropdown-caret" t-att-disabled="props.isDisabled" t-att-data-hotkey="props.hotkey" data-bounce-button="">
+                New
+            </button>
+            <t t-set-slot="content">
+                <DropdownItem tag="'button'" class="'btn btn-link'" onSelected="props.onCreate">
+                    New Project
+                </DropdownItem>
+                <div role="separator" class="dropdown-divider"/>
+                <div class="dropdown-header">Project Templates</div>
+                <t t-foreach="state.projectTemplates" t-as="template" t-key="template.id">
+                    <DropdownItem tag="'button'" class="'btn btn-link o-dropdopwn-item-indent o-project-template d-flex align-items-center pe-0'"
+                        onSelected="() => this.createProjectFromTemplate(template)">
+                        <span class="text-truncate" t-out="template.name"/>
+                        <ProjectTemplateButtons resModel="'project.project'" resId="template.id"/>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

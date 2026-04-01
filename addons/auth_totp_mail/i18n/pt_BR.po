@@ -1,0 +1,417 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_totp_mail
+#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Maitê Dietze (madi)" <madi@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-16 15:21+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
+"odoo-19/auth_totp_mail/pt_BR/>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+msgid ""
+".\n"
+"                <br/>"
+msgstr ""
+".\n"
+"                <br/>"
+
+#. module: auth_totp_mail
+#: model:mail.template,body_html:auth_totp_mail.mail_template_totp_invite
+msgid ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"        <t t-out=\"user.name  or ''\"/> requested you activate two-factor "
+"authentication to protect your account.<br/><br/>\n"
+"        Two-factor Authentication (\"2FA\") is a system of double "
+"authentication.\n"
+"        The first one is done with your password and the second one with a "
+"code you get from a dedicated mobile app.\n"
+"        Popular ones include Authy, Google Authenticator or the Microsoft "
+"Authenticator.\n"
+"\n"
+"        </p><p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" t-attf-"
+"style=\"background-color:{{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;"
+"\">\n"
+"                Activate my two-factor Authentication\n"
+"            </a>\n"
+"        </p>\n"
+"    \n"
+"</div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Olá <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"        <t t-out=\"user.name  or ''\"/> solicitou que você ative "
+"autenticação de dois fatores para proteger a sua conta.<br/><br/>\n"
+"        Autenticação de dois fatores (“2FA”) é um sistema de autenticação "
+"dupla. O primeiro fator é a sua senha e o segundo fator é realizado com um "
+"código que você recebe de um aplicativo dedicado.Alguns aplicativos "
+"populares incluem Authy, Google Authenticator ou o Microsoft Authenticator.\n"
+"\n"
+"        </p><p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" t-attf-"
+"style=\"background-color:{{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;"
+"\">\n"
+"                Ativar minha autenticação de dois fatores\n"
+"            </a>\n"
+"        </p>\n"
+"    \n"
+"</div>\n"
+"        "
+
+#. module: auth_totp_mail
+#: model:mail.template,body_html:auth_totp_mail.mail_template_totp_mail_code
+msgid ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"<p>Someone is trying to log in into your account with a new device.</p>\n"
+"<ul>\n"
+"    <t t-set=\"not_available\">N/A</t>\n"
+"    <li>Location: <t t-out=\"ctx.get('location') or not_available\"/></li>\n"
+"    <li>Device: <t t-out=\"ctx.get('device') or not_available\"/></li>\n"
+"    <li>Browser: <t t-out=\"ctx.get('browser') or not_available\"/></li>\n"
+"    <li>IP address: <t t-out=\"ctx.get('ip') or not_available\"/></li>\n"
+"</ul>\n"
+"<p>If this is you, please enter the following code to complete the login:</"
+"p>\n"
+"<t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"/>\n"
+"<t t-set=\"code\" t-value=\"code_expiration[0]\"/>\n"
+"<t t-set=\"expiration\" t-value=\"code_expiration[1]\"/>\n"
+"<div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"    <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid "
+"#dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-"
+"radius: 5px;\"/>\n"
+"</div>\n"
+"<small>Please note that this code expires in <t t-out=\"expiration\"/>.</"
+"small>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"    If you did NOT initiate this log-in,\n"
+"    you should immediately change your password to ensure account security.\n"
+"</p>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"    We also strongly recommend enabling the two-factor authentication using "
+"an authenticator app to help secure your account.\n"
+"</p>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
+"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px;\">\n"
+"        Activate my two-factor authentication\n"
+"    </a>\n"
+"</p>\n"
+"</div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"Prezado (a) <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"<p>Alguém está tentando fazer login em sua conta com um novo dispositivo.</"
+"p>\n"
+"<ul>\n"
+"    <t t-set=\"not_available\">N/A</t>\n"
+"    <li>Local: <t t-out=\"ctx.get('location') or not_available\"/></li>\n"
+"    <li>Dispositivo: <t t-out=\"ctx.get('device') or not_available\"/></li>\n"
+"    <li>Navegador: <t t-out=\"ctx.get('browser') or not_available\"/></li>\n"
+"    <li>Endereço de IP: <t t-out=\"ctx.get('ip') or not_available\"/></li>\n"
+"</ul>\n"
+"<p>Se for você, digite o seguinte código para concluir o login:</p>\n"
+"<t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"/>\n"
+"<t t-set=\"code\" t-value=\"code_expiration[0]\"/>\n"
+"<t t-set=\"expiration\" t-value=\"code_expiration[1]\"/>\n"
+"<div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"    <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid "
+"#dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-"
+"radius: 5px;\"/>\n"
+"</div>\n"
+"<small>Observe que esse código expira em <t t-out=\"expiration\"/>.</small>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"    Se você NÃO iniciou esse login,\n"
+"deverá alterar imediatamente sua senha para garantir a segurança da conta.\n"
+"</p>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"    Também é altamente recomendável ativar a autenticação de dois fatores "
+"usando um aplicativo autenticador para ajudar a proteger sua conta.\n"
+"</p>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
+"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px;\">\n"
+"        Ativar minha autenticação de dois fatores\n"
+"    </a>\n"
+"</p>\n"
+"</div>\n"
+"        "
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+msgid ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                To login, enter below the six-digit authentication code just "
+"sent via email to"
+msgstr ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                Para fazer login, insira abaixo o código de autenticação de "
+"seis dígitos enviado por e-mail para"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+msgid ""
+"<span class=\"text-muted\">\n"
+"                            Recommended for extra security.\n"
+"                        </span>"
+msgstr ""
+"<span class=\"text-muted\">\n"
+"                            Recomendado para segurança extra.\n"
+"                        </span>"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
+msgid "<span>Consider also</span>"
+msgstr "<span>Considerar também</span>"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "A new device was used to sign in to your account."
+msgstr "Um novo dispositivo foi usado para fazer login na sua conta."
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/auth_totp_device.py:0
+msgid ""
+"A trusted device has just been removed from your account: %(device_names)s"
+msgstr "Um dispositivo confiável foi removido da sua conta: %(device_names)s"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__all_required
+msgid "All users"
+msgstr "Todos os usuários"
+
+#. module: auth_totp_mail
+#: model:ir.model,name:auth_totp_mail.model_auth_totp_device
+msgid "Authentication Device"
+msgstr "Dispositivo de autenticação"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Cannot send email: user %s has no email address."
+msgstr ""
+"Não foi possível enviar e-mail: o usuário %s não tem endereço de e-mail."
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+msgid "Click to enable 2FA."
+msgstr "Clique para ativar a autenticação de dois fatores (2FA)."
+
+#. module: auth_totp_mail
+#: model:ir.model,name:auth_totp_mail.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configurações"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__display_name
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_users__display_name
+msgid "Display Name"
+msgstr "Nome exibido"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__employee_required
+msgid "Employees only"
+msgstr "Apenas funcionários"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+msgid "Enable 2FA"
+msgstr "Habilitar 2FA"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_config_settings_view_form
+msgid ""
+"Enforce the two-factor authentication by email for employees or for all "
+"users (including portal users) if they didn't enable any other two-factor "
+"authentication method."
+msgstr ""
+"Imponha a autenticação de dois fatores por e-mail para funcionários ou para "
+"todos os usuários (incluindo usuários do portal) caso eles não tenham "
+"ativado nenhum outro método de autenticação de dois fatores."
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_enforce
+msgid "Enforce two-factor authentication"
+msgstr "Impor autenticação de dois fatores"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__id
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_totp_mail
+#: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
+msgid "Invitation to activate two-factor authentication on your Odoo account"
+msgstr "Convite para ativar autenticação de dois fatores na sua conta Odoo"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid ""
+"Invitation to use two-factor authentication sent for the following user(s): "
+"%s"
+msgstr ""
+"Convite para ativar autenticação de dois fatores enviado para os seguintes "
+"usuários: %s"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
+msgid "Invite to use 2FA"
+msgstr "Convite para utilizar 2FA"
+
+#. module: auth_totp_mail
+#: model:ir.actions.server,name:auth_totp_mail.action_invite_totp
+msgid "Invite to use two-factor authentication"
+msgstr "Convite para utilizar a autenticação de dois fatores"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+msgid "Learn More"
+msgstr "Saiba mais"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "New Connection to your Account"
+msgstr "Nova conexão à sua conta"
+
+#. module: auth_totp_mail
+#: model:ir.actions.server,name:auth_totp_mail.action_activate_two_factor_authentication
+msgid "Open two-factor authentication configuration"
+msgstr "Abrir configurações da autenticação de dois fatores"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+msgid "Re-send email"
+msgstr "Reenviar e-mail"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Security"
+msgstr "Segurança"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Security Update: 2FA Activated"
+msgstr "Atualização de segurança: 2FA ativada"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Security Update: 2FA Deactivated"
+msgstr "Atualização de segurança: 2FA desativada"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/auth_totp_device.py:0
+msgid "Security Update: Device Removed"
+msgstr "Atualização de segurança: dispositivo removido"
+
+#. module: auth_totp_mail
+#: model:mail.template,name:auth_totp_mail.mail_template_totp_invite
+msgid "Settings: 2Fa Invitation"
+msgstr "Definições: convite para 2FA"
+
+#. module: auth_totp_mail
+#: model:mail.template,name:auth_totp_mail.mail_template_totp_mail_code
+msgid "Settings: 2Fa New Login"
+msgstr "Definições: novo login com 2FA"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+msgid "Two-factor Authentication"
+msgstr "Autenticação de dois fatores"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_policy
+msgid "Two-factor authentication enforcing policy"
+msgstr "Política de imposição de autenticação de dois fatores"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Two-factor authentication has been activated on your account"
+msgstr "A autenticação dois fatores foi ativada na sua conta"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Two-factor authentication has been deactivated on your account"
+msgstr "A autenticação dois fatores foi desativada na sua conta"
+
+#. module: auth_totp_mail
+#: model:ir.model,name:auth_totp_mail.model_res_users
+msgid "User"
+msgstr "Usuário"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Verification failed, please double-check the 6-digit code"
+msgstr "A verificação falhou, confira o código de 6 dígitos"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+msgid ""
+"We strongly recommend enabling the two-factor authentication using an "
+"authenticator app to help secure your account.\n"
+"                <br/>"
+msgstr ""
+"Recomendamos enfaticamente que ative a autenticação de dois fatores "
+"utilizando um aplicativo de autenticação para proteger a sua conta.\n"
+"                <br/>"
+
+#. module: auth_totp_mail
+#: model:mail.template,subject:auth_totp_mail.mail_template_totp_mail_code
+msgid "Your two-factor authentication code"
+msgstr "Seu código de autenticação de dois fatores"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
+msgid "activating Two-factor Authentication"
+msgstr "ativar a autenticação de dois fatores"
+
+#~ msgid "Account Security"
+#~ msgstr "Segurança da conta"
+
+#~ msgid "Name"
+#~ msgstr "Nome"

@@ -1,0 +1,747 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_pdf_quote_builder
+#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-09-16 21:23+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
+"sale_pdf_quote_builder/th/>\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.actions.report,print_report_name:sale_pdf_quote_builder.action_report_saleorder_raw
+msgid ""
+"(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
+"'Order - %s' % (object.name)"
+msgstr ""
+"(object.state ใน ('ร่าง', 'ส่ง') และ 'ใบเสนอราคา - %s' % (object.name)) หรือ "
+"'สั่งซื้อ - %s' % (object.name)"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "<i class=\"fa fa-arrow-right\"/> Link to the demo video"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
+msgid "<span class=\"pe-2\">Templates:</span>"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
+msgid "<span>Document type:</span>"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
+msgid ""
+"A form field set as used in product documents can't be linked to a quotation "
+"document."
+msgstr "ฟิลด์ฟอร์มที่ใช้ในเอกสารผลิตภัณฑ์ไม่สามารถเชื่อมโยงกับเอกสารใบเสนอราคาได้"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
+msgid ""
+"A form field set as used in quotation documents can't be linked to a product "
+"document."
+msgstr "ฟิลด์ฟอร์มที่ใช้ในเอกสารใบเสนอราคาไม่สามารถเชื่อมโยงกับเอกสารผลิตภัณฑ์ได้"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__access_token
+msgid "Access Token"
+msgstr "โทเค็นการเข้าถึง"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__active
+msgid "Active"
+msgstr "เปิดใช้งาน"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__add_by_default
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
+msgid "Add By Default"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
+msgid "All"
+msgstr "ทั้งหมด"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/controllers/quotation_document.py:0
+msgid "All files uploaded"
+msgstr "อัปโหลดไฟล์ทั้งหมด"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on_sale
+msgid ""
+"Allows you to share the document with your customers within a sale.\n"
+"Leave it empty if you don't want to share this document with sales "
+"customer.\n"
+"On quote: the document will be sent to and accessible by customers at any "
+"time.\n"
+"e.g. this option can be useful to share Product description files.\n"
+"On order confirmation: the document will be sent to and accessible by "
+"customers.\n"
+"e.g. this option can be useful to share User Manual or digital content "
+"bought on ecommerce. \n"
+"Inside quote: The document will be included in the pdf of the quotation and "
+"sale order between the header pages and the quote table. "
+msgstr ""
+"ช่วยให้คุณสามารถแชร์เอกสารกับลูกค้าของคุณภายในการขาย\n"
+"ปล่อยว่างไว้หากคุณไม่ต้องการแชร์เอกสารนี้กับลูกค้าฝ่ายขาย\n"
+"ในใบเสนอราคา: เอกสารจะถูกส่งถึงและลูกค้าสามารถเข้าถึงได้ตลอดเวลา\n"
+"เช่น ตัวเลือกนี้อาจมีประโยชน์ในการแชร์ไฟล์คำอธิบายผลิตภัณฑ์\n"
+"ในการยืนยันคำสั่งซื้อ: เอกสารจะถูกส่งถึงและลูกค้าสามารถเข้าถึงได้\n"
+"เช่น ตัวเลือกนี้อาจมีประโยชน์ในการแชร์คู่มือผู้ใช้หรือเนื้อหาดิจิทัลที่ซื้อจากอีคอมเมิร์ซ\n"
+"ในใบเสนอราคา: เอกสารจะรวมอยู่ใน pdf "
+"ของใบเสนอราคาและใบสั่งขายระหว่างหน้าส่วนหัวและตารางใบเสนอราคา "
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
+msgid "Archived"
+msgstr "เก็บถาวรแล้ว"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
+msgid "Attached To"
+msgstr "แนบกับ"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__local_url
+msgid "Attachment URL"
+msgstr "แนบไฟล์ URL"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__available_product_document_ids
+msgid "Available Product Documents"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__available_quotation_document_ids
+msgid "Available Quotation Documents"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__checksum
+msgid "Checksum/SHA1"
+msgstr "ตรวจสอบ/SHA1"
+
+#. module: sale_pdf_quote_builder
+#. odoo-javascript
+#: code:addons/sale_pdf_quote_builder/static/src/js/custom_content_kanban_like_widget/custom_field_card/custom_field_card.js:0
+msgid "Click to write content for the PDF quote..."
+msgstr "คลิกเขียนเนื้อหาสำหรับใบเสนอราคา PDF..."
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__company_id
+msgid "Company"
+msgstr "บริษัท"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
+msgid "Configure dynamic fields"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
+msgid "Configure the path to fill the form fields."
+msgstr "กำหนดค่าเส้นทางสำหรับการกรอกช่องฟอร์ม"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__create_uid
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__create_date
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
+msgid "Creation"
+msgstr "การสร้าง"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search
+msgid "Customizable"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__customizable_pdf_form_fields
+msgid "Customizable PDF Form Fields"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__db_datas
+msgid "Database Data"
+msgstr "ฐานข้อมูล"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
+msgid "Delete"
+msgstr "ลบ"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__description
+msgid "Description"
+msgstr "คำอธิบาย"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__display_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__display_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__display_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__document_type
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__document_type
+msgid "Document Type"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
+msgid "Document type"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
+msgid "Download"
+msgstr "ดาวน์โหลด"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "Download examples"
+msgstr "ดาวน์โหลดตัวอย่าง"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
+msgid "Edit"
+msgstr "แก้ไข"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__datas
+msgid "File Content (base64)"
+msgstr "เนื้อหาไฟล์ (base64)"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__raw
+msgid "File Content (raw)"
+msgstr "เนื้อหาไฟล์ (raw)"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__file_size
+msgid "File Size"
+msgstr "ขนาดไฟล์"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_order.py:0
+#: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__quotation_document__document_type__footer
+msgid "Footer"
+msgstr "ส่วนท้าย"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__name
+msgid "Form Field Name"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#: code:addons/sale_pdf_quote_builder/models/quotation_document.py:0
+msgid "Form Fields"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__form_field_ids
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__form_field_ids
+msgid "Form Fields Included"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.constraint,message:sale_pdf_quote_builder.constraint_sale_pdf_form_field_unique_name_per_doc_type
+msgid "Form field name must be unique for a given document type."
+msgstr "ชื่อฟิลด์แบบฟอร์มจะต้องไม่ซ้ำกันสำหรับประเภทเอกสารที่กำหนด"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_form_field
+msgid "Form fields of inside quotation documents."
+msgstr "ฟอร์มช่องใบเสนอราคาภายในเอกสาร"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__has_thumbnail
+msgid "Has Thumbnail"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_order.py:0
+#: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__quotation_document__document_type__header
+msgid "Header"
+msgstr "ส่วนหัว"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__sale_pdf_form_field__document_type__quotation_document
+msgid "Header/Footer"
+msgstr "ส่วนหัว/ส่วนท้าย"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__quotation_document_ids
+msgid "Headers and footers"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.actions.act_window,name:sale_pdf_quote_builder.quotation_document_action
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__quotation_document_ids
+#: model:ir.ui.menu,name:sale_pdf_quote_builder.sale_menu_quotation_document_action
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+msgid "Headers/Footers"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
+msgid "History"
+msgstr "ประวัติ"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__id
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__id
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__id
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__id
+msgid "ID"
+msgstr "ไอดี"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,help:sale_pdf_quote_builder.field_quotation_document__add_by_default
+msgid ""
+"If checked, this header or footer will be added by default on new quotes."
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,help:sale_pdf_quote_builder.field_quotation_document__active
+msgid ""
+"If unchecked, it will allow you to hide the header or footer without "
+"removing it."
+msgstr "หากไม่เลือกไว้ คุณสามารถซ่อนส่วนหัวหรือส่วนท้ายโดยไม่ต้องลบออก"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__image_height
+msgid "Image Height"
+msgstr "ความสูงของภาพ"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__image_src
+msgid "Image Src"
+msgstr "รูปภาพ Src"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__image_width
+msgid "Image Width"
+msgstr "ความกว้างรูปภาพ"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__index_content
+msgid "Indexed Content"
+msgstr "ดัชนีเนื้อหา"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on_sale__inside
+msgid "Inside quote pdf"
+msgstr "ใบเสนอราคาภายใน pdf"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
+msgid ""
+"Invalid form field name %(field_name)s. A form field name in a header or a "
+"footer can not start with \"sol_id_\"."
+msgstr ""
+"ชื่อฟิลด์ฟอร์มไม่ถูกต้อง %(field_name)s ชื่อฟิลด์ฟอร์มในส่วนหัวหรือส่วนท้ายไม่สามารถเริ่มต้นด้วย "
+"\"sol_id_\" ได้"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
+msgid ""
+"Invalid form field name %(field_name)s. It should only contain "
+"alphanumerics, hyphens or underscores."
+msgstr ""
+"ชื่อฟิลด์ฟอร์มไม่ถูกต้อง %(field_name)s ควรประกอบด้วยตัวอักษรและตัวเลข เครื่องหมายขีดกลาง "
+"หรือเครื่องหมายขีดล่างเท่านั้น"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
+msgid ""
+"Invalid path %(path)s. It should only contain alphanumerics, hyphens, "
+"underscores or points."
+msgstr ""
+"เส้นทาง %(path)s ไม่ถูกต้อง ควรประกอบด้วยตัวอักษรและตัวเลข เครื่องหมายยัติภังค์ "
+"เครื่องหมายขีดล่าง หรือจุดเท่านั้น"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__is_pdf_quote_builder_available
+msgid "Is Pdf Quote Builder Available"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__public
+msgid "Is public document"
+msgstr "เป็นเอกสารสาธารณะ"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/utils.py:0
+msgid ""
+"It seems that we're not able to process this pdf inside a quotation. It is "
+"either encrypted, or encoded in a format we do not support."
+msgstr ""
+"ดูเหมือนว่าเราไม่สามารถประมวลผล PDF นี้ภายในใบเสนอราคาได้ "
+"มีการเข้ารหัสหรือเข้ารหัสในรูปแบบที่เราไม่รองรับ"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__key
+msgid "Key"
+msgstr "คีย์"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__write_uid
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__write_uid
+msgid "Last Updated by"
+msgstr "อัปเดตครั้งล่าสุดโดย"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__write_date
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__write_date
+msgid "Last Updated on"
+msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
+msgid "Mark fields as safe to fill in the quote."
+msgstr "ทำเครื่องหมายช่องว่าปลอดภัยเพื่อกรอกใบเสนอราคา"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__mimetype
+msgid "Mime Type"
+msgstr "ประเภท Mime"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__name
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/ir_actions_report.py:0
+msgid "No"
+msgstr "ไม่"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+msgid "Only PDF documents can be attached inside a quote."
+msgstr "สามารถแนบเอกสาร PDF ในใบเสนอราคาได้เท่านั้น"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/quotation_document.py:0
+msgid "Only PDF documents can be used as header or footer."
+msgstr "เฉพาะเอกสาร PDF เท่านั้นที่สามารถใช้เป็นส่วนหัวหรือส่วนท้ายได้"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__original_id
+msgid "Original (unoptimized, unresized) attachment"
+msgstr "ต้นฉบับ (ไม่ได้ปรับให้เหมาะสม ไม่ได้ปรับขนาด) แนบไฟล์"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__path
+msgid "Path"
+msgstr "เส้นทาง"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.actions.act_window,help:sale_pdf_quote_builder.quotation_document_action
+msgid ""
+"Personalize your quotes with catchy header and footer pages\n"
+"                <br>\n"
+"                to boost your sales."
+msgstr ""
+"ปรับแต่งใบเสนอราคาของคุณด้วยหน้าส่วนหัวและส่วนท้ายที่สะดุดตาเพื่อ\n"
+"                <br>\n"
+"                เพิ่มยอดขายของคุณ"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
+msgid "Please use only relational fields until the last value of your path."
+msgstr "กรุณาใช้เฉพาะฟิลด์ที่สัมพันธ์กันจนถึงค่าสุดท้ายของเส้นทางของคุณ"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_order.py:0
+msgid "Product"
+msgstr "สินค้า"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_product_document
+#: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__sale_pdf_form_field__document_type__product_document
+msgid "Product Document"
+msgstr "เอกสารสินค้า"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__product_document_ids
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__product_document_ids
+msgid "Product Documents"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid ""
+"Provide header pages and footer pages to compose an attractive quotation "
+"with more information\n"
+"                        about your company, your products and you services. "
+"<br/>\n"
+"                        The pdf of your quotes will be built by putting "
+"together header pages, product descriptions,\n"
+"                        details of the quote and then the footer pages. <br/"
+">\n"
+"                        If empty, it will use those define in the company "
+"settings. <br/>"
+msgstr ""
+"จัดเตรียมหน้าส่วนหัวและหน้าส่วนท้ายเพื่อเขียนใบเสนอราคาที่น่าสนใจพร้อมข้อมูลเพิ่มเติม\n"
+"                        เกี่ยวกับบริษัท ผลิตภัณฑ์ และบริการของคุณ<br/>\n"
+"                        PDF ของใบเสนอราคาของคุณจะถูกสร้างขึ้นโดยการรวมหน้าส่วนหัว "
+"คำอธิบายผลิตภัณฑ์\n"
+"                        รายละเอียดของใบเสนอราคา และหน้าส่วนท้ายเข้าด้วยกัน <br/>\n"
+"                        หากว่างเปล่า จะใช้สิ่งที่กำหนดไว้ในการตั้งค่าบริษัท <br/>"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
+msgid "Quotation / Order"
+msgstr "ใบเสนอราคา / คำสั่ง"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
+msgid "Quotation Document"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__quotation_document_ids
+msgid "Quotation Documents"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
+msgid "Quotation Template"
+msgstr "เทมเพลตใบเสนอราคา"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__quotation_template_ids
+msgid "Quotation Templates"
+msgstr "เทมเพลตใบเสนอราคา"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_quotation_document
+msgid "Quotation's Headers & Footers"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_form_inherit_sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "Quote Builder"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "Quote Builder Demo Video"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__ir_attachment_id
+msgid "Related attachment"
+msgstr "ไฟล์แนบที่เกี่ยวข้อง"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_ir_actions_report
+msgid "Report Action"
+msgstr "การดําเนินการรายงาน"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_field
+msgid "Resource Field"
+msgstr "ข้อมูลทรัพยากร"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_id
+msgid "Resource ID"
+msgstr "ไอดีทรัพยากร"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_model
+msgid "Resource Model"
+msgstr "โมเดลทรัพยากร"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_name
+msgid "Resource Name"
+msgstr "ชื่อทรัพยากร"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on_sale
+msgid "Sale : Visible at"
+msgstr "การขาย : มองเห็นได้ที่"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.actions.server,name:sale_pdf_quote_builder.cron_post_upgrade_assign_missing_form_fields_ir_actions_server
+msgid "Sale Pdf Quote Builder: assign form fields to documents post upgrade"
+msgstr ""
+"โปรแกรมสร้างใบเสนอราคา PDF สำหรับการขาย: กำหนดฟิลด์ฟอร์มให้กับเอกสารหลังการอัปเกรด"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
+msgid "Sales Order"
+msgstr "คำสั่งขาย"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "รายการคำสั่งขาย"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__sequence
+msgid "Sequence"
+msgstr "ลำดับ"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__store_fname
+msgid "Stored Filename"
+msgstr "ชื่อไฟล์ที่จัดเก็บ"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
+msgid "The field %(field_name)s doesn't exist on model %(model_name)s"
+msgstr "ฟิลด์ %(field_name)s ไม่มีอยู่ในโมเดล %(model_name)s"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_form_field__name
+msgid "The form field name as written in the PDF."
+msgstr "ชื่อฟิลด์ฟอร์มตามที่เขียนไว้ในไฟล์ PDF"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_form_field__path
+msgid ""
+"The path to follow to dynamically fill the form field. \n"
+"Leave empty to be able to customized it in the quotation form."
+msgstr ""
+"เส้นทางที่ต้องปฏิบัติตามเพื่อกรอกช่องฟอร์มแบบไดนามิก \n"
+"เว้นว่างไว้เพื่อสามารถปรับแต่งในแบบฟอร์มใบเสนอราคาได้"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_order_line__product_document_ids
+msgid ""
+"The product documents for this order line that will be merged in the PDF "
+"quote."
+msgstr "เอกสารผลิตภัณฑ์สำหรับบรรทัดคำสั่งซื้อนี้ที่จะรวมอยู่ในใบเสนอราคา PDF"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__theme_template_id
+msgid "Theme Template"
+msgstr "เทมเพลตธีม"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search
+msgid "This document"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__thumbnail
+msgid "Thumbnail"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__type
+msgid "Type"
+msgstr "ประเภท"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.actions.act_window,help:sale_pdf_quote_builder.quotation_document_action
+msgid "Upload quotation headers and footers"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__url
+msgid "Url"
+msgstr "Url"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
+msgid "Visible to all"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__voice_ids
+msgid "Voice"
+msgstr "เสียง"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__website_id
+msgid "Website"
+msgstr "เว็บไซต์"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+msgid "When attached inside a quote, the document must be a file, not a URL."
+msgstr "เมื่อแนบไว้ในใบเสนอราคา เอกสารจะต้องเป็นไฟล์ ไม่ใช่ URL"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/ir_actions_report.py:0
+msgid "Yes"
+msgstr "ใช่"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,help:sale_pdf_quote_builder.field_quotation_document__type
+msgid ""
+"You can either upload a file from your computer or copy/paste an internet "
+"link to your file."
+msgstr ""
+"คุณสามารถอัปโหลดไฟล์จากคอมพิวเตอร์ของคุณ หรือคัดลอก/วางอินเตอร์เน็ตลิงก์ไปยังไฟล์ของคุณ"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
+msgid "on"
+msgstr "เมื่อ"
+
+#~ msgid "Group By"
+#~ msgstr "กลุ่มโดย"

@@ -1,0 +1,270 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_tax_python
+#
+# Translators:
+# Martin Trigaux, 2022
+#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-16 15:03+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
+"projects/odoo-19/account_tax_python/zh_Hans/>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
+msgid ""
+"\n"
+"    - Group of Taxes: The tax is a set of sub taxes.\n"
+"    - Fixed: The tax amount stays the same whatever the price.\n"
+"    - Percentage: The tax amount is a % of the price:\n"
+"        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+"        e.g 110 / (1 + 10%) = 100 (price included)\n"
+"    - Percentage Tax Included: The tax amount is a division of the price:\n"
+"        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+"        e.g 200 * (1 - 10%) = 180 (price included)\n"
+"        "
+msgstr ""
+"\n"
+"    - “税组”为一组子税项的统称。\n"
+"    - 固定税项：不论价钱多少，税款金额维持一样。\n"
+"    - 以百分比计算：税款为价钱的某个百分比：\n"
+"        例： 100 × (1 + 10%) = 110 （不包含价钱）\n"
+"        例： 110 ÷ (1 + 10%) = 100 （包含价钱）\n"
+"    - 以连税百分比计算：税款由总价钱除以某个百分比得出：\n"
+"        例： 180 ÷ (1 − 10%) = 200 （不包含价钱）\n"
+"        例： 200 × (1 − 10%) = 180 （包含价钱）\n"
+"        "
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
+msgid ""
+"Compute the amount of the tax.\n"
+"\n"
+":param base: float, actual amount on which the tax is applied\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: A object representing the product\n"
+msgstr ""
+"计算税款。\n"
+"\n"
+":param base: 浮点数字，计税用的实际金额\n"
+":param price_unit: 浮点数字\n"
+":param quantity: 浮点数字\n"
+":param product: 物件(object)，代表有关产品\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
+msgid "Custom Formula"
+msgstr "自定义公式"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Field '%s' is not accessible"
+msgstr "字段'%s'不可访问"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
+msgid "Formula"
+msgstr "公式"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
+msgid "Formula Decoded Info"
+msgstr "公式解码信息"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
+msgid "ID"
+msgstr "识别号"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Invalid AST node: %s"
+msgstr "无效 AST 节点：%s"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Invalid formula"
+msgstr "无效公式"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Kwargs are not allowed"
+msgstr "不允许使用 Kwargs"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only int, float or None are allowed as constant values"
+msgstr "只允许使用 int、float 或 None 作为常量值"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/models/account_tax.py:0
+msgid "Only primitive types are allowed in python tax formula context."
+msgstr "在 python 税收公式上下文中只允许使用原始类型。"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only product['string'] or uom['string'] read-access is allowed"
+msgstr ""
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only read access to identifiers is allowed"
+msgstr "只允许读取标识符"
+
+#. module: account_tax_python
+#: model:ir.model,name:account_tax_python.model_account_tax
+msgid "Tax"
+msgstr "税项"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
+msgid "Tax Computation"
+msgstr "税费计算"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Unknown function call"
+msgstr "未知函数调用"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Unknown identifier: %s"
+msgstr "未知标识符：%s"
+
+#~ msgid "Only product['string'] read-access is allowed"
+#~ msgstr "只允许对产品[‘字符串’]进行读取访问"
+
+#~ msgid ""
+#~ "\n"
+#~ "    - Group of Taxes: The tax is a set of sub taxes.\n"
+#~ "    - Fixed: The tax amount stays the same whatever the price.\n"
+#~ "    - Percentage of Price: The tax amount is a % of the price:\n"
+#~ "        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+#~ "        e.g 110 / (1 + 10%) = 100 (price included)\n"
+#~ "    - Percentage of Price Tax Included: The tax amount is a division of "
+#~ "the price:\n"
+#~ "        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+#~ "        e.g 200 * (1 - 10%) = 180 (price included)\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "    - 税组：税是一组子税。\n"
+#~ "    - 固定: 无论价格如何，税额都保持不变。\n"
+#~ "    - 价格百分比：税额是价格的百分比：\n"
+#~ "       例如100 * 10％= 110（不含价格）\n"
+#~ "       例如110 /（1 + 10％）= 100（含价格）\n"
+#~ "    - 含税价格的百分比：含税额除以价格:\n"
+#~ "       例如180 /（1 - 10％）= 200（不含价格）\n"
+#~ "       例如200 *（1 - 10％）= 180（含价格）\n"
+#~ "        "
+
+#~ msgid "Applicable Code"
+#~ msgstr "适用代码"
+
+#~ msgid ""
+#~ "Compute the amount of the tax by setting the variable 'result'.\n"
+#~ "\n"
+#~ ":param base_amount: float, actual amount on which the tax is applied\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res.company recordset singleton\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "通过设置变量‘结果’来计算税的总额\n"
+#~ "\n"
+#~ ":参数 base_amount: 浮点型, 税的实际额度\n"
+#~ ":参数 price_unit: 浮点型\n"
+#~ ":参数 quantity: 浮点型\n"
+#~ ":参数 company: res.company 记录单\n"
+#~ ":参数 product: product.product 记录单或者空\n"
+#~ ":参数 partner: res.partner 记录单或者空"
+
+#~ msgid ""
+#~ "Compute the amount of the tax by setting the variable 'result'.\n"
+#~ "\n"
+#~ ":param base_amount: float, actual amount on which the tax is applied\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "通过设置变量‘结果’来计算税的总额\n"
+#~ "\n"
+#~ ":参数 base_amount: 浮点型, 税的实际额度\n"
+#~ ":参数 price_unit: 浮点型\n"
+#~ ":参数 quantity: 浮点型\n"
+#~ ":参数 company: res.company 记录单\n"
+#~ ":参数 product: product.product 记录单或者空\n"
+#~ ":参数 partner: res.partner 记录单或者空"
+
+#~ msgid ""
+#~ "Determine if the tax will be applied by setting the variable 'result' to "
+#~ "True or False.\n"
+#~ "\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param company: res.company recordset singleton\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "通过设置变量‘结果’的真或假来决定是否计算税的额度\n"
+#~ "\n"
+#~ ":参数 price_unit: 浮点型\n"
+#~ ":参数 quantity: 浮点型\n"
+#~ ":参数 company: res.company 记录单\n"
+#~ ":参数 product: product.product 记录单或者空\n"
+#~ ":参数 partner: res.partner 记录单或者空"
+
+#~ msgid ""
+#~ "Determine if the tax will be applied by setting the variable 'result' to "
+#~ "True or False.\n"
+#~ "\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: product.product recordset singleton or None\n"
+#~ ":param partner: res.partner recordset singleton or None"
+#~ msgstr ""
+#~ "通过设置变量‘结果’的真或假来决定是否计算税的额度\n"
+#~ "\n"
+#~ ":参数 price_unit: 浮点型\n"
+#~ ":参数 quantity: 浮点型\n"
+#~ ":参数 company: res.company 记录单\n"
+#~ ":参数 product: product.product 记录单或者空\n"
+#~ ":参数 partner: res.partner 记录单或者空"
+
+#~ msgid "Python Code"
+#~ msgstr "Python 代码"
+
+#~ msgid "Templates for Taxes"
+#~ msgstr "税模板"

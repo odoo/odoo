@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_share" name="Share">
+    <div t-attf-class="s_share text-start o_no_link_popover #{_classes}">
+        <h4 t-if="not _no_title" class="s_share_title d-none">Share</h4>
+        <a t-if="not _exclude_share_links or not 'facebook' in _exclude_share_links" href="https://www.facebook.com/sharer/sharer.php?u={url}" t-attf-class="s_share_facebook #{_link_classes}" target="_blank" aria-label="Facebook">
+            <i t-attf-class="fa fa-facebook #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
+        <a t-if="not _exclude_share_links or not 'twitter' in _exclude_share_links" href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" t-attf-class="s_share_twitter #{_link_classes}" target="_blank" aria-label="X">
+            <i t-attf-class="fa fa-twitter #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
+        <a t-if="not _exclude_share_links or not 'linkedin' in _exclude_share_links" href="https://www.linkedin.com/sharing/share-offsite/?url={url}" t-attf-class="s_share_linkedin #{_link_classes}" target="_blank" aria-label="LinkedIn">
+            <i t-attf-class="fa fa-linkedin #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
+        <a t-if="not _exclude_share_links or not 'whatsapp' in _exclude_share_links" href="https://wa.me/?text={title}" t-attf-class="s_share_whatsapp #{_link_classes}" target="_blank" aria-label="WhatsApp">
+            <i t-attf-class="fa fa-whatsapp #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
+        <a t-if="not _exclude_share_links or not 'pinterest' in _exclude_share_links" href="https://pinterest.com/pin/create/button/?url={url}&amp;media={media}&amp;description={title}" t-attf-class="s_share_pinterest #{_link_classes}" target="_blank" aria-label="Pinterest">
+            <i t-attf-class="fa fa-pinterest #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
+        <a t-if="not _exclude_share_links or not 'email' in _exclude_share_links" href="mailto:?body={url}&amp;subject={title}" t-attf-class="s_share_email #{_link_classes}" aria-label="Email">
+            <i t-attf-class="fa fa-envelope #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
+    </div>
+</template>
+
+<asset id="website.s_share_000_scss" name="Share 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_share/000.scss</path>
+</asset>
+
+</odoo>

@@ -1,0 +1,1993 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * repair
+#
+# Translators:
+# Murat Durmuş <muratd@projetgrup.com>, 2022
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2022
+# Buket Şeker <buket_skr@hotmail.com>, 2022
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2022
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2022
+# Ali Zeynel AĞCA <zeynelagca@gmail.com>, 2022
+# abc Def <hdogan1974@gmail.com>, 2022
+# Halil, 2022
+# Umur Akın <umura@projetgrup.com>, 2022
+# Ediz Duman <neps1192@gmail.com>, 2022
+# Levent Karakaş <levent@mektup.at>, 2022
+# Martin Trigaux, 2022
+# Murat Kaplan <muratk@projetgrup.com>, 2022
+# Özlem Atalay <ozlema@eskayazilim.com.tr>, 2022
+# Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2022
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
+# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
+# İlknur Gözütok, 2023
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"PO-Revision-Date: 2025-11-21 14:45+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/repair/"
+"tr/>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/stock_warehouse.py:0
+msgid "%(name)s Sequence repair"
+msgstr "%(name)s Dizi onarımı"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
+msgid "%(product)s: Insufficient Quantity To Repair"
+msgstr "%(product)s: Onarım İçin Yeterli Miktar Yok"
+
+#. module: repair
+#: model:ir.actions.report,print_report_name:repair.action_report_repair_order
+msgid "('Repair Order - %s' % (object.name))"
+msgstr "('Onarım Siparişi - %s' % (nesne.adı))"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "(<i>Recycle</i>)"
+msgstr "(<i>Geri Dönüşüm</i>)"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "(<i>Remove</i>)"
+msgstr "(<i>Kaldır</i>)"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__state
+msgid ""
+"* The 'New' status is used when a user is encoding a new and unconfirmed "
+"repair order.\n"
+"* The 'Confirmed' status is used when a user confirms the repair order.\n"
+"* The 'Under Repair' status is used when the repair is ongoing.\n"
+"* The 'Repaired' status is set when repairing is completed.\n"
+"* The 'Cancelled' status is used when user cancel repair order."
+msgstr ""
+"* 'Yeni' durumu, kullanıcı yeni ve onaylanmamış bir onarım siparişini "
+"kodlarken kullanılır.\n"
+"* 'Onaylandı' durumu, kullanıcı onarım emrini onayladığında kullanılır.\n"
+"* 'Onarım Altında' durumu onarım devam ederken kullanılır.\n"
+"* Onarım tamamlandığında 'Onarıldı' durumu ayarlanır.\n"
+"* 'İptal Edildi' durumu, kullanıcı onarım emrini iptal ettiğinde kullanılır."
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
+msgid "<br/>You can still confirm the repair of"
+msgstr "<br/>Onarımını hala onaylayabilirsiniz"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "<i>(Add)</i>"
+msgstr "<i>(Ekle)</i>"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
+msgid "<span class=\"col-6\">Confirmed</span>"
+msgstr "<span class=\"col-6\">Onaylandı</span>"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
+msgid "<span class=\"col-6\">Late</span>"
+msgstr "<span class=\"col-6\">Gecikenler</span>"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
+msgid "<span class=\"col-6\">Under Repair</span>"
+msgstr "<span class=\"col-6\">Onarım Altında</span>"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
+msgid "<span class=\"o_stat_text\">Done:</span>"
+msgstr "<span class=\"o_stat_text\">Tamamlandı:</span>"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
+msgid "<span class=\"o_stat_text\">Repair Parts:</span>"
+msgstr "<span class=\"o_stat_text\">Onarım Parçaları:</span>"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "<span class=\"o_stat_text\">Sale Order</span>"
+msgstr "<span class=\"o_stat_text\">Satış Siparişi</span>"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
+msgid "<span class=\"o_stat_text\">To Do:</span>"
+msgstr "<span class=\"o_stat_text\">Yapılacaklar:</span>"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
+msgid "<span>Orders</span>"
+msgstr "<span>Siparişler</span>"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "<span>Repair Order #</span>"
+msgstr "<span>Onarım Siparişi #</span>"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "<strong>Customer:</strong>"
+msgstr "<strong>Müşteri:</strong>"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "<strong>Lot/Serial:</strong>"
+msgstr "<strong>Lot/Seri:</strong>"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "<strong>Product:</strong>"
+msgstr "<strong>Ürün:</strong>"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "<strong>Responsible:</strong>"
+msgstr "<strong>Sorumlu:</strong>"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "<strong>Status:</strong>"
+msgstr "<strong>Durumu:</strong>"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
+msgid ""
+"? , but get ready to have fun taking inventory to fix the negative stock "
+"quantity!"
+msgstr ""
+"? ama negatif stok miktarını düzeltmek için envanter sayımı yapmaya "
+"hazırlanın, eğlenceli olacak!"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
+msgid "Action Needed"
+msgstr "Aksiyon Gerekiyor"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_ids
+msgid "Activities"
+msgstr "Aktiviteler"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Etkinlik İstisna Dekorasyonu"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_state
+msgid "Activity State"
+msgstr "Aktivite Durumu"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Aktivite Türü İmgesi"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.repair_order_view_activity
+msgid "Activity view"
+msgstr "Faaliyet görünümü"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__add
+msgid "Add"
+msgstr "Ekle"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Add a line"
+msgstr "Satır Ekle"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Add internal notes."
+msgstr "İç not ekle."
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__location_dest_id
+msgid "Added Parts Destination Location"
+msgstr "Eklenen Parçalar Hedef Konum"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__search_date_category__after
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "After"
+msgstr "Sonra"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
+msgid "All"
+msgstr "Tümü"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__is_parts_available
+msgid "All Parts are available"
+msgstr "Tüm Parçalar Mevcuttur"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__allowed_lot_ids
+msgid "Allowed Lot"
+msgstr "İzin Verilen Lot"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr "İzin Verilen Birim"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__reserve_visible
+msgid "Allowed to Reserve Production"
+msgstr "Rezerve Üretime İzin Ver"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__unreserve_visible
+msgid "Allowed to Unreserve Production"
+msgstr "Rezerve Üretimi Kaldırmaya İzin Ver"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__is_parts_late
+msgid "Any Part is late"
+msgstr "Herhangi Bir Parça Geç Kaldı"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/product.py:0
+msgid ""
+"As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
+"been used for this product, the change of unit of measure can not be done.If "
+"you want to change it, please archive the product and create a new one."
+msgstr ""
+"Bu ürün için %(uom)s dışında başka bir ölçü birimi (örn: %(problem_uom)s) "
+"kullanıldığından, ölçü birimi değişikliği yapılamaz, değiştirmek isterseniz "
+"lütfen ürünü arşivleyin ve yeni bir tane oluşturun."
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
+msgid "Attachment Count"
+msgstr "Ek Sayısı"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__parts_availability_state__available
+msgid "Available"
+msgstr "Uygun"
+
+#. module: repair
+#. odoo-javascript
+#: code:addons/repair/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Repair"
+msgstr "Onarıma Geri Dön"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__search_date_category__before
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Before"
+msgstr "Önce"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.product_view_search_catalog
+msgid "BoM Components"
+msgstr "BoM Bileşenleri"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/stock_warehouse.py:0
+msgid "Can't find any production location."
+msgstr "Üretim yeri bulunamadı."
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Cancel Repair"
+msgstr "Onarımı İptal Et"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__cancel
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Cancelled"
+msgstr "İptal Edildi"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Catalog"
+msgstr "Katalog"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Check availability"
+msgstr "Uygunluk Kontrolü"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__partner_id
+msgid ""
+"Choose partner for whom the order will be invoiced and delivered. You can "
+"find a partner by its Name, TIN, Email or Internal Reference."
+msgstr ""
+"Siparişin faturalanacağı ve teslim edileceği iş ortağını seçin. Bir iş "
+"ortağını Adı, TIN, E-posta veya Dahili Referansına göre bulabilirsiniz."
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_tags__color
+msgid "Color Index"
+msgstr "Renk"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__company_id
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Company"
+msgstr "Firma"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
+msgid "Component Destination Location"
+msgstr "Bileşen Hedef Konumu"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__location_id
+#: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
+msgid "Component Source Location"
+msgstr "Bileşen Kaynak Konumu"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__parts_availability
+msgid "Component Status"
+msgstr "Bileşen Durumu"
+
+#. module: repair
+#: model:ir.ui.menu,name:repair.repair_menu_config
+#: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
+msgid "Configuration"
+msgstr "Ayarlar"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Confirm Repair"
+msgstr "Onarımı Onayla"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/stock_picking.py:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__confirmed
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Confirmed"
+msgstr "Doğrulanmış"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Create Quotation"
+msgstr "Teklif Oluştur"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/stock_picking.py:0
+#: model:ir.actions.server,name:repair.action_create_repair_order
+msgid "Create Repair"
+msgstr "Onarım Oluştur"
+
+#. module: repair
+#: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
+msgid "Create a new tag"
+msgstr "Yeni etiket oluştur"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_product_product__service_tracking
+#: model:ir.model.fields,field_description:repair.field_product_template__service_tracking
+msgid "Create on Order"
+msgstr "Sipariş Üzerine Oluştur"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__create_uid
+#: model:ir.model.fields,field_description:repair.field_repair_tags__create_uid
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__create_uid
+msgid "Created by"
+msgstr "Tarafından oluşturuldu"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__create_date
+#: model:ir.model.fields,field_description:repair.field_repair_tags__create_date
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__create_date
+msgid "Created on"
+msgstr "Oluşturuldu"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Creates a new serial/lot number"
+msgstr "Yeni seri/lot numarası oluşturur."
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__partner_id
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Customer"
+msgstr "Müşteri"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__search_date_category
+msgid "Date Category"
+msgstr "Tarih Kategorisi"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Demand"
+msgstr "Talep"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Description"
+msgstr "Açıklama"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Details"
+msgstr "Detaylar"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_product_product__display_name
+#: model:ir.model.fields,field_description:repair.field_product_template__display_name
+#: model:ir.model.fields,field_description:repair.field_repair_order__display_name
+#: model:ir.model.fields,field_description:repair.field_repair_tags__display_name
+#: model:ir.model.fields,field_description:repair.field_sale_order__display_name
+#: model:ir.model.fields,field_description:repair.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_forecasted_product_product__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_lot__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_move__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_traceability_report__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_warehouse__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__display_name
+msgid "Display Name"
+msgstr "İsim Göster"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "End Repair"
+msgstr "Onarımı Bitir"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__tracking
+msgid "Ensure the traceability of a storable product in your warehouse."
+msgstr "Deponuzda stoklanabilir bir ürünün izlenebilirliğini sağlayın."
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
+msgid "Exp %s"
+msgstr "Exp %s"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__parts_availability_state__expected
+msgid "Expected"
+msgstr "Beklenen"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_follower_ids
+msgid "Followers"
+msgstr "Takipçiler"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Takipçiler (İş ortakları)"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Yazı tipi harika simgesi ör. fa-görevler"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid ""
+"For some of the parts, there is a difference between the initial demand and "
+"the actual quantity that was used. Are you sure you want to confirm ?"
+msgstr ""
+"Bazı parçalar için, ilk talep ile kullanılan gerçek miktar arasında bir fark "
+"vardır. Onaylamak istediğinizden emin misiniz?"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Future Activities"
+msgstr "Sonraki Aktiviteler"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__has_message
+msgid "Has Message"
+msgstr "Mesaj Var"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__has_uncomplete_moves
+msgid "Has Uncomplete Moves"
+msgstr "Tamamlanmamış Hareketleri Var"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_product_product__id
+#: model:ir.model.fields,field_description:repair.field_product_template__id
+#: model:ir.model.fields,field_description:repair.field_repair_order__id
+#: model:ir.model.fields,field_description:repair.field_repair_tags__id
+#: model:ir.model.fields,field_description:repair.field_sale_order__id
+#: model:ir.model.fields,field_description:repair.field_sale_order_line__id
+#: model:ir.model.fields,field_description:repair.field_stock_forecasted_product_product__id
+#: model:ir.model.fields,field_description:repair.field_stock_lot__id
+#: model:ir.model.fields,field_description:repair.field_stock_move__id
+#: model:ir.model.fields,field_description:repair.field_stock_move_line__id
+#: model:ir.model.fields,field_description:repair.field_stock_picking__id
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__id
+#: model:ir.model.fields,field_description:repair.field_stock_traceability_report__id
+#: model:ir.model.fields,field_description:repair.field_stock_warehouse__id
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__id
+msgid "ID"
+msgstr "ID"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_exception_icon
+msgid "Icon"
+msgstr "Simge"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "İstisnai bir etkinliği belirtmek için kullanılan simge."
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_has_error
+#: model:ir.model.fields,help:repair.field_repair_order__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "İşaretliyse, bazı mesajlar gönderi hatası içermektedir."
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__under_warranty
+msgid ""
+"If ticked, the sales price will be set to 0 for all products transferred "
+"from the repair order."
+msgstr ""
+"İşaretlenirse, onarım siparişinden aktarılan tüm ürünler için satış fiyatı 0 "
+"olarak ayarlanacaktır."
+
+#. module: repair
+#: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
+msgid ""
+"In a repair order, you can detail the components you remove,\n"
+"                add or replace and record the time you spent on the "
+"different\n"
+"                operations."
+msgstr ""
+"Bir onarım siparişinde, sildiğiniz, eklediğiniz ya da değiştirdiğiniz "
+"bileşenleri ayrıntılandırabilirsiniz ve farklı işlemlere harcadığınız süreyi "
+"kaydedebilirsiniz."
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_lot__in_repair_count
+msgid "In repair count"
+msgstr "Onarımda Olan Sayısı"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.product_view_search_catalog
+msgid "In the Repair Order"
+msgstr "Onarım Siparişinde"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__internal_notes
+msgid "Internal Notes"
+msgstr "İç Notlar"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__move_id
+msgid "Inventory Move"
+msgstr "Envanter Hareketi"
+
+#. module: repair
+#: model:ir.actions.act_window,name:repair.action_repair_move_lines
+msgid "Inventory Moves"
+msgstr "Stok Hareketleri"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_is_follower
+msgid "Is Follower"
+msgstr "Takipçi mi"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "Jane Smith"
+msgstr "Jane Smith"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "John Doe"
+msgstr "John Doe"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "L12345"
+msgstr "L12345"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "Laptop"
+msgstr "Dizüstü bilgisayar"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__write_uid
+#: model:ir.model.fields,field_description:repair.field_repair_tags__write_uid
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__write_uid
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__write_date
+#: model:ir.model.fields,field_description:repair.field_repair_tags__write_date
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__write_date
+msgid "Last Updated on"
+msgstr "Son Güncelleme"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__parts_availability_state__late
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Late"
+msgstr "Geciken"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Late Activities"
+msgstr "Geciken Aktiviteler"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__parts_availability
+msgid ""
+"Latest parts availability status for this RO. If green, then the RO's "
+"readiness status is ready."
+msgstr ""
+"Bu RO için en son parça kullanılabilirlik durumu. Yeşilse, RO'nun hazır olma "
+"durumu hazırdır."
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__location_id
+msgid "Location"
+msgstr "Konum"
+
+#. module: repair
+#: model:ir.model,name:repair.model_stock_lot
+#: model:ir.model.fields,field_description:repair.field_repair_order__lot_id
+msgid "Lot/Serial"
+msgstr "Lot/Seri"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error
+msgid "Message Delivery error"
+msgstr "Mesaj Teslim hatası"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_ids
+msgid "Messages"
+msgstr "Mesajlar"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "My Activities"
+msgstr "Aktivitelerim"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Aktivite Son Tarihim"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__draft
+#: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "New"
+msgstr "Yeni"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Sonraki Aktivite Takvimi Etkinliği"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Sonraki Aktivite Son Tarihi"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_summary
+msgid "Next Activity Summary"
+msgstr "Sonraki Aktivite Özeti"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_type_id
+msgid "Next Activity Type"
+msgstr "Sonraki Aktivitie Türü"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/stock_warehouse.py:0
+msgid "No location of type Inventory Loss found"
+msgstr ""
+
+#. module: repair
+#: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
+msgid "No repair order found. Let's create one!"
+msgstr "Onarım siparişi bulunamadı. Hadi bir tane oluşturun!"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__0
+msgid "Normal"
+msgstr "Normal"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
+msgid "Not Available"
+msgstr "Mevcut Değil"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
+msgid ""
+"Note that the warehouses of the return and repair locations don't match!"
+msgstr "İade ve onarım yerlerinin depolarının eşleşmediğini unutmayın!"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Aksiyon Sayısı"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_late
+msgid "Number of Late Repair Orders"
+msgstr "Gecikmiş Onarım Siparişi Sayısı"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_confirmed
+msgid "Number of Repair Orders Confirmed"
+msgstr "Onaylanan Onarım Siparişi Sayısı"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_under_repair
+msgid "Number of Repair Orders Under Repair"
+msgstr "Onarımı Devam Eden Onarım Siparişi Sayısı"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_ready
+msgid "Number of Repair Orders to Process"
+msgstr "İşlenecek Onarım Siparişi Sayısı"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
+msgid "Number of errors"
+msgstr "Hata adedi"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "İşlem gerektiren mesaj sayısı"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Teslimat hatası olan mesaj adedi"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_picking__nbr_repairs
+msgid "Number of repairs linked to this picking"
+msgstr "Bu toplama işlemine bağlı onarım sayısı"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
+msgid "Open"
+msgstr "Açık"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__picking_type_id
+msgid "Operation Type"
+msgstr "Operasyon Türü"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Operations"
+msgstr "Operasyonlar"
+
+#. module: repair
+#: model:ir.ui.menu,name:repair.repair_order_menu
+msgid "Orders"
+msgstr "Siparişler"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__move_ids
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Parts"
+msgstr "Parçalar"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__parts_availability_state
+msgid "Parts Availability State"
+msgstr "Parça Uygunluk Durumu"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "Pending"
+msgstr "Beklemede"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Picked"
+msgstr "Toplandı"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__picking_product_ids
+msgid "Picking Product"
+msgstr "Ürün Toplama"
+
+#. module: repair
+#: model:ir.model,name:repair.model_stock_picking_type
+msgid "Picking Type"
+msgstr "Toplama Türü"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__picking_type_visible
+msgid "Picking Type Visible"
+msgstr "Toplama Türü Görünür"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
+msgid "Please set the first Serial Number or a default sequence"
+msgstr "Lütfen ilk Seri Numarasını veya varsayılan bir sırayı ayarlayın"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__priority
+msgid "Priority"
+msgstr "Öncelik"
+
+#. module: repair
+#: model:ir.model,name:repair.model_product_template
+#: model:ir.model.fields,field_description:repair.field_repair_order__picking_product_id
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_id
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Product"
+msgstr "Ürün"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "Product A"
+msgstr "Ürün A"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "Product B"
+msgstr "Ürün B"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_product_product__product_catalog_product_is_in_repair
+msgid "Product Catalog Product Is In Repair"
+msgstr "Ürün Kataloğu Ürünü Onarımda"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__product_location_dest_id
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_product_location_dest_id
+msgid "Product Destination Location"
+msgstr "Ürün Varış Yeri"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Product Moves"
+msgstr "Ürün Hareketleri"
+
+#. module: repair
+#: model:ir.model,name:repair.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Ürün Harketleri (Stok Hareket Satırları)"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__product_qty
+msgid "Product Quantity"
+msgstr "Ürün Miktarı"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__product_location_src_id
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_product_location_src_id
+msgid "Product Source Location"
+msgstr "Ürün Kaynak Konumu"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__tracking
+msgid "Product Tracking"
+msgstr "Ürün Takibi"
+
+#. module: repair
+#: model:ir.model,name:repair.model_product_product
+msgid "Product Variant"
+msgstr "Ürün Varyantı"
+
+#. module: repair
+#: model:ir.ui.menu,name:repair.repair_menu_product_product
+msgid "Product Variants"
+msgstr "Ürün Varyantları"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__product_id
+msgid "Product to Repair"
+msgstr "Onarılacak Ürün"
+
+#. module: repair
+#: model:ir.ui.menu,name:repair.repair_menu_product_template
+msgid "Products"
+msgstr "Ürünler"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__lot_id
+msgid "Products repaired are all belonging to this lot"
+msgstr "Onarılan ürünlerin hepsi bu partiye aittir"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__repair_properties
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Properties"
+msgstr "Özellikler"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quant_ids
+msgid "Quant"
+msgstr "Miktar"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quantity
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
+msgid "Quantity"
+msgstr "Miktar"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "RO123456"
+msgstr "RO123456"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__rating_ids
+msgid "Ratings"
+msgstr "Değerlendirmeler"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Ready"
+msgstr "Hazır"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__recycle
+msgid "Recycle"
+msgstr "Geri Dönüşüm"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_recycle_location_dest_id
+msgid "Recycle Destination Location"
+msgstr "Geri Dönüşüm Hedef Konumu"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__recycle_location_id
+msgid "Recycled Parts Destination Location"
+msgstr "Geri Dönüştürülen Parçaların Varış Yeri"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__reference_ids
+msgid "References"
+msgstr "Referanslar"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__remove
+msgid "Remove"
+msgstr "Kaldır"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_remove_location_dest_id
+msgid "Remove Destination Location"
+msgstr "Hedef Konumu Kaldır"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__parts_location_id
+msgid "Removed Parts Destination Location"
+msgstr "Sökülen Parçalar Varış Yeri"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_move__repair_id
+#: model:ir.model.fields,field_description:repair.field_stock_picking__repair_ids
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__repair_id
+#: model:ir.model.fields.selection,name:repair.selection__stock_picking_type__code__repair_operation
+msgid "Repair"
+msgstr "Onarım"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_warehouse__repair_mto_pull_id
+msgid "Repair MTO Rule"
+msgstr "Onarım MTO Kuralı"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Repair Notes"
+msgstr "Onarım Notları"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_warehouse__repair_type_id
+msgid "Repair Operation Type"
+msgstr "Onarım İşlem Türü"
+
+#. module: repair
+#: model:ir.actions.report,name:repair.action_report_repair_order
+#: model:ir.model,name:repair.model_repair_order
+#: model:ir.model.fields,field_description:repair.field_sale_order__repair_order_ids
+#: model:ir.model.fields.selection,name:repair.selection__product_template__service_tracking__repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Repair Order"
+msgstr "Onarım Siparişi"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_sale_order__repair_count
+msgid "Repair Order(s)"
+msgstr "Onarım Sipariş(ler)i"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/sale_order.py:0
+#: code:addons/repair/models/stock_picking.py:0
+#: model:ir.actions.act_window,name:repair.action_picking_repair
+#: model:ir.actions.act_window,name:repair.action_picking_repair_graph
+#: model:ir.actions.act_window,name:repair.action_repair_order_form
+#: model:ir.actions.act_window,name:repair.action_repair_order_tree
+#: model:ir.model.fields,field_description:repair.field_stock_lot__repair_line_ids
+#: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_form
+#: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_graph
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_pivot
+msgid "Repair Orders"
+msgstr "Onarım Siparişleri"
+
+#. module: repair
+#: model:ir.actions.act_window,name:repair.action_repair_order_graph
+msgid "Repair Orders Analysis"
+msgstr "Onarım Siparişleri Analizi"
+
+#. module: repair
+#: model:ir.ui.menu,name:repair.repair_menu_tag
+msgid "Repair Orders Tags"
+msgstr "Onarım Siparişleri Etiketleri"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__repair_properties_definition
+msgid "Repair Properties"
+msgstr "Onarım Özellikleri"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__name
+msgid "Repair Reference"
+msgstr "Onarım Referansı"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__repair_request
+msgid "Repair Request"
+msgstr "Onarım Talebi"
+
+#. module: repair
+#: model:product.template,name:repair.product_service_order_repair_product_template
+msgid "Repair Services"
+msgstr "Onarım Servisleri"
+
+#. module: repair
+#: model:ir.model,name:repair.model_repair_tags
+msgid "Repair Tags"
+msgstr "Onarım Etiketleri"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
+msgid "Repair must be under repair in order to end reparation."
+msgstr "Tamirin sona ermesi için tamir durumu altında olmalıdır."
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/stock_lot.py:0
+msgid "Repair orders of %s"
+msgstr "%snin onarım siparişleri"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_lot__repair_part_count
+msgid "Repair part count"
+msgstr "Onarım parça sayısı"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__done
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Repaired"
+msgstr "Onarıldı"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_lot__repaired_count
+msgid "Repaired count"
+msgstr "Onarılan sayısı"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/stock_warehouse.py:0
+#: model:ir.ui.menu,name:repair.menu_repair_order
+#: model:ir.ui.menu,name:repair.repair_menu
+#: model:stock.picking.type,name:repair.picking_type_warehouse0_repair
+#: model_terms:ir.ui.view,arch_db:repair.view_sale_order_form_inherit_repair
+msgid "Repairs"
+msgstr "Onarımlar"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
+msgid "Repairs order"
+msgstr "Onarım Siparişi"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/stock_warehouse.py:0
+msgid "Replenish on Order (MTO)"
+msgstr "(MTO) Sipariş Üzerine İkmal"
+
+#. module: repair
+#: model:ir.ui.menu,name:repair.repair_menu_reporting
+#: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
+msgid "Reporting"
+msgstr "Raporlama"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__user_id
+msgid "Responsible"
+msgstr "Sorumlu"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_user_id
+msgid "Responsible User"
+msgstr "Sorumlu Kullanıcı"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Returned"
+msgstr "İade"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS İleti hatası"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__sale_order_id
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Sale Order"
+msgstr "Satış Siparişi"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__sale_order_line_id
+msgid "Sale Order Line"
+msgstr "Satış Sipariş Satırı"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__repair_request
+msgid "Sale Order Line Description."
+msgstr "Satış Siparişi Satırı Açıklaması."
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__sale_order_line_id
+msgid "Sale Order Line from which the Repair Order comes from."
+msgstr "Onarım Siparişinin geldiği Satış Siparişi Satırı."
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
+msgid "Sale Order from which the Repair Order comes from."
+msgstr "Onarım Siparişinin geldiği Satış Siparişi."
+
+#. module: repair
+#: model:ir.model,name:repair.model_sale_order
+msgid "Sales Order"
+msgstr "Satış Siparişi"
+
+#. module: repair
+#: model:ir.model,name:repair.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Satış Sipariş Satırı"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__schedule_date
+msgid "Scheduled Date"
+msgstr "Planlanan Tarih"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Search Repair Orders"
+msgstr "Onarım Siparişlerini Ara"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
+msgid "Serial number is required for product to repair : %s"
+msgstr "Ürünün onarılabilmesi için seri numarası gereklidir: %s"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Set to Draft"
+msgstr "Taslak olarak ayarla"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Show all records whose next activity date is past"
+msgstr "Bir sonraki etkinlik tarihi geçmiş olan tüm kayıtları göster"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Start Repair"
+msgstr "Onarımı Başlat"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__state
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Status"
+msgstr "Durumu"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Aktivitelere göre durum \n"
+"Gecikmiş\\: Son tarih geçmiş\n"
+"Bugün\\: Aktivite tarihi bugün\n"
+"Planlanmış\\: Gelecek Aktiviteler."
+
+#. module: repair
+#: model:ir.model,name:repair.model_stock_move
+msgid "Stock Move"
+msgstr "Stok Hareketi"
+
+#. module: repair
+#: model:ir.model,name:repair.model_stock_forecasted_product_product
+msgid "Stock Replenishment Report"
+msgstr "Stok İkmal Raporu"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_tags__name
+msgid "Tag Name"
+msgstr "Etiket Adı"
+
+#. module: repair
+#: model:ir.model.constraint,message:repair.constraint_repair_tags_name_uniq
+msgid "Tag name already exists!"
+msgstr "Etiket adı zaten mevcut!"
+
+#. module: repair
+#: model:ir.actions.act_window,name:repair.action_repair_order_tag
+#: model:ir.model.fields,field_description:repair.field_repair_order__tag_ids
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_search
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_tree
+msgid "Tags"
+msgstr "Etiketler"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__reserve_visible
+msgid "Technical field to check when we can reserve quantities"
+msgstr ""
+"Miktarları ne zaman rezerve edebileceğimizi kontrol etmek için teknik alan"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__unreserve_visible
+msgid "Technical field to check when we can unreserve"
+msgstr "Rezerveyi ne zaman iptal edeceğimizi kontrol etmek için teknik alan"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__search_date_category__day_2
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "The day after tomorrow"
+msgstr "Yarından sonraki gün"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "This is a repair note."
+msgstr "Bu bir onarım notudur."
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_stock_picking_type__default_product_location_dest_id
+msgid ""
+"This is the default destination location for the product to be repaired in "
+"repair orders with this operation type."
+msgstr ""
+"Bu, bu işlem türüne sahip onarım siparişlerinde onarılacak ürün için "
+"varsayılan hedef konumdur."
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_stock_picking_type__default_recycle_location_dest_id
+msgid ""
+"This is the default recycle destination location when you create a repair "
+"order with this operation type."
+msgstr ""
+"Bu işlem türüyle bir onarım emri oluşturduğunuzda varsayılan geri dönüşüm "
+"hedefi konumu budur."
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_stock_picking_type__default_remove_location_dest_id
+msgid ""
+"This is the default remove destination location when you create a repair "
+"order with this operation type."
+msgstr ""
+"Bu işlem türüyle bir onarım emri oluşturduğunuzda varsayılan kaldırma hedefi "
+"konumu budur."
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_stock_picking_type__default_product_location_src_id
+msgid ""
+"This is the default source location for the product to be repaired in repair "
+"orders with this operation type."
+msgstr ""
+"Bu işlem türüne sahip onarım siparişlerinde onarılacak ürün için varsayılan "
+"kaynak konumudur."
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__location_id
+msgid ""
+"This is the location where the components of product to repair is located."
+msgstr "Bu, onarılacak ürün bileşenlerinin bulunduğu konumdur."
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__product_location_src_id
+msgid "This is the location where the product to repair is located."
+msgstr "Bu konum, onarılacak ürünün bulunduğu konumdur."
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__parts_location_id
+#: model:ir.model.fields,help:repair.field_repair_order__recycle_location_id
+msgid "This is the location where the repair parts are located."
+msgstr "Burası onarım parçalarının bulunduğu yerdir."
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__location_dest_id
+#: model:ir.model.fields,help:repair.field_repair_order__product_location_dest_id
+msgid "This is the location where the repaired product is located."
+msgstr "Bu, onarılan ürünün bulunduğu konumdur."
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
+msgid "To Repair"
+msgstr "Onarılacak"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__search_date_category__today
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Today"
+msgstr "Bugün"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Today Activities"
+msgstr "Bugünkü Aktiviteler"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__search_date_category__day_1
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Tomorrow"
+msgstr "Yarın"
+
+#. module: repair
+#: model:ir.model,name:repair.model_stock_traceability_report
+msgid "Traceability Report"
+msgstr "İzlenebilirlik Raporu"
+
+#. module: repair
+#: model:ir.model,name:repair.model_stock_picking
+#: model:ir.model.fields,field_description:repair.field_repair_order__picking_id
+msgid "Transfer"
+msgstr "Aktarım"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__picking_id
+msgid "Transfer from which the product to be repaired is picked"
+msgstr "Onarılacak ürünün toplandığı transfer"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_move__repair_line_type
+msgid "Type"
+msgstr "Tip"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__code
+msgid "Type of Operation"
+msgstr "Operasyon Türü"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Kayıtlardaki istisna etkinliğinin türü."
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__under_repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Under Repair"
+msgstr "Onarımda"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__under_warranty
+msgid "Under Warranty"
+msgstr "Garanti Kapsamında"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__product_uom
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_uom_name
+msgid "Unit"
+msgstr "Birim"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "Units"
+msgstr "Adet"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Unreserve"
+msgstr "Rezervasyonu Kaldır"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__1
+msgid "Urgent"
+msgstr "Acil"
+
+#. module: repair
+#: model:ir.model,name:repair.model_stock_warehouse
+msgid "Warehouse"
+msgstr "Depo"
+
+#. module: repair
+#: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
+msgid "Warn Insufficient Repair Quantity"
+msgstr "Yetersiz Onarım Miktarını Uyar"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
+msgid "Warning"
+msgstr "Uyarı"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__website_message_ids
+msgid "Website Messages"
+msgstr "Websitesi Mesajları"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__website_message_ids
+msgid "Website communication history"
+msgstr "Websitesi iletişim geçmişi"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__search_date_category__yesterday
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+msgid "Yesterday"
+msgstr "Dün"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/stock_lot.py:0
+msgid ""
+"You are not allowed to create a lot or serial number with this operation "
+"type. To change this, go on the operation type and tick the box \"Create New "
+"Lots/Serial Numbers\"."
+msgstr ""
+"Bu operasyon türüyle bir lot veya seri numarası oluşturmanıza izin "
+"verilmiyor. Bunu değiştirmek için operasyon türüne gidin ve \"Yeni Lotlar / "
+"Seri Numaraları Oluştur\" kutusunu işaretleyin."
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
+msgid "You can not enter negative quantities."
+msgstr "Negatif miktar giremezsiniz."
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
+msgid "You cannot cancel a Repair Order that's already been completed"
+msgstr "Zaten tamamlanmış olan bir Onarım Siparişini iptal edemezsiniz"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
+msgid ""
+"You cannot create a quotation for a repair order that is already linked to "
+"an existing sale order.\n"
+"Concerned repair order(s):\n"
+"%(ref_str)s"
+msgstr ""
+"Bir satış siparişine bağlı onarım emri için teklif oluşturamazsınız.\n"
+"İlgili onarım sipariş(ler)i:\n"
+"%(ref_str)s"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
+msgid ""
+"You need to define a customer for a repair order in order to create an "
+"associated quotation.\n"
+"Concerned repair order(s):\n"
+"%(ref_str)s"
+msgstr ""
+"İlişkili bir fiyat teklifi oluşturmak için bir onarım siparişi için bir "
+"müşteri tanımlamanız gerekir.\n"
+"İlgili onarım sipariş(ler)i:\n"
+"%(ref_str)s"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
+msgid "from location"
+msgstr "konumdan"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/stock_picking.py:0
+msgid "id"
+msgstr "kimlik"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/sale_order.py:0
+msgid "sale_order_id"
+msgstr "sale_order_id"
+
+#~ msgid ""
+#~ "(\n"
+#~ "                object.state == 'draft' and 'Repair Quotation - %s' % "
+#~ "(object.name) or\n"
+#~ "                'Repair Order - %s' % (object.name))"
+#~ msgstr ""
+#~ "(\n"
+#~ "                object.state == 'draft' and 'Repair Quotation - %s' % "
+#~ "(object.name) or\n"
+#~ "                'Repair Order - %s' % (object.name))"
+
+#~ msgid "(update)"
+#~ msgstr "(güncelle)"
+
+#~ msgid ""
+#~ "* The 'Draft' status is used when a user is encoding a new and "
+#~ "unconfirmed repair order.\n"
+#~ "* The 'Confirmed' status is used when a user confirms the repair order.\n"
+#~ "* The 'Ready to Repair' status is used to start to repairing, user can "
+#~ "start repairing only after repair order is confirmed.\n"
+#~ "* The 'Under Repair' status is used when the repair is ongoing.\n"
+#~ "* The 'To be Invoiced' status is used to generate the invoice before or "
+#~ "after repairing done.\n"
+#~ "* The 'Done' status is set when repairing is completed.\n"
+#~ "* The 'Cancelled' status is used when user cancel repair order."
+#~ msgstr ""
+#~ "* 'Taslak' durumu, bir kullanıcı yeni ve onaylanmamış bir onarım "
+#~ "siparişini kodlarken kullanılır.\n"
+#~ "* 'Onaylandı' durumu, bir kullanıcı onarım siparişini onayladığında "
+#~ "kullanılır.\n"
+#~ "* 'Onarıma Hazır' durumu onarıma başlamak için kullanılır, kullanıcı "
+#~ "ancak onarım siparişi onaylandıktan sonra onarıma başlayabilir.\n"
+#~ "* Onarım devam ederken 'Onarım Altında' durumu kullanılır.\n"
+#~ "* 'Faturalandırılacak' durumu, onarım yapılmadan önce veya sonra fatura "
+#~ "oluşturmak için kullanılır.\n"
+#~ "* Onarım tamamlandığında 'Bitti' durumu ayarlanır.\n"
+#~ "* Kullanıcı onarım siparişini iptal ettiğinde 'İptal edildi' durumu "
+#~ "kullanılır."
+
+#~ msgid ": Insufficient Quantity To Repair"
+#~ msgstr ": Onarım İçin Yetersiz Miktar"
+
+#~ msgid ""
+#~ "<span class=\"o_stat_text\">1</span>\n"
+#~ "                                <span class=\"o_stat_text\">Invoices</"
+#~ "span>"
+#~ msgstr ""
+#~ "<span class=\"o_stat_text\">1</span>\n"
+#~ "                                <span class=\"o_stat_text\">Faturalar</"
+#~ "span>"
+
+#~ msgid "<span class=\"o_stat_text\">Repairs</span>"
+#~ msgstr "<span class=\"o_stat_text\">Onarımlar</span>"
+
+#~ msgid "<strong>Lot/Serial Number:</strong>"
+#~ msgstr "<strong>Lot/Seri Numarası:</strong>"
+
+#~ msgid "<strong>Operations</strong>"
+#~ msgstr "<strong>Operasyonlar</strong>"
+
+#~ msgid "<strong>Parts</strong>"
+#~ msgstr "<strong>Parçalar</strong>"
+
+#~ msgid "<strong>Printing Date:</strong>"
+#~ msgstr "<strong>Yazdırma Tarihi:</strong>"
+
+#~ msgid "<strong>Product to Repair:</strong>"
+#~ msgstr "<strong>Onarılacak Ürün:</strong>"
+
+#~ msgid "<strong>Total Without Taxes</strong>"
+#~ msgstr "<strong>Vergisiz Toplam</strong>"
+
+#~ msgid "<strong>Total</strong>"
+#~ msgstr "<strong>Toplam</strong>"
+
+#~ msgid "<strong>Warranty:</strong>"
+#~ msgstr "<strong>Garanti:</strong>"
+
+#~ msgid "? This may lead to inconsistencies in your inventory."
+#~ msgstr "? Bu stoğunuzda tutarsızlıklara sebep olabilir."
+
+#~ msgid "Add quotation notes."
+#~ msgstr "Teklif notları ekleyin."
+
+#~ msgid "After Repair"
+#~ msgstr "Onarım Sonrası"
+
+#~ msgid "Allowed Picking Type"
+#~ msgstr "İzin Verilen Toplama Türü"
+
+#~ msgid "Before Repair"
+#~ msgstr "Onarım Öncesi"
+
+#~ msgid "Cancel"
+#~ msgstr "İptal"
+
+#~ msgid "Category"
+#~ msgstr "Kategori"
+
+#~ msgid ""
+#~ "Conversion between Units of Measure can only occur if they belong to the "
+#~ "same category. The conversion will be made based on the ratios."
+#~ msgstr ""
+#~ "Ölçü Birimleri arası dönüştürme yalnızca aynı kategoriye sahiplerse "
+#~ "yapılabilir. Dönüşümler oranlara göre yapılacaktır."
+
+#~ msgid "Create Invoice"
+#~ msgstr "Fatura Oluştur"
+
+#~ msgid "Create Mass Invoice (repair)"
+#~ msgstr "Toplu Fatura Oluştur (Onarım)"
+
+#~ msgid "Create Repair Orders from Returns"
+#~ msgstr "İadelerden Onarım Siparişleri Oluşturma"
+
+#~ msgid "Create invoices"
+#~ msgstr "Fatura oluştur"
+
+#~ msgid "Currency"
+#~ msgstr "Para Birimi"
+
+#~ msgid "Default Address"
+#~ msgstr "Varsayılan Adres"
+
+#~ msgid "Delivery Address"
+#~ msgstr "Teslim Adresi"
+
+#~ msgid "Dest. Location"
+#~ msgstr "Hedef Konum"
+
+#~ msgid "Do you confirm you want to repair"
+#~ msgstr "Onarmak istediğinizi onaylıyor musunuz?"
+
+#~ msgid "Do you really want to create the invoice(s)?"
+#~ msgstr "Gerçekten fatura(lar) oluşturmak istiyor musunuz?"
+
+#~ msgid "Done"
+#~ msgstr "Biten"
+
+#~ msgid "Draft"
+#~ msgstr "Taslak"
+
+#~ msgid ""
+#~ "Draft invoices for this order will be cancelled. Do you confirm the "
+#~ "action?"
+#~ msgstr ""
+#~ "Bu sipariş için taslak faturalar iptal edilecek. İşlemi onaylıyor musunuz?"
+
+#~ msgid "Extra Info"
+#~ msgstr "Diğer Bilgiler"
+
+#~ msgid "Fees"
+#~ msgstr "Ücret"
+
+#~ msgid "Group By"
+#~ msgstr "Grupla"
+
+#~ msgid "Group by partner invoice address"
+#~ msgstr "İş Ortağı Fatura Adreslerine göre Gruplandır"
+
+#~ msgid "History"
+#~ msgstr "Geçmiş"
+
+#~ msgid ""
+#~ "If ticked, you will be able to directly create repair orders from a "
+#~ "return."
+#~ msgstr ""
+#~ "İşaretlenirse, bir iadeden doğrudan onarım siparişleri oluşturabilirsiniz."
+
+#~ msgid "Invoice"
+#~ msgstr "Fatura"
+
+#~ msgid "Invoice Line"
+#~ msgstr "Fatura Satırı"
+
+#~ msgid "Invoice Method"
+#~ msgstr "Fatura Yöntemi"
+
+#~ msgid "Invoice State"
+#~ msgstr "Fatura Durumu"
+
+#~ msgid "Invoice address:"
+#~ msgstr "Fatura adresi:"
+
+#~ msgid "Invoice and shipping address:"
+#~ msgstr "Fatura ve teslimat adresi:"
+
+#~ msgid "Invoice created"
+#~ msgstr "Fatura oluşturuldu"
+
+#~ msgid "Invoiced"
+#~ msgstr "Faturalanan"
+
+#~ msgid "Invoicing Address"
+#~ msgstr "Fatura Adresi"
+
+#~ msgid "Journal Entry"
+#~ msgstr "Yevmiye Kaydı"
+
+#~ msgid "Journal Item"
+#~ msgstr "Yevmiye Kalemi"
+
+#~ msgid "No Invoice"
+#~ msgstr "Fatura Yok"
+
+#~ msgid "No account defined for product \"%s\"."
+#~ msgstr "\"%s\" Ürünü için tanımlı hesap yok."
+
+#~ msgid "No product defined on fees."
+#~ msgstr "Ücretlerde tanımlanmış ürün yok."
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Eylem gerektiren mesaj adedi"
+
+#~ msgid "Only draft repairs can be confirmed."
+#~ msgstr "Yalnızca taslak onarımlar onaylanabilir."
+
+#~ msgid "Price"
+#~ msgstr "Fiyat"
+
+#~ msgid "Pricelist"
+#~ msgstr "Fiyat Listesi"
+
+#~ msgid "Pricelist of the selected partner."
+#~ msgstr "Seçilen iş ortağının fiyat listesi."
+
+#~ msgid "Print Quotation"
+#~ msgstr "Teklifi Yazdır"
+
+#~ msgid "Product Unit of Measure"
+#~ msgstr "Ürün Ölçü Birimi"
+
+#~ msgid "Quotation"
+#~ msgstr "Teklif"
+
+#~ msgid "Quotation / Order"
+#~ msgstr "Teklif / Sipariş"
+
+#~ msgid "Quotation Notes"
+#~ msgstr "Teklif Notları"
+
+#~ msgid "Quotations"
+#~ msgstr "Teklifler"
+
+#~ msgid "Ready To Repair"
+#~ msgstr "Onarıma Hazır"
+
+#~ msgid "Ready to Repair"
+#~ msgstr "Onarıma Hazır"
+
+#~ msgid "Repair Description"
+#~ msgstr "Onarım Açıklaması"
+
+#~ msgid "Repair Fee"
+#~ msgstr "Onarım Ücreti"
+
+#~ msgid "Repair Fees"
+#~ msgstr "Onarım Ücretleri"
+
+#~ msgid "Repair Line"
+#~ msgstr "Onarım Satırı"
+
+#~ msgid "Repair Line (parts)"
+#~ msgstr "Onarım Hattı (parçalar)"
+
+#~ msgid "Repair Order #:"
+#~ msgstr "Onarım Sipariş #:"
+
+#~ msgid "Repair Order Reference"
+#~ msgstr "Onarım Siparişi Referansı"
+
+#~ msgid "Repair Quotation #:"
+#~ msgstr "Onarım Teklif #:"
+
+#~ msgid "Repair must be canceled in order to reset it to draft."
+#~ msgstr "Taslak sıfırlanması için tamir iptal olmalı."
+
+#~ msgid "Repair must be confirmed before starting reparation."
+#~ msgstr "Onarıma başlamadan önce onay gereklidir."
+
+#~ msgid "Repair must be repaired in order to make the product moves."
+#~ msgstr "Ürün hareketi için tamir iptal olmalı."
+
+#~ msgid "Repair order count"
+#~ msgstr "Onarım siparişi sayısı"
+
+#~ msgid "Repair: Quotation"
+#~ msgstr "Onarım: Fiyat Teklifi"
+
+#~ msgid "Return"
+#~ msgstr "İade"
+
+#~ msgid "Return Order from which the product to be repaired comes from."
+#~ msgstr "Tamir edilecek ürünün geldiği İade Siparişi."
+
+#~ msgid "Return Type Of"
+#~ msgstr "İade Türü"
+
+#~ msgid "Sale Order from which the product to be repaired comes from."
+#~ msgstr "Tamir edilecek ürünün geldiği Satış Siparişi."
+
+#~ msgid ""
+#~ "Selecting 'Before Repair' or 'After Repair' will allow you to generate "
+#~ "invoice before or after the repair is done respectively. 'No invoice' "
+#~ "means you don't want to generate invoice for this repair order."
+#~ msgstr ""
+#~ "'Onarımdan Önce' ya da 'Onarımdan Sonra' seçimi, faturanın onarım "
+#~ "yapılmasından önce ya da sonra oluşturulmasına izin verecektir. 'Fatura "
+#~ "Yok' ise bu onarım siparişi için fatura kesmek istemediğiniz anlamına "
+#~ "gelir."
+
+#~ msgid "Send Quotation"
+#~ msgstr "Teklifi Gönder"
+
+#~ msgid "Sent manually when clicking on \"Send Quotation\" on a repair order"
+#~ msgstr ""
+#~ "Bir onarım siparişinde \"Fiyat Teklifi Gönder\" e tıklandığında manuel "
+#~ "olarak gönderilir"
+
+#~ msgid "Serial number is required for operation lines with products: %s"
+#~ msgstr ""
+#~ "Ürünlerin bulunduğu operasyon hatları için seri numarası gereklidir: %s"
+
+#~ msgid "Show all records which has next action date is before today"
+#~ msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
+
+#~ msgid "Source Location"
+#~ msgstr "Kaynak Konum"
+
+#~ msgid "Subtotal"
+#~ msgstr "Ara Toplam"
+
+#~ msgid "Tax"
+#~ msgstr "Vergi"
+
+#~ msgid "Taxes"
+#~ msgstr "Vergiler"
+
+#~ msgid "The name of the Repair Order must be unique!"
+#~ msgstr "Onarım Sipariş adı benzersiz olmalı!"
+
+#~ msgid ""
+#~ "The product unit of measure you chose has a different category than the "
+#~ "product unit of measure."
+#~ msgstr ""
+#~ "Seçtiğiniz ölçü birimi, ürün ölçü biriminden farklı bir kategoridedir."
+
+#~ msgid ""
+#~ "The status of a repair line is set automatically to the one of the linked "
+#~ "repair order."
+#~ msgstr ""
+#~ "Onarım satırının durumu otomatik olarak bağlantılı onarım siparişine göre "
+#~ "ayarlanır."
+
+#~ msgid "To be Invoiced"
+#~ msgstr "Faturalanacak"
+
+#~ msgid "Total"
+#~ msgstr "Toplam"
+
+#~ msgid "Total amount"
+#~ msgstr "Toplam tutar"
+
+#~ msgid ""
+#~ "True if this repair is linked to a Return Order and the order is 'Done'. "
+#~ "False otherwise."
+#~ msgstr ""
+#~ "Bu onarım bir İade Siparişine bağlıysa ve sipariş 'Bitti' ise geçerlidir. "
+#~ "Aksi takdirde yanlış."
+
+#~ msgid "Unit Price"
+#~ msgstr "Birim Fiyat"
+
+#~ msgid "Unit of Measure"
+#~ msgstr "Ölçü Birimi"
+
+#~ msgid "Untaxed Amount"
+#~ msgstr "Vergi Hariç Tutar"
+
+#~ msgid "Untaxed amount"
+#~ msgstr "Vergi Hariç Tutar"
+
+#~ msgid "UoM"
+#~ msgstr "Ölçü Birimi"
+
+#~ msgid "Warranty Expiration"
+#~ msgstr "Garanti Bitişi"
+
+#~ msgid ""
+#~ "You can not delete a repair order once it has been confirmed. You must "
+#~ "first cancel it."
+#~ msgstr ""
+#~ "Onaylandıktan sonra bir onarım siparişini silemezsiniz. Önce iptal "
+#~ "etmelisin."
+
+#~ msgid ""
+#~ "You can not delete a repair order which is linked to an invoice which has "
+#~ "been posted once."
+#~ msgstr ""
+#~ "Bir kez nakledilen bir faturaya bağlı bir onarım siparişini silemezsiniz."
+
+#~ msgid "You cannot cancel a completed repair order."
+#~ msgstr "Tamamlanmış bir onarım siparişini iptal edemezsiniz."
+
+#~ msgid "You have to select an invoice address in the repair form."
+#~ msgstr "Onarım formunda bir fatura adresi seçmeniz gerekli."
+
+#~ msgid ""
+#~ "{{ object.partner_id.name }} Repair Orders (Ref {{ object.name or 'n/"
+#~ "a' }})"
+#~ msgstr ""
+#~ "{{ object.partner_id.name }} Onarım Siparişleri (Ref {{ object.name or 'n/"
+#~ "a' }})"

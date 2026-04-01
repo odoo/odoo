@@ -1,0 +1,862 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="base.user_demo" model="res.users">
+            <field name="group_ids" eval="[
+                (3, ref('hr.group_hr_user')),
+                (3, ref('hr.group_hr_manager'))]"/>
+        </record>
+
+        <record id="base.default_user_group" model="res.groups">
+            <field name="implied_ids" eval="[
+                (4, ref('hr.group_hr_manager'))]"/>
+        </record>
+
+        <!-- Resource Calendar -->
+        <record id="resource_calendar_std_20h" model="resource.calendar">
+            <field name="name">Standard 20 hours/week</field>
+            <field name="company_id" eval="False"/>
+            <field name="hours_per_day">4.0</field>
+            <field name="attendance_ids"
+                eval="[(5, 0, 0),
+                    (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'})
+                ]"
+            />
+            <field name="full_time_required_hours">40</field>
+        </record>
+
+        <!--Department-->
+        <record id="dep_management" model="hr.department">
+            <field name="name">Management</field>
+            <field name="color" eval="5"/>
+        </record>
+
+        <record id="dep_administration" model="hr.department">
+            <field name="parent_id" ref="dep_management"/>
+            <field name="manager_id" ref="employee_admin"/>
+            <field name="color" eval="8"/>
+        </record>
+
+        <record id="dep_sales" model="hr.department">
+            <field name="name">Sales</field>
+            <field name="parent_id" ref="dep_management"/>
+            <field name="color" eval="9"/>
+        </record>
+
+        <record id="dep_rd" model="hr.department">
+            <field name="name">Research &amp; Development</field>
+            <field name="parent_id" ref="dep_management"/>
+            <field name="color" eval="10"/>
+        </record>
+
+        <record id="dep_rd_be" model="hr.department">
+            <field name="name">R&amp;D USA</field>
+            <field name="parent_id" ref="dep_rd"/>
+            <field name="color" eval="10"/>
+        </record>
+
+        <record id="dep_rd_ltp" model="hr.department">
+            <field name="name">Long Term Projects</field>
+            <field name="parent_id" ref="dep_rd_be"/>
+            <field name="color" eval="10"/>
+        </record>
+
+        <record id="dep_ps" model="hr.department">
+            <field name="name">Professional Services</field>
+            <field name="parent_id" ref="dep_management"/>
+            <field name="color" eval="3"/>
+        </record>
+
+        <!-- Jobs -->
+        <record id="job_cto" model="hr.job">
+            <field name="name">Chief Technical Officer</field>
+            <field name="company_id" eval="False"/>
+            <field name="department_id" ref="dep_rd"/>
+            <field name="description">You will take part in the consulting services we provide to our partners and customers: design, analysis, development, testing, project management, support/coaching. You will work autonomously as well as coordinate and supervise small distributed development teams for some projects. Optionally, you will deliver Odoo training sessions to partners and customers (8-10 people/session). You will report to the Head of Professional Services and work closely with all developers and consultants.
+
+The job is located in Grand-Rosière (1367), Belgium (between Louvain-La-Neuve and Namur).</field>
+            <field name="requirements">Bachelor, master or engineering degree in Computer Science or equivalent by experience
+Preferably at least 1 years of experience
+Interest for enterprise application development
+Customer-minded
+Willing to travel abroad occasionally for short term missions.
+Passion for the Internet and its culture
+Quick and autonomous learner, problem-solving personality, enthusiastic when faced with technical challenges
+Team spirit and good communication
+Required skills:
+Good knowledge of object oriented programming, object modeling, relational databases, Unix/Linux platform
+Fluent in English, especially read and written
+Nice-to-have skills:
+Good knowledge of Python
+Good knowledge of HTML and Javascript
+Knowledge of UML-like modeling
+Good language skills, other than English (Dutch and French preferred, others welcome)
+            </field>
+            <field name="contract_type_id" ref="contract_type_permanent"/>
+        </record>
+
+        <record id="job_consultant" model="hr.job">
+            <field name="name">Consultant</field>
+            <field name="company_id" eval="False"/>
+            <field name="department_id" ref="dep_ps"/>
+            <field name="no_of_recruitment">5</field>
+            <field name="contract_type_id" ref="contract_type_interim"/>
+            <field name="description">We are looking for a Consultant to provide expert advice and strategic solutions,
+                driving business growth. Strong analytical skills and a proven track record in delivering results are
+                essential.
+            </field>
+        </record>
+
+        <record id="job_developer" model="hr.job">
+            <field name="name">Experienced Developer</field>
+            <field name="company_id" eval="False"/>
+            <field name="department_id" ref="dep_rd"/>
+            <field name="no_of_recruitment">5</field>
+            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="description">
+                We are looking for an experience developer to join our Web team.
+                Someone who can snap out of coding and perform analysis or meet clients to explain the technical
+                possibilities that can meet their needs.
+            </field>
+        </record>
+
+        <record id="job_hrm" model="hr.job">
+            <field name="name">Human Resources Manager</field>
+            <field name="company_id" eval="False"/>
+            <field name="department_id" ref="dep_administration"/>
+            <field name="description">
+                A Human Resources (HR) Manager is responsible for overseeing an organization's workforce and ensuring
+                that all HR functions are effectively managed. This includes recruiting, hiring, onboarding, and
+                training new employees, as well as managing employee relations, performance, and compensation. The HR
+                manager also ensures compliance with labor laws and company policies, while fostering a positive work
+                environment. They may handle conflict resolution, conduct employee evaluations, and implement programs
+                to improve employee engagement and retention. Additionally, HR managers play a strategic role in
+                aligning the workforce with the organization's goals and objectives.
+            </field>
+            <field name="contract_type_id" ref="contract_type_permanent"/>
+        </record>
+
+        <record id="job_marketing" model="hr.job">
+            <field name="name">Marketing and Community Manager</field>
+            <field name="company_id" eval="False"/>
+            <field name="department_id" ref="dep_sales"/>
+            <field name="description">
+                The Marketing Manager defines the mid- to long-term marketing strategy for his covered market segments
+                in the World. He develops and monitors the annual budget in collaboration with Sales. He defines the
+                products and customers portfolio according to the marketing plan. This mission requires strong
+                collaboration with Technical Service and Sales.
+            </field>
+        </record>
+
+        <record id="job_trainee" model="hr.job">
+            <field name="name">Trainee</field>
+            <field name="company_id" eval="False"/>
+            <field name="description">You participate to the update of our tutorial tools and pre-sales tools after the launch of a new version of Odoo. Indeed, any new version of the software brings significant improvements in terms of functionalities, ergonomics and configuration.
+You will have to become familiar with the existing tools (books, class supports, Odoo presentation’s slides, commercial tools),
+to participate to the update of those tools in order to make them appropriate for the new version of the software and, for sure,
+to suggest improvements in order to cover the new domains of the software.
+You join the Implementation Assistance department. This team of 3 people go with Odoo’s clients in the set up of the software. Your role will be
+to animate webinars in order to show the different functionalities of the software.
+to be involved in the support of the customers and
+to answer to their questions.
+You help the support manager to set up new support services by
+being involved in the treatment of new cases,
+contributing to the set up of a new politic,
+being involved into satisfaction surveys in order to have a better knowledge of how the support given is seen by the customers.</field>
+            <field name="requirements">You speak fluently English and French (one other European language is a +)
+At the time of your traineeship at Odoo, you will be in the last year of a Master or Bachelor Degree (ideally in the following sector: Business Management, IT Management, Computer Sciences)
+You have a software and new technology awareness
+You are ready to join a young and dynamic company, you are able to work in a “start up” fast paced environment, hands on attitude
+You are approachable, honest and a fun team player
+If you have development competencies, we can propose you specific traineeships</field>
+        </record>
+
+        <!-- Work Locations -->
+        <record id="work_location_1" model="hr.work.location">
+            <field name="name">Building 1, Second Floor</field>
+            <field name="location_type">office</field>
+            <field name="address_id" ref="base.main_partner"/>
+        </record>
+
+        <!-- Employee categories -->
+        <record id="employee_category_2" model="hr.employee.category">
+            <field name="name">Sales</field>
+            <field name="color" eval="1"/>
+        </record>
+
+        <record id="employee_category_3" model="hr.employee.category">
+            <field name="name">Trainer</field>
+            <field name="color" eval="2"/>
+        </record>
+
+        <record id="employee_category_4" model="hr.employee.category">
+            <field name="name">Employee</field>
+            <field name="color" eval="6"/>
+        </record>
+
+        <record id="employee_category_5" model="hr.employee.category">
+            <field name="name">Consultant</field>
+            <field name="color" eval="4"/>
+        </record>
+
+        <record id="employee_category_6" model="hr.employee.category">
+            <field name="name">Standard 20 hours/week</field>
+            <field name="color" eval="3"/>
+        </record>
+
+        <record id="employee_category_7" model="hr.employee.category">
+            <field name="name">High Potential</field>
+            <field name="color" eval="8"/>
+        </record>
+
+        <!--Employees-->
+        <record id="employee_admin" model="hr.employee">
+            <field name="private_phone">+1 555-555-5555</field>
+            <field name="private_email">admin@yourcompany.example.com</field>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_3')])]"/>
+            <field name="date_version" eval="'2020-01-01'"/>
+            <field name="contract_date_start" eval="'2020-01-01'"/>
+            <field name="contract_date_end" eval="False"/>
+            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="structure_type_id" ref="structure_type_employee"/>
+            <field name="wage">7540.00</field>
+            <field name="job_id" ref="hr.job_cto"/>
+            <field name="department_id" ref="dep_management"/>
+            <field name="parent_id" ref="employee_admin"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="private_street">215 Vine St</field>
+            <field name="private_city">Scranton</field>
+            <field name="private_zip">18503</field>
+            <field name="private_country_id" ref="base.us"/>
+            <field name="private_state_id" ref="base.state_us_39"/>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
+            <field name="sex">male</field>
+        </record>
+
+        <record id="work_contact_ngh" model="res.partner">
+            <field name="name">Jeffrey Kelly</field>
+            <field name="email">jeffrey.kelly72@example.com</field>
+            <field name="phone">(555)-264-7362</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_ngh-image.jpg"/>
+        </record>
+
+        <record id="employee_ngh" model="hr.employee">
+            <field name="name">Jeffrey Kelly</field>
+            <field name="department_id" ref="dep_sales"/>
+            <field name="parent_id" ref="employee_admin"/>
+            <field name="job_id" ref="hr.job_marketing"/>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_2')])]"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="work_contact_id" ref="hr.work_contact_ngh"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_ngh-image.jpg"/>
+            <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="sex">male</field>
+            <field name="date_version" eval="(DateTime.today() + relativedelta(months=-1, day=1))"/>
+            <field name="contract_date_start" eval="(DateTime.today() + relativedelta(months=-1, day=1))"/>
+            <field name="contract_date_end" eval="(DateTime.today() + relativedelta(months=2))"/>
+            <field name="wage" eval="6000"/>
+            <field name="structure_type_id" ref="hr.structure_type_worker"/>
+        </record>
+
+        <record id="employee_qdp" model="hr.employee">
+            <field name="name">Marc Demo</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_4')])]"/>
+            <field name="work_contact_id" ref="base.partner_demo"/>
+            <field name="date_version" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1))"/>
+            <field name="contract_date_start" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1))"/>
+            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="structure_type_id" ref="structure_type_employee"/>
+            <field name="wage">3750.00</field>
+            <field name="job_id" ref="hr.job_developer"/>
+            <field name="department_id" ref="dep_rd"/>
+            <field name="parent_id" ref="employee_admin"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="private_street">361-7936 Feugiat St.</field>
+            <field name="private_zip">58521</field>
+            <field name="private_city">Williston</field>
+            <field name="private_country_id" ref="base.us"/>
+            <field name="private_phone">+1 555-555-5757</field>
+            <field name="private_email">demo@yourcompany.example.com</field>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
+            <field name="sex">male</field>
+            <field name="distance_home_work">23</field>
+        </record>
+
+        <record id="work_contact_al" model="res.partner">
+            <field name="name">Ronnie Hart</field>
+            <field name="email">ronnie.hart87@example.com</field>
+            <field name="phone">(555)-310-7863</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_al-image.jpg"/>
+        </record>
+
+        <record id="employee_al" model="hr.employee">
+            <field name="name">Ronnie Hart</field>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_3')])]"/>
+            <field name="work_contact_id" ref="hr.work_contact_al"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_al-image.jpg"/>
+            <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="date_version" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="contract_date_start" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="structure_type_id" ref="structure_type_employee"/>
+            <field name="wage">4000.00</field>
+            <field name="job_id" ref="hr.job_cto"/>
+            <field name="department_id" ref="dep_rd"/>
+            <field name="parent_id" ref="employee_qdp"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
+            <field name="sex">male</field>
+        </record>
+
+        <record id="work_contact_vad" model="res.partner">
+            <field name="name">Tina Williamson</field>
+            <field name="email">tina.williamson98@example.com</field>
+            <field name="phone">(555)-694-7266</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_vad-image.jpg"/>
+        </record>
+
+        <record id="employee_vad" model="hr.employee">
+            <field name="name">Tina Williamson</field>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_7')])]"/>
+            <field name="work_contact_id" ref="hr.work_contact_vad"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_vad-image.jpg"/>
+            <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="date_version" eval="'2015-01-01'"/>
+            <field name="contract_date_start" eval="'2015-01-01'"/>
+            <field name="contract_date_end" eval="'2018-02-01'"/>
+            <field name="contract_type_id" ref="contract_type_full_time"/>
+            <field name="structure_type_id" ref="structure_type_employee"/>
+            <field name="wage">4000.00</field>
+            <field name="job_id" ref="hr.job_hrm"/>
+            <field name="department_id" ref="dep_administration"/>
+            <field name="parent_id" ref="employee_admin"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
+            <field name="sex">female</field>
+        </record>
+
+        <record id="work_contact_hne" model="res.partner">
+            <field name="name">Abigail Peterson</field>
+            <field name="email">abigail.peterson39@example.com</field>
+            <field name="phone">(555)-233-3393</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_hne-image.jpg"/>
+        </record>
+
+        <record id="employee_hne" model="hr.employee">
+            <field name="name">Abigail Peterson</field>
+            <field name="department_id" ref="dep_ps"/>
+            <field name="parent_id" ref="employee_ngh"/>
+            <field name="job_id" ref="hr.job_consultant"/>
+            <field name="job_title">Consultant</field>
+            <field name="private_country_id" ref="base.us"/>
+            <field name="private_email">abigail.peterson33@example.com</field>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="work_contact_id" ref="hr.work_contact_hne"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_hne-image.jpg"/>
+            <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="marital">married</field>
+            <field name="sex">female</field>
+            <field name="distance_home_work">32</field>
+            <field name="date_version" eval="(DateTime.today() + relativedelta(months=-1, day=1))"/>
+            <field name="contract_date_start" eval="(DateTime.today() + relativedelta(months=-1, day=1))"/>
+            <field name="contract_date_end" eval="(DateTime.today() + relativedelta(months=2))"/>
+            <field name="wage" eval="6500"/>
+            <field name="structure_type_id" ref="hr.structure_type_worker"/>
+        </record>
+
+        <record id="work_contact_fpi" model="res.partner">
+            <field name="name">Audrey Peterson</field>
+            <field name="email">audrey.peterson25@example.com</field>
+            <field name="phone">(555)-276-7903</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_fpi-image.jpg"/>
+        </record>
+
+        <record id="employee_fpi" model="hr.employee">
+            <field name="name">Audrey Peterson</field>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_5')])]"/>
+            <field name="private_country_id" ref="base.us"/>
+            <field name="private_email">Audrey.peterson2020@example.com</field>
+            <field name="work_contact_id" ref="hr.work_contact_fpi"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_fpi-image.jpg"/>
+            <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="sex">female</field>
+            <field name="distance_home_work">7</field>
+            <field name="date_version" eval="'2014-01-01'"/>
+            <field name="contract_date_start" eval="'2014-01-01'"/>
+            <field name="contract_date_end" eval="'2014-12-31'"/>
+            <field name="contract_type_id" ref="contract_type_full_time"/>
+            <field name="structure_type_id" ref="structure_type_employee"/>
+            <field name="wage">3700.00</field>
+            <field name="job_id" ref="hr.job_consultant"/>
+            <field name="department_id" ref="dep_ps"/>
+            <field name="parent_id" ref="employee_ngh"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
+        </record>
+
+        <function name="create_version" model="hr.employee">
+            <value eval="[ref('hr.employee_fpi')]"/>
+            <value eval="{
+                'date_version': '2015-01-01',
+                'contract_date_start': '2015-01-01',
+                'contract_date_end': '2017-12-01',
+                'wage': 3750.00
+            }"/>
+        </function>
+
+        <record id="work_contact_lur" model="res.partner">
+            <field name="name">Eli Lambert</field>
+            <field name="email">eli.lambert22@example.com</field>
+            <field name="phone">(555)-169-1352</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_lur-image.jpg"/>
+        </record>
+
+        <record id="employee_lur" model="hr.employee">
+            <field name="name">Eli Lambert</field>
+            <field name="department_id" ref="dep_sales"/>
+            <field name="parent_id" ref="employee_ngh"/>
+            <field name="job_id" ref="hr.job_marketing"/>
+            <field name="job_title">Marketing and Community Manager</field>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="work_contact_id" ref="hr.work_contact_lur"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_lur-image.jpg"/>
+            <field name="date_version" eval="'2010-01-01'"/>
+            <field name="sex">male</field>
+        </record>
+
+        <record id="work_contact_jod" model="res.partner">
+            <field name="name">Rachel Perry</field>
+            <field name="email">jod@odoo.com</field>
+            <field name="phone">(555)-267-3735</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_jod-image.jpg"/>
+        </record>
+
+        <record id="employee_jod" model="hr.employee">
+            <field name="name">Rachel Perry</field>
+            <field name="department_id" ref="dep_sales"/>
+            <field name="parent_id" ref="employee_ngh"/>
+            <field name="job_id" ref="hr.job_marketing"/>
+            <field name="job_title">Marketing and Community Manager</field>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="work_contact_id" ref="hr.work_contact_jod"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_jod-image.jpg"/>
+            <field name="date_version" eval="'2010-01-01'"/>
+            <field name="sex">female</field>
+        </record>
+
+        <record id="work_contact_fme" model="res.partner">
+            <field name="name">Keith Byrd</field>
+            <field name="email">keith.byrd52@example.com</field>
+            <field name="phone">(555)-505-5146</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_fme-image.jpg"/>
+        </record>
+
+        <record id="employee_fme" model="hr.employee">
+            <field name="name">Keith Byrd</field>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_4')])]"/>
+            <field name="work_contact_id" ref="hr.work_contact_fme"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_fme-image.jpg"/>
+            <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="date_version" eval="'2015-01-01'"/>
+            <field name="contract_date_start" eval="'2015-01-01'"/>
+            <field name="contract_date_end" eval="time.strftime('%Y-%m-%d')"/>
+            <field name="contract_type_id" ref="contract_type_full_time"/>
+            <field name="structure_type_id" ref="structure_type_employee"/>
+            <field name="wage">3650.00</field>
+            <field name="job_id" ref="hr.job_developer"/>
+            <field name="department_id" ref="dep_rd"/>
+            <field name="parent_id" ref="employee_al"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
+            <field name="sex">male</field>
+        </record>
+
+        <record id="work_contact_jep" model="res.partner">
+            <field name="name">Doris Cole</field>
+            <field name="email">doris.cole31@example.com</field>
+            <field name="phone">(555)-331-5378</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_jep-image.jpg"/>
+        </record>
+
+        <record id="employee_jep" model="hr.employee">
+            <field name="name">Doris Cole</field>
+            <field name="department_id" ref="dep_ps"/>
+            <field name="parent_id" ref="employee_vad"/>
+            <field name="job_id" ref="hr.job_consultant"/>
+            <field name="job_title">Consultant</field>
+            <field name="private_country_id" ref="base.us"/>
+            <field name="private_email">Doris.cole.LoveSong@example.com</field>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="work_contact_id" ref="hr.work_contact_jep"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_jep-image.jpg"/>
+            <field name="date_version" eval="'2010-01-01'"/>
+            <field name="sex">female</field>
+            <field name="distance_home_work">13</field>
+        </record>
+
+        <record id="work_contact_jgo" model="res.partner">
+            <field name="name">Ernest Reed</field>
+            <field name="email">ernest.reed47@example.com</field>
+            <field name="phone">(555)-518-8232</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_jgo-image.jpg"/>
+        </record>
+
+        <record id="employee_jgo" model="hr.employee">
+            <field name="name">Ernest Reed</field>
+            <field name="department_id" ref="dep_ps"/>
+            <field name="parent_id" ref="employee_vad"/>
+            <field name="job_id" ref="hr.job_consultant"/>
+            <field name="job_title">Consultant</field>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="work_contact_id" ref="hr.work_contact_jgo"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_jgo-image.jpg"/>
+            <field name="date_version" eval="'2010-01-01'"/>
+            <field name="sex">male</field>
+        </record>
+
+        <record id="work_contact_jth" model="res.partner">
+            <field name="name">Toni Jimenez</field>
+            <field name="email">toni.jimenez23@example.com</field>
+            <field name="phone">(555)-707-8451</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_jth-image.jpg"/>
+        </record>
+
+        <record id="employee_jth" model="hr.employee">
+            <field name="name">Toni Jimenez</field>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_5'), ref('employee_category_6')])]"/>
+            <field name="work_contact_id" ref="hr.work_contact_jth"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_jth-image.jpg"/>
+            <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="date_version" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
+            <field name="contract_date_start" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
+            <field name="contract_date_end" eval="time.strftime('%Y')+'-12-1'"/>
+            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="structure_type_id" ref="structure_type_employee"/>
+            <field name="wage">4200.00</field>
+            <field name="job_id" ref="hr.job_consultant"/>
+            <field name="department_id" ref="dep_ps"/>
+            <field name="parent_id" ref="employee_vad"/>
+            <field name="resource_calendar_id" ref="resource_calendar_std_20h"/>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
+            <field name="sex">female</field>
+        </record>
+
+        <record id="work_contact_mit" model="res.partner">
+            <field name="name">Anita Oliver</field>
+            <field name="phone">(555)-672-3185</field>
+            <field name="email">anita.oliver32@example.com</field>
+            <field name="phone">(555)-497-4804</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_mit-image.jpg"/>
+        </record>
+
+        <record id="employee_mit" model="hr.employee">
+            <field name="name">Anita Oliver</field>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_4')])]"/>
+            <field name="work_contact_id" ref="hr.work_contact_mit"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_mit-image.jpg"/>
+            <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="date_version" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="contract_date_start" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="structure_type_id" ref="structure_type_employee"/>
+            <field name="wage">4500.00</field>
+            <field name="job_id" ref="hr.job_developer"/>
+            <field name="department_id" ref="dep_rd_be"/>
+            <field name="parent_id" ref="employee_fme"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="private_country_id" ref="base.us"/>
+            <field name="private_phone">(538)-672-3185</field>
+            <field name="private_email">anita.oliver00@example.com</field>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
+            <field name="sex">female</field>
+        </record>
+
+        <record id="work_contact_niv" model="res.partner">
+            <field name="name">Sharlene Rhodes</field>
+            <field name="email">sharlene.rhodes49@example.com</field>
+            <field name="phone">(555)-719-4182</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_niv-image.jpg"/>
+        </record>
+
+        <record id="employee_niv" model="hr.employee">
+            <field name="name">Sharlene Rhodes</field>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_7')])]"/>
+            <field name="work_contact_id" ref="hr.work_contact_niv"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_niv-image.jpg"/>
+            <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="date_version" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
+            <field name="contract_date_start" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
+            <field name="contract_date_end" eval="time.strftime('%Y')+'-12-1'"/>
+            <field name="contract_type_id" ref="contract_type_full_time"/>
+            <field name="structure_type_id" ref="structure_type_employee"/>
+            <field name="wage">4000.00</field>
+            <field name="job_id" ref="hr.job_developer"/>
+            <field name="department_id" ref="dep_management"/>
+            <field name="parent_id" ref="employee_qdp"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
+            <field name="sex">female</field>
+        </record>
+
+        <record id="work_contact_stw" model="res.partner">
+            <field name="name">Randall Lewis</field>
+            <field name="email">randall.lewis74@example.com</field>
+            <field name="phone">(555)-775-6660</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_stw-image.jpg"/>
+        </record>
+
+        <record id="employee_stw" model="hr.employee">
+            <field name="name">Randall Lewis</field>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_4')])]"/>
+            <field name="work_contact_id" ref="hr.work_contact_stw"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_stw-image.jpg"/>
+            <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="date_version" eval="time.strftime('%Y')+'-02-01'"/>
+            <field name="contract_date_start" eval="time.strftime('%Y')+'-02-01'"/>
+            <field name="contract_date_end" eval="time.strftime('%Y')+'-12-1'"/>
+            <field name="contract_type_id" ref="contract_type_full_time"/>
+            <field name="structure_type_id" ref="structure_type_employee"/>
+            <field name="wage">4500.00</field>
+            <field name="job_id" ref="hr.job_developer"/>
+            <field name="department_id" ref="dep_rd"/>
+            <field name="parent_id" ref="employee_qdp"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
+            <field name="sex">male</field>
+        </record>
+
+        <record id="work_contact_chs" model="res.partner">
+            <field name="name">Jennie Fletcher</field>
+            <field name="email">jennie.fletcher76@example.com</field>
+            <field name="phone">(555)-363-8229</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_chs-image.jpg"/>
+        </record>
+
+        <record id="employee_chs" model="hr.employee">
+            <field name="name">Jennie Fletcher</field>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_7')])]"/>
+            <field name="work_contact_id" ref="hr.work_contact_chs"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_chs-image.jpg"/>
+            <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="date_version" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
+            <field name="contract_date_start" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
+            <field name="contract_date_end" eval="time.strftime('%Y')+'-12-1'"/>
+            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="structure_type_id" ref="structure_type_employee"/>
+            <field name="wage">3750.00</field>
+            <field name="job_id" ref="hr.job_developer"/>
+            <field name="department_id" ref="dep_rd"/>
+            <field name="parent_id" ref="employee_fme"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
+            <field name="sex">female</field>
+        </record>
+
+        <record id="work_contact_jve" model="res.partner">
+            <field name="name">Paul Williams</field>
+            <field name="email">paul.williams59@example.com</field>
+            <field name="phone">(555)-262-1607</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_jve-image.jpg"/>
+        </record>
+
+        <record id="employee_jve" model="hr.employee">
+            <field name="name">Paul Williams</field>
+            <field name="work_contact_id" ref="hr.work_contact_jve"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_jve-image.jpg"/>
+            <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="date_version" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
+            <field name="contract_date_start" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-01'"/>
+            <field name="contract_date_end" eval="time.strftime('%Y')+'-12-1'"/>
+            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="structure_type_id" ref="structure_type_employee"/>
+            <field name="wage">3950.00</field>
+            <field name="job_id" ref="hr.job_developer"/>
+            <field name="department_id" ref="dep_rd_ltp"/>
+            <field name="parent_id" ref="employee_qdp"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
+            <field name="sex">male</field>
+        </record>
+
+        <record id="work_contact_han" model="res.partner">
+            <field name="name">Walter Horton</field>
+            <field name="email">walter.horton80@example.com</field>
+            <field name="phone">(555)-912-1201</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_han-image.jpg"/>
+        </record>
+
+        <record id="employee_han" model="hr.employee">
+            <field name="name">Walter Horton</field>
+            <field name="work_contact_id" ref="hr.work_contact_han"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_han-image.jpg"/>
+            <field name="create_date">2010-01-01 00:00:00</field>
+            <field name="date_version" eval="time.strftime('%Y')+'-03-01'"/>
+            <field name="contract_date_start" eval="time.strftime('%Y')+'-03-01'"/>
+            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="structure_type_id" ref="structure_type_employee"/>
+            <field name="wage">4600.00</field>
+            <field name="job_id" ref="hr.job_developer"/>
+            <field name="department_id" ref="dep_rd"/>
+            <field name="parent_id" ref="employee_jve"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
+            <field name="sex">male</field>
+        </record>
+
+        <record id="work_contact_jog" model="res.partner">
+            <field name="name">Beth Evans</field>
+            <field name="email">beth.evans77@example.com</field>
+            <field name="phone">(555)-532-3841</field>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_jog-image.jpg"/>
+        </record>
+
+        <record id="employee_jog" model="hr.employee">
+            <field name="name">Beth Evans</field>
+            <field name="department_id" ref="dep_rd"/>
+            <field name="parent_id" ref="employee_jve"/>
+            <field name="job_id" ref="hr.job_developer"/>
+            <field name="job_title">Experienced Developer</field>
+            <field name="private_country_id" ref="base.us"/>
+            <field name="private_email">beth.evans@example.com</field>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="work_contact_id" ref="hr.work_contact_jog"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_jog-image.jpg"/>
+            <field name="date_version" eval="'2010-01-01'"/>
+            <field name="sex">female</field>
+            <field name="distance_home_work">50</field>
+        </record>
+
+        <record id="work_contact_barty_mcbly" model="res.partner">
+            <field name="name">Barty McBly</field>
+            <field name="phone">(555)-234-3424</field>
+            <field name="email">barty.mcbly@example.com</field>
+        </record>
+
+        <record id="employee_barty_mcbly" model="hr.employee">
+            <field name="name">Barty McBly</field>
+            <field name="work_contact_id" ref="hr.work_contact_barty_mcbly"/>
+            <field name="date_version">1885-09-02</field>
+            <field name="contract_date_start">1885-09-02</field>
+            <field name="contract_date_end">1885-09-07</field>
+            <field name="contract_type_id" ref="contract_type_full_time"/>
+            <field name="structure_type_id" ref="structure_type_employee"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="wage">15.00</field>
+            <field name="job_id" ref="hr.job_consultant"/>
+            <field name="department_id" ref="dep_administration"/>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
+            <field name="sex">male</field>
+        </record>
+
+        <function name="create_version" model="hr.employee">
+            <value eval="[ref('hr.employee_barty_mcbly')]"/>
+            <value eval="{
+                'date_version': '1955-11-05',
+                'contract_date_start': '1955-11-05',
+                'contract_date_end': '1984-11-12',
+                'wage': 250.00
+            }"/>
+        </function>
+
+        <function name="create_version" model="hr.employee">
+            <value eval="[ref('hr.employee_barty_mcbly')]"/>
+            <value eval="{
+                'date_version': '1985-10-26',
+                'contract_date_start': '1985-10-26',
+                'contract_date_end': '1985-10-27',
+                'wage': 1000.00
+            }"/>
+        </function>
+
+        <function name="create_version" model="hr.employee">
+            <value eval="[ref('hr.employee_barty_mcbly')]"/>
+            <value eval="{
+                'date_version': '2015-10-21',
+                'contract_date_start': '2015-10-21',
+                'contract_date_end': False,
+                'wage': 4000.00
+            }"/>
+        </function>
+
+        <!-- Contract Templates -->
+        <record id="contract_template_us_developer" model="hr.version">
+            <field name="name">Developer USA</field>
+            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="structure_type_id" ref="structure_type_employee"/>
+            <field name="wage">3000.00</field>
+            <field name="job_id" ref="hr.job_developer"/>
+            <field name="department_id" ref="hr.dep_rd_be"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+        </record>
+
+        <record id="contract_template_hr_manager" model="hr.version">
+            <field name="name">HR Manager</field>
+            <field name="contract_type_id" ref="contract_type_permanent"/>
+            <field name="structure_type_id" ref="structure_type_employee"/>
+            <field name="wage">2000.00</field>
+            <field name="job_id" ref="hr.job_hrm"/>
+            <field name="department_id" ref="hr.dep_administration"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+        </record>
+
+        <!-- Assign manager for each department -->
+        <record id="dep_management" model="hr.department">
+            <field name="manager_id" ref="employee_admin"/>
+        </record>
+
+        <record id="dep_sales" model="hr.department">
+            <field name="manager_id" ref="employee_ngh"/>
+        </record>
+
+        <record id="dep_rd" model="hr.department">
+            <field name="manager_id" ref="employee_qdp"/>
+        </record>
+
+        <record id="dep_rd_be" model="hr.department">
+            <field name="manager_id" ref="employee_al"/>
+        </record>
+
+        <record id="dep_rd_ltp" model="hr.department">
+            <field name="manager_id" ref="employee_jve"/>
+        </record>
+
+        <record id="dep_ps" model="hr.department">
+            <field name="manager_id" ref="employee_vad"/>
+        </record>
+
+        <!-- Structure Types -->
+        <record id="structure_type_employee_cp200_pfi" model="hr.payroll.structure.type">
+            <field name="default_resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+        </record>
+
+        <record id="structure_type_employee_cp200" model="hr.payroll.structure.type">
+            <field name="default_resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+        </record>
+    </data>
+</odoo>

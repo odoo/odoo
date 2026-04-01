@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_template_tree_view" model="ir.ui.view">
+            <field name="name">product.template.list.inherit.stock.account</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="standard_price" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_category_property_form_stock" model="ir.ui.view">
+            <field name="name">product.category.stock.property.form.inherit.stock</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="stock.product_category_form_view_inherit"/>
+            <field name="arch" type="xml">
+                <group name="logistics" position="after">
+                    <group string="Inventory Valuation">
+                        <field name="property_cost_method" required="True"/>
+                        <field name="property_valuation" groups="account.group_account_readonly,stock.group_stock_manager"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+        <record id="view_category_property_form" model="ir.ui.view">
+            <field name="name">product.category.stock.property.form.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="account.view_category_property_form"/>
+            <field name="arch" type="xml">
+                <field name="property_account_expense_categ_id" position="after">
+                    <field name="property_stock_valuation_account_id" string="Stock Account" options="{'no_create': True}"/>
+                    <field name="account_stock_variation_id" string="Stock Variation" options="{'no_create': True}"/>
+                    <field name="property_price_difference_account_id" options="{'no_create': True}" invisible="not (property_cost_method == 'standard' and property_valuation == 'real_time')"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- Stock Report View -->
+        <record model="ir.ui.view" id="view_template_property_form_stock_account">
+            <field name="name">view.template.property.form.stock.account</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.view_template_property_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//label[@for='serial_prefix_format']" position="before">
+                    <field name="lot_valuated" widget="confirm_boolean" invisible="tracking == 'none'"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_product_stock_tree_inherit_stock_account">
+            <field name="name">product.product.stock.list.inherit.stock.account</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="stock.product_product_stock_tree"/>
+            <field name="arch" type="xml">
+                <field name="qty_available" position="before">
+                    <field name="company_currency_id" column_invisible="True"/>
+                    <field name="cost_method" optional="hide"/>
+                    <field name="avg_cost"
+                        string="Unit Cost" optional="show" widget='stock_action_field'
+                        options="{
+                            'currency_field': 'company_currency_id',
+                            'action_name': 'stock_account.stock_avco_report_action',
+                            'disabled': 'cost_method == \'fifo\'',
+                        }" context="{
+                            'active_id': id,
+                            'cost_method': cost_method,
+                        }"/>
+                    <field
+                        name="total_value" string="Total Value" optional="show"
+                        widget='stock_action_field' options="{
+                            'currency_field': 'company_currency_id',
+                            'action_name': 'stock_account.stock_move_valuation_action',
+                        }" context=" {
+                            'search_default_product_id': id,
+                            'search_default_incoming': 1,
+                            'search_default_remaining': 1,
+                            'cost_method': cost_method,
+                            'tracking': tracking,
+                        }"
+                        sum="Total Value"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_product_view_list_at_date">
+            <field name="name">product.product.list.inherit.stock.account.at.date</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="stock.view_stock_product_tree"/>
+            <field name="arch" type="xml">
+                <field name="standard_price" position="after">
+                    <field name="avg_cost" string="Unit Cost" optional="hide" options="{
+                        'currency_field': 'company_currency_id',
+                    }"/>
+                    <field name="total_value" string="Total Value" optional="hide" options="{
+                        'currency_field': 'company_currency_id',
+                    }"/>
+                </field>
+            </field>
+        </record>
+   </data>
+</odoo>

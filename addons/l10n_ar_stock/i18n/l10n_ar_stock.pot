@@ -1,0 +1,293 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_ar_stock
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-30 19:04+0000\n"
+"PO-Revision-Date: 2025-12-30 19:04+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_ar_stock
+#. odoo-python
+#: code:addons/l10n_ar_stock/models/stock_picking_type.py:0
+msgid "%(company)s Sequence %(name)s"
+msgstr ""
+
+#. module: l10n_ar_stock
+#. odoo-python
+#: code:addons/l10n_ar_stock/models/stock_picking_type.py:0
+msgid ""
+"%(sequence_number)s is not a valid sequence number. Sequence numbers should "
+"contain exactly 8 digits (e.g. 00012345)."
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.actions.report,print_report_name:l10n_ar_stock.action_delivery_guide_report_pdf
+msgid "'Remito - %s' % (object.l10n_ar_delivery_guide_number or 's/n')"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.view_picking_type_form_inherit_l10n_ar_stock
+msgid "00000001"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.view_picking_type_form_inherit_l10n_ar_stock
+msgid "00000999"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:mail.template,body_html:l10n_ar_stock.email_template_ar_remitos_delivery_guide
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Here is your\n"
+"        <t t-if=\"object.l10n_ar_delivery_guide_number\">\n"
+"            document <strong t-out=\"object.l10n_ar_delivery_guide_number or ''\">00001-00000001</strong>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            document\n"
+"        </t>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (with reference: <t t-out=\"object.origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        Do not hesitate to contact us if you have any questions.\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
+msgid "<strong>Customer: </strong>"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.custom_header
+msgid "<strong>DOCUMENT NOT VALID AS AN INVOICE</strong>"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
+msgid "<strong>VAT Cond: </strong>"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_cai_expiration_date
+msgid ""
+"Argentina: Add the CAI expiration date given by ARCA for the sequence "
+"configured here"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_cai_authorization_code
+msgid "Argentina: Add the CAI number for Remitos given by ARCA"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_sequence_number_start
+msgid "Argentina: Add the first sequence number given by ARCA for this CAI"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_sequence_number_end
+msgid "Argentina: Add the last sequence number given by ARCA for this CAI"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_next_delivery_number
+msgid "Argentina: Hold the next sequence to use as delivery guide number."
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_sequence_id
+msgid "Argentina: Hold the sequence to generate a delivery guide number."
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_delivery_sequence_prefix
+msgid ""
+"Argentina: Prefix for the delivery guide sequence number. It is used to "
+"generate the delivery guide number."
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_document_type_id
+msgid "Argentina: Select the document type to be assigned on the Remito"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_cai_authorization_code
+msgid "CAI"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking__l10n_ar_cai_data
+msgid "CAI Data"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_cai_expiration_date
+msgid "CAI Expiration Date"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
+msgid "CAI Expiration Date:"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
+msgid "CAI:"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.actions.report,name:l10n_ar_stock.action_delivery_guide_report_pdf
+msgid "Delivery Guide (AR)"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking__l10n_ar_delivery_guide_number
+msgid "Delivery Guide No."
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.custom_header
+msgid "Delivery Guide No:"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.stock_picking_form_inherit_l10n_ar_stock
+msgid "Delivery Guide Number"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_sequence_id
+msgid "Delivery Guide Number Sequence"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_delivery_sequence_prefix
+msgid "Delivery Guide Prefix"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:mail.template,name:l10n_ar_stock.email_template_ar_remitos_delivery_guide
+msgid "Delivery guide: Send by email"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_document_type_id
+msgid "Document Type"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.stock_picking_form_inherit_l10n_ar_stock
+msgid "Generate Delivery Guide"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking__id
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking__l10n_ar_allow_generate_delivery_guide
+msgid "L10N Ar Allow Generate Delivery Guide"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking__l10n_ar_allow_send_delivery_guide
+msgid "L10N Ar Allow Send Delivery Guide"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_next_delivery_number
+msgid "Next Delivery Guide Number"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
+msgid "Page: <span class=\"page\"/> / <span class=\"topage\"/>"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model,name:l10n_ar_stock.model_stock_picking_type
+msgid "Picking Type"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.stock_picking_form_inherit_l10n_ar_stock
+msgid "Send Delivery Guide"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_sequence_number_start
+msgid "Sequence From"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_sequence_number_end
+msgid "Sequence To"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
+msgid "Sequence from"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:ir.model,name:l10n_ar_stock.model_stock_picking
+msgid "Stock Picking - Delivery Guide (Uruguay)"
+msgstr ""
+
+#. module: l10n_ar_stock
+#. odoo-python
+#: code:addons/l10n_ar_stock/models/stock_picking.py:0
+msgid ""
+"The delivery guide number %s exceeds the range specified in the CAI. Please "
+"update the range or use a different CAI with a different range."
+msgstr ""
+
+#. module: l10n_ar_stock
+#. odoo-python
+#: code:addons/l10n_ar_stock/models/stock_picking.py:0
+msgid "The partner does not have an email address."
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
+msgid "to"
+msgstr ""
+
+#. module: l10n_ar_stock
+#: model:mail.template,subject:l10n_ar_stock.email_template_ar_remitos_delivery_guide
+msgid ""
+"{{ object.company_id.name }} Document (Ref {{ "
+"object.l10n_ar_delivery_guide_number }})"
+msgstr ""

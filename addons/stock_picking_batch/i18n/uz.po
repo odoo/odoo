@@ -1,0 +1,1526 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_picking_batch
+#
+#
+# Translated by:
+# Deepvision - info@deepvision.uz | +998 77-093-0007
+# Amon Olimov - amon.bars@gmail.com
+# Jonibek Yorqulov - j.yorqulov@deepvision.uz
+# Mirzohidkhon Ulugkhujaev ulugkhujayevmirzohidxon@gmail.com
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-10-08 18:39+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
+msgid "%s was removed from the batch, no quantity processed"
+msgstr "%s partiyadan olib tashlandi, hech qanday miqdor qayta ishlanmadi"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "2023-08-20"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
+#, fuzzy
+msgid "<span class=\"col-6\">Waves</span>"
+msgstr "<span class=\"col-6\">To‘lqinlar</span>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+#, fuzzy
+msgid ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\" "
+"style=\"white-space: nowrap;\">Wave Grouping</span>"
+msgstr ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\" "
+"style=\"white-space: nowrap;\">To‘lqinlarni guruhlash</span>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+#, fuzzy
+msgid ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Batch "
+"Grouping</span>"
+msgstr ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not "
+"auto_batch\">Partiyalarni guruhlash</span>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
+msgid "<span class=\"o_stat_text\">Moves</span>"
+msgstr "<span class=\"o_stat_text\">Harakatlar</span>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
+msgid "<span class=\"o_stat_text\">Packages</span>"
+msgstr "<span class=\"o_stat_text\">Paketlar</span>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "<strong>FROM</strong>"
+msgstr "<strong>DAN</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "<strong>Lot/Serial Number</strong>"
+msgstr "<strong>Partiya/seriya raqami</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "<strong>Package</strong>"
+msgstr "<strong>Paket</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "<strong>Product Barcode</strong>"
+msgstr "<strong>Mahsulot shtrix-kodi</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "<strong>Responsible:</strong>"
+msgstr "<strong>Mas'ul shaxs:</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "<strong>TO</strong>"
+msgstr "<strong>GA</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "<strong>→</strong>"
+msgstr "<strong>→</strong>"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
+#, fuzzy
+msgid ""
+"A transfer will not be automatically added to batches that will exceed this "
+"number of lines if the transfer is added to it.\n"
+"Leave this value as '0' if no line limit."
+msgstr ""
+"Agar o‘tkazma qo‘shilsa, bu qatorlar sonidan oshib ketadigan partiyalarga "
+"avtomatik ravishda qo‘shilmaydi. Agar qatorlar soni cheklanmagan bo‘lsa, bu "
+"qiymatni '0' sifatida qoldiring."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
+#, fuzzy
+msgid ""
+"A transfer will not be automatically added to batches that will exceed this "
+"number of transfers.\n"
+"Leave this value as '0' if no transfer limit."
+msgstr ""
+"Agar o‘tkazma qo‘shilsa, bu o‘tkazmalar sonidan oshib ketadigan partiyalarga "
+"avtomatik ravishda qo‘shilmaydi. Agar o‘tkazmalar soni cheklanmagan bo‘lsa, "
+"bu qiymatni '0' sifatida qoldiring."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
+#, fuzzy
+msgid "Action Needed"
+msgstr "Harakat talab etiladi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_ids
+#, fuzzy
+msgid "Activities"
+msgstr "Faoliyatlar"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_exception_decoration
+#, fuzzy
+msgid "Activity Exception Decoration"
+msgstr "Faoliyat istisnosi bezagi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_state
+#, fuzzy
+msgid "Activity State"
+msgstr "Faoliyat holati"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_type_icon
+#, fuzzy
+msgid "Activity Type Icon"
+msgstr "Faoliyat turi belgisi"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking.py:0
+#: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
+#, fuzzy
+msgid "Add Operations"
+msgstr "Amallar qo‘shish"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
+#, fuzzy
+msgid "Add pickings to"
+msgstr "Tanlanmalarni qo‘shish"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
+#, fuzzy
+msgid "Add to"
+msgstr "Qo‘shish"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_move_line.py:0
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree_detailed_wave
+#, fuzzy
+msgid "Add to Wave"
+msgstr "To‘lqinga qo‘shish"
+
+#. module: stock_picking_batch
+#: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action_stock_picking
+#, fuzzy
+msgid "Add to batch"
+msgstr "Partiyaga qo‘shish"
+
+#. module: stock_picking_batch
+#: model:ir.actions.act_window,name:stock_picking_batch.stock_add_to_wave_action_stock_picking
+#, fuzzy
+msgid "Add to wave"
+msgstr "To‘lqinga qo‘shish"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
+msgid "Allocation"
+msgstr "Taqsimlash"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__allowed_picking_ids
+#, fuzzy
+msgid "Allowed Picking"
+msgstr "Ruxsat etilgan terish"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking.py:0
+#, fuzzy
+msgid "Assigned to %s Responsible"
+msgstr "%s ga mas'ul etib tayinlandi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_attachment_count
+#, fuzzy
+msgid "Attachment Count"
+msgstr "Biriktirishlar soni"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_auto_confirm
+#, fuzzy
+msgid "Auto-confirm"
+msgstr "Avtomatik tasdiqlash"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__auto_batch
+#, fuzzy
+msgid "Automatic Batches"
+msgstr "Avtomatik partiyalar"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_partner
+#, fuzzy
+msgid "Automatically group batches by contacts."
+msgstr "Partiyalarni kontaktlar bo‘yicha avtomatik guruhlash."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
+#, fuzzy
+msgid "Automatically group batches by destination country."
+msgstr "Partiyalarni borish mamlakati asosida avtomatik guruhlash."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
+#, fuzzy
+msgid "Automatically group batches by their destination location."
+msgstr "Partiyalarni belgilangan joyi bo‘yicha avtomatik guruhlash."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
+#, fuzzy
+msgid "Automatically group batches by their source location."
+msgstr "Partiyalarni manba joylashuvi bo‘yicha avtomatik guruhlash."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__auto_batch
+#, fuzzy
+msgid ""
+"Automatically put pickings into batches as they are confirmed when possible."
+msgstr ""
+"Iloji boricha tasdiqlanganda termalarni avtomatik ravishda partiyalarga "
+"joylashtirish."
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "Barcode"
+msgstr "Shtrix-kod"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_form_inherit
+#, fuzzy
+msgid "Batch"
+msgstr "Partiya"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+#, fuzzy
+msgid "Batch & Wave Transfers"
+msgstr "Partiyali va to‘lqinli o‘tkazmalar"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "Batch Name"
+msgstr "Partiya nomi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_properties_definition
+#, fuzzy
+msgid "Batch Properties"
+msgstr "Partiya xususiyatlari"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#: model:ir.actions.report,name:stock_picking_batch.action_report_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move_line__batch_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__batch_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__batch_id
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_move_line_view_search_inherit_stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_internal_search_inherit
+#, fuzzy
+msgid "Batch Transfer"
+msgstr "Partiyali o‘tkazma"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
+#, fuzzy
+msgid "Batch Transfer Lines"
+msgstr "Partiyali o‘tkazma qatorlari"
+
+#. module: stock_picking_batch
+#: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
+#: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
+#, fuzzy
+msgid "Batch Transfers"
+msgstr "Partiyali o‘tkazmalar"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
+msgid "Batch Transfers not finished"
+msgstr "Tugallanmagan partiyali o‘tkazmalar"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_move_line__batch_id
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking__batch_id
+#, fuzzy
+msgid "Batch associated to this transfer"
+msgstr "Bu o‘tkazmaga bog‘langan partiya"
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+#, fuzzy
+msgid "Batch transfers"
+msgstr "Partiyali o‘tkazmalar"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
+msgid "Batch transfers cannot be merged with wave transfers and vice versa."
+msgstr ""
+"Partiyali o‘tkazmalarni to‘lqinli o‘tkazmalar bilan birlashtirish mumkin "
+"emas va aksincha."
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
+msgid "Batch/Wave transfers have been merged into the following transfer"
+msgstr "Partiya/To‘lqin o‘tkazmalari quyidagi o‘tkazmaga birlashtirildi"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
+msgid "Batch/Wave transfers with different operation types cannot be merged."
+msgstr ""
+"Turli amal turlariga ega paket/to‘lqin o‘tkazmalarini birlashtirish mumkin "
+"emas."
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
+msgid "Batch/Wave transfers with different states cannot be merged."
+msgstr ""
+"Turli holatlardagi paket/to‘lqin o‘tkazmalarini birlashtirish mumkin emas."
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
+#, fuzzy
+msgid "Batches"
+msgstr "Paketlar"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_calendar
+#, fuzzy
+msgid "Calendar View"
+msgstr "Taqvim ko‘rinishi"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
+#, fuzzy
+msgid "Cancel"
+msgstr "Bekor qilish"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__cancel
+#, fuzzy
+msgid "Cancelled"
+msgstr "Bekor qilingan"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
+#, fuzzy
+msgid "Cannot create wave transfers"
+msgstr "To‘lqin o‘tkazmalarini yaratib bo‘lmaydi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_category_ids
+#, fuzzy
+msgid "Categories to consider when grouping waves."
+msgstr "To‘lqinlarni guruhlashda hisobga olinadigan toifalar."
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
+msgid "Check Availability"
+msgstr "Mavjudlikni tekshirish"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
+msgid "Choose Labels Layout"
+msgstr "Yorliqlar tartibini tanlash"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
+msgid "Choose Type of Labels To Print"
+msgstr "Chop etish uchun yorliq turini tanlang"
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+#, fuzzy
+msgid "Cluster transfers"
+msgstr "Klaster o‘tkazmalari"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__company_id
+#, fuzzy
+msgid "Company"
+msgstr "Kompaniya"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
+#, fuzzy
+msgid "Confirm"
+msgstr "Tasdiqlash"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_partner
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+#, fuzzy
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_batch
+#, fuzzy
+msgid "Count Picking Batch"
+msgstr "Terish paketini hisoblash"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_wave
+#, fuzzy
+msgid "Count Picking Wave"
+msgstr "Terish to‘lqinini hisoblash"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__create_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__create_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__create_uid
+#, fuzzy
+msgid "Created by"
+msgstr "Yaratuvchi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__create_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__create_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__create_date
+#, fuzzy
+msgid "Created on"
+msgstr "Yaratilgan sana"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__description
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__description
+#, fuzzy
+msgid "Description"
+msgstr "Tavsif"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
+#, fuzzy
+msgid "Destination Country"
+msgstr "Belgilangan mamlakat"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+#, fuzzy
+msgid "Destination Location"
+msgstr "Belgilangan joy"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
+msgid "Detailed Operations"
+msgstr "Batafsil operatsiyalar"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_move_tree_inherited
+#, fuzzy
+msgid "Details"
+msgstr "Tafsilotlar"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_warehouse__display_name
+#, fuzzy
+msgid "Display Name"
+msgstr "Ko‘rsatiladigan nom"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__done
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
+msgid "Done"
+msgstr "Bajarildi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__is_create_draft
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__draft
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
+msgid "Draft"
+msgstr "Qoralama"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_follower_ids
+#, fuzzy
+msgid "Followers"
+msgstr "Kuzatuvchilar"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_partner_ids
+#, fuzzy
+msgid "Followers (Partners)"
+msgstr "Kuzatuvchilar (Hamkorlar)"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_type_icon
+#, fuzzy
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome ikonkasi, masalan fa-tasks"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
+msgid "Future Activities"
+msgstr "Kelgusi faoliyatlar"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
+#, fuzzy
+msgid "Group by Destination Location"
+msgstr "Belgilangan joy bo‘yicha guruhlash"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
+#, fuzzy
+msgid "Group by Source Location"
+msgstr "Manba joylashuvi bo‘yicha guruhlash"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "Gujarat"
+msgstr "Gujarat"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__has_message
+#, fuzzy
+msgid "Has Message"
+msgstr "Xabar mavjud"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move_line__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_warehouse__id
+#, fuzzy
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_exception_icon
+#, fuzzy
+msgid "Icon"
+msgstr "Ikonka"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_exception_icon
+#, fuzzy
+msgid "Icon to indicate an exception activity."
+msgstr "Istisno faoliyatini ko‘rsatuvchi belgi."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction
+#, fuzzy
+msgid "If checked, new messages require your attention."
+msgstr "Agar belgilansa, yangi xabarlar e'tiboringizni talab qiladi."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
+#, fuzzy
+msgid "If checked, some messages have a delivery error."
+msgstr "Agar belgilansa, ba'zi xabarlarda yetkazib berish xatosi mavjud."
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking.py:0
+#, fuzzy
+msgid ""
+"If the Automatic Batches feature is enabled, at least one 'Group by' option "
+"must be selected."
+msgstr ""
+"Agar Avtomatik paketlar funksiyasi yoqilgan bo‘lsa, kamida bitta 'Guruhlash' "
+"opsiyasi tanlanishi shart."
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
+msgid "In Progress"
+msgstr "Bajarilmoqda"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__in_progress
+#, fuzzy
+msgid "In progress"
+msgstr "Jarayonda"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_is_follower
+#, fuzzy
+msgid "Is Follower"
+msgstr "Kuzatuvchi"
+
+#. module: stock_picking_batch
+#: model:ir.ui.menu,name:stock_picking_batch.menu_stock_jobs
+#, fuzzy
+msgid "Jobs"
+msgstr "Ishlar"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "John Doe"
+msgstr "Jon Doe"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__write_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__write_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__write_uid
+#, fuzzy
+msgid "Last Updated by"
+msgstr "Oxirgi yangilovchi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__write_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__write_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__write_date
+#, fuzzy
+msgid "Last Updated on"
+msgstr "Oxirgi yangilangan sana"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
+msgid "Late Activities"
+msgstr "Kechikkan faoliyatlar"
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+#, fuzzy
+msgid ""
+"Launch picking orders by aisle or area and regroup at packing zone. Ideal "
+"for large warehouses."
+msgstr ""
+"Terish buyurtmalarini yo‘lak yoki hudud bo‘yicha boshlash va qadoqlash "
+"zonasida qayta guruhlash. Katta omborxonalar uchun ideal."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__line_ids
+#, fuzzy
+msgid "Line"
+msgstr "Qator"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__picking_ids
+#, fuzzy
+msgid "List of transfers associated to this batch"
+msgstr "Ushbu partiya bilan bog‘liq o‘tkazmalar ro‘yxati"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
+msgid "List view of detailed operations"
+msgstr "Batafsil operatsiyalar ro‘yxati ko‘rinishi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_group_by_location
+#, fuzzy
+msgid "Location"
+msgstr "Joylashuv"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "Location From Name"
+msgstr "Boshlang‘ich joylashuv nomi"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "Location To Name"
+msgstr "Oxirgi joylashuv nomi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_location_ids
+#, fuzzy
+msgid "Locations to consider when grouping waves."
+msgstr "To‘lqinlarni guruhlashda hisobga olinadigan joylar"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "Lot Number"
+msgstr "Partiya raqami"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree
+#, fuzzy
+msgid "Lot/Serial Number"
+msgstr "Partiya/Seriya raqami"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_lines
+#, fuzzy
+msgid "Maximum lines"
+msgstr "Maksimal qatorlar"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_pickings
+#, fuzzy
+msgid "Maximum transfers"
+msgstr "Maksimal o‘tkazmalar"
+
+#. module: stock_picking_batch
+#: model:ir.actions.server,name:stock_picking_batch.action_merge_batch_picking
+#, fuzzy
+msgid "Merge"
+msgstr "Birlashtirish"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
+#, fuzzy
+msgid "Message Delivery error"
+msgstr "Xabar yetkazib berishdagi xato"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_ids
+#, fuzzy
+msgid "Messages"
+msgstr "Xabarlar"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__mode
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__mode
+#, fuzzy
+msgid "Mode"
+msgstr "Rejim"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree
+#, fuzzy
+msgid "Move Lines"
+msgstr "Qatorlarni ko‘chirish"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
+msgid "My Activities"
+msgstr "Mening faoliyatlarim"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__my_activity_date_deadline
+#, fuzzy
+msgid "My Activity Deadline"
+msgstr "Mening faoliyatim muddati"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
+msgid "My Transfers"
+msgstr "Mening o‘tkazmalarim"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_calendar_event_id
+#, fuzzy
+msgid "Next Activity Calendar Event"
+msgstr "Keyingi faoliyat taqvim hodisasi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_date_deadline
+#, fuzzy
+msgid "Next Activity Deadline"
+msgstr "Keyingi faoliyat muddati"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_summary
+#, fuzzy
+msgid "Next Activity Summary"
+msgstr "Keyingi faoliyat qisqacha mazmuni"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_type_id
+#, fuzzy
+msgid "Next Activity Type"
+msgstr "Keyingi faoliyat turi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
+#, fuzzy
+msgid "Number of Actions"
+msgstr "Harakatlar soni"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
+#, fuzzy
+msgid "Number of errors"
+msgstr "Xatolar soni"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
+#, fuzzy
+msgid "Number of messages requiring action"
+msgstr "Harakat talab qiladigan xabarlar soni"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
+#, fuzzy
+msgid "Number of messages with delivery error"
+msgstr "Yetkazib berishda xato bo‘lgan xabarlar soni"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_id
+#, fuzzy
+msgid "Operation Type"
+msgstr "Operatsiya turi"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
+msgid "Operations"
+msgstr "Operatsiyalar"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "Package ID"
+msgstr "Paket identifikatori"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
+msgid "Packages"
+msgstr "Paketlar"
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+#, fuzzy
+msgid ""
+"Pick multiple orders in one trip and prepare orders as you pick. This "
+"reduces packing time and is ideal for small products."
+msgstr ""
+"Bir safarda bir nechta buyurtmani tanlang va tanlash jarayonida "
+"buyurtmalarni tayyorlang. Bu qadoqlash vaqtini qisqartiradi va kichik "
+"mahsulotlar uchun juda qulay."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__picking_ids
+#, fuzzy
+msgid "Picking"
+msgstr "Tanlash"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_picking_type
+#, fuzzy
+msgid "Picking Type"
+msgstr "Tanlash turi"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
+msgid "Please select at least two batch/wave transfers to merge."
+msgstr ""
+"Birlashtirish uchun kamida ikkita partiya/to‘lqin o‘tkazmasini tanlang."
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
+#, fuzzy
+msgid "Prepare Batch"
+msgstr "Partiyani tayyorlash"
+
+#. module: stock_picking_batch
+#: model:ir.actions.act_window,name:stock_picking_batch.action_prepare_wave
+#: model:ir.actions.act_window,name:stock_picking_batch.action_prepare_wave_for_picking_type
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_wave_kanban
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_wave_tree
+#, fuzzy
+msgid "Prepare Wave"
+msgstr "To‘lqinni tayyorlash"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
+msgid "Print"
+msgstr "Chop etish"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
+msgid "Print Labels"
+msgstr "Yorliqlarni chop etish"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_group_by_product
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "Product"
+msgstr "Mahsulot"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "Product Barcode"
+msgstr "Mahsulot shtrix-kodi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_group_by_category
+#, fuzzy
+msgid "Product Category"
+msgstr "Mahsulot toifasi"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_move_line
+#, fuzzy
+msgid "Product Moves (Stock Move Line)"
+msgstr "Mahsulot harakatlari (Mahsulot harakati qatori)"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "Product Name"
+msgstr "Mahsulot nomi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__properties
+#, fuzzy
+msgid "Properties"
+msgstr "Xususiyatlar"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree
+#, fuzzy
+msgid "Put in Pack"
+msgstr "Paketga joylash"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "Quantity"
+msgstr "Miqdor"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "Quantity Done"
+msgstr "Bajarilgan miqdor"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__rating_ids
+#, fuzzy
+msgid "Ratings"
+msgstr "Baholashlar"
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+#, fuzzy
+msgid ""
+"Regroup multiple orders into one picking and consolidate at the packing zone."
+msgstr ""
+"Bir nechta buyurtmani bitta tanlash jarayoniga birlashtiring va qadoqlash "
+"zonasida jamlang."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__user_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__user_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__user_id
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
+msgid "Responsible"
+msgstr "Mas'ul"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_user_id
+#, fuzzy
+msgid "Responsible User"
+msgstr "Mas'ul foydalanuvchi"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "Result Package ID"
+msgstr "Natija paketi ID raqami"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
+#, fuzzy
+msgid "SMS Delivery error"
+msgstr "SMS yuborish xatosi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__scheduled_date
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "Scheduled Date"
+msgstr "Rejalashtirilgan sana"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
+#, fuzzy
+msgid ""
+"Scheduled date for the transfers to be processed.\n"
+"              - If manually set then scheduled date for all transfers in "
+"batch will automatically update to this date.\n"
+"              - If not manually changed and transfers are added/removed/"
+"updated then this will be their earliest scheduled date\n"
+"                but this scheduled date will not be set for all transfers in "
+"batch."
+msgstr ""
+"O‘tkazmalarni qayta ishlash uchun rejalashtirilgan sana. - Agar qo‘lda "
+"o‘rnatilsa, partiyadagi barcha o‘tkazmalar uchun rejalashtirilgan sana "
+"avtomatik ravishda ushbu sanaga yangilanadi. - Agar qo‘lda o‘zgartirilmasa "
+"va o‘tkazmalar qo‘shilsa/olib tashlansa/yangilansa, bu ularning eng erta "
+"rejalashtirilgan sanasi bo‘ladi, lekin bu sana partiyadagi barcha "
+"o‘tkazmalar uchun belgilanmaydi."
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
+msgid "Search Batch Transfer"
+msgstr "Partiya o‘tkazmasini qidirish"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+#, fuzzy
+msgid "Select locations you want to group"
+msgstr "Guruhlash kerak bo‘lgan joylarni tanlang"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+#, fuzzy
+msgid "Select product categories you want to group"
+msgstr "Guruhlash kerak bo‘lgan mahsulot toifalarini tanlang"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__batch_sequence
+#, fuzzy
+msgid "Sequence"
+msgstr "Ketma-ketlik"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_allocation
+#, fuzzy
+msgid "Show Allocation Button"
+msgstr "Taqsimlash tugmasini ko‘rsatish"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
+#, fuzzy
+msgid "Show Check Availability"
+msgstr "Mavjudlikni tekshirishni ko‘rsatish"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_lots_text
+#, fuzzy
+msgid "Show Lots Text"
+msgstr "Partiyalar matnini ko‘rsatish"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
+msgid "Show all records whose next activity date is past"
+msgstr "Keyingi faoliyat sanasi o‘tib ketgan barcha yozuvlarni ko‘rsatish"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+#, fuzzy
+msgid "Source Location"
+msgstr "Manba joylashuvi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_location
+#, fuzzy
+msgid ""
+"Split transfers by defined locations, then group transfers with the same "
+"location."
+msgstr ""
+"O‘tkazmalarni belgilangan joylar bo‘yicha ajrating, so‘ngra bir xil "
+"joylashuvli o‘tkazmalarni guruhlang."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_category
+#, fuzzy
+msgid ""
+"Split transfers by product category, then group transfers that have the same "
+"product category."
+msgstr ""
+"O‘tkazmalarni mahsulot toifasi bo‘yicha ajrating, so‘ngra bir xil mahsulot "
+"toifasiga ega o‘tkazmalarni guruhlang."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_product
+#, fuzzy
+msgid ""
+"Split transfers by product then group transfers that have the same product."
+msgstr ""
+"O‘tkazmalarni mahsulot bo‘yicha ajrating, so‘ngra bir xil mahsulotga ega "
+"o‘tkazmalarni guruhlang."
+
+#. module: stock_picking_batch
+#: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
+#: model:mail.message.subtype,name:stock_picking_batch.mt_batch_state
+#, fuzzy
+msgid "Stage Changed"
+msgstr "Bosqich o‘zgartirildi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__state
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
+msgid "State"
+msgstr "Holat"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "Status"
+msgstr "Status"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_state
+#, fuzzy
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Faoliyatlarga asoslangan holat Kechikkan: Muddati o‘tib ketgan Bugun: "
+"Faoliyat sanasi bugun Rejalashtirilgan: Kelajakdagi faoliyatlar."
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
+#, fuzzy
+msgid "Stock Batch Transfer"
+msgstr "Tovar partiyasini o‘tkazish"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_move
+#, fuzzy
+msgid "Stock Move"
+msgstr "Tovar harakati"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_line_ids
+#, fuzzy
+msgid "Stock move lines"
+msgstr "Tovar harakati qatorlari"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_ids
+#, fuzzy
+msgid "Stock moves"
+msgstr "Tovar harakatlari"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "Summary:"
+msgstr "Qisqacha ma'lumot:"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
+#, fuzzy
+msgid "The following batch transfer has been created"
+msgstr "Quyidagi partiya o‘tkazmasi yaratildi"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
+#, fuzzy
+msgid "The following batch transfer has been updated"
+msgstr "Quyidagi partiya o‘tkazmasi yangilandi"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
+msgid ""
+"The following transfers cannot be added to batch transfer %(batch)s. Please "
+"check their states and operation types.\n"
+"\n"
+"Incompatibilities: %(incompatible_transfers)s"
+msgstr ""
+"Quyidagi o‘tkazmalarni %(batch)s partiya o‘tkazmasiga qo‘shib bo‘lmaydi. "
+"Ularning holatlari va operatsiya turlarini tekshiring.  Nomuvofiqliklar: %"
+"(incompatible_transfers)s"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_move_line.py:0
+#, fuzzy
+msgid "The following wave transfer has been created"
+msgstr "Quyidagi to‘lqinli o‘tkazma yaratildi"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_move_line.py:0
+#, fuzzy
+msgid "The following wave transfer has been updated"
+msgstr "Quyidagi to‘lqinli o‘tkazma yangilandi"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
+#, fuzzy
+msgid "The selected operations should belong to a unique company."
+msgstr "Tanlangan operatsiyalar bitta kompaniyaga tegishli bo‘lishi kerak."
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
+#, fuzzy
+msgid "The selected pickings should belong to an unique company."
+msgstr "Tanlangan tanlovlar bitta kompaniyaga tegishli bo‘lishi kerak."
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
+#, fuzzy
+msgid "The selected transfers should belong to a unique company."
+msgstr "Tanlangan o‘tkazmalar bitta kompaniyaga tegishli bo‘lishi kerak."
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
+#, fuzzy
+msgid "The selected transfers should belong to the same operation type"
+msgstr ""
+"Tanlangan o‘tkazmalar bir xil operatsiya turiga tegishli bo‘lishi kerak"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__is_wave
+#, fuzzy
+msgid "This batch is a wave"
+msgstr "Bu partiya to‘lqindir"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
+msgid "To Do"
+msgstr "Bajarish kerak"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
+msgid "Today Activities"
+msgstr "Bugungi faoliyatlar"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_picking
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "Transfer"
+msgstr "O‘tkazma"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "Transfer Display Name"
+msgstr "O‘tkazma ko‘rsatish nomi"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
+msgid "Transfer Name"
+msgstr "O‘tkazma nomi"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
+msgid "Transferred by"
+msgstr "O‘tkazuvchi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
+msgid "Transfers"
+msgstr "O‘tkazmalar"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_code
+#, fuzzy
+msgid "Type of Operation"
+msgstr "Operatsiya turi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_exception_decoration
+#, fuzzy
+msgid "Type of the exception activity on record."
+msgstr "Yozuvdagi istisno faoliyat turi."
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking.py:0
+#, fuzzy
+msgid "Unassigned responsible from %s"
+msgstr "%sdan mas'ul tayinlanmagan"
+
+#. module: stock_picking_batch
+#: model:ir.actions.server,name:stock_picking_batch.action_unreserve_batch_picking
+#, fuzzy
+msgid "Unreserve"
+msgstr "Zaxirani bekor qilish"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
+msgid "Validate"
+msgstr "Tasdiqlash"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_warehouse
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__warehouse_id
+#, fuzzy
+msgid "Warehouse"
+msgstr "Ombor"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_location_ids
+#, fuzzy
+msgid "Wave Locations"
+msgstr "To‘lqin joylashuvlari"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_category_ids
+#, fuzzy
+msgid "Wave Product Categories"
+msgstr "To‘lqin mahsulot turkumlari"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__wave_id
+#, fuzzy
+msgid "Wave Transfer"
+msgstr "To‘lqin o‘tkazma"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_add_to_wave
+#, fuzzy
+msgid "Wave Transfer Lines"
+msgstr "To‘lqin o‘tkazma liniyalari"
+
+#. module: stock_picking_batch
+#: model:ir.actions.act_window,name:stock_picking_batch.action_picking_tree_wave
+#: model:ir.ui.menu,name:stock_picking_batch.stock_picking_wave_menu
+#, fuzzy
+msgid "Wave Transfers"
+msgstr "To‘lqin o‘tkazmalar"
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+#, fuzzy
+msgid "Wave transfers"
+msgstr "To‘lqin o‘tkazmalar"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids
+#, fuzzy
+msgid "Website Messages"
+msgstr "Veb-sayt xabarlari"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__website_message_ids
+#, fuzzy
+msgid "Website communication history"
+msgstr "Veb-saytdagi muloqot tarixi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_to_batch__is_create_draft
+#, fuzzy
+msgid "When checked, create the batch in draft status"
+msgstr "Belgilanganda, partiyani qoralama holatida yaratish"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
+msgid "You cannot delete Done batch transfers."
+msgstr "Bajarilgan partiya o‘tkazmalarini o‘chirib bo‘lmaydi."
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
+msgid "You cannot merge done or cancelled batch/wave transfers."
+msgstr ""
+"Bajarilgan yoki bekor qilingan partiya/to‘lqin o‘tkazmalarini birlashtirish "
+"mumkin emas."
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
+msgid "You have to set some pickings to batch."
+msgstr "Ba'zi teruvlarni partiyaga belgilashingiz kerak."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
+#, fuzzy
+msgid "a new batch transfer"
+msgstr "yangi partiya o‘tkazma"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__new
+#, fuzzy
+msgid "a new wave transfer"
+msgstr "yangi to‘lqin o‘tkazma"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
+#, fuzzy
+msgid "an existing batch transfer"
+msgstr "mavjud partiya o‘tkazma"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing
+#, fuzzy
+msgid "an existing wave transfer"
+msgstr "mavjud to‘lqin o‘tkazma"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__estimated_shipping_volume
+#, fuzzy
+msgid "shipping_volume"
+msgstr "jo‘natish_hajmi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__estimated_shipping_weight
+#, fuzzy
+msgid "shipping_weight"
+msgstr "jo‘natish_og‘irligi"

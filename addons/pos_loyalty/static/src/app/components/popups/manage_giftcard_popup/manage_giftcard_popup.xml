@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_loyalty.ManageGiftCardPopup">
+        <Dialog title="props.title" size="'md'">
+            <div class="position-relative">
+                <input id="code"
+                    t-att-rows="props.rows"
+                    class="form-control form-control-lg mx-auto"
+                    type="text"
+                    autocomplete="off"
+                    t-model="state.inputValue"
+                    t-ref="input"
+                    t-on-keydown="onKeydownGiftCardCode"
+                    t-att-placeholder="props.placeholder"
+                    t-att-style="state.error ? 'border-color: red;' : ''" />
+                <div t-if="state.loading" class="gift-card-loading pe-3 h-100 position-absolute end-0 top-0 d-flex align-items-center">
+                    <i class="fa fa-spinner fa-spin" />
+                </div>
+            </div>
+            <div class="mt-3 d-flex">
+                <div t-attf-class="col align-items-center d-flex {{!ui.isSmall? 'me-2 w-50': ''}}">
+                    <div class="col-form-label text-center pe-0 me-4 fs-5">Amount</div>
+                    <div t-attf-class="{{ui.isSmall? 'flex-grow-1' : ''}}">
+                        <input id="amount"
+                            class="form-control form-control-lg"
+                            type="number"
+                            t-att-disabled="state.lockGiftCardFields || state.loading"
+                            t-model="state.amountValue"
+                            t-ref="amountInput"
+                            placeholder="Enter amount"
+                            t-att-style="state.amountError ? 'border-color: red;' : ''"/>
+                    </div>
+                </div>
+                <div t-if="!ui.isSmall" class="d-flex ms-2 w-50 o_exp_date_container">
+                    <div class="col-form-label text-center pe-0 me-4 fs-5">Expiration</div>
+                    <DateTimeInput
+                        type="'date'"
+                        disabled="state.lockGiftCardFields || state.loading"
+                        value="state.expirationDate"
+                        onChange.bind="onExpDateChange" />
+                </div>
+            </div>
+            <div t-if="ui.isSmall" class="d-flex my-2 o_exp_date_container">
+                <div class="col-form-label text-center pe-0 me-2 fs-5">Expiration</div>
+                <DateTimeInput
+                    type="'date'"
+                    value="state.expirationDate"
+                    disabled="state.lockGiftCardFields || state.loading"
+                    onChange.bind="onExpDateChange" />
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="addBalance" t-att-disabled="state.loading">
+                    <t t-if="state.lockGiftCardFields">
+                        Add existing Gift Card
+                    </t>
+                    <t t-else="">
+                        Add Balance
+                    </t>
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

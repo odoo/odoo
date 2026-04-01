@@ -1,0 +1,15 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.Wysiwyg">
+        <div class="o-wysiwyg d-flex flex-column p-0" t-att-class="props.class" t-att-style="props.style">
+            <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
+            <div class="flex-grow-1" t-att-class="{'overflow-auto': !props.iframe}">
+                <t t-if="props.iframe">
+                    <iframe t-ref="content" class="w-100 h-100" t-att-data-class="props.contentClass" t-on-blur="props.onBlur"/>
+                </t>
+                <t t-else="">
+                    <div t-att-class="props.contentClass" t-ref="content" t-on-blur="props.onBlur" contenteditable="true"/>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

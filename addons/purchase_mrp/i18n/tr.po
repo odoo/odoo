@@ -1,0 +1,172 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * purchase_mrp
+#
+# Translators:
+# Özlem Atalay <ozlema@eskayazilim.com.tr>, 2022
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
+# Martin Trigaux, 2022
+# Ediz Duman <neps1192@gmail.com>, 2023
+# İlknur Gözütok, 2023
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 01:50+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
+"purchase_mrp/tr/>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: purchase_mrp
+#: model_terms:ir.ui.view,arch_db:purchase_mrp.purchase_order_form_mrp
+msgid "<span class=\"o_stat_text\">Manufacturing</span>"
+msgstr "<span class=\"o_stat_text\">Üretim</span>"
+
+#. module: purchase_mrp
+#: model_terms:ir.ui.view,arch_db:purchase_mrp.mrp_production_form_view_purchase
+msgid "<span class=\"o_stat_text\">Purchases</span>"
+msgstr "<span class=\"o_stat_text\">Satınalma</span>"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_report_mrp_report_bom_structure
+msgid "BOM Overview Report"
+msgstr "BOM Genel Raporu"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_mrp_bom
+msgid "Bill of Material"
+msgstr "Ürün Reçetesi"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_mrp_bom_line
+msgid "Bill of Material Line"
+msgstr "Ürün Reçetesi Satırları"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/mrp_bom.py:0
+msgid "Components cost share have to be positive or equals to zero."
+msgstr "Bileşen maliyet oranı pozitif veya sıfıra eşit olmalıdır."
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom_line__cost_share
+msgid "Cost Share (%)"
+msgstr "Maliyet Oranı (%)"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__mrp_production_count
+msgid "Count of MO Source"
+msgstr "MO Kaynağı Sayısı"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__purchase_order_count
+msgid "Count of generated PO"
+msgstr "Üretilen PO sayısı"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom_line__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order_line__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_report_mrp_report_bom_structure__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_report_mrp_report_mo_overview__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_stock_move__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_stock_rule__display_name
+msgid "Display Name"
+msgstr "İsim Göster"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom_line__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order_line__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_report_mrp_report_bom_structure__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_report_mrp_report_mo_overview__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_stock_move__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_stock_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_report_mrp_report_mo_overview
+msgid "MO Overview Report"
+msgstr "ÜE Genel Raporu"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Üretim Emri"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/purchase.py:0
+msgid "Manufacturing Source of %s"
+msgstr "%s Üretim Kaynağı"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/stock_move.py:0
+msgid ""
+"Odoo is not able to generate the anglo saxon entries. The total valuation of "
+"%s is zero."
+msgstr ""
+"Odoo, anglo sakson girişlerini oluşturamıyor.%s toplam değerlemesi sıfırdır."
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_purchase_order
+msgid "Purchase Order"
+msgstr "Satınalma Siparişi"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Satınalma Sipariş Satırı"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/mrp_production.py:0
+msgid "Purchase Order generated from %s"
+msgstr "%s'den oluşturulan Satın Alma Siparişi"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_stock_move
+msgid "Stock Move"
+msgstr "Stok Hareketi"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_stock_rule
+msgid "Stock Rule"
+msgstr "Stok Kuralı"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,help:purchase_mrp.field_mrp_bom_line__cost_share
+msgid ""
+"The percentage of the component repartition cost when purchasing a kit.The "
+"total of all components' cost have to be equal to 100."
+msgstr ""
+"Bir kit satın alırken bileşen yeniden bölümleme maliyetinin yüzdesi. Tüm "
+"bileşenlerin maliyetinin toplamı 100'e eşit olmalıdır."
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/mrp_bom.py:0
+msgid "The total cost share for a BoM's component have to be 100"
+msgstr "Bir BoM'un bileşeni için toplam maliyet oranı 100 olmalıdır"
+
+#~ msgid "Journal Item"
+#~ msgstr "Yevmiye Kalemi"
+
+#~ msgid "Production Order"
+#~ msgstr "Üretim Emri"

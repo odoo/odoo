@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.AccordionItem">
+        <div class="o_accordion position-relative">
+            <button class="o_menu_item o_accordion_toggle dropdown-item o-navigable" tabindex="0"
+                    t-att-class="{'selected': props.selected, 'open': state.open}"
+                    t-attf-class="{{ props.class }}"
+                    t-att-aria-expanded="state.open ? 'true' : 'false'"
+                    t-esc="props.description"
+                    t-on-click="() => state.open = !state.open"
+            />
+            <t t-if="state.open">
+                <div class="o_accordion_values ms-4 border-start">
+                    <t t-slot="default"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

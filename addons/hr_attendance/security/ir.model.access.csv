@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_attendance_admin,hr.attendance.admin,model_hr_attendance,group_hr_attendance_manager,1,1,1,1
+access_hr_attendance_user,hr.attendance.user,model_hr_attendance,group_hr_attendance_user,1,1,1,1
+access_hr_attendance_officer,hr.attendance.officer,model_hr_attendance,group_hr_attendance_officer,1,1,1,1
+access_hr_attendance_own_reader,hr.attendance.own.reader,model_hr_attendance,group_hr_attendance_own_reader,1,0,0,0
+access_hr_attendance_overtime_rule_admin,hr.attendance.admin.overtime.rule,model_hr_attendance_overtime_rule,group_hr_attendance_manager,1,1,1,1
+access_hr_attendance_overtime_ruleset_admin,hr.attendance.admin.overtime.ruleset,model_hr_attendance_overtime_ruleset,group_hr_attendance_manager,1,1,1,1
+access_hr_attendance_overtime_rule_user,hr.attendance.admin.overtime.rule,model_hr_attendance_overtime_rule,hr.group_hr_manager,1,0,0,0
+access_hr_attendance_overtime_rule_officer,hr.attendance.officer.overtime.rule,model_hr_attendance_overtime_rule,group_hr_attendance_officer,1,0,0,0
+access_hr_attendance_overtime_line_officer,hr.attendance.officer.overtime.line,model_hr_attendance_overtime_line,group_hr_attendance_officer,1,1,1,1
+access_hr_attendance_overtime_ruleset_hr_manager,hr.attendance.admin.overtime.ruleset,model_hr_attendance_overtime_ruleset,hr.group_hr_manager,1,0,0,0

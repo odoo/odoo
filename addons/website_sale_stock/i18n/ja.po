@@ -1,0 +1,419 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_sale_stock
+#
+# Translators:
+# Martin Trigaux, 2022
+# Andy Yiu, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2026-01-23 07:37+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"website_sale_stock/ja/>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
+msgid ""
+"%(product_name)s has not been added to your cart since it is not available."
+msgstr "%(product_name)s は在庫切れのため、カートに追加されませんでした。"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "<span invisible=\"not default_show_availability\">units</span>"
+msgstr "<span invisible=\"not default_show_availability\">単位</span>"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product_card/product_card.js:0
+msgid "All available quantity selected"
+msgstr "利用可能な数量はすべて選択済みです"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "All warehouses"
+msgstr "すべての倉庫"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__assign
+msgid "Assign"
+msgstr "割当"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
+msgid "Back in stock Notifications"
+msgstr "再入荷通知"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+msgid "Below"
+msgstr "下"
+
+#. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_res_config_settings
+msgid "Config Settings"
+msgstr "構成設定"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Continue Selling"
+msgstr "販売を続ける"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__default_allow_out_of_stock_order
+msgid "Continue selling when out-of-stock"
+msgstr "在庫切れでも販売を続ける"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
+msgid "Dear Customer,"
+msgstr "親愛なるお客様へ、"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid ""
+"Default availability mode set on newly created storable products. This can "
+"be changed at the product level."
+msgstr ""
+"新しく作成される在庫可能プロダクトに設定される、デフォルトの引当条件です。プ"
+"ロダクトごとに変更できます。"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,help:website_sale_stock.field_product_ribbon__assign
+msgid ""
+"Defines how this ribbon is assigned to products:\n"
+"- Manually: You assign the ribbon manually to products.\n"
+"- Sale: Applied when the product is visibly on sale.\n"
+"- New: Applied based on the New period you will define.\n"
+"- Out Of Stock: Applied when the product is out of stock."
+msgstr ""
+"このリボンをプロダクトにどのように割り当てるかを定義します:\n"
+"- 手動：リボンを手動でプロダクトに割り当てます。\n"
+"- セール：プロダクトが明確にセール中の場合に適用されます。\n"
+"- New：指定した「新着期間」に基づいて適用されます。\n"
+"- 在庫切れ：プロダクトが在庫切れの場合に適用されます。"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_feed__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+msgid "Get notified when back in stock"
+msgstr "再入荷時に通知を受け取る"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_feed__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/controllers/main.py:0
+msgid "Invalid Email"
+msgstr "無効なメール"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+msgid "Invalid email"
+msgstr "無効なメール"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Inventory Defaults"
+msgstr "在庫のデフォルト"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
+msgid "Order Now"
+msgstr "今すぐオーダ"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product_card/product_card.xml:0
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+msgid "Out of Stock"
+msgstr "在庫切れ"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product/product.xml:0
+msgid "Out of stock"
+msgstr "在庫切れ"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Out-of-Stock"
+msgstr "在庫切れ"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__out_of_stock_message
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__out_of_stock_message
+msgid "Out-of-Stock Message"
+msgstr "在庫切れメッセージ"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/product_product.py:0
+#: model:ir.model,name:website_sale_stock.model_product_template
+msgid "Product"
+msgstr "プロダクト"
+
+#. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_product_combo
+msgid "Product Combo"
+msgstr "プロダクトコンボ"
+
+#. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_product_feed
+msgid "Product Feed"
+msgstr "プロダクトフィード"
+
+#. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_product_product
+msgid "Product Variant"
+msgstr "プロダクトバリアント"
+
+#. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_product_ribbon
+msgid "Product ribbon"
+msgstr "プロダクトリボン"
+
+#. module: website_sale_stock
+#: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
+msgid "Product: send email regarding products availability"
+msgstr "製品: 製品の在庫情報についてメールを送信"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
+msgid "Regards,"
+msgstr "よろしくお願い致します、"
+
+#. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_sale_order
+msgid "Sales Order"
+msgstr "販売オーダ"
+
+#. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "販売オーダ明細"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__allow_out_of_stock_order
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__allow_out_of_stock_order
+msgid "Sell when Out-of-Stock"
+msgstr "在庫切れのときに販売"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+msgid "Show Available Qty"
+msgstr "入手可能数量を表示"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Show Available Quantity"
+msgstr "利用可能な数量を表示"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__default_available_threshold
+msgid "Show Threshold"
+msgstr "しきい値を表示"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__show_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__show_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__default_show_availability
+msgid "Show availability Qty"
+msgstr "利用可能在庫数を表示"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
+msgid ""
+"Some products became unavailable and your cart has been updated. We're sorry "
+"for the inconvenience."
+msgstr ""
+"一部の商品がご利用いただけなくなり、カートが更新されました。ご迷惑をおかけし"
+"て申し訳ございません。"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
+msgid "The following product is now available."
+msgstr "次の製品は入手可能になりました。"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/product_product.py:0
+msgid "The product '%(product_name)s' is now available"
+msgstr "製品「%(product_name)s」は入手可能になりました"
+
+#. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_stock_picking
+msgid "Transfer"
+msgstr "転送"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__website_warehouse_id
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__warehouse_id
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Warehouse"
+msgstr "倉庫"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+msgid "We'll notify you once the product is back in stock"
+msgstr "商品が再入荷しましたらお知らせいたします"
+
+#. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_website
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__website_id
+msgid "Website"
+msgstr "ウェブサイト"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
+msgid "Website where this order has been placed, for eCommerce orders."
+msgstr "Eコマースオーダに関し、オーダをしたサイト。"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+msgid "You already added all the available product in your cart"
+msgstr "カートには、購入可能なすべてのプロダクトが追加されています"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order_line.py:0
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr ""
+"%(product_name)s を %(desired_qty)s 個ご希望ですが、在庫は %(new_qty)s 個のみ"
+"です"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
+msgid ""
+"You ask for %(desired_qty)s products but only %(available_qty)s is available."
+msgstr ""
+"ご希望の数量は%(desired_qty)s個ですが、在庫は%(available_qty)s個のみです。"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+msgid "e.g. 'Will be back soon'"
+msgstr "例：まもなく再入荷します"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+msgid "in stock"
+msgstr "在庫あり"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+msgid "in your cart)"
+msgstr "カート内)"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "only if below"
+msgstr "次の数量以下の時"
+
+#. module: website_sale_stock
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_ribbon__assign__out_of_stock
+msgid "when out of stock"
+msgstr "在庫切れの場合"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+msgid "youremail@gmail.com"
+msgstr "youremail@gmail.com"
+
+#~ msgid "<span invisible=\"not show_availability\">Units</span>"
+#~ msgstr "<span invisible=\"not show_availability\">単位</span>"
+
+#~ msgid "Default visibility for custom messages."
+#~ msgstr "カスタムメッセージのデフォルト可視性。"
+
+#~ msgid "How to display products having low quantities (on hand - reserved)"
+#~ msgstr "在庫数の少ないプロダクトの表示方法 (手持在庫 - 在庫引当)"
+
+#~ msgid "Only"
+#~ msgstr "只今"
+
+#~ msgid "The item has not been added to your cart since it is not available."
+#~ msgstr "この商品はご利用いただけないため、カートに追加されていません。"
+
+#~ msgid "This product is out of stock."
+#~ msgstr "この製品は只今在庫切れです。"
+
+#~ msgid "Units"
+#~ msgstr "個"
+
+#~ msgid "We'll notify you once the product is back in stock."
+#~ msgstr "プロダクトが再入荷次第お知らせいたします。"
+
+#~ msgid "You already added"
+#~ msgstr "カートに既に"
+
+#~ msgid "You already added all the available product in your cart."
+#~ msgstr "カートに全て入手可能なプロダクトが追加されました。"
+
+#~ msgid "You already have %s Units in your cart."
+#~ msgstr "カートに既に%s個あります。"
+
+#~ msgid ""
+#~ "You ask for %(desired_qty)s products but only %(new_qty)s is available"
+#~ msgstr ""
+#~ "ご希望の数量は%(desired_qty)s個ですが只今%(new_qty)s個だけ入手可能となって"
+#~ "おります"
+
+#~ msgid "You ask for %s Units but only %s are available."
+#~ msgstr "ご希望の数量は%s個ですが只今%s個だけ入手可能となっております。"
+
+#~ msgid "in your cart."
+#~ msgstr "を追加しました。"
+
+#~ msgid "left in stock."
+#~ msgstr "が残っています。"

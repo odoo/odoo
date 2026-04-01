@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanHeader">
+        <div class="o_kanban_header position-sticky top-0 z-1" t-ref="root" t-attf-class="{{ !env.isSmall and group.isFolded ? 'd-print-none pt-2' : 'py-2 pt-print-0' }}">
+            <div class="o_kanban_header_title position-relative d-flex lh-lg">
+                <div t-if="group.isFolded" class="o_column_title d-flex align-items-center pt-1 fs-4 lh-1 text-nowrap opacity-50 opacity-100-hover flex-grow-1 gap-1"
+                     t-on-mouseenter="onTitleMouseEnter" t-on-mouseleave="onTitleMouseLeave">
+                    <t t-esc="group.displayName"></t>
+                    <span t-if="group.count > 0 and !props.list.model.useSampleModel" t-esc="'(' + group.count + ')'"/>
+                </div>
+                <div t-if="!group.isFolded"
+                    class="o_column_title flex-grow-1 min-w-0 mw-100 gap-1 d-flex fs-4 fw-bold align-top text-900"
+                      t-on-mouseenter="onTitleMouseEnter" t-on-mouseleave="onTitleMouseLeave"
+                >
+                    <span class="text-truncate" t-esc="group.displayName"/>
+                    <span t-if="!progressBar and !props.list.model.useSampleModel" t-esc="'(' + group.count + ')'"/>
+                </div>
+                <t t-if="env.isSmall or !group.isFolded">
+                    <GroupConfigMenu t-props="configMenuProps"/>
+                    <button t-if="canQuickCreate()" class="o_kanban_quick_add d-print-none btn pe-2 me-n2" t-on-click="() => this.quickCreate()">
+                        <i class="fa fa-plus opacity-75 opacity-100-hover" role="img" aria-label="Quick add" title="Quick add"/>
+                    </button>
+                </t>
+                <button t-else="" class="o_column_unfold btn d-flex align-items-center justify-content-between flex-nowrap transition-base">
+                    <i class="fa fa-caret-left transition-base" role="img" aria-label="Unfold" title="Unfold" />
+                    <i class="fa fa-caret-right" role="img" aria-label="Unfold" title="Unfold" />
+                </button>
+            </div>
+            <div t-if="(env.isSmall or !group.isFolded) and progressBar" class="o_kanban_counter position-relative d-flex align-items-center justify-content-between" t-att-class="{ 'opacity-25': !group.count }">
+                <ColumnProgress group="group" progressBar="progressBar" aggregate="groupAggregate" onBarClicked.bind="onBarClicked" />
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web.KanbanGroupTooltip">
+        <div class="o-tooltip text-prewrap px-2 py-1">
+            <t t-foreach="props.tooltip" t-as="entry" t-key="entry_index">
+                <t t-esc="entry.title"/>
+                <br/>
+                <t t-esc="entry.value"/>
+                <br t-if="!tooltip_last"/>
+            </t>
+        </div>
+    </t>
+
+</templates>

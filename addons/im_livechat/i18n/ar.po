@@ -1,0 +1,3639 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * im_livechat
+#
+# Translators:
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Niyas Raphy, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-13 18:37+0000\n"
+"PO-Revision-Date: 2026-03-14 09:34+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
+"im_livechat/ar/>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Weblate 5.16.2\n"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/chatbot_script_step.py:0
+msgid "\"%s\" is not a valid email."
+msgstr "\"%s\" ليس عنوان بريد إلكتروني صالح."
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_list
+msgid "# Messages"
+msgstr "عدد الرسائل"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_count
+msgid "# Ratings"
+msgstr "عدد التقييمات"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__message_count
+msgid "# of Messages per Session"
+msgstr "عدد الرسائل في كل جلسة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__call_count
+msgid "# of Sessions with Calls"
+msgstr "عدد الجلسات التي تتضمن مكالمات"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__number_of_calls
+msgid "# of Sessions with calls"
+msgstr "عدد الجلسات التي تتضمن مكالمات"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
+msgid "# of calls"
+msgstr "عدد المكالمات"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_rating
+msgid "% of Happiness"
+msgstr "% السعادة"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/chatbot_script_step.py:0
+msgid "%(title)s - Step %(sequence)d"
+msgstr "%(title)s - الخطوة %(sequence)d"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/chatbot_script.py:0
+msgid "%s (copy)"
+msgstr "%s (نسخة)"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/chatbot_script.py:0
+#: code:addons/im_livechat/models/discuss_channel.py:0
+msgid ""
+"'%(input_email)s' does not look like a valid email. Can you please try again?"
+msgstr ""
+"'%(input_email)s' لا يبدو أنه عنوان بريد إلكتروني صالح. هلّا حاولت مجدداً؟"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__action
+msgid ""
+"* 'Show' displays the chat button on the pages.\n"
+"* 'Show with notification' is 'Show' in addition to a floating text just "
+"next to the button.\n"
+"* 'Open automatically' displays the button and automatically opens the "
+"conversation pane.\n"
+"* 'Hide' hides the chat button on the pages.\n"
+msgstr ""
+"* 'إظهار' تعرض زر الدردشة في الصفحات.\n"
+"* 'إظهار مع إشعار' هي 'إظهار' بالإضافة إلى نص عائم بجانب الزر.\n"
+"* 'الفتح تلقائياً' تعرض الزر وتقوم بفتح إطار المحادثة تلقائياً.\n"
+"* 'إخفاء' تخفي زر الدردشة في الصفحات.\n"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid ""
+"<i class=\"fa fa-smile-o text-success\" title=\"Percentage of happy "
+"ratings\" role=\"img\" aria-label=\"Happy face\"/>"
+msgstr ""
+"<i class=\"fa fa-smile-o text-success\" title=\"نسبة التقييمات السعيدة \" "
+"role=\"img\" aria-label=\"Happy face\"/>"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
+msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Back to edit mode"
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>العودة إلى وضع التحرير"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "<i title=\"Remove operator\" class=\"fa fa-fw fa-lg fa-close\"/>"
+msgstr "<i title=\"إزالة المشغل \" class=\"fa fa-fw fa-lg fa-close\"/>"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+msgid "<span class=\"fw-bold\">Country: </span>"
+msgstr "<span class=\"fw-bold\">الدولة: </span>"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "<span class=\"o_stat_text\">Happy</span>"
+msgstr "<span class=\"o_stat_text\">سعيد</span>"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "<span class=\"o_stat_text\">Sessions</span>"
+msgstr "<span class=\"o_stat_text\">الجلسات</span>"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "<span>Ongoing Sessions:</span>"
+msgstr "<span>الجلسات الجارية:</span>"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
+msgid ""
+"<span>Reminder: This step will only be played if no operator is available.</"
+"span>"
+msgstr "<span>تذكير: سيتم تنفيذ هذه الخطوة إذا لم يكن هناك موظف متاح.</span>"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
+msgid ""
+"<span>Tip: At least one interaction (Question, Email, ...) is needed before "
+"the Bot can perform more complex actions (Forward to an Operator, ...). </"
+"span>\n"
+"                    <span>Use Channel Rules if you want the Bot to interact "
+"with visitors only when no operator is available.</span>"
+msgstr ""
+"<span>نصيحة: يجب أن يكون هناك تفاعل واحد على الأقل (سؤال، بريد "
+"إلكتروني، ...) حتى يتمكن الـ Bot من تأدية الإجراءات الأكثر تعقيداً (التحويل "
+"إلى موظف، ...). </span>\n"
+"                    <span>استخدم قواعد القنوات إذا كنت ترغب في أن يتفاعل الـ "
+"Bot مع الزائرين فقط عندما لا يكون هناك موظف متاح.</span>"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
+msgid ""
+"<span>Tip: At least one interaction (Question, Email, ...) is needed before "
+"the Bot can perform more complex actions (Forward to an Operator, ...).</"
+"span>"
+msgstr ""
+"<span>نصيحة: يجب أن يكون هناك تفاعل واحد على الأقل (سؤال، بريد "
+"إلكتروني، ...) حتى يتمكن الـ Bot من تأدية الإجراءات الأكثر تعقيداً (التحويل "
+"إلى موظف، ...).</span>"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
+msgid ""
+"<span>Tip: Plan further steps for the Bot in case no operator is available.</"
+"span>"
+msgstr ""
+"<span>نصيحة: قم بالتخطيط للمزيد من الخطوات للـ Bot في حال لم يكن هناك موظف "
+"متاح.</span>"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
+msgid "<span>You are currently testing</span>"
+msgstr "<span>أنت تختبر حالياً</span>"
+
+#. module: im_livechat
+#: model:ir.model.constraint,message:im_livechat.constraint_chatbot_message_unique_mail_message_id
+msgid "A mail.message can only be linked to a single chatbot message"
+msgstr "يمكن أن تكون mail.message مرتبطة فقط برسالة Bot دردشة واحدة"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_res_groups
+msgid "Access Groups"
+msgstr "مجموعات الوصول"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_needaction
+msgid "Action Needed"
+msgstr "إجراء مطلوب"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__active
+msgid "Active"
+msgstr "نشط"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/expertise_tags_autocomplete.js:0
+msgid "Add expertise"
+msgstr "أضف الخبرات "
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Add the following code to the &lt;head&gt; section of your website:"
+msgstr "أضف الكود التالي إلى قسم <العنوان> في موقعك الإلكتروني:"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+msgid "Add your notes here..."
+msgstr "أضف ملاحظاتك هنا..."
+
+#. module: im_livechat
+#: model:res.groups,name:im_livechat.im_livechat_group_manager
+msgid "Administrator"
+msgstr "المدير"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__partner_id
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel_member__livechat_member_type__agent
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__livechat_member_type__agent
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Agent"
+msgstr "الوكيل"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__agent_expertise_ids
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__agent_expertise_ids
+msgid "Agent Expertise"
+msgstr "خبرات الموظف"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_agent_history_action
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_partner_ids
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__user_ids
+#: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_agent
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_list
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Agents"
+msgstr "الوكلاء"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_history_ids
+msgid "Agents (History)"
+msgstr "موظفي الدعم (السجل)"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Agents who are inactive in Odoo for more than 30 minutes will be considered "
+"disconnected."
+msgstr "سيتم اعتبار الوكلاء غير النشطين في أودو لأكثر من 30 دقيقة غير متصلين."
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.menu_livechat_all_conversations
+msgid "All Conversations"
+msgstr "جميع المحادثات"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
+msgid "All countries"
+msgstr "كافة الدول"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Alternatively, share this URL with your customers or suppliers via email:"
+msgstr ""
+"عوضاً عن ذلك، قم بمشاركة عنوان URL هذا مع عملائك أو مورديك عبر البريد "
+"الإلكتروني:"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__chatbot_enabled_condition__always
+msgid "Always"
+msgstr "دائمًا"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/transcript_sender.xml:0
+msgid "An error occurred. Please try again."
+msgstr "حدث خطأ ما. يرجى المحاولة من جديد."
+
+#. module: im_livechat
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_redirect
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_redirect_demo
+msgid "And tadaaaa here you go! 🌟"
+msgstr "مرحى! لقد انتهيت! 🌟"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__name
+msgid "Answer"
+msgstr "الإجابة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__answer_ids
+msgid "Answers"
+msgstr "الإجابات"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_search
+msgid "Archived"
+msgstr "مؤرشف"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__are_you_inside
+msgid "Are you inside the matrix?"
+msgstr "هل أنت داخل المصفوفة؟"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_attachment_count
+msgid "Attachment Count"
+msgstr "عدد المرفقات"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__available_operator_ids
+msgid "Available Operator"
+msgstr "المشغل المتاح"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__avatar_128
+msgid "Avatar 128"
+msgstr "الصورة الرمزية 128"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_avg
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_avg
+msgid "Average Rating"
+msgstr "متوسط التقييم"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_avg_percentage
+msgid "Average Rating (%)"
+msgstr "متوسط التقييم (%)"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__time_to_answer
+msgid "Average time in hours to give the first answer to the visitor"
+msgstr "متوسط الوقت بالساعات لمنح الزائر الإجابة الأولى"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_list
+msgid "Bot"
+msgstr "Bot"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__operator_partner_id
+msgid "Bot Operator"
+msgstr "Bot مشغل الدعم"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_bot_partner_ids
+msgid "Bots"
+msgstr "برامج الدردشة الآلية"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_bot_history_ids
+msgid "Bots (History)"
+msgstr "برامج الدردشة الآلية (السجل)"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_background_color
+msgid "Button Background Color"
+msgstr "لون خلفية الزر"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Button Colors"
+msgstr "ألوان الزر "
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_text_color
+msgid "Button Text Color"
+msgstr "لون نص الزر"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__call_duration_hour
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__call_duration_hour
+msgid "Call Duration"
+msgstr "مدة المكالمة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__call_history_ids
+msgid "Call History"
+msgstr "سجل المكالمات"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.canned_responses
+msgid "Canned Responses"
+msgstr "الردود الجاهزة"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/im_livechat_channel_member_history.py:0
+msgid ""
+"Cannot create history as it is only available for live chats: %(histories)s."
+msgstr "لا يمكن إنشاء سجل حيث إنه متاح فقط للدردشات المباشرة: %(histories)s."
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_channel_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__channel_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__channel_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__livechat_channel_id
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Channel"
+msgstr "القناة"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_discuss_channel_member
+msgid "Channel Member"
+msgstr "عضو القناة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__channel_name
+msgid "Channel Name"
+msgstr "اسم القناة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_form
+msgid "Channel Rule"
+msgstr "قاعدة القناة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__channel_type
+msgid "Channel Type"
+msgstr "نوع القناة"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.support_channels
+#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
+msgid "Channels"
+msgstr "القنوات"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_discuss_channel__channel_type
+msgid ""
+"Chat is private and unique between 2 persons. Group is private among invited "
+"persons. Channel can be freely joined (depending on its configuration)."
+msgstr ""
+"تكون الدردشة خاصة وفريدة بين شخصين 2. الدردشات الجماعية خاصة للأشخاص "
+"المدعوين إليها. بوسك الانضمام إلى القناة متى شئت (بناءً على تهيئتها)."
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.chatbot_script_action
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__chatbot_script_id
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__chatbot_script_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__chatbot_script_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__chatbot_script_id
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel_member__livechat_member_type__bot
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__livechat_member_type__bot
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Chatbot"
+msgstr "برنامج الدردشة الآلي"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__chatbot_answers_path
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Chatbot Answers"
+msgstr "إجابات برنامج الدردشة الآلي"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__chatbot_answers_path_str
+msgid "Chatbot Answers (String)"
+msgstr "إجابات برنامج الدردشة الآلي (جملة)"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__chatbot_current_step_id
+msgid "Chatbot Current Step"
+msgstr "الخطوة الحالية لـ Chatbot"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_chatbot_message
+msgid "Chatbot Message"
+msgstr "رسالة Chatbot"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__chatbot_message_ids
+msgid "Chatbot Messages"
+msgstr "رسائل Chatbot"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
+msgid "Chatbot Name"
+msgstr "اسم Chatbot"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_chatbot_script
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__chatbot_script_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__chatbot_script_id
+#: model:ir.model.fields,field_description:im_livechat.field_res_partner__chatbot_script_ids
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__chatbot_script_ids
+msgid "Chatbot Script"
+msgstr "نص Chatbot"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_chatbot_script_answer
+msgid "Chatbot Script Answer"
+msgstr "إجابة نص Chatbot"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_chatbot_script_step
+msgid "Chatbot Script Step"
+msgstr "خطوة نَص Chatbot"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__script_step_id
+msgid "Chatbot Step"
+msgstr "خطوة Chatbot"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+msgid "Chatbot answers"
+msgstr "إجابات برنامج الدردشة الآلي"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.chatbot_config
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Chatbots"
+msgstr "برامج الدردشة الآلية"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Choose the live chat channel you want to display on your website."
+msgstr "اختر قناة الدردشة المباشرة التي ترغب في عرضها على موقعك الإلكتروني."
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_chrome_demo
+msgid "Chrome"
+msgstr "Chrome"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
+#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
+msgid "Close"
+msgstr "إغلاق"
+
+#. module: im_livechat
+#: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_end_dt_status_constraint
+msgid "Closed Live Chat session should not have a status."
+msgstr "يجب ألا يكون لجلسة الدردشة الحية المغلقة حالة."
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_conversation_tag__color
+msgid "Color"
+msgstr "اللون"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
+msgid "Comment"
+msgstr "تعليق"
+
+#. module: im_livechat
+#: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_max_sessions_mode_greater_than_zero
+msgid "Concurrent session number should be greater than zero."
+msgstr "يجب أن يكون رقم الجلسة المتكررة أكبر من صفر."
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.livechat_config
+msgid "Configuration"
+msgstr "التهيئة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Configure Channel"
+msgstr "تهيئة القناة "
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_res_partner
+msgid "Contact"
+msgstr "جهة الاتصال"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/chat_window_patch.xml:0
+msgid "Continue"
+msgstr "استمرار"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__channel_id
+msgid "Conversation"
+msgstr "المحادثة"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/thread_model_patch.js:0
+msgid "Conversation has ended"
+msgstr "انتهت المحادثة"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/discuss_channel.py:0
+msgid "Conversation with %s"
+msgstr "المحادثة مع %s"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_conversations
+msgid "Conversations handled"
+msgstr "المحادثات التي تم التعامل معها"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__country_ids
+msgid "Countries"
+msgstr "الدول"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__country_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_country_id
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Country"
+msgstr "الدولة"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+msgid "Country & Language"
+msgstr "البلد واللغة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__country_id
+msgid "Country of the visitor"
+msgstr "دولة الزائر"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_discuss_channel__country_id
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_member_history__session_country_id
+msgid "Country of the visitor of the channel"
+msgstr "دولة زائر القناة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_kanban
+msgid "Country:"
+msgstr "الدولة: "
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_conversation_tag_edit.xml:0
+msgid "Create"
+msgstr "إنشاء"
+
+#. module: im_livechat
+#: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action
+msgid "Create a Chatbot"
+msgstr "إنشاء Chatbot"
+
+#. module: im_livechat
+#: model:ir.model,website_form_label:im_livechat.model_res_partner
+msgid "Create a Customer"
+msgstr "Create a Customer"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__create_uid
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__create_uid
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__create_uid
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__create_uid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__create_uid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__create_uid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__create_uid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_conversation_tag__create_uid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__create_uid
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__create_date
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__create_date
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__create_date
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__create_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__create_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__create_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__create_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_conversation_tag__create_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__create_date
+msgid "Created on"
+msgstr "أنشئ في"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__visitor_partner_id
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_list
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
+msgid "Customer"
+msgstr "العميل"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_customer_guest_ids
+msgid "Customers (Guests)"
+msgstr "العملاء (الضيوف)"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_customer_history_ids
+msgid "Customers (History)"
+msgstr "العملاء (السجل)"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_customer_partner_ids
+msgid "Customers (Partners)"
+msgstr "العملاء (الشركاء)"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_list
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Date"
+msgstr "التاريخ"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+msgid "Date:"
+msgstr "التاريخ:"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Date: Last month"
+msgstr "التاريخ: الشهر الماضي"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Date: Last week"
+msgstr "التاريخ: الأسبوع الماضي"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Day of Week"
+msgstr "اليوم من الأسبوع"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_week_day
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_week_day
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__day_number
+msgid "Day of the Week"
+msgstr "اليوم من الأسبوع"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_background_color
+msgid "Default background color of the Livechat button"
+msgstr "لون الخلفية الافتراضي لزر الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__header_background_color
+msgid "Default background color of the channel header once open"
+msgstr "لون الخلفية الافتراضي لترويسة القناة بمجرد فتحها"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_text_color
+msgid "Default text color of the Livechat button"
+msgstr "لون النص الافتراضي لزر الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__title_color
+msgid "Default title color of the channel once open"
+msgstr "لون العنوان الافتراضي للقناة بمجرد فتحها"
+
+#. module: im_livechat
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
+msgid "Define a new website live chat channel"
+msgstr "تحديد قناة دردشة مباشرة جديدة للموقع الإلكتروني"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
+msgid ""
+"Delay (in seconds) to automatically open the conversation window. Note: the "
+"selected action must be 'Open automatically' otherwise this parameter will "
+"not be taken into account."
+msgstr ""
+"المهلة (بالثواني) قبل فتح نافذة المحادثة تلقائياً. ملاحظة: يجب أن يكون "
+"الإجراء المحدد هو 'الفتح تلقائياً'، وإلا فلن يؤخذ هذا المعيار في الاعتبار."
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_list
+msgid "Description"
+msgstr "الوصف"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
+msgid "Did we correctly answer your question?"
+msgstr "هل أجبنا على سؤالك بشكل صحيح؟ر"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_digest_digest
+msgid "Digest"
+msgstr "الموجز"
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_discuss_demo
+#: model:im_livechat.expertise,name:im_livechat.chatbot_script_expertise_discuss_demo
+msgid "Discuss"
+msgstr "المناقشة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_conversation_tag__conversation_ids
+msgid "Discuss Channels"
+msgstr "قنوات المناقشة"
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_discuss_livechat_demo
+msgid "Discuss and Livechat"
+msgstr "المناقشة والدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_discuss_channel
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__discuss_channel_id
+msgid "Discussion Channel"
+msgstr "قناة المناقشة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_digest_digest__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_call_history__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_rtc_session__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_conversation_tag__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_ir_websocket__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_mail_message__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_rating_rating__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_res_groups__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_res_partner__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__display_name
+msgid "Display Name"
+msgstr "اسم العرض"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Do not redirect visitors"
+msgstr "لا تقم بإعادة توجيه الزوار"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+msgid "Download"
+msgstr "تحميل"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+#: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
+msgid "Download a copy of this conversation"
+msgstr "تنزيل نسخة من هذه المحادثة"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/livechat_button.xml:0
+msgid "Drag to Move"
+msgstr "قم بالسحب للتحريك"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__duration
+msgid "Duration"
+msgstr "المدة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__duration
+msgid "Duration (min)"
+msgstr "المدة (بالدقائق)"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__duration
+msgid "Duration of the conversation (in minutes)"
+msgstr "مدة المحادثة (بالدقائق)"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_discuss_channel__duration
+msgid "Duration of the session in hours"
+msgstr "مدة الجلسة بالساعات"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+msgid "Duration:"
+msgstr "المدة:"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__question_email
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/chatbot_script_step.py:0
+msgid "Email: "
+msgstr "البريد الإلكتروني: "
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__chatbot_enabled_condition
+msgid "Enable ChatBot"
+msgstr "تمكين برامج الدردشة الآلية"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_outcome__escalated
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__session_outcome__escalated
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Escalated"
+msgstr "تصعيد"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/channel_invitation_patch.xml:0
+#: code:addons/im_livechat/static/src/core/web/expertise_tags_autocomplete.xml:0
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+#: model:ir.actions.act_window,name:im_livechat.expertise_action
+#: model:ir.ui.menu,name:im_livechat.expertise_menu
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_list
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
+#: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
+msgid "Expertise"
+msgstr "الخبرات"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_kanban
+msgid "Expertise:"
+msgstr "الخبرات: "
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_list
+msgid "Expertises"
+msgstr "الخبرات"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__session_expertise_ids
+msgid "Expertises used in this session"
+msgstr "الخبرات المستخدمة في هذه الجلسة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__session_expertises
+msgid "Expertises used in this session (String)"
+msgstr "الخبرات المستخدمة في هذه الجلسة (سلسلة)"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
+msgid "Explain your note"
+msgstr "شرح ملاحظتك"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "FOR OTHER WEBSITES"
+msgstr "للمواقع الإلكترونية الأخرى"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "FOR WEBSITES BUILT WITH ODOO"
+msgstr "للمواقع الإلكترونية التي تم إنشاؤها بواسطة أودو"
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_firefox_demo
+msgid "Firefox"
+msgstr "Firefox"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script__first_step_warning__first_step_invalid
+msgid "First Step Invalid"
+msgstr "الخطوة الأولى غير صالحة"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script__first_step_warning__first_step_operator
+msgid "First Step Operator"
+msgstr "موظف الخطوة الأولى"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__first_step_warning
+msgid "First Step Warning"
+msgstr "تحذير الخطوة الأولى"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_follower_ids
+msgid "Followers"
+msgstr "المتابعين"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "المتابعين (الشركاء)"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__forward_operator
+msgid "Forward to Operator"
+msgstr "التحويل إلى الموظف"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__free_input_single
+msgid "Free Input"
+msgstr "مدخلات حرة"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__free_input_multi
+msgid "Free Input (Multi-Line)"
+msgstr "مدخلات حرة (متعددة الأسطر)"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_week_day__4
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__5
+msgid "Friday"
+msgstr "الجمعة"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/chat_window_patch.xml:0
+msgid "Give your feedback"
+msgstr "قدّم ملاحظاتك"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
+msgid ""
+"Given the order to find a matching rule. If 2 rules are matching for the "
+"given url/country, the one with the lowest sequence will be chosen."
+msgstr ""
+"باعتبار أمر إيجاد قاعدة مطابقة. إذا تطابقت قاعدتان للرابط/البلد المعطى، سوف "
+"يتم اختيار القاعدة ذات التسلسل الأدنى."
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
+"<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
+"<strong>Marketing.</strong>"
+msgstr ""
+"اذهب إلى <strong>الموقع الإلكتروني</strong> > <strong>التهيئة</strong> > "
+"<strong>الإعدادات</strong> > <strong>البريد الإلكتروني</strong> &amp; "
+"<strong>التسويق.</strong>"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/views/discuss_template.xml:0
+msgid "Go to Sessions"
+msgstr "اذهب إلى الجلسات"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__guest_id
+msgid "Guest"
+msgstr "ضيف"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__handled_by_agent
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+msgid "Handled by Agent"
+msgstr "يتم التعامل معه بواسطة موظف الدعم"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__handled_by_bot
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+msgid "Handled by Bot"
+msgstr "يتم التعامل معه بواسطة برنامج الدردشة الآلي"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Happy"
+msgstr "سعيد"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__has_call
+msgid "Has Call"
+msgstr "يحتوي على مكالمة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__has_message
+msgid "Has Message"
+msgstr "يحتوي على رسالة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__has_access_livechat
+msgid "Has access to Livechat"
+msgstr "لديه صلاحية الوصول إلى الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__header_background_color
+msgid "Header Background Color"
+msgstr "لون خلفية الترويسة"
+
+#. module: im_livechat
+#: model:im_livechat.channel,default_message:im_livechat.im_livechat_channel_data
+msgid "Hello, how may I help you?"
+msgstr "مرحباً، كيف يمكنني مساعدتك؟"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__help_status__provided
+msgid "Help Provided"
+msgstr "تم تقديم المساعدة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_providing_help_history
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__agent_providing_help_history
+msgid "Help Provided (Agent)"
+msgstr "تم تقديم المساعدة (موظف الدعم)"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__help_status__requested
+msgid "Help Requested"
+msgstr "تم طلب المساعدة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_requesting_help_history
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__agent_requesting_help_history
+msgid "Help Requested (Agent)"
+msgstr "تم طلب المساعدة (موظف الدعم)"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__help_status
+msgid "Help Status"
+msgstr "حالة المساعدة"
+
+#. module: im_livechat
+#: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_looking_for_help_action
+msgid ""
+"Help out by joining requests from teammates, or mark your own conversations "
+"as needing help."
+msgstr ""
+"يمكنك المساعدة عن طريق الانضمام إلى طلبات زملائك في الفريق، أو قم يتعيين "
+"محادثاتك الخاصة على أنها تحتاج إلى مساعدة."
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "Here's a copy of your conversation with"
+msgstr "إليك نسخة من محادثتك مع"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__hide_button
+msgid "Hide"
+msgstr "إخفاء"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_list
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
+msgid "History"
+msgstr "السجل"
+
+#. module: im_livechat
+#: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_member_history_partner_id_or_guest_3b134909
+msgid "History should either be linked to a partner or a guest but not both"
+msgstr "يجب أن يكون التاريخ مرتبطًا بشريك أو ضيف، ولكن ليس بكليهما معًا."
+
+#. module: im_livechat
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_demo
+msgid ""
+"Hmmm, let me check if I can find someone that could help you with that..."
+msgstr "هممم، سأتحقق مما إذا كان هناك شخص يمكنه مساعدتك بشأن ذلك..."
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Hour of Day"
+msgstr "الساعة من اليوم"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date_hour
+msgid "Hour of start Date of session"
+msgstr "ساعة تاريخ بدء الجلسة"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
+#: model:im_livechat.channel,default_message:im_livechat.support_bot_channel_demo
+msgid "How may I help you?"
+msgstr "كيف يمكنني مساعدتك؟"
+
+#. module: im_livechat
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_noone_available
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_noone_available_demo
+msgid "Hu-ho, it looks like none of our operators are available 🙁"
+msgstr "أوه لا، يبدو أنه لا يوجد أي موظفون متاحون 🙁"
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_just_looking
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_just_looking_demo
+msgid "I am just looking around"
+msgstr "إنني ألقي نظرة فقط"
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_documentation
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_documentation_demo
+msgid "I am looking for your documentation"
+msgstr "إنني أبحث عن التوثيق"
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_pricing
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_pricing_demo
+msgid "I have a pricing question"
+msgstr "لدي سؤال عن الأسعار"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__id
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__id
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__id
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__id
+#: model:ir.model.fields,field_description:im_livechat.field_digest_digest__id
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_call_history__id
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__id
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__id
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_rtc_session__id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_conversation_tag__id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__id
+#: model:ir.model.fields,field_description:im_livechat.field_ir_websocket__id
+#: model:ir.model.fields,field_description:im_livechat.field_mail_message__id
+#: model:ir.model.fields,field_description:im_livechat.field_rating_rating__id
+#: model:ir.model.fields,field_description:im_livechat.field_res_groups__id
+#: model:ir.model.fields,field_description:im_livechat.field_res_partner__id
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__id
+#: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__id
+msgid "ID"
+msgstr "المُعرف"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_chatbot_message__user_raw_script_answer_id
+msgid "Id of the script answer. Useful for statistics when answer is deleted."
+msgstr "معرف إجابة البرنامج النصي. مفيد للإحصائيات عندما يتم حذف الإجابة."
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_discuss_channel__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "إذا كان محددًا، فهناك رسائل جديدة عليك رؤيتها."
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_discuss_channel__message_has_error
+#: model:ir.model.fields,help:im_livechat.field_discuss_channel__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "إذا كان محددًا، فقد حدث خطأ في تسليم بعض الرسائل."
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__max_sessions_mode
+msgid ""
+"If limited, operators will only handle the selected number of sessions at a "
+"time."
+msgstr ""
+"إذا كان محدوداً، فسيتعامل المشغلون مع العدد المحدد من الجلسات في كل مرة."
+
+#. module: im_livechat
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_exit
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_exit_demo
+msgid "If you need anything else, feel free to get back in touch"
+msgstr "إذا كنت بحاجة إلى أي شيء آخر، لا تتردد في التواصل معنا"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__image_1920
+msgid "Image"
+msgstr "صورة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__image_1024
+msgid "Image 1024"
+msgstr "صورة 1024"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__image_128
+msgid "Image 128"
+msgstr "صورة 128"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__image_256
+msgid "Image 256"
+msgstr "صورة 256"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__image_512
+msgid "Image 512"
+msgstr "صورة 512"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+msgid "In Call"
+msgstr "في مكالمة"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/views/boolean_phone/boolean_phone.xml:0
+msgid "In a Call"
+msgstr "في مكالمة"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/views/boolean_phone/boolean_phone.js:0
+msgid "In call"
+msgstr "في مكالمة"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/store_service_patch.js:0
+#: code:addons/im_livechat/static/src/core/web/thread_model_patch.js:0
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_status__in_progress
+msgid "In progress"
+msgstr "قيد التنفيذ"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+#: code:addons/im_livechat/static/src/core/web/thread_actions.js:0
+msgid "Information"
+msgstr "معلومات"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
+msgid ""
+"Invalid URL '%s'. The Review Link must start with 'http://' or 'https://'."
+msgstr ""
+"عنوان URL غير صالح ’%s‘. يجب أن يبدأ رابط المعاينة بـ ’http://‘ أو "
+"’https://‘."
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_is_follower
+msgid "Is Follower"
+msgstr "متابع"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__is_forward_operator
+msgid "Is Forward Operator"
+msgstr "موظف التحويل"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__is_forward_operator_child
+msgid "Is Forward Operator Child"
+msgstr "تابع لموظف التحويل"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_is_escalated
+msgid "Is session escalated"
+msgstr "تم تصعيد الجلسة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Join"
+msgstr "انضمام"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_model_patch.js:0
+msgid "Join %s"
+msgstr "الانضمام إلى %s"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Join Channel"
+msgstr "الانضمام إلى القناة"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/thread_actions.js:0
+msgid "Join Chat"
+msgstr "انضم إلى الدردشة"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_discuss_call_history
+msgid "Keep the call history"
+msgstr "احتفظ بسجل المكالمات"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_channel_member_history
+msgid "Keep the channel member history"
+msgstr "احتفظ بسجل أعضاء القناة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_conversations_value
+msgid "Kpi Livechat Conversations Value"
+msgstr "قيمة محادثات الدردشة المباشرة للمؤشرات الرئيسية للأداء"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_rating_value
+msgid "Kpi Livechat Rating Value"
+msgstr "قيمة تقييمات الدردشة المباشرة للمؤشرات الرئيسية للأداء"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_response_value
+msgid "Kpi Livechat Response Value"
+msgstr "قيمة ردود الدردشة المباشرة للمؤشرات الرئيسية للأداء"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/channel_member_list_patch.xml:0
+msgid "Lang"
+msgstr "اللغة"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_lang_id
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__lang_id
+msgid "Lang of the visitor of the channel."
+msgstr "لغة زائر القناة."
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_lang_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__lang_id
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+msgid "Language"
+msgstr "اللغة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_kanban
+msgid "Language:"
+msgstr "اللغة:"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Languages"
+msgstr "اللغات"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+msgid "Last 24 Hours"
+msgstr "آخر 24 ساعة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+msgid "Last 30 Days"
+msgstr "آخر 30 يوم"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+msgid "Last 365 Days"
+msgstr "آخر 365 يوم"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+msgid "Last 7 Days"
+msgstr "آخر 7 أيام"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__write_uid
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__write_uid
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__write_uid
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__write_uid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__write_uid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__write_uid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__write_uid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_conversation_tag__write_uid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__write_date
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__write_date
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__write_date
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__write_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__write_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__write_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__write_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_conversation_tag__write_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Learn how to display a live chat bubble on your website and start chatting "
+"with visitors in a few easy steps."
+msgstr ""
+"تعرّف على كيفية عرض فقاعة الدردشة المباشرة على موقعك الإلكتروني وابدأ الدردشة "
+"مع الزائرين في بضع خطوات سهلة."
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Leave"
+msgstr "مغادرة"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_model_patch.js:0
+msgid "Leave %s"
+msgstr "مغادرة %s"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Leave Channel"
+msgstr "مغادرة القناة"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/close_confirmation.xml:0
+#: code:addons/im_livechat/static/src/core/public_web/thread_model_patch.js:0
+msgid "Leaving will end the live chat. Do you want to proceed?"
+msgstr "ستؤدي المغادرة إلى إنهاء الدردشة المباشرة. هل ترغب في المتابعة؟"
+
+#. module: im_livechat
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_module_info_expert_text_step_demo
+msgid "Let me check if I can connect you with the right expert..."
+msgstr "دعني أتحقق مما إذا كان بإمكاني ربطك بالخبير المناسب..."
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel__max_sessions_mode__limited
+msgid "Limited"
+msgstr "محدود"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.menu_livechat_root
+#: model:res.groups.privilege,name:im_livechat.res_groups_privilege_live_chat
+#: model_terms:ir.ui.view,arch_db:im_livechat.digest_digest_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:im_livechat.view_partner_form
+msgid "Live Chat"
+msgstr "الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__action
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Live Chat Button"
+msgstr "زر الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
+msgid "Live Chat Channels"
+msgstr "قنوات الدردشة الحية"
+
+#. module: im_livechat
+#: model:ir.actions.report,name:im_livechat.action_report_livechat_conversation
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "Live Chat Conversation"
+msgstr "محادثة الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_conversation_tag
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_conversation_tag_ids
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__conversation_tag_ids
+msgid "Live Chat Conversation Tags"
+msgstr "علامات تصنيف الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_expertise
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_expertise_ids
+#: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__livechat_expertise_ids
+msgid "Live Chat Expertise"
+msgstr "خبرة الدردشة المباشرة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.view_partner_form
+msgid "Live Chat History"
+msgstr "سجل الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_note
+msgid "Live Chat Note"
+msgstr "ملاحظة في الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_failure
+msgid "Live Chat Session Failure"
+msgstr "فشلت جلسة الدردشة المباشرة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Live Chat Window"
+msgstr "نافذة الدردشة الحية"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_patch.js:0
+msgid "Live Chats"
+msgstr "الدردشات الحية"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_livechat_channel_id
+msgid "Live chat channel"
+msgstr "قناة الدردشة المباشرة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
+msgid "LiveChat Channel Search"
+msgstr "البحث عن قناة الدردشة المباشرة"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/discuss_app_model_patch.js:0
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_livechat_demo
+#: model:im_livechat.expertise,name:im_livechat.chatbot_script_expertise_livechat_demo
+msgid "Livechat"
+msgstr "الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_channel
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_channel_ids
+msgid "Livechat Channel"
+msgstr "قناة الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__livechat_channel_count
+#: model:ir.model.fields,field_description:im_livechat.field_res_partner__livechat_channel_count
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_channel_count
+msgid "Livechat Channel Count"
+msgstr "عدد قنوات الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_channel_member_history_ids
+msgid "Livechat Channel Member History"
+msgstr "سجل أعضاء قناة الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
+msgid "Livechat Channel Rules"
+msgstr "قواعد قناة الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__channel_type__livechat
+msgid "Livechat Conversation"
+msgstr "محادثة الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_expertise_ids
+msgid "Livechat Expertise"
+msgstr "خبرات الدردشة الحية"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.unit_embed_suite
+msgid "Livechat External Tests"
+msgstr "الاختبارات الخارجية للدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_is_in_call
+msgid "Livechat Is In Call"
+msgstr "هناك مكالمة نشطة في الدردشة الآن"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_lang_ids
+msgid "Livechat Languages"
+msgstr "لغات الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_matches_self_expertise
+msgid "Livechat Matches Self Expertise"
+msgstr "الخبرات الذاتية للعناصر التي تمت مطابقتها في الدردشة المباشرة "
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_matches_self_lang
+msgid "Livechat Matches Self Lang"
+msgstr "اللغة الذاتية للعناصر التي تمت مطابقتها في الدردشة المباشرة "
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__livechat_member_history_ids
+msgid "Livechat Member History"
+msgstr "سجل أعضاء الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__livechat_member_type
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__livechat_member_type
+msgid "Livechat Member Type"
+msgstr "نوع أعضاء الدردشة المباشرة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
+#: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
+msgid "Livechat Name"
+msgstr "اسم الدردشة الحية"
+
+#. module: im_livechat
+#: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_operator_id
+msgid "Livechat Operator ID is required for a channel of type livechat."
+msgstr "يتطلب مُعرف موظف دعم الدردشة المباشرة للقناة من نوع الدردشة المباشرة."
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_outcome
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_outcome
+msgid "Livechat Outcome"
+msgstr "نتائج الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_call_history__livechat_participant_history_ids
+msgid "Livechat Participant History"
+msgstr "سجل المشاركين في الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_status
+msgid "Livechat Status"
+msgstr "حالة الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_report_channel
+msgid "Livechat Support Channel Report"
+msgstr "تقرير قناة دعم الدردشة المباشرة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_graph
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_pivot
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
+msgid "Livechat Support Statistics"
+msgstr "إحصائيات دعم الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_username
+#: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__livechat_username
+msgid "Livechat Username"
+msgstr "اسم مستخدم الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__livechat_lang_ids
+msgid "Livechat languages"
+msgstr "لغات الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.discuss_channel_looking_for_help_action
+#: model:ir.ui.menu,name:im_livechat.menu_livechat_looking_for_help
+msgid "Looking for Help"
+msgstr "أبحث عن المساعدة"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/discuss_app_model_patch.js:0
+#: code:addons/im_livechat/static/src/core/web/store_service_patch.js:0
+#: code:addons/im_livechat/static/src/core/web/thread_model_patch.js:0
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_status__need_help
+msgid "Looking for help"
+msgstr "أبحث عن المساعدة"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_discuss_channel_rtc_session
+msgid "Mail RTC session"
+msgstr "جلسة بريد RTC"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__sequence
+msgid "Matching order"
+msgstr "الترتيب المطابق"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__max_sessions
+msgid "Maximum Sessions"
+msgstr "الحد الأقصى للجلسات"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__max_sessions
+msgid "Maximum number of concurrent sessions per operator."
+msgstr "الحد الأقصى لعدد الجلسات المتزامنة لكل مشغل."
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__member_id
+msgid "Member"
+msgstr "العضو"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_member_history_action
+#: model:ir.ui.menu,name:im_livechat.menu_member_history
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_tree
+msgid "Member History"
+msgstr "سجل الأعضاء"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_tree
+msgid "Member Type"
+msgstr "نوع العضو"
+
+#. module: im_livechat
+#: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_member_history_member_id_unique
+msgid "Members can only be linked to one history"
+msgstr "يمكن ربط الأعضاء بسجل واحد فقط"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_mail_message
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__message
+msgid "Message"
+msgstr "الرسالة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_has_error
+msgid "Message Delivery error"
+msgstr "خطأ في تسليم الرسائل"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_ids
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_list
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
+msgid "Messages"
+msgstr "الرسائل"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__nbr_message
+msgid "Messages per Session"
+msgstr "الرسائل في كل جلسة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+msgid "Messages:"
+msgstr "الرسائل:"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_week_day__0
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__1
+msgid "Monday"
+msgstr "الاثنين"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+msgid "My Expertise"
+msgstr "خبراتي"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+msgid "My Languages"
+msgstr "لغاتي"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "My Sessions"
+msgstr "جلساتي"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__name
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_conversation_tag__name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__name
+#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_search
+msgid "Name"
+msgstr "الاسم"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
+#: model:im_livechat.channel,button_text:im_livechat.im_livechat_channel_data
+#: model:im_livechat.channel,button_text:im_livechat.support_bot_channel_demo
+msgid "Need help? Chat with us."
+msgstr "هل أنت بحاجة إلى المساعدة؟ تحدث معنا."
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Neutral"
+msgstr "محايد"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_failure__no_answer
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_outcome__no_answer
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__session_outcome__no_answer
+msgid "Never Answered"
+msgstr "لم يتم الإجابة عنها قط"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
+msgid "New Session"
+msgstr "جلسة جديدة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__block_assignment_during_call
+msgid "No Chats During Call"
+msgstr "لا يتم تلقي أي محادثات أثناء المكالمات "
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_failure__no_failure
+msgid "No Failure"
+msgstr "لم يفشل"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/livechat_service.js:0
+msgid "No available collaborator, please try again later."
+msgstr "لا يوجد متعاون متاح. يرجى المحاولة مجدداً لاحقاً."
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/views/discuss_template.xml:0
+msgid "No conversation found"
+msgstr "لم يتم العثور على محادثة"
+
+#. module: im_livechat
+#: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_looking_for_help_action
+msgid "No conversations found"
+msgstr "لم يتم العثور على محادثة"
+
+#. module: im_livechat
+#: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action
+#: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action_from_livechat_channel
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_agent_history_action
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_time_to_answer_action
+msgid "No data yet!"
+msgstr "لا توجد أي بيانات بعد!"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/res_partner.py:0
+msgid "No history found"
+msgstr "لم يتم العثور على سجل"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_failure__no_agent
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_outcome__no_agent
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__session_outcome__no_agent
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "No one Available"
+msgstr "لا يوجد شخص متاح"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_conversation_tag_edit.xml:0
+msgid "No tags found"
+msgstr "لم يتم العثور على علامات تصنيف"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Not Answered"
+msgstr "لم يتم الرد عليها"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_note
+msgid ""
+"Note about the session, visible to all internal users having access to the "
+"session."
+msgstr ""
+"ملاحظة حول الجلسة: بوسع كافة المستخدمين الداخليين الذين يملكون صلاحية الوصول "
+"إلى الجلسة رؤية هذه الملاحظة."
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+msgid "Notes"
+msgstr "الملاحظات"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Notification Text"
+msgstr "نص الإشعار "
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_needaction_counter
+msgid "Number of Actions"
+msgstr "عدد الإجراءات"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__chatbot_script_count
+msgid "Number of Chatbot"
+msgstr "عدد أنظمة Chatbot"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__ongoing_session_count
+msgid "Number of Ongoing Sessions"
+msgstr "عدد الجلسات الجارية"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_ongoing_session_count
+msgid "Number of Ongoing sessions"
+msgstr "عدد الجلسات الجارية"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__nbr_channel
+msgid "Number of conversation"
+msgstr "عدد المحادثات"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_has_error_counter
+msgid "Number of errors"
+msgstr "عدد الأخطاء"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_message
+msgid "Number of message in the conversation"
+msgstr "عدد الرسائل في المحادثة"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_discuss_channel__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_discuss_channel__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "عدد الرسائل الحادث بها خطأ في التسليم"
+
+#. module: im_livechat
+#: model:chatbot.script,title:im_livechat.chatbot_script_welcome_bot_demo
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "Odoo"
+msgstr "أودو"
+
+#. module: im_livechat
+#: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_member_history_channel_id_guest_id_unique
+msgid "One guest can only be linked to one history on a channel"
+msgstr "لا يمكن ربط الضيف الواحد إلا بسجل واحد في القناة"
+
+#. module: im_livechat
+#: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_member_history_channel_id_partner_id_unique
+msgid "One partner can only be linked to one history on a channel"
+msgstr "لا يمكن ربط الشريك الواحد إلا بسجل واحد في القناة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+msgid "Ongoing"
+msgstr "جاري"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Ongoing Sessions"
+msgstr "الجلسات الجارية"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__triggering_answer_ids
+msgid "Only If"
+msgstr "فقط إذا"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
+msgid "Only Live Chat operators can join Live Chat channels"
+msgstr ""
+"وحدهم موظفو الدعم عبر الدردشة من يمكنهم الانضمام إلى قنوات الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__chatbot_enabled_condition__only_if_operator
+msgid "Only when an operator is available"
+msgstr "فقط عندما يكون هناك موظف دعم متوفر"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__chatbot_enabled_condition__only_if_no_operator
+msgid "Only when no operator is available"
+msgstr "فقط عندما لا يكون هناك موظف دعم متوفر"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__auto_popup
+msgid "Open automatically"
+msgstr "الفتح تلقائياً"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_operator_id
+msgid "Operator"
+msgstr "موظف الدعم"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__operator_expertise_ids
+msgid "Operator Expertise"
+msgstr "خبرات المشغل"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__user_ids
+msgid "Operators"
+msgstr "موظفي الدعم"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_answer_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
+msgid "Optional Link"
+msgstr "رابط اختياري"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Options"
+msgstr "الخيارات"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+msgid "Outcome"
+msgstr "النتيجة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_list
+msgid "Participants"
+msgstr "المشاركين"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__partner_id
+msgid "Partner"
+msgstr "الشريك"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__rating_percentage_satisfaction
+msgid "Percentage of happy ratings"
+msgstr "نسبة التقييمات السعيدة"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__question_phone
+msgid "Phone"
+msgstr "رقم الهاتف"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/chatbot_script_step.py:0
+msgid "Phone: "
+msgstr "رقم الهاتف: "
+
+#. module: im_livechat
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_just_looking
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_just_looking_demo
+msgid "Please do! If there is anything we can help with, let us know"
+msgstr ""
+"حسناً! إذا كان هناك ما يمكننا القيام به لمساعدتك، لا تتردد في التواصل معنا"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "Powered by"
+msgstr "مشغل بواسطة"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__question_selection
+msgid "Question"
+msgstr "السؤال"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/controllers/main.py:0
+#: model:ir.model,name:im_livechat.model_rating_rating
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__rating_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__rating
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Rating"
+msgstr "التقييم"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_graph
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_pivot
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_graph
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_pivot
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
+msgid "Rating (%)"
+msgstr "التقييم (%)"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_avg_text
+msgid "Rating Avg Text"
+msgstr "متوسط نص التقييم"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_last_feedback
+msgid "Rating Last Feedback"
+msgstr "آخر ملاحظات التقييم"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_last_image
+msgid "Rating Last Image"
+msgstr "آخر صورة للتقييم"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_last_value
+msgid "Rating Last Value"
+msgstr "آخر قيمة للتقييم"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_percentage_satisfaction
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_percentage_satisfaction
+msgid "Rating Satisfaction"
+msgstr "رضا التقييم"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_last_text
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_list
+msgid "Rating Text"
+msgstr "نص التقييم"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__rating
+msgid "Rating Value"
+msgstr "قيمة التقييم"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_count
+msgid "Rating count"
+msgstr "عدد التقييمات"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__rating_text
+msgid "Rating text"
+msgstr "نص التقييم"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_ids
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_ids
+msgid "Ratings"
+msgstr "التقييمات"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
+msgid "Receive a copy of this conversation"
+msgstr "استلام نسخة من هذه المحادثة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__redirect_link
+msgid "Redirect Link"
+msgstr "رابط إعادة التوجيه"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__regex_url
+msgid ""
+"Regular expression specifying the web pages this rule will be applied on."
+msgstr ""
+"التعبير النمطي الذي يحدد صفحات الويب التي سيتم تطبيق هذه القاعدة عليها."
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__mail_message_id
+msgid "Related Mail Message"
+msgstr "رسالة البريد ذات الصلة"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_actions_patch.xml:0
+#: code:addons/im_livechat/static/src/core/web/discuss_sidebar_category_patch.xml:0
+msgid "Relevant to your expertise"
+msgstr "ذات صلة بخبرتك"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__remaining_session_capacity
+msgid "Remaining Session Capacity"
+msgstr "السعة المتبقية في الجلسة"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
+msgid "Reporting"
+msgstr "إعداد التقارير"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/js/colors_reset_button/colors_reset_button.xml:0
+msgid "Reset to default colors"
+msgstr "إعادة الضبط إلى الألوان الافتراضية"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__response_time_hour
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__time_to_answer
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_graph
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_pivot
+msgid "Response Time"
+msgstr "وقت الرد"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
+msgid "Response Time (hh:mm:ss)"
+msgstr "وقت الرد (hh:mm:ss)"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/thread_actions.js:0
+msgid "Restart Conversation"
+msgstr "إعادة تشغيل المحادثة"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/discuss_channel.py:0
+msgid "Restarting conversation..."
+msgstr "جارِ إعادة تشغيل المحادثة..."
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__review_link
+msgid "Review Link"
+msgstr "رابط التقييم"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rule_ids
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Rules"
+msgstr "القواعد"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "خطأ في تسليم الرسائل النصية القصيرة"
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_safari_demo
+msgid "Safari"
+msgstr "Safari"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__rating_text
+msgid "Satisfaction Rate"
+msgstr "معدل الرضا"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_week_day__5
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__6
+msgid "Saturday"
+msgstr "السبت"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Save your Channel to get your configuration widget."
+msgstr "احفظ قناتك لتحصل على أداة تهيئتك."
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
+msgid "Say something"
+msgstr "قل شيئًا"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/composer_patch.js:0
+msgid "Say something..."
+msgstr "قل شيئاً..."
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
+msgid "Script"
+msgstr "نص برمجي"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__script_external
+msgid "Script (external)"
+msgstr "نص برمجي (خارجي)"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__script_step_id
+msgid "Script Step"
+msgstr "خطوة النص"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__script_step_ids
+msgid "Script Steps"
+msgstr "خطوات النص"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+msgid "Search Agent"
+msgstr "البحث عن موظف الدعم"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_search
+msgid "Search History"
+msgstr "سجل البحث"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+msgid "Search history"
+msgstr "البحث في السجل"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_conversation_tag_edit.xml:0
+msgid "Search or create new tags"
+msgstr "البحث أو إنشاء علامات تصنيف جديدة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Search report"
+msgstr "البحث في التقرير"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/channel_commands_patch.js:0
+msgid "See 15 last visited pages"
+msgstr "عرض آخر 15 صفحة تمت زيارتها"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
+msgid "Select an option above"
+msgstr "قم بتحديد خيار أعلاه"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
+msgid "Send"
+msgstr "إرسال"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+msgid "Send conversation"
+msgstr "إرسال المحادثة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__sequence
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__sequence
+msgid "Sequence"
+msgstr "تسلسل"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_list
+msgid "Session Date"
+msgstr "تاريخ الجلسة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_duration_hour
+msgid "Session Duration"
+msgstr "مدة الجلسة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
+msgid "Session Form"
+msgstr "استمارة الجلسة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Session Limits"
+msgstr "جدود الجلسة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__session_outcome
+msgid "Session Outcome"
+msgstr "نواتج الجلسة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_start_hour
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_start_hour
+msgid "Session Start Hour"
+msgstr "ساعة بدء الجلسة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_end_dt
+msgid "Session end date"
+msgstr "تاريخ انتهاء الجلسة"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_end_dt
+msgid ""
+"Session is closed when either the visitor or the last agent leaves the "
+"conversation."
+msgstr "يتم إغلاق الجلسة عندما يغادر الزائر أو الموظف الأخير المحادثة."
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__call_percentage
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__percentage_of_calls
+msgid "Session with Calls (%)"
+msgstr "الجلسات التي تتضمن مكالمات (%)"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.discuss_channel_action
+#: model:ir.actions.act_window,name:im_livechat.discuss_channel_action_from_livechat_channel
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_report_channel_action
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_report_channel_time_to_answer_action
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__channel_ids
+#: model:ir.ui.menu,name:im_livechat.menu_livechat_sessions
+#: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_channel
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_graph
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_pivot
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Sessions"
+msgstr "الجلسات"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__max_sessions_mode
+msgid "Sessions per Operator"
+msgstr "عدد الجلسات لكل موظف دعم"
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_setup_demo
+msgid "Setup"
+msgstr "الضبط"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__display_button
+msgid "Show"
+msgstr "إظهار"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_chatbot_script_step__triggering_answer_ids
+msgid "Show this step only if all of these answers have been selected."
+msgstr "إظهار هذه الخطوة فقط إذا تم تحديد كافة الإجابات تلك."
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__display_button_and_text
+msgid "Show with notification"
+msgstr "الإظهار مع الإشعار"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/thread_actions.js:0
+msgid "Someone has already joined this conversation"
+msgstr "لقد انضم شخص ما بالفعل إلى هذه المحادثة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__source_id
+msgid "Source"
+msgstr "المصدر"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
+#: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
+msgid "Spoken Languages"
+msgstr "اللغات المتحدث بها "
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date
+msgid "Start Date of session"
+msgstr "تاريخ بدء الجلسة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date_minutes
+msgid "Start Date of session, truncated to minutes"
+msgstr "تاريخ بدء الجلسة، مقتطع إلى دقائق"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_hour
+msgid "Start Hour of session"
+msgstr "ساعة بدء الجلسة"
+
+#. module: im_livechat
+#: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action
+#: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action_from_livechat_channel
+msgid "Start a conversation to populate your chat history."
+msgstr "قم ببدء محادثة لملء سجل الدردشة الخاص بك."
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Status"
+msgstr "الحالة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+msgid "Status:"
+msgstr "الحالة:"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__step_type
+msgid "Step Type"
+msgstr "نوع الخطوة"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/chatbot_script.py:0
+msgid "Step of type 'Question' must have answers."
+msgstr "يجب أن تحتوي الخطوة من نوع 'سؤال' على إجابات."
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_outcome__no_failure
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__session_outcome__no_failure
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+msgid "Success"
+msgstr "نجاح"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_week_day__6
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__0
+msgid "Sunday"
+msgstr "الأحد"
+
+#. module: im_livechat
+#: model:chatbot.script,title:im_livechat.chatbot_script_support_bot_demo
+msgid "Support Bot"
+msgstr "برنامج الدردشة الآلي للدعم"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/composer_patch.js:0
+msgid "Tab to next livechat"
+msgstr "اضغط على مفتاح \"tab\" للانتقال إلى نافذة الدردشة التالية"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_conversation_tag_edit.xml:0
+msgid "Tag has already been selected"
+msgstr "تم تحديد علامة التصنيف بالفعل"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+#: model:ir.actions.act_window,name:im_livechat.livechat_conversation_tag_action
+#: model:ir.ui.menu,name:im_livechat.menu_livechat_conversation_tag
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_list
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_conversation_tag_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_conversation_tag_view_list
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Tags"
+msgstr "علامات التصنيف"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_conversation_tag_ids
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_member_history__conversation_tag_ids
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__conversation_tag_ids
+msgid "Tags to qualify the conversation."
+msgstr "علامات التصنيف المستخدمة لتأهيل المحادثة."
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__conversation_tag_ids
+msgid "Tags used in this conversation"
+msgstr "علامات التصنيف المستخدمة في هذه المحادثة"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.livechat_technical
+msgid "Technical"
+msgstr "تقني"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__text
+msgid "Text"
+msgstr "النص"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_text
+msgid "Text of the Button"
+msgstr "نص الزر"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
+msgid "Thank you for your feedback"
+msgstr "شكراً لملاحظاتك"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
+msgid "The channel of the rule"
+msgstr "قناة القاعدة"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/transcript_sender.xml:0
+msgid "The conversation was sent."
+msgstr "تم إرسال المحادثة."
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__country_ids
+msgid ""
+"The rule will only be applied for these countries. Example: if you select "
+"'Belgium' and 'United States' and that you set the action to 'Hide', the "
+"chat button will be hidden on the specified URL from the visitors located in "
+"these 2 countries. This feature requires GeoIP installed on your server."
+msgstr ""
+"سيتم تطبيق هذه القاعدة على هذه البلدان فقط. مثلًا: إذا اخترت 'بلجيكا' "
+"و'الولايات المتحدة' وقمت بتعيين الإجراء إلى 'إخفاء'، سيتم إخفاء زر الدردشة "
+"عن الزوار الموجودين في هذين البلدين في رابط URL المحدد. تتطلب هذه الخاصية "
+"تثبيت GeoIP على خادمك."
+
+#. module: im_livechat
+#: model:res.groups,comment:im_livechat.im_livechat_group_manager
+msgid "The user will be able to delete support channels."
+msgstr "سيكون المستخدم قادرًا على حذف قنوات الدعم."
+
+#. module: im_livechat
+#: model:res.groups,comment:im_livechat.im_livechat_group_user
+msgid "The user will be able to join support channels."
+msgstr "سيكون المستخدم قادرًا على الانضمام لقنوات الدعم."
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_chatbot_script_answer__redirect_link
+msgid ""
+"The visitor will be redirected to this link upon clicking the option (note "
+"that the script will end if the link is external to the livechat website)."
+msgstr ""
+"ستتم إعادة توجيه الزائر إلى هذا الرابط عند الضغط على الخيار (يرجى العلم بأن "
+"النص سينتهي في حال كان الرابط خارجياً بالنسبة للموقع الإلكتروني للدردشة "
+"المباشرة)."
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_res_users_settings__livechat_lang_ids
+msgid ""
+"These languages, in addition to your main language, will be used to assign "
+"you to Live Chat sessions."
+msgstr ""
+"سيتم استخدام هذه اللغات، بالإضافة إلى لغتك الرئيسية، لتعيينك بجلسات الدردشة "
+"المباشرة."
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__default_message
+msgid ""
+"This is an automated 'welcome' message that your visitor will see when they "
+"initiate a new conversation."
+msgstr "هذه رسالة ترحيب 'مرحبًا' تلقائية سيراها الزائر عندما يبدأ محادثة جديدة."
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
+msgid "This livechat conversation has ended."
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_res_users_settings__livechat_username
+msgid "This username will be used as your name in the livechat channels."
+msgstr "سوف يُستخدَم اسم المستخدم هذا كاسمك في قنوات الدردشة المباشرة."
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_week_day__3
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__4
+msgid "Thursday"
+msgstr "الخميس"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_member_history__session_duration_hour
+msgid "Time spent by the persona in the session in hours"
+msgstr "الوقت الذي قضته الشخصية في الجلسة محسوباً بالساعات"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
+msgid "Time to Open"
+msgstr "وقت الفتح"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_response
+msgid "Time to answer (sec)"
+msgstr "الوقت للإجابة (ثواني)"
+
+#. module: im_livechat
+#: model:digest.tip,name:im_livechat.digest_tip_im_livechat_0
+#: model_terms:digest.tip,tip_description:im_livechat.digest_tip_im_livechat_0
+msgid "Tip: Use canned responses to chat faster"
+msgstr "نصيحة: استخدم الردود الجاهزة للدردشة بشكل أسرع"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__title
+msgid "Title"
+msgstr "اللقب"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__title_color
+msgid "Title Color"
+msgstr "لون العنوان"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"To apply the rule only to certain pages of your website, enter a URL regex "
+"like /shop. This will match any page that starts with /shop, such as /shop/"
+"product. Leave the field empty to apply the rule to all pages.<br/>\n"
+"                                    For on-premise databases, GeoIP must be "
+"installed on your server to geolocate visitors. Without it, rules that "
+"include country restrictions will be ignored."
+msgstr ""
+"لتطبيق القاعدة على صفحات معينة فقط من صفحات موقعك الإلكتروني، أدخل تعبير "
+"عنوان URL مثل \"/shop\". سيتطابق هذا مع أي صفحة تبدأ بـ /shop، مثل /shop/"
+"product. اترك الحقل فارغًا لتطبيق القاعدة على جميع الصفحات.<br/>\n"
+"                                    بالنسبة لقواعد البيانات المحلية، يجب "
+"تثبيت GeoIP على الخادم الخاص بك لتحديد الموقع الجغرافي للزائرين. بدونه، سيتم "
+"تجاهل القواعد التي تتضمن قيود البلد."
+
+#. module: im_livechat
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_agent_history_action
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_time_to_answer_action
+msgid ""
+"Track and improve live chat performance with insights on session activity, "
+"response times, customer ratings, and call interactions."
+msgstr ""
+"تتبّع أداء الدردشة المباشرة واعمل على تحسينه من خلال الإحصاءات المتعلقة بنشاط "
+"الجلسة، وأوقات الاستجابة، وتقييمات العملاء، وتفاعلات المكالمات."
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_troubleshooting_demo
+msgid "Troubleshooting"
+msgstr "Troubleshooting"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_week_day__1
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__2
+msgid "Tuesday"
+msgstr "الثلاثاء"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Turn on the <strong>Live Chat</strong> feature."
+msgstr "قم بتفعيل خاصية <strong>الدردشة المباشرة</strong>."
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
+msgid "URL Regex"
+msgstr "التعبير النمطي لرابط URL"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__web_page
+msgid ""
+"URL to a static page where you client can discuss with the operator of the "
+"channel."
+msgstr "رابط صفحة ثابتة يمكن لعميلك فيها التحدث مع موظفي الدعم في قناتك."
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__uuid
+msgid "UUID"
+msgstr "المعرف الفريد عالمياً"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Unhappy"
+msgstr "غير سعيد"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/im_livechat_channel_member_history.py:0
+#: code:addons/im_livechat/report/im_livechat_report_channel.py:0
+msgid "Unknown"
+msgstr "غير معروف"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel__max_sessions_mode__unlimited
+msgid "Unlimited"
+msgstr "غير محدودة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+msgid "Unrated"
+msgstr "غير مُقيَّم"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_conversation_tag_edit.xml:0
+msgid "Unselect tag"
+msgstr "إلغاء تحديد علامة التصنيف "
+
+#. module: im_livechat
+#: model_terms:digest.tip,tip_description:im_livechat.digest_tip_im_livechat_0
+msgid ""
+"Use canned responses to define templates of messages in the livechat app. To "
+"load a canned response, start your sentence with '::' and select the "
+"template."
+msgstr ""
+"استخدم الردود الجاهزة لتحديد قوالب الرسائل في تطبيق الدردشة المباشرة. لتحميل "
+"رد جاهز، ابدأ جملتك بـ '::' وقم باختيار القالب."
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_res_users
+#: model:res.groups,name:im_livechat.im_livechat_group_user
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "User"
+msgstr "المستخدم"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_res_partner__user_livechat_username
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__user_livechat_username
+msgid "User Livechat Username"
+msgstr "اسم مستخدم الدردشة المباشرة"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__user_raw_script_answer_id
+msgid "User Raw Script Answer"
+msgstr "إجابة النص البرمجي المجرد للمستخدم"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_res_users_settings
+msgid "User Settings"
+msgstr "إعدادات المستخدم"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__user_script_answer_id
+msgid "User's answer"
+msgstr "إجابة المستخدم"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__user_raw_answer
+msgid "User's raw answer"
+msgstr "إجابة المستخدم المجردة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "View Channel"
+msgstr "عرض القناة"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+msgid "View Contact"
+msgstr "عرض جهة الاتصال"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/controllers/main.py:0
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel_member__livechat_member_type__visitor
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__livechat_member_type__visitor
+msgid "Visitor"
+msgstr "زائر"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/thread_patch.js:0
+msgid "Visitor is disconnected"
+msgstr "انقطع الاتصال بالزائر"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/thread_patch.js:0
+msgid "Visitor is disconnected since %(time)s"
+msgstr "انقطع الاتصال بالزائر منذ %(time)s"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/thread_patch.js:0
+msgid "Visitor is disconnected since yesterday at %(time)s"
+msgstr "انقطع الاتصال بالزائر منذ الأمس، الساعة %(time)s"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/discuss_channel.py:0
+msgid "Visitor left the conversation."
+msgstr "غادر الزائر المحادثة."
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__review_link
+msgid ""
+"Visitors who leave a positive review will be redirected to this optional "
+"link."
+msgstr ""
+"ستتم إعادة توجيه الزوار الذين يتركون تعليقًا إيجابيًا إلى هذا الرابط الاختياري."
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/store_service_patch.js:0
+#: code:addons/im_livechat/static/src/core/web/thread_model_patch.js:0
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_status__waiting
+msgid "Waiting for customer"
+msgstr "بانتظار العميل"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__web_page
+msgid "Web Page"
+msgstr "صفحة ويب"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__website_message_ids
+msgid "Website Messages"
+msgstr "رسائل الموقع الإلكتروني"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_discuss_channel__website_message_ids
+msgid "Website communication history"
+msgstr "سجل تواصل الموقع الإلكتروني"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_week_day__2
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__3
+msgid "Wednesday"
+msgstr "الأربعاء"
+
+#. module: im_livechat
+#: model:chatbot.script,title:im_livechat.chatbot_script_welcome_bot
+msgid "Welcome Bot"
+msgstr "Bot الترحيب"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__default_message
+msgid "Welcome Message"
+msgstr "رسالة الترحيب"
+
+#. module: im_livechat
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_welcome
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_welcome_demo
+msgid "Welcome to CompanyName! 👋"
+msgstr "مرحباً بك إلى اسم الشركة! 👋"
+
+#. module: im_livechat
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_initial_step_demo
+msgid "Welcome to the Support! How can I assist you today?"
+msgstr "مرحبًا بك في قسم الدعم! كيف يمكنني مساعدتك اليوم؟"
+
+#. module: im_livechat
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_dispatch
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_dispatch_demo
+msgid "What are you looking for?"
+msgstr "ما الذي تبحث عنه؟"
+
+#. module: im_livechat
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_troubleshooting_step_browser_demo
+msgid "What browser are you using?"
+msgstr "ما المتصفح الذي تستخدمه؟"
+
+#. module: im_livechat
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_module_selection_demo
+msgid "What module are you interested in?"
+msgstr "ما هو التطبيق الذي ترغب في استخدامه؟"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_chatbot_script_step__operator_expertise_ids
+#: model:ir.model.fields,help:im_livechat.field_res_users__livechat_expertise_ids
+#: model:ir.model.fields,help:im_livechat.field_res_users_settings__livechat_expertise_ids
+msgid ""
+"When forwarding live chat conversations, the chatbot will prioritize users "
+"with matching expertise."
+msgstr ""
+"عند إعادة توجيه محادثات الدردشة المباشرة، سيعطي روبوت الدردشة الآلي الأولوية "
+"للمستخدمين ذوي الخبرة المطابقة."
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__has_call
+msgid "Whether the session had a call"
+msgstr "ما إذا كان هذه الجلسة تحتوي على مكالمة أم لا"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_res_users__livechat_is_in_call
+msgid ""
+"Whether the user is in a call, only available if the user is in a live chat "
+"agent"
+msgstr ""
+"سواء كان المستخدم مشغولاً بمكالمة، أو متاحاً فقط إذا كان في محادثة مباشرة مع "
+"أحد موظفي الدعم"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__block_assignment_during_call
+msgid "While on a call, agents will not receive new conversations."
+msgstr "لن يتلقى الموظفون أي محادثات جديدة أثناء إجراء مكالمة."
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Widget"
+msgstr "أداة ذكية"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Window Colors"
+msgstr "ألوان النوافذ"
+
+#. module: im_livechat
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email_demo
+msgid ""
+"Would you mind leaving your email address so that we can reach you back?"
+msgstr "هلّا تركت عنوان بريدك الإلكتروني حتى نتمكن من التواصل معك؟"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/controllers/channel.py:0
+msgid "Write expertises: Only LINK and UNLINK commands are allowed."
+msgstr "اكتب الخبرات: يُسمح فقط باستخدام أوامر LINK و UNLINK."
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/close_confirmation.xml:0
+msgid "Yes, leave conversation"
+msgstr "نعم، قم بمغادرة المحادثة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "You"
+msgstr "أنت"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/controllers/attachment.py:0
+msgid "You are not allowed to upload attachments on this channel."
+msgstr "لا يسمح لك بتحميل المرفقات على هذه القناة."
+
+#. module: im_livechat
+#: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action
+msgid ""
+"You can create a new Chatbot with a defined script to speak to your website "
+"visitors."
+msgstr "يمكنك إنشاء Chatbot جديد مع نص محدد للتحدث مع زائري موقعك الإلكتروني."
+
+#. module: im_livechat
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
+msgid ""
+"You can create channels for each website on which you want\n"
+"                to integrate the website live chat widget, allowing your "
+"website\n"
+"                visitors to talk in real time with your operators."
+msgstr ""
+"بإمكانك إنشاء قنوات لكل موقع إلكتروني ترغب في\n"
+"                تثبيت أداة الدردشة المباشرة عليه، للسماح لزوار موقعك\n"
+"                بالتحدث مع موظفيك للدعم في الوقت الفعلي."
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_categories_patch.xml:0
+msgid "You have joined this live chat channel"
+msgstr "لقد انضممت إلى قناة الدردشة الحية هذه"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_model_patch.js:0
+msgid "You joined %s."
+msgstr "لقد قمت بالانضمام إلى %s."
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_model_patch.js:0
+msgid "You left %s."
+msgstr "لقد قمت بمغادرة %s."
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "at"
+msgstr "في"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/channel_member_list_patch.xml:0
+msgid "country"
+msgstr "الدولة"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
+msgid "e.g. \"Meeting Scheduler Bot\""
+msgstr "مثال: \"Bot مجدوِل الاجتماعات\""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
+msgid "e.g. 'How can I help you?'"
+msgstr "مثال: \"كيف يمكنني مساعدتك؟\""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
+msgid "e.g. /contactus"
+msgstr "مثال: /contactus"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "e.g. Hello, how may I help you?"
+msgstr "مثلًا: مرحبًا، كيف يمكنني مساعدتك؟"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "e.g. Need help? Chat with us."
+msgstr "على سبيل المثال: هل أنت بحاجة إلى المساعدة؟ تحدث معنا."
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "e.g. YourWebsite.com"
+msgstr "مثلًا: YourWebSite.com"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/channel_invitation_patch.xml:0
+msgid "in a call"
+msgstr "في مكالمة"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_categories_patch.xml:0
+msgid "joined"
+msgstr "تم الانضمام"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/transcript_sender.xml:0
+msgid "mail@example.com"
+msgstr "mail@example.com"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "on"
+msgstr "في"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
+msgid "seconds"
+msgstr "ثواني"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_ir_websocket
+msgid "websocket message handling"
+msgstr "التعامل مع رسائل websocket"
+
+#~ msgid "This livechat conversation has ended"
+#~ msgstr "انتهت هذه المحادثة"
+
+#~ msgid ""
+#~ "<span groups=\"im_livechat.im_livechat_group_manager\">Configure Channel</"
+#~ "span>\n"
+#~ "                                <span groups=\"!"
+#~ "im_livechat.im_livechat_group_manager\">View Channel</span>"
+#~ msgstr ""
+#~ "<span groups=\"im_livechat.im_livechat_group_manager\">تهيئة القناة</"
+#~ "span>\n"
+#~ "                                <span groups=\"!"
+#~ "im_livechat.im_livechat_group_manager\">عرض القناة</span>"
+
+#~ msgid " (copy)"
+#~ msgstr " (نسخة)"
+
+#~ msgid "# of Sessions"
+#~ msgstr "عدد الجلسات"
+
+#~ msgid "# of speakers"
+#~ msgstr "عدد المتحدثين"
+
+#~ msgid "% Happy"
+#~ msgstr "% سعيد"
+
+#~ msgid "%s and %s are typing..."
+#~ msgstr "%s و%s يكتبان..."
+
+#~ msgid "%s has joined"
+#~ msgstr "%s انضم "
+
+#~ msgid "%s is typing..."
+#~ msgstr "%s يكتب..."
+
+#~ msgid "%s, %s and more are typing..."
+#~ msgstr "%s و%s وغيرهما يكتبون..."
+
+#~ msgid ", on the"
+#~ msgstr "، في "
+
+#~ msgid "-------- Show older messages --------"
+#~ msgstr "-------- إظهار الرسائل الأقدم --------"
+
+#~ msgid "1 is Monday, 7 is Sunday"
+#~ msgstr "1 هو يوم الاثنين، 7 هو يوم الأحد "
+
+#~ msgid ""
+#~ "<i class=\"fa fa-user\" role=\"img\" aria-label=\"User\" title=\"User\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-user\" role=\"img\" aria-label=\"User\" title=\"المستخدم "
+#~ "\"/>"
+
+#~ msgid "<span style=\"font-size: 10px;\">Livechat Conversation</span><br/>"
+#~ msgstr ""
+#~ "<span style=\"font-size: 10px;\">محادثة الدردشة المباشرة</span><br/>"
+
+#~ msgid "<span>Best regards,</span><br/><br/>"
+#~ msgstr "<span>مع أطيب التحيات،</span><br/><br/> "
+
+#~ msgid "<span>Hello,</span><br/>Here's a copy of your conversation with"
+#~ msgstr "<span>مرحباً،</span><br/>إليك نسخة من محادثتك مع "
+
+#~ msgid ""
+#~ "A session is without answer if the operator did not answer. \n"
+#~ "                                       If the visitor is also the "
+#~ "operator, the session will always be answered."
+#~ msgstr ""
+#~ "تكون الجلسة دون إجابة إذا لم يجب موظف الدعم. \n"
+#~ "                                       إذا كان الزائر أيضاً موظف الدعم، "
+#~ "سوف تكون الجلسة قد تمت الإجابة عليها. "
+
+#~ msgid "Anonymous"
+#~ msgstr "مجهول الهوية "
+
+#~ msgid "Anonymous Name"
+#~ msgstr "اسم مجهول"
+
+#~ msgid "Ask something ..."
+#~ msgstr "اسأل سؤالاً... "
+
+#~ msgid "Attendees"
+#~ msgstr "الحاضرين "
+
+#~ msgid "Avatar"
+#~ msgstr "الصورة الرمزية"
+
+#~ msgid "Average duration"
+#~ msgstr "متوسط المدة"
+
+#~ msgid "Average message"
+#~ msgstr "متوسط الرسالة"
+
+#~ msgid "Average time in seconds to give the first answer to the visitor"
+#~ msgstr "متوسط الوقت بالثواني لمنح الزائر الإجابة الأولى "
+
+#~ msgid "Average time to give the first answer to the visitor"
+#~ msgstr "متوسط الوقت لمنح الزائر الإجابة الأولى "
+
+#~ msgid "Bad"
+#~ msgstr "سيئ"
+
+#~ msgid ""
+#~ "Canned responses allow you to insert prewritten responses in\n"
+#~ "                your messages by typing <i>:shortcut</i>. The shortcut "
+#~ "is\n"
+#~ "                replaced directly in your message, so that you can still "
+#~ "edit\n"
+#~ "                it before sending."
+#~ msgstr ""
+#~ "تتيح لك الردود الجاهزة إدراج ردود مكتوبة مسبقًا في\n"
+#~ "                رسائلك من خلال كتابة <i>: اختصار</i>. يتم استبدال "
+#~ "الاختصار\n"
+#~ "                مباشرة في رسالتك، حتى تتمكن من التحرير\n"
+#~ "                قبل الإرسال. "
+
+#~ msgid "Channel Header Color"
+#~ msgstr "لون ترويسة القناة "
+
+#~ msgid "Channel Rules"
+#~ msgstr "قواعد القناة"
+
+#~ msgid "Chat Input Placeholder"
+#~ msgstr "العنصر النائب لتحديد مكان الكتابة "
+
+#~ msgid "Chat with one of our collaborators"
+#~ msgstr "دردش مع أحد متعاونينا "
+
+#~ msgid "Close chat window"
+#~ msgstr "إغلاق نافذة الدردشة"
+
+#~ msgid "Close conversation"
+#~ msgstr "إغلاق المحادثة"
+
+#~ msgid "Code"
+#~ msgstr "الكود"
+
+#~ msgid "Conversation Sent"
+#~ msgstr "تم إرسال المحادثة "
+
+#~ msgid "Conversation ended..."
+#~ msgstr "انتهت المحادثة... "
+
+#~ msgid ""
+#~ "Copy and paste this code into your website, within the &lt;head&gt; tag:"
+#~ msgstr "قم بنسخ ولصق هذا الكود في موقعك ضمن علامة التصنيف: "
+
+#~ msgid "Create a channel and start chatting to fill up your history."
+#~ msgstr "أنشئ قناة وابدأ الدردشة لتملأ سجلك."
+
+#~ msgid "Create a new canned response"
+#~ msgstr "إنشاء رد جاهز جديد"
+
+#~ msgid "Creation Date"
+#~ msgstr "تاريخ الإنشاء"
+
+#~ msgid "Creation date"
+#~ msgstr "تاريخ الإنشاء"
+
+#~ msgid "Creation date (hour)"
+#~ msgstr "تاريخ الإنشاء (الساعة)"
+
+#~ msgid "Customer Ratings"
+#~ msgstr "تقييمات العميل"
+
+#~ msgid "Day Number"
+#~ msgstr "رقم اليوم "
+
+#~ msgid "Days of activity"
+#~ msgstr "أيام النشاط "
+
+#~ msgid "Default text displayed on the Livechat Support Button"
+#~ msgstr "النص الافتراضي المعروض على زر دعم الدردشة المباشرة "
+
+#~ msgid ""
+#~ "Define rules for your live support channel. You can apply an action for "
+#~ "the given URL, and per country.<br/>To identify the country, GeoIP must "
+#~ "be installed on your server, otherwise, the countries of the rule will "
+#~ "not be taken into account."
+#~ msgstr ""
+#~ "قم بتحديد قواعد لقناة الدعم المباشر لديك. بإمكانك تطبيق إجراء على رابط "
+#~ "URL المعطى حسب الدولة. <br/>لتحديد الدولة، يجب أن يكون المعرف الجغرافي "
+#~ "مثبتاً في خادمك، وإلا فلن يتم اعتبار دول القاعدة. "
+
+#~ msgid "Duration of the conversation (in seconds)"
+#~ msgstr "مدة المحادثة (بالثواني)"
+
+#~ msgid "Enable the bot only if there is no operator available"
+#~ msgstr "قم تمكين الـ bot فقط إذا لم يكن هناك موظف متاح "
+
+#~ msgid "Enabled only if no operator"
+#~ msgstr "التمكين فقط إذا لم يكن هنام موظف متاح "
+
+#~ msgid ""
+#~ "For websites built with the Odoo CMS, go to Website &gt; Configuration "
+#~ "&gt; Settings and select the Website Live Chat Channel you want to add to "
+#~ "your website."
+#~ msgstr ""
+#~ "للمواقع الإلكترونية المبنية باستخدام نظام إدارة المحتوى لدى أودو، اذهب "
+#~ "إلى إعدادات تهيئة الموقع الإلكتروني وقم بتحديد قناة الدردشة المباشرة "
+#~ "للموقع الإلكتروني التي ترغب في إضافتها إلى موقعك الإلكتروني. "
+
+#~ msgid "Good"
+#~ msgstr "جيد"
+
+#~ msgid "Group By..."
+#~ msgstr "التجميع حسب.."
+
+#~ msgid "Have a Question? Chat with us."
+#~ msgstr "ألديك سؤال؟ تواصل معنا عبر الدردشة. "
+
+#~ msgid "How to use the Website Live Chat widget?"
+#~ msgstr "كيف أستخدم أداة الدردشة المباشرة في الموقع الإلكتروني؟"
+
+#~ msgid "Invalid email address"
+#~ msgstr "عنوان البريد الإلكتروني غير صالح"
+
+#~ msgid "Is category livechat open"
+#~ msgstr "فئة الدردشة المباشرة مفتوحة "
+
+#~ msgid "Is livechat ongoing?"
+#~ msgstr "هل الدردشة المباشرة مستمرة؟ "
+
+#~ msgid "Is visitor anonymous"
+#~ msgstr "الزائر مجهول "
+
+#~ msgid "Last 24h"
+#~ msgstr "آخر 24 ساعة"
+
+#~ msgid "Listeners of a Channel"
+#~ msgstr "مستمعي القناة"
+
+#~ msgid "Livechat Button"
+#~ msgstr "زر الدردشة المباشرة "
+
+#~ msgid "Livechat Button Color"
+#~ msgstr "لون زر الدردشة المباشرة "
+
+#~ msgid ""
+#~ "Livechat Support Channel Statistics allows you to easily check and "
+#~ "analyse your company livechat session performance. Extract information "
+#~ "about the missed sessions, the audience, the duration of a session, etc."
+#~ msgstr ""
+#~ "تتيح لك إحصائيات قناة دعم الدردشة الحية مراجعة وتحليل أداء جلسة الدردشة "
+#~ "المباشرة في شركتك، لتتمكن من جمع معلومات إضافية عن الجلسات التي فاتتك "
+#~ "والجمهور ومدة الجلسة، إلخ. "
+
+#~ msgid "Livechat Support Operator Report"
+#~ msgstr "تقرير موظف دعم الدردشة المباشرة "
+
+#~ msgid "Livechat Window"
+#~ msgstr "نافذة الدردشة المباشرة "
+
+#~ msgid "Livechat session is active until visitor leaves the conversation."
+#~ msgstr "تكون جلسة الدردشة المباشرة نشطة حتى يغادر الزائر المحادثة. "
+
+#~ msgid "Loading older messages..."
+#~ msgstr "إظهار الرسائل الأقدم..."
+
+#~ msgid "Missed sessions"
+#~ msgstr "الجلسات الفائتة "
+
+#~ msgid "New messages"
+#~ msgstr "رسائل جديدة"
+
+#~ msgid "No customer ratings on live chat session yet"
+#~ msgstr "لا توجد تقييمات للعملاء على جلسة الدردشة المباشرة بعد "
+
+#~ msgid "No operator available"
+#~ msgstr "لا يوجد موظف متاح "
+
+#~ msgid "Note by"
+#~ msgstr "ملاحظة من قِبَل "
+
+#~ msgid "Number of days since the first session of the operator"
+#~ msgstr "عدد الأيام منذ أول جلسة لموظف الدعم "
+
+#~ msgid "Number of different speakers"
+#~ msgstr "عدد المتحدثين المختلفين"
+
+#~ msgid "OK"
+#~ msgstr "موافق"
+
+#~ msgid "Online Chat Name"
+#~ msgstr "اسم الدردشة عبر الإنترنت "
+
+#~ msgid "Oops! Something went wrong."
+#~ msgstr "عذراً! حدث خطأ ما. "
+
+#~ msgid "Open automatically timer"
+#~ msgstr "مؤقت الفتح تلقائياً "
+
+#~ msgid "Operator Analysis"
+#~ msgstr "تحليل موظف الدعم"
+
+#~ msgid ""
+#~ "Operators\n"
+#~ "                                            <br/>\n"
+#~ "                                            <i class=\"fa fa-comments\" "
+#~ "role=\"img\" aria-label=\"Comments\" title=\"Comments\"/>"
+#~ msgstr ""
+#~ "موظفي الدعم\n"
+#~ "                                            <br/>\n"
+#~ "                                            <i class=\"fa fa-comments\" "
+#~ "role=\"img\" aria-label=\"Comments\" title=\"التعليقات \"/>"
+
+#~ msgid ""
+#~ "Operators that do not show any activity In Odoo for more than 30 minutes "
+#~ "will be considered as disconnected."
+#~ msgstr ""
+#~ "سيتم اعتبار موظفي الدعم غير متصلين إذا لم يقوموا بأي إجراء في أودو لأكثر "
+#~ "من 30 دقيقة."
+
+#~ msgid "Please call me on: "
+#~ msgstr "يرجى الاتصال بي عبر: "
+
+#~ msgid "Please check your internet connection."
+#~ msgstr "يرجى التحقق من اتصالك بالإنترنت. "
+
+#~ msgid "Please contact me on: "
+#~ msgstr "يرجى التواصل معي عبر: "
+
+#~ msgid "Please wait"
+#~ msgstr "يرجى الانتظار "
+
+#~ msgid "Please wait..."
+#~ msgstr "انتظر من فضلك... "
+
+#~ msgid "Rating: %s"
+#~ msgstr "التقييم: %s"
+
+#~ msgid "Ratings for livechat channel"
+#~ msgstr "تقييمات قناة الدردشة المباشرة "
+
+#~ msgid "Report"
+#~ msgstr "التقرير"
+
+#~ msgid "Restart"
+#~ msgstr "إعادة التشغيل "
+
+#~ msgid "Session Statistics"
+#~ msgstr "إحصائيات الجلسة"
+
+#~ msgid "Session expired... Please refresh and try again."
+#~ msgstr "لقد انتهت صلاحية الجلسة...يرجى التحديث ثم المحاولة مجدداً. "
+
+#~ msgid "Session not rated"
+#~ msgstr "لم يتم تقييم الجلسة "
+
+#~ msgid "Session(s) without answer"
+#~ msgstr "الجلسة (الجلسات) بلا إجابات "
+
+#~ msgid "Sessions History"
+#~ msgstr "سجل الجلسات "
+
+#~ msgid "Text that prompts the user to initiate the chat."
+#~ msgstr "النص الذي يحث المستخدم على بدء المحادثة."
+
+#~ msgid "There is no rating for this channel at the moment"
+#~ msgstr "لا يوجد تقييم لهذه القناة حاليًا"
+
+#~ msgid "This Week"
+#~ msgstr "هذا الأسبوع"
+
+#~ msgid "Time to answer"
+#~ msgstr "الوقت للإجابة "
+
+#~ msgid "Today"
+#~ msgstr "اليوم"
+
+#~ msgid "Treated sessions"
+#~ msgstr "الجلسات المقفلة"
+
+#~ msgid "Try again"
+#~ msgstr "حاول مجدداً "
+
+#~ msgid ""
+#~ "Type <b>:shortcut</b> to insert a canned response in your message.<br>"
+#~ msgstr "اكتب <b>:اختصار</b> لإدراج رد جاهز في رسالتك.<br> "
+
+#~ msgid ""
+#~ "Use canned responses to define templates of messages in the livechat app. "
+#~ "To load a canned response, start your sentence with ':' and select the "
+#~ "template."
+#~ msgstr ""
+#~ "استخدم الردود الجاهزة لتحديد قوالب الرسائل في تطبيق الدردشة المباشرة. "
+#~ "لتحميل رد جاهز، ابدأ جملتك بـ ':' وقم باختيار القالب. "
+
+#~ msgid "Visitor has left the conversation."
+#~ msgstr "لقد غادر الزائر المحادثة. "
+
+#~ msgid "Visitor is Happy"
+#~ msgstr "الزائر سعيد "
+
+#~ msgid "Website Live Chat Channels"
+#~ msgstr "قنوات الدردشة المباشرة في الموقع الإلكتروني "
+
+#~ msgid "Yesterday"
+#~ msgstr "البارحة"
+
+#~ msgid "Your chatter history is empty"
+#~ msgstr "سجل الدردشة الخاص بك فارغ "
+
+#~ msgid "chatbot_image"
+#~ msgstr "chatbot_image"
+
+#~ msgid "is typing"
+#~ msgstr "يكتب "
+
+#~ msgid ""
+#~ "or copy this url and send it by email to your customers or suppliers:"
+#~ msgstr ""
+#~ "أو انسخ هذا الرابط وأرسله عبر البريد الإلكتروني إلى عملائك ومورديك: "
+
+#~ msgid "read less"
+#~ msgstr "قراءة أقل"
+
+#~ msgid "read more"
+#~ msgstr "قراءة المزيد"
+
+#~ msgid "{{author_name}}"
+#~ msgstr "{{author_name}}"

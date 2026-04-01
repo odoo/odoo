@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="blacklist_main" name="Unsubscribed">
+        <t t-call="portal.frontend_layout">
+            <div class="container mb64">
+                <div class="row">
+                    <div class="col-lg-6 offset-lg-3 mt-5">
+                        <form t-att-action="'/sms/%s/%s' % (mailing_id, trace_code)" method="post">
+                            <p>Please confirm your phone number to unsubscribe :</p>
+                            <div class="mb-3 row">
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="sms_number" id="sms_number" t-att-required="true" placeholder='e.g. "+1 (555) 123-4567"'/>
+                                </div>
+                            </div>
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input type="hidden" name="trace_code" t-att-value="trace_code"/>
+                            <input type="hidden" name="mailing_id" t-att-value="mailing_id"/>
+                            <div class="mb-3 row">
+                                <div class="col-sm-10">
+                                    <button type="submit" class="btn btn-primary">Unsubscribe</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div t-if="unsubscribe_error" class="alert alert-danger text-center w-auto offset-lg-3" role="alert">
+                        <p>There was an error when trying to unsubscribe <strong t-out="sms_number"/><br />
+                        <t t-out="unsubscribe_error"/></p>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="blacklist_number" name="Unsubscribed">
+        <t t-call="portal.frontend_layout">
+            <div class="container mb64">
+                <div class="row">
+                    <div class="col-lg-6 offset-lg-3">
+                        <h3>SMS Subscription</h3>
+
+                        <div class="alert alert-success text-center" role="status">
+                            <t t-if="lists_optout">
+                                <p><strong t-esc="sms_number"/> has been successfully removed from</p>
+                                <t t-foreach="lists_optout" t-as="list_id">
+                                    <t t-if="list_id.is_public">
+                                        <strong t-out="list_id.name"/><br />
+                                    </t>
+                                    <t t-else=""><strong>Mailing List</strong></t>
+                                </t>
+                            </t>
+                            <p t-else="">
+                                <strong t-esc="sms_number"/> has been successfully blacklisted
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  width="800" height="600">
+    <style>
+        @keyframes rotate {
+            from {transform: rotate(0deg);}
+            to   {transform: rotate(-360deg);}
+        }
+        #lines {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: rotate 60s cubic-bezier(.56, .37, .43, .58) infinite;
+        }
+    </style>
+    <defs>
+        <clipPath id="clip-path" clipPathUnits="objectBoundingBox">
+            <use xlink:href="#filterPath" fill="none"/>
+        </clipPath>
+        <path id="filterPath" d="M.8406.2509c.0364.0999-.0392.2908-.1137.4054c-.0738.1156-.1466.1554-.2468.1789c-.1001.0235-.2279.0309-.2881-.0722c-.0602-.1031-.0542-.3175.0098-.441C.2654.1991.3858.1662.5209.1541C.6558.1422.8042.151.8406.2509z">
+            <animate xlink:href="#filterPath" dur="30s" repeatCount="indefinite" attributeName="d" attributeType="XML"
+            values="
+            M.8406.2509c.0364.0999-.0392.2908-.1137.4054c-.0738.1156-.1466.1554-.2468.1789c-.1001.0235-.2279.0309-.2881-.0722c-.0602-.1031-.0542-.3175.0098-.441C.2654.1991.3858.1662.5209.1541C.6558.1422.8042.151.8406.2509z;
+            M.7978.3155c.0658.1114.0707.2723.007.3781c-.0637.1065-.196.1586-.3251.1564C.3499.8485.2236.7925.1746.6958C.1256.5991.155.4602.2176.3504C.281.2405.379.1606.4912.1508C.6043.1419.7313.2041.7978.3155z;
+            M.8269.2535c.0535.0914.0073.2558-.0697.384c-.077.1282-.1848.2207-.2782.212c-.0941-.0087-.1736-.1191-.2391-.2402C.1749.4882.1245.3569.164.2744C.2039.1918.3345.1598.4766.1515C.6186.1442.7733.1621.8269.2535z;
+            M.8406.2509c.0364.0999-.0392.2908-.1137.4054c-.0738.1156-.1466.1554-.2468.1789c-.1001.0235-.2279.0309-.2881-.0722c-.0602-.1031-.0542-.3175.0098-.441C.2654.1991.3858.1662.5209.1541C.6558.1422.8042.151.8406.2509z"
+            calcMode="spline"
+            keySplines=".56 .37 .43 .58;.56 .37 .43 .58;.56 .37 .43 .58"/>
+        </path>
+    </defs>
+    <svg viewBox="0 0 28.35 28.35" width="100%" height="105%" y="-2.5%">
+        <g id="lines">
+            <animate dur="20s" repeatCount="indefinite" attributeName="stroke-dasharray" attributeType="XML"
+            values="
+            0.25 0.25 0.25 0.25;
+            0.5 0.5 0.5 0.5;
+            0.25 0.25 0.25 0.25"
+            calcMode="spline"
+            keySplines=".56 .37 .43 .58;.56 .37 .43 .58"/>
+            <line x1="6.67" y1="9.61" x2="1.8" y2="9.52" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="7.98" y1="7.94" x2="3.28" y2="6.69" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="9.65" y1="6.64" x2="5.38" y2="4.3" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="11.59" y1="5.78" x2="8" y2="2.48" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="13.67" y1="5.4" x2="10.98" y2="1.35" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="15.78" y1="5.54" x2="14.14" y2="0.95" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="17.8" y1="6.17" x2="17.3" y2="1.33" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="19.61" y1="7.28" x2="20.29" y2="2.45" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="21.11" y1="8.78" x2="22.91" y2="4.26" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="22.2" y1="10.59" x2="25.03" y2="6.64" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="22.82" y1="12.62" x2="26.52" y2="9.46" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="22.94" y1="14.73" x2="27.29" y2="12.55" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="22.55" y1="16.81" x2="27.3" y2="15.73" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="21.68" y1="18.74" x2="26.54" y2="18.83" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="20.36" y1="20.4" x2="25.07" y2="21.66" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="18.69" y1="21.71" x2="22.96" y2="24.05" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="16.76" y1="22.57" x2="20.34" y2="25.86" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="14.68" y1="22.94" x2="17.37" y2="27" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="12.56" y1="22.81" x2="14.21" y2="27.39" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="10.54" y1="22.17" x2="11.04" y2="27.02" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="8.73" y1="21.07" x2="8.06" y2="25.89" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="7.24" y1="19.57" x2="5.43" y2="24.09" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="6.15" y1="17.75" x2="3.31" y2="21.71" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="5.53" y1="15.73" x2="1.83" y2="18.89" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="5.41" y1="13.61" x2="1.05" y2="15.8" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+            <line x1="5.79" y1="11.53" x2="1.05" y2="12.61" fill="none" stroke="#3AADAA" stroke-miterlimit="10" stroke-width="1"/>
+        </g>
+    </svg>
+    <svg viewBox="0 0 1 1" id="preview" preserveAspectRatio="none">
+        <use xlink:href="#filterPath" fill="darkgrey"/>
+    </svg>
+    <image xlink:href="" clip-path="url(#clip-path)"/>
+</svg>

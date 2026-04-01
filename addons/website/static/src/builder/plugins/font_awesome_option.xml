@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.FontAwesomeOption">
+    <BuilderRow label.translate="Color">
+        <BuilderColorPicker styleAction="'color'"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Background Color">
+        <BuilderColorPicker styleAction="'background-color'"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Size">
+        <BuilderButtonGroup>
+            <BuilderButton action="'faResize'" actionParam="''" title.translate="Size 1x">1x</BuilderButton>
+            <BuilderButton action="'faResize'" actionParam="'fa-2x'" title.translate="Size 2x">2x</BuilderButton>
+            <BuilderButton action="'faResize'" actionParam="'fa-3x'" title.translate="Size 3x">3x</BuilderButton>
+            <BuilderButton action="'faResize'" actionParam="'fa-4x'" title.translate="Size 4x">4x</BuilderButton>
+            <BuilderButton action="'faResize'" actionParam="'fa-5x'" title.translate="Size 5x">5x</BuilderButton>
+        </BuilderButtonGroup>
+    </BuilderRow>
+
+    <!-- TODO: check if that (should?) work in mass mailing -->
+    <BorderConfigurator label.translate="Border" withRoundCorner="false"/>
+</t>
+
+</templates>

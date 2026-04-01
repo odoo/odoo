@@ -1,0 +1,20 @@
+.o-mail-ActionList {
+    --mail-ActionList-activeItemColor: #{white};
+    --mail-ActionList-activeItemBgColor: #{rgba(mix($gray-300, $gray-400), .75)};
+    --mail-ActionList-dangerBgColor: #{rgba(saturate($danger, 20%), .5)};
+    --mail-ActionList-successBgColor: #{rgba(saturate($success, 20%), .5)};
+    --mail-ActionList-buttonInlineIconOpacity: #{85%};
+    --mail-ActionList-dangerColor: #{lighten($danger, 5%)};
+    --o-mail-ActionList-successNoBgColor: #{lighten($success, 10%)};
+    --o-mail-ActionList-dangerNoBgColor: #{lighten($danger, 10%)};
+
+    .o-hasBtnBg.o-tag-SUCCESS {
+        @include button-variant(darken($success, 10%), darken($success, 10%));
+        --btn-color: white;
+        --btn-active-color: white;
+
+        i {
+            text-shadow: 0px 0px 1px darken($success, 10%);
+        }
+    }
+}

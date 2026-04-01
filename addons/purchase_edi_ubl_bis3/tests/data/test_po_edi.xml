@@ -1,0 +1,148 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Order xmlns="urn:oasis:names:specification:ubl:schema:xsd:Order-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+  <cbc:CustomizationID>urn:fdc:peppol.eu:poacc:trns:order:3</cbc:CustomizationID>
+  <cbc:ProfileID>urn:fdc:peppol.eu:poacc:bis:ordering:3</cbc:ProfileID>
+  <cbc:ID>My PO</cbc:ID>
+  <cbc:IssueDate>create_date_placeholder</cbc:IssueDate>
+  <cbc:OrderTypeCode>105</cbc:OrderTypeCode>
+  <cbc:DocumentCurrencyCode>USD</cbc:DocumentCurrencyCode>
+  <cac:QuotationDocumentReference>
+    <cbc:ID>SO/1234</cbc:ID>
+  </cac:QuotationDocumentReference>
+  <cac:BuyerCustomerParty>
+    <cac:Party>
+      <cac:PartyName>
+        <cbc:Name>company_1_data</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cac:Country>
+          <cbc:IdentificationCode>US</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID>BE0477472701</cbc:CompanyID>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>company_1_data</cbc:RegistrationName>
+        <cbc:CompanyID>BE0477472701</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Name>company_1_data</cbc:Name>
+      </cac:Contact>
+    </cac:Party>
+  </cac:BuyerCustomerParty>
+  <cac:SellerSupplierParty>
+    <cac:Party>
+      <cac:PartyName>
+        <cbc:Name>partner_a</cbc:Name>
+      </cac:PartyName>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID>NL123456782B90</cbc:CompanyID>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>partner_a</cbc:RegistrationName>
+        <cbc:CompanyID>NL123456782B90</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Name>partner_a</cbc:Name>
+      </cac:Contact>
+    </cac:Party>
+  </cac:SellerSupplierParty>
+  <cac:Delivery>
+    <cac:DeliveryParty>
+      <cac:PartyName>
+        <cbc:Name>company_1_data</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cac:Country>
+          <cbc:IdentificationCode>US</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID>BE0477472701</cbc:CompanyID>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>company_1_data</cbc:RegistrationName>
+        <cbc:CompanyID>BE0477472701</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Name>company_1_data</cbc:Name>
+      </cac:Contact>
+    </cac:DeliveryParty>
+  </cac:Delivery>
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="USD">69.00</cbc:TaxAmount>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="USD">460.00</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="USD">69.00</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>15.0</cbc:Percent>
+        <cac:TaxScheme><cbc:ID>VAT</cbc:ID></cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  <cac:AnticipatedMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="USD">460.00</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="USD">460.00</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="USD">529.00</cbc:TaxInclusiveAmount>
+    <cbc:PrepaidAmount currencyID="USD">0.00</cbc:PrepaidAmount>
+    <cbc:PayableAmount currencyID="USD">529.00</cbc:PayableAmount>
+  </cac:AnticipatedMonetaryTotal>
+  <cac:OrderLine>
+    <cac:LineItem>
+      <cbc:ID>1</cbc:ID>
+      <cbc:Quantity unitCode="C62">10.0</cbc:Quantity>
+      <cbc:LineExtensionAmount currencyID="USD">450.00</cbc:LineExtensionAmount>
+      <cac:AllowanceCharge>
+        <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+        <cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+        <cbc:Amount currencyID="USD">50.00</cbc:Amount>
+      </cac:AllowanceCharge>
+      <cac:Price>
+        <cbc:PriceAmount currencyID="USD">50.0</cbc:PriceAmount>
+      </cac:Price>
+      <cac:Item>
+        <cbc:Description>Product A description</cbc:Description>
+        <cbc:Name>product_a</cbc:Name>
+        <cac:ClassifiedTaxCategory>
+          <cbc:ID>S</cbc:ID>
+          <cbc:Percent>15.0</cbc:Percent>
+          <cac:TaxScheme>
+            <cbc:ID>VAT</cbc:ID>
+          </cac:TaxScheme>
+        </cac:ClassifiedTaxCategory>
+      </cac:Item>
+    </cac:LineItem>
+  </cac:OrderLine>
+  <cac:OrderLine>
+    <cac:LineItem>
+      <cbc:ID>2</cbc:ID>
+      <cbc:Quantity unitCode="C62">1.0</cbc:Quantity>
+      <cbc:LineExtensionAmount currencyID="USD">10.00</cbc:LineExtensionAmount>
+      <cac:Price>
+        <cbc:PriceAmount currencyID="USD">10.0</cbc:PriceAmount>
+      </cac:Price>
+      <cac:Item>
+        <cbc:Description>Product A description</cbc:Description>
+        <cbc:Name>product_a</cbc:Name>
+        <cac:ClassifiedTaxCategory>
+          <cbc:ID>S</cbc:ID>
+          <cbc:Percent>15.0</cbc:Percent>
+          <cac:TaxScheme>
+            <cbc:ID>VAT</cbc:ID>
+          </cac:TaxScheme>
+        </cac:ClassifiedTaxCategory>
+      </cac:Item>
+    </cac:LineItem>
+  </cac:OrderLine>
+</Order>

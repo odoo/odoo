@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fetchmail_server_view_form" model="ir.ui.view">
+        <field name="name">fetchmail.server.view.form.inherit.gmail</field>
+        <field name="model">fetchmail.server</field>
+        <field name="priority">100</field>
+        <field name="inherit_id" ref="mail.view_email_server_form"/>
+        <field name="arch" type="xml">
+            <field name="user" position="after">
+                <div invisible="server_type != 'gmail'"
+                    class="d-flex flex-row align-items-center" colspan="2"
+                    groups="base.group_system">
+                    <span invisible="server_type != 'gmail' or not google_gmail_refresh_token"
+                        class="badge text-bg-success">
+                        Gmail Token Valid
+                    </span>
+                    <button type="object"
+                        name="open_google_gmail_uri" class="btn-link px-0"
+                        invisible="server_type != 'gmail' or google_gmail_refresh_token">
+                        <i class="oi oi-arrow-right"/>
+                        Connect your Gmail account
+                    </button>
+                    <button type="object"
+                        name="open_google_gmail_uri" class="btn-link px-0 ms-2"
+                        invisible="server_type != 'gmail' or not google_gmail_refresh_token">
+                        <i class="fa fa-cog" title="Edit Settings"/>
+                    </button>
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>

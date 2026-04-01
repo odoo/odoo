@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.ShadowOption">
+    <BuilderRow label.translate="Shadow">
+       <BuilderButtonGroup action="props.setShadowModeAction">
+         <BuilderButton actionValue="'none'" id="'no_shadow'" className="'lh-1'">None</BuilderButton>
+         <BuilderButton actionValue="'outset'" title.translate="Outset" iconImg="'/html_builder/static/img/options/shadow_out.svg'"/>
+         <BuilderButton actionValue="'inset'" title.translate="Inset" iconImg="'/html_builder/static/img/options/shadow_in.svg'"/>
+       </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderContext t-if="!this.isActiveItem('no_shadow')" action="props.setShadowAction">
+        <BuilderRow label.translate="Color" level="1">
+            <BuilderColorPicker actionParam="'color'"  enabledTabs="['solid', 'custom']"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Offset (X, Y)" level="1">
+            <BuilderNumberInput actionParam="'offsetX'" unit="'px'"/>
+            <BuilderNumberInput actionParam="'offsetY'" unit="'px'"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Blur" level="1">
+            <BuilderNumberInput actionParam="'blur'" unit="'px'"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Spread" level="1">
+            <BuilderNumberInput actionParam="'spread'" unit="'px'"/>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+</templates>

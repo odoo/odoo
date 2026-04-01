@@ -1,0 +1,119 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_stripe
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-09-16 04:48+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"pos_stripe/ko/>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: pos_stripe
+#: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+msgid "Do not have access to fetch token from Stripe"
+msgstr "Stripe에서 토큰을 가져올 권한이 없습니다."
+
+#. module: pos_stripe
+#: model_terms:ir.ui.view,arch_db:pos_stripe.pos_payment_method_view_form_inherit_pos_stripe
+msgid ""
+"Don't forget to complete Stripe connect before using this payment method."
+msgstr "해당 결제 방법을 사용하기 전에 Stripe 연결을 완료하시기 바랍니다."
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "Failed to discover: %s"
+msgstr "검색에 실패했습니다: %s"
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "Failed to load resource: net::ERR_INTERNET_DISCONNECTED."
+msgstr "리소스를 가져오지 못했습니다: net::ERR_INTERNET_DISCONNECTED."
+
+#. module: pos_stripe
+#: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "No available Stripe readers."
+msgstr "사용할 수 있는 Stripe 리더기가 없습니다."
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "Payment cancelled because not reader connected"
+msgstr "연결된 리더기가 없어 결제가 취소되었습니다."
+
+#. module: pos_stripe
+#: model:ir.model,name:pos_stripe.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "POS 결제 수단"
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "Reader disconnected"
+msgstr "리더기 연결이 끊어졌습니다."
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "Stripe Error"
+msgstr "Stripe 오류"
+
+#. module: pos_stripe
+#: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__stripe_serial_number
+msgid "Stripe Serial Number"
+msgstr "Stripe 일련번호"
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+msgid "Stripe payment provider for company %s is missing"
+msgstr "%s회사에 Stripe 결제대행업체가 누락되었습니다."
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "Stripe readers %s not listed in your account"
+msgstr "%s Stripe 리더기가 계정에 없습니다."
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+msgid ""
+"Terminal %(terminal)s is already used on payment method %(payment_method)s."
+msgstr ""
+"%(terminal)s 단말기가 이미 %(payment_method)s 결제 방법에 사용되고 있습니다."
+
+#. module: pos_stripe
+#: model:ir.model.fields,help:pos_stripe.field_pos_payment_method__stripe_serial_number
+msgid "[Serial number of the stripe terminal], for example: WSC513105011295"
+msgstr "[Stripe 단말기 일련번호], 예: WSC513105011295"

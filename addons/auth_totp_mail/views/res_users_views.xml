@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_users_form">
+        <field name="name">res.users.view.form.inherit.auth.totp.mail</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="auth_totp.view_totp_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='div_action_totp_enable_wizard']" position="inside">
+                <button groups="base.group_erp_manager" invisible="id == uid or totp_enabled"
+                        name="action_totp_invite" string="Invite to use 2FA" type="object" class="btn btn-secondary h-100"/>
+            </xpath>
+            <xpath expr="//div[@name='div_action_totp_enable_wizard']/span" position="attributes">
+                <attribute name="class" add="me-2" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- View used when coming from "invite to use 2FA" mail -->
+    <!-- The notebook is overridden to avoid displaying irrelevant data and show
+    only the button to enable the 2FA button. -->
+    <record model="ir.ui.view" id="auth_totp_mail.res_users_view_form">
+        <field name="name">res.users.view.form.auth.totp.mail</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form position="attributes">
+                <attribute name='create'>0</attribute>
+                <attribute name='edit'>0</attribute>
+                <attribute name='delete'>0</attribute>
+            </form>
+            <notebook position="replace">
+                <div class="d-flex mt-3">
+                    <div class="col-7 col-sm-6 col-lg-3 d-flex flex-column">
+                        <label for="totp_enabled" string="Two-factor Authentication" class="o_form_label"/>
+                        <span class="text-muted">
+                            Recommended for extra security.
+                        </span>
+                    </div>
+                    <field name="totp_enabled" invisible="1"/> <!-- Required for the visibility of the 2FA buttons. -->
+                    <button invisible="totp_enabled" name="action_totp_enable_wizard"
+                        type="object" class="btn btn-secondary h-100" string="Enable 2FA" help="Click to enable 2FA."/>
+                    <button invisible="not totp_enabled" name="action_totp_enable_wizard"
+                        type="object" disabled="1" class="btn btn-secondary h-100 disabled" string="Enable 2FA"/>
+                </div>
+            </notebook>
+        </field>
+    </record>
+</odoo>

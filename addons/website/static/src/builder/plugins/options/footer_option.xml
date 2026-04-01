@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.FooterTemplateOption">
+    <BuilderRow label.translate="Template">
+        <BuilderSelect action="'websiteConfigFooter'">
+            <t t-foreach="footerTemplates" t-as="template" t-key="template.key">
+                <t t-component="template.Component" t-props="template.props"/>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+<t t-name="website.FooterTemplateChoice">
+    <BuilderSelectItem title="props.title" actionParam="{ view: props.view, vars: { 'footer-template': props.varName } }">
+        <Img attrs="{ style: 'width: 100%;' }" src="props.imgSrc"/>
+    </BuilderSelectItem>
+</t>
+
+<t t-name="website.FooterWidthOption">
+    <BuilderRow label.translate="Content width">
+        <BuilderButtonGroup action="'previewableWebsiteConfig'">
+            <BuilderButton actionParam="{ views: ['website.footer_copyright_content_width_small'], previewClass: 'o_container_small'}">
+                <Img src="'/website/static/src/img/snippets_options/content_width_small.svg'"/>
+            </BuilderButton>
+            <BuilderButton actionParam="{ views: [], previewClass: 'container'}">
+                <Img src="'/website/static/src/img/snippets_options/content_width_normal.svg'"/>
+            </BuilderButton>
+            <BuilderButton actionParam="{ views: ['website.footer_copyright_content_width_fluid'], previewClass: 'container-fluid'}">
+                <Img src="'/website/static/src/img/snippets_options/content_width_full.svg'"/>
+            </BuilderButton>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+
+<t t-name="website.FooterColorsOption">
+    <BuilderRow label.translate="Background">
+        <BuilderColorPicker
+            enabledTabs="['theme', 'custom', 'gradient']"
+            preview="false"
+            defaultColor="''"
+            action="'customizeWebsiteColor'"
+            actionParam="{
+                mainParam: 'footer-custom',
+                gradientColor: 'footer-gradient',
+                combinationColor: 'footer',
+                nullValue: 'NULL',
+            }"/>
+    </BuilderRow>
+</t>
+
+<t t-name="website.FooterSlideoutOption">
+    <BuilderRow label.translate="Slideout Effect">
+        <BuilderSelect preview="false" action="'websiteConfig'">
+            <BuilderSelectItem actionParam="{ views: [], vars: { 'footer-effect': '' } }">
+                Regular
+            </BuilderSelectItem>
+            <BuilderSelectItem actionParam="{ views: ['website.template_footer_slideout'], vars: { 'footer-effect': 'slideout_slide_hover' } }">
+                Slide Hover
+            </BuilderSelectItem>
+            <BuilderSelectItem actionParam="{ views: ['website.template_footer_slideout'], vars: { 'footer-effect': 'slideout_shadow' } }">
+                Slide Hover + Shadow
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+<t t-name="website.ToggleFooterCopyrightOption">
+    <BuilderRow label.translate="Copyright">
+        <BuilderCheckbox action="'websiteConfig'" preview="false"
+                actionParam="{ views: ['!website.footer_no_copyright'] }"/>
+    </BuilderRow>
+</t>
+
+<t t-name="website.FooterBorder">
+    <BorderConfigurator label.translate="Border"/>
+    <ShadowOption/>
+</t>
+
+<t t-name="website.FooterScrollToTopOption">
+    <BuilderRow label.translate="Scroll Top Button">
+        <BuilderCheckbox id="'footer_scrolltop_opt'" action="'websiteConfig'" actionParam="{
+            views: ['website.option_footer_scrolltop'],
+            vars: {'footer-scrolltop': 'true'},
+            varsOnClean: {'footer-scrolltop': 'false'}
+        }"/>
+        <BuilderSelect t-if="this.isActiveItem('footer_scrolltop_opt')" applyTo="'#o_footer_scrolltop_wrapper'">
+            <BuilderSelectItem classAction="'justify-content-start'">Left</BuilderSelectItem>
+            <BuilderSelectItem classAction="'justify-content-center'">Center</BuilderSelectItem>
+            <BuilderSelectItem classAction="'justify-content-end'">Right</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+</templates>

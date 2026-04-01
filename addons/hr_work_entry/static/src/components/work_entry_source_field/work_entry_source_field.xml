@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="hr_work_entry.WorkEntrySourceField" t-inherit="web.RadioField">
+        <xpath expr="//input[hasclass('o_radio_input')]" position="attributes">
+            <attribute name="t-att-disabled">props.readonly or (item[0] === 'calendar' and isFullyFlexible)</attribute>
+        </xpath>
+
+        <xpath expr="//div[hasclass('o_radio_item')]" position="inside">
+            <span t-if="props.readonly or (item[0] === 'calendar' and item[0] === value and isFullyFlexible)"
+                class="fa fa-exclamation-triangle text-danger o_work_entry_source_warning ms-3"
+                data-tooltip-template="hr_work_entry.WorkEntrySourceWarning"
+                t-att-data-tooltip-info='tooltipWarning'/>
+        </xpath>
+
+    </t>
+</templates>

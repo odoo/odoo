@@ -1,0 +1,52 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import api, fields, models
+from odoo.fields import Domain
+
+
+class ProductReplenish(models.TransientModel):
+    _inherit = 'product.replenish'
+
+    @api.depends('product_id.bom_ids', 'product_id.bom_ids.product_uom_id')
+    def _compute_allowed_uom_ids(self):
+        super()._compute_allowed_uom_ids()
+        for rec in self:
+            rec.allowed_uom_ids |= rec.product_id.bom_ids.product_uom_id
+
+    @api.depends('route_id')
+    def _compute_date_planned(self):
+        super()._compute_date_planned()
+        for rec in self:
+            if 'manufacture' in rec.route_id.rule_ids.mapped('action'):
+                rec.date_planned = rec._get_date_planned(rec.route_id, product_tmpl_id=rec.product_tmpl_id)
+
+    def _get_record_to_notify(self, date):
+        order_line = self.env['mrp.production'].search([('write_date', '>=', date)], limit=1)
+        return order_line or super()._get_record_to_notify(date)
+
+    def _get_replenishment_order_notification_link(self, production):
+        if production._name == 'mrp.production':
+            return [{
+                'label': production.name,
+                'url': f'/odoo/action-mrp.action_mrp_production_form/{production.id}'
+            }]
+        return super()._get_replenishment_order_notification_link(production)
+
+    def _get_date_planned(self, route_id, **kwargs):
+        date = super()._get_date_planned(route_id, **kwargs)
+        if 'manufacture' not in route_id.rule_ids.mapped('action'):
+            return date
+        delay = 0
+        product_tmpl_id = kwargs.get('product_tmpl_id') or self.product_tmpl_id
+        if product_tmpl_id and product_tmpl_id.bom_ids:
+            delay += product_tmpl_id.bom_ids[0].produce_delay + product_tmpl_id.bom_ids[0].days_to_prepare_mo
+        return fields.Datetime.add(date, days=delay)
+
+    def _get_route_domain(self, product_tmpl_id):
+        domain = super()._get_route_domain(product_tmpl_id)
+        company = product_tmpl_id.company_id or self.env.company
+        manufacture_route = self.env['stock.rule'].search([('action', '=', 'manufacture'), ('company_id', '=', company.id)]).route_id
+        if manufacture_route and product_tmpl_id.bom_ids:
+            domain = Domain.OR([domain, Domain('id', 'in', manufacture_route.ids)])
+        return domain

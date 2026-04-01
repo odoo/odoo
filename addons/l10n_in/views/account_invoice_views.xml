@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="invoice_form_inherit_l10n_in" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n.in</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mt-1 mb-1" role="alert" invisible="not l10n_in_warning">
+                    <div>
+                        <field name="l10n_in_warning" widget="actionable_errors"/>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="l10n_in_state_id" domain="[('country_id.code', '=', 'IN')]"
+                    options="{'no_create': True, 'no_open': True}"
+                    invisible="country_code != 'IN' or not l10n_in_is_gst_registered_enabled or move_type == 'entry'"
+                    readonly="state != 'draft'"
+                    required="country_code == 'IN' and l10n_in_is_gst_registered_enabled and state == 'draft' and move_type != 'entry' and l10n_in_journal_type in ('sale', 'purchase')"/>
+                <field name="l10n_in_gst_treatment"
+                    invisible="country_code != 'IN' or not l10n_in_is_gst_registered_enabled or move_type == 'entry'"
+                    readonly="state != 'draft'"
+                    required="country_code == 'IN' and l10n_in_is_gst_registered_enabled and state == 'draft' and move_type != 'entry'"/>
+                <label for="l10n_in_partner_gstin_status"
+                    invisible="not l10n_in_show_gstin_status"/>
+                <div name="status_date_container"
+                    invisible="not l10n_in_show_gstin_status">
+                    <field name="l10n_in_partner_gstin_status" class="d-none"/>
+                    <span class="text-nowrap" readonly="1">
+                        <span invisible="not l10n_in_partner_gstin_status"
+                            class="oe_inline text-success">Active</span>
+                        <span invisible="not l10n_in_gstin_verified_date or l10n_in_partner_gstin_status"
+                            class="oe_inline text-danger">Inactive</span>
+                        <span class="text-muted oe_inline">
+                            <span invisible="l10n_in_gstin_verified_date">Not Checked</span>
+                            <span invisible="not l10n_in_gstin_verified_date" class="ps-3">Checked: </span>
+                            <field name="l10n_in_gstin_verified_date" class="oe_inline" widget="remaining_days"/>
+                            <button name="l10n_in_verify_partner_gstin_status"
+                                type="object" icon="fa-refresh"
+                                class="oe_link p-0 ps-3" title="Verify GSTIN status" />
+                        </span>
+                    </span>
+                </div>
+                <field name="reversed_entry_id" domain="[('move_type', '=', 'out_invoice'), ('commercial_partner_id', '=', commercial_partner_id)]" readonly="state != 'draft'" invisible="move_type != 'out_refund' or country_code != 'IN'"/>
+            </xpath>
+            <xpath expr="//page[@id='other_tab']/group[@id='other_tab_group']" position="after">
+                <group string="Export India" invisible="l10n_in_gst_treatment not in ['overseas', 'deemed_export'] or move_type not in ['out_invoice', 'out_refund']">
+                    <field name="l10n_in_shipping_bill_number" readonly="state != 'draft'"/>
+                    <field name="l10n_in_shipping_bill_date" readonly="state != 'draft'"/>
+                    <field name="l10n_in_shipping_port_code_id" readonly="state != 'draft'"/>
+                </group>
+                <group string="Import India" invisible="l10n_in_gst_treatment not in ['overseas', 'special_economic_zone'] or move_type not in ['in_invoice', 'in_refund']">
+                    <field name="l10n_in_shipping_bill_number" string="Bill of Entry Number" readonly="state != 'draft'"/>
+                    <field name="l10n_in_shipping_bill_date" string="Bill of Entry Date" readonly="state != 'draft'"/>
+                    <field name="l10n_in_shipping_port_code_id" readonly="state != 'draft'"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='partner_shipping_id']" position="before">
+                <field name="l10n_in_reseller_partner_id"
+                       groups="l10n_in.group_l10n_in_reseller"
+                       invisible="move_type not in ('out_invoice', 'out_refund') or country_code != 'IN' or move_type == 'entry'"
+                       readonly="state != 'draft'"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list//field[@name='product_id']" position="after">
+                <field name="l10n_in_hsn_code" optional="hide" column_invisible="parent.country_code != 'IN'"/>
+            </xpath>
+            <xpath expr="//field[@name='journal_line_ids' or @name='line_ids']/list//field[@name='name']" position="after">
+                <field name="l10n_in_hsn_code" optional="hide" column_invisible="parent.country_code != 'IN'"/>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="%(l10n_in_withholding_entry_form_action)d" string="TDS Entry" type="action" class="btn btn-secondary float-end"
+                        invisible="country_code != 'IN' or l10n_in_tds_deduction == 'no' or not l10n_in_tds_feature_enabled or move_type not in ('out_invoice', 'in_invoice', 'out_refund', 'in_refund') or state != 'posted'"/>
+                <button name="action_l10n_in_apply_higher_tax" string="Apply Higher TCS" type="object" class="btn btn-secondary float-end"
+                        invisible="not l10n_in_display_higher_tcs_button or not l10n_in_tcs_feature_enabled"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_l10n_in_withholding_entries"
+                        class="oe_stat_button"
+                        type="object"
+                        icon="fa-list-alt"
+                        invisible="not l10n_in_tds_feature_enabled or not l10n_in_withhold_move_ids">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">TDS</span>
+                        <span class="o_stat_value"><field name="l10n_in_total_withholding_amount"/></span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//notebook/page[@id='aml_tab']" position="before">
+                <page name="withholding_tab" string="TDS Information" invisible="not l10n_in_tds_feature_enabled or not l10n_in_withholding_line_ids">
+                    <field name="l10n_in_withholding_line_ids" nolabel="1" colspan="4">
+                        <list editable="bottom" string="TDS Information">
+                            <field name="tax_ids" string="Tax" widget="many2many_tax_tags"/>
+                            <field name="price_subtotal" string="Base Amount" sum="Total"/>
+                            <field name="l10n_in_withhold_tax_amount" string="TDS Amount" sum="Total"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_line_list_l10n_in_withholding" model="ir.ui.view">
+        <field name="name">account.move.line.list.l10n.in.withholding</field>
+        <field name="model">account.move.line</field>
+        <field name="arch" type="xml">
+            <list string="Journal items" editable="top" create="0" default_group_by="l10n_in_tds_tcs_section_id">
+                <field name="product_id" readonly="1"/>
+                <field name="name" widget="section_and_note_text"/>
+                <field name="account_id"/>
+                <field name="tax_ids"
+                       widget="many2many_tax_tags"
+                       domain="[('type_tax_use', '=', context.get('default_tax_type_use'))]"
+                       column_invisible="context.get('move_type')"/>
+                <field name="l10n_in_tds_tcs_section_id" string="Suggested Section"/>
+                <field name="price_total"/>
+            </list>
+        </field>
+    </record>
+</odoo>

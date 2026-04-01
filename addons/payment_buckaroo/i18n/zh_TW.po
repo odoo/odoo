@@ -1,0 +1,112 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_buckaroo
+#
+# Translators:
+# Wil Odoo, 2025
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-09-16 08:10+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-19/payment_buckaroo/zh_Hant/>\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: payment_buckaroo
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+msgid ""
+"An error occurred during processing of your payment (code %s). Please try "
+"again."
+msgstr "處理付款過程中，發生錯誤（代碼：%s）。請再試一次。"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields.selection,name:payment_buckaroo.selection__payment_provider__code__buckaroo
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__buckaroo_secret_key
+msgid "Buckaroo Secret Key"
+msgstr "Buckaroo 密鑰"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__code
+msgid "Code"
+msgstr "代碼"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_transaction__id
+msgid "ID"
+msgstr "識別號"
+
+#. module: payment_buckaroo
+#: model:ir.model,name:payment_buckaroo.model_payment_provider
+msgid "Payment Provider"
+msgstr "付款服務商"
+
+#. module: payment_buckaroo
+#: model:ir.model,name:payment_buckaroo.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "付款交易"
+
+#. module: payment_buckaroo
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+msgid "Received data with missing transaction keys"
+msgstr "收到的數據中缺漏交易密鑰"
+
+#. module: payment_buckaroo
+#: model_terms:ir.ui.view,arch_db:payment_buckaroo.payment_provider_form
+msgid "Secret Key"
+msgstr "密鑰"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_provider__buckaroo_website_key
+msgid "The key solely used to identify the website with Buckaroo"
+msgstr "只用於向 Buckaroo 識別該網站的密鑰"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "此付款服務商的技術代碼。"
+
+#. module: payment_buckaroo
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+msgid "Unknown status code: %s."
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__buckaroo_website_key
+msgid "Website Key"
+msgstr "網站密鑰"
+
+#. module: payment_buckaroo
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+msgid "Your payment was refused (code %s). Please try again."
+msgstr "你的付款被拒絕（代碼：%s）。請再試一次。"
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr "沒有找到匹配參考 %s 的交易。"
+
+#~ msgid "Unknown status code: %s"
+#~ msgstr "不明狀態代碼：%s"

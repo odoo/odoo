@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="website.prompt">
+        <div role="dialog" class="modal o_technical_modal" tabindex="-1">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <header class="modal-header" t-if="window_title">
+                        <h3 class="modal-title"><t t-out="window_title"/></h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </header>
+                    <main class="modal-body">
+                        <form role="form" t-att-id="id">
+                            <div class="row mb0">
+                                <label for="page-name" class="col-md-3 col-form-label">
+                                    <t t-out="field_name"/>
+                                </label>
+                                <div class="col-md-9">
+                                    <input t-if="field_type == 'input'" type="text" class="form-control" required="required"/>
+                                    <textarea t-if="field_type == 'textarea'" class="form-control" required="required" rows="5"></textarea>
+                                    <select t-if="field_type == 'select'" class="form-select"></select>
+                                </div>
+                            </div>
+                        </form>
+                    </main>
+                    <footer class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-continue"><t t-out="btn_primary_title"/></button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Cancel"><t t-out="btn_secondary_title"/></button>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

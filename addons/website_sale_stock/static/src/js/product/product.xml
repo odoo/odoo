@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="sale.Product" t-inherit-mode="extension">
+        <QuantityButtons position="attributes">
+            <attribute name="t-if" add="!isOutOfStock()" separator=" &amp;&amp; "/>
+            <attribute name="isPlusButtonDisabled">
+                !env.isQuantityAllowed(props, props.quantity + 1)
+            </attribute>
+        </QuantityButtons>
+        <QuantityButtons position="after">
+            <t t-call="website_sale_stock.out_of_stock"/>
+        </QuantityButtons>
+        <button name="sale_product_configurator_add_button" position="attributes">
+            <attribute name="t-if" add="!isOutOfStock()" separator=" &amp;&amp; "/>
+        </button>
+        <button name="sale_product_configurator_add_button" position="after">
+            <t t-call="website_sale_stock.out_of_stock"/>
+        </button>
+    </t>
+
+    <t t-name="website_sale_stock.out_of_stock">
+        <div
+            t-if="isOutOfStock()"
+            class="text-danger fw-bold"
+        >
+            <i class="fa fa-times me-1"/>
+            Out of stock
+        </div>
+    </t>
+</templates>

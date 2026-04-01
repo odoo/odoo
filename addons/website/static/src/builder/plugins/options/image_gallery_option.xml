@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ImageGalleryImagesOption">
+    <BuilderRow label.translate="Images">
+        <BuilderButton type="'success'" className="'flex-grow-1'" preview="false" title.translate="Add Image"  action="'addImage'"> Add </BuilderButton>
+        <BuilderButton type="'danger'" className="'flex-grow-1'" preview="false" title.translate="Remove all images" action="'removeAllImages'"> Remove all </BuilderButton>
+    </BuilderRow>
+</t>
+
+<t t-name="website.ImageGalleryOption">
+    <BuilderRow label.translate="Mode" t-if="!this.state.isSlideShow">
+        <BuilderSelect>
+            <BuilderSelectItem id="'grid_mode_opt'" action="'setImageGalleryLayout'" actionParam="'grid'">Grid</BuilderSelectItem>
+            <BuilderSelectItem id="'masonry_mode_opt'" action="'setImageGalleryLayout'" actionParam="'masonry'">Masonry</BuilderSelectItem>
+            <BuilderSelectItem action="'setImageGalleryLayout'" actionParam="'nomode'">Float</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow
+        t-if="!this.state.isSlideShow"
+        label.translate="Images Spacing">
+        <BuilderRange action="'setClassRange'" actionParam="['o_spc-none','o_spc-small','o_spc-medium','o_spc-big']" max="3"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Columns" t-if="isActiveItem('grid_mode_opt') || isActiveItem('masonry_mode_opt')">
+        <BuilderSelect>
+            <t t-foreach="[1,2,3,4,6,12]" t-as="column" t-key="column">
+                <BuilderSelectItem action="'setImageGalleryColumns'" actionParam="column"><t t-esc="column"/></BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderContext applyTo="'.carousel'">
+        <BuilderRow label.translate="Transition">
+            <BuilderSelect >
+                <BuilderSelectItem classAction="'slide'">Slide</BuilderSelectItem>
+                <BuilderSelectItem classAction="'carousel-fade slide'">Fade</BuilderSelectItem>
+                <BuilderSelectItem classAction="'carousel-instant slide'">None</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Autoplay" level="1">
+            <BuilderSelect dataAttributeAction="'bsRide'">
+                <BuilderSelectItem id="'auto_after_first_hover'" dataAttributeActionValue="'true'">After First Hover</BuilderSelectItem>
+                <BuilderSelectItem id="'auto_always'" dataAttributeActionValue="'carousel'">Always</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'false'">Never</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+
+        <t t-if="isActiveItem('auto_after_first_hover') || isActiveItem('auto_always')">
+            <BuilderRow label.translate="Speed" level="1">
+                <BuilderNumberInput dataAttributeAction="'bsInterval'"
+                    default="10"
+                    unit="'s'"
+                    saveUnit="'ms'"
+                    step="0.1"
+                    min="1"
+                    preview="false"
+                    applyWithUnit="false"/>
+            </BuilderRow>
+        </t>
+    </BuilderContext>
+
+    <BuilderRow label.translate="Style" t-if="this.state.isSlideShow">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">Classic</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_controllers_indicators_outside'">Indicators outside</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_controllers_outside'">Outside, center</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_left'">Outside, at right</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_right'">Outside, at left</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Invert colors" level="1" t-if="this.state.isSlideShow">
+        <BuilderCheckbox applyTo="'.carousel'" classAction="'carousel-dark'"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Arrows" level="1" t-if="this.state.isSlideShow">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="'s_image_gallery_arrows_default'">Default</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_arrows_boxed'">Boxed</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_arrows_rounded'">Rounded</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_arrows_hidden'">Hidden</BuilderSelectItem>
+        </BuilderSelect>
+     </BuilderRow>
+
+    <BuilderRow label.translate="Indicators" level="1" t-if="this.state.isSlideShow">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="'s_image_gallery_indicators_bars'">Bars</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_indicators_dots'">Dots</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_indicators_numbers'">Numbers</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_indicators_squared'">Squared Miniatures</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_indicators_rounded'">Rounded Miniatures</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_indicators_hidden'">Hidden</BuilderSelectItem>
+        </BuilderSelect>
+     </BuilderRow>
+
+    <BuilderContext applyTo="'img'">
+        <BorderConfigurator label.translate="Border"/>
+    </BuilderContext>
+</t>
+<t t-name="website.s_image_gallery_slideshow">
+    <div t-attf-id="#{id}" t-attf-class="carousel slide #{colorContrast}" t-att-data-bs-ride="ride" t-attf-data-bs-interval="#{interval}" style="margin: 0 12px;">
+        <div class="carousel-inner">
+            <t t-foreach="images" t-as="image" t-key="image_index">
+                <div t-attf-class="carousel-item #{image_index == index and 'active' or None}">
+                    <t t-if="!copyAttributes">
+                        <img class="img img-fluid d-block" t-att-src="image.getAttribute('src')" t-att-alt="image.alt" data-name="Image"/>
+                    </t>
+                    <t t-else="">
+                        <t t-set="imageAttributes" t-value="Object.fromEntries([...image.attributes].map(attr => [attr.name, attr.value]))"/>
+                        <img t-att="imageAttributes"/>
+                    </t>
+                </div>
+            </t>
+        </div>
+        <div class="o_carousel_controllers">
+            <button class="carousel-control-prev o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{id}" data-bs-slide="prev" aria-label="Previous" title="Previous">
+                <span class="carousel-control-prev-icon" aria-hidden="true"/>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <div class="carousel-indicators s_image_gallery_indicators_bars">
+                <t t-foreach="images" t-as="image" t-key="image_index">
+                    <button type="button" aria-label="Carousel indicator" t-attf-data-bs-target="##{id}" t-att-data-bs-slide-to="image_index" t-att-class="image_index == index and 'active' or None" t-attf-style="background-image: url(#{image.getAttribute('src')})"/>
+                </t>
+            </div>
+            <button class="carousel-control-next o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{id}" data-bs-slide="next" aria-label="Next" title="Next">
+                <span class="carousel-control-next-icon" aria-hidden="true"/>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</t>
+
+</templates>

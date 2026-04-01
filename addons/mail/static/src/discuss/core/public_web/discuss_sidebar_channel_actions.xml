@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebarChannelActions">
+        <t t-set="partitionedActions" t-value="threadActions.partition"/>
+        <ActionList actions="[partitionedActions.quick, partitionedActions.other, ...partitionedActions.group]" dropdown="true" thread="thread"/>
+    </t>
+</templates>

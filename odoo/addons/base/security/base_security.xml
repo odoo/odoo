@@ -1,0 +1,263 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+        <!-- TODO Remove me? Ony group system -->
+        <record model="ir.rule" id="res_users_log_rule">
+            <field name="name">res.users.log per user</field>
+            <field name="model_id" ref="model_res_users_log"/>
+            <field name="domain_force">[('create_uid','=', user.id)]</field>
+            <field name="perm_read" eval="False"/>
+        </record>
+
+        <record model="ir.rule" id="res_partner_rule">
+            <field name="name">res.partner company</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <!-- We exclude partners that have internal users (`partner_share` field) from
+            the multi-company rule because it might interfere with the user's company rule
+            and make some users unselectable in relational fields. This means that partners
+            of internal users are always visible, not matter the company setting. -->
+            <field name="domain_force">['|', '|', ('partner_share', '=', False), ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]</field>
+        </record>
+
+        <record model="ir.rule" id="res_partner_portal_public_rule">
+            <field name="name">res_partner: portal/public: read access on my commercial partner</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="domain_force">[('id', 'child_of', user.commercial_partner_id.id)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_portal')), Command.link(ref('base.group_public'))]"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="perm_write" eval="False"/>
+        </record>
+
+        <record model="ir.rule" id="ir_default_user_rule">
+            <field name="name">Defaults: alter personal defaults</field>
+            <field name="model_id" ref="model_ir_default"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+        </record>
+
+        <record model="ir.rule" id="ir_default_system_rule">
+            <field name="name">Defaults: alter all defaults</field>
+            <field name="model_id" ref="model_ir_default"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="perm_read" eval="False"/>
+        </record>
+
+        <!-- Used for dashboard customizations, users should only be able to edit their own dashboards -->
+        <!-- Remove me? users never create those directly -->
+        <record model="ir.rule" id="ir_ui_view_custom_personal">
+            <field name="name">ir.ui.view_custom rule</field>
+            <field name="model_id" ref="model_ir_ui_view_custom"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+        </record>
+
+        <record id="res_partner_bank_rule" model="ir.rule">
+            <field name="name">Partner bank company rule</field>
+            <field name="model_id" ref="model_res_partner_bank"/>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        </record>
+
+        <record id="res_currency_rate_rule" model="ir.rule">
+            <field name="name">multi-company currency rate rule</field>
+            <field name="model_id" ref="model_res_currency_rate"/>
+            <field name="domain_force">['|', ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]</field>
+        </record>
+
+        <record id="change_password_rule" model="ir.rule">
+            <field name="name">change user password rule</field>
+            <field name="model_id" ref="model_change_password_user"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        </record>
+
+        <!-- Restrict modifications on ir.filters to owner only -->
+        <record id="ir_filters_admin_all_rights_rule" model="ir.rule">
+            <field name="name">ir.filters.admin.all.rights</field>
+            <field name="model_id" ref="model_ir_filters"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_erp_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="ir_filters_employee_rule" model="ir.rule">
+            <field name="name">ir.filter: owner or global</field>
+            <field name="model_id" ref="model_ir_filters"/>
+            <field name="domain_force">[('user_ids','in',[False,user.id])]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="ir_filters_portal_public_rule" model="ir.rule">
+            <field name="name">ir.filter: portal/public</field>
+            <field name="model_id" ref="model_ir_filters"/>
+            <field name="domain_force">[('user_ids', 'in', user.ids)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_portal')), Command.link(ref('base.group_public'))]"/>
+        </record>
+
+        <!-- Record Rules For Company -->
+        <record id="res_company_rule_portal" model="ir.rule">
+            <field name="name">company rule portal</field>
+            <field name="model_id" ref="model_res_company"/>
+            <field eval="False" name="global"/>
+            <field name="groups" eval="[Command.set([ref('base.group_portal')])]"/>
+            <field name="domain_force">[('id','in', company_ids)]</field>
+        </record>
+        <record id="res_company_rule_employee" model="ir.rule">
+            <field name="name">company rule employee</field>
+            <field name="model_id" ref="model_res_company"/>
+            <field eval="False" name="global"/>
+            <field name="groups" eval="[Command.set([ref('base.group_user')])]"/>
+            <field name="domain_force">[('id','in', company_ids)]</field>
+        </record>
+        <record id="res_company_rule_public" model="ir.rule">
+            <field name="name">company rule public</field>
+            <field name="model_id" ref="model_res_company"/>
+            <field eval="False" name="global"/>
+            <field name="groups" eval="[Command.set([ref('base.group_public')])]"/>
+            <field name="domain_force">[('id','in', company_ids)]</field>
+        </record>
+        <record id="res_company_rule_erp_manager" model="ir.rule">
+            <field name="name">company rule erp manager</field>
+            <field name="model_id" ref="model_res_company"/>
+            <field eval="False" name="global"/>
+            <field name="groups" eval="[Command.set([ref('base.group_erp_manager')])]"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+        </record>
+
+        <record id="res_users_identity_check" model="ir.rule">
+            <field name="name">users can only access their own id check</field>
+            <field name="model_id" ref="model_res_users_identitycheck"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        </record>
+
+        <!-- Record Rule For User -->
+        <record id="res_users_rule" model="ir.rule">
+            <field name="name">user rule</field>
+            <field name="model_id" ref="model_res_users"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|', ('share', '=', False), ('company_ids', 'in', company_ids)]</field>
+        </record>
+
+        <record id="res_users_rule_portal" model="ir.rule">
+            <field name="name">portal user access</field>
+            <field name="model_id" ref="model_res_users"/>
+            <field name="groups" eval="[Command.set([ref('base.group_portal')])]"/>
+            <field name="domain_force">[('commercial_partner_id', '=', user.commercial_partner_id.id)]</field>
+        </record>
+
+        <record id="change_password_own_rule" model="ir.rule">
+            <field name="name">change own password</field>
+            <field name="model_id" ref="model_change_password_own"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        </record>
+
+        <!-- Record Rule For User settings -->
+        <record id="res_users_settings_rule_admin" model="ir.rule">
+            <field name="name">Administrators can access all User Settings.</field>
+            <field name="model_id" ref="model_res_users_settings"/>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="res_users_settings_rule_user" model="ir.rule">
+            <field name="name">res.users.settings: access their own entries</field>
+            <field name="model_id" ref="model_res_users_settings"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- rules for API token -->
+        <record id="api_key_public" model="ir.rule">
+            <field name="name">Public users can't interact with keys at all</field>
+            <field name="model_id" ref="model_res_users_apikeys"/>
+            <field name="domain_force">[(0, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_public'))]"/>
+        </record>
+        <record id="api_key_user" model="ir.rule">
+            <field name="name">Users can read and delete their own keys</field>
+            <field name="model_id" ref="model_res_users_apikeys"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="groups" eval="[
+                Command.link(ref('base.group_portal')),
+                Command.link(ref('base.group_user')),
+            ]"/>
+        </record>
+        <record id="api_key_admin" model="ir.rule">
+            <field name="name">Administrators can view user keys to revoke them</field>
+            <field name="model_id" ref="model_res_users_apikeys"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+        </record>
+
+        <!-- rules for embedded actions -->
+        <record id="embedded_action_user_delete_rule" model="ir.rule">
+            <field name="name">Users can modify or delete embedded actions that they have created or that are shared</field>
+            <field name="model_id" ref="model_ir_embedded_actions"/>
+            <field name="domain_force">[('user_id', 'in', [user.id, False])]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+         <record id="embedded_action_admin_delete_rule" model="ir.rule">
+            <field name="name">Admins have all the rights on embedded actions</field>
+            <field name="model_id" ref="model_ir_embedded_actions"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Record Rules For User Devices -->
+        <record id="user_device" model="ir.rule">
+            <field name="name">Users can read only their own devices</field>
+            <field name="model_id" ref="model_res_device"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+        </record>
+        <record id="user_device_admin" model="ir.rule">
+            <field name="name">Administrators can read all devices</field>
+            <field name="model_id" ref="model_res_device"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+        </record>
+
+        <record id="user_device_logs" model="ir.rule">
+            <field name="name">Users can read only their own device logs</field>
+            <field name="model_id" ref="model_res_device_log"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+        </record>
+        <record id="user_device_logs_admin" model="ir.rule">
+            <field name="name">Administrators can read all device logs</field>
+            <field name="model_id" ref="model_res_device_log"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+        </record>
+
+        <record id="properties_base_definition_rule_admin" model="ir.rule">
+            <field name="name">properties.base.definition: system all access</field>
+            <field name="model_id" ref="base.model_properties_base_definition"/>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+    </data>
+</odoo>

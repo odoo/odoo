@@ -1,0 +1,26 @@
+
+.s_hr {
+    line-height: 0;
+
+    hr {
+        padding: 0;
+        margin: 0;
+        // Bootstrap sets an "opacity" on hr elements, it is removed here to let
+        // users set the color as they want with the editor.
+        opacity: 1;
+    }
+}
+
+// Allows clicking on the separator when it has no padding and has a low height.
+.editor_enable .s_hr {
+    position: relative;
+
+    &::after {
+        content: '';
+        @include o-position-absolute(50%, 0, 0, 0);
+        z-index: 1;
+        transform: translateY(-50%);
+        height: 6px;
+        padding: inherit;
+    }
+}

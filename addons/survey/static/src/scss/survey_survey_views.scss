@@ -1,0 +1,134 @@
+// KANBAN VIEW
+.o_survey_view_kanban_view .o_kanban_renderer {
+    // Common: left semi-trophy icon for certifications
+    .o_survey_kanban_card_certification {
+        background-image:
+            linear-gradient(rgba($o-view-background-color,.75),
+                            rgba($o-view-background-color,.75)),
+            url(/survey/static/src/img/trophy-solid.svg);
+        background-repeat: no-repeat;
+        background-position: bottom 6px left -45px;
+        background-size: 100%, 100px;
+    }
+
+    // Grouped / Ungrouped sections hidding
+    &.o_kanban_grouped {
+        .row > div {
+            flex: 1 1 100% !important;
+            max-width: 100% !important;
+            padding-left: 0 !important;
+            &.col-6 {
+                flex: 1 1 50% !important;
+                max-width: 50% !important;
+            }
+            &.d-none {
+                display: none !important; //forcing the d-none to override the d-lg or d-sm classes for grouped view
+            }
+        }
+    }
+
+    // Ungrouped display: whole length (kanban-list)
+    &.o_kanban_ungrouped {
+        padding: 0px;
+
+        .o_kanban_record {
+            width: 100%;
+            margin: 0px;
+        }
+
+        .o_survey_kanban_card {
+            border-top: 0px !important;
+        }
+    }
+
+    // Grouped specific
+    &.o_kanban_grouped {
+        // Due to activity widget crashing if present twice, have to set absolute and tweak
+        .o_survey_kanban_card_bottom {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+    }
+
+    // Ungrouped specific
+    &.o_kanban_ungrouped {
+        // Set a minimal height otherwise display may have different card sized
+        .o_survey_kanban_card > div.row {
+                min-height: 60px;
+        }
+
+        // Left semi-trophy icon for certifications: tweak display for list view
+        .o_survey_kanban_card_certification {
+            background-position: center left -35px;
+            background-size: auto 75%;
+        }
+
+        // Due to activity widget crashing if present twice, have to set absolute and tweak
+        .o_survey_kanban_card_bottom {
+            position: absolute;
+            bottom: 4px;
+            right: 19px;
+            @include media-breakpoint-down(lg) {
+                bottom: 19px;
+                right: 0;
+            }
+            @include media-breakpoint-down(sm) {
+                bottom: 10px;
+                right: 10px;
+            }
+        }
+    }
+
+    // RIBBON: Kanban specific
+    // Ungrouped specific
+    .o_survey_kanban_card {
+        .ribbon {
+            --Ribbon-wrapper-width: 6rem;
+
+            @include media-breakpoint-down(md) {
+                --Ribbon-wrapper-width: 6.5rem;
+            }
+        }
+    }
+}
+
+// FORM view
+.o_survey_form table.o_section_list_view tr.o_data_row.o_is_section {
+    font-weight: bold;
+    background-color: var(--SurveyForm__section-background-color, #DDD);
+    border-top: 1px solid #BBB;
+    border-bottom: 1px solid #BBB;
+
+    > td {
+        background: transparent;
+    }
+}
+.o_survey_form table.o_section_list_view tr.o_data_row.o_is_section {
+    &:hover i {
+        visibility: visible;
+    }
+    &:not(:hover) i {
+        visibility: hidden;
+    }
+}
+
+// TOOLS
+.icon_rotates {
+    transform: rotate(180deg);
+}
+
+/* Style of the tiles allowing the user to load a sample survey. */
+
+.o_survey_sample_card:hover {
+    background: var(--SurveySampleCard-background-hover, #{$o-gray-200});
+}
+
+.o_form_label.o_form_label_readonly.o_survey_label_survey_start_url{
+    opacity: 100;
+    font-weight: 500;
+}
+
+.o_nocontent_help:has(.o_survey_load_sample) {
+    max-width: unset !important;
+}

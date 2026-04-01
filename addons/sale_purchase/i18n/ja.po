@@ -1,0 +1,250 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_purchase
+#
+# Translators:
+# Martin Trigaux, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-09-14 21:20+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"sale_purchase/ja/>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid ""
+".\n"
+"            Manual actions may be needed."
+msgstr ""
+"。\n"
+"            マニュアルでのフォローが必要かもしれません。"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
+msgid "<span class=\"o_stat_text\">Sale</span>"
+msgstr "<span class=\"o_stat_text\">販売</span>"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__display_name
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid "Exception(s) occurred on the purchase order(s):"
+msgstr "購買オーダに例外が起こりました:"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+msgid "Exception(s) occurred on the sale order(s):"
+msgstr "販売オーダに例外が起こりました:"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid "Exception(s):"
+msgstr "例外:"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_ids
+msgid "Generated Purchase Lines"
+msgstr "生成された購買明細"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__id
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__id
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__id
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_purchase
+#: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
+#: model:ir.model.fields,help:sale_purchase.field_product_template__service_to_purchase
+msgid ""
+"If ticked, each time you sell this product through a SO, a RfQ is "
+"automatically created to buy the product. Tip: don't forget to set a vendor "
+"on the product."
+msgstr ""
+"チェックを入れると、この製品を販売注文で販売するたびに、その製品を購入するた"
+"めのRFQが自動的に作成されます。ヒント：製品に仕入先を設定することを忘れないで"
+"ください。"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+msgid "Manual actions may be needed."
+msgstr "マニュアルでのフォローが必要かもしれません。"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
+msgid "Number of Purchase Order Generated"
+msgstr "生成された購買オーダの数"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__sale_order_count
+msgid "Number of Source Sale"
+msgstr "ソース販売数"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_count
+msgid "Number of generated purchase items"
+msgstr "生成された購買項目数"
+
+#. module: sale_purchase
+#. odoo-python
+#: code:addons/sale_purchase/models/sale_order_line.py:0
+msgid "Ordered quantity decreased!"
+msgstr "注文数量が減少しました！"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_line_id
+msgid "Origin Sale Item"
+msgstr "元の販売項目"
+
+#. module: sale_purchase
+#. odoo-python
+#: code:addons/sale_purchase/models/product_template.py:0
+msgid ""
+"Please define the vendor from whom you would like to purchase this service "
+"automatically."
+msgstr "このサービスを自動的に購入したい仕入先を指定して下さい。"
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_product_template
+msgid "Product"
+msgstr "プロダクト"
+
+#. module: sale_purchase
+#. odoo-python
+#: code:addons/sale_purchase/models/product_template.py:0
+msgid "Product that is not a service can not create RFQ."
+msgstr "サービスでないプロダクトは見積依頼を作成できません。"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
+msgid "Purchase"
+msgstr "購買"
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_purchase_order
+msgid "Purchase Order"
+msgstr "購買オーダ"
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "購買オーダ明細"
+
+#. module: sale_purchase
+#. odoo-python
+#: code:addons/sale_purchase/models/sale_order.py:0
+msgid "Purchase Order generated from %s"
+msgstr "%sから生成された購買オーダ"
+
+#. module: sale_purchase
+#: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
+msgid ""
+"Purchase line generated by this Sales item on order confirmation, or when "
+"the quantity was increased."
+msgstr ""
+"受注確認時、または数量が増加したときに、この販売明細によって生成された購買明"
+"細。"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
+msgid "Reordering"
+msgstr "再オーダ"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_order_id
+msgid "Sale Order"
+msgstr "販売オーダ"
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_sale_order
+msgid "Sales Order"
+msgstr "販売オーダ"
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "販売オーダ明細"
+
+#. module: sale_purchase
+#. odoo-python
+#: code:addons/sale_purchase/models/purchase_order.py:0
+msgid "Sources Sale Orders %s"
+msgstr "ソース販売オーダ%s"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
+msgid "Subcontract Service"
+msgstr "外注サービス"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__has_sale_order
+msgid ""
+"Technical field for whether the purchase order has associated sale orders"
+msgstr "購買オーダに関連付けられている販売オーダがあるかどうかの技術設定"
+
+#. module: sale_purchase
+#. odoo-python
+#: code:addons/sale_purchase/models/sale_order_line.py:0
+msgid ""
+"There is no vendor associated to the product %s. Please define a vendor for "
+"this product."
+msgstr ""
+"プロダクト %s に仕入先が紐付けられていません。プロダクトに仕入先を設定してく"
+"ださい。"
+
+#. module: sale_purchase
+#. odoo-python
+#: code:addons/sale_purchase/models/sale_order_line.py:0
+msgid ""
+"You are decreasing the ordered quantity! Do not forget to manually update "
+"the purchase order if needed."
+msgstr ""
+"注文数量を減らしています！必要に応じて、忘れず購買オーダを手動で更新して下さ"
+"い！"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid "cancelled"
+msgstr "キャンセル済"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid "of"
+msgstr "の"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+msgid "ordered instead of"
+msgstr "が次の数量の代わりにオーダされました:"
+
+#~ msgid "Sales Order Cancel"
+#~ msgstr "受注キャンセル"

@@ -1,0 +1,176 @@
+.o_add_snippets_preview {
+    overflow: hidden;
+
+    > body {
+        overflow-x: hidden;
+        overflow-y: auto;
+        width: 30%;
+        height: 30%;
+        background-color: unset;
+        scrollbar-gutter: stable both-edges;
+    }
+    .o_snippets_preview_row {
+        position: absolute; // Needed for RTL
+        transform: scale(0.3);
+        transform-origin: top left;
+        width: 333%;
+        height: 100%;
+
+        .o_snippet_preview_wrap {
+            min-height: 100px;
+            box-shadow: 0 0 6rem rgba(0, 0, 0, 0.16);
+            margin: map-get($spacers, 5) (map-get($spacers, 5) * .5) (map-get($spacers, 3) * 4);
+            background-color: var(--body-bg);
+            transform: scale(.98);
+            cursor: pointer;
+
+            [data-snippet="s_carousel"],
+            [data-snippet="s_carousel_intro"],
+            [data-snippet="s_carousel_cards"],
+            [data-snippet="s_quotes_carousel_minimal"],
+            [data-snippet="s_quotes_carousel"],
+            [data-snippet="s_quotes_carousel_compact"] {
+                .carousel-inner, .carousel-inner > .carousel-item {
+                    height: fit-content;
+                }
+            }
+            [data-snippet="s_three_columns"] .figure-img[style*="height:50vh"] {
+                /* In Travel theme. */
+                height: 500px !important;
+            }
+            [data-snippet="s_numbers_charts"] .s_chart {
+                display: none;
+            }
+            [data-snippet="s_banner_product"] .s_parallax_bg {
+                // Disable the parallax effect entirely. By default the effect
+                // is very subtle and showcasing it in the preview is not
+                // representative of the actual result.
+                //
+                // Note: in master this code should be moved into the
+                // 'html_builder.iframe_add_dialog' bundle
+                background-position: top !important;
+                transform: none !important;
+                inset: 0 !important;
+            }
+            .o_full_screen_height, .o_half_screen_height {
+                height: unset !important;
+                min-height: unset !important;
+            }
+            .o_full_screen_height {
+                aspect-ratio: 4 / 3;
+            }
+            .o_half_screen_height {
+                aspect-ratio: 8 / 3;
+            }
+            [inert="inert"] > [data-snippet] {
+                isolation: isolate;
+
+                &[data-snippet="s_text_block"] {
+                    font-size: 1.6rem;
+                }
+
+                &.s_popup {
+                    min-height: 660px;
+
+                    > .modal {
+                        --black-50: rgba(0, 0, 0, 0.25) !important;
+                        display: block;
+                        opacity: 1;
+                        position: absolute;
+
+                        .modal-dialog {
+                            transform: none;
+                        }
+                        .modal-content {
+                            box-shadow: 0rem 3.5rem 12rem rgba(0, 0, 0, 0.6);
+                        }
+                    }
+                }
+            }
+            &[data-label]:not([data-label=""])::before {
+                content: attr(data-label);
+                @include o-position-absolute(0, 0);
+                z-index: 1;
+                transform-origin: top right;
+                transform: scale(3.4);
+                font-family: $o-we-font-family;
+                font-size: $o-we-sidebar-font-size;
+                background-color: $o-we-toolbar-color-accent;
+                color: white;
+                padding: 6px 12px;
+                border-bottom-left-radius: 5px;
+            }
+            &::after {
+                content: "";
+                @include o-position-absolute(0, 0, 0, 0);
+                outline: 6px solid transparent;
+                pointer-events: none;
+                z-index: 1;
+            }
+            &:hover, &:focus-visible {
+                box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2);
+                &::after {
+                    outline: 6px solid $o-we-handles-accent-color;
+                }
+            }
+            &.o_snippet_preview_install {
+                .s_dialog_preview_image {
+                    filter: saturate(0) blur(5px);
+                }
+                &:hover, &:focus-within {
+                    .s_dialog_preview_image {
+                        opacity: 1;
+                        filter: saturate(0) brightness(0.6) blur(5px);
+                    }
+                     > .o_snippet_preview_install_btn {
+                        opacity: 1;
+                     }
+                }
+
+                &:focus-within > .o_snippet_preview_install_btn {
+                    outline: 6px solid $o-we-handles-accent-color;
+                }
+
+                > .o_snippet_preview_install_btn {
+                    z-index: 1;
+                    @include o-position-absolute(auto, 0, 0, 0);
+                    opacity: 0;
+                    transform: scale(3.33);
+                    width: max-content;
+                    font-size: 14px;
+                    font-family: $o-we-font-family;
+                    background-color: $o-we-color-info;
+                    transition: 0.3s;
+                }
+            }
+            .s_dialog_preview_image {
+                display: flex;
+                flex-direction: column;
+                img {
+                    max-width: 100%;
+                }
+            }
+
+            .o_animate {
+                visibility: visible;
+                animation-name: none;
+            }
+        }
+
+        .o_custom_snippet_edit {
+            > * {
+                font-size: 50px;
+                font-family: $o-we-font-family;
+            }
+            .btn:hover {
+                color: rgba(0, 0, 0, 0.8);
+            }
+        }
+    }
+
+    &.o_add_snippets_preview--dark {
+        .o_custom_snippet_edit {
+            color: $white;
+        }
+    }
+}

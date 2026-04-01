@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <template id="address_form_fields" inherit_id="portal.address_form_fields">
+        <div id="div_state" position="after">
+            <t t-if="res_company.country_id.code == 'PE'">
+                <div
+                    id="div_city_id"
+                    class="col-lg-6 mb-3"
+                    t-att-style="(country and country.code != 'PE') and 'display:none;'"
+                >
+                    <label class="col-form-label" for="city_id">City</label>
+                    <select id="city_id" name="city_id" class="form-select" data-init="1">
+                        <option value="">City...</option>
+                        <option
+                            t-foreach="state_cities"
+                            t-as="city"
+                            t-att-value="city.id"
+                            t-att-selected="city.id == partner_sudo.city_id.id"
+                            t-out="city.name"
+                        />
+                    </select>
+                </div>
+
+                <div
+                    id="div_district"
+                    class="col-lg-6 mb-3"
+                    t-att-style="((country and country.code != 'PE') or not city) and 'display:none;'"
+                >
+                    <label class="col-form-label" for="l10n_pe_district">District</label>
+                    <select
+                        id="l10n_pe_district"
+                        name="l10n_pe_district"
+                        class="form-select"
+                        data-init="1"
+                    >
+                        <option value="">District...</option>
+                        <option
+                            t-foreach="city_districts"
+                            t-as="district"
+                            t-att-value="district.id"
+                            t-att-selected="district.id == partner_sudo.l10n_pe_district.id"
+                            t-out="district.name"
+                        />
+                    </select>
+                </div>
+            </t>
+        </div>
+    </template>
+
+</odoo>

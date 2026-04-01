@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="res_users_apikeys_view_kanban">
+            <field name="name">res.users.apikeys.kanban</field>
+            <field name="model">res.users.apikeys</field>
+            <field name="arch" type="xml">
+                <kanban create="0" can_open="0">
+                    <templates>
+                        <t t-name="card" class="flex-row">
+                            <div>
+                                <div>
+                                    <field name="name" class="fw-bold fs-5"/>
+                                    <field name="create_date" class="ms-2 text-muted"/>
+                                </div>
+                                <small invisible="not scope">Scope: <field name="scope"/></small>
+                                <small>Expires on: <field name="expiration_date"/></small>
+                            </div>
+                            <button name="remove" type="object" string="Delete" class="btn btn-secondary ms-auto mb-auto my-auto"/>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+    </data>
+</odoo>

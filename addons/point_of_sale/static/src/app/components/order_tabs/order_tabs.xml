@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.OrderTabs">
+        <ListContainer items="props.orders.toSorted((a, b) => a.getName().localeCompare(b.getName()))"
+            onClickPlus="() => this.newFloatingOrder()"
+            t-slot-scope="scope"
+            class="props.class"
+            forceSmall="ui.isSmall and !env.inDialog"
+        >
+            <t t-set="order" t-value="scope.item" />
+            <div class="floating-order-container position-relative">
+                <button t-esc="order.getName()"
+                    t-att-class="{ 'active': pos.getOrder()?.id === order.id }"
+                    t-attf-class="{{`o_colorlist_item_color_transparent_${order.preset_id?.color}`}}"
+                    class="btn btn-lg btn-secondary text-truncate mx-1 border-transparent"
+                    style="min-width: 4rem;"
+                    t-on-click="() => this.selectFloatingOrder(order)"
+                />
+            </div>
+        </ListContainer>
+    </t>
+</templates>

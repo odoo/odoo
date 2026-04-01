@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.BlockquoteOption">
+    <!-- Layout -->
+    <BuilderRow label.translate="Edge Spacing">
+        <BuilderRange action="'setClassRange'" actionParam="['p-1','p-2','p-3','p-4','p-5']" max="4"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Decoration">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="'s_blockquote_default'">None</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_blockquote_with_line'" id="'blockquote_with_line_opt'">Left line</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_blockquote_with_icon'">Icon</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Style" applyTo="'.s_blockquote_line_elt'" level="1" t-if="this.isActiveItem('blockquote_with_line_opt')">
+        <BuilderNumberInput styleAction="'width'" min="0" unit="'px'"/>
+        <BuilderColorPicker styleAction="'background-color'" enabledTabs="['solid', 'custom', 'gradient']"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Author Alignment" applyTo="':scope > .s_blockquote_infos'">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="'flex-row align-items-start justify-content-start text-start'">Left</BuilderSelectItem>
+            <BuilderSelectItem classAction="'flex-column align-items-center text-center'">Center</BuilderSelectItem>
+            <BuilderSelectItem classAction="'flex-row-reverse align-items-start justify-content-start text-end'">Right</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BorderConfigurator label.translate="Border"/>
+    <ShadowOption/>
+</t>
+
+</templates>

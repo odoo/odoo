@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="slide.course.join" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o_wslides_js_course_join_link')]" position="inside">
+            <t t-if="widget.channel.channelEnroll == 'payment'">
+                <t t-if="widget.publicUser">
+                    Sign in
+                </t>
+                <t t-else="">
+                    Buy this Course
+                </t>
+            </t>
+        </xpath>
+    </t>
+</templates>

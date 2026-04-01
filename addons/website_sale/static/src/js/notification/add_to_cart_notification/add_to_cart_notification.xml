@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_sale.addToCartNotification">
+        <div
+            class="d-flex flex-column gap-2 mb-2 mt-1"
+            t-foreach="mainLines"
+            t-as="line"
+            t-key="line.id"
+        >
+            <t t-call="website_sale.cartLine"/>
+        </div>
+        <a role="button" class="w-100 btn btn-primary" href="/shop/cart">
+            View cart
+        </a>
+    </t>
+
+    <t t-name="website_sale.cartLine">
+        <div class="d-flex gap-3">
+            <div class="position-relative">
+                <div class="o_cart_product_image">
+                    <img
+                        class="img o_image_64_max rounded mb-2 img-fluid"
+                        t-att-src="line.image_url"
+                        t-att-alt="line.name"
+                    />
+                </div>
+                <span
+                    class="o_cart_item_count badge bg-secondary position-absolute top-0 start-100 translate-middle"
+                    t-out="line.quantity"
+                />
+            </div>
+            <div class="d-flex flex-column align-items-start flex-grow-1">
+                <span t-out="line.name"/>
+                <span
+                    t-if="line.combination_name"
+                    class="text-muted small"
+                    t-out="line.combination_name"
+                />
+                <span t-if="line.description" class="text-muted small" t-out="line.description"/>
+                <span t-out="line.uom_name" class="badge mt-1 bg-light"/>
+            </div>
+            <div
+                class="col-3 d-flex flex-column align-items-end gap-1"
+                t-if="!line.linked_line_id"
+                t-out="getFormattedPrice(line)"
+            />
+        </div>
+        <div
+            class="d-flex ps-5"
+            t-foreach="getLinkedLines(line.id)"
+            t-as="linkedLine"
+            t-key="linkedLine.id"
+        >
+            <t t-call="website_sale.cartLine">
+                <t t-set="line" t-value="linkedLine"/>
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template
+        id="website_sale_mass_mailing.newsletter"
+        inherit_id="website_sale.address_form_fields"
+        name="Newsletter"
+        active="False"
+    >
+         <div id="div_phone" position="after">
+            <div t-if="is_anonymous_cart" class="mb-2">
+                <label>
+                    <input
+                        type="checkbox"
+                        name="newsletter"
+                        class="form-check-input label-optional"
+                    /> Subscribe to our newsletter for updates and exclusive offers.
+                </label>
+            </div>
+        </div>
+    </template>
+
+</odoo>

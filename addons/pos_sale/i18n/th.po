@@ -1,0 +1,536 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_sale
+#
+# Translators:
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
+# Martin Trigaux, 2022
+# Wichanon Jamwutthipreecha, 2022
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"PO-Revision-Date: 2025-09-16 21:15+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/pos_sale/th/"
+">\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/sale_order.py:0
+msgid "%(line_description)s (Cancelled)"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/account_move.py:0
+msgid "%(old_name)s (Cancelled)"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
+msgid "(tax incl.)"
+msgstr "(รวมภาษี)"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
+msgid "<span style=\"margin: 0px 5px;\">:</span>"
+msgstr "<span style=\"margin: 0px 5px;\">:</span>"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "A new order has been created."
+msgstr "มีการสร้างคำสั่งซื้อใหม่แล้ว"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
+msgid "Amount To Pay In POS"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
+msgid "Amount left to pay in POS to avoid double payment or double invoicing."
+msgstr ""
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "Apply a down payment (fixed amount)"
+msgstr "ใช้เงินดาวน์ (จำนวนเงินคงที่)"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "Apply a down payment (percentage)"
+msgstr "วางเงินดาวน์ (เปอร์เซ็นต์)"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_res_config_settings
+msgid "Config Settings"
+msgstr "ตั้งค่าการกำหนดค่า"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model,website_form_label:pos_sale.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
+msgid "Currency Rate"
+msgstr "อัตราแลกเปลี่ยน"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.message_body
+msgid "Delivered from"
+msgstr "จัดส่งจาก"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__qty_delivered
+msgid "Delivery Quantity"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_product_template__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_res_partner__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_stock_picking__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "Do you want to load the SN/Lots linked to the Sales Order?"
+msgstr "คุณต้องการโหลด SN/ล็อต ที่เชื่อมโยงกับคำสั่งขายหรือไม่?"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "Down Payment"
+msgstr "เงินดาวน์"
+
+#. module: pos_sale
+#: model:product.template,name:pos_sale.default_downpayment_product_product_template
+msgid "Down Payment (POS)"
+msgstr "เงินดาวน์ (POS)"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__down_payment_details
+msgid "Down Payment Details"
+msgstr "รายละเอียดเงินดาวน์"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__down_payment_product_id
+#: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_down_payment_product_id
+#: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
+msgid "Down Payment Product"
+msgstr "เงินดาวน์สินค้า"
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/sale_order.py:0
+msgid ""
+"Down payment (ref: %(order_reference)s on \n"
+" %(date)s)"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "Due balance: %s"
+msgstr "ยอดเงินคงเหลือ: %s"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
+msgid "From"
+msgstr "จาก"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_account_move__id
+#: model:ir.model.fields,field_description:pos_sale.field_account_move_line__id
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_sale.field_product_template__id
+#: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__id
+#: model:ir.model.fields,field_description:pos_sale.field_res_partner__id
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__id
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__id
+#: model:ir.model.fields,field_description:pos_sale.field_stock_picking__id
+msgid "ID"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
+msgid "Invoiced"
+msgstr "ออกใบแจ้งหนี้แล้ว"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid ""
+"It seems that you didn't configure a down payment product in your point of "
+"sale. You can go to your point of sale configuration to choose one."
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_account_move_line
+msgid "Journal Item"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/sale_order.py:0
+msgid "Linked POS Orders"
+msgstr "เชื่อมต่อคำสั่งซื้อ POS"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_origin_id
+msgid "Linked Sale Order"
+msgstr "เชื่อมต่อคำสั่งขาย"
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/pos_order.py:0
+msgid "Linked Sale Orders"
+msgstr "เชื่อมต่อคำสั่งขาย"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "No down payment product"
+msgstr "สินค้าไม่มีเงินดาวน์"
+
+#. module: pos_sale
+#: model:ir.actions.act_window,name:pos_sale.pos_session_action_from_crm_team
+msgid "Open Sessions"
+msgstr "เปิดเซสชั่น"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__order_reference
+msgid "Order"
+msgstr "คำสั่ง"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_line_ids
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__pos_order_line_ids
+msgid "Order lines Transfered to Point of Sale"
+msgstr "รายการคำสั่งซื้อที่โอนไปยังระบบขายหน้าร้าน"
+
+#. module: pos_sale
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
+msgid "POS Order"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
+msgid "Paid"
+msgstr "ชำระแล้ว"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "กำหนดค่าการขายหน้าร้าน"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr "รายการคำสั่งซื้อการขายหน้าร้าน"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "คำสั่งซื้อการขายหน้าร้าน"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_session
+msgid "Point of Sale Session"
+msgstr "เซสชั่นการขายหน้าร้าน"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_config_ids
+msgid "Point of Sales"
+msgstr "การขายหน้าร้าน"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_count
+msgid "Pos Order Count"
+msgstr "จำนวนคำสั่งซื้อ Pos"
+
+#. module: pos_sale
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__done
+msgid "Posted"
+msgstr "โพสต์"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_product_template
+msgid "Product"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/components/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "Quotation/Order"
+msgstr "ใบเสนอราคา/คำสั่งซื้อ"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "SN/Lots Loading"
+msgstr "กำลังโหลด SN/ล็อต"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
+msgid "SO"
+msgstr "SO"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__sale_order_count
+msgid "Sale Order Count"
+msgstr "จำนวนคำสั่งขาย"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
+msgid "Sales"
+msgstr "การขาย"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_sale_report
+msgid "Sales Analysis Report"
+msgstr "รายงานวิเคราะห์การขาย"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_sale_order
+msgid "Sales Order"
+msgstr "คำสั่งขาย"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "รายการคำสั่งขาย"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_crm_team
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__crm_team_id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__crm_team_id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session__crm_team_id
+#: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
+msgid "Sales Team"
+msgstr "ทีมขาย"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_crm_team_id
+msgid "Sales Team (PoS)"
+msgstr "ทีมขาย (PoS)"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
+msgid "Sales are reported to the following sales team"
+msgstr "มีการรายงานยอดขายไปยังทีมขายต่อไปนี้"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/components/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "Set Sale Order"
+msgstr "ตั้งค่าคำสั่งขาย"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "Settle the order"
+msgstr "ชำระคำสั่งซื้อ"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_id
+msgid "Source Sale Order Line"
+msgstr "แหล่งที่มาของรายการคำสั่งขาย"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__state
+msgid "Status"
+msgstr "สถานะ"
+
+#. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
+msgid ""
+"The rate of the currency to the currency of rate applicable at the date of "
+"the order"
+msgstr "อัตราของสกุลเงินต่ออีกสกุลเงินของอัตราที่ใช้ในวันที่สั่งซื้อ"
+
+#. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
+#: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
+#: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_crm_team_id
+msgid "This Point of sale's sales will be related to this Sales Team."
+msgstr "จุดขายนี้จะเกี่ยวข้องกับทีมขายนี้"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
+msgid "This product will be applied when down payment is made"
+msgstr "สินค้านี้จะถูกนำไปใช้เมื่อชำระเงินดาวน์"
+
+#. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
+#: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_down_payment_product_id
+msgid "This product will be used as down payment on a sale order."
+msgstr "สินค้านี้จะใช้เป็นเงินดาวน์สำหรับคำสั่งขาย"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_stock_picking
+msgid "Transfer"
+msgstr ""
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
+msgid ""
+"Transferred<br/>\n"
+"                                from Sale"
+msgstr ""
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
+msgid ""
+"Transferred<br/>\n"
+"                            to POS"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "Warning for %s"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "What do you want to do?"
+msgstr "คุณอยากทำอะไร?"
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/pos_order.py:0
+#: code:addons/pos_sale/models/sale_order.py:0
+msgid "id"
+msgstr ""
+
+#~ msgid "Back"
+#~ msgstr "กลับ"
+
+#~ msgid "Back to list"
+#~ msgstr "กลับไปที่รายการ"
+
+#~ msgid "Cancelled"
+#~ msgstr "ยกเลิก"
+
+#~ msgid "Customer"
+#~ msgstr "ลูกค้า"
+
+#~ msgid "Date"
+#~ msgstr "วันที่"
+
+#~ msgid "E.g. customer: Steward, date: 2020-05-09"
+#~ msgstr "เช่น ลูกค้า: Steward วันที่: 2020-05-09"
+
+#~ msgid "Locked"
+#~ msgstr "ล็อก"
+
+#~ msgid "New"
+#~ msgstr "ใหม่"
+
+#~ msgid "Next Order List"
+#~ msgstr "รายการคำสั่งถัดไป"
+
+#~ msgid "No"
+#~ msgstr "ไม่"
+
+#~ msgid "Open POS Sessions"
+#~ msgstr "เปิดเซสชั่น POS"
+
+#~ msgid "Previous Order List"
+#~ msgstr "รายการคำสั่งก่อนหน้า"
+
+#~ msgid "Products not available in POS"
+#~ msgstr "สินค้าไม่มีใน POS"
+
+#~ msgid "Quotation"
+#~ msgstr "ใบเสนอราคา"
+
+#~ msgid "Quotation Sent"
+#~ msgstr "ส่งใบเสนอราคาแล้ว"
+
+#~ msgid "Salesman"
+#~ msgstr "พนักงานขาย"
+
+#~ msgid "Salesperson"
+#~ msgstr "พนักงานขาย"
+
+#~ msgid "Session Running"
+#~ msgstr "เซสชั่นที่กำลังทำงาน"
+
+#~ msgid "Session Sale Amount"
+#~ msgstr "จำนวนเซสชั่นการขาย"
+
+#~ msgid "Sessions Running"
+#~ msgstr "เซสชั่นที่กำลังทำงาน"
+
+#~ msgid ""
+#~ "Some of the products in your Sale Order are not available in POS, do you "
+#~ "want to import them?"
+#~ msgstr "สินค้าบางรายการในคำสั่งขายของคุณไม่มีใน POS คุณต้องการนำเข้าหรือไม่?"
+
+#~ msgid "State"
+#~ msgstr "รัฐ"
+
+#~ msgid "Total"
+#~ msgstr "รวม"
+
+#~ msgid ""
+#~ "Transfered<br/>\n"
+#~ "                                from Sale"
+#~ msgstr ""
+#~ "โอน<br/>\n"
+#~ "                                จากการขาย"
+
+#~ msgid ""
+#~ "Transfered<br/>\n"
+#~ "                                to POS"
+#~ msgstr ""
+#~ "โอน<br/>\n"
+#~ "                                ไปที่ POS"
+
+#~ msgid "Yes"
+#~ msgstr "ใช่"

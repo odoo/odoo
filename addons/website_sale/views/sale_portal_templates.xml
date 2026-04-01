@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="sale_order_portal_content_inherit_website_sale" name="Orders Followup Products Links" inherit_id="sale.sale_order_portal_content">
+        <div name="sol_table" position="attributes">
+            <attribute name="class" remove="table-responsive" separator=" "/>
+        </div>
+        <span name="span_product_name" position="replace">
+            <a t-if="line.product_id.website_published" t-att-href="line.product_id.website_url" class="d-block text-wrap" style="max-width: 35vw">
+                <span t-field="line.name" />
+            </a>
+            <t t-if="not line.product_id.website_published">
+                <span t-field="line.name" class="d-block text-wrap" style="max-width: 35vw"/>
+            </t>
+        </span>
+    </template>
+
+    <template id="sale_order_re_order_btn" inherit_id="sale.sale_order_portal_template" name="Sale Order Order Again">
+        <div id="print_invoice_sidebar_button" position="after">
+            <t t-if="sale_order.with_user(request.env.user).sudo()._is_reorder_allowed()">
+                <button
+                    id="reorder_sidebar_button"
+                    class="btn btn-secondary o_wsale_reorder_button oe_website_sale"
+                    t-att-data-sale-order-id="sale_order.id"
+                >
+                    <i class="fa fa-rotate-right me-1"/>
+                    Order Again
+                </button>
+            </t>
+        </div>
+    </template>
+
+</odoo>

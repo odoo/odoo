@@ -1,0 +1,140 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * snailmail_account
+#
+# Translators:
+# Maksym <ms@myodoo.pl>, 2022
+# Wojciech Warczakowski <w.warczakowski@gmail.com>, 2022
+# Piotr Strębski <strebski@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2022
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2022
+# Mariusz, 2022
+# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2022
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2022
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2026-02-03 10:35+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
+"snailmail_account/pl/>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: snailmail_account
+#. odoo-python
+#: code:addons/snailmail_account/wizard/account_move_send_batch_wizard.py:0
+msgid "(Stamps: %s)"
+msgstr "(Znaczki: %s)"
+
+#. module: snailmail_account
+#: model_terms:ir.ui.view,arch_db:snailmail_account.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Ustawione wartości są "
+"specyficzne dla firmy.\"/>"
+
+#. module: snailmail_account
+#: model:ir.model,name:snailmail_account.model_account_move_send
+msgid "Account Move Send"
+msgstr "Wyślij zapis księgowy"
+
+#. module: snailmail_account
+#: model:ir.model,name:snailmail_account.model_account_move_send_batch_wizard
+msgid "Account Move Send Batch Wizard"
+msgstr "Kreator zapisu księgowego i wysyłania zbiorczego"
+
+#. module: snailmail_account
+#. odoo-python
+#: code:addons/snailmail_account/models/account_move_send.py:0
+msgid "Check Invoice(s)"
+msgstr "Sprawdź fakturę/-y"
+
+#. module: snailmail_account
+#: model:ir.model,name:snailmail_account.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: snailmail_account
+#: model:ir.model,website_form_label:snailmail_account.model_res_partner
+msgid "Create a Customer"
+msgstr "Utwórz klienta"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_move__display_name
+#: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:snailmail_account.field_account_move_send_batch_wizard__display_name
+#: model:ir.model.fields,field_description:snailmail_account.field_res_partner__display_name
+msgid "Display Name"
+msgstr "Nazwa wyświetlana"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_move__id
+#: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__id
+#: model:ir.model.fields,field_description:snailmail_account.field_account_move_send_batch_wizard__id
+#: model:ir.model.fields,field_description:snailmail_account.field_res_partner__id
+msgid "ID"
+msgstr "ID"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_res_partner__invoice_sending_method
+#: model:ir.model.fields,field_description:snailmail_account.field_res_users__invoice_sending_method
+msgid "Invoice sending"
+msgstr "Wysyłanie faktury"
+
+#. module: snailmail_account
+#: model:ir.model,name:snailmail_account.model_account_move
+msgid "Journal Entry"
+msgstr "Zapis dziennika"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_move_send_batch_wizard__send_by_post_stamps
+msgid "Send By Post Stamps"
+msgstr "Wyślij przez Post Stamps"
+
+#. module: snailmail_account
+#. odoo-python
+#: code:addons/snailmail_account/models/account_move_send.py:0
+msgid ""
+"The partners on the following invoices have no valid address, so those "
+"invoices will not be sent: %s"
+msgstr ""
+"Partnerzy w następujących fakturach nie mają ważnego adresu, więc te faktury "
+"nie zostaną wysłane: %s"
+
+#. module: snailmail_account
+#. odoo-python
+#: code:addons/snailmail_account/models/account_move_send.py:0
+msgid "View Invoice(s)"
+msgstr "Zobacz Fakturę/-y"
+
+#. module: snailmail_account
+#. odoo-python
+#: code:addons/snailmail_account/controllers/portal.py:0
+#: model:ir.model.fields.selection,name:snailmail_account.selection__res_partner__invoice_sending_method__snailmail
+msgid "by Post"
+msgstr "pocztą"
+
+#~ msgid "Companies"
+#~ msgstr "Firmy"
+
+#~ msgid "Config Settings"
+#~ msgstr "Ustawienia konfiguracji"
+
+#~ msgid "Send by Post"
+#~ msgstr "Wyślij pocztą"

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+<t t-name="website.iframeWidget">
+    <div t-if="props.record.data[props.name]" t-attf-class="{{ this.state.isMobile ? 'is_mobile' : 'h-100' }}">
+        <iframe
+            frameBorder="0"
+            class="d-block"
+            height="100%"
+            width="100%"
+            t-att-src="props.record.data[props.name]"/>
+        <img t-if="this.state.isMobile"
+             alt="phone"
+             class="img_mobile h-100"
+             src="/website/static/src/img/phone.svg"/>
+    </div>
+    <div t-else="">No Url</div>
+</t>
+
+</templates>

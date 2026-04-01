@@ -1,0 +1,347 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_ar_stock
+#
+# Grace Conlon <grco@odoo.com>, 2026.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.4a1+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-30 19:04+0000\n"
+"PO-Revision-Date: 2026-02-21 10:09+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
+"odoo-19-l10n/l10n_ar_stock/es_419/>\n"
+"Language: es_419\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: l10n_ar_stock
+#. odoo-python
+#: code:addons/l10n_ar_stock/models/stock_picking_type.py:0
+msgid "%(company)s Sequence %(name)s"
+msgstr "Secuencia %(name)s de %(company)s"
+
+#. module: l10n_ar_stock
+#. odoo-python
+#: code:addons/l10n_ar_stock/models/stock_picking_type.py:0
+msgid ""
+"%(sequence_number)s is not a valid sequence number. Sequence numbers should "
+"contain exactly 8 digits (e.g. 00012345)."
+msgstr ""
+"%(sequence_number)s no es un número de secuencia válido. Los números de "
+"secuenciadeben contener exactamente 8 dígitos (por ejemplo, 00012345)."
+
+#. module: l10n_ar_stock
+#: model:ir.actions.report,print_report_name:l10n_ar_stock.action_delivery_guide_report_pdf
+msgid "'Remito - %s' % (object.l10n_ar_delivery_guide_number or 's/n')"
+msgstr "'Remito - %s' % (object.l10n_ar_delivery_guide_number or 's/n')"
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.view_picking_type_form_inherit_l10n_ar_stock
+msgid "00000001"
+msgstr "00000001"
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.view_picking_type_form_inherit_l10n_ar_stock
+msgid "00000999"
+msgstr "00000999"
+
+#. module: l10n_ar_stock
+#: model:mail.template,body_html:l10n_ar_stock.email_template_ar_remitos_delivery_guide
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> "
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Here is your\n"
+"        <t t-if=\"object.l10n_ar_delivery_guide_number\">\n"
+"            document <strong t-out=\"object.l10n_ar_delivery_guide_number or "
+"''\">00001-00000001</strong>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            document\n"
+"        </t>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (with reference: <t t-out=\"object.origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        Do not hesitate to contact us if you have any questions.\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Estimado/a\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> "
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Aquí tiene su\n"
+"        <t t-if=\"object.l10n_ar_delivery_guide_number\">\n"
+"            documento <strong t-out=\"object.l10n_ar_delivery_guide_number "
+"or ''\">00001-00000001</strong>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            documento\n"
+"        </t>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (con referencia: <t t-out=\"object.origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        de <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        No dude en contactarnos si tiene alguna pregunta.\n"
+"    </p>\n"
+"</div>\n"
+"            "
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
+msgid "<strong>Customer: </strong>"
+msgstr "<strong>Cliente: </strong>"
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.custom_header
+msgid "<strong>DOCUMENT NOT VALID AS AN INVOICE</strong>"
+msgstr "<strong>DOCUMENTO NO VÁLIDO COMO FACTURA</strong>"
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
+msgid "<strong>VAT Cond: </strong>"
+msgstr "<strong>Cond. IVA: </strong>"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_cai_expiration_date
+msgid ""
+"Argentina: Add the CAI expiration date given by ARCA for the sequence "
+"configured here"
+msgstr ""
+"Argentina: Agrega la fecha de vencimiento del CAI proporcionada por ARCA "
+"para la secuencia configurada aquí"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_cai_authorization_code
+msgid "Argentina: Add the CAI number for Remitos given by ARCA"
+msgstr "Argentina: Agrega el número de CAI para Remitos proporcionado por ARCA"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_sequence_number_start
+msgid "Argentina: Add the first sequence number given by ARCA for this CAI"
+msgstr ""
+"Argentina: Agrega el primer número de secuencia proporcionado por ARCA para "
+"este CAI"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_sequence_number_end
+msgid "Argentina: Add the last sequence number given by ARCA for this CAI"
+msgstr ""
+"Argentina: Agrega el último número de secuencia proporcionado por ARCA para "
+"este CAI"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_next_delivery_number
+msgid "Argentina: Hold the next sequence to use as delivery guide number."
+msgstr ""
+"Argentina: Mantiene la siguiente secuencia a usar como número de Remito."
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_sequence_id
+msgid "Argentina: Hold the sequence to generate a delivery guide number."
+msgstr "Argentina: Tiene la secuencia para generar un número de Remito."
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_delivery_sequence_prefix
+msgid ""
+"Argentina: Prefix for the delivery guide sequence number. It is used to "
+"generate the delivery guide number."
+msgstr ""
+"Argentina: Prefijo para el número de secuencia de los Remitos. Se usa para "
+"generar el número de Remito."
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_document_type_id
+msgid "Argentina: Select the document type to be assigned on the Remito"
+msgstr ""
+"Argentina: Seleccione el tipo de documento que se asignará en el Remito"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_cai_authorization_code
+msgid "CAI"
+msgstr "CAI"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking__l10n_ar_cai_data
+msgid "CAI Data"
+msgstr "Datos del CAI"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_cai_expiration_date
+msgid "CAI Expiration Date"
+msgstr "Fecha de Vencimiento del CAI"
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
+msgid "CAI Expiration Date:"
+msgstr "Fecha de Vencimiento del CAI:"
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
+msgid "CAI:"
+msgstr "CAI:"
+
+#. module: l10n_ar_stock
+#: model:ir.actions.report,name:l10n_ar_stock.action_delivery_guide_report_pdf
+msgid "Delivery Guide (AR)"
+msgstr "Remito (AR)"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking__l10n_ar_delivery_guide_number
+msgid "Delivery Guide No."
+msgstr "Número de Remito"
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.custom_header
+msgid "Delivery Guide No:"
+msgstr "N° de Remito:"
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.stock_picking_form_inherit_l10n_ar_stock
+msgid "Delivery Guide Number"
+msgstr "Número de Remito"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_sequence_id
+msgid "Delivery Guide Number Sequence"
+msgstr "Secuencia del Número de Remito"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_delivery_sequence_prefix
+msgid "Delivery Guide Prefix"
+msgstr "Prefijo de la Remito"
+
+#. module: l10n_ar_stock
+#: model:mail.template,name:l10n_ar_stock.email_template_ar_remitos_delivery_guide
+msgid "Delivery guide: Send by email"
+msgstr "Remito: Enviar por correo electrónico"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_document_type_id
+msgid "Document Type"
+msgstr "Tipo de Documento"
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.stock_picking_form_inherit_l10n_ar_stock
+msgid "Generate Delivery Guide"
+msgstr "Generar Remito"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking__id
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking__l10n_ar_allow_generate_delivery_guide
+msgid "L10N Ar Allow Generate Delivery Guide"
+msgstr "L10N Ar Permitir Generar Remito"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking__l10n_ar_allow_send_delivery_guide
+msgid "L10N Ar Allow Send Delivery Guide"
+msgstr "L10N Ar Permitir Enviar Remito"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_next_delivery_number
+msgid "Next Delivery Guide Number"
+msgstr "Siguiente Número de Remito"
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
+msgid "Page: <span class=\"page\"/> / <span class=\"topage\"/>"
+msgstr "Página: <span class=\"page\"/> / <span class=\"topage\"/>"
+
+#. module: l10n_ar_stock
+#: model:ir.model,name:l10n_ar_stock.model_stock_picking_type
+msgid "Picking Type"
+msgstr "Tipo de albarán"
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.stock_picking_form_inherit_l10n_ar_stock
+msgid "Send Delivery Guide"
+msgstr "Enviar Remito"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_sequence_number_start
+msgid "Sequence From"
+msgstr "Secuencia Desde"
+
+#. module: l10n_ar_stock
+#: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_sequence_number_end
+msgid "Sequence To"
+msgstr "Secuencia Hasta"
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
+msgid "Sequence from"
+msgstr "Secuencia desde"
+
+#. module: l10n_ar_stock
+#: model:ir.model,name:l10n_ar_stock.model_stock_picking
+msgid "Stock Picking - Delivery Guide (Uruguay)"
+msgstr "Recolección de inventario - Remito"
+
+#. module: l10n_ar_stock
+#. odoo-python
+#: code:addons/l10n_ar_stock/models/stock_picking.py:0
+msgid ""
+"The delivery guide number %s exceeds the range specified in the CAI. Please "
+"update the range or use a different CAI with a different range."
+msgstr ""
+"El número de remito %s excede el rango especificado en el CAI. Por "
+"favor,actualizá el rango o utilizá un CAI diferente con otro rango."
+
+#. module: l10n_ar_stock
+#. odoo-python
+#: code:addons/l10n_ar_stock/models/stock_picking.py:0
+msgid "The partner does not have an email address."
+msgstr "El contacto no tiene una dirección de correo electrónico."
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
+msgid "to"
+msgstr "a"
+
+#. module: l10n_ar_stock
+#: model:mail.template,subject:l10n_ar_stock.email_template_ar_remitos_delivery_guide
+msgid ""
+"{{ object.company_id.name }} Document (Ref "
+"{{ object.l10n_ar_delivery_guide_number }})"
+msgstr ""
+"Documento de {{ object.company_id.name }} (Ref "
+"{{ object.l10n_ar_delivery_guide_number }})"
+
+#~ msgid "Transfer"
+#~ msgstr "Albarán"

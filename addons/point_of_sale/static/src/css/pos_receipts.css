@@ -1,0 +1,102 @@
+.pos-receipt-print {
+    width: 512px;
+    font-size: 22px;
+    color: #000000;
+}
+
+.pos-receipt .pos-receipt-right-align {
+    float: right;
+    display: flex;
+}
+
+.pos-receipt .pos-receipt-center-align {
+    text-align: center;
+}
+
+.pos-receipt .pos-receipt-left-padding {
+    padding-left: 2em;
+}
+
+.pos-receipt .pos-receipt-logo {
+    width: 50%;
+    display: block;
+    margin: 0 auto;
+}
+
+.pos-receipt .pos-receipt-qrcode {
+    display: block;
+    margin: 0 auto;
+}
+
+.pos-receipt .pos-receipt-contact, .pos-receipt .pos-receipt-customer {
+    text-align: center;
+    font-size: 75%;
+}
+
+.pos-receipt .pos-receipt-order-data {
+    font-size: 75%;
+}
+
+.pos-receipt .pos-receipt-amount {
+    text-align: start;
+}
+
+.pos-receipt .pos-receipt-title {
+    font-weight: bold;
+    font-size: 200%;
+    text-align: center;
+}
+
+.pos-receipt .pos-receipt-header {
+    font-size: 125% !important;
+    text-align: center;
+}
+
+.pos-receipt .attribute-line {
+    font-size: 85%;
+}
+
+.pos-payment-terminal-receipt {
+    text-align: center;
+}
+
+.pos-payment-terminal-receipt pre {
+    font-family: inherit;
+    font-size: 75%;
+
+    /* The following prevents html_editor/main/font/font_plugin.scss
+       from interfering (included by pos_appointment module) */
+    padding: unset;
+    border: unset;
+    border-radius: unset;
+    background-color: unset;
+    color: unset;
+}
+
+.responsive-price {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.responsive-price > .pos-receipt-right-align {
+    margin-left: auto;
+}
+
+.pos-receipt .pos-receipt-taxes {
+    display: flex;
+    flex-direction: column;
+}
+
+.pos-receipt .orderlines {
+    /*rtl:ignore*/
+    direction: ltr;
+}
+
+.pos-receipt-print .qty {
+    min-width: 3.5rem;
+}
+
+.pos-receipt-print .info-list {
+    margin-left: 1.5rem !important;
+}

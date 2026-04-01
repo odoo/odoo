@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="event_booth_view_form_from_event" model="ir.ui.view">
+        <field name="name">event.booth.view.form.from.event</field>
+        <field name="model">event.booth</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <form string="Booths">
+                <header>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box" invisible="not id"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Name"/>
+                        <h1><field name="name" placeholder="e.g. First Booth Alley 1"/></h1>
+                    </div>
+                    <group>
+                        <group name="details">
+                            <field name="booth_category_id" placeholder="Pick a Booth Category..."/>
+                        </group>
+                        <group name="renter">
+                            <field name="partner_id" placeholder="Pick a Renter..."/>
+                            <field name="contact_name"/>
+                            <field name="contact_email" widget="email"/>
+                            <field name="contact_phone" widget="phone"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_booth_view_form" model="ir.ui.view">
+        <field name="name">event.booth.view.form</field>
+        <field name="model">event.booth</field>
+        <field name="inherit_id" ref="event_booth_view_form_from_event"/>
+        <field name="mode">primary</field>
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <field name="booth_category_id" position="before">
+                <field name="event_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="event_booth_view_form_simple_from_event" model="ir.ui.view">
+        <field name="name">event.booth.view.form.simple.from.event</field>
+        <field name="model">event.booth</field>
+        <field name="inherit_id" ref="event_booth_view_form_from_event"/>
+        <field name="mode">primary</field>
+        <field name="priority">48</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="replace"/>
+            <xpath expr="//chatter" position="replace"/>
+        </field>
+    </record>
+
+    <record id="event_booth_view_tree_from_event" model="ir.ui.view">
+        <field name="name">event.booth.view.list.from.event</field>
+        <field name="model">event.booth</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <list string="Booths" sample="1" expand="1">
+                <field name="name" decoration-bf="1"/>
+                <field name="booth_category_id"/>
+                <field name="partner_id"/>
+                <field name="contact_name" optional="hide"/>
+                <field name="contact_email" optional="hide"/>
+                <field name="contact_phone" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'available'"
+                       decoration-success="state == 'unavailable'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="event_booth_view_tree" model="ir.ui.view">
+        <field name="name">event.booth.view.list</field>
+        <field name="model">event.booth</field>
+        <field name="inherit_id" ref="event_booth_view_tree_from_event"/>
+        <field name="mode">primary</field>
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="event_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="event_booth_view_kanban_from_event" model="ir.ui.view">
+        <field name="name">event.booth.view.kanban</field>
+        <field name="model">event.booth</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" quick_create_view="event_booth.event_booth_view_form_quick_create" sample="1">
+                <field name="name"/>
+                <templates>
+                    <t t-name="card">
+                        <field class="fw-bold fs-5" name="name"/>
+                        <footer class="p-0">
+                            <field name="booth_category_id"/>
+                            <field class="ms-auto" name="activity_ids" widget="kanban_activity"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="event_booth_view_kanban" model="ir.ui.view">
+        <field name="name">event.booth.view.kanban</field>
+        <field name="model">event.booth</field>
+        <field name="inherit_id" ref="event_booth_view_kanban_from_event"/>
+        <field name="mode">primary</field>
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <xpath expr="//footer" position="before">
+                <field name="event_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_booth_view_form_quick_create" model="ir.ui.view">
+        <field name="name">event.booth.view.form.quick_create</field>
+        <field name="model">event.booth</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name" placeholder="e.g. First Booth Alley 1"/>
+                    <field name="booth_category_id" placeholder="Pick a Booth Category..."/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_booth_view_search" model="ir.ui.view">
+        <field name="name">event.booth.view.search</field>
+        <field name="model">event.booth</field>
+        <field name="arch" type="xml">
+            <search string="Event Booth">
+                <field name="name" string="Name" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="contact_name" string="Renter Name" filter_domain="[('contact_name', 'ilike', self)]"/>
+                <field name="contact_email" string="Renter Email" filter_domain="[('contact_email', 'ilike', self)]"/>
+                <field name="event_id"/>
+                <filter string="Available" name="filter_booth_available"
+                    domain="[('state', '=', 'available')]"/>
+                <filter string="Unavailable" name="filter_booth_unavailable"
+                    domain="[('state', '=', 'unavailable')]"/>
+                <group>
+                    <filter name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_partner_id" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_by_booth_category_id" context="{'group_by': 'booth_category_id'}"/>
+                    <filter string="Event" name="group_by_event_id" context="{'group_by': 'event_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="event_booth_view_graph" model="ir.ui.view">
+        <field name="name">event.booth.view.graph</field>
+        <field name="model">event.booth</field>
+        <field name="arch" type="xml">
+            <graph string="Event booth" sample="1" type="pie">
+                <field name="booth_category_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="event_booth_view_pivot" model="ir.ui.view">
+        <field name="name">event.booth.view.pivot</field>
+        <field name="model">event.booth</field>
+        <field name="arch" type="xml">
+            <pivot string="Event booth" sample="1">
+                <field name="booth_category_id" type="row"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="event_booth_action" model="ir.actions.act_window">
+        <field name="name">Booths</field>
+        <field name="res_model">event.booth</field>
+        <field name="view_mode">kanban,list,form,graph,pivot</field>
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_group_by_state': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Booth
+            </p><p>
+                Booths are the physical stands that you rent during your event.
+            </p>
+        </field>
+    </record>
+
+    <record id="event_booth_action_from_event" model="ir.actions.act_window">
+        <field name="name">Booths</field>
+        <field name="res_model">event.booth</field>
+        <field name="view_mode">kanban,list,form,graph,pivot</field>
+        <field name="domain">[('event_id', '=', active_id)]</field>
+        <field name="context">{'default_event_id': active_id, 'search_default_group_by_state': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Booth
+            </p><p>
+                Booths are the physical stands that you rent during your event.
+            </p>
+        </field>
+    </record>
+    <record id="event_booth_action_from_event_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="event_booth_view_kanban_from_event"/>
+        <field name="act_window_id" ref="event_booth_action_from_event"/>
+    </record>
+    <record id="event_booth_action_from_event_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="event_booth_view_tree_from_event"/>
+        <field name="act_window_id" ref="event_booth_action_from_event"/>
+    </record>
+    <record id="event_booth_action_from_event_view_form" model="ir.actions.act_window.view">
+        <field name="sequence">3</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="event_booth_view_form_from_event"/>
+        <field name="act_window_id" ref="event_booth_action_from_event"/>
+    </record>
+
+</data></odoo>

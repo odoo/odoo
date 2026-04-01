@@ -1,0 +1,19 @@
+.o_stock_kanban .o_kanban_renderer {
+    --KanbanRecord-width: 480px;
+
+    @include media-only(screen) {
+        --KanbanGroup-width: 480px;
+    }
+    @include media-only(print) {
+        --KanbanGroup-width: 400px;
+    }
+    padding: 4px;
+    .o_kanban_record {
+        margin-left: 4px;
+        margin-right: 4px;
+    }
+}
+
+.stock-overview-links {
+    height: 5.5rem;
+}

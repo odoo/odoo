@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit_project_purchase" model="ir.ui.view">
+        <field name="name">purchase.order.form.purchase.project</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <field name="origin" position="after">
+                <field name="project_id" groups="project.group_project_user"/>
+            </field>
+        </field>
+    </record>
+</odoo>

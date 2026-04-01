@@ -1,0 +1,325 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_presence
+#
+#
+# Translated by:
+# Deepvision - info@deepvision.uz | +998 77-093-0007
+# Amon Olimov - amon.bars@gmail.com
+# Jonibek Yorqulov - j.yorqulov@deepvision.uz
+# Mirzohidkhon Ulugkhujaev ulugkhujayevmirzohidxon@gmail.com
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-10-08 18:38+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+#, fuzzy
+msgid "%(name)s has been noted as %(state)s today"
+msgstr "%(name)s bugun %(state)s deb qayd etildi"
+
+#. module: hr_presence
+#: model:mail.template,body_html:hr_presence.mail_template_presence
+#, fuzzy
+msgid ""
+"<div>\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,"
+"<br/><br/>\n"
+"We hope this message finds you well. It has come to our attention that you "
+"are currently not present at work, and there is no record of a time off "
+"request from you. If this absence is due to an oversight on our part, we "
+"sincerely apologize for any confusion.\n"
+"Please take the necessary steps to address this unplanned absence. Should "
+"you have any questions or need assistance, do not hesitate to reach out to "
+"your manager or the HR department at your earliest convenience.\n"
+"Thank you for your prompt attention to this matter.\n"
+"                    <br/>Best Regards,<br/><br/>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div> Hurmatli <t t-out=\"object.name yoki ''\">Abigayl Peterson</t>,<br/"
+"><br/> Ushbu xat sizni sog‘-salomat topishini umid qilamiz. Bizga ma'lum "
+"bo‘lishicha, siz hozirda ishda yo‘qsiz va sizning ta'til so‘rovingiz haqida "
+"hech qanday ma'lumot yo‘q. Agar bu holat biz tomondan yo‘l qo‘yilgan "
+"e'tiborsizlik tufayli yuz bergan bo‘lsa, yuzaga kelgan tushunmovchiliklar "
+"uchun samimiy uzr so‘raymiz. Iltimos, bu rejalashtirilmagan yo‘qlikni "
+"bartaraf etish uchun zarur choralarni ko‘ring. Savollaringiz bo‘lsa yoki "
+"yordamga muhtoj bo‘lsangiz, imkon qadar tezroq rahbaringizga yoki kadrlar "
+"bo‘limiga murojaat qilishdan tortinmang. Ushbu masalaga tezkor e'tibor "
+"qaratganingiz uchun tashakkur. <br/>Hurmat bilan,<br/><br/> </div>"
+
+#. module: hr_presence
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__absent
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
+#, fuzzy
+msgid "Absent"
+msgstr "Yo‘q"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_log
+#, fuzzy
+msgid "Add a log note"
+msgstr "Jurnal qaydini qo‘shish"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_res_company
+#, fuzzy
+msgid "Companies"
+msgstr "Kompaniyalar"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_res_config_settings
+#, fuzzy
+msgid "Config Settings"
+msgstr "Sozlamalarni moslash"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_time_off
+#, fuzzy
+msgid "Create a Time Off"
+msgstr "Ta'til yaratish"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_ir_websocket__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_res_company__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__display_name
+#, fuzzy
+msgid "Display Name"
+msgstr "Ko‘rsatiladigan nom"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__email_sent
+#, fuzzy
+msgid "Email Sent"
+msgstr "Elektron xat yuborildi"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_hr_employee
+#, fuzzy
+msgid "Employee"
+msgstr "Xodim"
+
+#. module: hr_presence
+#: model:sms.template,name:hr_presence.sms_template_data_hr_presence
+#, fuzzy
+msgid "Employee: Presence Reminder"
+msgstr "Xodim: Hozirlik eslatmasi"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.ir_cron_presence_control_ir_actions_server
+#, fuzzy
+msgid "HR Presence: cron"
+msgstr "HR mavjudligi: cron"
+
+#. module: hr_presence
+#: model:mail.template,name:hr_presence.mail_template_presence
+#, fuzzy
+msgid "HR: Employee Absence email"
+msgstr "HR: Xodimning yo‘qligi haqida elektron xat"
+
+#. module: hr_presence
+#: model:sms.template,body:hr_presence.sms_template_data_hr_presence
+#, fuzzy
+msgid ""
+"Hi, we noticed you're not at work and no time-off was submitted. If this is "
+"an oversight from us, we apologize. Please contact your manager or HR ASAP. "
+"Thanks"
+msgstr ""
+"Salom, siz ishda emasligingizni va ta'til so‘rovi yuborilmaganligini "
+"aniqladik. Agar bu biz tomondan yo‘l qo‘yilgan xato bo‘lsa, uzr so‘raymiz. "
+"Iltimos, rahbaringiz yoki HR mutaxassisi bilan tezda bog‘laning. Rahmat"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
+#, fuzzy
+msgid "Hr Presence Last Compute Date"
+msgstr "HR mavjudligi oxirgi hisoblash sanasi"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__hr_presence_state_display
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__hr_presence_state_display
+#, fuzzy
+msgid "Hr Presence State Display"
+msgstr "HR mavjudlik holati ko‘rsatkichi"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__id
+#: model:ir.model.fields,field_description:hr_presence.field_ir_websocket__id
+#: model:ir.model.fields,field_description:hr_presence.field_res_company__id
+#: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__id
+#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__id
+#, fuzzy
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
+#, fuzzy
+msgid "IP Address"
+msgstr "IP manzil"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__ip_connected
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__ip_connected
+#, fuzzy
+msgid "Ip Connected"
+msgstr "IP ulangan"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_presence
+#, fuzzy
+msgid "Manually Set Presence"
+msgstr "Mavjudlikni qo‘lda o‘rnatish"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_present
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_present
+#, fuzzy
+msgid "Manually Set Present"
+msgstr "Mavjudlikni qo‘lda belgilash"
+
+#. module: hr_presence
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__out_of_working_hour
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__out_of_working_hour
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
+#, fuzzy
+msgid "Off-Hours"
+msgstr "Ish vaqtidan tashqari"
+
+#. module: hr_presence
+#. odoo-javascript
+#: code:addons/hr_presence/static/src/search/hr_presence_cog_menu/hr_presence_cog_menu.xml:0
+#, fuzzy
+msgid "Presence Control"
+msgstr "Mavjudlikni nazorat qilish"
+
+#. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
+#, fuzzy
+msgid "Presence/Absence"
+msgstr "Borlik/yo‘qlik"
+
+#. module: hr_presence
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
+#: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__present
+#, fuzzy
+msgid "Present"
+msgstr "Mavjud"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_hr_employee_public
+#, fuzzy
+msgid "Public Employee"
+msgstr "Davlat xizmatchisi"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+#, fuzzy
+msgid "Send SMS"
+msgstr "SMS yuborish"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_sms
+#, fuzzy
+msgid "Send a SMS"
+msgstr "SMS yuborish"
+
+#. module: hr_presence
+#: model:mail.template,description:hr_presence.mail_template_presence
+#, fuzzy
+msgid ""
+"Sent manually in presence module when an employee wasn't working despite not "
+"being off"
+msgstr ""
+"Xodim ta'tilda bo‘lmasdan ishga kelmaganda mavjudlik modulida qo‘lda "
+"yuborildi"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_absent
+#, fuzzy
+msgid "Set Absent"
+msgstr "Yo‘q deb belgilash"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_present
+#, fuzzy
+msgid "Set Present"
+msgstr "Mavjud deb belgilash"
+
+#. module: hr_presence
+#: model:mail.template,subject:hr_presence.mail_template_presence
+#, fuzzy
+msgid "Unexpected Absence"
+msgstr "Kutilmagan yo‘qlik"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+#, fuzzy
+msgid "Unplanned Absence"
+msgstr "Rejalashtirilmagan yo‘qlik"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_res_users_log
+#, fuzzy
+msgid "Users Log"
+msgstr "Foydalanuvchilar jurnali"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+#, fuzzy
+msgid ""
+"We hope this message finds you well. It has come to our attention that you "
+"are currently not present at work, and there is no record of a time off "
+"request from you. If this absence is due to an oversight on our part, we "
+"sincerely apologize for any confusion.\n"
+"Please take the necessary steps to address this unplanned absence. Should "
+"you have any questions or need assistance, do not hesitate to reach out to "
+"your manager or the HR department at your earliest convenience.\n"
+"Thank you for your prompt attention to this matter."
+msgstr ""
+"Ushbu xat sizni sog‘-salomat topishini umid qilamiz. Bizga ma'lum "
+"bo‘lishicha, siz hozirda ishda yo‘qsiz va sizning ta'til so‘rovingiz haqida "
+"hech qanday ma'lumot yo‘q. Agar bu holat biz tomondan yo‘l qo‘yilgan "
+"e'tiborsizlik tufayli yuz bergan bo‘lsa, yuzaga kelgan tushunmovchiliklar "
+"uchun samimiy uzr so‘raymiz. Iltimos, bu rejalashtirilmagan yo‘qlikni "
+"bartaraf etish uchun zarur choralarni ko‘ring. Savollaringiz bo‘lsa yoki "
+"yordamga muhtoj bo‘lsangiz, imkon qadar tezroq rahbaringizga yoki kadrlar "
+"bo‘limiga murojaat qilishdan tortinmang. Ushbu masalaga tezkor e'tibor "
+"qaratganingiz uchun tashakkur."
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+#, fuzzy
+msgid "You don't have the right to do this. Please contact an Administrator."
+msgstr ""
+"Sizda bunday qilish huquqi yo‘q. Iltimos, administratorga murojaat eting."
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_ir_websocket
+#, fuzzy
+msgid "websocket message handling"
+msgstr "veb-soket xabarlarini boshqarish"

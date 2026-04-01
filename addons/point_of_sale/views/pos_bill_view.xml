@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_bill_form" model="ir.ui.view">
+        <field name="name">pos.bill.form</field>
+        <field name="model">pos.bill</field>
+        <field name="arch" type="xml">
+            <form string="Bills">
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="value" />
+                        <field name="pos_config_ids" widget="many2many_tags" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pos_bill_tree" model="ir.ui.view">
+        <field name="name">pos.bill.list</field>
+        <field name="model">pos.bill</field>
+        <field name="arch" type="xml">
+            <list string="Bills" create="1" delete="1" editable="bottom">
+                <field name="name" />
+                <field name="value" />
+                <field name="pos_config_ids" widget="many2many_tags_placeholder_list_view" placeholder="For all point of sale."/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_pos_bill" model="ir.actions.act_window">
+        <field name="name">Coins/Bills</field>
+        <field name="res_model">pos.bill</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="menu_pos_bill"
+        name="Coins/Bills"
+        parent="menu_point_config_product"
+        sequence="4"
+        action="action_pos_bill"
+        groups="group_pos_manager"/>
+</odoo>

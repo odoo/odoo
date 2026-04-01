@@ -1,0 +1,807 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_ro_edi
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Betty Keresztesi <betty@soft4biz.ro>, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.4a1+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-20 19:07+0000\n"
+"PO-Revision-Date: 2025-11-26 11:32+0000\n"
+"Last-Translator: Betty Keresztesi <betty@soft4biz.ro>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19-l10n/"
+"l10n_ro_edi/ro/>\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,help:l10n_ro_edi.field_account_bank_statement_line__l10n_ro_edi_state
+#: model:ir.model.fields,help:l10n_ro_edi.field_account_move__l10n_ro_edi_state
+msgid ""
+"- Not indexed: Invoice index was not received on time due to a server "
+"timeout\n"
+"                - Sent: Successfully sent to the SPV, waiting for "
+"validation\n"
+"                - Validated: Sent & validated by the SPV\n"
+"                - Refused: Validation error from the SPV\n"
+"        "
+msgstr ""
+"- Neindexat: Indexul facturii nu a fost primit la timp din cauza unei "
+"expirări a timpului de așteptare al serverului\n"
+"                - Trimis: Trimis cu succes către SPV, în așteptarea "
+"validării\n"
+"                - Validat: Trimis și validat de SPV\n"
+"                -- Refuzat: Eroare de validare din partea SPV\n"
+"        "
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid ""
+".\n"
+"                                        Login or Sign Up if you don't have "
+"an account yet"
+msgstr ""
+".\n"
+"                                        Conectați-vă sau înregistrați-vă "
+"dacă nu aveți încă un cont"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid ""
+"<span class=\"o_form_label\">\n"
+"                                    E-Factura Details\n"
+"                                </span>\n"
+"                                <span class=\"fa fa-lg fa-building-o\" "
+"title=\"Values set here are company-specific.\"/>"
+msgstr ""
+"<span class=\"o_form_label\">\n"
+"                                    Detalii E-Factura\n"
+"                                </span>\n"
+"                                <span class=\"fa fa-lg fa-building-o\" "
+"title=\"Valorile setate aici sunt specifice companiei.\"/>"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_access_token
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__l10n_ro_edi_access_token
+msgid "Access Token"
+msgstr "Token de acces"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_access_expiry_date
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__l10n_ro_edi_access_expiry_date
+msgid "Access Token Expiry Date"
+msgstr "Data de expirare a tokenului de acces"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/controllers/main.py:0
+msgid ""
+"Access key not found. Please try again.\n"
+"Response: %s"
+msgstr ""
+"Cheia de acces nu a fost găsită. Vă rugăm să încercați din nou.\n"
+"Răspuns: %s"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/utils.py:0
+msgid "Access token is forbidden."
+msgstr "Tokenul de acces este interzis."
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/utils.py:0
+msgid "Access token is unauthorized."
+msgstr "Tokenul de acces nu este autorizat."
+
+#. module: l10n_ro_edi
+#: model:ir.model,name:l10n_ro_edi.model_account_move_send
+msgid "Account Move Send"
+msgstr "Cont Mutare Trimitere"
+
+#. module: l10n_ro_edi
+#: model:ir.model,name:l10n_ro_edi.model_account_move_send_wizard
+msgid "Account Move Send Wizard"
+msgstr "Asistent trimitere notă contabilă"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid "Activate test environment for sending E-Factura to SPV"
+msgstr "Activați mediul de testare pentru trimiterea E-Factura către SPV"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__attachment
+msgid "Attachment"
+msgstr "Atașament"
+
+#. module: l10n_ro_edi
+#: model:ir.model,name:l10n_ro_edi.model_account_edi_xml_ubl_ro
+msgid "CIUS RO"
+msgstr "CIUS RO"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid "CIUS-RO XML attachment not found."
+msgstr "Atașament XML CIUS-RO nu a fost găsit."
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move_send.py:0
+msgid "Check Invoice(s)"
+msgstr "Verifică Factura(le)"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid "Client ID"
+msgstr "ID Client"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/controllers/main.py:0
+#: code:addons/l10n_ro_edi/models/res_company.py:0
+msgid "Client ID and Client Secret field must be filled."
+msgstr "Câmpurile ID client și Secret client trebuie completate."
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_client_secret
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__l10n_ro_edi_client_secret
+msgid "Client Secret"
+msgstr "Secret Client"
+
+#. module: l10n_ro_edi
+#: model:ir.model,name:l10n_ro_edi.model_res_company
+msgid "Companies"
+msgstr "Companii"
+
+#. module: l10n_ro_edi
+#: model:ir.model,name:l10n_ro_edi.model_res_config_settings
+msgid "Config Settings"
+msgstr "Setări de configurare"
+
+#. module: l10n_ro_edi
+#: model:ir.model,name:l10n_ro_edi.model_res_partner
+msgid "Contact"
+msgstr "Contactați"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid "Copy the generated Client ID and Client Secret to the fields below"
+msgstr "Copiați Client ID și Client Secret generate în câmpurile de mai jos"
+
+#. module: l10n_ro_edi
+#: model:ir.model,website_form_label:l10n_ro_edi.model_res_partner
+msgid "Create a Customer"
+msgstr "Creează un client"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__create_uid
+msgid "Created by"
+msgstr "Creat de"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__create_date
+msgid "Created on"
+msgstr "Creat la"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid ""
+"Data needed to generate token for sending RO-CIUS to Romanian government"
+msgstr ""
+"Date necesare pentru generarea token-ului pentru trimiterea RO-CIUS către "
+"autoritățile din România"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__datetime
+msgid "Datetime"
+msgstr "Dată și oră"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_edi_xml_ubl_ro__display_name
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move_send_wizard__display_name
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__display_name
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_partner__display_name
+msgid "Display Name"
+msgstr "Nume afișat"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__key_download
+msgid "Document download key"
+msgstr "Cheie de descărcare a documentului"
+
+#. module: l10n_ro_edi
+#: model:ir.model,name:l10n_ro_edi.model_l10n_ro_edi_document
+msgid "Document object for tracking CIUS-RO XML sent to E-Factura"
+msgstr ""
+"Document pentru urmărirea fișierelor XML CIUS-RO trimise către E-Factura"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.account_move_form_inherit_l10n_ro_edi
+msgid "Download the document sent"
+msgstr "Descarcă documentul trimis"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.account_move_form_inherit_l10n_ro_edi
+msgid "Download the signature"
+msgstr "Descarcă semnătura"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.account_move_form_inherit_l10n_ro_edi
+msgid "E-Factura"
+msgstr "E- Factură"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_bank_statement_line__l10n_ro_edi_index
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move__l10n_ro_edi_index
+msgid "E-Factura Index"
+msgstr "Index E- Factură"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_bank_statement_line__l10n_ro_edi_state
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move__l10n_ro_edi_state
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__state
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.l10n_ro_edi_view_account_invoice_filter
+msgid "E-Factura Status"
+msgstr "Stare E-Factura"
+
+#. module: l10n_ro_edi
+#: model:ir.actions.server,name:l10n_ro_edi.ir_cron_l10n_ro_edi_refresh_access_token_ir_actions_server
+msgid "E-Factura: Refresh Access Token"
+msgstr "E-Factura: Reîmprospătare token de acces"
+
+#. module: l10n_ro_edi
+#: model:ir.actions.server,name:l10n_ro_edi.ir_cron_l10n_ro_edi_synchronize_invoices_ir_actions_server
+msgid "E-Factura: Synchronize with ANAF"
+msgstr "E-Factura: Sincronizare cu ANAF"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__l10n_ro_edi_document__state__invoice_refused
+msgid "Error"
+msgstr "Eroare"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/controllers/main.py:0
+#: code:addons/l10n_ro_edi/models/res_company.py:0
+msgid "Error when converting response to json: %s"
+msgstr "Eroare la convertirea răspunsului în json: %s"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/controllers/main.py:0
+#: code:addons/l10n_ro_edi/models/res_company.py:0
+msgid "Error when decoding the access token payload: %s"
+msgstr "Eroare la decodificarea conținutului tokenului de acces: %s"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/controllers/main.py:0
+msgid "Error when processing the response: %s"
+msgstr "Eroare la procesarea răspunsului: %s"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/res_company.py:0
+msgid "Error when refreshing the access token: %s"
+msgstr "Eroare la reîmprospătarea tokenului de acces: %s"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move_send.py:0
+msgid "Error when sending CIUS-RO E-Factura to the SPV"
+msgstr "Eroare la trimiterea CIUS-RO E-Factura către SPV"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid "Error when trying to download the E-Factura data from the SPV: %s"
+msgstr "Eroare la încercarea de a descărca datele E-Factura de la SPV: %s"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid "Error when trying to fetch the E-Factura status from the SPV: %s"
+msgstr "Eroare la încercarea de a prelua starea E-Factura de la SPV: %s"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid "Error when trying to send the e-Factura to the SPV: %s"
+msgstr "Eroare la încercarea de a trimite e-Factura către SPV: %s"
+
+#. module: l10n_ro_edi
+#: model:ir.actions.server,name:l10n_ro_edi.l10n_ro_edi_action_fetch_ciusro_status
+msgid "Fetch E-Factura Status"
+msgstr "Preia starea E-Factura"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.account_move_form_inherit_l10n_ro_edi
+msgid "Fetch status"
+msgstr "Preia starea"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid ""
+"Fill \"Callback URL 1\" with the following URL:\n"
+"                                                <br/>"
+msgstr ""
+"Completați „URL de apelare înapoi 1” cu următorul URL:\n"
+"                                                <br/>"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid ""
+"Fill \"Denumire Aplicatie\" with any desired name for your registration data"
+msgstr ""
+"Completați „Denumire Aplicație” cu orice nume dorit pentru datele dvs. de "
+"înregistrare"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid "Generate Token"
+msgstr "Generare token"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid "Generate a new Client data"
+msgstr "Generează date noi pentru Client"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid "Go to"
+msgstr "Mergi la"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid "Go to \"Editare profil Oauth\""
+msgstr "Accesați „Editare profil Oauth”"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_edi_xml_ubl_ro__id
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move_send__id
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move_send_wizard__id
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__id
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__id
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_partner__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid "Import Vendor Bills in :"
+msgstr "Importă facturi de la furnizori în :"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid "In \"Serviciu\", select the option \"E-Factura\""
+msgstr "In „Serviciu”, selectați opțiunea „E-Factura”"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__invoice_id
+msgid "Invoice"
+msgstr "Factură"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid ""
+"It was not possible to retrieve the PDF from the SPV for the following "
+"reason: %s"
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model:ir.model,name:l10n_ro_edi.model_account_move
+msgid "Journal Entry"
+msgstr "Notă contabilă"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__key_certificate
+msgid "Key Certificate"
+msgstr "Cheie certificat"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__key_signature
+msgid "Key Signature"
+msgstr "Cheie semnătură"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_callback_url
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__l10n_ro_edi_callback_url
+msgid "L10N Ro Edi Callback Url"
+msgstr "L10N Ro Edi Callback Url"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_bank_statement_line__l10n_ro_edi_document_ids
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move__l10n_ro_edi_document_ids
+msgid "L10N Ro Edi Document"
+msgstr "L10N Ro Edi Document"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__write_uid
+msgid "Last Updated by"
+msgstr "Ultima actualizare de"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__write_date
+msgid "Last Updated on"
+msgstr "Ultima actualizare la"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__message
+msgid "Message"
+msgstr "Mesaj"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid "No PDF found: PDF imported from SPV."
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__account_move__l10n_ro_edi_state__invoice_not_indexed
+msgid "Not indexed"
+msgstr "Neindexat"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid "Only posted entries can be sent to SPV."
+msgstr "Numai înregistrările validate pot fi trimise către SPV."
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/controllers/main.py:0
+msgid "Received access key: %s"
+msgstr "Cheie de acces primită: %s"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_refresh_token
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__l10n_ro_edi_refresh_token
+msgid "Refresh Token"
+msgstr "Reîmprospătare Token"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_refresh_expiry_date
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__l10n_ro_edi_refresh_expiry_date
+msgid "Refresh Token Expiry Date"
+msgstr "Data de expirare a tokenului de reîmprospătare"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/res_company.py:0
+msgid "Refresh token failed [company=%(company_id)s]"
+msgstr "Eșec la reîmprospătarea tokenului [company=%(company_id)s]"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/res_company.py:0
+msgid "Refresh token not found"
+msgstr "Token de reîmprospătare negăsit"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__account_move__l10n_ro_edi_state__invoice_refused
+msgid "Refused"
+msgstr "Respins"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.l10n_ro_edi_view_account_invoice_filter
+msgid "Refused E-Factura"
+msgstr "E-Factura refuzată"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/controllers/main.py:0
+msgid ""
+"Response (code=%(status_code)s) to %(url)s failed:\n"
+"%(text)s"
+msgstr ""
+"Răspunsul (cod=%(status_code)s) către %(url)s a eșuat:\n"
+"%(text)s"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__res_partner__invoice_edi_format__ciusro
+msgid "Romania (CIUS RO)"
+msgstr "România (CIUS RO)"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid "Romanian E-Factura"
+msgstr "E-Factura românească"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid ""
+"Romanian access token not found. Please generate or fill it in the settings."
+msgstr ""
+"Tokenul de acces românesc nu a fost găsit. Vă rugăm să o generați sau să o "
+"completați în setări."
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid ""
+"SPV failed to return with an index on time, synchronize this invoice to "
+"recover the index and the status."
+msgstr ""
+"SPV nu a reușit să returneze un index la timp, sincronizați această factură "
+"pentru a recupera indexul și starea."
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid "SPV has not finished processing the invoice, try again later."
+msgstr "SPV nu a terminat procesarea facturii, încercați din nou mai târziu."
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_anaf_imported_inv_journal_id
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__l10n_ro_edi_anaf_imported_inv_journal_id
+msgid "Select journal for SPV imported bills"
+msgstr "Selectați jurnalul pentru facturile importate din SPV"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move_send.py:0
+#: code:addons/l10n_ro_edi/wizard/account_move_send_wizard.py:0
+msgid "Send E-Factura to SPV"
+msgstr "Trimite E-Factura către SPV"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__account_move__l10n_ro_edi_state__invoice_sent
+#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__l10n_ro_edi_document__state__invoice_sent
+msgid "Sent"
+msgstr "Trimis"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,help:l10n_ro_edi.field_l10n_ro_edi_document__state
+msgid ""
+"Sent -> Successfully sent to the SPV, waiting for validation.\n"
+"                Validated -> Sent & validated by the SPV.\n"
+"                Refused -> Sent & refused by the SPV.\n"
+"        "
+msgstr ""
+"Trimis -> Trimis cu succes către SPV, în așteptarea validării.\n"
+"                Validat -> Trimis și validat de SPV.\n"
+"                Refuzat -> Trimis și refuzat de SPV.\n"
+"        "
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.l10n_ro_edi_view_account_invoice_filter
+msgid "Sent E-Factura"
+msgstr "E-Factura trimisă"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__show_fetch_status_button
+msgid "Show Fetch Status Button"
+msgstr "Afișează butonul Preia starea"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid "Submit the form by clicking on \"Generare Client ID\""
+msgstr "Trimiteți formularul făcând clic pe „Generare Client ID”"
+
+#. module: l10n_ro_edi
+#. odoo-javascript
+#: code:addons/l10n_ro_edi/static/src/components/fetch_invoices.xml:0
+msgid "Synchronize with ANAF"
+msgstr "Sincronizează cu ANAF"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid "Synchronized with SPV from message %s"
+msgstr "Sincronizat cu SPV din mesaj %s"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move_send.py:0
+msgid "The CIUS-RO E-Factura could not be found"
+msgstr "CIUS-RO E-Factura nu a putut fi găsită"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move_send.py:0
+msgid "The CIUS-RO E-Factura has already been sent"
+msgstr "CIUS-RO E-Factura a fost deja trimisă"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/utils.py:0
+msgid "The SPV data could not be parsed."
+msgstr "Datele SPV nu au putut fi analizate."
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid ""
+"The e-Factura has been sent and is now being validated by the SPV with index "
+"key: %s"
+msgstr ""
+"E-Factura a fost trimisă și este acum în curs de validare de către SPV cu "
+"cheia de index: %s"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move_send.py:0
+msgid ""
+"The following invoice(s) are waiting for answer from the Romanian SPV: %s.We "
+"won't send them again."
+msgstr ""
+"Următoarea factură (facturi) așteaptă răspunsul de la SPV-ul român: %s. Nu "
+"le vom trimite din nou."
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_edi_xml_ubl_ciusro.py:0
+msgid ""
+"The following partner doesn't have a VAT nor Company ID: %s. At least one of "
+"them is required. "
+msgstr ""
+"Următorul partener nu are TVA sau ID de companie: %s. Cel puțin unul dintre "
+"ele este necesar. "
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_edi_xml_ubl_ciusro.py:0
+msgid ""
+"The following partner's city name is invalid: %s. If partner's state is "
+"București, the city name must be 'SECTORX', where X is a number between 1-6."
+msgstr ""
+"Numele orașului următorului partener este invalid: %s. Dacă statul "
+"partenerului este București, numele orașului trebuie să fie 'SECTORX', unde "
+"X este un număr între 1-6."
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid "The invoice has already been sent to the SPV."
+msgstr "Această factură a fost deja trimisă către SPV."
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid ""
+"The invoice has probably been refused by the SPV. We were unable to recover "
+"the reason of the refusal because the invoice had not received its index. "
+"Duplicate the invoice and attempt to send it again."
+msgstr ""
+"Factură a fost probabil refuzată de SPV. Nu am putut recupera motivul "
+"refuzului deoarece factura nu și-a primit indexul. Duplicați factura și "
+"încercați să o trimiteți din nou."
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid "The invoice is not ready to be sent: %s"
+msgstr "Factura nu este gata să fie trimisă: %s"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/utils.py:0
+msgid "There is something wrong with the SPV. Please try again later."
+msgstr "Există o problemă cu SPV. Vă rugăm să încercați din nou mai târziu."
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid "This invoice has been accepted by the SPV."
+msgstr "Această factură a fost acceptată de SPV."
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid "This invoice was refused by the SPV for the following reason: %s"
+msgstr "Această factură a fost refuzată de SPV din următorul motiv: %s"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/utils.py:0
+msgid ""
+"Timeout while sending to SPV. Use Synchronise to SPV to update the status."
+msgstr ""
+"Timeout la trimiterea către SPV. Utilizați Sincronizare cu SPV pentru a "
+"actualiza starea."
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid ""
+"To benefit from this feature, you must have a digital signature USB token "
+"from\n"
+"                                        Romania connected with an ANAF "
+"account"
+msgstr ""
+"Pentru a beneficia de această funcție, trebuie să aveți un token USB de "
+"semnătură digitală din\n"
+"                                        România conectat la un cont ANAF"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/res_company.py:0
+msgid ""
+"Token not found.\n"
+"Response: %s"
+msgstr ""
+"Token negăsit.\n"
+"Răspuns: %s"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/utils.py:0
+msgid "Unknown endpoint."
+msgstr "Punct final necunoscut."
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_test_env
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__l10n_ro_edi_test_env
+msgid "Use Test Environment"
+msgstr "Utilizează mediu de testare"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__account_move__l10n_ro_edi_state__invoice_validated
+#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__l10n_ro_edi_document__state__invoice_validated
+msgid "Validated"
+msgstr "Validat"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.l10n_ro_edi_view_account_invoice_filter
+msgid "Validated E-Factura"
+msgstr "E-Factura validată"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move_send.py:0
+msgid "View Invoice(s)"
+msgstr "Vezi Factura(le)"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid ""
+"With the digital signature USB token inserted, generate the token using the "
+"button below"
+msgstr ""
+"Cu tokenul USB de semnătură digitală introdus, generați tokenul folosind "
+"butonul de mai jos"
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/wizard/account_move_send_wizard.py:0
+msgid "You can't send now. Invoice is waiting for an answer."
+msgstr "Nu puteți trimite acum. Factura așteaptă un răspuns."
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/utils.py:0
+msgid "You reached the limit of requests. Please try again later."
+msgstr "Ai atins limita de cereri. Vă rugăm să încercați din nou mai târziu."
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_client_id
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__l10n_ro_edi_client_id
+msgid "eFactura Client ID"
+msgstr "ID client eFactura"
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_partner__invoice_edi_format
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_users__invoice_edi_format
+msgid "eInvoice format"
+msgstr "Format factură electronică"
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid "https://pfinternet.anaf.ro/"
+msgstr "https://pfinternet.anaf.ro/"

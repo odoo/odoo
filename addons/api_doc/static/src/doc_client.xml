@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<templates>
+<t t-name="api_doc.DocClient">
+    <header class="position-fixed bg-1 d-flex flex-nowrap gap-1 align-items-center justify-content-between w-100">
+        <div class="d-flex flex-nowrap">
+            <h2>Odoo Runtime Doc</h2>
+        </div>
+        <div>
+            <input
+                t-on-click="() => this.state.showSearchModal = true"
+                placeholder="Find anything..."
+            />
+        </div>
+        <div class="d-flex flex-nowrap gap-1">
+            <button class="btn" role="button" t-on-click="() => this.env.modelStore.showApiKeyModal = true">
+                <i class="fa fa-key" aria-hidden="true"></i>
+            </button>
+            <button class="btn" role="button" t-on-click="() => this.toggleTheme()">
+                <i class="fa fa-moon-o" aria-hidden="true"></i>
+            </button>
+        </div>
+    </header>
+    <main class="position-relative d-flex flex-nowrap">
+        <DocSidebar t-if="!ui.isSmall"/>
+        <t t-if="modelStore.models.length > 0">
+            <DocModel t-if="modelStore.activeModel"/>
+        </t>
+        <div t-elif="!modelStore.error" class="h-100 w-100 d-flex flex-nowrap align-items-center justify-content-center gap-1">
+            <i class="fa fa-spinner o-doc-spinner" aria-hidden="true"></i>
+            <div>Loading Models</div>
+        </div>
+
+        <div t-if="modelStore.error" class="d-flex flex-column align-items-center justify-content-center w-100 h-100">
+            <DocErrorDialog
+                name="modelStore.error.name"
+                status="modelStore.error.status"
+                traceback="modelStore.error.traceback"
+            />
+        </div>
+    </main>
+    <ApiKeyModal t-if="modelStore.showApiKeyModal"/>
+    <SearchModal
+        t-if="state.showSearchModal"
+        close="() => this.state.showSearchModal = false"
+    />
+</t>
+</templates>

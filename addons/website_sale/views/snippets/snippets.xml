@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="snippets" inherit_id="website.snippets" name="e-commerce snippets">
+    <xpath expr="//t[@id='sale_products_hook']" position="replace">
+        <t t-snippet="website_sale.s_dynamic_snippet_products" string="Products" label="Dynamic Content" group="catalog"/>
+        <t t-snippet="website_sale.s_dynamic_snippet_category_list" string="Category List" label="Dynamic Content" group="catalog"/>
+    </xpath>
+    <xpath expr="//t[@id='snippet_add_to_cart_hook']" position="replace">
+        <t t-snippet="website_sale.s_add_to_cart" string="Add to Cart Button" t-thumbnail="/website/static/src/img/snippets_thumbs/s_add_to_cart.svg" t-grid-column-span="3"/>
+    </xpath>
+</template>
+
+</odoo>

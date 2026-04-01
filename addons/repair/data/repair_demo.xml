@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_service_order_repair" model="product.product">
+        <field name="name">Repair Services</field>
+        <field name="categ_id" ref="product.product_category_services"/>
+        <field name="standard_price">20.5</field>
+        <field name="list_price">30.75</field>
+        <field name="type">service</field>
+        <field name="service_tracking">repair</field>
+    </record>
+
+    <record id="repair_r1" model="repair.order">
+        <field name="schedule_date" eval="DateTime.today()"/>
+        <field name="user_id"/>
+        <field name="product_id" ref="product.product_product_3"/>
+        <field name="product_uom" ref="uom.product_uom_unit"/>
+        <field name="picking_type_id" ref="picking_type_warehouse0_repair"/>
+        <field name="move_ids" model="stock.move" eval="[(5, 0, 0), (0, 0, {
+            'location_dest_id': obj().env.ref('product.product_product_11').property_stock_production.id,
+            'location_id': obj().env.ref('stock.stock_location_stock').id,
+            'product_id': obj().env.ref('product.product_product_11').id,
+            'product_uom': obj().env.ref('uom.product_uom_unit').id,
+            'product_uom_qty': '1.0',
+            'state': 'draft',
+            'repair_line_type': 'add',
+            'company_id': obj().env.ref('base.main_company').id,
+        })]"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+    </record>
+
+    <record id="repair_r0" model="repair.order">
+        <field name="schedule_date" eval="DateTime.today()"/>
+        <field name="product_id" ref="product.product_product_5"/>
+        <field name="product_uom" ref="uom.product_uom_unit"/>
+        <field name="user_id"/>
+        <field name="picking_type_id" ref="picking_type_warehouse0_repair"/>
+        <field name="move_ids" model="stock.move" eval="[(5, 0, 0), (0, 0, {
+            'location_dest_id': obj().env.ref('product.product_product_12').property_stock_production.id,
+            'location_id': obj().env.ref('stock.stock_location_stock').id,
+            'product_id': obj().env.ref('product.product_product_12').id,
+            'product_uom': obj().env.ref('uom.product_uom_unit').id,
+            'product_uom_qty': 1.0,
+            'state': 'draft',
+            'repair_line_type': 'add',
+            'company_id': obj().env.ref('base.main_company').id,
+        })]"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+    </record>
+
+    <record id="repair_r2" model="repair.order">
+        <field name="priority">1</field>
+        <field name="schedule_date" eval="DateTime.today() + relativedelta(days=-5)"/>
+        <field name="product_id" ref="product.product_product_6"/>
+        <field name="product_uom" ref="uom.product_uom_unit"/>
+        <field name="user_id"/>
+        <field name="picking_type_id" ref="picking_type_warehouse0_repair"/>
+        <field name="move_ids" model="stock.move" eval="[(5, 0, 0), (0, 0, {
+            'location_dest_id': obj().env.ref('product.product_product_13').property_stock_production.id,
+            'location_id': obj().env.ref('stock.stock_location_stock').id,
+            'product_id': obj().env.ref('product.product_product_13').id,
+            'product_uom': obj().env.ref('uom.product_uom_unit').id,
+            'product_uom_qty': 1.0,
+            'state': 'draft',
+            'repair_line_type': 'add',
+            'company_id': obj().env.ref('base.main_company').id,
+        })]"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+    </record>
+</odoo>

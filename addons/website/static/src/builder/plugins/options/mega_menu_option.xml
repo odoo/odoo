@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.MegaMenuOption">
+    <t t-set="templatePrefix" t-value="state.templatePrefix"/>
+    <BuilderRow label.translate="Template">
+        <BuilderSelect id="'mega_menu_template_opt'" action="'selectTemplate'">
+            <BuilderSelectItem
+                title.translate="Multi Menus"
+                actionParam="{
+                    view: `${templatePrefix}s_mega_menu_multi_menus`,
+                    templateClass: 's_mega_menu_multi_menus',
+                }">
+                <Img class="'w-75 m-auto'" style="'margin-block: -0.8em !important;'" src="'/website/static/src/img/snippets_thumbs/s_mega_menu_multi_menus.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Image Menu"
+                actionParam="{
+                    view: `${templatePrefix}s_mega_menu_menu_image_menu`,
+                    templateClass: 's_mega_menu_menu_image_menu',
+                }">
+                <Img class="'w-75 m-auto'" style="'margin-block: -0.8em !important;'" src="'/website/static/src/img/snippets_thumbs/s_mega_menu_menu_image_menu.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Odoo Menu"
+                actionParam="{
+                    view: `${templatePrefix}s_mega_menu_odoo_menu`,
+                    templateClass: 's_mega_menu_odoo_menu',
+                }">
+                <Img class="'w-75 m-auto'" style="'margin-block: -0.8em !important;'" src="'/website/static/src/img/snippets_thumbs/s_mega_menu_odoo_menu.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Little Icons"
+                actionParam="{
+                    view: `${templatePrefix}s_mega_menu_little_icons`,
+                    templateClass: 's_mega_menu_little_icons',
+                }">
+                <Img class="'w-75 m-auto'" style="'margin-block: -0.8em !important;'" src="'/website/static/src/img/snippets_thumbs/s_mega_menu_little_icons.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Big Icons Subtitles"
+                actionParam="{
+                    view: `${templatePrefix}s_mega_menu_big_icons_subtitles`,
+                    templateClass: 's_mega_menu_big_icons_subtitles',
+                }">
+                <Img class="'w-75 m-auto'" style="'margin-block: -0.8em !important;'" src="'/website/static/src/img/snippets_thumbs/s_mega_menu_big_icons_subtitles.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Images Subtitles"
+                actionParam="{
+                    view: `${templatePrefix}s_mega_menu_images_subtitles`,
+                    templateClass: 's_mega_menu_images_subtitles',
+                }">
+                <Img class="'w-75 m-auto'" style="'margin-block: -0.8em !important;'" src="'/website/static/src/img/snippets_thumbs/s_mega_menu_images_subtitles.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Logos"
+                actionParam="{
+                    view: `${templatePrefix}s_mega_menu_menus_logos`,
+                    templateClass: 's_mega_menu_menus_logos',
+                }">
+                <Img class="'w-75 m-auto'" style="'margin-block: -0.25em !important;'" src="'/website/static/src/img/snippets_thumbs/s_mega_menu_menus_logos.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Thumbnails"
+                actionParam="{
+                    view: `${templatePrefix}s_mega_menu_thumbnails`,
+                    templateClass: 's_mega_menu_thumbnails',
+                }">
+                <Img class="'w-75 m-auto'" style="'margin-block: -0.25em !important;'" src="'/website/static/src/img/snippets_thumbs/s_mega_menu_thumbnails.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Cards"
+                actionParam="{
+                    view: `${templatePrefix}s_mega_menu_cards`,
+                    templateClass: 's_mega_menu_cards',
+                }">
+                <Img class="'w-75 m-auto'" style="'margin-block: -0.25em !important;'" src="'/website/static/src/img/snippets_thumbs/s_mega_menu_cards.svg'"/>
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Size" t-if="!hasHeaderTemplates(['hamburger', 'sidebar'])">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">Full-Width</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_mega_menu_container_size'">Narrow</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+</templates>

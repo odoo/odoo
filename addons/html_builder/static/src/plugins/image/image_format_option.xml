@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.ImageFormat">
+    <BuilderRow label.translate="Format" level="this.props.level">
+        <BuilderSelect>
+            <t t-foreach="state.formats" t-as="format" t-key="format.id">
+                <BuilderSelectItem className="'o_we_badge_at_end'" action="'setImageFormat'" actionParam="format">
+                    <div class="d-flex align-items-center overflow-hidden">
+                        <span class="text-truncate flex-grow-1 me-2" t-out="format.label"/>
+                        <span class="badge rounded-pill me-1 top-0 align-self-center flex-shrink-0" t-out="format.mimetype.split('/')[1]"/>
+                    </div>
+                </BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Quality" t-if="state.showQuality and state.formats.length" level="this.props.level">
+        <BuilderRange
+            action="'setImageQuality'"
+            min="0"
+            max="100"
+            t-if="!state.compressionUnsupported" />
+        <span t-if="state.compressionUnsupported" class="fst-italic">
+            WebP compression not supported on this browser
+        </span>
+    </BuilderRow>
+</t>
+
+
+
+</templates>

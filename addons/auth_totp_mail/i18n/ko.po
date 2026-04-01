@@ -1,0 +1,414 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_totp_mail
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-01-23 07:38+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"auth_totp_mail/ko/>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+msgid ""
+".\n"
+"                <br/>"
+msgstr ""
+".\n"
+"                <br/>"
+
+#. module: auth_totp_mail
+#: model:mail.template,body_html:auth_totp_mail.mail_template_totp_invite
+msgid ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"        <t t-out=\"user.name  or ''\"/> requested you activate two-factor "
+"authentication to protect your account.<br/><br/>\n"
+"        Two-factor Authentication (\"2FA\") is a system of double "
+"authentication.\n"
+"        The first one is done with your password and the second one with a "
+"code you get from a dedicated mobile app.\n"
+"        Popular ones include Authy, Google Authenticator or the Microsoft "
+"Authenticator.\n"
+"\n"
+"        </p><p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" t-attf-"
+"style=\"background-color:{{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;"
+"\">\n"
+"                Activate my two-factor Authentication\n"
+"            </a>\n"
+"        </p>\n"
+"    \n"
+"</div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        안녕하세요 <t t-out=\"object.partner_id.name or ''\"/>님,<br/><br/>\n"
+"        <t t-out=\"user.name  or ''\"/> 사에서 귀하의 계정을 보호하기 위해 2"
+"단계 인증 활성화를 요청했습니다.<br/><br/>\n"
+"        2단계 인증 절차 (\"2FA\")란 이중 확인 절차를 통해 사용자 본인만이 계"
+"정에 접근할 수 있도록 하는 인증 시스템입니다.\n"
+"        먼저 아이디와 비밀번호로 로그인한 후, 두 번째 단계로 전용 모바일 앱에"
+"서 받은 코드를 입력하는 방식입니다.\n"
+"        보통 사용하는 인증 앱으로는 Authy, Google Authenticator 또는 "
+"Microsoft Authenticator 등이 있습니다.\n"
+"\n"
+"        </p><p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" t-attf-"
+"style=\"background-color:{{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;"
+"\">\n"
+"                2단계 인증 활성화하기\n"
+"            </a>\n"
+"        </p>\n"
+"    \n"
+"</div>\n"
+"        "
+
+#. module: auth_totp_mail
+#: model:mail.template,body_html:auth_totp_mail.mail_template_totp_mail_code
+msgid ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"<p>Someone is trying to log in into your account with a new device.</p>\n"
+"<ul>\n"
+"    <t t-set=\"not_available\">N/A</t>\n"
+"    <li>Location: <t t-out=\"ctx.get('location') or not_available\"/></li>\n"
+"    <li>Device: <t t-out=\"ctx.get('device') or not_available\"/></li>\n"
+"    <li>Browser: <t t-out=\"ctx.get('browser') or not_available\"/></li>\n"
+"    <li>IP address: <t t-out=\"ctx.get('ip') or not_available\"/></li>\n"
+"</ul>\n"
+"<p>If this is you, please enter the following code to complete the login:</"
+"p>\n"
+"<t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"/>\n"
+"<t t-set=\"code\" t-value=\"code_expiration[0]\"/>\n"
+"<t t-set=\"expiration\" t-value=\"code_expiration[1]\"/>\n"
+"<div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"    <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid "
+"#dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-"
+"radius: 5px;\"/>\n"
+"</div>\n"
+"<small>Please note that this code expires in <t t-out=\"expiration\"/>.</"
+"small>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"    If you did NOT initiate this log-in,\n"
+"    you should immediately change your password to ensure account security.\n"
+"</p>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"    We also strongly recommend enabling the two-factor authentication using "
+"an authenticator app to help secure your account.\n"
+"</p>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
+"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px;\">\n"
+"        Activate my two-factor authentication\n"
+"    </a>\n"
+"</p>\n"
+"</div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"안녕하세요, <t t-out=\"object.partner_id.name or ''\"/>님.<br/><br/>\n"
+"<p>새 디바이스에서 귀하의 계정에 로그인하려는 시도가 감지되었습니다.</p>\n"
+"<ul>\n"
+"    <t t-set=\"not_available\">N/A</t>\n"
+"    <li>위치: <t t-out=\"ctx.get('location') or not_available\"/></li>\n"
+"    <li>디바이스: <t t-out=\"ctx.get('device') or not_available\"/></li>\n"
+"    <li>브라우저: <t t-out=\"ctx.get('browser') or not_available\"/></li>\n"
+"    <li>IP 주소: <t t-out=\"ctx.get('ip') or not_available\"/></li>\n"
+"</ul>\n"
+"<p>본인이 맞는 경우, 다음 코드를 입력하여 로그인을 완료해주시기 바랍니다:</"
+"p>\n"
+"<t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"/>\n"
+"<t t-set=\"code\" t-value=\"code_expiration[0]\"/>\n"
+"<t t-set=\"expiration\" t-value=\"code_expiration[1]\"/>\n"
+"<div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"    <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid "
+"#dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-"
+"radius: 5px;\"/>\n"
+"</div>\n"
+"<small>해당 코드는 <t t-out=\"expiration\"/>분 후에 만료됩니다.</small>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"    이 로그인 시도가 본인이 아닌 경우\n"
+"    계정 보안을 위해 즉시 비밀번호를 변경해주시기 바랍니다.\n"
+"</p>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"    추가적인 보안 강화를 위해 인증 앱을 사용하여 2단계 인증을 활성화하는 것"
+"도 권장합니다.\n"
+"</p>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
+"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px;\">\n"
+"        2단계 인증 활성화하기\n"
+"    </a>\n"
+"</p>\n"
+"</div>\n"
+"        "
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+msgid ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                To login, enter below the six-digit authentication code just "
+"sent via email to"
+msgstr ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                로그인하려면 이메일을 통해 전송된 6자리 인증 코드를 아래에 입"
+"력하세요"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+msgid ""
+"<span class=\"text-muted\">\n"
+"                            Recommended for extra security.\n"
+"                        </span>"
+msgstr ""
+"<span class=\"text-muted\">\n"
+"                            보안 강화를 위한 권장 사항입니다.\n"
+"                       </span>"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
+msgid "<span>Consider also</span>"
+msgstr "<span>추가 고려 사항:</span>"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "A new device was used to sign in to your account."
+msgstr "새 기기를 사용하여 계정에 로그인했습니다."
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/auth_totp_device.py:0
+msgid ""
+"A trusted device has just been removed from your account: %(device_names)s"
+msgstr "계정에서 신뢰할 수 있는 장치가 제거되었습니다: %(device_names)s"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__all_required
+msgid "All users"
+msgstr "모든 사용자"
+
+#. module: auth_totp_mail
+#: model:ir.model,name:auth_totp_mail.model_auth_totp_device
+msgid "Authentication Device"
+msgstr "인증 장치"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Cannot send email: user %s has no email address."
+msgstr "이메일을 보낼 수 없습니다 :  %s 사용자는 이메일 주소가 없습니다."
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+msgid "Click to enable 2FA."
+msgstr "2단계 인증을 활성화하려면 클릭하세요."
+
+#. module: auth_totp_mail
+#: model:ir.model,name:auth_totp_mail.model_res_config_settings
+msgid "Config Settings"
+msgstr "환경설정"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__display_name
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_users__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__employee_required
+msgid "Employees only"
+msgstr "직원 전용"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+msgid "Enable 2FA"
+msgstr "2단계 인증 활성화"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_config_settings_view_form
+msgid ""
+"Enforce the two-factor authentication by email for employees or for all "
+"users (including portal users) if they didn't enable any other two-factor "
+"authentication method."
+msgstr ""
+"다른 2단계 인증 방법을 설정하지 않은 경우, 포털 사용자를 포함한 직원 또는 모"
+"든 사용자에게 이메일을 통한 2단계 인증을 적용합니다."
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_enforce
+msgid "Enforce two-factor authentication"
+msgstr "2단계 인증 적용"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__id
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_totp_mail
+#: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
+msgid "Invitation to activate two-factor authentication on your Odoo account"
+msgstr "Odoo 계정에서 2단계 인증을 활성화하도록 초대합니다"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid ""
+"Invitation to use two-factor authentication sent for the following user(s): "
+"%s"
+msgstr "다음 사용자에 대해 2단계 인증 사용 초대를 보냈습니다: %s"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
+msgid "Invite to use 2FA"
+msgstr "2FA 사용 초대"
+
+#. module: auth_totp_mail
+#: model:ir.actions.server,name:auth_totp_mail.action_invite_totp
+msgid "Invite to use two-factor authentication"
+msgstr "2단계 인증 설정 초대"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+msgid "Learn More"
+msgstr "추가 정보"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "New Connection to your Account"
+msgstr "계정에 새로 연결"
+
+#. module: auth_totp_mail
+#: model:ir.actions.server,name:auth_totp_mail.action_activate_two_factor_authentication
+msgid "Open two-factor authentication configuration"
+msgstr "2단계 인증 환경설정 열기"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+msgid "Re-send email"
+msgstr "이메일 재전송"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Security"
+msgstr "보안"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Security Update: 2FA Activated"
+msgstr "보안 업데이트: 2FA 활성화됨"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Security Update: 2FA Deactivated"
+msgstr "보안 업데이트: 2FA 비활성화됨"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/auth_totp_device.py:0
+msgid "Security Update: Device Removed"
+msgstr "보안 업데이트: 장치 제거됨"
+
+#. module: auth_totp_mail
+#: model:mail.template,name:auth_totp_mail.mail_template_totp_invite
+msgid "Settings: 2Fa Invitation"
+msgstr "설정: 2Fa 초대"
+
+#. module: auth_totp_mail
+#: model:mail.template,name:auth_totp_mail.mail_template_totp_mail_code
+msgid "Settings: 2Fa New Login"
+msgstr "설정: 2Fa 새로운 로그인"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+msgid "Two-factor Authentication"
+msgstr "2단계 인증"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_policy
+msgid "Two-factor authentication enforcing policy"
+msgstr "2단계 인증 적용 정책"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Two-factor authentication has been activated on your account"
+msgstr "계정에서 2단계 인증이 활성화되었습니다"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Two-factor authentication has been deactivated on your account"
+msgstr "계정에서 2단계 인증이 비활성화되었습니다"
+
+#. module: auth_totp_mail
+#: model:ir.model,name:auth_totp_mail.model_res_users
+msgid "User"
+msgstr "사용자"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Verification failed, please double-check the 6-digit code"
+msgstr "인증에 실패했습니다. 6자리 코드를 다시 확인하세요."
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+msgid ""
+"We strongly recommend enabling the two-factor authentication using an "
+"authenticator app to help secure your account.\n"
+"                <br/>"
+msgstr ""
+"계정을 안전하게 보호할 수 있도록 인증 앱을 통하여 2단계 인증 기능을 사용하는 "
+"것을 적극 권장합니다.\n"
+"                <br/>"
+
+#. module: auth_totp_mail
+#: model:mail.template,subject:auth_totp_mail.mail_template_totp_mail_code
+msgid "Your two-factor authentication code"
+msgstr "2단계 인증 코드"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
+msgid "activating Two-factor Authentication"
+msgstr "2단계 인증 설정하기"
+
+#~ msgid "Account Security"
+#~ msgstr "계정 보안"
+
+#~ msgid "Name"
+#~ msgstr "이름"

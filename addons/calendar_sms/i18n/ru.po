@@ -1,0 +1,122 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * calendar_sms
+#
+# Translators:
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-12-03 08:31+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
+"calendar_sms/ru/>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_event
+msgid "Calendar Event"
+msgstr "Календарное событие"
+
+#. module: calendar_sms
+#: model:sms.template,name:calendar_sms.sms_template_data_calendar_reminder
+msgid "Calendar Event: Reminder"
+msgstr "Событие календаря: Напоминание"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__display_name
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__display_name
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__display_name
+msgid "Display Name"
+msgstr "Display Name"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_alarm
+msgid "Event Alarm"
+msgstr "Сигнал тревоги"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_alarm_manager
+msgid "Event Alarm Manager"
+msgstr "Менеджер аварийных сигналов событий"
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
+msgid "Event reminder: %(name)s, %(time)s."
+msgstr "Напоминание о событиях: %(name)s, %(time)s."
+
+#. module: calendar_sms
+#: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
+msgid ""
+"Event reminder: {{ object.name }}, "
+"{{ object.get_display_time_tz(object.partner_id.tz) }}"
+msgstr ""
+"Напоминание о событии: {{ object.name }}, "
+"{{ object.get_display_time_tz(object.partner_id.tz) }}"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__id
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__id
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__id
+msgid "ID"
+msgstr "ID"
+
+#. module: calendar_sms
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
+msgid "SMS"
+msgstr "СМС"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_template_id
+msgid "SMS Template"
+msgstr "SMS шаблон"
+
+#. module: calendar_sms
+#: model:ir.model.fields.selection,name:calendar_sms.selection__calendar_alarm__alarm_type__sms
+msgid "SMS Text Message"
+msgstr "Текстовое сообщение SMS"
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_tree_inherited
+msgid "Send SMS"
+msgstr "Отправить SMS"
+
+#. module: calendar_sms
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
+msgid "Send SMS to attendees"
+msgstr "Отправка SMS участникам"
+
+#. module: calendar_sms
+#: model:ir.model.fields,help:calendar_sms.field_calendar_alarm__sms_template_id
+msgid "Template used to render SMS reminder content."
+msgstr "Шаблон для генерации SMS напоминания."
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
+msgid "There are no attendees on these events"
+msgstr "На этих мероприятиях нет посетителей"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type
+msgid "Type"
+msgstr "Тип"
+
+#~ msgid "Notify Responsible"
+#~ msgstr "Уведомить ответственного"
+
+#~ msgid "Send SMS Text Message"
+#~ msgstr "Отправить текстовое сообщение SMS"

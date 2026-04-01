@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="sale_project.ProjectProfitabilitySection">
+        <tr class="opacity-trigger-hover" t-att-class="{ 'table-active': !state.isFolded }">
+            <t t-set="revenue_label" t-value="props.labels[revenue.id] or revenue.id"/>
+            <td>
+                <div class="position-relative d-flex gap-1">
+                    <t t-if="this.props.revenue.isSectionFoldable">
+                        <button class="o_group_caret btn btn-link d-flex gap-1 flex-grow-1 p-0 text-reset text-start" t-on-click="() => this.toggleSaleItems()">
+                            <i t-attf-class="fa fa-fw #{state.isFolded ? 'fa-caret-right' : 'fa-caret-down'} mt-1"/>
+                            <span t-out="revenue_label"/>
+                        </button>
+                    </t>
+                    <t t-esc="revenue_label" t-else=""/>
+                    <a
+                        class="revenue_section btn btn-link my-n2 py-2 text-action"
+                        t-if="revenue.action" href="#"
+                        t-on-click="() => this.props.onClick(revenue.action)"
+                        t-att-class="{ 'ms-auto': env.isSmall, 'opacity-0': !env.isSmall and state.isFolded, 'opacity-100-hover': !env.isSmall }"
+                        aria-label="Internal link"
+                        data-tooltip="Internal link"
+                    >
+                        <i class="oi oi-arrow-right"/>
+                    </a>
+                </div>
+            </td>
+            <td t-attf-class="text-end {{ revenue.invoiced + revenue.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.invoiced + revenue.to_invoice)"/></td>
+            <td t-attf-class="text-end {{ revenue.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.to_invoice)"/></td>
+            <td t-attf-class="text-end {{ revenue.invoiced === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.invoiced)"/></td>
+        </tr>
+        <t t-if="!state.isFolded and this.props.revenue.isSectionFoldable">
+            <tr class="table-active">
+                <td colspan="4" class="p-0 m-0">
+                    <table class="o_rightpanel_subtable table table-sm table-borderless table-hover mb-0 border-bottom">
+                        <thead>
+                            <tr>
+                                <th class="ps-4">Sales Order Items</th>
+                                <th class="text-end">Sold</th>
+                                <th class="text-end">Delivered</th>
+                                <th class="text-end">Invoiced</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="sale_items" t-as="sale_item" t-key="sale_item.id">
+                                <t t-set="uom_name" t-value="sale_item.product_uom_id and sale_item.product_uom_id[1]"/>
+                                <td class="ps-4">
+                                    <a t-if="sale_item.action" href="#" t-on-click="() => this.onSaleItemActionClick(sale_item.action)">
+                                        <t t-esc="sale_item.display_name"/>
+                                    </a>
+                                    <t t-else="" t-esc="sale_item.display_name"/>
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-flex d-md-block flex-column">
+                                        <t t-esc="formatValue(sale_item.product_uom_qty, uom_name)"/>
+                                        <small t-esc="uom_name" class="ms-md-1 text-muted"/>
+                                    </div>
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-flex d-md-block flex-column">
+                                        <t t-esc="formatValue(sale_item.qty_delivered, uom_name)"/>
+                                        <small t-esc="uom_name" class="ms-md-1 text-muted"/>
+                                    </div>
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-flex d-md-block flex-column">
+                                        <t t-esc="formatValue(sale_item.qty_invoiced, uom_name)"/>
+                                        <small t-esc="uom_name" class="ms-md-1 text-muted"/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr t-if="state.displayLoadMore">
+                                <td class="pt-0 pb-3" colspan="4">
+                                    <a class="btn btn-link" t-on-click="() => this.onLoadMoreClick(revenue)">
+                                        Load more <i class="fa fa-arrow-circle-down ms-1"/>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </td>
+            </tr>
+        </t>
+    </t>
+</templates>

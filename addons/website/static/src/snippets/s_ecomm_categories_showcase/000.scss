@@ -1,0 +1,110 @@
+.s_ecomm_categories_showcase {
+    --ecomm-categories-showcase-min-height: 50vh;
+    --ecomm-categories-showcase-width: 85%;
+    --ecomm-categories-showcase-row-height: 100%;
+    --ecomm-categories-showcase-flex-base: 1;
+    --ecomm-categories-showcase-edge-spacing: #{$container-padding-x * .5};
+
+    .s_ecomm_categories_showcase_wrapper {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .s_ecomm_categories_showcase_block {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        width: var(--ecomm-categories-showcase-width);
+        overflow: hidden;
+        min-height: 45vh;
+
+        .s_ecomm_categories_showcase_row {
+            height: var(--ecomm-categories-showcase-row-height);
+            padding: #{map-get($spacers, 4)};
+            margin: 0;
+            z-index: 2;
+        }
+
+        .o_bg_video_container iframe {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    .s_ecomm_categories_showcase_content {
+        width: 100%;
+        padding: 0;
+    }
+
+    @include media-breakpoint-down(lg) {
+        .s_ecomm_categories_showcase_wrapper {
+            margin-left: calc(var(--ecomm-categories-showcase-edge-spacing) * -1);
+            margin-right: calc(var(--ecomm-categories-showcase-edge-spacing) * -1);
+            padding: 0 var(--ecomm-categories-showcase-edge-spacing);
+            scroll-padding-left: var(--ecomm-categories-showcase-edge-spacing);
+            scroll-padding-right: var(--ecomm-categories-showcase-edge-spacing);
+        }
+    }
+
+    @include media-breakpoint-between(md, lg) {
+        --ecomm-categories-showcase-width: 55%;
+    }
+
+    @include media-breakpoint-up(lg) {
+        .container-fluid {
+            padding: 0 var(--ecomm-categories-showcase-fluid-padding-x, 0);
+
+            &:has(.gap-4) {
+                --ecomm-categories-showcase-fluid-padding-x: #{$container-padding-x};
+            }
+        }
+
+        .s_ecomm_categories_showcase_wrapper {
+            flex-wrap: wrap;
+            overflow-x: visible;
+        }
+
+        .s_ecomm_categories_showcase_block {
+            flex: var(--ecomm-categories-showcase-flex-base);
+            min-height: var(--ecomm-categories-showcase-min-height);
+            width: auto;
+            transition: flex 0.3s ease-out;
+        }
+
+        .s_ecomm_categories_showcase_wrapper:hover .s_ecomm_categories_showcase_block,
+        .s_ecomm_categories_showcase_wrapper:focus-within .s_ecomm_categories_showcase_block:not(:focus-within) {
+            flex: var(--ecomm-categories-showcase-flex-base);
+        }
+
+        .s_ecomm_categories_showcase_wrapper:hover .s_ecomm_categories_showcase_block:hover,
+        .s_ecomm_categories_showcase_wrapper .s_ecomm_categories_showcase_block:focus-within {
+            flex: 3;
+        }
+
+        &.first-large-layout .s_ecomm_categories_showcase_block:first-child {
+            flex: 2;
+        }
+    }
+
+    &.o_min_height_short {
+        --ecomm-categories-showcase-min-height: 25vh;
+
+        @include media-breakpoint-down(md) {
+            .s_ecomm_categories_showcase_block {
+                min-height: 30vh;
+            }
+        }
+    }
+
+    &.o_min_height_tall {
+        --ecomm-categories-showcase-min-height: 75vh;
+
+        @include media-breakpoint-down(md) {
+            .s_ecomm_categories_showcase_block {
+                min-height: 60vh;
+            }
+        }
+    }
+}

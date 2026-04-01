@@ -1,0 +1,51 @@
+<templates xml:space="preserve">
+<t t-name="web.ColorPicker">
+    <div t-attf-class="o_font_color_selector user-select-none {{this.props.className}}"
+        t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true" t-ref="root">
+        <div class="px-1 mb-1 pt-2 d-flex">
+            <t t-foreach="this.tabs" t-as="tab" t-key="tab.id">
+                <button t-attf-class="btn btn-sm text-truncate btn-tab #{tab.id}-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === tab.id ? 'active' : ''}"
+                    t-on-click="() => this.setTab(tab.id)">
+                    <t t-out="tab.name" />
+                </button>
+            </t>
+            <div class="flex-grow-1" />
+            <button t-attf-class="btn btn-sm fa fa-trash #{ isDarkTheme ? 'btn-secondary' : 'btn-light'}"
+                    title="Reset"
+                    t-on-click="onColorApply"
+                    t-on-mouseover="onColorHover"
+                    t-on-mouseout="onColorHoverOut"
+                    t-on-focusin="onColorFocusin"
+                    t-on-focusout="onColorFocusout"/>
+        </div>
+        <t t-set="activeTab" t-value="this.tabs.find((tab) => state.activeTab === tab.id)" />
+        <t t-component="activeTab.component" t-props="{
+            applyColor: this.applyColor.bind(this),
+            onColorClick: this.onColorApply.bind(this),
+            onColorPointerOver: this.onColorHover.bind(this),
+            onColorPointerOut: this.onColorHoverOut.bind(this),
+            onColorPointerLeave: this.applyColorResetPreview.bind(this),
+            onFocusin: this.onColorFocusin.bind(this),
+            onFocusout: this.onColorFocusout.bind(this),
+            colorPickerNavigation: this.colorPickerNavigation.bind(this),
+            onColorPreview: this.onColorPreview.bind(this),
+            setOnCloseCallback: this.props.setOnCloseCallback.bind(this),
+            setOperationCallbacks: this.setOperationCallbacks.bind(this),
+            editColorCombination: this.props.editColorCombination,
+            selectedColorCombination: this.props.state.selectedColorCombination,
+            defaultOpacity: this.props.defaultOpacity,
+            noTransparency: this.props.noTransparency,
+            defaultThemeColorVars: this.DEFAULT_THEME_COLOR_VARS,
+            defaultColorSet: this.defaultColorSet,
+            cssVarColorPrefix: this.props.cssVarColorPrefix,
+            defaultColors: this.DEFAULT_COLORS,
+            getUsedCustomColors: this.props.getUsedCustomColors,
+            grayscales: this.grayscales,
+            currentCustomColor: this.state.currentCustomColor,
+            currentColorPreview: this.state.currentColorPreview,
+            selectedColor: this.props.state.selectedColor,
+        }" />
+    </div>
+</t>
+
+</templates>

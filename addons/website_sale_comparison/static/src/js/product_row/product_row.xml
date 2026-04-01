@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_sale_comparison.ProductRow">
+        <div
+            class="d-flex align-items-center gap-2 flex-grow-1 p-1 rounded text-truncate"
+            name="product_comparison_bottom_bar_row"
+        >
+            <a
+                t-att-href="props.website_url"
+                class="d-flex gap-2 flex-grow-1 text-truncate text-decoration-none"
+            >
+                <img
+                    t-att-src="props.image_url"
+                    class="o_wsale_comparison_bottom_bar_image border rounded"
+                    alt="Product Image"
+                />
+                <h6 class="flex-grow-1 mb-0 text-truncate">
+                    <span t-out="props.display_name" class="d-block mb-0 small text-truncate"/>
+                    <small t-if="!props.prevent_zero_price_sale" class="mb-0 text-body">
+                        <span t-out="formattedPrice" class="me-1 text-nowrap"/>
+                        <del
+                            t-if="props.strikethrough_price"
+                            t-out="formattedStrikethroughPrice"
+                            class="text-nowrap text-muted"
+                        />
+                    </small>
+                </h6>
+            </a>
+            <button
+                t-on-click="removeProduct"
+                class="btn btn-sm btn-light ms-auto rounded-circle p-2 lh-1"
+                aria-label="Remove product from comparison"
+            >
+                <i class="oi oi-close"/>
+            </button>
+        </div>
+    </t>
+</templates>

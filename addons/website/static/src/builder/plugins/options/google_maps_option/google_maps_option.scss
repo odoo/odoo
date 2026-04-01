@@ -1,0 +1,55 @@
+.pac-container { // Google Maps' Autocomplete
+    z-index: $zindex-modal-backdrop; // > $o-we-zindex
+    width: ceil($o-we-sidebar-width * 0.9) !important;
+    font-size: $o-we-sidebar-font-size;
+    margin-left: -$o-we-sidebar-width/2;
+    border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-dropdown-border-color;
+    border-top: none;
+    border-radius: $o-we-item-border-radius;
+    overflow: hidden;
+    background-color: $o-we-sidebar-content-field-dropdown-bg;
+    box-shadow: $o-we-sidebar-content-field-dropdown-shadow;
+    margin-top: $o-we-sidebar-content-field-dropdown-spacing;
+    transform: translate(41px);
+
+    &:after {
+        display: none;
+    }
+
+    .pac-item {
+        @include o-text-overflow(block);
+        line-height: $o-we-sidebar-content-field-dropdown-item-height;
+        color: $o-we-sidebar-content-field-clickable-color;
+        padding: 0 1em 0 (2 * $o-we-sidebar-content-field-control-item-spacing + $o-we-sidebar-content-field-control-item-size);
+        border-top: $o-we-sidebar-content-field-border-width solid lighten($o-we-sidebar-content-field-dropdown-border-color, 15%);
+        border-radius: $o-we-sidebar-content-field-border-radius;
+        background-color: $o-we-sidebar-content-field-clickable-bg;
+        color: $o-we-sidebar-content-field-clickable-color;
+        font-size: $o-we-sidebar-font-size;
+
+        &:hover, &:focus, &.pac-item-selected {
+            background-color: $o-we-sidebar-content-field-dropdown-item-bg-hover;
+            cursor: pointer;
+        }
+
+        /* Remove Google Maps' own icon. */
+        .pac-icon {
+            all: revert;
+        }
+
+        .pac-icon-marker {
+            position: absolute;
+            margin-left: -1em;
+
+            &::after {
+                content: '\f041';
+                font-family: FontAwesome;
+            }
+        }
+
+        .pac-item-query {
+            margin-right: 0.4em;
+            color: inherit;
+        }
+    }
+}

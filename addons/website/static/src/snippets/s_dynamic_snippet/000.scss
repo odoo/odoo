@@ -1,0 +1,87 @@
+.s_dynamic {
+    // TODO Dynamic snippet loading style: Temporarily disabled in preview mode
+    // since it needs interactions to be available.
+    #wrap &:not(.o_check_scroll_position) {
+        // Compatibility code: The `o_dynamic_empty` class was originally used to control
+        // the visibility of dynamic snippets. It was later renamed (starting from `18.0`)
+        // to `s_dynamic_empty`, while another class `o_dynamic_snippet_empty` was added by
+        // the public widget before leaving edit mode (on destroy).
+        // Also since `18.2`, `o_dynamic_snippet_empty` is handled via the interaction’s
+        // dynamic content, meaning it is cleaned up on destroy and only the class added in
+        // XML (`s_dynamic_empty`) remains. As a result, a dynamic snippet may end up with:
+        // 1. `o_dynamic_empty` & `o_dynamic_snippet_empty` > for snippets from before `18.0`
+        // and edited in `18.0`.
+        // 2. `o_dynamic_empty` > for   before `18.0` and never updated in edit mode.
+        // 3. `s_dynamic_empty` and `o_dynamic_snippet_empty` > for snippets created in `18.0`
+        // and never edited.
+        // 4. `s_dynamic_empty` > for snippets created starting from `18.2`.
+        // 5. No visibility class > for snippets created starting from `19.0`.
+        &.o_dynamic_empty,
+        &.s_dynamic_empty,
+        &.o_dynamic_snippet_empty {
+            body:not(.editor_enable) & {
+                display: none !important;
+            }
+        }
+        &.o_dynamic_snippet_loading {
+            body:not(.editor_enable) & {
+                section:not(.s_dynamic_snippet_holder) {
+                    display: none !important;
+                }
+                .s_dynamic_snippet_holder {
+                    display: block !important;
+                }
+            }
+        }
+    }
+    [data-url] {
+        cursor: pointer;
+    }
+    img {
+        object-fit: scale-down;
+    }
+
+    //
+    // Handle adaptations according to the container size and s_dynamic_snippet_title position.
+    //
+
+    // Define entries minimum size as half 'o_small_container' width.
+    $-container-small-inner-width-max: map-get($container-max-widths, md) - $grid-gutter-width;
+    $-entry-min-width: ($-container-small-inner-width-max * 0.5) - $grid-gutter-width;
+
+    > .container {
+        .s_dynamic_snippet_title.s_dynamic_snippet_title_aside + .s_dynamic_snippet_content .s_dynamic_snippet_row > * {
+            @include media-breakpoint-up(lg) {
+                // Switch to a fluid layout in order to keep entries readable.
+                // Our target grid is 2columns based
+                flex: 0 1 MAX(var(--DynamicSnippet__entry-maxWidth, #{$-entry-min-width}), 50%);
+            }
+        }
+    }
+
+    > .o_container_small {
+        .s_dynamic_snippet_row > * {
+            @include media-breakpoint-up(lg) {
+                flex: 0 1 MAX(var(--DynamicSnippet__entry-maxWidth, #{$-entry-min-width}), 50%);
+            }
+        }
+
+        .s_dynamic_snippet_title.s_dynamic_snippet_title_aside {
+            // By default 's_dynamic_snippet_title_aside' is col-3.
+            // We adjust it col-5 to increase readability when inside a small container
+            min-width: percentage(divide(5, $grid-columns));
+
+            + .s_dynamic_snippet_content .s_dynamic_snippet_row > * {
+                @include media-breakpoint-up(lg) {
+                    flex: 1 1 var(--DynamicSnippet__entry-maxWidth, #{$-entry-min-width});
+                }
+            }
+        }
+    }
+
+    &.s_dynamic_snippet_cover_left {
+        .s_dynamic_snippet_content_position {
+            flex-direction: row-reverse;
+        }
+    }
+}

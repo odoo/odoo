@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CardImageOption">
+    <BuilderRow label.translate="Cover Image">
+        <t t-if="state.hasCoverImage">
+        <!-- Image position -->
+            <BuilderButtonGroup action="'setCoverImagePosition'">
+                <BuilderButton
+                    id="'card_img_top_opt'"
+                    classAction="'o_card_img_top'"
+                    actionParam="'card-img-top'"
+                    iconImg="'/website/static/src/img/snippets_options/pos_top.svg'"
+                    title.translate="Top"/>
+                <BuilderButton
+                    classAction="'o_card_img_horizontal flex-lg-row'"
+                    actionParam="'rounded-start'"
+                    iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"
+                    title.translate="Left"/>
+                <BuilderButton
+                    classAction="'o_card_img_horizontal flex-lg-row-reverse'"
+                    actionParam="'rounded-end'"
+                    iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"
+                    title.translate="Right"/>
+                <BuilderButton
+                    id="'card_img_bottom_opt'"
+                    classAction="'o_card_img_bottom flex-column-reverse'"
+                    actionParam="'card-img-bottom'"
+                    iconImg="'/website/static/src/img/snippets_options/pos_bottom.svg'"
+                    title.translate="Bottom"/>
+            </BuilderButtonGroup>
+
+        <!-- Remove image -->
+            <BuilderButton 
+                action="'removeCoverImage'"
+                preview="false"
+                icon="'oi-close'"
+                className="'o_we_bg_danger'"
+                title.translate="Remove Cover"/>
+        </t>
+        <t t-else="">
+            <!-- Add cover image -->
+            <BuilderButton
+                action="'addCoverImage'"
+                preview="false"
+                className="'o_we_bg_success'"
+                label.translate="Add"
+                title.translate="Add"/>
+        </t>
+    </BuilderRow>
+
+    <t t-if="state.hasCoverImage">
+        <!-- Ratio  -->
+        <BuilderRow label.translate="Ratio" level="1">
+            <BuilderSelect applyTo="':scope > .o_card_img_wrapper'">
+                <BuilderSelectItem id="'card_img_default_ratio_option'" classAction="''">Image default</BuilderSelectItem>
+                <BuilderSelectItem classAction="'ratio ratio-1x1'">Square</BuilderSelectItem>
+                <t t-if="isActiveItem('card_img_top_opt') || isActiveItem('card_img_bottom_opt')">
+                    <BuilderSelectItem classAction="'ratio ratio-4x3'">Landscape - 4/3</BuilderSelectItem>
+                    <BuilderSelectItem classAction="'ratio ratio-16x9'">Wide - 16/9</BuilderSelectItem>
+                    <BuilderSelectItem classAction="'ratio ratio-21x9'">Ultrawide - 21/9</BuilderSelectItem>
+                    <BuilderSelectItem
+                        id="'image_ratio_custom_opt'"
+                        classAction="'ratio o_card_img_ratio_custom'">
+                        Custom
+                    </BuilderSelectItem>
+                </t>
+            </BuilderSelect>
+        </BuilderRow>
+
+        <!-- Custom ratio control -->
+        <BuilderRow t-if="isActiveItem('image_ratio_custom_opt')" label.translate="Custom Ratio" level="2">
+            <BuilderRange
+                styleAction="'--card-img-aspect-ratio'"
+                min="8"
+                max="132"
+                step="4"
+                displayRangeValue="true"
+                unit="'%'"/>
+        </BuilderRow>
+
+        <!-- Width -->
+        <BuilderRow t-if="!isActiveItem('card_img_top_opt') and !isActiveItem('card_img_bottom_opt')" label.translate="Width" level="1">
+            <!-- Bootstrap default column size -->
+            <t t-set="colSize" t-value="8.33333333"/>
+            <BuilderRange
+                styleAction="'--card-img-size-h'"
+                min="colSize"
+                max="colSize * 11"
+                step="colSize"
+                unit="'%'"/>
+        </BuilderRow>
+
+        <!-- Alignment -->
+        <CardImageAlignmentOption label.translate="Alignment" level="1"/>
+    </t>
+</t>
+
+<t t-name="website.s_card.imageWrapper">
+    <figure class="o_card_img_wrapper ratio ratio-16x9 mb-0">
+        <img class="o_card_img card-img-top object-fit-cover" src="/web/image/website.s_card_default_image_1"/>
+    </figure>
+</t>
+
+</templates>

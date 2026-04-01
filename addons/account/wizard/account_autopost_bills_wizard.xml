@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="autopost_bills_wizard" model="ir.ui.view">
+            <field name="name">Autopost Bills</field>
+            <field name="model">account.autopost.bills.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Autopost Bills">
+                    <p>Hey there !</p>
+                    <p>
+                        It looks like you've successfully validated the last
+                        <b>
+                            <field name="nb_unmodified_bills" readonly="True" class="oe_inline" invisible="nb_unmodified_bills &gt; 9"/>
+                            <span invisible="nb_unmodified_bills &lt; 10">10+</span>
+                        </b>
+                        bills for <b><field name="partner_name"/></b> without making any corrections.
+                    </p>
+                    <p>Want to make your life even easier and automate bill validation from this vendor ?</p>
+
+                    <p class="text-muted">
+                        <i class="fa fa-lightbulb-o" role="img"/>
+                        Don't worry, you can always change this setting later on the vendor's form.
+                        You also have the option to disable the feature for all vendors in the accounting settings.
+                    </p>
+
+                    <footer>
+                        <button class="btn-primary" type="object" name="action_automate_partner">Activate auto-validation</button>
+                        <button class="btn-secondary" type="object" name="action_ask_later">Ask me later</button>
+                        <button class="btn-secondary" type="object" name="action_never_automate_partner">Never for this vendor</button>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

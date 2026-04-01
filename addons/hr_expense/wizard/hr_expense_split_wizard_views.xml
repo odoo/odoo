@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_expense_split" model="ir.ui.view">
+            <field name="name">Expense split</field>
+            <field name="model">hr.expense.split.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <div class="alert alert-warning w-100 d-flex align-items-center gap-1"
+                        invisible="split_possible"  role="alert">
+                        <span>The total amount doesn't match the original amount.</span>
+                    </div>
+                    <field name="total_amount_currency_original" invisible="1"/>
+                    <field name="expense_id" invisible="1"/>
+                    <field name="expense_split_line_ids" widget="one2many" context="{'default_expense_id': expense_id}">
+                        <list editable="bottom">
+                            <field name="currency_id" column_invisible="True"/>
+                            <field name="expense_id" column_invisible="True"/>
+                            <field name="company_id" column_invisible="True"/>
+                            <field name="product_has_cost" column_invisible="True"/>
+                            <field name="name"/>
+                            <field name="product_id"
+                                context="{
+                                    'default_type': 'service',
+                                    'default_can_be_expensed': 1,
+                                    'list_view_ref': 'hr_expense.product_product_expense_tree_view',
+                                    'form_view_ref': 'hr_expense.product_product_expense_form_view',
+                                }"
+                            />
+                            <field name="employee_id" widget="many2one_avatar_user"/>
+                            <field name="tax_ids" widget="many2many_tags"/>
+                            <field name="tax_amount_currency"/>
+                            <field name="analytic_distribution" widget="analytic_distribution"
+                                optional="show"
+                                groups="analytic.group_analytic_accounting"/>
+                            <field name="total_amount_currency" force_save="1" readonly="product_has_cost"/>
+                        </list>
+                    </field>
+                    <field name="currency_id" invisible="1"/>
+                    <group class="oe_subtotal_footer" colspan="2" name="expense_total">
+                        <label for="total_amount_currency" invisible="split_possible"/>
+                        <field name="total_amount_currency" nolabel="1" class="text-danger" invisible="split_possible"/>
+                        <field name="total_amount_currency" invisible="not split_possible"/>
+                        <field name="total_amount_currency_original" widget='monetary' string="Original Amount"/>
+                        <field name="tax_amount_currency" widget='monetary' string="Taxes"/>
+                    </group>
+                    <field name="split_possible" invisible="1"/>
+                    <footer>
+                        <button name="action_split_expense" invisible="split_possible" string="Split Expense" type="object" class="oe_highlight" disabled="disabled"  data-hotkey="q"/>
+                        <button name="action_split_expense" string="Split Expense" invisible="not split_possible" type="object" class="oe_highlight"  data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="mail_group_view_list" model="ir.ui.view">
+        <field name="name">mail.group.view.list</field>
+        <field name="model">mail.group</field>
+        <field name="arch" type="xml">
+            <list sample="1">
+                <field name="name" width="100%"/>
+                <field name="member_count" string="#Members" width="100%"/>
+                <field name="mail_group_message_count" string="#Messages" width="100%"/>
+                <field name="mail_group_message_moderation_count" string="#To Review" width="100%"/>
+            </list>
+        </field>
+    </record>
+    <record id="mail_group_view_kanban" model="ir.ui.view">
+        <field name="name">mail.group.view.kanban</field>
+        <field name="model">mail.group</field>
+        <field name="arch" type="xml">
+            <kanban string="Mail Groups" sample="1">
+                <field name="is_member"/>
+                <templates>
+                    <t t-name="card" class="flex-row">
+                        <aside>
+                            <field name="image_128" widget="image" alt="Group"/>
+                        </aside>
+                        <main class="ms-2 d-flex flex-column">
+                            <widget name="web_ribbon" title="Closed" bg_color="text-bg-danger" invisible="not is_closed"/>
+                            <span class="fw-bold fs-5">#<field name="name"/></span>
+                            <field class="text-truncate text-nowrap d-block" name="description"/>
+                            <div class="d-flex flex-row mt-2">
+                                <a class="text-truncate"
+                                   t-if="record.mail_group_message_moderation_count.raw_value"
+                                   name="%(mail_group.mail_group_message_action)d"
+                                   type="action"
+                                   context="{'search_default_mail_group_id': id, 'search_default_moderation_status': 'pending_moderation'}">
+                                    <field name="mail_group_message_moderation_count"/>
+                                    messages to review
+                                </a>
+                                <div class="text-end ms-auto">
+                                    <button type="object" invisible="is_member or is_closed" class="btn btn-primary ms-auto"
+                                            name="action_join">Join
+                                    </button>
+                                    <button type="object" invisible="not is_member" class="btn btn-secondary ms-auto"
+                                            name="action_leave">Leave
+                                    </button>
+                                </div>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="mail_group_view_form" model="ir.ui.view">
+        <field name="name">mail.group.view.form</field>
+        <field name="model">mail.group</field>
+        <field name="arch" type="xml">
+            <form string="Mail Group">
+                <header>
+                    <button type="object" class="btn btn-primary" name="action_join"
+                        string="Join" invisible="is_member or is_closed"/>
+                    <button type="object" invisible="not is_member"
+                        class="btn btn-secondary" name="action_leave" string="Leave"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Closed" bg_color="text-bg-danger" invisible="not is_closed"/>
+                    <div class="oe_button_box" name="button_box" groups="base.group_user" invisible="not can_manage_group">
+                        <button name="%(mail_group.mail_group_member_action)d"
+                                type="action"
+                                context="{'search_default_mail_group_id': id}"
+                                class="oe_stat_button"
+                                icon="fa-users"
+                                help="Members of this group">
+                            <field name="member_count" widget="statinfo" string="Members"/>
+                        </button>
+                       <button name="%(mail_group.mail_group_message_action)d"
+                                type="action"
+                                context="{'search_default_mail_group_id': id}"
+                                class="oe_stat_button"
+                                icon="fa-envelope"
+                                help="All messages of this group">
+                            <field name="mail_group_message_count" widget="statinfo" string="Emails"/>
+                        </button>
+                        <button name="%(mail_group.mail_group_message_action)d"
+                                type="action"
+                                context="{'search_default_mail_group_id': id, 'search_default_moderation_status': 'pending_moderation'}"
+                                class="oe_stat_button"
+                                icon="fa-commenting-o"
+                                help="Emails waiting an action for this group"
+                                invisible="not (moderation and mail_group_message_moderation_count != 0)">
+                            <field name="mail_group_message_moderation_count" widget="statinfo" string="To Review"/>
+                        </button>
+                        <button name="%(mail_group.mail_group_moderation_action)d"
+                                type="action"
+                                context="{'search_default_mail_group_id': id}"
+                                invisible="not (moderation and moderation_rule_count != 0)"
+                                class="oe_stat_button"
+                                icon="fa-gavel"
+                                help="Moderated emails in this group">
+                            <field name="moderation_rule_count" widget="statinfo" string="Moderations"/>
+                        </button>
+                    </div>
+                    <field name="image_128" widget="image" class="oe_avatar" options="{'size': [90, 90]}"/>
+                    <div class="oe_title mb24">
+                        <label for="name" string="Group Name"/>
+                        <h1>
+                            <field name="name" class="oe_inline" default_focus="1" placeholder='e.g. "Newsletter"'/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <label for="alias_name" string="Email Alias"/>
+                            <div class="oe_inline" name="alias_def">
+                                <field name="alias_id" class="oe_read_only oe_inline" string="Email Alias" required="0"/>
+                                <div class="oe_inline" name="edit_alias" style="display: inline;">
+                                    <div class="oe_edit_only" dir="ltr">
+                                        <field name="alias_name" placeholder="alias" class="oe_inline"/>@
+                                        <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
+                                               options="{'no_create': True, 'no_open': True}"/>
+                                    </div>
+                                    <button icon="oi-arrow-right" type="action" name="%(base_setup.action_general_configuration)d"
+                                            string="Choose or configure a custom domain" class="p-0 btn-link"
+                                            invisible="alias_domain_id"/>
+                                </div>
+                            </div>
+                            <field name="description" placeholder='e.g. "This group is about ..."'/>
+                            <field name="moderation"/>
+                            <td class="o_td_label">
+                                <label for="moderator_ids" string="Moderators" invisible="not moderation"/>
+                                <label for="moderator_ids" string="Responsibles" invisible="moderation"/>
+                            </td>
+                            <field name="moderator_ids" widget="many2many_avatar_user" class="oe_inline" nolabel="1" placeholder="Select users"/>
+                            <field name="is_moderator" invisible="1"/>
+                            <field name="can_manage_group" invisible="1"/>
+                            <field name="is_member" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="privacy" string="Privacy">
+                            <group>
+                                <group>
+                                    <field name="access_mode" widget="radio"/>
+                                    <field name="access_group_id" invisible="access_mode != 'groups'"
+                                           required="access_mode == 'groups'"/>
+                                    <field name="alias_contact" invisible="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="moderation" string="Notify Members" invisible="not moderation">
+                            <group>
+                                <field name="moderation_notify"/>
+                                <field invisible="not moderation_notify" required="moderation_notify" name="moderation_notify_msg"/>
+                            </group>
+                        </page>
+                        <page name="guidelines" string="Guidelines">
+                            <group>
+                                <field name="moderation_guidelines"/>
+                                <field required="moderation_guidelines" name="moderation_guidelines_msg" placeholder='e.g."Please be polite and ..."'/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="mail_group_view_search" model="ir.ui.view">
+        <field name="name">mail.group.view.search</field>
+        <field name="model">mail.group</field>
+        <field name="arch" type="xml">
+            <search string="Search Mail group">
+                <field name="name"/>
+                <field name="alias_email"/>
+                <separator/>
+                <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
+                <filter string="Moderated" name="moderation" domain="[('moderation', '=', True)]"/>
+                <group>
+                    <filter string="Moderation" name="Moderation" context="{'group_by':'moderation'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="mail_group_action" model="ir.actions.act_window">
+        <field name="name">Mail Groups</field>
+        <field name="res_model">mail.group</field>
+        <field name="path">mail-groups</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create a Mail Group</p>
+            <p>Mailing groups are communities that like to discuss a specific topic together.</p>
+        </field>
+    </record>
+</odoo>

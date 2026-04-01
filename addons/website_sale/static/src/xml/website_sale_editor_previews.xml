@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+<t t-name="website_sale.editor_preview.filmstrip">
+    <div
+        class="o_wsale_filmstrip_preview overflow-y-hidden"
+        data-wsale-injected-preview="website_sale.editor_preview.filmstrip"
+    >
+        <div class="d-flex align-items-stretch py-2 overflow-auto">
+            <div
+                t-foreach="[...Array(10).keys()]"
+                t-as="category_placeholder"
+                t-key="category_placeholder"
+                t-attf-class="d-flex align-items-center gap-3 btn btn-light mb-2 me-3"
+            >
+                <i class="fa fa-image fs-2 opacity-25" role="img"/>
+                <div class="placeholder opacity-25" t-att-style="`width: ${(c % 3) + 4}rem`"/>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="website_sale.editor_preview.sidebar">
+    <div
+        class="o_wsale_sidebar_preview position-relative overflow-hidden"
+        data-wsale-injected-preview="website_sale.editor_preview.sidebar"
+    >
+        <div
+            class="position-absolute top-0 start-0 end-0 bottom-0 pt-4 px-3 opacity-50"
+        >
+            <div class="d-flex flex-column gap-2">
+                <div class="d-block placeholder placeholder-lg col-7 mb-2"/>
+                <div
+                    t-foreach="[...Array(10).keys()]"
+                    t-as="category_placeholder"
+                    t-key="category_placeholder"
+                    t-attf-class="d-block placeholder placeholder-xs opacity-25 col-{{(p % 4) + 4}}"
+                />
+            </div>
+            <hr class="my-4"/>
+            <div class="d-flex flex-column gap-2" style="animation-delay: 0.5s;">
+                <div class="d-block placeholder placeholder-lg col-6 mb-2"/>
+                <div
+                    t-foreach="[...Array(9).keys()]"
+                    t-as="category_placeholder"
+                    t-key="category_placeholder"
+                    t-attf-class="d-block placeholder placeholder-xs opacity-25 col-{{(p % 3) + 6}}"
+                />
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="website_sale.editor_preview.description">
+    <div
+        class="oe_subdescription o_wsale_description_preview position-relative d-flex flex-column gap-1 mb-2"
+        data-wsale-injected-preview="website_sale.editor_preview.description"
+    >
+        <div class="d-block placeholder col-12"/>
+        <div class="d-block placeholder col-12"/>
+        <div class="d-block placeholder col-7"/>
+    </div>
+</t>
+
+<t t-name="website_sale.editor_preview.floating_bar">
+    <div
+        class="o_wsale_floating_bar_preview position-fixed end-0 bottom-0 d-flex gap-2 mb-4 me-4 bg-white border p-3 rounded shadow"
+        data-wsale-injected-preview="website_sale.editor_preview.floating_bar"
+    >
+        <div class="d-block placeholder opacity-25 p-3 px-4"/>
+        <div class="vr opacity-25"/>
+        <div class="d-block placeholder opacity-25 p-3 px-4"/>
+        <div class="d-block placeholder opacity-25 p-3 px-4"/>
+        <div class="d-block placeholder opacity-25 p-3 px-4"/>
+    </div>
+</t>
+</templates>

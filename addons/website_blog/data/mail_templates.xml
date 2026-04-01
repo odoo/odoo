@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <template id="blog_post_template_new_post">
+        <p>A new post <t t-out="post.name" /> has been published on the <t t-out="object.name" /> blog. Click here to access the blog :</p>
+        <p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
+            <a t-attf-href="/blog/#{slug(object)}/#{slug(post)}"
+                style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer;background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">
+                Access post
+            </a>
+        </p>
+    </template>
+</data></odoo>

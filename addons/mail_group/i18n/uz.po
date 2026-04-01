@@ -1,0 +1,1926 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mail_group
+#
+#
+# Translated by:
+# Deepvision - info@deepvision.uz | +998 77-093-0007
+# Amon Olimov - amon.bars@gmail.com
+# Jonibek Yorqulov - j.yorqulov@deepvision.uz
+# Mirzohidkhon Ulugkhujaev ulugkhujayevmirzohidxon@gmail.com
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-10-08 18:38+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+#, fuzzy
+msgid "#Members"
+msgstr "#A'zolar"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+#, fuzzy
+msgid "#Messages"
+msgstr "#Xabarlar"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+#, fuzzy
+msgid "#To Review"
+msgstr "#Ko‘rib chiqish"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#, fuzzy
+msgid ") <span invisible=\"not send_email\">and send them an email</span>."
+msgstr ") <span invisible=\"not send_email\">va ularga xat yuborish</span>."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+#, fuzzy
+msgid ""
+"<br/>\n"
+"                    Get the conversation started by sending an email to"
+msgstr "<br/> Xat yuborish orqali suhbatni boshlang"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+#, fuzzy
+msgid "<br/> You'll be notified as soon as some new content is posted."
+msgstr "<br/> Yangi ma'lumot joylanganda sizga darhol xabar beriladi."
+
+#. module: mail_group
+#: model:mail.template,body_html:mail_group.mail_template_list_subscribe
+#, fuzzy
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hello,<br/><br/>\n"
+"                You have requested to be subscribed to the mailing list "
+"<strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                To confirm, please visit the following link: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"                If this was a mistake or you did not requested this action, "
+"please ignore this message.\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\"> Assalomu alaykum,<br/><br/> Siz "
+"<strong t-out=\"object.name or ''\"/> pochta ro‘yxatiga obuna bo‘lishni "
+"so‘radingiz. <br/><br/> Tasdiqlash uchun quyidagi havolaga o‘ting: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong> <br/><br/> Agar bu xato bo‘lsa "
+"yoki siz bu amalni so‘ramagan bo‘lsangiz, ushbu xabarga e'tibor bermang. </"
+"div>"
+
+#. module: mail_group
+#: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
+#, fuzzy
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hello,<br/><br/>\n"
+"                You have requested to be unsubscribed to the mailing list "
+"<strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                To confirm, please visit the following link: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"                <br/><br/>\n"
+"                If this was a mistake or you did not requested this action, "
+"please ignore this message.\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\"> Assalomu alaykum,<br/><br/> Siz "
+"<strong t-out=\"object.name or ''\"/> pochta ro‘yxatidan obunani bekor "
+"qilishni so‘radingiz. <br/><br/> Tasdiqlash uchun quyidagi havolaga o‘ting: "
+"<strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t "
+"t-out=\"ctx['token_url'] or ''\"/></a></strong>. <br/><br/> Agar bu xato "
+"bo‘lsa yoki siz bu amalni so‘ramagan bo‘lsangiz, ushbu xabarga e'tibor "
+"bermang. </div>"
+
+#. module: mail_group
+#: model:mail.template,body_html:mail_group.mail_template_guidelines
+#, fuzzy
+msgid ""
+"<div>\n"
+"                <p>Hello <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
+"                <p>Please find below the guidelines of the <t t-"
+"out=\"object.mail_group_id.name\"/> mailing list.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
+"or ''\"/></p>\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div> <p>Assalomu alaykum, <t t-out=\"object.partner_id.name or ''\"/>,</p> "
+"<p>Iltimos, <t t-out=\"object.mail_group_id.name\"/> pochta ro‘yxati "
+"bo‘yicha qo‘llanmani quyida ko‘rib chiqing.</p> <p><t t-"
+"out=\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p> </div>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_footer
+#, fuzzy
+msgid ""
+"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr ""
+"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Sana\" title=\"Sana\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
+msgid ""
+"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Taxallus\" "
+"title=\"Taxallus\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_name
+#, fuzzy
+msgid ""
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Taxallus\" "
+"title=\"Taxallus\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
+msgid ""
+"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
+"title=\"Traffic\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Trafik\" "
+"title=\"Trafik\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
+msgid ""
+"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
+"title=\"Recipients\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Qabul qiluvchilar\" "
+"title=\"Qabul qiluvchilar\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+#, fuzzy
+msgid ""
+"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
+"title=\"Previous message\"/>"
+msgstr ""
+"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Oldingi xabar\" "
+"title=\"Oldingi xabar\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+#, fuzzy
+msgid ""
+"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Next message\" "
+"title=\"Next message\"/>"
+msgstr ""
+"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Keyingi xabar\" "
+"title=\"Keyingi xabar\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+#, fuzzy
+msgid ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show attachments\" "
+"title=\"Show attachments\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Ilovalarni "
+"ko‘rsatish\" title=\"Ilovalarni ko‘rsatish\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+#, fuzzy
+msgid ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
+"title=\"Show replies\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Javoblarni "
+"ko‘rsatish\" title=\"Javoblarni ko‘rsatish\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+#, fuzzy
+msgid ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide "
+"attachments\" title=\"Hide attachments\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Ilovalarni "
+"yashirish\" title=\"Ilovalarni yashirish\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+#, fuzzy
+msgid ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
+"title=\"Hide replies\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Javoblarni "
+"yashirish\" title=\"Javoblarni yashirish\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+#, fuzzy
+msgid "<span class=\"bg-warning\">Pending</span>"
+msgstr "<span class=\"bg-warning\">Kutilmoqda</span>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#, fuzzy
+msgid ""
+"<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != "
+"'allow'\">Whitelisted</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" "
+"invisible=\"author_moderation != 'ban'\">Banned</span>"
+msgstr ""
+"<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != "
+"'allow'\">Oq ro‘yxatda</span> <span class=\"ms-2 badge text-bg-danger\" "
+"invisible=\"author_moderation != 'ban'\">Taqiqlangan</span>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_footer
+#, fuzzy
+msgid "<span class=\"mx-2\">-</span>"
+msgstr "<span class=\"mx-2\">-</span>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
+#, fuzzy
+msgid "<span>By thread</span>"
+msgstr "<span>Mavzu bo‘yicha</span>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
+msgid ""
+"<span>No Mail Group yet.</span>\n"
+"                    <br/>"
+msgstr "<span>Hali pochta guruhi mavjud emas.</span> <br/>"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_defaults
+#, fuzzy
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr ""
+"Ushbu taxallus uchun yangi yozuvlar yaratishda standart qiymatlarni "
+"ta'minlash uchun baholanadigan Python lug‘ati."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+#, fuzzy
+msgid "Accept"
+msgstr "Qabul qilish"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__accepted
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#, fuzzy
+msgid "Accepted"
+msgstr "Qabul qilingan"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__action
+#, fuzzy
+msgid "Action"
+msgstr "Amal"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__active
+#, fuzzy
+msgid "Active"
+msgstr "Faol"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+#, fuzzy
+msgid ""
+"Add this email address to white list of people and accept all pending "
+"messages from the same author."
+msgstr ""
+"Ushbu elektron pochta manzilini odamlarning oq ro‘yxatiga qo‘shing va bir "
+"muallifdan kutilayotgan barcha xabarlarni qabul qiling."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_id
+#, fuzzy
+msgid "Alias"
+msgstr "Taxallus"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_contact
+#, fuzzy
+msgid "Alias Contact Security"
+msgstr "Taxallus aloqasi xavfsizligi"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain_id
+#, fuzzy
+msgid "Alias Domain"
+msgstr "Taxallus domeni"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain
+#, fuzzy
+msgid "Alias Domain Name"
+msgstr "Taxallus domen nomi"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_full_name
+#, fuzzy
+msgid "Alias Email"
+msgstr "Taxallus elektron pochtasi"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_name
+#, fuzzy
+msgid "Alias Name"
+msgstr "Taxallus nomi"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_status
+#, fuzzy
+msgid "Alias Status"
+msgstr "Taxallus holati"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_status
+#, fuzzy
+msgid "Alias status assessed on the last message received."
+msgstr "Taxallus holati oxirgi qabul qilingan xabar asosida baholangan."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_model_id
+#, fuzzy
+msgid "Aliased Model"
+msgstr "Taxalluslangan model"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "All messages of this group"
+msgstr "Ushbu guruhning barcha xabarlari"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+#, fuzzy
+msgid "Allowed Emails"
+msgstr "Ruxsat etilgan elektron pochta manzillari"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
+msgid "Alone we can do so little, together we can do so much"
+msgstr "Yolg‘iz holda oz ish qila olamiz, birga esa ko‘p narsaga erishamiz"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__allow
+#, fuzzy
+msgid "Always Allow"
+msgstr "Doimo ruxsat berish"
+
+#. module: mail_group
+#. odoo-javascript
+#: code:addons/mail_group/static/src/interactions/mail_group.js:0
+#, fuzzy
+msgid "An email with instructions has been sent."
+msgstr "Ko‘rsatmalar bilan elektron xat yuborildi."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+#, fuzzy
+msgid "Archived"
+msgstr "Arxivlangan"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
+#, fuzzy
+msgid "Archives"
+msgstr "Arxivlar"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__attachment_ids
+#, fuzzy
+msgid "Attachments"
+msgstr "Ilovalar"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_id
+#, fuzzy
+msgid "Author"
+msgstr "Muallif"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_moderation
+#, fuzzy
+msgid "Author Moderation Status"
+msgstr "Muallif moderatsiya holati"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group_message__author_id
+#, fuzzy
+msgid ""
+"Author of the message. If not set, email_from may hold an email address that "
+"did not match any partner."
+msgstr ""
+"Xabar muallifi. Agar belgilanmagan bo‘lsa, email_from hech qaysi hamkorga "
+"mos kelmaydigan elektron pochta manzilini o‘z ichiga olishi mumkin."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__access_group_id
+#, fuzzy
+msgid "Authorized Group"
+msgstr "Vakolatli guruh"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify
+#, fuzzy
+msgid "Automatic notification"
+msgstr "Avtomatik xabarnoma"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message_reject__action__ban
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+#, fuzzy
+msgid "Ban"
+msgstr "Taqiqlash"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#, fuzzy
+msgid "Ban the author of the message ("
+msgstr "Xabar muallifini taqiqlash ("
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+#, fuzzy
+msgid ""
+"Ban this email address and reject all pending messages from the same author "
+"and send an email to the author"
+msgstr ""
+"Ushbu elektron pochta manzilini taqiqlang, bir muallifdan kutilayotgan "
+"barcha xabarlarni rad eting va muallifga elektron xat yuboring"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__ban
+#, fuzzy
+msgid "Banned"
+msgstr "Taqiqlangan"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+#, fuzzy
+msgid "Banned Emails"
+msgstr "Taqiqlangan elektron pochta manzillari"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
+#, fuzzy
+msgid "By date"
+msgstr "Sana bo‘yicha"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__can_manage_group
+#, fuzzy
+msgid "Can Manage"
+msgstr "Boshqara oladi"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__can_manage_group
+#, fuzzy
+msgid "Can manage the members"
+msgstr "A'zolarni boshqara oladi"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_child_ids
+#, fuzzy
+msgid "Children"
+msgstr "Farzandlar"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "Choose or configure a custom domain"
+msgstr "Maxsus domenni tanlang yoki sozlang"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_name
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
+msgid "Closed"
+msgstr "Yopiq"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__is_closed
+#, fuzzy
+msgid ""
+"Closed groups might still be accessed, but emails sent to it will bounce"
+msgstr ""
+"Yopiq guruhlarga kirish mumkin, lekin ularga yuborilgan xatlar qaytariladi"
+
+#. module: mail_group
+#: model:mail.template,subject:mail_group.mail_template_list_subscribe
+#, fuzzy
+msgid "Confirm subscription to {{ object.name }}"
+msgstr "{{ object.name }} ga obunani tasdiqlang"
+
+#. module: mail_group
+#: model:mail.template,subject:mail_group.mail_template_list_unsubscribe
+#, fuzzy
+msgid "Confirm unsubscription to {{ object.name }}"
+msgstr "{{ object.name }} ga obunani bekor qilishni tasdiqlang"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__body
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__body
+#, fuzzy
+msgid "Contents"
+msgstr "Tarkib"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
+#, fuzzy
+msgid "Create a Mail Group"
+msgstr "Pochta guruhini yarating"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
+msgid "Create a new group"
+msgstr "Yangi guruh yarating"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_uid
+#, fuzzy
+msgid "Created by"
+msgstr "Yaratuvchi"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__create_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__create_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_date
+#, fuzzy
+msgid "Created on"
+msgstr "Yaratilgan sana"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__is_moderator
+#, fuzzy
+msgid "Current user is a moderator of the group"
+msgstr "Joriy foydalanuvchi guruhning moderatori"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_bounced_content
+#, fuzzy
+msgid "Custom Bounced Message"
+msgstr "Maxsus qaytarilgan xabar"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_defaults
+#, fuzzy
+msgid "Default Values"
+msgstr "Standart qiymatlar"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__description
+#, fuzzy
+msgid "Description"
+msgstr "Tavsif"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#, fuzzy
+msgid "Discard"
+msgstr "Bekor qilish"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__display_name
+#, fuzzy
+msgid "Display Name"
+msgstr "Ko‘rsatiladigan nom"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__email
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_tree
+#, fuzzy
+msgid "Email"
+msgstr "Elektron pochta"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
+msgid "Email %s is invalid"
+msgstr "%s elektron pochta manzili noto‘g‘ri"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_email
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "Email Alias"
+msgstr "Elektron pochta taxallusi"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__email_from_normalized
+#, fuzzy
+msgid "Email From"
+msgstr "Kimdan"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group_message__email_from
+#, fuzzy
+msgid ""
+"Email address of the sender. This field is set when no matching partner is "
+"found and replaces the author_id field in the chatter."
+msgstr ""
+"Jo‘natuvchining elektron pochta manzili. Bu maydon mos keladigan hamkor "
+"topilmaganda o‘rnatiladi va chatdagi muallif_id maydonini almashtiradi."
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_domain
+#, fuzzy
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "Elektron pochta domeni, masalan: 'odoo@example.com' dagi 'example.com'"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "Emails"
+msgstr "Xatlar"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "Emails waiting an action for this group"
+msgstr "Ushbu guruh uchun amal kutayotgan xatlar"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__public
+#, fuzzy
+msgid "Everyone"
+msgstr "Hamma"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+#, fuzzy
+msgid "Follow-Ups"
+msgstr "Kuzatuvlar"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#, fuzzy
+msgid "From"
+msgstr "Kimdan"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__mail_group_id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__mail_group_id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__mail_group_id
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
+msgid "Group"
+msgstr "Guruh"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#, fuzzy
+msgid "Group Message"
+msgstr "Guruh xabari"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "Group Name"
+msgstr "Guruh nomi"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+#, fuzzy
+msgid "Group message can only be linked to mail group. Current model is %s."
+msgstr ""
+"Guruh xabari faqat pochta guruhiga bog‘lanishi mumkin. Joriy model: %s."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/controllers/portal.py:0
+#, fuzzy
+msgid "Groups"
+msgstr "Guruhlar"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "Guidelines"
+msgstr "Yo‘riqnoma"
+
+#. module: mail_group
+#: model:mail.template,subject:mail_group.mail_template_guidelines
+#, fuzzy
+msgid "Guidelines of group {{ object.mail_group_id.name }}"
+msgstr "{{ object.mail_group_id.name }} guruhi yo‘riqnomasi"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+#, fuzzy
+msgid "Hello"
+msgstr "Salom"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.email_template_mail_group_closed
+#, fuzzy
+msgid ""
+"Hello there,\n"
+"    <br/><br/>\n"
+"    The mailing list you are trying to reach has been closed, and will not "
+"accept new messages.\n"
+"    <br/><br/>\n"
+"    Kind Regards,"
+msgstr ""
+"Assalomu alaykum, <br/><br/> Siz ulanmoqchi bo‘lgan pochta ro‘yxati yopilgan "
+"va yangi xabarlarni qabul qilmaydi.     <br/><br/> Hurmat bilan,"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__id
+#, fuzzy
+msgid "ID"
+msgstr "ID"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_thread_id
+#, fuzzy
+msgid ""
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
+msgstr ""
+"Taxallusga ega bo‘lgan asosiy yozuvning identifikatori (masalan: vazifa "
+"yaratish taxallusiga ega loyiha)"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_bounced_content
+#, fuzzy
+msgid ""
+"If set, this content will automatically be sent out to unauthorized users "
+"instead of the default message."
+msgstr ""
+"Agar o‘rnatilgan bo‘lsa, ushbu mazmun standart xabar o‘rniga ruxsatsiz "
+"foydalanuvchilarga avtomatik ravishda yuboriladi."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__image_128
+#, fuzzy
+msgid "Image"
+msgstr "Rasm"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
+msgid "Invalid action for URL generation (%s)"
+msgstr "URL yaratish uchun noto‘g‘ri amal (%s)"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_moderation.py:0
+#, fuzzy
+msgid "Invalid email address “%s”"
+msgstr "\"%s\" elektron pochta manzili noto‘g‘ri"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.invalid_token_subscription
+#, fuzzy
+msgid "Invalid or expired confirmation link."
+msgstr "Tasdiqlash havolasi noto‘g‘ri yoki muddati o‘tgan."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+#, fuzzy
+msgid "Is Allowed"
+msgstr "Ruxsat berilgan"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+#, fuzzy
+msgid "Is Banned"
+msgstr "Taqiqlangan"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__is_closed
+#, fuzzy
+msgid "Is Closed"
+msgstr "Yopiq"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__is_group_moderated
+#, fuzzy
+msgid "Is Group Moderated"
+msgstr "Guruh moderatsiya qilinadi"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__is_member
+#, fuzzy
+msgid "Is Member"
+msgstr "A'zo"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+#, fuzzy
+msgid "Join"
+msgstr "Qo‘shilish"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__write_uid
+#, fuzzy
+msgid "Last Updated by"
+msgstr "Oxirgi yangilangan"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__write_date
+#, fuzzy
+msgid "Last Updated on"
+msgstr "Oxirgi yangilanish sanasi"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+#, fuzzy
+msgid "Leave"
+msgstr "Chiqish"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
+#, fuzzy
+msgid "Let people subscribe to your list online or manually add them here."
+msgstr ""
+"Odamlarni ro‘yxatingizga onlayn obuna qilish yoki bu yerga qo‘lda qo‘shish "
+"imkonini bering."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_incoming_local
+#, fuzzy
+msgid "Local-part based incoming detection"
+msgstr "Mahalliy qismga asoslangan kiruvchi xabarlarni aniqlash"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "Mail Group"
+msgstr "Pochta guruhi"
+
+#. module: mail_group
+#: model:res.groups,name:mail_group.group_mail_group_manager
+#, fuzzy
+msgid "Mail Group Administrator"
+msgstr "Pochta guruhi boshqaruvchisi"
+
+#. module: mail_group
+#: model:mail.template,name:mail_group.mail_template_list_subscribe
+#, fuzzy
+msgid "Mail Group: Mailing List Subscription"
+msgstr "Pochta guruhi: Xat ro‘yxatiga obuna bo‘lish"
+
+#. module: mail_group
+#: model:mail.template,name:mail_group.mail_template_list_unsubscribe
+#, fuzzy
+msgid "Mail Group: Mailing List Unsubscription"
+msgstr "Pochta guruhi: Xat ro‘yxatidan chiqish"
+
+#. module: mail_group
+#: model:mail.template,name:mail_group.mail_template_guidelines
+#, fuzzy
+msgid "Mail Group: Send Guidelines"
+msgstr "Pochta guruhi: Yuborish qoidalari"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_action
+#: model:ir.ui.menu,name:mail_group.mail_group_menu
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+#, fuzzy
+msgid "Mail Groups"
+msgstr "Pochta guruhlari"
+
+#. module: mail_group
+#: model:ir.actions.server,name:mail_group.ir_cron_mail_notify_group_moderators_ir_actions_server
+#, fuzzy
+msgid "Mail List: Notify group moderators"
+msgstr "Xat ro‘yxati: Guruh moderatorlariga xabar berish"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__mail_message_id
+#, fuzzy
+msgid "Mail Message"
+msgstr "Pochta xabari"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_member
+#, fuzzy
+msgid "Mailing List Member"
+msgstr "Xat ro‘yxati a'zosi"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_message
+#, fuzzy
+msgid "Mailing List Message"
+msgstr "Xat ro‘yxati xabari"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_moderation
+#, fuzzy
+msgid "Mailing List black/white list"
+msgstr "Xat ro‘yxatining qora/oq ro‘yxati"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.portal_breadcrumbs_group
+#, fuzzy
+msgid "Mailing Lists"
+msgstr "Xat ro‘yxatlari"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
+#, fuzzy
+msgid ""
+"Mailing groups are communities that like to discuss a specific topic "
+"together."
+msgstr ""
+"Pochta guruhlari - ma'lum bir mavzuni birgalikda muhokama qilishni "
+"yoqtiradigan jamoalardir."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+#, fuzzy
+msgid "Mailing-List:"
+msgstr "Xat ro‘yxati:"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_member_action
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__member_ids
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "Members"
+msgstr "A'zolar"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__member_count
+#, fuzzy
+msgid "Members Count"
+msgstr "A'zolar soni"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "Members of this group"
+msgstr "Bu guruh a'zolari"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__members
+#, fuzzy
+msgid "Members only"
+msgstr "Faqat a'zolar"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__mail_group_message_id
+#, fuzzy
+msgid "Message"
+msgstr "Xabar"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_message_reject_action
+#, fuzzy
+msgid "Message Rejection Explanation"
+msgstr "Xabarni rad etish tushuntirishi"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_message_action
+#, fuzzy
+msgid "Messages"
+msgstr "Xabarlar"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_count
+#, fuzzy
+msgid "Messages Count"
+msgstr "Xabarlar soni"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_last_month_count
+#, fuzzy
+msgid "Messages Per Month"
+msgstr "Oylik xabarlar"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
+msgid "Messages are pending moderation"
+msgstr "Xabarlar moderatsiyadan o‘tmoqda"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_moderation_count
+#, fuzzy
+msgid "Messages that need an action"
+msgstr "Harakatni talab qiladigan xabarlar"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
+#, fuzzy
+msgid "Moderate"
+msgstr "Moderatsiya qilish"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+#, fuzzy
+msgid "Moderate Messages"
+msgstr "Xabarlarni moderatsiya qilish"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+#, fuzzy
+msgid "Moderated"
+msgstr "Moderatsiya qilingan"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderator_id
+#, fuzzy
+msgid "Moderated By"
+msgstr "Moderator tomonidan"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_ids
+#, fuzzy
+msgid "Moderated Emails"
+msgstr "Moderatsiya qilingan xatlar"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_count
+#, fuzzy
+msgid "Moderated emails count"
+msgstr "Moderatsiya qilingan xatlar soni"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "Moderated emails in this group"
+msgstr "Bu guruhdagi moderatsiya qilingan xatlar"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
+msgid "Moderated group must have moderators."
+msgstr "Moderatsiya qilingan guruhda moderatorlar bo‘lishi shart."
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_moderation_action
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+#, fuzzy
+msgid "Moderation"
+msgstr "Moderatsiya"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_tree
+#, fuzzy
+msgid "Moderation Lists"
+msgstr "Moderatsiya ro‘yxatlari"
+
+#. module: mail_group
+#: model:ir.ui.menu,name:mail_group.mail_group_moderation_menu
+#, fuzzy
+msgid "Moderation Rules"
+msgstr "Moderatsiya qoidalari"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "Moderations"
+msgstr "Moderatsiyalar"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__is_moderator
+#, fuzzy
+msgid "Moderator"
+msgstr "Moderator"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderator_ids
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "Moderators"
+msgstr "Moderatorlar"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
+msgid "Moderators must have an email address."
+msgstr "Moderatorlarda elektron pochta manzili bo‘lishi shart."
+
+#. module: mail_group
+#: model:mail.group,name:mail_group.mail_group_1
+#, fuzzy
+msgid "My Company News"
+msgstr "Kompaniyam yangiliklari"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__name
+#, fuzzy
+msgid "Name"
+msgstr "Nom"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
+msgid ""
+"Need to unsubscribe? <br/>It's right here! <span class=\"oi fa-2x oi-arrow-"
+"down float-end\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
+msgstr ""
+"Obunani bekor qilishni xohlaysizmi? <br/>Mana shu yerda! <span class=\"oi "
+"fa-2x oi-arrow-down float-end\" role=\"img\" aria-label=\"\" title=\"Buni "
+"o‘qing!\"/>"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__moderation_guidelines
+#, fuzzy
+msgid ""
+"Newcomers on this moderated group will automatically receive the guidelines."
+msgstr ""
+"Bu moderatsiya qilingan guruhdagi yangi a'zolar avtomatik ravishda "
+"ko‘rsatmalarni olishadi."
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
+#, fuzzy
+msgid "No Members in this list yet!"
+msgstr "Bu ro‘yxatda hali a'zolar yo‘q!"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
+#, fuzzy
+msgid "No Messages in this list yet!"
+msgstr "Bu ro‘yxatda hozircha xabarlar yo‘q!"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email_normalized
+#, fuzzy
+msgid "Normalized Email"
+msgstr "Normallashtirilgan elektron pochta"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from_normalized
+#, fuzzy
+msgid "Normalized From"
+msgstr "Normallashtirilgan jo‘natuvchi"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify_msg
+#, fuzzy
+msgid "Notification message"
+msgstr "Bildirishnoma xabari"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "Notify Members"
+msgstr "A'zolarga xabar berish"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_count
+#, fuzzy
+msgid "Number of message in this group"
+msgstr "Ushbu guruhdagi xabarlar soni"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
+msgid ""
+"Only an administrator or a moderator can send guidelines to group members."
+msgstr ""
+"Faqat administrator yoki moderator guruh a'zolariga ko‘rsatmalar yuborishi "
+"mumkin."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
+msgid "Only members can send email to the mailing list."
+msgstr "Faqat a'zolar tarqatma ro‘yxatiga elektron xat yuborishi mumkin."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
+msgid "Only selected groups of users can send email to the mailing list."
+msgstr ""
+"Faqat tanlangan foydalanuvchilar guruhlari tarqatma ro‘yxatiga xat yuborishi "
+"mumkin."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+#, fuzzy
+msgid "Oops, there are no messages here."
+msgstr "Afsuski, bu yerda xabarlar yo‘q."
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
+#, fuzzy
+msgid ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
+msgstr ""
+"Barcha kiruvchi xabarlar biriktirilishi kerak bo‘lgan mavzu (yozuv) ning "
+"ixtiyoriy identifikatori, hatto ularga javob berilmagan bo‘lsa ham. Agar "
+"o‘rnatilsa, bu yangi yozuvlar yaratilishini butunlay o‘chiradi."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_parent_id
+#, fuzzy
+msgid "Parent"
+msgstr "Asosiy"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_model_id
+#, fuzzy
+msgid "Parent Model"
+msgstr "Asosiy model"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_thread_id
+#, fuzzy
+msgid "Parent Record Thread ID"
+msgstr "Asosiy yozuv mavzusi identifikatori"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_model_id
+#, fuzzy
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+"Taxallusga ega asosiy model. Taxallus ma'lumotnomasini o‘z ichiga olgan "
+"model alias_model_id tomonidan berilgan model bo‘lishi shart emas (masalan: "
+"loyiha (asosiy model) va vazifa (model))"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__partner_id
+#, fuzzy
+msgid "Partner"
+msgstr "Hamkor"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__member_partner_ids
+#, fuzzy
+msgid "Partners Member"
+msgstr "Hamkor a'zo"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_ids
+#, fuzzy
+msgid "Pending Messages"
+msgstr "Kutilayotgan xabarlar"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_moderation_count
+#, fuzzy
+msgid "Pending Messages Count"
+msgstr "Kutilayotgan xabarlar soni"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__pending_moderation
+#, fuzzy
+msgid "Pending Moderation"
+msgstr "Moderatsiya kutilmoqda"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__moderation_notify
+#, fuzzy
+msgid ""
+"People receive an automatic notification about their message being waiting "
+"for moderation."
+msgstr ""
+"Odamlar o‘z xabarlari moderatsiyani kutayotgani haqida avtomatik "
+"bildirishnoma oladilar."
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__ban
+#, fuzzy
+msgid "Permanent Ban"
+msgstr "Doimiy taqiq"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_contact
+#, fuzzy
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
+msgstr ""
+"Pochta shlyuzi orqali hujjatga xabar joylash siyosati. - hamma: hamma "
+"joylashi mumkin - hamkorlar: faqat tasdiqlangan hamkorlar - kuzatuvchilar: "
+"faqat tegishli hujjat kuzatuvchilari yoki kuzatuvchi kanallar a'zolari"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+#, fuzzy
+msgid "Post to:"
+msgstr "Quyidagiga yuborish:"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_date
+#, fuzzy
+msgid "Posted"
+msgstr "Joylangan"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__access_mode
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "Privacy"
+msgstr "Maxfiylik"
+
+#. module: mail_group
+#: model:mail.group,name:mail_group.mail_group_2
+#, fuzzy
+msgid "Public Mailing List"
+msgstr "Ommaviy tarqatma ro‘yxati"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/wizard/mail_group_message_reject.py:0
+#, fuzzy
+msgid "Re: %s"
+msgstr "Javob: %s"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_force_thread_id
+#, fuzzy
+msgid "Record Thread ID"
+msgstr "Yozuv mavzusi identifikatori"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+#, fuzzy
+msgid "Reference"
+msgstr "Havola"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message_reject__action__reject
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+#, fuzzy
+msgid "Reject"
+msgstr "Rad etish"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_message_reject
+#, fuzzy
+msgid "Reject Group Message"
+msgstr "Guruh xabarini rad etish"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#, fuzzy
+msgid "Reject Silently"
+msgstr "Ovozsiz rad etish"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#, fuzzy
+msgid "Reject the message"
+msgstr "Xabarni rad etish"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__rejected
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#, fuzzy
+msgid "Rejected"
+msgstr "Rad etilgan"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+#, fuzzy
+msgid "Remove message with explanation"
+msgstr "Xabarni tushuntirish bilan olib tashlash"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "Responsibles"
+msgstr "Mas'ullar"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
+#, fuzzy
+msgid "Search Group Message"
+msgstr "Guruh xabarini qidirish"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_search
+#, fuzzy
+msgid "Search Mail Group Member"
+msgstr "Pochta guruhi a'zosini qidirish"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+#, fuzzy
+msgid "Search Mail group"
+msgstr "Pochta guruhini qidirish"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+#, fuzzy
+msgid "Search Moderation List"
+msgstr "Moderatsiya ro‘yxatini qidirish"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "Select users"
+msgstr "Foydalanuvchilarni tanlash"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
+#, fuzzy
+msgid "Selected group of users"
+msgstr "Tanlangan foydalanuvchilar guruhi"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+#, fuzzy
+msgid "Send"
+msgstr "Yuborish"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#, fuzzy
+msgid "Send & Ban"
+msgstr "Yuborish va taqiqlash"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#, fuzzy
+msgid "Send & Reject"
+msgstr "Yuborish va rad etish"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__send_email
+#, fuzzy
+msgid "Send Email"
+msgstr "Elektron xat yuborish"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group_message_reject__send_email
+#, fuzzy
+msgid "Send an email to the author of the message"
+msgstr "Xabar muallifiga elektron xat yuborish"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_compose_message_action_mail_group
+#, fuzzy
+msgid "Send email"
+msgstr "Elektron xat yuborish"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
+#, fuzzy
+msgid "Send guidelines to new members"
+msgstr "Yangi a'zolarga ko‘rsatmalar yuborish"
+
+#. module: mail_group
+#: model:mail.template,description:mail_group.mail_template_guidelines
+#, fuzzy
+msgid "Sent to people who subscribed to a mailing group with group guidelines"
+msgstr ""
+"Guruh ko‘rsatmalari bilan tarqatma guruhiga obuna bo‘lgan odamlarga yuborildi"
+
+#. module: mail_group
+#: model:mail.template,description:mail_group.mail_template_list_unsubscribe
+#, fuzzy
+msgid "Sent to people who unsubscribed from a mailing group"
+msgstr "Jo‘natma guruhidan obunani bekor qilgan kishilarga yuborildi"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__status
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+#, fuzzy
+msgid "Status"
+msgstr "Holat"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
+msgid "Stay in touch with our Community"
+msgstr "Jamoamiz bilan aloqada qoling"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__subject
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__subject
+#, fuzzy
+msgid "Subject"
+msgstr "Mavzu"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
+msgid "Subscribe"
+msgstr "Obuna bo‘lish"
+
+#. module: mail_group
+#: model:mail.template,description:mail_group.mail_template_list_subscribe
+#, fuzzy
+msgid "Subscription confirmation to a mailing group"
+msgstr "Pochta guruhiga obuna bo‘lishni tasdiqlash"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
+msgid ""
+"Template \"mail_group.mail_template_guidelines\" was not found. No email has "
+"been sent. Please contact an administrator to fix this issue."
+msgstr ""
+"\"mail_group.mail_template_guidelines\" andozasi topilmadi. Hech qanday xat "
+"yuborilmadi. Ushbu muammoni bartaraf etish uchun administratorga murojaat "
+"qiling."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+#, fuzzy
+msgid "Thank you!"
+msgstr "Rahmat!"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
+msgid "The \"Authorized Group\" is missing."
+msgstr "\"Vakolatli guruh\" mavjud emas."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+#, fuzzy
+msgid "The email"
+msgstr "Elektron pochta"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+#, fuzzy
+msgid "The email \"%s\" is not valid."
+msgstr "\"%s\" elektron pochta manzili noto‘g‘ri."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
+msgid "The group of the message do not match."
+msgstr "Xabar guruhi mos kelmayapti."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
+msgid "The guidelines description is empty."
+msgstr "Yo‘riqnoma tavsifi bo‘sh."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
+msgid "The guidelines description is missing."
+msgstr "Yo‘riqnoma tavsifi mavjud emas."
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_model_id
+#, fuzzy
+msgid ""
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
+msgstr ""
+"Ushbu taxallus mos keladigan model (Odoo hujjat turi). Mavjud yozuvga javob "
+"bermaydigan har qanday kiruvchi xat ushbu modelning yangi yozuvini "
+"yaratishga olib keladi (masalan, loyiha vazifasi)"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_name
+#, fuzzy
+msgid ""
+"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
+"<jobs@example.odoo.com>"
+msgstr ""
+"Elektron pochta taxallusining nomi, masalan <jobs@example.odoo.com> uchun "
+"xatlarni qabul qilmoqchi bo‘lsangiz, 'jobs'"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
+msgid "The notification message is missing."
+msgstr "Bildirishnoma xabari mavjud emas."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
+msgid "The partner can not be found."
+msgstr "Hamkor topilmadi."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+#, fuzzy
+msgid "The record of the message should be the group."
+msgstr "Xabarning yozuvi guruh bo‘lishi kerak."
+
+#. module: mail_group
+#. odoo-javascript
+#: code:addons/mail_group/static/src/interactions/mail_group.js:0
+#, fuzzy
+msgid "This email is already subscribed."
+msgstr "Bu elektron pochta allaqachon obuna qilingan."
+
+#. module: mail_group
+#. odoo-javascript
+#: code:addons/mail_group/static/src/interactions/mail_group.js:0
+#, fuzzy
+msgid "This email is not subscribed."
+msgstr "Bu elektron pochtaga obuna qilinmagan."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+#, fuzzy
+msgid "This message can not be moderated"
+msgstr "Bu xabarni moderatsiya qilib bo‘lmaydi"
+
+#. module: mail_group
+#: model:ir.model.constraint,message:mail_group.constraint_mail_group_member_unique_partner
+#, fuzzy
+msgid "This partner is already subscribed to the group"
+msgstr "Bu hamkor allaqachon guruhga obuna bo‘lgan"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+#, fuzzy
+msgid "Those messages can not be moderated: %s."
+msgstr "Ushbu xabarlarni moderatsiya qilib bo‘lmaydi: %s."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "To Review"
+msgstr "Ko‘rib chiqish"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
+msgid "Unsubscribe"
+msgstr "Obunani bekor qilish"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+#, fuzzy
+msgid "Unsubscribe:"
+msgstr "Obunani bekor qilish:"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
+#, fuzzy
+msgid ""
+"When people send an email to the alias of the list, they will appear here."
+msgstr ""
+"Odamlar ro‘yxatning taxallusiga elektron xat yuborishganda, ular bu yerda "
+"ko‘rinadi."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+#, fuzzy
+msgid "Whitelist"
+msgstr "Oq ro‘yxat"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__allow
+#, fuzzy
+msgid "Whitelisted"
+msgstr "Oq ro‘yxatga kiritilgan"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+#, fuzzy
+msgid "Wrong status (%s)"
+msgstr "Noto‘g‘ri holat (%s)"
+
+#. module: mail_group
+#: model:ir.model.constraint,message:mail_group.constraint_mail_group_moderation_mail_group_email_uniq
+#, fuzzy
+msgid "You can create only one rule for a given email address in a group."
+msgstr ""
+"Guruhda berilgan elektron pochta manzili uchun faqat bitta qoida "
+"yaratishingiz mumkin."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
+msgid "You can not join a closed group."
+msgstr "Yopiq guruhga qo‘shila olmaysiz."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
+msgid "You can not send guidelines for a closed group."
+msgstr "Yopiq guruh uchun yo‘riqnomalarni yubora olmaysiz."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+#, fuzzy
+msgid "You have messages to moderate, please go for the proceedings."
+msgstr "Moderatsiya qilish uchun xabarlaringiz bor, iltimos, jarayonga o‘ting."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+msgid "_______________________________________________"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "alias"
+msgstr "taxallus"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#, fuzzy
+msgid "and send an email to the author ("
+msgstr "va muallifga elektron xat yuborish ("
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+#, fuzzy
+msgid "attachments"
+msgstr "ilovalar"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_footer
+#, fuzzy
+msgid "by"
+msgstr "tomonidan"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "e.g. \"Newsletter\""
+msgstr "masalan, \"Yangiliklar\""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "e.g. \"This group is about ...\""
+msgstr "masalan, \"Bu guruh ... haqida\""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "e.g. mycompany.com"
+msgstr "masalan, mycompany.com"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
+msgid "e.g.\"Please be polite and ...\""
+msgstr "masalan, \"Iltimos, xushmuomala bo‘ling va ...\""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
+#, fuzzy
+msgid "group"
+msgstr "guruh"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+#, fuzzy
+msgid "has been"
+msgstr "bo‘ldi"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
+msgid "members<br/>"
+msgstr "a'zo<br/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
+msgid "messages / month"
+msgstr "xabar / oy"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+#, fuzzy
+msgid "messages to review"
+msgstr "xabarni ko‘rib chiqish"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+#, fuzzy
+msgid "more replies"
+msgstr "ko‘proq javob"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+#, fuzzy
+msgid "replies"
+msgstr "javob"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+#, fuzzy
+msgid "subscribed to"
+msgstr "ro‘yxatga obuna bo‘ldi"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+#, fuzzy
+msgid "the list"
+msgstr "ro‘yxat"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+#, fuzzy
+msgid "unsubscribed from"
+msgstr "obunani bekor qildi"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
+msgid "your email..."
+msgstr "elektron pochta manzilingiz..."

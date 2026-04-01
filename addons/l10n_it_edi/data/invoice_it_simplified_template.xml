@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="account_invoice_line_it_simplified_FatturaPA">
+            <DatiBeniServizi>
+                <Descrizione>
+                    <t t-out="format_alphanumeric(line.name, 1000)"/>
+                    <t t-if="not line.name" t-out="'NO NAME'"/>
+                </Descrizione>
+                <Importo t-out="format_monetary(line.price_total, currency)"/>
+                <DatiIVA>
+                    <Imposta t-out="format_monetary(line.price_total - line.price_subtotal, currency)"/>
+                </DatiIVA>
+                <Natura t-if="line.tax_ids.l10n_it_exempt_reason" t-out="line.tax_ids.l10n_it_exempt_reason"/>
+            </DatiBeniServizi>
+        </template>
+
+        <template id="account_invoice_it_simplified_FatturaPA_export">
+            <t t-set="currency" t-value="record.currency_id or record.company_currency_id"/>
+            <t t-set="bank" t-value="record.partner_bank_id"/>
+            <p:FatturaElettronicaSemplificata t-att-versione="formato_trasmissione" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.0 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.0/Schema_del_file_xml_FatturaPA_versione_1.0.xsd">
+                <FatturaElettronicaHeader>
+                    <DatiTrasmissione>
+                        <IdTrasmittente>
+                            <IdPaese t-out="sender_info['country_code']"/>
+                            <IdCodice t-out="sender_info['codice_fiscale'] or sender_info['vat']"/>
+                        </IdTrasmittente>
+                        <ProgressivoInvio t-out="format_alphanumeric(record.name.replace('/',''), -10)"/>
+                        <FormatoTrasmissione t-out="formato_trasmissione"/>
+                        <CodiceDestinatario t-if="buyer_info['pa_index']" t-out="buyer_info['pa_index']"/>
+                        <PECDestinatario t-if="buyer.l10n_it_pec_email" t-out="buyer.l10n_it_pec_email"/>
+                    </DatiTrasmissione>
+                    <CedentePrestatore>
+                        <IdFiscaleIVA>
+                            <IdPaese t-out="seller_info['country_code']"/>
+                            <IdCodice t-out="seller_info['vat']"/>
+                        </IdFiscaleIVA>
+                        <CodiceFiscale t-if="seller_info['codice_fiscale']" t-out="seller_info['codice_fiscale']"/>
+                        <t t-if="seller_info['is_company']">
+                            <Denominazione t-out="format_alphanumeric(seller.display_name, 80)"/>
+                        </t>
+                        <t t-else="">
+                            <Nome t-out="format_alphanumeric(seller_info['first_name'], 60)"/>
+                            <Cognome t-out="format_alphanumeric(seller_info['last_name'], 60)"/>
+                        </t>
+                        <t t-call="l10n_it_edi.account_invoice_it_FatturaPA_sede">
+                            <t t-set="partner" t-value="seller"/>
+                            <t t-set="partner_info" t-value="seller_info"/>
+                        </t>
+                        <RappresentanteFiscale t-if="seller.l10n_it_has_tax_representative">
+                            <IdFiscaleIVA>
+                                <IdPaese t-out="representative_info['country_code']"/>
+                                <IdCodice t-out="representative_info['vat']"/>
+                            </IdFiscaleIVA>
+                            <Anagrafica>
+                                <t t-if="representative_info['is_company']">
+                                    <Denominazione t-out="format_alphanumeric(representative.display_name, 80)"/>
+                                </t>
+                                <t t-else="">
+                                    <Nome t-out="format_alphanumeric(representative_info['first_name'], 60)"/>
+                                    <Cognome t-out="format_alphanumeric(representative_info['last_name'], 60)"/>
+                                </t>
+                            </Anagrafica>
+                        </RappresentanteFiscale>
+                        <IscrizioneREA t-if="seller.l10n_it_has_eco_index">
+                            <Ufficio t-out="seller.l10n_it_eco_index_office.code"/>
+                            <NumeroREA t-out="format_alphanumeric(seller.l10n_it_eco_index_number)"/>
+                            <CapitaleSociale t-if="seller.l10n_it_eco_index_share_capital != 0" t-out="format_numbers_two(seller.l10n_it_eco_index_share_capital)"/>
+                            <SocioUnico t-if="seller.l10n_it_eco_index_sole_shareholder != 'NO'" t-out="seller.l10n_it_eco_index_sole_shareholder"/>
+                            <StatoLiquidazione t-out="seller.l10n_it_eco_index_liquidation_state"/>
+                        </IscrizioneREA>
+                        <RegimeFiscale t-out="seller.l10n_it_tax_system"/>
+                    </CedentePrestatore>
+                    <CessionarioCommittente>
+                        <IdentificativiFiscali>
+                            <IdFiscaleIVA t-if="buyer_info['vat'] and buyer_info['in_eu']">
+                                <IdPaese t-out="buyer_info['country_code']"/>
+                                <IdCodice t-out="buyer_info['vat']"/>
+                            </IdFiscaleIVA>
+                            <CodiceFiscale t-if="buyer_info['codice_fiscale']" t-out="buyer_info['codice_fiscale']"/>
+                        </IdentificativiFiscali>
+                    </CessionarioCommittente>
+                </FatturaElettronicaHeader>
+                <FatturaElettronicaBody>
+                    <DatiGenerali>
+                        <DatiGeneraliDocumento>
+                            <TipoDocumento t-out="document_type"/>
+                            <Divisa t-out="currency.name"/>
+                            <Data t-out="format_date(record.invoice_date)"/>
+                            <Numero t-out="format_alphanumeric(record.name, -20)"/>
+                        </DatiGeneraliDocumento>
+                        <DatiFatturaRettificata t-if="record.move_type == 'out_refund' and record.reversed_entry_id">
+                            <NumeroFR t-out="format_alphanumeric(record.reversed_entry_id.name, -20)"/>
+                            <DataFR t-out="format_date(record.reversed_entry_id.invoice_date)"/>
+                            <ElementiRettificati t-out="format_alphanumeric(record.ref, 1000)"/>
+                        </DatiFatturaRettificata>
+                    </DatiGenerali>
+                    <t t-foreach="record.invoice_line_ids.filtered(lambda l: l.display_type not in ('line_section', 'line_subsection', 'line_note'))" t-as="line">
+                        <t t-call="l10n_it_edi.account_invoice_line_it_simplified_FatturaPA"/>
+                    </t>
+                    <Allegati t-if="pdf">
+                        <NomeAttachment t-out="format_alphanumeric(pdf_name, 60)"/>
+                        <FormatoAttachment t-translation="off">PDF</FormatoAttachment>
+                        <Attachment t-out="pdf"/>
+                    </Allegati>
+                </FatturaElettronicaBody>
+            </p:FatturaElettronicaSemplificata>
+        </template>
+    </data>
+</odoo>

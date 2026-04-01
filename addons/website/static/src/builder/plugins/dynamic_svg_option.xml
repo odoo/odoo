@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.DynamicSvgOption">
+    <BuilderRow label.translate="Dynamic Colors" action="'svgColor'">
+        <t t-foreach="Object.keys(domState.colors)" t-as="colorName" t-key="colorName">
+            <BuilderColorPicker title="title[colorName]" actionParam="colorName" enabledTabs="['solid', 'custom']"/>
+        </t>
+    </BuilderRow>
+</t>
+
+</templates>

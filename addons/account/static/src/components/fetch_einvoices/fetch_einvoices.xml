@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="account.FetchEInvoices">
+        <DropdownItem onSelected.bind="fetchEInvoices">
+            <i class="fa fa-fw fa-refresh me-1" aria-hidden="true"></i><t t-esc="this.buttonLabel" />
+        </DropdownItem>
+    </t>
+</templates>

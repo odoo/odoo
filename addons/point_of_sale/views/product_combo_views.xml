@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="point_of_sale.product_combo_view_form" model="ir.ui.view">
+        <field name="name">product.combo.form.inherit.point.of.sale</field>
+        <field name="model">product.combo</field>
+        <field name="inherit_id" ref="product.product_combo_view_form"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="attributes">
+                <attribute name="context">{'default_available_in_pos': True}</attribute>
+            </field>
+
+            <xpath expr="//field[@name='company_id']" position="replace">
+                <group>
+                    <span class="o_form_label oe_inline fw-bolder">Maximum</span>
+                    <div>
+                        <field name="qty_max" class="text-center" style="width:50px;"/>
+                        <label for="qty_max" string="items" class="fw-bolder ps-3" />
+                    </div>
+                    <span class="o_form_label oe_inline fw-bolder">Includes</span>
+                    <div>
+                        <field name="qty_free" class="text-center" style="width:50px;"/>
+                        <label for="qty_free" string="items" class="fw-bolder ps-3" />
+                    </div>
+                </group>
+                <group>
+                    <field name="base_price" widget="monetary" options="{'field_digits': True}"/>
+                    <field
+                        name="company_id"
+                        placeholder="Visible to all"
+                        groups="base.group_multi_company"
+                        options="{'no_create': True}"
+                        class="oe_inline"
+                    />
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

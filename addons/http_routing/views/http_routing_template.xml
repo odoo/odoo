@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="http_error" name="HTTP Error">
+        <t t-call="web.frontend_layout">
+            <div id="wrap">
+                <div class="oe_structure">
+                    <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
+                </div>
+                <t t-if="editable or debug">
+                    <t t-call="http_routing.http_error_debug"/>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="error_message">
+        <p t-if="error_message">
+            <strong>Error message:</strong>
+            <pre t-esc="error_message"/>
+        </p>
+    </template>
+
+    <template id="http_error_debug">
+        <div class="container accordion mb32 mt32" id="debug_infos">
+            <div class="card" t-if="error_message">
+                <h4 class="card-header">
+                    <a data-bs-toggle="collapse" href="#error_main">Error</a>
+                </h4>
+                <div id="error_main" class="collapse show">
+                    <div class="card-body">
+                        <t t-call="http_routing.error_message"/>
+                    </div>
+                </div>
+            </div>
+            <div class="card" t-if="qweb_exception">
+                <h4 class="card-header">
+                    <a data-bs-toggle="collapse" href="#error_qweb">QWeb</a>
+                </h4>
+                <div id="error_qweb" class="collapse show">
+                    <div class="card-body">
+                        <p>
+                            The error occurred while rendering the template <code t-esc="qweb_exception.template"/>
+                            <t t-if="qweb_exception.element">and evaluating the following expression: <code t-esc="qweb_exception.element"/></t>
+                        </p>
+                        <pre t-esc="str(exception)"/>
+                    </div>
+                </div>
+            </div>
+            <div class="card" t-if="traceback">
+                <h4 class="card-header">
+                    <a data-bs-toggle="collapse" href="#error_traceback">Traceback</a>
+                </h4>
+                <div id="error_traceback" t-attf-class="collapse #{not error_message and not qweb_exception and 'show'}">
+                    <div class="card-body">
+                        <pre id="exception_traceback" t-esc="traceback"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="4xx">
+        <t t-call="web.frontend_layout">
+            <div id="wrap">
+                <div class="container">
+                    <h1 class="mt-5">Oops! Something went wrong.</h1>
+                    <p>Take a look at the error message below.</p>
+                </div>
+                <t t-if="editable or debug">
+                    <t t-call="http_routing.http_error_debug"/>
+                </t>
+                <t t-else="">
+                    <div class="container">
+                        <t t-call="http_routing.error_message"/>
+                    </div>
+                </t>
+        </div>
+        </t>
+    </template>
+
+    <template id="400">
+        <t t-call="web.frontend_layout">
+            <div id="wrap">
+                <div class="container">
+                    <h1 class="mt-5">400: Bad Request</h1>
+                    <p>The server couldn't understand the request. Take a look at the error message below.</p>
+                </div>
+                <t t-if="editable or debug">
+                    <t t-call="http_routing.http_error_debug"/>
+                </t>
+                <t t-else="">
+                    <div class="container">
+                        <t t-call="http_routing.error_message"/>
+                    </div>
+                </t>
+        </div>
+        </t>
+    </template>
+
+    <template id="403">
+        <t t-call="web.frontend_layout">
+            <div id="wrap">
+                <div class="container">
+                    <h1 class="mt-5">403: Forbidden</h1>
+                    <p>The page you were looking for could not be authorized.</p>
+                </div>
+                    <t t-if="editable or debug">
+                        <t t-call="http_routing.http_error_debug"/>
+                    </t>
+                    <t t-else="">
+                        <div class="container">
+                            <t t-call="http_routing.error_message"/>
+                        </div>
+                    </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="404" name="Page Not Found">
+        <t t-call="web.frontend_layout">
+            <div id="wrap">
+                <t t-out="0"/>
+                <div class="oe_structure oe_empty">
+                    <section class="s_text_image pt104 pb104" data-snippet="s_image_text" data-name="Image - Text">
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col-lg-4 pb32">
+                                    <img class="img img-fluid mx-auto" src="/html_editor/shape/http_routing/404.svg?c2=o-color-2" alt=""/>
+                                </div>
+                                <div class="col-lg-8 text-lg-start text-center my-auto">
+                                    <h1 class="visually-hidden">Error 404</h1>
+                                    <h2>We couldn't find the page you're looking for!</h2>
+                                    <p></p>
+                                    <p><b>Don't panic.</b> If you think it's our mistake, please send us a message on <a href="/contactus">this page</a>.</p>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="s_hr pt32 pb48" data-snippet="s_hr" data-name="Separator">
+                                        <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid; border-top-color: var(--400);"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <p class="text-center">Maybe you were looking for one of these <b>popular pages?</b></p>
+                                    <ul class="list-inline text-center">
+                                        <li class="list-inline-item mb-2"><a href="/" class="btn btn-primary">Home</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="415">
+        <t t-call="web.frontend_layout">
+            <div id="wrap">
+                <div class="container">
+                    <h1 class="mt-5">415: Unsupported Media Type</h1>
+                    <p>It looks like the URL you are accessing doesn't support the format of the request. Take a look at the error message below.</p>
+                </div>
+                <t t-if="editable or debug">
+                    <t t-call="http_routing.http_error_debug"/>
+                </t>
+                <t t-else="">
+                    <div class="container">
+                        <t t-call="http_routing.error_message"/>
+                    </div>
+                </t>
+        </div>
+        </t>
+    </template>
+
+    <template id="422">
+        <t t-call="web.frontend_layout">
+            <div id="wrap">
+                <div class="container">
+                    <h1 class="mt-5">Oops! Something went wrong.</h1>
+                    <p>Take a look at the error message below.</p>
+                </div>
+                <t t-if="editable or debug">
+                    <t t-call="http_routing.http_error_debug"/>
+                </t>
+                <t t-else="">
+                    <div class="container">
+                        <t t-call="http_routing.error_message"/>
+                    </div>
+                </t>
+        </div>
+        </t>
+    </template>
+
+    <template id="500">
+        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+        <!-- This template should not use any variable except those provided by http_routing.ir_http._handle_exception  -->
+        <!--    no request.crsf_token, no theme style, no assets, ... cursor can be broken during rendering !      -->
+        <!--    see test_05_reset_specific_view_controller_broken_request                                          -->
+        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+        <html>
+            <head>
+                <title t-esc="status_message">Internal Server Error</title>
+
+                <link rel="stylesheet" href="/web/static/lib/bootstrap/dist/css/bootstrap.css"/>
+                <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"/>
+                <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/util/index.js"/>
+                <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/dom/data.js"/>
+                <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/dom/event-handler.js"/>
+                <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/dom/manipulator.js"/>
+                <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/dom/selector-engine.js"/>
+                <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/util/config.js"/>
+                <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/base-component.js"/>
+                <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/collapse.js"/>
+                <style>
+                    html {
+                        font-size: 14px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div id="wrapwrap">
+                    <header>
+                        <div class="navbar navbar-expand-md navbar-light bg-light">
+                            <div class="container">
+                                <div class="collapse navbar-collapse navbar-top-collapse">
+                                    <ul class="navbar-nav ms-auto" id="top_menu">
+                                        <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                                        <li class="nav-item"><a href="javascript: window.history.back()" class="nav-link">Back</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                    <main>
+                        <div id="error_message" class="oe_structure">
+                            <h2 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h2>
+                        </div>
+
+                        <t t-if="editable or debug">
+                            <t t-call="http_routing.http_error_debug"/>
+                        </t>
+                    </main>
+                </div>
+            </body>
+        </html>
+    </template>
+</odoo>

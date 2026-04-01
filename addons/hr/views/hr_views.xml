@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem
+            id="menu_hr_root"
+            name="Employees"
+            groups="group_hr_manager,group_hr_user,base.group_user"
+            web_icon="hr,static/description/icon.png"
+            sequence="185"/>
+
+        <menuitem
+            id="menu_hr_main"
+            name="Human Resources"
+            parent="menu_hr_root"
+            sequence="0"/>
+
+        <menuitem
+            id="menu_hr_employee_payroll"
+            name="Employees"
+            action="open_view_employee_list_my"
+            parent="menu_hr_root"
+            groups="group_hr_user"
+            sequence="3"/>
+
+        <menuitem
+            id="menu_hr_employee"
+            name="Directory"
+            action="hr_employee_public_action"
+            parent="menu_hr_root"
+            sequence="4"/>
+
+        <menuitem
+            id="hr_menu_hr_reports"
+            name="Reporting"
+            parent="menu_hr_root"
+            groups="group_hr_user"
+            sequence="95"/>
+
+        <menuitem
+                id="menu_hr_department_kanban"
+                action="hr_department_kanban_action"
+                parent="menu_hr_root"
+                groups="base.group_user"/>
+
+        <menuitem
+            id="menu_human_resources_configuration"
+            name="Configuration"
+            parent="menu_hr_root"
+            groups="group_hr_manager"
+            sequence="100"/>
+
+            <menuitem
+                id="menu_config_employee"
+                name="Employee"
+                parent="menu_human_resources_configuration"
+                sequence="10"/>
+
+            <menuitem
+                id="menu_config_plan_plan"
+                name="Onboarding / Offboarding"
+                action="mail_activity_plan_action"
+                parent="menu_config_employee"
+                sequence="1"/>
+
+            <menuitem
+                id="menu_hr_work_location_tree"
+                action="hr_work_location_action"
+                parent="menu_config_employee"
+                sequence="5"/>
+
+            <menuitem
+                id="menu_resource_calendar_view"
+                action="resource.action_resource_calendar_form"
+                parent="menu_config_employee"
+                name="Working Schedules"
+                sequence="6"/>
+
+            <menuitem
+                id="menu_hr_departure_reason_tree"
+                action="hr_departure_reason_action"
+                parent="menu_config_employee"
+                sequence="7"/>
+
+            <menuitem
+                id="menu_view_employee_category_form"
+                name="Tags"
+                action="open_view_categ_form"
+                parent="menu_config_employee"
+                groups="base.group_no_one"
+                sequence="10"/>
+
+            <menuitem
+                id="menu_config_recruitment"
+                name="Recruitment"
+                parent="menu_human_resources_configuration"
+                sequence="20"/>
+
+                <menuitem
+                    id="menu_view_hr_job"
+                    action="action_hr_job"
+                    parent="menu_config_recruitment"
+                    sequence="1"/>
+
+                <menuitem
+                    id="menu_hr_employee_contract_templates"
+                    name="Contract Templates"
+                    action="action_hr_contract_templates"
+                    parent="menu_config_recruitment"
+                    sequence="2"
+                    groups="hr.group_hr_manager"/>
+
+                <menuitem
+                    id="menu_view_hr_contract_type"
+                    action="hr_contract_type_action"
+                    parent="menu_config_recruitment"
+                    sequence="3"
+                    groups="group_hr_user"
+                    active="0"/>
+
+    </data>
+</odoo>

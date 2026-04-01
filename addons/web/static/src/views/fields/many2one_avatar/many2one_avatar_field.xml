@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Many2OneAvatarField">
+        <t t-set="relation" t-value="props.record.fields[props.name].relation"/>
+        <t t-set="value" t-value="props.record.data[props.name]"/>
+        <div class="d-flex align-items-center gap-1">
+            <span class="o_avatar o_m2o_avatar">
+                <t t-if="value">
+                    <img class="rounded" t-attf-src="/web/image/{{relation}}/{{value.id}}/avatar_128"/>
+                </t>
+                <t t-elif="!props.readonly">
+                    <span class="o_avatar_empty o_m2o_avatar_empty"/>
+                </t>
+            </span>
+            <Many2One t-props="m2oProps" cssClass="'w-100'">
+                <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                    <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
+                        <img class="rounded me-1" t-attf-src="/web/image/{{relation}}/{{autoCompleteItemScope.record.id}}/avatar_128"/>
+                        <span t-out="autoCompleteItemScope.label"/>
+                    </span>
+                </t>
+            </Many2One>
+        </div>
+    </t>
+
+</templates>

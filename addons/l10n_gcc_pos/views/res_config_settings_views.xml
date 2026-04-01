@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form_inherit_l10n_gcc_pos" model="ir.ui.view">
+            <field name="name">res.config.settins.view.form.inherit</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <block id="pos_bills_and_receipts_section" position="inside">
+                    <setting string="Gulf Cooperation Council Format"
+                             invisible="not company_id.l10n_gcc_country_is_gcc"
+                             help="Add Arabic as a secondary language to your receipt">
+                        <field name="l10n_gcc_dual_language_receipt"/>
+                    </setting>
+                </block>
+            </field>
+        </record>
+    </data>
+</odoo>

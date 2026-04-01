@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanCoverImageDialog">
+        <Dialog title.translate="Set a Cover Image" size="'lg'">
+            <div t-if="attachments.length" class="o_kanban_cover_container bg-100">
+                <t t-foreach="attachments" t-as="attachment" t-key="attachment.id">
+                    <div class="o_kanban_cover_image position-relative d-inline-block m-2 border bg-white o_cursor_pointer" t-att-class="{
+                        'o_selected border-primary': state.selectedAttachmentId === attachment.id,
+                    }">
+                        <img t-attf-src="/web/image/{{attachment.id}}?unique=1"
+                            class="position-absolute start-0 end-0 top-0 bottom-0 mw-100 mh-100 m-auto"
+                            alt="Attachment"
+                            t-on-click="() => this.selectAttachment(attachment, false)"
+                            t-on-dblclick="() => this.selectAttachment(attachment, true)"
+                        />
+                    </div>
+                </t>
+            </div>
+            <t t-else="">There is no available image to be set as cover.</t>
+            <t t-set-slot="footer" t-slot-scope="dialog">
+                <button t-if="attachments.length" class="btn btn-primary" t-on-click="setCover" t-att-disabled="!state.selectedAttachmentId">
+                    Select
+                </button>
+                <FileInput
+                    autoOpen="!attachments.length"
+                    acceptedFileExtensions="'image/*'"
+                    onUpload.bind="onUpload"
+                    resModel="props.record.resModel"
+                    resId="props.record.resId">
+                        <button class="btn btn-primary w-auto" t-on-click="uploadImage">
+                            Upload and Set
+                        </button>
+                </FileInput>
+                <button t-if="hasCoverImage" class="btn btn-secondary" t-on-click="removeCover">
+                    Remove Cover Image
+                </button>
+                <button class="btn btn-secondary" t-on-click="dialog.close">
+                    Discard
+                </button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

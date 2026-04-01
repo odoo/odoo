@@ -1,0 +1,180 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_mrp
+#
+# Translators:
+# Martin Trigaux, 2022
+# Larissa Manderfeld, 2023
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~15.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-11-28 10:55+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-19/sale_mrp/"
+"de/>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: sale_mrp
+#: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Manufactured</b>"
+msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Gefertigt</b>"
+
+#. module: sale_mrp
+#: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Confirmed</b>"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>Bestätigt</b>"
+
+#. module: sale_mrp
+#: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>In progress</b>"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>In Bearbeitung</b>"
+
+#. module: sale_mrp
+#: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
+msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
+msgstr "<i class=\"fa fa-fw fa-times\"/> <b>Abgebrochen</b>"
+
+#. module: sale_mrp
+#: model_terms:ir.ui.view,arch_db:sale_mrp.mrp_production_form_view_sale
+msgid "<span class=\"o_stat_text\">Sale</span>"
+msgstr "<span class=\"o_stat_text\">Verkauf</span>"
+
+#. module: sale_mrp
+#: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
+msgid "<strong>Manufacturing Orders</strong>"
+msgstr "<strong>Fertigungsaufträge</strong>"
+
+#. module: sale_mrp
+#. odoo-python
+#: code:addons/sale_mrp/models/mrp_bom.py:0
+msgid ""
+"As long as there are some sale order lines that must be delivered/invoiced "
+"and are related to these bills of materials, you can not remove them.\n"
+"The error concerns these products: %s"
+msgstr ""
+"Solange es Verkaufsauftragszeilen gibt, die geliefert/abgerechnet werden "
+"müssen und mit diesen Stücklisten in Verbindung stehen, können Sie diese "
+"nicht entfernen.\n"
+"Der Fehler betrifft diese Produkte: %s"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_mrp_bom
+msgid "Bill of Material"
+msgstr "Stückliste"
+
+#. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order__mrp_production_count
+msgid "Count of MO generated"
+msgstr "Anzahl generierter Fertigungsaufträge"
+
+#. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_production__sale_order_count
+msgid "Count of Source SO"
+msgstr "Anzahl der VA-Referenzen"
+
+#. module: sale_mrp
+#: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
+msgid "Date:"
+msgstr "Datum:"
+
+#. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_bom__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_production__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_move__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_rule__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_bom__id
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_production__id
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_move__id
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_move_line__id
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_account_move_line
+msgid "Journal Item"
+msgstr "Buchungszeile"
+
+#. module: sale_mrp
+#: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_form_mrp
+msgid "Manufacturing"
+msgstr "Fertigung"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Fertigungsauftrag"
+
+#. module: sale_mrp
+#. odoo-python
+#: code:addons/sale_mrp/models/sale_order.py:0
+msgid "Manufacturing Orders Generated by %s"
+msgstr "Fertigungsaufträge generiert durch %s"
+
+#. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order__mrp_production_ids
+msgid "Manufacturing orders associated with this sales order."
+msgstr "Fertigungsaufträge im Zusammenhang mit diesem Verkaufsauftrag."
+
+#. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_production__sale_line_id
+msgid "Origin sale order line"
+msgstr "Ursprüngliche Verkaufsauftragszeile"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Produktbewegungen (Lagerbuchung)"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_sale_order
+msgid "Sales Order"
+msgstr "Verkaufsauftrag"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Verkaufsauftragszeile"
+
+#. module: sale_mrp
+#. odoo-python
+#: code:addons/sale_mrp/models/mrp_production.py:0
+msgid "Sources Sale Orders of %s"
+msgstr "Referenz-Verkaufsaufträge von %s"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_stock_move
+msgid "Stock Move"
+msgstr "Lagerbuchung"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_stock_rule
+msgid "Stock Rule"
+msgstr "Bestandsregel"
+
+#~ msgid "<span class=\"o_stat_text\">Manufacturing</span>"
+#~ msgstr "<span class=\"o_stat_text\">Fertigungsauftrag</span>"
+
+#~ msgid "Production Order"
+#~ msgstr "Fertigungsauftrag"

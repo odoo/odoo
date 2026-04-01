@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.HeaderNavigationOption">
+    <div class="options-container-header d-flex align-items-center mt-3">
+        <span class="options-container-label ps-2 py-2">Navigation</span>
+    </div>
+
+    <t t-set="align_left_views" t-value="[
+    ]"/>
+
+    <t t-set="align_center_views" t-value="[
+        'website.template_header_hamburger_mobile_align_center',
+        'website.template_header_default_align_center',
+        'website.template_header_boxed_align_center',
+        'website.template_header_stretch_align_center',
+        'website.template_header_search_align_center',
+        'website.template_header_sales_one_align_center',
+        'website.template_header_sales_two_align_center',
+        'website.template_header_sales_three_align_center',
+        'website.template_header_sales_four_align_center',
+        'website.template_header_sidebar_align_center',
+        'website.template_header_vertical_align_center',
+    ]"/>
+
+    <t t-set="align_right_views" t-value="[
+        'website.template_header_hamburger_mobile_align_right',
+        'website.template_header_default_align_right',
+        'website.template_header_boxed_align_right',
+        'website.template_header_stretch_align_right',
+        'website.template_header_search_align_right',
+        'website.template_header_sales_one_align_right',
+        'website.template_header_sales_two_align_right',
+        'website.template_header_sales_three_align_right',
+        'website.template_header_sales_four_align_right',
+        'website.template_header_sidebar_align_right',
+        'website.template_header_vertical_align_right',
+    ]"/>
+
+    <BuilderRow label.translate="Desktop Menu" tooltip.translate="Change the burger button position/menu items alignment">
+        <!-- Reason why we enable this option for those templates only:
+            website.template_header_hamburger => Hamburger Icon Position
+            website.template_header_sidebar => Sidebar Position
+        -->
+        <BuilderButtonGroup action="'websiteConfig'" t-if="hasSomeViews(['website.template_header_hamburger', 'website.template_header_sidebar'])">
+            <BuilderButton
+                icon="'fa-long-arrow-left'"
+                actionParam="{
+                    views: [],
+                    vars: { 'hamburger-position': 'left' }
+                }"/>
+            <BuilderButton
+                icon="'fa-long-arrow-right'"
+                actionParam="{
+                    views: ['website.template_header_hamburger_align_right', 'website.template_header_sidebar_position_right'],
+                    vars: { 'hamburger-position': 'right' }
+                }"/>
+        </BuilderButtonGroup>
+
+        <BuilderSelect action="'websiteConfig'">
+            <BuilderSelectItem actionParam="{ views: align_left_views }">
+                <span><i class="fa fa-align-left fa-fw"></i></span>
+            </BuilderSelectItem>
+            <BuilderSelectItem actionParam="{ views: align_center_views }">
+                <span><i class="fa fa-align-center fa-fw"></i></span>
+            </BuilderSelectItem>
+            <BuilderSelectItem actionParam="{ views: align_right_views }">
+                <span><i class="fa fa-align-right fa-fw"></i></span>
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Mobile Menu">
+        <BuilderButtonGroup action="'websiteConfig'">
+            <BuilderButton icon="'fa-long-arrow-left'"
+                actionParam="{
+                    views: ['website.template_header_mobile_position_left'],
+                    vars: { 'hamburger-position-mobile': 'left' }
+                }"/>
+            <BuilderButton
+                icon="'fa-long-arrow-right'"
+                actionParam="{
+                    views: [],
+                    vars: { 'hamburger-position-mobile': 'right' }
+                }"/>
+        </BuilderButtonGroup>
+
+        <BuilderSelect action="'websiteConfig'">
+            <BuilderSelectItem
+                actionParam="{
+                    views: [],
+                }"
+            >
+                <span><i class="fa fa-align-left fa-fw"></i></span>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{
+                    views: ['website.template_header_mobile_align_center'],
+                }"
+            >
+                <span><i class="fa fa-align-center fa-fw"></i></span>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{
+                    views: ['website.template_header_mobile_align_right'],
+                }"
+            >
+                <span><i class="fa fa-align-right fa-fw"></i></span>
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <t t-set="excludedViewsSubMenus" t-value="[
+        'website.template_header_hamburger',
+    ]"/>
+    <BuilderRow label.translate="Sub Menus" tooltip.translate="Opening behavior of dropdown menus" t-if="!hasSomeViews(excludedViewsSubMenus)">
+        <BuilderSelect action="'previewableWebsiteConfig'">
+            <BuilderSelectItem
+                id="header_dropdown_on_click_opt"
+                label.translate="On Click"
+                actionParam="{views: [], previewClass: ''}"
+            >On Click</BuilderSelectItem>
+            <BuilderSelectItem
+                label.translate="On Hover"
+                actionParam="{views: ['website.header_hoverable_dropdown'], previewClass: 'o_hoverable_dropdown'}"
+            >On Hover</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Link Style" tooltip.translate="Style of menu items">
+        <BuilderSelect action="'websiteConfig'">
+            <BuilderSelectItem
+                id="'option_header_navbar_links_default'"
+                label.translate="Default"
+                actionParam="{
+                    views: [],
+                    vars: { 'header-links-style': 'default' },
+                }"
+            >Default</BuilderSelectItem>
+            <BuilderSelectItem
+                id="'option_header_navbar_links_fill'"
+                label.translate="Fill"
+                actionParam="{
+                    views: ['website.header_navbar_pills_style'],
+                    vars: { 'header-links-style': 'fill' },
+                }"
+            >Fill</BuilderSelectItem>
+            <BuilderSelectItem
+                id="'option_header_navbar_links_outline'"
+                label.translate="Outline"
+                actionParam="{
+                    views: [],
+                    vars: { 'header-links-style': 'outline' },
+                }"
+            >Outline</BuilderSelectItem>
+            <BuilderSelectItem
+                id="'option_header_navbar_links_pills'"
+                label.translate="Pill"
+                actionParam="{
+                    views: ['website.header_navbar_pills_style'],
+                    vars: { 'header-links-style': 'pills' },
+                }"
+            >Pill</BuilderSelectItem>
+            <BuilderSelectItem
+                id="'option_header_navbar_block'"
+                label.translate="Block"
+                actionParam="{
+                    views: ['website.header_navbar_pills_style'],
+                    vars: { 'header-links-style': 'block' },
+                }"
+            >Block</BuilderSelectItem>
+            <BuilderSelectItem
+                id="'option_header_navbar_border_bottom'"
+                label.translate="Border Bottom"
+                actionParam="{
+                    views: [],
+                    vars: { 'header-links-style': 'border-bottom' },
+                }"
+            >Border Bottom</BuilderSelectItem>
+            <BuilderSelectItem
+                id="'option_header_navbar_underline'"
+                label.translate="Underline"
+                actionParam="{
+                    views: [],
+                    vars: { 'header-links-style': 'underline' },
+                }"
+            >Underline</BuilderSelectItem>
+            <BuilderSelectItem
+                id="'option_header_navbar_bold'"
+                label.translate="Bold"
+                actionParam="{
+                    views: [],
+                    vars: { 'header-links-style': 'bold' },
+                }"
+            >Bold</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+</t>
+
+</templates>

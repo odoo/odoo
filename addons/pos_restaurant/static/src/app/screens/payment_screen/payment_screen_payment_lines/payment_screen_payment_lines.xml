@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_restaurant.PaymentScreenPaymentLines" t-inherit="point_of_sale.PaymentScreenPaymentLines" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('send_payment_reversal')]/.." position="replace">
+            <t t-if="line.canBeAdjusted() &amp;&amp; line.pos_order_id.amountPaid &lt; line.pos_order_id.priceIncl">
+                <div class="button send_adjust_amount" title="Adjust Amount" t-on-click="() => this.sendPaymentAdjust(line)">
+                    Adjust Amount
+                </div>
+            </t>
+            <t t-elif="line.can_be_reversed">
+                <div class="button send_payment_reversal" title="Reverse Payment" t-on-click="() => this.props.sendPaymentReverse(line)">
+                    Reverse
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

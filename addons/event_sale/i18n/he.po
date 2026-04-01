@@ -1,0 +1,776 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * event_sale
+#
+# Translators:
+# NoaFarkash, 2022
+# שהאב חוסיין <shhab89@gmail.com>, 2022
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
+# Jonathan Spier, 2022
+# Martin Trigaux, 2022
+# ExcaliberX <excaliberx@gmail.com>, 2022
+# Yihya Hugirat <hugirat@gmail.com>, 2022
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
+# or balmas <or@laylinetech.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-14 15:21+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-19/"
+"event_sale/he/>\n"
+"Language: he\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
+"n % 10 == 0) ? 2 : 3));\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
+msgid ""
+".\n"
+"            <span>Manual actions may be needed.</span>"
+msgstr ""
+".\n"
+"            י<span>יתכן שיהיה צורך בפעולות ידניות.</span>"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Configure Events &amp; Tickets"
+msgstr "<i class=\"fa fa-arrow-right\"/> הגדרת אירועים &amp; כרטיסים"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
+msgid "<span class=\"o_stat_text\">Sale Order</span>"
+msgstr "<span class=\"o_stat_text\">הזמנת לקוח</span>"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "<span class=\"o_stat_text\">Sales</span>"
+msgstr "<span class=\"o_stat_text\">מכירות</span>"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
+msgid "<span>Registration modification for attendee:</span>"
+msgstr "<span>שינוי רישום למשתתף</span>"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "Add"
+msgstr "הוסף"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
+#: model_terms:ir.ui.view,arch_db:event_sale.sale_order_view_form
+msgid "All Events"
+msgstr "כל האירועים"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event__sale_order_lines_ids
+msgid "All sale order lines pointing to this event"
+msgstr "כל שורות הזמנת המכירה מצביעות על אירוע זה"
+
+#. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_event_event_configurator__is_multi_slots
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__is_multi_slots
+msgid ""
+"Allow multiple time slots. The communications, the maximum number of "
+"attendees and the maximum number of tickets registrations are defined for "
+"each time slot instead of the whole event."
+msgstr ""
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__done
+msgid "Attended"
+msgstr "השתתף"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_sale_order__attendee_count
+msgid "Attendee Count"
+msgstr "מספר משתתפים"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_name
+msgid "Attendee Name"
+msgstr "שם משתתף"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.sale_order_view_form
+msgid "Attendees"
+msgstr "משתתפים"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+msgid "Before updating the linked registrations of"
+msgstr "לפני עדכון הרישומים המקושרים של"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Booked by"
+msgstr "הוזמן ע\"י"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_campaign_id
+msgid "Campaign"
+msgstr "קמפיין"
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__cancel
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__cancel
+msgid "Cancelled"
+msgstr "בוטל"
+
+#. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_id
+msgid ""
+"Choose an event and it will automatically create a registration for this "
+"event."
+msgstr "בחר אירוע ותיווצר הרשמה אוטומטית לאירוע זה."
+
+#. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_slot_id
+msgid ""
+"Choose an event slot and it will automatically create a registration for "
+"this event slot."
+msgstr ""
+
+#. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
+msgid ""
+"Choose an event ticket and it will automatically create a registration for "
+"this event ticket."
+msgstr "בחר כרטיס לאירוע ותיווצר הרשמה אוטומטית לכרטיס אירוע זה."
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "Close"
+msgstr "סגור"
+
+#. module: event_sale
+#: model_terms:ir.actions.act_window,help:event_sale.event_sale_report_action
+msgid "Come back once tickets have been sold to overview your sales income."
+msgstr "חזור לאחר שהכרטיסים נמכרו כדי לעיין בהכנסות המכירה שלך."
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__company_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__company_id
+msgid "Company"
+msgstr "חברה"
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__open
+msgid "Confirmed"
+msgstr "מאושר"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/product_template.py:0
+msgid "Create an Attendee for the selected Event."
+msgstr "צור משתתף לאירוע שנבחר."
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+msgid "Create/Update registrations"
+msgstr "צור\\ עדכן הרשמות"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__create_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_uid
+msgid "Created by"
+msgstr "נוצר על-ידי"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__create_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_date
+msgid "Created on"
+msgstr "נוצר ב-"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_partner_id
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Customer"
+msgstr "לקוח"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "Discard"
+msgstr "בטל"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event__display_name
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__display_name
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__display_name
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__display_name
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__display_name
+#: model:ir.model.fields,field_description:event_sale.field_product_template__display_name
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__display_name
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__display_name
+#: model:ir.model.fields,field_description:event_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr "שם לתצוגה"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_registration_editor
+msgid "Edit Attendee Details on Sales Confirmation"
+msgstr "ערוך פרטי משתתף באישור המכירה"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_registration_editor_line
+msgid "Edit Attendee Line on Sales Confirmation"
+msgstr "ערוך שורת משתתף באישור המכירה"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__editor_id
+msgid "Editor"
+msgstr "עורך"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__email
+msgid "Email"
+msgstr "דוא\"ל"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_event_event
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__event_id
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_id
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Event"
+msgstr "אירוע"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_event_event_configurator
+msgid "Event Configurator"
+msgstr "מגדיר אירוע"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_end
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Event End Date"
+msgstr "תאריך סיום האירוע"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_event_registration
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_id
+msgid "Event Registration"
+msgstr "הרשמה לאירוע"
+
+#. module: event_sale
+#: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
+msgid "Event Registrations"
+msgstr "הרשמות לאירוע"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Event Sales Analysis"
+msgstr "ניתוח מכירות אירועים"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_event_sale_report
+msgid "Event Sales Report"
+msgstr "דו\"ח מכירת אירועים"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_slot_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_slot_id
+msgid "Event Slot"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_begin
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Event Start Date"
+msgstr "תאריך התחלת האירוע"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_event_event_ticket
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_ticket_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_ticket_id
+msgid "Event Ticket"
+msgstr "כרטיס לאירוע"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_type_id
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Event Type"
+msgstr "סוג אירוע"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Events that have ended"
+msgstr "אירועים שהסתיימו"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
+msgid "Exception:"
+msgstr "חריג:"
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__free
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Free"
+msgstr "פנוי"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__has_available_tickets
+msgid "Has Available Tickets"
+msgstr "בעל כרטיסים זמינים"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event__id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__id
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__id
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__id
+#: model:ir.model.fields,field_description:event_sale.field_product_template__id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__id
+msgid "ID"
+msgstr "מזהה"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/wizard/event_configurator.py:0
+msgid "Invalid slot choice \"%(slot_name)s\" for event \"%(event_name)s\"."
+msgstr ""
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/wizard/event_configurator.py:0
+msgid "Invalid ticket choice \"%(ticket_name)s\" for event \"%(event_name)s\"."
+msgstr "בחירת כרטיס לא תקינה \"%(ticket_name)s\" לאירוע \"%(event_name)s\"."
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__invoice_partner_id
+msgid "Invoice Address"
+msgstr "כתובת לחשבונית"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__is_multi_slots
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__is_multi_slots
+msgid "Is Multi Slots"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__active
+msgid "Is registration active (not archived)?"
+msgstr "האם הרישום פעיל (לא בארכיון)?"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_uid
+msgid "Last Updated by"
+msgstr "עודכן לאחרונה על-ידי"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_date
+msgid "Last Updated on"
+msgstr "עדכון אחרון ב"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_medium_id
+msgid "Medium"
+msgstr "אמצעי תקשורת"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__name
+msgid "Name"
+msgstr "שם"
+
+#. module: event_sale
+#: model_terms:ir.actions.act_window,help:event_sale.event_sale_report_action
+msgid "No Event Revenues yet!"
+msgstr "אין הכנסות מאירועים עדיין!"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Non-free tickets"
+msgstr "כרטיסים בתשלום"
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__to_pay
+msgid "Not Sold"
+msgstr "לא נמכר"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_date
+msgid "Order Date"
+msgstr "תאריך הזמנה"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__registration_id
+msgid "Original Registration"
+msgstr "הרשמה מקורית"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Participant"
+msgstr "משתתף"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Past Events"
+msgstr "אירועים שעברו"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_status
+msgid "Payment Status"
+msgstr "סטטוס תשלום"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Pending payment"
+msgstr "תשלום ממתין"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__phone
+msgid "Phone"
+msgstr "טלפון"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/sale_order.py:0
+msgid ""
+"Please make sure all your event related lines are configured before "
+"confirming this order:%s"
+msgstr "אנא ודא שכל השורות הקשורות לאירוע מוגדרות לפני שתאשר את הזמנה זו:%s"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_product_template
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__product_id
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__product_id
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Product"
+msgstr "מוצר"
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__draft
+msgid "Quotation"
+msgstr "הצעת מחיר"
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__sent
+msgid "Quotation Sent"
+msgstr "הצעת המחיר נשלחה"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+msgid "Registration"
+msgstr "הרשמה"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_create_date
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Registration Date"
+msgstr "תאריך הרשמה"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_state
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Registration Status"
+msgstr "סטטוס הרשמה"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
+msgid "Registration revenues"
+msgstr "הכנסות מהרשמות"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__registration_ids
+msgid "Registrations"
+msgstr "הרשמות"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__event_registration_ids
+msgid "Registrations to Edit"
+msgstr "הרשמות לעריכה"
+
+#. module: event_sale
+#: model:ir.actions.act_window,name:event_sale.event_sale_report_action
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_price
+#: model:ir.ui.menu,name:event_sale.menu_action_show_revenues
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_graph
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_pivot
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_tree
+msgid "Revenues"
+msgstr "הכנסות"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_id
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
+msgid "Sale Order"
+msgstr "הזמנת לקוח"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_line_id
+msgid "Sale Order Line"
+msgstr "שורת פריט בהזמנה"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_state
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Sale Order Status"
+msgstr "סטטוס הזמנת לקוח"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "Sales"
+msgstr "מכירות"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event__sale_price_total
+msgid "Sales (Tax Included)"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_sale_order
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__sale_order_id
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__sale
+msgid "Sales Order"
+msgstr "הזמנת לקוח"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_sale_order_line
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_line_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__sale_order_line_id
+msgid "Sales Order Line"
+msgstr "שורת הזמנת לקוח"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_user_id
+msgid "Salesperson"
+msgstr "איש מכירות"
+
+#. module: event_sale
+#: model:ir.actions.act_window,name:event_sale.event_configurator_action
+msgid "Select an Event"
+msgstr "בחר אירוע"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/event_registration.py:0
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__event_slot_id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_slot_id
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Slot"
+msgstr "משבצת"
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__sold
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Sold"
+msgstr "נמכר"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_source_id
+msgid "Source"
+msgstr "מקור"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__state
+msgid "Status"
+msgstr "סטטוס"
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/sale_order_line.py:0
+msgid ""
+"The sale order line with the product %(product_name)s needs an event, a "
+"ticket and a slot in case the event has multiple time slots."
+msgstr ""
+
+#. module: event_sale
+#. odoo-python
+#: code:addons/event_sale/models/event_registration.py:0
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Ticket"
+msgstr "קריאת שירות"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__event_ticket_id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ticket_id
+msgid "Ticket Type"
+msgstr "סוג כרטיס"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_ticket_price
+msgid "Ticket price"
+msgstr "מחיר כרטיס"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "Total sales for this event"
+msgstr "סך המכירות לאירוע זה"
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__draft
+msgid "Unconfirmed"
+msgstr "לא מאושר"
+
+#. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_event_registration__state
+msgid ""
+"Unconfirmed: registrations in a pending state waiting for an action "
+"(specific case, notably with sale status)\n"
+"Registered: registrations considered taken by a client\n"
+"Attended: registrations for which the attendee attended the event\n"
+"Cancelled: registrations cancelled manually"
+msgstr ""
+"לא מאומת: רישומים במצב ממתין ממתינים לפעולה (מקרה ספציפי, בעיקר עם סטטוס "
+"מכירה)\n"
+"רשום: רישומים שנחשבים שנלקחו על ידי לקוח\n"
+"השתתפו: הרשמות עבורן השתתף המשתתף באירוע\n"
+"בוטלה: ההרשמות בוטלו באופן ידני"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_price_untaxed
+msgid "Untaxed Revenues"
+msgstr "הכנסות ללא מיסים"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Upcoming events from today"
+msgstr "אירועים קרובים מהיום"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
+msgid "Upcoming/Running"
+msgstr "קרובים/מתקיימים"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "We could not find a matching event ticket for this product. <br/>"
+msgstr "לא נמצא כרטיס אירוע תואם למוצר הזה.<br/>"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
+msgid "changed from"
+msgstr ""
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+msgid "please provide attendee details."
+msgstr "נא לצרף את פרטי המשתתף."
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
+msgid "to"
+msgstr "ל"
+
+#~ msgid ""
+#~ "A description of the ticket that you want to communicate to your "
+#~ "customers."
+#~ msgstr "תיאור של הכרטיס שאתה רוצה להעביר ללקוחות שלך."
+
+#~ msgid ""
+#~ "A storable product is a product for which you manage stock. The Inventory "
+#~ "app has to be installed.\n"
+#~ "A consumable product is a product for which stock is not managed.\n"
+#~ "A service is a non-material product you provide."
+#~ msgstr ""
+#~ "מוצר מנוהל מלאי הוא מוצר שעבורו מתבצע ניהול מלאי במערכת. יש להתקין את "
+#~ "יישום המלאי.מוצר לא מנוהל מלאי הוא מוצר אשר לא מתבצע עבורו ניהול מלאי "
+#~ "במערכת.שירות הוא מוצר לא חומרי שאתה מספק."
+
+#~ msgid "Cancel"
+#~ msgstr "בטל"
+
+#~ msgid "Configure an event"
+#~ msgstr "הגדר אירוע"
+
+#~ msgid "Currency"
+#~ msgstr "מטבע"
+
+#~ msgid "Description"
+#~ msgstr "תיאור"
+
+#~ msgid "Event Template Ticket"
+#~ msgstr "תבניות כרטיסים לארוע"
+
+#~ msgid "Event Tickets"
+#~ msgstr "כרטיסים לאירוע"
+
+#~ msgid "Group By"
+#~ msgstr "קבץ לפי"
+
+#~ msgid "Is Paid"
+#~ msgstr "שולם"
+
+#~ msgid "Journal Entry"
+#~ msgstr "פקודת יומן"
+
+#~ msgid "Locked"
+#~ msgstr "נעולה"
+
+#~ msgid "Mobile"
+#~ msgstr "נייד"
+
+#~ msgid "Not Paid"
+#~ msgstr "לא שולם"
+
+#~ msgid "Ok"
+#~ msgstr "אישור"
+
+#~ msgid "Order Ref"
+#~ msgstr "מזהה הזמנה"
+
+#~ msgid "Paid"
+#~ msgstr "שולם"
+
+#~ msgid "Price"
+#~ msgstr "מחיר"
+
+#~ msgid "Price Reduce"
+#~ msgstr "הורדת מחיר"
+
+#~ msgid "Price Reduce Tax inc"
+#~ msgstr "הורדת מחיר מיסים כלולים"
+
+#~ msgid "Product Type"
+#~ msgstr "סוג מוצר"
+
+#~ msgid "Product Variant"
+#~ msgstr "וריאנט מוצר"
+
+#~ msgid "Quotation Template Line"
+#~ msgstr "שורת תבנית הצעת מחיר"
+
+#~ msgid "Quotation Template Option"
+#~ msgstr "אפשרות תבנית הצעת מחיר"
+
+#~ msgid "Sales (Tax Excluded)"
+#~ msgstr "מכירות (ללא מיסים)"
+
+#~ msgid "Sales End"
+#~ msgstr "סיום מכירה"
+
+#~ msgid "Sales Start"
+#~ msgstr "תחילת מכירות"
+
+#~ msgid "Skip"
+#~ msgstr "דלג"
+
+#~ msgid "Ticket changed from"
+#~ msgstr "הכרטיס שונה מ-"
+
+#~ msgid "Transaction"
+#~ msgstr "עסקה"

@@ -1,0 +1,638 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * rating
+#
+# Translators:
+# Martin Trigaux, 2022
+# Friederike Fasterling-Nesselbosch, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-09-14 21:19+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/rating/"
+"it/>\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_invalid_partner
+msgid "\" or someone from the same company can give it a rating."
+msgstr "\" o qualcuno della stessa azienda che può fornire una recensione."
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_count
+msgid "# Ratings"
+msgstr "N. valutazioni"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
+msgid "<i class=\"fa fa-arrow-left me-1\"/> Back to the Homepage"
+msgstr "<i class=\"fa fa-arrow-left me-1\"/>Torna alla pagina iniziale"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "<i class=\"fa fa-clock-o me-2\" aria-label=\"Create date\"/>"
+msgstr "<i class=\"fa fa-clock-o me-2\" aria-label=\"Data creazione\"/>"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "<i class=\"fa fa-folder me-2\" aria-label=\"Open folder\"/>"
+msgstr "<i class=\"fa fa-folder me-2\" aria-label=\"Apri cartella\"/>"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "A star"
+msgstr "Una stella"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__message_needaction
+msgid "Action Needed"
+msgstr "Azione richiesta"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__message_attachment_count
+msgid "Attachment Count"
+msgstr "Numero allegati"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg
+msgid "Average Rating"
+msgstr "Valutazione media"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg_percentage
+msgid "Average Rating (%)"
+msgstr "Valutazione media (%)"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__feedback
+msgid "Comment"
+msgstr "Commento"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__create_uid
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__partner_id
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_mail_message__display_name
+#: model:ir.model.fields,field_description:rating.field_mail_thread__display_name
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__display_name
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__display_name
+#: model:ir.model.fields,field_description:rating.field_rating_rating__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__res_id
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+msgid "Document"
+msgstr "Documento"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__res_model
+msgid "Document Model"
+msgstr "Modello documento"
+
+#. module: rating
+#: model:ir.model,name:rating.model_mail_thread
+msgid "Email Thread"
+msgstr "Discussione e-mail"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
+msgid "Feel free to share feedback on your experience:"
+msgstr "Non esitare a lasciare un feedback sulla tua esperienza:"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__consumed
+msgid "Filled Rating"
+msgstr "Valutazione effettuata"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__message_follower_ids
+msgid "Followers"
+msgstr "Seguito da"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seguito da (partner)"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "Half a star"
+msgstr "Mezza stella"
+
+#. module: rating
+#. odoo-python
+#: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__discuss_channel__rating_avg_text__top
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__top
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__top
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__top
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__top
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__top
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Happy"
+msgstr "Positivo"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__has_message
+msgid "Has Message"
+msgstr "Contiene messaggio"
+
+#. module: rating
+#: model:ir.model.fields,help:rating.field_rating_rating__is_internal
+msgid ""
+"Hide to public / portal users, independently from subtype configuration."
+msgstr ""
+"Nascosto agli utenti pubblici / portale, indipendentemente dalla "
+"configurazione del sottotipo."
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_invalid_partner
+msgid "Home"
+msgstr "Home"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_mail_message__id
+#: model:ir.model.fields,field_description:rating.field_mail_thread__id
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__id
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__id
+#: model:ir.model.fields,field_description:rating.field_rating_rating__id
+msgid "ID"
+msgstr "ID"
+
+#. module: rating
+#: model:ir.model.fields,help:rating.field_rating_mixin__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Se selezionata, nuovi messaggi richiedono attenzione."
+
+#. module: rating
+#: model:ir.model.fields,help:rating.field_rating_mixin__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Se selezionata, alcuni messaggi presentano un errore di consegna."
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating_image
+msgid "Image"
+msgstr "Immagine"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating_image_url
+msgid "Image URL"
+msgstr "URL immagine"
+
+#. module: rating
+#. odoo-python
+#: code:addons/rating/controllers/main.py:0
+msgid ""
+"Incorrect rating: should be %(rating_unhappy)d, %(rating_neutral)d or %"
+"(rating_happy)d (received %(rate)d)"
+msgstr ""
+"Valutazione non corretta: dovrebbe essere %(rating_unhappy)d, %"
+"(rating_neutral)d o %(rating_happy)d (ricevuto %(rate)d)"
+
+#. module: rating
+#. odoo-python
+#: code:addons/rating/models/mail_thread.py:0
+msgid "Invalid token or rating."
+msgstr "Token o valutazione non valido."
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__message_is_follower
+msgid "Is Follower"
+msgstr "Sta seguendo"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Last 30 Days"
+msgstr "Ultimi 30 giorni"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Last 365 Days"
+msgstr "Ultimi 365 giorni"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Last 7 Days"
+msgstr "Ultimi 7 giorni"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__write_uid
+msgid "Last Updated by"
+msgstr "Ultimo aggiornamento di"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__write_date
+msgid "Last Updated on"
+msgstr "Ultimo aggiornamento il"
+
+#. module: rating
+#: model:ir.model,name:rating.model_mail_message
+#: model:ir.model.fields,field_description:rating.field_rating_rating__message_id
+msgid "Message"
+msgstr "Messaggio"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__message_has_error
+msgid "Message Delivery error"
+msgstr "Errore di consegna messaggio"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__message_ids
+msgid "Messages"
+msgstr "Messaggi"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "My Ratings"
+msgstr "Le mie valutazioni"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_name
+msgid "Name"
+msgstr "Nome"
+
+#. module: rating
+#. odoo-python
+#: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__discuss_channel__rating_avg_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__ok
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Neutral"
+msgstr "Neutrale"
+
+#. module: rating
+#: model_terms:ir.actions.act_window,help:rating.rating_rating_action
+msgid "No rating yet"
+msgstr "Ancora nessuna valutazione"
+
+#. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__discuss_channel__rating_avg_text__none
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__none
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__none
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__none
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__none
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__none
+msgid "Not Rated yet"
+msgstr "Ancora nessuna valutazione"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Numero di azioni"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__message_has_error_counter
+msgid "Number of errors"
+msgstr "Numero di errori"
+
+#. module: rating
+#: model:ir.model.fields,help:rating.field_rating_mixin__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Numero di messaggi che richiedono un'azione"
+
+#. module: rating
+#: model:ir.model.fields,help:rating.field_rating_mixin__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Numero di messaggi con errore di consegna"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_invalid_partner
+msgid "Only the customer of \""
+msgstr "Solo il cliente di \""
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_id
+msgid "Parent Document"
+msgstr "Documento principale"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model
+msgid "Parent Document Model"
+msgstr "Modello documento principale"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_name
+msgid "Parent Document Name"
+msgstr "Nome documento principale"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+msgid "Parent Holder"
+msgstr "Contenitore principale"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_ref
+msgid "Parent Ref"
+msgstr "Rif. principale"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model_id
+msgid "Parent Related Document Model"
+msgstr "Modello documento collegato al principale"
+
+#. module: rating
+#: model:ir.model.fields,help:rating.field_rating_parent_mixin__rating_percentage_satisfaction
+msgid "Percentage of happy ratings"
+msgstr "Percentuale di valutazioni positive"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rated_on
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Rated On"
+msgstr "Valutato il"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_id
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Rated Operator"
+msgstr "Operatore valutato"
+
+#. module: rating
+#: model:ir.model,name:rating.model_rating_rating
+#: model:ir.model.fields,field_description:rating.field_mail_mail__rating_id
+#: model:ir.model.fields,field_description:rating.field_mail_message__rating_id
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating_text
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form_text
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Rating"
+msgstr "Valutazione"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
+msgid "Rating (/5)"
+msgstr "Valutazione (/5)"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg_text
+msgid "Rating Avg Text"
+msgstr "Testo media valutazione"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_feedback
+msgid "Rating Last Feedback"
+msgstr "Ultimo riscontro valutazione"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_image
+msgid "Rating Last Image"
+msgstr "Immagine ultima valutazione"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_value
+msgid "Rating Last Value"
+msgstr "Valore ultima valutazione"
+
+#. module: rating
+#: model:ir.model,name:rating.model_rating_mixin
+msgid "Rating Mixin"
+msgstr "Mixin valutazione"
+
+#. module: rating
+#: model:ir.model,name:rating.model_rating_parent_mixin
+msgid "Rating Parent Mixin"
+msgstr "Mixin principale valutazione"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_percentage_satisfaction
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_percentage_satisfaction
+msgid "Rating Satisfaction"
+msgstr "Valutazione soddisfazione"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_text
+msgid "Rating Text"
+msgstr "Testo valutazione"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_mail_mail__rating_value
+#: model:ir.model.fields,field_description:rating.field_mail_message__rating_value
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating
+msgid "Rating Value"
+msgstr "Valore valutazione"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_count
+msgid "Rating count"
+msgstr "Numero valutazioni"
+
+#. module: rating
+#: model:ir.model.constraint,message:rating.constraint_rating_rating_rating_range
+msgid "Rating should be between 0 and 5"
+msgstr "La valutazione deve essere tra 0 e 5"
+
+#. module: rating
+#. odoo-javascript
+#: code:addons/rating/static/src/core/web/notification_item_patch.xml:0
+msgid "Rating:"
+msgstr "Valutazione:"
+
+#. module: rating
+#: model:ir.actions.act_window,name:rating.rating_rating_action
+#: model:ir.model.fields,field_description:rating.field_account_analytic_account__rating_ids
+#: model:ir.model.fields,field_description:rating.field_calendar_event__rating_ids
+#: model:ir.model.fields,field_description:rating.field_discuss_channel__rating_ids
+#: model:ir.model.fields,field_description:rating.field_fleet_vehicle__rating_ids
+#: model:ir.model.fields,field_description:rating.field_fleet_vehicle_log_contract__rating_ids
+#: model:ir.model.fields,field_description:rating.field_fleet_vehicle_log_services__rating_ids
+#: model:ir.model.fields,field_description:rating.field_fleet_vehicle_model__rating_ids
+#: model:ir.model.fields,field_description:rating.field_gamification_badge__rating_ids
+#: model:ir.model.fields,field_description:rating.field_gamification_badge_user__rating_ids
+#: model:ir.model.fields,field_description:rating.field_gamification_challenge__rating_ids
+#: model:ir.model.fields,field_description:rating.field_iap_account__rating_ids
+#: model:ir.model.fields,field_description:rating.field_ir_actions_server__rating_ids
+#: model:ir.model.fields,field_description:rating.field_ir_cron__rating_ids
+#: model:ir.model.fields,field_description:rating.field_lunch_supplier__rating_ids
+#: model:ir.model.fields,field_description:rating.field_mail_blacklist__rating_ids
+#: model:ir.model.fields,field_description:rating.field_mail_thread__rating_ids
+#: model:ir.model.fields,field_description:rating.field_mail_thread_blacklist__rating_ids
+#: model:ir.model.fields,field_description:rating.field_mail_thread_cc__rating_ids
+#: model:ir.model.fields,field_description:rating.field_mail_thread_main_attachment__rating_ids
+#: model:ir.model.fields,field_description:rating.field_mail_thread_phone__rating_ids
+#: model:ir.model.fields,field_description:rating.field_mail_tracking_duration_mixin__rating_ids
+#: model:ir.model.fields,field_description:rating.field_maintenance_equipment__rating_ids
+#: model:ir.model.fields,field_description:rating.field_maintenance_request__rating_ids
+#: model:ir.model.fields,field_description:rating.field_maintenance_team__rating_ids
+#: model:ir.model.fields,field_description:rating.field_phone_blacklist__rating_ids
+#: model:ir.model.fields,field_description:rating.field_product_category__rating_ids
+#: model:ir.model.fields,field_description:rating.field_product_pricelist__rating_ids
+#: model:ir.model.fields,field_description:rating.field_product_product__rating_ids
+#: model:ir.model.fields,field_description:rating.field_product_template__rating_ids
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_ids
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_ids
+#: model:ir.model.fields,field_description:rating.field_res_partner__rating_ids
+#: model:ir.model.fields,field_description:rating.field_res_users__rating_ids
+#: model:ir.ui.menu,name:rating.rating_rating_menu_technical
+#: model_terms:ir.ui.view,arch_db:rating.mail_message_view_form
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
+msgid "Ratings"
+msgstr "Valutazioni"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__res_model_id
+msgid "Related Document Model"
+msgstr "Modello documento correlato"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_mail_mail__rating_ids
+#: model:ir.model.fields,field_description:rating.field_mail_message__rating_ids
+msgid "Related ratings"
+msgstr "Valutazioni correlate"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Resource"
+msgstr "Risorsa"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__resource_ref
+msgid "Resource Ref"
+msgstr "Rif. risorsa"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__res_name
+msgid "Resource name"
+msgstr "Nome risorsa"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__access_token
+msgid "Security Token"
+msgstr "Token di sicurezza"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
+msgid "Send Feedback"
+msgstr "Invia commento"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__create_date
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Submitted on"
+msgstr "Inviata il"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
+msgid "Thank you for rating our services!"
+msgstr "Grazie per aver valutato i nostri servizi!"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
+msgid "Thank you for your feedback!"
+msgstr "Grazie per il tuo riscontro!"
+
+#. module: rating
+#: model_terms:ir.actions.act_window,help:rating.rating_rating_action
+msgid "There is no rating for this object at the moment."
+msgstr "Ancora nessuna valutazione per questo oggetto."
+
+#. module: rating
+#. odoo-python
+#: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__discuss_channel__rating_avg_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__ko
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Unhappy"
+msgstr "Non felice"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__is_internal
+msgid "Visible Internally Only"
+msgstr "Visibile solo internamente"
+
+#. module: rating
+#. odoo-python
+#: code:addons/rating/models/mail_thread.py:0
+msgid "Wrong rating value. A rate should be between 0 and 5 (received %d)."
+msgstr ""
+"Valore di valutazione errato. La valutazione deve essere compresa tra 0 e 5 "
+"(%d ricevuto)."
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_invalid_partner
+msgid "You cannot rate this"
+msgstr "Non puoi valutarlo"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
+msgid "by"
+msgstr "di"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
+msgid "for"
+msgstr "per"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
+msgid "on"
+msgstr "il"
+
+#~ msgid "Date"
+#~ msgstr "Data"
+
+#~ msgid "Dissatisfied"
+#~ msgstr "Insoddisfatto"
+
+#~ msgid "Go back to the Homepage"
+#~ msgstr "Ritorna alla pagina principale"
+
+#~ msgid "Group By"
+#~ msgstr "Raggruppa per"
+
+#~ msgid "Last 30 days"
+#~ msgstr "Ultimi 30 giorni"
+
+#~ msgid "Last 7 days"
+#~ msgstr "Ultimi 7 giorni"
+
+#~ msgid "No Rating yet"
+#~ msgstr "Ancora nessuna valutazione"
+
+#~ msgid "Okay"
+#~ msgstr "OK"
+
+#~ msgid "Rating Value (/5)"
+#~ msgstr "Livello valutazione (/5)"
+
+#~ msgid "Satisfied"
+#~ msgstr "Soddisfatto"
+
+#~ msgid "Thank you, we appreciate your feedback!"
+#~ msgstr "Grazie, apprezziamo la sua opinione!"
+
+#~ msgid "Today"
+#~ msgstr "Oggi"

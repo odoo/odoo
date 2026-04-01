@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="event_track_proposal">
+    <t t-call="website_event.layout">
+        <t t-set="hide_submenu" t-value="True"/>
+        <div class="oe_structure" id="oe_structure_website_event_track_proposal_1" data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES OF ALL EVENTS"/>
+        <div class="container">
+            <t t-call="website_event.navbar"/>
+
+            <div class="row mb-3">
+                <div t-att-class="event.website_track_proposal and 'col-lg-8 col-xl-9 pe-xxl-5' or 'col-12'">
+                    <!-- Default Title (editable) -->
+                    <div class="oe_structure">
+                        <section class="pt24 pb24">
+                            <h1 class="my-0 h3-fs">Call for Proposals</h1>
+                        </section>
+                    </div>
+
+                    <!-- "Proposal are CLOSED" content -->
+                    <div t-if="not event.website_track_proposal" class="oe_structure">
+                        <section class="s_text_block pb40" data-snippet="s_text_block" data-name="Text">
+                            <div class="container s_allow_columns">
+                                <h4>Proposals are closed.</h4>
+                                <p> We're sorry, this event does not accept proposals anymore </p>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- "Proposal are ALLOWED" content -->
+                    <div t-if="event.website_track_proposal" class="oe_structure">
+                        <section>
+                            <h4 class="mt-0">
+                                Introduction
+                            </h4>
+                            <p class="lead">
+                                We will accept a broad range of
+                                presentations, from reports on academic and
+                                commercial projects to tutorials and case
+                                studies. As long as the presentation is
+                                interesting and potentially useful to the
+                                audience, it will be considered for
+                                inclusion in the programme.
+                            </p>
+                        </section>
+                    </div>
+
+                    <section t-if="event.website_track_proposal" id="forms">
+                        <form class="js_website_submit_form o_website_event_track_proposal_form row mt-3" t-att-data-event-id="event.id" enctype="multipart/form-data">
+                            <input name="csrf_token" type="hidden" t-att-value="request.csrf_token()"/>
+                            <div id="track_intro" class="col-12">
+                                <hr/>
+                                <h5 class="mt-0 mb-1">Talk Intro</h5>
+                                <div class="form-text text-muted mb16">
+                                    What is your talk about?
+                                </div>
+                                <div class="row mb-3">
+                                    <label class="col-form-label col-sm-auto" for="track_name" style="width: 200px" >
+                                        <span class="o_wetrack_proposal_label_content">Talk Title</span>
+                                        <span>*</span>
+                                    </label>
+                                    <div class="col-sm">
+                                        <input name="track_name" type="text" class="form-control form-field" required="True"/>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label class="col-form-label col-sm-auto" for="description" style="width: 200px" >
+                                        <span class="o_wetrack_proposal_label_content">Talk Introduction</span>
+                                        <span>*</span>
+                                    </label>
+                                    <div class="col-sm">
+                                        <textarea name="description" class="form-control" rows="4" required="True"/>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label class="col-form-label col-sm-auto" for="tags" style="width: 200px">Categories</label>
+                                    <div class="col-sm o_website_event_track_proposal_form_tags"/>
+                                </div>
+                            </div>
+
+                            <div id="speaker_profile" class="col-12">
+                                <hr/>
+                                <h5 class="mt-0 mb-1">Speaker Profile</h5>
+                                <div class="form-text text-muted mb16">
+                                    Who will give this talk? We will show this to attendees to showcase your talk.
+                                </div>
+                                <div class="row mb-3">
+                                    <label class="col-form-label col-sm-auto" for="partner_name" style="width: 200px">Name</label>
+                                    <div class="col-sm"><input name="partner_name" type="text" class="form-control"/></div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label class="col-form-label col-sm-auto" for="partner_email" style="width: 200px">Email</label>
+                                    <div class="col-sm"><input name="partner_email" type="email" class="form-control" /></div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label class="col-form-label col-sm-auto" for="partner_phone" style="width: 200px">Phone</label>
+                                    <div class="col-sm"><input name="partner_phone" type="text" class="form-control"/></div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label class="col-form-label col-sm-auto" for="image" style="width: 200px">Picture</label><br/>
+                                    <div class="col-sm"><input name="image" class="form-control" type="file" accept="image/*" style="width: 100%"/></div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label class="col-form-label col-sm-auto" for="partner_function" style="width: 200px">Job Title</label>
+                                    <div class="col-sm"><input name="partner_function" type="text" class="form-control"/></div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label class="col-form-label col-sm-auto" for="partner_biography" style="width: 200px" >Biography</label>
+                                    <div class="col-sm"><textarea name="partner_biography" rows="4" class="form-control"/></div>
+                                </div>
+                            </div>
+                            <t t-call="website_event_track.event_track_proposal_contact_details"/>
+                            <div class="o_form_buttons col-12 d-flex align-items-center pt16 pb48">
+                                <button type="submit" class="btn btn-primary o_wetrack_proposal_submit_button">Submit Proposal</button>
+                                <span class="o_wetrack_proposal_error_section text-danger d-none ml8">
+                                    <i class="fa fa-close mr4" role="img" aria-label="Error" title="Error"/>
+                                    <span class="o_wetrack_proposal_error_message"/>
+                                </span>
+                            </div>
+                        </form>
+                    </section>
+                    <div class="oe_structure" id="oe_structure_website_event_track_proposal_2" data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES OF ALL EVENTS"/>
+                </div> <!-- Close main column -->
+
+                <!-- Sidebar: visible if proposals are allowed only -->
+                <aside t-if="event.website_track_proposal" class="col-lg-4 col-xl-3 mt-3 mt-lg-0 pt-3">
+                    <h5 class="o_page_header">Talks Types</h5>
+                    <h6>Regular Talks</h6>
+                    <p>
+                        These are standard talks with slides, alocated in slots of 60 minutes.
+                    </p>
+                    <h6>Lightning Talks</h6>
+                    <p>
+                        These are 30 minutes talks on many different topics. Most topics are accepted in lightning talks.
+                    </p>
+                    <br/>
+                    <h5 class="o_page_header">Submission Agreement</h5>
+                    <p>
+                    We require speakers to accept an agreement in which they commit to:
+                    </p>
+                    <ul>
+                        <li>
+                            Timely release of presentation material (slides),
+                            for publishing on our website.
+                        </li>
+                        <li>
+                            Allow video and audio recording of their
+                            presentation, for publishing on our website.
+                        </li>
+                    </ul>
+                </aside>
+            </div>
+        </div>
+        <div class="oe_structure" id="oe_structure_website_event_track_proposal_3" data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES OF ALL EVENTS"/>
+    </t>
+</template>
+
+<template id="event_track_proposal_contact_details">
+    <div id="event_track_proposal_additional_contact_section" class="col-12">
+        <div class="mb-3">
+            <input name="add_contact_information" type= "checkbox" class="o_wetrack_add_contact_information_checkbox"/>
+            <label class="fw-normal" for="add_contact_information">Contact me through a different email/phone</label>
+        </div>
+        <div class="o_wetrack_contact_information d-none">
+            <hr/>
+            <h5 class="mt-0 mb-1">Contact Information</h5>
+            <div class="form-text text-muted mb16">
+                How can our team get in touch with you?
+            </div> 
+            <div class="row mb-3">
+                <label class="col-form-label col-sm-auto" style="width: 200px">
+                    <span for="contact_name">Name</span>
+                    <span>*</span>
+                </label>
+                <div class="col-sm"><input name="contact_name" type="text" class="form-control o_wetrack_contact_name_input"/></div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-form-label col-sm-auto" for="contact_email" style="width: 200px" >Email</label>
+                <div class="col-sm"><input name="contact_email" type="email" class="form-control o_wetrack_contact_mean o_wetrack_contact_email_input"/></div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-form-label col-sm-auto" for="contact_phone" style="width: 200px" >Phone</label>
+                <div class="col-sm"><input name="contact_phone" type="text" class="form-control o_wetrack_contact_mean o_wetrack_contact_phone_input"/></div>
+            </div>
+        </div> 
+    </div>
+</template>
+
+</odoo>

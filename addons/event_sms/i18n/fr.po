@@ -1,0 +1,129 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * event_sms
+#
+# Translators:
+# Martin Trigaux, 2022
+# Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2023
+# Jérémy Kersten <jke@openerp.com>, 2023
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~15.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-09-14 21:20+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-19/event_sms/"
+"fr/>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: event_sms
+#: model:ir.model.fields,field_description:event_sms.field_event_mail__display_name
+#: model:ir.model.fields,field_description:event_sms.field_event_mail_registration__display_name
+#: model:ir.model.fields,field_description:event_sms.field_event_type_mail__display_name
+#: model:ir.model.fields,field_description:event_sms.field_sms_template__display_name
+msgid "Display Name"
+msgstr "Nom d'affichage"
+
+#. module: event_sms
+#: model:ir.model,name:event_sms.model_event_mail
+msgid "Event Automated Mailing"
+msgstr "Envois automatisés pour un événement"
+
+#. module: event_sms
+#: model:sms.template,name:event_sms.sms_template_data_event_registration
+msgid "Event: Registration"
+msgstr "Événement : inscription"
+
+#. module: event_sms
+#: model:sms.template,name:event_sms.sms_template_data_event_reminder
+msgid "Event: Reminder"
+msgstr "Événement : Rappel"
+
+#. module: event_sms
+#: model:ir.model.fields,field_description:event_sms.field_event_mail__id
+#: model:ir.model.fields,field_description:event_sms.field_event_mail_registration__id
+#: model:ir.model.fields,field_description:event_sms.field_event_type_mail__id
+#: model:ir.model.fields,field_description:event_sms.field_sms_template__id
+msgid "ID"
+msgstr "ID"
+
+#. module: event_sms
+#: model:ir.model,name:event_sms.model_event_type_mail
+msgid "Mail Scheduling on Event Category"
+msgstr "Planification d'e-mails en fonction de la catégorie d'événement"
+
+#. module: event_sms
+#: model:sms.template,body:event_sms.sms_template_data_event_reminder
+msgid ""
+"Ready for \"{{ object.event_id.name }}\" {{ object.event_date_range }}?\n"
+"{{ 'It starts at %s' % format_time(time=object.event_begin_date, "
+"tz=object.event_id.date_tz, time_format='short', "
+"lang_code=object.partner_id.lang) + (', at %s' % "
+"object.event_id.address_inline if object.event_id.address_inline else '') + "
+"'.\\nSee you there!' if object.event_id.address_inline or "
+"'website_published' not in object.event_id._fields else 'Join us on %s/event/"
+"%i!' % (object.get_base_url(), object.event_id.id) }}"
+msgstr ""
+"Prêt pour \"{{ object.event_id.name }}\" {{ object.event_date_range }} ?\n"
+"{{ 'L\\'événement commence à %s' % format_time(time=object.event_begin_date, "
+"tz=object.event_id.date_tz, time_format='short', "
+"lang_code=object.partner_id.lang) + (', à %s' % "
+"object.event_id.address_inline if object.event_id.address_inline else '') + "
+"'.\\nÀ bientôt !' if object.event_id.address_inline or 'website_published' "
+"not in object.event_id._fields else 'Rejoignez-nous à %s/event/%i !' % "
+"(object.get_base_url(), object.event_id.id) }}"
+
+#. module: event_sms
+#: model:ir.model,name:event_sms.model_event_mail_registration
+msgid "Registration Mail Scheduler"
+msgstr "Planificateur d'e-mail d'inscription"
+
+#. module: event_sms
+#. odoo-javascript
+#: code:addons/event_sms/static/src/template_reference_field/field_event_mail_template_reference.xml:0
+#: model:ir.model.fields.selection,name:event_sms.selection__event_mail__notification_type__sms
+#: model:ir.model.fields.selection,name:event_sms.selection__event_mail__template_ref__sms_template
+#: model:ir.model.fields.selection,name:event_sms.selection__event_type_mail__notification_type__sms
+#: model:ir.model.fields.selection,name:event_sms.selection__event_type_mail__template_ref__sms_template
+msgid "SMS"
+msgstr "SMS"
+
+#. module: event_sms
+#: model:ir.model,name:event_sms.model_sms_template
+msgid "SMS Templates"
+msgstr "Modèles de SMS"
+
+#. module: event_sms
+#: model:ir.model.fields,field_description:event_sms.field_event_mail__notification_type
+#: model:ir.model.fields,field_description:event_sms.field_event_type_mail__notification_type
+msgid "Send"
+msgstr "Envoyer"
+
+#. module: event_sms
+#: model:ir.model.fields,field_description:event_sms.field_event_mail__template_ref
+#: model:ir.model.fields,field_description:event_sms.field_event_type_mail__template_ref
+msgid "Template"
+msgstr "Modèle"
+
+#. module: event_sms
+#: model:sms.template,body:event_sms.sms_template_data_event_registration
+msgid ""
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: We are happy to confirm your registration for the "
+"{{ object.event_id.name }} event."
+msgstr ""
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: Nous avons le plaisir de confirmer votre "
+"inscription à l'événement {{ object.event_id.name }}."
+
+#~ msgid "Event Registration"
+#~ msgstr "Inscription à l’événement"

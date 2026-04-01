@@ -1,0 +1,175 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_tax_python
+#
+#
+# Translated by:
+# Deepvision - info@deepvision.uz | +998 77-093-0007
+# Amon Olimov - amon.bars@gmail.com
+# Jonibek Yorqulov - j.yorqulov@deepvision.uz
+# Mirzohidkhon Ulugkhujaev ulugkhujayevmirzohidxon@gmail.com
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-10-08 18:37+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
+#, fuzzy
+msgid ""
+"\n"
+"    - Group of Taxes: The tax is a set of sub taxes.\n"
+"    - Fixed: The tax amount stays the same whatever the price.\n"
+"    - Percentage: The tax amount is a % of the price:\n"
+"        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+"        e.g 110 / (1 + 10%) = 100 (price included)\n"
+"    - Percentage Tax Included: The tax amount is a division of the price:\n"
+"        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+"        e.g 200 * (1 - 10%) = 180 (price included)\n"
+"        "
+msgstr ""
+"- Soliqlar guruhi: Soliq - bu kichik soliqlardan tashkil topgan to‘plam.     "
+"- Qat'iy belgilangan: Soliq miqdori narx qanday bo‘lishidan qat'i nazar "
+"o‘zgarmaydi.     - Foizli: Soliq summasi narxning foizi hisoblanadi: "
+"masalan, 100 * (1 + 10%) = 110 (narx kiritilmagan) masalan, 110 / (1 + 10%) "
+"= 100 (narx kiritilgan) - Foiz solig‘i kiritilgan: Soliq summasi narxning "
+"bo‘linmasi hisoblanadi: masalan, 180 / (1 - 10%) = 200 (narx kiritilmagan) "
+"masalan, 200 * (1 - 10%) = 180 (narx kiritilgan)"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
+#, fuzzy
+msgid ""
+"Compute the amount of the tax.\n"
+"\n"
+":param base: float, actual amount on which the tax is applied\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: A object representing the product\n"
+msgstr ""
+"Soliq miqdorini hisoblang.  :param baza: float, soliq solinadigan haqiqiy "
+"miqdor :param narx_birligi: float :param miqdor: float :param mahsulot: "
+"Mahsulotni ifodalovchi obyekt"
+
+#. module: account_tax_python
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
+#, fuzzy
+msgid "Custom Formula"
+msgstr "Maxsus formula"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
+#, fuzzy
+msgid "Display Name"
+msgstr "Ko‘rsatish nomi"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+#, fuzzy
+msgid "Field '%s' is not accessible"
+msgstr "'%s' maydoniga kirish mumkin emas"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
+#, fuzzy
+msgid "Formula"
+msgstr "Formula"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
+#, fuzzy
+msgid "Formula Decoded Info"
+msgstr "Formulaning koddan chiqarilgan ma'lumoti"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
+#, fuzzy
+msgid "ID"
+msgstr "ID"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+#, fuzzy
+msgid "Invalid AST node: %s"
+msgstr "Noto‘g‘ri AST tuguni: %s"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+#, fuzzy
+msgid "Invalid formula"
+msgstr "Noto‘g‘ri formula"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+#, fuzzy
+msgid "Kwargs are not allowed"
+msgstr "Kwargs-ga ruxsat berilmagan"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+#, fuzzy
+msgid "Only int, float or None are allowed as constant values"
+msgstr "Faqat int, float yoki None o‘zgarmas qiymatlar sifatida ruxsat etilgan"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/models/account_tax.py:0
+#, fuzzy
+msgid "Only primitive types are allowed in python tax formula context."
+msgstr ""
+"Python soliq formulasi kontekstida faqat sodda turlarga ruxsat beriladi"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+msgid "Only product['string'] or uom['string'] read-access is allowed"
+msgstr ""
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+#, fuzzy
+msgid "Only read access to identifiers is allowed"
+msgstr "Identifikatorlarga faqat o‘qish ruxsati berilgan"
+
+#. module: account_tax_python
+#: model:ir.model,name:account_tax_python.model_account_tax
+#, fuzzy
+msgid "Tax"
+msgstr "Soliq"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
+#, fuzzy
+msgid "Tax Computation"
+msgstr "Soliqlarni hisoblash"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+#, fuzzy
+msgid "Unknown function call"
+msgstr "Noma'lum funksiya chaqiruvi"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/tools/formula_utils.py:0
+#, fuzzy
+msgid "Unknown identifier: %s"
+msgstr "Noma'lum identifikator: %s"

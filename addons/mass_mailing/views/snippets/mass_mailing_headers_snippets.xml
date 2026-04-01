@@ -1,0 +1,236 @@
+<odoo>
+<template id="s_mail_block_header_social" name="Left Logo">
+    <section class="s_header_social o_mail_block_header_social o_mail_snippet_general pt16 pb16" data-name="Left Logo" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-12 pt16 pb16">
+                    <div class="o_not_editable">
+                        <a t-att-href="company_id.website or '#'" style="text-decoration:none;float:none;" target="_blank">
+                            <img t-if="company_id.logo or user_id.company_id.logo"
+                                class="img img-fluid o_editable_media py-4"
+                                t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
+                                t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
+                                style="height:auto;max-width:100%;" />
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-12 o_mail_header_social" style="text-align: right;">
+                    <t t-call="mass_mailing.social_links"/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mail_block_header_logo" name="Centered Logo">
+    <section class="s_header_logo o_mail_block_header_logo o_mail_snippet_general" data-name="Centered Logo" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3"/>
+                <div class="col-md-6" style="text-align: center;">
+                    <div class="o_not_editable">
+                        <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;" target="_blank">
+                            <img t-if="company_id.logo or user_id.company_id.logo"
+                                class="img img-fluid o_editable_media py-4"
+                                t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
+                                t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
+                                style="height:auto;max-width:100%;"/>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3" style="text-align: right;"/>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mail_block_header_menu">
+    <section class="s_header_menu o_mail_snippet_general" data-name="Menu">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3"/>
+                <div class="col-md-6" style="text-align: center;">
+                    <div class="o_not_editable">
+                        <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;" target="_blank">
+                            <img t-if="company_id.logo or user_id.company_id.logo"
+                                class="img img-fluid o_editable_media py-4"
+                                t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
+                                t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
+                                style="height:auto;max-width:100%;"/>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3" style="text-align: right;"/>
+            </div>
+        </div>
+        <t t-call="mass_mailing.s_hr"/>
+        <div class="container">
+            <div class="row">
+                <div class="offset-md-3 offset-3 col-md-2 col-2">
+                    <a href="https://www.example.com">
+                        News
+                    </a>
+                </div>
+                <div class="col-md-2 col-2">
+                    <a href="https://www.example.com">
+                        Shop
+                    </a>
+                </div>
+                <div class="col-md-2 col-2 me-auto">
+                    <a href="https://www.example.com">
+                        Contact
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mail_block_header_logo_and_button">
+    <section class="o_mail_snippet_general pt32 pb32" data-vxml="001">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 col-6">
+                    <div class="o_not_editable">
+                        <a t-att-href="company_id.website or '#'" target="_blank">
+                            <img t-if="company_id.logo or user_id.company_id.logo"
+                                class="img img-fluid o_editable_media py-4"
+                                t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
+                                t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"/>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-6">
+                    <p class="m-0" style="text-align: right;">
+                        <a href="/web/login" class="btn btn-primary">
+                            <span class="fa fa-user me-2" contenteditable="false"/>My Account<span class="fa fa-chevron-right ms-2" contenteditable="false"/>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mail_block_header_logo_and_stacked_menu" name="Logo + Stacked Menu">
+    <section class="o_mail_snippet_general pt32 pb32" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-12">
+                    <div class="o_not_editable">
+                        <a t-att-href="company_id.website or '#'" target="_blank">
+                            <img t-if="company_id.logo or user_id.company_id.logo"
+                                class="img img-fluid o_editable_media mx-auto py-4"
+                                style="width: 30% !important"
+                                t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
+                                t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-12">
+                    <p class="m-0" style="text-align: center;"><a href="#" class="btn btn-link">News</a><a href="#" class="btn btn-link">Shop</a><a href="#" class="btn btn-link">Contact Us</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mail_block_header_logo_col" name="Company Logo with Dates and Issues">
+    <section class="o_mail_snippet_general pt32 pb32" data-vxml="001">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-3 col-3">
+                    <t t-set="now" t-value="datetime.datetime.now()"/>
+                    <p style="text-align: center"><t t-out="now.month"/><br/><strong t-out="now.year"/></p>
+                </div>
+                <div class="col-md-6 col-6">
+                    <div class="o_not_editable">
+                        <a t-att-href="company_id.website or '#'" target="_blank">
+                            <img t-if="company_id.logo or user_id.company_id.logo"
+                                class="img img-fluid o_editable_media py-4"
+                                t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
+                                t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"/>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3 col-3">
+                    <p style="text-align: center">Issue<br/><strong>#42</strong></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mail_block_header_logo_and_inline_menu" name="Logo + Inline Menu">
+    <section class="o_mail_snippet_general pt32 pb32" data-vxml="001">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 col-12">
+                    <div class="o_not_editable">
+                        <a t-att-href="company_id.website or '#'" target="_blank">
+                            <img t-if="company_id.logo or user_id.company_id.logo"
+                                class="img img-fluid o_editable_media py-4"
+                                t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
+                                t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo" />
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-12">
+                    <p class="m-0" style="text-align: center;"><a href="#" class="btn btn-link">News</a><a href="#" class="btn btn-link">Shop</a><a href="#" class="btn btn-link">Contact Us</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mail_block_header_name_and_inline_menu" name="Company Name and Menu">
+    <section class="o_mail_snippet_general pt32 pb32" data-vxml="001">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 col-12">
+                    <h1><span class="h2-fs" t-out="company_id.partner_id.name"/></h1>
+                </div>
+                <div class="col-md-6 col-12">
+                    <p class="m-0" style="text-align: center;"><a href="#" class="btn btn-link">News</a><a href="#" class="btn btn-link">Shop</a><a href="#" class="btn btn-link">Contact Us</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mail_block_header_name_and_inline_menu" name="Company Name and Menu">
+    <section class="o_mail_snippet_general pt32 pb32" data-vxml="001">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 col-12">
+                    <h1><span class="h2-fs" t-out="company_id.partner_id.name"/></h1>
+                </div>
+                <div class="col-md-6 col-12">
+                    <p class="m-0" style="text-align: center;"><a href="#" class="btn btn-link">News</a><a href="#" class="btn btn-link">Shop</a><a href="#" class="btn btn-link">Contact Us</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mail_block_header_name_and_button" name="Company Name and Log In Button">
+    <section class="o_mail_snippet_general pt32 pb32" data-vxml="001">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 col-12">
+                    <h1><span class="h2-fs" t-out="company_id.partner_id.name"/></h1>
+                </div>
+                <div class="col-md-6 col-12">
+                    <p class="m-0" style="text-align: end;">
+                        <a href="/web/login" class="btn btn-primary">
+                            <span class="fa fa-user me-2" contenteditable="false"/>My Account<span class="fa fa-chevron-right ms-2" contenteditable="false"/>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+</odoo>

@@ -1,0 +1,186 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_paypal
+#
+# Translators:
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-09-16 21:27+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
+"payment_paypal/th/>\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Client ID"
+msgstr "ไอดีลูกค้า"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Client Secret"
+msgstr "ความลับลูกค้า"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__code
+msgid "Code"
+msgstr "โค้ด"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_provider.py:0
+msgid "Could not generate a new access token."
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_account
+msgid "Email"
+msgstr "อีเมล"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Generate your webhook"
+msgstr "สร้างเว็บฮุคของคุณ"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "How to configure your paypal account?"
+msgstr "วิธีกำหนดค่าบัญชี Paypal ของคุณ?"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__id
+msgid "ID"
+msgstr "ไอดี"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/controllers/main.py:0
+msgid "Invalid response format, can't normalize."
+msgstr ""
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
+msgstr "ไม่มีค่าสำหรับ txn_id (%(txn_id)s) หรือ txn_type (%(txn_type)s)"
+
+#. module: payment_paypal
+#: model:ir.model.fields.selection,name:payment_paypal.selection__payment_provider__code__paypal
+msgid "PayPal"
+msgstr "PayPal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_access_token
+msgid "PayPal Access Token"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_access_token_expiry
+msgid "PayPal Access Token Expiry"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_client_id
+msgid "PayPal Client ID"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_client_secret
+msgid "PayPal Client Secret"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
+msgid "PayPal Transaction Type"
+msgstr "ประเภทธุรกรรมของ PayPal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_webhook_id
+msgid "PayPal Webhook ID"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_provider
+msgid "Payment Provider"
+msgstr "ผู้ให้บริการชำระเงิน"
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "ธุรกรรมสำหรับการชำระเงิน"
+
+#. module: payment_paypal
+#. odoo-javascript
+#: code:addons/payment_paypal/static/src/interactions/payment_form.js:0
+msgid "Payment processing failed"
+msgstr "การประมวลผลการชำระเงินล้มเหลว"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+msgid "Received data with invalid payment status: %s"
+msgstr "ได้รับข้อมูลที่มีสถานะการชำระเงินไม่ถูกต้อง: %s"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+msgid "The customer left the payment page."
+msgstr "ลูกค้าออกจากหน้าชำระเงิน"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_access_token_expiry
+msgid "The moment at which the access token becomes invalid."
+msgstr "ขณะที่โทเค็นการเข้าถึงกลายเป็นไม่ถูกต้อง"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_email_account
+msgid ""
+"The public business email solely used to identify the account with PayPal"
+msgstr "อีเมลธุรกิจสาธารณะที่ใช้ระบุบัญชีกับ PayPal เท่านั้น"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_access_token
+msgid "The short-lived token used to access Paypal APIs"
+msgstr "โทเค็นอายุสั้นที่ใช้สำหรับเข้าถึง PayPal API"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "รหัสทางเทคนิคของผู้ให้บริการชำระเงินรายนี้"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/controllers/main.py:0
+msgid "Unable to verify the payment data"
+msgstr ""
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Webhook ID"
+msgstr ""
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_provider.py:0
+msgid "You must have an HTTPS connection to generate a webhook."
+msgstr "คุณต้องมีการเชื่อมต่อ HTTPS เพื่อสร้างเว็บฮุก"
+
+#~ msgid "Paypal"
+#~ msgstr "Paypal"

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <template id="forum_post_template_new_answer">
+        <p>A new answer on <t t-out="object.name"/> has been posted. Click here to access the post :</p>
+        <p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
+            <a t-attf-href="/forum/#{slug(object.forum_id)}/#{slug(object)}"
+                t-attf-style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: {{object.forum_id.website_id.get_current_website().company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; background-color: {{object.forum_id.website_id.get_current_website().company_id.email_secondary_color or '#875A7B'}}; border-radius:3px">
+                See post
+            </a>
+        </p>
+    </template>
+
+    <template id="forum_post_template_new_question">
+        <p>A new question <b t-out="object.name" /> on <t t-out="object.forum_id.name"/> has been posted. Click here to access the question :</p>
+        <p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
+            <a t-attf-href="/forum/#{slug(object.forum_id)}/#{slug(object)}"
+                t-attf-style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: {{object.forum_id.website_id.get_current_website().company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; background-color: {{object.forum_id.website_id.get_current_website().company_id.email_secondary_color or '#875A7B'}}; border-radius:3px">
+                See question
+            </a>
+        </p>
+    </template>
+
+    <template id="forum_post_template_validation">
+        <p>A new question <b t-out="object.name" /> on <t t-out="object.forum_id.name"/> has been posted and require your validation. Click here to access the question :</p>
+        <p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
+            <a t-attf-href="/forum/#{slug(object.forum_id)}/#{slug(object)}"
+                t-attf-style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: {{object.forum_id.website_id.get_current_website().company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; background-color: {{object.forum_id.website_id.get_current_website().company_id.email_secondary_color or '#875A7B'}}; border-radius:3px">
+                Validate question
+            </a>
+        </p>
+    </template>
+</data></odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="spreadsheet_dashboard_timesheet" model="spreadsheet.dashboard">
+        <field name="name">Timesheets</field>
+        <field name="spreadsheet_binary_data" type="base64" file="spreadsheet_dashboard_sale_timesheet/data/files/timesheet_dashboard.json"/>
+        <field name="main_data_model_ids" eval="[(4, ref('analytic.model_account_analytic_line')), (4, ref('project.model_project_project')), (4, ref('sale.model_sale_order'))]"/>
+        <field name="sample_dashboard_file_path">spreadsheet_dashboard_sale_timesheet/data/files/timesheet_sample_dashboard.json</field>
+        <field name="dashboard_group_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_group_project"/>
+        <field name="group_ids" eval="[Command.link(ref('hr_timesheet.group_hr_timesheet_approver'))]"/>
+        <field name="sequence">200</field>
+        <field name="is_published">True</field>
+    </record>
+
+</odoo>

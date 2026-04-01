@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="html_editor.ImageField" t-inherit="web.ImageField" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('position-relative')]//div" position="replace">
+            <div t-attf-class="position-absolute d-flex justify-content-between w-100 bottom-0 opacity-0 opacity-100-hover {{isMobile ? 'o_mobile_controls' : ''}}" aria-atomic="true" t-att-style="sizeStyle">
+                <button
+                    t-if="props.record.data[props.name] and state.isValid"
+                    class="o_select_file_button btn btn-light border-0 rounded-circle m-1 p-1"
+                    data-tooltip="Edit"
+                    aria-label="Edit"
+                    t-on-click.prevent.stop="onFileEdit">
+                    <i class="fa fa-pencil fa-fw"/>
+                </button>
+                <button
+                    t-if="props.record.data[props.name] and state.isValid"
+                    class="o_clear_file_button btn btn-light border-0 rounded-circle m-1 p-1"
+                    data-tooltip="Clear"
+                    aria-label="Clear"
+                    t-on-click.prevent.stop="onFileRemove">
+                    <i class="fa fa-trash-o fa-fw"/>
+                </button>
+            </div>
+        </xpath>
+    </t>
+</templates>

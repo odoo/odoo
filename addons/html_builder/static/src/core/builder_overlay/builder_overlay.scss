@@ -1,0 +1,278 @@
+div[data-oe-local-overlay-id="builder-overlay-container"] {
+    position: absolute;
+    pointer-events: none;
+
+    .oe_overlay {
+        @include o-position-absolute;
+        display: none;
+        border-color: $o-we-handles-accent-color;
+        background: transparent;
+        text-align: center;
+        font-size: 16px;
+        transition: opacity 400ms linear 0s;
+
+        &.o_overlay_hidden {
+            opacity: 0 !important;
+            transition: none;
+        }
+
+        &.oe_active,
+        &.o_we_overlay_preview {
+            display: block;
+            z-index: 1;
+        }
+
+        &.o_we_overlay_preview {
+            transition: none;
+        }
+
+        // HANDLES
+        .o_handles {
+            @include o-position-absolute(-$o-we-handles-offset-to-hide, 0, auto, 0);
+            border-color: inherit;
+            pointer-events: auto;
+
+            > .o_handle {
+                position: absolute;
+
+                &.o_side_y {
+                    height: $o-we-handle-edge-size;
+                }
+                &.o_side_x {
+                    width: $o-we-handle-edge-size;
+                }
+                &.w {
+                    inset: $o-we-handles-offset-to-hide auto $o-we-handles-offset-to-hide * -1 $o-we-handle-border-width * 0.5;
+                    transform: translateX(-50%);
+                    cursor: ew-resize;
+
+                    body.o_rtl & {
+                        transform: translateX(50%);
+                    }
+                }
+                &.e {
+                    inset: $o-we-handles-offset-to-hide $o-we-handle-border-width * 0.5 $o-we-handles-offset-to-hide * -1 auto;
+                    transform: translateX(50%);
+                    cursor: ew-resize;
+
+                    body.o_rtl & {
+                        transform: translateX(-50%);
+                    }
+                }
+                &.n {
+                    inset: $o-we-handles-offset-to-hide 0 auto 0;
+                    cursor: ns-resize;
+
+                    &.o_grid_handle {
+                        transform: translateY(-50%);
+
+                        &:before {
+                            transform: translateY($o-we-handle-border-width * 0.5);
+                        }
+                    }
+                }
+                &.s {
+                    inset: auto 0 $o-we-handles-offset-to-hide * -1 0;
+                    cursor: ns-resize;
+
+                    &.o_grid_handle {
+                        transform: translateY(50%);
+
+                        &:before {
+                            transform: translateY($o-we-handle-border-width * -0.5);
+                        }
+                    }
+                }
+                &.ne {
+                    inset: ($o-we-handles-offset-to-hide + $o-we-handle-border-width * 0.5) $o-we-handle-border-width * 0.5 auto auto;
+                    transform: translate(50%, -50%);
+                    cursor: nesw-resize;
+
+                    body.o_rtl & {
+                        cursor: nwse-resize;
+                    }
+                }
+                &.se {
+                    inset: auto $o-we-handle-border-width * 0.5 ($o-we-handles-offset-to-hide * -1 + $o-we-handle-border-width * 0.5) auto;
+                    transform: translate(50%, 50%);
+                    cursor: nwse-resize;
+
+                    body.o_rtl & {
+                        cursor: nesw-resize;
+                    }
+                }
+                &.sw {
+                    inset: auto auto ($o-we-handles-offset-to-hide * -1 + $o-we-handle-border-width * 0.5) $o-we-handle-border-width * 0.5;
+                    transform: translate(-50%, 50%);
+                    cursor: nesw-resize;
+
+                    body.o_rtl & {
+                        cursor: nwse-resize;
+                    }
+                }
+                &.nw {
+                    inset: ($o-we-handles-offset-to-hide + $o-we-handle-border-width * 0.5) auto auto $o-we-handle-border-width * 0.5;
+                    transform: translate(-50%, -50%);
+                    cursor: nwse-resize;
+
+                    body.o_rtl & {
+                        cursor: nesw-resize;
+                    }
+                }
+                .o_handle_indicator {
+                    position: absolute;
+                    inset: $o-we-handles-btn-size * -0.5;
+                    display: block;
+                    width: $o-we-handles-btn-size;
+                    height: $o-we-handles-btn-size;
+                    margin: auto;
+                    border: solid $o-we-handle-border-width $o-we-handles-accent-color;
+                    border-radius: $o-we-handles-btn-size;
+                    background: $o-we-fg-lighter;
+                    outline: $o-we-handle-inside-line-width solid $o-we-fg-lighter;
+                    outline-offset: -($o-we-handles-btn-size * 0.5);
+                    transition: $transition-base;
+
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        inset: $o-we-handles-btn-size * -0.5;
+                        display: block;
+                        border-radius: inherit;
+                    }
+                }
+
+                &.o_column_handle.o_side_y {
+                    background-color: rgba($o-we-handles-accent-color, .1);
+
+                    &::after {
+                        content: '';
+                        position: absolute;
+                        height: $o-we-handles-btn-size;
+                    }
+                    &.n {
+                        border-bottom: dashed $o-we-handle-border-width * 0.5 rgba($o-we-handles-accent-color, 0.5);
+
+                        &::after {
+                            inset: 0 0 auto 0;
+                            transform: translateY(-50%);
+                        }
+                    }
+                    &.s {
+                        border-top: dashed $o-we-handle-border-width * 0.5 rgba($o-we-handles-accent-color, 0.5);
+
+                        &::after {
+                            inset: auto 0 0 0;
+                            transform: translateY(50%);
+                        }
+                    }
+                }
+                &.o_side {
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        inset: 0;
+                        background: $o-we-handles-accent-color;
+                    }
+                    &.o_side_x {
+
+                        &::before {
+                            width: $o-we-handle-border-width;
+                            margin: 0 auto;
+                        }
+                    }
+                    &.o_side_y {
+
+                        &::before {
+                            height: $o-we-handle-border-width;
+                            margin: auto 0;
+                        }
+                    }
+                    &.o_column_handle {
+
+                        &.n::before {
+                            margin: 0 auto auto;
+                        }
+
+                        &.s::before {
+                            margin: auto auto 0;
+                        }
+                    }
+                }
+
+                &.readonly {
+                    cursor: default;
+                    pointer-events: none;
+
+                    &.o_column_handle.o_side_y {
+                        border: none;
+                        background: none;
+                    }
+
+                    &::after, .o_handle_indicator {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        // HANDLES - ACTIVE AND HOVER STATES
+        // By using `o_handlers_idle` class, we can avoid hovering another
+        // handle when we're already dragging another one.
+        &.o_handlers_idle .o_handle:hover, .o_handle:active {
+
+            .o_handle_indicator {
+                outline-color: $o-we-handles-accent-color;
+            }
+        }
+
+        &.o_handlers_idle .o_corner_handle:hover, .o_corner_handle:active {
+
+            .o_handle_indicator {
+                transform: scale(1.25);
+            }
+        }
+
+        &.o_handlers_idle .o_column_handle.o_side_y:hover, .o_column_handle.o_side_y:active {
+            background: repeating-linear-gradient(
+                            45deg,
+                            rgba($o-we-handles-accent-color, .1),
+                            rgba($o-we-handles-accent-color, .1) 5px,
+                            darken(rgba($o-we-handles-accent-color, .25), 5%) 5px,
+                            darken(rgba($o-we-handles-accent-color, .25), 5%) 10px
+                        );
+        }
+
+        &.o_handlers_idle .o_side_x:hover, .o_side_x:active {
+
+            &::before {
+                width: $o-we-handle-border-width * 2;
+            }
+            .o_handle_indicator {
+                height: $o-we-handles-btn-size * 2;
+            }
+        }
+
+        &.o_handlers_idle .o_side_y:hover, .o_side_y:active {
+
+            &::before {
+                height: $o-we-handle-border-width * 2;
+            }
+            .o_handle_indicator {
+                width: $o-we-handles-btn-size * 2;
+            }
+        }
+    }
+}
+
+/* rtl:begin:ignore */
+@each $cursor in (nesw-resize, nwse-resize, ns-resize, ew-resize, move) {
+    .#{$cursor}-important * {
+        cursor: $cursor !important;
+    }
+}
+/* rtl:end:ignore */
+
+.o_resizing {
+    pointer-events: none;
+}

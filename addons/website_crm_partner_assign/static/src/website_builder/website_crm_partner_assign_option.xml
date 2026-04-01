@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_crm_partner_assign.PartnersPageOption">
+        <BuilderRow t-if="state.has_google_maps_api_key" label.translate="World Map">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_crm_partner_assign.ref_country']}" />
+        </BuilderRow>
+        <BuilderRow label.translate="Address">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_crm_partner_assign.o_wcrm_partner_address']}" />
+        </BuilderRow>
+    </t>
+
+</templates>

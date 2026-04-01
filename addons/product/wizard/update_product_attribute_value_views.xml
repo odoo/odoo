@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="update_product_attribute_value_form" model="ir.ui.view">
+        <field name="name">update.product.attribute.value.form</field>
+        <field name="model">update.product.attribute.value</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="product_count" invisible="1"/>
+                <field name="mode" invisible="1"/>
+                <field name="message"/>
+                <footer>
+                    <button string="Cancel" special="cancel"/>
+                    <button
+                        name="action_confirm"
+                        string="Confirm"
+                        class="btn-primary"
+                        type="object"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

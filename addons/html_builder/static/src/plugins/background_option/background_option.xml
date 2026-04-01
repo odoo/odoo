@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BackgroundOption">
+    <!-- BackgroundToggler -->
+    <BuilderRow label.translate="Background" t-if="props.withColors or props.withImages">
+    <!-- todo adapt when colorpicker is implemented: snippet_options_background_color_widget-->
+        <t t-if="props.withColors" t-call="html_builder.BackgroundColorWidgetOption"/>
+        <t t-if="props.withImages">
+            <BuilderButton
+                action="'toggleBgImage'"
+                title.translate="Image"
+                preview="false"
+                className="'ms-auto fa fa-fw fa-camera px-2'"
+                id="'toggle_bg_image_id'"
+            />
+            <t t-if="props.withShapes">
+                <BuilderButton
+                    action="'toggleBgShape'"
+                    preview="false"
+                    id="'toggle_bg_shape_id'"
+                    iconImg="'/html_builder/static/img/options/bg_shape.svg'"
+                    className="'px-2'"
+                    title.translate="Shape"
+                />
+            </t>
+        </t>
+    </BuilderRow>
+    <t t-if="props.withImages">
+        <BackgroundImageOption/>
+        <BackgroundPositionOption/>
+        <ImageFilterOption level="2"/>
+        <ImageFormatOption level="2" computeMaxDisplayWidth="this.computeMaxDisplayWidth"/>
+        <!-- Color filter -->
+        <BuilderRow t-if="this.showColorFilter()" label.translate="Color Filter" level="2">
+            <BuilderColorPicker
+                action="'selectFilterColor'"
+                defaultOpacity="50"
+                enabledTabs="['custom', 'gradient']"
+                grayscales="{
+                    'transparent': [
+                        'black-75',
+                        'black-50',
+                        'black-25',
+                        'black-15',
+                        'white-25',
+                        'white-50',
+                        'white-75',
+                        'white-85'
+                    ],
+                    'solid': [],
+                }"
+                selectedTab="'gradient'"/>
+        </BuilderRow>
+        <BackgroundShapeOption t-if="props.withShapes"/>
+    </t>
+</t>
+</templates>

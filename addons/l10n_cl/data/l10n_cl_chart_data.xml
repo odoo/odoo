@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Account Tags -->
+    <!-- Account Taxes Tags Ventas -->
+    <record id="tag_cl_sale_mnt_exe" model="account.account.tag">
+        <!-- TotMntExe -->
+        <field name="name">Sales - Total Amount Exempt or Unrecorded</field>
+        <field name="name@es_419">Ventas - Total Monto Exento o No Gravado</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <record id="tag_cl_sale_mnt_neto" model="account.account.tag">
+        <!-- TotMntNeto -->
+        <field name="name">Sales - Total Net Amount</field>
+        <field name="name@es_419">Ventas - Total Monto Neto</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <record id="tag_cl_sale_valor_neto_comis" model="account.account.tag">
+        <!-- TotValComNeto -->
+        <field name="name">Sales - Total Net Value Commissions and Other Charges</field>
+        <field name="name@es_419">Ventas - Total Valor Neto Comisiones y Otros Cargos</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <record id="tag_cl_sale_valor_comisiones_no_afecto" model="account.account.tag">
+        <!-- TotValComExe -->
+        <field name="name">Sales - Total Net Value Commissions and Other Unaffected Charges</field>
+        <field name="name@es_419">Ventas - Total Valor Neto Comisiones y Otros Cargos No Afectos</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <record id="tag_cl_sale_monto_no_facturable" model="account.account.tag">
+        <!-- TotMntNoFact -->
+        <field name="name">Sales - Total Non-Billable Amount</field>
+        <field name="name@es_419">Ventas - Total Monto No Facturable</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <record id="tag_cl_sale_exento_vta_pasajes_nacional" model="account.account.tag">
+        <!-- TotPsjNac -->
+        <field name="name">Sales - Exempt Domestic Ticket Sales</field>
+        <field name="name@es_419">Ventas - Exento Ventas de Pasajes Nacional</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <record id="tag_cl_sale_exento_vta_pasajes_internacional" model="account.account.tag">
+        <!-- TotPsjInt -->
+        <field name="name">Sales - Exempt Sales of International Tickets</field>
+        <field name="name@es_419">Ventas - Exento Ventas de Pasajes Internacional</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <!-- Account Taxes Tags Commpras -->
+    <record id="tag_cl_purchase_mnt_exe" model="account.account.tag">
+        <!-- TotMntExe -->
+        <field name="name">Shopping Cart - Total Exempt or Unrecorded Amount</field>
+        <field name="name@es_419">Compras - Total Monto Exento o No Gravado</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <record id="tag_cl_purchase_mnt_neto" model="account.account.tag">
+        <!-- TotMntNeto -->
+        <field name="name">Purchases - Total Net Amount</field>
+        <field name="name@es_419">Compras - Total Monto Neto</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <record id="tag_cl_purchase_mnt_neto_uso_comun" model="account.account.tag">
+        <!-- TotMntNeto -->
+        <field name="name">Purchases - Total Net Amount Common Use</field>
+        <field name="name@es_419">Compras - Total Monto Neto Uso Común</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <record id="tag_cl_purchase_mnt_neto_no_recup" model="account.account.tag">
+        <!-- TotMntNeto -->
+        <field name="name">Purchases - Total Net Amount not Recoverable</field>
+        <field name="name@es_419">Compras - Total Monto Neto No Recuperable</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <record id="tag_cl_purchase_mnt_neto_supermercado" model="account.account.tag">
+        <!-- TotMntNeto -->
+        <field name="name">Purchases - Total Net Amount Supermarket Purchases</field>
+        <field name="name@es_419">Compras - Total Monto Neto Compras de Supermercado</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <record id="tag_cl_purchase_mnt_neto_actf" model="account.account.tag">
+        <!-- TotMntActivoFijo -->
+        <field name="name">Purchases - Total Nets Amount Fixed Assets</field>
+        <field name="name@es_419">Compras - Total Monto Neto Activo Fijo</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <record id="tag_cl_purchase_tab_puros" model="account.account.tag">
+        <!-- TotTabPuros -->
+        <field name="name">Purchases - Total Manufactured Cigars</field>
+        <field name="name@es_419">Compras - Total Tabacos Manufacturados Puros</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <record id="tag_cl_purchase_tab_cigar" model="account.account.tag">
+        <!-- TotTabCigarrillos -->
+        <field name="name">Purchases - Total Manufactured Tobacco Cigarettes</field>
+        <field name="name@es_419">Compras - Total Tabacos Manufacturados Cigarrillos</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <record id="tag_cl_purchase_tab_elab" model="account.account.tag">
+        <!-- TotTabCigarrillos -->
+        <field name="name">Purchases - Total Manufactured Tobacco Products</field>
+        <field name="name@es_419">Compras - Total Tabacos Manufacturados Elaborados</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <record id="tag_cl_remanente_cf" model="account.account.tag">
+        <field name="name">Remaining Tax Credit</field>
+        <field name="name@es_419">Remanente Crédito Fiscal</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <record id="tag_cl_impuesto_unico_trabajadores" model="account.account.tag">
+        <field name="name">Single Tax Workers</field>
+        <field name="name@es_419">Impuesto Único Trabajadores</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <!-- honorarios y otros -->
+    <record id="tag_cl_fees_amount" model="account.account.tag">
+        <field name="name">Fees - Amounts Subject to 2 Category Income Tax Withholding</field>
+        <field name="name@es_419">Honorarios -  Montos Sujetos a Retención Renta 2 Categoría</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <record id="tag_cl_specific_fuel_tax" model="account.account.tag">
+        <field name="name">Specific Fuel Tax</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+</odoo>

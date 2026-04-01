@@ -1,0 +1,9 @@
+<odoo>
+    <data noupdate="1">
+        <record id="fr_and_mc" model="res.country.group">
+            <field name="name">France and Monaco</field>
+            <field name="code">FR-MC</field>
+            <field name="country_ids" eval="[Command.set([ref('base.fr'), ref('base.mc')])]"/>
+        </record>
+    </data>
+</odoo>

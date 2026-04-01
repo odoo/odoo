@@ -1,0 +1,7 @@
+<templates xml:space="preserve">
+    <t t-name="mail.MailActivityMixinListRescheduleDropdown" t-inherit="mail.MailActivityListRescheduleDropdown">
+        <xpath expr="//Dropdown" position="attributes">
+            <attribute name="t-if">props.record.data.my_activity_date_deadline</attribute>
+        </xpath>
+    </t>
+</templates>

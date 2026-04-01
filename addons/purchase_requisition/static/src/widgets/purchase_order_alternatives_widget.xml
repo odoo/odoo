@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Ensure we can't unlink a PO from itself (i.e. confusing behavior) -->
+    <t t-name="purchase_requisition.AltPOsListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow" t-inherit-mode="primary">
+        <xpath expr="//t[@t-if='displayOptionalFields or props.list.isGrouped or hasX2ManyAction']" position="attributes">
+            <attribute name="t-if">(displayOptionalFields or hasX2ManyAction) and !isCurrentRecord(record)</attribute>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,147 @@
+<odoo noupdate="1">
+<!--
+    Earnings regimenes according to scale:
+-->
+
+    <record model="l10n_ar.earnings.scale" id="normal_scale">
+        <field name="name">Normal Scale</field>
+    </record>
+
+    <record model="l10n_ar.earnings.scale.line" id="scale_1">
+        <field name="scale_id" ref="normal_scale"/>
+        <field name="to_amount">8000</field>
+        <field name="fixed_amount">0</field>
+        <field name="percentage">5</field>
+        <field name="excess_amount">0</field>
+    </record>
+
+    <record model="l10n_ar.earnings.scale.line" id="scale_2">
+        <field name="scale_id" ref="normal_scale"/>
+        <field name="to_amount">16000</field>
+        <field name="fixed_amount">400</field>
+        <field name="percentage">9</field>
+        <field name="excess_amount">8000</field>
+    </record>
+
+    <record model="l10n_ar.earnings.scale.line" id="scale_3">
+        <field name="scale_id" ref="normal_scale"/>
+        <field name="to_amount">24000</field>
+        <field name="fixed_amount">1120</field>
+        <field name="percentage">12</field>
+        <field name="excess_amount">16000</field>
+    </record>
+
+    <record model="l10n_ar.earnings.scale.line" id="scale_4">
+        <field name="scale_id" ref="normal_scale"/>
+        <field name="to_amount">32000</field>
+        <field name="fixed_amount">2080</field>
+        <field name="percentage">15</field>
+        <field name="excess_amount">24000</field>
+    </record>
+
+    <record model="l10n_ar.earnings.scale.line" id="scale_5">
+        <field name="scale_id" ref="normal_scale"/>
+        <field name="to_amount">48000</field>
+        <field name="fixed_amount">3280</field>
+        <field name="percentage">19</field>
+        <field name="excess_amount">32000</field>
+    </record>
+
+    <record model="l10n_ar.earnings.scale.line" id="scale_6">
+        <field name="scale_id" ref="normal_scale"/>
+        <field name="to_amount">64000</field>
+        <field name="fixed_amount">6320</field>
+        <field name="percentage">23</field>
+        <field name="excess_amount">48000</field>
+    </record>
+
+    <record model="l10n_ar.earnings.scale.line" id="scale_7">
+        <field name="scale_id" ref="normal_scale"/>
+        <field name="to_amount">96000</field>
+        <field name="fixed_amount">10000</field>
+        <field name="percentage">27</field>
+        <field name="excess_amount">64000</field>
+    </record>
+
+    <record model="l10n_ar.earnings.scale.line" id="scale_8">
+        <field name="scale_id" ref="normal_scale"/>
+        <field name="to_amount">999999999</field>
+        <field name="fixed_amount">18640</field>
+        <field name="percentage">31</field>
+        <field name="excess_amount">96000</field>
+    </record>
+
+<!--
+    Earnings regimenes according to scale: scale 119
+-->
+
+
+    <record model="l10n_ar.earnings.scale" id="scale_119">
+        <field name="name">Scale 119</field>
+    </record>
+
+    <record model="l10n_ar.earnings.scale.line" id="scale_9">
+        <field name="scale_id" ref="scale_119"/>
+        <field name="to_amount">71000</field>
+        <field name="fixed_amount">0</field>
+        <field name="percentage">5</field>
+        <field name="excess_amount">0</field>
+    </record>
+
+    <record model="l10n_ar.earnings.scale.line" id="scale_10">
+        <field name="scale_id" ref="scale_119"/>
+        <field name="to_amount">142000</field>
+        <field name="fixed_amount">3550</field>
+        <field name="percentage">9</field>
+        <field name="excess_amount">71000</field>
+    </record>
+
+    <record model="l10n_ar.earnings.scale.line" id="scale_11">
+        <field name="scale_id" ref="scale_119"/>
+        <field name="to_amount">213000</field>
+        <field name="fixed_amount">9940</field>
+        <field name="percentage">12</field>
+        <field name="excess_amount">142000</field>
+    </record>
+
+    <record model="l10n_ar.earnings.scale.line" id="scale_12">
+        <field name="scale_id" ref="scale_119"/>
+        <field name="to_amount">284000</field>
+        <field name="fixed_amount">18460</field>
+        <field name="percentage">15</field>
+        <field name="excess_amount">213000</field>
+    </record>
+
+    <record model="l10n_ar.earnings.scale.line" id="scale_13">
+        <field name="scale_id" ref="scale_119"/>
+        <field name="to_amount">426000</field>
+        <field name="fixed_amount">29110</field>
+        <field name="percentage">19</field>
+        <field name="excess_amount">284000</field>
+    </record>
+
+    <record model="l10n_ar.earnings.scale.line" id="scale_14">
+        <field name="scale_id" ref="scale_119"/>
+        <field name="to_amount">568000</field>
+        <field name="fixed_amount">56090</field>
+        <field name="percentage">23</field>
+        <field name="excess_amount">426000</field>
+    </record>
+
+    <record model="l10n_ar.earnings.scale.line" id="scale_15">
+        <field name="scale_id" ref="scale_119"/>
+        <field name="to_amount">852000</field>
+        <field name="fixed_amount">88750</field>
+        <field name="percentage">27</field>
+        <field name="excess_amount">568000</field>
+    </record>
+
+    <record model="l10n_ar.earnings.scale.line" id="scale_16">
+        <field name="scale_id" ref="scale_119"/>
+        <field name="to_amount">999999999</field>
+        <field name="fixed_amount">165430</field>
+        <field name="percentage">31</field>
+        <field name="excess_amount">852000</field>
+    </record>
+
+</odoo>

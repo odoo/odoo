@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.AddProductOption">
+    <BuilderRow label.translate="Product">
+        <BuilderButton
+            type="'success'"
+            action="'addItem'"
+            actionParam="`${this.productSelector}:last-of-type`"
+            preview="false"
+            applyTo="this.buttonApplyTo">
+            <t t-out="buttonLabel"/>
+        </BuilderButton>
+    </BuilderRow>
+</t>
+
+</templates>

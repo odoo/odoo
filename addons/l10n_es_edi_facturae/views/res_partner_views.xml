@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_l10n_es_edi_facturae" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.l10n_es_edi_facturae</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='child_ids']//form//group[@name='other_info']" position="inside">
+                <group invisible="type != 'facturae_ac'">
+                    <field name="l10n_es_edi_facturae_ac_center_code"/>
+                    <field name="l10n_es_edi_facturae_ac_role_type_ids" widget="many2many_tags"/>
+                    <field name="l10n_es_edi_facturae_ac_physical_gln"/>
+                    <field name="l10n_es_edi_facturae_ac_logical_operational_point"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BasicMany2Many">
+    <div class="d-flex flex-column">
+        <table class="o-hb-m2m-table">
+            <tr t-foreach="props.selection" t-as="entry" t-key="entry.id">
+                <td>
+                    <input type="text" class="o-hb-input-base" disabled="" t-att-data-name="entry.display_name" t-att-value="entry.display_name"/>
+                </td>
+                <td>
+                    <button class="mt-0 border-0 p-0 bg-transparent text-danger fa fa-fw fa-minus" t-on-click="() => this.unselect(entry.id)"/>
+                </td>
+            </tr>
+        </table>
+        <SelectMany2X
+            model="props.model"
+            fields="props.fields"
+            limit="props.limit"
+            domain="props.domain"
+            selected="props.selection"
+            select="select.bind(this)"
+            create="props.create"
+        />
+    </div>
+</t>
+
+</templates>

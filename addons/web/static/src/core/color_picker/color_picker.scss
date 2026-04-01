@@ -1,0 +1,94 @@
+$o-we-toolbar-bg: #FFF !default;
+$o-we-toolbar-color-text: #2b2b33 !default; // Same as $o-we-bg-light
+$o-we-item-spacing: 8px !default;
+$o-we-color-success: #00ff9e !default;
+
+.o_font_color_selector {
+    @include o-input-number-no-arrows();
+    --bg: #{$o-we-toolbar-bg};
+    --text-rgb: #{red($o-we-toolbar-color-text)}, #{green($o-we-toolbar-color-text)}, #{blue($o-we-toolbar-color-text)};
+    --border-rgb: var(--text-rgb);
+    width: 208px;
+    max-height: inherit;
+    overflow-y: auto;
+    border-radius: inherit;
+    background-color: inherit;
+    box-shadow: $box-shadow;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.o_color_button {
+    width: 23px;
+    height: 22px;
+    box-shadow: inset 0 0 0 1px rgba(var(--border-rgb), .5);
+    margin: 0.5px;
+
+    &:focus,
+    &:hover {
+        transform: scale(1.1);
+    }
+}
+
+.o_color_picker_button {
+    @extend %o-preview-alpha-background;
+
+    &:not(.selected):focus,
+    &:not(.selected):hover {
+        outline: solid $o-enterprise-action-color;
+        z-index: 1;
+        transition: transform 0.1s ease-out;
+    }
+}
+
+.o_font_color_selector {
+    .btn-tab {
+        min-width: 57px;
+        padding: 3px;
+        font-size: 12px;
+    }
+
+    .o_color_picker_button.selected {
+        border: 3px solid $o-enterprise-action-color !important;
+    }
+}
+
+.o_font_color_selector .o_colorpicker_section {
+    margin-bottom: 3px;
+}
+
+.o_font_color_selector {
+    --o-color-picker-grid-columns: 8;
+    .o_colorpicker_section, .o_color_section {
+        display: grid;
+        grid-template-columns: repeat(var(--o-color-picker-grid-columns), 1fr);
+    }
+}
+
+.o_font_color_selector .o_colorpicker_widget {
+    width: 100%;
+    margin-top: 2px;
+    .o_hex_input {
+        border: 1px solid !important;
+        padding: 0 2px !important;
+        width: 10ch !important;
+        opacity: 0.7;
+    }
+}
+
+:root {
+    @each $color, $value in $grays {
+        @include print-variable($color, $value);
+    }
+}
+
+.color-combination-button.selected h1 {
+    &::before {
+        content: "\f00c";
+        margin-right: $o-we-item-spacing;
+        font-size: 0.8em;
+        font-family: FontAwesome;
+        color: $o-we-color-success;
+    }
+}

@@ -1,0 +1,35 @@
+/* As we use the Enable TOTP backend wizard in frontend, we need to
+   import the needed css from backend to replicate backend copyclipboard
+   widget style. We cannot put this into the original view as all those
+   classes are generated in the backend widget. */
+.o_auth_totp_enable_2FA {
+    .o_field_copy {
+        height: 24px;
+        position: relative;
+        width: 100% !important;
+        border-radius: 5px;
+        border: 1px solid $primary;
+        @include font-size($font-size-sm);
+        text-transform: uppercase;
+        color: $o-brand-primary;
+        font-weight: $badge-font-weight;
+        text-align: center;
+        padding-right: 6rem;
+        word-break: break-word;
+        .o_clipboard_button {
+            @include o-position-absolute($top: 0, $right: 0);
+            &.o_btn_text_copy {
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+            &.o_btn_char_copy {
+                height: 100%;
+            }
+        }
+        &.o_field_copy_url {
+            cursor: pointer;
+            padding-left: 3px;
+        }
+    }
+}

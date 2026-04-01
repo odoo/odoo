@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model='l10n_latam.document.type' id='document_type01'>
+        <field name='sequence'>10</field>
+        <field name='code'>01</field>
+        <field name='report_name'>Factura electrónica</field>
+        <field name="report_name@es_419">Factura electrónica</field>
+        <field name='name'>Factura</field>
+        <field name="name@es_419">Factura</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='doc_code_prefix'>F</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type03'>
+        <field name='sequence'>10</field>
+        <field name='code'>02</field>
+        <field name='report_name'>Recibo por Honorarios</field>
+        <field name="report_name@es_419">Recibo por Honorarios</field>
+        <field name='name'>Recibo por Honorarios</field>
+        <field name="name@es_419">Recibo por Honorarios</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>R</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type02'>
+        <field name='sequence'>20</field>
+        <field name='code'>03</field>
+        <field name='report_name'>Boleta de venta electrónica</field>
+        <field name="report_name@es_419">Boleta de venta electrónica</field>
+        <field name='name'>Boleta</field>
+        <field name="name@es_419">Boleta</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='doc_code_prefix'>B</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type04'>
+        <field name='sequence'>20</field>
+        <field name='code'>04</field>
+        <field name='report_name'>Liquidación de compra</field>
+        <field name="report_name@es_419">Liquidación de compra</field>
+        <field name='name'>Liquidación de compra</field>
+        <field name="name@es_419">Liquidación de compra</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>L</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type05'>
+        <field name='sequence'>20</field>
+        <field name='code'>05</field>
+        <field name='report_name'>Boletos de Transporte Aéreo que emiten las Compañías de Aviación Comercial por el servicio de transporte aéreo regular de pasajeros, emitido de manera manual, mecanizada o por medios electrónicos (BME)</field>
+        <field name="report_name@es_419">Boletos de Transporte Aéreo que emiten las Compañías de Aviación Comercial por el servicio de transporte aéreo regular de pasajeros, emitido de manera manual, mecanizada o por medios electrónicos (BME)</field>
+        <field name='name'>Boletos de Transporte Aéreo que emiten las Compañías de Aviación Comercial por el servicio de transporte aéreo regular de pasajeros, emitido de manera manual, mecanizada o por medios electrónicos (BME)</field>
+        <field name="name@es_419">Boletos de Transporte Aéreo que emiten las Compañías de Aviación Comercial por el servicio de transporte aéreo regular de pasajeros, emitido de manera manual, mecanizada o por medios electrónicos (BME)</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>B</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type06'>
+        <field name='sequence'>20</field>
+        <field name='code'>06</field>
+        <field name='report_name'>Carta de porte aéreo por el servicio de transporte de carga aérea</field>
+        <field name="report_name@es_419">Carta de porte aéreo por el servicio de transporte de carga aérea</field>
+        <field name='name'>Carta de porte aéreo por el servicio de transporte de carga aérea</field>
+        <field name="name@es_419">Carta de porte aéreo por el servicio de transporte de carga aérea</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>C</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type07'>
+        <field name='sequence'>40</field>
+        <field name='code'>07</field>
+        <field name='report_name'>Nota de Crédito electrónica</field>
+        <field name="report_name@es_419">Nota de Crédito electrónica</field>
+        <field name='name'>Nota de Crédito</field>
+        <field name="name@es_419">Nota de crédito</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='doc_code_prefix'>F</field>
+        <field name='internal_type'>credit_note</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type07b'>
+        <field name='sequence'>41</field>
+        <field name='code'>07</field>
+        <field name='report_name'>Nota de Crédito Boleta electrónica</field>
+        <field name="report_name@es_419">Nota de Crédito Boleta electrónica</field>
+        <field name='name'>Nota de Crédito Boleta</field>
+        <field name="name@es_419">Nota de Crédito Boleta</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='doc_code_prefix'>B</field>
+        <field name='internal_type'>credit_note</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type08'>
+        <field name='sequence'>50</field>
+        <field name='code'>08</field>
+        <field name='report_name'>Nota de Débito electrónica</field>
+        <field name="report_name@es_419">Nota de Débito electrónica</field>
+        <field name='name'>Nota de Débito</field>
+        <field name="name@es_419">Nota de Débito</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='doc_code_prefix'>F</field>
+        <field name='internal_type'>debit_note</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type08b'>
+        <field name='sequence'>50</field>
+        <field name='code'>08</field>
+        <field name='report_name'>Nota de débito boleta electrónica </field>
+        <field name="report_name@es_419">Nota de débito boleta electrónica </field>
+        <field name='name'>Nota de Débito Boleta</field>
+        <field name="name@es_419">Nota de Débito Boleta</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='doc_code_prefix'>B</field>
+        <field name='internal_type'>debit_note</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type10'>
+        <field name='sequence'>50</field>
+        <field name='code'>10</field>
+        <field name='report_name'>Recibo por Arrendamiento</field>
+        <field name="report_name@es_419">Recibo por Arrendamiento</field>
+        <field name='name'>Recibo por Arrendamiento</field>
+        <field name="name@es_419">Recibo por Arrendamiento</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>R</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type11'>
+        <field name='sequence'>50</field>
+        <field name='code'>11</field>
+        <field name='report_name'>Póliza emitida por las Bolsas de Valores, Bolsas de Productos o Agentes de Intermediación por operaciones realizadas en las Bolsas de Valores o Productos o fuera de las mismas, autorizadas por SMV</field>
+        <field name="report_name@es_419">Póliza emitida por las Bolsas de Valores, Bolsas de Productos o Agentes de Intermediación por operaciones realizadas en las Bolsas de Valores o Productos o fuera de las mismas, autorizadas por SMV</field>
+        <field name='name'>Póliza emitida por las Bolsas de Valores, Bolsas de Productos o Agentes de Intermediación por operaciones realizadas en las Bolsas de Valores o Productos o fuera de las mismas, autorizadas por SMV</field>
+        <field name="name@es_419">Póliza emitida por las Bolsas de Valores, Bolsas de Productos o Agentes de Intermediación por operaciones realizadas en las Bolsas de Valores o Productos o fuera de las mismas, autorizadas por SMV</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>P</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type12'>
+        <field name='sequence'>50</field>
+        <field name='code'>12</field>
+        <field name='report_name'>Ticket o cinta emitido por máquina registradora</field>
+        <field name="report_name@es_419">Ticket o cinta emitido por máquina registradora</field>
+        <field name='name'>Ticket o cinta emitido por máquina registradora</field>
+        <field name="name@es_419">Ticket o cinta emitido por máquina registradora</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>T</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type13'>
+        <field name='sequence'>50</field>
+        <field name='code'>13</field>
+        <field name='report_name'>Documentos emitidos por las empresas del sistema financiero y de seguros, y por las cooperativas de ahorro y crédito no autorizadas a captar recursos del público, que se encuentren bajo el control de la Superintendencia de Banca, Seguros y AFP.</field>
+        <field name="report_name@es_419">Documentos emitidos por las empresas del sistema financiero y de seguros, y por las cooperativas de ahorro y crédito no autorizadas a captar recursos del público, que se encuentren bajo el control de la Superintendencia de Banca, Seguros y AFP.</field>
+        <field name='name'>Documentos emitidos por las empresas del sistema financiero y de seguros, y por las cooperativas de ahorro y crédito no autorizadas a captar recursos del público, que se encuentren bajo el control de la Superintendencia de Banca, Seguros y AFP.</field>
+        <field name="name@es_419">Documentos emitidos por las empresas del sistema financiero y de seguros, y por las cooperativas de ahorro y crédito no autorizadas a captar recursos del público, que se encuentren bajo el control de la Superintendencia de Banca, Seguros y AFP.</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>D</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type14'>
+        <field name='sequence'>50</field>
+        <field name='code'>14</field>
+        <field name='report_name'>Recibo por servicios públicos de suministro de energía eléctrica, agua, teléfono, telex y telegráficos y otros servicios complementarios que se incluyan en el</field>
+        <field name="report_name@es_419">Recibo por servicios públicos de suministro de energía eléctrica, agua, teléfono, telex y telegráficos y otros servicios complementarios que se incluyan en el</field>
+        <field name='name'>Recibo por servicios públicos de suministro de energía eléctrica, agua, teléfono, telex y telegráficos y otros servicios complementarios que se incluyan en el</field>
+        <field name="name@es_419">Recibo por servicios públicos de suministro de energía eléctrica, agua, teléfono, telex y telegráficos y otros servicios complementarios que se incluyan en el</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>R</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type15'>
+        <field name='sequence'>50</field>
+        <field name='code'>15</field>
+        <field name='report_name'>Boletos emitidos por el servicio de transporte terrestre regular urbano de pasajeros y el ferroviario público de pasajeros prestado en vía férrea local.</field>
+        <field name="report_name@es_419">Boletos emitidos por el servicio de transporte terrestre regular urbano de pasajeros y el ferroviario público de pasajeros prestado en vía férrea local.</field>
+        <field name='name'>Boletos emitidos por el servicio de transporte terrestre regular urbano de pasajeros y el ferroviario público de pasajeros prestado en vía férrea local.</field>
+        <field name="name@es_419">Boletos emitidos por el servicio de transporte terrestre regular urbano de pasajeros y el ferroviario público de pasajeros prestado en vía férrea local.</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>B</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type16'>
+        <field name='sequence'>50</field>
+        <field name='code'>16</field>
+        <field name='report_name'>Boletos de viaje emitidos por las empresas de transporte nacional de pasajeros, siempre que cuenten con la autorización de la autoridad competente, en las rutas autorizadas. Vía terrestre o ferroviario público no emitido por medios electrónicos (BVME)</field>
+        <field name="report_name@es_419">Boletos de viaje emitidos por las empresas de transporte nacional de pasajeros, siempre que cuenten con la autorización de la autoridad competente, en las rutas autorizadas. Vía terrestre o ferroviario público no emitido por medios electrónicos (BVME)</field>
+        <field name='name'>Boletos de viaje emitidos por las empresas de transporte nacional de pasajeros, siempre que cuenten con la autorización de la autoridad competente, en las rutas autorizadas. Vía terrestre o ferroviario público no emitido por medios electrónicos (BVME)</field>
+        <field name="name@es_419">Boletos de viaje emitidos por las empresas de transporte nacional de pasajeros, siempre que cuenten con la autorización de la autoridad competente, en las rutas autorizadas. Vía terrestre o ferroviario público no emitido por medios electrónicos (BVME)</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>B</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type17'>
+        <field name='sequence'>50</field>
+        <field name='code'>17</field>
+        <field name='report_name'>Documento emitido por la Iglesia Católica por el arrendamiento de bienes inmuebles</field>
+        <field name="report_name@es_419">Documento emitido por la Iglesia Católica por el arrendamiento de bienes inmuebles</field>
+        <field name='name'>Documento emitido por la Iglesia Católica por el arrendamiento de bienes inmuebles</field>
+        <field name="name@es_419">Documento emitido por la Iglesia Católica por el arrendamiento de bienes inmuebles</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>D</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type18'>
+        <field name='sequence'>50</field>
+        <field name='code'>18</field>
+        <field name='report_name'>Documento emitido por las Administradoras Privadas de Fondo de Pensiones que se encuentran bajo la supervisión de la Superintendencia de Banca, Seguros y AFP</field>
+        <field name="report_name@es_419">Documento emitido por las Administradoras Privadas de Fondo de Pensiones que se encuentran bajo la supervisión de la Superintendencia de Banca, Seguros y AFP</field>
+        <field name='name'>Documento emitido por las Administradoras Privadas de Fondo de Pensiones que se encuentran bajo la supervisión de la Superintendencia de Banca, Seguros y AFP</field>
+        <field name="name@es_419">Documento emitido por las Administradoras Privadas de Fondo de Pensiones que se encuentran bajo la supervisión de la Superintendencia de Banca, Seguros y AFP</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>D</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type19'>
+        <field name='sequence'>50</field>
+        <field name='code'>19</field>
+        <field name='report_name'>Boleto o entrada por atracciones y espectáculos públicos</field>
+        <field name="report_name@es_419">Boleto o entrada por atracciones y espectáculos públicos</field>
+        <field name='name'>Boleto o entrada por atracciones y espectáculos públicos</field>
+        <field name="name@es_419">Boleto o entrada por atracciones y espectáculos públicos</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>B</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type20'>
+        <field name='sequence'>60</field>
+        <field name='code'>20</field>
+        <field name='report_name'>Comprobante de retención</field>
+        <field name="report_name@es_419">Comprobante de retención</field>
+        <field name='name'>Comprobante de retención</field>
+        <field name="name@es_419">Comprobante de retención</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='doc_code_prefix'>R</field>
+        <field name='internal_type'/>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type21'>
+        <field name='sequence'>60</field>
+        <field name='code'>21</field>
+        <field name='report_name'>Conocimiento de embarque por el servicio de transporte de carga marítima</field>
+        <field name="report_name@es_419">Conocimiento de embarque por el servicio de transporte de carga marítima</field>
+        <field name='name'>Conocimiento de embarque por el servicio de transporte de carga marítima</field>
+        <field name="name@es_419">Conocimiento de embarque por el servicio de transporte de carga marítima</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>B</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type22'>
+        <field name='sequence'>60</field>
+        <field name='code'>22</field>
+        <field name='report_name'>Comprobante por Operaciones No Habituales</field>
+        <field name="report_name@es_419">Comprobante por Operaciones No Habituales</field>
+        <field name='name'>Comprobante por Operaciones No Habituales</field>
+        <field name="name@es_419">Comprobante por Operaciones No Habituales</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>C</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type23'>
+        <field name='sequence'>60</field>
+        <field name='code'>23</field>
+        <field name='report_name'>Pólizas de Adjudicación emitidas con ocasión del remate o adjudicación de bienes por venta forzada, por los martilleros o las entidades que rematen o subasten bienes por cuenta de terceros</field>
+        <field name="report_name@es_419">Pólizas de Adjudicación emitidas con ocasión del remate o adjudicación de bienes por venta forzada, por los martilleros o las entidades que rematen o subasten bienes por cuenta de terceros</field>
+        <field name='name'>Pólizas de Adjudicación emitidas con ocasión del remate o adjudicación de bienes por venta forzada, por los martilleros o las entidades que rematen o subasten bienes por cuenta de terceros</field>
+        <field name="name@es_419">Pólizas de Adjudicación emitidas con ocasión del remate o adjudicación de bienes por venta forzada, por los martilleros o las entidades que rematen o subasten bienes por cuenta de terceros</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>C</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type24'>
+        <field name='sequence'>60</field>
+        <field name='code'>24</field>
+        <field name='report_name'>Certificado de pago de regalías emitidas por PERUPETRO S.A</field>
+        <field name="report_name@es_419">Certificado de pago de regalías emitidas por PERUPETRO S.A</field>
+        <field name='name'>Certificado de pago de regalías emitidas por PERUPETRO S.A</field>
+        <field name="name@es_419">Certificado de pago de regalías emitidas por PERUPETRO S.A</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>C</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type25'>
+        <field name='sequence'>60</field>
+        <field name='code'>25</field>
+        <field name='report_name'>Documento de Atribución (Ley del Impuesto General a las Ventas e Impuesto Selectivo al Consumo, Art. 19º, último párrafo, R.S. N° 022-98-SUNAT).</field>
+        <field name="report_name@es_419">Documento de Atribución (Ley del Impuesto General a las Ventas e Impuesto Selectivo al Consumo, Art. 19º, último párrafo, R.S. N° 022-98-SUNAT).</field>
+        <field name='name'>Documento de Atribución (Ley del Impuesto General a las Ventas e Impuesto Selectivo al Consumo, Art. 19º, último párrafo, R.S. N° 022-98-SUNAT).</field>
+        <field name="name@es_419">Documento de Atribución (Ley del Impuesto General a las Ventas e Impuesto Selectivo al Consumo, Art. 19º, último párrafo, R.S. N° 022-98-SUNAT).</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>D</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type26'>
+        <field name='sequence'>60</field>
+        <field name='code'>26</field>
+        <field name='report_name'>Recibo por el Pago de la Tarifa por Uso de Agua Superficial con fines agrarios y por el pago de la Cuota para la ejecución de una determinada obra o actividad acordada por la Asamblea General de la Comisión de Regantes o Resolución expedida por el Jefe de la Unidad de Aguas y de Riego (Decreto Supremo N° 003-90-AG, Arts. 28 y 48)</field>
+        <field name="report_name@es_419">Recibo por el Pago de la Tarifa por Uso de Agua Superficial con fines agrarios y por el pago de la Cuota para la ejecución de una determinada obra o actividad acordada por la Asamblea General de la Comisión de Regantes o Resolución expedida por el Jefe de la Unidad de Aguas y de Riego (Decreto Supremo N° 003-90-AG, Arts. 28 y 48)</field>
+        <field name='name'>Recibo por el Pago de la Tarifa por Uso de Agua Superficial con fines agrarios y por el pago de la Cuota para la ejecución de una determinada obra o actividad acordada por la Asamblea General de la Comisión de Regantes o Resolución expedida por el Jefe de la Unidad de Aguas y de Riego (Decreto Supremo N° 003-90-AG, Arts. 28 y 48)</field>
+        <field name="name@es_419">Recibo por el Pago de la Tarifa por Uso de Agua Superficial con fines agrarios y por el pago de la Cuota para la ejecución de una determinada obra o actividad acordada por la Asamblea General de la Comisión de Regantes o Resolución expedida por el Jefe de la Unidad de Aguas y de Riego (Decreto Supremo N° 003-90-AG, Arts. 28 y 48)</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>R</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type27'>
+        <field name='sequence'>60</field>
+        <field name='code'>27</field>
+        <field name='report_name'>Seguro Complementario de Trabajo de Riesgo</field>
+        <field name="report_name@es_419">Seguro Complementario de Trabajo de Riesgo</field>
+        <field name='name'>Seguro Complementario de Trabajo de Riesgo</field>
+        <field name="name@es_419">Seguro Complementario de Trabajo de Riesgo</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>S</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type28'>
+        <field name='sequence'>60</field>
+        <field name='code'>28</field>
+        <field name='report_name'>Documentos emitidos por los servicios aeroportuarios prestados a favor de los pasajeros, mediante mecanismo de etiquetas autoadhesivas.</field>
+        <field name="report_name@es_419">Documentos emitidos por los servicios aeroportuarios prestados a favor de los pasajeros, mediante mecanismo de etiquetas autoadhesivas.</field>
+        <field name='name'>Documentos emitidos por los servicios aeroportuarios prestados a favor de los pasajeros, mediante mecanismo de etiquetas autoadhesivas.</field>
+        <field name="name@es_419">Documentos emitidos por los servicios aeroportuarios prestados a favor de los pasajeros, mediante mecanismo de etiquetas autoadhesivas.</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>D</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type29'>
+        <field name='sequence'>60</field>
+        <field name='code'>29</field>
+        <field name='report_name'>Documentos emitidos por la COFOPRI en calidad de oferta de venta de terrenos, los correspondientes a las subastas públicas y a la retribución de los servicios que presta</field>
+        <field name="report_name@es_419">Documentos emitidos por la COFOPRI en calidad de oferta de venta de terrenos, los correspondientes a las subastas públicas y a la retribución de los servicios que presta</field>
+        <field name='name'>Documentos emitidos por la COFOPRI en calidad de oferta de venta de terrenos, los correspondientes a las subastas públicas y a la retribución de los servicios que presta</field>
+        <field name="name@es_419">Documentos emitidos por la COFOPRI en calidad de oferta de venta de terrenos, los correspondientes a las subastas públicas y a la retribución de los servicios que presta</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>D</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type30'>
+        <field name='sequence'>60</field>
+        <field name='code'>30</field>
+        <field name='report_name'>Documentos emitidos por las empresas que desempeñan el rol adquirente en los sistemas de pago mediante tarjetas de crédito y débito, emitidas por bancos e instituciones financieras o crediticias, domiciliados o no en el país.</field>
+        <field name="report_name@es_419">Documentos emitidos por las empresas que desempeñan el rol adquirente en los sistemas de pago mediante tarjetas de crédito y débito, emitidas por bancos e instituciones financieras o crediticias, domiciliados o no en el país.</field>
+        <field name='name'>Documentos emitidos por las empresas que desempeñan el rol adquirente en los sistemas de pago mediante tarjetas de crédito y débito, emitidas por bancos e instituciones financieras o crediticias, domiciliados o no en el país.</field>
+        <field name="name@es_419">Documentos emitidos por las empresas que desempeñan el rol adquirente en los sistemas de pago mediante tarjetas de crédito y débito, emitidas por bancos e instituciones financieras o crediticias, domiciliados o no en el país.</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>D</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type32'>
+        <field name='sequence'>60</field>
+        <field name='code'>32</field>
+        <field name='report_name'>Documentos emitidos por las empresas recaudadoras de la denominada Garantía de Red Principal a la que hace referencia el numeral 7.6 del artículo 7° de la Ley N° 27133 – Ley de Promoción del Desarrollo de la Industria del Gas Natural</field>
+        <field name="report_name@es_419">Documentos emitidos por las empresas recaudadoras de la denominada Garantía de Red Principal a la que hace referencia el numeral 7.6 del artículo 7° de la Ley N° 27133 – Ley de Promoción del Desarrollo de la Industria del Gas Natural</field>
+        <field name='name'>Documentos emitidos por las empresas recaudadoras de la denominada Garantía de Red Principal a la que hace referencia el numeral 7.6 del artículo 7° de la Ley N° 27133 – Ley de Promoción del Desarrollo de la Industria del Gas Natural</field>
+        <field name="name@es_419">Documentos emitidos por las empresas recaudadoras de la denominada Garantía de Red Principal a la que hace referencia el numeral 7.6 del artículo 7° de la Ley N° 27133 – Ley de Promoción del Desarrollo de la Industria del Gas Natural</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>D</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type33'>
+        <field name='sequence'>60</field>
+        <field name='code'>33</field>
+        <field name='report_name'>Manifiesto de Pasajeros</field>
+        <field name="report_name@es_419">Manifiesto de Pasajeros</field>
+        <field name='name'>Manifiesto de Pasajeros</field>
+        <field name="name@es_419">Manifiesto de Pasajeros</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>M</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type34'>
+        <field name='sequence'>60</field>
+        <field name='code'>34</field>
+        <field name='report_name'>Documento del Operador</field>
+        <field name="report_name@es_419">Documento del Operador</field>
+        <field name='name'>Documento del Operador</field>
+        <field name="name@es_419">Documento del Operador</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>D</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type35'>
+        <field name='sequence'>60</field>
+        <field name='code'>35</field>
+        <field name='report_name'>Documento del Partícipe</field>
+        <field name="report_name@es_419">Documento del Partícipe</field>
+        <field name='name'>Documento del Partícipe</field>
+        <field name="name@es_419">Documento del Partícipe</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>D</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type36'>
+        <field name='sequence'>60</field>
+        <field name='code'>36</field>
+        <field name='report_name'>Recibo de Distribución de Gas Natural</field>
+        <field name="report_name@es_419">Recibo de Distribución de Gas Natural</field>
+        <field name='name'>Recibo de Distribución de Gas Natural</field>
+        <field name="name@es_419">Recibo de Distribución de Gas Natural</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>R</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type37'>
+        <field name='sequence'>60</field>
+        <field name='code'>37</field>
+        <field name='report_name'>Documentos que emitan los concesionarios del servicio de revisiones técnicas vehiculares, por la prestación de dicho servicio</field>
+        <field name="report_name@es_419">Documentos que emitan los concesionarios del servicio de revisiones técnicas vehiculares, por la prestación de dicho servicio</field>
+        <field name='name'>Documentos que emitan los concesionarios del servicio de revisiones técnicas vehiculares, por la prestación de dicho servicio</field>
+        <field name="name@es_419">Documentos que emitan los concesionarios del servicio de revisiones técnicas vehiculares, por la prestación de dicho servicio</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>D</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type40'>
+        <field name='sequence'>60</field>
+        <field name='code'>40</field>
+        <field name='report_name'>Comprobante de percepción</field>
+        <field name="report_name@es_419">Comprobante de percepción</field>
+        <field name='name'>Comprobante de percepción</field>
+        <field name="name@es_419">Comprobante de percepción</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='doc_code_prefix'>P</field>
+        <field name='internal_type'/>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type41'>
+        <field name='sequence'>70</field>
+        <field name='code'>41</field>
+        <field name='report_name'>Comprobante de Percepción - Venta interna</field>
+        <field name="report_name@es_419">Comprobante de Percepción - Venta interna</field>
+        <field name='name'>Comprobante de Percepción - Venta interna</field>
+        <field name="name@es_419">Comprobante de Percepción - Venta interna</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>C</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type42'>
+        <field name='sequence'>70</field>
+        <field name='code'>42</field>
+        <field name='report_name'>Documentos emitidos por las empresas que desempeñan el rol adquiriente en los sistemas de pago mediante tarjetas de crédito emitidas por ellas mismas</field>
+        <field name="report_name@es_419">Documentos emitidos por las empresas que desempeñan el rol adquiriente en los sistemas de pago mediante tarjetas de crédito emitidas por ellas mismas</field>
+        <field name='name'>Documentos emitidos por las empresas que desempeñan el rol adquiriente en los sistemas de pago mediante tarjetas de crédito emitidas por ellas mismas</field>
+        <field name="name@es_419">Documentos emitidos por las empresas que desempeñan el rol adquiriente en los sistemas de pago mediante tarjetas de crédito emitidas por ellas mismas</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>D</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type43'>
+        <field name='sequence'>70</field>
+        <field name='code'>43</field>
+        <field name='report_name'>Boletos emitidos por las Compañías de Aviación Comercial que prestan servicios de transporte aéreo no regular de pasajeros y transporte aéreo especial de pasajeros.</field>
+        <field name="report_name@es_419">Boletos emitidos por las Compañías de Aviación Comercial que prestan servicios de transporte aéreo no regular de pasajeros y transporte aéreo especial de pasajeros.</field>
+        <field name='name'>Boletos emitidos por las Compañías de Aviación Comercial que prestan servicios de transporte aéreo no regular de pasajeros y transporte aéreo especial de pasajeros.</field>
+        <field name="name@es_419">Boletos emitidos por las Compañías de Aviación Comercial que prestan servicios de transporte aéreo no regular de pasajeros y transporte aéreo especial de pasajeros.</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>B</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type44'>
+        <field name='sequence'>70</field>
+        <field name='code'>44</field>
+        <field name='report_name'>Billetes de lotería, rifas y apuestas. </field>
+        <field name="report_name@es_419">Billetes de lotería, rifas y apuestas. </field>
+        <field name='name'>Billetes de lotería, rifas y apuestas. </field>
+        <field name="name@es_419">Billetes de lotería, rifas y apuestas. </field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>B</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type45'>
+        <field name='sequence'>70</field>
+        <field name='code'>45</field>
+        <field name='report_name'>Documentos emitidos por centros educativos y culturales, universidades, asociaciones y fundaciones, en lo referente a actividades no gravadas con tributos administrados por la SUNAT.</field>
+        <field name="report_name@es_419">Documentos emitidos por centros educativos y culturales, universidades, asociaciones y fundaciones, en lo referente a actividades no gravadas con tributos administrados por la SUNAT.</field>
+        <field name='name'>Documentos emitidos por centros educativos y culturales, universidades, asociaciones y fundaciones, en lo referente a actividades no gravadas con tributos administrados por la SUNAT.</field>
+        <field name="name@es_419">Documentos emitidos por centros educativos y culturales, universidades, asociaciones y fundaciones, en lo referente a actividades no gravadas con tributos administrados por la SUNAT.</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>D</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type46'>
+        <field name='sequence'>70</field>
+        <field name='code'>46</field>
+        <field name='report_name'>Formulario de Declaración - pago o Boleta de pago de tributos Internos</field>
+        <field name="report_name@es_419">Formulario de Declaración - pago o Boleta de pago de tributos Internos</field>
+        <field name='name'>Formulario de Declaración - pago o Boleta de pago de tributos Internos</field>
+        <field name="name@es_419">Formulario de Declaración - pago o Boleta de pago de tributos Internos</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>F</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type48'>
+        <field name='sequence'>70</field>
+        <field name='code'>48</field>
+        <field name='report_name'>Comprobante de Operaciones - Ley N° 29972</field>
+        <field name="report_name@es_419">Comprobante de Operaciones - Ley N° 29972</field>
+        <field name='name'>Comprobante de Operaciones - Ley N° 29972</field>
+        <field name="name@es_419">Comprobante de Operaciones - Ley N° 29972</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>C</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type49'>
+        <field name='sequence'>70</field>
+        <field name='code'>49</field>
+        <field name='report_name'>Constancia de Depósito - IVAP (Ley 28211)</field>
+        <field name="report_name@es_419">Constancia de Depósito - IVAP (Ley 28211)</field>
+        <field name='name'>Constancia de Depósito - IVAP (Ley 28211)</field>
+        <field name="name@es_419">Constancia de Depósito - IVAP (Ley 28211)</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>C</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type50'>
+        <field name='sequence'>70</field>
+        <field name='code'>50</field>
+        <field name='report_name'>Declaración Única de Aduanas - Importación definitiva</field>
+        <field name="report_name@es_419">Declaración Única de Aduanas - Importación definitiva</field>
+        <field name='name'>Declaración Única de Aduanas - Importación definitiva</field>
+        <field name="name@es_419">Declaración Única de Aduanas - Importación definitiva</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>D</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type51'>
+        <field name='sequence'>70</field>
+        <field name='code'>51</field>
+        <field name='report_name'>Póliza o DUI Fraccionada</field>
+        <field name="report_name@es_419">Póliza o DUI Fraccionada</field>
+        <field name='name'>Póliza o DUI Fraccionada</field>
+        <field name="name@es_419">Póliza o DUI Fraccionada</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>P</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type52'>
+        <field name='sequence'>70</field>
+        <field name='code'>52</field>
+        <field name='report_name'>Despacho Simplificado - Importación Simplificada</field>
+        <field name="report_name@es_419">Despacho Simplificado - Importación Simplificada</field>
+        <field name='name'>Despacho Simplificado - Importación Simplificada</field>
+        <field name="name@es_419">Despacho Simplificado - Importación Simplificada</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>D</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type53'>
+        <field name='sequence'>70</field>
+        <field name='code'>53</field>
+        <field name='report_name'>Declaración de Mensajería o Courier</field>
+        <field name="report_name@es_419">Declaración de Mensajería o Courier</field>
+        <field name='name'>Declaración de Mensajería o Courier</field>
+        <field name="name@es_419">Declaración de Mensajería o Courier</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>D</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type54'>
+        <field name='sequence'>70</field>
+        <field name='code'>54</field>
+        <field name='report_name'>Liquidación de Cobranza</field>
+        <field name="report_name@es_419">Liquidación de Cobranza</field>
+        <field name='name'>Liquidación de Cobranza</field>
+        <field name="name@es_419">Liquidación de Cobranza</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>L</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type55'>
+        <field name='sequence'>70</field>
+        <field name='code'>55</field>
+        <field name='report_name'>BVME para transporte ferroviario de pasajeros</field>
+        <field name="report_name@es_419">BVME para transporte ferroviario de pasajeros</field>
+        <field name='name'>BVME para transporte ferroviario de pasajeros</field>
+        <field name="name@es_419">BVME para transporte ferroviario de pasajeros</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>B</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type56'>
+        <field name='sequence'>70</field>
+        <field name='code'>56</field>
+        <field name='report_name'>Comprobante de pago SEAE</field>
+        <field name="report_name@es_419">Comprobante de pago SEAE</field>
+        <field name='name'>Comprobante de pago SEAE</field>
+        <field name="name@es_419">Comprobante de pago SEAE</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>C</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type87'>
+        <field name='sequence'>70</field>
+        <field name='code'>87</field>
+        <field name='report_name'>Nota de Crédito Especial</field>
+        <field name="report_name@es_419">Nota de Crédito Especial</field>
+        <field name='name'>Nota de Crédito Especial</field>
+        <field name="name@es_419">Nota de Crédito Especial</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>N</field>
+        <field name='internal_type'>credit_note</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type88'>
+        <field name='sequence'>70</field>
+        <field name='code'>88</field>
+        <field name='report_name'>Nota de Débito Especial</field>
+        <field name="report_name@es_419">Nota de Débito Especial</field>
+        <field name='name'>Nota de Débito Especial</field>
+        <field name="name@es_419">Nota de Débito Especial</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>N</field>
+        <field name='internal_type'>debit_note</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type89'>
+        <field name='sequence'>70</field>
+        <field name='code'>89</field>
+        <field name='report_name'>Nota de Ajuste de Operaciones - Ley N° 29972</field>
+        <field name="report_name@es_419">Nota de Ajuste de Operaciones - Ley N° 29972</field>
+        <field name='name'>Nota de Ajuste de Operaciones - Ley N° 29972</field>
+        <field name="name@es_419">Nota de Ajuste de Operaciones - Ley N° 29972</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>N</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type91'>
+        <field name='sequence'>70</field>
+        <field name='code'>91</field>
+        <field name='report_name'>Comprobante de No Domiciliado</field>
+        <field name="report_name@es_419">Comprobante de No Domiciliado</field>
+        <field name='name'>Comprobante de No Domiciliado</field>
+        <field name="name@es_419">Comprobante de No Domiciliado</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>C</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type96'>
+        <field name='sequence'>70</field>
+        <field name='code'>96</field>
+        <field name='report_name'>Exceso de crédito fiscal por retiro de bienes</field>
+        <field name="report_name@es_419">Exceso de crédito fiscal por retiro de bienes</field>
+        <field name='name'>Exceso de crédito fiscal por retiro de bienes</field>
+        <field name="name@es_419">Exceso de crédito fiscal por retiro de bienes</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>E</field>
+        <field name='internal_type'>invoice</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type97'>
+        <field name='sequence'>70</field>
+        <field name='code'>97</field>
+        <field name='report_name'>Nota de Crédito - No Domiciliado</field>
+        <field name="report_name@es_419">Nota de Crédito - No Domiciliado</field>
+        <field name='name'>Nota de Crédito - No Domiciliado</field>
+        <field name="name@es_419">Nota de Crédito - No Domiciliado</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>N</field>
+        <field name='internal_type'>credit_note</field>
+    </record>
+    <record model='l10n_latam.document.type' id='document_type98'>
+        <field name='sequence'>70</field>
+        <field name='code'>98</field>
+        <field name='report_name'>Nota de Débito - No Domiciliado</field>
+        <field name="report_name@es_419">Nota de Débito - No Domiciliado</field>
+        <field name='name'>Nota de Débito - No Domiciliado</field>
+        <field name="name@es_419">Nota de Débito - No Domiciliado</field>
+        <field name='country_id' ref='base.pe' />
+        <field name='doc_code_prefix'>N</field>
+        <field name='internal_type'>debit_note</field>
+    </record>
+</odoo>

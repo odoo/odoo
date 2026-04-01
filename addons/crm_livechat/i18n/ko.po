@@ -1,0 +1,233 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * crm_livechat
+#
+# Translators:
+# Martin Trigaux, 2022
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~15.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-10-22 02:31+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"crm_livechat/ko/>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/chatbot_script_step.py:0
+msgid "%s's New Lead"
+msgstr "%s 의 신규 영업제안"
+
+#. module: crm_livechat
+#: model_terms:ir.ui.view,arch_db:crm_livechat.crm_lead_view_form
+msgid "<span class=\"o_stat_text\">View chat</span>"
+msgstr "<span class=\"o_stat_text\">그래프 보기</span>"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_chatbot_script
+msgid "Chatbot Script"
+msgstr "챗봇 스크립트"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_chatbot_script_step
+msgid "Chatbot Script Step"
+msgstr "챗봇 스크립트 단계"
+
+#. module: crm_livechat
+#. odoo-javascript
+#: code:addons/crm_livechat/static/src/core/thread_actions.js:0
+#: model:ir.model.fields.selection,name:crm_livechat.selection__chatbot_script_step__step_type__create_lead
+msgid "Create Lead"
+msgstr "영업제안 생성"
+
+#. module: crm_livechat
+#: model:ir.model.fields.selection,name:crm_livechat.selection__chatbot_script_step__step_type__create_lead_and_forward
+msgid "Create Lead & Forward"
+msgstr "잠재고객 생성 및 전달"
+
+#. module: crm_livechat
+#. odoo-javascript
+#: code:addons/crm_livechat/static/src/core/channel_commands.js:0
+msgid "Create a new lead (/lead lead title)"
+msgstr "새로운 영업제안 생성(/영업제안 영업제안명)"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/discuss_channel.py:0
+msgid ""
+"Create a new lead with: %(pre_start)s%(lead_command)s %(i_start)slead title%"
+"(i_end)s%(pre_end)s"
+msgstr ""
+
+#. module: crm_livechat
+#: model:ir.model,website_form_label:crm_livechat.model_crm_lead
+msgid "Create an Opportunity"
+msgstr "영업기회 생성"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/chatbot_script_step.py:0
+#: code:addons/crm_livechat/models/discuss_channel.py:0
+msgid "Created a new lead: %s"
+msgstr "새로운 영업제안을 생성하였습니다: %s"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_discuss_channel
+msgid "Discussion Channel"
+msgstr "메일 및 채팅 채널"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__display_name
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__display_name
+#: model:ir.model.fields,field_description:crm_livechat.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:crm_livechat.field_discuss_channel__display_name
+#: model:ir.model.fields,field_description:crm_livechat.field_im_livechat_report_channel__display_name
+#: model:ir.model.fields,field_description:crm_livechat.field_res_users__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__lead_count
+msgid "Generated Lead Count"
+msgstr "생성된 영업제안 수"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_discuss_channel__has_crm_lead
+msgid "Has Crm Lead"
+msgstr "CRM 영업제안 있음"
+
+#. module: crm_livechat
+#: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_welcome
+msgid "Hi there, what brings you to our website today? 👋"
+msgstr "환영합니다, 오늘 저희 웹사이트에서 무엇을 도와드릴까요? 👋"
+
+#. module: crm_livechat
+#: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_noone_available
+msgid "Hu-ho, it looks like none of our operators are available 🙁"
+msgstr "죄송합니다, 지금은 모든 상담사가 상담 중입니다 🙁"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__id
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__id
+#: model:ir.model.fields,field_description:crm_livechat.field_crm_lead__id
+#: model:ir.model.fields,field_description:crm_livechat.field_discuss_channel__id
+#: model:ir.model.fields,field_description:crm_livechat.field_im_livechat_report_channel__id
+#: model:ir.model.fields,field_description:crm_livechat.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_crm_lead
+msgid "Lead"
+msgstr "영업제안"
+
+#. module: crm_livechat
+#: model:chatbot.script,title:crm_livechat.chatbot_script_lead_generation_bot
+msgid "Lead Generation Bot"
+msgstr "영업제안 생성 봇"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_discuss_channel__lead_ids
+#: model_terms:ir.ui.view,arch_db:crm_livechat.chatbot_script_view_form
+msgid "Leads"
+msgstr "영업제안"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_im_livechat_report_channel__leads_created
+msgid "Leads created"
+msgstr "영업제안 생성"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_crm_lead__origin_channel_id
+msgid "Live chat from which the lead was created"
+msgstr "영업제안이 생성되어 있는 실시간 채팅"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_im_livechat_report_channel
+msgid "Livechat Support Channel Report"
+msgstr "실시간 채팅 지원 채널 보고서"
+
+#. module: crm_livechat
+#. odoo-javascript
+#: code:addons/crm_livechat/static/src/core/web/livechat_channel_info_list_patch.xml:0
+msgid "Open leads"
+msgstr "영업제안 열기"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__crm_team_id
+msgid "Sales Team"
+msgstr "영업팀"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__step_type
+msgid "Step Type"
+msgstr "단계 유형"
+
+#. module: crm_livechat
+#: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_just_looking
+msgid "Thank you, you should hear back from us very soon!"
+msgstr "감사합니다, 최대한 빠른 시간 내 연락드리겠습니다!"
+
+#. module: crm_livechat
+#: model:ir.model.fields,help:crm_livechat.field_discuss_channel__lead_ids
+msgid "The channel becomes accessible to sales users when leads are set."
+msgstr "채널에 판매 사용자가 액세스하려면 영업제안을 설정해야 합니다."
+
+#. module: crm_livechat
+#: model:ir.model.fields,help:crm_livechat.field_chatbot_script_step__crm_team_id
+msgid ""
+"Used in combination with 'create_lead' step type in order to automatically "
+"assign the created lead/opportunity to the defined team"
+msgstr ""
+"설정한 팀에 생성된 영업제안/영업기회를 자동 배정하기 위해  'create_lead' 단"
+"계 유형과 조합하여 사용합니다."
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_res_users
+msgid "User"
+msgstr "사용자"
+
+#. module: crm_livechat
+#: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_pricing_email
+msgid ""
+"Would you mind leaving your email address so that we can reach you back?"
+msgstr "이메일 주소를 남겨주시면 확인 후 바로 연락드리겠습니다."
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/crm_lead.py:0
+msgid "You cannot create leads linked to channels you don't have access to."
+msgstr ""
+"채널에 액세스 권한이 없는 경우에는 영업제안을 연결하여 생성할 수 없습니다."
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/crm_lead.py:0
+msgid ""
+"You cannot update a lead and link it to a channel you don't have access to."
+msgstr ""
+"영업제안을 업데이트하여 채널에 연결할 수 없습니다. 해당 채널에 액세스 권한이 "
+"없습니다."
+
+#. module: crm_livechat
+#. odoo-javascript
+#: code:addons/crm_livechat/static/src/core/thread_actions.js:0
+msgid "e.g. Product pricing"
+msgstr "예: 제품 가격"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/chatbot_script_step.py:0
+msgid "livechat discussion"
+msgstr "실시간 채팅 대화"

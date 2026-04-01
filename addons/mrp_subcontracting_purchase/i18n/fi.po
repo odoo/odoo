@@ -1,0 +1,159 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp_subcontracting_purchase
+#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-01-13 15:36+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
+"mrp_subcontracting_purchase/fi/>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: mrp_subcontracting_purchase
+#. odoo-python
+#: code:addons/mrp_subcontracting_purchase/models/stock_move.py:0
+msgid "%(value)s for %(quantity)s %(unit)s from %(production)s"
+msgstr "%(production)s -tuotannon %(quantity)s %(unit)s arvot %(value)s"
+
+#. module: mrp_subcontracting_purchase
+#. odoo-python
+#: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
+msgid "+ %d day(s)"
+msgstr "+ %d päivä(ä)"
+
+#. module: mrp_subcontracting_purchase
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting_purchase.purchase_order_form_mrp_subcontracting_purchase
+msgid "<span class=\"o_stat_text\">Resupply</span>"
+msgstr "<span class=\"o_stat_text\">Hanki lisää</span>"
+
+#. module: mrp_subcontracting_purchase
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting_purchase.stock_picking_form_mrp_subcontracting
+msgid "<span class=\"o_stat_text\">Source PO</span>"
+msgstr "<span class=\"o_stat_text\">Alkuperäinen ostotilaus</span>"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model,name:mrp_subcontracting_purchase.model_report_mrp_report_bom_structure
+msgid "BOM Overview Report"
+msgstr "Osaluettelon yleiskatsausraportti"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_purchase_order__subcontracting_resupply_picking_count
+msgid "Count of Subcontracting Resupply"
+msgstr "Alihankinnan jälleenhankinnan määrä"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model.fields,help:mrp_subcontracting_purchase.field_purchase_order__subcontracting_resupply_picking_count
+msgid "Count of Subcontracting Resupply for component"
+msgstr "Alihankinnan jälleenhankinnan määrä komponentin osalta"
+
+#. module: mrp_subcontracting_purchase
+#. odoo-python
+#: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
+msgid "Days to Supply Components"
+msgstr "Päiviä komponenttien toimittamiseen"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_product_product__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_report_mrp_report_bom_structure__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_move__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_rule__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_account_move_line__id
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_product_product__id
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_purchase_order__id
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_report_mrp_report_bom_structure__id
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_move__id
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_picking__id
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_rule__id
+msgid "ID"
+msgstr "Tunnus"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model,name:mrp_subcontracting_purchase.model_account_move_line
+msgid "Journal Item"
+msgstr "Kirjausrivi"
+
+#. module: mrp_subcontracting_purchase
+#. odoo-python
+#: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
+msgid "Manufacturing Lead Time"
+msgstr "Tuotannon läpimenoaika"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_picking__subcontracting_source_purchase_count
+msgid "Number of subcontracting PO Source"
+msgstr "Alkuperäisen ostotilauksen alihankintojen määrä"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model.fields,help:mrp_subcontracting_purchase.field_stock_picking__subcontracting_source_purchase_count
+msgid "Number of subcontracting Purchase Order Source"
+msgstr "Ostotilauksen lähteen alihankinnan määrä"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model,name:mrp_subcontracting_purchase.model_product_product
+msgid "Product Variant"
+msgstr "Tuotevariaatio"
+
+#. module: mrp_subcontracting_purchase
+#. odoo-python
+#: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
+msgid "Production Start Date"
+msgstr "Tuotannon aloituspäivä"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model,name:mrp_subcontracting_purchase.model_purchase_order
+msgid "Purchase Order"
+msgstr "Ostotilaus"
+
+#. module: mrp_subcontracting_purchase
+#. odoo-python
+#: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
+msgid "Receipt Date"
+msgstr "Vastaanottopäivä"
+
+#. module: mrp_subcontracting_purchase
+#. odoo-python
+#: code:addons/mrp_subcontracting_purchase/models/stock_picking.py:0
+msgid "Source PO of %s"
+msgstr "Ostotilauksen lähde %s"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model,name:mrp_subcontracting_purchase.model_stock_move
+msgid "Stock Move"
+msgstr "Varastosiirto"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model,name:mrp_subcontracting_purchase.model_stock_rule
+msgid "Stock Rule"
+msgstr "Varaston sääntö"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model,name:mrp_subcontracting_purchase.model_stock_picking
+msgid "Transfer"
+msgstr "Siirto"
+
+#. module: mrp_subcontracting_purchase
+#. odoo-python
+#: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
+msgid "Vendor Lead Time"
+msgstr "Toimittajan läpimenoaika"
+
+#~ msgid "Stock Valuation Layer"
+#~ msgstr "Varaston arvostuskerros"

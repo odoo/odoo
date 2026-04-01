@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.CallDropdown">
+        <t t-slot="default"/>
+        <div t-if="isOpen" class="o-discuss-CallDropdown" t-att-class="props.class">
+            <div t-ref="menu" t-on-click="onClickMenu" class="o-discuss-CallDropdown-content o-dropdown--menu dropdown-menu d-block" t-att-class="props.menuClass">
+                <t t-slot="content"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

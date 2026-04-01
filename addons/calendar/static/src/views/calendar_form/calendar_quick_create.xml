@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="calendar.CalendarQuickCreateButtons" t-inherit="web.FormViewDialog.ToOne.buttons">
+        <xpath expr="//button[hasclass('o_form_button_save')]" position="after">
+            <button t-if="!props.resId" class="btn btn-secondary" t-on-click="goToFullEvent">More Options</button>
+        </xpath>
+        <xpath expr="//button[hasclass('o_form_button_cancel')]" position="attributes">
+            <attribute name="class" add="ms-auto" separator=" "/>
+        </xpath>
+    </t>
+</templates>

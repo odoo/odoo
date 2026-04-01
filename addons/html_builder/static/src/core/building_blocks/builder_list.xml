@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xml:space="preserve">
+
+<t t-name="html_builder.BuilderList">
+    <BuilderComponent>
+        <div class="w-100 p-2 py-0">
+            <t t-if="state.value?.length > 2">
+                <div class="o_we_table_wrapper">
+                    <table t-ref="table">
+                        <t t-set="items" t-value="formatRawValue(state.value)"/>
+                        <t t-foreach="items" t-as="item" t-key="item._id">
+                            <tr class="o_row_draggable" t-att-data-id="item._id">
+                                <td t-if="props.sortable" class="o_handle_cell w-0">
+                                    <button type="button" class="btn">
+                                        <i class="fa fa-fw fa-arrows" aria-hidden="true"/>
+                                        <span class="visually-hidden">Drag and sort field</span>
+                                    </button>
+                                </td>
+                                <t t-foreach="Object.entries(props.itemShape).filter(([key,_]) => !props.hiddenProperties.includes(key))" t-as="entry" t-key="entry[0]">
+                                    <td t-att-class="props.columnWidth[entry[0]] || ''">
+                                        <t t-if="entry[1].endsWith('boolean')">
+                                            <div class="o-hb-checkbox o-checkbox form-check o_field_boolean o_boolean_toggle form-switch">
+                                                <input type="checkbox" class="form-check-input"
+                                                    t-att-name="entry[0]"
+                                                    t-att-checked="item[entry[0]]"
+                                                    t-att-data-id="item._id"
+                                                    t-on-click="onChange"
+                                                />
+                                            </div>
+                                        </t>
+                                        <t t-else="">
+                                            <input  class="o-hb-input-base"
+                                                    t-att-type="entry[1]"
+                                                    t-att-name="entry[0]"
+                                                    t-att-value="item[entry[0]]"
+                                                    t-att-data-id="item._id"
+                                                    t-att-disabled="props.isInputDisabled"
+                                                    t-on-input="onInput"
+                                                    t-on-change="onChange"
+                                            />
+                                        </t>
+                                    </td>
+                                </t>
+                                <td>
+                                    <button type="button" class="btn text-danger builder_list_remove_item"
+                                            t-if="!(this.props.forbidLastItemRemoval and (items.length === 1))"
+                                            t-on-click="() => this.deleteItem(item._id)">
+                                        <i class="fa fa-fw fa-minus" aria-hidden="true"/>
+                                        <span class="visually-hidden">Delete item</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </t>
+                    </table>
+                </div>
+            </t>
+            <div class="o-hb-select-wrapper" t-if="this.allRecords and this.allRecords.length" >
+                <t t-set="availableRecords" t-value="this.getAvailableRecords()"></t>
+                <div class="mt-1 ms-auto">
+                    <Dropdown state="this.dropdown" menuClass="'o-hb-select-dropdown mt-1'">
+                        <button class="bl-dropdown-toggle o-hb-select-toggle o-hb-btn btn btn-success text-start o-dropdown-caret w-100 mx-auto px-3"
+                            t-att-disabled="!availableRecords.length">
+                            <t t-set="noAvailableRecordLabel">You don't have any record to add</t>
+                            <span class=""
+                                t-att-title="!availableRecords.length ? noAvailableRecordLabel : ''"
+                                t-att-style="!availableRecords.length ? 'pointer-events: auto; display: inline-block;' : ''">
+                                <t t-out="props.addItemTitle" />
+                            </span>
+                        </button>
+                        <t t-set-slot="content">
+                            <t t-foreach="availableRecords" t-as="item" t-key="item.id">
+                                <t t-foreach="Object.entries(props.itemShape).filter(([key, value]) => !value.endsWith('boolean'))" t-as="entry" t-key="entry[0]">
+                                    <div class="o-hb-select-dropdown-item d-flex flex-column cursor-pointer o-dropdown-item dropdown-item o-navigable w-100 mx-auto"
+                                        style="max-height: 50vh;"
+                                        t-att-type="entry[1]"
+                                        t-att-name="entry[0]"
+                                        t-att-data-id="item.id"
+                                        t-on-click="addItem"
+                                    >
+                                        <t t-out="item[entry[0]]" />
+                                    </div>
+                                </t>
+                            </t>
+                        </t>
+                    </Dropdown>
+                </div>
+            </div>
+            <t t-else="">
+                <div class="text-end mt-1">
+                    <button type="button" class="builder_list_add_item o-hb-btn btn btn-success px-3"
+                            t-on-click="addItem">
+                        <t t-out="props.addItemTitle"/>
+                    </button>
+                </div>
+            </t>
+        </div>
+    </BuilderComponent>
+</t>
+
+</template>

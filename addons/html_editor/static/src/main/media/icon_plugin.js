@@ -1,0 +1,215 @@
+import { withSequence } from "@html_editor/utils/resource";
+import { Plugin } from "../../plugin";
+import { _t } from "@web/core/l10n/translation";
+import { MediaDialog } from "./media_dialog/media_dialog";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { ICON_SELECTOR, isElement } from "@html_editor/utils/dom_info";
+import { isIconElement, isZwnbsp } from "../../utils/dom_info";
+
+export class IconPlugin extends Plugin {
+    static id = "icon";
+    static dependencies = ["history", "selection", "dialog"];
+    toolbarNamespace = "icon";
+    /** @type {import("plugins").EditorResources} */
+    resources = {
+        user_commands: [
+            {
+                id: "resizeIcon1",
+                description: _t("Resize icon 1x"),
+                run: () => this.resizeIcon({ size: "1" }),
+                isAvailable: isHtmlContentSupported,
+            },
+            {
+                id: "resizeIcon2",
+                description: _t("Resize icon 2x"),
+                run: () => this.resizeIcon({ size: "2" }),
+                isAvailable: isHtmlContentSupported,
+            },
+            {
+                id: "resizeIcon3",
+                description: _t("Resize icon 3x"),
+                run: () => this.resizeIcon({ size: "3" }),
+                isAvailable: isHtmlContentSupported,
+            },
+            {
+                id: "resizeIcon4",
+                description: _t("Resize icon 4x"),
+                run: () => this.resizeIcon({ size: "4" }),
+                isAvailable: isHtmlContentSupported,
+            },
+            {
+                id: "resizeIcon5",
+                description: _t("Resize icon 5x"),
+                run: () => this.resizeIcon({ size: "5" }),
+                isAvailable: isHtmlContentSupported,
+            },
+            {
+                id: "toggleSpinIcon",
+                description: _t("Toggle icon spin"),
+                icon: "fa-play",
+                run: this.toggleSpinIcon.bind(this),
+                isAvailable: isHtmlContentSupported,
+            },
+            {
+                id: "replaceIcon",
+                description: _t("Replace icon"),
+                run: this.openIconDialog.bind(this),
+                isAvailable: isHtmlContentSupported,
+            },
+        ],
+        toolbar_namespace_providers: [
+            (targetedNodes) => {
+                if (!targetedNodes.length) {
+                    return;
+                }
+                const isIconInTargetedNodes = targetedNodes.some(isIconElement);
+                // All nodes should be icons or their ZWS children.
+                // FEFF nodes are only considered valid if an icon is selected and the
+                // FEFF is directly adjacent to it.
+                const isIconRelatedNode = (node) => {
+                    if (
+                        node.classList?.contains("fa") ||
+                        node.parentElement?.classList.contains("fa")
+                    ) {
+                        return true;
+                    }
+                    if (isZwnbsp(node) && isIconInTargetedNodes) {
+                        return (
+                            node.nextElementSibling?.classList?.contains("fa") ||
+                            node.previousElementSibling?.classList?.contains("fa")
+                        );
+                    }
+                    return false;
+                };
+
+                if (targetedNodes.every(isIconRelatedNode)) {
+                    return this.toolbarNamespace;
+                }
+            },
+        ],
+        toolbar_groups: [
+            withSequence(2, { id: "icon_size", namespaces: ["icon"] }),
+            withSequence(3, { id: "icon_spin", namespaces: ["icon"] }),
+            withSequence(3, { id: "icon_replace", namespaces: ["icon"] }),
+        ],
+        toolbar_items: [
+            {
+                id: "icon_size_1",
+                groupId: "icon_size",
+                commandId: "resizeIcon1",
+                text: "1x",
+                isActive: () => this.hasIconSize("1"),
+            },
+            {
+                id: "icon_size_2",
+                groupId: "icon_size",
+                commandId: "resizeIcon2",
+                text: "2x",
+                isActive: () => this.hasIconSize("2"),
+            },
+            {
+                id: "icon_size_3",
+                groupId: "icon_size",
+                commandId: "resizeIcon3",
+                text: "3x",
+                isActive: () => this.hasIconSize("3"),
+            },
+            {
+                id: "icon_size_4",
+                groupId: "icon_size",
+                commandId: "resizeIcon4",
+                text: "4x",
+                isActive: () => this.hasIconSize("4"),
+            },
+            {
+                id: "icon_size_5",
+                groupId: "icon_size",
+                commandId: "resizeIcon5",
+                text: "5x",
+                isActive: () => this.hasIconSize("5"),
+            },
+            {
+                id: "icon_spin",
+                groupId: "icon_spin",
+                commandId: "toggleSpinIcon",
+                isActive: () => this.hasSpinIcon(),
+            },
+            {
+                id: "icon_replace",
+                groupId: "icon_replace",
+                commandId: "replaceIcon",
+                text: _t("Replace"),
+            },
+        ],
+    };
+
+    getTargetedIcon() {
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        return targetedNodes.find((node) => isElement(node) && node.matches(ICON_SELECTOR));
+    }
+
+    resizeIcon({ size }) {
+        const targetedIcon = this.getTargetedIcon();
+        if (!targetedIcon) {
+            return;
+        }
+        for (const classString of targetedIcon.classList) {
+            if (classString.match(/^fa-[2-5]x$/)) {
+                targetedIcon.classList.remove(classString);
+            }
+        }
+        if (size !== "1") {
+            targetedIcon.classList.add(`fa-${size}x`);
+        }
+        this.dependencies.history.addStep();
+    }
+
+    toggleSpinIcon() {
+        const selectedIcon = this.getTargetedIcon();
+        if (!selectedIcon) {
+            return;
+        }
+        selectedIcon.classList.toggle("fa-spin");
+        this.dependencies.history.addStep();
+    }
+
+    hasIconSize(size) {
+        const selectedIcon = this.getTargetedIcon();
+        if (!selectedIcon) {
+            return;
+        }
+        if (size === "1") {
+            return ![...selectedIcon.classList].some((classString) =>
+                classString.match(/^fa-[2-5]x$/)
+            );
+        }
+        return selectedIcon.classList.contains(`fa-${size}x`);
+    }
+
+    hasSpinIcon() {
+        const selectedIcon = this.getTargetedIcon();
+        if (!selectedIcon) {
+            return;
+        }
+        return selectedIcon.classList.contains("fa-spin");
+    }
+
+    openIconDialog() {
+        const selectedIcon = this.getTargetedIcon();
+        if (!selectedIcon) {
+            return;
+        }
+        this.dependencies.dialog.addDialog(MediaDialog, {
+            visibleTabs: ["ICONS"],
+            media: selectedIcon,
+            save: (el) => this.onSaveIcon(el, selectedIcon),
+        });
+    }
+
+    onSaveIcon(icon, prevIcon) {
+        for (const attribute of icon.attributes) {
+            prevIcon.setAttribute(attribute.nodeName, attribute.nodeValue);
+        }
+        this.dependencies.history.addStep();
+    }
+}

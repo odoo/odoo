@@ -1,0 +1,69 @@
+.o_controller_with_rightpanel .o_content {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+
+    @include media-breakpoint-down(lg) {
+        flex-direction: column;
+        overflow: initial;
+    }
+
+    .o_renderer {
+        flex: 1 1 auto;
+        max-height: 100%;
+        position: relative;
+        padding: 0;
+
+        @include media-breakpoint-down(lg) {
+            flex-shrink: 0;
+            max-height: inherit;
+        }
+
+        &.o_kanban_ungrouped .o_kanban_record {
+            width: 100%;
+            margin: 0;
+            border-top: 0;
+            border-right: 0;
+        }
+    }
+}
+
+.o_rightpanel {
+    flex: 0 0 50%;
+    min-width: 400px;
+    max-width: 1140px;
+
+    @include media-breakpoint-down(lg) {
+        flex-basis: auto;
+        min-width: auto;
+        max-width: none;
+        border: 0;
+    }
+
+    .o_rightpanel_section {
+        .o_form_view {
+            .oe_button_box {
+                box-shadow: inset 0 -1px 0 $border-color;
+            }
+        }
+
+        tr th:not(:first-child) {
+            width: 20%;
+        }
+    }
+
+    .o_rightpanel_data_table {
+        --#{$prefix}border-style: dashed;
+
+        th, td {
+            &:first-child {
+                padding-left: map-get($spacers, 3);
+            }
+
+            &:last-child {
+                padding-right: map-get($spacers, 3);
+            }
+        }
+    }
+}

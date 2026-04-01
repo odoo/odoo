@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CarouselCardsOption" t-inherit="website.CarouselBottomControllersOption" t-inherit-mode="primary">
+    <xpath expr="//BuilderRow[@label.translate=&quot;Indicators&quot;]" position="after">
+        <BuilderRow label.translate="Images">
+            <BuilderCheckbox id="'toggle_card_img_opt'" preview="false" action="'toggleCardImg'"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Position" level="1" t-if="isActiveItem('toggle_card_img_opt')">
+            <BuilderButtonGroup applyTo="'.s_card'">
+                <BuilderButton title.translate="Left" classAction="'flex-lg-row'" iconImg="'/html_builder/static/img/options/pos_left.svg'"/>
+                <BuilderButton title.translate="Right" classAction="'flex-lg-row-reverse'" iconImg="'/html_builder/static/img/options/pos_right.svg'"/>
+            </BuilderButtonGroup>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Width" tooltip.translate="Adjust the image width" level="1" t-if="isActiveItem('toggle_card_img_opt')">
+            <BuilderRange
+                styleAction="'--card-img-size-h'"
+                min="10"
+                max="75"
+                step="5"
+                displayRangeValue="true"
+                unit="'%'"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Extra height" tooltip.translate="Add extra height to cards">
+            <BuilderRange
+                styleAction="'--CardBody-extra-height'"
+                min="0"
+                max="500"
+                step="10"
+                displayRangeValue="true"
+                unit="'px'"/>
+        </BuilderRow>
+    </xpath>
+</t>
+
+<t t-name="website.s_carousel_cards.imageWrapper">
+    <figure class="o_card_img_wrapper mb-0">
+        <img class="o_card_img h-100" src="/web/image/website.s_carousel_cards_default_image_1" alt=""/>
+    </figure>
+</t>
+
+</templates>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_holidays.TimeOffCalendarMobileFilterPanel" t-inherit="web.CalendarMobileFilterPanel" t-inherit-mode="primary">
+        <xpath expr="//i[@name='expand_filter_button']" position="replace">
+            <div class="ms-2 w-25">
+                Summary
+                <i t-attf-class="oi fa-fw oi-chevron-{{caretDirection}}" name="expand_filter_button"/>
+            </div>
+        </xpath>
+        <xpath expr="//span[@name='filter_label']" position="after">
+            <t t-set="holiday" t-value="this.leaveState.holidays[filter.value]"/>
+            <t t-if="holiday">
+                <t t-set="data" t-value="holiday[1]"/>
+                <t t-set="duration" t-value="holiday[2] ? data.virtual_remaining_leaves : data.virtual_leaves_taken"/>
+                <span class="fw-bold text-nowrap ms-1">
+                    (<span class="o_timeoff_green text-success" t-esc="duration"/> / <span class="fw-bold text-nowrap" t-esc="data.max_leaves"/>)
+                </span>
+            </t>
+        </xpath>
+    </t>
+</templates>

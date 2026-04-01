@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ProductInfoPopup">
+        <Dialog>
+            <t t-set-slot="header">
+                <button t-on-click="toggleFavorite" class="border-0 bg-transparent mb-2" t-att-disabled="this.pos.cashier._role == 'minimal'">
+                    <i t-attf-class="fa fa-lg fa-fw  {{props.productTemplate.is_favorite ? 'fa-star' : 'fa-star-o'}}"
+                        t-att-style="props.productTemplate.is_favorite ? 'color: #f3cc00;' : ''"
+                        role="img"/>
+                </button>
+                <h3 class="section-title" t-out="props.productTemplate.displayName + ' | ' + env.utils.formatCurrency(props.info.productInfo.all_prices.price_with_tax)"/>
+                <button type="button" class="btn-close mb-2" aria-label="Close" tabindex="-1" t-on-click="props.close"/>
+            </t>
+            <div class="section-public-description mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.productTemplate.productDescriptionMarkup">
+                <h3 class="section-title">
+                    Description
+                </h3>
+                <t t-out="props.productTemplate.productDescriptionMarkup" />
+            </div>
+            <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.info?.productInfo?.warehouses?.length > 0">
+                <h3 class="section-title">
+                    Inventory
+                    <t t-if="pos.session.update_stock_at_closing">(as of opening)</t>
+                </h3>
+                <div class="section-inventory-body">
+                    <t t-foreach="props.info.productInfo.warehouses" t-as="warehouse" t-key="warehouse.name">
+                        <div class="d-flex flex-column flex-md-row gap-2">
+                            <div>
+                                <t t-esc="warehouse.name" class="table-name"/>
+                                :
+                            </div>
+                            <div>
+                                <span class="me-1 fw-bolder"><t t-esc="warehouse.free_qty" class="table-name"/></span>
+                                <t t-esc="warehouse.uom"/> available,
+                            </div>
+                            <div>
+                                <span class="me-1 fw-bolder"><t t-esc="warehouse.forecasted_quantity"/></span>
+                                forecasted
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+            <div class="section-supplier mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.info?.productInfo?.suppliers?.length > 0">
+                <h3 class="section-title">Replenishment</h3>
+                <div class="section-supplier-body">
+                    <t t-foreach="props.info.productInfo.suppliers" t-as="supplier" t-key="supplier.id">
+                        <div class="d-flex flex-column flex-md-row gap-2">
+                            <div>
+                                <span t-esc="supplier.name" class="table-name"/>:
+                            </div>
+                            <span class="me-1 fw-bolder">
+                                <t t-esc="supplier.delay"/> 
+                                Days
+                            </span>
+                            <span t-if="_hasMarginsCostsAccessRights()">
+                                <t t-esc="env.utils.formatCurrency(supplier.price)"/>
+                            </span>
+                        </div>
+                    </t>
+                </div>
+            </div>
+            <div class="section-optional-product mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.info?.productInfo?.optional_products?.length > 0">
+                <h3 class="section-title">Optional Products:</h3>
+                <div class="section-optional-product-body" t-foreach="props.info.productInfo.optional_products" t-as="optional" t-key="optional.id">
+                    <span>
+                        <a class="text-primary text-decoration-underline" t-esc="optional.name" t-on-click="() => this.searchProduct(optional.name)"/>
+                            from
+                        <t t-esc="env.utils.formatCurrency(optional.list_price)"/>
+                    </span>
+                </div>
+            </div>
+            <div class="financials-order d-grid gap-2 mt-3" style="grid-template-columns: repeat(2, 1fr);">
+                <div class="section-financials text-start">
+                    <h3 class="section-title">Financials</h3>
+                    <div class="grid gap-2">
+                        <label class="fw-bold">Price excl. Tax:</label>
+                        <span><t t-esc="env.utils.formatCurrency(props.info.productInfo.all_prices.price_without_tax)"/></span>
+                        <label class="fw-bold vat-label"><t t-esc="vatLabel"/></label>
+                        <span class="vat-value">
+                            <t t-esc="props.info.taxAmount"/>
+                            (<t t-esc="props.info.taxName"/>)
+                        </span>
+                        <label class="fw-bold">Price incl. Tax:</label>
+                        <span><t t-esc="env.utils.formatCurrency(props.info.productInfo.all_prices.price_with_tax)"/></span>
+                        <t t-if="_hasMarginsCostsAccessRights()">
+                            <label class="fw-bold">Cost:</label>
+                            <span><t t-esc="props.info.costCurrency"/></span>
+                            <label class="fw-bold">Margin:</label>
+                            <span><t t-esc="props.info.marginCurrency"/> (<t t-esc="props.info.marginPercent"/>%) </span>
+                        </t>
+                    </div>
+                    <div class="grid gap-2 mt-3">
+                        <t t-foreach="props.info.productInfo.pricelists" t-as="pricelist" t-key="pricelist.name">
+                            <label class="fw-bold" t-esc="pricelist.name"/>
+                            <span t-esc="env.utils.formatCurrency(pricelist.price)"/>
+                        </t>
+                    </div>
+                </div>
+                <div class="section-order text-start">
+                    <h3 class="section-title">Order</h3>
+                    <div class="grid gap-2">
+                        <label class="fw-bold">Total Price excl. Tax:</label>
+                        <span t-esc="props.info.orderPriceWithoutTaxCurrency"/>
+                        <label class="fw-bold"><t t-esc="totalVatLabel"/></label>
+                        <span t-esc="props.info.orderTaxTotalCurrency"/>
+                        <label class="fw-bold">Total Price incl. Tax:</label>
+                        <span t-esc="props.info.orderPriceWithTaxCurrency"/>
+                        <t t-if="_hasMarginsCostsAccessRights()">
+                            <label class="fw-bold">Total Cost:</label>
+                            <span t-esc="props.info.orderCostCurrency"/>
+                            <label class="fw-bold">Total Margin:</label>
+                            <span><t t-esc="props.info.orderMarginCurrency"/> (<t t-esc="props.info.orderMarginPercent"/>%)</span>
+                        </t>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <div class="d-flex flex-row gap-2 w-100">
+                    <button class="btn btn-primary btn-lg lh-lg w-50" t-on-click="props.close">Close</button>
+                    <button t-if="allowProductEdition" class="btn btn-secondary btn-lg lh-lg w-50" t-on-click="editProduct">Edit</button>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+</templates>

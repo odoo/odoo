@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="stock.ForecastWidget">
+        <span title="Forecasted Report"
+              t-on-click="_openReport" t-att="resId ? {} : {'disabled': ''}"
+              class="badge rounded-pill align-middle"
+              t-att-class="decoration"
+        >
+            <t t-if="!forecastExpectedDate and willBeFulfilled">
+                Available
+            </t>
+            <t t-elif="forecastExpectedDate and willBeFulfilled">
+                Exp <t t-out="forecastExpectedDate"/>
+            </t>
+            <t t-else="">Not Available</t>
+        </span>
+    </t>
+
+</templates>

@@ -1,0 +1,14 @@
+<templates xml:space="preserve">
+
+<t t-name="html_editor.ColorSelector">
+    <button t-ref="root" class="btn btn-light" t-attf-class="o-select-color-{{props.type}} {{this.colorPicker.isOpen ? 'active' : ''}}" t-att-title="props.title" t-att-disabled="props.isDisabled">
+        <t t-if="props.type === 'foreground'">
+            <i class="fa fa-fw fa-font py-1" t-att-style="this.getSelectedColorStyle()"/>
+        </t>
+        <t t-else="">
+            <i class="fa fa-fw fa-paint-brush py-1" t-att-style="this.getSelectedColorStyle()"/>
+        </t>
+    </button>
+</t>
+
+</templates>

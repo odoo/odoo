@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_sa_additional_footer">
+        <span t-if="report_type == 'pdf' and additional_footer_text" class="text-muted text-center" t-out="additional_footer_text"/><br/>
+    </template>
+    <template id="l10n_sa_external_layout_standard" inherit_id="web.external_layout_standard">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
+        </xpath>
+        <xpath expr="//span[hasclass('page')]/.." position="before">
+            <t t-call="l10n_sa.l10n_sa_additional_footer"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
+        </xpath>
+        <xpath expr="//span[hasclass('page')]/.." position="before">
+            <t t-call="l10n_sa.l10n_sa_additional_footer"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_external_layout_bold" inherit_id="web.external_layout_bold">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
+        </xpath>
+        <xpath expr="//span[hasclass('page')]/.." position="before">
+            <t t-call="l10n_sa.l10n_sa_additional_footer"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_external_layout_striped" inherit_id="web.external_layout_striped">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
+        </xpath>
+        <xpath expr="//span[hasclass('page')]/.." position="before">
+            <t t-call="l10n_sa.l10n_sa_additional_footer"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_external_layout_folder" inherit_id="web.external_layout_folder">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
+        </xpath>
+        <xpath expr="//span[hasclass('page')]/.." position="before">
+            <t t-call="l10n_sa.l10n_sa_additional_footer"/>
+        </xpath>
+        <t t-set="header_shape_height" position="after">
+            <t t-set="header_shape_height" t-if="o and o._name == 'account.move' and o.country_code == 'SA'">215</t>
+        </t>
+    </template>
+    <template id="l10n_sa_external_layout_wave" inherit_id="web.external_layout_wave">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
+        </xpath>
+        <xpath expr="//span[hasclass('page')]/.." position="before">
+            <t t-call="l10n_sa.l10n_sa_additional_footer"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_external_layout_bubble" inherit_id="web.external_layout_bubble">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
+        </xpath>
+        <xpath expr="//span[hasclass('page')]/.." position="before">
+            <t t-call="l10n_sa.l10n_sa_additional_footer"/>
+        </xpath>
+    </template>
+</odoo>

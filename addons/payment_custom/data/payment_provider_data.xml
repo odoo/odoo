@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment.payment_provider_transfer" model="payment.provider">
+        <field name="code">custom</field>
+        <field name="redirect_form_view_id" ref="redirect_form"/>
+        <!-- Clear the default value before recomputing the pending_msg -->
+        <field name="pending_msg" eval="False"/>
+        <field name="custom_mode">wire_transfer</field>
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment_custom.payment_method_wire_transfer'),
+                     ])]"
+        />
+    </record>
+
+    <function model="payment.provider"
+              name="_transfer_ensure_pending_msg_is_set"
+              eval="[[ref('payment.payment_provider_transfer')]]"/>
+
+</odoo>

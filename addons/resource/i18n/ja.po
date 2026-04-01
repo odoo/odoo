@@ -1,0 +1,1088 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * resource
+#
+# Translators:
+# Martin Trigaux, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-02 13:44+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"resource/ja/>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+msgid "# Work Resources"
+msgstr "# 作業リソース"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+msgid ""
+"%(att)s is a break attendance, You should not have such record on duration "
+"based calendar"
+msgstr "%(att)s は休憩の記録ですが、時間ベースのカレンダーには適していません"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#: code:addons/resource/models/resource_resource.py:0
+msgid "%s (copy)"
+msgstr "%s (コピー)"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "2 Week's Calendar"
+msgstr "2 週間カレンダー"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span class=\"ms-1\">%</span>"
+msgstr "<span class=\"ms-1\">%</span>"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span class=\"ms-2\">hours/day</span>"
+msgstr "<span class=\"ms-2\">時間/日</span>"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span class=\"ms-2\">hours/week</span>"
+msgstr "<span class=\"ms-2\">時間/週</span>"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span class=\"o_stat_text\">Time Off</span>"
+msgstr "<span class=\"o_stat_text\">休止j</span>"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span>hours/week</span>"
+msgstr "<span> 時間/週</span>"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__active
+#: model:ir.model.fields,field_description:resource.field_resource_resource__active
+msgid "Active"
+msgstr "有効"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__afternoon
+msgid "Afternoon"
+msgstr "午後"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Archived"
+msgstr "アーカイブ済"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid ""
+"Are you sure you want to switch to a 1-week calendar? All work entries will "
+"be lost."
+msgstr "本当に1週間カレンダに変更しますか？勤務記録はすべて失われます。"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid ""
+"Are you sure you want to switch to a 2-week calendar? All work entries will "
+"be lost."
+msgstr "本当に2週間カレンダに変更しますか？勤務記録はすべて失われます。"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__duration_based
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_based
+msgid "Attendance based on duration"
+msgstr "期間に基づく勤怠"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Attendances can't overlap."
+msgstr "勤務時間が重複しています。"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__avatar_128
+msgid "Avatar 128"
+msgstr "アバター 128"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
+msgid "Average Hour per Day"
+msgstr "1日当たりの平均時間"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
+msgid ""
+"Average hours per day a resource is supposed to work with this calendar."
+msgstr "リソースがこのカレンダで働くと想定される 1 日あたりの平均時間。"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Avg"
+msgstr "平均"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__lunch
+msgid "Break"
+msgstr "休憩"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__two_weeks_calendar
+msgid "Calendar in 2 weeks mode"
+msgstr "2週間モードのカレンダ"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__schedule_type
+msgid ""
+"Choose which level of definition you want to define on your Schedule\n"
+"- Flexible : Define an amount of hours to work on the week.\n"
+"- Fully Fixed : define the days, periods and the start & end time for each "
+"period of the day"
+msgstr ""
+"スケジュールで設定する詳細レベルを選択してください\n"
+"- 柔軟：週あたりの勤務時間数を設定します。\n"
+"- 完全固定：曜日、時間帯ごとの開始時刻と終了時刻を詳細に設定します"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
+msgid "Closing Days"
+msgstr "閉鎖日数"
+
+#. module: resource
+#: model:ir.model,name:resource.model_res_company
+msgid "Companies"
+msgstr "会社"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__company_id
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__company_id
+#: model:ir.model.fields,field_description:resource.field_resource_mixin__company_id
+#: model:ir.model.fields,field_description:resource.field_resource_resource__company_id
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Company"
+msgstr "会社"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Confirm"
+msgstr "確定"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__create_uid
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__create_uid
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__create_uid
+#: model:ir.model.fields,field_description:resource.field_resource_resource__create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__create_date
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__create_date
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__create_date
+#: model:ir.model.fields,field_description:resource.field_resource_resource__create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Date"
+msgstr "日付"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__day_period
+msgid "Day Period"
+msgstr "時間帯"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__dayofweek
+msgid "Day of Week"
+msgstr "曜日"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_id
+#: model:ir.model.fields,field_description:resource.field_res_users__resource_calendar_id
+msgid "Default Working Hours"
+msgstr "稼働時間のデフォルト値"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Define Amount of Hours per day"
+msgstr "1日の労働時間を定義"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_res_users__resource_calendar_id
+#: model:ir.model.fields,help:resource.field_resource_mixin__resource_calendar_id
+#: model:ir.model.fields,help:resource.field_resource_resource__calendar_id
+msgid ""
+"Define the working schedule of the resource. If not set, the resource will "
+"have fully flexible working hours."
+msgstr ""
+"リソースの稼働スケジュールを定義します。未設定の場合、このリソースは完全に柔"
+"軟な稼働時間となります。"
+
+#. module: resource
+#: model_terms:ir.actions.act_window,help:resource.action_resource_calendar_form
+msgid ""
+"Define working hours and time table that could be scheduled to your project "
+"members"
+msgstr ""
+"プロジェクトメンバーにスケジュールすることができる勤務時間と時間表を定義"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_res_company__display_name
+#: model:ir.model.fields,field_description:resource.field_res_users__display_name
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__display_name
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__display_name
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__display_name
+#: model:ir.model.fields,field_description:resource.field_resource_mixin__display_name
+#: model:ir.model.fields,field_description:resource.field_resource_resource__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__display_type
+msgid "Display Type"
+msgstr "表示タイプ"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_days
+msgid "Duration (days)"
+msgstr "休暇期間（日）"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_hours
+msgid "Duration (hours)"
+msgstr "期間(時間)"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__time_efficiency
+msgid "Efficiency Factor"
+msgstr "効率因子"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__email
+msgid "Email"
+msgstr "メール"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_to
+msgid "End Date"
+msgstr "終了日"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_explanation
+msgid "Explanation"
+msgstr "説明"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource__share
+msgid ""
+"External user with limited access, created only for the purpose of sharing "
+"data."
+msgstr "データ共有の目的のためだけに作成されたアクセス制限のある外部ユーザ"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__0
+msgid "First"
+msgstr "1番目"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+msgid "First week"
+msgstr "第1週"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar__schedule_type__flexible
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
+msgid "Flexible"
+msgstr "柔軟"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__flexible_hours
+msgid "Flexible Hours"
+msgstr "フレックスタイム"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
+msgid "Friday"
+msgstr "金曜"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Friday Afternoon"
+msgstr "金曜 午後"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Friday Lunch"
+msgstr "金曜ランチ"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Friday Morning"
+msgstr "金曜 午前"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__full_day
+msgid "Full Day"
+msgstr "全日"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__full_time_required_hours
+msgid "Full Time Equivalent"
+msgstr "フルタイム換算"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar__schedule_type__fully_fixed
+msgid "Fully Fixed"
+msgstr "完全固定"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
+msgid "Fully Flexible"
+msgstr "完全フレックス"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
+msgid "Gives the sequence of this line when displaying the resource calendar."
+msgstr "リソースカレンダを表示する際のこの行の付番を示します。"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
+msgid "Global Time Off"
+msgstr "全体休止時間"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
+msgid "Hours"
+msgstr "時間"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_week
+msgid "Hours per Week"
+msgstr "1週間ごとの時間"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__user
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Human"
+msgstr "人的資源"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_res_company__id
+#: model:ir.model.fields,field_description:resource.field_res_users__id
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__id
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__id
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__id
+#: model:ir.model.fields,field_description:resource.field_resource_mixin__id
+#: model:ir.model.fields,field_description:resource.field_resource_resource__id
+msgid "ID"
+msgstr "ID"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid ""
+"If checked, the working schedule will be based on an amount of hours "
+"(defined for each day) and not a start & end time anymore.Do you confirm ?"
+msgstr ""
+"このオプションを有効にすると、勤務スケジュールは開始・終了時刻ではなく、(各日"
+"に設定された)勤務時間数に基づいて管理されるようになります。よろしいですか?"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar_leaves__resource_id
+msgid ""
+"If empty, this is a generic time off for the company. If a resource is set, "
+"the time off is only for this resource"
+msgstr ""
+"空欄の場合は、会社全体に適用される汎用的な休止時間となります。リソースが設定"
+"されている場合は、そのリソースのみに適用されます。"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource__active
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr "有効項目をFalse にセットすると、リソースレコードは削除することなく非表示にで"
+"きます。"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the Working "
+"Time without removing it."
+msgstr "有効フィールドをFALSEに設定すると、作業時間を削除せずに非表示にすることができ"
+"ます。"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid ""
+"If unchecked, the working schedule will be based on a defined start and end "
+"hours.Do you confirm ?"
+msgstr ""
+"このオプションを無効にすると、勤務スケジュールは勤務時間数ではなく、開始時刻"
+"と終了時刻に基づいて管理されるようになります。よろしいですか?"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid ""
+"In a calendar with 2 weeks mode, all periods need to be in the sections."
+msgstr ""
+"2週間モードのカレンダでは、すべての期間をセクションに含める必要があります。"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__is_fulltime
+msgid "Is Full Time"
+msgstr "フルタイム"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__write_uid
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__write_uid
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__write_uid
+#: model:ir.model.fields,field_description:resource.field_resource_resource__write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__write_date
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__write_date
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__write_date
+#: model:ir.model.fields,field_description:resource.field_resource_resource__write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__material
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Material"
+msgstr "材料"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__0
+msgid "Monday"
+msgstr "月曜"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Monday Afternoon"
+msgstr "月曜 午後"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Monday Lunch"
+msgstr "月曜日ランチ"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Monday Morning"
+msgstr "月曜 午前"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__morning
+msgid "Morning"
+msgstr "午前"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__name
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__name
+#: model:ir.model.fields,field_description:resource.field_resource_resource__name
+msgid "Name"
+msgstr "名称"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__full_time_required_hours
+msgid ""
+"Number of hours to work on the company schedule to be considered as fulltime."
+msgstr ""
+"フルタイムとみなされるために、会社のスケジュールで勤務する必要のある時間数。"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__other
+msgid "Other"
+msgstr "その他"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
+msgid "Partial working schedules"
+msgstr "一部勤務スケジュール"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Period"
+msgstr "期間"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__phone
+msgid "Phone"
+msgstr "電話"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Provided datetimes needs to be timezoned"
+msgstr "提供される日付は、タイムゾーンが必要です"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__name
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
+msgid "Reason"
+msgstr "理由"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource__user_id
+msgid "Related user name for the resource to manage its access."
+msgstr "そのアクセスを管理するためのリソースに関連するユーザ名"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Required Full Time"
+msgstr "必要なフルタイム勤務時"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__resource_id
+#: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_id
+#: model:ir.ui.menu,name:resource.menu_resource_config
+#: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Resource"
+msgstr "リソース"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_mixin
+msgid "Resource Mixin"
+msgstr "リソースMixin"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
+#: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
+#: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
+msgid "Resource Time Off"
+msgstr "リソースの休止"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "リソースの休暇詳細"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar
+msgid "Resource Working Time"
+msgstr "リソース稼働時間"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__calendar_id
+msgid "Resource's Calendar"
+msgstr "リソースカレンダ"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_resource_tree
+#: model:ir.actions.act_window,name:resource.resource_resource_action_from_calendar
+#: model:ir.model,name:resource.model_resource_resource
+#: model:ir.model.fields,field_description:resource.field_res_users__resource_ids
+#: model:ir.ui.menu,name:resource.menu_resource_resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_resource_tree
+msgid "Resources"
+msgstr "リソース"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
+msgid "Resources Time Off"
+msgstr "リソースの休止"
+
+#. module: resource
+#: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
+#: model_terms:ir.actions.act_window,help:resource.resource_resource_action_from_calendar
+msgid ""
+"Resources allow you to create and manage resources that should be involved "
+"in a specific project phase. You can also set their efficiency level and "
+"workload based on their weekly working hours."
+msgstr ""
+"リソースは特定のプロジェクトフェーズに関与すべきリソースの作成と管理ができま"
+"す。それらの効率レベルと週間作業時間を基本とする作業負荷を設定できます。"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__5
+msgid "Saturday"
+msgstr "土曜"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+msgid "Schedule Total Time"
+msgstr "スケジュール合計時間"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__schedule_type
+msgid "Schedule Type"
+msgstr "スケジュールタイプ"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Search Resource"
+msgstr "リソースの検索"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Search Working Period Time Off"
+msgstr "稼働期間中の休止時間を検索"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
+msgid "Search Working Time"
+msgstr "作業時間の検索"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__1
+msgid "Second"
+msgstr "2番目"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+msgid "Second week"
+msgstr "第2週"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__display_type__line_section
+msgid "Section"
+msgstr "セクション"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__sequence
+msgid "Sequence"
+msgstr "シーケンス"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__share
+msgid "Share User"
+msgstr "共有ユーザ"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/res_company.py:0
+msgid "Standard 40 hours/week"
+msgstr "標準40時間/週"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_from
+msgid "Start Date"
+msgstr "開始日"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar_attendance__hour_from
+msgid ""
+"Start and End time of working.\n"
+"A specific value of 24:00 is interpreted as 23:59:59.999999."
+msgstr ""
+"勤務開始時間と終了時間。\n"
+"24:00は23:59:59.999999と解釈されます。"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Starting Date of Time Off"
+msgstr "休止の開始日"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
+msgid "Sunday"
+msgstr "日曜"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Switch"
+msgstr "切り替え"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Switch to 1-week calendar"
+msgstr "1週間カレンダーに変更"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Switch to 2-weeks calendar"
+msgstr "2週間カレンダーに変更"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Switch to Duration based attendance"
+msgstr "勤怠ベースに変更"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Switch to fixed attendance"
+msgstr "固定勤怠に変更"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar_attendance__display_type
+msgid "Technical field for UX purpose."
+msgstr "UXの目的のためのテクニカルフィールド。"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid ""
+"The current week (from %(first_day)s to %(last_day)s) corresponds to %"
+"(number)s week."
+msgstr ""
+"現在の週(%(first_day)s から %(last_day)s まで)は、第 %(number)s 週にあたりま"
+"す。"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__duration_based
+#: model:ir.model.fields,help:resource.field_resource_calendar_attendance__duration_based
+msgid ""
+"The hours will be centered around 12:00 to cover the duration for the day"
+msgstr ""
+"その日の勤務時間は、1日の所要時間をカバーするように正午12:00を中心に配置され"
+"ます"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_leaves.py:0
+msgid "The start date of the time off must be earlier than the end date."
+msgstr "休止の開始日は終了日より前にして下さい。"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__tz
+#: model:ir.model.fields,help:resource.field_resource_mixin__tz
+msgid ""
+"This field is used in order to define in which timezone the resources will "
+"work."
+msgstr ""
+"このフィールドは、そのリソースが稼働するタイムゾーンを定義するために、用いら"
+"れます。"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource__time_efficiency
+msgid ""
+"This field is used to calculate the expected duration of a work order at "
+"this work center. For example, if a work order takes one hour and the "
+"efficiency factor is 100%, then the expected duration will be one hour. If "
+"the efficiency factor is 200%, however the expected duration will be 30 "
+"minutes."
+msgstr ""
+"このフィールドは、この作業区における作業オーダの予想時間を計算するために使用"
+"されます。例えば、作業オーダに1時間かかり、効率ファクタが100％である場合の予"
+"想所要時間は1時間ですが、効率ファクタが200％の場合、予想所要時間は30分となり"
+"ます。"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
+msgid "Thursday"
+msgstr "木曜"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Thursday Afternoon"
+msgstr "木曜日午後"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Thursday Lunch"
+msgstr "木曜日ランチ"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Thursday Morning"
+msgstr "木曜 午前"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__leave_ids
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__leave
+msgid "Time Off"
+msgstr "休止"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
+msgid "Time Off Detail"
+msgstr "休止詳細"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
+msgid "Time Type"
+msgstr "時間タイプ"
+
+#. module: resource
+#: model:ir.model.constraint,message:resource.constraint_resource_resource_check_time_efficiency
+msgid "Time efficiency must be strictly positive"
+msgstr "時間効率は必ず正の値にして下さい。"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__tz
+#: model:ir.model.fields,field_description:resource.field_resource_mixin__tz
+#: model:ir.model.fields,field_description:resource.field_resource_resource__tz
+msgid "Timezone"
+msgstr "タイムゾーン"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__tz_offset
+msgid "Timezone offset"
+msgstr "タイムゾーンオフセット値"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Total"
+msgstr "合計"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__1
+msgid "Tuesday"
+msgstr "火曜"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Tuesday Afternoon"
+msgstr "火曜 午後"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Tuesday Lunch"
+msgstr "火曜日ランチ"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Tuesday Morning"
+msgstr "火曜 午前"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__resource_type
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Type"
+msgstr "タイプ"
+
+#. module: resource
+#: model:ir.model,name:resource.model_res_users
+#: model:ir.model.fields,field_description:resource.field_resource_resource__user_id
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "User"
+msgstr "ユーザ"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
+msgid "Visible to all"
+msgstr "全員に表示"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__2
+msgid "Wednesday"
+msgstr "水曜"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Wednesday Afternoon"
+msgstr "水曜 午後"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Wednesday Lunch"
+msgstr "水曜日ランチ"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Wednesday Morning"
+msgstr "水曜 午前"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Week 1 Working Hours"
+msgstr "第1週 勤務時間"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Week 2 Working Hours"
+msgstr "第2週 勤務時間"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__week_type
+msgid "Week Number"
+msgstr "週番号"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__flexible_hours
+msgid ""
+"When enabled, it will allow employees to work flexibly, without relying on "
+"the company's working schedule (working hours)."
+msgstr ""
+"有効にすると、会社の就業スケジュール(就業時間)に縛られずに、フレキシブルに就"
+"業できるようになります。"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
+msgid ""
+"Whether this should be computed as a time off or as work time (eg: formation)"
+msgstr ""
+"これは「休止時間」として計算すべきか、それとも「勤務時間」として計算すべきか"
+"(例：研修など)を指定します。"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar_attendance
+msgid "Work Detail"
+msgstr "作業詳細"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Work Resources"
+msgstr "リソース"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__work_resources_count
+msgid "Work Resources count"
+msgstr "作業リソース数"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__work_time_rate
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Work Time Rate"
+msgstr "労働時間比率"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_from
+msgid "Work from"
+msgstr "作業開始時間"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__work_time_rate
+msgid ""
+"Work time rate versus full time working schedule, should be between 0 and "
+"100 %."
+msgstr ""
+"フルタイム勤務スケジュールに対する労働時間比率は、0～100％の間でなければなり"
+"ません。"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_to
+msgid "Work to"
+msgstr "作業終了時間"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_ids
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__calendar_id
+#: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_calendar_id
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Working Hours"
+msgstr "勤務時間"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Working Hours of %s"
+msgstr "%sの勤務時間"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: model:ir.ui.menu,name:resource.menu_resource_calendar
+msgid "Working Schedules"
+msgstr "勤務スケジュール"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids
+#: model:ir.model.fields,field_description:resource.field_resource_resource__calendar_id
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_tree
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Working Time"
+msgstr "勤務時間"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids_1st_week
+msgid "Working Time 1st Week"
+msgstr "勤務スケジュール 第1週"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids_2nd_week
+msgid "Working Time 2nd Week"
+msgstr "勤務スケジュール 第2週"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "You can't delete section between weeks."
+msgstr "週の間のセクションを削除することはできません。"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "even"
+msgstr "偶数"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "odd"
+msgstr "奇数"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+msgid "other week"
+msgstr "今週以降"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+msgid "this week"
+msgstr "今週"
+
+#~ msgid "Group By"
+#~ msgstr "グループ化"
+
+#~ msgid "Starting Date"
+#~ msgstr "開始日"
+
+#~ msgid "Switch to 1 week calendar"
+#~ msgstr "1週間カレンダーに変更"
+
+#~ msgid "Switch to 2 weeks calendar"
+#~ msgstr "2週間のカレンダーに変更"
+
+#~ msgid "The current week (from %s to %s) correspond to the  %s one."
+#~ msgstr "今週 ( %s ～ %s) が %s 週に対応します。"
+
+#~ msgid "Working Times"
+#~ msgstr "労働時間"
+
+#~ msgid "second"
+#~ msgstr "秒"

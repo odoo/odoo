@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="resource_mail.AvatarCardResourcePopover" t-inherit-mode="extension">
+        <xpath expr="//span[@name='icon'][hasclass('o_user_im_status')]/i[hasclass('fa-question-circle')]" position="before">
+            <i t-elif="record.im_status === 'presence_home_online'" class="fa fa-fw fa-home text-success" title="At Home - Online" role="img" aria-label="At Home - Online"/>
+            <i t-elif="record.im_status === 'presence_home_away'" class="fa fa-fw fa-home text-warning" title="At Home - Idle" role="img" aria-label="At Home - Idle"/>
+            <i t-elif="record.im_status === 'presence_home_offline'" class="fa fa-fw fa-home text-body" title="At Home - Offline" role="img" aria-label="At Home - Offline"/>
+            <i t-elif="record.im_status === 'presence_office_online'" class="fa fa-fw fa-building text-success" title="At Office - Online" role="img" aria-label="At Office - Online"/>
+            <i t-elif="record.im_status === 'presence_office_away'" class="fa fa-fw fa-building text-warning" title="At Office - Idle" role="img" aria-label="At Office - Idle"/>
+            <i t-elif="record.im_status === 'presence_office_offline'" class="fa fa-fw fa-building text-body" title="At Office - Offline" role="img" aria-label="At Office - Offline"/>
+            <i t-elif="record.im_status === 'presence_other_online'" class="fa fa-fw fa-map-marker text-success" title="At Other - Online" role="img" aria-label="At Other - Online"/>
+            <i t-elif="record.im_status === 'presence_other_away'" class="fa fa-fw fa-map-marker text-warning" title="At Other - Idle" role="img" aria-label="At Other - Idle"/>
+            <i t-elif="record.im_status === 'presence_other_offline'" class="fa fa-fw fa-map-marker text-body" title="At Other - Offline" role="img" aria-label="At Other - Offline"/>
+        </xpath>
+        <xpath expr="//span[@name='icon'][hasclass('o_employee_presence_status')]" position="inside">
+            <i t-if="record.hr_icon_display === 'presence_home'" class="fa fa-fw fa-home text-success me-1" title="At Home - Present" role="img" aria-label="At Home"/>
+            <i t-if="record.hr_icon_display === 'presence_office'" class="fa fa-fw fa-building text-success me-1" title="At Office - Present" role="img" aria-label="At Office"/>
+            <i t-if="record.hr_icon_display === 'presence_other'" class="fa fa-fw fa-map-marker text-success me-1" title="Present" role="img" aria-label="At Other"/>
+        </xpath>
+    </t>
+</templates>

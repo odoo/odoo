@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="mail.Wysiwyg.mentionLink">
+        <a
+            t-att-href="href"
+            t-att-class="option.partner ? 'o_mail_redirect' : 'o_channel_redirect'"
+            t-att-data-oe-id="option.partner ? option.partner.id : option.channel.id"
+            t-att-data-oe-model="option.partner ? 'res.partner' : 'discuss.channel'"
+            target="_blank"
+            data-oe-protected="true"
+            contenteditable="false"
+        />
+    </t>
+
+    <t t-name="mail.MentionList">
+        <div class="o-mail-MentionList search d-flex">
+            <input type="text" class="form-control border-0 flex-grow-1 rounded-end-0" t-ref="autofocus" t-att-placeholder="placeholder" t-model="state.searchTerm" t-on-keydown="onKeydown"/>
+            <i class="oi oi-search p-2 fs-5 rounded-end" title="Search..." role="img" aria-label="Search..."/>
+        </div>
+        <NavigableList class="'o-mail-MentionList-suggestionList'" t-props="navigableListProps"/>
+    </t>
+</templates>

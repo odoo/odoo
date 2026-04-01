@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--Sample sale orders with carrier defined-->
+        <record id="outgoing_shipment_with_carrier_confirmed" model="stock.picking">
+            <field name="picking_type_id" ref="stock.picking_type_out"/>
+            <field name="origin">outgoing shipment</field>
+            <field name="user_id"></field>
+            <field name="carrier_id" ref="delivery.delivery_carrier"/>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=3)"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
+                'product_id': ref('product.product_product_6'),
+                'product_uom': ref('uom.product_uom_unit'),
+                'product_uom_qty': 1.0,
+                'picking_type_id': ref('stock.picking_type_out'),
+                'location_id': ref('stock.stock_location_stock'),
+                'location_dest_id': ref('stock.stock_location_customers'),
+            })]"/>
+        </record>
+
+        <record id="outgoing_shipment_with_carrier_assigned" model="stock.picking">
+            <field name="picking_type_id" ref="stock.picking_type_out"/>
+            <field name="origin">outgoing shipment</field>
+            <field name="user_id"></field>
+            <field name="carrier_id" ref="delivery.delivery_carrier"/>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=3)"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
+                'product_id': ref('product.product_product_6'),
+                'product_uom': ref('uom.product_uom_unit'),
+                'product_uom_qty': 1.0,
+                'picking_type_id': ref('stock.picking_type_out'),
+                'location_id': ref('stock.stock_location_stock'),
+                'location_dest_id': ref('stock.stock_location_customers'),
+            })]"/>
+        </record>
+
+        <record id="outgoing_shipment_with_carrier_done" model="stock.picking">
+            <field name="picking_type_id" ref="stock.picking_type_out"/>
+            <field name="origin">outgoing shipment</field>
+            <field name="user_id"></field>
+            <field name="carrier_id" ref="delivery.delivery_carrier"/>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=8)"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
+                'product_id': ref('product.product_product_6'),
+                'product_uom': ref('uom.product_uom_unit'),
+                'product_uom_qty': 1.0,
+                'picking_type_id': ref('stock.picking_type_out'),
+                'location_id': ref('stock.stock_location_stock'),
+                'location_dest_id': ref('stock.stock_location_customers'),
+            })]"/>
+        </record>
+        <function model="stock.picking" name="action_confirm">
+            <value model="stock.picking" eval="[
+                ref('outgoing_shipment_with_carrier_done'),
+                ref('outgoing_shipment_with_carrier_assigned'),
+                ref('outgoing_shipment_with_carrier_confirmed'),
+            ]"/>
+        </function>
+        <function model="stock.picking" name="action_assign">
+            <value model="stock.picking" eval="[
+                ref('outgoing_shipment_with_carrier_done'),
+                ref('outgoing_shipment_with_carrier_assigned'),
+            ]"/>
+        </function>
+        <function model="stock.move.line" name="write">
+            <value model="stock.move.line" search="[('picking_id', '=', ref('outgoing_shipment_with_carrier_done'))]"/>
+            <value eval="{'quantity': 1}"/>
+        </function>
+        <function model="stock.picking" name="_action_done">
+            <value model="stock.picking" eval="[
+                ref('outgoing_shipment_with_carrier_done'),
+            ]"/>
+        </function>
+    </data>
+</odoo>

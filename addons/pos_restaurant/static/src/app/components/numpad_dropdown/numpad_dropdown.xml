@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.NumpadDropdown">
+        <button class="btn btn-secondary btn-lg lh-lg" t-on-click="() => this.toggleTableSelector()">
+            <i class="fa fa-fw fa-hashtag" aria-hidden="true"/>
+        </button>
+        <div t-if="this.pos.tableSelectorState and !this.isSmall" class="table-selector bg-light rounded d-flex flex-column z-3 shadow overflow-hidden">
+            <div class="d-flex justify-content-center p-3">
+                <span t-if="this.state.buffer" t-esc="this.state.buffer" class="input-value fw-bolder fs-3" t-att-class="{'text-danger opacity-75': !this.state.isValidBuffer}"/>
+                <span t-else="" class="text-muted fs-3">Enter a table number</span>
+            </div>
+            <Numpad buttons="this.numpadButtons" class="'flex-grow-1 bg-200'"/>
+            <button class="jump-button w-100 btn btn-primary rounded-0 border-0" t-on-click="() => this.searchOrder()">
+                Jump
+            </button>
+        </div>
+        <div t-if="this.pos.tableSelectorState and this.isSmall" class="table-selector-small h-50 modal-dialog modal-dialog-centered z-3">
+            <div class="modal-content h-100" t-att-class="props.contentClass" t-att-style="contentStyle">
+                <main class="d-flex flex-column justify-content-between bg-light h-100">
+                    <div class="input-symbol">
+                        <div class="popup-input value active form-control form-control-lg py-3 text-center">
+                            <span t-if="this.state.buffer" t-esc="this.state.buffer" class="input-value fw-bolder fs-3" t-att-class="{'text-danger opacity-75': !this.state.isValidBuffer}"/>
+                            <span t-else="" class="text-muted fs-3">Enter a table number</span>
+                        </div>
+                    </div>
+                    <Numpad buttons="this.numpadButtons" class="'flex-grow-1 m-0 p-0 border-top rounded-3'"/>
+                    <div class="d-flex flex-grow-1 justify-content-center">
+                        <button class="jump-button flex-grow-1 btn btn-primary rounded-0 border-0 py-3" t-on-click="() => this.searchOrder()">
+                            Jump
+                        </button>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </t>
+</templates>

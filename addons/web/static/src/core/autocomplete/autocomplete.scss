@@ -1,0 +1,53 @@
+
+.o-autocomplete {
+    .o-autocomplete--dropdown-menu {
+        // Needed because they are rendered at a lower stacking context compared to modals.
+        z-index: $zindex-modal + 1;
+        max-width: 600px;
+    }
+    .o-autocomplete--input {
+        width: 100%;
+    }
+    .o-autocomplete--mark {
+        padding: 0.1875em 0;
+    }
+
+    .ui-menu-item {
+        > span {
+            --dropdown-link-hover-color: var(--dropdown-color);
+            --dropdown-link-hover-bg: var(--dropdown-bg);
+        }
+
+        > a.ui-state-active {
+            margin: 0;
+            border: none;
+            font-weight: $font-weight-normal;
+            color: $dropdown-link-hover-color;
+            background-color: $dropdown-link-hover-bg;
+        }
+
+        &.o_m2o_dropdown_option, &.o_m2o_start_typing, &.o_m2o_no_result {
+            text-indent: $o-dropdown-hpadding * .5;
+        }
+
+        &.o_m2o_dropdown_option, &.o_calendar_dropdown_option {
+            > a {
+                color: $link-color;
+                &.ui-state-active:not(.o_m2o_start_typing) {
+                    color: $link-hover-color;
+                }
+            }
+        }
+
+        &.o_m2o_start_typing, &.o_m2o_no_result {
+            font-style: italic;
+            a.ui-menu-item-wrapper, a.ui-state-active, a.ui-state-active:hover {
+                background: none;
+            }
+        }
+
+        &.o_m2o_start_typing > a.ui-state-active {
+            color: $dropdown-link-color;
+        }
+    }
+}

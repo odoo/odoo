@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="stock_scrap_search_view" model="ir.ui.view">
+            <field name="name">stock.scrap.search</field>
+            <field name="model">stock.scrap</field>
+            <field name="arch" type="xml">
+                <search string="Search Scrap">
+                    <field name="name" string="Reference"/>
+                    <field name="product_id"/>
+                    <field name="location_id"/>
+                    <field name="scrap_location_id"/>
+                    <field name="create_date"/>
+                    <group>
+                        <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Location" name="location" domain="[]" context="{'group_by':'location_id'}"/>
+                        <filter string="Scrap Location" name="scrap_location" domain="[]" context="{'group_by':'scrap_location_id'}"/>
+                        <filter string="Transfer" name="transfer" domain="[]" context="{'group_by':'picking_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="stock_scrap_form_view" model="ir.ui.view">
+            <field name="name">stock.scrap.form</field>
+            <field name="model">stock.scrap</field>
+            <field name="arch" type="xml">
+                <form string="Scrap">
+                    <header>
+                        <button name="action_validate" invisible="state != 'draft'" string="Validate" type="object" class="oe_highlight" context="{'not_unlink_on_discard': True}" data-hotkey="v"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done" />
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="action_get_stock_picking"
+                                    string="Stock Operation" type="object"
+                                    invisible="not picking_id" icon="fa-cogs"/>
+                            <field name="picking_id" invisible="1" readonly="state == 'done'"/>
+                            <button class="oe_stat_button" name="action_get_stock_move_lines"
+                                    type="object"
+                                    invisible="not move_ids" icon="fa-exchange">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">Product Moves</span>
+                                    </div>
+                            </button>
+                            <field name="move_ids" invisible="1"/>
+                        </div>
+                        <div class="oe_title">
+                            <h1><field name="name" nolabel="1"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="product_id" context="{'default_is_storable': True}" readonly="state == 'done'"/>
+                                <field name="tracking" invisible="1"/>
+                                <label for="scrap_qty"/>
+                                <div class="o_row">
+                                    <field name="scrap_qty" readonly="state == 'done' or tracking == 'serial'"/>
+                                    <field name="product_uom_id" readonly="state == 'done' or tracking == 'serial'" widget="many2one_uom" groups="uom.group_uom" force_save="1"/>
+                                </div>
+                                <field name="lot_id" context="{'default_product_id': product_id}" invisible="not product_id or tracking == 'none'" readonly="state == 'done'" required="tracking != 'none'" groups="stock.group_production_lot"/>
+                                <field name="should_replenish" readonly="state == 'done'"/>
+                                <field name="scrap_reason_tag_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                            </group>
+                            <group>
+                                <field name="company_id" invisible="1" readonly="state == 'done'"/>
+                                <field name="package_id" groups="stock.group_tracking_lot" readonly="state == 'done'"/>
+                                <field name="owner_id" groups="stock.group_tracking_owner" readonly="state == 'done'"/>
+                                <field name="location_id" options="{'no_create': True, 'no_open': True}" groups="stock.group_stock_multi_locations" force_save="1" readonly="state == 'done'"/>
+                                <field name="scrap_location_id" options="{'no_create': True, 'no_open': True}" groups="stock.group_stock_multi_locations" force_save="1" readonly="state == 'done'"/>
+                                <field name="origin"/>
+                                <field name="date_done" invisible="state == 'draft'"/>
+                                <field name="picking_id" invisible="not picking_id" readonly="state == 'done'"/>
+                                <field name="company_id" groups="base.group_multi_company" readonly="state == 'done'"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id="stock_scrap_view_kanban" model="ir.ui.view">
+            <field name="name">stock.scrap.kanban</field>
+            <field name="model">stock.scrap</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" sample="1">
+                    <templates>
+                        <t t-name="card">
+                            <div class="row">
+                                <field name="name" class="col-6 fw-bolder"/>
+                                <div class="col-6 fw-bolder text-end">
+                                    <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/><field name="date_done"/>
+                                </div>
+                            </div>
+                            <field name="product_id"/>
+                            <div class="row">
+                                <field name="scrap_qty" class="col-6"/>
+                                <div class="col-6">
+                                    <field name="state" class="float-end badge text-bg-secondary"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="stock_scrap_tree_view" model="ir.ui.view">
+            <field name="name">stock.scrap.list</field>
+            <field name="model">stock.scrap</field>
+            <field name="arch" type="xml">
+                <list multi_edit="1" sample="1" decoration-info="state == 'draft'">
+                    <field name="company_id" column_invisible="True" readonly="state == 'done'"/>
+                    <field name="name" decoration-bf="1"/>
+                    <field name="date_done"/>
+                    <field name="product_id" readonly="1"/>
+                    <field name="scrap_qty" readonly="state == 'done'"/>
+                    <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom" readonly="state == 'done'"/>
+                    <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state == 'done'"/>
+                    <field name="scrap_location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state == 'done'"/>
+                    <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                    <field name="state" widget="badge" decoration-success="state == 'done'" decoration-muted="state == 'draft'"/>
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_stock_scrap">
+            <field name="name">Scrap Orders</field>
+            <field name="res_model">stock.scrap</field>
+            <field name="path">scraps</field>
+            <field name="view_mode">list,form,kanban,pivot,graph</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Scrap products
+              </p><p>
+                Scrapping a product will remove it from your stock. The product will
+                end up in a scrap location that can be used for reporting purpose.
+              </p>
+            </field>
+        </record>
+
+        <record id="stock_scrap_form_view2" model="ir.ui.view">
+            <field name="name">stock.scrap.form2</field>
+            <field name="model">stock.scrap</field>
+            <field name="arch" type="xml">
+                <form string="Scrap">
+                    <group>
+                        <group>
+                            <field name="state" invisible="1"/>
+                            <field name="product_id" options="{'no_create': True}" domain="[('id', 'in', context.get('product_ids', []))]" readonly="state == 'done'"/>
+                            <field name="tracking" invisible="1"/>
+                            <label for="scrap_qty"/>
+                            <div class="o_row">
+                                <field name="scrap_qty" readonly="tracking == 'serial'"/>
+                                <field name="product_uom_id" readonly="tracking == 'serial'" groups="uom.group_uom" widget="many2one_uom"/>
+                            </div>
+                            <field name="lot_id" groups="stock.group_production_lot"
+                                context="{'default_product_id': product_id}"
+                                invisible="not product_id or tracking == 'none'"
+                                readonly="state == 'done'"
+                                required="tracking != 'none'"/>
+                            <field name="scrap_reason_tag_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                        </group>
+                        <group>
+                            <field name="picking_id" invisible="1" readonly="state == 'done'"/>
+                            <field name="package_id" groups="stock.group_tracking_lot" readonly="state == 'done'"/>
+                            <field name="owner_id" groups="stock.group_tracking_owner" readonly="state == 'done'"/>
+                            <field name="company_id" invisible="1" readonly="state == 'done'"/>
+                            <field name="location_id" groups="stock.group_stock_multi_locations" options="{'no_open': True, 'no_create': True}" readonly="state == 'done'"/>
+                            <field name="scrap_location_id" groups="stock.group_stock_multi_locations" options="{'no_open': True, 'no_create': True}"  readonly="state == 'done'"/>
+                            <field name="should_replenish" readonly="state == 'done'"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="action_validate" string="Scrap Products" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    <menuitem
+        id="menu_stock_scrap"
+        name="Scrap"
+        parent="menu_stock_adjustments"
+        action="action_stock_scrap"
+        sequence="99"/>
+
+</odoo>

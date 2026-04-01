@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_opening_hours" name="Opening Hours">
+    <section class="s_opening_hours parallax pt256" data-scroll-background-ratio="1.5">
+        <span class="s_parallax_bg oe_img_bg o_bg_img_center" style="background-image: url('/web/image/website.s_opening_hours_default_image'); background-position: 50% 75%;"/>
+        <div class="container-fluid">
+            <div class="row o_grid_mode" data-row-count="7">
+                <!-- This next div is intended to correct a visual issue, specifically a vertical line anomaly next to the hours, that appears only in the modal preview.-->
+                <div class="s_dialog_preview o_grid_item o_cc o_cc1 g-col-lg-10 g-height-7 col-lg-10" style="z-index: 2; grid-area: 1 / 2 / 8 / 12; --grid-item-padding-y: 0px; --grid-item-padding-x: 0px;"/>
+                <div class="o_grid_item o_cc o_cc1 g-col-lg-6 g-height-7 col-lg-6" style="grid-area: 1 / 2 / 8 / 8; z-index: 3; --grid-item-padding-y: 32px; --grid-item-padding-x: 40px;">
+                    <h2 class="display-4-fs">Let’s get in touch</h2>
+                    <p class="lead"><u>info@yourcompany.example.com</u></p>
+                </div>
+                <div class="o_grid_item o_cc o_cc1 g-col-lg-2 g-height-7 col-lg-2 col-6" style="grid-area: 1 / 8 / 8 / 10; z-index: 4; --grid-item-padding-y: 32px; --grid-item-padding-x: 40px;">
+                    <p class="o_small"><u>Monday</u><br/>8.00am-6.00pm</p>
+                    <p class="o_small"><u>Tuesday</u><br/>8.00am-6.00pm</p>
+                    <p class="o_small"><u>Wednesday</u><br/>8.00am-12.00am</p>
+                    <p class="o_small"><u>Thursday</u><br/>8.00am-6.00pm</p>
+                </div>
+                <div class="o_grid_item o_cc o_cc1 g-col-lg-2 g-height-7 col-lg-2 col-6" style="grid-area: 1 / 10 / 8 / 12; z-index:5; --grid-item-padding-y: 32px; --grid-item-padding-x: 40px;">
+                    <p class="o_small"><u>Friday</u><br/>8.00am-6.00pm</p>
+                    <p class="o_small"><u>Saturday</u><br/>8.00am-6.00pm</p>
+                    <p class="o_small"><u>Sunday</u><br/>Closed</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

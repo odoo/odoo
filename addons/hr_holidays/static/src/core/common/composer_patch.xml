@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Composer.suggestionPartner" t-inherit-mode="extension">
+        <xpath expr="//span[@t-if='partner.email']" position="before">
+            <span t-if="partner.outOfOfficeDateEndText" class="text-warning me-1 smaller fw-bold opacity-75" t-esc="partner.outOfOfficeDateEndText"/>
+        </xpath>
+    </t>
+</templates>

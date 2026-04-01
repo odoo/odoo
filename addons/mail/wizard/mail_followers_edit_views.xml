@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- wizard view -->
+        <record model="ir.ui.view" id="mail_followers_edit_form">
+            <field name="name">mail.followers.edit.form</field>
+            <field name="model">mail.followers.edit</field>
+            <field name="arch" type="xml">
+                <form string="Add/Remove Followers">
+                    <group>
+                        <field name="res_model" invisible="1"/>
+                        <field name="res_ids" invisible="1"/>
+                        <field name="operation" widget="radio" options="{'horizontal': true}"/>
+                        <field name="partner_ids" widget="many2many_tags_email"
+                                placeholder="Add contacts" options="{'warn_future': True, 'edit_tags': True}"
+                                context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form', 'force_email': True}"/>
+                        <field name="notify" options="{'autosave': False}" invisible="operation == 'remove'" widget="boolean_toggle"/>
+                    </group>
+                    <field name="message"
+                        invisible="not notify or operation == 'remove'"
+                        placeholder="Extra Comments ..."
+                        widget="html_mail"
+                        options="{'no-attachment': true}"
+                        class="o_mail_extra_comments border p-1 ps-1 pe-5"/>
+                    <footer>
+                        <button string="Update Followers" name="edit_followers" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="mail_followers_list_edit_form" model="ir.ui.view">
+            <field name="name">mail.followers.list.edit.form</field>
+            <field name="model">mail.followers.edit</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="mail_followers_edit_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="operation" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                    </field>
+                    <button name="edit_followers" position="attributes">
+                        <attribute name="string">Add Followers</attribute>
+                    </button>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</odoo>

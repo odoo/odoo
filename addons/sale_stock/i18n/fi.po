@@ -1,0 +1,1011 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_stock
+#
+# Translators:
+# Miika Nissi <miika.nissi@tawasta.fi>, 2022
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2022
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2022
+# Jussi Heikkilä <jussi.heikkila@panimo.com>, 2022
+# Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2022
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2022
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
+# Jussi Lehto <jussi@gulfeo.com>, 2022
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
+# Marko Happonen <marko.happonen@sprintit.fi>, 2022
+# Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2022
+# Martin Trigaux, 2022
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-13 18:36+0000\n"
+"PO-Revision-Date: 2026-02-20 11:55+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
+"sale_stock/fi/>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
+msgid ""
+".\n"
+"                Manual actions may be needed."
+msgstr ""
+".\n"
+"                Manuaalisia toimenpiteitä saatetaan tarvita."
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
+msgid "1 Quotation"
+msgstr "1 Tarjous"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> Awaiting arrival"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Odottaa saapumista"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<i class=\"fa fa-fw fa-clock-o\"/>Preparation"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/>Valmistelu"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<i class=\"fa fa-fw fa-times\"/> Cancelled"
+msgstr "<i class=\"fa fa-fw fa-times\"/> Peruutettu"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<i class=\"fa fa-fw fa-times\"/>Cancelled"
+msgstr "<i class=\"fa fa-fw fa-times\"/>Peruutettu"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<i class=\"fa fa-fw fa-truck\"/> Received"
+msgstr "<i class=\"fa fa-fw fa-truck\"/> Vastaanotettu"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
+msgid "<span class=\"o_stat_text\">Sales</span>"
+msgstr "<span class=\"o_stat_text\">Myynti</span>"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid ""
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Shipped\n"
+"                                    </span>"
+msgstr ""
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Lähetetty\n"
+"                                    </span>"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+msgid "<strong>Customer Reference</strong>"
+msgstr "<strong>Asiakasviite</strong>"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
+msgid "<strong>Incoterm</strong>"
+msgstr "<strong>Incoterm</strong>"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order_line__is_storable
+msgid "A storable product is a product for which you manage stock."
+msgstr "Varastoitava tuote on tuote, jonka varastoa hallinnoit."
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
+msgid ""
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
+msgstr ""
+"Tuotekonfiguraation mukaan toimitettu määrä voidaan laskea automaattisesti "
+"mekanismin avulla:\n"
+"  - Manuaalinen: määrä asetetaan manuaalisesti rivillä\n"
+"  - Analyyttinen kuluista: määrä on kirjattujen kulujen summa\n"
+"  - Työaikakirjaukset: määrä on tähän myyntiriviin linkitettyjen tehtävissä "
+"olevien kirjattujen tuntien summa\n"
+"  - Varastosiirrot: määrä tulee vahvistetuista keräilyistä\n"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_account_accrued_orders_wizard
+msgid "Accrued Orders Wizard"
+msgstr "Ohjattu jaksotettujen tilausten toiminto"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "All planned operations included"
+msgstr "Sisältää kaikki suunnitellut siirrot"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
+msgid "Apply specific routes"
+msgstr "Käytä tiettyjä reittejä"
+
+#. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
+msgid "As soon as possible"
+msgstr "Niin pian kuin mahdollista"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "Availability"
+msgstr "Saatavuus"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.js:0
+msgid "Available"
+msgstr "Saatavilla"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "Available in stock"
+msgstr "Saatavilla varastossa"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order__delivery_status
+msgid ""
+"Blue: Not Delivered/Started\n"
+"            Orange: Partially Delivered\n"
+"            Green: Fully Delivered"
+msgstr ""
+"Sininen: Ei toimitettu/aloitettu\n"
+"            Oranssi: Osittain toimitettu\n"
+"            Vihreä: Täysin toimitettu"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
+msgid "Choose to apply SO lines specific routes."
+msgstr "Valitse käyttääksesi myytitilausriveihin tiettyjä reittejä."
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_res_company
+msgid "Companies"
+msgstr "Yritykset"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
+msgid "Completion date of the first delivery order."
+msgstr "Ensimmäisen toimitusjärjestyksen loppuun saattaminen."
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_res_config_settings
+msgid "Config Settings"
+msgstr "Asetukset"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+msgid "Customer reference"
+msgstr "Asiakkaan viitteet"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "Date:"
+msgstr "Päiväys:"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__property_warehouse_id
+msgid "Default Warehouse"
+msgstr "Vakiovarasto"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
+msgid "Delivered"
+msgstr "Toimitettu"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
+msgid "Delivery"
+msgstr "Toimitus"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
+msgid "Delivery Orders"
+msgstr "Toimitustilaukset"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
+msgid "Delivery Status"
+msgstr "Toimituksen tila"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
+msgid ""
+"Delivery date you can promise to the customer, computed from the minimum "
+"lead time of the order lines in case of Service products. In case of "
+"shipping, the shipping policy of the order will be taken into account to "
+"either use the minimum or maximum lead time of the order lines."
+msgstr ""
+"Toimituspäivä jonka voit luvata asiakkaalle, laskettu myyntirivien "
+"minimiliidiajan perusteella, jos rivillä on palvelutuote. Jos tarvitaan "
+"toimitusta, tilauksen toimitusehdot otetaan huomioon laskettaessa rivien "
+"minimi- tai maksimiliidiaikoja."
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_res_company__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_forecasted_product_product__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_lot__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_reference__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_route__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rule__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
+msgid "Display Qty Widget"
+msgstr "Saldonäyttö-ikkuna"
+
+#. module: sale_stock
+#. odoo-python
+#: code:addons/sale_stock/models/sale_order.py:0
+msgid ""
+"Do not forget to change the partner on the following delivery orders: %s"
+msgstr "Älä unohda vaihtaa kumppania seuraavissa tilauksissa: %s"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
+msgid "Effective Date"
+msgstr "Toimeenpanopäivä"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
+msgid "Exception(s) occurred on the picking:"
+msgstr "Poikkeus tapahtui keräyksessä:"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Exception(s) occurred on the sale order(s):"
+msgstr "Myyntitilauksessa tapahtui poikkeuksia:"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Exception(s):"
+msgstr "Poikkeukset:"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__expected_date
+msgid "Expected Date"
+msgstr "Oletettu päivämäärä"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "Expected Delivery"
+msgstr "Odotettu toimitus"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
+msgid "Expected:"
+msgstr "Odotettu:"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__forecast_expected_date
+msgid "Forecast Expected Date"
+msgstr "Ennusteen odotettu päivä"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.js:0
+msgid "Forecasted Stock"
+msgstr "Ennustetut saldot"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
+msgid "Free Qty Today"
+msgstr "Vapaa saldo tänään"
+
+#. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
+msgid "Fully Delivered"
+msgstr "Täysin toimitettu"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/stock_valuation/stock_valuation_report.js:0
+msgid "Goods Delivered Not Invoiced"
+msgstr "Toimitetut tuotteet, joita ei ole laskutettu"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
+msgid "Has late picking"
+msgstr "Keräily myöhässä"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__id
+#: model:ir.model.fields,field_description:sale_stock.field_account_move__id
+#: model:ir.model.fields,field_description:sale_stock.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_stock.field_product_template__id
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule__id
+#: model:ir.model.fields,field_description:sale_stock.field_res_company__id
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_forecasted_product_product__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_lot__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move_line__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_reference__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_route__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rule__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__id
+msgid "ID"
+msgstr "Tunnus"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
+msgid ""
+"If you deliver all products at once, the delivery order will be scheduled "
+"based on the greatest product lead time. Otherwise, it will be based on the "
+"shortest."
+msgstr ""
+"Jos toimitat kaikki tuotteet samanaikaisesti, toimitusjärjestys ajoitetaan "
+"suurimman tuoteajan mukaan. Muussa tapauksessa se perustuu lyhyimpään."
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Impacted Transfer(s):"
+msgstr "Vaikuttaa siirtoihin:"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
+msgid "Incoterm"
+msgstr "Incoterm"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm_location
+msgid "Incoterm Location"
+msgstr "Incotermin sijainti"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+msgid "Incoterm details"
+msgstr "Incotermin tiedot"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "Incoterm:"
+msgstr "Incoterm:"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
+msgid ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
+msgstr ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_route
+msgid "Inventory Routes"
+msgstr "Varaston reititys"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
+msgid "Is Mto"
+msgstr "On tilausohjautuva"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
+msgid "JSON data for the popover widget"
+msgstr "Ponnahdusikkunan JSON-tiedot"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_account_move
+msgid "Journal Entry"
+msgstr "Päiväkirjan kirjaus"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_account_move_line
+msgid "Journal Item"
+msgstr "Kirjausrivi"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "Last Delivery Orders"
+msgstr "Viimeiset toimitustilaukset"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__late_availability
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_sale_order_view_search_inherit
+msgid "Late Availability"
+msgstr "Myöhäinen saatavuus"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
+msgid "Lead Time"
+msgstr "Toimitusviive"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_lot
+msgid "Lot/Serial"
+msgstr "Erä/sarja"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Manual actions may be needed."
+msgstr "Manuaalisia toimintoja saatetaan tarvita."
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
+msgid ""
+"Margin of error for dates promised to customers. Products will be scheduled "
+"for delivery that many days earlier than the actual promised date, to cope "
+"with unexpected delays in the supply chain."
+msgstr ""
+"Ennakkoaika luvattu asiakkaalle, jotta odottamattomat viipeet kompensoidaan. "
+"Tuotteet ajoitetaan hankintaan ja valmistukseen tämän verran päivinä aiemmin."
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
+#: model:ir.model.fields,help:sale_stock.field_res_config_settings__security_lead
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid ""
+"Margin of error for dates promised to customers. Products will be scheduled "
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
+msgstr ""
+"Ennakkoaika luvattu asiakkaalle, jotta odottamattomat viipeet kompensoidaan. "
+"Tuotteet ajoitetaan hankintaan ja valmistukseen tämän verran päivinä aiemmin."
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
+msgid "Method to update delivered qty"
+msgstr "Menetelmä päivittääkseen toimitettuja määriä"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "Move forward expected delivery dates by"
+msgstr "Siirry odotettavissa oleviin toimituspäiviin mennessä"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
+msgid "No delivery yet! Automate them with sales orders."
+msgstr "Ei vielä toimitusta! Automatisoi ne myyntitilauksilla."
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "No future availability"
+msgstr "Ei tulevaa saatavuutta"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
+msgid "Not Available"
+msgstr "Ei saatavilla"
+
+#. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
+#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
+msgid "Not Delivered"
+msgstr "Ei toimitettu"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "Not enough future availability"
+msgstr "Tulevaisuuden saatavuus ei ole riittävä"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
+msgid ""
+"Number of days between the order confirmation and the shipping of the "
+"products to the customer"
+msgstr ""
+"Aika päivinä tilauksen vahvistuksesta tuotteiden toimitukseen asiakkaalle"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "On"
+msgstr "pvm"
+
+#. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__partial
+#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
+msgid "Partially Delivered"
+msgstr "Osittain toimitettu"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
+msgid "Picking Policy"
+msgstr "Keräilykäytäntö"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_product_template
+msgid "Product"
+msgstr "Tuote"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Tuotteiden siirrot (Stock Move Line)"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
+msgid "Qty Available Today"
+msgstr "Saatavilla oleva määrä tänään"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
+msgid "Qty To Deliver"
+msgstr "Toimitettava määrä"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
+msgid "Quotations"
+msgstr "Tarjoukset"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "RETURN"
+msgstr "PALAUTA"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
+msgid ""
+"Reduce back orders with reservations, locations management, smart\n"
+"                replenishment propositions, shipping connectors, barcode "
+"scanner, etc."
+msgstr ""
+"Vähennä jälkitoimituksia varausten, sijaintihallinnan, älykkäiden\n"
+"                täydennysehdotusten, logistiikkayhteyksien, "
+"viivakoodinlukijoiden, jne. avulla."
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_reference
+msgid "Reference between stock documents"
+msgstr "Viite varastoasiakirjojen välillä"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__stock_reference_ids
+msgid "References"
+msgstr "Viitteet"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "Remaining demand available at"
+msgstr "Jäljellä oleva kysyntä saatavilla"
+
+#. module: sale_stock
+#. odoo-python
+#: code:addons/sale_stock/models/sale_order_line.py:0
+msgid "Replenish on Order (MTO)"
+msgstr "Täydennä tilauksesta (MTO)"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "Reserved"
+msgstr "Varattu"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Palauta keräily"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "Returns"
+msgstr "Palautukset"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_ids
+msgid "Routes"
+msgstr "Reitit"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move__sale_line_id
+msgid "Sale Line"
+msgstr "Myyntirivi"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/stock_valuation/stock_valuation_report.js:0
+#: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
+msgid "Sale Orders"
+msgstr "Myyntitilaukset"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_lot__sale_order_count
+msgid "Sale order count"
+msgstr "Myyntitilausten määrä"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_reference__sale_ids
+msgid "Sales"
+msgstr "Myynti"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_report
+msgid "Sales Analysis Report"
+msgstr "Myyntianalyysi"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
+msgid "Sales Order"
+msgstr "Myyntitilaus"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Myyntitilausrivi"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
+msgid "Sales Order Lines"
+msgstr "Myyntitilausrivit"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_lot__sale_order_ids
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
+msgid "Sales Orders"
+msgstr "Myyntitilaukset"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_company__security_lead
+msgid "Sales Safety Days"
+msgstr "Myynnin varmuuspäivät"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "Schedule deliveries earlier to avoid delays"
+msgstr "Aikataulutetut toimitukset aikaisemmin viivästysten välttämiseksi"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
+msgid "Scheduled Date"
+msgstr "Suunniteltu päivämäärä"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
+msgid "Security Lead Time"
+msgstr "Varmuusviive"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
+msgid "Security Lead Time for Sales"
+msgstr "Myynnin turvallisuus liidiaika"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_route__sale_selectable
+msgid "Selectable on Sales Order Line"
+msgstr "Valittavissa myyntitilausrivillä"
+
+#. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__one
+msgid "Ship all products at once"
+msgstr "Lähetä kaikki tuotteet kerralla"
+
+#. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__direct
+msgid "Ship products as soon as available, with back orders"
+msgstr "Lähetä tuotteet heti kun saatavilla, käyttäen jälkitilauksia"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
+msgid "Shipping Policy"
+msgstr "Lähetyssäännöt"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
+msgid "Shipping Status"
+msgstr "Toimituksen tila"
+
+#. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
+#: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
+msgid "Started"
+msgstr "Aloitettu"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_move
+msgid "Stock Move"
+msgstr "Varastosiirto"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order_line__qty_delivered_method__stock_move
+msgid "Stock Moves"
+msgstr "Varastosiirrot"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_forecasted_product_product
+msgid "Stock Replenishment Report"
+msgstr "Varaston täydennyksen raportti"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_rule
+msgid "Stock Rule"
+msgstr "Varaston sääntö"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_rules_report
+msgid "Stock Rules report"
+msgstr "Varaston sääntöjen raportti"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
+msgid "Stock rule report"
+msgstr "Varastosääntöjen raportti"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
+msgid "The delivery"
+msgstr "Toimitus"
+
+#. module: sale_stock
+#. odoo-python
+#: code:addons/sale_stock/models/sale_order.py:0
+msgid ""
+"The delivery address has been changed on the Sales Order<br/>\n"
+"                        From <strong>\"%(old_address)s\"</strong> to "
+"<strong>\"%(new_address)s\"</strong>,\n"
+"                        You should probably update the partner on this "
+"document."
+msgstr ""
+"Toimitusosoite on muutettu myyntitilauksessa<br/>\n"
+"                        Osoitteesta <strong>\"%(old_address)s\"</strong> "
+"osoitteeseen <strong>\"%(new_address)s</strong>\",\n"
+"                        Sinun pitäisi luultavasti päivittää tämän asiakirjan "
+"kumppani."
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
+msgid ""
+"The ordered quantity cannot be decreased below the amount already delivered. "
+"Instead, create a return in your inventory."
+msgstr ""
+"Tilattua määrää ei voi pienentää jo toimitettua määrää pienemmäksi. Luo sen "
+"sijaan palautus varastoon."
+
+#. module: sale_stock
+#. odoo-python
+#: code:addons/sale_stock/models/sale_order_line.py:0
+msgid ""
+"The ordered quantity of a sale order line cannot be decreased below the "
+"amount already delivered. Instead, create a return in your inventory."
+msgstr ""
+"Myyntitilausrivin tilattua määrää ei voi pienentää jo toimitettua määrää "
+"pienemmäksi. Luo sen sijaan palautus varastoon."
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "This product is replenished on demand."
+msgstr "Tätä tuotetta hankintaan tarpeeseen (on demand)."
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_storable
+msgid "Track Inventory"
+msgstr "Seuraa inventaariota"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_picking
+msgid "Transfer"
+msgstr "Siirto"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
+msgid "Transfers"
+msgstr "Siirrot"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order__late_availability
+msgid "True if any related picking has late availability"
+msgstr "Tosi, jos jokin siihen liittyvä keräily on myöhässä saatavuuden vuoksi"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_res_users
+msgid "User"
+msgstr "Käyttäjä"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "View Forecast"
+msgstr "Katso ennuste"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date
+msgid "Virtual Available At Date"
+msgstr "Virtuaalisaatavuus päivämäärällä"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__warehouse_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report__warehouse_id
+msgid "Warehouse"
+msgstr "Varasto"
+
+#. module: sale_stock
+#. odoo-python
+#: code:addons/sale_stock/models/sale_order.py:0
+msgid "Warning!"
+msgstr "Varoitus!"
+
+#. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__one
+msgid "When all products are ready"
+msgstr "Kun kaikki tuotteet ovat valmiita"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "When to start shipping"
+msgstr "Milloin lähetys aloitetaan"
+
+#. module: sale_stock
+#. odoo-python
+#: code:addons/sale_stock/models/sale_order.py:0
+msgid ""
+"You must have a warehouse for line using a delivery in different company."
+msgstr ""
+"Sinulla on oltava varasto riviä varten, joka käyttää toimitusta eri "
+"yrityksessä."
+
+#. module: sale_stock
+#. odoo-python
+#: code:addons/sale_stock/models/sale_order.py:0
+msgid "You must set a warehouse on your sale order to proceed."
+msgstr "Sinun on asetettava myyntitilauksellesi varasto, jotta voit edetä."
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "cancelled"
+msgstr "peruutettu"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "days"
+msgstr "päivää"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "of"
+msgstr "of"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "ordered instead of"
+msgstr "tilattu sen sijasta"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
+msgid "processed instead of"
+msgstr "käsitelty"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
+msgid "will be late."
+msgstr "tulee olemaan myöhässä."
+
+#~ msgid "Stock Valuation"
+#~ msgstr "Varaston arvonmääritys"
+
+#~ msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Preparation</b>"
+#~ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>Valmistelussa</b>"
+
+#~ msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
+#~ msgstr "<i class=\"fa fa-fw fa-times\"/> <b>Peruttu</b>"
+
+#~ msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>"
+#~ msgstr "<i class=\"fa fa-fw fa-truck\"/> <b>Toimitettu</b>"
+
+#~ msgid ""
+#~ "<span attrs=\"{'invisible': [('display_delivery_alert', '=', False)]}\">\n"
+#~ "                    Some deliveries are already done. Returns can be "
+#~ "created from the Delivery Orders.\n"
+#~ "                </span>"
+#~ msgstr ""
+#~ "<span attrs=\"{'invisible': [('display_delivery_alert', '=', False)]}\">\n"
+#~ "                    Osa toimituksista on jo tehty. Palautukset voidaan "
+#~ "luoda toimitustilauksista.\n"
+#~ "                </span>"
+
+#~ msgid "<strong>Customer Reference:</strong>"
+#~ msgstr "<strong>Asiakasviite:</strong>"
+
+#~ msgid "<strong>Delivery Orders</strong>"
+#~ msgstr "<strong>Toimitustilaukset</strong>"
+
+#~ msgid "<strong>Incoterm: </strong>"
+#~ msgstr "<strong>Incoterm: </strong>"
+
+#~ msgid "<strong>Incoterm:</strong>"
+#~ msgstr "<strong>Incoterm:</strong>"
+
+#~ msgid "Delivery Alert"
+#~ msgstr "Toimitushälytys"
+
+#~ msgid "Display incoterms on Sales Order and related invoices"
+#~ msgstr "Näytä incotermit myyntitilauksella ja laskuilla"
+
+#~ msgid "Incoterms"
+#~ msgstr "Incoterms"
+
+#~ msgid "Inventory"
+#~ msgstr "Varasto"
+
+#~ msgid "Procurement Group"
+#~ msgstr "Hankintaryhmä"
+
+#~ msgid "Route"
+#~ msgstr "Reitti"
+
+#~ msgid "Sale Order"
+#~ msgstr "Myyntitilaus"
+
+#~ msgid "Sales Order Cancel"
+#~ msgstr "Myyntitilaus peruttu"
+
+#~ msgid ""
+#~ "The delivery address has been changed on the Sales Order<br/>\n"
+#~ "                        From <strong>\"%s\"</strong> To <strong>\"%s\"</"
+#~ "strong>,\n"
+#~ "                        You should probably update the partner on this "
+#~ "document."
+#~ msgstr ""
+#~ "Toimitusosoite on muutettu myyntitilauksessa<br/>\n"
+#~ "                        Osoitteesta <strong>\"%s\"</strong> osoitteeseen "
+#~ "<strong>\"%s</strong>\",\n"
+#~ "                        Sinun pitäisi todennäköisesti päivittää tämän "
+#~ "asiakirjan kumppani."

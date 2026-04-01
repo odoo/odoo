@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inventory_warning_reset_view" model="ir.ui.view">
+        <field name="name">inventory.reset.warning.view</field>
+        <field name="model">stock.inventory.warning</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <div>
+                    This will discard all unapplied counts, do you want to proceed?
+                </div>
+                <footer>
+                    <button name="action_reset" string="Continue" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button name="cancel_button" string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="inventory_warning_set_view" model="ir.ui.view">
+        <field name="name">inventory.set.warning.view</field>
+        <field name="model">stock.inventory.warning</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <div>
+                    Some selected lines already have quantities set, they will be ignored.
+                </div>
+                <footer>
+                    <button name="action_set" string="Continue" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button name="cancel_button" string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

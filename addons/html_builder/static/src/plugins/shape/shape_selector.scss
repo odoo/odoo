@@ -1,0 +1,138 @@
+.o_pager_nav_angle {
+    @include button-variant($o-we-bg-light, $o-we-bg-light);
+    padding: $o-we-item-spacing / 2;
+    font-size: $o-we-sidebar-font-size * 1.4;
+}
+
+.o-hb-select-pager-tab-container {
+    border-top: $o-we-border-width solid $o-we-bg-lighter;
+    border-bottom: $o-we-border-width solid $o-we-bg-lighter;
+}
+
+.o-hb-select-pager-tab {
+    display: inline-flex;
+    flex: 1 1 auto;
+    justify-content: center;
+    min-width: 0;
+    border: none;
+    background-color: transparent;
+    color: $o-we-fg-light;
+    font-weight: normal;
+
+    > span {
+        $-r: $o-we-sidebar-tabs-size-ratio;
+        border-bottom: $o-we-sidebar-tabs-active-border-width solid transparent;
+        padding: (0.6em * $-r) (0.4em * $-r) (0.5em * $-r);
+    }
+
+    &:hover > span {
+        color: $o-we-fg-lighter;
+        border-bottom-color: #{rgba($o-we-sidebar-tabs-active-border-color, .5)};
+    }
+
+    &.active > span {
+        background-color: $o-we-sidebar-tabs-active-background-color;
+        color: $o-we-sidebar-content-field-colorpicker-dropdown-active-color;
+        border-bottom-color: $o-we-sidebar-tabs-active-border-color;
+    }
+}
+
+.builder_select_page {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: $o-we-item-spacing / 2;
+    padding: $o-we-item-spacing;
+    background-color: $o-we-bg-lighter;
+
+    button {
+        --PreviewAlphaBg-background-size: 16px;
+
+        @extend %o-preview-alpha-background;
+        padding: $o-we-item-spacing;
+        background-color: transparent;
+        width: 100%;
+
+        &:hover,
+        &:focus-visible {
+            background-color: transparent;
+        }
+    }
+
+    .o-hb-bg-shape-btn {
+        grid-column: span 2;
+        padding: 0;
+
+        button, div {
+            height: 50px;
+        }
+    }
+
+    .o-hb-img-shape-btn {
+        button {
+            aspect-ratio: 1;
+        }
+    }
+
+    .o-hb-img-shape-btn,  .o-hb-bg-shape-btn {
+        > .o-hb-btn {
+            --o-highlight-shape-color: var(--o-hb-btn-active-color, #{$o-we-color-accent});
+            --o-highlight-shape-bg-opacity: 0%;
+            --o-highlight-shape-bg-color: color-mix(
+                in srgb,
+                var(--o-highlight-shape-color) var(--o-highlight-shape-bg-opacity),
+                transparent
+            );
+
+            &.active {
+                --o-highlight-shape-bg-opacity: 10%;
+                border-width: 3px;
+                border-color: var(--o-highlight-shape-color);
+                background-color: var(--o-highlight-shape-bg-color);
+
+                &::before {
+                    border-radius: unset;
+                }
+            }
+            &:hover,
+            &:focus-visible {
+                --o-highlight-shape-bg-opacity: 25%;
+                box-shadow: unset;
+                background-color: var(--o-highlight-shape-bg-color);
+            }
+        }
+    }
+
+    img {
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: contain;
+    }
+}
+
+.o_we_shape_animated_label {
+    @include o-position-absolute(0, 0);
+    padding: 0 4px;
+    background: $o-we-toolbar-color-accent;
+    color: white;
+
+    > span {
+        @include o-text-overflow(inline-block);
+        max-width: 0;
+    }
+}
+div:hover>.o_we_shape_animated_label {
+    i {
+        padding-right: $o-we-item-spacing / 2;
+    }
+
+    > span {
+        max-width: $o-we-sidebar-width / 2;
+        transition: max-width 0.5s ease 0s;
+    }
+}
+
+@include media-breakpoint-down(md) {
+    .o_we_shape:not(.o_shape_show_mobile) {
+        display: none;
+    }
+}

@@ -1,0 +1,37 @@
+<odoo>
+    <data noupdate="1">
+        <record id="pos_resource_preset" model="resource.calendar">
+            <field name="name">Opening time</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="attendance_ids" eval="[(5, 0, 0),
+                    (0, 0, {'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12, 'hour_to': 15, 'day_period': 'lunch'}),
+                    (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 18, 'hour_to': 22, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Wednesday Lunch', 'dayofweek': '2', 'hour_from': 12, 'hour_to': 15, 'day_period': 'lunch'}),
+                    (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 18, 'hour_to': 22, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 12, 'hour_to': 15, 'day_period': 'lunch'}),
+                    (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 18, 'hour_to': 22, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12, 'hour_to': 15, 'day_period': 'lunch'}),
+                    (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 18, 'hour_to': 22, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Saturday Lunch', 'dayofweek': '5', 'hour_from': 12, 'hour_to': 15, 'day_period': 'lunch'}),
+                    (0, 0, {'name': 'Saturday Afternoon', 'dayofweek': '5', 'hour_from': 18, 'hour_to': 22, 'day_period': 'afternoon'})
+                ]"
+            />
+        </record>
+        <record model="pos.preset" id="pos_takein_preset">
+            <field name="name">Dine In</field>
+            <field name="color">4</field>
+        </record>
+        <record model="pos.preset" id="pos_takeout_preset">
+            <field name="name">Takeout</field>
+            <field name="color">3</field>
+            <field name="identification">name</field>
+            <field name="use_timing">True</field>
+            <field name="resource_calendar_id" eval="ref('pos_resource_preset')"/>
+        </record>
+        <record model="pos.preset" id="pos_delivery_preset">
+            <field name="name">Delivery</field>
+            <field name="color">2</field>
+            <field name="identification">address</field>
+        </record>
+    </data>
+</odoo>

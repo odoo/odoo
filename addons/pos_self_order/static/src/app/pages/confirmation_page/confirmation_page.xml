@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ConfirmationPage">
+        <div t-if="this.state.onReload" class="self_order_success_loader position-absolute vh-100 w-100 d-flex justify-content-center align-items-center opacity-50 bg-dark o_self_fade">
+            <div class="page-loader d-flex justify-content-center align-items-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+        <div t-else="" class="confirmation-page d-flex justify-content-center align-items-center flex-column h-100 p-3 text-center o_self_background" t-attf-style="background-image:#{selfOrder.kioskBackgroundImageUrl};background-size: cover; background-position: center;">
+            <div class="d-flex flex-column align-items-center justify-content-center w-100 h-100">
+                <div class="mb-4">
+                    <h1 t-if="state.payment and selfOrder.config.self_ordering_pay_after !== 'each'" class="fw-bold" style="text-wrap: pretty;">
+                        Hope you enjoyed your meal!
+                    </h1>
+                    <div t-else="" class="d-flex flex-column align-items-center gap-4" style="text-wrap: pretty;">
+                        <svg width="115px" height="115px" viewBox="0 0 133 133" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <g id="check-group" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <circle id="filled-circle" fill="#28a745" cx="66.5" cy="66.5" r="54.5" />
+                                <circle id="white-circle" fill="#FFFFFF" cx="66.5" cy="66.5" r="55.5" />
+                                <circle id="outline" stroke="#28a745" stroke-width="4" cx="66.5" cy="66.5" r="54.5" />
+                                <polyline id="check" stroke="#FFFFFF" stroke-width="5.5" points="41 70 56 85 92 49" />
+                            </g>
+                        </svg>
+                        <h1 class="mb-0">We're preparing your order!</h1>
+                    </div>
+                </div>
+                <div t-if="state.payment and confirmedOrder.state !== 'paid'" 
+                    class="px-4 py-3 m-n1 rounded-bottom rounded-4 border border-light bg-light text-body fw-bold" style="max-width: 95%; text-wrap: pretty;">
+                    Pay
+                    <span class="fw-bolder" t-esc="selfOrder.formatMonetary(confirmedOrder.amount_total || 0)"/>
+                    at the counter
+                </div>
+                <div class="bg-white w-100 w-md-auto py-4 px-5 rounded-4 border border-light">
+                    <h3 class="d-block text-muted">Your order number</h3>
+                    <span class="tracking-number fw-bold lh-1 text-primary" t-esc="confirmedOrder.tracking_number" />
+                </div>
+            </div>
+            <div class="d-flex flex-column align-items-center w-100 w-md-auto">
+                <span role="button" t-if="selfOrder.showDownloadButton(confirmedOrder) and confirmedOrder.uiState.receiptReady" t-on-click="() => this.selfOrder.downloadReceipt(this.confirmedOrder)" class="mb-4 text-primary">
+                    Download your receipt here
+                </span>
+                <button class="btn btn-lg btn-primary w-100 w-md-auto" t-on-click="backToHome">
+                    <span t-if="!confirmedOrder?.uiState?.receiptReady" class="spinner-border"/>
+                    <t t-elif="this.selfOrder.config.self_ordering_mode === 'kiosk'">Close</t>
+                    <t t-else="">Ok</t>
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>

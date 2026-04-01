@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="analytic.AnalyticDistribution">
+        <div class="o_field_tags d-inline-flex flex-wrap mw-100" t-att-class="{'o_tags_input o_input': !props.readonly}" t-ref="analyticDistribution" t-on-keydown="onWidgetKeydown">
+            <TagsList tags="planSummaryTags()"/>
+            <div t-if="!props.readonly" class="o_input_dropdown d-inline-flex w-100" tabindex="0" t-ref="mainElement" t-on-focus="onMainElementFocus" t-on-click="onMainElementFocus">
+                <span class="analytic_distribution_placeholder"><t t-if="!state.formattedData.length" t-esc="props.placeholder"/></span>
+                <span class="o_dropdown_button" />
+                <t t-call="analytic.AnalyticDistributionPopup"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="analytic.AnalyticDistributionPopup">
+        <div class="popover analytic_distribution_popup dropdown-menu o-dropdown--menu show rounded py-0 overflow-x-hidden" t-if="state.showDropdown" t-ref="analyticDropdown">
+            <div class="popover-header sticky-top">
+                <div class="d-flex">
+                    <div class="h5 mt-2 me-auto">
+                        Analytic
+                        <span t-if="allowSave" class="btn btn-link" t-on-click="onSaveNew" title="Save as new analytic distribution model">New Model</span>
+                    </div>
+                    <div class="popupButtons">
+                        <span class="btn o_button" t-on-click.stop="() => this.closeAnalyticEditor()" title="Close"><span class="fa fa-close"/></span>
+                    </div>
+                </div>
+            </div>
+            <div class="popover-body p-2 table-responsive" style="max-width: 100vw;">
+                <span t-if="!allPlans.length">No analytic plans found</span>
+                <table t-else="" class="o_list_table table table-sm table-hover o_analytic_table mb-2 table-striped">
+                    <t t-set="totals" t-value="planTotals()"/>
+                    <thead>
+                        <tr class="border-bottom">
+                            <th t-foreach="allPlans" t-as="plan" t-key="plan.id">
+                                <t t-if="props.multi_edit">
+                                    <a t-if="state.update_plan[plan.column_name]" t-on-click="() => state.update_plan[plan.column_name] = false" href="#">Don't update</a>
+                                    <a t-else="" t-on-click="() => state.update_plan[plan.column_name] = true" href="#">Update</a>
+                                    <br/>
+                                </t>
+                                <span t-out="plan.name"/>
+                                <t t-if="state.update_plan[plan.column_name]">(<span t-att-class="totals[plan.id].class" t-out="totals[plan.id].formattedValue"/>)</t>
+                            </th>
+                            <th class="numeric_column_width">Percentage</th>
+                            <th t-if="valueColumnEnabled" class="numeric_column_width" t-out="props.record.fields[props.amount_field].string"/>
+                            <th class="deleteColumn w-20px"/>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="state.formattedData" t-as="line" t-key="line.id" t-att-id="line_index" t-att-name="'line_' + line_index">
+                            <Record t-props="recordProps(line)" t-slot-scope="data">
+                                <t t-foreach="Object.keys(data.record.fields).filter((f) => f.startsWith('x_plan') || f == 'account_id')" t-as="field" t-key="field">
+                                    <td t-att-style="state.update_plan[field] ? '' : '--table-bg-state: var(--table-hover-bg);'">
+                                        <Field t-if="state.update_plan[field]"
+                                               id="field"
+                                               name="field"
+                                               record="data.record"
+                                               domain="data.record.fields[field].domain"
+                                               canOpen="false"
+                                               canCreate="false"
+                                               canCreateEdit="false"
+                                               canQuickCreate="false"/>
+                                    </td>
+                                </t>
+                                <td class="numeric_column_width">
+                                    <Field id="'percentage'" name="'percentage'" record="data.record"/>
+                                </td>
+                                <td t-if="valueColumnEnabled" class="numeric_column_width">
+                                    <Field id="props.amount_field" name="props.amount_field" record="data.record"/>
+                                </td>
+                                <td class="w-20px">
+                                    <span class="fa fa-trash-o cursor-pointer" t-on-click.stop="() => this.deleteLine(line_index)"/>
+                                </td>
+                            </Record>
+                        </tr>
+                        <tr>
+                            <td t-on-click.stop.prevent="addLine" class="o_field_x2many_list_row_add" t-att-colspan="allPlans.length + 2 + valueColumnEnabled">
+                                <a href="#" t-ref="addLineButton" tabindex="0">Add a Line</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </t>
+
+</templates>

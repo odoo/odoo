@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="project.ProjectTaskCalendarCommonRenderer" t-inherit="web.CalendarCommonRenderer">
+        <xpath expr="//div[hasclass('o_calendar_widget')]" position="after">
+            <div class="o_task_event_to_plan_container d-none position-absolute"/>
+        </xpath>
+    </t>
+
+</templates>

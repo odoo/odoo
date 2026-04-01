@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="project.ProjectTaskCalendarSidePanel" t-inherit="web.CalendarSidePanel">
+        <div class="o_calendar_sidebar" position="inside">
+            <ProjectTaskCalendarListToPlan
+                t-if="props.model.meta.showTasksToPlan and props.model.tasksToPlan?.length"
+                model="props.model"
+                editRecord="props.editRecord"
+            />
+        </div>
+    </t>
+</templates>

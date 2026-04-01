@@ -1,0 +1,101 @@
+.o-livechat-LivechatStatusLabel.o-help {
+    color: var(--livechat-LivechatStatusLabel-helpColor, #{$purple});
+}
+
+.o-livechat-LivechatStatusSelection {
+    --list-group-border-radius: var(--border-radius);
+
+    @keyframes shakeX {
+        from, to {transform: translate3d(0, 0, 0);}
+        20%, 60% {transform: translate3d(-.15em, 0, 0);}
+        40%, 80% {transform: translate3d(.15em, 0, 0);}
+    }
+
+    button:where(:not(.active)) .o-livechat-LivechatStatusLabel {
+        visibility: hidden;
+        animation: none;
+    }
+
+    .o-livechat-LivechatStatusLabel {
+        &.o-waiting {
+            transform: rotate(180deg);
+            transition: transform 1s;
+        }
+        &.o-help {
+            animation: none;
+        }
+    }
+
+    button.active .o-livechat-LivechatStatusLabel {
+        &.o-waiting {
+            transform: none;
+        }
+        &.o-help {
+            animation: shakeX .5s;
+        }
+    }
+
+    button.active.o-inProgress  {
+        --list-group-active-bg: #{rgba($success, .2)};
+        --list-group-active-color: #{$success};
+        --list-group-active-border-color: #{$success};
+
+        .o-livechat-LivechatStatusSelection-Label {
+            color: var(--list-group-color);
+        }
+        &.o-livechat-LivechatStatusLabel-icon {
+            color: $success;
+        }
+
+        .form-check-input {
+            background-color: $success;
+            border-color: $success;
+        }
+    }
+
+    button.active.o-need-help {
+        --list-group-active-bg: #{rgba($purple, .1)};
+        --list-group-active-color: var(--body-color);
+        --list-group-active-border-color: var(--purple);
+
+
+        &.o-livechat-LivechatStatusLabel-icon {
+            color: var(--purple);
+        }
+
+        .form-check-input {
+            background-color: var(--purple);
+            border-color: var(--purple);
+        }
+    }
+
+    button.active.o-waiting {
+        --list-group-active-color: var(--body-color);
+        --list-group-active-border-color: map-get($o-theme-text-colors, 'warning');
+
+        .form-check-input {
+            background-color: map-get($o-theme-text-colors, 'warning');
+            border-color: map-get($o-theme-text-colors, 'warning');
+        }
+    }
+
+    // Dropdown
+    .o_popover & {
+        --list-group-border-radius: 0;
+
+        .list-group-item {
+            border-width: 0;
+            margin: 0;
+        }
+    }
+}
+
+.o-livechat-LivechatStatusLabel.position-absolute {
+    background-color: rgba($white, var(--bg-opacity, 1));
+    border-radius: 50%;
+}
+
+.o_country_flag {
+    width:24px;
+    height: 16px;
+}

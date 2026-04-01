@@ -1,0 +1,12 @@
+<templates>
+<t t-name="mass_mailing.BlockAlignmentOption">
+    <BuilderRow label.translate="Alignment" t-if="!this.isActiveItem('so_width_100')">
+        <BuilderButtonGroup>
+            <!-- TODO EGGMAIL: investigate how margins behave in email clients -->
+            <BuilderButton icon="'fa-align-left'" title.translate="Left" classAction="'me-auto'"/>
+            <BuilderButton icon="'fa-align-center'" title.translate="Center" classAction="'mx-auto'"/>
+            <BuilderButton icon="'fa-align-right'" title.translate="Right" classAction="'ms-auto'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+</templates>

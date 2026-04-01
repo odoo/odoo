@@ -1,0 +1,237 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_debit_note
+#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-01-13 15:36+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
+"account_debit_note/fi/>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
+msgid "<span class=\"o_stat_text\">Debit Notes</span>"
+msgstr "<span class=\"o_stat_text\">Veloituslaskut</span>"
+
+#. module: account_debit_note
+#: model:ir.model,name:account_debit_note.model_account_debit_note
+msgid "Add Debit Note wizard"
+msgstr "Lisää ohjattu veloituslaskutoiminto"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
+msgid "Cancel"
+msgstr "Peruuta"
+
+#. module: account_debit_note
+#: model:ir.model.fields,help:account_debit_note.field_account_journal__debit_sequence
+msgid ""
+"Check this box if you don't want to share the same sequence for invoices and "
+"debit notes made from this journal"
+msgstr ""
+"Valitse, jos et halua käyttää samaa sekvenssiä tästä päiväkirjasta tehdyille "
+"laskuille ja veloituslaskuille"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
+msgid "Copy Lines"
+msgstr "Kopioi rivit"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__country_code
+msgid "Country Code"
+msgstr "Maatunnus"
+
+#. module: account_debit_note
+#: model:ir.actions.act_window,name:account_debit_note.action_view_account_move_debit
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
+msgid "Create Debit Note"
+msgstr "Luo veloituslasku"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__create_date
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_filter_debit
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_line_filter_debit
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
+msgid "Debit Note"
+msgstr "Veloituslasku"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__date
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
+msgid "Debit Note Date"
+msgstr "Veloituslaskun päiväys"
+
+#. module: account_debit_note
+#. odoo-python
+#: code:addons/account_debit_note/models/account_move.py:0
+#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+#: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_note_ids
+#: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_note_ids
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_invoice_filter_debit
+msgid "Debit Notes"
+msgstr "Veloituslaskut"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_journal__debit_sequence
+msgid "Dedicated Debit Note Sequence"
+msgstr "Veloituslaskuille omistettu sekvenssi"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__display_name
+#: model:ir.model.fields,field_description:account_debit_note.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_debit_note.field_account_move__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__id
+#: model:ir.model.fields,field_description:account_debit_note.field_account_journal__id
+#: model:ir.model.fields,field_description:account_debit_note.field_account_move__id
+msgid "ID"
+msgstr "Tunnus"
+
+#. module: account_debit_note
+#: model:ir.model.fields,help:account_debit_note.field_account_debit_note__journal_id
+msgid "If empty, uses the journal of the journal entry to be debited."
+msgstr "Jos tyhjä, käytetään veloitettavan kirjauksen päiväkirjaa."
+
+#. module: account_debit_note
+#: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
+msgid ""
+"In case you need to do corrections for every line, it can be in handy to "
+"copy them.  We won't copy them for debit notes from credit notes. "
+msgstr ""
+"Jos teet korjauksia jokaiselle riville, voi olla kätevintä kopioida ne. Odoo "
+"ei kopioi niitä hyvityslaskuista veloituslaskuille. "
+
+#. module: account_debit_note
+#: model:ir.model,name:account_debit_note.model_account_journal
+msgid "Journal"
+msgstr "Päiväkirja"
+
+#. module: account_debit_note
+#: model:ir.model,name:account_debit_note.model_account_move
+msgid "Journal Entry"
+msgstr "Kirjaus"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_type
+msgid "Journal Type"
+msgstr "Päiväkirjatyyppi"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__move_ids
+msgid "Move"
+msgstr "Siirto"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__move_type
+msgid "Move Type"
+msgstr "Siirtotyyppi"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_note_count
+#: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_note_count
+msgid "Number of Debit Notes"
+msgstr "Veloituslaskujen määrä"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_origin_id
+#: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_origin_id
+msgid "Original Invoice Debited"
+msgstr "Alkuperäinen lasku veloitettu"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__reason
+msgid "Reason"
+msgstr "Syy"
+
+#. module: account_debit_note
+#: model:ir.model.fields,help:account_debit_note.field_account_debit_note__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"Kaksimerkkinen ISO-maaatunnus. \n"
+"Voit käyttää tätä kenttää pikahakuun."
+
+#. module: account_debit_note
+#: model:ir.model.fields,help:account_debit_note.field_account_bank_statement_line__debit_note_ids
+#: model:ir.model.fields,help:account_debit_note.field_account_move__debit_note_ids
+msgid "The debit notes created for this invoice"
+msgstr "Tälle laskulle luodut veloituslaskut"
+
+#. module: account_debit_note
+#. odoo-python
+#: code:addons/account_debit_note/models/account_move.py:0
+msgid "This debit note was created from: %s"
+msgstr "Tämä veloituslasku luotiin kohteesta: %s"
+
+#. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_id
+msgid "Use Specific Journal"
+msgstr "Käytä tiettyä päiväkirjaa"
+
+#. module: account_debit_note
+#. odoo-python
+#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+msgid ""
+"You can make a debit note only for a Customer Invoice, a Customer Credit "
+"Note, a Vendor Bill or a Vendor Credit Note."
+msgstr ""
+"Voit tehdä veloituslaskun ainoastaan asiakaslaskulle, "
+"asiakashyvityslaskulle, toimittajan laskulle tai toimittajan hyvityslaskulle."
+
+#. module: account_debit_note
+#. odoo-python
+#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+msgid "You can only debit posted moves."
+msgstr "Voit veloittaa vain kirjattuja siirtoja."
+
+#. module: account_debit_note
+#. odoo-python
+#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+msgid ""
+"You can't make a debit note for an invoice that is already linked to a debit "
+"note."
+msgstr ""
+"Et voi tehdä veloitulaskua laskulle, joka on jo linkitetty toiseen "
+"veloituslaskuun."
+
+#. module: account_debit_note
+#. odoo-python
+#: code:addons/account_debit_note/models/account_move.py:0
+msgid "debit_origin_id"
+msgstr "debit_origin_id"

@@ -1,0 +1,484 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_edi
+#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-28 12:50+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
+"account_edi/tr/>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_move.py:0
+msgid "%(count)s Electronic invoicing error(s)"
+msgstr "%(count)s Elektronik faturalama hatası/hataları"
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_move.py:0
+msgid "%(count)s Electronic invoicing info(s)"
+msgstr "%(count)s Elektronik faturalama bilgisi/bilgileri"
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_move.py:0
+msgid "%(count)s Electronic invoicing warning(s)"
+msgstr "%(count)s Elektronik faturalama uyarısı/uyarıları"
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_move.py:0
+msgid "A cancellation of the EDI has been requested."
+msgstr "EDI'nin iptali talep edildi."
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_move.py:0
+msgid "A request for cancellation of the EDI has been called off."
+msgstr "EDI'nin iptali talebi iptal edildi."
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_move_send
+msgid "Account Move Send"
+msgstr "Hesap Hareketi Yollandı"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid ""
+"Are you sure you want to cancel this invoice without waiting for the EDI "
+"document to be canceled?"
+msgstr ""
+"EDI belgesinin iptal edilmesini beklemeden bu faturayı iptal etmek "
+"istediğinizden emin misiniz?"
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_ir_attachment
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__attachment_id
+msgid "Attachment"
+msgstr "Ek"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__blocking_level
+msgid "Blocking Level"
+msgstr "Engelleme Seviyesi"
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_edi_document__blocking_level
+msgid ""
+"Blocks the current operation of the document depending on the error "
+"severity:\n"
+"  * Info: the document is not blocked and everything is working as it "
+"should.\n"
+"  * Warning: there is an error that doesn't prevent the current Electronic "
+"Invoicing operation to succeed.\n"
+"  * Error: there is an error that blocks the current Electronic Invoicing "
+"operation."
+msgstr ""
+"Hata önem derecesine bağlı olarak belgenin geçerli çalışmasını engeller:\n"
+"  * Bilgi: belge engellenmedi ve her şey olması gerektiği gibi çalışıyor.\n"
+"  * Uyarı: Geçerli Elektronik Faturalandırma işleminin başarılı olmasını "
+"engellemeyen bir hata var.\n"
+"  * Hata: Geçerli Elektronik Faturalama işlemini engelleyen bir hata var."
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "Call off EDI Cancellation"
+msgstr "EDI İptalini Durdurun"
+
+#. module: account_edi
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__cancelled
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__cancelled
+msgid "Cancelled"
+msgstr "İptal Edildi"
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_journal.py:0
+msgid ""
+"Cannot deactivate (%s) on this journal because not all documents are "
+"synchronized"
+msgstr ""
+"Tüm belgeler senkronize edilmediğinden bu yevmiyede (%s) devre dışı "
+"bırakılamıyor"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__code
+msgid "Code"
+msgstr "Kod"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_journal__compatible_edi_ids
+msgid "Compatible Edi"
+msgstr "Uyumlu Edi"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__create_uid
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__create_uid
+msgid "Created by"
+msgstr "Tarafından oluşturuldu"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__create_date
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__create_date
+msgid "Created on"
+msgstr "Oluşturuldu"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__display_name
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__display_name
+#: model:ir.model.fields,field_description:account_edi.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_edi.field_account_move__display_name
+#: model:ir.model.fields,field_description:account_edi.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:account_edi.field_account_resequence_wizard__display_name
+#: model:ir.model.fields,field_description:account_edi.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:account_edi.field_ir_attachment__display_name
+msgid "Display Name"
+msgstr "İsim Göster"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "Download"
+msgstr "İndir"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "EDI Documents"
+msgstr "EDI Belgeleri"
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_edi_format
+msgid "EDI format"
+msgstr "EDI biçimi"
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_journal__compatible_edi_ids
+msgid "EDI format that support moves in this journal"
+msgstr "Bu yevmiyedeki hareketleri destekleyen EDI formatı"
+
+#. module: account_edi
+#: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
+msgid "EDI: Perform web services operations"
+msgstr "EDI: Web servis işlemlerini gerçekleştir"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_blocking_level
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_blocking_level
+msgid "Edi Blocking Level"
+msgstr "Edi Engelleme Seviyesi"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_content
+msgid "Edi Content"
+msgstr "Edi İçeriği"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_document_ids
+msgid "Edi Document"
+msgstr "EDI Belgesi"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_count
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_count
+msgid "Edi Error Count"
+msgstr "Edi Hata Sayısı"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_message
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_message
+msgid "Edi Error Message"
+msgstr "Edi Hata Mesajı"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_id
+msgid "Edi Format"
+msgstr "Edi Biçimi"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_abandon_cancel_button
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_abandon_cancel_button
+msgid "Edi Show Abandon Cancel Button"
+msgstr "Edi Vazgeç İptal Düğmesini Göster"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_cancel_button
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_cancel_button
+msgid "Edi Show Cancel Button"
+msgstr "Edi Göster İptal Düğmesi"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_force_cancel_button
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_force_cancel_button
+msgid "Edi Show Force Cancel Button"
+msgstr "EDI Zorla İptal Et Düğmesini Göster"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_web_services_to_process
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_web_services_to_process
+msgid "Edi Web Services To Process"
+msgstr "Edi Web Hizmetleri İşlenecek"
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_edi_document
+msgid "Electronic Document for an account.move"
+msgstr "Bir account.move için Elektronik Belge"
+
+#. module: account_edi
+#: model:ir.actions.act_window,name:account_edi.action_open_edi_documents
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_state
+#: model:ir.model.fields,field_description:account_edi.field_account_journal__edi_format_ids
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_state
+msgid "Electronic invoicing"
+msgstr "Elektronik faturalama"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
+msgid "Electronic invoicing processing needed"
+msgstr "Elektronik fatura işleme gerekli"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
+msgid "Electronic invoicing state"
+msgstr "Elektronik faturalandırma durumu"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__error
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__blocking_level__error
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_blocking_level__error
+msgid "Error"
+msgstr "Hata"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "Force Cancel"
+msgstr "Zorla İptal Et"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_name
+msgid "Format Name"
+msgstr "Biçim Adı"
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_error_count
+#: model:ir.model.fields,help:account_edi.field_account_move__edi_error_count
+msgid "How many EDIs are in error for this move?"
+msgstr "Bu muhasebe hareketi için kaç adet EDI hatası var?"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__id
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__id
+#: model:ir.model.fields,field_description:account_edi.field_account_journal__id
+#: model:ir.model.fields,field_description:account_edi.field_account_move__id
+#: model:ir.model.fields,field_description:account_edi.field_account_move_send__id
+#: model:ir.model.fields,field_description:account_edi.field_account_resequence_wizard__id
+#: model:ir.model.fields,field_description:account_edi.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:account_edi.field_ir_attachment__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_edi
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__blocking_level__info
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_blocking_level__info
+msgid "Info"
+msgstr "Info"
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_move.py:0
+msgid ""
+"Invalid invoice configuration:\n"
+"\n"
+"%s"
+msgstr ""
+"Geçersiz fatura yapılandırması:\n"
+"\n"
+"%s"
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_journal
+msgid "Journal"
+msgstr "Yevmiye"
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_move
+msgid "Journal Entry"
+msgstr "Yevmiye Kaydı"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__write_uid
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__write_uid
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__write_date
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__write_date
+msgid "Last Updated on"
+msgstr "Son Güncelleme"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__move_id
+msgid "Move"
+msgstr "Hareket"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__name
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__name
+msgid "Name"
+msgstr "Adı"
+
+#. module: account_edi
+#: model:ir.model.constraint,message:account_edi.constraint_account_edi_document_unique_edi_document_by_move_by_format
+msgid "Only one edi document by move by format"
+msgstr "Biçime göre taşıyarak yalnızca bir edi belgesi"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "Process now"
+msgstr "Şimdi işle"
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_resequence_wizard
+msgid "Remake the sequence of Journal Entries."
+msgstr "Yevmiye Kayıtlarının sırasını yeniden oluşturun."
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_ir_actions_report
+msgid "Report Action"
+msgstr "Rapor işlemi"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "Request EDI Cancellation"
+msgstr "EDI İptali İste"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "Retry"
+msgstr "Yinele"
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_journal__edi_format_ids
+msgid "Send XML/EDI invoices"
+msgstr "XML / EDI faturaları gönder"
+
+#. module: account_edi
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__sent
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__sent
+msgid "Sent"
+msgstr "Gönderildi"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__state
+msgid "State"
+msgstr "İl/Eyalet"
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_state
+#: model:ir.model.fields,help:account_edi.field_account_move__edi_state
+msgid "The aggregated state of all the EDIs with web-service of this move"
+msgstr "Bu kaydın web hizmetine sahip tüm EDI'lerin toplu durumu"
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_edi_document__attachment_id
+msgid ""
+"The file generated by edi_format_id when the invoice is posted (and this "
+"document is processed)."
+msgstr ""
+"Fatura kaydedildiğinde (ve bu belge işlendiğinde) edi_format_id tarafından "
+"oluşturulan dosya."
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/wizard/account_resequence.py:0
+msgid ""
+"The following documents have already been sent and cannot be resequenced: %s"
+msgstr "Aşağıdaki belgeler zaten gönderilmiş ve yeniden sıralanamaz: %s"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "The invoice will soon be sent to"
+msgstr "Fatura yakında şu adrese gönderilecektir:"
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_edi_document__error
+msgid ""
+"The text of the last error that happened during Electronic Invoice operation."
+msgstr "Elektronik Fatura işlemi sırasında oluşan son hatanın metni."
+
+#. module: account_edi
+#: model:ir.model.constraint,message:account_edi.constraint_account_edi_format_unique_code
+msgid "This code already exists"
+msgstr "Bu kod zaten var"
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_edi_document.py:0
+msgid "This document is being sent by another process already. "
+msgstr "Bu belge zaten başka bir işlem tarafından gönderiliyor. "
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_move.py:0
+msgid ""
+"This invoice was canceled while the EDIs %s still had a pending cancellation "
+"request."
+msgstr ""
+"Bu fatura iptal edildi ancak EDI belgeleri %s için hâlâ bekleyen bir iptal "
+"talebi var."
+
+#. module: account_edi
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__to_cancel
+msgid "To Cancel"
+msgstr "İptal etmek için"
+
+#. module: account_edi
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_send
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__to_send
+msgid "To Send"
+msgstr "Giden"
+
+#. module: account_edi
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__blocking_level__warning
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_blocking_level__warning
+msgid "Warning"
+msgstr "Uyarı"
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_move.py:0
+msgid ""
+"You can't edit the following journal entry %s because an electronic document "
+"has already been sent. Please use the 'Request EDI Cancellation' button "
+"instead."
+msgstr ""
+"Bir elektronik belge zaten gönderildiği için bu %s yevmiye kaydını "
+"düzenleyemezsiniz. Lütfen bunun yerine 'EDI İptali İste' düğmesini kullanın."
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/ir_attachment.py:0
+msgid ""
+"You can't unlink an attachment being an EDI document sent to the government."
+msgstr ""
+"Devlete gönderilen bir EDI belgesi olan bir ekin bağlantısını "
+"kaldıramazsınız."
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "⇒ See errors"
+msgstr "⇒ Hataları görün"

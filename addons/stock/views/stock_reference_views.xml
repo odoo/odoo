@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_reference_search_view" model="ir.ui.view">
+        <field name="name">stock.reference.search</field>
+        <field name="model">stock.reference</field>
+        <field name="arch" type="xml">
+            <search string="Search Reference">
+                <field name="name" string="Name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="stock_reference_form_view" model="ir.ui.view">
+        <field name="name">stock.reference.form</field>
+        <field name="model">stock.reference</field>
+        <field name="arch" type="xml">
+            <form string="Scrap">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" nolabel="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="picking_ids" widget="many2many_tags" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+       <record id="stock_reference_tree_view" model="ir.ui.view">
+        <field name="name">stock.reference.list</field>
+        <field name="model">stock.reference</field>
+        <field name="arch" type="xml">
+            <list string="References" create="false" delete="false" edit="false">
+                <field name="name" decoration-bf="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_stock_reference">
+        <field name="name">References</field>
+        <field name="res_model">stock.reference</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Stock Reference
+            </p><p>
+                Start transferring goods to see references
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_stock_references"
+        parent="menu_stock_procurement"
+        action="action_stock_reference"
+        sequence="99"
+        groups="base.group_no_one"/>
+</odoo>
