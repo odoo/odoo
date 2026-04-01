@@ -14,9 +14,9 @@ export class Location extends Component {
         city: t.string(),
         zipCode: t.string(),
         openingHours: t.record(t.array(t.string()).optional()).optional({}),
-        additionalData: t.object().optional(),
         isSelected: t.boolean(),
         setSelectedLocation: t.function(),
+        showPinIndicator: t.boolean().optional(true),
     });
 
     /**
