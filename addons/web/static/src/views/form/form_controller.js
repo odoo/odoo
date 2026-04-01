@@ -346,6 +346,7 @@ export class FormController extends Component {
         this.propertiesState = useState({
             editable: false,
         });
+        useSubEnv({ propertiesState: this.propertiesState });
     }
 
     get cogMenuProps() {
@@ -398,6 +399,11 @@ export class FormController extends Component {
      */
     onWillLoadRoot() {
         this.duplicateId = undefined;
+        if (this.propertiesState.editable) {
+            // Reset properties edit mode
+            this.propertiesState.editable = false;
+            this.model.bus.trigger("PROPERTY_FIELD:EDIT", { editable: false });
+        }
     }
 
     onRootLoaded() {
