@@ -5384,20 +5384,29 @@ class TestCompanyDependent(TransactionCase):
 
 
 class TestWriteOverrideTranslatedFields(TransactionCase):
+    CHECKED_FIELD_NAMES = {  # {module_name: [model_name.field_name, ...]}
+        'base': ['res.groups.name'],
+        'web_studio': ['ir.ui.menu.name'],
+        'website_sale': ['product.template.description_ecommerce'],
+        'point_of_sale': ['product.template.public_description', 'product.tag.pos_description'],
+        'account': ['account.journal.name'],
+        'documents': ['documents.document.name'],
+        'im_livechat': ['chatbot.script.title'],
+        'documents_project': ['project.project.name'],
+        'website_slides': ['slide.channel.description'],
+    }
+
     def test_write_override_translated_field(self):
         base_write = self.env.registry['base'].write
         violations = []
+        modules_to_check = set(self.env['ir.module.module'].search([
+            ('name', 'in', list(self.CHECKED_FIELD_NAMES)),
+            ('state', '=', 'installed'),
+        ]).mapped('name'))
         checked_field_names = {
-            'ir.ui.menu.name',
-            'res.groups.name',
-            'product.template.description_ecommerce',
-            'product.template.public_description',
-            'product.tag.pos_description',
-            'account.journal.name',
-            'documents.document.name',
-            'chatbot.script.title',
-            'project.project.name',
-            'slide.channel.description',
+            module_name: field_names
+            for module_name, field_names in self.CHECKED_FIELD_NAMES.items()
+            if module_name in modules_to_check
         }
         for model in self.env.registry.values():
             if model.write is base_write:
@@ -5423,13 +5432,15 @@ class TestWriteOverrideTranslatedFields(TransactionCase):
                         f'vals.get("{field_name}"',
                     ]
                     if matched_pattern := next(iter(p for p in patterns if p in source), None):
-                        if full_name in checked_field_names:
-                            checked_field_names.remove(full_name)
+                        module_name = cls.__module__.split('.')[2]  # odoo.addons.module_name.xxx
+                        if full_name in checked_field_names.get(module_name, []):
+                            checked_field_names[module_name].remove(full_name)
                         else:
                             violations.append(
-                                f"find pattern {matched_pattern} in the write method of model {model._name} ({cls.__module__})'"
+                                f"find pattern {matched_pattern} in the write method of model {model._name} ({cls.__module__})"
                             )
 
+        checked_field_names = {k: v for k, v in checked_field_names.items() if v}
         if checked_field_names:
             _logger.warning("Some checked fields maybe not be used in the write anymore %s", checked_field_names)
         self.assertFalse(len(violations), "Override `write`(maybe also `create`) for translated fields \n" + '\n'.join(violations))
