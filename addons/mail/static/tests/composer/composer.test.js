@@ -21,6 +21,7 @@ import {
     patchUiSize,
     registerArchs,
     scroll,
+    setIndexedDB,
     setupChatHub,
     start,
     startServer,
@@ -39,9 +40,9 @@ import {
 
 import { Composer } from "@mail/core/common/composer";
 import { edit, press, queryFirst } from "@odoo/hoot-dom";
-import { browser } from "@web/core/browser/browser";
 import { MailComposerFormController } from "@mail/chatter/web/mail_composer_form";
 import { useSubEnv } from "@odoo/owl";
+import { getIndexedDB } from "../mail_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -1549,23 +1550,25 @@ test("composer reply-to message is restored on thread change", async () => {
     await contains(".o-mail-Composer:contains('Replying to')");
     const store = getService("mail.store");
     expect(
-        browser.localStorage.getItem(store["discuss.channel"].get(channelId).composer.localId)
+        JSON.stringify(
+            await getIndexedDB("composer", store["discuss.channel"].get(channelId).composer.localId)
+        )
     ).toBe(
         '{"emailAddSignature":true,"replyToMessageId":1,"composerHtml":["markup","Hello World!"],"fromFullComposer":false}'
     );
-    // check local storage emptied on message post
+    // check IndexedDB emptied on message post
     await click(".o-mail-Composer button:enabled[aria-label='Send']");
     await click(".o-mail-Message[data-persistent]:contains(Hello World!)");
     expect(
-        browser.localStorage.getItem(store["discuss.channel"].get(channelId).composer.localId)
-    ).toBe(null);
-    // check local storage empty, change thread to force save in local storage if needed (debounced otherwise)
+        await getIndexedDB("composer", store["discuss.channel"].get(channelId).composer.localId)
+    ).toBe(undefined);
+    // check IndexedDB empty, change thread to force save in local storage if needed (debounced otherwise)
     await click(".o-mail-DiscussSidebar-item:contains('Inbox')");
     await contains(".o-mail-Message", { count: 0 });
     await click(".o-mail-DiscussSidebar-item:contains('General')");
     expect(
-        browser.localStorage.getItem(store["discuss.channel"].get(channelId).composer.localId)
-    ).toBe(null);
+        await getIndexedDB("composer", store["discuss.channel"].get(channelId).composer.localId)
+    ).toBe(undefined);
 });
 
 test("composer reply-to message is restored page reload", async () => {
@@ -1599,9 +1602,10 @@ test("composer reply-to message is restored page reload", async () => {
     ]);
     // simulate composer was replying to 1st message before page reload
     // not taking last message as to not fetch last message data prematurely
-    browser.localStorage.setItem(
+    await setIndexedDB(
+        "composer",
         `Composer,(mail.thread,discuss.channel AND ${channelId}) OR (undefined)`,
-        `{"replyToMessageId":${messageId_1},"text":"some text"}`
+        { replyToMessageId: messageId_1, text: "some text" }
     );
     await start();
     await openDiscuss(channelId);
@@ -1825,7 +1829,9 @@ test("mentions can be correctly selected with ctrl+A and deleted", async () => {
     await contains(`.o-mail-Composer-html.odoo-editor-editable:text('Hello General')`);
     await contains(editor.editable.querySelector("i.fa-hashtag"));
     await htmlInsertText(editor, "nice to meet you!");
-    await contains(".o-mail-Composer-html.odoo-editor-editable:text('Hello General nice to meet you!')");
+    await contains(
+        ".o-mail-Composer-html.odoo-editor-editable:text('Hello General nice to meet you!')"
+    );
     await focus(editor.editable);
     await press("Control+a");
     await press("Backspace");

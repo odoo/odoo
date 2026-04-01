@@ -41,6 +41,7 @@ import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 export { SIZES } from "@web/core/ui/ui_service";
+import { IndexedDB } from "@web/core/utils/indexed_db";
 
 import { SoundEffects } from "@mail/core/common/sound_effects_service";
 import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
@@ -1054,4 +1055,14 @@ export function sendPresenceUpdate(modelName, id, newPresence) {
         im_status: newPresence,
     });
     env["bus.bus"]._sendone(serverState.userId, "mail.record/insert", store.get_result());
+}
+
+export async function setIndexedDB(table, key, value) {
+    const db = new IndexedDB("mail");
+    await db.write(table, key, value);
+}
+
+export async function getIndexedDB(table, key) {
+    const db = new IndexedDB("mail");
+    return await db.read(table, key);
 }

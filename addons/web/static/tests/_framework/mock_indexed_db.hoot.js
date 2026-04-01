@@ -124,7 +124,7 @@ export function mockIndexedDBFactory(name, { fn }) {
             }
 
             async delete(table, key) {
-                return this.mutex.exec(() => delete dbs[this.name][table][key]);
+                return this.mutex.exec(() => delete dbs[this.name][table]?.[key]);
             }
 
             async invalidate(matchers = null) {
