@@ -6,7 +6,7 @@ patch(PosStore.prototype, {
     async getServerOrders() {
         if (this.session._self_ordering) {
             await this.loadServerOrders([
-                ["company_id", "=", this.config.company_id.id],
+                ["config_id", "in", [this.config.id, ...this.config.raw.trusted_config_ids]],
                 ["state", "=", "draft"],
                 "|",
                 ["pos_reference", "ilike", "Kiosk"],
