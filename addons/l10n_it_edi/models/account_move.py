@@ -2,8 +2,8 @@ import base64
 import logging
 import re
 import uuid
+import unicodedata
 from datetime import datetime
-
 from lxml import etree
 from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
 from odoo.exceptions import LockError, UserError
@@ -2013,6 +2013,13 @@ class AccountMove(models.Model):
             sep = ' ' if street and street2 else ''
             return format_alphanumeric(f"{street}{sep}{street2}", maxlen)
 
+        def format_uom(uom, maxlen=None):
+            if not uom:
+                return False
+
+            uom = unicodedata.normalize('NFKC', uom)
+            return format_alphanumeric(uom, maxlen)
+
         return {
             'format_date': format_date,
             'format_float': format_float,
@@ -2022,6 +2029,7 @@ class AccountMove(models.Model):
             'format_phone': format_phone,
             'format_alphanumeric': format_alphanumeric,
             'format_address': format_address,
+            'format_uom': format_uom,
         }
 
     def _l10n_it_edi_render_xml(self, pdf_values=None):
