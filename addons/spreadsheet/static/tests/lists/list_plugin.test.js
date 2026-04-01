@@ -1454,3 +1454,13 @@ test("Chaining monetary fields includes the currency field", async function () {
     expect(getEvaluatedCell(model, "A1").formattedValue).toBe("$699.99");
     expect.verifySteps(["web_search_read"]);
 });
+
+test("List header labels are loaded even if there are no corresponding list values", async function () {
+    const { model } = await createSpreadsheetWithList({ columns: [] });
+    const listId = model.getters.getListIds()[0];
+    setCellContent(model, "A1", `=ODOO.LIST.HEADER(${listId}, "currency_id")`);
+    setCellContent(model, "B1", `=ODOO.LIST.HEADER(${listId}, "product_id.template_id.name")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("Currency");
+    expect(getCellValue(model, "B1")).toBe("Product Name");
+});
