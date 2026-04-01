@@ -454,13 +454,15 @@ class MailingMailing(models.Model):
         self.mailing_on_mailing_list = False
         self.filtered(lambda m: m.mailing_model_id == mailing_list_model_id).mailing_on_mailing_list = True
 
-    @api.depends('mailing_model_id', 'contact_list_ids', 'mailing_type')
+    @api.depends('mailing_model_id', 'contact_list_ids', 'mailing_type', 'mailing_filter_id')
     def _compute_mailing_domain(self):
         for mailing in self:
             if not mailing.mailing_model_id:
                 mailing.mailing_domain = ''
             elif mailing.is_dynamic_recipients and mailing.contact_list_ids:
                 mailing.mailing_domain = Domain.OR([mailing_list._parse_mailing_domain() for mailing_list in self.contact_list_ids])
+            elif mailing.mailing_filter_id:
+                mailing.mailing_domain = mailing.mailing_filter_id.mailing_domain
             else:
                 mailing.mailing_domain = repr(mailing._get_default_mailing_domain() or [])
 
