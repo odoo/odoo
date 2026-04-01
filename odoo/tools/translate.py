@@ -1396,12 +1396,14 @@ def trans_export_records(lang, model_name, ids, buffer, format, env):
     return True
 
 
-def _push(callback, term, source_line):
-    """ Sanity check before pushing translation terms """
-    term = (term or "").strip()
-    # Avoid non-char tokens like ':' '...' '.00' etc.
-    if len(term) > 8 or any(x.isalpha() for x in term):
-        callback(term, source_line)
+def is_meaningful_term(term):
+    """ Returns True if the given term is a meaningful translation term that should be exported.
+
+    This is used to filter out terms that are unlikely to be translated, such as purely numeric strings,
+    punctuation, or empty strings.
+    """
+    return bool(term and any(c.isalpha() for c in term.strip()))
+
 
 def _extract_translatable_qweb_terms(element, callback):
     """ Helper method to walk an etree document representing
@@ -1421,15 +1423,15 @@ def _extract_translatable_qweb_terms(element, callback):
                 and not (el.tag == 'attribute' and not is_translatable_attrib(el.get('name'), el))
                 and el.get("t-translation", '').strip() != "off"):
 
-            _push(callback, el.text, el.sourceline)
+            callback(el.text, el.sourceline)
             # heuristic: tags with names starting with an uppercase letter are
             # component nodes
             is_component = el.tag[0].isupper() or "t-component" in el.attrib or "t-set-slot" in el.attrib
             for attr in el.attrib:
                 if (not is_component and attr in OWL_TRANSLATED_ATTRS) or (is_component and attr.endswith(".translate")):
-                    _push(callback, el.attrib[attr], el.sourceline)
+                    callback(el.attrib[attr], el.sourceline)
             _extract_translatable_qweb_terms(el, callback)
-        _push(callback, el.tail, el.sourceline)
+        callback(el.tail, el.sourceline)
 
 
 def babel_extract_qweb(fileobj, keywords, comment_tags, options):
@@ -1446,8 +1448,11 @@ def babel_extract_qweb(fileobj, keywords, comment_tags, options):
     :rtype: Iterable
     """
     result = []
+
     def handle_text(text, lineno):
-        result.append((lineno, None, text, []))
+        if is_meaningful_term(text):
+            result.append((lineno, None, text, []))
+
     tree = etree.parse(fileobj)
     _extract_translatable_qweb_terms(tree.getroot(), handle_text)
     return result
@@ -1544,14 +1549,8 @@ class TranslationReader:
         msgid "<source>"
         record_id is the database id of the record being translated
         """
-        # empty and one-letter terms are ignored, they probably are not meant to be
-        # translated, and would be very hard to translate anyway.
-        sanitized_term = (source or '').strip()
-        # remove non-alphanumeric chars
-        sanitized_term = re.sub(r'\W+', '', sanitized_term)
-        if not sanitized_term or len(sanitized_term) <= 1:
-            return
-        self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id, value))
+        if is_meaningful_term(source):
+            self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id, value))
 
     def _export_imdinfo(self, model: str, imd_per_id: dict[int, ImdInfo]):
         records = self._get_translatable_records(imd_per_id.values())

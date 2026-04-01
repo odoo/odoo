@@ -1,20 +1,28 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from hashlib import sha256
-from unittest.mock import patch
+import io
 import logging
 import time
+from hashlib import sha256
+from unittest.mock import patch
 
-from psycopg2 import IntegrityError
 from psycopg2.extras import Json
-import io
 
 from odoo import fields
 from odoo.exceptions import UserError, ValidationError
+from odoo.tests.common import BaseCase, TransactionCase, tagged
 from odoo.tools import sql
-from odoo.tools.translate import ParsedTranslation, StoredTranslations, TranslationImporter, TranslationModuleReader
-from odoo.tools.translate import quote, unquote, xml_translate, html_translate
-from odoo.tests.common import TransactionCase, BaseCase, tagged
+from odoo.tools.translate import (
+    ParsedTranslation,
+    StoredTranslations,
+    TranslationImporter,
+    TranslationModuleReader,
+    TranslationReader,
+    babel_extract_qweb,
+    html_translate,
+    quote,
+    unquote,
+    xml_translate,
+)
 
 _stats_logger = logging.getLogger('odoo.tests.stats')
 
@@ -433,6 +441,26 @@ class TranslationToolsTestCase(BaseCase):
         result = html_translate(lambda term: term, source)
         self.assertEqual(result, source)
 
+    def test_babel_extract_qweb_filters_non_meaningful_terms(self):
+        """QWeb extraction should filter out terms with no letters and keep one-letter terms."""
+        source = b"""
+            <templates>
+                <t t-name="x_test_template">
+                    <span>123</span>
+                    <span>!@#</span>
+                    <span>g</span>
+                    <span>hello</span>
+                </t>
+            </templates>
+        """
+        extracted = list(babel_extract_qweb(io.BytesIO(source), None, None, None))
+        terms = [term for _, _, term, _ in extracted]
+
+        self.assertIn('g', terms)
+        self.assertIn('hello', terms)
+        self.assertNotIn('123', terms)
+        self.assertNotIn('!@#', terms)
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLanguageInstall(TransactionCase):
@@ -464,6 +492,23 @@ class TestTranslationExport(TransactionCase):
         """Read files of installed modules and export translatable terms"""
         with self.assertNoLogs('odoo.tools.translate', "ERROR"):
             TranslationModuleReader(self.env.cr)
+
+    def test_push_translation_filters_no_letter_strings(self):
+        """Strings with no letters should not be queued for translation export."""
+        reader = TranslationReader(self.env.cr)
+        reader._push_translation('module', 'model', 'res.partner,name', 1, 'hello')
+        reader._push_translation('module', 'model', 'res.partner,name', 2, '123')
+        reader._push_translation('module', 'model', 'res.partner,name', 3, '!@#')
+        reader._push_translation('module', 'model', 'res.partner,name', 4, '')
+        sources = [entry[1] for entry in reader._to_translate]
+        self.assertEqual(sources, ['hello'])
+
+    def test_push_translation_exports_one_letter_strings(self):
+        """One-letter strings should be queued for export (e.g. UoM abbreviations like 'g' for grams)."""
+        reader = TranslationReader(self.env.cr)
+        reader._push_translation('module', 'model', 'res.partner,name', 1, 'g')
+        sources = [entry[1] for entry in reader._to_translate]
+        self.assertEqual(sources, ['g'])
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -1421,7 +1466,7 @@ class TestXMLTranslation(TransactionCase):
 
         self.assertEqual(view.arch_db, archf % terms_en)
         self.assertEqual(view.with_context(lang='fr_FR').arch_db, archf % terms_fr)
-        
+
         # change the order of the text term and the xml term and redo the previous test
         archf = '<form>%s<div>%s</div></form>'
         terms_en = ('<span invisible="1">Draft</span>', 'Draft')
