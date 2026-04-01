@@ -182,3 +182,19 @@ class HrApplicant(models.Model):
                         mapped_skills = source_applicant._map_applicant_skill_ids_to_other_applicant_skill_ids(applicant, original_vals)
                         applicant.with_context(skills_synced=True).write({"applicant_skill_ids": mapped_skills})
         return super().write(vals)
+
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        if self.env.context.get("show_matching_score_in_name", False):
+            for applicant in self:
+                if applicant.matching_score:
+                    name = f"{applicant.display_name or applicant.name} \t --{applicant.matching_score:.0f}%--"
+                    applicant.display_name = name.strip()
+
+    @api.model
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        show_matching_score_in_name = self.env.context.get('show_matching_score_in_name', False)
+        if show_matching_score_in_name:
+            records = self.search(domain).sorted(lambda a: a.matching_score, reverse=True)[:limit]
+            return [(r.id, r.display_name) for r in records]
+        return super().name_search(name=name, domain=domain if domain else None, operator=operator, limit=limit)

@@ -94,3 +94,10 @@ class HrJob(models.Model):
             records = records.sorted(lambda a: (a.no_of_recruitment > 0, a.applicant_matching_score), reverse=True)[:limit]
             return [(r.id, r.display_name) for r in records]
         return super().name_search(name, domain, operator, limit)
+
+    def action_job_add_applicants(self):
+        res = super().action_job_add_applicants()
+        if len(self.ids) == 1:
+            res["context"]["active_job_id"] = self.id
+            res["context"]["active_job_applicant_ids"] = self.application_ids.ids
+        return res
