@@ -1315,6 +1315,9 @@ class StockQuant(models.Model):
         if not self.env['ir.config_parameter'].sudo().get_param('stock.skip_quant_tasks'):
             self._quant_tasks()
         ctx = dict(self.env.context or {})
+        if not domain:
+            domain = []
+        domain += [('product_id.company_id', 'in', ctx.get('allowed_company_ids', []) + [False])]
         ctx['inventory_report_mode'] = True
         ctx.pop('group_by', None)
         action = {
@@ -1323,7 +1326,7 @@ class StockQuant(models.Model):
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
             'context': ctx,
-            'domain': domain or [],
+            'domain': domain,
             'help': """
                 <p class="o_view_nocontent_empty_folder">{}</p>
                 <p>{}</p>
