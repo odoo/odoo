@@ -269,8 +269,6 @@ def _request_ciusro_synchronize_invoices_pagination(company, session, nb_days=1)
             endpoint='listaMesajePaginatieFactura',
             params={'startTime': start_time, 'endTime': end_time, 'cif': company.vat.replace('RO', ''), 'pagina': page_number},
         )
-        if total_page_number == 1 and 'numar_total_pagini' in result:
-            total_page_number = result.get('numar_total_pagini', 1)
         if 'error' in result:
             errors.append(result.get("error"))
         elif 'eroare' in result:
@@ -279,6 +277,9 @@ def _request_ciusro_synchronize_invoices_pagination(company, session, nb_days=1)
         try:
             msg_content = json.loads(result['content'])
             messages += msg_content.get('mesaje', [])
+            if total_page_number == 1 and 'numar_total_pagini' in msg_content:
+                total_page_number = msg_content.get('numar_total_pagini', 1)
+        
         except ValueError as e:
             errors.append(company.env._("The SPV data could not be parsed. %s") % e)
 
