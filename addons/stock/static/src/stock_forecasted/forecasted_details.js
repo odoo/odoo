@@ -200,7 +200,7 @@ export class ForecastedDetails extends Component {
     }
 
     sameDocumentIn(line1, line2){
-        return this._sameDocument(line1, line2, 'document_in');
+        return this._sameDocument(line1, line2, 'document_in') && line1.receipt_date === line2.receipt_date;
     }
 
     sameDocumentOut(line1, line2){

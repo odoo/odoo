@@ -661,3 +661,26 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             [(test_product, 1)], date=today - relativedelta(days=1), warehouse=other_warehouse
         )
         self.start_tour('/odoo/purchase', "test_purchase_order_suggest_search_panel_ux", login='admin')
+
+    def test_forecast_po_line_multi_date(self):
+        """
+        Test PO with two lines for the same product but different date_planned must
+        appear as two separate rows in the forecast report (not merged into one).
+        """
+        self.env['purchase.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_qty': 3,
+                    'date_planned': '2026-04-08',
+                }),
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_qty': 7,
+                    'date_planned': '2026-04-15',
+                }),
+            ],
+        }).button_confirm()
+        url = '/odoo/action-stock.product_template_action_product'
+        self.start_tour(url, 'test_forecast_po_line_multi_date', login='admin')
