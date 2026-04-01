@@ -3,66 +3,8 @@ import { manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts } from "../_helpers/format";
-import { getContent, setSelection } from "../_helpers/selection";
-import { insertText, undo } from "../_helpers/user_actions";
-
-async function insertSpace(editor) {
-    const keydownEvent = await manuallyDispatchProgrammaticEvent(editor.editable, "keydown", {
-        key: " ",
-    });
-    if (keydownEvent.defaultPrevented) {
-        return;
-    }
-    // InputEvent is required to simulate the insert text.
-    const [beforeinputEvent] = await manuallyDispatchProgrammaticEvent(
-        editor.editable,
-        "beforeinput",
-        {
-            inputType: "insertText",
-            data: " ",
-        }
-    );
-    if (beforeinputEvent.defaultPrevented) {
-        return;
-    }
-    const range = editor.document.getSelection().getRangeAt(0);
-    if (!range.collapsed) {
-        throw new Error("need to implement something... maybe");
-    }
-    let offset = range.startOffset;
-    const node = range.startContainer;
-    // mimic the behavior of the browser when inserting a &nbsp
-    const twoSpace = " \u00A0";
-    node.textContent = (
-        node.textContent.slice(0, offset) +
-        " " +
-        node.textContent.slice(offset)
-    ).replaceAll("  ", twoSpace);
-
-    if (
-        node.nextSibling &&
-        node.nextSibling.textContent.startsWith(" ") &&
-        node.textContent.endsWith(" ")
-    ) {
-        node.nextSibling.textContent = "\u00A0" + node.nextSibling.textContent.slice(1);
-    }
-
-    offset++;
-    setSelection({
-        anchorNode: node,
-        anchorOffset: offset,
-    });
-
-    const [inputEvent] = await manuallyDispatchProgrammaticEvent(editor.editable, "input", {
-        inputType: "insertText",
-        data: " ",
-    });
-    if (inputEvent.defaultPrevented) {
-        return;
-    }
-    // KeyUpEvent is not required but is triggered like the browser would.
-    await manuallyDispatchProgrammaticEvent(editor.editable, "keyup", { key: " " });
-}
+import { getContent } from "../_helpers/selection";
+import { insertSpace, insertText, undo } from "../_helpers/user_actions";
 
 /**
  * Automatic link creation when pressing Space, Enter or Shift+Enter after an url
@@ -173,7 +115,7 @@ test("should not transform an email url after space", async () => {
     await testEditor({
         contentBefore: "<p>user@domain.com[]</p>",
         stepFunction: (editor) => insertSpace(editor),
-        contentAfter: "<p>user@domain.com []</p>",
+        contentAfter: "<p>user@domain.com&nbsp;[]</p>",
     });
 });
 
@@ -188,7 +130,8 @@ test("should not transform url after two space", async () => {
 
 test("transform text url into link and undo it", async () => {
     const { el, editor } = await setupEditor(`<p>[]</p>`);
-    await insertText(editor, "www.abc.jpg ");
+    await insertText(editor, "www.abc.jpg");
+    await insertSpace(editor);
     expect(cleanLinkArtifacts(getContent(el))).toBe(
         '<p><a href="http://www.abc.jpg">www.abc.jpg</a>&nbsp;[]</p>'
     );
