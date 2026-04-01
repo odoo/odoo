@@ -287,6 +287,7 @@
                 <separator/>
                 <filter invisible="context.get('default_talent_pool_ids', False)" string="Applicants" name="applicants" domain="[('talent_pool_ids', '=', False)]"/>
                 <filter invisible="context.get('default_talent_pool_ids', False)" string="Talents" name="talents" domain="[('talent_pool_ids', '!=', False)]"/>
+                <filter invisible="1" string="Non-Linked Talents" name="non_linked_talents" domain="[('talent_pool_ids', '!=', False), ('linked_applicant_ids', 'not in', context.get('active_job_applicant_ids', []))]"/>
                 <separator/>
                 <filter invisible="context.get('default_talent_pool_ids', False)" string="In Progress" name="ongoing" domain="[('date_closed', '=', False), ('active', '=', True), ('refuse_reason_id', '=', False)]"/>
                 <filter invisible="context.get('default_talent_pool_ids', False)" string="Hired" name="hired" domain="[('date_closed', '!=', False)]"/>

@@ -463,3 +463,17 @@ class HrJob(models.Model):
                 'expand': 1
             },
         }
+
+    def action_job_add_applicants(self):
+        return {
+            "name": self.env._("Matching Talents"),
+            "type": "ir.actions.act_window",
+            "res_model": "job.add.applicants",
+            "target": "new",
+            "views": [[self.env.ref('hr_recruitment.job_add_applicants_from_job_view_form').id, "form"]],
+            "context": {
+                "is_modal": True,
+                "default_job_ids": self.ids
+                or self.env.context.get("default_job_ids"),
+            },
+        }

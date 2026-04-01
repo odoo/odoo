@@ -875,7 +875,7 @@ class HrApplicant(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "job.add.applicants",
             "target": "new",
-            "views": [[False, "form"]],
+            "views": [[self.env.ref('hr_recruitment.job_add_applicants_view_form').id, "form"]],
             "context": {
                 "is_modal": True,
                 "default_applicant_ids": self.ids
