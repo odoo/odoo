@@ -1292,7 +1292,7 @@ test("Chaining monetary fields includes the currency field", async function () {
 });
 
 test("List header labels are loaded even if there are no corresponding list values", async function () {
-    const { model } = await createSpreadsheetWithList();
+    const { model } = await createSpreadsheetWithList({ columns: [] });
     const listId = model.getters.getListIds()[0];
     setCellContent(model, "A1", `=ODOO.LIST.HEADER(${listId}, "currency_id")`);
     setCellContent(model, "B1", `=ODOO.LIST.HEADER(${listId}, "product_id.template_id.name")`);
