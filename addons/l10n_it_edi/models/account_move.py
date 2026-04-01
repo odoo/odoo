@@ -3,6 +3,7 @@
 from base64 import b64encode
 from datetime import datetime
 import logging
+import unicodedata
 from lxml import etree
 from markupsafe import escape
 import uuid
@@ -1332,6 +1333,13 @@ class AccountMove(models.Model):
             sep = ' ' if street and street2 else ''
             return format_alphanumeric(f"{street}{sep}{street2}", maxlen)
 
+        def format_uom(uom, maxlen=None):
+            if not uom:
+                return False
+
+            uom = unicodedata.normalize('NFKC', uom)
+            return format_alphanumeric(uom, maxlen)
+
         return {
             'format_date': format_date,
             'format_monetary': format_monetary,
@@ -1340,6 +1348,7 @@ class AccountMove(models.Model):
             'format_phone': format_phone,
             'format_alphanumeric': format_alphanumeric,
             'format_address': format_address,
+            'format_uom': format_uom,
         }
 
     def _l10n_it_edi_render_xml(self, pdf_values=None):

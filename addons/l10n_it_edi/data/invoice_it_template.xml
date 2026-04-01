@@ -16,7 +16,7 @@
                     <Descrizione t-out="format_alphanumeric(line_dict['description'], 1000)"/>
                     <Quantita t-out="format_numbers(abs(line.quantity))"/>
                     <UnitaMisura t-if="line.product_uom_id and line.product_uom_id.category_id != env.ref('uom.product_uom_categ_unit')"
-                                 t-out="format_alphanumeric(line.product_uom_id.name, 10)"/>
+                                 t-out="format_uom(line.product_uom_id.name, 10)"/>
                     <PrezzoUnitario t-out="'%.06f' % (line_dict['unit_price'])"/>
                     <ScontoMaggiorazione t-if="line.discount != 0">
                         <Tipo t-out="format_alphanumeric(line_dict['discount_type'])"/>
