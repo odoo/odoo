@@ -975,10 +975,13 @@ def patch_num2words():
     try:
         import num2words  # noqa: PLC0415
     except ImportError:
-        _logger = logging.getLogger(__name__)
-        _logger.warning("num2words is not available, Arabic number to words conversion will not work")
         return
     if MIN_PY_VERSION >= (3, 12):
-        raise RuntimeError("The num2words monkey patch is obsolete. Bump the version of the library to the latest available in the official package repository, if it hasn't already been done, and remove the patch.")
+        raise RuntimeError("The num2words monkey patch for Arabic is obsolete. Bump the version of the library to the latest available in the official package repository, if it hasn't already been done, and remove the patch.")
+    if MIN_PY_VERSION >= (3, 13):
+        raise RuntimeError("The num2words monkey patch for Czech is obsolete. Bump the version of the library to the latest available in the official package repository, if it hasn't already been done, and remove the patch.")
     num2words.CONVERTER_CLASSES["ar"] = Num2Word_AR_Fixed()
     num2words.CONVERTER_CLASSES["bg"] = NumberToWords_BG()
+    if 'cz' in num2words.CONVERTER_CLASSES and not 'cs' in num2words.CONVERTER_CLASSES:
+        # There is a mistake in the Czech language code in versions < 0.5.14. Map it to the correct code here.
+        num2words.CONVERTER_CLASSES['cs'] = num2words.CONVERTER_CLASSES['cz']
