@@ -1,68 +1,77 @@
 // = Icons
+// version 0.2.1
 // ============================================================================
-
 
 // Sizes
 // ----------------------------------------------------------------------------
 
-$oi-default-size: 1em;   // Normally 13px
+$oi-default-size: 1em;   // Normally 14px
 $oi-fw-ratio: 1.28571429; // Matches .fa-fw
+$ms-size-multiplier: 1.214285; // Compensate pictogram's inner spacing
 
-$oi-sizes: (
-    'small': (
-        'font-size': .769em,    // ~ 10px
-        'vertical-align': 10%,
-    ),
-    'normal': (
-        'font-size': $oi-default-size,
-    ),
-    'large': (
-        'font-size': 1.315em,   // ~ 17px
-        'vertical-align': -6%,
-    ),
-    'larger': (
-        'font-size': 1.462em,   // ~ 19px
-        'vertical-align': -10%,
-    ),
-);
+// ================================
+// MIXINS
+// ================================
 
-// Force font-weight to normal
-// ----------------------------------------------------------------------------
-.oi, .fa {
-    font-weight: $font-weight-normal;
+@mixin material-icon-base {
+    display: inline-block;
+    font-family: var(--icon-font-family, #{$ms-font-family});
+    font-style: normal;
+    font-size: var(--oi-font-size, #{$default-icon-size});
+    font-weight: 400 !important;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    vertical-align: -11.5%;
+    speak: never;
+    -webkit-font-smoothing: antialiased;
+    -webkit-font-feature-settings: 'liga';
+    -moz-osx-font-smoothing: grayscale;
+    -moz-font-feature-settings: 'liga';
+
+    &:before {
+        transform: scale(var(--oi-before-scale, #{$ms-size-multiplier}));
+        display: inline-block;
+        content: attr(data-icon);
+        text-rendering: geometricPrecision;
+        font-size: var(--oi-font-size, $oi-default-size);
+    }
+    &.oi-filled[data-icon]:not([data-icon=""]):before {
+        content: attr(data-icon) "_f";
+    }
+}
+
+@mixin icon-content($icon-name) {
+    &::before {
+        content: $icon-name;
+    }
+}
+
+@mixin ms-icon($icon-name, $filled: false) {
+    @include icon-content(if($filled, $icon-name + "_f", $icon-name));
+}
+
+@mixin rotate($degrees) {
+    -webkit-transform: rotate(#{$degrees}deg);
+    transform: rotate(#{$degrees}deg);
+}
+
+@mixin flip($x: 1, $y: 1) {
+    -webkit-transform: scale($x, $y);
+    transform: scale($x, $y);
 }
 
 // Define base-classes' properties using CSS variables.
 // Allows to dinamically update rules according to the context and eventual
 // utility classes.
 // ----------------------------------------------------------------------------
-.oi, .fa {
-    &:before {
-        font-size: var(--oi-font-size, $oi-default-size);
-        vertical-align: var(--oi-vertical-align, 0);
-        text-rendering: geometricPrecision;
-    }
-}
 
 .oi-fw {
     width: calc(#{$oi-fw-ratio} * var(--oi-font-size, #{$oi-default-size}));
     text-align: center;
-}
-
-// Print CSS variables for each size/breakpoint
-// ----------------------------------------------------------------------------
-@each $breakpoint in map-keys($grid-breakpoints) {
-    @include media-breakpoint-up($breakpoint) {
-        $-infix: breakpoint-infix($breakpoint, $grid-breakpoints);
-
-        @each $-key, $-values in $oi-sizes {
-            .oi#{$-infix}-#{$-key} {
-                @each $-rule, $-value in $-values {
-                    @include print-variable('oi-#{$-rule}', $-value);
-                }
-            }
-        }
-    }
 }
 
 // Rely on animations already defined by FontAwesome
@@ -73,12 +82,6 @@ $oi-sizes: (
 
 .oi-pulse {
     animation: fa-spin 1s infinite steps(8);
-}
-
-.o_barcode {
-    -webkit-mask: url('/web/static/img/barcode.svg') center/contain no-repeat;
-    mask: url('/web/static/img/barcode.svg') center/contain no-repeat;
-    background-color: $o-brand-primary;
 }
 
 .o_fa_stack {
@@ -94,4 +97,205 @@ $oi-sizes: (
     > :first-child {
         font-size: 2em;
     }
+}
+
+// ================================
+// SCSS VARIABLES
+// ================================
+
+$ms-font-family: 'Material Symbols Outlined';
+$oi-font-family: 'odoo_ui_icons';
+$default-icon-size: $oi-default-size;
+// TODO : review large size and get rid of $fa- variables
+$fa-lg-size: $oi-default-size * 1.25;
+$fa-fw-width: 1.28571em;
+
+// Icon sizing map
+$icon-sizes: (
+    'lg': $fa-lg-size,
+    '2x': $oi-default-size * 2,
+    '3x': $oi-default-size * 3,
+    '4x': $oi-default-size * 4,
+    '5x': $oi-default-size * 5,
+    '6x': 6em,
+    '7x': 7em,
+    '8x': 8em,
+    '9x': 9em,
+    '10x': 10em,
+);
+
+// ================================
+// BASE CLASSES
+// ================================
+
+// Generic class for Material Symbols and OI extended library icons.
+.oi {
+    @include material-icon-base;
+}
+
+// To remove after the switch
+.mi, .fa {
+    @include material-icon-base;
+}
+
+
+@mixin oi-icon($icon-name) {
+    --icon-font-family: #{$oi-font-family};
+    $icon-content: map-get($oi-custom-icons, $icon-name);
+    @include icon-content($icon-content);
+    @if index($oi-custom-rtl-icons, $icon-name) != null {
+        .o_rtl & {
+            transform: rotateY(180deg);
+        }
+    }
+}
+
+.oi {
+    @each $icon-name, $icon-content in $oi-custom-icons {
+        // Add "oi_" prefix to avoid conflict with Material Symbols icon names
+        &[data-icon="oi_#{$icon-name}"] {
+            @include oi-icon($icon-name);
+        }
+    }
+}
+
+/* RTL adaptations - Flip directional icons by 180 degree. */
+/* ---------------------------------------------------------------------------- */
+
+.o_rtl {
+    @each $icon in $ms-rtl-icons {
+        [data-icon="#{$icon}"] {
+            transform: rotateY(180deg);
+        }
+    }
+}
+
+$icon-bundles: (
+    "fa": $fa-icon-map,
+    "oi": $oi-icon-map
+);
+
+@each $prefix, $map in $icon-bundles {
+    @each $icon-slug, $config in $map {
+
+        .#{$prefix}-#{$icon-slug} {
+            $type: nth($config, 1);
+            $icon-name: nth($config, 2);
+
+            @if $type =="oi" {
+                @include oi-icon($icon-name);
+            }
+            @else if $type =="ms" {
+                $is-filled: length($config) >=3 and nth($config, 3)=="filled";
+                @include ms-icon($icon-name, $is-filled);
+            }
+        }
+    }
+}
+
+// ================================
+// UTILITY CLASSES & ADVANCED FEATURES
+// ================================
+
+// Dynamic size generation using SCSS loops
+@each $name, $size in $icon-sizes {
+    .fa-#{$name},
+    .oi-#{$name} {
+        font-size: $size;
+
+        @if $name == 'lg' {
+            line-height: 0.5;
+            vertical-align: -40%;
+        }
+    }
+}
+
+// Temporary kept for compatibility.
+.oi-stack, .fa-stack {
+    position: relative;
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    line-height: 2em;
+    vertical-align: middle;
+}
+
+.oi-stack-1x, .oi-stack-2x,
+.fa-stack-1x, .fa-stack-2x {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.oi-stack-2x, .fa-stack-2x {
+    font-size: 2em;
+}
+
+// Fixed width for consistent alignment
+// To remove after the switch
+.fa-fw {
+    width: $fa-fw-width;
+    text-align: center;
+}
+
+// Rotation classes using mixin
+.fa-rotate-90,
+.oi-rotate-90 {
+    @include rotate(90);
+}
+
+.fa-rotate-180,
+.oi-rotate-180 {
+    @include rotate(180);
+}
+
+.fa-rotate-270,
+.oi-rotate-270 {
+    @include rotate(270);
+}
+
+// Flipping classes using mixin
+.fa-flip-horizontal,
+.oi-flip-horizontal {
+    @include flip(-1, 1);
+}
+
+.fa-flip-vertical,
+.oi-flip-vertical {
+    @include flip(1, -1);
+}
+
+// Spinning animation
+.fa-spin,
+.oi-spin {
+    -webkit-animation: fa-spin 2s infinite linear;
+    animation: fa-spin 2s infinite linear;
+}
+
+@-webkit-keyframes fa-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+    }
+}
+
+@keyframes fa-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(359deg);
+    }
+}
+
+// ================================
+// MATERIAL SYMBOLS ADVANCED FEATURES
+// ================================
+
+// Skip transform computation
+.oi-natural-scale {
+    --oi-before-scale: 1;
 }

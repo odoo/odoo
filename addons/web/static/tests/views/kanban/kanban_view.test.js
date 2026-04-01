@@ -7518,10 +7518,10 @@ test("groups will be scrolled to on unfold if outside of viewport", async () => 
     await contains(".o_column_folded:eq(0)").click();
     // Group is followed by a folded group which is outside the viewport
     // after unfold, scroll to that group
-    expect(".o_content").toHaveProperty("scrollLeft", 1844);
+    expect(".o_content").toHaveProperty("scrollLeft", 1862);
     let { x, width } = queryRect(".o_column_folded:eq(0)");
     // TODO JUM: change digits option
-    expect(x + width).toBeCloseTo(window.innerWidth - 1, {
+    expect(x + width).toBeCloseTo(window.innerWidth, {
         digits: 0,
         message:
             "the next group (which is folded) should stick to the right of the screen after the scroll",
@@ -7538,7 +7538,7 @@ test("groups will be scrolled to on unfold if outside of viewport", async () => 
     });
     // scroll to the end
     await contains(".o_content").scroll({ left: 5000 });
-    expect(".o_content").toHaveProperty("scrollLeft", 3302);
+    expect(".o_content").toHaveProperty("scrollLeft", 3326);
     await contains(".o_kanban_group:last").click();
     expect(".o_content").toHaveProperty("scrollLeft", 3562);
     ({ x, width } = queryRect('.o_kanban_group:contains("column 11 (1)")'));
