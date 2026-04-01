@@ -51,6 +51,7 @@ import { rightPos } from "@html_editor/utils/position";
 import { syntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/backend/syntax_highlighting/syntax_highlighting";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { IndexedDB } from "@web/core/utils/indexed_db";
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
@@ -681,11 +682,11 @@ export class Composer extends Component {
                 }
                 if (accidentalDiscard) {
                     this.fullComposerBus.trigger("ACCIDENTAL_DISCARD", {
-                        onAccidentalDiscard: (isEmpty) => {
+                        onAccidentalDiscard: async (isEmpty) => {
                             if (!isEmpty) {
                                 this.state.isFullComposerOpen = true;
                                 this.saveContent();
-                                this.restoreContent();
+                                await this.restoreContent();
                                 this.state.isFullComposerOpen = false;
                             }
                         },
@@ -871,6 +872,7 @@ export class Composer extends Component {
         this.props.composer.replyToMessage = undefined;
         this.props.composer.emailAddSignature = true;
         this.props.composer.thread.additionalRecipients = [];
+        this.deleteSavedContent();
         return message;
     }
 
@@ -974,26 +976,22 @@ export class Composer extends Component {
         if (composer.restoredFromFullComposer && !this.state.isFullComposerOpen) {
             return;
         }
-        const saveContentToLocalStorage = ({
+        const saveContentToLocalStorage = async ({
             composerHtml,
             emailAddSignature,
             replyToMessageId,
             fromFullComposer = composer.restoredFromFullComposer,
         }) => {
             if (isHtmlEmpty(composerHtml)) {
-                browser.localStorage.removeItem(composer.localId);
+                await this.deleteSavedContent();
             } else {
-                browser.localStorage.setItem(
-                    composer.localId,
-                    JSON.stringify({
-                        emailAddSignature,
-                        replyToMessageId,
-                        composerHtml: isMarkup(composerHtml)
-                            ? ["markup", composerHtml]
-                            : composerHtml,
-                        fromFullComposer,
-                    })
-                );
+                const db = new IndexedDB("mail");
+                await db.write("composer", composer.localId, {
+                    emailAddSignature,
+                    replyToMessageId,
+                    composerHtml: isMarkup(composerHtml) ? ["markup", composerHtml] : composerHtml,
+                    fromFullComposer,
+                });
             }
         };
         if (this.state.isFullComposerOpen) {
@@ -1011,15 +1009,18 @@ export class Composer extends Component {
         }
     }
 
-    restoreContent() {
+    async deleteSavedContent() {
+        const db = new IndexedDB("mail");
         const composer = toRaw(this.props.composer);
-        let config;
-        try {
-            config = JSON.parse(browser.localStorage.getItem(composer.localId));
-        } catch {
-            browser.localStorage.removeItem(composer.localId);
-        }
+        await db.delete("composer", composer.localId);
+    }
+
+    async restoreContent() {
+        const db = new IndexedDB("mail");
+        const composer = toRaw(this.props.composer);
+        const config = await db.read("composer", composer.localId);
         if (!config) {
+            await this.deleteSavedContent();
             return;
         }
         if (!isHtmlEmpty(config.composerHtml)) {
