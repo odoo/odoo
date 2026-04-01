@@ -26,7 +26,7 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #       - search ir_rule (_get_rules)
         #       - search mail_message
         #   - fetch bus_bus (_bus_last_id)
-        #   30 store add message:
+        #   35 store add message:
         #       - search mail_message
         #       - fetch mail_message
         #       - search mail_message_schedule
@@ -56,17 +56,28 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #           - fetch res_users
         #           - fetch res_partner
         #       - fetch mail_message_subtype
-        #       6 rating stats computation:
-        #           - read group rating_rating (_rating_get_stats_per_record for slide.channel)
-        #           - read group rating_rating (_rating_get_stats_per_record for product.template)
+        #       8 rating stats computation:
+        #           3 check access read for slide.channel:
+        #               - search ir_rule (identify rules)
+        #               - fetch ir_rule (rule definitions)
+        #               - fetch slide_channel (verify records)
+        #           3 check access read for product.template:
+        #               - search ir_rule (identify rules)
+        #               - fetch ir_rule (rule definitions)
+        #               - fetch product_template (verify records)
         #           - compute message_needaction for slide.channel
         #           - compute message_needaction for product.template
         #       - select current db snapshot
         first_model_records = self.env["product.template"].create(
-            [{"name": "Product A1"}, {"name": "Product A2"}]
+            [{"name": "Product A1"}, {"name": "Product A2"}, {"name": "Product A3"}]
         )
         second_model_records = self.env["slide.channel"].create(
-            [{"name": "Course B1"}, {"name": "Course B2"}]
+            [
+                {"name": "Course B1"},
+                {"name": "Course B2"},
+                {"name": "Course B3"},
+                {"name": "Course B4"},
+            ]
         )
         for record in chain(first_model_records, second_model_records):
             record.message_post(
@@ -76,5 +87,5 @@ class TestInboxPerformance(HttpCase, MailCommon):
                 rating_value="4",
             )
         self.authenticate(self.user_employee.login, self.user_employee.password)
-        with self.assertQueryCount(41):
+        with self.assertQueryCount(45):
             self.make_jsonrpc_request("/mail/data", {"fetch_params": ["/mail/inbox/messages"]})
