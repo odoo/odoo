@@ -16,6 +16,8 @@ from .. import sql_db
 
 __unittest = True
 
+real_time = time.time.__call__
+
 STDOUT_LINE = '\nStdout:\n%s'
 STDERR_LINE = '\nStderr:\n%s'
 
@@ -116,14 +118,14 @@ class OdooTestResult(object):
         "Called when the given test is about to be run"
         self.testsRun += 1
         self.log(logging.INFO, 'Starting %s ...', self.getDescription(test), test=test)
-        self.time_start = time.time()
+        self.time_start = real_time()
         self.queries_start = sql_db.sql_counter
 
     def stopTest(self, test):
         """Called when the given test has been run"""
         if stats_logger.isEnabledFor(logging.INFO):
             self.stats[test.id()] = Stat(
-                time=time.time() - self.time_start,
+                time=real_time() - self.time_start,
                 queries=sql_db.sql_counter - self.queries_start,
             )
 
@@ -289,12 +291,12 @@ class OdooTestResult(object):
     @contextlib.contextmanager
     def collectStats(self, test_id):
         queries_before = sql_db.sql_counter
-        time_start = time.time()
+        time_start = real_time()
 
         yield
 
         self.stats[test_id] += Stat(
-            time=time.time() - time_start,
+            time=real_time() - time_start,
             queries=sql_db.sql_counter - queries_before,
         )
 
