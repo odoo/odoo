@@ -67,6 +67,11 @@ export class RecordListInternal {
     name;
     /** @type {Record} */
     owner;
+    /**
+     * @type {boolean} Technical flag to immediately read attribute.
+     * Useful to read `data` while passing to owl's proxy getter again to register observer.
+     */
+    gettingField = false;
 
     /**
      * Version of add() that does not update the inverse.
@@ -274,7 +279,14 @@ export class RecordList extends Array {
             /** @param {RecordList<R>} receiver */
             get(recordList, name, recordListFullProxy) {
                 recordListFullProxy = recordList._.downgradeProxy(recordList, recordListFullProxy);
+                if (name === "data" && !recordList._.gettingField) {
+                    recordList._.gettingField = true;
+                    const res = recordList._proxy.data;
+                    recordList._.gettingField = false;
+                    return res;
+                }
                 if (
+                    recordList._.gettingField ||
                     typeof name === "symbol" ||
                     Object.keys(recordList).includes(name) ||
                     Object.prototype.hasOwnProperty.call(recordList.constructor.prototype, name)
