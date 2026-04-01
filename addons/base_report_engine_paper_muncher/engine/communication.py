@@ -249,8 +249,8 @@ def generate_environ(path: str) -> WSGIEnvironment:
     """
     url, _, query_string = path.partition('?')
     current_environ = request.httprequest.environ
-    # TODO by security forge request with public user env
-    # TODO for protected documents odoo should give a URL with an access token
+    # By security, we forge a request with public user environment.
+    # For protected documents, Odoo should provide a URL with an access token.
     environ = create_environ(
         method='GET',
         path=url,
@@ -258,7 +258,6 @@ def generate_environ(path: str) -> WSGIEnvironment:
         headers={
             'Host': current_environ['HTTP_HOST'],
             'User-Agent': SERVER_SOFTWARE,
-            'http_cookie': current_environ['HTTP_COOKIE'],
             'remote_addr': current_environ['REMOTE_ADDR'],
         }
     )
