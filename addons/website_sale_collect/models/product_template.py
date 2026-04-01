@@ -19,8 +19,6 @@ class ProductTemplate(models.Model):
         if (
             bool(in_store_dm)  # Click & Collect is enabled.
             and product_or_template.is_product_variant
-            and product_or_template.is_storable
-            and not (in_store_dm.excluded_tag_ids & product_or_template.all_product_tag_ids)
         ):
             product_sudo = product_or_template.sudo()  # To read the stock values when public user.
             order_sudo = request.cart
@@ -38,30 +36,41 @@ class ProductTemplate(models.Model):
                 ("website_published", "=", True),
                 ("delivery_type", "!=", "in_store"),
             ])
-            if available_delivery_methods_sudo:
+            product_tags = product_or_template.all_product_tag_ids
+            valid_delivery_methods = available_delivery_methods_sudo.filtered(
+                lambda dm: not (dm.excluded_tag_ids & product_tags)
+            )
+            if valid_delivery_methods:
                 res["delivery_stock_data"] = utils.format_product_stock_values(
                     product_sudo, uom=uom, cart_qty=cart_qty
                 )
             else:
                 res["delivery_stock_data"] = {}
 
-            # Prepare the in-store stock data.
-            if (
-                order_sudo
-                and order_sudo.carrier_id.delivery_type == "in_store"
-                and order_sudo.pickup_location_data
-            ):  # Get stock values for the product variant in the selected store.
-                res["in_store_stock_data"] = utils.format_product_stock_values(
-                    product_sudo,
-                    uom=uom,
-                    wh_id=order_sudo.pickup_location_data["id"],
-                    cart_qty=cart_qty,
-                )
+            # If C&C not excluded via tags, prepare the in-store stock data.
+            if not (in_store_dm.excluded_tag_ids & product_or_template.all_product_tag_ids):
+                if (
+                    order_sudo
+                    and order_sudo.carrier_id.delivery_type == "in_store"
+                    and order_sudo.pickup_location_data
+                ):  # Get stock values for the product variant in the selected store.
+                    res["in_store_stock_data"] = utils.format_product_stock_values(
+                        product_sudo,
+                        uom=uom,
+                        wh_id=order_sudo.pickup_location_data["id"],
+                        cart_qty=cart_qty,
+                    )
+                else:
+                    res["in_store_stock_data"] = utils.format_product_stock_values(
+                        product_sudo,
+                        uom=uom,
+                        free_qty=website.sudo()._get_max_in_store_product_available_qty(
+                            product_sudo
+                        ),
+                        cart_qty=cart_qty,
+                    )
             else:
-                res["in_store_stock_data"] = utils.format_product_stock_values(
-                    product_sudo,
-                    uom=uom,
-                    free_qty=website.sudo()._get_max_in_store_product_available_qty(product_sudo),
-                    cart_qty=cart_qty,
-                )
+                # In-store dm is not compatible with the product.
+                res["in_store_stock_data"] = {}
+
         return res

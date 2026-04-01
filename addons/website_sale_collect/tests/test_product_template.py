@@ -30,12 +30,11 @@ class TestProductTemplate(ClickAndCollectCommon):
         self.in_store_dm.excluded_tag_ids = [Command.set(excluded_tag.ids)]
         self.storable_product.all_product_tag_ids = [Command.set(excluded_tag.ids)]
         with self.mock_request(sale_order_id=self.cart.id):
-            combination_info = self.env['product.template']._get_additionnal_combination_info(
+            combination_info = self.env["product.template"]._get_additionnal_combination_info(
                 self.storable_product,
                 quantity=3,
                 date=datetime(2000, 1, 1),
                 uom=self.uom_unit,
                 website=self.website,
             )
-        self.assertFalse(combination_info.get("show_click_and_collect_availability"))
-        self.assertFalse(combination_info.get("in_store_stock"))
+        self.assertFalse(combination_info.get("in_store_stock_data"))
