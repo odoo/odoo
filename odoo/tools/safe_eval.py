@@ -707,7 +707,7 @@ class _SafeChecker:
         self.add_hook(type(d.values()), list)
 
     def add_hook(self, type_: type, hook: typing.Callable | None = None) -> None:
-        self.__hooks[type_] = hook
+        self.__hooks[type_] = hook or self._hook_nop
 
     @property
     def _encoder(self):
@@ -764,18 +764,17 @@ class _SafeChecker:
         """ Dispatch to the default check-serialisation function of `obj`. """
         t_obj = type(obj)
         try:
-            hook = self.__hooks[t_obj]
+            return self.__hooks[t_obj](obj)
         except KeyError:
             if isinstance(obj, type):
                 hook = self._hook_class
             else:
                 hook = self._hook_instance
             self.__hooks[t_obj] = hook
+            return hook(obj)
 
-        if not hook:
-            return None
-
-        return hook(obj)
+    def _hook_nop(self, obj):
+        return None
 
     def _hook_iterator(self, obj):
         return obj.__reduce__()
