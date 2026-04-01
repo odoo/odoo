@@ -69,7 +69,7 @@ export class SearchBarMenu extends Component {
     // Filter Panel
     get filterItems() {
         return this.env.searchModel.getSearchItems((searchItem) =>
-            ["filter", "dateFilter", "parentFilter"].includes(searchItem.type)
+            ["filter", "dateFilter", "parentFilter", "lazyParentFilter"].includes(searchItem.type)
         );
     }
 
@@ -88,6 +88,18 @@ export class SearchBarMenu extends Component {
         } else {
             this.env.searchModel.toggleSearchItem(itemId);
         }
+    }
+
+    async onToggle({ itemId, optionsParams }) {
+        if (optionsParams.toBeLoaded) {
+            await this.env.searchModel.loadLazyParentFilter(itemId);
+            this.render();
+        }
+    }
+
+    async onLoadMoreOptions({ itemId }) {
+        await this.env.searchModel.loadMoreOptions(itemId);
+        this.render();
     }
 
     // GroupBy Panel

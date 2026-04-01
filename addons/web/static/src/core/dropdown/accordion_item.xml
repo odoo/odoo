@@ -8,7 +8,7 @@
                     t-attf-class="{{ this.props.class }}"
                     t-att-aria-expanded="this.state.open ? 'true' : 'false'"
                     t-out="this.props.description"
-                    t-on-click="() => this.state.open = !this.state.open"
+                    t-on-click="this.toggle"
             />
             <t t-if="this.state.open">
                 <div class="o_accordion_values ms-4 border-start">

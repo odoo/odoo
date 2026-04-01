@@ -890,6 +890,68 @@ export class SearchModel extends EventBus {
         this._notify();
     }
 
+    async loadLazyParentFilter(itemId) {
+        const searchItem = this.searchItems[itemId];
+        if (searchItem.optionsParams.fieldType === "selection") {
+            const field = this.searchViewFields[searchItem.optionsParams.fieldName];
+            const values = field.selection;
+            const options = searchItem.optionsParams.customOptions;
+            for (const val of values) {
+                options.push({
+                    description: val[1],
+                    domain: Domain.and([
+                        searchItem.domain,
+                        `[('${searchItem.optionsParams.fieldName}', '=', '${val[0]}')]`,
+                    ]).toString(),
+                    id: `custom_${val[1].toLowerCase()}_${searchItem.optionsParams.fieldName}`,
+                    type: "innerFilter",
+                });
+            }
+        }
+        if (["many2many", "many2one"].includes(searchItem.optionsParams.fieldType)) {
+            await this.loadMoreOptions(itemId);
+        }
+        delete searchItem.optionsParams.toBeLoaded;
+    }
+
+    async loadMoreOptions(itemId) {
+        const searchItem = this.searchItems[itemId];
+        const field = this.searchViewFields[searchItem.optionsParams.fieldName];
+        if (searchItem.optionsParams.limit) {
+            searchItem.optionsParams.limit *= 2;
+        } else {
+            searchItem.optionsParams.limit = 8;
+        }
+        const res = await this.orm
+            .cache({ type: "disk" })
+            .webSearchRead(
+                field.relation,
+                new Domain(searchItem.optionsParams.domain).toList(this.context),
+                {
+                    specification: {
+                        id: {},
+                        display_name: {},
+                    },
+                    limit: searchItem.optionsParams.limit,
+                }
+            );
+        searchItem.optionsParams.count = res.length;
+        const values = res.records.map((r) => [r.id, r.display_name]);
+        const options = [];
+        for (const val of values) {
+            options.push({
+                description: val[1],
+                domain: Domain.and([
+                    searchItem.domain,
+                    `[('${searchItem.optionsParams.fieldName}', '=', ${val[0]})]`,
+                ]).toString(),
+                id: `custom_${val[1].toLowerCase()}_${searchItem.optionsParams.fieldName}`,
+                type: "innerFilter",
+            });
+        }
+        searchItem.optionsParams.customOptions = options;
+    }
+
     /**
      * Set the active value id of a given category.
      * @param {number} sectionId
@@ -1586,6 +1648,7 @@ export class SearchModel extends EventBus {
                 );
                 break;
             case "parentFilter":
+            case "lazyParentFilter":
                 enrichSearchItem.options = _enrichOptions(
                     searchItem.optionsParams.customOptions,
                     queryElements.map((queryElem) => queryElem.generatorId)

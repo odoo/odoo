@@ -76,7 +76,11 @@ export class SearchArchParser {
                     this.visitSeparator();
                     break;
                 case "field":
-                    this.visitField(node);
+                    if (this.optionsParams) {
+                        this.visitInnerField(node);
+                    } else {
+                        this.visitField(node);
+                    }
                     break;
                 case "filter":
                     if (this.optionsParams) {
@@ -314,6 +318,22 @@ export class SearchArchParser {
         preInnerFilterOption.description = node.getAttribute("string");
         preInnerFilterOption.domain = node.getAttribute("domain");
         this.optionsParams.customOptions.push(preInnerFilterOption);
+    }
+
+    visitInnerField(node) {
+        this.optionsParams.toBeLoaded = true;
+        this.optionsParams.fieldName = node.getAttribute("name");
+        this.optionsParams.domain = node.getAttribute("domain") || [];
+        this.optionsParams.fieldType = this.fields[this.optionsParams.fieldName]?.type;
+        this.optionsParams.customOptions = [];
+        if (
+            !this.optionsParams.fieldType ||
+            !["many2many", "many2one", "selection"].includes(this.optionsParams.fieldType)
+        ) {
+            throw new Error(
+                `Inner field should only consist in a many2one, many2many or selection field`
+            );
+        }
     }
 
     visitGroup(node, visitChildren) {

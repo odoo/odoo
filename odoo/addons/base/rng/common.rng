@@ -399,9 +399,12 @@
                 <!-- Supported in Search View -->
                 <rng:group>
                     <rng:attribute name="string"/>
-                    <rng:oneOrMore>
-                        <rng:ref name="filter"/>
-                    </rng:oneOrMore>
+                    <rng:choice>
+                        <rng:ref name="field" />
+                        <rng:oneOrMore>
+                            <rng:ref name="filter"/>
+                        </rng:oneOrMore>
+                    </rng:choice>
                 </rng:group>
             </rng:choice>
 
