@@ -19,7 +19,7 @@
                 </button>
                 <!-- Center Side Div -->
                 <div class="floor-selector d-flex gap-1 py-2 overflow-auto">
-                    <t t-foreach="pos.models['restaurant.floor'].filter(f => f.active !== false)" t-as="floor" t-key="floor.id">
+                    <t t-foreach="pos.config.floor_ids.filter((f) => f.active)" t-as="floor" t-key="floor.id">
                         <button class="button button-floor btn btn-outline-secondary btn-lg px-3 lh-lg text-nowrap text-body" t-attf-class="{{ floor.id === state.selectedFloorId ? 'active' : '' }}" t-on-click="() => this.selectFloor(floor)">
                             <t t-esc="floor.name" />
                             <t t-set="changeCount" t-value="this.getFloorChangeCount(floor)"/>
