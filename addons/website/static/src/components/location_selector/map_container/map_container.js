@@ -1,40 +1,31 @@
 import { LocationSchedule } from "../location_schedule/location_schedule";
 import { Map } from "../map/map";
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, useProps, proxy, t } from "@odoo/owl";
 import { AssetsLoadingError, loadCSS, loadJS } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
+import { LOCATION_LIST } from "../utils";
 
 export class MapContainer extends Component {
     static components = { LocationSchedule, Map };
     static template = "website.locationSelector.mapContainer";
-    static props = {
-        locations: {
-            type: Array,
-            element: {
-                type: Object,
-                shape: {
-                    id: [String, Number],
-                    name: String,
-                    opening_hours: {
-                        type: Object,
-                        values: { type: Array, element: String },
-                    },
-                    street: String,
-                    city: String,
-                    zip_code: String,
-                    state: { type: String, optional: true },
-                    country_code: String,
-                    additional_data: { type: Object, optional: true },
-                    distance: { type: Number, optional: true },
-                    latitude: [String, Number],
-                    longitude: [String, Number],
-                },
-            },
-        },
-        selectedLocationId: [String, { value: false }],
-        setSelectedLocation: Function,
-        validateSelection: Function,
-    };
+    props = useProps({
+        locations: LOCATION_LIST,
+        pressControlToZoom: t.boolean().optional(false),
+        selectedLocationId: t.string(),
+        setSelectedLocation: t.function(),
+        setVisibleLocations: t.function().optional(),
+        validateSelection: t.function().optional(),
+        showDetailsTooltip: t.boolean().optional(false),
+        showDetailsTextArea: t.boolean().optional(true),
+        mapZoom: t.string().optional("13"),
+        showIndexes: t.boolean(),
+        showEmail: t.boolean().optional(false),
+        showImage: t.boolean().optional(false),
+        showPhone: t.boolean().optional(false),
+        showWebsite: t.boolean().optional(false),
+        showLocationNameOnMarkerHover: t.boolean().optional(false),
+        containerEl: t.any().optional(),
+    });
 
     setup() {
         this.state = proxy({
@@ -47,11 +38,22 @@ export class MapContainer extends Component {
              * UserError if the script can't be loaded (e.g. if the customer loses the connection
              * between the rendering of the page and when he opens the location selector, or if the
              * CDN’s doesn't host the library anymore).
-             */
+             * When the component is mounted inside the custom snippet preview iframe, loadCSS should
+             * target the iframe instead of the main document, because otherwise the CSS would not be
+             * available.
+             **/
             try {
+                const isCustomSnippetPreview =
+                    this.props.containerEl?.ownerDocument.documentElement.classList.contains(
+                        "o_add_snippets_preview"
+                    );
                 await Promise.all([
                     loadJS("https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"),
-                    loadCSS("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"),
+                    loadCSS("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css", {
+                        targetDoc: isCustomSnippetPreview
+                            ? this.props.containerEl.ownerDocument
+                            : undefined,
+                    }),
                 ]);
                 this.state.shouldLoadMap = true;
             } catch (error) {
@@ -88,6 +90,13 @@ export class MapContainer extends Component {
 
     get chooseLocationButtonLabel() {
         return _t("Choose this location");
+    }
+
+    get hasOpeningHours() {
+        return (
+            this.selectedLocation.opening_hours &&
+            Object.keys(this.selectedLocation.opening_hours).length > 0
+        );
     }
 
     get openingHoursLabel() {

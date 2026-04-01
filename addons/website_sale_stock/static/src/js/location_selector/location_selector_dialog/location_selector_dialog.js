@@ -16,6 +16,14 @@ export const locationSelectorDialogProps = {
     selectedLocationId: t.string().optional(),
     save: t.function(),
     close: t.function(), // This is the close from the env of the Dialog Component
+
+    // The following props are never set from `website_sale_stock`. They
+    // always keep their default values and are required to adapt the
+    // `LocationSelector` (`website`) to `website_sale_stock` module.
+    showDetailsTooltip: t.boolean().optional(false),
+    showDetailsTextArea: t.boolean().optional(true),
+    showSearchbar: t.boolean().optional(true),
+    showSidebar: t.boolean().optional(true),
 };
 
 export class LocationSelectorDialog extends Component {
