@@ -1,3 +1,4 @@
+import { deepEqual } from "@web/core/utils/objects";
 import { onWillRender } from "@web/owl2/utils";
 import { parseEmail } from "@mail/utils/common/format";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -204,6 +205,16 @@ export class RecipientsInput extends Component {
             for (const recipient of this.props.thread[threadField]) {
                 createTagForRecipient(recipient, threadField);
             }
+        }
+        // Avoid changing the reference if nothing as changed (except the id)
+        // to avoid useRecipientChecker to open emailSetterPopover multiple time on recipient without email.
+        if (
+            deepEqual(
+                tags.map((t) => ({ ...t, id: "tag_0" })),
+                this.tags.map((t) => ({ ...t, id: "tag_0" }))
+            )
+        ) {
+            return this.tags;
         }
         return tags;
     }
