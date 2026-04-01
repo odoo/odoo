@@ -3273,3 +3273,23 @@ class TestStockValuation(TestStockValuationCommon):
         self.company.with_user(accounting_user).action_close_stock_valuation(at_date=Date.today(), auto_post=True)
         report = self.env['stock_account.stock.valuation.report'].with_user(accounting_user)._get_report_data(date=Date.today())
         self.assertTrue(report)
+
+    def test_avg_cost_partially_consigned(self):
+        """Ensures the avg_cost is correctly computed when the product is partially
+        consigned (the consigned products are not taken into account in the computation).
+        """
+        self._make_in_move(self.product_avco, 1, 10)
+        self._make_in_move(self.product_avco, 1, 20, owner_id=self.vendor)
+        self.assertEqual(self.product_avco.avg_cost, 10)
+
+    def test_quants_values_partially_consigned(self):
+        """Ensures the value of the quants are correctly computed when the product is partially
+        consigned (the consigned products are not taken into account in the computation).
+        """
+        self._make_in_move(self.product_avco, 1, 10)
+        self._make_in_move(self.product_avco, 1, 20, owner_id=self.vendor)
+        quants = self.product_avco.stock_quant_ids
+        regular_quant = quants.filtered(lambda q: q.location_id == self.stock_location and not q.owner_id)
+        consigned_quant = quants.filtered(lambda q: q.location_id == self.stock_location and q.owner_id)
+        self.assertEqual(regular_quant.value, 10)
+        self.assertEqual(consigned_quant.value, 0)
