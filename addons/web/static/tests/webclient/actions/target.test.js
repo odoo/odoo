@@ -411,7 +411,7 @@ describe("new", () => {
                         { onClose: () => expect.step("failing dialog closed") }
                     );
                 } catch (e) {
-                    expect(e.cause.message).toBe("my error");
+                    expect(e.message).toBe("my error");
                     throw e;
                 }
             }
