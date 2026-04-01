@@ -187,6 +187,11 @@ export class ListDataSource extends OdooViewsDataSource {
             this._triggerFetching();
             return LOADING_ERROR;
         }
+        if (!this.alreadyFetchedFieldPaths.has(fieldPath)) {
+            this.addFieldPathToFetch(fieldPath);
+            this._triggerFetching();
+            return LOADING_ERROR;
+        }
         this.assertIsValid();
         const field = this.fieldPathsToFieldMap[fieldPath];
         return field ? field.string : fieldPath;
