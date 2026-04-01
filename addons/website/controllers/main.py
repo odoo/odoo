@@ -406,7 +406,7 @@ class Website(Home):
         return request.redirect(action_url)
 
     @http.route('/website/configurator/preview', type='http', auth="user", website=True, multilang=False)
-    def website_configurator_preview(self, industry, theme_name=None, install_theme=False, generate_content=False, user_prompt=None, tone=None, **kwargs):
+    def website_configurator_preview(self, industry, theme_name=None, install_theme=False, generate_content=False, user_prompt=None, tone=None, with_images=False, industry_id=0, **kwargs):
         if not request.env.user.has_group('website.group_website_designer'):
             raise werkzeug.exceptions.NotFound()
         website = request.website
@@ -423,6 +423,8 @@ class Website(Home):
                 generate_content=str(generate_content).lower() in ('1', 'true'),
                 user_prompt=user_prompt,
                 tone=tone,
+                with_images=str(with_images).lower() in ('1', 'true'),
+                industry_id=int(industry_id),
             )),
         })
         return response

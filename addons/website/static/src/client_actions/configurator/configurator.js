@@ -858,6 +858,7 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         this.logoInputRef = useRef("logoSelectionInput");
         this.state.selectedTone = "Inspirational";
         this.is_content_generated = false;
+        this.images_loaded = false;
         this.state.generatorIsLoading = false;
 
         onWillStart(async () => {
@@ -1079,9 +1080,11 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         if (userPrompt !== "" || !this.is_content_generated) {
             const params = new URLSearchParams({
                 industry: this.state.selectedIndustry.label,
+                industry_id: this.state.selectedIndustry.id,
                 install_theme: "0",
                 theme_name: this.state.selectedTheme || "theme_default",
                 generate_content: "1",
+                with_images: this.images_loaded ? "0" : "1",
                 user_prompt: userPrompt !== "" ? userPrompt : null,
                 tone: this.state.selectedTone || null,
             });
@@ -1089,6 +1092,7 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
             if (iframe) {
                 this.state.generatorIsLoading = true;
                 this.is_content_generated = true;
+                this.images_loaded = true;
                 iframe.src = `/website/configurator/preview?${params.toString()}&preview_ts=${Date.now()}`;
             }
         }
@@ -1097,6 +1101,7 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
     get previewUrl() {
         const params = new URLSearchParams({
             industry: this.state.selectedIndustry.label,
+            industry_id: this.state.selectedIndustry.id,
             install_theme: "1",
             theme_name: this.state.selectedTheme || "theme_default",
             generate_content: "0",
