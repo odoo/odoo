@@ -22,6 +22,21 @@ const enterPagePropertiesAndClickOnInputUrl = [
     },
 ];
 
+const saveChanges = [
+    {
+        content: "Click on the 'Save' of the Page Properties",
+        trigger: ".modal-content:contains('Page Properties') footer button:contains('Save')",
+        run: "click",
+    },
+    {
+        content: "Wait for the load operation to finish",
+        trigger: "body.o_web_client:not(.modal-open)",
+    },
+    {
+        trigger: ":iframe .s_website_form",
+    },
+];
+
 const translateUrl = function (newUrl) {
     return [
         ...enterPagePropertiesAndClickOnInputUrl,
@@ -40,30 +55,23 @@ const translateUrl = function (newUrl) {
             trigger: ".modal-content:contains('Translate: url') footer button:contains('Save')",
             run: "click",
         },
-        {
-            content: "Click on the 'Save' of the Page Properties",
-            trigger: ".modal-content:contains('Page Properties') footer button:contains('Save')",
-            run: "click",
-        },
-        {
-            content: "Wait for the load operation to finish",
-            trigger: "body.o_web_client:not(.modal-open)",
-        },
-        {
-            trigger: ":iframe .s_website_form",
-        },
     ];
 };
 
 registerWebsitePreviewTour("translate_url_exists_in_other_language", {}, () => [
     ...translateUrl("/page-en"),
+    ...saveChanges,
 ]);
 
 registerWebsitePreviewTour("translate_url_exists_in_same_language", {}, () => [
     ...translateUrl("/page-fr"),
+    ...saveChanges,
 ]);
 
-registerWebsitePreviewTour("update_homepage_url", {}, () => [...translateUrl("/contactus-fr")]);
+registerWebsitePreviewTour("update_homepage_url", {}, () => [
+    ...translateUrl("/contactus-fr"),
+    ...saveChanges,
+]);
 
 registerWebsitePreviewTour("set_homepage_property_of_a_page", {}, () => [
     ...enterPageProperties,
@@ -90,4 +98,14 @@ registerWebsitePreviewTour("add_language_and_translate_url", { edition: true }, 
         content: "Check that the translate button is visible",
         trigger: "button.o_field_translate:contains('EN')",
     },
+]);
+
+registerWebsitePreviewTour("translate_url_and_redirect", {}, () => [
+    ...translateUrl("/contactus-fr"),
+    {
+        content: "Click on 'Redirect Old URL'",
+        trigger: ".modal-content:contains('Page Properties') #redirect_old_url_0",
+        run: "click",
+    },
+    ...saveChanges,
 ]);
