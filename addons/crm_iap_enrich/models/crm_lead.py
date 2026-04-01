@@ -132,7 +132,7 @@ class CrmLead(models.Model):
                     self.env['ir.cron']._commit_progress(remaining=0)
                     break
                 except Exception:
-                    self.env.cr.rollback()
+                    self.env['ir.cron']._rollback_progress()
                     _logger.error('A batch of leads could not be enriched: %s', repr(leads))
                     time_left = self.env['ir.cron']._commit_progress(len(leads))
                 if not time_left:
@@ -151,7 +151,7 @@ class CrmLead(models.Model):
                     break
                 except Exception:
                     if not modules.module.current_test:
-                        self.env.cr.rollback()
+                        self.env['ir.cron']._rollback_progress()
                     _logger.error('A batch of leads could not be enriched: %s', repr(leads))
 
     @api.model

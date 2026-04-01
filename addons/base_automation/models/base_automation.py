@@ -1202,7 +1202,7 @@ class BaseAutomation(models.Model):
                     automation._process(record, trigger='time-based')
                 self.env.flush_all()
             except Exception as e:
-                self.env.cr.rollback()
+                self.env['ir.cron']._rollback_progress()
                 _logger.exception("Error in time-based automation rule `%s`.", automation.name)
                 final_exception = e
                 continue

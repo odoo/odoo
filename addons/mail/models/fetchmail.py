@@ -305,6 +305,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                         remaining_time = MailThread.env['ir.cron']._commit_progress(1)
                     except Exception:  # noqa: BLE001
                         MailThread.env.cr.rollback()
+                        self.env['ir.cron']._rollback_progress()
                         failed += 1
                         _logger.info('Failed to process mail from %s server %s.', *server_type_and_name, exc_info=True)
                         # mail failed, but still "seen", so one unit of work

@@ -59,7 +59,7 @@ class IrAutovacuum(models.AbstractModel):
                 _logger.debug("%s.%s  took %.2fs", model, attr, time.monotonic() - start_time)
             except Exception:
                 _logger.exception("Failed %s.%s()", model, attr)
-                self.env.cr.rollback()
+                self.env['ir.cron']._rollback_progress()
 
     @api.autovacuum
     def _gc_orm_signaling(self):

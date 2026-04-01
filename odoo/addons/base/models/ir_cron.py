@@ -879,6 +879,8 @@ class IrCron(models.Model):
         :param deactivate: deactivate the cron after running it
         :return: remaining time (seconds) for the cron run
         """
+        # Typical use case:
+        # https://www.odoo.com/documentation/master/developer/reference/backend/actions.html#writing-cron-functions
         ctx = self.env.context
         progress = self.env['ir.cron.progress'].sudo().browse(ctx.get('ir_cron_progress_id'))
         if not progress:
@@ -900,6 +902,11 @@ class IrCron(models.Model):
         progress.write(vals)
         self.env.cr.commit()
         return max(ctx.get('cron_end_time', float('inf')) - time.monotonic(), 0)
+
+    @api.model
+    def _rollback_progress(self) -> None:
+        """The rollback with the same logic as the commit for cron jobs."""
+        self.env.cr.rollback()
 
     def action_open_parent_action(self):
         return self.ir_actions_server_id.action_open_parent_action()

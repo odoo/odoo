@@ -71,7 +71,7 @@ class ResUsersDeletion(models.Model):
                 delete_request.state = 'done'
                 commit_progress(1)
             except Exception as e:
-                self.env.cr.rollback()
+                self.env['ir.cron']._rollback_progress()
                 _logger.error(
                     "User #%i %r could not be deleted. Original request from %r. Related error: %s",
                     user.id, user_name, requester_name, e)
@@ -92,7 +92,7 @@ class ResUsersDeletion(models.Model):
                 if not commit_progress():
                     break
             except Exception as e:
-                self.env.cr.rollback()
+                self.env['ir.cron']._rollback_progress()
                 _logger.warning(
                     "Partner #%i %r could not be deleted. Original request from %r. Related error: %s",
                     partner.id, user_name, requester_name, e)

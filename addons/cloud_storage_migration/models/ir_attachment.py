@@ -173,7 +173,7 @@ class CloudStorageAttachmentMigration(models.Model):
                 _logger.info('uploaded attachment %s to cloud storage', attachment.id)
             except Exception as e:  # noqa: BLE001
                 _logger.warning('Failed to upload attachment %s to cloud storage: %s', attachment.id, e)
-                self.env.cr.rollback()
+                self.env['ir.cron']._rollback_progress()
 
             if end_time < time.monotonic():
                 break
