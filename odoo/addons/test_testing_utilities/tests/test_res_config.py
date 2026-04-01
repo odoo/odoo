@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from unittest.mock import patch
 from odoo.tests.common import tagged, TransactionCase
@@ -20,3 +19,21 @@ class TestResConfig(TransactionCase):
 
         create_param_mock.assert_not_called()
         write_param_mock.assert_not_called()
+
+    def test_boolean_config_parameter(self):
+        ICP = self.env['ir.config_parameter'].sudo()
+        ResConfigTest = self.env['res.config.test']
+
+        # If no `ir.config_parameter` record exists yet for the config, value
+        # should be `False`
+        ICP.search([('key', '=', 'resConfigTest.parameterBool')]).unlink()
+        defaults = ResConfigTest.default_get(['param_bool'])
+        self.assertFalse(defaults['param_bool'])
+
+        ICP.set_str('resConfigTest.parameterBool', 'False')
+        defaults = ResConfigTest.default_get(['param_bool'])
+        self.assertFalse(defaults['param_bool'])
+
+        ICP.set_str('resConfigTest.parameterBool', 'True')
+        defaults = ResConfigTest.default_get(['param_bool'])
+        self.assertTrue(defaults['param_bool'])
