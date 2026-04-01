@@ -2,6 +2,8 @@ import math
 from collections import OrderedDict
 from decimal import ROUND_HALF_UP, Decimal
 
+from odoo.release import MIN_PY_VERSION
+
 # The following section of the code is used to add support for the Bulgarian language in the num2words package.
 # Part of the code is taken from num2words package: https://github.com/savoirfairelinux/num2words
 
@@ -598,3 +600,10 @@ def patch_module():
     except ImportError:
         return
     num2words.CONVERTER_CLASSES['bg'] = NumberToWords_BG()
+
+    if MIN_PY_VERSION >= (3, 13):
+        msg = "The num2words monkey patch for Czech is obsolete. Bump the version of the library to the latest available in the official package repository, if it hasn't already been done, and remove the patch."
+        raise RuntimeError(msg)
+    if 'cz' in num2words.CONVERTER_CLASSES and not 'cs' in num2words.CONVERTER_CLASSES:
+        # There is a mistake in the Czech language code in versions < 0.5.14. Map it to the correct code here.
+        num2words.CONVERTER_CLASSES['cs'] = num2words.CONVERTER_CLASSES['cz']
