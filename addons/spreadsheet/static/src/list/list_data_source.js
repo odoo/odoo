@@ -84,20 +84,20 @@ export class ListDataSource extends OdooViewsDataSource {
 
     async _load() {
         await super._load();
+        this.fieldPathsToFieldMap = {};
+        const specification = await this._getReadSpec();
+        this.alreadyFetchedFieldPaths = new Set([...this.fieldPathsToFetch]);
         if (this.maxPosition === 0) {
             this.data = [];
             return;
         }
-        this.fieldPathsToFieldMap = {};
         const { domain, orderBy, context } = this._searchParams;
-        const specification = await this._getReadSpec();
         const { records } = await this._orm.webSearchRead(this._metaData.resModel, domain, {
             specification,
             order: orderByToString(orderBy),
             limit: this.maxPosition,
             context,
         });
-        this.alreadyFetchedFieldPaths = new Set([...this.fieldPathsToFetch]);
         this.data = records;
         this.maxPositionFetched = this.maxPosition;
     }
@@ -184,6 +184,11 @@ export class ListDataSource extends OdooViewsDataSource {
             return this._loadError;
         }
         if (!this.isMetaDataLoaded()) {
+            this._triggerFetching();
+            return LOADING_ERROR;
+        }
+        if (!this.alreadyFetchedFieldPaths.has(fieldPath)) {
+            this.addFieldPathToFetch(fieldPath);
             this._triggerFetching();
             return LOADING_ERROR;
         }
