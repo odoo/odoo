@@ -6295,7 +6295,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
-            'target': 'self',
+            'target': 'new',
             'url': self.get_portal_url(),
         }
 

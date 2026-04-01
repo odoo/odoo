@@ -1725,7 +1725,7 @@ class SaleOrder(models.Model):
     @api.readonly
     def action_preview_sale_order(self):
         self.ensure_one()
-        return {"type": "ir.actions.act_url", "target": "self", "url": self.get_portal_url()}
+        return {"type": "ir.actions.act_url", "target": "new", "url": self.get_portal_url()}
 
     def action_update_taxes(self):
         self.ensure_one()
