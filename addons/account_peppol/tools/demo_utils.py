@@ -152,12 +152,44 @@ def _mock_peppol_deregister_participant(func, self, *args, **kwargs):
     self.unlink()
 
 
+def _mock_peppol_deregister_participant(func, self, *args, **kwargs):
+    self.company_id._reset_peppol_configuration()
+    self.unlink()
+
+
 _demo_behaviour = {
+<<<<<<< a71f4f2c6b2973ab47b9a36446266233b8d80aed
     '_call_peppol_proxy': _mock_call_peppol_proxy,  # account_edi_proxy_client.user
     '_get_peppol_verification_state': _mock_get_peppol_verification_state,  # res.partner
     '_check_peppol_participant_exists': _mock_check_peppol_participant_exists,  # res.partner
     '_register_proxy_user': _mock_register_proxy_user,  # account_edi_proxy_client.user
     '_peppol_deregister_participant': _mock_peppol_deregister_participant,
+||||||| d975f3fa4e920a5ba78ee380a2bca486204b952e
+    '_call_peppol_proxy': _mock_call_peppol_proxy,
+    'button_account_peppol_check_partner_endpoint': _mock_button_verify_partner_endpoint,
+    '_get_peppol_verification_state': _mock_get_peppol_verification_state,
+    '_peppol_migrate_registration': _mock_migrate_participant,
+    'button_peppol_sender_registration': _mock_user_creation,
+    'button_deregister_peppol_participant': _mock_deregister_participant,
+    'button_update_peppol_user_data': _mock_update_user_data,
+    'button_peppol_smp_registration': _mock_receiver_registration,
+    'button_check_peppol_verification_code': _mock_check_verification_code,
+    'button_register_peppol_participant': _mock_user_creation,
+    '_check_company_on_peppol': _mock_check_company_on_peppol,
+=======
+    '_call_peppol_proxy': _mock_call_peppol_proxy,
+    'button_account_peppol_check_partner_endpoint': _mock_button_verify_partner_endpoint,
+    '_get_peppol_verification_state': _mock_get_peppol_verification_state,
+    '_peppol_migrate_registration': _mock_migrate_participant,
+    'button_peppol_sender_registration': _mock_user_creation,
+    'button_deregister_peppol_participant': _mock_deregister_participant,
+    'button_update_peppol_user_data': _mock_update_user_data,
+    'button_peppol_smp_registration': _mock_receiver_registration,
+    'button_check_peppol_verification_code': _mock_check_verification_code,
+    'button_register_peppol_participant': _mock_user_creation,
+    '_check_company_on_peppol': _mock_check_company_on_peppol,
+    '_peppol_deregister_participant': _mock_peppol_deregister_participant,
+>>>>>>> c1635bd27b242889128054a90bb349b34f7da253
 }
 
 # -------------------------------------------------------------------------
