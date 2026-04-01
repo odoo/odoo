@@ -278,6 +278,7 @@ class MailController(http.Controller):
         '/mail/font_to_img/<icon>/<color>/<bg>/<int:width>x<int:height>',
         '/mail/font_to_img/<icon>/<color>/<bg>/<int:width>x<int:height>/<int:alpha>',
         ], type='http', auth="none")
+    # TODO: Adapt the code to make it work with Material Symbol library
     def export_icon_to_png(self, icon, color='#000', bg=None, size=100, alpha=255, font='/web/static/src/libs/fontawesome/fonts/fontawesome-webfont.ttf', width=None, height=None):
         """ This method converts an unicode character to an image (using Font
             Awesome font by default) and is used only for mass mailing because
@@ -299,17 +300,17 @@ class MailController(http.Controller):
                 # Replacement of existing Twitter icons by X icons (the route
                 # here receives the old icon code always, but the replacement
                 # one is also considered for consistency anyway).
-                "61569": "59464",  # F081 -> E848: fa-twitter-square
-                "61593": "59418",  # F099 -> E81A: fa-twitter
+                "61569": "59464",  # F081 -> E848: oi_x-square
+                "61593": "59418",  # F099 -> E81A: oi_x
 
                 # Addition of new icons
-                "59407": "59407",  # E80F: fa-strava
-                "59409": "59409",  # E811: fa-discord
-                "59416": "59416",  # E818: fa-threads
-                "59417": "59417",  # E819: fa-kickstarter
-                "59419": "59419",  # E81B: fa-tiktok
-                "59420": "59420",  # E81C: fa-bluesky
-                "59421": "59421",  # E81D: fa-google-play
+                "59407": "59407",  # E80F: oi_strava
+                "59409": "59409",  # E811: oi_discord
+                "59416": "59416",  # E818: oi_threads
+                "59417": "59417",  # E819: oi_kickstarter
+                "59419": "59419",  # E81B: oi_tiktok
+                "59420": "59420",  # E81C: oi_bluesky
+                "59421": "59421",  # E81D: oi_google-play
             }
             if icon in oi_font_char_codes:
                 icon = oi_font_char_codes[icon]

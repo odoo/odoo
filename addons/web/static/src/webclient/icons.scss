@@ -1,68 +1,71 @@
 // = Icons
+// version 0.2.1
 // ============================================================================
-
 
 // Sizes
 // ----------------------------------------------------------------------------
 
-$oi-default-size: 1em;   // Normally 13px
+$oi-default-size: 1em;   // Normally 14px
 $oi-fw-ratio: 1.28571429; // Matches .fa-fw
+$ms-size-multiplier: 1.214285; // Compensate pictogram's inner spacing
 
-$oi-sizes: (
-    'small': (
-        'font-size': .769em,    // ~ 10px
-        'vertical-align': 10%,
-    ),
-    'normal': (
-        'font-size': $oi-default-size,
-    ),
-    'large': (
-        'font-size': 1.315em,   // ~ 17px
-        'vertical-align': -6%,
-    ),
-    'larger': (
-        'font-size': 1.462em,   // ~ 19px
-        'vertical-align': -10%,
-    ),
-);
+// ================================
+// MIXINS
+// ================================
 
-// Force font-weight to normal
-// ----------------------------------------------------------------------------
-.oi, .fa {
-    font-weight: $font-weight-normal;
+@mixin material-icon-base {
+    display: inline-block;
+    font-family: var(--icon-font-family, #{$ms-font-family});
+    font-style: normal;
+    font-size: var(--oi-font-size, #{$default-icon-size});
+    font-variation-settings: "FILL" var(--o-mi-fill, 0), "opsz" 24;
+    font-weight: 400 !important;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    vertical-align: -11.5%;
+    speak: never;
+    -webkit-font-smoothing: antialiased;
+    -webkit-font-feature-settings: 'liga';
+    -moz-osx-font-smoothing: grayscale;
+    -moz-font-feature-settings: 'liga';
+
+    &:before {
+        transform: scale(1.214285);
+        display: inline-block;
+        content: attr(data-icon);
+        text-rendering: geometricPrecision;
+        font-size: var(--oi-font-size, $oi-default-size);
+    }
+}
+
+@mixin icon-content($icon-name) {
+    &::before {
+        content: $icon-name;
+    }
+}
+
+@mixin rotate($degrees) {
+    -webkit-transform: rotate(#{$degrees}deg);
+    transform: rotate(#{$degrees}deg);
+}
+
+@mixin flip($x: 1, $y: 1) {
+    -webkit-transform: scale($x, $y);
+    transform: scale($x, $y);
 }
 
 // Define base-classes' properties using CSS variables.
 // Allows to dinamically update rules according to the context and eventual
 // utility classes.
 // ----------------------------------------------------------------------------
-.oi, .fa {
-    &:before {
-        font-size: var(--oi-font-size, $oi-default-size);
-        vertical-align: var(--oi-vertical-align, 0);
-        text-rendering: geometricPrecision;
-    }
-}
 
 .oi-fw {
     width: calc(#{$oi-fw-ratio} * var(--oi-font-size, #{$oi-default-size}));
     text-align: center;
-}
-
-// Print CSS variables for each size/breakpoint
-// ----------------------------------------------------------------------------
-@each $breakpoint in map-keys($grid-breakpoints) {
-    @include media-breakpoint-up($breakpoint) {
-        $-infix: breakpoint-infix($breakpoint, $grid-breakpoints);
-
-        @each $-key, $-values in $oi-sizes {
-            .oi#{$-infix}-#{$-key} {
-                @each $-rule, $-value in $-values {
-                    @include print-variable('oi-#{$-rule}', $-value);
-                }
-            }
-        }
-    }
 }
 
 // Rely on animations already defined by FontAwesome
@@ -73,12 +76,6 @@ $oi-sizes: (
 
 .oi-pulse {
     animation: fa-spin 1s infinite steps(8);
-}
-
-.o_barcode {
-    -webkit-mask: url('/web/static/img/barcode.svg') center/contain no-repeat;
-    mask: url('/web/static/img/barcode.svg') center/contain no-repeat;
-    background-color: $o-brand-primary;
 }
 
 .o_fa_stack {
@@ -94,4 +91,3889 @@ $oi-sizes: (
     > :first-child {
         font-size: 2em;
     }
+}
+
+// ================================
+// SCSS VARIABLES
+// ================================
+
+$ms-font-family: 'material_symbols_rounded';
+$oi-font-family: 'odoo_ui_icons';
+$default-icon-size: $oi-default-size;
+// TODO : review large size and get rid of $fa- variables
+$fa-lg-size: $oi-default-size * 1.25;
+$fa-fw-width: 1.28571em;
+
+// Icon sizing map
+$icon-sizes: (
+    'lg': $fa-lg-size,
+    '2x': $oi-default-size * 2,
+    '3x': $oi-default-size * 3,
+    '4x': $oi-default-size * 4,
+    '5x': $oi-default-size * 5,
+    '6x': 6em,
+    '7x': 7em,
+    '8x': 8em,
+    '9x': 9em,
+    '10x': 10em,
+);
+
+// ================================
+// BASE CLASSES
+// ================================
+
+// Generic class for Material Symbols and OI extended library icons.
+.oi {
+    @include material-icon-base;
+}
+
+// To remove after the switch
+.mi, .fa {
+    @include material-icon-base;
+}
+
+// ================================
+// ODOO ICONS override mapping
+/* Kept for compatibility with website made prior saas-19.3 */
+/* ---------------------------------------------------------------------------- */
+.oi-threads:before { content: '\e818'; }
+
+.oi-kickstarter:before { content: '\e819'; }
+
+.oi-x:before { content: '\e81a'; }
+
+.oi-x-square:before { content: '\e848'; }
+
+.oi-tiktok:before { content: '\e81b'; }
+
+.oi-bluesky:before { content: '\e81c'; }
+
+.oi-google-play:before { content: '\e81d'; }
+
+.oi-strava:before { content: '\e80f'; }
+
+.oi-discord:before { content: '\e811'; }
+
+.oi-view-pivot:before { content: '\e800'; }
+
+.oi-view-cohort:before { content: '\e816'; }
+
+.oi-studio:before { content: '\e813'; }
+
+.oi-odoo:before { content: '\e806'; }
+
+/* Custom icon mapping */
+/* ---------------------------------------------------------------------------- */
+
+$oi-custom-icons: (
+    // Brands
+    "threads": ('value': '\e818'),
+    "kickstarter": ('value': '\e819'),
+    "x": ('value': '\e81a'),
+    "twitter": ('value': '\e81a'),
+    "x-square": ('value': '\e848'),
+    "twitter-square": ('value': '\e848'),
+    "tiktok": ('value': '\e81b'),
+    "bluesky": ('value': '\e81c'),
+    "google-play": ('value': '\e81d'),
+    "strava": ('value': '\e80f'),
+    "discord": ('value': '\e811'),
+    "amazon": ('value': '\e801'),
+    "angellist": ('value': '\e802'),
+    "bandcamp": ('value': '\e803'),
+    "binoculars": ('value': '\e804'),
+    "bitbucket-square": ('value': '\e805'),
+    "bitbucket": ('value': '\e807'),
+    "black-tie": ('value': '\e808'),
+    "bomb": ('value': '\e809'),
+    "buysellads": ('value': '\e80a'),
+    "cc-amex": ('value': '\e80b'),
+    "github-square": ('value': '\e80c'),
+    "500px": ('value': '\e80d'),
+    "adn": ('value': '\e80e'),
+    "android": ('value': '\e810'),
+    "apple": ('value': '\e812'),
+    "behance-square": ('value': '\e814'),
+    "behance": ('value': '\e815'),
+    "birthday-cake": ('value': '\e817'),
+    "chrome": ('value': '\e822'),
+    "codepen": ('value': '\e823'),
+    "codiepie": ('value': '\e824'),
+    "connectdevelop": ('value': '\e825'),
+    "contao": ('value': '\e826'),
+    "creative-commons": ('value': '\e827'),
+    "css3": ('value': '\e828'),
+    "delicious": ('value': '\e82a'),
+    "deviantart": ('value': '\e82b'),
+    "digg": ('value': '\e82c'),
+    "dribbble": ('value': '\e82d'),
+    "dropbox": ('value': '\e82e'),
+    "drupal": ('value': '\e82f'),
+    "edge": ('value': '\e830'),
+    "eercast": ('value': '\e831'),
+    "empire": ('value': '\e832'),
+    "envira": ('value': '\e833'),
+    "etsy": ('value': '\e834'),
+    "expeditedssl": ('value': '\e835'),
+    "fa": ('value': '\e836'),
+    "facebook-official": ('value': '\e837'),
+    "facebook-square": ('value': '\e838'),
+    "facebook": ('value': '\e839'),
+    "firefox": ('value': '\e83a'),
+    "first-order": ('value': '\e83b'),
+    "flickr": ('value': '\e83c'),
+    "fonticons": ('value': '\e83d'),
+    "fort-awesome": ('value': '\e83e'),
+    "forumbee": ('value': '\e83f'),
+    "foursquare": ('value': '\e840'),
+    "free-code-camp": ('value': '\e841'),
+    "get-pocket": ('value': '\e842'),
+    "gg-circle": ('value': '\e843'),
+    "gg": ('value': '\e844'),
+    "git-square": ('value': '\e845'),
+    "git": ('value': '\e846'),
+    "github-alt": ('value': '\e847'),
+    "github": ('value': '\e849'),
+    "gitlab": ('value': '\e84a'),
+    "gittip": ('value': '\e84b'),
+    "glide-g": ('value': '\e84c'),
+    "glide": ('value': '\e84d'),
+    "google-plus-circle": ('value': '\e84e'),
+    "google-plus-square": ('value': '\e84f'),
+    "google-plus": ('value': '\e850'),
+    "google-wallet": ('value': '\e851'),
+    "google": ('value': '\e852'),
+    "grav": ('value': '\e853'),
+    "hacker-news": ('value': '\e854'),
+    "hand-lizard-o": ('value': '\e855'),
+    "hand-peace-o": ('value': '\e856'),
+    "hand-scissors-o": ('value': '\e857'),
+    "hand-spock-o": ('value': '\e858'),
+    "houzz": ('value': '\e859'),
+    "html5": ('value': '\e85a'),
+    "imdb": ('value': '\e85b'),
+    "instagram": ('value': '\e85c'),
+    "internet-explorer": ('value': '\e85d'),
+    "ioxhost": ('value': '\e85e'),
+    "joomla": ('value': '\e85f'),
+    "jsfiddle": ('value': '\e860'),
+    "lastfm-square": ('value': '\e861'),
+    "lastfm": ('value': '\e862'),
+    "leanpub": ('value': '\e863'),
+    "lemon-o": ('value': '\e864'),
+    "linkedin-square": ('value': '\e865'),
+    "linkedin": ('value': '\e866'),
+    "linode": ('value': '\e867'),
+    "linux": ('value': '\e868'),
+    "magnet": ('value': '\e869'),
+    "maxcdn": ('value': '\e86e'),
+    "meanpath": ('value': '\e86f'),
+    "medium": ('value': '\e870'),
+    "meetup": ('value': '\e871'),
+    "mercury": ('value': '\e872'),
+    "mixcloud": ('value': '\e873'),
+    "modx": ('value': '\e874'),
+    "neuter": ('value': '\e875'),
+    "odnoklassniki-square": ('value': '\e876'),
+    "odnoklassniki": ('value': '\e877'),
+    "opencart": ('value': '\e878'),
+    "openid": ('value': '\e879'),
+    "opera": ('value': '\e87a'),
+    "optin-monster": ('value': '\e87b'),
+    "pagelines": ('value': '\e87c'),
+    "paypal": ('value': '\e87d'),
+    "cc-paypal": ('value': '\e81f'),
+    "pied-piper-alt": ('value': '\e87e'),
+    "pied-piper-pp": ('value': '\e87f'),
+    "pied-piper": ('value': '\e880'),
+    "pinterest-p": ('value': '\e881'),
+    "pinterest-square": ('value': '\e882'),
+    "pinterest": ('value': '\e883'),
+    "product-hunt": ('value': '\e884'),
+    "qq": ('value': '\e885'),
+    "quora": ('value': '\e886'),
+    "ra": ('value': '\e887'),
+    "ravelry": ('value': '\e888'),
+    "reddit-alien": ('value': '\e889'),
+    "reddit-square": ('value': '\e88a'),
+    "reddit": ('value': '\e88b'),
+    "renren": ('value': '\e88c'),
+    "safari": ('value': '\e88d'),
+    "scribd": ('value': '\e88e'),
+    "sellsy": ('value': '\e88f'),
+    "shirtsinbulk": ('value': '\e890'),
+    "simplybuilt": ('value': '\e891'),
+    "skyatlas": ('value': '\e892'),
+    "skype": ('value': '\e893'),
+    "slack": ('value': '\e894'),
+    "slideshare": ('value': '\e895'),
+    "snapchat-ghost": ('value': '\e896'),
+    "snapchat-square": ('value': '\e897'),
+    "snapchat": ('value': '\e898'),
+    "soundcloud": ('value': '\e899'),
+    "spotify": ('value': '\e89a'),
+    "stack-exchange": ('value': '\e89b'),
+    "stack-overflow": ('value': '\e89c'),
+    "steam-square": ('value': '\e89d'),
+    "steam": ('value': '\e89e'),
+    "stumbleupon-circle": ('value': '\e89f'),
+    "stumbleupon": ('value': '\e8a0'),
+    "superpowers": ('value': '\e8a1'),
+    "telegram": ('value': '\e8a2'),
+    "weibo": ('value': '\e820'),
+    "tencent-weibo": ('value': '\e8a3'),
+    "themeisle": ('value': '\e8a4'),
+    "trademark": ('value': '\e8a5'),
+    "trello": ('value': '\e8a6'),
+    "tripadvisor": ('value': '\e8a7'),
+    "tumblr-square": ('value': '\e8a8'),
+    "tumblr": ('value': '\e8a9'),
+    "twitch": ('value': '\e8aa'),
+    "user-secret": ('value': '\e8ab'),
+    "viacoin": ('value': '\e8ae'),
+    "viadeo-square": ('value': '\e8af'),
+    "viadeo": ('value': '\e8b0'),
+    "vimeo-square": ('value': '\e8b1'),
+    "vimeo": ('value': '\e8b2'),
+    "vine": ('value': '\e8b3'),
+    "vk": ('value': '\e8b4'),
+    "wechat": ('value': '\e8b5'),
+    "whatsapp": ('value': '\e8b6'),
+    "wikipedia-w": ('value': '\e8b7'),
+    "windows": ('value': '\e8b8'),
+    "wordpress": ('value': '\e8b9'),
+    "wpbeginner": ('value': '\e8ba'),
+    "wpexplorer": ('value': '\e8bb'),
+    "wpforms": ('value': '\e8bc'),
+    "xing-square": ('value': '\e8bd'),
+    "xing": ('value': '\e8be'),
+    "y-combinator": ('value': '\e8bf'),
+    "yahoo": ('value': '\e8c0'),
+    "yelp": ('value': '\e8c1'),
+    "youtube-play": ('value': '\e8c2'),
+    "youtube-square": ('value': '\e8c3'),
+    "youtube": ('value': '\e8c4'),
+    "cc-diners-club": ('value': '\e8c5'),
+    "cc-stripe": ('value': '\e8c6'),
+    "cc-visa": ('value': '\e8c7'),
+    "cc-jcb": ('value': '\e8c8'),
+    "dashcube": ('value': '\e8c9'),
+    "cc-mastercard": ('value': '\e8ca'),
+    "cc-discover": ('value': '\e8cb'),
+    // Views
+    "view-pivot": ('value': '\e800','rtl': true),
+    "view-cohort": ('value': '\e816', 'rtl': true),
+    "view-kanban": ('value': '\e81e'),
+    "studio": ('value': '\e813'),
+    // Misc
+    "odoo": ('value': '\e806'),
+    "mars-double": ('value': '\e86a'),
+    "mars-stroke-h": ('value': '\e86b'),
+    "mars-stroke-v": ('value': '\e86c'),
+    "mars-stroke": ('value': '\e86d'),
+    "venus-double": ('value': '\e8ac'),
+    "venus-mars": ('value': '\e8ad'),
+    //Apps
+    "app_documents": ('value': '\e821'),
+);
+
+.oi {
+    @each $icon-name, $icon-content in $oi-custom-icons {
+        // Add "oi_" prefix to avoid conflict with Material Symbols icon names
+        &[data-icon="oi_#{$icon-name}"] {
+            --icon-font-family: #{$oi-font-family};
+
+            &:before {
+                content: '#{map-get($icon-content, 'value')}';
+            }
+
+            @if index($icon-content, 'rtl') {
+                .o_rtl & {
+                    transform: rotateY(180deg);
+                }
+            }
+        }
+    }
+}
+
+/* RTL adaptations - Flip directional icons by 180 degree. */
+/* ---------------------------------------------------------------------------- */
+
+$ms-rtl-icons:
+    "arrow_back",
+    "arrow_back_2",
+    "arrow_back_ios",
+    "arrow_back_ios_new",
+    "arrow_circle_left",
+    "arrow_circle_right",
+    "arrow_forward",
+    "arrow_forward_ios",
+    "arrow_insert",
+    "arrow_left",
+    "arrow_left_alt",
+    "arrow_menu_close",
+    "arrow_menu_open",
+    "arrow_outward",
+    "arrow_right",
+    "arrow_right_alt",
+    "arrow_top_left",
+    "arrow_top_right",
+    "double_arrow",
+    "keyboard_arrow_left",
+    "keyboard_arrow_right",
+    "keyboard_double_arrow_left",
+    "keyboard_double_arrow_right",
+    "line_end_arrow",
+    "line_end_arrow_notch",
+    "line_start_arrow",
+    "line_start_arrow_notch",
+    "mobile_arrow_up_right",
+    "play_arrow",
+    "subdirectory_arrow_left",
+    "subdirectory_arrow_right",
+    "arrows_more_down",
+    "arrows_more_up",
+    "chevron_backward",
+    "chevron_forward",
+    "chevron_left",
+    "chevron_right",
+    "east",
+    "west",
+    "north_east",
+    "north_west",
+    "south_east",
+    "south_west",
+    "turn_left",
+    "turn_right",
+    "turn_sharp_left",
+    "turn_sharp_right",
+    "turn_slight_left",
+    "turn_slight_right",
+    "u_turn_left",
+    "u_turn_right",
+    "horizontal_align_left",
+    "horizontal_align_right";
+
+.o_rtl {
+    @each $icon in $ms-rtl-icons {
+        [data-icon="#{$icon}"] {
+            transform: rotateY(180deg);
+        }
+    }
+}
+
+// ================================
+// ODOO ICONS TO MATERIAL SYMBOLS MAPPING
+// ================================
+
+.oi-text-break {
+    @include material-icon-base;
+    @include icon-content("format_image_front");
+}
+
+.oi-text-inline {
+    @include material-icon-base;
+    @include icon-content("format_image_inline_left");
+}
+
+.oi-voip {
+    @include material-icon-base;
+    @include icon-content("tty");
+    --o-ms-fill: 1;
+}
+
+.oi-search {
+    @include material-icon-base;
+    @include icon-content("search");
+}
+
+.oi-group {
+    @include material-icon-base;
+    @include icon-content("stacks");
+}
+
+.oi-settings-adjust {
+    @include material-icon-base;
+    @include icon-content("tune");
+}
+
+.oi-apps {
+    @include material-icon-base;
+    @include icon-content("apps");
+}
+
+.oi-panel-right {
+    @include material-icon-base;
+    @include icon-content("dock_to_left");
+}
+
+.oi-launch {
+    @include material-icon-base;
+    @include icon-content("open_in_browser");
+}
+
+.oi-text-wrap {
+    @include material-icon-base;
+    @include icon-content("text_wrap");
+}
+
+.oi-gif-picker {
+    @include material-icon-base;
+    @include icon-content("gif_box");
+}
+
+.oi-chevron-down {
+    @include material-icon-base;
+    @include icon-content("keyboard_arrow_down");
+}
+
+.oi-chevron-left {
+    @include material-icon-base;
+    @include icon-content("chevron_backward");
+}
+
+.oi-chevron-right {
+    @include material-icon-base;
+    @include icon-content("chevron_forward");
+}
+
+.oi-chevron-up {
+    @include material-icon-base;
+    @include icon-content("keyboard_arrow_up");
+}
+
+.oi-arrows-h {
+    @include material-icon-base;
+    @include icon-content("arrow_range");
+}
+
+.oi-arrows-v {
+    @include material-icon-base;
+    @include icon-content("height");
+}
+
+.oi-arrow-down-left {
+    @include material-icon-base;
+    @include icon-content("south_west");
+}
+
+.oi-arrow-down-right {
+    @include material-icon-base;
+    @include icon-content("south_east");
+}
+
+.oi-arrow-down {
+    @include material-icon-base;
+    @include icon-content("south");
+}
+
+.oi-arrow-left {
+    @include material-icon-base;
+    @include icon-content("west");
+}
+
+.oi-arrow-right {
+    @include material-icon-base;
+    @include icon-content("east");
+}
+
+.oi-arrow-up-left {
+    @include material-icon-base;
+    @include icon-content("north_west");
+}
+
+.oi-arrow-up-right {
+    @include material-icon-base;
+    @include icon-content("north_east");
+}
+
+.oi-arrow-up {
+    @include material-icon-base;
+    @include icon-content("north");
+}
+
+.oi-draggable {
+    @include material-icon-base;
+    @include icon-content("drag_indicator");
+}
+
+.oi-view {
+    @include material-icon-base;
+    @include icon-content("toolbar");
+}
+
+.oi-archive {
+    @include material-icon-base;
+    @include icon-content("archive");
+}
+
+.oi-unarchive {
+    @include material-icon-base;
+    @include icon-content("unarchive");
+}
+
+.oi-text-effect {
+    @include material-icon-base;
+    @include icon-content("stylus_laser_pointer");
+}
+
+.oi-smile-add {
+    @include material-icon-base;
+    @include icon-content("add_reaction");
+}
+
+.oi-close {
+    @include material-icon-base;
+    @include icon-content("close_small");
+}
+
+.oi-food-delivery {
+    @include material-icon-base;
+    @include icon-content("shopping_bag_speed");
+}
+
+.oi-schedule-today {
+    @include material-icon-base;
+    @include icon-content("early_on");
+}
+
+.oi-schedule-tomorrow {
+    @include material-icon-base;
+    @include icon-content("event_upcoming");
+}
+
+.oi-schedule-later {
+    @include material-icon-base;
+    @include icon-content("calendar_clock");
+}
+
+.oi-activity {
+    @include material-icon-base;
+    @include icon-content("schedule");
+}
+
+.oi-activity-plus {
+    @include material-icon-base;
+    @include icon-content("alarm_add");
+}
+
+.oi-numpad {
+    @include material-icon-base;
+    @include icon-content("dialpad");
+}
+
+.oi-transfer {
+    @include material-icon-base;
+    @include icon-content("sync_alt");
+}
+
+.oi-suitcase {
+    @include material-icon-base;
+    @include icon-content("work");
+}
+
+.oi-suitcase-plus {
+    @include material-icon-base;
+    @include icon-content("person_add");
+}
+
+.oi-merge {
+    @include material-icon-base;
+    @include icon-content("call_merge");
+}
+
+.oi-record {
+    @include material-icon-base;
+    @include icon-content("graphic_eq");
+}
+
+.oi-backspace-o {
+    @include material-icon-base;
+    @include icon-content("backspace");
+}
+
+.oi-user {
+    @include material-icon-base;
+    @include icon-content("person");
+    --o-ms-fill: 1;
+}
+
+.oi-user-plus {
+    @include material-icon-base;
+    @include icon-content("person_add");
+    --o-mi-fill: 1;
+}
+
+.oi-users {
+    @include material-icon-base;
+    @include icon-content("group");
+    --o-mi-fill: 1;
+}
+
+.oi-ellipsis-h {
+    @include material-icon-base;
+    @include icon-content("more_horiz");
+}
+
+.oi-ellipsis-v {
+    @include material-icon-base;
+    @include icon-content("more_vert");
+}
+
+.oi-plus {
+    @include material-icon-base;
+    @include icon-content("add");
+}
+
+.oi-minus {
+    @include material-icon-base;
+    @include icon-content("remove");
+}
+
+.oi-star-plus {
+    @include material-icon-base;
+    @include icon-content("star");
+}
+
+.oi-subtitle {
+    @include material-icon-base;
+    @include icon-content("subtitles");
+}
+
+.oi-bring-front {
+    @include material-icon-base;
+    @include icon-content("flip_to_front");
+}
+
+.oi-send-back {
+    @include material-icon-base;
+    @include icon-content("flip_to_back");
+}
+
+.oi-life-ring-plus {
+    @include material-icon-base;
+    @include icon-content("support");
+}
+
+.oi.oi-view-list {
+    @include material-icon-base;
+    @include icon-content("view_list");
+}
+
+.oi.oi-view-kanban {
+    @include material-icon-base;
+    @include icon-content("view_kanban");
+}
+
+// ================================
+// FONT AWESOME 4 TO MATERIAL SYMBOLS MAPPING
+// ================================
+
+.fa-500px {
+    @include icon-content("\e80d");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-address-book {
+    @include icon-content("contact_page");
+    --o-mi-fill: 1;
+}
+
+.fa-address-book-o {
+    @include icon-content("contact_page");
+}
+
+.fa-address-card,
+.fa-vcard {
+    @include icon-content("contact_mail");
+    --o-mi-fill: 1;
+}
+
+.fa-address-card-o,
+.fa-vcard-o {
+    @include icon-content("contact_mail");
+}
+
+.fa-adjust {
+    @include icon-content("contrast");
+}
+
+.fa-adn {
+    @include icon-content("\e80e");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-align-center {
+    @include icon-content("format_align_center");
+}
+
+.fa-align-justify {
+    @include icon-content("format_align_justify");
+}
+
+.fa-align-left {
+    @include icon-content("format_align_left");
+}
+
+.fa-align-right {
+    @include icon-content("format_align_right");
+}
+
+.fa-amazon {
+    @include icon-content("\e801");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-ambulance {
+    @include icon-content("emergency");
+}
+
+.fa-american-sign-language-interpreting,
+.fa-asl-interpreting {
+    @include icon-content("sign_language");
+}
+
+.fa-anchor {
+    @include icon-content("anchor");
+}
+
+.fa-android {
+    @include icon-content("\e810");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-angellist {
+    @include icon-content("\e802");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-angle-double-down {
+    @include icon-content("keyboard_double_arrow_down");
+}
+
+.fa-angle-double-left {
+    @include icon-content("keyboard_double_arrow_left");
+}
+
+.fa-angle-double-right {
+    @include icon-content("keyboard_double_arrow_right");
+}
+
+.fa-angle-double-up {
+    @include icon-content("keyboard_double_arrow_up");
+}
+
+.fa-angle-down {
+    @include icon-content("keyboard_arrow_down");
+}
+
+.fa-angle-left {
+    @include icon-content("keyboard_arrow_left");
+}
+
+.fa-angle-right {
+    @include icon-content("keyboard_arrow_right");
+}
+
+.fa-angle-up {
+    @include icon-content("keyboard_arrow_up");
+}
+
+.fa-apple {
+    @include icon-content("\e812");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-archive {
+    @include icon-content("archive");
+}
+
+.fa-area-chart {
+    @include icon-content("area_chart");
+}
+
+.fa-arrow-circle-down {
+    @include icon-content("arrow_circle_down");
+    --o-mi-fill: 1;
+}
+
+.fa-arrow-circle-left {
+    @include icon-content("arrow_circle_left");
+    --o-mi-fill: 1;
+}
+
+.fa-arrow-circle-o-down {
+    @include icon-content("arrow_circle_down");
+}
+
+.fa-arrow-circle-o-left {
+    @include icon-content("arrow_circle_left");
+}
+
+.fa-arrow-circle-o-right {
+    @include icon-content("arrow_circle_right");
+}
+
+.fa-arrow-circle-o-up {
+    @include icon-content("arrow_circle_up");
+}
+
+.fa-arrow-circle-right {
+    @include icon-content("arrow_circle_right");
+    --o-mi-fill: 1;
+}
+
+.fa-arrow-circle-up {
+    @include icon-content("arrow_circle_up");
+    --o-mi-fill: 1;
+}
+
+.fa-arrow-down {
+    @include icon-content("arrow_downward");
+}
+
+.fa-arrow-left {
+    @include icon-content("arrow_back");
+}
+
+.fa-arrow-right {
+    @include icon-content("arrow_forward");
+}
+
+.fa-arrow-up {
+    @include icon-content("arrow_upward");
+}
+
+.fa-arrows {
+    @include icon-content("open_with");
+}
+
+.fa-arrows-alt {
+    @include icon-content("open_with");
+}
+
+.fa-arrows-h {
+    @include icon-content("swap_horiz");
+}
+
+.fa-arrows-v {
+    @include icon-content("swap_vert");
+}
+
+.fa-assistive-listening-systems {
+    @include icon-content("hearing");
+}
+
+.fa-asterisk {
+    @include icon-content("emergency");
+}
+
+.fa-at {
+    @include icon-content("alternate_email");
+}
+
+.fa-audio-description {
+    @include icon-content("audio_description");
+}
+
+.fa-automobile,
+.fa-car {
+    @include icon-content("directions_car");
+}
+
+.fa-backward {
+    @include icon-content("fast_rewind");
+}
+
+.fa-balance-scale {
+    @include icon-content("balance");
+}
+
+.fa-ban {
+    @include icon-content("block");
+}
+
+.fa-bandcamp {
+    @include icon-content("\e803");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-bank,
+.fa-institution,
+.fa-university {
+    @include icon-content("account_balance");
+}
+
+.fa-bar-chart,
+.fa-bar-chart-o {
+    @include icon-content("bar_chart");
+}
+
+.fa-barcode {
+    @include icon-content("barcode");
+}
+
+.fa-bars,
+.fa-navicon,
+.fa-reorder {
+    @include icon-content("menu");
+}
+
+.fa-bath,
+.fa-bathtub,
+.fa-s15 {
+    @include icon-content("bathtub");
+}
+
+.fa-battery,
+.fa-battery-4,
+.fa-battery-full {
+    @include icon-content("battery_full");
+}
+
+.fa-battery-0,
+.fa-battery-empty {
+    @include icon-content("battery_0_bar");
+}
+
+.fa-battery-1,
+.fa-battery-quarter {
+    @include icon-content("battery_2_bar");
+}
+
+.fa-battery-2,
+.fa-battery-half {
+    @include icon-content("battery_3_bar");
+}
+
+.fa-battery-3,
+.fa-battery-three-quarters {
+    @include icon-content("battery_5_bar");
+}
+
+.fa-bed,
+.fa-hotel {
+    @include icon-content("bed");
+}
+
+.fa-beer {
+    @include icon-content("sports_bar");
+}
+
+.fa-behance {
+    @include icon-content("\e815");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-behance-square {
+    @include icon-content("\e814");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-bell {
+    @include icon-content("notifications");
+    --o-mi-fill: 1;
+}
+
+.fa-bell-o {
+    @include icon-content("notifications");
+}
+
+.fa-bell-slash {
+    @include icon-content("notifications_off");
+    --o-mi-fill: 1;
+}
+
+.fa-bell-slash-o {
+    @include icon-content("notifications_off");
+}
+
+.fa-bicycle {
+    @include icon-content("directions_bike");
+}
+
+.fa-binoculars {
+    @include icon-content("\e804");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-birthday-cake {
+    @include icon-content("cake");
+}
+
+.fa-bitbucket {
+    @include icon-content("\e807");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-bitbucket-square {
+    @include icon-content("\e805");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-bitcoin,
+.fa-btc {
+    @include icon-content("currency_bitcoin");
+}
+
+.fa-black-tie {
+    @include icon-content("\e808");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-blind {
+    @include icon-content("blind");
+}
+
+.fa-bluetooth {
+    @include icon-content("bluetooth");
+}
+
+.fa-bluetooth-b {
+    @include icon-content("bluetooth");
+}
+
+.fa-bold {
+    @include icon-content("format_bold");
+}
+
+.fa-bolt,
+.fa-flash {
+    @include icon-content("flash_on");
+}
+
+.fa-bomb {
+    @include icon-content("\e809");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-book {
+    @include icon-content("book");
+}
+
+.fa-bookmark {
+    @include icon-content("bookmark");
+    --o-mi-fill: 1;
+}
+
+.fa-bookmark-o {
+    @include icon-content("bookmark");
+}
+
+.fa-braille {
+    @include icon-content("grain");
+}
+
+.fa-briefcase {
+    @include icon-content("work");
+}
+
+.fa-bug {
+    @include icon-content("bug_report");
+}
+
+.fa-building {
+    @include icon-content("business");
+    --o-mi-fill: 1;
+}
+
+.fa-building-o {
+    @include icon-content("business");
+}
+
+.fa-bullhorn {
+    @include icon-content("campaign");
+}
+
+.fa-bullseye {
+    @include icon-content("crisis_alert");
+}
+
+.fa-bus {
+    @include icon-content("directions_bus");
+}
+
+.fa-buysellads {
+    @include icon-content("\e80a");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-cab,
+.fa-taxi {
+    @include icon-content("local_taxi");
+}
+
+.fa-calculator {
+    @include icon-content("calculate");
+}
+
+.fa-calendar {
+    @include icon-content("calendar_today");
+    --o-mi-fill: 1;
+}
+
+.fa-calendar-check-o {
+    @include icon-content("event_available");
+}
+
+.fa-calendar-minus-o {
+    @include icon-content("event_busy");
+}
+
+.fa-calendar-o {
+    @include icon-content("calendar_today");
+}
+
+.fa-calendar-plus-o {
+    @include icon-content("calendar_add_on");
+}
+
+.fa-calendar-times-o {
+    @include icon-content("event_busy");
+}
+
+.fa-camera {
+    @include icon-content("photo_camera");
+}
+
+.fa-camera-retro {
+    @include icon-content("camera_alt");
+}
+
+.fa-caret-down {
+    @include icon-content("arrow_drop_down");
+}
+
+.fa-caret-left {
+    @include icon-content("arrow_left");
+}
+
+.fa-caret-right {
+    @include icon-content("arrow_right");
+}
+
+.fa-caret-square-o-down,
+.fa-toggle-down {
+    @include icon-content("arrow_drop_down_circle");
+}
+
+.fa-caret-square-o-left,
+.fa-toggle-left {
+    @include icon-content("arrow_circle_left");
+}
+
+.fa-caret-square-o-right,
+.fa-toggle-right {
+    @include icon-content("arrow_circle_right");
+}
+
+.fa-caret-square-o-up,
+.fa-toggle-up {
+    @include icon-content("arrow_drop_up");
+}
+
+.fa-caret-up {
+    @include icon-content("arrow_drop_up");
+}
+
+.fa-cart-arrow-down {
+    @include icon-content("shopping_cart_checkout");
+}
+
+.fa-cart-plus {
+    @include icon-content("add_shopping_cart");
+}
+
+.fa-cc {
+    @include icon-content("closed_caption");
+}
+
+.fa-cc-amex {
+    @include icon-content("\e80b");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-cc-diners-club {
+    @include icon-content("\e8c5");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-cc-discover {
+    @include icon-content("\e8cb");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-cc-jcb {
+    @include icon-content("\e8c8");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-cc-mastercard {
+    @include icon-content("\e8ca");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-cc-paypal {
+    @include icon-content("\e81f");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-cc-stripe {
+    @include icon-content("\e8c6");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-cc-visa {
+    @include icon-content("\e8c7");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-certificate {
+    @include icon-content("verified");
+}
+
+.fa-chain,
+.fa-link {
+    @include icon-content("link");
+}
+
+.fa-chain-broken,
+.fa-unlink {
+    @include icon-content("link_off");
+}
+
+.fa-check {
+    @include icon-content("check");
+}
+
+.fa-check-circle {
+    @include icon-content("check_circle");
+    --o-mi-fill: 1;
+}
+
+.fa-check-circle-o {
+    @include icon-content("check_circle");
+}
+
+.fa-check-square {
+    @include icon-content("check_box");
+    --o-mi-fill: 1;
+}
+
+.fa-check-square-o {
+    @include icon-content("check_box");
+}
+
+.fa-chevron-circle-down {
+    @include icon-content("expand_circle_down");
+    --o-mi-fill: 1;
+}
+
+.fa-chevron-circle-left {
+    @include icon-content("arrow_circle_left");
+    --o-mi-fill: 1;
+}
+
+.fa-chevron-circle-right {
+    @include icon-content("arrow_circle_right");
+    --o-mi-fill: 1;
+}
+
+.fa-chevron-circle-up {
+    @include icon-content("expand_circle_up");
+    --o-mi-fill: 1;
+}
+
+.fa-chevron-down {
+    @include icon-content("expand_more");
+}
+
+.fa-chevron-left {
+    @include icon-content("chevron_left");
+}
+
+.fa-chevron-right {
+    @include icon-content("chevron_right");
+}
+
+.fa-chevron-up {
+    @include icon-content("expand_less");
+}
+
+.fa-child {
+    @include icon-content("child_care");
+}
+
+.fa-chrome {
+    @include icon-content("\e822");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-circle {
+    @include icon-content("circle");
+    --o-mi-fill: 1;
+}
+
+.fa-circle-o {
+    @include icon-content("circle");
+}
+
+.fa-circle-o-notch {
+    @include icon-content("autorenew");
+}
+
+.fa-circle-thin {
+    @include icon-content("radio_button_unchecked");
+}
+
+.fa-clipboard {
+    @include icon-content("assignment");
+}
+
+.fa-clock-o {
+    @include icon-content("schedule");
+}
+
+.fa-clone {
+    @include icon-content("content_copy");
+}
+
+.fa-close,
+.fa-remove,
+.fa-times {
+    @include icon-content("close");
+}
+
+.fa-cloud {
+    @include icon-content("cloud");
+}
+
+.fa-cloud-download {
+    @include icon-content("cloud_download");
+}
+
+.fa-cloud-upload {
+    @include icon-content("cloud_upload");
+}
+
+.fa-cny,
+.fa-jpy,
+.fa-rmb,
+.fa-yen {
+    @include icon-content("currency_yen");
+}
+
+.fa-code {
+    @include icon-content("code");
+}
+
+.fa-code-fork {
+    @include icon-content("fork_right");
+}
+
+.fa-codepen {
+    @include icon-content("\e823");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-codiepie {
+    @include icon-content("\e824");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-coffee {
+    @include icon-content("coffee");
+}
+
+.fa-cog,
+.fa-gear {
+    @include icon-content("settings");
+    --o-mi-fill: 1;
+}
+
+.fa-cogs,
+.fa-gears {
+    @include icon-content("settings_applications");
+}
+
+.fa-columns {
+    @include icon-content("view_column");
+}
+
+.fa-comment {
+    @include icon-content("chat_bubble");
+    --o-mi-fill: 1;
+}
+
+.fa-comment-o {
+    @include icon-content("chat_bubble");
+}
+
+.fa-commenting {
+    @include icon-content("mode_comment");
+    --o-mi-fill: 1;
+}
+
+.fa-commenting-o {
+    @include icon-content("mode_comment");
+}
+
+.fa-comments {
+    @include icon-content("forum");
+    --o-mi-fill: 1;
+}
+
+.fa-comments-o {
+    @include icon-content("forum");
+}
+
+.fa-compass {
+    @include icon-content("explore");
+}
+
+.fa-compress {
+    @include icon-content("close_fullscreen");
+}
+
+.fa-connectdevelop {
+    @include icon-content("\e825");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-contao {
+    @include icon-content("\e826");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-copy,
+.fa-files-o {
+    @include icon-content("content_copy");
+}
+
+.fa-copyright {
+    @include icon-content("copyright");
+}
+
+.fa-creative-commons {
+    @include icon-content("\e827");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-credit-card {
+    @include icon-content("credit_card");
+}
+
+.fa-credit-card-alt {
+    @include icon-content("credit_card");
+}
+
+.fa-crop {
+    @include icon-content("crop");
+}
+
+.fa-crosshairs {
+    @include icon-content("my_location");
+}
+
+.fa-css3 {
+    @include icon-content("\e828");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-cube {
+    @include icon-content("deployed_code");
+}
+
+.fa-cubes {
+    @include icon-content("inventory_2");
+}
+
+.fa-cut,
+.fa-scissors {
+    @include icon-content("content_cut");
+}
+
+.fa-cutlery {
+    @include icon-content("restaurant");
+}
+
+.fa-dashboard,
+.fa-tachometer {
+    @include icon-content("speed");
+}
+
+.fa-dashcube {
+    @include icon-content("\e8c9");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-database {
+    @include icon-content("database");
+}
+
+.fa-deaf,
+.fa-deafness,
+.fa-hard-of-hearing {
+    @include icon-content("hearing_disabled");
+}
+
+.fa-dedent,
+.fa-outdent {
+    @include icon-content("format_indent_decrease");
+}
+
+.fa-delicious {
+    @include icon-content("\e82a");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-desktop {
+    @include icon-content("desktop_windows");
+}
+
+.fa-deviantart {
+    @include icon-content("\e82b");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-diamond {
+    @include icon-content("diamond");
+}
+
+.fa-digg {
+    @include icon-content("\e82c");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-dollar,
+.fa-usd {
+    @include icon-content("attach_money");
+}
+
+.fa-dot-circle-o {
+    @include icon-content("radio_button_checked");
+}
+
+.fa-download {
+    @include icon-content("download");
+}
+
+.fa-dribbble {
+    @include icon-content("\e82d");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-drivers-license,
+.fa-id-card {
+    @include icon-content("badge");
+    --o-mi-fill: 1;
+}
+
+.fa-drivers-license-o,
+.fa-id-card-o {
+    @include icon-content("badge");
+}
+
+.fa-dropbox {
+    @include icon-content("\e82e");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-drupal {
+    @include icon-content("\e82f");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-edge {
+    @include icon-content("\e830");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-edit {
+    @include icon-content("edit");
+    --o-mi-fill: 1;
+}
+
+.fa-eercast {
+    @include icon-content("\e831");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-eject {
+    @include icon-content("eject");
+}
+
+.fa-ellipsis-h {
+    @include icon-content("more_horiz");
+}
+
+.fa-ellipsis-v {
+    @include icon-content("more_vert");
+}
+
+.fa-empire,
+.fa-ge {
+    @include icon-content("\e832");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-envelope {
+    @include icon-content("mail");
+    --o-mi-fill: 1;
+}
+
+.fa-envelope-o {
+    @include icon-content("mail");
+}
+
+.fa-envelope-open {
+    @include icon-content("drafts");
+    --o-mi-fill: 1;
+}
+
+.fa-envelope-open-o {
+    @include icon-content("drafts");
+}
+
+.fa-envelope-square {
+    @include icon-content("mail");
+    --o-mi-fill: 1;
+}
+
+.fa-envira {
+    @include icon-content("\e833");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-eraser {
+    @include icon-content("ink_eraser");
+}
+
+.fa-etsy {
+    @include icon-content("\e834");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-eur,
+.fa-euro {
+    @include icon-content("euro");
+}
+
+.fa-exchange {
+    @include icon-content("swap_horiz");
+}
+
+.fa-exclamation {
+    @include icon-content("priority_high");
+}
+
+.fa-exclamation-circle {
+    @include icon-content("error");
+}
+
+.fa-exclamation-triangle,
+.fa-warning {
+    @include icon-content("warning");
+}
+
+.fa-expand {
+    @include icon-content("expand_content");
+}
+
+.fa-expeditedssl {
+    @include icon-content("\e835");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-external-link {
+    @include icon-content("open_in_new");
+}
+
+.fa-external-link-square {
+    @include icon-content("open_in_new");
+}
+
+.fa-eye {
+    @include icon-content("visibility");
+}
+
+.fa-eye-slash {
+    @include icon-content("visibility_off");
+}
+
+.fa-eyedropper {
+    @include icon-content("colorize");
+}
+
+.fa-fa,
+.fa-font-awesome {
+    @include icon-content("\e83e");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-facebook,
+.fa-facebook-f {
+    @include icon-content("\e839");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-facebook-official {
+    @include icon-content("\e837");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-facebook-square {
+    @include icon-content("\e838");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-fast-backward {
+    @include icon-content("fast_rewind");
+}
+
+.fa-fast-forward {
+    @include icon-content("fast_forward");
+}
+
+.fa-fax {
+    @include icon-content("fax");
+}
+
+.fa-feed,
+.fa-rss {
+    @include icon-content("rss_feed");
+}
+
+.fa-female {
+    @include icon-content("female");
+}
+
+.fa-fighter-jet {
+    @include icon-content("flight");
+}
+
+.fa-file {
+    @include icon-content("description");
+    --o-mi-fill: 1;
+}
+
+.fa-file-archive-o,
+.fa-file-zip-o {
+    @include icon-content("folder_zip");
+}
+
+.fa-file-audio-o,
+.fa-file-sound-o {
+    @include icon-content("audio_file");
+}
+
+.fa-file-code-o {
+    @include icon-content("code");
+}
+
+.fa-file-excel-o {
+    @include icon-content("table_chart");
+}
+
+.fa-file-image-o,
+.fa-file-photo-o,
+.fa-file-picture-o {
+    @include icon-content("image");
+}
+
+.fa-file-movie-o,
+.fa-file-video-o {
+    @include icon-content("movie");
+}
+
+.fa-file-o {
+    @include icon-content("description");
+}
+
+.fa-file-pdf-o {
+    @include icon-content("picture_as_pdf");
+}
+
+.fa-file-powerpoint-o {
+    @include icon-content("slideshow");
+}
+
+.fa-file-text {
+    @include icon-content("article");
+    --o-mi-fill: 1;
+}
+
+.fa-file-text-o {
+    @include icon-content("article");
+}
+
+.fa-file-word-o {
+    @include icon-content("description");
+}
+
+.fa-film {
+    @include icon-content("movie");
+}
+
+.fa-filter {
+    @include icon-content("filter_alt");
+    --o-mi-fill: 1;
+}
+
+.fa-fire {
+    @include icon-content("whatshot");
+}
+
+.fa-fire-extinguisher {
+    @include icon-content("fire_extinguisher");
+}
+
+.fa-firefox {
+    @include icon-content("\e83a");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-first-order {
+    @include icon-content("\e83b");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-flag {
+    @include icon-content("flag");
+    --o-mi-fill: 1;
+}
+
+.fa-flag-checkered {
+    @include icon-content("sports_score");
+}
+
+.fa-flag-o {
+    @include icon-content("flag");
+}
+
+.fa-flask {
+    @include icon-content("science");
+}
+
+.fa-flickr {
+    @include icon-content("\e83c");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-floppy-o,
+.fa-save {
+    @include icon-content("save");
+}
+
+.fa-folder {
+    @include icon-content("folder");
+    --o-mi-fill: 1;
+}
+
+.fa-folder-o {
+    @include icon-content("folder");
+}
+
+.fa-folder-open {
+    @include icon-content("folder_open");
+    --o-mi-fill: 1;
+}
+
+.fa-folder-open-o {
+    @include icon-content("folder_open");
+}
+
+.fa-font {
+    @include icon-content("text_fields");
+}
+
+.fa-fonticons {
+    @include icon-content("\e83d");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-fort-awesome {
+    @include icon-content("\e83e");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-forumbee {
+    @include icon-content("\e83f");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-forward {
+    @include icon-content("forward");
+}
+
+.fa-foursquare {
+    @include icon-content("\e840");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-free-code-camp {
+    @include icon-content("\e841");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-frown-o {
+    @include icon-content("sentiment_sad");
+}
+
+.fa-futbol-o,
+.fa-soccer-ball-o {
+    @include icon-content("sports_soccer");
+}
+
+.fa-gamepad {
+    @include icon-content("stadia_controller");
+}
+
+.fa-gavel,
+.fa-legal {
+    @include icon-content("gavel");
+}
+
+.fa-gbp {
+    @include icon-content("currency_pound");
+}
+
+.fa-genderless {
+    @include icon-content("radio_button_unchecked");
+}
+
+.fa-get-pocket {
+    @include icon-content("\e842");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-gg {
+    @include icon-content("\e844");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-gg-circle {
+    @include icon-content("\e843");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-gift {
+    @include icon-content("card_giftcard");
+}
+
+.fa-git {
+    @include icon-content("\e846");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-git-square {
+    @include icon-content("\e845");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-github {
+    @include icon-content("\e849");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-github-alt {
+    @include icon-content("\e847");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-github-square {
+    @include icon-content("\e80c");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-gitlab {
+    @include icon-content("\e84a");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-gittip,
+.fa-gratipay {
+    @include icon-content("\e84b");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-glass {
+    @include icon-content("local_bar");
+}
+
+.fa-glide {
+    @include icon-content("\e84d");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-glide-g {
+    @include icon-content("\e84c");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-globe {
+    @include icon-content("public");
+}
+
+.fa-google {
+    @include icon-content("\e852");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-google-plus {
+    @include icon-content("\e850");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-google-plus-circle,
+.fa-google-plus-official {
+    @include icon-content("\e84e");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-google-plus-square {
+    @include icon-content("\e84f");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-google-wallet {
+    @include icon-content("\e851");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-graduation-cap,
+.fa-mortar-board {
+    @include icon-content("school");
+}
+
+.fa-grav {
+    @include icon-content("\e853");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-group,
+.fa-users {
+    @include icon-content("group");
+    --o-mi-fill: 1;
+}
+
+.fa-h-square {
+    @include icon-content("local_hospital");
+}
+
+.fa-hacker-news,
+.fa-y-combinator-square,
+.fa-yc-square {
+    @include icon-content("\e854");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-hand-grab-o,
+.fa-hand-rock-o {
+    @include icon-content("back_hand");
+}
+
+.fa-hand-lizard-o {
+    @include icon-content("\e855");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-hand-o-down {
+    @include icon-content("pan_tool_alt");
+}
+
+.fa-hand-o-left {
+    @include icon-content("arrow_back");
+}
+
+.fa-hand-o-right {
+    @include icon-content("arrow_forward");
+}
+
+.fa-hand-o-up {
+    @include icon-content("back_hand");
+}
+
+.fa-hand-paper-o,
+.fa-hand-stop-o {
+    @include icon-content("back_hand");
+}
+
+.fa-hand-peace-o {
+    @include icon-content("\e856");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-hand-pointer-o {
+    @include icon-content("pan_tool_alt");
+}
+
+.fa-hand-scissors-o {
+    @include icon-content("\e857");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-hand-spock-o {
+    @include icon-content("\e858");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-handshake-o {
+    @include icon-content("handshake");
+}
+
+.fa-hashtag {
+    @include icon-content("tag");
+}
+
+.fa-hdd-o {
+    @include icon-content("storage");
+}
+
+.fa-header {
+    @include icon-content("title");
+}
+
+.fa-headphones {
+    @include icon-content("headphones");
+}
+
+.fa-heart {
+    @include icon-content("favorite");
+    --o-mi-fill: 1;
+}
+
+.fa-heart-o {
+    @include icon-content("favorite");
+}
+
+.fa-heartbeat {
+    @include icon-content("cardiology");
+}
+
+.fa-history {
+    @include icon-content("history");
+}
+
+.fa-home {
+    @include icon-content("home");
+}
+
+.fa-hospital-o {
+    @include icon-content("local_hospital");
+}
+
+.fa-hourglass {
+    @include icon-content("hourglass_empty");
+}
+
+.fa-hourglass-1,
+.fa-hourglass-start {
+    @include icon-content("hourglass_top");
+}
+
+.fa-hourglass-2,
+.fa-hourglass-half {
+    @include icon-content("hourglass_bottom");
+}
+
+.fa-hourglass-3,
+.fa-hourglass-end {
+    @include icon-content("hourglass_disabled");
+}
+
+.fa-hourglass-o {
+    @include icon-content("hourglass_empty");
+}
+
+.fa-houzz {
+    @include icon-content("\e859");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-html5 {
+    @include icon-content("\e85a");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-i-cursor {
+    @include icon-content("text_fields");
+}
+
+.fa-id-badge {
+    @include icon-content("badge");
+}
+
+.fa-ils,
+.fa-shekel,
+.fa-sheqel {
+    @include icon-content("₪");
+}
+
+.fa-image,
+.fa-photo,
+.fa-picture-o {
+    @include icon-content("image");
+}
+
+.fa-imdb {
+    @include icon-content("\e85b");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-inbox {
+    @include icon-content("inbox");
+}
+
+.fa-indent {
+    @include icon-content("format_indent_increase");
+}
+
+.fa-industry {
+    @include icon-content("factory");
+}
+
+.fa-info {
+    @include icon-content("info");
+}
+
+.fa-info-circle {
+    @include icon-content("info");
+}
+
+.fa-inr,
+.fa-rupee {
+    @include icon-content("currency_rupee");
+}
+
+.fa-instagram {
+    @include icon-content("\e85c");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-internet-explorer {
+    @include icon-content("\e85d");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-intersex,
+.fa-transgender {
+    @include icon-content("transgender");
+}
+
+.fa-ioxhost {
+    @include icon-content("\e85e");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-italic {
+    @include icon-content("format_italic");
+}
+
+.fa-joomla {
+    @include icon-content("\e85f");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-jsfiddle {
+    @include icon-content("\e860");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-key {
+    @include icon-content("key");
+}
+
+.fa-keyboard-o {
+    @include icon-content("keyboard");
+}
+
+.fa-krw,
+.fa-won {
+    @include icon-content("￦");
+}
+
+.fa-language {
+    @include icon-content("translate");
+}
+
+.fa-laptop {
+    @include icon-content("laptop");
+}
+
+.fa-lastfm {
+    @include icon-content("\e862");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-lastfm-square {
+    @include icon-content("\e861");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-leaf {
+    @include icon-content("eco");
+}
+
+.fa-leanpub {
+    @include icon-content("\e863");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-lemon-o {
+    @include icon-content("\e864");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-level-down {
+    @include icon-content("subdirectory_arrow_right");
+}
+
+.fa-level-up {
+    @include icon-content("subdirectory_arrow_left");
+}
+
+.fa-life-bouy,
+.fa-life-buoy,
+.fa-life-ring,
+.fa-life-saver,
+.fa-support {
+    @include icon-content("support");
+}
+
+.fa-lightbulb-o {
+    @include icon-content("lightbulb");
+}
+
+.fa-line-chart {
+    @include icon-content("show_chart");
+}
+
+.fa-linkedin {
+    @include icon-content("\e866");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-linkedin-square {
+    @include icon-content("\e865");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-linode {
+    @include icon-content("\e867");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-linux {
+    @include icon-content("\e868");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-list {
+    @include icon-content("format_list_bulleted");
+}
+
+.fa-list-alt {
+    @include icon-content("list_alt");
+}
+
+.fa-list-ol {
+    @include icon-content("format_list_numbered");
+}
+
+.fa-list-ul {
+    @include icon-content("format_list_bulleted");
+}
+
+.fa-location-arrow {
+    @include icon-content("my_location");
+}
+
+.fa-lock {
+    @include icon-content("lock");
+}
+
+.fa-long-arrow-down {
+    @include icon-content("south");
+}
+
+.fa-long-arrow-left {
+    @include icon-content("west");
+}
+
+.fa-long-arrow-right {
+    @include icon-content("east");
+}
+
+.fa-long-arrow-up {
+    @include icon-content("north");
+}
+
+.fa-low-vision {
+    @include icon-content("visibility_off");
+}
+
+.fa-magic {
+    @include icon-content("wand_stars");
+}
+
+.fa-magnet {
+    @include icon-content("\e869");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-mail-forward,
+.fa-share {
+    @include icon-content("share");
+}
+
+.fa-mail-reply,
+.fa-reply {
+    @include icon-content("reply");
+}
+
+.fa-mail-reply-all,
+.fa-reply-all {
+    @include icon-content("reply_all");
+}
+
+.fa-male {
+    @include icon-content("male");
+}
+
+.fa-map {
+    @include icon-content("map");
+}
+
+.fa-map-marker {
+    @include icon-content("location_on");
+}
+
+.fa-map-o {
+    @include icon-content("map");
+}
+
+.fa-map-pin {
+    @include icon-content("push_pin");
+}
+
+.fa-map-signs {
+    @include icon-content("signpost");
+}
+
+.fa-mars {
+    @include icon-content("male");
+}
+
+.fa-mars-double {
+    @include icon-content("\e86a");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-mars-stroke {
+    @include icon-content("\e86d");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-mars-stroke-h {
+    @include icon-content("\e86b");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-mars-stroke-v {
+    @include icon-content("\e86c");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-maxcdn {
+    @include icon-content("\e86e");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-meanpath {
+    @include icon-content("\e86f");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-medium {
+    @include icon-content("\e870");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-medkit {
+    @include icon-content("medical_services");
+}
+
+.fa-meetup {
+    @include icon-content("\e871");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-meh-o {
+    @include icon-content("sentiment_neutral");
+}
+
+.fa-mercury {
+    @include icon-content("\e872");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-microchip {
+    @include icon-content("memory");
+}
+
+.fa-microphone {
+    @include icon-content("mic");
+}
+
+.fa-microphone-slash {
+    @include icon-content("mic_off");
+}
+
+.fa-minus {
+    @include icon-content("remove");
+}
+
+.fa-minus-circle {
+    @include icon-content("remove_circle");
+}
+
+.fa-minus-square {
+    @include icon-content("indeterminate_check_box");
+    --o-mi-fill: 1;
+}
+
+.fa-minus-square-o {
+    @include icon-content("indeterminate_check_box");
+}
+
+.fa-mixcloud {
+    @include icon-content("\e873");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-mobile,
+.fa-mobile-phone {
+    @include icon-content("smartphone");
+}
+
+.fa-modx {
+    @include icon-content("\e874");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-money {
+    @include icon-content("payments");
+}
+
+.fa-moon-o {
+    @include icon-content("dark_mode");
+}
+
+.fa-motorcycle {
+    @include icon-content("two_wheeler");
+}
+
+.fa-mouse-pointer {
+    @include icon-content("mouse");
+}
+
+.fa-music {
+    @include icon-content("music_note");
+}
+
+.fa-neuter {
+    @include icon-content("\e875");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-newspaper-o {
+    @include icon-content("newspaper");
+}
+
+.fa-object-group {
+    @include icon-content("select_all");
+}
+
+.fa-object-ungroup {
+    @include icon-content("deselect");
+}
+
+.fa-odnoklassniki {
+    @include icon-content("\e877");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-odnoklassniki-square {
+    @include icon-content("\e876");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-opencart {
+    @include icon-content("\e878");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-openid {
+    @include icon-content("\e879");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-opera {
+    @include icon-content("\e87a");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-optin-monster {
+    @include icon-content("\e87b");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-pagelines {
+    @include icon-content("\e87c");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-paint-brush {
+    @include icon-content("design_services");
+}
+
+.fa-paper-plane,
+.fa-send {
+    @include icon-content("send");
+    --o-mi-fill: 1;
+}
+
+.fa-paper-plane-o,
+.fa-send-o {
+    @include icon-content("send");
+}
+
+.fa-paperclip {
+    @include icon-content("attach_file");
+}
+
+.fa-paragraph {
+    @include icon-content("format_paragraph");
+}
+
+.fa-paste {
+    @include icon-content("content_paste");
+}
+
+.fa-pause {
+    @include icon-content("pause");
+}
+
+.fa-pause-circle {
+    @include icon-content("pause_circle");
+    --o-mi-fill: 1;
+}
+
+.fa-pause-circle-o {
+    @include icon-content("pause_circle");
+}
+
+.fa-paw {
+    @include icon-content("pets");
+}
+
+.fa-paypal {
+    @include icon-content("\e87d");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-pencil {
+    @include icon-content("edit");
+    --o-mi-fill: 1;
+}
+
+.fa-pencil-square {
+    @include icon-content("edit_square");
+    --o-mi-fill: 1;
+}
+
+.fa-pencil-square-o {
+    @include icon-content("edit_square");
+}
+
+
+.fa-percent {
+    @include icon-content("percent");
+}
+
+.fa-phone {
+    @include icon-content("phone");
+    --o-mi-fill: 1;
+}
+
+.fa-phone-square {
+    @include icon-content("phone");
+    --o-mi-fill: 1;
+}
+
+.fa-pie-chart {
+    @include icon-content("pie_chart");
+}
+
+.fa-pied-piper {
+    @include icon-content("\e880");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-pied-piper-alt {
+    @include icon-content("\e87e");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-pied-piper-pp {
+    @include icon-content("\e87f");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-pinterest {
+    @include icon-content("\e883");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-pinterest-p {
+    @include icon-content("\e881");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-pinterest-square {
+    @include icon-content("\e882");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-plane {
+    @include icon-content("travel");
+}
+
+.fa-play {
+    @include icon-content("play_arrow");
+}
+
+.fa-play-circle {
+    @include icon-content("play_circle");
+    --o-mi-fill: 1;
+}
+
+.fa-play-circle-o {
+    @include icon-content("play_circle");
+}
+
+.fa-plug {
+    @include icon-content("power");
+}
+
+.fa-plus {
+    @include icon-content("add");
+}
+
+.fa-plus-circle {
+    @include icon-content("add_circle");
+}
+
+.fa-plus-square {
+    @include icon-content("add_box");
+    --o-mi-fill: 1;
+}
+
+.fa-plus-square-o {
+    @include icon-content("add_box");
+}
+
+.fa-podcast {
+    @include icon-content("podcasts");
+}
+
+.fa-power-off {
+    @include icon-content("power_settings_new");
+}
+
+.fa-print {
+    @include icon-content("print");
+}
+
+.fa-product-hunt {
+    @include icon-content("\e884");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-puzzle-piece {
+    @include icon-content("extension");
+}
+
+.fa-qq {
+    @include icon-content("\e885");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-qrcode {
+    @include icon-content("qr_code");
+}
+
+.fa-question {
+    @include icon-content("help");
+}
+
+.fa-question-circle {
+    @include icon-content("help");
+}
+
+.fa-question-circle-o {
+    @include icon-content("help_outline");
+}
+
+.fa-quora {
+    @include icon-content("\e886");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-quote-left {
+    @include icon-content("format_quote");
+}
+
+.fa-quote-right {
+    @include icon-content("format_quote");
+}
+
+.fa-ra,
+.fa-rebel,
+.fa-resistance {
+    @include icon-content("\e887");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-random {
+    @include icon-content("shuffle");
+}
+
+.fa-ravelry {
+    @include icon-content("\e888");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-recycle {
+    @include icon-content("recycling");
+}
+
+.fa-reddit {
+    @include icon-content("\e88b");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-reddit-alien {
+    @include icon-content("\e889");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-reddit-square {
+    @include icon-content("\e88a");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-refresh {
+    @include icon-content("refresh");
+}
+
+.fa-registered {
+    @include icon-content("Ⓡ");
+}
+
+.fa-renren {
+    @include icon-content("\e88c");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-repeat,
+.fa-rotate-right {
+    @include icon-content("redo");
+}
+
+.fa-retweet {
+    @include icon-content("repeat");
+}
+
+.fa-road {
+    @include icon-content("road");
+}
+
+.fa-rocket {
+    @include icon-content("rocket_launch");
+}
+
+.fa-rotate-left,
+.fa-undo {
+    @include icon-content("undo");
+}
+
+.fa-rouble,
+.fa-rub,
+.fa-ruble {
+    @include icon-content("currency_ruble");
+}
+
+.fa-rss-square {
+    @include icon-content("rss_feed");
+}
+
+.fa-safari {
+    @include icon-content("\e88d");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-scribd {
+    @include icon-content("\e88e");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-search {
+    @include icon-content("search");
+}
+
+.fa-search-minus {
+    @include icon-content("zoom_out");
+}
+
+.fa-search-plus {
+    @include icon-content("zoom_in");
+}
+
+.fa-sellsy {
+    @include icon-content("\e88f");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-server {
+    @include icon-content("dns");
+}
+
+.fa-share-alt {
+    // Mostly used for Hierarchy view
+    @include icon-content("family_history");
+}
+
+.fa-share-alt-square {
+    @include icon-content("share");
+}
+
+.fa-share-square {
+    @include icon-content("share");
+}
+
+.fa-share-square-o {
+    @include icon-content("share");
+}
+
+.fa-shield {
+    @include icon-content("security");
+}
+
+.fa-ship {
+    @include icon-content("directions_boat");
+}
+
+.fa-shirtsinbulk {
+    @include icon-content("\e890");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-shopping-bag {
+    @include icon-content("shopping_bag");
+}
+
+.fa-shopping-basket {
+    @include icon-content("shopping_basket");
+}
+
+.fa-shopping-cart {
+    @include icon-content("shopping_cart");
+}
+
+.fa-shower {
+    @include icon-content("shower");
+}
+
+.fa-sign-in {
+    @include icon-content("login");
+}
+
+.fa-sign-language,
+.fa-signing {
+    @include icon-content("sign_language");
+}
+
+.fa-sign-out {
+    @include icon-content("logout");
+}
+
+.fa-signal {
+    @include icon-content("signal_cellular_4_bar");
+}
+
+.fa-simplybuilt {
+    @include icon-content("\e891");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-sitemap {
+    @include icon-content("account_tree");
+}
+
+.fa-skyatlas {
+    @include icon-content("\e892");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-skype {
+    @include icon-content("\e893");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-slack {
+    @include icon-content("\e894");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-sliders {
+    @include icon-content("tune");
+}
+
+.fa-slideshare {
+    @include icon-content("\e895");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-smile-o {
+    @include icon-content("sentiment_satisfied");
+}
+
+.fa-snapchat {
+    @include icon-content("\e898");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-snapchat-ghost {
+    @include icon-content("\e896");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-snapchat-square {
+    @include icon-content("\e897");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-snowflake-o {
+    @include icon-content("ac_unit");
+}
+
+.fa-sort,
+.fa-unsorted {
+    @include icon-content("swap_vert");
+}
+
+.fa-sort-alpha-asc {
+    @include icon-content("sort_by_alpha");
+}
+
+.fa-sort-alpha-desc {
+    @include icon-content("sort_by_alpha");
+}
+
+.fa-sort-amount-asc {
+    @include icon-content("sort");
+}
+
+.fa-sort-amount-desc {
+    @include icon-content("sort");
+}
+
+.fa-sort-asc,
+.fa-sort-up {
+    @include icon-content("arrow_upward");
+}
+
+.fa-sort-desc,
+.fa-sort-down {
+    @include icon-content("arrow_downward");
+}
+
+.fa-sort-numeric-asc {
+    @include icon-content("sort");
+}
+
+.fa-sort-numeric-desc {
+    @include icon-content("sort");
+}
+
+.fa-soundcloud {
+    @include icon-content("\e899");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-space-shuttle {
+    @include icon-content("rocket");
+}
+
+.fa-spinner {
+    @include icon-content("progress_activity");
+}
+
+.fa-spoon {
+    @include icon-content("restaurant");
+}
+
+.fa-spotify {
+    @include icon-content("\e89a");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-square {
+    @include icon-content("square");
+    --o-mi-fill: 1;
+}
+
+.fa-square-o {
+    @include icon-content("square");
+}
+
+.fa-stack-exchange {
+    @include icon-content("\e89b");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-stack-overflow {
+    @include icon-content("\e89c");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-star {
+    @include icon-content("star");
+    --o-mi-fill: 1;
+}
+
+.fa-star-half {
+    @include icon-content("star_half");
+}
+
+.fa-star-half-empty,
+.fa-star-half-full,
+.fa-star-half-o {
+    @include icon-content("star_half");
+}
+
+.fa-star-o {
+    @include icon-content("star");
+}
+
+.fa-steam {
+    @include icon-content("\e89e");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-steam-square {
+    @include icon-content("\e89d");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-step-backward {
+    @include icon-content("skip_previous");
+}
+
+.fa-step-forward {
+    @include icon-content("skip_next");
+}
+
+.fa-stethoscope {
+    @include icon-content("stethoscope");
+}
+
+.fa-sticky-note {
+    @include icon-content("sticky_note_2");
+    --o-mi-fill: 1;
+}
+
+.fa-sticky-note-o {
+    @include icon-content("sticky_note_2");
+}
+
+.fa-stop {
+    @include icon-content("stop");
+}
+
+.fa-stop-circle {
+    @include icon-content("stop_circle");
+    --o-mi-fill: 1;
+}
+
+.fa-stop-circle-o {
+    @include icon-content("stop_circle");
+}
+
+.fa-street-view {
+    @include icon-content("streetview");
+}
+
+.fa-strikethrough {
+    @include icon-content("strikethrough_s");
+}
+
+.fa-stumbleupon {
+    @include icon-content("\e8a0");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-stumbleupon-circle {
+    @include icon-content("\e89f");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-subscript {
+    @include icon-content("subscript");
+}
+
+.fa-subway {
+    @include icon-content("subway");
+}
+
+.fa-suitcase {
+    @include icon-content("luggage");
+}
+
+.fa-sun-o {
+    @include icon-content("light_mode");
+}
+
+.fa-superpowers {
+    @include icon-content("\e8a1");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-superscript {
+    @include icon-content("superscript");
+}
+
+.fa-table {
+    @include icon-content("table_chart");
+}
+
+.fa-tablet {
+    @include icon-content("tablet");
+}
+
+.fa-tag {
+    @include icon-content("label");
+}
+
+.fa-tags {
+    @include icon-content("sell");
+}
+
+.fa-tasks {
+    @include icon-content("checklist");
+}
+
+.fa-telegram {
+    @include icon-content("\e8a2");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-television,
+.fa-tv {
+    @include icon-content("tv");
+}
+
+.fa-tencent-weibo {
+    @include icon-content("\e8a3");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-terminal {
+    @include icon-content("terminal");
+}
+
+.fa-text-height {
+    @include icon-content("height");
+}
+
+.fa-text-width {
+    @include icon-content("width");
+}
+
+.fa-th {
+    @include icon-content("grid_view");
+}
+
+.fa-th-large {
+    @include icon-content("view_module");
+}
+
+.fa-th-list {
+    @include icon-content("view_list");
+}
+
+.fa-themeisle {
+    @include icon-content("\e8a4");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-thermometer,
+.fa-thermometer-4,
+.fa-thermometer-full {
+    @include icon-content("device_thermostat");
+}
+
+.fa-thermometer-0,
+.fa-thermometer-empty {
+    @include icon-content("device_thermostat");
+}
+
+.fa-thermometer-1,
+.fa-thermometer-quarter {
+    @include icon-content("device_thermostat");
+}
+
+.fa-thermometer-2,
+.fa-thermometer-half {
+    @include icon-content("device_thermostat");
+}
+
+.fa-thermometer-3,
+.fa-thermometer-three-quarters {
+    @include icon-content("device_thermostat");
+}
+
+.fa-thumb-tack {
+    @include icon-content("push_pin");
+}
+
+.fa-thumbs-down {
+    @include icon-content("thumb_down");
+    --o-mi-fill: 1;
+}
+
+.fa-thumbs-o-down {
+    @include icon-content("thumb_down");
+}
+
+.fa-thumbs-o-up {
+    @include icon-content("thumb_up");
+}
+
+.fa-thumbs-up {
+    @include icon-content("thumb_up");
+    --o-mi-fill: 1;
+}
+
+.fa-ticket {
+    @include icon-content("confirmation_number");
+}
+
+.fa-times-circle {
+    @include icon-content("cancel");
+    --o-mi-fill: 1;
+}
+
+.fa-times-circle-o {
+    @include icon-content("cancel");
+}
+
+.fa-times-rectangle,
+.fa-window-close {
+    @include icon-content("cancel");
+    --o-mi-fill: 1;
+}
+
+.fa-times-rectangle-o,
+.fa-window-close-o {
+    @include icon-content("cancel");
+}
+
+.fa-tint {
+    @include icon-content("water_drop");
+}
+
+.fa-toggle-off {
+    @include icon-content("toggle_off");
+}
+
+.fa-toggle-on {
+    @include icon-content("toggle_on");
+}
+
+.fa-trademark {
+    @include icon-content("\e8a5");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-train {
+    @include icon-content("train");
+}
+
+.fa-transgender-alt {
+    @include icon-content("transgender");
+}
+
+.fa-trash {
+    @include icon-content("delete");
+    --o-mi-fill: 1;
+}
+
+.fa-trash-o {
+    @include icon-content("delete");
+}
+
+.fa-tree {
+    @include icon-content("park");
+}
+
+.fa-trello {
+    @include icon-content("\e8a6");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-tripadvisor {
+    @include icon-content("\e8a7");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-trophy {
+    @include icon-content("trophy");
+    --o-mi-fill: 1;
+}
+
+.fa-truck {
+    @include icon-content("local_shipping");
+}
+
+.fa-try,
+.fa-turkish-lira {
+    @include icon-content("currency_lira");
+}
+
+.fa-tty {
+    @include icon-content("tty");
+}
+
+.fa-tumblr {
+    @include icon-content("\e8a9");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-tumblr-square {
+    @include icon-content("\e8a8");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-twitch {
+    @include icon-content("\e8aa");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-twitter {
+    @include icon-content("\e81a");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-twitter-square {
+    @include icon-content("\e848");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-umbrella {
+    @include icon-content("umbrella");
+}
+
+.fa-underline {
+    @include icon-content("format_underlined");
+}
+
+.fa-universal-access {
+    @include icon-content("accessibility");
+}
+
+.fa-unlock {
+    @include icon-content("lock_open");
+}
+
+.fa-unlock-alt {
+    @include icon-content("no_encryption");
+}
+
+.fa-upload {
+    @include icon-content("upload");
+}
+
+.fa-usb {
+    @include icon-content("usb");
+}
+
+.fa-user {
+    @include icon-content("person");
+    --o-mi-fill: 1;
+}
+
+.fa-user-circle {
+    @include icon-content("account_circle");
+    --o-mi-fill: 1;
+}
+
+.fa-user-circle-o {
+    @include icon-content("account_circle");
+}
+
+.fa-user-md {
+    @include icon-content("medical_services");
+}
+
+.fa-user-o {
+    @include icon-content("person");
+}
+
+.fa-user-plus {
+    @include icon-content("person_add");
+    --o-mi-fill: 1;
+}
+
+.fa-user-secret {
+    @include icon-content("\e8ab");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-user-times {
+    @include icon-content("person_remove");
+    --o-mi-fill: 1;
+}
+
+.fa-venus {
+    @include icon-content("female");
+}
+
+.fa-venus-double {
+    @include icon-content("\e8ac");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-venus-mars {
+    @include icon-content("\e8ad");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-viacoin {
+    @include icon-content("\e8ae");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-viadeo {
+    @include icon-content("\e8b0");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-viadeo-square {
+    @include icon-content("\e8af");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-video-camera {
+    @include icon-content("videocam");
+    --o-mi-fill: 1;
+}
+
+.fa-vimeo {
+    @include icon-content("\e8b2");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-vimeo-square {
+    @include icon-content("\e8b1");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-vine {
+    @include icon-content("\e8b3");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-vk {
+    @include icon-content("\e8b4");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-volume-control-phone {
+    @include icon-content("phone_in_talk");
+}
+
+.fa-volume-down {
+    @include icon-content("volume_down");
+}
+
+.fa-volume-off {
+    @include icon-content("volume_off");
+}
+
+.fa-volume-up {
+    @include icon-content("volume_up");
+}
+
+.fa-wechat,
+.fa-weixin {
+    @include icon-content("\e8b5");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-weibo {
+    @include icon-content("e820");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-whatsapp {
+    @include icon-content("\e8b6");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-wheelchair {
+    @include icon-content("accessible");
+}
+
+.fa-wheelchair-alt {
+    @include icon-content("accessible");
+}
+
+.fa-wifi {
+    @include icon-content("wifi");
+}
+
+.fa-wikipedia-w {
+    @include icon-content("\e8b7");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-window-maximize {
+    @include icon-content("fullscreen");
+}
+
+.fa-window-minimize {
+    @include icon-content("minimize");
+}
+
+.fa-window-restore {
+    @include icon-content("fullscreen_exit");
+}
+
+.fa-windows {
+    @include icon-content("\e8b8");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-wordpress {
+    @include icon-content("\e8b9");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-wpbeginner {
+    @include icon-content("\e8ba");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-wpexplorer {
+    @include icon-content("\e8bb");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-wpforms {
+    @include icon-content("\e8bc");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-wrench {
+    @include icon-content("build");
+}
+
+.fa-xing {
+    @include icon-content("\e8be");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-xing-square {
+    @include icon-content("\e8bd");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-y-combinator,
+.fa-yc {
+    @include icon-content("\e8bf");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-yahoo {
+    @include icon-content("\e8c0");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-yelp {
+    @include icon-content("\e8c1");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-youtube {
+    @include icon-content("\e8c4");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-youtube-play {
+    @include icon-content("\e8c2");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-youtube-square {
+    @include icon-content("\e8c3");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-tiktok {
+    @include icon-content("\e81b");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-discord {
+    @include icon-content("\e811");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-google-play {
+    @include icon-content("\e81d");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-strava {
+    @include icon-content("\e80f");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-bluesky {
+    @include icon-content("\e81c");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-kickstarter {
+    @include icon-content("\e819");
+    --icon-font-family: #{$oi-font-family};
+}
+
+.fa-threads {
+    @include icon-content("\e818");
+    --icon-font-family: #{$oi-font-family};
+}
+
+// ================================
+// UTILITY CLASSES & ADVANCED FEATURES
+// ================================
+
+// Dynamic size generation using SCSS loops
+@each $name, $size in $icon-sizes {
+    .fa-#{$name},
+    .oi-#{$name} {
+        font-size: $size;
+
+        @if $name == 'lg' {
+            line-height: 0.5;
+            vertical-align: -40%;
+        }
+    }
+}
+
+// Temporary kept for compatibility.
+.oi-stack, .fa-stack {
+    position: relative;
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    line-height: 2em;
+    vertical-align: middle;
+}
+
+.oi-stack-1x, .oi-stack-2x,
+.fa-stack-1x, .fa-stack-2x {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.oi-stack-2x, .fa-stack-2x {
+    font-size: 2em;
+}
+
+// Fixed width for consistent alignment
+// To remove after the switch
+.fa-fw {
+    width: $fa-fw-width;
+    text-align: center;
+}
+
+// Rotation classes using mixin
+.fa-rotate-90,
+.oi-rotate-90 {
+    @include rotate(90);
+}
+
+.fa-rotate-180,
+.oi-rotate-180 {
+    @include rotate(180);
+}
+
+.fa-rotate-270,
+.oi-rotate-270 {
+    @include rotate(270);
+}
+
+// Flipping classes using mixin
+.fa-flip-horizontal,
+.oi-flip-horizontal {
+    @include flip(-1, 1);
+}
+
+.fa-flip-vertical,
+.oi-flip-vertical {
+    @include flip(1, -1);
+}
+
+// Spinning animation
+.fa-spin,
+.oi-spin {
+    -webkit-animation: fa-spin 2s infinite linear;
+    animation: fa-spin 2s infinite linear;
+}
+
+@-webkit-keyframes fa-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+    }
+}
+
+@keyframes fa-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(359deg);
+    }
+}
+
+// ================================
+// MATERIAL SYMBOLS ADVANCED FEATURES
+// ================================
+
+// Predefined Material Symbols variants
+.oi-filled {
+    --o-mi-fill: 1;
+}
+
+.oi-outlined {
+    --o-mi-fill: 0;
 }

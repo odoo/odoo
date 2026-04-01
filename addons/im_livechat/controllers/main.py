@@ -46,9 +46,9 @@ class LivechatController(http.Controller):
         stream = request.env['ir.binary']._get_stream_from(getattr(asset, ext)())
         return stream.get_response()
 
-    @http.route('/im_livechat/font-awesome', type='http', auth='none', cors="*")
-    def fontawesome(self, **kwargs):
-        return Stream.from_path('web/static/src/libs/fontawesome/fonts/fontawesome-webfont.woff2').get_response()
+    @http.route('/im_livechat/material_symbols_outlined', type='http', auth='none', cors="*")
+    def material_symbols(self, **kwargs):
+        return Stream.from_path('web/static/src/libs/materialsymbols/MaterialSymbolsOutlined_wgth-400_opsz-24.woff2').get_response()
 
     @http.route('/im_livechat/odoo_ui_icons', type='http', auth='none', cors="*")
     def odoo_ui_icons(self, **kwargs):
