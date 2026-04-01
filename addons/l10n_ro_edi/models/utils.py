@@ -256,33 +256,31 @@ def _request_ciusro_synchronize_invoices_pagination(company, session, nb_days=1)
     messages = []
     errors = []
     nb_days = max(1, min(nb_days, 60))  # Ensure nb_days is between 1 and 60 as per SPV limits
+    # The endpoint requires a timestamp in milliseconds, so we convert the
+    # datetime to timestamp and then to milliseconds
     start_time = str((datetime.now() - timedelta(days=nb_days)).timestamp() * 1e3).split(".")[0]
     end_time = str(datetime.now().timestamp() * 1e3).split(".")[0]
     page_number = 1
-    result = make_efactura_request(
-        session=session,
-        company=company,
-        endpoint='listaMesajePaginatieFactura',
-        params={'startTime': start_time, 'endTime': end_time, 'cif': company.vat.replace('RO', ''), 'pagina': page_number},
-    )
-
-    total_page_number = result.get('numar_total_pagini', 1)
+    total_page_number = 1
     while page_number <= total_page_number:
-        if page_number > 1:
-            result = make_efactura_request(
-                session=session,
-                company=company,
-                endpoint='listaMesajePaginatieFactura',
-                params={'startTime': start_time, 'endTime': end_time, 'cif': company.vat.replace('RO', ''), 'pagina': page_number},
-            )
-        if 'content' in result:
-            result = json.loads(result['content'])
-
-        messages += result.get('mesaje', [])
-        if result.get("error"):
+        result = make_efactura_request(
+            session=session,
+            company=company,
+            endpoint='listaMesajePaginatieFactura',
+            params={'startTime': start_time, 'endTime': end_time, 'cif': company.vat.replace('RO', ''), 'pagina': page_number},
+        )
+        if total_page_number == 1 and 'numar_total_pagini' in result:
+            total_page_number = result.get('numar_total_pagini', 1)
+        if 'error' in result:
             errors.append(result.get("error"))
-        if result.get("eroare"):
+        elif 'eroare' in result:
             errors.append(result.get("eroare"))
+
+        try:
+            msg_content = json.loads(result['content'])
+            messages += msg_content.get('mesaje', [])
+        except ValueError:
+            return {'error': company.env._("The SPV data could not be parsed.")}
 
         page_number += 1
 
