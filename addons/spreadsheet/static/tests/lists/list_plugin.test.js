@@ -112,7 +112,7 @@ test("Numeric/monetary fields are correctly loaded and displayed", async () => {
     expect(getFormattedValueGrid(model, "A2:C6")).toEqual({
         A2: "74.40€",    B2: "10.00",  C2: "1",
         A3: "$74.80",    B3: "11.00",  C3: "2",
-        A4: "4.00€",     B4: "95.00",  C4: "3",      
+        A4: "4.00€",     B4: "95.00",  C4: "3",
         A5: "$1,000.00", B5: "15.00",  C5: "4",
         A6: "$0.00",     B6: "0.00",   C6: "0",
     });
@@ -1326,4 +1326,14 @@ test("Chaining monetary fields includes the currency field", async function () {
     expect(getCellValue(model, "A1")).toBe(699.99);
     expect(getEvaluatedCell(model, "A1").formattedValue).toBe("$699.99");
     expect.verifySteps(["web_search_read"]);
+});
+
+test("List header labels are loaded even if there are no corresponding list values", async function () {
+    const { model } = await createSpreadsheetWithList({ columns: [] });
+    const listId = model.getters.getListIds()[0];
+    setCellContent(model, "A1", `=ODOO.LIST.HEADER(${listId}, "currency_id")`);
+    setCellContent(model, "B1", `=ODOO.LIST.HEADER(${listId}, "product_id.template_id.name")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("Currency");
+    expect(getCellValue(model, "B1")).toBe("Product Name");
 });
