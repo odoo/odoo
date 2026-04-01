@@ -132,7 +132,8 @@ test("should not transform url after two space", async () => {
 
 test("transform text url into link and undo it", async () => {
     const { el, editor } = await setupEditor(`<p>[]</p>`);
-    await insertText(editor, "www.abc.jpg ");
+    await insertText(editor, "www.abc.jpg");
+    await insertSpace(editor);
     expect(cleanLinkArtifacts(getContent(el))).toBe(
         '<p><a href="https://www.abc.jpg">www.abc.jpg</a>&nbsp;[]</p>'
     );
