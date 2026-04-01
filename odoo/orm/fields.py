@@ -453,7 +453,16 @@ class Field[T]:
                 warnings.warn(f"compute_sql attribute makes sense only if {self} is a computed field")
             if 'compute_sudo' not in attrs:
                 warnings.warn(f"compute_sql requires an explicit compute_sudo parameter on {self}")
-        if attrs.get('compute'):
+        if attrs.get('related'):
+            if attrs.pop('compute', None):
+                warnings.warn(f"Field {self} is both compute and related. Set one of them to None.")
+            # by default, related fields are not stored, computed in superuser
+            # mode, not copied and readonly
+            attrs['store'] = store = attrs.get('store', False)
+            attrs['compute_sudo'] = attrs.get('compute_sudo', attrs.get('related_sudo', True))
+            attrs['copy'] = attrs.get('copy', False)
+            attrs['readonly'] = attrs.get('readonly', True)
+        elif attrs.get('compute'):
             # by default, computed fields are not stored, computed in superuser
             # mode if stored, not copied (unless stored and explicitly not
             # readonly), and readonly (unless inversible)
@@ -462,13 +471,6 @@ class Field[T]:
             if not (attrs['store'] and not attrs.get('readonly', True)):
                 attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
-        if attrs.get('related'):
-            # by default, related fields are not stored, computed in superuser
-            # mode, not copied and readonly
-            attrs['store'] = store = attrs.get('store', False)
-            attrs['compute_sudo'] = attrs.get('compute_sudo', attrs.get('related_sudo', True))
-            attrs['copy'] = attrs.get('copy', False)
-            attrs['readonly'] = attrs.get('readonly', True)
         if attrs.get('precompute'):
             if not attrs.get('compute') and not attrs.get('related'):
                 warnings.warn(f"precompute attribute doesn't make any sense on non computed field {self}", stacklevel=1)
