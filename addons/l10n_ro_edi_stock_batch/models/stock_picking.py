@@ -9,7 +9,7 @@ class Picking(models.Model):
         # OVERRIDES 'l10n_ro_edi_stock'
         for picking in self:
             picking.l10n_ro_edi_stock_enable = (
-                (not picking.batch_id or picking.batch_id.state != 'done')
+                not picking.batch_id
                 and picking.picking_type_code != 'internal'
                 and picking.company_id.country_id.code == 'RO'
             )
