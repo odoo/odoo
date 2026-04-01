@@ -45,13 +45,13 @@ class AccountAnalyticLine(models.Model):
         self.ensure_one()
         if (self.so_line):
             return {
-                'res_model': self.so_line,
+                'res_model': self.so_line._name,
                 'type': 'ir.actions.act_window',
                 'views': [[False, "form"]],
                 'res_id': self.so_line.id,
             }
         return {
-            'res_model': self,
+            'res_model': self._name,
             'type': 'ir.actions.act_window',
             'views': [[False, "form"]],
             'res_id': self.id,
