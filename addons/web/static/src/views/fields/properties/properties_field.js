@@ -63,7 +63,7 @@ export class PropertiesField extends Component {
 
         this.state = useState({
             canChangeDefinition: false,
-            isInEditMode: false,
+            isInEditMode: this.env.propertiesState?.editable || false,
             isDragging: false,
             isPopoverOpen: false,
         });
@@ -72,7 +72,7 @@ export class PropertiesField extends Component {
         if (this.env.config?.viewType === "form") {
             useBus(this.env.model.bus, "PROPERTY_FIELD:EDIT", async (ev) => {
                 if (!ev.detail.editable) {
-                    this.state.isInEditMode = false;
+                    this.setEditMode(false);
                     return;
                 }
 
@@ -90,7 +90,7 @@ export class PropertiesField extends Component {
                 }
                 const isInEditMode = canChangeDefinition && !this.props.readonly;
                 this.state.canChangeDefinition = !!canChangeDefinition;
-                this.state.isInEditMode = isInEditMode;
+                this.setEditMode(isInEditMode);
                 if (isInEditMode && this.propertiesList.length === 0) {
                     this.onPropertyCreate();
                 }
@@ -104,7 +104,7 @@ export class PropertiesField extends Component {
             this.checkDefinitionWriteAccess().then((canChangeDefinition) => {
                 if (canChangeDefinition) {
                     this.state.canChangeDefinition = true;
-                    this.state.isInEditMode = !this.props.readonly;
+                    this.setEditMode(!this.props.readonly);
                 }
             });
         });
@@ -117,10 +117,11 @@ export class PropertiesField extends Component {
                 }
                 this.checkDefinitionWriteAccess().then((canChangeDefinition) => {
                     this.state.canChangeDefinition = !!canChangeDefinition;
-                    this.state.isInEditMode =
+                    const editable =
                         canChangeDefinition &&
                         !this.props.readonly &&
                         (this.state.isInEditMode || this.props.editMode);
+                    this.setEditMode(editable);
                 });
             },
             () => [this.props.record.data[this.definitionRecordField]]
@@ -128,7 +129,7 @@ export class PropertiesField extends Component {
 
         onWillUpdateProps(async (nextProps) => {
             if (nextProps.readonly && !this.props.readonly) {
-                this.state.isInEditMode = false;
+                this.setEditMode(false);
             }
             if (
                 !nextProps.readonly &&
@@ -139,10 +140,11 @@ export class PropertiesField extends Component {
                     canChangeDefinition = await this.checkDefinitionWriteAccess();
                 }
                 this.state.canChangeDefinition = !!canChangeDefinition;
-                this.state.isInEditMode =
+                const editable =
                     canChangeDefinition &&
                     !nextProps.readonly &&
                     (this.state.isInEditMode || nextProps.editMode);
+                this.setEditMode(editable);
             }
         });
 
@@ -608,7 +610,10 @@ export class PropertiesField extends Component {
 
         if (newType === "separator" && oldType !== "separator") {
             // unfold automatically the new separator
-            await this._toggleSeparators([propertyDefinition.name], propertyDefinition.fold_by_default);
+            await this._toggleSeparators(
+                [propertyDefinition.name],
+                propertyDefinition.fold_by_default
+            );
             // layout has been changed, move the definition popover
             this.movePopoverToProperty = propertyDefinition.name;
         } else if (oldType === "separator" && newType !== "separator") {
@@ -617,7 +622,10 @@ export class PropertiesField extends Component {
                 (property, index) => index < propertyIndex && property.type === "separator"
             );
             if (previousSeperator) {
-                await this._toggleSeparators([previousSeperator.name], propertyDefinition.fold_by_default);
+                await this._toggleSeparators(
+                    [previousSeperator.name],
+                    propertyDefinition.fold_by_default
+                );
             }
             // layout has been changed, move the definition popover
             this.movePopoverToProperty = propertyDefinition.name;
@@ -635,7 +643,10 @@ export class PropertiesField extends Component {
             const displayData = this._getDisplayData();
             message += _t(
                 'It will be removed for everyone using the "%(parentName)s" %(parentFieldLabel)s.',
-                { parentName: displayData.parentName, parentFieldLabel: displayData.parentFieldLabel }
+                {
+                    parentName: displayData.parentName,
+                    parentFieldLabel: displayData.parentFieldLabel,
+                }
             );
         } else {
             message += _t("It will be removed for everyone!");
@@ -961,15 +972,15 @@ export class PropertiesField extends Component {
                 parentFieldLabel: displayData.parentFieldLabel,
             });
         }
-        return _t(
-            'Oops! You cannot edit the %(parentFieldLabel)s "%(parentName)s".',
-            { parentFieldLabel: displayData.parentFieldLabel, parentName: displayData.parentName }
-        );
+        return _t('Oops! You cannot edit the %(parentFieldLabel)s "%(parentName)s".', {
+            parentFieldLabel: displayData.parentFieldLabel,
+            parentName: displayData.parentName,
+        });
     }
 
     /**
-    * Following functions are utility function overwritten in the component PropertiesDefinitionField
-    */
+     * Following functions are utility function overwritten in the component PropertiesDefinitionField
+     */
     _toggleSeparatorValue(property, forceState) {
         property.value = forceState ?? !(property.value ?? property.fold_by_default);
     }
@@ -988,14 +999,14 @@ export class PropertiesField extends Component {
             string: _t("Property %s", count + 1),
             type: "char",
             definition_changed: true,
-        }
+        };
     }
 
     _getDisplayData() {
         return {
-            'parentName': this.props.record.data[this.definitionRecordField].display_name,
-            'parentFieldLabel': this.props.record.fields[this.definitionRecordField].string,
-        }
+            parentName: this.props.record.data[this.definitionRecordField].display_name,
+            parentFieldLabel: this.props.record.fields[this.definitionRecordField].string,
+        };
     }
 
     _onDeleteConfirm(propertiesDefinitions, propertyName) {
@@ -1006,6 +1017,13 @@ export class PropertiesField extends Component {
 
     _isPropertyDefinitionWidget() {
         return false;
+    }
+
+    setEditMode(editable) {
+        this.state.isInEditMode = !!editable;
+        if (this.env.propertiesState) {
+            this.env.propertiesState.editable = this.state.isInEditMode;
+        }
     }
 }
 

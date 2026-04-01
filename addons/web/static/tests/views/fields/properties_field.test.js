@@ -1802,6 +1802,8 @@ test("properties: default value date", async () => {
     // save the form and check that the default value is not reset
     await click(".o_form_button_save");
     await animationFrame();
+    await toggleActionMenu();
+    await toggleMenuItem("Edit Properties");
     await click(".o_property_field:nth-last-child(2) .o_field_property_open_popover");
     await animationFrame();
     expect(".o_property_field_popover .o_field_property_definition_value input").toHaveValue(
@@ -2462,6 +2464,8 @@ test("new property, change record, change property type", async () => {
 
     await contains(".o_property_field .o_property_field_value input").edit("aze");
     await contains(".o_pager_next").click();
+    await toggleActionMenu();
+    await toggleMenuItem("Edit Properties");
     expect(".o_property_field .o_property_field_value input").toHaveValue("");
     // Change second record's property type
     await contains(".o_property_field .o_field_property_open_popover").click();
@@ -2878,9 +2882,6 @@ test("properties definition: default value should not add value key", async () =
         actionMenus: {},
     });
 
-    await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
-
     await click(".o_field_property_add button");
     await waitFor(".o_property_field_popover");
     await changeType("boolean");
@@ -2923,8 +2924,6 @@ test("properties definition: test display and edit", async () => {
     });
 
     // Edit an existing definition
-    await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
     expect(".o_field_property_open_popover").toHaveCount(4, {
         message: "4 popover buttons should be present : 1 for each definition.",
     });
@@ -3023,9 +3022,7 @@ test("properties: no parent document set", async () => {
     patchWithCleanup(formView.env.services.notification, {
         add: (message, options) => {
             expect.step("notification");
-            expect(message).toBe(
-                "Oops! A Company is needed to add property fields."
-            );
+            expect(message).toBe("Oops! A Company is needed to add property fields.");
             expect(options.type).toBe("warning");
         },
     });
@@ -3044,5 +3041,53 @@ test("properties: no parent document set", async () => {
 
     expect(".o_field_properties:first-child .o_field_property_open_popover").toHaveCount(0, {
         message: "The edit definition button must not be in the view",
+    });
+});
+
+test("add button visible in edit mode and during notebook switch", async () => {
+    onRpc("has_access", () => true);
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <notebook>
+                        <page string="Properties">
+                            <group>
+                                <field name="company_id"/>
+                                <field name="properties"/>
+                            </group>
+                        </page>
+                        <page string="Other">
+                            <group>
+                                <field name="display_name"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>`,
+        actionMenus: {},
+    });
+
+    expect(".o_field_property_add button").toHaveCount(0, {
+        message: "Add Property button should be hidden before enabling edit mode",
+    });
+
+    await toggleActionMenu();
+    await toggleMenuItem("Edit Properties");
+
+    expect(".o_field_property_add button").toHaveCount(1, {
+        message: "Add Property button should be visible in edit mode",
+    });
+
+    await contains(".o_notebook_headers .nav-link:contains(Other)").click();
+    await contains(".o_notebook_headers .nav-link:contains(Properties)").click();
+    await waitFor(".o_field_property_add button");
+
+    expect(".o_field_property_add button").toHaveCount(1, {
+        message: "Add Property button should remain visible after notebook switch",
     });
 });

@@ -30,7 +30,7 @@ export class PropertiesDefinitionField extends PropertiesField {
         }
         const isInEditMode = canChangeDefinition && !this.props.readonly;
         this.state.canChangeDefinition = !!canChangeDefinition;
-        this.state.isInEditMode = isInEditMode;
+        this.setEditMode(isInEditMode);
         if (isInEditMode && this.propertiesList.length === 0) {
             const newName = this.generatePropertyName("char");
             const propertiesDefinitions = [{
