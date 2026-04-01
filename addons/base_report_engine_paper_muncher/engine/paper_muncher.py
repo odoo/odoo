@@ -96,147 +96,26 @@ def run_paper_muncher(
             "Ensure it is installed and available in the system PATH."
         )
 
-    if len(bodies) == 1:
-        return run_process(binary, extra_args, documents[0])
-    return run_process_multi(binary, extra_args, documents)
-
-
-def run_process_multi(
-        binary,
-        extra_args,
-        documents,
-):
-    names = [f"pipe:{i}.html" for i in range(len(documents))]
-    _logger.info("=== run_process_multi START ===")
-    _logger.info("Documents count: %d", len(documents))
-    _logger.info("Names: %s", names)
-    _logger.info("Binary: %s", binary)
-    _logger.info("Extra args: %s", extra_args)
-
-    env = os.environ.copy()
-    # Disable ANSI color codes in subprocess logs to prevent parsing errors.
-    env['NO_COLOR'] = '1'
-
-    for i, doc in enumerate(documents):
-        doc_preview = doc[:200] if len(doc) > 200 else doc
-        _logger.info("Document[%d]: %d bytes, preview: %r", i, len(doc), doc_preview)
-
-    command = [binary, *names, '-o', "pipe:"] + extra_args
-    _logger.info("Full command: %s", ' '.join(command))
-
-    with subprocess.Popen(
-            command,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            env=env,
-    ) as process:
-        _logger.info("Paper Muncher process started: pid=%d", process.pid)
-        try:
-            _serve_requests(process, documents)
-            # Multi-document mode: Paper Muncher doesn't send PUT request
-            # Just close stdin and read the PDF
-            _logger.info("Closing stdin to signal end of input")
-            process.stdin.close()
-
-            if process.poll() is not None:
-                raise RuntimeError("Paper Muncher crashed before returning PDF")
-
-            try:
-                rendered_content = read_all_with_timeout(process.stdout)
-                stderr_output = read_all_with_timeout(process.stderr)
-            except (EOFError, TimeoutError):
-                try:
-                    process.kill()
-                except Exception:
-                    pass
-                try:
-                    process.wait()
-                except Exception:
-                    pass
-                raise
-
-            if stderr_output:
-                _logger.warning(
-                    "Paper Muncher error output: %s",
-                    stderr_output.decode('utf-8', errors='replace'),
-                )
-
-            try:
-                process.wait(timeout=5)
-            except subprocess.TimeoutExpired:
-                try:
-                    process.kill()
-                except Exception:
-                    pass
-                try:
-                    process.wait()
-                except Exception:
-                    pass
-                _logger.warning(
-                    "Paper Muncher did not terminate in time, forcefully killed it"
-                )
-
-            if process.returncode != 0:
-                _logger.warning("Paper Muncher exited with code %d", process.returncode)
-
-            if not rendered_content.startswith(b'%PDF-'):
-                raise RuntimeError("Paper Muncher did not return valid PDF content")
-
-            _logger.info("=== run_process_multi SUCCESS ===")
-            return rendered_content
-        except Exception as e:
-            _logger.error("=== run_process_multi FAILED: %s ===", e, exc_info=True)
-            raise
+    return run_process(binary, extra_args, documents)
 
 
 def run_process(
         binary,
         extra_args,
-        content,
+        documents,
 ):
     env = os.environ.copy()
     # Disable ANSI color codes in subprocess logs to prevent parsing errors.
     env['NO_COLOR'] = '1'
 
+    names = [f"pipe:{i}.html" for i in range(len(documents))]
+
     with subprocess.Popen(
-            [binary, "pipe:", '-o', "pipe:"] + extra_args,
+            [binary, *names, '-o', "pipe:"] + extra_args,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             env=env,
     ) as process:
-        try:
-            consume_paper_muncher_request(process.stdout)
-        except EOFError as early_eof:
-            raise RuntimeError("Paper Muncher terminated prematurely (phase 1)") from early_eof
-
-        if process.poll() is not None:
-            raise RuntimeError("Paper Muncher crashed before receiving content")
-
-        now = datetime.now(timezone.utc)
-        response_headers = (
-                               b"HTTP/1.1 200 OK\r\n"
-                               b"Content-Length: %(length)d\r\n"
-                               b"Content-Type: text/html\r\n"
-                               b"Date: %(date)s\r\n"
-                               b"Server: %(server)s\r\n"
-                               b"\r\n"
-                           ) % {
-                               b'length': len(content.encode()),
-                               b'date': format_datetime(now, usegmt=True).encode(),
-                               b'server': SERVER_SOFTWARE.encode(),
-                           }
-
-        try:
-            _safe_write(process, response_headers)
-            _safe_write(process, content.encode())
-            process.stdin.flush()
-        except TimeoutError:
-            raise
-
-        if process.poll() is not None:
-            raise RuntimeError("Paper Muncher crashed while sending HTML content")
-
-        return _serve_requests(process, [content])
+        return _serve_requests(process, documents)
 

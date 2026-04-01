@@ -511,10 +511,7 @@ class IrActionsReport(models.Model):
                     " attributes 'data-oe-model' and 'data-oe-id' as part of the div with 'article' classname.",
                     report_sudo.name,
                 ))
-
-            print(f"OO::{pdf_content[:400].decode('utf-8', errors='replace')}::OO")
             pdf_content_stream = io.BytesIO(pdf_content)
-            # TODO DOODODODOD
             # Printing a PDF report without any records. The content could be returned directly.
             if has_duplicated_ids or not res_ids:
                 return {
@@ -529,7 +526,6 @@ class IrActionsReport(models.Model):
             # Only one record: append the whole PDF.
             if len(res_ids_wo_stream) == 1:
                 collected_streams[res_ids_wo_stream[0]]['stream'] = pdf_content_stream
-                print("RETURN 1")
                 return collected_streams
 
             # In case of multiple docs, we need to split the pdf according the records.
@@ -544,7 +540,6 @@ class IrActionsReport(models.Model):
                     stream = io.BytesIO()
                     attachment_writer.write(stream)
                     collected_streams[res_ids_wo_stream[i]]['stream'] = stream
-                print("RETURN 2")
                 return collected_streams
 
             # In cases where the number of res_ids != the number of pages,
@@ -587,7 +582,6 @@ class IrActionsReport(models.Model):
                         stream = io.BytesIO()
                         attachment_writer.write(stream)
                         collected_streams[res_ids_wo_stream[i]]['stream'] = stream
-                    print("RETURN 3")
 
                     return collected_streams
                 else:
@@ -596,7 +590,6 @@ class IrActionsReport(models.Model):
                         collected_streams[res_id]['stream'] = individual_collected_stream[res_id]['stream']
             collected_streams[False] = {'stream': pdf_content_stream, 'attachment': None}
 
-        print("RETURN 4")
         return collected_streams
 
     def _prepare_pdf_report_attachment_vals_list(self, report, streams):

@@ -461,14 +461,14 @@ def _serve_requests(process, documents):
                         request_number += 1
 
                         if request_line.startswith('GET'):
-                            _handle_single_request(process, request_line, documents, documents_served, request_number)
-                        elif request_line.startswith('PUT'):
-                            print(f"PUT RECEIVED {request_line} headers: {headers}")
+                            documents_served = _handle_single_request(process, request_line, documents, documents_served, request_number)
 
-                            return _finalize_and_read(process, stdout_buffer)
-                            if len(documents_served) >= len(documents):
-                                # TODO Handle PUT request body reading and processing
-                                return
+                        elif request_line.startswith('PUT'):
+                            all_docs_served = len(documents_served) >= len(documents)
+                            if all_docs_served:
+                                return _finalize_and_read(process, stdout_buffer)
+                            raise RuntimeError("Paper Muncher returned before we sent everything")
+
 
     finally:
         selector.close()
@@ -558,10 +558,9 @@ def _handle_single_request(process, request_line, documents, documents_served, r
 
     _logger.info("Request #%d: path=%r (documents_count=%d)", request_number, path, len(documents))
 
-    # Document vs Asset logic
-    document = re.match(r'^/?(?P<index>\d+)\.html(?:\?.*)?$', path)
-    if document:
-        index = int(document.group('index'))
+    is_document = path.endswith(('.html','.xhtml','.xml')) or path == "."
+    if is_document:
+        index = int(path.split('.')[0]) if path != "." else 0
         _logger.info("Request #%d: Document request for index=%d", request_number, index)
         content = documents[index]
         now = datetime.now(timezone.utc)
@@ -588,6 +587,7 @@ def _handle_single_request(process, request_line, documents, documents_served, r
 
     process.stdin.flush()
     _logger.info("Request #%d: Asset %s sent successfully", request_number, path)
+    return documents_served
 
 
 def _safe_write(process, data: bytes) -> None:
