@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Literal
 
 from pydantic import BaseModel, ConfigDict
 from sqlalchemy import text
+from sqlalchemy.ext.asyncio import create_async_engine
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
@@ -45,23 +46,31 @@ class Settings(BaseModel):
     async def resolve_runtime_mode(self, session: "AsyncSession | None" = None) -> Literal["direct", "xmlrpc"]:
         if self.odoo_runtime_mode in {"direct", "xmlrpc"}:
             return self.odoo_runtime_mode
-        if session is None:
-            return "xmlrpc"
-        try:
-            result = await session.scalar(
-                text(
-                    """
-                    SELECT EXISTS (
-                        SELECT 1
-                        FROM information_schema.tables
-                        WHERE table_schema = 'public'
-                          AND table_name = 'ir_model'
-                    )
-                    """
-                )
+        probe = text(
+            """
+            SELECT EXISTS (
+                SELECT 1
+                FROM information_schema.tables
+                WHERE table_schema = 'public'
+                  AND table_name = 'ir_model'
             )
+            """
+        )
+        if session is not None:
+            try:
+                result = await session.scalar(probe)
+            except Exception:  # noqa: BLE001
+                return "xmlrpc"
+            return "direct" if bool(result) else "xmlrpc"
+
+        engine = create_async_engine(self.database_url, pool_pre_ping=True)
+        try:
+            async with engine.connect() as connection:
+                result = await connection.scalar(probe)
         except Exception:  # noqa: BLE001
             return "xmlrpc"
+        finally:
+            await engine.dispose()
         return "direct" if bool(result) else "xmlrpc"
 
 
