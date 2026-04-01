@@ -28,66 +28,40 @@ DEFAULT_READ_TIMEOUT = 15  # seconds
 DEFAULT_READLINE_TIMEOUT = 1 * 15 # seconds (15 minutes is for the put request)
 DEFAULT_WRITE_TIMEOUT = 15  # seconds
 DEFAULT_CHUNK_SIZE = 4096  # bytes
+LOG_PAPER_MUNCHER = False
 HTML_BODY_PATTERN = re.compile(
     r'(?s)(.*?)(<body[^>]*>)(.*?)(</body>)(.*)', re.IGNORECASE)
 
 def remaining_time(deadline: float) -> float:
+    """Return remaining seconds until a monotonic deadline.
+
+    Args:
+        deadline: Absolute timestamp from :func:`time.monotonic`.
+
+    Raises:
+        TimeoutError: If the deadline has been reached.
+    """
     remaining = deadline - time.monotonic()
     if remaining <= 0:
         raise TimeoutError("Timeout exceeded")
     return remaining
-
-
-def readline_with_timeout(
-        file_object: IO[bytes],
-        timeout: int = DEFAULT_READLINE_TIMEOUT,
-) -> bytes:
-    """Read a full line ending with '\\n' from a file-like object within a timeout.
-
-    :param IO[bytes] file_object: File-like object to read from (must be in binary mode).
-    :param int timeout: Max seconds to wait for line data.
-    :return: A line of bytes ending in '\\n'.
-    :rtype: bytes
-    :raises TimeoutError: If timeout is reached before a line is read.
-    :raises EOFError: If EOF is reached before a line is read.
-    """
-    fd = file_object.fileno()
-    deadline = time.monotonic() + timeout
-    line_buffer = bytearray()
-
-    with selectors.DefaultSelector() as selector:
-        selector.register(fd, selectors.EVENT_READ)
-
-        while selector.select(timeout=remaining_time(deadline)):
-            next_byte = os.read(fd, 1)
-            if not next_byte:
-                raise EOFError("EOF reached while reading line")
-
-            line_buffer += next_byte
-            if next_byte == b'\n':
-                break
-        else:
-            raise TimeoutError("Timeout while reading line from subprocess")
-    _logger.debug(
-        "Elapsed time reading line: %.3f seconds",
-        time.monotonic() - (deadline - timeout)
-    )
-    return bytes(line_buffer)
-
 
 def read_all_with_timeout(
         file_object: IO[bytes],
         timeout: int = DEFAULT_READ_TIMEOUT,
         chunk_size: int = DEFAULT_CHUNK_SIZE,
 ) -> bytes:
-    """Read all data from a file-like object until EOF, with a timeout per chunk.
+    """Read from a binary stream until EOF with a global timeout.
 
-    :param IO[bytes] file_object: File-like object to read from.
-    :param int timeout: Timeout in seconds for the entire read operation.
-    :param int chunk_size: Number of bytes to read per chunk.
-    :return: All bytes read until EOF.
-    :rtype: bytes
-    :raises TimeoutError: If no data is read within the timeout period.
+    The timeout applies to the whole operation (single deadline), not per chunk.
+
+    Args:
+        file_object: Binary stream (must implement :meth:`fileno`).
+        timeout: Maximum number of seconds.
+        chunk_size: Maximum bytes per read.
+
+    Raises:
+        TimeoutError: If the deadline is reached before EOF.
     """
     fd = file_object.fileno()
     data = bytearray()
@@ -108,37 +82,21 @@ def read_all_with_timeout(
     )
     return bytes(data)
 
-def consume_paper_muncher_request(
-        stdout: IO[bytes],
-        timeout: int = DEFAULT_READLINE_TIMEOUT
-) -> None:
-    """Read and discard all header lines from a Paper Muncher request.
-
-    :param IO[bytes] stdout: File-like stdout stream from Paper Muncher.
-    :param int timeout: Timeout in seconds for each line read.
-    :return: None
-    :rtype: None
-    """
-    deadline = time.monotonic() + timeout
-    while line := readline_with_timeout(stdout, timeout=int(remaining_time(deadline))):
-        _logger.debug("Paper Muncher request line: %s", line.rstrip())
-        if line == b"\r\n":
-            return
-        if not line:
-            raise EOFError("EOF reached while reading request headers")
-
-
 def write_with_timeout(
         file_object: BinaryIO,
         data: bytes,
         timeout: int = DEFAULT_WRITE_TIMEOUT
 ) -> None:
-    """Write all data to a file-like object within a timeout, using selectors.
+    """Write all bytes to a binary stream with a global timeout.
 
-    :param BinaryIO file_object: File-like object to write to.
-    :param bytes data: Bytes to write.
-    :param int timeout: Max seconds to wait for write readiness.
-    :raises TimeoutError: If writing cannot complete within timeout.
+    Args:
+        file_object: Binary stream (must implement :meth:`fileno`).
+        data: Bytes to write.
+        timeout: Maximum number of seconds.
+
+    Raises:
+        TimeoutError: If the deadline is reached before completion.
+        RuntimeError: If 0 bytes are written while data remains.
     """
     fd = file_object.fileno()
     total_written = 0
@@ -161,55 +119,9 @@ def write_with_timeout(
         time.monotonic() - (deadline - timeout)
     )
 
-def read_paper_muncher_request(
-        stdout: IO[bytes],
-        timeout: int = DEFAULT_READLINE_TIMEOUT,
-) -> Optional[str]:
-    """Read the HTTP-like request line from Paper Muncher and return the path.
-
-    :param IO[bytes] stdout: File-like stdout stream from Paper Muncher.
-    :param int timeout: Timeout in seconds for each line read.
-    :return: The requested asset path, or ``None`` if the method is PUT.
-    :rtype: str or None
-    :raises EOFError: If no request line is found.
-    :raises ValueError: If the request format is invalid or the method is unsupported.
-    """
-    deadline = time.monotonic() + timeout
-    _logger.debug("read_paper_muncher_request: starting, timeout=%d", timeout)
-    try:
-        first_line_bytes = readline_with_timeout(stdout, timeout=int(remaining_time(deadline)))
-    except TimeoutError as e:
-        _logger.error("Timeout reading first line from Paper Muncher (waited %d seconds)", timeout)
-        raise
-
-    if not first_line_bytes:
-        raise EOFError("EOF reached while reading first line from subprocess")
-
-    first_line = first_line_bytes.decode('utf-8').rstrip('\r\n')
-
-    _logger.debug("First Paper Muncher request line: %s", first_line)
-
-    parts = first_line.split(' ')
-    if len(parts) != 3:
-        raise ValueError(
-            f"Invalid HTTP request line from Paper Muncher: {first_line}")
-
-    method, path, _ = parts
-    if method == 'PUT':
-        path = None
-    elif method != 'GET':
-        raise ValueError(
-            f"Unexpected HTTP method: {method} in line: {first_line}")
-
-    consume_paper_muncher_request(stdout, timeout=int(remaining_time(deadline)))
-
-    return path
-
-
 @contextmanager
 def preserve_thread_data():
-    """Context manager to preserve and restore thread-local data used by Odoo.
-    """
+    """Preserve and restore a subset of Odoo thread-local attributes."""
     current_thread = threading.current_thread()
     attrs_to_preserve = [
         'query_count',
@@ -240,13 +152,7 @@ def preserve_thread_data():
 
 
 def generate_environ(path: str) -> WSGIEnvironment:
-    """Generate a WSGI environment for the given path.
-    This is used to simulate an HTTP request to the Odoo application.
-
-    :param str path: The HTTP request path.
-    :return: The WSGI environment dictionary.
-    :rtype: WSGIEnvironment
-    """
+    """Build a WSGI environ for an internal Odoo GET request."""
     url, _, query_string = path.partition('?')
     current_environ = request.httprequest.environ
     # By security, we forge a request with public user environment.
@@ -266,12 +172,9 @@ def generate_environ(path: str) -> WSGIEnvironment:
 def generate_odoo_http_response(
         request_path: str
 ) -> Generator[bytes, None, None]:
-    """Simulate an internal HTTP GET request to the Odoo WSGI app and yield
-    the HTTP response headers and body as bytes.
+    """Yield a raw HTTP response (headers then body) for an internal Odoo GET.
 
-    :param str request_path: Path to query within the Odoo app.
-    :yields: Chunks of the full HTTP response to the simulated request.
-    :rtype: Generator[bytes, None, None]
+    If the response provides ``X-Sendfile``, the file is streamed from disk.
     """
     with preserve_thread_data():
         response_iterable, http_status, http_response_headers = run_wsgi_app(
@@ -306,12 +209,9 @@ def generate_odoo_http_response(
 
 
 def partition_on_body(html: str) -> tuple[str, str, str]:
-    """Extract the content of the <body> tag from HTML as a tuple of
-    (before_body, body_content, after_body)
+    """Split HTML into ``(prefix_with_<body>, body_inner_html, suffix_from_</body>)``.
 
-    :param str html: Full HTML document.
-    :return: Tuple of (open_body, body_content, close_body)
-    :rtype: tuple[str, str, str]
+    If no ``<body>`` can be identified, returns ``(html, "", "")``.
     """
     if not html:
         return "", "", ""
@@ -325,14 +225,7 @@ def partition_on_body(html: str) -> tuple[str, str, str]:
 
 
 def make_multi_docs_html(bodies, header='', footer=''):
-    """Combine multi header and footer with their respective bodies.
-
-    :param bodies: List of HTML body strings.
-    :param header: HTML header fragment.
-    :param footer: HTML footer fragment.
-    :return: Combined HTML document.
-    :rtype: list[str]
-    """
+    """Inject per-page header/footer fragments into each body HTML document."""
 
     footers_encapsulated = partition_on_body(footer)[1]
     footers_tree = html.fromstring(footers_encapsulated)
@@ -369,11 +262,9 @@ def make_multi_docs_html(bodies, header='', footer=''):
 
 
 def consume_headers(buffer: bytearray) -> tuple[Optional[str], Optional[dict[str, str]]]:
-    """Parse and remove HTTP request line and headers from the start of the buffer.
+    """Parse and remove an HTTP-like header block from a byte buffer.
 
-    :param bytearray buffer: The buffer containing incoming data.
-    :return: A tuple of (request_line, headers) if a full headers block was found,
-             otherwise (None, None).
+    Returns ``(None, None)`` if the full header block has not been received yet.
     """
     # Look for the end of the HTTP headers (double CRLF or double LF)
     headers_end = buffer.find(b'\r\n\r\n')
@@ -407,6 +298,7 @@ def consume_headers(buffer: bytearray) -> tuple[Optional[str], Optional[dict[str
 
 
 def _serve_requests(process, documents):
+    """Serve Paper Muncher requests until the rendered PDF is returned."""
     _logger.info("_serve_requests: Starting request loop, %d documents available", len(documents))
     documents_served = set()
 
@@ -433,10 +325,15 @@ def _serve_requests(process, documents):
                 if key.data == 'stderr':
                     # DRAIN STDERR: Read logs so the worker doesn't block
                     # Using a large read to clear the buffer quickly
+
+
                     log_data = os.read(process.stderr.fileno(), 65536)
                     if not log_data:
                         selector.unregister(process.stderr)
                     else:
+                        if not LOG_PAPER_MUNCHER:
+                            continue
+
                         stderr_buffer.extend(log_data)
                         while b'\n' in stderr_buffer:
                             line_end = stderr_buffer.find(b'\n') + 1
@@ -475,9 +372,7 @@ def _serve_requests(process, documents):
 
 
 def _finalize_and_read(process, current_buffer):
-    """Envoie la réponse finale OK, ferme stdin, lit stdout/stderr et effectue
-    les vérifications de terminaison du processus. Retourne les bytes PDF.
-    """
+    """Send the final response, then read stdout/stderr and validate the PDF."""
     now = datetime.now(timezone.utc)
     final_response = (
                          b"HTTP/1.1 200 OK\r\n"
@@ -544,7 +439,7 @@ def _finalize_and_read(process, current_buffer):
 
 
 def _handle_single_request(process, request_line, documents, documents_served, request_number):
-    """Extracted logic to handle a single protocol request."""
+    """Serve one ``GET`` request (document or asset) from the worker."""
     parts = request_line.split(' ')
     if len(parts) < 2:
         return
@@ -591,12 +486,7 @@ def _handle_single_request(process, request_line, documents, documents_served, r
 
 
 def _safe_write(process, data: bytes) -> None:
-    """Write bytes to process.stdin using write_with_timeout and kill the process on TimeoutError.
-
-    :param process: subprocess.Popen instance with stdin attribute
-    :param data: bytes to write
-    :raises TimeoutError: re-raises after killing the process
-    """
+    """Write to the worker stdin, killing the process if the write times out."""
     try:
         write_with_timeout(process.stdin, data)
     except TimeoutError:

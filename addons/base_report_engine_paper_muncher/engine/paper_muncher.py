@@ -19,8 +19,7 @@ try:
 except ImportError:
     magic = None
 
-from .communication import (partition_on_body, consume_paper_muncher_request, read_all_with_timeout, make_multi_docs_html,
-                            _serve_requests, _safe_write)
+from .communication import (partition_on_body, make_multi_docs_html, _serve_requests)
 from .utils import get_paper_muncher_binary
 
 _logger = logging.getLogger(__name__)
