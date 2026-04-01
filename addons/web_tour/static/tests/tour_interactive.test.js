@@ -806,3 +806,25 @@ test("pointer hidden when trigger is behind overlay", async () => {
     // Finalize the dummy tour to avoid leaving in a dirty state
     await contains("button.foo").click();
 });
+
+test("start a tour that no longer exist should clear tourstate", async () => {
+    Tour._records = [{ name: "tour69" }];
+    registry.category("web_tour.tours").add("tour69", {
+        steps: () => [{ trigger: "button.foo", run: "click" }],
+    });
+    class Root extends Component {
+        static components = { Counter };
+        static template = xml/*html*/ `
+                <t>
+                    <Counter />
+                </t>
+            `;
+        static props = ["*"];
+    }
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour69", { mode: "manual" });
+    expect(browser.localStorage.getItem("current_tour")).toBe("tour69");
+    registry.category("web_tour.tours").remove("tour69");
+    await getService("tour_service").startTour("tour69", { mode: "manual" });
+    expect(browser.localStorage.getItem("current_tour")).toBe(null);
+});

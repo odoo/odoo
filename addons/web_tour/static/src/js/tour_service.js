@@ -225,6 +225,10 @@ export class TourService {
         const tourName = tourState.getCurrentTour();
         const tourConfig = tourState.getCurrentConfig();
         const tour = await this.getTour(tourName, tourConfig);
+        if (!tour) {
+            tourState.clear();
+            return;
+        }
 
         tour.steps.forEach((step) => this.validateStep(step));
 
@@ -258,8 +262,8 @@ export class TourService {
                 tourState.clear();
                 browser.console.log("tour succeeded");
                 let message = tourConfig.rainbowManMessage || tour.rainbowManMessage;
-                if (message) {
-                    message = window.DOMPurify.sanitize(tourConfig.rainbowManMessage);
+                if (message && window.DOMPurify) {
+                    message = window.DOMPurify.sanitize(message);
                     this.effect.add({
                         type: "rainbow_man",
                         message: markup(message),
