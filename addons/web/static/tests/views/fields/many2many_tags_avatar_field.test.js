@@ -196,7 +196,7 @@ test("widget many2many_tags_avatar list view - don't crash on keyboard navigatio
 });
 
 test("widget many2many_tags_avatar in kanban view", async () => {
-    expect.assertions(24);
+    expect.assertions(25);
 
     for (let id = 5; id <= 15; id++) {
         Partner._records.push({
@@ -212,7 +212,7 @@ test("widget many2many_tags_avatar in kanban view", async () => {
         partner_ids: [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
     });
     Turtle._records[0].partner_ids = [1];
-    Turtle._records[1].partner_ids = [1, 2, 4];
+    Turtle._records[1].partner_ids = [1, 2];
     Turtle._records[2].partner_ids = [1, 2, 4, 5];
     Turtle._views = {
         form: '<form><field name="name"/></form>',
@@ -258,56 +258,59 @@ test("widget many2many_tags_avatar in kanban view", async () => {
 
     expect(
         ".o_kanban_record:nth-child(2) .o_field_many2many_tags_avatar .o_avatar img"
-    ).toHaveCount(3);
-    expect(
-        ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_avatar img"
     ).toHaveCount(2);
     expect(
-        `.o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_avatar:nth-child(1 of .o_tag) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/5/avatar_128?unique=1676282400000']`
+        ".o_kanban_record:nth-child(2) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
+    ).toHaveCount(0);
+    expect(
+        ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_avatar img"
     ).toHaveCount(1);
     expect(
-        `.o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_avatar:nth-child(2 of .o_tag) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/4/avatar_128?unique=1676282400000']`
+        `.o_kanban_record:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(1 of .o_tag) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/1/avatar_128?unique=1676282400000']`
+    ).toHaveCount(1);
+    expect(
+        `.o_kanban_record:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(2 of .o_tag) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/2/avatar_128?unique=1676282400000']`
     ).toHaveCount(1);
     expect(
         ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
     ).toHaveCount(1);
     expect(
         ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
-    ).toHaveText("+2");
+    ).toHaveText("+3");
 
     expect(
         ".o_kanban_record:nth-child(4) .o_field_many2many_tags_avatar .o_avatar img"
-    ).toHaveCount(2);
+    ).toHaveCount(1);
     expect(
         ".o_kanban_record:nth-child(4) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
     ).toHaveCount(1);
     expect(
         ".o_kanban_record:nth-child(4) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
-    ).toHaveText("+11");
+    ).toHaveText("+12");
     expect(".o_field_many2many_tags_avatar .o_field_many2many_selection").toHaveCount(0);
-    await contains(".o_kanban_record:nth-child(3) .o_quick_assign", { visible: false }).click();
+    await contains(".o_kanban_record:nth-child(2) .o_quick_assign", { visible: false }).click();
     await animationFrame();
     expect(".o-overlay-container input").toBeFocused();
-    expect(".o-overlay-container .o_tag").toHaveCount(4);
+    expect(".o-overlay-container .o_tag").toHaveCount(2);
     // delete inside the popover
     await contains(".o-overlay-container .o_tag .o_delete:eq(0)", {
         visible: false,
         displayed: true,
     }).click();
-    expect(".o-overlay-container .o_tag").toHaveCount(3);
-    expect(".o_kanban_record:nth-child(3) .o_tag").toHaveCount(3);
+    expect(".o-overlay-container .o_tag").toHaveCount(1);
+    expect(".o_kanban_record:nth-child(2) .o_tag").toHaveCount(1);
     // select first non selected input
     await contains(".o-overlay-container .o-autocomplete--dropdown-item:eq(4)").click();
-    expect(".o-overlay-container .o_tag").toHaveCount(4); // Should show full list above m2m autocomplete input
-    expect(".o_kanban_record:nth-child(3) .o_tag").toHaveCount(3); // But keep truncate in the card
+    expect(".o-overlay-container .o_tag").toHaveCount(2);
+    expect(".o_kanban_record:nth-child(2) .o_tag").toHaveCount(2);
     // load more
     await contains(".o-overlay-container .o_m2o_dropdown_option_search_more").click();
     // first non already selected item
     await contains(".o_dialog .o_list_table .o_data_row .o_data_cell:eq(3)").click();
-    expect(".o-overlay-container .o_tag").toHaveCount(5);
-    expect(".o_kanban_record:nth-child(3) .o_tag").toHaveCount(3);
+    expect(".o-overlay-container .o_tag").toHaveCount(3); // Should show full list above m2m autocomplete input
+    expect(".o_kanban_record:nth-child(2) .o_tag:not(.o_m2m_avatar_empty)").toHaveCount(1); // But keep truncate in the card
     expect(
-        `.o_kanban_record:nth-child(2) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/4/avatar_128?unique=1676282400000']`
+        `.o_kanban_record:nth-child(2) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/2/avatar_128?unique=1676282400000']`
     ).toHaveCount(1);
     await contains(".o_kanban_record .o_field_many2many_tags_avatar img.o_m2m_avatar").click();
 });

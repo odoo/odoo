@@ -423,17 +423,17 @@ test("many2many in kanban view", async () => {
         ".o_kanban_record .o_field_many2many_avatar_employee img.o_m2m_avatar:eq(0)"
     ).toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/hr.employee.public/${employeeId_2}/avatar_128?unique=1676282400000`
+        `${getOrigin()}/web/image/hr.employee.public/${employeeId_1}/avatar_128?unique=1676282400000`
     );
     expect(
         ".o_kanban_record .o_field_many2many_avatar_employee img.o_m2m_avatar:eq(1)"
     ).toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/hr.employee.public/${employeeId_1}/avatar_128?unique=1676282400000`
+        `${getOrigin()}/web/image/hr.employee.public/${employeeId_2}/avatar_128?unique=1676282400000`
     );
 
     // Clicking on first employee's avatar
-    await contains(".o_kanban_record img.o_m2m_avatar:eq(1)").click();
+    await contains(".o_kanban_record img.o_m2m_avatar:eq(0)").click();
     await waitFor(".o-mail-avatar-card-name:text(Mario)");
     expect(".o_card_user_infos > a").toHaveText("Mario@partner.com");
     expect(".o_avatar_card_buttons button:eq(0)").toHaveText("Send message");
@@ -442,7 +442,7 @@ test("many2many in kanban view", async () => {
     await waitFor(".o-mail-ChatWindow-header:contains('Mario')");
 
     // Clicking on second employee's avatar
-    await contains(".o_kanban_record img.o_m2m_avatar:eq(0)").click();
+    await contains(".o_kanban_record img.o_m2m_avatar:eq(1)").click();
     await waitFor(".o-mail-avatar-card-name:text(Luigi)");
     expect(".o_avatar_card").toHaveCount(1);
     expect(".o_avatar_card_buttons button:eq(0)").toHaveText("Send message");

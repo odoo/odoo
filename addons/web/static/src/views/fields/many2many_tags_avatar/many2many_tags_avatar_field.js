@@ -102,10 +102,6 @@ export class Many2ManyTagsAvatarFieldPopover extends Many2ManyTagsAvatarField {
         // update dropdown
         this.autoCompleteRef.el?.querySelector("input")?.click();
     }
-
-    get tags() {
-        return super.tags.reverse();
-    }
 }
 
 export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
@@ -117,7 +113,7 @@ export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
 
     static defaultProps = {
         ...Many2ManyTagsAvatarField.defaultProps,
-        tagLimit: 3,
+        tagLimit: 2,
     };
 
     setup() {
@@ -138,10 +134,6 @@ export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
         delete props.relation;
         props.tagLimit = 0; // See all tags when editing in popover
         return props;
-    }
-
-    get tags() {
-        return super.tags.reverse();
     }
 
     get placeholder() {

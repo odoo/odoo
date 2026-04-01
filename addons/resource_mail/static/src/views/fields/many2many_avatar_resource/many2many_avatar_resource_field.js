@@ -114,10 +114,6 @@ export class Many2ManyTagsAvatarResourceFieldPopover extends WithResourceFieldMi
 export class KanbanMany2ManyAvatarResourceField extends WithResourceFieldMixin(KanbanMany2ManyTagsAvatarUserField) {
     static PopoverClass = Many2ManyTagsAvatarResourceFieldPopover;
 
-    get tags() {
-        return super.tags.reverse();
-    }
-
     get placeholder() {
         return _t("Search resources...");
     }

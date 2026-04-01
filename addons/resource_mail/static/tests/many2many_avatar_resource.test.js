@@ -221,19 +221,14 @@ test("many2many_avatar_resource widget in kanban view", async () => {
 
     const [ card1, card2 ] = queryAll(".oe_kanban_content");
     await contains(
-        "img.o_m2m_avatar",
-        { count: 2, target: card1 },
-        "Two human resources with avatar should be displayed",
-    );
-    await contains(
         "i.fa-wrench.o_m2m_avatar",
         { count: 1, target: card1 },
         "One material resource with fa-wrench icon should be displayed",
     );
     await contains(
-        "div.o_tag_badge_text",
+        "img.o_m2m_avatar",
         { count: 0, target: card1 },
-        "No text should be displayed on any avatar",
+        "No human resource with avatar should be displayed",
     );
     await waitFor(
         ".o_kanban_record:nth-child(1) .o_field_many2many_avatar_resource .o_quick_assign",
@@ -262,15 +257,32 @@ test("many2many_avatar_resource widget in kanban view", async () => {
     expect(".o-overlay-container .o_avatar_many2x_autocomplete").toHaveCount(3);
     expect(".o-overlay-container .o_avatar_many2x_autocomplete i.o_material_resource.fa-wrench").toHaveCount(1);
     expect(".o-overlay-container .o_avatar_many2x_autocomplete img").toHaveCount(2);
+    await webContains(
+        ".o-overlay-container .o_avatar_many2x_autocomplete i.o_material_resource.fa-wrench",
+        { visible: false },
+        "Adding the wrench"
+    ).click();
+    await animationFrame();
+    await click(".o_kanban_record:nth-child(2) .many2many_tags_avatar_field_container .o_tag i.fa-wrench");
+    await contains(".o_avatar_card", { count: 0 });
 
-    // Second and third records in widget should display employee avatars
+    // 1. Deleting the wrench
+    await webContains(
+        ".o_kanban_record:nth-child(1) .o_field_many2many_avatar_resource .o_quick_assign",
+        { visible: false },
+        "Quick assign button should be displayed on the card"
+    ).click();
+    await animationFrame();
+    await webContains(
+        ".o-overlay-container .o_tag:nth-child(1) .o_delete",
+        { visible: false, displayed: true },
+        "The delete button should be displayed on the wrench record"
+    ).click();
+    // 2. Second and third records in widget should display employee avatars
     const [ tagMarie, tagPierre ] = document.querySelectorAll(".many2many_tags_avatar_field_container .o_tag img");
     expect(tagMarie).toHaveAttribute("data-src", `/web/image/resource.resource/${data.resourceMarieId}/avatar_128`);
     expect(tagPierre).toHaveAttribute("data-src", `/web/image/resource.resource/${data.resourcePierreId}/avatar_128`);
-    // 1. Clicking on material resource's icon
-    await click(".many2many_tags_avatar_field_container .o_tag i.fa-wrench");
-    await contains(".o_avatar_card", { count: 0 });
-    // 2. Clicking on human resource's avatar with no user associated
+    // 3. Clicking on human resource's avatar with no user associated
     await click(tagMarie);
     await contains(".o-mail-avatar-card-name", { text: "Marie" });
     await contains(
