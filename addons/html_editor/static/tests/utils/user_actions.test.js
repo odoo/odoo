@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
-import { simulateArrowKeyPress } from "../_helpers/user_actions";
+import { insertSpace, simulateArrowKeyPress } from "../_helpers/user_actions";
 
 describe("simulateArrowKeyPress method", () => {
     describe("move", () => {
@@ -107,5 +107,33 @@ describe("simulateArrowKeyPress method", () => {
                 );
             });
         });
+    });
+});
+
+describe("insertSpace method", () => {
+    test("insert first space", async () => {
+        const { editor, el } = await setupEditor("<p>a[]b</p>");
+        await insertSpace(editor);
+        expect(getContent(el)).toBe("<p>a []b</p>");
+    });
+    test("insert space after space", async () => {
+        const { editor, el } = await setupEditor("<p>a []b</p>");
+        await insertSpace(editor);
+        expect(getContent(el)).toBe("<p>a&nbsp; []b</p>");
+    });
+    test("insert space before space", async () => {
+        const { editor, el } = await setupEditor("<p>a[] b</p>");
+        await insertSpace(editor);
+        expect(getContent(el)).toBe("<p>a&nbsp;[] b</p>");
+    });
+    test("insert space at begin", async () => {
+        const { editor, el } = await setupEditor("<p>[]a</p>");
+        await insertSpace(editor);
+        expect(getContent(el)).toBe("<p>&nbsp;[]a</p>");
+    });
+    test("insert space at end", async () => {
+        const { editor, el } = await setupEditor("<p>a[]</p>");
+        await insertSpace(editor);
+        expect(getContent(el)).toBe("<p>a&nbsp;[]</p>");
     });
 });
