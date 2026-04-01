@@ -2,26 +2,28 @@
 <odoo>
     <template id="l10n_ph.minimal_layout" inherit_id="web.minimal_layout">
         <xpath expr="//script[@t-if='subst']" position="after">
-        <t t-if="report_xml_id == 'l10n_ph.action_report_disbursement_voucher_ph'">
-            <script>
-                function display_footer_on_last_page_only() {
+            <t t-if="report_xml_id == 'l10n_ph.action_report_disbursement_voucher_ph'">
+                <script>
+                    function display_footer_on_last_page_only() {
                     var vars = {};
                     var x = document.location.search.substring(1).split('&amp;');
                     for (var i in x) {
-                        var z = x[i].split('=', 2);
-                        vars[z[0]] = unescape(z[1]);
+                    var z = x[i].split('=', 2);
+                    vars[z[0]] = unescape(z[1]);
                     }
                     var elements = document.getElementsByClassName('last-page');
                     var isLastPage = vars.sitepage === vars.sitepages;
                     for (var i = 0; i&lt;elements.length; i++) {
-                        elements[i].style.display = isLastPage ? 'inherit' : 'none';
+                    elements[i].style.display = isLastPage ? 'inherit' : 'none';
                     }
-                }
-            </script>
-        </t>
+                    }
+                </script>
+            </t>
         </xpath>
         <xpath expr="//body" position="attributes">
-            <attribute name="t-att-onload">(subst and 'subst();' or '') + (report_xml_id == 'l10n_ph.action_report_disbursement_voucher_ph' and 'display_footer_on_last_page_only()' or '')</attribute>
+            <attribute name="t-att-onload">(subst and 'subst();' or '') + (report_xml_id == 'l10n_ph.action_report_disbursement_voucher_ph' and
+                'display_footer_on_last_page_only()' or '')
+            </attribute>
         </xpath>
     </template>
 
@@ -29,7 +31,8 @@
         <div class="last-page text-start">
             <div class="row">
                 <div class="col-8">
-                    Prepared By: <span t-out="user.name"/>
+                    Prepared By:
+                    <span t-out="user.name"/>
                 </div>
                 <div class="col-4">
                     Approved By:
@@ -59,10 +62,25 @@
         </xpath>
 
         <xpath expr="//div[hasclass('row')][div[hasclass('col-6')][@t-if='o.memo']]" position="after">
-            <t t-if="is_l10n_ph_disbursement_voucher">
+            <t t-if="is_l10n_ph_disbursement_voucher and o.payment_method_id.code == 'check_printing'">
                 <div class="row">
-                    <div class="col-6 offset-6" t-if="o.check_number">
-                        Check Number: <span t-field="o.check_number"/>
+                    <div class="col-6" t-if="o.date">
+                        Check Date:
+                        <span t-field="o.date"/>
+                    </div>
+                    <div class="col-6" t-if="o.check_number">
+                        Check Number:
+                        <span t-field="o.check_number"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6" t-if="o.journal_id">
+                        Bank:
+                        <span t-field="o.journal_id"/>
+                    </div>
+                    <div class="col-6" t-if="o.check_amount_in_words">
+                        Amount in Words:
+                        <span t-field="o.check_amount_in_words"/>
                     </div>
                 </div>
             </t>
@@ -77,31 +95,160 @@
 
         <xpath expr="//div[table[@name='invoices']]" position="after">
             <t t-if="is_l10n_ph_disbursement_voucher">
-                <table name="journal_entries"
-                    t-if="o.move_id and o.move_id.move_type == 'entry'"
-                    class="table table-borderless"
-                    style="page-break-inside: avoid;">
-                    <thead>
-                        <tr>
-                            <th class="col-8"><span>Account</span></th>
-                            <th class="text-end col-2"><span>Debit</span></th>
-                            <th class="text-end col-2"><span>Credit</span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <t t-foreach="o.move_id.line_ids" t-as="line">
-                        <tr>
-                            <td><span t-field="line.account_id.name"/></td>
-                            <td class="text-end">
-                                <span t-field="line.debit" t-options="{'widget': 'monetary', 'display_currency': line.company_currency_id}"/>
-                            </td>
-                            <td class="text-end">
-                                <span t-field="line.credit" t-options="{'widget': 'monetary', 'display_currency': line.company_currency_id}"/>
-                            </td>
-                        </tr>
-                        </t>
-                    </tbody>
-                </table>
+                <t t-set="show_source_bill" t-value="len(o.reconciled_bill_ids) &gt; 1"/>
+
+                <t t-if="o.reconciled_bill_ids">
+                    <h5 class="mt-3 mb-2">
+                        <strong>Related Vendor Bill</strong>
+                    </h5>
+                    <table name="vendor_bill_journal_entries"
+                           class="table table-borderless"
+                           style="page-break-inside: avoid;">
+                        <thead>
+                            <tr>
+                                <th class="col-2">
+                                    <span>Account</span>
+                                </th>
+                                <th class="col-3">
+                                    <span>Number</span>
+                                </th>
+                                <th t-if="show_source_bill" class="col-2">
+                                    <span>Source Vendor Bill</span>
+                                </th>
+                                <th groups="analytic.group_analytic_accounting" class="col-3">
+                                    <span>Analytic Distribution</span>
+                                </th>
+                                <th class="text-end col-1">
+                                    <span>Debit</span>
+                                </th>
+                                <th class="text-end col-1">
+                                    <span>Credit</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="related_bill_debit_total" t-value="0.0"/>
+                            <t t-set="related_bill_credit_total" t-value="0.0"/>
+                            <t t-foreach="o.reconciled_bill_ids" t-as="bill">
+                                <tr t-foreach="bill.line_ids" t-as="line">
+                                    <t t-set="related_bill_debit_total" t-value="related_bill_debit_total + line.debit"/>
+                                    <t t-set="related_bill_credit_total" t-value="related_bill_credit_total + line.credit"/>
+                                    <td>
+                                        <span t-out="line.account_id.display_name"/>
+                                    </td>
+                                    <td>
+                                        <span t-out="line.move_name"/>
+                                    </td>
+                                    <td t-if="show_source_bill">
+                                        <span t-field="bill.name"/>
+                                    </td>
+                                    <td groups="analytic.group_analytic_accounting">
+                                        <span t-out="line._get_analytic_distribution_plain_text() or '-'"
+                                              style="white-space: pre-line;"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.debit" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.credit" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td>
+                                    <strong>Totals</strong>
+                                </td>
+                                <td/>
+                                <td t-if="show_source_bill"/>
+                                <td groups="analytic.group_analytic_accounting"/>
+                                <td class="text-end">
+                                    <strong>
+                                        <span t-out="related_bill_debit_total"
+                                              t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                                    </strong>
+                                </td>
+                                <td class="text-end">
+                                    <strong>
+                                        <span t-out="related_bill_credit_total"
+                                              t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+
+                <t t-if="o.move_id and o.move_id.move_type == 'entry'">
+                    <h5 class="mt-4 mb-2">
+                        <strong>Payment</strong>
+                    </h5>
+                    <table name="payment_journal_entries"
+                           class="table table-borderless"
+                           style="page-break-inside: avoid;">
+                        <thead>
+                            <tr>
+                                <th class="col-3">
+                                    <span>Account</span>
+                                </th>
+                                <th class="col-3">
+                                    <span>Label</span>
+                                </th>
+                                <th groups="analytic.group_analytic_accounting" class="col-3">
+                                    <span>Analytic Distribution</span>
+                                </th>
+                                <th class="text-end col-2">
+                                    <span>Debit</span>
+                                </th>
+                                <th class="text-end col-2">
+                                    <span>Credit</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="payment_debit_total" t-value="0.0"/>
+                            <t t-set="payment_credit_total" t-value="0.0"/>
+                            <tr t-foreach="o.move_id.line_ids" t-as="line">
+                                <t t-set="payment_debit_total" t-value="payment_debit_total + line.debit"/>
+                                <t t-set="payment_credit_total" t-value="payment_credit_total + line.credit"/>
+                                <td>
+                                    <span t-field="line.account_id"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.name"/>
+                                </td>
+                                <td groups="analytic.group_analytic_accounting">
+                                    <span t-out="line._get_analytic_distribution_plain_text() or '-'"
+                                          style="white-space: pre-line;"/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-field="line.debit" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-field="line.credit" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Totals</strong>
+                                </td>
+                                <td/>
+                                <td groups="analytic.group_analytic_accounting"/>
+                                <td class="text-end">
+                                    <strong>
+                                        <span t-out="payment_debit_total"
+                                              t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                                    </strong>
+                                </td>
+                                <td class="text-end">
+                                    <strong>
+                                        <span t-out="payment_credit_total"
+                                              t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
             </t>
         </xpath>
     </template>
