@@ -513,3 +513,21 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
                 category=public_category,
             )
         self.assertIn('/category', values['keep'].path)
+
+    def test_multi_website_breadcrumb_category(self):
+        """Ensure that the breadcrumb category is correctly filtered by website."""
+        website_2 = self.env["website"].create({"name": "Website 2"})
+        category_1, category_2 = self.env["product.public.category"].create([
+            {"name": "Category 1", "website_id": self.website.id},
+            {"name": "Category 2", "website_id": website_2.id},
+        ])
+        self.product.product_tmpl_id.public_categ_ids = [
+            Command.set([category_1.id, category_2.id])
+        ]
+
+        for website, category in [(self.website, category_1), (website_2, category_2)]:
+            with MockRequest(self.env, website=website):
+                values = self.pc_controller._prepare_product_values(
+                    self.product.product_tmpl_id, category=None
+                )
+                self.assertEqual(values["category"], category)
