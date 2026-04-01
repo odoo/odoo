@@ -33,7 +33,7 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
             ],
             'name': 'Standard 40h/week',
         })
-        cls.user = new_test_user(cls.env, login='user', groups='base.group_user,hr_holidays.group_hr_holidays_employee', company_id=cls.company.id).with_company(cls.company)
+        cls.user = new_test_user(cls.env, login='user', groups='base.group_user,hr_holidays.group_hr_holidays_employee,hr_attendance.group_hr_attendance_own_reader', company_id=cls.company.id).with_company(cls.company)
         cls.user_manager = new_test_user(cls.env, login='manager', groups='base.group_user,hr_holidays.group_hr_holidays_user,hr_attendance.group_hr_attendance_manager', company_id=cls.company.id).with_company(cls.company)
 
         cls.manager = cls.env['hr.employee'].create({

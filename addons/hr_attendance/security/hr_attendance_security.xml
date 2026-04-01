@@ -6,20 +6,21 @@
         <field name="category_id" ref="base.module_category_human_resources"/>
     </record>
 
+
     <record id="group_hr_attendance_own_reader" model="res.groups">
-        <field name="name">User: Read his own attendances</field>
+        <field name="name">User</field>
+        <field name="sequence">3</field>
+        <field name="privilege_id" ref="res_groups_privilege_attendances"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         <field name="comment">The user will have access to his own attendances on his user / employee profile</field>
     </record>
 
-    <record id="base.group_user" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_own_reader'))]"/>
-    </record>
 
     <record id="group_hr_attendance_own" model="res.groups">
         <field name="name">Self Attendance Edit</field>
-        <field name="sequence">0</field>
+        <field name="sequence">5</field>
         <field name="privilege_id" ref="res_groups_privilege_attendances"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="implied_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_own_reader'))]"/>
         <field name="comment">Grants users permission to modify their own attendance entries that are pending approval.</field>
     </record>
 

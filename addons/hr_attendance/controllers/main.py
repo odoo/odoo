@@ -23,6 +23,11 @@ class HrAttendance(http.Controller):
     @staticmethod
     def _get_user_attendance_data(employee):
         response = {}
+        # We need attendance_check_in and timesheet_check_in permissions to edit the systray UI accordingly
+        # e.g., when user can check in for both, the UI of systray will show both details of attendance and timesheet
+        user = request.env.user
+        attendance_check_in_permission = user.has_group('hr_attendance.group_hr_attendance_own_reader')
+        timesheet_check_in_permission = user.has_group('hr_timesheet.group_hr_timesheet_user')
         if employee:
             response = {
                 'id': employee.id,
@@ -33,6 +38,8 @@ class HrAttendance(http.Controller):
                 'last_attendance_worked_hours': float_round(employee.last_attendance_worked_hours, precision_digits=2),
                 'last_check_in': employee.last_check_in,
                 'attendance_state': employee.attendance_state,
+                'attendance_check_in_permission': attendance_check_in_permission,
+                'timesheet_check_in_permission': timesheet_check_in_permission,
                 'display_systray': employee.company_id.attendance_from_systray,
                 'device_tracking_enabled': employee.company_id.attendance_device_tracking,
             }

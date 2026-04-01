@@ -51,8 +51,11 @@ export class ActivityMenu extends Component {
             return;
         }
 
+        this.state.attendanceCheckInPermission = this.employee.attendance_check_in_permission;
+        this.state.timesheetCheckInPermission = this.employee.timesheet_check_in_permission;
         this.employeeName = this.employee.name;
-        this.state.isDisplayed = this.employee.display_systray;
+        //Systray dot should be displayed if at least the user has attendance or timesheet check in permission
+        this.state.isDisplayed = this.employee.display_systray && (this.state.attendanceCheckInPermission || this.state.timesheetCheckInPermission);
         this.state.checkedIn = this.employee.attendance_state === "checked_in";
 
         this.hoursToday = formatFloatTime(this.employee.hours_today, { numeric: true });

@@ -75,7 +75,8 @@ class HrEmployee(models.Model):
             if vals['attendance_manager_id']:
                 officer = self.env['res.users'].browse(vals['attendance_manager_id'])
                 officers_group = self.env.ref('hr_attendance.group_hr_attendance_officer', raise_if_not_found=False)
-                if officers_group and not officer.has_group('hr_attendance.group_hr_attendance_officer'):
+                # We need to add the group_hr_attendance_officer group id directly, otherwise it causes a problem in attendance group permission selection in settings
+                if officers_group and officers_group.id not in officer.group_ids.ids:
                     officer.sudo().write({'group_ids': [(4, officers_group.id)]})
 
         res = super().write(vals)
