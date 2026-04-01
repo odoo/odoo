@@ -86,6 +86,10 @@ class HrEmployee(models.Model):
 
         return res
 
+    def _has_attendance_check_in_ability(self):
+        self.ensure_one()
+        return True
+
     @api.depends('parent_id')
     def _compute_attendance_manager(self):
         for employee in self:
