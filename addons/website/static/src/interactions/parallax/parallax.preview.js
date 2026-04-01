@@ -14,7 +14,7 @@ const ParallaxPreview = (I) =>
         // The PARALLAX_RATE controls how fast the background moves.
         // A higher PARALLAX_RATE means faster movement, which requires a larger
         // background SCALE to prevent background cutoff.
-        PARALLAX_RATE = 16;
+        PARALLAX_RATE = 4.8;
         SCALE = 2.4;
         dynamicContent = {};
 
