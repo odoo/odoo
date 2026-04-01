@@ -82,7 +82,7 @@ test("error in a client action (at rendering)", async () => {
     try {
         await getService("action").doAction("Boom");
     } catch (e) {
-        expect(e.cause).toBeInstanceOf(TypeError);
+        expect(e).toBeInstanceOf(TypeError);
     }
     await animationFrame();
     expect(".o_kanban_view").toHaveCount(1);

@@ -219,9 +219,9 @@ export class FormController extends Component {
         });
 
         onError((error) => {
-            const suggestedCompany = error.cause?.data?.context?.suggested_company;
+            const suggestedCompany = error.data?.context?.suggested_company;
             if (
-                error.cause?.data?.name === "odoo.exceptions.AccessError" &&
+                error.data?.name === "odoo.exceptions.AccessError" &&
                 suggestedCompany &&
                 !this.env.inDialog
             ) {
