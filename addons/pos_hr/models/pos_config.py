@@ -19,32 +19,37 @@ class PosConfig(models.Model):
         help='Employees linked to users with the PoS Manager role are automatically added to this list')
 
     def write(self, vals):
-        if 'advanced_employee_ids' not in vals:
-            vals['advanced_employee_ids'] = []
-        group_users = self.sudo()._get_group_pos_manager().with_company(self.company_id).user_ids.filtered(
-            lambda u: self.company_id in u.company_ids
-        )
-        allowed_employees = group_users.sudo().mapped('employee_id')
-        if not allowed_employees and group_users:
-            target_user = group_users.sudo().with_company(self.company_id).filtered(lambda user: not user.employee_id)[0]
-            target_user.action_create_employee()
-            allowed_employees = target_user.employee_id
+        sudo_vals = {}
+        for field_name in ('minimal_employee_ids', 'basic_employee_ids', 'advanced_employee_ids'):
+            if self.env.su:
+                continue
+            value = vals.get(field_name)
+            if isinstance(value, list) and all(isinstance(cmd, (list, tuple)) for cmd in value):
+                sudo_vals[field_name] = vals.pop(field_name)
 
-        # Update the vals list
-        vals['advanced_employee_ids'] += [(4, emp.id) for emp in allowed_employees]
+        res = True
+        for company in self.mapped('company_id'):
+            company_records = self.filtered(lambda r: r.company_id == company)
+            company_vals = dict(vals)
+            advanced_employees = list(company_vals.get('advanced_employee_ids') or [])
 
-        # write employees in sudo, because we have no access to these corecords
-        sudo_vals = {
-            field_name: vals.pop(field_name)
-            for field_name in ('minimal_employee_ids', 'basic_employee_ids', 'advanced_employee_ids')
-            if not self.env.su
-            if isinstance(vals.get(field_name), list)
-            if all(isinstance(cmd, (list, tuple)) for cmd in vals[field_name])
-        }
+            group_users = company_records.sudo()._get_group_pos_manager().user_ids.filtered(
+                lambda u: company in u.company_ids
+            )
+            allowed_employees = group_users.sudo().mapped('employee_id')
+            if not allowed_employees and group_users:
+                users_without_employee = group_users.with_company(company).filtered(lambda u: not u.employee_id)
+                if users_without_employee:
+                    target_user = users_without_employee[0]
+                    target_user.action_create_employee()
+                    allowed_employees = target_user.employee_id
 
-        res = super().write(vals)
-        if sudo_vals:
-            super(PosConfig, self.sudo()).write(sudo_vals)
+            advanced_employees += [(4, emp.id) for emp in allowed_employees]
+            company_vals['advanced_employee_ids'] = advanced_employees
+            res = super(PosConfig, company_records).write(company_vals) and res
+            if sudo_vals:
+                super(PosConfig, company_records.sudo()).write(sudo_vals)
+
         return res
 
     @api.onchange('minimal_employee_ids')

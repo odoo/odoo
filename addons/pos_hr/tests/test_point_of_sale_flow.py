@@ -3,7 +3,8 @@
 from unittest.mock import patch
 
 import odoo
-from odoo.addons.point_of_sale.tests.common import CommonPosTest
+from odoo import Command
+from odoo.addons.point_of_sale.tests.common import CommonPosTest, TestPoSCommon
 from odoo.exceptions import UserError
 
 
@@ -28,3 +29,28 @@ class TestPointOfSaleFlow(CommonPosTest):
 
         session.set_opening_control(0, None)
         self.assertEqual(int(session.name.split('/')[1]), int(current_session_name.split('/')[1]) + 1)
+
+
+@odoo.tests.tagged('post_install', '-at_install')
+class TestPosHrBatchWrite(TestPoSCommon):
+
+    def test_batch_write_multi_company_singleton(self):
+        company_b = self.setup_other_company(name='Company B')
+
+        payment_method_b = self.env['pos.payment.method'].create({
+            'name': 'Cash B',
+            'receivable_account_id': company_b['default_account_receivable'].id,
+            'journal_id': company_b['default_journal_cash'].id,
+            'company_id': company_b['company'].id,
+        })
+        pos_config_b = self.env['pos.config'].create({
+            'name': 'Config B',
+            'company_id': company_b['company'].id,
+            'journal_id': company_b['default_journal_sale'].id,
+            'invoice_journal_id': company_b['default_journal_sale'].id,
+            'payment_method_ids': [Command.set([payment_method_b.id])],
+        })
+        configs = self.basic_config | pos_config_b
+        configs.write({'cash_rounding': False})
+
+        self.assertFalse(any(configs.mapped('cash_rounding')))
