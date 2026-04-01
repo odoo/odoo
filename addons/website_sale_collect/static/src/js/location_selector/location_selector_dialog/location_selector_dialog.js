@@ -51,7 +51,7 @@ patch(LocationSelectorDialog.prototype, {
      *
      */
     get isClickAndCollect() {
-        return this.props.deliveryMethodType === 'in_store';
+        return this.dialogProps.deliveryMethodType === 'in_store';
     },
 
     /**
@@ -62,12 +62,12 @@ patch(LocationSelectorDialog.prototype, {
      */
     _getLocationsParams() {
         let params = super._getLocationsParams(...arguments);
-        if (this.props.isProductPage) {
-            params.product_id = this.props.productId;
-            params.uom_id = this.props.uomId;
+        if (this.dialogProps.isProductPage) {
+            params.product_id = this.dialogProps.productId;
+            params.uom_id = this.dialogProps.uomId;
         }
         if (this.isClickAndCollect) {
-            params.country_code = this.state.selectedCountryData.code ?? this.props.countryCode;
+            params.country_code = this.state.selectedCountryData.code ?? this.dialogProps.countryCode;
         }
         return params;
     },
@@ -80,8 +80,8 @@ patch(LocationSelectorDialog.prototype, {
     get taxRecomputationWarning() {
         if (
             this.isClickAndCollect &&
-            !this.props.isProductPage &&
-            this.props.countryCode !== this.state.selectedCountryData.code
+            !this.dialogProps.isProductPage &&
+            this.dialogProps.countryCode !== this.state.selectedCountryData.code
         )
             return _t("This address may require to recompute taxes.");
         return "";
@@ -126,8 +126,8 @@ patch(LocationSelectorDialog.prototype, {
         this.state.locations = locations.pickup_location_data;
         this.state.countries = locations.country_data;
         if (this.state.countries.length && !this.state.selectedCountryData.code) {
-            const matchingCountry = this.props.countryCode && this.state.countries.find(
-                (country) => country.value.code === this.props.countryCode
+            const matchingCountry = this.dialogProps.countryCode && this.state.countries.find(
+                (country) => country.value.code === this.dialogProps.countryCode
             );
             this.state.selectedCountryData = matchingCountry
                 ? matchingCountry.value

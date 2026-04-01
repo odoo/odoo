@@ -1,70 +1,78 @@
-import { Component, onMounted, onPatched, onWillUnmount, useProps, proxy, t } from '@odoo/owl';
-import { browser } from '@web/core/browser/browser';
 import { Dialog } from '@web/core/dialog/dialog';
+import { t, useProps } from '@odoo/owl';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
-import { useService } from "@web/core/utils/hooks";
-import { useDebounced } from '@web/core/utils/timing';
-import { LocationList } from '@website/components/location_selector/location_list/location_list';
-import { MapContainer } from '@website/components/location_selector/map_container/map_container';
+import {
+    LocationSelectorComponent
+} from '@website/components/location_selector/location_selector_component/location_selector_component';
 
+// Props specific to the location selector dialog (never used by
+// `LocationSelectorComponent` in `website`).
 export const locationSelectorDialogProps = {
     isFrontend: t.boolean().optional(),
     deliveryMethodId: t.number().optional(),
     countryId: t.number().optional(),
-    zipCode: t.string(),
     selectedLocationId: t.string().optional(),
     save: t.function(),
     close: t.function(), // This is the close from the env of the Dialog Component
 };
 
-export class LocationSelectorDialog extends Component {
-    static components = { Dialog, LocationList, MapContainer };
+export class LocationSelectorDialog extends LocationSelectorComponent {
+    static components = { ...LocationSelectorComponent.components, Dialog };
     static template = 'website_sale_stock.locationSelector.dialog';
-    props = useProps(locationSelectorDialogProps);
+    dialogProps = useProps(locationSelectorDialogProps);
 
     setup() {
-        this.uiService = useService("ui");
-        this.state = proxy({
-            locations: [],
-            error: false,
-            viewMode: 'list',
-            zipCode: this.props.zipCode,
-            // Some APIs like FedEx use strings to identify locations.
-            selectedLocationId: String(this.props.selectedLocationId),
-            isSmall: this.uiService.isSmall,
-        });
-
+        super.setup();
         this.getLocationUrl = '/website_sale_stock/get_pickup_locations';
-
-        this.debouncedOnResize = useDebounced(this.updateSize.bind(this), 300);
-        this.debouncedSearchButton = useDebounced(() => {
-            this.state.locations = [];
-            this._loadLocations();
-        }, 300);
-
-        onMounted(() => {
-            browser.addEventListener('resize', this.debouncedOnResize);
-            this.updateSize();
-        });
-        onWillUnmount(() => browser.removeEventListener('resize', this.debouncedOnResize));
-
-        // Fetch new locations when the zip code is updated.
-        let zipCode;
-        onMounted(() => {
-            zipCode = this.state.zipCode;
-            this._loadLocations();
-        });
-        onPatched(() => {
-            if (this.state.zipCode !== zipCode) {
-                zipCode = this.state.zipCode;
-                this.state.locations = [];
-                this._loadLocations();
-            }
-        });
+        // Some APIs like FedEx use strings to identify locations.
+        this.state.selectedLocationId = String(this.dialogProps.selectedLocationId);
     }
 
-    get locations() { return this.state.locations; }
+    // The following getters override `LocationSelectorComponent` defaults
+    get showSidebar() {
+        return true;
+    }
+
+    get showSearchbar() {
+        return true;
+    }
+
+    get mapZoom() {
+        return "13";
+    }
+
+    get sidebarLocation() {
+        return "left";
+    }
+
+    get showDetailsTooltip() {
+        return false;
+    }
+
+    get showDetailsTextArea() {
+        return true;
+    }
+
+    get showIndexes() {
+        return true;
+    }
+
+    get showPinIndicator() {
+        return true;
+    }
+
+    get showLocationNameOnMarkerHover() {
+        return false;
+    }
+
+    get pressControlToZoom() {
+        return false;
+    }
+
+    get validateSelection() {
+        return this._validateSelection.bind(this);
+    }
 
     /**
      * Fetch the information needed to get the closest pickup locations
@@ -72,11 +80,11 @@ export class LocationSelectorDialog extends Component {
      * @private
      * @return {Object} The result values.
      */
-    _getLocationsParams() {
-        const params = { zip_code: this.state.zipCode };
-        if (!this.props.isFrontend) { // The delivery method is fetched from the order for frontend
-            params.delivery_method_id = this.props.deliveryMethodId;
-            params.country_id = this.props.countryId;
+    _getLocationsParams(searchQuery) {
+        const params = { zip_code: searchQuery };
+        if (!this.dialogProps.isFrontend) { // The delivery method is fetched from the order for frontend
+            params.delivery_method_id = this.dialogProps.deliveryMethodId;
+            params.country_id = this.dialogProps.countryId;
         }
         return params;
     }
@@ -91,21 +99,23 @@ export class LocationSelectorDialog extends Component {
      * Select the first location available if no location is currently selected or if the currently
      * selected location is not on the list anymore.
      *
-     * @private
+     * Overrides `LocationSelectorComponent`'s local, static search to fetch
+     * the locations from the server instead.
+     *
      * @return {void}
      */
-    async _loadLocations() {
+    async updateLocations(searchQuery) {
         this.state.error = false;
         const { pickup_locations, error } = await rpc(
-            this.getLocationUrl, this._getLocationsParams()
+            this.getLocationUrl, this._getLocationsParams(searchQuery)
         );
         if (error) {
             this.state.error = error;
             console.error(error);
-        } else {
-            this._updateLocations(pickup_locations);
-            this._selectLocation();
+            return;
         }
+        this._updateLocations(pickup_locations);
+        this._selectLocation();
     }
 
     _updateLocations(locations) {
@@ -113,30 +123,9 @@ export class LocationSelectorDialog extends Component {
     }
 
     _selectLocation() {
-        if (!this.locations.find(l => String(l.id) === this.state.selectedLocationId)) {
-            this.state.selectedLocationId = this.locations[0]
-                ? String(this.locations[0].id)
-                : false;
+        if (!this.locations.some((l) => String(l.id) === this.state.selectedLocationId)) {
+            this.setSelectedLocation(this.locations[0] ? this.locations[0].id : false);
         }
-    }
-
-    /**
-     * Find the selected location based on its id.
-     *
-     * @return {Object} The selected location.
-     */
-    get selectedLocation() {
-        return this.state.locations.find(l => String(l.id) === this.state.selectedLocationId);
-    }
-
-    /**
-     * Set the selectedLocationId in the state.
-     *
-     * @param {String} locationId
-     * @return {void}
-     */
-    setSelectedLocation(locationId) {
-        this.state.selectedLocationId = String(locationId);
     }
 
     /**
@@ -144,44 +133,25 @@ export class LocationSelectorDialog extends Component {
      *
      * @return {void}
      */
-    async validateSelection() {
-        if (!this.state.selectedLocationId) return;
-        const selectedLocation = this.state.locations.find(
-            l => String(l.id) === this.state.selectedLocationId
+    async _validateSelection() {
+        if (!this.state.selectedLocationId) {
+            return;
+        }
+        const selectedLocation = this.locations.find(
+            (l) => String(l.id) === this.state.selectedLocationId
         );
-        await this.props.save(selectedLocation);
-        this.props.close();
+        await this.dialogProps.save(selectedLocation);
+        this.dialogProps.close();
     }
 
     //--------------------------------------------------------------------------
     // User Interface
     //--------------------------------------------------------------------------
 
-    /**
-     * Determines the component to show in mobile view based on the current state.
-     *
-     * Returns the MapContainer component if `viewMode` is strictly equal to `map`, else return the
-     * List component.
-     *
-     * @return {Component} The component to show in mobile view.
-     */
-    get mobileComponent() {
-        if (this.state.viewMode === 'map') return MapContainer;
-        return LocationList;
-    }
-
     get title() {
-        if (this.state.locations.length === 1) {
+        if (this.locations.length === 1) {
             return _t("Pickup Location")
         }
         return _t("Choose a pick-up point");
-    }
-
-    /**
-     *
-     * @return {void}
-     */
-    updateSize() {
-        this.state.isSmall = this.uiService.isSmall;
     }
 }

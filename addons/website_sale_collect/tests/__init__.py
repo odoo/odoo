@@ -10,5 +10,6 @@ from . import (
     test_product_template,
     test_sale_order,
     test_stock_warehouse,
+    test_stock_warehouse_opening_hours,
     test_website,
 )
