@@ -2728,6 +2728,35 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(product.with_company(self.company).total_value, 20)
         self.assertEqual(product.with_company(branch).total_value, 30)
 
+    def test_product_value_with_internal_location_without_warehouse(self):
+        """
+        Check the influence of internal locations without warehouse (e.g. subcontracting/rental)
+        on product valuation.
+        """
+        product = self.product_avco_auto
+        location = self.env['stock.location'].create({
+            'name': 'Internal no warehouse',
+            'usage': 'internal',
+        })
+        self.assertFalse(location.warehouse_id)
+        self.assertTrue(location._should_be_valued())
+        self.env['stock.quant']._update_available_quantity(product, self.warehouse.lot_stock_id, 2)
+        self.env['stock.quant']._update_available_quantity(product, location, 3)
+
+        quants = self.env['stock.quant'].search([('product_id', '=', product.id), ('location_id.usage', '=', 'internal')], order='id')
+        self.assertRecordValues(quants, [
+            {'location_id': self.warehouse.lot_stock_id.id, 'quantity': 2.0, 'value': 20.0},
+            {'location_id': location.id, 'quantity': 3.0, 'value': 30.0},
+        ])
+        # Check all warehouse stock report value
+        self.assertRecordValues(product.with_context(warehouse_id=False), [
+            {'avg_cost': 10.0, 'total_value': 50.0, 'qty_available': 2.0},
+        ])
+        # Check specific warehouse stock report value
+        self.assertRecordValues(product.with_context(warehouse_id=self.warehouse.id), [
+            {'avg_cost': 10.0, 'total_value': 20.0, 'qty_available': 2.0},
+        ])
+
     def test_action_done_with_state_already_done(self):
         """ This test ensure that calling _action_done on a move already done
         has no effect on the valuation.
