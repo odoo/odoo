@@ -60,8 +60,8 @@ class TestBatchStockETransport(TestETransportFlows):
         batch.action_confirm()
 
         self.assertRecordValues(pickings.sorted('sale_id'), [
-            {'sale_id': self.sale_orders[0].id, 'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
-            {'sale_id': self.sale_orders[1].id, 'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
+            {'sale_id': self.sale_orders[0].id, 'l10n_ro_edi_stock_enable': False, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
+            {'sale_id': self.sale_orders[1].id, 'l10n_ro_edi_stock_enable': False, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
         ])
         self.assertRecordValues(batch, [
             {'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': True, 'picking_ids': pickings.ids},
@@ -94,8 +94,8 @@ class TestBatchStockETransport(TestETransportFlows):
 
         # Can send the batch but not the individual pickings
         self.assertRecordValues(pickings.sorted('sale_id'), [
-            {'sale_id': self.sale_orders[0].id, 'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
-            {'sale_id': self.sale_orders[1].id, 'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
+            {'sale_id': self.sale_orders[0].id, 'l10n_ro_edi_stock_enable': False, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
+            {'sale_id': self.sale_orders[1].id, 'l10n_ro_edi_stock_enable': False, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
         ])
         self.assertRecordValues(batch, [
             {'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': True, 'picking_ids': pickings.ids},
@@ -107,7 +107,7 @@ class TestBatchStockETransport(TestETransportFlows):
             # Can send as Done and not in the batch anymore
             {'sale_id': self.sale_orders[0].id, 'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': True, 'picking_type_code': 'outgoing'},
             # In the batch so should be sent in the batch
-            {'sale_id': self.sale_orders[1].id, 'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
+            {'sale_id': self.sale_orders[1].id, 'l10n_ro_edi_stock_enable': False, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
         ])
         self.assertRecordValues(batch, [
             {'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': True, 'picking_ids': pickings[1].ids},
