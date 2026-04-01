@@ -232,7 +232,6 @@ registry.category("web_tour.tours").add("test_edit_payments_with_tip", {
 });
 
 registry.category("web_tour.tours").add("test_tip_after_payment", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),

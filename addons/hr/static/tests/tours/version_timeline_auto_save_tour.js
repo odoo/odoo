@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add("version_timeline_auto_save_tour", {
-    undeterministicTour_doNotCopy: true,
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {

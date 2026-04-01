@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("test_product_replenishment", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         // Show Route column
         {
@@ -12,13 +11,7 @@ registry.category("web_tour.tours").add("test_product_replenishment", {
         {
             content: "Show route column",
             trigger: '.o-dropdown-item input[name="route_id"]',
-            run: async ({ anchor }) => {
-                // We need this condition because `route_id` field is hidden by
-                // default except if `purchase_mrp` is installed.
-                if (!anchor.checked) {
-                    anchor.click();
-                }
-            },
+            run: "check",
         },
         {
             content: "Close line fields list",
