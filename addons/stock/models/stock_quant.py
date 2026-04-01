@@ -1320,7 +1320,7 @@ class StockQuant(models.Model):
         ctx.pop('group_by', None)
 
         action = self.env['ir.actions.act_window']._for_xml_id('stock.stock_quant_action')
-
+        action["domain"] = [('product_id.company_id', 'in', ctx.get('allowed_company_ids', []) + [False])]
         form_view = self.env.ref('stock.view_stock_quant_form_editable').id
         if self.env.context.get('inventory_mode') and self.env.user.has_group('stock.group_stock_manager'):
             action['view_id'] = self.env.ref('stock.view_stock_quant_tree_editable').id
