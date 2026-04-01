@@ -319,7 +319,7 @@ class ResPartner(models.Model):
             company = self.env.company
 
         vat_label = _("VAT")
-        if country_code and company.country_id and country_code == company.country_id.code.lower() and company.country_id.vat_label:
+        if country_code and company.country_id and country_code == company.country_id.code and company.country_id.vat_label:
             vat_label = company.country_id.vat_label
 
         expected_format = _ref_vat.get(country_code.lower())
