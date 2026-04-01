@@ -1,8 +1,8 @@
 import { onWillRender, useChildSubEnv, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { HighlightText } from "../highlight_text/highlight_text";
-import { escapeRegExp } from "@web/core/utils/strings";
 
 import { Component } from "@odoo/owl";
+import { normalize } from "@web/core/l10n/utils";
 
 export class SettingsBlock extends Component {
     static template = "web.SettingsBlock";
@@ -30,10 +30,11 @@ export class SettingsBlock extends Component {
         this.settingsContainerTipRef = useRef("settingsContainerTip");
         useLayoutEffect(
             () => {
-                const regexp = new RegExp(escapeRegExp(this.state.search.value), "i");
                 const force =
                     this.state.search.value &&
-                    !regexp.test([this.props.title, this.props.tip].join()) &&
+                    !normalize([this.props.title, this.props.tip].join()).includes(
+                        this.state.search.value
+                    ) &&
                     !this.settingsContainerRef.el.querySelector(
                         ".o_setting_box.o_searchable_setting"
                     );
@@ -42,8 +43,11 @@ export class SettingsBlock extends Component {
             () => [this.state.search.value]
         );
         onWillRender(() => {
-            const regexp = new RegExp(escapeRegExp(this.state.search.value), "i");
-            if (regexp.test([this.props.title, this.props.tip].join())) {
+            if (
+                normalize([this.props.title, this.props.tip].join()).includes(
+                    this.state.search.value
+                )
+            ) {
                 this.showAllContainerState.showAllContainer = true;
             } else {
                 this.showAllContainerState.showAllContainer = false;

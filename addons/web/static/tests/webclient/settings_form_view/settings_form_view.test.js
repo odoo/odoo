@@ -176,12 +176,15 @@ test("change setting on nav bar click in base settings on desktop", async () => 
     );
 
     await editSearch("Hello there");
+    await runAllTimers(); // for skipping the debounce delay
     expect(".o_searchview input").toHaveValue("Hello there", {
         message: "input value should be updated",
     });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
 
     await editSearch("b");
+    expect(".highlighter").toHaveCount(0, { message: "search is debounce" });
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryFirst(".highlighter")).toHaveText("B", { message: "b word highlighted" });
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Bar", "Big BAZ"],
@@ -194,6 +197,7 @@ test("change setting on nav bar click in base settings on desktop", async () => 
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
     await editSearch("group Bar");
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Bar", "Big BAZ"],
         { message: "When searching a title, all group is shown" }
@@ -201,11 +205,13 @@ test("change setting on nav bar click in base settings on desktop", async () => 
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
     await editSearch("bx");
+    await runAllTimers(); // for skipping the debounce delay
     await animationFrame();
     expect(".o_nocontent_help").toBeVisible({ message: "record not found message shown" });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
 
     await editSearch("Foo");
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryFirst(".highlighter")).toHaveText("Foo", { message: "Foo word highlighted" });
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Foo", "Personalize setting"],
@@ -214,6 +220,7 @@ test("change setting on nav bar click in base settings on desktop", async () => 
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
     await editSearch("Hide");
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryAllTexts(".settings h2:not(.d-none)")).toEqual([], {
         message: "Hide settings should not be shown",
     });
@@ -300,12 +307,14 @@ test("change setting on nav bar click in base settings on mobile", async () => {
     );
 
     await editSearch("Hello there");
+    await runAllTimers(); // for skipping the debounce delay
     expect(".o_searchview input").toHaveValue("Hello there", {
         message: "input value should be updated",
     });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
 
     await editSearch("b");
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryFirst(".highlighter")).toHaveText("B", { message: "b word highlighted" });
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Bar", "Big BAZ"],
@@ -318,6 +327,7 @@ test("change setting on nav bar click in base settings on mobile", async () => {
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
     await editSearch("group Bar");
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Bar", "Big BAZ"],
         { message: "When searching a title, all group is shown" }
@@ -325,11 +335,13 @@ test("change setting on nav bar click in base settings on mobile", async () => {
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
     await editSearch("bx");
+    await runAllTimers(); // for skipping the debounce delay
     await animationFrame();
     expect(".o_nocontent_help").toBeVisible({ message: "record not found message shown" });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
 
     await editSearch("Foo");
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryFirst(".highlighter")).toHaveText("Foo", { message: "Foo word highlighted" });
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Foo", "Personalize setting"],
@@ -338,6 +350,7 @@ test("change setting on nav bar click in base settings on mobile", async () => {
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
     await editSearch("Hide");
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryAllTexts(".settings h2:not(.d-none)")).toEqual([], {
         message: "Hide settings should not be shown",
     });
@@ -2149,8 +2162,10 @@ test("settings search is accent-insensitive", async () => {
         `,
     });
     await editSearch("bar");
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryAllTexts(".highlighter")).toEqual(["Bâr", "Bar", "bàr"]);
     await editSearch("àz");
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryAllTexts(".highlighter")).toEqual(["ÄZ", "áz"]);
 });
 
@@ -2173,7 +2188,9 @@ test("settings search does not highlight escaped characters when highlighting th
     });
 
     await editSearch("a");
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryAllTexts(".highlighter")).toEqual(["a", "a", "a"]);
     await editSearch("&");
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryAllTexts(".highlighter")).toEqual(["&", "&"]);
 });

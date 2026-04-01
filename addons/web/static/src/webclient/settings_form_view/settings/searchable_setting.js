@@ -1,7 +1,7 @@
 import { useState } from "@web/owl2/utils";
 import { onMounted } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
-import { normalizedMatch } from "@web/core/l10n/utils";
+import { normalize } from "@web/core/l10n/utils";
 import { Setting } from "@web/views/form/setting/setting";
 import { FormLabelHighlightText } from "../highlight_text/form_label_highlight_text";
 import { HighlightText } from "../highlight_text/highlight_text";
@@ -42,7 +42,7 @@ export class SearchableSetting extends Setting {
         if (this.state.showAllContainer.showAllContainer) {
             return true;
         }
-        if (normalizedMatch(this.labels.join(), this.state.search.value).match) {
+        if (normalize(this.labels.join()).includes(this.state.search.value)) {
             return true;
         }
         return false;
