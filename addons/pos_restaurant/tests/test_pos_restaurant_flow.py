@@ -115,3 +115,39 @@ class TestPosRestaurantFlow(TestFrontendCommon):
 
         with self.assertRaises(UserError):
             product.action_archive()
+
+    def test_load_onboarding_restaurant_scenario_multiple(self):
+        res1 = self.env['pos.config'].load_onboarding_restaurant_scenario(with_demo_data=False)
+        config1 = self.env['pos.config'].browse(res1['config_id'])
+        self.assertEqual(len(config1.floor_ids), 2)
+        tables1_count = sum(len(f.table_ids) for f in config1.floor_ids)
+        self.assertGreater(tables1_count, 0)
+        res2 = self.env['pos.config'].load_onboarding_restaurant_scenario(with_demo_data=False)
+        config2 = self.env['pos.config'].browse(res2['config_id'])
+        self.assertEqual(len(config2.floor_ids), 2)
+        tables2_count = sum(len(f.table_ids) for f in config2.floor_ids)
+        self.assertEqual(tables1_count, tables2_count, "Duplicated floors should have the same number of tables")
+        self.assertFalse(config1.floor_ids & config2.floor_ids, "Floors should be independent per POS config")
+
+    def test_load_onboarding_bar_scenario_gets_default_floors(self):
+        res = self.env['pos.config'].load_onboarding_bar_scenario(with_demo_data=False)
+        config = self.env['pos.config'].browse(res['config_id'])
+        self.assertEqual(len(config.floor_ids), 2)
+        self.assertTrue(config.floor_ids.table_ids)
+
+    def test_copy_floor_for_config_remaps_table_parents(self):
+        parent, child = self.env['restaurant.table'].create([
+            {'table_number': 81, 'floor_id': self.main_floor.id, 'seats': 4},
+            {'table_number': 82, 'floor_id': self.main_floor.id, 'seats': 4},
+        ])
+        child.write({'parent_id': parent.id, 'parent_side': 'left'})
+        other_config = self.env['pos.config'].create({'name': 'Other', 'module_pos_restaurant': True})
+
+        new_floor = self.main_floor._copy_floor_for_config(other_config)
+
+        self.assertEqual(new_floor.pos_config_ids, other_config)
+        self.assertEqual(len(new_floor.table_ids), len(self.main_floor.table_ids))
+        self.assertFalse(new_floor.table_ids & self.main_floor.table_ids)
+        new_child = new_floor.table_ids.filtered(lambda t: t.table_number == 82)
+        new_parent = new_floor.table_ids.filtered(lambda t: t.table_number == 81)
+        self.assertEqual(new_child.parent_id, new_parent, "parent_id must point to the copied floor's table")
