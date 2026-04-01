@@ -253,8 +253,7 @@ class StockMove(models.Model):
             return 0
         valued_consigned_qty = self._get_valued_consigned_qty()
         total_qty += valued_consigned_qty
-        if self.product_id.cost_method == 'fifo' or valued_consigned_qty or\
-            (self.product_id.lot_valuated and self.product_id.cost_method == 'average'):
+        if self.product_id.cost_method != 'standard' or valued_consigned_qty:
             return sum(self.mapped('value')) / total_qty
         else:
             return self.product_id.standard_price
