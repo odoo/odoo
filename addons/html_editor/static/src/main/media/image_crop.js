@@ -200,19 +200,16 @@ export class ImageCrop extends Component {
         this.cropper = await activateCropper(
             cropperImage,
             cropperAspectRatios[this.aspectRatio]?.value || 0,
-            this.media.dataset
-        );
-
-        this.cropper.element.addEventListener("ready", () => {
-            const cropperMove = this.cropperWrapper.el.querySelector(".cropper-face.cropper-move");
-            for (const shape of IMAGE_SHAPES) {
-                if (this.media.classList.contains(shape)) {
-                    cropperMove.classList.add(shape);
-                } else {
-                    cropperMove.classList.remove(shape);
-                }
+            this.media.dataset,
+            {
+                onReady: (cropper) => {
+                    const cropperMove = cropper.face;
+                    for (const shape of IMAGE_SHAPES) {
+                        cropperMove.classList.toggle(shape, this.media.classList.contains(shape));
+                    }
+                },
             }
-        });
+        );
         this.isCropperActive = true;
     }
     /**
