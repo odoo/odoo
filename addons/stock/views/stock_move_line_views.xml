@@ -148,7 +148,7 @@
                 <filter string="Scrapped" name="scrapped" domain="[('is_scrap', '=', True)]"/>
                 <separator/>
                 <filter name="date" date="date" default_period="month"/>
-                <filter string="Last 30 Days" name="filter_last_30_days" domain="[('date','&gt;=', 'today -30d')]"/>
+                <filter string="Last 30 Days" name="filter_last_30_days" domain="[('date', '&gt;=', 'today -30d'), ('date', '&lt;', 'today')]"/>
                 <filter string="Last 3 Months" name="filter_last_3_months" domain="[('date','&gt;=', 'today -3m')]"/>
                 <filter string="Last 12 Months" name="filter_last_12_months" domain="[('date','&gt;=', 'today -12m')]"/>
                 <separator/>

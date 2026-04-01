@@ -24,8 +24,8 @@
                     <filter string="Closed" name="closed_tasks" domain="[('is_closed', '=', True)]"/>
                     <filter string="Closed On" name="closed_on" domain="[('is_closed', '=', True)]" date="date_last_stage_update"
                         invisible="context.get('template_project')">
-                        <filter name="create_date_last_30_days" string="Last 30 Days" domain="[('date_last_stage_update', '&gt;=', 'today -30d +1d')]"/>
-                        <filter name="create_date_last_365_days" string="Last 365 Days" domain="[('date_last_stage_update', '&gt;=', 'today -365d +1d')]"/>
+                        <filter name="create_date_last_30_days" string="Last 30 Days" domain="[('date_last_stage_update', '&gt;=', 'today -30d'), ('date_last_stage_update', '&lt;', 'today')]"/>
+                        <filter name="create_date_last_365_days" string="Last 365 Days" domain="[('date_last_stage_update', '&gt;=', 'today -365d'), ('date_last_stage_update', '&lt;', 'today')]"/>
                     </filter>
                     <separator/>
                     <filter string="Templates" context="{'render_task_templates': True}" name="templates" domain="[('has_template_ancestor', '=', True)]"/>

@@ -22,10 +22,10 @@
                         <filter name="fiter_session_rating_unhappy" domain="[('livechat_rating', '=', '1') ]" string="Unhappy"/>
                     </filter>
                     <filter name="filter_session_date" date="create_date" string="Session Date">
-                        <filter name="rated_on_last_24_hours" string="Last 24 Hours" domain="[('create_date', '&gt;', '-1d')]"/>
-                        <filter name="rated_on_last_7_days" string="Last 7 Days" domain="[('create_date', '&gt;', 'today -7d +1d')]"/>
-                        <filter name="rated_on_last_30_days" string="Last 30 Days" domain="[('create_date', '&gt;', 'today -30d +1d')]"/>
-                        <filter name="rated_on_last_365_days" string="Last 365 Days" domain="[('create_date', '&gt;', 'today -365d +1d')]"/>
+                        <filter name="rated_on_last_24_hours" string="Last 24 Hours" domain="[('create_date', '&gt;=', 'now -24H'), ('create_date', '&lt;=', 'now')]"/>
+                        <filter name="rated_on_last_7_days" string="Last 7 Days" domain="[('create_date', '&gt;=', 'today -7d'), ('create_date', '&lt;', 'today')]"/>
+                        <filter name="rated_on_last_30_days" string="Last 30 Days" domain="[('create_date', '&gt;=', 'today -30d'), ('create_date', '&lt;', 'today')]"/>
+                        <filter name="rated_on_last_365_days" string="Last 365 Days" domain="[('create_date', '&gt;=', 'today -365d'), ('create_date', '&lt;', 'today')]"/>
                     </filter>
                     <group>
                         <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'livechat_channel_id'}"/>
