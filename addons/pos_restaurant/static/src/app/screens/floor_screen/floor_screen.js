@@ -734,6 +734,7 @@ export class FloorScreen extends Component {
                     [
                         {
                             name: newName,
+                            active: true,
                             background_color: backgroundColor,
                             pos_config_ids: [this.pos.config.id],
                         },
@@ -791,6 +792,7 @@ export class FloorScreen extends Component {
         const copyFloor = await this.pos.data.create("restaurant.floor", [
             {
                 name: newFloorName,
+                active: true,
                 background_color: "#ACADAD",
                 pos_config_ids: [this.pos.config.id],
             },
@@ -980,8 +982,9 @@ export class FloorScreen extends Component {
         this.pos.models["restaurant.table"].deleteMany(activeFloor.table_ids);
         activeFloor.delete();
 
-        if (this.pos.models["restaurant.floor"].length > 0) {
-            this.selectFloor(this.pos.models["restaurant.floor"].getAll()[0]);
+        const remainingFloors = this.pos.config.floor_ids.filter((f) => f.active);
+        if (remainingFloors.length > 0) {
+            this.selectFloor(remainingFloors[0]);
         } else {
             this.pos.isEditMode = false;
             this.pos.floorPlanStyle = "default";
