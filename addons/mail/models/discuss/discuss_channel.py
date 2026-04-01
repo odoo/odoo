@@ -318,7 +318,7 @@ class Channel(models.Model):
                     channels=format_list(self.env, self.mapped("name")),
                 )
             )
-        old_vals = {channel: channel._channel_basic_info() for channel in self}
+        old_vals = { channel: {**channel._channel_basic_info(), "active": channel.active } for channel in self }
         result = super().write(vals)
         for channel in self:
             info = channel._channel_basic_info()
@@ -328,6 +328,9 @@ class Channel(models.Model):
                     diff[key] = value
             if diff:
                 channel._bus_send_store(channel, diff)
+            if vals.get("active") is False and old_vals[channel]["active"]:
+                channel.sub_channel_ids.active = False
+                channel._bus_send("discuss.channel/delete", {"id": channel.id})
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
         return result
