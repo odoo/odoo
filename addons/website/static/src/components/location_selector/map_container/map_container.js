@@ -9,38 +9,26 @@ export class MapContainer extends Component {
     static components = { LocationSchedule, Map };
     static template = "website.locationSelector.mapContainer";
     static props = {
-        locations: {
-            type: Array,
-            element: {
-                type: Object,
-                values: {
-                    type: Object,
-                    shape: {
-                        id: String,
-                        name: String,
-                        openingHours: {
-                            type: Object,
-                            values: {
-                                type: Array,
-                                element: String,
-                                optional: true,
-                            },
-                        },
-                        street: String,
-                        city: String,
-                        zip_code: String,
-                        state: { type: String, optional: true },
-                        country_code: String,
-                        additional_data: { type: Object, optional: true },
-                        latitude: String,
-                        longitude: String,
-                    },
-                },
-            },
-        },
+        locations: Array,
+        pressControlToZoom: { type: Boolean, optional: true },
         selectedLocationId: [String, { value: false }],
         setSelectedLocation: Function,
-        validateSelection: Function,
+        setVisibleLocations: { type: Function, optional: true },
+        validateSelection: { Function, optional: true },
+        showDetailsTooltip: { type: Boolean, optional: true },
+        showDetailsTextArea: { type: Boolean, optional: true },
+        mapZoom: { type: String, optional: true },
+        showIndexes: Boolean,
+        showEmail: { type: Boolean, optional: true },
+        showImage: { type: Boolean, optional: true },
+        showPhone: { type: Boolean, optional: true },
+        showWebsite: { type: Boolean, optional: true },
+        showLocationNameOnMarkerHover: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        showDetailsTooltip: false,
+        showDetailsTextArea: true,
+        mapZoom: "13",
     };
 
     setup() {
@@ -95,6 +83,13 @@ export class MapContainer extends Component {
 
     get chooseLocationButtonLabel() {
         return _t("Choose this location");
+    }
+
+    get hasOpeningHours() {
+        return (
+            this.selectedLocation.opening_hours &&
+            Object.keys(this.selectedLocation.opening_hours).length > 0
+        );
     }
 
     get openingHoursLabel() {
