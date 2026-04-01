@@ -11,7 +11,7 @@ import {
     makeRecordFieldLocalId,
 } from "./misc";
 import { RecordList } from "./record_list";
-import { toRaw } from "@odoo/owl";
+import { immediateEffect, toRaw } from "@odoo/owl";
 import { RecordUses } from "./record_uses";
 import { LocalStorageEntry } from "@mail/utils/common/local_storage";
 
@@ -229,21 +229,23 @@ export class RecordInternal {
         if (!Model._.fieldsCompute.get(fieldName)) {
             return;
         }
-        const store = record._rawStore;
-        this.fieldsComputing.set(fieldName, true);
-        this.fieldsComputeOnNeed.delete(fieldName);
-        let computedValue;
-        try {
-            computedValue = Model._.fieldsCompute
-                .get(fieldName)
-                .call(this.fieldsComputeProxy2.get(fieldName));
-        } catch (err) {
-            store.handleError(err);
-        }
-        store._.updateFields(record, {
-            [fieldName]: computedValue,
+        immediateEffect(() => {
+            const store = record._rawStore;
+            this.fieldsComputing.set(fieldName, true);
+            this.fieldsComputeOnNeed.delete(fieldName);
+            let computedValue;
+            try {
+                computedValue = Model._.fieldsCompute
+                    .get(fieldName)
+                    .call(this.fieldsComputeProxy2.get(fieldName));
+            } catch (err) {
+                store.handleError(err);
+            }
+            store._.updateFields(record, {
+                [fieldName]: computedValue,
+            });
+            this.fieldsComputing.delete(fieldName);
         });
-        this.fieldsComputing.delete(fieldName);
     }
     /**
      * @param {Record} record
