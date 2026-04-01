@@ -85,11 +85,21 @@ export class TourStepAutomatic extends TourStep {
             return !this.isUIBlocked &&
                 this.elementIsEnabled &&
                 this.elementIsInModal &&
-                this.parentFrameIsReady
+                this.parentFrameIsReady &&
+                this.frontendBodyIsReady
                 ? this.element
                 : false;
         }
         return false;
+    }
+
+    /** Wait interactions are bound to elements */
+    get frontendBodyIsReady() {
+        if (document.documentElement.hasAttribute("data-website-id")) {
+            return document.body.getAttribute("is-ready") === "true";
+        } else {
+            return true;
+        }
     }
 
     get isUIBlocked() {
