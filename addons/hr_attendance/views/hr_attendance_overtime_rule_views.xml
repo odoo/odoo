@@ -40,7 +40,7 @@
                                     hours
                                 </span>
                                 <field name="employer_tolerance" widget="float_time" string="With a tolerance in favor of the employer of"/>
-                                <field name="employee_tolerance" widget="float_time" string="With a tolerance in favor of the employee of"/>
+                                <field name="employee_tolerance" invisible="base_off == 'timing'" widget="float_time" string="With a tolerance in favor of the employee of"/>
                                 <!-- TIMING -->
                                 <field name="timing_type" widget="radio" string="If the employee works" invisible="base_off != 'timing'"/>
                                 <span class="fw-bold" invisible="base_off != 'timing' or timing_type not in ['work_days', 'non_work_days']">Between</span>

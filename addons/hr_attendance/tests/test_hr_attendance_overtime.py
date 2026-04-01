@@ -1899,3 +1899,61 @@ class TestHrAttendanceOvertime(HttpCase):
             {'date': date(2021, 1, 9), 'duration': 4, 'rule_ids_amount': 2},
         ]
         self.assertCountEqual(actual, expected)
+
+    def test_overtime_timing_rule_employer_tolerance(self):
+        ruleset = self.env['hr.attendance.overtime.ruleset'].create({
+            'name': 'Test Timing Tolerance Ruleset',
+            'rule_ids': [
+                Command.create({
+                    'name': 'Weekend Rule',
+                    'base_off': 'timing',
+                    'timing_type': 'non_work_days',
+                    'employer_tolerance': 1.0,
+                }),
+            ],
+        })
+        self.employee.ruleset_id = ruleset
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 2, 8, 0),
+            'check_out': datetime(2021, 1, 2, 8, 10),
+        })
+        overtime = self.env['hr.attendance.overtime.line'].search([
+            ('employee_id', '=', self.employee.id),
+            ('date', '=', date(2021, 1, 2)),
+        ])
+        self.assertFalse(
+            overtime,
+            'No overtime should be created when worked time (10 min) is below employer tolerance (1 hour).',
+        )
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 9, 8, 0),
+            'check_out': datetime(2021, 1, 9, 9, 0),
+        })
+        overtime = self.env['hr.attendance.overtime.line'].search([
+            ('employee_id', '=', self.employee.id),
+            ('date', '=', date(2021, 1, 9)),
+        ])
+        self.assertFalse(
+            overtime,
+            'No overtime should be created when worked time equals employer tolerance exactly (1 hour = 1 hour).',
+        )
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 16, 8, 0),
+            'check_out': datetime(2021, 1, 16, 12, 0),
+        })
+        overtime = self.env['hr.attendance.overtime.line'].search([
+            ('employee_id', '=', self.employee.id),
+            ('date', '=', date(2021, 1, 16)),
+        ])
+        self.assertTrue(
+            overtime,
+            'Overtime should be created when worked time (4 hours) exceeds employer tolerance (1 hour).',
+        )
+        self.assertEqual(
+            sum(overtime.mapped('duration')),
+            4.0,
+            msg='Overtime duration should be the full 4 hours worked, not 4 - 1 = 3 hours.',
+        )
