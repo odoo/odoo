@@ -259,7 +259,15 @@ class PosConfig(models.Model):
 
     def _get_self_order_route(self, table_id: Optional[int] = None) -> str:
         self.ensure_one()
-        base_route = f"/pos-self/{self.id}"
+        lang = self.self_ordering_default_language_id
+        lang_prefix = ""
+        if lang:
+            default_lang_code = self.env['ir.default'].sudo()._get('res.partner', 'lang')
+            if not default_lang_code:
+                default_lang_code = next(iter(self.env['res.lang']._get_active_by('code')))
+            if lang.code != default_lang_code:
+                lang_prefix = f"/{lang.url_code}"
+        base_route = f"{lang_prefix}/pos-self/{self.id}"
         table_route = ""
 
         if self.self_ordering_mode == 'consultation':
