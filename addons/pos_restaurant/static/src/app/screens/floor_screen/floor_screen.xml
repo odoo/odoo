@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.FloorScreen">
+<<<<<<< 384dce8575ca7530351deaf5b08c004da36c062f
         <div class="floor-screen screen h-100 position-relative d-flex flex-column flex-nowrap m-0 bg-view text-start overflow-hidden">
             <div class="position-relative w-100 p-2 border-bottom z-2">
                 <div class="o_fp_toolbar d-flex flex-row justify-content-between gap-1" t-on-transitionend="onToolbarTransitionEnd">
@@ -9,6 +10,183 @@
                         <t t-if="this.pos.getOrder()?.isDirectSale">
                             <i class="fa fa-angle-double-left fa-fw" role="img" aria-label="Back" title="Back"/>
                             <span t-if="!ui.isSmall" class="ms-1">Back</span>
+||||||| d58f4ed332af35f6de26a93f07adf05368731e20
+        <div class="floor-screen screen h-100 position-relative d-flex flex-column flex-nowrap m-0 bg-300 text-start overflow-hidden">
+            <t t-set="editButtonClass" t-value="'btn btn-lg'" />
+            <t t-set="hasSelectedTable" t-value="selectedTables.length > 0" />
+            <t t-set="firstSelectedTable" t-value="selectedTables.length ? selectedTables[0] : null" />
+            <div t-attf-class="d-flex flex-row {{pos.isEditMode ? 'flex-wrap' : ''}} justify-content-between px-2 gap-1 border-bottom bg-view">
+                <button t-if="!pos.isEditMode" class="new-order btn btn-lg lh-lg my-2" t-attf-class="{{ this.pos.getOrder()?.isDirectSale ? 'btn-secondary' : 'btn-primary'}}"
+                    t-on-click="() => this.clickNewOrder()">
+                    <t t-if="this.pos.getOrder()?.isDirectSale">
+                        <i class="fa fa-angle-double-left fa-fw" role="img" aria-label="Back" title="Back"/>
+                        <span t-if="!ui.isSmall" class="ms-1">Back</span>
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-plus fa-fw" role="img" aria-label="New Order" title="New Order"/>
+                        <span t-if="!ui.isSmall" class="ms-1">New Order</span>
+                    </t>
+                </button>
+                <!-- Center Side Div -->
+                <div class="floor-selector d-flex gap-1 py-2 overflow-auto">
+                    <t t-foreach="pos.models['restaurant.floor'].filter(f => f.active !== false)" t-as="floor" t-key="floor.id">
+                        <button class="button button-floor btn btn-outline-secondary btn-lg px-3 lh-lg text-nowrap text-body" t-attf-class="{{ floor.id === state.selectedFloorId ? 'active' : '' }}" t-on-click="() => this.selectFloor(floor)">
+                            <t t-esc="floor.name" />
+                            <t t-set="changeCount" t-value="this.getFloorChangeCount(floor)"/>
+                            <span t-if="changeCount > 0" class="badge rounded-pill text-bg-danger ms-2 py-1 smaller fw-bolder" t-esc="changeCount"/>
+                        </button>
+                    </t>
+                    <button t-attf-class="{{editButtonClass}} btn-secondary lh-lg" t-if="pos.isEditMode or pos.config.floor_ids?.length === 0" t-on-click="addFloor" title="Add Floor" >
+                        <i class="fa fa-plus fa-fw" role="img" aria-label="Add Floor" />
+                    </button>
+                </div>
+                <!-- Right Side Div -->
+                <div t-if="pos.isEditMode" class="edit-buttons d-flex flex-grow-1 justify-content-center justify-content-md-end gap-2 m-2 px-1 px-sm-0 overflow-x-auto">
+                    <div class="d-flex gap-1 p-1 rounded-3 bg-200">
+                        <t t-if="hasSelectedTable">
+                            <span t-if="!ui.isSmall" class="mx-2 align-self-center text-uppercase smaller fw-bolder">Table <t t-esc="firstSelectedTable.table_number" /></span>
+                            <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="changeSeatsNum" t-att-disabled="!hasSelectedTable" title="Seats">
+                                <i class="fa fa-user fa-fw" role="img" aria-label="Seats" />
+                            </button>
+                            <t t-if="selectedTables.some((t) => t.shape === 'square')">
+                                <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.changeShape('round')" t-att-disabled="!hasSelectedTable" title="Round Shape">
+                                    <i class="fa fa-circle-o fa-fw" role="img" aria-label="Make Round" />
+                                </button>
+                            </t>
+                            <t t-else="">
+                                <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.changeShape('square')" t-att-disabled="!hasSelectedTable" title="Square Shape">
+                                    <i class="fa fa-square-o fa-fw" role="img" aria-label="Make Square" />
+                                </button>
+                            </t>
+                        </t>
+                        <Dropdown menuClass="'pos-dropdown-menu px-1'">
+                            <button t-attf-class="{{editButtonClass}} btn-light" title="Change Floor Background">
+                                <i class="fa fa-paint-brush fa-fw" role="img" aria-label="Change Floor Background"/>
+                            </button>
+                            <t t-set-slot="content">
+                                <div class="d-grid gap-1 py-2 px-1" style="grid-template-columns: repeat(3, 1fr);">
+                                    <t t-foreach="Object.entries(getColors())" t-as="color" t-key="color[0]">
+                                        <t t-set="adaptColor" t-value="!hasSelectedTable ? this.getLighterShade(color[0]) : color[0]" />
+                                        <t t-set="key" t-value="color[0]"/>
+                                        <DropdownItem closingMode="'none'" onSelected="() => this.setColor(hasSelectedTable, adaptColor, key)">
+                                            <button
+                                                class="p-4 border-1 rounded"
+                                                t-attf-style="background-color: {{adaptColor}}"
+                                            />
+                                        </DropdownItem>
+                                    </t>
+                                    <DropdownItem closingMode="'none'">
+                                        <button class="floor-picture border-1 rounded position-relative text-center overflow-hidden d-flex flex-column align-items-center justify-content-center">
+                                            <i class="fa fa-camera" role="img" aria-label="Picture" title="Picture"></i>
+                                            File
+                                            <input type="file" class="image-uploader" t-on-change="uploadImage" />
+                                        </button>
+                                    </DropdownItem>
+                                </div>
+                            </t>
+                        </Dropdown>
+                        <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.rename(hasSelectedTable)" title="Rename">
+                            <i class="fa fa-pencil-square-o fa-fw" role="img" aria-label="Rename"/>
+                        </button>
+                        <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.duplicate(hasSelectedTable)" title="Clone">
+                            <i class="fa fa-copy fa-fw" role="img" aria-label="Clone"/>
+                        </button>
+                        <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.delete(hasSelectedTable)" title="Delete">
+                            <i class="fa fa-trash fa-fw" role="img" aria-label="Delete"/>
+                        </button>
+                    </div>
+                    <button t-attf-class="btn btn-outline-secondary btn-lg d-flex align-items-center justify-content-center gap-2 lh-lg" t-on-click.stop="doCreateTable.call" t-att-disabled="doCreateTable.status === 'loading'">
+                        <t t-if="doCreateTable.status === 'loading'">
+                            <i class="fa fa-circle-o-notch fa-spin icon-button" role="img" aria-label="Loading" title="Loading"></i>
+=======
+        <div class="floor-screen screen h-100 position-relative d-flex flex-column flex-nowrap m-0 bg-300 text-start overflow-hidden">
+            <t t-set="editButtonClass" t-value="'btn btn-lg'" />
+            <t t-set="hasSelectedTable" t-value="selectedTables.length > 0" />
+            <t t-set="firstSelectedTable" t-value="selectedTables.length ? selectedTables[0] : null" />
+            <div t-attf-class="d-flex flex-row {{pos.isEditMode ? 'flex-wrap' : ''}} justify-content-between px-2 gap-1 border-bottom bg-view">
+                <button t-if="!pos.isEditMode" class="new-order btn btn-lg lh-lg my-2" t-attf-class="{{ this.pos.getOrder()?.isDirectSale ? 'btn-secondary' : 'btn-primary'}}"
+                    t-on-click="() => this.clickNewOrder()">
+                    <t t-if="this.pos.getOrder()?.isDirectSale">
+                        <i class="fa fa-angle-double-left fa-fw" role="img" aria-label="Back" title="Back"/>
+                        <span t-if="!ui.isSmall" class="ms-1">Back</span>
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-plus fa-fw" role="img" aria-label="New Order" title="New Order"/>
+                        <span t-if="!ui.isSmall" class="ms-1">New Order</span>
+                    </t>
+                </button>
+                <!-- Center Side Div -->
+                <div class="floor-selector d-flex gap-1 py-2 overflow-auto">
+                    <t t-foreach="pos.config.floor_ids.filter((f) => f.active)" t-as="floor" t-key="floor.id">
+                        <button class="button button-floor btn btn-outline-secondary btn-lg px-3 lh-lg text-nowrap text-body" t-attf-class="{{ floor.id === state.selectedFloorId ? 'active' : '' }}" t-on-click="() => this.selectFloor(floor)">
+                            <t t-esc="floor.name" />
+                            <t t-set="changeCount" t-value="this.getFloorChangeCount(floor)"/>
+                            <span t-if="changeCount > 0" class="badge rounded-pill text-bg-danger ms-2 py-1 smaller fw-bolder" t-esc="changeCount"/>
+                        </button>
+                    </t>
+                    <button t-attf-class="{{editButtonClass}} btn-secondary lh-lg" t-if="pos.isEditMode or pos.config.floor_ids?.length === 0" t-on-click="addFloor" title="Add Floor" >
+                        <i class="fa fa-plus fa-fw" role="img" aria-label="Add Floor" />
+                    </button>
+                </div>
+                <!-- Right Side Div -->
+                <div t-if="pos.isEditMode" class="edit-buttons d-flex flex-grow-1 justify-content-center justify-content-md-end gap-2 m-2 px-1 px-sm-0 overflow-x-auto">
+                    <div class="d-flex gap-1 p-1 rounded-3 bg-200">
+                        <t t-if="hasSelectedTable">
+                            <span t-if="!ui.isSmall" class="mx-2 align-self-center text-uppercase smaller fw-bolder">Table <t t-esc="firstSelectedTable.table_number" /></span>
+                            <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="changeSeatsNum" t-att-disabled="!hasSelectedTable" title="Seats">
+                                <i class="fa fa-user fa-fw" role="img" aria-label="Seats" />
+                            </button>
+                            <t t-if="selectedTables.some((t) => t.shape === 'square')">
+                                <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.changeShape('round')" t-att-disabled="!hasSelectedTable" title="Round Shape">
+                                    <i class="fa fa-circle-o fa-fw" role="img" aria-label="Make Round" />
+                                </button>
+                            </t>
+                            <t t-else="">
+                                <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.changeShape('square')" t-att-disabled="!hasSelectedTable" title="Square Shape">
+                                    <i class="fa fa-square-o fa-fw" role="img" aria-label="Make Square" />
+                                </button>
+                            </t>
+                        </t>
+                        <Dropdown menuClass="'pos-dropdown-menu px-1'">
+                            <button t-attf-class="{{editButtonClass}} btn-light" title="Change Floor Background">
+                                <i class="fa fa-paint-brush fa-fw" role="img" aria-label="Change Floor Background"/>
+                            </button>
+                            <t t-set-slot="content">
+                                <div class="d-grid gap-1 py-2 px-1" style="grid-template-columns: repeat(3, 1fr);">
+                                    <t t-foreach="Object.entries(getColors())" t-as="color" t-key="color[0]">
+                                        <t t-set="adaptColor" t-value="!hasSelectedTable ? this.getLighterShade(color[0]) : color[0]" />
+                                        <t t-set="key" t-value="color[0]"/>
+                                        <DropdownItem closingMode="'none'" onSelected="() => this.setColor(hasSelectedTable, adaptColor, key)">
+                                            <button
+                                                class="p-4 border-1 rounded"
+                                                t-attf-style="background-color: {{adaptColor}}"
+                                            />
+                                        </DropdownItem>
+                                    </t>
+                                    <DropdownItem closingMode="'none'">
+                                        <button class="floor-picture border-1 rounded position-relative text-center overflow-hidden d-flex flex-column align-items-center justify-content-center">
+                                            <i class="fa fa-camera" role="img" aria-label="Picture" title="Picture"></i>
+                                            File
+                                            <input type="file" class="image-uploader" t-on-change="uploadImage" />
+                                        </button>
+                                    </DropdownItem>
+                                </div>
+                            </t>
+                        </Dropdown>
+                        <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.rename(hasSelectedTable)" title="Rename">
+                            <i class="fa fa-pencil-square-o fa-fw" role="img" aria-label="Rename"/>
+                        </button>
+                        <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.duplicate(hasSelectedTable)" title="Clone">
+                            <i class="fa fa-copy fa-fw" role="img" aria-label="Clone"/>
+                        </button>
+                        <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.delete(hasSelectedTable)" title="Delete">
+                            <i class="fa fa-trash fa-fw" role="img" aria-label="Delete"/>
+                        </button>
+                    </div>
+                    <button t-attf-class="btn btn-outline-secondary btn-lg d-flex align-items-center justify-content-center gap-2 lh-lg" t-on-click.stop="doCreateTable.call" t-att-disabled="doCreateTable.status === 'loading'">
+                        <t t-if="doCreateTable.status === 'loading'">
+                            <i class="fa fa-circle-o-notch fa-spin icon-button" role="img" aria-label="Loading" title="Loading"></i>
+>>>>>>> d03fbf084643cb68b2edfd04d31b292e72eb68f0
                         </t>
                         <t t-else="">
                             <i class="fa fa-plus fa-fw" role="img" aria-label="New Order" title="New Order"/>
