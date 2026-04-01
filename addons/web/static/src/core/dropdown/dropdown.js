@@ -1,5 +1,13 @@
 import { onRendered, reactive, useChildEnv, useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, status, untrack, useEffect, xml } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillUpdateProps,
+    status,
+    untrack,
+    useEffect,
+    xml,
+} from "@odoo/owl";
 import { useDropdownGroup } from "@web/core/dropdown/_behaviours/dropdown_group_hook";
 import { useDropdownNesting } from "@web/core/dropdown/_behaviours/dropdown_nesting";
 import { DropdownPopover } from "@web/core/dropdown/_behaviours/dropdown_popover";
@@ -174,8 +182,16 @@ export class Dropdown extends Component {
             untrack(() => (this.popoverRefresher ? this.popoverRefresher.token++ : null))
         );
 
-        // onMounted(() => this.onStateChanged(this.state));
+        let mounted = false;
+        onMounted(() => {
+            mounted = true;
+            this.onStateChanged(this.state);
+        });
         useEffect(() => {
+            if (!mounted) {
+                this.state.isOpen; // subscribe to signal
+                return;
+            }
             this.onStateChanged(this.state);
         });
 
