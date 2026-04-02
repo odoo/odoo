@@ -14,7 +14,8 @@ export class AttendanceCalendarRenderer extends CalendarRenderer {
         We cannot use model.data.range because in month view the visible calendar may
         include overflow days from the previous or next month*/
         const { scale, date, firstDayOfWeek } = this.props.model.meta;
-        let start; let end;
+        let start;
+        let end;
         if (scale === "week") {
             const offset = (date.weekday - firstDayOfWeek + 7) % 7;
             start = date.minus({ days: offset }).startOf("day");

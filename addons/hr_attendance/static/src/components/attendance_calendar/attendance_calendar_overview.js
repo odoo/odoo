@@ -17,7 +17,9 @@ export class AttendanceCalendarOverview extends Component {
             extraHours: 0,
         });
         useLayoutEffect(
-            () => { this.loadData(); },
+            () => {
+                this.loadData();
+            },
             () => [this.props.dateRange]
         );
     }
@@ -29,7 +31,11 @@ export class AttendanceCalendarOverview extends Component {
     async loadData() {
         const { start, end } = this.props.dateRange;
         const employeeId = this.env.searchModel.context.active_id;
-        const attendace_data = await this.orm.call("hr.employee", "get_attendace_data_by_employee", [employeeId, start, end]);
+        const attendace_data = await this.orm.call(
+            "hr.employee",
+            "get_attendace_data_by_employee",
+            [employeeId, start, end]
+        );
         this.state.workedHours = attendace_data[employeeId].worked_hours;
         this.state.extraHours = attendace_data[employeeId].overtime_hours;
     }
