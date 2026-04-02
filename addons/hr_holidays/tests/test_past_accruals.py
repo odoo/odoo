@@ -21,7 +21,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'request_unit': 'day',
             'unit_of_measure': 'day',
         })
-        cls.accrual_plan = cls.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        cls.accrual_plan = cls.env['hr.leave.accrual.plan'].create({
             'name': 'Test Seniority Plan',
             'level_ids': [
                 (0, 0, {

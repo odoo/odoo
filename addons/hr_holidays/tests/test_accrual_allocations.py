@@ -123,7 +123,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 10,
             })],
         })
-        cls.accrual_plan_yearly_max_postponed_days_start = cls.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        cls.accrual_plan_yearly_max_postponed_days_start = cls.env['hr.leave.accrual.plan'].create({
             'name': '21 days per year, 5 carryover max',
             'transition_mode': 'immediately',
             'carryover_date': 'year_start',
@@ -142,7 +142,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 })
             ],
         })
-        cls.accrual_plan_monthly_start_carryover_lost = cls.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        cls.accrual_plan_monthly_start_carryover_lost = cls.env['hr.leave.accrual.plan'].create({
             'name': '1 day per month start - carryover 1st of Mai',
             'carryover_date': 'other',
             'carryover_day': 1,
@@ -182,7 +182,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.assertAlmostEqual(remaining_leaves, expected_balance_value, places=1, msg=msg)
 
     def test_consistency_between_cap_accrued_time_and_maximum_leave(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -208,12 +208,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.assertEqual(accrual_plan.level_ids.maximum_leave, 0)
 
     def test_accrual_unlink(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
         })
 
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
             'name': 'Accrual allocation for employee',
             'accrual_plan_id': accrual_plan.id,
             'employee_id': self.employee_emp.id,
@@ -230,7 +230,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_frequency_hourly_calendar(self):
         with freeze_time("2017-12-05"):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -245,7 +245,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'maximum_leave': 10000
                 })],
             })
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -270,7 +270,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_frequency_hourly_worked_hours(self):
         with freeze_time("2017-12-05"):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'is_based_on_worked_time': True,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -285,7 +285,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'all',
                 })],
             })
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -329,7 +329,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_frequency_daily(self):
         with freeze_time("2017-12-05"):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -344,7 +344,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'all',
                 })],
             })
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -369,7 +369,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_frequency_weekly(self):
         with freeze_time("2017-12-05"):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -384,7 +384,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'all',
                 })],
             })
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -416,7 +416,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_frequency_bimonthly(self):
         with freeze_time('2021-09-01'):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -433,7 +433,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'all',
                 })],
             })
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -464,7 +464,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_frequency_monthly(self):
         with freeze_time('2021-09-01'):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -479,7 +479,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'all',
                 })],
             })
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -505,7 +505,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_frequency_biyearly(self):
         with freeze_time('2021-09-01'):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -521,7 +521,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 })],
             })
             # this sets up an accrual on the 1st of January and the 1st of July
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -551,7 +551,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_frequency_yearly(self):
         with freeze_time('2021-09-01'):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -567,7 +567,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 })],
             })
             # this sets up an accrual on the 1st of January
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -615,7 +615,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
             self.employee_emp.resource_calendar_id = calendar_emp.id
 
-            accrual_plan_not_based_on_worked_time = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan_not_based_on_worked_time = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -630,7 +630,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'all',
                 })],
             })
-            accrual_plan_based_on_worked_time = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan_based_on_worked_time = self.env['hr.leave.accrual.plan'].create({
                 'is_based_on_worked_time': True,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -645,7 +645,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'all',
                 })],
             })
-            allocation_not_worked_time = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation_not_worked_time = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan_not_based_on_worked_time.id,
                 'employee_id': self.employee_emp.id,
@@ -654,7 +654,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
                 'state': 'confirm',
             })
-            allocation_worked_time = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation_worked_time = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan_based_on_worked_time.id,
                 'employee_id': self.employee_emp.id,
@@ -710,7 +710,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     @freeze_time('2025-09-01')  # Monday
     def test_non_elligible_leaves(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'is_based_on_worked_time': True,
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -722,7 +722,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 10000,
             })],
         })
-        allocation_worked_time = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+        allocation_worked_time = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
             'name': 'Accrual allocation for employee',
             'accrual_plan_id': accrual_plan.id,
             'employee_id': self.employee_emp.id,
@@ -761,7 +761,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     @freeze_time('2025-09-01')  # Monday
     def test_elligible_leaves(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'is_based_on_worked_time': True,
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -773,7 +773,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 10000,
             })],
         })
-        allocation_worked_time = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+        allocation_worked_time = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
             'name': 'Accrual allocation for employee',
             'accrual_plan_id': accrual_plan.id,
             'employee_id': self.employee_emp.id,
@@ -812,7 +812,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     @freeze_time('2025-09-01')  # Monday
     def test_worked_leaves(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'is_based_on_worked_time': True,
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -824,7 +824,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 10000,
             })],
         })
-        allocation_worked_time = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+        allocation_worked_time = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
             'name': 'Accrual allocation for employee',
             'accrual_plan_id': accrual_plan.id,
             'employee_id': self.employee_emp.id,
@@ -862,7 +862,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_check_max_value(self):
         with freeze_time("2017-12-05"):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -877,7 +877,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'all',
                 })],
             })
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -905,7 +905,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_check_max_value_hours(self):
         with freeze_time("2017-12-05"):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -920,7 +920,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'all',
                 })],
             })
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -948,7 +948,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_accrual_hours_with_max_carryover(self):
         with freeze_time("2024-10-10"):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual plan - hours and max postpone',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -964,7 +964,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'postpone_max_days': 4,  # confusing name but is in hours when added_value_type == 'hour'
                 })],
             })
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'date_from': datetime.date(2025, 1, 1),
                 'accrual_plan_id': accrual_plan.id,
@@ -987,7 +987,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_transition_immediately(self):
         with freeze_time("2017-12-05"):
             # 1 accrual with 2 levels and level transition immediately
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'transition_mode': 'immediately',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -1010,7 +1010,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'all',
                 })],
             })
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1026,7 +1026,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_transition_after_period(self):
         with freeze_time("2017-12-05"):
             # 1 accrual with 2 levels and level transition after
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'transition_mode': 'end_of_accrual',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -1049,7 +1049,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'all',
                 })],
             })
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1086,7 +1086,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             - The total number of days that the employee has is 1 day.
         """
         with freeze_time('2021-12-15'):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -1101,7 +1101,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'lost',
                 })],
             })
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1123,7 +1123,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         # 1 accrual with 2 levels and level transition after
         # This also tests retroactivity
         with freeze_time('2021-12-15'):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -1138,7 +1138,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'all',
                 })],
             })
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1157,7 +1157,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_unused_accrual_postponed_2(self):
         with freeze_time('2021-01-01'):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -1173,7 +1173,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'postpone_max_days': 10,
                 })],
             })
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1218,7 +1218,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         # 1 accrual with 2 levels and level transition after
         # This also tests retroactivity
         with freeze_time('2021-12-15'):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'accrued_gain_time': 'start',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -1235,7 +1235,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'postpone_max_days': 15,
                 })],
             })
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1275,7 +1275,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             - The total number of days that the employee has is 22 days.
         """
         with freeze_time('2021-01-01'):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -1291,7 +1291,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'postpone_max_days': 7,
                 })],
             })
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1312,7 +1312,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_skipped_period(self):
         # Test that when an allocation is made in the past and the second level is technically reached
         #  that the first level is not skipped completely.
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -1336,7 +1336,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time('2020-08-16'):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual Allocation - Test',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1351,7 +1351,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.assertAlmostEqual(allocation.number_of_days, 30.82, 2, "Invalid number of days")
 
     def test_three_levels_accrual(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -1388,7 +1388,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time('2022-01-31'):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual Allocation - Test',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1434,7 +1434,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         From 01/01/2022, to 01/04/2022 3 days are accrued to the employee.
         The total number of days that the employee has is 1 + 3 = 4 days.
         """
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'level_ids': [
@@ -1461,7 +1461,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             ],
         })
         with freeze_time('2021-01-01'):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual Allocation - Test',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1497,7 +1497,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         On 01/01/2022, the previous 3 days are lost due to carryover. 3 days are accrued.
         The total number of days should be 3.
         """
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
             'level_ids': [
@@ -1514,7 +1514,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             ],
         })
         with freeze_time('2019-01-01'):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual Allocation - Test',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1530,7 +1530,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.assertAlmostEqual(allocation.number_of_days, 3, 2, "Invalid number of days")
 
     def test_accrual_maximum_leaves(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -1546,7 +1546,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time("2021-09-03"):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1563,7 +1563,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.assertEqual(allocation.number_of_days, 5, "Should accrue maximum 5 days")
 
     def test_accrual_maximum_leaves_no_limit(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -1578,7 +1578,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time("2021-09-03"):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1595,7 +1595,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.assertEqual(allocation.number_of_days, 29, "No limits for accrued days")
 
     def test_accrual_leaves_taken_maximum(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -1611,7 +1611,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time("2022-01-01"):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1641,7 +1641,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.assertEqual(allocation.number_of_days, 10, "Should accrue 5 additional days")
 
     def test_accrual_leaves_taken_maximum_hours(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -1657,7 +1657,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time(datetime.date(2022, 1, 1)):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1688,7 +1688,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     @mute_logger('odoo.sql_db')
     def test_yearly_cap_constraint(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'accrued_gain_time': 'end',
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -1730,7 +1730,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'request_unit': 'hour',
             'unit_of_measure': 'hour',
         })
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'accrued_gain_time': 'end',
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -1749,7 +1749,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
 
         with freeze_time('2024-01-01'):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'employee_id': self.employee_emp.id,
                 'work_entry_type_id': work_entry_type.id,
@@ -1811,7 +1811,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 "Nothing more should have been accrued since the yearly cap was already reached.")
 
     def test_accrual_period_start(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'accrued_gain_time': 'end',
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -1827,7 +1827,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time("2023-04-24"):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1844,7 +1844,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         accrual_plan.accrued_gain_time = 'start'
         with freeze_time("2023-04-24"):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1860,7 +1860,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.assertEqual(allocation.number_of_days, 1, "Should accrue 1 day, at the start of the period.")
 
     def test_accrual_period_start_multiple_runs(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -1876,7 +1876,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time("2023-04-13"):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1896,7 +1896,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.assertAlmostEqual(allocation.number_of_days, 9, 2)
 
     def test_accrual_period_start_level_transfer(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
             'level_ids': [
@@ -1923,7 +1923,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             ],
         })
         with freeze_time("2023-04-26"):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1946,7 +1946,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.assertEqual(allocation.number_of_days, 5, "Should accrue 5 days, after level transfer 10 are cut to 5")
 
     def test_accrual_carryover_at_allocation(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
@@ -1963,7 +1963,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time("2023-04-26"):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -1993,7 +1993,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.assertAlmostEqual(allocation.number_of_days, 1, "Allocations lost, then 1 accrued.")
 
     def test_accrual_carryover_at_other(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
@@ -2014,7 +2014,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time("2023-04-20"):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -2087,7 +2087,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         - On 15/07/2026, 12 days will be accrued.
         The the employee should have 12 days on 01/08/2026
         """
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'accrued_gain_time': 'end',
             'can_be_carryover': True,
@@ -2140,7 +2140,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             ],
         })
         with freeze_time("2023-04-04"):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -2156,7 +2156,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.assertEqual(allocation.number_of_days, 12)
 
     def test_accrual_creation_on_anterior_date(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Weekly accrual',
             'can_be_carryover': True,
             'carryover_date': 'allocation',
@@ -2263,7 +2263,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.assertEqual(level.added_value_type, 'hour')
 
     def test_accrual_immediate_cron_run(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Weekly accrual',
             'can_be_carryover': True,
             'carryover_date': 'allocation',
@@ -2297,7 +2297,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 "the amount shouldn't have changed after running the cron")
 
     def test_accrual_creation_for_history(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Monthly accrual',
             'can_be_carryover': True,
             'carryover_date': 'year_start',
@@ -2337,7 +2337,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.assertAlmostEqual(accrual_allocation.number_of_days, 12, places=0)
 
     def test_accrual_with_report_creation_for_history(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Monthly accrual',
             'can_be_carryover': True,
             'carryover_date': 'year_start',
@@ -2379,7 +2379,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.assertAlmostEqual(accrual_allocation.number_of_days, 12, places=0)
 
     def test_accrual_period_start_past_start_date(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Monthly accrual',
             'can_be_carryover': True,
             'carryover_date': 'year_start',
@@ -2413,7 +2413,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.assertAlmostEqual(accrual_allocation.number_of_days, 4.0, places=0)
 
     def test_cancel_invalid_leaves_with_regular_and_accrual_allocations(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Monthly accrual',
             'can_be_carryover': True,
             'carryover_date': 'year_start',
@@ -2485,7 +2485,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'request_unit': 'day',
             'unit_of_measure': 'day',
         })
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Monthly accrual',
             'can_be_carryover': True,
             'carryover_date': 'year_start',
@@ -2571,10 +2571,10 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_check_lastcall_change_regular_to_accrual(self):
         with freeze_time("2017-12-05"):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
             })
-            allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].create({
                 'name': 'Accrual allocation for employee',
                 'employee_id': self.employee_emp.id,
                 'work_entry_type_id': self.work_entry_type.id,
@@ -2709,7 +2709,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     @freeze_time('2024-01-01')
     def test_validate_leaves_with_more_days_than_allocation(self):
-        allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
+        allocation = self.env['hr.leave.allocation'].create({
             'name': 'Accrual allocation for employee',
             'employee_id': self.employee_emp.id,
             'work_entry_type_id': self.work_entry_type.id,
@@ -2749,7 +2749,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         will the number_of_days be computed or not. Also that the number_of_days
         gets recomputed when changing the employee
         """
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Monthly accrual',
             'is_based_on_worked_time': True,
             'transition_mode': 'immediately',
@@ -2834,7 +2834,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         On 01/07/2025 (Carryover date), no days should be accrued.
         On 01/01/2026 (Accrual date), 10 days are accrued to the employee. Total accrued days = 20 days.
         """
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'carryover_date': 'other',
@@ -2850,7 +2850,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time('2024-01-01'):
-            allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].create({
                 'name': 'Accrual allocation for employee',
                 'employee_id': self.employee_emp.id,
                 'work_entry_type_id': self.work_entry_type.id,
@@ -2898,7 +2898,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             * 10 days are accrued to the employee.
             * Total employee should have 10 days.
         """
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'carryover_date': 'year_start',
@@ -2912,7 +2912,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time('2024-01-01'):
-            allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].create({
                 'name': 'Accrual allocation for employee',
                 'employee_id': self.employee_emp.id,
                 'work_entry_type_id': self.work_entry_type.id,
@@ -2960,7 +2960,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             - (6/12) / 14 = 7 days are accrued to the employee.
             - Total number of days = 6 + 7 = 13 days
         """
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'carryover_date': 'other',
@@ -2985,7 +2985,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time('2024-01-01'):
-            allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].create({
                 'name': 'Accrual allocation for employee',
                 'employee_id': self.employee_emp.id,
                 'work_entry_type_id': self.work_entry_type.id,
@@ -3041,7 +3041,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         6. On 01/01/2025: 1 day is accrued.
         Total number of days =  8 days
         """
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
@@ -3069,7 +3069,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time('2024-01-01'):
-            allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].create({
                 'name': 'Accrual allocation for employee',
                 'employee_id': self.employee_emp.id,
                 'work_entry_type_id': self.work_entry_type.id,
@@ -3135,7 +3135,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             - 12 days are accrued for the new period (becase days are accrue at the start of the accrual period)
             - Total number of days is 6.67 + 4 + 12 = 22.67 days.
         """
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
@@ -3161,7 +3161,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time('2024-01-01'):
-            allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].create({
                 'name': 'Accrual allocation for employee',
                 'employee_id': self.employee_emp.id,
                 'work_entry_type_id': self.work_entry_type.id,
@@ -3223,7 +3223,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         - The expiration date should be 01/09/2024 and not 01/06/2024. In other words, the expiration date
           should be computed using the first level's validity period and not the second level's expiration period.
         """
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'carryover_date': 'other',
@@ -3262,7 +3262,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time('2023-01-01'):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -3301,7 +3301,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         - 01/04/2025 carryover date. The carried over days will expire in 3 months.
         - 01/07/2025 expiration date.
         """
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'carryover_date': 'other',
@@ -3332,7 +3332,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time('2023-01-01'):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -3376,7 +3376,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         - 01/07/2025 expiration date.
         - 01/01/2026 accrual date (the new expiration date should be computed and set to 01/08/2026)
         """
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'carryover_date': 'other',
@@ -3407,7 +3407,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time('2023-01-01'):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -3449,7 +3449,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         - 01/07/2025 carryover date. The carried over days will expire in 2 months.
         - 01/09/2025 expiration date.
         """
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'carryover_date': 'other',
@@ -3468,7 +3468,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time('2023-01-01'):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -3511,7 +3511,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         - 01/07/2025 carryover date. The carried over days will expire in 2 months.
         - 01/09/2025 expiration date.
         """
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'carryover_date': 'other',
@@ -3530,7 +3530,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time('2023-01-01'):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -3573,7 +3573,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         - On 20/04/2025(carryover date): 5 days are lost and 5 days will carry over.
         - On 10/05/2025(carried over days expiration date): 5 days are lost.
         """
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'carryover_date': 'other',
@@ -3594,7 +3594,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time('2024-01-01'):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -3637,7 +3637,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         - The employee's balance should be 10 days at the end.
         - allocation.number_of_days (employee balance + leaves_taken) should be 13 days at the end.
         """
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'carryover_date': 'other',
@@ -3660,7 +3660,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time('2024-01-01'):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -3721,7 +3721,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         - The employee's balance should be 5 days at the end.
         - allocation.number_of_days (employee balance + leaves_taken) should be 11 days at the end.
         """
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'carryover_date': 'other',
@@ -3742,7 +3742,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })]
         })
         with freeze_time('2023-01-01'):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -3838,7 +3838,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
               - Expiration date of carry-over days will reset to False
               - Compute the number of accrued days on 09/25/2024 -> 2 days.
         """
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'can_be_carryover': True,
             'carryover_date': 'allocation',
@@ -3856,7 +3856,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
 
         with freeze_time('2023-08-01'):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'allocation_type': 'accrual',
                 'accrual_plan_id': accrual_plan.id,
@@ -3879,7 +3879,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.assertEqual(allocation.number_of_days, 2)
 
     def test_start_accrual_gain_time_immediately(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': '1.25 days each 1st of the month',
             'transition_mode': 'immediately',
             'can_be_carryover': True,
@@ -3898,7 +3898,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
 
         with freeze_time('2024-09-02'):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -3927,7 +3927,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_set_accrual_allocation_to_zero_from_ui(self):
         with freeze_time('2024-06-15'):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': '2 days on the 1st of each month',
                 'accrued_gain_time': 'start',
                 'can_be_carryover': True,
@@ -3941,7 +3941,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 })],
             })
 
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -3959,7 +3959,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.assertAlmostEqual(remaining_leaves, 2, 2, "Only 2 days gained on 1st of July should be accrued")
 
     def test_cache_invalidation_with_future_leaves(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': '1 days every last day of the month',
             'transition_mode': 'immediately',
             'can_be_carryover': True,
@@ -3980,7 +3980,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
 
         with freeze_time('2024-06-30'):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp_id,
@@ -4004,7 +4004,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.assertEqual(allocation.number_of_days, 1, 'Days should be allocated even when leave is taken in the future')
 
     def test_accrual_days_left_under_carryover_maximum(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': '21 days per year, 28 days cap, 7 carryover max',
             'transition_mode': 'immediately',
             'can_be_carryover': True,
@@ -4056,7 +4056,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.assertEqual(remaining_future, 27)
 
     def test_accrual_unused_accrual_reset_to_lost(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': '21 days per year, 28 days cap, 7 carryover max',
             'transition_mode': 'immediately',
             'can_be_carryover': True,
@@ -4064,7 +4064,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'accrued_gain_time': 'start',
         })
 
-        plan = self.env["hr.leave.accrual.level"].with_context(tracking_disable=True).create({
+        plan = self.env["hr.leave.accrual.level"].create({
             "accrual_plan_id" : accrual_plan.id,
         })
 
@@ -4115,7 +4115,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'employee without calendar',
                 'resource_calendar_id': False,
             })
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'is_based_on_worked_time': True,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -4129,7 +4129,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 })],
             })
             past_date = datetime.date.today() - relativedelta(days=1)
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'accrual allocation for employee without calendar',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': employee_without_calendar.id,
@@ -4181,7 +4181,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
 
         with freeze_time("2024-12-01"):
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -4502,10 +4502,10 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 23, "The carryover expired after 6 month so the remaining leaves should be 23")
 
     def test_accrual_plan_cleared_when_switch_to_regular(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
         })
-        allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
+        allocation = self.env['hr.leave.allocation'].create({
             'name': 'Accrual allocation for employee',
             'allocation_type': 'accrual',
             'work_entry_type_id': self.work_entry_type.id,
@@ -4669,7 +4669,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_allocation_immediate_monthly_start_day(self):
         """ Test fix for incorrect accrued days when changing date_from on accrual allocations. """
         with freeze_time('2024-11-15'):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
                 'accrued_gain_time': 'start',
                 'carryover_date': 'other',
@@ -4687,7 +4687,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 })],
             })
 
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
@@ -4955,7 +4955,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'unit_of_measure': 'day',
         })
 
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan',
             'carryover_date': 'year_start',
             'accrued_gain_time': 'end',
@@ -4997,7 +4997,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         2026-02-01(feb). It should be 2.
         """
         with freeze_time('2025-01-01'):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
                 'accrued_gain_time': 'start',
                 'level_ids': [Command.create({
