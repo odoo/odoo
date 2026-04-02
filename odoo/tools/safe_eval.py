@@ -725,6 +725,9 @@ class _SafeChecker:
 
     def __init__(self):
         self.__hooks: WeakKeyDictionary[type, typing.Callable | None] = WeakKeyDictionary()
+        self._hook_class = safe_whitelist.check_class
+        self._hook_instance = safe_whitelist.check_instance
+        self._hook_function = safe_whitelist.check_function
 
         # Primary hooks
         self.add_hook(ModuleType, self._hook_module)
@@ -829,22 +832,6 @@ class _SafeChecker:
 
     def _hook_module(self, obj):
         raise UnsafeModuleError(obj)
-
-    def _hook_class(self, obj) -> None:
-        if obj not in safe_whitelist.TRUSTED_CLASSES:
-            safe_whitelist.check_class(obj)
-
-    def _hook_instance(self, obj) -> None:
-        if type(obj) not in safe_whitelist.TRUSTED_CLASSES:
-            safe_whitelist.check_instance(obj)
-
-    def _hook_function(self, obj) -> None:
-        # At runtime if `__name__` is present in globals, `__module__` will
-        # be present on the user defined function
-        if obj is safe_call:
-            return
-        if obj not in _SafeWhitelist.TRUSTED_FUNCTIONS:
-            safe_whitelist.check_function(obj)
 
     def _hook_method(self, obj):
         bound_obj = obj.__self__
@@ -1016,23 +1003,33 @@ class _SafeWhitelist:
 
         return re.compile(_trie_to_regex(trie))
 
-    def check_class(self, obj):
-        if not self._re_class.fullmatch(self.get_full_path(obj)):
+    def check_class(self, obj) -> None:
+        if (
+            obj not in self.TRUSTED_CLASSES and
+            not self._re_class.fullmatch(self.get_full_path(obj))
+        ):
             raise UnsafeClassError(obj)
 
-    def check_instance(self, obj):
-        if not self._re_instance.fullmatch(self.get_full_path(type(obj))):
+    def check_instance(self, obj) -> None:
+        t_obj = type(obj)
+        if (
+            t_obj not in self.TRUSTED_CLASSES and
+            not self._re_instance.fullmatch(self.get_full_path(t_obj))
+        ):
             raise UnsafeInstanceError(obj)
 
-    def check_function(self, obj):
-        if not self._re_function.fullmatch(self.get_full_path(obj)):
+    def check_function(self, obj) -> None:
+        if (
+            obj not in self.TRUSTED_FUNCTIONS and
+            not self._re_function.fullmatch(self.get_full_path(obj))
+        ):
             raise UnsafeFunctionError(obj)
 
 
 safe_transformer = _SafeTransformer()
 safe_transform = safe_transformer.visit
-safe_checker = _SafeChecker()
 safe_whitelist = _SafeWhitelist()
+safe_checker = _SafeChecker()
 
 
 def handle_unsafe_error(error):
@@ -1050,6 +1047,9 @@ def safe_call(callee, /, *args, **kwargs):
     except UnsafeError as e:
         handle_unsafe_error(e)
     return callee(*args, **kwargs)
+
+
+safe_whitelist.TRUSTED_FUNCTIONS |= {safe_call}
 
 
 def monitoring_call(code, instruction_offset, callee, arg0):
