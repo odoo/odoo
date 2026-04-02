@@ -344,7 +344,7 @@ class MailThread(models.AbstractModel):
         if self.env.context.get('mail_create_nosubscribe') and 'mail_post_autofollow_author_skip' not in self.env.context:
             self = self.with_context(mail_post_autofollow_author_skip=True)
 
-        if self.env.context.get('tracking_disable'):
+        if self.env.context.get('tracking_disable') or self.env.context.get('mail_thread_disable'):
             threads = super(MailThread, self).create(vals_list)
             threads._track_discard()
             return threads
@@ -403,7 +403,7 @@ class MailThread(models.AbstractModel):
         return threads
 
     def write(self, vals):
-        if self.env.context.get('tracking_disable'):
+        if self.env.context.get('tracking_disable') or self.env.context.get('mail_thread_disable'):
             return super().write(vals)
 
         if not self._track_disabled():
