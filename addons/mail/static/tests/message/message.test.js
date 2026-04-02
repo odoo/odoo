@@ -247,7 +247,7 @@ test("Editing message keeps the mentioned channels", async () => {
     await press("Enter");
     await contains(".o_channel_redirect:text('other')");
     await click(".o-mail-Message [title='Edit']");
-    await contains(".o-mail-Message .o-mail-Composer-input", { value: "#other" });
+    await contains(".o-mail-Message .o-mail-Composer-input", { value: "#other " });
     await insertText(".o-mail-Message .o-mail-Composer-input", "#other bye", { replace: true });
     await click(".o-mail-Message button:text('save')");
     await contains(".o-mail-Message-content:text('other bye (edited)')");
@@ -276,7 +276,7 @@ test("Editing message keeps the mentioned roles", async () => {
     await press("Enter");
     await contains(".o-discuss-mention", { text: "@admin" });
     await click(".o-mail-Message [title='Edit']");
-    await contains(".o-mail-Message .o-mail-Composer-input", { value: "@admin" });
+    await contains(".o-mail-Message .o-mail-Composer-input", { value: "@admin " });
     await insertText(".o-mail-Message .o-mail-Composer-input", "@admin edit", { replace: true });
     await click(".o-mail-Message button", { text: "save" });
     await contains(".o-mail-Message-content", { text: "@admin edit (edited)" });
