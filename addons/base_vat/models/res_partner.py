@@ -213,6 +213,10 @@ class ResPartner(models.Model):
         If they exist, we simply return them. If they don't, we create them in another cursor to
         avoid the current transaction to be rolled back after the record has been created on IAP.
         """
+        # No existing cron = no way for db to pull updates, thus no need to bother IAP
+        if not self.env.ref('base_vat.vies_iap_check_update', raise_if_not_found=False):
+            return "dummy_identifier", "dummy_token"  # ignored by IAP, same as neutralized
+
         IrConfigParam = self.env['ir.config_parameter'].sudo()
         identifier = IrConfigParam.get_str('iap_vies.client_identifier')
         token = IrConfigParam.get_str('iap_vies.client_token')
