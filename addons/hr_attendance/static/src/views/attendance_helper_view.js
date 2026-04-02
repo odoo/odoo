@@ -31,4 +31,4 @@ export class AttendanceActionHelper extends Component {
     LoadTryKiosk() {
         this.actionService.doAction("hr_attendance.action_try_kiosk");
     }
-};
+}

@@ -22,7 +22,7 @@ export class KioskPinCode extends Component {
             codePin: "",
         });
         this.lockPad = false;
-        this.checkedIn = this.props.employeeData.attendance_state === 'checked_in';
+        this.checkedIn = this.props.employeeData.attendance_state === "checked_in";
 
         const onKeyDown = async (ev) => {
             const allowedKeys = { Delete: "C", Enter: "OK", Backspace: null };
@@ -38,14 +38,13 @@ export class KioskPinCode extends Component {
 
             if (allowedKeys[key] !== null) {
                 await this.onClickPadButton(allowedKeys[key]);
-            }
-            else {
+            } else {
                 this.state.codePin = this.state.codePin.substring(0, this.state.codePin.length - 1);
             }
-        }
-        browser.addEventListener('keydown', onKeyDown);
-        onWillStart(() => browser.addEventListener('keydown', onKeyDown))
-        onWillDestroy(() => browser.removeEventListener('keydown', onKeyDown));
+        };
+        browser.addEventListener("keydown", onKeyDown);
+        onWillStart(() => browser.addEventListener("keydown", onKeyDown));
+        onWillDestroy(() => browser.removeEventListener("keydown", onKeyDown));
     }
 
     async onClickPadButton(value) {
@@ -56,7 +55,7 @@ export class KioskPinCode extends Component {
             this.state.codePin = "";
         } else if (value === "OK") {
             this.lockPad = true;
-            await this.props.onPinConfirm(this.props.employeeData.id, this.state.codePin)
+            await this.props.onPinConfirm(this.props.employeeData.id, this.state.codePin);
             this.state.codePin = "";
             this.lockPad = false;
         } else {

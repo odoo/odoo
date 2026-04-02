@@ -110,10 +110,12 @@ export class ActivityMenu extends Component {
 
     confirmChecking() {
         this.dialogService.add(ConfirmationDialog, {
-            body: _t("Unable to get a valid location. Do you want to proceed with your check-in/out anyway?"),
+            body: _t(
+                "Unable to get a valid location. Do you want to proceed with your check-in/out anyway?"
+            ),
             confirmLabel: _t("Proceed Anyway"),
             confirm: async () => await this.checking(),
-            cancel: () => this._attendanceInProgress = false,
+            cancel: () => (this._attendanceInProgress = false),
         });
     }
 
