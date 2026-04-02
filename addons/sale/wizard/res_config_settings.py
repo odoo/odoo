@@ -29,6 +29,9 @@ class ResConfigSettings(models.TransientModel):
     group_warning_sale = fields.Boolean(
         string="Sale Order Warnings", implied_group="sale.group_warning_sale"
     )
+    group_services_and_material = fields.Boolean(
+        string="Services & Materials", implied_group="sale.group_services_and_material"
+    )
 
     # Config params
     automatic_invoice = fields.Boolean(

@@ -178,6 +178,12 @@
                         <setting id="setting_commission" help="Manage Sales &amp; teams targets and commissions">
                             <field name="module_sale_commission" widget="upgrade_boolean"/>
                         </setting>
+                        <setting
+                            id="setting_services_and_materials"
+                            help="Use fixed-price and cost-based services and materials for re-invoicing"
+                        >
+                            <field name="group_services_and_material"/>
+                        </setting>
                     </block>
                     <block title="Connectors" id="connectors_setting_container">
                         <setting id="amazon_connector" documentation="/applications/sales/sales/amazon_connector/setup.html" help="Import Amazon orders and sync deliveries">

@@ -25,7 +25,7 @@ class ProductTemplate(models.Model):
     )
     sale_line_warn_msg = fields.Text(string="Sales Order Line Warning")
     reinvoice_policy = fields.Selection(
-        selection=[("no", "No"), ("cost", "At cost"), ("sales_price", "Sales price")],
+        selection=[("no", "No"), ("cost", "At cost"), ("sales_price", "At Sales price")],
         string="Re-Invoice Costs",
         default="no",
         compute="_compute_reinvoice_policy",
@@ -99,7 +99,9 @@ class ProductTemplate(models.Model):
     @api.depends("purchase_ok", "sale_ok")
     def _compute_visible_reinvoice_policy(self):
         self.visible_reinvoice_policy = False
-        if self.env.user.has_group("analytic.group_analytic_accounting"):
+        if self.env.user.has_group("analytic.group_analytic_accounting") or self.env.user.has_group(
+            "sale.group_services_and_material"
+        ):
             self.filtered(lambda pt: pt.purchase_ok or pt.sale_ok).visible_reinvoice_policy = True
 
     @api.depends("sale_ok")
