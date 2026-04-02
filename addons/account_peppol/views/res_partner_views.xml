@@ -33,7 +33,10 @@
                     <field name="peppol_verification_state" invisible="1" force_save="1"/>
                     <label for="peppol_verification_state" invisible="not peppol_endpoint"/>
                     <div class="row" invisible="not peppol_endpoint">
-                        <div class="col-6">
+                        <div class="col-6" title="Supports Invoice Responses" invisible="not peppol_response_support">
+                            <field name="peppol_verification_state" readonly="1"/>
+                        </div>
+                        <div class="col-6" title="Does not support Invoice Responses" invisible="peppol_response_support">
                             <field name="peppol_verification_state" readonly="1"/>
                         </div>
                         <div class="col-6 pt-0">
