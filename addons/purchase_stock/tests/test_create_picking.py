@@ -94,6 +94,17 @@ class TestCreatePicking(ProductVariantsCommon):
         self.assertRecordValues(backorder.move_line_ids, [
             {'product_id': self.product_id_2.id, 'quantity': 4, 'picking_type_id': receipt_type_id}])
 
+        backorder.button_validate()
+
+        # Ensure that, after all those operations, it is still possible to create a PO
+        # Need use of `Form` to ensure that all compute/onchange are working (cf commit)
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.po.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product_id_2
+        po = po_form.save()
+        self.assertTrue(po)
+
     def test_01_check_double_validation(self):
 
         # make double validation two step
