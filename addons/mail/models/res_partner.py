@@ -51,6 +51,14 @@ class ResPartner(models.Model):
     # ------------------------------------------------------------
     # ORM
     # ------------------------------------------------------------
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        # partner being created in a lot of use cases, by default consider creator
+        # want to follow the record
+        mail_create_nosubscribe = self.env.context.get('mail_create_nosubscribe', True)
+        return super(ResPartner, self.with_context(mail_create_nosubscribe=mail_create_nosubscribe)).create(vals_list)
+
     @api.model
     def _get_view_cache_key(self, view_id=None, view_type='form', **options):
         """Add context variable force_email in the key as _get_view depends on it."""
