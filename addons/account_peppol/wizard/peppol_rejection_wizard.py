@@ -13,7 +13,7 @@ class PeppolRejectionWizard(models.TransientModel):
     reason_ids = fields.Many2many(
         comodel_name='account.peppol.clarification',
         relation='account_peppol_rejection_reason_rel',
-        default=lambda self: self.env.ref('account_peppol_response.peppol_clarification_reason_unr', raise_if_not_found=False),
+        default=lambda self: self.env.ref('account_peppol.peppol_clarification_reason_unr', raise_if_not_found=False),
         domain="[('list_identifier', '=', 'OPStatusReason')]",
         required=True,
         string='Rejection reasons',

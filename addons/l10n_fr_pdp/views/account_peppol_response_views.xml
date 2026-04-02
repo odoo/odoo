@@ -3,7 +3,7 @@
     <record id="account_peppol_response_view_form" model="ir.ui.view">
         <field name="name">account.peppol.response.view.form.l10n.fr.pdp</field>
         <field name="model">account.peppol.response</field>
-        <field name="inherit_id" ref="account_peppol_response.account_peppol_response_view_form"/>
+        <field name="inherit_id" ref="account_peppol.account_peppol_response_view_form"/>
         <field name="arch" type="xml">
             <field name="response_code" position="after">
                 <field name="pdp_ref_response_code"/>
@@ -19,7 +19,7 @@
     <record id="account_peppol_response_view_list" model="ir.ui.view">
         <field name="name">account.peppol.response.view.list.l10n.fr.pdp</field>
         <field name="model">account.peppol.response</field>
-        <field name="inherit_id" ref="account_peppol_response.account_peppol_response_view_list"/>
+        <field name="inherit_id" ref="account_peppol.account_peppol_response_view_list"/>
         <field name="arch" type="xml">
             <field name="response_code" position="after">
                 <field name="pdp_ref_response_code" optional="hide"/>

@@ -8,7 +8,7 @@
 """,
     'depends': [
         'l10n_fr_account',
-        'account_peppol_response',
+        'account_peppol',
         'auth_totp_mail',
         'iap',
     ],
