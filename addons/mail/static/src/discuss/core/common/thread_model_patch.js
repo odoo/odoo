@@ -288,7 +288,6 @@ const threadPatch = {
         await this.leaveChannelProcess();
     },
     async leaveChannelProcess() {
-        await this.closeChatWindow();
         if (this.exists()) {
             await this.leaveChannelRpc();
         }

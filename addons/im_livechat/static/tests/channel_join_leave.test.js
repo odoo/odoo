@@ -169,3 +169,32 @@ test("visitor leaving ends the livechat conversation", async () => {
     await click("button[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
 });
+
+test("leaving chat window triggers a single RPC", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor #1" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "livechat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        livechat_operator_id: serverState.partnerId,
+    });
+    pyEnv["mail.message"].create({
+        body: "Last message from Visitor #1",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    setupChatHub({ opened: [channelId] });
+    onRpc("discuss.channel", "action_unfollow", () => expect.step("action_unfollow"));
+    await start();
+    await contains(".o-mail-ChatWindow");
+    await click("[title='Open Actions Menu']", {
+        parent: [".o-mail-ChatWindow:has(:text('Visitor #1'))"],
+    });
+    await click(".o-dropdown-item:text('Leave Channel')");
+    await click("button:contains(Leave Conversation)");
+    await contains(".o-mail-ChatWindow", { count: 0 });
+    await expect.waitForSteps(["action_unfollow"]);
+});
