@@ -284,18 +284,20 @@ export class RecordInternal {
         if (!Model._.fieldsOnUpdate.get(fieldName)) {
             return;
         }
-        /**
-         * Forward internal proxy for performance as onUpdate does not
-         * need reactive (observe is called separately).
-         */
-        try {
-            Model._.fieldsOnUpdate
-                .get(fieldName)
-                .forEach((fn) => fn.call(record._proxyInternal, record._proxyInternal[fieldName]));
-        } catch (err) {
-            store.handleError(err);
-        }
-        this.fieldsOnUpdateObserves.get(fieldName)?.();
+        immediateEffect(() => {
+            /**
+             * Forward internal proxy for performance as onUpdate does not
+             * need reactive (observe is called separately).
+             */
+            try {
+                Model._.fieldsOnUpdate
+                    .get(fieldName)
+                    .forEach((fn) => fn.call(record._proxy, record._proxy[fieldName]));
+            } catch (err) {
+                store.handleError(err);
+            }
+            this.fieldsOnUpdateObserves.get(fieldName)?.();
+        });
     }
     /**
      * The internal reactive is only necessary to trigger outer reactives when

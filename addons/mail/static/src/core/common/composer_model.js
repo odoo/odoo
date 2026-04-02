@@ -14,7 +14,11 @@ export class Composer extends Record {
         this.attachments.length = 0;
         this.replyToMessage = undefined;
         this.restoredFromFullComposer = false;
-        this.composerHtml = markup("<div class='o-paragraph'><br></div>");
+        if (this.updateFrom === "html") {
+            this.composerHtml = markup("<div class='o-paragraph'><br></div>");
+        } else {
+            this.composerText = "";
+        }
         Object.assign(this.selection, {
             start: 0,
             end: 0,
