@@ -116,7 +116,10 @@ export class GovDocumentBuilder extends Component {
         this.canvasRef = useRef("canvas");
 
         this.docId = this.props.action?.params?.doc_id;
+        this.initialMode = this.props.action?.params?.initial_mode;
         this.catalog = BLOCK_CATALOG;
+        this.lastSavedLayoutJson = JSON.stringify([]);
+        this.lastSavedTypstSource = "";
 
         this.state = useState({
             loading: true,
@@ -127,6 +130,8 @@ export class GovDocumentBuilder extends Component {
             dragOverIndex: null,  // índice do drop target
             previewMode: false,
             searchQuery: "",
+            editMode: "visual",
+            typstSource: "",
         });
 
         onWillStart(() => this._loadDocument());
@@ -142,17 +147,35 @@ export class GovDocumentBuilder extends Component {
             const [doc] = await this.orm.read(
                 "gov.processo.doc",
                 [this.docId],
-                ["name", "layout_json", "processo_id", "doc_type", "state"]
+                [
+                    "name",
+                    "layout_json",
+                    "processo_id",
+                    "doc_type",
+                    "state",
+                    "typst_source",
+                    "is_visual_builder",
+                ]
             );
             this.state.doc = doc;
+            let parsedBlocks = [];
             // Restaurar blocos salvos ou iniciar vazio
             if (doc.layout_json) {
                 try {
-                    this.state.blocks = JSON.parse(doc.layout_json);
+                    parsedBlocks = JSON.parse(doc.layout_json);
                 } catch {
-                    this.state.blocks = [];
+                    parsedBlocks = [];
                 }
             }
+            this.state.blocks = parsedBlocks;
+            this.lastSavedLayoutJson = JSON.stringify(parsedBlocks);
+            this.state.typstSource = doc.typst_source || "";
+            this.lastSavedTypstSource = doc.typst_source || "";
+            this.state.editMode =
+                this.initialMode ||
+                ((doc.typst_source || "").trim() && parsedBlocks.length === 0
+                    ? "typst"
+                    : "visual");
         } catch (e) {
             this.notification.add(
                 _t("Erro ao carregar documento: ") + e.message,
@@ -277,24 +300,57 @@ export class GovDocumentBuilder extends Component {
         }
     }
 
+    setEditMode(mode) {
+        this.state.editMode = mode;
+    }
+
+    onTypstInput(ev) {
+        this.state.typstSource = ev.target.value;
+    }
+
     // ── Salvar ──────────────────────────────────────────────────────────────-
-    async onSave() {
+    async onSave(silent = false) {
         if (!this.docId || this.state.saving) return;
         this.state.saving = true;
         try {
+            const vals = {};
             const layoutJson = JSON.stringify(this.state.blocks);
-            await this.orm.write("gov.processo.doc", [this.docId], {
-                layout_json: layoutJson,
-                is_visual_builder: true,
-            });
-            this.notification.add(_t("Layout salvo com sucesso!"), {
-                type: "success",
-            });
+            if (layoutJson !== this.lastSavedLayoutJson) {
+                vals.layout_json = layoutJson;
+            }
+            if (this.state.typstSource !== this.lastSavedTypstSource) {
+                vals.typst_source = this.state.typstSource;
+            }
+            if (!this.state.doc?.is_visual_builder) {
+                vals.is_visual_builder = true;
+            }
+            if (!Object.keys(vals).length) {
+                if (!silent) {
+                    this.notification.add(_t("Nenhuma alteração pendente para salvar."), {
+                        type: "info",
+                    });
+                }
+                return true;
+            }
+            await this.orm.write("gov.processo.doc", [this.docId], vals);
+            this.lastSavedLayoutJson = layoutJson;
+            this.lastSavedTypstSource = this.state.typstSource;
+            this.state.doc = {
+                ...(this.state.doc || {}),
+                ...vals,
+            };
+            if (!silent) {
+                this.notification.add(_t("Documento salvo com sucesso!"), {
+                    type: "success",
+                });
+            }
+            return true;
         } catch (e) {
             this.notification.add(
                 _t("Erro ao salvar: ") + e.message,
                 { type: "danger" }
             );
+            return false;
         } finally {
             this.state.saving = false;
         }
@@ -302,7 +358,8 @@ export class GovDocumentBuilder extends Component {
 
     // ── Gerar PDF via backend ────────────────────────────────────────────────
     async onGeneratePdf() {
-        await this.onSave();
+        const saved = await this.onSave(true);
+        if (!saved) return;
         if (!this.docId) return;
         try {
             await this.orm.call(
@@ -336,6 +393,17 @@ export class GovDocumentBuilder extends Component {
 
     get blockCount() {
         return this.state.blocks.length;
+    }
+
+    get builderBadge() {
+        if (this.state.editMode === "typst") {
+            return _t("Modo Typst");
+        }
+        return `${this.blockCount} blocos`;
+    }
+
+    get isLocked() {
+        return this.state.doc?.state === "assinado";
     }
 }
 

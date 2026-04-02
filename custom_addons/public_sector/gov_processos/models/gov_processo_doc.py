@@ -508,14 +508,21 @@ class GovProcessoDoc(models.Model):
 
     def action_abrir_construtor_visual(self):
         self.ensure_one()
+        return self._build_construtor_visual_action()
+
+    def _build_construtor_visual_action(self, initial_mode=False):
+        self.ensure_one()
+        params = {
+            "doc_id": self.id,
+            "model": "gov.processo.doc",
+        }
+        if initial_mode:
+            params["initial_mode"] = initial_mode
         return {
             "type": "ir.actions.client",
             "tag": "gov_document_builder",
             "name": "Construtor Visual de Documento",
-            "params": {
-                "doc_id": self.id,
-                "model": "gov.processo.doc",
-            },
+            "params": params,
             "target": "fullscreen",
         }
 

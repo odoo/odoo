@@ -71,6 +71,8 @@
   flex: 1;
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 16px;
 }
 
 .gov-builder-title {
@@ -99,6 +101,12 @@
   background: rgba(79, 125, 255, 0.15);
   color: var(--gov-accent);
   border: 1px solid rgba(79, 125, 255, 0.3);
+}
+
+.gov-builder-mode-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 /* ── Botões ──────────────────────────────────────────────────────────────── */
@@ -172,6 +180,66 @@
   display: flex;
   flex: 1;
   overflow: hidden;
+}
+
+.gov-builder-editor-wrap {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  padding: 24px;
+  background: var(--gov-bg);
+}
+
+.gov-typst-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  background: var(--gov-bg-2);
+  border: 1px solid var(--gov-border);
+  border-radius: var(--gov-radius);
+  box-shadow: var(--gov-shadow);
+  overflow: hidden;
+}
+
+.gov-typst-panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--gov-border);
+  background: linear-gradient(135deg, rgba(79, 125, 255, 0.08), rgba(124, 92, 255, 0.08));
+}
+
+.gov-typst-panel-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gov-text-1);
+}
+
+.gov-typst-panel-hint {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--gov-text-2);
+  line-height: 1.5;
+}
+
+.gov-typst-textarea {
+  flex: 1;
+  min-height: 0;
+  padding: 20px;
+  border: none;
+  outline: none;
+  resize: none;
+  background: var(--gov-bg);
+  color: var(--gov-text-1);
+  font: 13px/1.6 "SFMono-Regular", "Cascadia Code", "Liberation Mono", monospace;
+  tab-size: 2;
+}
+
+.gov-typst-textarea::placeholder {
+  color: var(--gov-text-3);
 }
 
 /* ── Sidebar ─────────────────────────────────────────────────────────────── */

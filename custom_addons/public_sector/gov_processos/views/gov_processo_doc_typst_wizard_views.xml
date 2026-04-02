@@ -11,6 +11,7 @@
                             <field name="processo_id"/>
                             <field name="source_doc_id" invisible="not source_doc_id"/>
                             <field name="modelo_typst"/>
+                            <field name="edit_mode"/>
                             <field name="doc_type"/>
                             <field name="name"/>
                         </group>
@@ -19,11 +20,12 @@
                             <field name="subtitulo"/>
                             <field name="referencia"/>
                             <field name="base_legal"/>
+                            <field name="active_doc_id" invisible="not active_doc_id"/>
                         </group>
                     </group>
 
                     <notebook>
-                        <page string="Estrutura">
+                        <page string="Estrutura" invisible="edit_mode != 'structured'">
                             <group string="Pecas do Documento" col="4">
                                 <field name="incluir_peca_dfd" widget="boolean_toggle"/>
                                 <field name="incluir_peca_justificativa" widget="boolean_toggle"/>
@@ -34,7 +36,7 @@
                                 <field name="incluir_peca_nota_tecnica" widget="boolean_toggle"/>
                             </group>
                         </page>
-                        <page string="Conteudo">
+                        <page string="Conteudo" invisible="edit_mode != 'structured'">
                             <group>
                                 <field name="area_requisitante"/>
                                 <field name="objeto"/>
@@ -46,6 +48,19 @@
                                 <field name="observacoes_finais"/>
                             </group>
                         </page>
+                        <page string="Typst Manual" invisible="edit_mode != 'manual_typst'">
+                            <div class="alert alert-info" role="alert">
+                                Cole aqui um documento Typst completo ou abra o builder para editar o mesmo rascunho em tela cheia.
+                            </div>
+                            <field
+                                name="typst_source_manual"
+                                nolabel="1"
+                                placeholder="Cole o codigo Typst completo aqui."
+                                widget="ace"
+                                options="{'mode': 'text'}"
+                                style="min-height: 320px; font-family: monospace;"
+                            />
+                        </page>
                         <page string="Assinatura">
                             <group>
                                 <field name="incluir_assinatura" widget="boolean_toggle"/>
@@ -54,7 +69,7 @@
                                 <field name="gerar_pdf_imediatamente" widget="boolean_toggle"/>
                             </group>
                         </page>
-                        <page string="Previa Typst">
+                        <page string="Previa Typst" invisible="edit_mode != 'structured'">
                             <div class="alert alert-info" role="alert">
                                 Gere a previa sob demanda. O conteudo abaixo sera gravado em <code>typst_source</code> no documento do processo.
                             </div>
@@ -72,6 +87,13 @@
                         name="action_atualizar_previa"
                         string="Atualizar Previa"
                         type="object"
+                        invisible="edit_mode != 'structured'"
+                    />
+                    <button
+                        name="action_abrir_builder"
+                        string="Abrir no Builder"
+                        type="object"
+                        class="btn-secondary"
                     />
                     <button
                         name="action_criar_documento"

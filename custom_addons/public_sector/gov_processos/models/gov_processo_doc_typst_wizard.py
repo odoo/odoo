@@ -29,6 +29,20 @@ class GovProcessoDocTypstWizard(models.TransientModel):
         string="Modelo Typst",
         default="nota_tecnica",
     )
+    edit_mode = fields.Selection(
+        [
+            ("structured", "Estruturado"),
+            ("manual_typst", "Typst Manual"),
+        ],
+        string="Modo de Edicao",
+        default="structured",
+        required=True,
+    )
+    active_doc_id = fields.Many2one(
+        "gov.processo.doc",
+        string="Documento Ativo",
+        readonly=True,
+    )
     incluir_peca_dfd = fields.Boolean(string="Peca DFD")
     incluir_peca_justificativa = fields.Boolean(string="Peca Justificativa")
     incluir_peca_etp = fields.Boolean(string="Peca ETP")
@@ -73,6 +87,7 @@ class GovProcessoDocTypstWizard(models.TransientModel):
         string="Gerar PDF apos criar",
         default=True,
     )
+    typst_source_manual = fields.Text(string="Codigo Typst Completo")
     typst_preview = fields.Text(
         string="Previa Typst",
         readonly=True,
@@ -213,23 +228,101 @@ class GovProcessoDocTypstWizard(models.TransientModel):
             "piece_keys": self._get_selected_piece_keys(),
         }
 
+    def _build_structured_typst_source(self):
+        self.ensure_one()
+        return self.typst_preview or GovTypstDocumentBuilder.build_document(self._build_payload())
+
+    def _get_manual_typst_source(self, allow_builder_seed=False):
+        self.ensure_one()
+        manual_source = self.typst_source_manual or ""
+        if manual_source.strip():
+            return manual_source
+        active_doc = self.active_doc_id.exists()
+        if active_doc and (active_doc.typst_source or "").strip():
+            return active_doc.typst_source
+        if allow_builder_seed:
+            return self._build_structured_typst_source()
+        return manual_source
+
+    def _get_effective_typst_source(self, allow_builder_seed=False):
+        self.ensure_one()
+        if self.edit_mode == "manual_typst":
+            return self._get_manual_typst_source(allow_builder_seed=allow_builder_seed)
+        return self._build_structured_typst_source()
+
+    def _build_snapshot_payload(self):
+        self.ensure_one()
+        return {
+            "wizard_edit_mode": self.edit_mode,
+            "payload": self._build_payload(),
+            "active_doc_id": self.active_doc_id.id or False,
+        }
+
+    def _prepare_document_vals(self, *, allow_builder_seed=False):
+        self.ensure_one()
+        typst_source = self._get_effective_typst_source(allow_builder_seed=allow_builder_seed)
+        return {
+            "processo_id": self.processo_id.id,
+            "doc_type": self.doc_type,
+            "name": self.name,
+            "typst_source": typst_source,
+            "latex_source": self.source_doc_id.latex_source if self.source_doc_id else False,
+            "render_mode": "manual_source",
+            "dados_snapshot": json.dumps(
+                self._build_snapshot_payload(),
+                ensure_ascii=False,
+                indent=2,
+            ),
+            "dfd_area_requisitante": self.area_requisitante,
+            "dfd_objeto": self.objeto,
+            "dfd_justificativa": self.justificativa,
+        }
+
+    def _get_changed_document_vals(self, doc, vals):
+        self.ensure_one()
+        changed_vals = {}
+        for field_name, value in vals.items():
+            if doc[field_name] != value:
+                changed_vals[field_name] = value
+        return changed_vals
+
+    def _ensure_active_document(self, *, allow_builder_seed=False):
+        self.ensure_one()
+        vals = self._prepare_document_vals(allow_builder_seed=allow_builder_seed)
+        doc = self.active_doc_id.exists()
+        if doc:
+            if doc.state == "assinado":
+                raise UserError("O documento ativo ja esta assinado e nao pode ser reutilizado.")
+            changed_vals = self._get_changed_document_vals(doc, vals)
+            if changed_vals:
+                changed_vals["change_reason"] = "Documento ativo sincronizado pelo wizard Typst"
+                doc.write(changed_vals)
+        else:
+            doc = self.env["gov.processo.doc"].create(vals)
+            self.active_doc_id = doc.id
+        return doc
+
     def _validate_wizard_inputs(self):
         self.ensure_one()
         missing = []
         if not self.processo_id:
             missing.append("Processo")
-        if not self.modelo_typst:
-            missing.append("Modelo Typst")
         if not self.doc_type:
             missing.append("Tipo de Documento")
         if not (self.name or "").strip():
             missing.append("Nome do Documento")
-        if not (self.titulo or "").strip():
-            missing.append("Titulo")
-        if not (self.objeto or "").strip():
-            missing.append("Objeto")
-        if not self._get_selected_piece_keys():
-            missing.append("Pecas do documento")
+        if self.edit_mode == "manual_typst":
+            if not (self._get_manual_typst_source() or "").strip():
+                missing.append("Codigo Typst Completo")
+        else:
+            if not self.modelo_typst:
+                missing.append("Modelo Typst")
+            if not (self.titulo or "").strip():
+                missing.append("Titulo")
+            if not (self.objeto or "").strip():
+                missing.append("Objeto")
+            if not self._get_selected_piece_keys():
+                missing.append("Pecas do documento")
         if missing:
             raise UserError(
                 "Preencha os campos obrigatorios antes de criar o documento: "
@@ -238,8 +331,10 @@ class GovProcessoDocTypstWizard(models.TransientModel):
 
     def action_atualizar_previa(self):
         for wizard in self:
+            if wizard.edit_mode == "manual_typst":
+                raise UserError("A previa automatica esta disponivel apenas no modo estruturado.")
             wizard._validate_wizard_inputs()
-            wizard.typst_preview = GovTypstDocumentBuilder.build_document(wizard._build_payload())
+            wizard.typst_preview = wizard._build_structured_typst_source()
         return {
             "type": "ir.actions.act_window",
             "res_model": "gov.processo.doc.typst.wizard",
@@ -248,24 +343,23 @@ class GovProcessoDocTypstWizard(models.TransientModel):
             "target": "new",
         }
 
+    def action_abrir_builder(self):
+        self.ensure_one()
+        if not self.processo_id:
+            raise UserError("Selecione um processo antes de abrir o builder.")
+        if not self.doc_type:
+            raise UserError("Informe o tipo do documento antes de abrir o builder.")
+        if not (self.name or "").strip():
+            raise UserError("Informe o nome do documento antes de abrir o builder.")
+        doc = self._ensure_active_document(allow_builder_seed=True)
+        self.active_doc_id = doc.id
+        return doc._build_construtor_visual_action(initial_mode="typst")
+
     def action_criar_documento(self):
         self.ensure_one()
         self._validate_wizard_inputs()
-        typst_source = self.typst_preview or GovTypstDocumentBuilder.build_document(self._build_payload())
-        doc = self.env["gov.processo.doc"].create(
-            {
-                "processo_id": self.processo_id.id,
-                "doc_type": self.doc_type,
-                "name": self.name,
-                "typst_source": typst_source,
-                "latex_source": self.source_doc_id.latex_source if self.source_doc_id else False,
-                "render_mode": "manual_source",
-                "dados_snapshot": json.dumps(self._build_payload(), ensure_ascii=False, indent=2),
-                "dfd_area_requisitante": self.area_requisitante,
-                "dfd_objeto": self.objeto,
-                "dfd_justificativa": self.justificativa,
-            }
-        )
+        doc = self._ensure_active_document()
+        self.active_doc_id = doc.id
         if self.gerar_pdf_imediatamente:
             doc.action_gerar_pdf()
         return {

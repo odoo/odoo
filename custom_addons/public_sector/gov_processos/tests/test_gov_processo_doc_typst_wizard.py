@@ -88,3 +88,52 @@ class TestGovProcessoDocTypstWizard(TransactionCase):
         self.assertIn("Urgencia comprovada", doc.typst_source)
         self.assertIn("Valor estimado", doc.typst_source)
         self.assertTrue(doc.dados_snapshot)
+
+    def test_open_builder_creates_active_document_for_manual_typst(self):
+        wizard = self.env["gov.processo.doc.typst.wizard"].create(
+            {
+                "processo_id": self.processo.id,
+                "source_doc_id": self.source_doc.id,
+                "edit_mode": "manual_typst",
+                "doc_type": "outro",
+                "name": "Minuta Manual",
+                "titulo": "Minuta Manual",
+                "objeto": "Objeto inicial.",
+                "typst_source_manual": '= "Documento manual"\n',
+                "gerar_pdf_imediatamente": False,
+            }
+        )
+
+        action = wizard.action_abrir_builder()
+
+        self.assertTrue(wizard.active_doc_id)
+        self.assertEqual(action["type"], "ir.actions.client")
+        self.assertEqual(action["tag"], "gov_document_builder")
+        self.assertEqual(action["params"]["doc_id"], wizard.active_doc_id.id)
+        self.assertEqual(action["params"]["initial_mode"], "typst")
+        self.assertEqual(wizard.active_doc_id.typst_source, '= "Documento manual"\n')
+
+    def test_create_document_reuses_active_document_in_manual_mode(self):
+        wizard = self.env["gov.processo.doc.typst.wizard"].create(
+            {
+                "processo_id": self.processo.id,
+                "source_doc_id": self.source_doc.id,
+                "edit_mode": "manual_typst",
+                "doc_type": "outro",
+                "name": "Documento Ativo Reutilizado",
+                "titulo": "Documento Ativo Reutilizado",
+                "objeto": "Objeto inicial.",
+                "gerar_pdf_imediatamente": False,
+            }
+        )
+
+        wizard.action_abrir_builder()
+        active_doc = wizard.active_doc_id
+        active_doc.write({"typst_source": '= "Alterado no builder"\n'})
+
+        action = wizard.action_criar_documento()
+        doc = self.env["gov.processo.doc"].browse(action["res_id"])
+
+        self.assertEqual(doc, active_doc)
+        self.assertEqual(doc.name, "Documento Ativo Reutilizado")
+        self.assertEqual(doc.typst_source, '= "Alterado no builder"\n')

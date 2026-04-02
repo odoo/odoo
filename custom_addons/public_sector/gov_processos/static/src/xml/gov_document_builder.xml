@@ -16,18 +16,30 @@
       </div>
       <div class="gov-builder-topbar-center">
         <span class="gov-builder-title">✦ Construtor Visual de Documento</span>
+        <div class="gov-builder-mode-switch">
+          <button class="gov-btn"
+                  t-att-class="state.editMode === 'visual' ? 'gov-btn-primary' : 'gov-btn-secondary'"
+                  t-on-click="() => this.setEditMode('visual')">
+            <i class="fa fa-th-large"/> Visual
+          </button>
+          <button class="gov-btn"
+                  t-att-class="state.editMode === 'typst' ? 'gov-btn-primary' : 'gov-btn-secondary'"
+                  t-on-click="() => this.setEditMode('typst')">
+            <i class="fa fa-code"/> Typst
+          </button>
+        </div>
       </div>
       <div class="gov-builder-topbar-right">
-        <span class="gov-builder-badge" t-esc="blockCount + ' blocos'"/>
+        <span class="gov-builder-badge" t-esc="builderBadge"/>
         <button class="gov-btn gov-btn-secondary" t-on-click="onGeneratePdf"
-                t-att-disabled="state.saving">
+                t-att-disabled="state.saving or isLocked">
           <i class="fa fa-file-pdf-o"/> Gerar PDF
         </button>
         <button class="gov-btn gov-btn-primary" t-on-click="onSave"
-                t-att-disabled="state.saving">
+                t-att-disabled="state.saving or isLocked">
           <i t-att-class="state.saving ? 'fa fa-spinner fa-spin' : 'fa fa-save'"/>
           <t t-if="state.saving">Salvando...</t>
-          <t t-else="">Salvar Layout</t>
+          <t t-else="">Salvar Documento</t>
         </button>
       </div>
     </div>
@@ -39,7 +51,7 @@
     </div>
 
     <!-- MAIN LAYOUT -->
-    <div t-else="" class="gov-builder-layout">
+    <div t-elif="state.editMode === 'visual'" class="gov-builder-layout">
 
       <!-- SIDEBAR: catálogo de blocos -->
       <div class="gov-builder-sidebar">
@@ -159,6 +171,28 @@
           <p>Arraste blocos da biblioteca ou clique neles para adicionar</p>
           <p class="gov-canvas-empty-hint">Cada bloco representa uma seção do documento</p>
         </div>
+      </div>
+    </div>
+
+    <div t-else="" class="gov-builder-editor-wrap">
+      <div class="gov-typst-panel">
+        <div class="gov-typst-panel-head">
+          <div>
+            <div class="gov-typst-panel-title">Codigo Typst Completo</div>
+            <div class="gov-typst-panel-hint">
+              O conteúdo salvo aqui atualiza diretamente o <code>typst_source</code> do documento.
+            </div>
+          </div>
+          <span class="gov-builder-badge">Fonte principal do PDF</span>
+        </div>
+        <textarea
+          class="gov-typst-textarea"
+          spellcheck="false"
+          t-att-readonly="isLocked"
+          t-att-value="state.typstSource"
+          t-on-input="onTypstInput"
+          placeholder="Cole ou edite o documento Typst completo aqui."
+        />
       </div>
     </div>
 
