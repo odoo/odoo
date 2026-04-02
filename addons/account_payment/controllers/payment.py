@@ -36,25 +36,25 @@ class PaymentPortal(payment_portal.PaymentPortal):
         return self._process_transaction(partner_sudo.id, invoice_sudo.currency_id.id, [invoice_id], False, **kwargs)
 
     @route('/invoice/transaction/overdue', type='jsonrpc', auth='public')
-    def overdue_invoices_transaction(self, payment_reference, **kwargs):
+    def overdue_invoices_transaction(self, payment_reference, partner_id=None, overdue_invoice_ids='', **kwargs):
         """ Create a draft transaction for overdue invoices and return its processing values.
 
         :param str payment_reference: The reference to the current payment
+        :param str partner_id: The id of the partner
+        :param str overdue_invoice_ids: coma-separated ids of the target overdue invoices
         :param dict kwargs: Locally unused data passed to `_create_transaction`
         :return: The mandatory values for the processing of the transaction
         :rtype: dict
         :raise: ValidationError if the user is not logged in, or all the overdue invoices don't share the same currency.
         """
-        logged_in = not request.env.user._is_public()
-        if not logged_in:
-            raise ValidationError(_("Please log in to pay your overdue invoices"))
-        partner = request.env.user.partner_id
-        overdue_invoices = request.env['account.move'].search(self._get_overdue_invoices_domain())
+        partner_id = (partner_id and int(partner_id)) or request.env.user.partner_id.id
+        overdue_invoice_ids = tuple(int(overdue_invoice_id) for overdue_invoice_id in overdue_invoice_ids.split(','))
+        overdue_invoices = request.env['account.move'].sudo().browse(overdue_invoice_ids)
         currencies = overdue_invoices.mapped('currency_id')
         if not all(currency == currencies[0] for currency in currencies):
             raise ValidationError(_("Impossible to pay all the overdue invoices if they don't share the same currency."))
         self._validate_transaction_kwargs(kwargs)
-        return self._process_transaction(partner.id, currencies[0].id, overdue_invoices.ids, payment_reference, **kwargs)
+        return self._process_transaction(partner_id, currencies[0].id, overdue_invoice_ids, payment_reference, **kwargs)
 
     def _process_transaction(self, partner_id, currency_id, invoice_ids, payment_reference, **kwargs):
         kwargs.update({
