@@ -3,9 +3,15 @@
 
     <t t-name="web.MonetaryField">
         <span t-if="this.props.readonly" t-out="this.formattedValue" />
-        <div t-else="" class="o_input_box">
-            <span t-if="!this.props.hideSymbol and this.currency" t-attf-class="o_input_box_overlay_{{ this.currency.position === 'before' ? 'start' : 'end' }}" t-out="this.currencySymbol"/>
+        <div t-else="" class="text-nowrap d-inline-flex w-100 align-items-baseline position-relative">
+            <span class="o_input position-absolute pe-none d-flex w-100">
+                <span t-if="!this.props.hideSymbol and this.currency and this.currency.position === 'before'" t-out="this.currencySymbol + nbsp"/>
+                <span class="opacity-0 d-inline-block overflow-hidden mw-100 o_monetary_ghost_value" t-out="this.state.value"/>
+                <span t-if="!this.props.hideSymbol and this.currency and this.currency.position === 'after'" t-out="nbsp + this.currencySymbol"/>
+            </span>
+            <span class="opacity-0" t-if="!this.props.hideSymbol and this.currency and this.currency.position === 'before'" t-out="this.currencySymbol + nbsp"/>
             <input t-custom-ref="numpadDecimal" t-on-input="this.onInput" t-att-id="this.props.id" t-att-type="this.props.inputType" class="o_input flex-grow-1 flex-shrink-1" autocomplete="off"/>
+            <span class="opacity-0" t-if="!this.props.hideSymbol and this.currency and this.currency.position === 'after'" t-out="nbsp + this.currencySymbol"/>
         </div>
     </t>
 

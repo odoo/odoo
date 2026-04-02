@@ -99,24 +99,28 @@
                         </h1>
                     </div>
                     <group>
-                        <div>
-                            <div class="o_input_box">
-                                <i class="o_input_box_overlay_start fa fa-user" title="Customer" name="partner_id"/>
+                        <group>
+                            <label for="partner_id" class="d-md-none"/>
+                            <div class="d-flex align-items-baseline">
+                                <i class="d-none d-md-inline fa fa-user me-2" title="Customer" name="partner_id"/>
                                 <field name="partner_id" nolabel="1" widget="res_partner_many2one" placeholder="Select Customer" context="{'show_address': True}"/>
                             </div>
-                            <div class="o_input_box" invisible="not partner_phone">
-                                <i class="o_input_box_overlay_start fa fa-phone" title="Phone"/>
+                            <label for="partner_phone" class="d-md-none" invisible="not partner_phone"/>
+                            <div class="d-flex align-items-baseline" invisible="not partner_phone">
+                                <i class="d-none d-md-inline fa fa-user me-2 fa fa-phone" title="Phone"/>
                                 <field name="partner_phone" nolabel="1" widget="phone"/>
                             </div>
-                            <div class="o_input_box" invisible="not partner_email">
-                                <i class="o_input_box_overlay_start fa fa-envelope" title="Email"/>
+                            <label for="partner_email" class="d-md-none" invisible="not partner_email"/>
+                            <div class="d-flex align-items-baseline" invisible="not partner_email">
+                                <i class="d-none d-md-inline fa fa-user me-2 fa fa-envelope" title="Email"/>
                                 <field name="partner_email" nolabel="1" widget="email"/>
                             </div>
-                            <div class="o_input_box">
-                                <i class="o_input_box_overlay_start fa fa-tag" title="Tags"/>
+                            <label for="tag_ids" class="d-md-none"/>
+                            <div class="d-flex align-items-baseline">
+                                <i class="d-none d-md-inline fa fa-user me-2 fa fa-tag" title="Tags"/>
                                 <field name="tag_ids" nolabel="1" widget="many2many_tags" placeholder="Select Tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                             </div>
-                        </div>
+                        </group>
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="user_id" string="Project Manager" widget="many2one_avatar_user" readonly="not active" domain="[('share', '=', False)]"/>

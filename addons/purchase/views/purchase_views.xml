@@ -239,7 +239,7 @@
                             </div>
                             <field name="receipt_reminder_email" string="Ask confirmation" widget="boolean_toggle" groups="purchase.group_send_reminder" />
                             <label for="reminder_date_before_receipt" string="Days before confirmation" invisible="not receipt_reminder_email" groups="purchase.group_send_reminder" />
-                            <div name="reminder" class="o_input_box d-flex"
+                            <div name="reminder" class="d-flex"
                                  invisible="not receipt_reminder_email" groups="purchase.group_send_reminder"
                                  title="Automatically send a confirmation email to the vendor X days before the expected receipt date, asking him to confirm the exact date.">
                                 <field name="reminder_date_before_receipt" />

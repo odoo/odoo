@@ -540,21 +540,18 @@
                                groups="product.group_product_pricelist"
                                invisible="not has_active_pricelist"/>
                         <div groups="product.group_product_pricelist"
-                             class="o_input_box"
+                             class="o_row"
                              invisible="not has_active_pricelist">
                             <field
                                 name="pricelist_id"
                                 options="{'no_open': True, 'no_create': True}"
                                 readonly="state in ['cancel', 'sale']"/>
-                            <button string="Update Prices" name="action_update_prices" type="object"
-                                data-tooltip="Recompute all prices based on this pricelist"
-                                class="o_input_box_overlay_end btn btn-link"
+                            <button name="action_update_prices" type="object"
+                                string="Update Prices"
+                                help="Recompute all prices based on this pricelist"
+                                class="btn-link mb-1 px-0" icon="fa-refresh"
                                 confirm="This will update the unit price of all products based on the new pricelist."
-                                invisible="not show_update_pricelist or state in ['sale', 'cancel']"
-                            >
-                                <i class="fa fa-refresh" />
-                                <span class="d-touch-none ms-1">Update Prices</span>
-                            </button>
+                                invisible="not show_update_pricelist or state in ['sale', 'cancel']"/>
                         </div>
                         <field name="currency_id" invisible="1"/>
                         <field
@@ -568,11 +565,10 @@
                             options="{'no_open': True, 'no_create': True}"/>
                         <label for="commitment_date" invisible="state == 'draft'"/>
                         <label for="commitment_date" string="Delivery Date" invisible="state != 'draft'"/>
-                        <div name="commitment_date_div" class="o_input_box">
+                        <div name="commitment_date_div" class="o_row align-items-center">
                             <field name="commitment_date" readonly="state == 'cancel' or locked"/>
                             <field
                                 name="delivery_status"
-                                class="o_input_box_overlay_end"
                                 widget="badge"
                                 decoration-success="delivery_status == 'full'"
                                 decoration-warning="delivery_status == 'partial'"
@@ -650,17 +646,15 @@
                                             readonly="qty_invoiced &gt; 0"/>
                                         <t groups="sale.group_discount_per_so_line">
                                             <label for="discount"/>
-                                            <div class="o_input_box" name="discount">
-                                                <field name="discount"/>
-                                                <span class="o_input_box_overlay_end o_input_box_overlay_inline">%</span>
+                                            <div name="discount">
+                                                <field name="discount" class="oe_inline"/> %
                                             </div>
                                         </t>
                                     </group>
                                     <group invisible="display_type">
                                         <label for="customer_lead"/>
-                                        <div name="lead" class="o_input_box">
-                                            <field name="customer_lead" readonly="product_type != 'consu'"/>
-                                            <span class="o_input_box_overlay_end o_input_box_overlay_inline">days</span>
+                                        <div name="lead">
+                                            <field name="customer_lead" class="oe_inline" readonly="product_type != 'consu'"/> days
                                         </div>
                                         <field name="analytic_distribution" widget="analytic_distribution"
                                            groups="analytic.group_analytic_accounting"
@@ -973,20 +967,17 @@
                             <group name="sale_info" string="Invoicing">
                                 <field name="show_update_fpos" invisible="1"/>
                                 <label for="fiscal_position_id"/>
-                                <div class="o_input_box">
+                                <div class="o_row">
                                     <field name="fiscal_position_id" options="{'no_create': True}"/>
                                     <button
                                         string="Update Taxes"
                                         name="action_update_taxes"
                                         type="object"
-                                        data-tooltip="Recompute all taxes based on this fiscal position"
-                                        class="o_input_box_overlay_end btn btn-link"
+                                        help="Recompute all taxes based on this fiscal position"
+                                        class="btn-link mb-1 px-0"
+                                        icon="fa-refresh"
                                         confirm="This will update all taxes based on the currently selected fiscal position."
-                                        invisible="not show_update_fpos or state in ['sale', 'cancel']"
-                                    >
-                                        <i class="fa fa-refresh" />
-                                        <span class="d-touch-none ms-1">Update Taxes</span>
-                                    </button>
+                                        invisible="not show_update_fpos or state in ['sale', 'cancel']"/>
                                 </div>
                                 <field name="preferred_payment_method_line_id"/>
                                 <field name="partner_invoice_id" groups="!account.group_delivery_invoice_address" invisible="1"/>

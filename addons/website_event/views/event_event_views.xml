@@ -16,10 +16,12 @@
                     <field name="publish_on" widget="datetime"/>
                     <button name="action_unschedule" type="object" invisible="not publish_on">Unschedule</button>
                 </div>
-                <div colspan="2" class="o_row o_input_box">
-                    <label for="website_visibility" string="Visibility"/>
-                    <field name="website_visibility"/>
-                    <div class="o_input_box_overlay_end">
+                <label for="website_visibility" string="Visibility"/>
+                <div class="row">
+                    <div class="col-md-5 pe-md-0">
+                        <field name="website_visibility"/>
+                    </div>
+                    <div class="col-md-7 ps-md-0">
                         <button name="website_publish_button" type="object" string="Publish"
                             invisible="website_published or website_visibility == 'public'" class="btn btn-sm btn-link h-100 ms-2"/>
                         <span invisible="not website_published or website_visibility == 'public'" class="ms-2">

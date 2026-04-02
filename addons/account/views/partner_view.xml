@@ -58,13 +58,11 @@
                                 invisible="(not auto_apply and not foreign_vat) or not country_id or states_count == 0"/>
                             <label for="zip_from" string="Zip Range"/>
                             <div class="o_row" invisible="not auto_apply or not country_id">
-                                <div class="o_cell o_input_box">
-                                    <span class="o_input_box_overlay_start">From</span>
-                                    <field name="zip_from" />
+                                <div>
+                                    From <field name="zip_from" class="oe_inline"/>
                                 </div>
-                                <div class="o_cell o_input_box">
-                                    <span class="o_input_box_overlay_start">To</span>
-                                    <field name="zip_to" />
+                                <div>
+                                    To <field name="zip_to" class="oe_inline"/>
                                 </div>
                             </div>
                         </group>
