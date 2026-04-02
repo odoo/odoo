@@ -17,8 +17,8 @@ class TestHrHomeworkingHrEmployeeLocation(common.TransactionCase):
         cls.user_employee = mail_new_test_user(cls.env, login='david', groups='base.group_user')
 
         # Hr Data
-        Department = cls.env['hr.department'].with_context(tracking_disable=True)
-        WorkLocation = cls.env['hr.work.location'].with_context(tracking_disable=True)
+        Department = cls.env['hr.department']
+        WorkLocation = cls.env['hr.work.location']
         main_partner_id = cls.env.ref('base.main_partner')
 
         cls.rd_dept = Department.create({

@@ -37,7 +37,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         super(TestLeaveRequests, cls).setUpClass()
 
         # Make sure we have the rights to create, validate and delete the leaves, leave types and allocations
-        HrWorkEntryType = cls.env['hr.work.entry.type'].with_user(cls.user_hrmanager_id).with_context(tracking_disable=True)
+        HrWorkEntryType = cls.env['hr.work.entry.type'].with_user(cls.user_hrmanager_id)
 
         cls.holidays_type_1 = HrWorkEntryType.create({
             'name': 'NotLimitedHR',
@@ -1290,7 +1290,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             The objective is to check that it is not possible to place leaves
             for which the interval does not correspond to the interval of allocations.
         """
-        work_entry_type_A = self.env['hr.work.entry.type'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+        work_entry_type_A = self.env['hr.work.entry.type'].with_user(self.user_hrmanager_id).create({
             'name': 'Type A',
             'code': 'Type A',
             'requires_allocation': True,
@@ -1340,7 +1340,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         def run_validation_flow(leave_validation_type):
             HrWorkEntryType = self.env['hr.work.entry.type'].with_user(self.user_hrmanager_id)
-            work_entry_type = HrWorkEntryType.with_context(tracking_disable=True).create({
+            work_entry_type = HrWorkEntryType.create({
                 'name': leave_validation_type.capitalize(),
                 'code': leave_validation_type.capitalize(),
                 'leave_validation_type': leave_validation_type,

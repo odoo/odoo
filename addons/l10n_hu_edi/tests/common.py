@@ -224,7 +224,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
             'currency_id': self.company_data['company'].currency_id.id,
             'company_id': False,
         })
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_company.id,
             'pricelist_id': pricelist_huf.id,
             'order_line': [

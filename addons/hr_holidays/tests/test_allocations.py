@@ -363,7 +363,7 @@ class TestAllocations(TestHrHolidaysCommon):
             'unit_of_measure': 'hour',
         })
 
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
         })
 
