@@ -514,8 +514,12 @@ Please change the quantity done or the rounding precision of your unit of measur
                     move.forecast_availability = move.product_uom._compute_quantity(
                         move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
                 elif move.state == 'draft':
+                    free_qty = virtual_available_dict[key_virtual_available(move)][move.product_id.id]
+                    if float_compare(free_qty, move.product_qty, precision_rounding=move.product_id.uom_id.rounding) >= 0:
+                        move.forecast_availability = free_qty
+                        continue
                     # for move _is_consuming and in draft -> the forecast_availability > 0 if in stock
-                    move.forecast_availability = virtual_available_dict[key_virtual_available(move)][move.product_id.id] - move.product_qty
+                    move.forecast_availability = free_qty - move.product_qty
                 elif move.state in ('waiting', 'confirmed', 'partially_available'):
                     outgoing_unreserved_moves_per_warehouse[move.location_id.warehouse_id].add(move.id)
             elif move.picking_type_id.code == 'incoming':
