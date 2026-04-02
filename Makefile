@@ -163,7 +163,7 @@ CONFIG_FIND_CMD = find . \
 	studio-runtime-config studio-runtime-bootstrap studio-runtime-up studio-runtime-stop studio-runtime-logs studio-runtime-status studio-runtime-shell studio-runtime-sync-engine-url \
 	gov-runtime-config gov-runtime-bootstrap gov-runtime-up gov-runtime-stop gov-runtime-logs gov-runtime-status gov-runtime-shell \
 	dev-host-backup dev-host-restore-ktest \
-	assets-rebuild \
+	assets-rebuild tenant-assets-rescue assets-reset \
 	smoke troubleshoot up-smoke \
 	mobile-install mobile-doctor mobile-add-android mobile-add-ios \
 	mobile-sync mobile-open-android mobile-open-ios \
@@ -335,6 +335,7 @@ help:
 	@echo ""
 	@echo "Assets:"
 	@echo "  make assets-rebuild # Clear and rebuild Odoo web assets"
+	@echo "  make tenant-assets-rescue DB=<tenant> # Diagnose and recover a tenant after backend theme/assets breakage"
 	@echo "  make assets-reset   # Hard reset assets (DB + force 'web' module upgrade)"
 	@echo ""
 	@echo "Utility:"
@@ -1694,12 +1695,44 @@ assets-rebuild:
 	@$(COMPOSE) restart odoo
 	@echo "Assets reset complete. Do a hard refresh in browser (Ctrl+F5)."
 
+tenant-assets-rescue:
+	@$(MAKE) guard-prod-host
+	@if [ -z "$(DB)" ]; then \
+	  echo "Usage: make tenant-assets-rescue DB=<tenant>"; \
+	  exit 1; \
+	fi
+	@exists="$$(docker exec kodoo-db psql -U "$(PROD_DB_USER)" -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname='$(DB)'" 2>/dev/null | tr -d '[:space:]')"; \
+	if [ "$$exists" != "1" ]; then \
+	  echo "Database '$(DB)' was not found in the Docker PostgreSQL backend."; \
+	  exit 1; \
+	fi
+	@echo "== Tenant theme/assets rescue ($(DB)) =="
+	@theme_state="$$(docker exec kodoo-db psql -U "$(PROD_DB_USER)" -d "$(DB)" -tAc "SELECT COALESCE((SELECT state FROM ir_module_module WHERE name='multicolor_backend_theme'), 'missing')" 2>/dev/null | tr -d '[:space:]')"; \
+	backend_assets="$$(docker exec kodoo-db psql -U "$(PROD_DB_USER)" -d "$(DB)" -tAc "SELECT COUNT(*) FROM ir_attachment WHERE url LIKE '%web.assets_backend%'" 2>/dev/null | tr -d '[:space:]')"; \
+	echo "Detected multicolor_backend_theme state: $$theme_state"; \
+	echo "Detected web.assets_backend attachments: $$backend_assets"
+	@echo "-- Theme/module state --"
+	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -P pager=off -c "SELECT name, state, COALESCE(latest_version, '') AS latest_version, write_date FROM ir_module_module WHERE name IN ('multicolor_backend_theme', 'theme_liquid_glass', 'web') OR name ILIKE '%backend_theme%' ORDER BY name;"
+	@echo "-- Asset attachment state --"
+	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -P pager=off -c "SELECT COUNT(*) AS total_assets, COUNT(*) FILTER (WHERE url LIKE '%web.assets_backend%') AS backend_assets, COUNT(*) FILTER (WHERE url LIKE '%web.assets_web%') AS web_assets FROM ir_attachment WHERE url LIKE '/web/assets/%';"
+	@echo "-- Web config hints --"
+	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -P pager=off -c "SELECT key, value FROM ir_config_parameter WHERE key IN ('web.base.url', 'web.base.url.freeze', 'web.assets_hash') ORDER BY key;"
+	@echo "Clearing cached assets and running a real upgrade on module 'web'..."
+	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "DELETE FROM ir_attachment WHERE url LIKE '/web/assets/%' OR name LIKE 'web.assets_%';"
+	@$(PROD_RUNTIME_COMPOSE) up -d db odoo nginx >/dev/null
+	@$(PROD_RUNTIME_COMPOSE) exec -T odoo odoo -c /etc/odoo/odoo.conf -d "$(DB)" --http-port=9069 --gevent-port=9072 --stop-after-init -u web
+	@echo "Restarting Odoo..."
+	@$(COMPOSE) restart odoo
+	@echo "Tenant rescue complete. Hard refresh the browser (Ctrl+F5)."
+	@echo "If multicolor_backend_theme shows as 'uninstalled', recover the backend first and only then reinstall or replace the theme intentionally."
+
 assets-reset:
 	@$(MAKE) guard-prod-host
 	@echo "Hard resetting Odoo assets (DB + Upgrade force)..."
 	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "DELETE FROM ir_attachment WHERE url LIKE '/web/assets/%' OR name LIKE 'web.assets_%';"
-	@echo "Marking 'web' module for upgrade to force total bundle regeneration..."
-	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "UPDATE ir_module_module SET state='to upgrade' WHERE name='web';"
+	@echo "Running a real upgrade of module 'web' to force total bundle regeneration..."
+	@$(PROD_RUNTIME_COMPOSE) up -d db odoo nginx >/dev/null
+	@$(PROD_RUNTIME_COMPOSE) exec -T odoo odoo -c /etc/odoo/odoo.conf -d "$(DB)" --http-port=9069 --gevent-port=9072 --stop-after-init -u web
 	@echo "Restarting Odoo..."
 	@$(COMPOSE) restart odoo
 	@echo "Assets hard reset complete. The next page load will take longer while bundles are regenerated."

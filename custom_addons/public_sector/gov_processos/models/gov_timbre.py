@@ -4,6 +4,7 @@ import logging
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools.image import image_process
 
 _logger = logging.getLogger(__name__)
 
@@ -14,7 +15,17 @@ try:
 except Exception:
     _PIL_AVAILABLE = False
 
-CABECALHO_MAX_BYTES = 500 * 1024
+
+def _format_binary_size(size_bytes):
+    if size_bytes >= 1024 * 1024:
+        size_mb = size_bytes / (1024 * 1024)
+        if size_mb.is_integer():
+            return f"{int(size_mb)} MB"
+        return f"{size_mb:.1f} MB"
+    return f"{size_bytes // 1024} KB"
+
+
+CABECALHO_MAX_BYTES = 16 * 1024 * 1024
 RODAPE_MAX_BYTES = 300 * 1024
 CABECALHO_MAX_WIDTH = 800
 CABECALHO_MAX_HEIGHT = 200
@@ -22,6 +33,9 @@ RODAPE_MAX_WIDTH = 800
 RODAPE_MAX_HEIGHT = 100
 CABECALHO_ALTURA_DEFAULT = 3.0
 RODAPE_ALTURA_DEFAULT = 1.5
+CABECALHO_MAX_LABEL = _format_binary_size(CABECALHO_MAX_BYTES)
+RODAPE_MAX_LABEL = _format_binary_size(RODAPE_MAX_BYTES)
+JPEG_RESIZE_QUALITY = 95
 
 
 class GovTimbre(models.Model):
@@ -50,7 +64,8 @@ class GovTimbre(models.Model):
         string="Imagem do Cabecalho",
         help=(
             "PNG ou JPG. Largura: ate 800px. "
-            "Altura recomendada: ate 200px. Max: 500KB."
+            f"Altura recomendada: ate 200px. Max: {CABECALHO_MAX_LABEL}. "
+            "Imagens maiores sao redimensionadas automaticamente sem distorcer a proporcao."
         ),
     )
     cabecalho_img_fname = fields.Char("Nome do arquivo - Cabecalho")
@@ -64,7 +79,8 @@ class GovTimbre(models.Model):
         string="Imagem do Rodape",
         help=(
             "PNG ou JPG. Largura: ate 800px. "
-            "Altura recomendada: ate 100px. Max: 300KB."
+            f"Altura recomendada: ate 100px. Max: {RODAPE_MAX_LABEL}. "
+            "Imagens maiores sao redimensionadas automaticamente sem distorcer a proporcao."
         ),
     )
     rodape_img_fname = fields.Char("Nome do arquivo - Rodape")
@@ -84,6 +100,7 @@ class GovTimbre(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            self._prepare_upload_images(vals)
             if vals.get("is_default"):
                 ug_id = vals.get("ug_id") or self.env.company.id
                 conflitos = self.search(
@@ -103,6 +120,7 @@ class GovTimbre(models.Model):
         return records
 
     def write(self, vals):
+        self._prepare_upload_images(vals)
         if vals.get("is_default"):
             for rec in self:
                 ug_id = vals.get("ug_id", rec.ug_id.id)
@@ -201,27 +219,95 @@ class GovTimbre(models.Model):
                 label="rodape",
             )
 
-    def _validate_image(self, b64_data, max_bytes, max_width, max_height, label):
+    @api.model
+    def _prepare_upload_images(self, vals):
+        image_specs = {
+            "cabecalho_img": {
+                "max_width": CABECALHO_MAX_WIDTH,
+                "max_height": CABECALHO_MAX_HEIGHT,
+                "label": "cabecalho",
+            },
+            "rodape_img": {
+                "max_width": RODAPE_MAX_WIDTH,
+                "max_height": RODAPE_MAX_HEIGHT,
+                "label": "rodape",
+            },
+        }
+        for field_name, spec in image_specs.items():
+            if vals.get(field_name):
+                vals[field_name] = self._resize_image_upload_if_needed(vals[field_name], **spec)
+        return vals
+
+    def _decode_image_data(self, b64_data, label):
         try:
-            raw = base64.b64decode(b64_data)
+            return base64.b64decode(b64_data)
         except Exception as exc:
             raise ValidationError(f"Imagem de {label} invalida.") from exc
+
+    @staticmethod
+    def _detect_image_format(raw, label):
+        if raw.startswith(b"\x89PNG\r\n\x1a\n"):
+            return "png", "PNG"
+        if raw.startswith(b"\xff\xd8\xff"):
+            return "jpg", "JPEG"
+        raise ValidationError(
+            f"Formato da imagem de {label} invalido. "
+            "Use PNG ou JPG."
+        )
+
+    def _resize_image_upload_if_needed(self, b64_data, max_width, max_height, label):
+        raw = self._decode_image_data(b64_data, label)
+        fmt, output_format = self._detect_image_format(raw, label)
+
+        if not _PIL_AVAILABLE:
+            return b64_data
+
+        try:
+            with Image.open(io.BytesIO(raw)) as img:
+                width, height = img.size
+            if width <= max_width and height <= max_height:
+                return b64_data
+
+            resized = image_process(
+                raw,
+                size=(max_width, max_height),
+                verify_resolution=False,
+                quality=JPEG_RESIZE_QUALITY if output_format == "JPEG" else 0,
+                output_format=output_format,
+            )
+
+            with Image.open(io.BytesIO(resized)) as resized_img:
+                new_width, new_height = resized_img.size
+
+            _logger.info(
+                "Imagem de %s redimensionada automaticamente de %sx%s para %sx%s (%s).",
+                label,
+                width,
+                height,
+                new_width,
+                new_height,
+                fmt,
+            )
+            return base64.b64encode(resized).decode("ascii")
+        except ValidationError:
+            raise
+        except Exception as exc:
+            _logger.warning(
+                "Falha ao redimensionar imagem %s automaticamente: %s",
+                label,
+                exc,
+            )
+            return b64_data
+
+    def _validate_image(self, b64_data, max_bytes, max_width, max_height, label):
+        raw = self._decode_image_data(b64_data, label)
+        fmt, _output_format = self._detect_image_format(raw, label)
 
         size = len(raw)
         if size > max_bytes:
             raise ValidationError(
-                f"Imagem do {label} excede o limite de {max_bytes // 1024} KB "
-                f"({size // 1024} KB enviados)."
-            )
-
-        if raw.startswith(b"\x89PNG\r\n\x1a\n"):
-            fmt = "png"
-        elif raw.startswith(b"\xff\xd8\xff"):
-            fmt = "jpg"
-        else:
-            raise ValidationError(
-                f"Formato da imagem de {label} invalido. "
-                "Use PNG ou JPG."
+                f"Imagem do {label} excede o limite de {_format_binary_size(max_bytes)} "
+                f"({_format_binary_size(size)} enviados)."
             )
 
         if _PIL_AVAILABLE:

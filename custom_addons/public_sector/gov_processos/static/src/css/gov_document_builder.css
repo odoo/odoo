@@ -3,7 +3,8 @@
    Design: Modo escuro, premium, glassmorphism sutil, micro-animações
    ═══════════════════════════════════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/* Avoid remote font imports in backend bundles; they can break CSS parsing and
+   make the whole Odoo asset bundle fragile. */
 
 :root {
   --gov-bg:           #0f1117;

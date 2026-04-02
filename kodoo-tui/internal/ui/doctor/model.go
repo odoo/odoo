@@ -251,6 +251,20 @@ func buildModeDoctors(snapshot state.Snapshot) []modeDoctor {
 			CurrentIssue: currentIssue(devProjectCases(snapshot)),
 		},
 		{
+			Key:         "Tenant Theme / Assets",
+			Label:       "Tenant Theme / Assets Doctor",
+			Description: "Recuperacao de tenants com backend theme quebrado, bundles inconsistentes ou assets faltando.",
+			Primary: event.RequestMakeTargetMsg{
+				Target:          "tenant-assets-rescue",
+				Description:     "Diagnose the selected tenant and rebuild backend assets after a theme or bundle incident.",
+				RelevantKeys:    []string{"PROD_DB_NAME", "DOMAIN"},
+				SelectDatabase:  true,
+				DatabaseBackend: "docker",
+			},
+			Cases:        tenantThemeAssetCases(snapshot),
+			CurrentIssue: currentIssue(tenantThemeAssetCases(snapshot)),
+		},
+		{
 			Key:         "Local Diagnostic / Manager",
 			Label:       "Local Diagnostic Doctor",
 			Description: "Checagens de host, configuracao e database manager.",
@@ -485,6 +499,45 @@ func localDiagnosticCases(snapshot state.Snapshot) []doctorCase {
 		},
 	)
 	return cases
+}
+
+func tenantThemeAssetCases(snapshot state.Snapshot) []doctorCase {
+	currentTenant := strings.TrimSpace(snapshot.Runtime.ActiveDB)
+	currentSemsa := strings.EqualFold(currentTenant, "semsa")
+
+	return []doctorCase{
+		{
+			Severity: state.SeverityCritical,
+			Title:    "Backend theme foi removido e o tenant ficou com bundles incoerentes",
+			Symptom:  "O backend abre sem CSS/JS, com erros de assets, ou fica em tela quebrada logo apos trocar/desinstalar um tema backend.",
+			Cause:    "O tenant ainda referencia bundles antigos, mas o tema fornecedor ja nao esta mais instalado ou deixou de publicar seus assets.",
+			Fix:      "Escolha o banco afetado e rode make tenant-assets-rescue DB=<tenant> para diagnosticar o estado do tema, limpar ir_attachment, executar upgrade real do modulo web e reiniciar o Odoo.",
+			Current:  currentSemsa,
+		},
+		{
+			Severity: state.SeverityWarning,
+			Title:    "Chameleon backend theme aparece como uninstalled",
+			Symptom:  "multicolor_backend_theme deixa de aparecer como installed no tenant, e a interface que dependia dele perde o bundle esperado.",
+			Cause:    "Algum ajuste recente removeu o addon do tenant ou o deixou inconsistente em relacao ao cache de assets persistido no banco.",
+			Fix:      "Recupere primeiro o backend com tenant-assets-rescue; so depois reinstale o Chameleon ou substitua por outro tema de forma deliberada.",
+			Current:  currentSemsa,
+		},
+		{
+			Severity: state.SeverityWarning,
+			Title:    "web.assets_backend ficou zerado no banco do tenant",
+			Symptom:  "Consultas em ir_attachment mostram bundles web/public, mas nenhum web.assets_backend para o banco do cliente.",
+			Cause:    "O cache do backend nao foi recomposto depois da troca de tema, ou foi limpo parcialmente sem regeneracao completa.",
+			Fix:      "Use o doctor de tenant/theme/assets para forcar a limpeza do cache e o upgrade do modulo web no tenant selecionado.",
+		},
+		{
+			Severity: state.SeverityInfo,
+			Title:    "O problema esta em um tenant especifico, nao no stack inteiro",
+			Symptom:  "Outros bancos continuam abrindo normalmente, mas um cliente isolado fica sem assets ou com layout quebrado.",
+			Cause:    "Bundles de assets e estado de modulos vivem por banco; reiniciar o stack sem tratar o tenant afetado raramente basta.",
+			Fix:      "Selecione exatamente o banco afetado no Doctor para aplicar a recuperacao sem mexer nos outros tenants.",
+			Current:  currentTenant != "" && !currentSemsa,
+		},
+	}
 }
 
 type serviceSnapshot struct {
