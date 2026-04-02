@@ -145,6 +145,26 @@ registry.category("web_tour.tours").add("test_combo_prices", {
             { product: "Purple 3", attributes: [] },
         ]),
         ...commonSteps,
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Small Combo"),
+        ...ProductPage.setupCombo([{ product: "No Price 1", attributes: [] }], false), //Only one free and max so no need to click on add to cart
+        ...ProductPage.setupCombo([
+            { product: "Purple 1", attributes: [] },
+            { product: "Purple 2", attributes: [] },
+        ]),
+        ...commonSteps,
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("No Free Combo"),
+        ...ProductPage.setupCombo([
+            { product: "First no Free 1", attributes: [] },
+            { product: "First no Free 2", attributes: [] },
+        ]),
+        ...ProductPage.setupCombo([
+            { product: "Second no Free 1", attributes: [] },
+            { product: "Second no Free 1", attributes: [] },
+        ]),
+        ...ProductPage.setupCombo([{ product: "Third no Free 2", attributes: [] }]),
+        ...commonSteps,
     ],
 });
 
