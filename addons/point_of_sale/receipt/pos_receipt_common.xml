@@ -11,9 +11,11 @@
                         </td>
 
                         <td class="text-end top w-40" >
-                            <div>Tel: <t t-out="config['phone']"/></div>
-                            <div t-out="config['email']"/>
-                            <div t-out="config['website']"/>
+                            <div t-if="config['phone']">
+                                <div>Tel: <t t-out="config['phone']"/></div>
+                            </div>
+                            <div t-if="config['email']" t-out="config['email']"/>
+                            <div t-if="config['website']" t-out="config['website']"/>
                         </td>
                     </tr>
                     <tr>
