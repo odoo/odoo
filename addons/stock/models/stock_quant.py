@@ -922,7 +922,7 @@ class StockQuant(models.Model):
 
         # do full packaging reservation when it's needed
         if product_packaging_id and product_id.product_tmpl_id.categ_id.packaging_reserve_method == "full":
-            available_quantity = product_packaging_id._check_qty(available_quantity, product_id.uom_id, "DOWN")
+            available_quantity = product_packaging_id._check_qty(min(quantity, available_quantity), product_id.uom_id, "DOWN")
 
         quantity = min(quantity, available_quantity)
 
