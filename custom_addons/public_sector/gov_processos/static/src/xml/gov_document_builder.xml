@@ -178,27 +178,182 @@
     </div>
 
     <div t-else="" class="gov-builder-editor-wrap">
-      <div class="gov-typst-panel">
-        <div class="gov-typst-panel-head">
-          <div>
-            <div class="gov-typst-panel-title">Codigo Typst Completo</div>
-            <div class="gov-typst-panel-hint">
-              O conteúdo salvo aqui atualiza diretamente o <code>typst_source</code> do documento.
+      <div class="gov-typst-workbench">
+        <div class="gov-typst-panel">
+          <div class="gov-typst-panel-head">
+            <div>
+              <div class="gov-typst-panel-title">Codigo Typst Completo</div>
+              <div class="gov-typst-panel-hint">
+                O conteúdo salvo aqui atualiza diretamente o <code>typst_source</code> do documento.
+              </div>
+              <div class="gov-typst-panel-shortcuts">
+                Use o painel lateral para validar, depurar com IA, corrigir ou completar no cursor.
+              </div>
+            </div>
+            <div class="gov-typst-panel-side">
+              <img class="gov-typst-panel-art"
+                   src="/gov_processos/static/src/img/gov_builder_typst_panel.svg"
+                   alt="Ilustração do editor Typst"/>
+              <div class="gov-typst-panel-actions">
+                <span class="gov-builder-badge">Fonte principal do PDF</span>
+                <button class="gov-btn gov-btn-secondary" t-on-click="scrollTypstToTop">
+                  <i class="fa fa-arrow-up"/> Topo
+                </button>
+                <button class="gov-btn gov-btn-secondary" t-on-click="scrollTypstToBottom">
+                  <i class="fa fa-arrow-down"/> Fim
+                </button>
+              </div>
             </div>
           </div>
-          <img class="gov-typst-panel-art"
-               src="/gov_processos/static/src/img/gov_builder_typst_panel.svg"
-               alt="Ilustração do editor Typst"/>
-          <span class="gov-builder-badge">Fonte principal do PDF</span>
+          <textarea
+            class="gov-typst-textarea"
+            spellcheck="false"
+            t-ref="typstEditor"
+            t-att-readonly="isLocked"
+            t-att-value="state.typstSource"
+            t-on-input="onTypstInput"
+            t-on-paste="onTypstPaste"
+            placeholder="Cole ou edite o documento Typst completo aqui."
+          />
         </div>
-        <textarea
-          class="gov-typst-textarea"
-          spellcheck="false"
-          t-att-readonly="isLocked"
-          t-att-value="state.typstSource"
-          t-on-input="onTypstInput"
-          placeholder="Cole ou edite o documento Typst completo aqui."
-        />
+
+        <div class="gov-typst-assistant-card">
+          <div class="gov-typst-assistant-head">
+            <div>
+              <div class="gov-typst-panel-title">Assistente Typst</div>
+              <div class="gov-typst-panel-hint">
+                Validação local e apoio do Ollama do ai_gov para debug, correção e autocomplete.
+              </div>
+            </div>
+            <img class="gov-typst-assistant-art"
+                 src="/gov_processos/static/src/img/gov_builder_typst_ai.svg"
+                 alt="Ilustração do assistente Typst"/>
+          </div>
+
+          <div class="gov-typst-toolbar">
+            <span class="gov-builder-badge" t-if="state.assistantInfo" t-esc="assistantBadge"/>
+            <button class="gov-btn gov-btn-secondary"
+                    t-on-click="onQuickEscapeCurrency"
+                    t-att-disabled="isLocked or !hasCurrencyRisk">
+              <i class="fa fa-money"/> Escapar R$
+            </button>
+            <button class="gov-btn gov-btn-secondary"
+                    t-on-click="onValidateTypst"
+                    t-att-disabled="state.validatingTypst">
+              <i t-att-class="state.validatingTypst ? 'fa fa-spinner fa-spin' : 'fa fa-stethoscope'"/>
+              <t t-if="state.validatingTypst">Validando...</t>
+              <t t-else="">Validar</t>
+            </button>
+          </div>
+
+          <div class="gov-typst-assistant-section">
+            <label class="gov-typst-assistant-label">Pedido para a IA</label>
+            <textarea
+              class="gov-typst-assistant-prompt"
+              t-att-value="state.assistantPrompt"
+              t-on-input="onAssistantPromptInput"
+              placeholder="Ex.: explique o erro da tabela da seção 8; complete a checklist; corrija apenas o bloco selecionado."
+            />
+            <div class="gov-typst-assistant-footnote">
+              O autocomplete usa a posição atual do cursor ou a seleção ativa do editor.
+            </div>
+          </div>
+
+          <div class="gov-typst-toolbar gov-typst-toolbar--stacked">
+            <button class="gov-btn gov-btn-secondary"
+                    t-on-click="() => this.onRunTypstAssistant('debug')"
+                    t-att-disabled="state.assistantBusy">
+              <i t-att-class="state.assistantBusy and state.assistantMode === 'debug' ? 'fa fa-spinner fa-spin' : 'fa fa-bug'"/>
+              Diagnosticar IA
+            </button>
+            <button class="gov-btn gov-btn-secondary"
+                    t-on-click="() => this.onRunTypstAssistant('fix')"
+                    t-att-disabled="state.assistantBusy or isLocked">
+              <i t-att-class="state.assistantBusy and state.assistantMode === 'fix' ? 'fa fa-spinner fa-spin' : 'fa fa-magic'"/>
+              Corrigir com IA
+            </button>
+            <button class="gov-btn gov-btn-primary"
+                    t-on-click="() => this.onRunTypstAssistant('autocomplete')"
+                    t-att-disabled="state.assistantBusy or isLocked">
+              <i t-att-class="state.assistantBusy and state.assistantMode === 'autocomplete' ? 'fa fa-spinner fa-spin' : 'fa fa-plus-circle'"/>
+              Autocompletar IA
+            </button>
+          </div>
+
+          <div class="gov-typst-status-card">
+            <div class="gov-typst-status-head">
+              <span class="gov-typst-status-title">Saúde do documento</span>
+              <span t-att-class="typstStatusClass" t-esc="typstStatusLabel"/>
+            </div>
+            <div class="gov-typst-status-message">
+              <t t-esc="state.typstValidation?.compile_message or 'Ainda não houve uma validação recente do código.'"/>
+            </div>
+            <div class="gov-typst-status-meta" t-esc="typstStatsLabel"/>
+          </div>
+
+          <div class="gov-typst-status-card">
+            <div class="gov-typst-status-head">
+              <span class="gov-typst-status-title">Diagnósticos</span>
+              <span class="gov-builder-badge" t-esc="String(typstDiagnostics.length)"/>
+            </div>
+            <div t-if="typstDiagnostics.length" class="gov-typst-diagnostic-list">
+              <t t-foreach="typstDiagnostics" t-as="diagnostic" t-key="(diagnostic.code || 'diag') + '_' + diagnostic_index">
+                <div class="gov-typst-diagnostic-item"
+                     t-att-class="'gov-typst-diagnostic-item--' + (diagnostic.severity || 'info')">
+                  <div class="gov-typst-diagnostic-head">
+                    <span class="gov-typst-diagnostic-source">
+                      <t t-esc="diagnostic.source or 'local'"/>
+                    </span>
+                    <span class="gov-typst-diagnostic-location"
+                          t-if="diagnostic.line">
+                      <t t-esc="'L' + diagnostic.line + (diagnostic.column ? ':' + diagnostic.column : '')"/>
+                    </span>
+                  </div>
+                  <div class="gov-typst-diagnostic-message" t-esc="diagnostic.message"/>
+                  <div class="gov-typst-diagnostic-hint" t-if="diagnostic.hint" t-esc="diagnostic.hint"/>
+                  <pre class="gov-typst-diagnostic-excerpt" t-if="diagnostic.excerpt" t-esc="diagnostic.excerpt"/>
+                </div>
+              </t>
+            </div>
+            <div t-else="" class="gov-typst-empty-note">
+              Sem diagnósticos no momento. Valide o código ou peça ajuda à IA.
+            </div>
+          </div>
+
+          <div class="gov-typst-status-card" t-if="state.assistantResult or state.assistantBusy">
+            <div class="gov-typst-status-head">
+              <span class="gov-typst-status-title">Resposta da IA</span>
+              <span class="gov-builder-badge"
+                    t-if="state.assistantProvider or state.assistantModel"
+                    t-esc="(state.assistantProvider || 'ollama') + (state.assistantModel ? ' · ' + state.assistantModel : '')"/>
+            </div>
+            <div class="gov-typst-status-meta" t-if="state.assistantDurationMs">
+              <t t-esc="String(state.assistantDurationMs) + ' ms'"/>
+            </div>
+            <pre class="gov-typst-ai-result" t-if="state.assistantResult" t-esc="state.assistantResult"/>
+            <div t-else="" class="gov-typst-empty-note">
+              Aguardando resposta do assistente...
+            </div>
+            <div class="gov-typst-toolbar gov-typst-toolbar--stacked">
+              <button class="gov-btn gov-btn-primary"
+                      t-if="assistantCanApply"
+                      t-on-click="applyAssistantSuggestion">
+                <i class="fa fa-check"/> <t t-esc="assistantApplyLabel"/>
+              </button>
+              <button class="gov-btn gov-btn-secondary"
+                      t-if="state.assistantResult"
+                      t-on-click="clearAssistantResult">
+                <i class="fa fa-eraser"/> Limpar painel
+              </button>
+            </div>
+            <div class="gov-typst-inline-validation" t-if="state.assistantValidation">
+              <span class="gov-typst-inline-validation-title">Pré-validação da sugestão</span>
+              <span t-att-class="state.assistantValidation.compile_ok ? 'gov-typst-inline-validation-badge gov-typst-inline-validation-badge--success' : 'gov-typst-inline-validation-badge gov-typst-inline-validation-badge--warning'">
+                <t t-esc="state.assistantValidation.compile_ok ? 'Compila' : 'Revise antes de aplicar'"/>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

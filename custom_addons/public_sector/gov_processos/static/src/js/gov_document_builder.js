@@ -114,6 +114,7 @@ export class GovDocumentBuilder extends Component {
         this.notification = useService("notification");
         this.action = useService("action");
         this.canvasRef = useRef("canvas");
+        this.typstEditorRef = useRef("typstEditor");
 
         this.docId = this.props.action?.params?.doc_id;
         this.initialMode = this.props.action?.params?.initial_mode;
@@ -133,6 +134,20 @@ export class GovDocumentBuilder extends Component {
             searchQuery: "",
             editMode: "visual",
             typstSource: "",
+            typstValidation: null,
+            validatingTypst: false,
+            assistantBusy: false,
+            assistantInfo: null,
+            assistantPrompt: "",
+            assistantMode: "",
+            assistantResult: "",
+            assistantApplyText: "",
+            assistantProvider: "",
+            assistantModel: "",
+            assistantDurationMs: 0,
+            assistantValidation: null,
+            assistantSelectionStart: 0,
+            assistantSelectionEnd: 0,
         });
 
         onWillStart(() => this._loadDocument());
@@ -177,6 +192,7 @@ export class GovDocumentBuilder extends Component {
                 ((doc.typst_source || "").trim() && parsedBlocks.length === 0
                     ? "typst"
                     : "visual");
+            await this._loadTypstAssistantInfo();
         } catch (e) {
             this.notification.add(
                 _t("Erro ao carregar documento: ") + e.message,
@@ -303,10 +319,314 @@ export class GovDocumentBuilder extends Component {
 
     setEditMode(mode) {
         this.state.editMode = mode;
+        if (mode === "typst" && !this.state.assistantInfo) {
+            this._loadTypstAssistantInfo();
+        }
     }
 
     onTypstInput(ev) {
         this.state.typstSource = ev.target.value;
+        this._resetTypstValidation();
+    }
+
+    onAssistantPromptInput(ev) {
+        this.state.assistantPrompt = ev.target.value;
+    }
+
+    _resetTypstValidation() {
+        this.state.typstValidation = null;
+        this.state.assistantValidation = null;
+    }
+
+    _applyValidationPayload(validation) {
+        this.state.typstValidation = validation || null;
+    }
+
+    async _loadTypstAssistantInfo() {
+        if (!this.docId) {
+            return;
+        }
+        try {
+            const info = await this.orm.call(
+                "gov.processo.doc",
+                "action_typst_assistant_status",
+                [[this.docId]]
+            );
+            this.state.assistantInfo = info || null;
+        } catch (e) {
+            this.state.assistantInfo = null;
+            this.notification.add(
+                _t("Não foi possível carregar o assistente Typst: ") +
+                    this._getErrorMessage(e, _t("Odoo Server Error")),
+                { type: "warning" }
+            );
+        }
+    }
+
+    _getEditorSelection() {
+        const editor = this.typstEditorRef.el;
+        if (!editor) {
+            const length = this.state.typstSource.length;
+            return {
+                cursorPosition: length,
+                selectionStart: length,
+                selectionEnd: length,
+            };
+        }
+        return {
+            cursorPosition: editor.selectionStart ?? 0,
+            selectionStart: editor.selectionStart ?? 0,
+            selectionEnd: editor.selectionEnd ?? 0,
+        };
+    }
+
+    _collectErrorMessages(error) {
+        const queue = [error];
+        const messages = [];
+        const seen = new Set();
+        while (queue.length) {
+            const current = queue.shift();
+            if (!current || seen.has(current)) {
+                continue;
+            }
+            if (typeof current === "object") {
+                seen.add(current);
+            }
+            if (typeof current === "string") {
+                messages.push(current.trim());
+                continue;
+            }
+            if (current.message) {
+                messages.push(String(current.message).trim());
+            }
+            if (current.data?.message) {
+                messages.push(String(current.data.message).trim());
+            }
+            if (current.data?.debug) {
+                messages.push(String(current.data.debug).trim());
+            }
+            if (current.cause) {
+                queue.push(current.cause);
+            }
+            if (current.data) {
+                queue.push(current.data);
+            }
+        }
+        return messages.filter(Boolean);
+    }
+
+    _getErrorMessage(error, fallbackMessage) {
+        const messages = this._collectErrorMessages(error);
+        const preferredMessage = messages.find(
+            (message) =>
+                !["Odoo Server Error", "RPC_ERROR"].includes(message) &&
+                !message.startsWith("Traceback")
+        );
+        if (preferredMessage) {
+            return preferredMessage;
+        }
+        return fallbackMessage;
+    }
+
+    _buildViewsFromMode(viewMode) {
+        const modes = String(viewMode || "form")
+            .split(",")
+            .map((item) => item.trim())
+            .filter(Boolean);
+        return modes.length ? modes.map((mode) => [false, mode]) : [[false, "form"]];
+    }
+
+    onTypstPaste(ev) {
+        const previousLength = this.state.typstSource.length;
+        const pastedText = ev.clipboardData?.getData("text/plain") || "";
+        if (previousLength <= 32 && pastedText.length > 256) {
+            requestAnimationFrame(() => {
+                if (this.typstEditorRef.el) {
+                    this.typstEditorRef.el.scrollTop = 0;
+                }
+            });
+        }
+    }
+
+    onQuickEscapeCurrency() {
+        let replacements = 0;
+        const updatedSource = (this.state.typstSource || "").replace(
+            /(^|[^\\])(R\$)/gm,
+            (match, prefix) => {
+                replacements += 1;
+                return `${prefix}R\\$`;
+            }
+        );
+        if (!replacements) {
+            this.notification.add(_t("Nenhum 'R$' sem escape foi encontrado."), {
+                type: "info",
+            });
+            return;
+        }
+        this.state.typstSource = updatedSource;
+        this._resetTypstValidation();
+        this.notification.add(
+            _t("Correção rápida aplicada em ") + `${replacements} ` + _t("ocorrência(s) de R$."),
+            { type: "success" }
+        );
+        requestAnimationFrame(() => this.typstEditorRef.el?.focus());
+    }
+
+    scrollTypstToTop() {
+        if (this.typstEditorRef.el) {
+            this.typstEditorRef.el.scrollTo({ top: 0, behavior: "smooth" });
+            this.typstEditorRef.el.focus();
+        }
+    }
+
+    async onValidateTypst() {
+        if (!this.docId || this.state.validatingTypst) {
+            return;
+        }
+        this.state.validatingTypst = true;
+        try {
+            const validation = await this.orm.call(
+                "gov.processo.doc",
+                "action_typst_validate_source",
+                [[this.docId], this.state.typstSource]
+            );
+            this._applyValidationPayload(validation);
+            this.notification.add(
+                validation?.compile_ok
+                    ? _t("Validação Typst concluída.")
+                    : _t("Validação concluída com erros de compilação."),
+                { type: validation?.compile_ok ? "success" : "warning" }
+            );
+        } catch (e) {
+            this.notification.add(
+                _t("Erro ao validar Typst: ") +
+                    this._getErrorMessage(e, _t("Odoo Server Error")),
+                { type: "danger" }
+            );
+        } finally {
+            this.state.validatingTypst = false;
+        }
+    }
+
+    async onRunTypstAssistant(mode) {
+        if (!this.docId || this.state.assistantBusy) {
+            return;
+        }
+        this.state.assistantBusy = true;
+        this.state.assistantMode = mode;
+        this.state.assistantResult = "";
+        this.state.assistantApplyText = "";
+        this.state.assistantProvider = "";
+        this.state.assistantModel = "";
+        this.state.assistantDurationMs = 0;
+        this.state.assistantValidation = null;
+        this.state.assistantSelectionStart = 0;
+        this.state.assistantSelectionEnd = 0;
+        try {
+            const selection = this._getEditorSelection();
+            const result = await this.orm.call(
+                "gov.processo.doc",
+                "action_typst_ai_assist",
+                [
+                    [this.docId],
+                    this.state.typstSource,
+                    mode,
+                    this.state.assistantPrompt,
+                    selection.cursorPosition,
+                    selection.selectionStart,
+                    selection.selectionEnd,
+                ]
+            );
+            this.state.assistantResult = result?.output_text || "";
+            this.state.assistantApplyText = result?.apply_text || "";
+            this.state.assistantProvider = result?.provider || "";
+            this.state.assistantModel = result?.model_name || "";
+            this.state.assistantDurationMs = result?.duration_ms || 0;
+            this.state.assistantValidation = result?.result_validation || null;
+            this.state.assistantSelectionStart = result?.selection_start ?? 0;
+            this.state.assistantSelectionEnd = result?.selection_end ?? 0;
+            this._applyValidationPayload(result?.source_validation || null);
+            this.notification.add(
+                mode === "debug"
+                    ? _t("Diagnóstico IA concluído.")
+                    : _t("Sugestão IA pronta para revisão."),
+                { type: "success" }
+            );
+        } catch (e) {
+            this.notification.add(
+                _t("Erro no assistente Typst: ") +
+                    this._getErrorMessage(e, _t("Odoo Server Error")),
+                { type: "danger" }
+            );
+        } finally {
+            this.state.assistantBusy = false;
+        }
+    }
+
+    applyAssistantSuggestion() {
+        if (!this.state.assistantApplyText || this.isLocked) {
+            return;
+        }
+        const editor = this.typstEditorRef.el;
+        if (this.state.assistantMode === "fix") {
+            this.state.typstSource = this.state.assistantApplyText;
+            this._applyValidationPayload(this.state.assistantValidation);
+            this.notification.add(_t("Correção completa aplicada ao editor."), {
+                type: "success",
+            });
+            requestAnimationFrame(() => {
+                editor?.focus();
+                if (editor) {
+                    editor.selectionStart = 0;
+                    editor.selectionEnd = 0;
+                    editor.scrollTop = 0;
+                }
+            });
+            return;
+        }
+
+        if (this.state.assistantMode === "autocomplete") {
+            const start = this.state.assistantSelectionStart ?? this._getEditorSelection().selectionStart;
+            const end = this.state.assistantSelectionEnd ?? this._getEditorSelection().selectionEnd;
+            this.state.typstSource =
+                this.state.typstSource.slice(0, start) +
+                this.state.assistantApplyText +
+                this.state.typstSource.slice(end);
+            this._applyValidationPayload(this.state.assistantValidation);
+            this.notification.add(_t("Snippet inserido no cursor."), {
+                type: "success",
+            });
+            requestAnimationFrame(() => {
+                editor?.focus();
+                if (editor) {
+                    const caret = start + this.state.assistantApplyText.length;
+                    editor.selectionStart = caret;
+                    editor.selectionEnd = caret;
+                }
+            });
+        }
+    }
+
+    clearAssistantResult() {
+        this.state.assistantMode = "";
+        this.state.assistantResult = "";
+        this.state.assistantApplyText = "";
+        this.state.assistantProvider = "";
+        this.state.assistantModel = "";
+        this.state.assistantDurationMs = 0;
+        this.state.assistantValidation = null;
+        this.state.assistantSelectionStart = 0;
+        this.state.assistantSelectionEnd = 0;
+    }
+
+    scrollTypstToBottom() {
+        if (this.typstEditorRef.el) {
+            this.typstEditorRef.el.scrollTo({
+                top: this.typstEditorRef.el.scrollHeight,
+                behavior: "smooth",
+            });
+            this.typstEditorRef.el.focus();
+        }
     }
 
     // ── Salvar ──────────────────────────────────────────────────────────────-
@@ -348,7 +668,7 @@ export class GovDocumentBuilder extends Component {
             return true;
         } catch (e) {
             this.notification.add(
-                _t("Erro ao salvar: ") + e.message,
+                _t("Erro ao salvar: ") + this._getErrorMessage(e, _t("Odoo Server Error")),
                 { type: "danger" }
             );
             return false;
@@ -373,7 +693,7 @@ export class GovDocumentBuilder extends Component {
             });
         } catch (e) {
             this.notification.add(
-                _t("Erro ao gerar PDF: ") + e.message,
+                _t("Erro ao gerar PDF: ") + this._getErrorMessage(e, _t("Odoo Server Error")),
                 { type: "danger" }
             );
         }
@@ -384,7 +704,7 @@ export class GovDocumentBuilder extends Component {
         if (this.returnAction) {
             const action = { ...this.returnAction };
             if (action.type === "ir.actions.act_window" && !action.views) {
-                action.views = [[false, action.view_mode || "form"]];
+                action.views = this._buildViewsFromMode(action.view_mode);
             }
             this.action.doAction(action);
             return;
@@ -395,6 +715,7 @@ export class GovDocumentBuilder extends Component {
                 res_model: "gov.processo.doc",
                 res_id: this.docId,
                 view_mode: "form",
+                views: [[false, "form"]],
                 target: "current",
             });
         }
@@ -417,6 +738,73 @@ export class GovDocumentBuilder extends Component {
 
     get backLabel() {
         return this.returnAction ? _t("Voltar ao Wizard") : _t("Voltar");
+    }
+
+    get typstDiagnostics() {
+        return this.state.typstValidation?.diagnostics || [];
+    }
+
+    get typstStatusClass() {
+        const status = this.state.typstValidation?.status;
+        if (status === "error") {
+            return "gov-typst-status-badge gov-typst-status-badge--error";
+        }
+        if (status === "warning") {
+            return "gov-typst-status-badge gov-typst-status-badge--warning";
+        }
+        if (status === "success") {
+            return "gov-typst-status-badge gov-typst-status-badge--success";
+        }
+        return "gov-typst-status-badge";
+    }
+
+    get typstStatusLabel() {
+        const status = this.state.typstValidation?.status;
+        if (status === "error") {
+            return _t("Erros encontrados");
+        }
+        if (status === "warning") {
+            return _t("Compila, mas há alertas");
+        }
+        if (status === "success") {
+            return _t("Pronto para PDF");
+        }
+        if (status === "empty") {
+            return _t("Sem conteúdo");
+        }
+        return _t("Sem validação");
+    }
+
+    get typstStatsLabel() {
+        const stats = this.state.typstValidation?.stats;
+        if (!stats) {
+            return _t("Valide para ver linhas e caracteres.");
+        }
+        return `${stats.lines} ${_t("linhas")} · ${stats.chars} ${_t("caracteres")}`;
+    }
+
+    get assistantBadge() {
+        const provider = this.state.assistantInfo?.provider || "ollama";
+        const model = this.state.assistantInfo?.model_name || "";
+        return model ? `${provider} · ${model}` : provider;
+    }
+
+    get assistantCanApply() {
+        return (
+            !this.isLocked &&
+            !!this.state.assistantApplyText &&
+            ["fix", "autocomplete"].includes(this.state.assistantMode)
+        );
+    }
+
+    get assistantApplyLabel() {
+        return this.state.assistantMode === "autocomplete"
+            ? _t("Inserir no cursor")
+            : _t("Aplicar correção");
+    }
+
+    get hasCurrencyRisk() {
+        return /(^|[^\\])R\$/m.test(this.state.typstSource || "");
     }
 }
 

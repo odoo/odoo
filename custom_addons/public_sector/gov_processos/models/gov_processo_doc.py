@@ -2,6 +2,7 @@ import base64
 import hashlib
 import html
 import json
+import os
 import re
 
 from markupsafe import Markup, escape
@@ -34,6 +35,9 @@ class GovProcessoDoc(models.Model):
     _inherit = ["mail.thread"]
     _VERSION_SUFFIX_RE = re.compile(r"\s*\(v(\d+)\)\s*$", re.IGNORECASE)
     _HTML_TAG_RE = re.compile(r"<[^>]+>")
+    _TYPST_ERROR_LOCATION_RE = re.compile(r"main\.typ:(\d+):(\d+)")
+    _TYPST_ERROR_SUMMARY_RE = re.compile(r"error:\s*(.+)")
+    _TYPST_CURRENCY_RE = re.compile(r"(?<!\\)R\$")
 
     def _auto_init(self):
         result = super()._auto_init()
@@ -510,6 +514,19 @@ class GovProcessoDoc(models.Model):
         self.ensure_one()
         return self._build_construtor_visual_action()
 
+    def _build_act_window_views(self, view_mode):
+        mode = (view_mode or "form").strip()
+        return [(False, item.strip()) for item in mode.split(",") if item.strip()]
+
+    def _build_act_window_action(self, *, view_mode="form", **kwargs):
+        action = {
+            "type": "ir.actions.act_window",
+            "view_mode": view_mode,
+            **kwargs,
+        }
+        action["views"] = self._build_act_window_views(view_mode)
+        return action
+
     def _build_construtor_visual_action(self, initial_mode=False, extra_params=None):
         self.ensure_one()
         params = {
@@ -663,14 +680,13 @@ class GovProcessoDoc(models.Model):
             subtype_xmlid="mail.mt_note",
         )
 
-        return {
-            "type": "ir.actions.act_window",
-            "name": "Checklist Clonado",
-            "res_model": "gov.processo.doc",
-            "res_id": new_doc.id,
-            "view_mode": "form",
-            "target": "current",
-        }
+        return self._build_act_window_action(
+            name="Checklist Clonado",
+            res_model="gov.processo.doc",
+            res_id=new_doc.id,
+            view_mode="form",
+            target="current",
+        )
 
     def _get_scope_values_for_ai(self):
         self.ensure_one()
@@ -779,6 +795,397 @@ class GovProcessoDoc(models.Model):
                 "memory_top_k": 5,
             }
         )
+
+    def _build_fallback_ollama_config(self):
+        ollama_host = os.getenv("OLLAMA_HOST", "http://ollama:11434").rstrip("/")
+        return self.env["gov.ai.provider.config"].new(
+            {
+                "name": "Fallback Ollama Local",
+                "provider": "ollama",
+                "model_name": "llama3.2:1b",
+                "endpoint_url": f"{ollama_host}/api/generate",
+                "temperature": 0.1,
+                "max_tokens": 1800,
+                "timeout_seconds": 90,
+                "memory_top_k": 3,
+            }
+        )
+
+    def _get_typst_ai_config(self):
+        self.ensure_one()
+        Config = self.env["gov.ai.provider.config"]
+        company_id = self.processo_id.ug_id.id if self.processo_id and self.processo_id.ug_id else self.env.company.id
+        search_orders = [
+            [
+                ("company_id", "=", company_id),
+                ("active", "=", True),
+                ("provider", "=", "ollama"),
+                ("is_default", "=", True),
+            ],
+            [
+                ("company_id", "=", company_id),
+                ("active", "=", True),
+                ("provider", "=", "ollama"),
+            ],
+            [
+                ("active", "=", True),
+                ("provider", "=", "ollama"),
+                ("is_default", "=", True),
+            ],
+            [
+                ("active", "=", True),
+                ("provider", "=", "ollama"),
+            ],
+        ]
+        for domain in search_orders:
+            config = Config.search(domain, order="sequence, id", limit=1)
+            if config:
+                return config
+        return self._build_fallback_ollama_config()
+
+    def _strip_markdown_code_fences(self, text):
+        cleaned = (text or "").strip()
+        if not cleaned.startswith("```"):
+            return cleaned
+        lines = cleaned.splitlines()
+        if not lines:
+            return cleaned
+        first_line = lines[0].strip()
+        if not first_line.startswith("```"):
+            return cleaned
+        lines = lines[1:]
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
+        return "\n".join(lines).strip()
+
+    def _format_typst_diagnostics_for_prompt(self, diagnostics):
+        if not diagnostics:
+            return "- Nenhum diagnóstico local encontrado."
+        lines = []
+        for item in diagnostics[:8]:
+            location = ""
+            if item.get("line"):
+                location = f" linha {item['line']}"
+                if item.get("column"):
+                    location += f", coluna {item['column']}"
+            hint = f" | dica: {item['hint']}" if item.get("hint") else ""
+            lines.append(
+                f"- [{item.get('severity', 'info')}] {item.get('source', 'local')}{location}: "
+                f"{item.get('message', '')}{hint}"
+            )
+        return "\n".join(lines)
+
+    def _build_typst_focus_context(
+        self,
+        source,
+        cursor_position=0,
+        selection_start=0,
+        selection_end=0,
+    ):
+        text = source or ""
+        length = len(text)
+        cursor = max(0, min(int(cursor_position or 0), length))
+        start = max(0, min(int(selection_start or cursor), length))
+        end = max(start, min(int(selection_end or start), length))
+        selection = text[start:end]
+        before = text[max(0, start - 900):start]
+        after = text[end:min(length, end + 900)]
+        line_number = text[:cursor].count("\n") + 1 if text else 1
+        current_line = ""
+        if text:
+            lines = text.splitlines()
+            if 0 <= line_number - 1 < len(lines):
+                current_line = lines[line_number - 1]
+        return {
+            "cursor_position": cursor,
+            "selection_start": start,
+            "selection_end": end,
+            "selection_text": selection,
+            "before_cursor": before,
+            "after_cursor": after,
+            "line_number": line_number,
+            "current_line": current_line,
+        }
+
+    def _build_typst_local_diagnostics(self, source):
+        diagnostics = []
+        for line_number, line in enumerate((source or "").splitlines(), start=1):
+            for match in self._TYPST_CURRENCY_RE.finditer(line):
+                diagnostics.append(
+                    {
+                        "severity": "warning",
+                        "source": "heuristica",
+                        "code": "currency_escape",
+                        "line": line_number,
+                        "column": match.start() + 1,
+                        "message": "Símbolo monetário 'R$' sem escape pode quebrar o parser do Typst.",
+                        "hint": r"Use 'R\$' em valores monetários literais.",
+                        "excerpt": line.strip(),
+                    }
+                )
+        return diagnostics
+
+    def _build_typst_compile_diagnostics(self, source):
+        try:
+            GovTypstService.compile(source, timeout=45)
+            return {
+                "compile_ok": True,
+                "compile_message": "Typst validado com sucesso.",
+                "diagnostics": [],
+            }
+        except UserError as exc:
+            message = str(exc)
+            location = self._TYPST_ERROR_LOCATION_RE.search(message or "")
+            summary = self._TYPST_ERROR_SUMMARY_RE.search(message or "")
+            line = int(location.group(1)) if location else False
+            column = int(location.group(2)) if location else False
+            excerpt = ""
+            if line and source:
+                lines = source.splitlines()
+                if 0 <= line - 1 < len(lines):
+                    excerpt = lines[line - 1].strip()
+            diagnostic = {
+                "severity": "error",
+                "source": "compilador",
+                "code": "typst_compile_error",
+                "line": line,
+                "column": column,
+                "message": summary.group(1).strip() if summary else message[:240],
+                "hint": "Revise o trecho apontado e tente gerar o PDF novamente.",
+                "excerpt": excerpt,
+            }
+            return {
+                "compile_ok": False,
+                "compile_message": message,
+                "diagnostics": [diagnostic],
+            }
+
+    def action_typst_assistant_status(self):
+        self.ensure_one()
+        config = self._get_typst_ai_config()
+        return {
+            "enabled": True,
+            "provider": config.provider or "ollama",
+            "model_name": config.model_name or "",
+            "config_name": config.name or "",
+            "endpoint_url": config.endpoint_url or "",
+        }
+
+    def action_typst_validate_source(self, source=None):
+        self.ensure_one()
+        text = source if source is not None else self.typst_source or ""
+        stats = {
+            "chars": len(text or ""),
+            "lines": len((text or "").splitlines()) or (1 if text else 0),
+        }
+        if not (text or "").strip():
+            return {
+                "ok": False,
+                "status": "empty",
+                "compile_ok": False,
+                "compile_message": "Nenhum conteúdo Typst informado.",
+                "diagnostics": [
+                    {
+                        "severity": "warning",
+                        "source": "heuristica",
+                        "code": "empty_source",
+                        "line": False,
+                        "column": False,
+                        "message": "Cole ou escreva um código Typst antes de validar.",
+                        "hint": "Você pode começar do zero ou abrir um documento já existente.",
+                        "excerpt": "",
+                    }
+                ],
+                "stats": stats,
+            }
+
+        local_diagnostics = self._build_typst_local_diagnostics(text)
+        compile_result = self._build_typst_compile_diagnostics(text)
+        diagnostics = compile_result["diagnostics"] + local_diagnostics
+        has_errors = any(item.get("severity") == "error" for item in diagnostics)
+        has_warnings = any(item.get("severity") == "warning" for item in diagnostics)
+        status = "success"
+        if has_errors:
+            status = "error"
+        elif has_warnings:
+            status = "warning"
+        return {
+            "ok": compile_result["compile_ok"] and not has_errors,
+            "status": status,
+            "compile_ok": compile_result["compile_ok"],
+            "compile_message": compile_result["compile_message"],
+            "diagnostics": diagnostics,
+            "stats": stats,
+        }
+
+    def action_typst_ai_assist(
+        self,
+        source=None,
+        mode="debug",
+        user_instruction="",
+        cursor_position=0,
+        selection_start=0,
+        selection_end=0,
+    ):
+        self.ensure_one()
+        mode = (mode or "debug").strip().lower()
+        if mode not in {"debug", "fix", "autocomplete"}:
+            raise UserError("Modo do assistente Typst inválido.")
+
+        text = source if source is not None else self.typst_source or ""
+        if not text.strip() and mode != "autocomplete":
+            raise UserError("Cole um código Typst antes de pedir diagnóstico ou correção.")
+
+        validation = self.action_typst_validate_source(text)
+        config = self._get_typst_ai_config()
+        focus = self._build_typst_focus_context(
+            text,
+            cursor_position=cursor_position,
+            selection_start=selection_start,
+            selection_end=selection_end,
+        )
+        context = self._build_ai_context(template=False, memory_block="")
+        diagnostics_block = self._format_typst_diagnostics_for_prompt(validation.get("diagnostics"))
+        process_label = self.processo_id.name or self.processo_id.subject or ""
+        instruction = (user_instruction or "").strip()
+
+        system_prompt = (
+            "Você é um assistente especialista em Typst para documentos administrativos brasileiros. "
+            "Considere que o compilador recebe apenas um arquivo 'main.typ', sem imports externos. "
+            "Preserve o estilo e o conteúdo jurídico-administrativo do usuário. "
+            "Responda em português. "
+            "No modo 'debug', explique a causa provável e a correção mínima. "
+            "No modo 'fix', retorne apenas o Typst corrigido completo, sem markdown. "
+            "No modo 'autocomplete', retorne apenas o snippet Typst a inserir no cursor/seleção, sem markdown."
+        )
+
+        source_block = text
+        if mode == "autocomplete":
+            source_block = (
+                focus["before_cursor"][-2400:]
+                + "\n/* ponto de inserção */\n"
+                + (focus["selection_text"] or "")
+                + "\n/* após o cursor */\n"
+                + focus["after_cursor"][:1800]
+            )
+        elif mode == "debug" and len(source_block) > 9000:
+            source_block = (
+                focus["before_cursor"][-2000:]
+                + "\n/* trecho focado */\n"
+                + (focus["selection_text"] or focus["current_line"] or "")
+                + "\n/* continuação */\n"
+                + focus["after_cursor"][:2000]
+            )
+
+        user_prompt = (
+            f"Modo: {mode}\n"
+            f"Documento: {self.name or ''}\n"
+            f"Processo: {process_label}\n"
+            f"Modelo atual no Ollama: {config.model_name or ''}\n"
+            f"Diagnósticos locais e de compilação:\n{diagnostics_block}\n\n"
+            f"Estatísticas do código: {validation['stats']['lines']} linhas, {validation['stats']['chars']} caracteres.\n"
+            f"Linha atual do cursor: {focus['line_number']}\n"
+            f"Instrução adicional do usuário: {instruction or 'Nenhuma; aja de forma objetiva.'}\n\n"
+            "Trecho antes do cursor:\n"
+            f"{focus['before_cursor'][-1200:]}\n\n"
+            "Seleção atual:\n"
+            f"{focus['selection_text'] or '(sem seleção)'}\n\n"
+            "Trecho depois do cursor:\n"
+            f"{focus['after_cursor'][:1200]}\n\n"
+            "Linha atual:\n"
+            f"{focus['current_line'] or '(sem linha atual)'}\n\n"
+            "Fonte Typst relevante:\n"
+            f"{source_block}\n"
+        )
+
+        run_vals = {
+            "name": f"Assistente Typst - {self.name or 'Documento'}",
+            "company_id": self.processo_id.ug_id.id if self.processo_id and self.processo_id.ug_id else self.env.company.id,
+            "processo_id": self.processo_id.id,
+            "doc_id": self.id,
+            "provider": config.provider or "ollama",
+            "model_name": config.model_name or "ollama",
+            "prompt_system": system_prompt,
+            "prompt_user": user_prompt,
+            "memory_snapshot": json.dumps(
+                {
+                    "mode": mode,
+                    "cursor_position": focus["cursor_position"],
+                    "selection_start": focus["selection_start"],
+                    "selection_end": focus["selection_end"],
+                },
+                ensure_ascii=False,
+            ),
+        }
+
+        try:
+            result = GovAiDocService.generate_text(
+                config=config,
+                system_prompt=system_prompt,
+                user_prompt=user_prompt,
+                template=False,
+                context=context,
+            )
+            raw_text = (result.get("text") or "").strip()
+            cleaned_text = self._strip_markdown_code_fences(raw_text)
+            if not cleaned_text:
+                raise UserError("A IA retornou conteúdo vazio.")
+
+            apply_text = ""
+            result_validation = False
+            if mode == "fix":
+                apply_text = cleaned_text
+                result_validation = self.action_typst_validate_source(cleaned_text)
+            elif mode == "autocomplete":
+                apply_text = cleaned_text
+                merged = (
+                    text[:focus["selection_start"]]
+                    + cleaned_text
+                    + text[focus["selection_end"]:]
+                )
+                result_validation = self.action_typst_validate_source(merged)
+
+            run = self.env["gov.ai.run"].create(
+                {
+                    **run_vals,
+                    "status": "success",
+                    "provider": result.get("provider", run_vals["provider"]),
+                    "model_name": result.get("model_name", run_vals["model_name"]),
+                    "response_text": cleaned_text,
+                    "raw_response": result.get("raw_response", ""),
+                    "duration_ms": result.get("duration_ms", 0),
+                }
+            )
+            self.write(
+                {
+                    "ai_last_run_id": run.id,
+                    "ai_provider_used": result.get("provider", ""),
+                    "ai_model_used": result.get("model_name", ""),
+                }
+            )
+            return {
+                "mode": mode,
+                "provider": result.get("provider", ""),
+                "model_name": result.get("model_name", ""),
+                "duration_ms": result.get("duration_ms", 0),
+                "output_text": cleaned_text,
+                "apply_text": apply_text,
+                "source_validation": validation,
+                "result_validation": result_validation,
+                "selection_start": focus["selection_start"],
+                "selection_end": focus["selection_end"],
+            }
+        except Exception as exc:
+            self.env["gov.ai.run"].create(
+                {
+                    **run_vals,
+                    "status": "error",
+                    "error_message": str(exc),
+                }
+            )
+            if isinstance(exc, UserError):
+                raise
+            raise UserError(f"Falha no assistente Typst: {str(exc)}") from exc
 
     def _retrieve_ai_memories(self, query, limit=5):
         self.ensure_one()
@@ -927,19 +1334,18 @@ class GovProcessoDoc(models.Model):
         self.ensure_one()
         if self.state == "assinado":
             raise UserError("Documento assinado não pode ser regerado.")
-        return {
-            "type": "ir.actions.act_window",
-            "name": f"Gerar com IA — {self.name}",
-            "res_model": "gov.ai.generate.wizard",
-            "view_mode": "form",
-            "target": "new",
-            "context": {
+        return self._build_act_window_action(
+            name=f"Gerar com IA — {self.name}",
+            res_model="gov.ai.generate.wizard",
+            view_mode="form",
+            target="new",
+            context={
                 "default_doc_id": self.id,
                 "default_processo_id": self.processo_id.id,
                 "default_doc_type": self.doc_type,
                 "default_template_id": self.ai_template_id.id if self.ai_template_id else False,
             },
-        }
+        )
 
     def action_sync_template_parameters(self):
         self.ensure_one()
@@ -975,19 +1381,18 @@ class GovProcessoDoc(models.Model):
 
         template.sync_process_parameters(self.processo_id)
         keys = template.get_parameter_keys()
-        return {
-            "type": "ir.actions.act_window",
-            "name": f"Variáveis do Modelo — {self.name}",
-            "res_model": "gov.processo.parametro",
-            "view_mode": "list,form",
-            "domain": [
+        return self._build_act_window_action(
+            name=f"Variáveis do Modelo — {self.name}",
+            res_model="gov.processo.parametro",
+            view_mode="list,form",
+            domain=[
                 ("processo_id", "=", self.processo_id.id),
                 ("key", "in", keys or [""]),
             ],
-            "context": {
+            context={
                 "default_processo_id": self.processo_id.id,
             },
-        }
+        )
 
     def action_apply_template_latex(self):
         self.ensure_one()
@@ -1120,45 +1525,42 @@ class GovProcessoDoc(models.Model):
 
     def action_open_xlsx_jobs(self):
         self.ensure_one()
-        return {
-            "type": "ir.actions.act_window",
-            "name": f"Jobs XLSX — {self.name}",
-            "res_model": "gov.processo.planilha.job",
-            "view_mode": "list,form",
-            "domain": [("doc_id", "=", self.id)],
-            "context": {
+        return self._build_act_window_action(
+            name=f"Jobs XLSX — {self.name}",
+            res_model="gov.processo.planilha.job",
+            view_mode="list,form",
+            domain=[("doc_id", "=", self.id)],
+            context={
                 "default_doc_id": self.id,
                 "default_processo_id": self.processo_id.id,
             },
-        }
+        )
 
     def action_open_ingest_jobs(self):
         self.ensure_one()
-        return {
-            "type": "ir.actions.act_window",
-            "name": f"Conversões de Upload - {self.name}",
-            "res_model": "gov.processo.doc.ingest.job",
-            "view_mode": "list,form",
-            "domain": [("doc_id", "=", self.id)],
-            "context": {
+        return self._build_act_window_action(
+            name=f"Conversões de Upload - {self.name}",
+            res_model="gov.processo.doc.ingest.job",
+            view_mode="list,form",
+            domain=[("doc_id", "=", self.id)],
+            context={
                 "default_doc_id": self.id,
                 "default_processo_id": self.processo_id.id,
             },
-        }
+        )
 
     def action_open_render_jobs(self):
         self.ensure_one()
-        return {
-            "type": "ir.actions.act_window",
-            "name": f"Jobs de Render - {self.name}",
-            "res_model": "gov.processo.doc.render.job",
-            "view_mode": "list,form",
-            "domain": [("doc_id", "=", self.id)],
-            "context": {
+        return self._build_act_window_action(
+            name=f"Jobs de Render - {self.name}",
+            res_model="gov.processo.doc.render.job",
+            view_mode="list,form",
+            domain=[("doc_id", "=", self.id)],
+            context={
                 "default_doc_id": self.id,
                 "default_processo_id": self.processo_id.id,
             },
-        }
+        )
 
     def action_salvar_memoria_ia(self):
         self.ensure_one()
@@ -1195,13 +1597,12 @@ class GovProcessoDoc(models.Model):
             message_type="comment",
             subtype_xmlid="mail.mt_note",
         )
-        return {
-            "type": "ir.actions.act_window",
-            "res_model": "gov.ai.memory",
-            "res_id": memory.id,
-            "view_mode": "form",
-            "target": "current",
-        }
+        return self._build_act_window_action(
+            res_model="gov.ai.memory",
+            res_id=memory.id,
+            view_mode="form",
+            target="current",
+        )
 
     def action_compile_pdf(self):
         """

@@ -202,10 +202,17 @@
   background: var(--gov-bg);
 }
 
+.gov-typst-workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.95fr);
+  gap: 18px;
+  flex: 1;
+  min-height: 0;
+}
+
 .gov-typst-panel {
   display: flex;
   flex-direction: column;
-  flex: 1;
   min-height: 0;
   background: var(--gov-bg-2);
   border: 1px solid var(--gov-border);
@@ -224,6 +231,12 @@
   background: linear-gradient(135deg, rgba(79, 125, 255, 0.08), rgba(124, 92, 255, 0.08));
 }
 
+.gov-typst-panel-side {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .gov-typst-panel-title {
   font-size: 15px;
   font-weight: 600;
@@ -237,6 +250,12 @@
   line-height: 1.5;
 }
 
+.gov-typst-panel-shortcuts {
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--gov-text-3);
+}
+
 .gov-typst-panel-art {
   width: 148px;
   height: auto;
@@ -245,8 +264,15 @@
   filter: drop-shadow(0 12px 26px rgba(0, 0, 0, 0.22));
 }
 
+.gov-typst-panel-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
 .gov-typst-textarea {
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 0;
   padding: 20px;
   border: none;
@@ -256,10 +282,276 @@
   color: var(--gov-text-1);
   font: 13px/1.6 "IBM Plex Mono", "Cascadia Code", "Liberation Mono", monospace;
   tab-size: 2;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
 }
 
 .gov-typst-textarea::placeholder {
   color: var(--gov-text-3);
+}
+
+.gov-typst-assistant-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background:
+    linear-gradient(180deg, rgba(79, 125, 255, 0.06), rgba(15, 17, 23, 0.8)),
+    var(--gov-bg-2);
+  border: 1px solid var(--gov-border);
+  border-radius: var(--gov-radius);
+  box-shadow: var(--gov-shadow);
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+.gov-typst-assistant-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--gov-border);
+}
+
+.gov-typst-assistant-art {
+  width: 112px;
+  max-width: 34%;
+  height: auto;
+  opacity: 0.96;
+  filter: drop-shadow(0 12px 26px rgba(0, 0, 0, 0.28));
+}
+
+.gov-typst-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 14px 20px 0;
+}
+
+.gov-typst-toolbar--stacked {
+  padding-top: 12px;
+}
+
+.gov-typst-assistant-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 20px 0;
+}
+
+.gov-typst-assistant-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gov-text-2);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.gov-typst-assistant-prompt {
+  min-height: 104px;
+  padding: 12px 14px;
+  border-radius: var(--gov-radius-sm);
+  border: 1px solid var(--gov-border);
+  background: rgba(15, 17, 23, 0.88);
+  color: var(--gov-text-1);
+  outline: none;
+  resize: vertical;
+  font: 12px/1.6 "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+}
+
+.gov-typst-assistant-prompt:focus {
+  border-color: var(--gov-accent);
+  box-shadow: 0 0 0 3px var(--gov-accent-glow);
+}
+
+.gov-typst-assistant-footnote {
+  font-size: 11px;
+  color: var(--gov-text-3);
+  line-height: 1.5;
+}
+
+.gov-typst-status-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 16px 20px 0;
+  padding: 16px;
+  border-radius: var(--gov-radius);
+  border: 1px solid var(--gov-border);
+  background: rgba(11, 14, 22, 0.72);
+}
+
+.gov-typst-status-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gov-typst-status-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gov-text-1);
+}
+
+.gov-typst-status-message {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--gov-text-2);
+  white-space: pre-wrap;
+}
+
+.gov-typst-status-meta {
+  font-size: 11px;
+  color: var(--gov-text-3);
+}
+
+.gov-typst-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(154, 163, 184, 0.12);
+  border: 1px solid rgba(154, 163, 184, 0.16);
+  color: var(--gov-text-2);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.gov-typst-status-badge--success {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #8af0af;
+}
+
+.gov-typst-status-badge--warning {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #fdc467;
+}
+
+.gov-typst-status-badge--error {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.28);
+  color: #ff8c8c;
+}
+
+.gov-typst-diagnostic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 320px;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+.gov-typst-diagnostic-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(99, 122, 172, 0.18);
+  background: rgba(19, 24, 37, 0.9);
+}
+
+.gov-typst-diagnostic-item--warning {
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.gov-typst-diagnostic-item--error {
+  border-color: rgba(239, 68, 68, 0.24);
+}
+
+.gov-typst-diagnostic-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11px;
+}
+
+.gov-typst-diagnostic-source {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gov-text-3);
+}
+
+.gov-typst-diagnostic-location {
+  color: var(--gov-accent);
+  font-weight: 600;
+}
+
+.gov-typst-diagnostic-message {
+  font-size: 12px;
+  color: var(--gov-text-1);
+  line-height: 1.55;
+}
+
+.gov-typst-diagnostic-hint {
+  font-size: 11px;
+  color: var(--gov-text-2);
+  line-height: 1.55;
+}
+
+.gov-typst-diagnostic-excerpt,
+.gov-typst-ai-result {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(9, 12, 18, 0.92);
+  color: var(--gov-text-1);
+  font: 12px/1.65 "IBM Plex Mono", "Cascadia Code", "Liberation Mono", monospace;
+  white-space: pre-wrap;
+  overflow: auto;
+}
+
+.gov-typst-ai-result {
+  max-height: 260px;
+}
+
+.gov-typst-empty-note {
+  font-size: 12px;
+  color: var(--gov-text-3);
+  line-height: 1.6;
+}
+
+.gov-typst-inline-validation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.gov-typst-inline-validation-title {
+  font-size: 11px;
+  color: var(--gov-text-2);
+}
+
+.gov-typst-inline-validation-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.gov-typst-inline-validation-badge--success {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.26);
+  color: #8af0af;
+}
+
+.gov-typst-inline-validation-badge--warning {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.28);
+  color: #fdc467;
 }
 
 /* ── Sidebar ─────────────────────────────────────────────────────────────── */
@@ -688,12 +980,42 @@
     padding: 16px;
   }
 
+  .gov-typst-workbench {
+    grid-template-columns: 1fr;
+  }
+
   .gov-typst-panel-head {
+    flex-wrap: wrap;
+  }
+
+  .gov-typst-panel-side {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .gov-typst-panel-actions {
+    width: 100%;
+    align-items: flex-start;
+    flex-direction: row;
     flex-wrap: wrap;
   }
 
   .gov-typst-panel-art {
     width: 120px;
-    order: 3;
+  }
+
+  .gov-typst-assistant-head {
+    flex-wrap: wrap;
+  }
+
+  .gov-typst-assistant-art {
+    width: 96px;
+    max-width: 100%;
+  }
+
+  .gov-typst-inline-validation {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

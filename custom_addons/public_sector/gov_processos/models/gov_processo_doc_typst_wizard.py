@@ -280,6 +280,18 @@ class GovProcessoDocTypstWizard(models.TransientModel):
             "target": "new",
         }
 
+    def _build_document_form_action(self, doc, *, target="current"):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": doc.name,
+            "res_model": "gov.processo.doc",
+            "res_id": doc.id,
+            "view_mode": "form",
+            "views": [(False, "form")],
+            "target": target,
+        }
+
     def _prepare_document_vals(self, *, allow_builder_seed=False):
         self.ensure_one()
         typst_source = self._get_effective_typst_source(allow_builder_seed=allow_builder_seed)
@@ -362,6 +374,7 @@ class GovProcessoDocTypstWizard(models.TransientModel):
             "res_model": "gov.processo.doc.typst.wizard",
             "res_id": self.id,
             "view_mode": "form",
+            "views": [(False, "form")],
             "target": "new",
         }
 
@@ -387,15 +400,7 @@ class GovProcessoDocTypstWizard(models.TransientModel):
         doc = self.active_doc_id.exists()
         if not doc:
             raise UserError("Nenhum documento ativo foi criado ainda.")
-        return {
-            "type": "ir.actions.act_window",
-            "name": doc.name,
-            "res_model": "gov.processo.doc",
-            "res_id": doc.id,
-            "view_mode": "form",
-            "views": [(False, "form")],
-            "target": "current",
-        }
+        return self._build_document_form_action(doc)
 
     def action_sincronizar_do_documento_ativo(self):
         self.ensure_one()
@@ -414,10 +419,4 @@ class GovProcessoDocTypstWizard(models.TransientModel):
         self.active_doc_id = doc.id
         if self.gerar_pdf_imediatamente:
             doc.action_gerar_pdf()
-        return {
-            "type": "ir.actions.act_window",
-            "res_model": "gov.processo.doc",
-            "res_id": doc.id,
-            "view_mode": "form",
-            "target": "current",
-        }
+        return self._build_document_form_action(doc)
