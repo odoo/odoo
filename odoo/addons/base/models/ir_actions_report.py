@@ -6,6 +6,7 @@ import logging
 import typing
 from ast import literal_eval
 from collections import OrderedDict
+from collections.abc import Sequence
 
 import lxml.html
 import requests
@@ -712,9 +713,6 @@ class IrActionsReport(models.Model):
         if res_ids:
             _logger.info("The PDF report has been generated for model: %s, records %s.", report_sudo.model, str(res_ids))
 
-        with open('/tmp/debug_odoo_final.pdf', 'wb') as f:
-            f.write(pdf_content)
-
         return pdf_content, 'pdf'
 
     @api.model
@@ -772,30 +770,21 @@ class IrActionsReport(models.Model):
         :return: a tuple of (pdf, html_ids) where pdf is the generated pdf content and html ids to separate the
             pdf content.
         """
-        pdf_rendering_method = getattr(self, engine_name, None)
-        if callable(pdf_rendering_method):
-            return pdf_rendering_method(html, report_ref=report_ref, landscape=landscape, **kwargs)
+        # If we reach here it means no module handled the pdf rendering with the given engine_name.
         raise NotImplementedError(f"Unknown PDF engine: {engine_name}")
 
     def _run_pdf_engine_without_processing(
             self,
-            engine_name,
-            bodies,
-            report_ref=False,
-            header=None,
-            footer=None,
-            landscape=False,
-            specific_paperformat_args=None,
-            set_viewport_size=False):
-        pdf_rendering_method = getattr(self, engine_name, None)
-        if callable(pdf_rendering_method):
-            return pdf_rendering_method(bodies,
-                                        report_ref=report_ref,
-                                        landscape=landscape,
-                                        header=header,
-                                        footer=footer,
-                                        specific_paperformat_args=specific_paperformat_args,
-                                        set_viewport_size=set_viewport_size)
+            engine_name: str,
+            bodies: Sequence[str],
+            report_ref: typing.Union[str, bool] = False,
+            header = None,
+            footer = None,
+            landscape: bool = False,
+            specific_paperformat_args = None,
+            set_viewport_size = False
+    ) -> bytes :
+        # If we reach here it means no module handled the pdf rendering with the given engine_name.
         raise NotImplementedError(f"Unknown PDF engine: {engine_name}")
 
 

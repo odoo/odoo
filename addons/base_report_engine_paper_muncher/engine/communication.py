@@ -25,9 +25,9 @@ _logger = logging.getLogger(__name__)
 
 SERVER_SOFTWARE = f'{odoo.release.product_name}/{odoo.release.version}'
 DEFAULT_READ_TIMEOUT = 15  # seconds
-DEFAULT_READLINE_TIMEOUT = 1 * 15 # seconds (15 minutes is for the put request)
 DEFAULT_WRITE_TIMEOUT = 15  # seconds
-DEFAULT_CHUNK_SIZE = 4096  # bytes
+DEFAULT_SERVE_TIMEOUT = 15 * 60  # seconds
+DEFAULT_CHUNK_SIZE = 8192  # bytes
 LOG_PAPER_MUNCHER = False
 HTML_BODY_PATTERN = re.compile(
     r'(?s)(.*?)(<body[^>]*>)(.*?)(</body>)(.*)', re.IGNORECASE)
@@ -244,6 +244,19 @@ def make_multi_docs_html(bodies, header='', footer=''):
     is_same_length_h = (len(headers) == len(bodies))
     is_same_length_f = (len(footers) == len(bodies))
 
+    if headers and not is_same_length_h:
+        _logger.warning(
+            "Header fragments count (%d) does not match body count (%d); reusing the first header fragment where needed.",
+            len(headers),
+            len(bodies),
+        )
+    if footers and not is_same_length_f:
+        _logger.warning(
+            "Footer fragments count (%d) does not match body count (%d); reusing the first footer fragment where needed.",
+            len(footers),
+            len(bodies),
+        )
+
     documents = []
     for i, body in enumerate(bodies):
         open_body, body, close_body = partition_on_body(body)
@@ -297,7 +310,7 @@ def consume_headers(buffer: bytearray) -> tuple[Optional[str], Optional[dict[str
     return request_line, headers
 
 
-def _serve_requests(process, documents):
+def _serve_requests(process, documents, timeout: int = DEFAULT_SERVE_TIMEOUT):
     """Serve Paper Muncher requests until the rendered PDF is returned."""
     _logger.info("_serve_requests: Starting request loop, %d documents available", len(documents))
     documents_served = set()
@@ -312,14 +325,16 @@ def _serve_requests(process, documents):
     stderr_buffer = bytearray()
 
     request_number = 0
+    deadline = time.monotonic() + timeout
     try:
         while True:
             # Check if process died
             if process.poll() is not None:
                 break
 
-            # Wait for data on either pipe (timeout helps check process status)
-            events = selector.select(timeout=1.0)
+            # Wait for data on either pipe while enforcing a global deadline.
+            wait_timeout = min(1.0, remaining_time(deadline))
+            events = selector.select(timeout=wait_timeout)
 
             for key, mask in events:
                 if key.data == 'stderr':
@@ -365,6 +380,19 @@ def _serve_requests(process, documents):
                             if all_docs_served:
                                 return _finalize_and_read(process, stdout_buffer)
                             raise RuntimeError("Paper Muncher returned before we sent everything")
+    except TimeoutError as timeout_error:
+        try:
+            process.kill()
+        except Exception:
+            pass
+        try:
+            process.wait()
+        except Exception:
+            pass
+        raise TimeoutError(
+            "Paper Muncher exceeded the maximum serve timeout "
+            f"({timeout}s) after serving {len(documents_served)}/{len(documents)} document(s)."
+        ) from timeout_error
 
 
     finally:

@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from collections.abc import Sequence
+import typing
 
 from odoo import api, models, fields, _
 from odoo.exceptions import UserError
@@ -33,21 +35,21 @@ class IrActionsReport(models.Model):
     @api.model
     def _run_paper_muncher(
         self,
-        bodies,
-        report_ref=False,
-        landscape=False,
-        header=None,
-        footer=None,
-        specific_paperformat_args=None,
-        set_viewport_size=False,
+        bodies: Sequence[str],
+        report_ref: typing.Union[str, bool] = False,
+        header = None,
+        footer = None,
+        landscape: bool = False,
+        specific_paperformat_args = None,
+        set_viewport_size = False,
+        scale: int = 72,
     ) -> bytes:
-        '''Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
-        document.
-        :param str html: The html to convert to pdf.
+        '''Execute paper-muncher as a subprocess in order to convert html given in input into a pdf
+        document. 
+        :param Sequence[str] bodies: The html bodies to convert to pdf.
         :param report_ref: report reference that is needed to get report paperformat.
         :param landscape: Force the pdf to be rendered under a landscape format.
         :return: Content of the pdf as bytes
-        :rtype: bytes, list
         '''
 
         paperformat_id = self._get_report(report_ref).get_paperformat() if report_ref else self.get_paperformat()
@@ -60,7 +62,8 @@ class IrActionsReport(models.Model):
                 footer=footer,
                 landscape=landscape,
                 specific_paperformat_args=specific_paperformat_args,
-                set_viewport_size=set_viewport_size
+                set_viewport_size=set_viewport_size,
+                scale=scale
             )
         except Exception as e:  # noqa: BLE001
             _logger.error(
@@ -69,21 +72,20 @@ class IrActionsReport(models.Model):
             )
             raise UserError(_('The PDF generation failed. Please contact an administrator.'))
 
-        with open("/tmp/PM1.pdf", 'wb') as f:
-            f.write(output)
-
         return output
 
     def _run_pdf_engine_without_processing(
             self,
-            engine_name,
-            bodies,
-            report_ref=False,
-            header=None,
-            footer=None,
-            landscape=False,
-            specific_paperformat_args=None,
-            set_viewport_size=False):
+            engine_name: str,
+            bodies: Sequence[str],
+            report_ref: typing.Union[str, bool] = False,
+            header = None,
+            footer = None,
+            landscape: bool = False,
+            specific_paperformat_args = None,
+            set_viewport_size = False,
+            scale: int = 72,
+    ) -> bytes:
         if engine_name == 'paper-muncher':
             content = self._run_paper_muncher(
                 bodies,
@@ -92,14 +94,16 @@ class IrActionsReport(models.Model):
                 footer=footer,
                 landscape=landscape,
                 specific_paperformat_args=specific_paperformat_args,
-                set_viewport_size=set_viewport_size
+                set_viewport_size=set_viewport_size,
+                scale=scale
             )
             return content
         else:
-            return super()._run_pdf_engine_without_processing(engine_name, bodies, report_ref, header, footer, landscape)
+            return super()._run_pdf_engine_without_processing(engine_name, bodies, report_ref, header, footer, landscape, specific_paperformat_args, set_viewport_size)
 
 
-    def _run_pdf_engine(self, engine_name, html, report_ref=False, landscape=False, **kwargs):
+    def _run_pdf_engine(self, engine_name: str, html: str, report_ref: typing.Union[str, bool] = False,
+                        landscape: bool = False, **kwargs) -> tuple[bytes, list[int]]:
         if engine_name == 'paper-muncher':
             report_sudo = self._get_report(report_ref)
             bodies, html_ids, header, footer, specific_paperformat_args = report_sudo \
@@ -109,6 +113,7 @@ class IrActionsReport(models.Model):
                    header=header,
                    footer=footer,
                    landscape=landscape,
-                   specific_paperformat_args=specific_paperformat_args)
+                   specific_paperformat_args=specific_paperformat_args,
+                   scale=kwargs.get('dpi-resolution',72))
             return content, html_ids
-        return super()._run_pdf_engine(engine_name, html, report_ref, landscape)
+        return super()._run_pdf_engine(engine_name, html, report_ref, landscape, **kwargs)

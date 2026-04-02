@@ -5,12 +5,8 @@ import logging
 import subprocess
 import os
 from collections.abc import Mapping, Sequence
-from datetime import datetime, timezone
-from email.utils import format_datetime
 from typing import Optional
 from lxml import etree, html
-from PyPDF2 import PdfMerger
-import inspect
 
 import odoo
 
@@ -34,6 +30,7 @@ def run_paper_muncher(
         landscape: bool = False,
         specific_paperformat_args: Optional[Mapping] = None,
         set_viewport_size: Optional[str] = None,
+        scale = 72,
 ) -> bytes:
     """Render a PDF from HTML content using Paper Muncher subprocess.
 
@@ -46,6 +43,7 @@ def run_paper_muncher(
     :param Optional[str] set_viewport_size: Optional viewport string (currently unused).
     :return: PDF bytes returned by Paper Muncher.
     :rtype: bytes
+    :param scale:
     :raises RuntimeError: If Paper Muncher fails during any phase.
     """
 
@@ -64,22 +62,14 @@ def run_paper_muncher(
 
     FEATURE_FLAGS = True
 
-
-    # hack for general ledger
-    fname = str(inspect.stack()[2].function)
-    if fname  == "_render_qweb_pdf_prepare_streams":
-        extra_args = ['--scale', '72dpi']
-    elif fname == "export_to_pdf":
-        extra_args = ['--scale', '72dpi']
-    else:
-        extra_args = []
+    extra_args = ['--scale', f'{scale}dpi']
 
     if landscape:
         extra_args += ['--orientation', 'landscape']
 
     if FEATURE_FLAGS:
-        extra_args += ['--feature', '*=on']
-        extra_args += ['--debug', 'http-client=on']
+        extra_args += ['--feature', '*=on'] # activate all experimental/optional features
+        # extra_args += ['--debug', 'http-client=on'] # logs paper-munchers requests
         extra_args += ['--margins', 'none']
 
     if paperformat and paperformat.format:
@@ -117,4 +107,3 @@ def run_process(
             env=env,
     ) as process:
         return _serve_requests(process, documents)
-

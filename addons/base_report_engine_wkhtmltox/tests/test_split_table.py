@@ -2,7 +2,7 @@
 
 from odoo.tests.common import TransactionCase
 from odoo.tools import file_open
-from odoo.addons.base_report_engine_wkhtmltox.engine import _split_table
+from odoo.addons.base_report_engine_wkhtmltox.models.ir_actions_report import _split_table
 from lxml import etree
 
 

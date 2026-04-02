@@ -573,4 +573,4 @@ class IrActionsReport(models.Model):
                 landscape=landscape,
                 specific_paperformat_args=specific_paperformat_args)
             return content, html_ids
-        return super()._run_pdf_engine(engine_name, html, report_ref, landscape)
+        return super()._run_pdf_engine(engine_name, html, report_ref, landscape, **kwargs)

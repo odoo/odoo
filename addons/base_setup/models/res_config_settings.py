@@ -45,7 +45,7 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.report_rendering_engine",
         string="Rendering Engine",
         readonly=False,
-        help="Rendering engine used to generate the reports. (e.g. Web Kit HTML to PDF, Paper Muncher, etc.)",
+        help="Rendering engine used to generate the reports.",
     )
 
     def open_company(self):
