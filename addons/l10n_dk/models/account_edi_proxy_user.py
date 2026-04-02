@@ -1,4 +1,6 @@
 import logging
+from lxml import etree
+from markupsafe import Markup
 
 from odoo import api, fields, models, modules, tools, _
 from odoo.exceptions import UserError, ValidationError
@@ -133,6 +135,61 @@ class AccountEdiProxyClientUser(models.Model):
             'refresh_token': response['refresh_token'],
         })
 
+    @api.model
+    def _nemhandel_extract_response_info(self, document):
+        doc_tree = etree.fromstring(document)
+        blr_status = doc_tree.find('{*}DocumentResponse/{*}Response/{*}ResponseCode').text
+        descriptions = doc_tree.findall('{*}DocumentResponse/{*}Response/{*}Description')
+
+        note = Markup()
+        if descriptions:
+            for description in descriptions:
+                note += Markup('<br>{}').format(description.text or self.env._("N/A"))
+        return blr_status, note
+
+    def _nemhandel_import_response(self, uuid, content, decoded_document, origin_moves):
+        blr_status, note = self._nemhandel_extract_response_info(decoded_document)
+        if move := origin_moves.get(content['origin_message_uuid']):
+            if blr_status in {'BusinessAccept', 'BusinessReject'}:
+                self.env['nemhandel.response'].create({
+                    'nemhandel_message_uuid': uuid,
+                    'response_code': blr_status,
+                    'nemhandel_state': content['state'],
+                    'move_id': move.id,
+                })
+                if content['state'] == 'done':
+                    if blr_status == 'BusinessReject':
+                        move._message_log(
+                            body=self.env._(
+                                "The Nemhandel receiver of this document has rejected it with the following information: %s",
+                                note,
+                            ) if note else self.env._(
+                                "The Nemhandel receiver of this document has rejected it.",
+                            ),
+                        )
+                    else:
+                        move._message_log(
+                            body=self.env._(
+                                "The Nemhandel receiver of this document has accepted it with the following information: %s",
+                                note,
+                            ) if note else self.env._(
+                                "The Nemhandel receiver of this document has accepted it.",
+                            ),
+                        )
+            if blr_status in {'TechnicalReject', 'ProfileReject'}:
+                move._message_log(
+                    body=self.env._(
+                        "An issue arose with your Nemhandel document on the partner's side with the following information: %(note)s"
+                        "%(br)sPlease contact the support if this issue persists.",
+                        note=note,
+                        br=Markup('<br>'),
+                    ) if note else self.env._(
+                        "An issue arose with your Nemhandel document on the partner's side."
+                        "%(br)sPlease contact the support if this issue persists.",
+                        br=Markup('<br>'),
+                    ),
+                )
+
     def _nemhandel_import_invoice(self, attachment, nemhandel_state, uuid, journal=None):
         """Save new documents in an accounting journal, when one is specified on the company.
 
@@ -231,29 +288,33 @@ class AccountEdiProxyClientUser(models.Model):
         self.ensure_one()
         processed_uuids = []
         moves = self.env['account.move']
+        origin_message_uuids = [content['origin_message_uuid'] for content in messages.values()]
+        origin_moves = self.env['account.move'].search([
+            ('nemhandel_message_uuid', 'in', origin_message_uuids),
+            ('company_id', '=', self.company_id.id),
+            ('partner_id', '!=', self.company_id.partner_id.id),
+        ]).grouped('nemhandel_message_uuid')
         for uuid, content in messages.items():
-            if content['document_type'] == 'ApplicationResponse':
-                # Those document types should already be handled in l10n_dk_nemhandel_responses
-                # but if the user uninstalled it, and as we can't easily unregister our user for the
-                # ApplicationResponse service, we need this fallback.
-                processed_uuids.append(uuid)
-                continue
             enc_key = content["enc_key"]
             document_content = content["document"]
-            filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
             decoded_document = self._decrypt_data(document_content, enc_key)
-            attachment = self.env["ir.attachment"].create(
-                {
-                    "name": f"{filename}.xml",
-                    "raw": decoded_document,
-                    "type": "binary",
-                    "mimetype": "application/xml",
-                }
-            )
-            if uuid_move := self._nemhandel_import_invoice(attachment, content["state"], uuid, journal=self.company_id.nemhandel_purchase_journal_id):
-                # Only acknowledge when we saved the document somewhere
+            if content['document_type'] == 'ApplicationResponse':
+                self._nemhandel_import_response(uuid, content, decoded_document, origin_moves)
                 processed_uuids.append(uuid)
-                moves += uuid_move.get('move', self.env['account.move'])
+            else:
+                filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
+                attachment = self.env["ir.attachment"].create(
+                    {
+                        "name": f"{filename}.xml",
+                        "raw": decoded_document,
+                        "type": "binary",
+                        "mimetype": "application/xml",
+                    }
+                )
+                if uuid_move := self._nemhandel_import_invoice(attachment, content["state"], uuid, journal=self.company_id.nemhandel_purchase_journal_id):
+                    # Only acknowledge when we saved the document somewhere
+                    processed_uuids.append(uuid)
+                    moves += uuid_move.get('move', self.env['account.move'])
         return processed_uuids, moves
 
     def _nemhandel_post_process_new_messages(self, moves):
@@ -266,12 +327,14 @@ class AccountEdiProxyClientUser(models.Model):
         job_count = batch_size or BATCH_SIZE
         need_retrigger = False
         for edi_user in self:
-            documents = edi_user._nemhandel_get_documents_for_status(job_count)
-            if not documents:
+            edi_user = edi_user.with_company(edi_user.company_id)
+            uuid_to_record = edi_user._nemhandel_get_documents_for_status(job_count + 1)
+            if not uuid_to_record:
                 continue
+            if len(uuid_to_record) > job_count:
+                need_retrigger = True
+                uuid_to_record.popitem()
 
-            need_retrigger = need_retrigger or len(documents) > job_count
-            uuid_to_record = {document.nemhandel_message_uuid: document for document in documents[:job_count]}
             messages_to_process = edi_user._call_nemhandel_proxy(
                 "/api/nemhandel/1/get_document",
                 params={'message_uuids': list(uuid_to_record)},
@@ -288,47 +351,122 @@ class AccountEdiProxyClientUser(models.Model):
 
     def _nemhandel_get_documents_for_status(self, batch_size):
         self.ensure_one()
+        uuid_to_record = {}
         edi_user_moves = self.env['account.move'].search(
             [
                 ('nemhandel_move_state', '=', 'processing'),
                 ('company_id', '=', self.company_id.id),
             ],
-            limit=batch_size + 1,
+            limit=batch_size,
         )
-        return list(edi_user_moves)
+        uuid_to_record.update(edi_user_moves.grouped('nemhandel_message_uuid'))
+        if len(uuid_to_record) > batch_size:
+            return uuid_to_record
+        edi_user_responses = self.env['nemhandel.response'].search(
+            [
+                ('nemhandel_state', '=', 'processing'),
+                ('company_id', '=', self.company_id.id),
+            ],
+            limit=batch_size - len(edi_user_moves),
+        )
+        uuid_to_record.update(edi_user_responses.grouped('nemhandel_message_uuid'))
+        return uuid_to_record
+
+    def _nemhandel_process_error_status(self, content, record):
+        ''' Process the eventual errors sent by IAP.
+            Returns True if the error is final, False if it has to be fetched again.
+        '''
+        if content['error'].get('code') == 702:
+            # "Nemhandel request not ready" error:
+            # thrown when the IAP is still processing the message
+            return False
+        if record._name == 'nemhandel.response':
+            # In case of an error, IAP doesn't return the document_type, so we fall back on the record's name
+            if content['error'].get('code') == 207:
+                record.nemhandel_state = 'not_serviced'
+            else:
+                record.nemhandel_state = 'error'
+                record.move_id._message_log(
+                    body=self.env._("Nemhandel business response error: %s", content['error'].get('data', {}).get('message') or content['error']['message']),
+                )
+            return True
+
+        # Invoice
+        record._message_log(body=_("Nemhandel error: %s", content['error'].get('data', {}).get('message') or content['error']['message']))
+        record.nemhandel_move_state = 'error'
+        return True
 
     def _nemhandel_process_messages_status(self, messages, uuid_to_record):
         self.ensure_one()
         processed_message_uuids = []
         for uuid, content in messages.items():
-            if uuid == 'error':
-                # this rare edge case can happen if the participant is not active on the proxy side
-                # in this case we can't get information about the invoices
-                moves = self.env['account.move']
-                log_message = self.env._("Nemhandel error: %s", content['message'])
-                bodies = {}
-                for move in uuid_to_record.values():
-                    moves |= move
-                    bodies[move.id] = log_message
-                moves.nemhandel_move_state = 'error'
-                moves._message_log_batch(bodies=bodies)
-                return processed_message_uuids
-
-            move = uuid_to_record[uuid]
+            record = uuid_to_record[uuid]
             if content.get('error'):
-                # "Nemhandel request not ready" error:
-                # thrown when the IAP is still processing the message
-                if content['error'].get('code') == 702:
-                    continue
-                move._message_log(body=_("Nemhandel error: %s", content['error'].get('data', {}).get('message') or content['error']['message']))
-                move.nemhandel_move_state = 'error'
-                processed_message_uuids.append(uuid)
+                if self._nemhandel_process_error_status(content, record):
+                    processed_message_uuids.append(uuid)
                 continue
 
-            move.nemhandel_move_state = content['state']
-            move._message_log(body=_('Nemhandel status update: %s', content['state']))
+            if content['document_type'] == 'ApplicationResponse':
+                record.nemhandel_state = content['state']
+            else:
+                record.nemhandel_move_state = content['state']
+                record._message_log(body=_('Nemhandel status update: %s', content['state']))
             processed_message_uuids.append(uuid)
         return processed_message_uuids
+
+    def _nemhandel_send_response(self, reference_moves, status, note=False):
+        self.ensure_one()
+        reference_moves = reference_moves.filtered(lambda rm: rm.nemhandel_message_uuid and rm.partner_id.nemhandel_response_support)
+        if not reference_moves:
+            return
+
+        assert status in {'BusinessAccept', 'BusinessReject'}
+
+        try:
+            response = self._call_nemhandel_proxy(
+                "/api/nemhandel/1/send_response",
+                params={
+                    'reference_uuids': reference_moves.mapped('nemhandel_message_uuid'),
+                    'status': status,
+                    'note': note,
+                },
+            )
+        except UserError as e:
+            log_message = self.env._(
+                "An error occurred with the Nemhandel proxy while responding to this invoice's expeditor.%(br)sResponse: %(status)s - %(error)s",
+                br=Markup('<br>'),
+                status=status,
+                error=str(e),
+            )
+            reference_moves._message_log_batch(
+                bodies={move.id: log_message for move in reference_moves},
+            )
+        else:
+            if response.get('error'):
+                log_message = self.env._(
+                    "An error occurred with the Nemhandel server while responding to this invoice's expeditor.%(br)sStatus: %(status)s - %(error)s",
+                    br=Markup('<br>'),
+                    status=status,
+                    error=response['error']['message'],
+                )
+                reference_moves._message_log_batch(
+                    bodies={move.id: log_message for move in reference_moves},
+                )
+            else:
+                self.env['nemhandel.response'].create([{
+                        'nemhandel_message_uuid': message['message_uuid'],
+                        'response_code': status,
+                        'nemhandel_state': 'processing',
+                        'move_id': move.id,
+                    }
+                    for message, move in zip(response.get('messages'), reference_moves)
+                ])
+                log_message = self.env._(
+                    "A Nemhandel response was sent to the Nemhandel Access Point declaring you accepted this document.",
+                ) if status == 'BusinessAccept' else self.env._(
+                    "A Nemhandel response was sent to the Nemhandel Access Point declaring you rejected this document.",
+                )
+                reference_moves._message_log_batch(bodies={move.id: log_message for move in reference_moves})
 
     def _nemhandel_get_participant_status(self):
         for edi_user in self:
