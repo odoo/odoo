@@ -53,3 +53,25 @@ class TestWebsiteSaleStockProductCombo(HttpCase, WebsiteSaleStockCommon):
         })
 
         self.assertIsNone(combo._get_max_quantity(self.website, self.cart))
+
+    def test_website_sale_stock_max_combo(self):
+        """
+        Ensure we cannot add to the cart more units of a combo product than what is available in
+        stock (the maximum quantity of its combo items).
+        """
+        product1 = self._create_product(name='Test product1')
+        self.env['stock.quant']._update_available_quantity(product1, self.warehouse.lot_stock_id, 2)
+        product2 = self._create_product(name='Test product2')
+        self.env['stock.quant']._update_available_quantity(product2, self.warehouse.lot_stock_id, 1)
+        self._create_product(
+            name='ComboProduct',
+            type='combo',
+            combo_ids=[Command.create({
+                'name': 'Test combo',
+                'combo_item_ids': [
+                    Command.create({'product_id': product1.id}),
+                    Command.create({'product_id': product2.id}),
+                ],
+            })],
+        )
+        self.start_tour('/shop?search=ComboProduct', 'test_website_sale_stock_max_combo')

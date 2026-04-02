@@ -755,7 +755,9 @@ export class ProductPage extends Interaction {
                 ctaWrapper.classList.replace('d-flex', 'd-none');
                 ctaWrapper.classList.add('out_of_stock');
             }
-        } else if (has_max_combo_quantity) {
+        }
+
+        if (has_max_combo_quantity) {
             if (addQtyInput) {
                 addQtyInput.dataset.max = combination.max_combo_quantity || 1;
                 if (qty > combination.max_combo_quantity) {
