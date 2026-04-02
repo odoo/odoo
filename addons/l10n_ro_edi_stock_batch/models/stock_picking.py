@@ -4,11 +4,15 @@ from odoo import api, models
 class Picking(models.Model):
     _inherit = 'stock.picking'
 
-    @api.depends('batch_id', 'company_id')
+    @api.depends('batch_id', 'company_id', 'picking_type_code')
     def _compute_l10n_ro_edi_stock_enable(self):
         # OVERRIDES 'l10n_ro_edi_stock'
         for picking in self:
-            picking.l10n_ro_edi_stock_enable = not picking.batch_id and picking.company_id.country_id.code == 'RO'
+            picking.l10n_ro_edi_stock_enable = (
+                (not picking.batch_id or picking.batch_id.state != 'done')
+                and picking.picking_type_code != 'internal'
+                and picking.company_id.country_id.code == 'RO'
+            )
 
     @api.model
     def _l10n_ro_edi_stock_validate_carrier_filter(self, picking):
