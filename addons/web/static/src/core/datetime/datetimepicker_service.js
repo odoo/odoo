@@ -1,5 +1,5 @@
 import { onWillRender, reactive, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { markRaw, onPatched } from "@odoo/owl";
+import { immediateEffect, markRaw, onMounted, onPatched, onWillDestroy } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { areDatesEqual, formatDate, formatDateTime, parseDate, parseDateTime } from "../l10n/dates";
 import { makePopover } from "../popover/popover_hook";
@@ -459,25 +459,32 @@ export const datetimePickerService = {
                     },
                     ...markValuesRaw(params.pickerProps),
                 };
-                const pickerProps = reactive(rawPickerProps, () => {
-                    // Update inputs
-                    for (const [el, value] of zip(
-                        getInputs(),
-                        ensureArray(pickerProps.value),
-                        true
-                    )) {
-                        if (el) {
-                            updateInput(el, value);
-                            // Apply changes immediately if the popover is already closed.
-                            // Otherwise ´apply()´ will be called later on close.
-                            if (!isOpen()) {
-                                apply();
+                const pickerProps = reactive(rawPickerProps);
+                let disposeEffect;
+                onMounted(() => {
+                    disposeEffect = immediateEffect(() => {
+                        JSON.stringify(pickerProps);
+                        // Update inputs
+                        for (const [el, value] of zip(
+                            getInputs(),
+                            ensureArray(pickerProps.value),
+                            true
+                        )) {
+                            if (el) {
+                                updateInput(el, value);
+                                // Apply changes immediately if the popover is already closed.
+                                // Otherwise ´apply()´ will be called later on close.
+                                if (!isOpen()) {
+                                    apply();
+                                }
                             }
                         }
-                    }
 
-                    shouldFocus = true;
+                        shouldFocus = true;
+                    });
                 });
+                onWillDestroy(() => disposeEffect?.());
+
                 const popover = createPopover(DateTimePickerPopover, {
                     useBottomSheet: isBottomSheet(),
                     async onClose() {
