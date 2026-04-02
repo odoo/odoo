@@ -872,6 +872,53 @@ class HrLeave(models.Model):
             sorted_leaves[leave.work_entry_type_id, leave.date_from.date()] |= leave
         for (work_entry_type, date_from), leaves in sorted_leaves.items():
             if not work_entry_type.requires_allocation or self.env.context.get('skip_allocation_check'):
+                if work_entry_type.allows_positive_cap:
+                    current_year_start = fields.Date.today().replace(month=1, day=1)
+                    current_year_end = fields.Date.today().replace(month=12, day=31)
+                    is_hour = work_entry_type.unit_of_measure == 'hour'
+                    aggregate_field = 'number_of_hours:sum' if is_hour else 'number_of_days:sum'
+                    unit = 'hours' if is_hour else 'days'
+                    active_leaves = leaves.filtered(lambda leave: leave.state not in ('cancel', 'refuse'))
+                    grouped_employee_leaves_dict = dict(self.env['hr.leave']._read_group(
+                        domain=[
+                            ('work_entry_type_id', '=', work_entry_type.id),
+                            ('employee_id', 'in', active_leaves.employee_id.ids),
+                            ('state', 'in', ['confirm', 'validate', 'validate1']),
+                            ('id', 'not in', active_leaves.ids),
+                            ('date_from', '>=', current_year_start),
+                            ('date_from', '<=', current_year_end),
+                        ],
+                        groupby=['employee_id'],
+                        aggregates=[aggregate_field],
+                    ))
+
+                    for leave in active_leaves:
+                        if leave.date_to and leave.date_to.date() > current_year_end:
+                            if self.env.context.get('multi_leave_request', False):
+                                employees_without_allocation |= leave.employee_id
+                            else:
+                                raise ValidationError(self.env._(
+                                    "%(leave_type)s can only be requested within the current year. "
+                                    "Please adjust your dates to end on or before December 31st.",
+                                    leave_type=work_entry_type.name,
+                                ))
+
+                        taken = grouped_employee_leaves_dict.get(leave.employee_id, 0.0)
+                        requested = leave.number_of_hours if is_hour else leave.number_of_days
+
+                        if taken + requested > work_entry_type.max_allowed_positive:
+                            if self.env.context.get('multi_leave_request', False):
+                                employees_without_allocation |= leave.employee_id
+                            else:
+                                raise ValidationError(self.env._(
+                                    "You have exceeded the allowed limit for %(leave_type)s. "
+                                    "You have %(remaining)s %(unit)s remaining out of your %(cap)s %(unit)s annual allowance.",
+                                    amount=requested,
+                                    unit=unit,
+                                    leave_type=work_entry_type.name,
+                                    remaining=round(work_entry_type.max_allowed_positive - taken, 2),
+                                    cap=work_entry_type.max_allowed_positive,
+                                ))
                 continue
             employees = leaves.employee_id
             leave_data = work_entry_type.get_allocation_data(employees, date_from)

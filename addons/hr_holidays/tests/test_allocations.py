@@ -2,6 +2,7 @@ from datetime import date, timedelta
 
 from freezegun import freeze_time
 
+from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.fields import Date, Datetime
 from odoo.tests import Form, tagged, users
@@ -667,3 +668,41 @@ class TestAllocations(TestHrHolidaysCommon):
                 'date_to': date(2024, 6, 30),
             })
             allocation_2.action_approve()
+
+    def test_positive_cap_allocation_constraints(self):
+        work_entry_type_cap = self.env['hr.work.entry.type'].create({
+            'name': 'Positive Cap Leave',
+            'code': 'POSCAP',
+            'count_as': 'absence',
+            'requires_allocation': True,
+            'allocation_validation_type': 'no_validation',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+            'allows_positive_cap': True,
+            'max_allowed_positive': 5,
+        })
+
+        allocation_1 = self.env['hr.leave.allocation'].create({
+            'employee_id': self.employee.id,
+            'work_entry_type_id': work_entry_type_cap.id,
+            'allocation_type': 'regular',
+            'number_of_days': 3,
+        })
+        allocation_1._action_validate()
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave.allocation'].create({
+                'employee_id': self.employee.id,
+                'work_entry_type_id': work_entry_type_cap.id,
+                'allocation_type': 'regular',
+                'number_of_days': 4,
+            })
+
+        work_entry_type_cap.write({'requires_allocation': False})
+        next_year = fields.Date.today().year + 1
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave'].create({
+                'employee_id': self.employee.id,
+                'work_entry_type_id': work_entry_type_cap.id,
+                'request_date_from': date(next_year, 3, 1),
+                'request_date_to': date(next_year, 3, 5),
+            })

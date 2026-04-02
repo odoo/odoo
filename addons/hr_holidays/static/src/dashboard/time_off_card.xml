@@ -2,7 +2,9 @@
 <templates xml:space="preserve">
     <div t-name="hr_holidays.TimeOffCard" class="o_timeoff_card py-3 text-primary">
         <t t-set="data" t-value="this.props.data"/>
-        <t t-set="duration" t-value="this.props.requires_allocation ? data.virtual_remaining_leaves : data.virtual_leaves_taken"/>
+        <t t-set="duration"
+           t-value="data.show_positive_cap ? data.positive_cap_remaining :
+                    (this.props.requires_allocation ? data.virtual_remaining_leaves : data.virtual_leaves_taken)"/>
         <t t-set="parsed_duration" t-value="this.formatDuration(duration)"/>
         <t t-set="show_popover" t-value="true"/>
 
@@ -14,18 +16,27 @@
                 </span>
             </span>
             <span
-                t-att-class="'text-uppercase o_timeoff_details p-1' + (this.warning ? ' alert alert-warning' : '')">
+                t-att-class="'text-uppercase o_timeoff_details p-1' + (this.warning ? ' alert alert-warning' : '')"
+                t-on-click.stop="(ev) => (show_popover &amp;&amp; this.onClickInfo(ev))">
                 <t t-if="data.unit_of_measure == 'hour'" name="duration_unit">hours</t>
                 <t t-else="">days</t>
                 <t t-if="this.props.requires_allocation" name="duration_type">
                     available
                 </t>
                 <t t-else="">
-                    taken
+                    <t t-if="data.show_positive_cap">
+                        available
+                    </t>
+                    <t t-else="">
+                        taken
+                    </t>
                 </t>
                 <span t-if="show_popover"
                     t-att-class="'o_timeoff_info fa' + (this.warning ? ' fa-exclamation-triangle' : ' fa-question-circle-o')"
                 />
+            </span>
+            <span t-if="data.show_positive_cap" class="text-uppercase o_timeoff_validity">
+                (valid until <t t-out="data.positive_cap_valid_until"/>)
             </span>
             <span t-if="this.props.requires_allocation and data.closest_allocation_expire !== false" class="text-uppercase o_timeoff_validity">
                 <t t-if="data.closest_allocation_remaining != data.virtual_remaining_leaves">
@@ -41,14 +52,18 @@
 
     <t t-name="hr_holidays.TimeOffCardMobile">
         <t t-set="data" t-value="this.props.data"/>
-        <t t-set="duration" t-value="this.props.requires_allocation ? data.virtual_remaining_leaves : data.virtual_leaves_taken" />
+        <t t-set="duration" t-value="this.props.requires_allocation ? data.virtual_remaining_leaves : (data.show_positive_cap ? data.positive_cap_remaining : data.virtual_leaves_taken)" />
 
         <span class="float-end o_timeoff_card_mobile">
             <t t-if="this.props.requires_allocation" name="duration_type">
                 <strong t-out="duration" class="o_timeoff_green text-success"/> / <span t-out="data.max_leaves"/> <t t-if="data.unit_of_measure == 'hour'">Hours</t><t t-else="">Days</t> <span class="o_timeoff_green text-success">Available</span>
             </t>
             <t t-else="">
-                <strong t-out="duration"/> <t t-if="data.unit_of_measure == 'hour'">Hours</t><t t-else="">Days</t> <span class="text-primary">Taken</span>
+                <strong t-out="duration"/> <t t-if="data.unit_of_measure == 'hour'">Hours</t><t t-else="">Days</t>
+                <span class="text-primary">
+                    <t t-if="data.show_positive_cap">Available</t>
+                    <t t-else="">Taken</t>
+                </span>
             </t>
         </span>
     </t>
