@@ -9,7 +9,7 @@ patch(ProductCatalogKanbanRecord.prototype, {
 
         useSubEnv({
             ...this.env,
-            selectedSectionId: this.env.searchModel.selectedSection.sectionId,
+            selectedSectionId: this.env.searchModel.selectedSectionId,
         });
     },
 
@@ -23,7 +23,7 @@ patch(ProductCatalogKanbanRecord.prototype, {
     _getUpdateQuantityAndGetPriceParams() {
         return {
             ...super._getUpdateQuantityAndGetPriceParams(),
-            section_id: this.env.selectedSectionId ?? this.env.searchModel.selectedSection.sectionId,
+            section_id: this.env.selectedSectionId ?? this.env.searchModel.selectedSectionId,
         };
     },
 
@@ -34,19 +34,26 @@ patch(ProductCatalogKanbanRecord.prototype, {
         super.addProduct(qty);
     },
 
-    updateQuantity(quantity) {
-        const lineCountChange = (quantity > 0) - (this.productCatalogData.quantity > 0);
-        if (lineCountChange !== 0) {
-            this.notifyLineCountChange(lineCountChange);
-        }
+    _updateProductCatalogData(result) {
+        super._updateProductCatalogData(result);
 
-        super.updateQuantity(quantity);
+        if (result.subtotal !== undefined) {
+            const parsedSubtotal = parseFloat(result.subtotal);
+            const previousSubtotal = this.productCatalogData.subtotal ?? 0;
+            const subtotalDelta = parsedSubtotal - previousSubtotal;
+
+            this.productCatalogData.subtotal = parsedSubtotal;
+
+            if (subtotalDelta) {
+                this.notifySectionSubtotalChange(subtotalDelta);
+            }
+        }
     },
 
-    notifyLineCountChange(lineCountChange) {
-        this.env.searchModel.trigger('section-line-count-change', {
+    notifySectionSubtotalChange(subtotalDelta) {
+        this.env.searchModel.trigger("section-subtotal-change", {
             sectionId: this.env.selectedSectionId,
-            lineCountChange: lineCountChange,
+            subtotalDelta: subtotalDelta,
         });
     },
-})
+});

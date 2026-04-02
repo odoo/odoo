@@ -90,7 +90,7 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
             headers={'Content-Type': 'application/json'},
         )
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.json()['result'], other_product_price_converted)
+        self.assertEqual(resp.json()['result']['price'], other_product_price_converted)
 
         resp = self.url_open(
             url='/product/catalog/update_order_line_info',
@@ -107,7 +107,7 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
             headers={'Content-Type': 'application/json'},
         )
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.json()['result'], company_product_price)
+        self.assertEqual(resp.json()['result']['price'], company_product_price)
 
         self._enable_uom()
         pack_6_uom = self.env.ref('uom.product_uom_pack_6')
@@ -123,7 +123,7 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
                 'uom_id': pack_6_uom.id,
             },
             headers={'Content-Type': 'application/json'},
-        )
+        )['price']
         self.assertTrue(resp)
         product_uom_factor = purchase_order.order_line[0]._get_product_catalog_lines_data(purchase_order)['productUomFactor']
         self.assertEqual(resp, other_product_price_converted * 6)
@@ -214,10 +214,10 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
             supplier_info.product_tmpl_id.product_variant_ids[0]
         )
         self.assertEqual(catalog_info['price'], 100.0)
-        catalog_price = purchase_order._update_order_line_info(
+        vals = purchase_order._update_order_line_info(
             product=product_template.product_variant_ids[0],
             quantity=0,
             uom=self.uom_pack_6,
             child_field='order_line',
         )
-        self.assertEqual(catalog_price, 100.0)
+        self.assertEqual(vals['price'], 100.0)

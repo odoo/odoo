@@ -24,7 +24,6 @@ class ProductCatalogController(Controller):
                     'quantity': float (optional)
                     'productType': string,
                     'productUomDisplayName': string (optional),
-                    'code': string (optional),
                     'readOnly': bool (optional),
                 }
             }
@@ -43,10 +42,9 @@ class ProductCatalogController(Controller):
         :param string res_model: The order model.
         :param int order_id: The order id.
         :param int product_id: The product, as a `product.product` id.
-        :return: The unit price price of the product, based on the pricelist of the order and
-                 the quantity selected.
+        :return: A dictionary containing the product's unit price and any additional values.
 
-        :rtype: float
+        :rtype: dict
         """
         request.update_context(catalog_update=True)
         order = self.env[res_model].browse(order_id)

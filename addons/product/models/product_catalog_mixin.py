@@ -161,7 +161,7 @@ class ProductCatalogMixin(models.AbstractModel):
         )
         return lines_to_consider.grouped("product_id")
 
-    def _update_order_line_info(self, product, quantity, uom, child_field, **kwargs) -> float:
+    def _update_order_line_info(self, product, quantity, uom, child_field, **kwargs) -> dict:
         """Update the line information for a given product or create a new one if none exists yet.
 
         :param object product: recordset of `product.product`.
@@ -170,7 +170,7 @@ class ProductCatalogMixin(models.AbstractModel):
         :param str child_field: name of the one2many field holding the catalog lines.
         :param dict kwargs: additional values forwarded to called methods.
 
-        :return: The unit price of the product to display in the catalog.
+        :return: A dictionary containing unit price of the product to display in the catalog.
         """
         self.ensure_one()
         if self._is_readonly():
@@ -205,10 +205,16 @@ class ProductCatalogMixin(models.AbstractModel):
                 child_field, product, quantity, uom, **kwargs
             )
 
-        if catalog_line:
-            return catalog_line._get_catalog_unit_price(parent_record=self, **kwargs)
+        return self._get_updated_order_line_info(catalog_line, product, uom, **kwargs)
 
-        return self._get_product_catalog_default_unit_price(product, uom, **kwargs)
+    def _get_updated_order_line_info(self, catalog_line, product, uom, **kwargs) -> dict:
+        """Return the updated product information to be shown in the catalog."""
+        if catalog_line:
+            unit_price = catalog_line._get_catalog_unit_price(parent_record=self, **kwargs)
+        else:
+            unit_price = self._get_product_catalog_default_unit_price(product, uom, **kwargs)
+
+        return {"price": unit_price}
 
     def _catalog_create_new_line(self, child_field, product, quantity, uom, **kwargs):
         """Create a new product line according to the provided values."""
