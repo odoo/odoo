@@ -16,9 +16,9 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
 
     def _add_invoice_config_vals(self, vals):
         super()._add_invoice_config_vals(vals)
-        invoice = vals['invoice']
 
         # Support the unlikely case where we invoice a refund of an order included in a consolidated invoice.
+        invoice = vals['invoice']
         consolidated_invoice = self._is_consolidated_invoice_refund(invoice)
         if consolidated_invoice:
             # We need to match the customer, so we change it to the same as the consolidated invoice (General Public)
@@ -34,6 +34,30 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             if general_public:
                 vals['customer'] = general_public
                 vals['partner_shipping'] = general_public
+
+    def _add_invoice_payment_terms_nodes(self, document_node, vals):
+        super()._add_invoice_payment_terms_nodes(document_node, vals)
+        invoice = vals['invoice']
+        # For individual POS e-invoices, the prepaid amount must be 0.
+        # POS orders are paid immediately at the point of sale, MyInvois requires
+        # the PayableAmount to reflect the full invoice amount (not reduced by prepayment).
+        if invoice.pos_order_ids:
+            document_node['cac:PrepaidPayment'] = {
+                'cbc:PaidAmount': {
+                    '_text': self.format_float(0.0, vals['currency_dp']),
+                    'currencyID': vals['currency_name'],
+                }
+            }
+
+    def _add_invoice_monetary_total_nodes(self, document_node, vals):
+        super()._add_invoice_monetary_total_nodes(document_node, vals)
+        invoice = vals['invoice']
+        if invoice.pos_order_ids:
+            monetary_total_tag = self._get_tags_for_document_type(vals)['monetary_total']
+            document_node[monetary_total_tag]['cbc:PayableAmount'] = {
+                '_text': self.format_float(invoice.amount_total, vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            }
 
     def _add_invoice_header_nodes(self, document_node, vals):
         super()._add_invoice_header_nodes(document_node, vals)
