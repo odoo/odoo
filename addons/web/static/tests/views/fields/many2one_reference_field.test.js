@@ -1,8 +1,9 @@
-import { expect, test } from "@odoo/hoot";
+import { animationFrame, expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { runAllTimers } from "@odoo/hoot-mock";
 
 import {
+    clickFieldDropdown,
     clickFieldDropdownItem,
     clickSave,
     contains,
@@ -27,6 +28,7 @@ class Partner extends models.Model {
     _records = [
         { id: 1, model: "partner.type", res_id: 10 },
         { id: 2, res_id: false },
+        { id: 3 },
     ];
 }
 
@@ -40,7 +42,18 @@ class PartnerType extends models.Model {
     ];
 }
 
-defineModels([Partner, PartnerType]);
+class JobTitle extends models.Model {
+    id = fields.Integer();
+    name = fields.Char();
+
+    _records = [
+        { id: 20, name: "dev" },
+        { id: 24, name: "kitchen" },
+        { id: 27, name: "ba" },
+    ];
+}
+
+defineModels([Partner, PartnerType, JobTitle]);
 
 onRpc("has_group", () => true);
 
@@ -85,7 +98,7 @@ test("Many2OneReferenceField in list view", async () => {
             </list>`,
     });
 
-    expect(queryAllTexts(".o_data_cell")).toEqual(["gold", ""]);
+    expect(queryAllTexts(".o_data_cell")).toEqual(["gold", "", ""]);
 });
 
 test("Many2OneReferenceField with no_open option", async () => {
@@ -102,6 +115,30 @@ test("Many2OneReferenceField with no_open option", async () => {
 
     expect(".o_field_widget input").toHaveValue("gold");
     expect(".o_field_widget[name=res_id] .o_external_button").toHaveCount(0);
+});
+
+test.tags("desktop");
+test("Many2OneReferenceField with model_field change in form view", async () => {
+     await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 3,
+        arch: `
+            <form>
+                <field name="model"/>
+                <field name="res_id"/>
+            </form>`,
+    });
+
+    await contains(".o_field_widget[name=model] input").edit("partner.type");
+    await animationFrame();
+    await clickFieldDropdown("res_id");
+    expect(".o_field_widget[name=res_id] .o-autocomplete--dropdown-item").toHaveCount(3);
+
+    await contains(".o_field_widget[name=model] input").edit("job.title");
+    await animationFrame();
+    await clickFieldDropdown("res_id");
+    expect(".o_field_widget[name=res_id] .o-autocomplete--dropdown-item").toHaveCount(4);
 });
 
 test.tags("desktop");
