@@ -51,6 +51,36 @@ class TestKarmaTrackingCommon(common.TransactionCase):
             old_value = new_value
             track_date = track_date + relativedelta(days=days_delta)
 
+    def test_get_user_ids_ranked_by_karma(self):
+        """Test the optimized raw SQL ranking method with various timeframes and pagination."""
+        self._create_trackings(self.test_user, 20, 2, self.test_date, days_delta=30)
+        self._create_trackings(self.test_user_2, 10, 20, self.test_date, days_delta=2)
+        domain = [("id", "in", (self.test_user.id, self.test_user_2.id))]
+
+        # All-time: test_user_2 (200) > test_user (40)
+        user_ids = self.env["res.users"]._get_user_ids_ranked_by_karma(domain)
+        self.assertEqual(user_ids, [self.test_user_2.id, self.test_user.id])
+
+        # Before specific date: test_user (20) > test_user_2 (10)
+        user_ids = self.env["res.users"]._get_user_ids_ranked_by_karma(
+            domain, to_date=self.test_date + relativedelta(day=2)
+        )
+        self.assertEqual(user_ids, [self.test_user.id, self.test_user_2.id])
+
+        # After specific date: test_user_2 (50) > test_user (20)
+        user_ids = self.env["res.users"]._get_user_ids_ranked_by_karma(
+            domain, from_date=self.test_date + relativedelta(months=1, day=1)
+        )
+        self.assertEqual(user_ids, [self.test_user_2.id, self.test_user.id])
+
+        # Limit: Returns only the top overall user (test_user_2 with 200)
+        user_ids = self.env["res.users"]._get_user_ids_ranked_by_karma(domain, limit=1)
+        self.assertEqual(user_ids, [self.test_user_2.id])
+
+        # Offset: Skips the top user, returns the 2nd overall user (test_user with 40)
+        user_ids = self.env["res.users"]._get_user_ids_ranked_by_karma(domain, limit=1, offset=1)
+        self.assertEqual(user_ids, [self.test_user.id])
+
     def test_computation_gain(self):
         self._create_trackings(self.test_user, 20, 2, self.test_date, days_delta=30)
         self._create_trackings(self.test_user_2, 10, 20, self.test_date, days_delta=2)
