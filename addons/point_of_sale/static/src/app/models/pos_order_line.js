@@ -66,6 +66,9 @@ export class PosOrderline extends PosOrderlineAccounting {
     }
 
     get quantityStr() {
+        if (!this.product_id) {
+            return "";
+        }
         let unitPart = "";
         let decimalPart = "";
         const unit = this.product_id.uom_id;
