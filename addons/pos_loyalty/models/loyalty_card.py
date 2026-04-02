@@ -71,7 +71,7 @@ class LoyaltyCard(models.Model):
         Override to log gift card emails in pos.order chatter
         """
         mail_ids = super()._send_creation_communication(force_send=force_send)
-        for mail in self.env['mail.mail'].browse([mid for mid in mail_ids if mid]):
+        for mail in self.env['mail.mail'].browse([mid for mid in mail_ids if mid]).exists():
             if mail.model != 'loyalty.card' or mail.res_id not in self.ids:
                 continue
 
