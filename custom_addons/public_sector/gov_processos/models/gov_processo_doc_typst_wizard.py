@@ -276,6 +276,7 @@ class GovProcessoDocTypstWizard(models.TransientModel):
             "res_model": "gov.processo.doc.typst.wizard",
             "res_id": self.id,
             "view_mode": "form",
+            "views": [(False, "form")],
             "target": "new",
         }
 
@@ -392,6 +393,7 @@ class GovProcessoDocTypstWizard(models.TransientModel):
             "res_model": "gov.processo.doc",
             "res_id": doc.id,
             "view_mode": "form",
+            "views": [(False, "form")],
             "target": "current",
         }
 

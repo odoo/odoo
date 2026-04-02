@@ -340,7 +340,7 @@
                             <div class="mb-3">
                                 <button name="action_tramitar" string="Tramitar" type="object" class="btn-primary"/>
                             </div>
-                            <field name="tramite_ids" widget="one2many_list" mode="list" readonly="1">
+                            <field name="tramite_ids" mode="list" readonly="1">
                                 <list create="false" edit="false" delete="false">
                                     <field name="date"/>
                                     <field name="action"/>
@@ -438,7 +438,7 @@
                                     class="btn-secondary"
                                 />
                             </div>
-                            <field name="doc_ids" widget="one2many_list" mode="list">
+                            <field name="doc_ids" mode="list">
                                 <list>
                                     <field name="sequence" widget="handle"/>
                                     <field name="doc_type"/>

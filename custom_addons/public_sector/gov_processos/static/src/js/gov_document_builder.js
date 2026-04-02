@@ -382,7 +382,11 @@ export class GovDocumentBuilder extends Component {
     // ── Voltar ao documento ─────────────────────────────────────────────────-
     onBack() {
         if (this.returnAction) {
-            this.action.doAction(this.returnAction);
+            const action = { ...this.returnAction };
+            if (action.type === "ir.actions.act_window" && !action.views) {
+                action.views = [[false, action.view_mode || "form"]];
+            }
+            this.action.doAction(action);
             return;
         }
         if (this.docId) {

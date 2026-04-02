@@ -113,6 +113,7 @@ class TestGovProcessoDocTypstWizard(TransactionCase):
         self.assertEqual(action["params"]["initial_mode"], "typst")
         self.assertEqual(action["params"]["return_action"]["res_model"], "gov.processo.doc.typst.wizard")
         self.assertEqual(action["params"]["return_action"]["res_id"], wizard.id)
+        self.assertEqual(action["params"]["return_action"]["views"], [(False, "form")])
         self.assertEqual(wizard.active_doc_id.typst_source, '= "Documento manual"\n')
 
     def test_create_document_reuses_active_document_in_manual_mode(self):
