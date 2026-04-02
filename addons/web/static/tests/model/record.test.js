@@ -744,9 +744,7 @@ test(`faulty useRecordObserver in widget`, async () => {
     }
 
     await mountWithCleanup(Parent);
-    expect(`.error`).toHaveText(
-        `The following error occurred in onWillStart: "faulty record observer"`
-    );
+    expect(`.error`).toHaveText(`faulty record observer`);
 });
 
 test(`don't duplicate a useRecordObserver effect when switching back and forth between the same records`, async () => {
