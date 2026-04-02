@@ -2259,7 +2259,7 @@
                                 <t t-set="_input_classes" t-valuef="border-0 p-3"/>
                                 <t t-set="_submit_classes" t-valuef="px-4"/>
                                 <t t-set="action" t-value="keep(search=0)"/>
-                                <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
+                                <t t-if="original_category" t-set="placeholder">Search in <t t-out="original_category.name"/></t>
                             </t>
                         </div>
                     </div>
@@ -2432,7 +2432,8 @@
         name="Searchbar On Product Page"
     >
         <xpath expr="//div[hasclass('o_wsale_product_top_bar_desktop')]" position="inside">
-            <t t-call="website_sale.search">
+            <t t-if="original_category" t-set="placeholder">Search in <t t-out="original_category.name"/></t>
+            <t t-call="website_sale.search" placeholder="placeholder">
                 <t t-set="search" t-value="False"/>
                 <t t-set="_classes" t-value="'me-sm-2'"/>
             </t>
@@ -3390,7 +3391,9 @@
             <t t-if="website_sale_order and website_sale_order.website_order_line">
                 <t
                     t-if="(website.account_on_checkout != 'mandatory' or
-                            not website.is_public_user()) and show_shorter_cart_summary"
+                            not website.is_public_user()) and
+                            show_shorter_cart_summary and
+                            website_sale_order._allow_express_checkout()"
                     t-call="payment.express_checkout"
                 />
                 <t t-if="current_website_checkout_step_href == '/shop/payment'">

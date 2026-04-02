@@ -817,7 +817,7 @@ class AccountEdiCommon(models.AbstractModel):
         charges = []
         discount_amount = 0
         for allowance_charge_node in tree.iterfind(xpath_dict['allowance_charge']):
-            charge_indicator = allowance_charge_node.findtext(xpath_dict['allowance_charge_indicator'])
+            charge_indicator = allowance_charge_node.findtext(xpath_dict['allowance_charge_indicator']) or 'false'
             amount = float(allowance_charge_node.findtext(xpath_dict['allowance_charge_amount'], default='0'))
             reason_code = allowance_charge_node.findtext(xpath_dict['allowance_charge_reason_code'], default='')
             reason = allowance_charge_node.findtext(xpath_dict['allowance_charge_reason'], default='')
@@ -947,7 +947,11 @@ class AccountEdiCommon(models.AbstractModel):
         #   * unit price = 1, qty = 0, but price_subtotal = -200
         # for instance, when filling a down payment as an document line. The equation in the docstring is not
         # respected, and the result will not be correct, so we just follow the simple rule below:
-        if net_price_unit is not None and float_compare(price_subtotal, net_price_unit * (delivered_qty / basis_qty) - allow_charge_amount, currency.decimal_places):
+        if (
+            net_price_unit is not None
+            and price_subtotal is not None
+            and float_compare(price_subtotal, net_price_unit * (delivered_qty / basis_qty) - allow_charge_amount, currency.decimal_places)
+        ):
             if net_price_unit == 0 and delivered_qty == 0:
                 quantity = 1
                 price_unit = price_subtotal
@@ -1054,6 +1058,9 @@ class AccountEdiCommon(models.AbstractModel):
         """
         charges_vals = []
         for charge in line_values.pop('charges'):
+            if not charge['line_quantity']:
+                continue
+
             if charge['reason_code'] == 'AEO':
                 # a 1 eur fixed tax on a line with quantity=2 will yield an AllowanceCharge with amount = 2
                 charge_copy = charge.copy()
@@ -1063,12 +1070,12 @@ class AccountEdiCommon(models.AbstractModel):
                     if tax.price_include:
                         line_values['price_unit'] += tax.amount
                     continue
-            charges_vals.append([
-                charge['reason_code'] + " " + charge['reason'],
-                1,
-                charge['amount'],
-                taxes,
-            ])
+
+            price_subtotal_before = line_values['price_unit'] * charge['line_quantity'] * (1.0 - line_values['discount'] / 100.0)
+            price_subtotal_after = price_subtotal_before + charge['amount']
+            line_values['price_unit'] += charge['amount'] / charge['line_quantity']
+            new_price_subtotal_before_discount = line_values['price_unit'] * charge['line_quantity']
+            line_values['discount'] = (1 - (price_subtotal_after / new_price_subtotal_before_discount)) * 100.0
         return record._get_line_vals_list(charges_vals)
 
     def _get_document_allowance_charge_xpaths(self):
