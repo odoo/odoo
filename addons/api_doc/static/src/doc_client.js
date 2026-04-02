@@ -73,4 +73,13 @@ export class DocClient extends Component {
         localStorage.setItem("theme", theme);
         document.body.setAttribute("theme", theme);
     }
+
+    get modelStoreError() {
+        const name = this.modelStore.error.name;
+        const status = this.modelStore.error.status ?? 0;
+        const traceback = this.modelStore.error.traceback instanceof Object
+            ? this.modelStore.error.traceback.stack
+            : this.modelStore.error.traceback;
+        return {name, status, traceback};
+    }
 }

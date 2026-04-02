@@ -9,15 +9,15 @@
 
         <h3 class="mt-3 mb-2" id="fields">Fields</h3>
         <DocLoadingIndicator
-            isLoaded="this.state.model and this.state.model.fields != null and this.state.fields.data"
+            isLoaded="this.isDocTableLoaded()"
             class="'o-fade-in'"
         >
-            <DocTable data="this.state.fields.data" activeIndex="this.state.fields.activeIndex"/>
+            <DocTable data="this.state.fields.data"/>
         </DocLoadingIndicator>
 
         <h3 class="mt-3 mb-2" id="methods">Methods</h3>
         <DocLoadingIndicator
-            isLoaded="this.state.methods and this.state.methods.length > 0"
+            isLoaded="this.isDocMethodLoaded()"
             class="'o-fade-in position-relative'"
         >
             <DocMethod

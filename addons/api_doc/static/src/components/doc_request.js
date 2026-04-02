@@ -25,7 +25,6 @@ export class DocRequest extends Component {
     static props = {
         url: String,
         request: { optional: true },
-        method: { type: String, optional: true },
     };
     static defaultProps = {
         httpMethod: "POST",

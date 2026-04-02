@@ -288,4 +288,15 @@ export class DocModel extends Component {
     toggleAllModules(select) {
         this.setActiveModules(this.state.modules, select);
     }
+
+    isDocTableLoaded() {
+        return this.state.fields.data
+            && this.state.model
+            && this.state.model.fields != null;
+    }
+
+    isDocMethodLoaded() {
+        return this.state.methods
+            && this.state.methods.length > 0;
+    }
 }

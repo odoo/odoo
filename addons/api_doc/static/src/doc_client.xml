@@ -32,9 +32,9 @@
 
         <div t-if="this.modelStore.error" class="d-flex flex-column align-items-center justify-content-center w-100 h-100">
             <DocErrorDialog
-                name="this.modelStore.error.name"
-                status="this.modelStore.error.status"
-                traceback="this.modelStore.error.traceback"
+                name="this.modelStoreError.name"
+                status="this.modelStoreError.status"
+                traceback="this.modelStoreError.traceback"
             />
         </div>
     </main>
