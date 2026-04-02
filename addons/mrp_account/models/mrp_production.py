@@ -26,7 +26,7 @@ class MrpProduction(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        for production in self:
+        for production in self.sudo():
             if vals.get('name'):
                 production.move_raw_ids.analytic_account_line_ids.ref = production.display_name
                 for workorder in production.workorder_ids:
