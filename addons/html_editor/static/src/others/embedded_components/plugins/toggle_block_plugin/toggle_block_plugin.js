@@ -464,6 +464,10 @@ export class ToggleBlockPlugin extends Plugin {
                 }
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
                 toggle.replaceWith(baseContainer);
+                const dir = toggle.getAttribute("dir");
+                if (dir) {
+                    baseContainer.setAttribute("dir", dir);
+                }
                 this.dependencies.selection.setCursorStart(baseContainer);
                 return true;
             }
