@@ -636,7 +636,6 @@ export class DiscussChannel extends Record {
     }
 
     async leaveChannelProcess() {
-        await this.closeChatWindow();
         if (this.exists()) {
             await this.leaveChannelRpc();
         }
