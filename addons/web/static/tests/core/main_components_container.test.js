@@ -42,7 +42,6 @@ test("unmounts erroring main component", async () => {
     expect.errors(1);
     onError((error) => {
         expect.step(error.reason.message);
-        expect.step(error.reason.cause.message);
     });
     let compA;
     class MainComponentA extends Component {
@@ -74,10 +73,7 @@ test("unmounts erroring main component", async () => {
     `);
     compA.state.shouldThrow = true;
     await animationFrame();
-    expect.verifySteps([
-        'An error occurred in the owl lifecycle (see this Error\'s "cause" property)',
-        "BOOM",
-    ]);
+    expect.verifySteps(["BOOM"]);
     expect.verifyErrors(["BOOM"]);
 
     expect(".o-main-components-container > span").toHaveCount(1);
@@ -89,7 +85,6 @@ test("unmounts erroring main component: variation", async () => {
     expect.errors(1);
     onError((error) => {
         expect.step(error.reason.message);
-        expect.step(error.reason.cause.message);
     });
     class MainComponentA extends Component {
         static template = xml`<span>MainComponentA</span>`;
@@ -121,10 +116,7 @@ test("unmounts erroring main component: variation", async () => {
     `);
     compB.state.shouldThrow = true;
     await animationFrame();
-    expect.verifySteps([
-        'An error occurred in the owl lifecycle (see this Error\'s "cause" property)',
-        "BOOM",
-    ]);
+    expect.verifySteps(["BOOM"]);
     expect.verifyErrors(["BOOM"]);
     expect(".o-main-components-container > span").toHaveCount(1);
     expect(".o-main-components-container > span").toHaveInnerHTML("MainComponentA");
