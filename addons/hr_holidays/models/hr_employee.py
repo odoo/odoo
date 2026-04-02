@@ -207,12 +207,12 @@ class HrEmployee(models.Model):
             for employee, holiday in employee_holidays.items()
         })
 
-        for employee, holidays in employee_holidays.items():
-            latest_holiday = holidays[0]
-            employee.leave_date_from = min(holidays.mapped('date_from')).date()
-            employee.leave_date_to = employee_back_on.get(employee.id, latest_holiday.date_to).date()
-            employee.current_leave_state = latest_holiday.state
-            employee.is_absent = any(h.work_entry_type_id.count_as == 'absence' for h in holidays)
+        for employee, emp_holidays in employee_holidays.items():
+            latest_emp_holiday = emp_holidays[0]
+            employee.leave_date_from = min(emp_holidays.mapped('date_from')).date()
+            employee.leave_date_to = employee_back_on.get(employee.id, latest_emp_holiday.date_to).date()
+            employee.current_leave_state = latest_emp_holiday.state
+            employee.is_absent = any(e_h.work_entry_type_id.count_as == 'absence' for e_h in emp_holidays)
 
         no_data = self - holidays.employee_id
         no_data.update({
