@@ -2,6 +2,7 @@
 
 from datetime import datetime, timedelta
 from unittest.mock import patch
+from werkzeug.urls import url_encode
 
 from odoo import Command, fields
 from odoo.exceptions import AccessError
@@ -188,6 +189,8 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
             'tokenization_requested': False,
             'landing_route': tx_context['landing_route'],
             'payment_reference': tx_context['payment_reference'],
+            'partner_id': tx_context['partner_id'],
+            'overdue_invoice_ids': tx_context['overdue_invoice_ids'],
         }
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
             processing_values = self._get_processing_values(
@@ -261,3 +264,62 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
         link = invoice._get_portal_payment_link()
         self.assertIsNotNone(link, "A payment link should be generated for the invoice.")
         self.assertIn('amount=300.0', link)  # 30% of 1000 first installment
+
+    def test_invoice_overdue_payment_no_user_flow(self):
+        """
+        Test the overdue payment of an invoice is correctly processed
+        with the invoice amount without user login
+        """
+        # Create a partner to create invoice
+        partner = self.env['res.partner'].create({'name': 'Alsh'})
+
+        # Create an invoice with invoice due date must be in past with payment status to be not paid
+        invoice = self.init_invoice(
+            "out_invoice", partner, amounts=[1000.0], currency=self.currency,
+        )
+        invoice.write({
+            'invoice_date_due': invoice.invoice_date - timedelta(days=10),
+        })
+        invoice.action_post()
+
+        url_params = url_encode({'access_token': partner._get_overdue_invoices_token(), 'partner_id': partner.id, 'company_ids': self.env.companies.ids})
+        overdue_url = self._build_url('/my/invoices/overdue?%s' % url_params)
+        resp = self._make_http_get_request(overdue_url, {})
+
+        self.assertEqual(resp.status_code, 200)
+
+        tx_context = self._get_payment_context(resp)
+
+        # Validate the transaction context amount and payment_reference
+        self.assertEqual(tx_context.get('amount'), invoice.amount_total)
+        self.assertEqual(tx_context['payment_reference'], invoice.payment_reference)
+
+        # Prepare the transaction route values
+        tx_route_values = {
+            'provider_id': self.provider.id,
+            'payment_method_id': self.payment_method_id,
+            'token_id': None,
+            'amount': tx_context.get('amount'),
+            'flow': 'direct',
+            'tokenization_requested': False,
+            'landing_route': tx_context['landing_route'],
+            'payment_reference': tx_context['payment_reference'],
+            'partner_id': tx_context['partner_id'],
+            'overdue_invoice_ids': tx_context['overdue_invoice_ids'],
+        }
+        with mute_logger('odoo.addons.payment.models.payment_transaction'):
+            processing_values = self._get_processing_values(
+                tx_route=tx_context['transaction_route'], **tx_route_values
+            )
+        tx_sudo = self._get_tx(processing_values['reference'])
+        tx_sudo._set_done()
+
+        # Validate the transaction amount is equal to the invoice amount
+        self.assertEqual(tx_sudo.amount, invoice.amount_total)
+
+        url = self._build_url('/payment/status/poll')
+        resp = self.make_jsonrpc_request(url, {})
+        self.assertTrue(tx_sudo.is_post_processed)
+
+        self.assertEqual(resp['state'], 'done')
+        self.assertTrue(invoice.payment_state == invoice._get_invoice_in_payment_state())
