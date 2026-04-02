@@ -9,5 +9,3 @@ export async function startDocClient() {
     });
     app.mount(document.body);
 }
-
-startDocClient();

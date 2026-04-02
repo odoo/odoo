@@ -53,6 +53,15 @@ the methods over HTTP, with examples in various programming languages.
             'api_doc/static/src/doc_client.css',
             ('remove', 'api_doc/static/src/api_action.js'),
         ],
+        'web.assets_unit_tests': [
+            'api_doc/static/src/**/*.xml',
+            'api_doc/static/src/**/*.js',
+            'api_doc/static/src/doc_client.css',
+            ('remove', 'api_doc/static/src/api_action.js'),
+            ('remove', 'api_doc/static/src/main.js'),
+            'api_doc/static/tests/**/*.test.js',
+            'api_doc/static/tests/doc_test_helpers.js',
+        ],
         'web.assets_backend': [
             'api_doc/static/src/api_action.js',
         ],
