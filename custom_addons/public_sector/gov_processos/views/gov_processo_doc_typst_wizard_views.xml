@@ -21,8 +21,15 @@
                             <field name="referencia"/>
                             <field name="base_legal"/>
                             <field name="active_doc_id" invisible="not active_doc_id"/>
+                            <field name="active_doc_state" invisible="not active_doc_id"/>
+                            <field name="active_doc_version" invisible="not active_doc_id"/>
                         </group>
                     </group>
+
+                    <div class="alert alert-secondary" role="alert" invisible="not active_doc_id">
+                        Este wizard está vinculado ao documento ativo <field name="active_doc_id" nolabel="1" readonly="1"/>.
+                        O conteúdo salvo no builder reaproveita esse mesmo rascunho.
+                    </div>
 
                     <notebook>
                         <page string="Estrutura" invisible="edit_mode != 'structured'">
@@ -51,6 +58,20 @@
                         <page string="Typst Manual" invisible="edit_mode != 'manual_typst'">
                             <div class="alert alert-info" role="alert">
                                 Cole aqui um documento Typst completo ou abra o builder para editar o mesmo rascunho em tela cheia.
+                            </div>
+                            <div class="mb-2 d-flex gap-2" invisible="not active_doc_id">
+                                <button
+                                    name="action_sincronizar_do_documento_ativo"
+                                    string="Recarregar do Documento Ativo"
+                                    type="object"
+                                    class="btn-secondary"
+                                />
+                                <button
+                                    name="action_abrir_documento_ativo"
+                                    string="Abrir Documento Ativo"
+                                    type="object"
+                                    class="btn-secondary"
+                                />
                             </div>
                             <field
                                 name="typst_source_manual"

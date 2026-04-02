@@ -8,7 +8,7 @@
     <div class="gov-builder-topbar">
       <div class="gov-builder-topbar-left">
         <button class="gov-btn gov-btn-ghost" t-on-click="onBack" title="Voltar ao documento">
-          <i class="fa fa-arrow-left"/> Voltar
+          <i class="fa fa-arrow-left"/> <t t-esc="backLabel"/>
         </button>
         <span class="gov-builder-docname" t-if="state.doc">
           <i class="fa fa-file-text-o"/> <t t-esc="state.doc.name"/>
@@ -167,6 +167,9 @@
 
         <!-- Estado vazio -->
         <div class="gov-canvas-empty" t-if="state.blocks.length === 0">
+          <img class="gov-canvas-empty-art"
+               src="/gov_processos/static/src/img/gov_builder_empty_state.svg"
+               alt="Ilustração do construtor visual"/>
           <i class="fa fa-hand-pointer-o fa-3x gov-canvas-empty-icon"/>
           <p>Arraste blocos da biblioteca ou clique neles para adicionar</p>
           <p class="gov-canvas-empty-hint">Cada bloco representa uma seção do documento</p>
@@ -183,6 +186,9 @@
               O conteúdo salvo aqui atualiza diretamente o <code>typst_source</code> do documento.
             </div>
           </div>
+          <img class="gov-typst-panel-art"
+               src="/gov_processos/static/src/img/gov_builder_typst_panel.svg"
+               alt="Ilustração do editor Typst"/>
           <span class="gov-builder-badge">Fonte principal do PDF</span>
         </div>
         <textarea

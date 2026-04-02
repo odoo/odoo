@@ -111,6 +111,8 @@ class TestGovProcessoDocTypstWizard(TransactionCase):
         self.assertEqual(action["tag"], "gov_document_builder")
         self.assertEqual(action["params"]["doc_id"], wizard.active_doc_id.id)
         self.assertEqual(action["params"]["initial_mode"], "typst")
+        self.assertEqual(action["params"]["return_action"]["res_model"], "gov.processo.doc.typst.wizard")
+        self.assertEqual(action["params"]["return_action"]["res_id"], wizard.id)
         self.assertEqual(wizard.active_doc_id.typst_source, '= "Documento manual"\n')
 
     def test_create_document_reuses_active_document_in_manual_mode(self):
@@ -137,3 +139,27 @@ class TestGovProcessoDocTypstWizard(TransactionCase):
         self.assertEqual(doc, active_doc)
         self.assertEqual(doc.name, "Documento Ativo Reutilizado")
         self.assertEqual(doc.typst_source, '= "Alterado no builder"\n')
+
+    def test_sync_manual_source_from_active_document(self):
+        wizard = self.env["gov.processo.doc.typst.wizard"].create(
+            {
+                "processo_id": self.processo.id,
+                "source_doc_id": self.source_doc.id,
+                "edit_mode": "manual_typst",
+                "doc_type": "outro",
+                "name": "Sincronizar Documento Ativo",
+                "titulo": "Sincronizar Documento Ativo",
+                "objeto": "Objeto inicial.",
+                "typst_source_manual": '= "Rascunho local"\n',
+                "gerar_pdf_imediatamente": False,
+            }
+        )
+
+        wizard.action_abrir_builder()
+        wizard.active_doc_id.write({"typst_source": '= "Atualizado no builder"\n'})
+
+        action = wizard.action_sincronizar_do_documento_ativo()
+
+        self.assertEqual(action["res_model"], "gov.processo.doc.typst.wizard")
+        self.assertEqual(action["res_id"], wizard.id)
+        self.assertEqual(wizard.typst_source_manual, '= "Atualizado no builder"\n')

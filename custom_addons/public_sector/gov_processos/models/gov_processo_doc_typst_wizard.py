@@ -43,6 +43,16 @@ class GovProcessoDocTypstWizard(models.TransientModel):
         string="Documento Ativo",
         readonly=True,
     )
+    active_doc_state = fields.Selection(
+        related="active_doc_id.state",
+        string="Estado do Documento Ativo",
+        readonly=True,
+    )
+    active_doc_version = fields.Integer(
+        related="active_doc_id.version",
+        string="Versao do Documento Ativo",
+        readonly=True,
+    )
     incluir_peca_dfd = fields.Boolean(string="Peca DFD")
     incluir_peca_justificativa = fields.Boolean(string="Peca Justificativa")
     incluir_peca_etp = fields.Boolean(string="Peca ETP")
@@ -258,6 +268,17 @@ class GovProcessoDocTypstWizard(models.TransientModel):
             "active_doc_id": self.active_doc_id.id or False,
         }
 
+    def _build_return_to_wizard_action(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Novo Documento Typst",
+            "res_model": "gov.processo.doc.typst.wizard",
+            "res_id": self.id,
+            "view_mode": "form",
+            "target": "new",
+        }
+
     def _prepare_document_vals(self, *, allow_builder_seed=False):
         self.ensure_one()
         typst_source = self._get_effective_typst_source(allow_builder_seed=allow_builder_seed)
@@ -353,7 +374,36 @@ class GovProcessoDocTypstWizard(models.TransientModel):
             raise UserError("Informe o nome do documento antes de abrir o builder.")
         doc = self._ensure_active_document(allow_builder_seed=True)
         self.active_doc_id = doc.id
-        return doc._build_construtor_visual_action(initial_mode="typst")
+        return doc._build_construtor_visual_action(
+            initial_mode="typst",
+            extra_params={
+                "return_action": self._build_return_to_wizard_action(),
+            },
+        )
+
+    def action_abrir_documento_ativo(self):
+        self.ensure_one()
+        doc = self.active_doc_id.exists()
+        if not doc:
+            raise UserError("Nenhum documento ativo foi criado ainda.")
+        return {
+            "type": "ir.actions.act_window",
+            "name": doc.name,
+            "res_model": "gov.processo.doc",
+            "res_id": doc.id,
+            "view_mode": "form",
+            "target": "current",
+        }
+
+    def action_sincronizar_do_documento_ativo(self):
+        self.ensure_one()
+        doc = self.active_doc_id.exists()
+        if not doc:
+            raise UserError("Nenhum documento ativo foi criado ainda.")
+        self.typst_source_manual = doc.typst_source or ""
+        if self.edit_mode == "structured":
+            self.typst_preview = doc.typst_source or ""
+        return self._build_return_to_wizard_action()
 
     def action_criar_documento(self):
         self.ensure_one()

@@ -117,6 +117,7 @@ export class GovDocumentBuilder extends Component {
 
         this.docId = this.props.action?.params?.doc_id;
         this.initialMode = this.props.action?.params?.initial_mode;
+        this.returnAction = this.props.action?.params?.return_action;
         this.catalog = BLOCK_CATALOG;
         this.lastSavedLayoutJson = JSON.stringify([]);
         this.lastSavedTypstSource = "";
@@ -380,6 +381,10 @@ export class GovDocumentBuilder extends Component {
 
     // ── Voltar ao documento ─────────────────────────────────────────────────-
     onBack() {
+        if (this.returnAction) {
+            this.action.doAction(this.returnAction);
+            return;
+        }
         if (this.docId) {
             this.action.doAction({
                 type: "ir.actions.act_window",
@@ -404,6 +409,10 @@ export class GovDocumentBuilder extends Component {
 
     get isLocked() {
         return this.state.doc?.state === "assinado";
+    }
+
+    get backLabel() {
+        return this.returnAction ? _t("Voltar ao Wizard") : _t("Voltar");
     }
 }
 

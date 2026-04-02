@@ -510,7 +510,7 @@ class GovProcessoDoc(models.Model):
         self.ensure_one()
         return self._build_construtor_visual_action()
 
-    def _build_construtor_visual_action(self, initial_mode=False):
+    def _build_construtor_visual_action(self, initial_mode=False, extra_params=None):
         self.ensure_one()
         params = {
             "doc_id": self.id,
@@ -518,6 +518,8 @@ class GovProcessoDoc(models.Model):
         }
         if initial_mode:
             params["initial_mode"] = initial_mode
+        if extra_params:
+            params.update(extra_params)
         return {
             "type": "ir.actions.client",
             "tag": "gov_document_builder",
