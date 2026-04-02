@@ -1418,6 +1418,38 @@ class TestStockQuant(TestStockCommon):
         )
         self.assertEqual(quant.inventory_quantity, 0)
 
+    def test_forced_full_packaging_reservation(self):
+        '''
+        Ensure reservations respect the setting set on the product's category.
+        '''
+        self.productA.categ_id = self.env.ref('product.product_category_goods')
+        self.productA.categ_id.packaging_reserve_method = 'full'
+        # Delivery for 26 units
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'product_uom_qty': 26,
+                'uom_id': self.productA.uom_id.id,
+            })],
+            'state': 'draft',
+        })
+        delivery.move_ids.packaging_uom_id = self.uom_dozen
+
+        # Only 1 full packaging in stock, so reservation should be 12
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 15)
+        delivery.action_confirm()
+        self.assertEqual(delivery.move_ids.quantity, 12)
+
+        # Plenty in stock, reservation should be the max amount of full packagings so 24
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 100)
+        delivery.action_assign()
+        self.assertEqual(delivery.move_ids.quantity, 24)
+
 
 class TestStockQuantRemovalStrategy(TestStockCommon):
 
