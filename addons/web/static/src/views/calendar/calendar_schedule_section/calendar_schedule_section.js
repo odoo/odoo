@@ -38,6 +38,6 @@ export class CalendarScheduleSection extends Component {
     }
 
     openRecord(event) {
-        this.props.editRecord({ ...event, title: event.name });
+        this.props.editRecord({ ...event, title: event.display_name });
     }
 }
