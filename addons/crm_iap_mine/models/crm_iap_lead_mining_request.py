@@ -76,7 +76,7 @@ class CrmIapLeadMiningRequest(models.Model):
     lead_contacts_credits = fields.Char(compute='_compute_tooltip', readonly=True)
     lead_total_credits = fields.Char(compute='_compute_tooltip', readonly=True)
 
-    @api.onchange('lead_number', 'contact_number')
+    @api.depends('lead_number', 'contact_number')
     def _compute_tooltip(self):
         for record in self:
             company_credits = CREDIT_PER_COMPANY * record.lead_number
