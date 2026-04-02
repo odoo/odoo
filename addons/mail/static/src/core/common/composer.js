@@ -487,6 +487,7 @@ export class Composer extends Component {
     }
 
     get navigableListProps() {
+        void this.suggestion.state.count;
         const props = {
             anchorRef: this.inputContainerRef.el,
             position: this.env.inChatter ? "bottom-fit" : "top-fit",
