@@ -117,9 +117,16 @@ owl.useRef = function useRef(name) {
     if (!node.__refs__) {
         node.__refs__ = {};
     }
+    if (!node.__refs__[name]) {
+        node.__refs__[name] = { lastSetId: null, values: {} };
+    }
     return {
         get el() {
-            return node.__refs__[name] || null;
+            const info = node.__refs__[name];
+            if (!info.lastSetId) {
+                return null;
+            }
+            return info.values[info.lastSetId];
         },
     };
 };
@@ -325,6 +332,7 @@ class Portal extends owl.Component {
     }
 }
 
+let refId = 0;
 const customDirectives = {
     /**
      * @param {HTMLElement} node
@@ -332,7 +340,7 @@ const customDirectives = {
      */
     ref: (node, value) => {
         const refName = `"` + value.replaceAll(/\{\{(.+?)\}\}/g, `" + $1 + "`) + `"`;
-        node.setAttribute("t-ref", `__globals__.createRefSignal(this, ${refName})`);
+        node.setAttribute("t-ref", `__globals__.createRefSignal(this, ${refName}, ${++refId})`);
     },
     /**
      * @param {HTMLElement} node
@@ -366,15 +374,26 @@ const globalValues = {
      * @param {any} component
      * @param {string} refName
      */
-    createRefSignal: (component, refName) => ({
-        /** @param {HTMLElement | null} value */
-        set(value) {
-            if (!component.__owl__.__refs__) {
-                component.__owl__.__refs__ = {};
-            }
-            component.__owl__.__refs__[refName] = value;
-        },
-    }),
+    createRefSignal: (component, refName, refId) => {
+        const node = component.__owl__;
+        if (!node.__refs__) {
+            node.__refs__ = {};
+        }
+        if (!node.__refs__[refName]) {
+            node.__refs__[refName] = { lastSetId: null, values: {} };
+        }
+        const refInfo = node.__refs__[refName];
+
+        return {
+            /** @param {HTMLElement | null} value */
+            set(value) {
+                if (value) {
+                    refInfo.lastSetId = refId;
+                }
+                refInfo.values[refId] = value;
+            },
+        };
+    },
     /**
      * @param {Function} getter
      * @param {Function} setter
