@@ -8,6 +8,7 @@ from odoo.exceptions import ValidationError
 
 from odoo.addons.l10n_dk.tools.demo_utils import handle_demo
 
+APPLICATION_RESPONSE_CUSTOMISATION_ID = "busdox-docid-qns::urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2::ApplicationResponse##OIOUBL-2.1::2.1"
 TIMEOUT = 10
 _logger = logging.getLogger(__name__)
 
@@ -47,6 +48,8 @@ class ResPartner(models.Model):
         compute="_compute_nemhandel_identifier_value", store=True, readonly=False,
         tracking=True,
     )
+    nemhandel_supported_documents = fields.Json('Supported Nemhandel Documents')
+    nemhandel_response_support = fields.Boolean('Nemhandel Response Service', compute='_compute_nemhandel_response_support')
 
     is_using_nemhandel = fields.Boolean(compute='_compute_is_using_nemhandel')
 
@@ -89,6 +92,15 @@ class ResPartner(models.Model):
                 partner.nemhandel_identifier_value = partner.nemhandel_identifier_value
             else:
                 partner.nemhandel_identifier_value = ''
+
+    @api.depends('nemhandel_supported_documents', 'nemhandel_verification_state')
+    def _compute_nemhandel_response_support(self):
+        for partner in self:
+            partner.nemhandel_response_support = (
+                partner.nemhandel_verification_state == 'valid'
+                and partner.nemhandel_supported_documents
+                and APPLICATION_RESPONSE_CUSTOMISATION_ID in partner.nemhandel_supported_documents
+            )
 
     @api.depends_context('allowed_company_ids')
     @api.depends('invoice_edi_format')
@@ -249,7 +261,7 @@ class ResPartner(models.Model):
 
         self_partner = self.with_company(company)
         old_value = self_partner.nemhandel_verification_state
-        self_partner.nemhandel_verification_state = self._get_nemhandel_verification_state(self_partner.invoice_edi_format)
+        self_partner.nemhandel_verification_state = self_partner._get_nemhandel_verification_state(self_partner.invoice_edi_format)
         if self_partner.nemhandel_verification_state == 'valid' and not self_partner.invoice_sending_method:
             self_partner.invoice_sending_method = 'nemhandel'
 
@@ -272,5 +284,7 @@ class ResPartner(models.Model):
         if participant_info is None:
             return 'not_valid'
 
-        is_participant_on_network = self._check_nemhandel_participant_exists(participant_info, edi_identification)
-        return 'valid' if is_participant_on_network else 'not_valid'
+        if self._check_nemhandel_participant_exists(participant_info, edi_identification):
+            self.nemhandel_supported_documents = [service['document_id'] for service in participant_info.get('services', []) if service.get('document_id')]
+            return 'valid'
+        return 'not_valid'

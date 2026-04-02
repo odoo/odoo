@@ -19,7 +19,10 @@
                     <div class="row"
                          groups="base.group_no_one"
                          invisible="not is_using_nemhandel or not nemhandel_identifier_value">
-                        <div class="col-4">
+                        <div class="col-4" title="Supports Invoice Responses" invisible="not nemhandel_response_support">
+                            <field name="nemhandel_verification_state" readonly="True"/>
+                        </div>
+                        <div class="col-4" title="Does not support Invoice Responses" invisible="nemhandel_response_support">
                             <field name="nemhandel_verification_state" readonly="True"/>
                         </div>
                         <div class="col-8 pt-0">

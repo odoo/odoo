@@ -31,9 +31,11 @@ Also provides Nemhandel registration and invoice sending throught the Odoo Acces
         'data/nemhandel_onboarding_tour.xml',
         'views/account_journal_views.xml',
         'views/account_move_views.xml',
+        'views/nemhandel_response_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
         'wizard/nemhandel_registration_views.xml',
+        'wizard/nemhandel_rejection_wizard_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
