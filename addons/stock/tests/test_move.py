@@ -6581,7 +6581,10 @@ class TestStockMove(TestStockCommon):
             })]
         })
         self.product.is_storable = True
+        self.assertEqual(picking.move_ids.forecast_availability, -10)
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 10)
+        self.env.invalidate_all()
+        self.assertEqual(picking.move_ids.forecast_availability, 10)
         picking.action_confirm()
         self.assertEqual(picking.move_ids.state, 'assigned')
         picking.move_ids.quantity = 4
