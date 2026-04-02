@@ -15,11 +15,24 @@ def migrate(cr, version):
                 write_date TIMESTAMP DEFAULT NOW()
             )
         """)
-        cr.execute("INSERT INTO enquiry_stage (name, sequence, fold) VALUES ('New', 10, FALSE)")
-        cr.execute("INSERT INTO enquiry_stage (name, sequence, fold) VALUES ('Demo Scheduled', 20, FALSE)")
-        cr.execute("INSERT INTO enquiry_stage (name, sequence, fold) VALUES ('Completed', 30, FALSE)")
-        cr.execute("INSERT INTO enquiry_stage (name, sequence, fold) VALUES ('Enrolled', 40, FALSE)")
-        cr.execute("INSERT INTO enquiry_stage (name, sequence, fold) VALUES ('Lost', 50, TRUE)")
+        stages = [
+            ('stage_new', 'New', 10, False),
+            ('stage_demo_scheduled', 'Demo Scheduled', 20, False),
+            ('stage_completed', 'Completed', 30, False),
+            ('stage_enrolled', 'Enrolled', 40, False),
+            ('stage_lost', 'Lost', 50, True),
+        ]
+        for xml_id, name, sequence, fold in stages:
+            cr.execute(
+                "INSERT INTO enquiry_stage (name, sequence, fold) VALUES (%s, %s, %s) RETURNING id",
+                (name, sequence, fold)
+            )
+            stage_id = cr.fetchone()[0]
+            # Register in ir_model_data so noupdate="1" works
+            cr.execute("""
+                INSERT INTO ir_model_data (name, module, model, res_id, noupdate)
+                VALUES (%s, %s, %s, %s, %s)
+            """, (xml_id, 'tuition_management', 'enquiry.stage', stage_id, True))
 
     # Add stage_id column to enquiry if it doesn't exist
     cr.execute("SELECT column_name FROM information_schema.columns WHERE table_name='enquiry' AND column_name='stage_id'")

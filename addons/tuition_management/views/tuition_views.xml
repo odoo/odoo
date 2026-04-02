@@ -497,38 +497,46 @@
 <field name="arch" type="xml">
 <form string="Enquiry">
 <header>
-<button name="action_enroll_to_course" type="object" string="Enroll to Course" class="btn-primary"/>
+<field name="is_enrolled_stage" invisible="1"/>
+<field name="is_enrolled" invisible="1"/>
+<button name="action_enroll_to_course" type="object" string="Enroll to Course" class="btn-primary" invisible="not is_enrolled_stage or is_enrolled"/>
 </header>
 <div class="alert alert-info" role="status">
-<field name="stage_id" nolabel="1" widget="statusbar" options="{'clickable': True}"/>
+<field name="stage_id" nolabel="1" widget="statusbar" options="{'clickable': True}" readonly="is_enrolled"/>
 </div>
 <sheet>
+<group string="Course Information" invisible="not is_enrolled">
+<field name="course_id"/>
+<field name="enrollment_id"/>
+<field name="parent_profile_id"/>
+<field name="student_profile_id"/>
+</group>
 <group string="Enquiry Information">
-<field name="enquiry_name"/>
-<field name="enquiry_date"/>
+<field name="enquiry_name" readonly="is_enrolled"/>
+<field name="enquiry_date" readonly="is_enrolled"/>
 </group>
 <group string="Parent Information">
-<field name="name" string="Parent Name"/>
-<field name="email"/>
-<field name="partner_id"/>
+<field name="name" string="Parent Name" readonly="is_enrolled"/>
+<field name="email" readonly="is_enrolled"/>
+<field name="partner_id" readonly="is_enrolled"/>
 <label for="phone" string="Phone Number"/>
 <div style="display: grid; grid-template-columns: 25% 75%; gap: 8px;">
-<field name="country_code" placeholder="Country Code"/>
-<field name="phone" class="o_field_char" placeholder="Phone Number"/>
+<field name="country_code" placeholder="Country Code" readonly="is_enrolled"/>
+<field name="phone" class="o_field_char" placeholder="Phone Number" readonly="is_enrolled"/>
 </div>
 </group>
 <group string="Student Information">
-<field name="student_name"/>
+<field name="student_name" readonly="is_enrolled"/>
 </group>
 <group string="Academic Information">
-<field name="subject_id"/>
-<field name="grade_id"/>
+<field name="subject_id" readonly="is_enrolled"/>
+<field name="grade_id" readonly="is_enrolled"/>
 </group>
 <group string="Demo Sessions">
-<field name="demo_session_ids"/>
+<field name="demo_session_ids" readonly="is_enrolled"/>
 </group>
 <group string="Notes">
-<field name="notes" nolabel="1"/>
+<field name="notes" nolabel="1" readonly="is_enrolled"/>
 </group>
 </sheet>
 </form>

@@ -190,6 +190,22 @@ class EnquiryStage(models.Model):
     name = fields.Char(string='Stage Name', required=True)
     sequence = fields.Integer(string='Sequence', default=10)
     fold = fields.Boolean(string='Folded in Kanban', default=False)
+    is_won = fields.Boolean(string='Is Won Stage', default=False, help='Mark this as the won/enrolled stage. Cannot be edited or deleted.')
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_won_stage(self):
+        for rec in self:
+            if rec.is_won:
+                raise UserError('The "%s" stage is a system stage and cannot be deleted.' % rec.name)
+
+    def write(self, vals):
+        for rec in self:
+            if rec.is_won:
+                # Only allow writing is_won itself (for setup) and fields not related to display
+                protected = {'name', 'sequence', 'fold'}
+                if protected & set(vals.keys()):
+                    raise UserError('The "%s" stage is a system stage and cannot be modified.' % rec.name)
+        return super().write(vals)
 
 
 class Enquiry(models.Model):
@@ -216,8 +232,28 @@ class Enquiry(models.Model):
     stage_id = fields.Many2one('enquiry.stage', string='Stage', tracking=True, 
                                 default=lambda self: self.env['enquiry.stage'].search([], limit=1, order='sequence'),
                                 group_expand='_read_group_stage_ids')
+    is_enrolled_stage = fields.Boolean(string='Is Enrolled', compute='_compute_is_enrolled_stage')
+    is_enrolled = fields.Boolean(string='Is Enrolled to Course', default=False)
+    course_id = fields.Many2one('course.master', string='Course', readonly=True)
+    enrollment_id = fields.Many2one('course.enrollment', string='Enrollment', readonly=True)
+    parent_profile_id = fields.Many2one('parent.profile', string='Parent Profile', readonly=True)
+    student_profile_id = fields.Many2one('student.profile', string='Student Profile', readonly=True)
     notes = fields.Text()
     demo_session_ids = fields.One2many('demo.session', 'enquiry_id', string='Demo Sessions')
+
+    @api.depends('stage_id')
+    def _compute_is_enrolled_stage(self):
+        for rec in self:
+            rec.is_enrolled_stage = rec.stage_id.is_won if rec.stage_id else False
+
+    @api.onchange('subject_id', 'name')
+    def _onchange_enquiry_name(self):
+        """Auto-populate enquiry name from subject and parent name."""
+        for rec in self:
+            subject = rec.subject_id.name if rec.subject_id else ''
+            parent = rec.name or ''
+            if subject and parent:
+                rec.enquiry_name = f"{subject} enquiry for {parent}"
 
     @api.model
     def _read_group_stage_ids(self, stages, domain):
@@ -383,17 +419,26 @@ class Enquiry(models.Model):
             })
         
         # Create enrollment
+        enrollment_name = f"{self.subject_id.name} enquiry for {self.name}"
         enrollment = self.env['course.enrollment'].create({
-            'name': f"{student_profile.name} - {course.name}",
+            'name': enrollment_name,
             'course_id': course.id,
             'student_id': student_profile.id,
             'status': 'enrolled',
         })
         
-        # Move to Enrolled stage
+        # Move to Enrolled stage and save references
         enrolled_stage = self.env['enquiry.stage'].search([('name', 'ilike', 'Enrolled')], limit=1)
+        vals = {
+            'is_enrolled': True,
+            'course_id': course.id,
+            'enrollment_id': enrollment.id,
+            'parent_profile_id': parent_profile.id,
+            'student_profile_id': student_profile.id,
+        }
         if enrolled_stage:
-            self.stage_id = enrolled_stage
+            vals['stage_id'] = enrolled_stage.id
+        self.write(vals)
         
         return {
             'type': 'ir.actions.act_window',
