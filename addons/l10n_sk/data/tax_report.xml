@@ -782,12 +782,13 @@ line 1 (sk_01) and its VAT label,
                                 <field name="label">calcul</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">sk_17.vat - sk_18_total.vat - sk_18a_total.vat - sk_19_total.vat
-                                    + sk_24.vat + sk_26.vat + sk_28.vat - sk_30.vat - sk_31.vat</field>
+                                    + sk_24.vat + sk_26.vat + sk_28.vat + sk_29.vat - sk_30.vat - sk_31.vat</field>
                             </record>
                             <record id="sk_final_32_vat" model="account.report.expression">
                                 <field name="label">vat</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">sk_32.calcul</field>
+                                <field name="subformula">if_above(EUR(0))</field>
                             </record>
                         </field>
                     </record>
