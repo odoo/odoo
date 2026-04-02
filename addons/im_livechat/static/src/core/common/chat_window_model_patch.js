@@ -41,6 +41,7 @@ const chatWindowPatch = {
                         this.open({ focus: true, notifyState: this.channel.state !== "open" });
                     } else {
                         super.close(...arguments);
+                        this.channel.leaveChannelRpc();
                     }
                     break;
                 }
@@ -48,6 +49,7 @@ const chatWindowPatch = {
                 this.livechatStep = CW_LIVECHAT_STEP.CONFIRM_CLOSE;
                 if (!isSelfVisitor && this.channel.channel_member_ids.length > 2) {
                     super.close(...arguments);
+                    this.channel.leaveChannelRpc();
                     break;
                 }
                 if (!this.hubAsOpened) {
@@ -63,6 +65,7 @@ const chatWindowPatch = {
                 } else {
                     this.livechatStep = CW_LIVECHAT_STEP.NONE;
                     super.close(...arguments);
+                    this.channel.leaveChannelRpc();
                 }
                 break;
             }
