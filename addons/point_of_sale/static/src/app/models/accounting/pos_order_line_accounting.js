@@ -100,6 +100,9 @@ export class PosOrderlineAccounting extends Base {
      * This is the preferred way to get prices of an orderline since its rounded globally.
      */
     get prices() {
+        if (!this.order_id) {
+            return undefined;
+        }
         const data = this.order_id.prices.baseLineByLineUuids[this.uuid];
         return data.tax_details;
     }
@@ -108,11 +111,17 @@ export class PosOrderlineAccounting extends Base {
      * Same as "get prices" but the prices are computed as if the quantity was 1.
      */
     get unitPrices() {
+        if (!this.order_id) {
+            return undefined;
+        }
         const data = this.order_id.unitPrices.baseLineByLineUuids[this.uuid];
         return data.tax_details;
     }
 
     get productProductPrice() {
+        if (!this.product_id) {
+            return 0;
+        }
         return this.product_id.getPrice(
             this.config.pricelist_id,
             1,
@@ -138,6 +147,9 @@ export class PosOrderlineAccounting extends Base {
     }
 
     get taxGroupLabels() {
+        if (!this.order_id) {
+            return "";
+        }
         let taxes_id = this.tax_ids;
         if (this.order_id.fiscal_position_id) {
             taxes_id = this.order_id.fiscal_position_id.getTaxesAfterFiscalPosition(this.tax_ids);
