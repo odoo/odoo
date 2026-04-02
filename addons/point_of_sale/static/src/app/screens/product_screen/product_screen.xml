@@ -24,7 +24,7 @@
             </div>
             <div class="rightpane d-flex flex-grow-1 flex-column bg-secondary" t-if="!this.ui.isSmall || this.pos.mobile_pane === 'right'">
                 <div class="position-relative d-flex flex-column flex-grow-1 overflow-hidden">
-                    <CategorySelector t-if="!this.ui.isSmall || !this.pos.scanning" />
+                    <CategorySelector t-if="this.pos.productToDisplayByCateg.length > 0 and (!this.ui.isSmall || !this.pos.scanning)" />
                     <BarcodeVideoScanner t-if="this.pos.scanning" t-props="this.barcodeVideoScannerProps" />
                     <div t-elif="this.pos.productToDisplayByCateg.length > 0" class="overflow-y-auto" t-on-scroll="this.onScroll">
                         <div t-foreach="this.pos.productToDisplayByCateg" t-as="productCateg" t-key="productCateg[0]" class="product-list d-grid gap-1 gap-lg-2 px-2 py-2">
