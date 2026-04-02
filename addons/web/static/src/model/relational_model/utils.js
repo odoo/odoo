@@ -774,6 +774,34 @@ export function useRecordObserver(callback) {
     const component = useComponent();
     let currentId;
 
+    let hooksSet = false;
+    const setHooks = (props) => {
+        hooksSet = true;
+        const hooks = props.record.model.hooks;
+        const hookNames = ["onRootLoaded", "onRecordSaved", "onSavedMulti", "onRecordChanged"];
+        const previousCbs = [];
+        for (const hookName of hookNames) {
+            const previousCb = hooks[hookName];
+            previousCbs.push([hookName, previousCb]);
+            hooks[hookName] = (...args) => {
+                const result = previousCb(...args);
+                batchedCallback(
+                    currentId,
+                    props.record,
+                    props,
+                    () => {},
+                    () => {}
+                );
+                return result;
+            };
+        }
+        return () => {
+            for (const [key, previousCb] of previousCbs) {
+                hooks[key] = previousCb;
+            }
+        };
+    };
+
     const batchedCallback = batched(
         (effectId, record, props, resolve, reject) => {
             if (effectId !== currentId) {
@@ -786,6 +814,7 @@ export function useRecordObserver(callback) {
         () => new Promise((res) => window.requestAnimationFrame(res))
     );
 
+    let disposeHooks = () => {};
     let disposePreviousEffect = () => {};
     const observeRecord = (props) => {
         disposePreviousEffect();
@@ -793,11 +822,16 @@ export function useRecordObserver(callback) {
         if (!props.record) {
             return;
         }
+        if (!hooksSet) {
+            disposeHooks = setHooks(props);
+        }
         const { promise, resolve, reject } = Promise.withResolvers();
         const effectId = currentId;
         let firstCall = true;
         disposePreviousEffect = immediateEffect(() => {
-            props.record; // consume signal
+            for (const key in props.record.data) {
+                props.record.data[key]; // consume signal
+            }
             if (firstCall) {
                 firstCall = false;
                 untrack(() => Promise.resolve(callback(props.record, props)))
@@ -811,6 +845,8 @@ export function useRecordObserver(callback) {
     };
     onWillDestroy(() => {
         currentId = uniqueId();
+        disposePreviousEffect();
+        disposeHooks();
     });
     onWillStart(() => observeRecord(component.props));
     onWillUpdateProps((nextProps) => {
@@ -818,23 +854,6 @@ export function useRecordObserver(callback) {
             return observeRecord(nextProps);
         }
     });
-
-    const hooks = component.props.record.model.hooks;
-    const hookNames = ["onRootLoaded", "onRecordSaved", "onSavedMulti", "onRecordChanged"];
-    for (const hookName of hookNames) {
-        const previousCb = hooks[hookName];
-        hooks[hookName] = (...args) => {
-            const result = previousCb(...args);
-            batchedCallback(
-                currentId,
-                component.props.record,
-                component.props,
-                () => {},
-                () => {}
-            );
-            return result;
-        };
-    }
 }
 
 /**
