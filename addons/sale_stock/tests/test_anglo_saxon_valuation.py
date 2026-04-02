@@ -1641,6 +1641,48 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
             {'account_id': self.account_expense.id, 'debit': 60.0, 'credit': 0.0},
         ])
 
+    def test_cogs_fifo_multiple_invoice_uom(self):
+        """
+        Ensure that multiple COGS lines with different UoM do not negatively impact the COGS computation.
+        Each COGS line quantity must be individually converted to the product UoM using its own UoM.
+        """
+        unit_6 = self.env['uom.uom'].create({
+            'name': 'Pack of 6',
+            'relative_factor': 6,
+            'relative_uom_id': self.env.ref('uom.product_uom_unit').id,
+        })
+        self.product_fifo_auto.write({"uom_ids": [Command.link(unit_6.id)]})
+
+        self._make_in_move(self.product_fifo_auto, 12, 1)
+
+        moves = self.env['stock.move'].search([('product_id', '=', self.product_fifo_auto.id)])
+        self.assertEqual(moves.value, 12)
+
+        sale_order = self._so_deliver(self.product_fifo_auto, 6, 5)
+        invoice1 = sale_order._create_invoices()
+        invoice1.action_post()
+
+        order_line = sale_order.order_line
+        order_line.product_uom_qty = 12
+
+        move = order_line.move_ids.filtered(lambda sm: sm.state != "done")
+        move.write({'quantity': 6, 'picked': True})
+        move.picking_id.button_validate()
+
+        invoice2 = sale_order._create_invoices()
+        # Change invoice UoM from 6 Units to 1 Pack of 6 (because why not?)
+        invoice2.invoice_line_ids.write({"quantity": 1, "product_uom_id": unit_6.id})
+        invoice2.action_post()
+
+        cogs_line_1 = invoice1.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        cogs_line_2 = invoice2.line_ids.filtered(lambda l: l.display_type == 'cogs')
+        self.assertRecordValues((cogs_line_1 | cogs_line_2), [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 6.0},
+            {'account_id': self.account_expense.id, 'debit': 6.0, 'credit': 0.0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 6.0},
+            {'account_id': self.account_expense.id, 'debit': 6.0, 'credit': 0.0},
+        ])
+
     def test_multi_steps_partially_delivered(self):
         """Checks that when there is multi steps delivery, if one of the moves of the chain
         is validated but not the other(s) we fallback on the standard price for the cogs.
