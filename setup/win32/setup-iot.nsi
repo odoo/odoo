@@ -197,11 +197,12 @@ Section $(TITLE_Odoo_IoT) SectionOdoo_IoT
     WriteIniStr "$INSTDIR\odoo.conf" "options" "server_wide_modules" "iot_drivers,web"
     # Configure logging
     WriteIniStr "$INSTDIR\odoo.conf" "options" "logfile" "$INSTDIR\odoo.log"
-    WriteIniStr "$INSTDIR\odoo.conf" "options" "log_handler" ":WARNING"
-    WriteIniStr "$INSTDIR\odoo.conf" "options" "log_level" "warn"
+    WriteIniStr "$INSTDIR\odoo.conf" "options" "log_handler" ":INFO,werkzeug:WARNING"
+    WriteIniStr "$INSTDIR\odoo.conf" "options" "log_level" "info"
     # Other configuration
     WriteIniStr "$INSTDIR\odoo.conf" "options" "list_db" "False"
     WriteIniStr "$INSTDIR\odoo.conf" "options" "max_cron_threads" "0"
+    WriteIniStr "$INSTDIR\odoo.conf" "options" "http_interface" "0.0.0.0"
 
     DetailPrint "Installing Windows service"
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe"'
@@ -247,8 +248,8 @@ Section -$(TITLE_Nginx) Nginx
     CreateDirectory $INSTDIR\nginx\logs
     File "conf\nginx\nginx.conf"
     # Temporary certs for the first start
-    File "..\..\odoo\setup\iot_box_builder\overwrite_after_init\etc\ssl\certs\nginx-cert.crt"
-    File "..\..\odoo\setup\iot_box_builder\overwrite_after_init\etc\ssl\private\nginx-cert.key"
+    File "..\iot_box_builder\overwrite_after_init\etc\ssl\certs\nginx-cert.crt"
+    File "..\iot_box_builder\overwrite_after_init\etc\ssl\private\nginx-cert.key"
 SectionEnd
 
 Section -$(TITLE_Ghostscript) SectionGhostscript
