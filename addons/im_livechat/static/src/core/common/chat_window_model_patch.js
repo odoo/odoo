@@ -29,5 +29,17 @@ const chatWindowPatch = {
         this.confirmCloseResolver = Promise.withResolvers();
         return this.confirmCloseResolver.promise.finally(() => (this.confirmCloseResolver = null));
     },
+    async _onBeforeClose() {
+        const canClose = await super._onBeforeClose(...arguments);
+        if (
+            this.exists() &&
+            this.channel?.channel_type === "livechat" &&
+            this.channel.livechatVisitorMember?.persona?.notEq(this.store.self) &&
+            canClose
+        ) {
+            await this.channel.leaveChannelRpc();
+        }
+        return canClose;
+    },
 };
 patch(ChatWindow.prototype, chatWindowPatch);
