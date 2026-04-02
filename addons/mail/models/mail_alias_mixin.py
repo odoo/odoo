@@ -51,3 +51,10 @@ class MailAliasMixin(models.AbstractModel):
             record.with_context(mail_notrack=True).alias_id = alias
             _logger.info('Mail alias created for %s %s (id %s)',
                          record._name, record.display_name, record.id)
+
+    # --------------------------------------------------
+    # access rights: ignore parent model
+    # --------------------------------------------------
+
+    def _access_domain(self, operation):
+        return self.env['ir.access']._get_domain_for(self._name, operation, include_inherits=False)
