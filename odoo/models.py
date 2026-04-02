@@ -1154,90 +1154,96 @@ class BaseModel(metaclass=MetaModel):
                     paths = [path[1:] or ['display_name'] for path in paths]
                     fetch_fields(subrecords, paths)
 
-            fetch_fields(self, fields)
+        field_names = [f[0].split('.')[0] for f in fields if len(f) == 1 and f[0] not in ('.id', 'id')]
 
-        for record in self:
-            # main line of record, initially empty
-            current = [''] * len(fields)
-            lines.append(current)
+        BATCH_SIZE = 1000
+        for i in range(0, len(self), BATCH_SIZE):
+            subrecordset = self[i:i + BATCH_SIZE]
+            if _is_toplevel_call:
+                fetch_fields(subrecordset, fields)
+            for record in subrecordset:
+                # main line of record, initially empty
+                current = [''] * len(fields)
+                lines.append(current)
 
-            # list of primary fields followed by secondary field(s)
-            primary_done = []
+                # list of primary fields followed by secondary field(s)
+                primary_done = []
 
-            # process column by column
-            for i, path in enumerate(fields):
-                if not path:
-                    continue
+                # process column by column
+                for i, path in enumerate(fields):
+                    if not path:
+                        continue
 
-                name = path[0]
-                if name in primary_done:
-                    continue
+                    name = path[0]
+                    if name in primary_done:
+                        continue
 
-                if name == '.id':
-                    current[i] = str(record.id)
-                elif name == 'id':
-                    current[i] = (record._name, record.id)
-                else:
-                    prop_name = None
-                    if '.' in name:  # Properties field
-                        fname, prop_name = name.split('.')
-                        field = record._fields[fname]
-                        field_type, cache_value = cache_properties[field].get(prop_name, ('char', None))
-                        value = cache_value.get(record.id, '') if cache_value else ''
-                    else:  # Normal field
-                        field = record._fields[name]
-                        field_type = field.type
-                        value = record[name]
-
-                    # this part could be simpler, but it has to be done this way
-                    # in order to reproduce the former behavior
-                    if not isinstance(value, BaseModel):
-                        current[i] = field.convert_to_export(value, record)
-
-                    elif import_compatible and field_type == 'reference':
-                        current[i] = f"{value._name},{value.id}"
-
+                    if name == '.id':
+                        current[i] = str(record.id)
+                    elif name == 'id':
+                        current[i] = (record._name, record.id)
                     else:
-                        primary_done.append(name)
-                        # recursively export the fields that follow name; use
-                        # 'display_name' where no subfield is exported
-                        fields2 = [(p[1:] or ['display_name'] if p and p[0] == name else [])
-                                   for p in fields]
+                        prop_name = None
+                        if '.' in name:  # Properties field
+                            fname, prop_name = name.split('.')
+                            field = record._fields[fname]
+                            field_type, cache_value = cache_properties[field].get(prop_name, ('char', None))
+                            value = cache_value.get(record.id, '') if cache_value else ''
+                        else:  # Normal field
+                            field = record._fields[name]
+                            field_type = field.type
+                            value = record[name]
 
-                        # in import_compat mode, m2m should always be exported as
-                        # a comma-separated list of xids or names in a single cell
-                        if import_compatible and field_type == 'many2many':
-                            index = None
-                            # find out which subfield the user wants & its
-                            # location as we might not get it as the first
-                            # column we encounter
-                            for name in ['id', 'name', 'display_name']:
-                                with contextlib.suppress(ValueError):
-                                    index = fields2.index([name])
-                                    break
-                            if index is None:
-                                # not found anything, assume we just want the
-                                # display_name in the first column
-                                name = None
-                                index = i
+                        # this part could be simpler, but it has to be done this way
+                        # in order to reproduce the former behavior
+                        if not isinstance(value, BaseModel):
+                            current[i] = field.convert_to_export(value, record)
 
-                            if name == 'id':
-                                xml_ids = [xid for _, xid in value.__ensure_xml_id()]
-                                current[index] = ','.join(xml_ids)
-                            else:
-                                current[index] = ','.join(value.mapped('display_name')) if value else ''
-                            continue
+                        elif import_compatible and field_type == 'reference':
+                            current[i] = f"{value._name},{value.id}"
 
-                        lines2 = value._export_rows(fields2, _is_toplevel_call=False)
-                        if lines2:
-                            # merge first line with record's main line
-                            for j, val in enumerate(lines2[0]):
-                                if val or isinstance(val, (int, float)):
-                                    current[j] = val
-                            # append the other lines at the end
-                            lines += lines2[1:]
                         else:
-                            current[i] = ''
+                            primary_done.append(name)
+                            # recursively export the fields that follow name; use
+                            # 'display_name' where no subfield is exported
+                            fields2 = [(p[1:] or ['display_name'] if p and p[0] == name else [])
+                                    for p in fields]
+
+                            # in import_compat mode, m2m should always be exported as
+                            # a comma-separated list of xids or names in a single cell
+                            if import_compatible and field_type == 'many2many':
+                                index = None
+                                # find out which subfield the user wants & its
+                                # location as we might not get it as the first
+                                # column we encounter
+                                for name in ['id', 'name', 'display_name']:
+                                    with contextlib.suppress(ValueError):
+                                        index = fields2.index([name])
+                                        break
+                                if index is None:
+                                    # not found anything, assume we just want the
+                                    # display_name in the first column
+                                    name = None
+                                    index = i
+
+                                if name == 'id':
+                                    xml_ids = [xid for _, xid in value.__ensure_xml_id()]
+                                    current[index] = ','.join(xml_ids)
+                                else:
+                                    current[index] = ','.join(value.mapped('display_name')) if value else ''
+                                continue
+
+                            lines2 = value._export_rows(fields2, _is_toplevel_call=False)
+                            if lines2:
+                                # merge first line with record's main line
+                                for j, val in enumerate(lines2[0]):
+                                    if val or isinstance(val, (int, float)):
+                                        current[j] = val
+                                # append the other lines at the end
+                                lines += lines2[1:]
+                            else:
+                                current[i] = ''
+            subrecordset.invalidate_recordset(field_names)
 
         # if any xid should be exported, only do so at toplevel
         if _is_toplevel_call and any(f[-1] == 'id' for f in fields):
