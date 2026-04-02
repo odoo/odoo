@@ -21,8 +21,8 @@ class PosOrderLine(models.Model):
     def _get_product_cost_with_moves(self, moves):
         self.ensure_one()
         product = self.product_id
-        if any(bom.type == 'phantom' for bom in product.bom_ids):
-            bom = self.env['mrp.bom']._bom_find(product, company_id=self.company_id.id, bom_type='phantom')[product]
+        bom = self.env['mrp.bom']._bom_find(product, company_id=self.company_id.id, bom_type='phantom').get(product)
+        if bom:
             return moves._get_kit_price_unit(product, bom, self.qty)
         return super()._get_product_cost_with_moves(moves)
 

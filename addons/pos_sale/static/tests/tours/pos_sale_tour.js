@@ -244,6 +244,17 @@ registry.category("web_tour.tours").add("PoSSaleOrderWithDownpayment", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_pos_settle_so_with_downpayment", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.checkOrderlinesNumber(3),
+            ProductScreen.totalAmountIs(755.0),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_settle_so_with_non_pos_groupable_uom", {
     steps: () =>
         [
@@ -673,5 +684,18 @@ registry.category("web_tour.tours").add("test_settle_changed_price_with_lots", {
                 quantity: "1.0",
                 price: "100",
             }),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PoSApplyDownpaymentWithExtraLine", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.downPaymentFirstOrder("+10"),
+            ProductScreen.clickDisplayedProduct("product_a"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
         ].flat(),
 });

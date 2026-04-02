@@ -306,6 +306,38 @@ class TestManualConsumption(TestMrpCommon):
             {"manual_consumption": True, "picked": True, "lot_ids": lots[1].ids},
         ])
 
+    def test_consumption_on_new_move_lines(self):
+        """
+        Test to ensure that from 'Details' wizard, when removing all the move_lines and then
+        adding new ones, the move is still properly consumed
+        """
+        bom = self.bom_4
+        component = bom.bom_line_ids.product_id
+        component.write({
+            "is_storable": True,
+            "tracking": "lot",
+        })
+
+        lot = self.env["stock.lot"].create({"name": "lot_1", "product_id": component.id})
+        self.env["stock.quant"]._update_available_quantity(component, self.stock_location, 5, lot_id=lot)
+
+        mo = self.env["mrp.production"].create({"bom_id": bom.id, "product_qty": 1})
+        mo.action_confirm()
+
+        self.assertRecordValues(mo.move_raw_ids, [
+            {"manual_consumption": False, "picked": False},
+        ])
+
+        with Form.from_action(self.env, mo.move_raw_ids[0].action_show_details()) as wiz_form:
+            wiz_form.move_line_ids.remove(0)
+            with wiz_form.move_line_ids.new() as line:
+                line.quantity = 2
+            wiz_form.save()
+
+        self.assertRecordValues(mo.move_raw_ids, [
+            {"manual_consumption": True, "picked": True},
+        ])
+
     def test_manual_consumption_is_false_if_quantity_was_unchanged(self):
         """
         Check that a move's `manual_consumption` field is only set if the

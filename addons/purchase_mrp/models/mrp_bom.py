@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -42,10 +41,21 @@ class MrpBomLine(models.Model):
     def _get_cost_share(self):
         self.ensure_one()
         product = self.env.context.get('bom_variant_id', self.env['product.product'])
-        variant_bom_lines = self.bom_id.bom_line_ids.filtered(lambda bl: not bl._skip_bom_line(product) and not bl.product_uom_id.is_zero(bl.product_qty))
-        if not float_is_zero(self.cost_share, precision_digits=2) or not len(variant_bom_lines) or not all(float_is_zero(bom_line.cost_share, precision_digits=2) for bom_line in variant_bom_lines):
+        cache = self.env.context.get('bom_cost_share_cache', {})
+        variant_cache_key = (self.bom_id.id, product.id)
+        if variant_cache_key not in cache:
+            variant_bom_lines = self.bom_id.bom_line_ids.filtered(
+                lambda bl: not bl._skip_bom_line(product)
+                and not bl.product_uom_id.is_zero(bl.product_qty)
+            )
+            cache[variant_cache_key] = (
+                len(variant_bom_lines),
+                any(not float_is_zero(bom_line.cost_share, precision_digits=2) for bom_line in variant_bom_lines),
+            )
+        variant_bom_line_count, has_non_zero_cost_share = cache[variant_cache_key]
+        if not float_is_zero(self.cost_share, precision_digits=2) or not variant_bom_line_count or has_non_zero_cost_share:
             return self.cost_share / 100
-        return 1 / len(variant_bom_lines)
+        return 1 / variant_bom_line_count
 
     def _prepare_bom_done_values(self, quantity, product, original_quantity, boms_done):
         result = super()._prepare_bom_done_values(quantity, product, original_quantity, boms_done)

@@ -572,6 +572,8 @@ class PosOrder(models.Model):
         values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
         values.setdefault('fiscal_position_id', session.config_id.default_fiscal_position_id.id)
         values.setdefault('company_id', session.config_id.company_id.id)
+        if session.config_id.use_presets and session.config_id.default_preset_id:
+            values.setdefault('preset_id', session.config_id.default_preset_id.id)
 
         if not values.get('pos_reference'):
             reference, tracking_number = session.config_id._get_next_order_refs()
@@ -789,7 +791,7 @@ class PosOrder(models.Model):
                 partner_bank_id = journal_bank
 
         # Case 3: fallback → company bank
-        elif amount_total >= 0 and self.company_id.partner_id.bank_ids:
+        if not partner_bank_id and amount_total >= 0 and self.company_id.partner_id.bank_ids:
             partner_bank_id = _first_allowed(self.company_id.partner_id.bank_ids)
 
         return partner_bank_id.id if partner_bank_id else False

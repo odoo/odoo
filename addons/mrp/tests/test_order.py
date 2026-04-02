@@ -1596,6 +1596,9 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.state, 'done')
         self.assertEqual(mo.qty_produced, 1)
         self.assertEqual(mo.move_raw_ids.state, 'cancel')
+        # Check that the duplicated production does not have the same reference
+        mo2 = mo.copy()
+        self.assertNotEqual(mo2.reference_ids, mo.reference_ids)
 
     def test_product_produce_14(self):
         """ Check two component move with the same product are not merged."""

@@ -307,3 +307,40 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         po = self.env['purchase.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
         # Should have same payment term as PO
         self.assertEqual(po.payment_term_id, payment_term)
+
+    def test_so_import_line_allowance_charges(self):
+        po_line_vals = [{
+            'product_id': self.place_prdct.id,
+            'price_unit': 30.0,
+            'product_uom_id': self.uom_units.id,
+            'product_qty': 10.0,
+            'tax_ids': self.purchase_tax.ids,
+            'discount': -10.0,
+        }]
+        xml_attachment = self.get_purchase_xml(po_line_vals)
+
+        so = self.env['sale.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
+        self.assertRecordValues(so.order_line, [{
+            'price_unit': 50.0,
+            'product_uom_qty': 10.0,
+            'product_uom_id': self.uom_units.id,
+            'discount': 0.0,
+        }])
+
+    def test_po_import_line_allowance_charges(self):
+        so_line_vals = [{
+            'product_id': self.place_prdct.id,
+            'product_uom_id': self.uom_units.id,
+            'product_uom_qty': 10.0,
+            'tax_ids': self.sale_tax.ids,
+            'discount': -10.0,
+        }]
+        xml_attachment = self.get_sale_xml(so_line_vals)
+
+        po = self.env['purchase.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
+        self.assertRecordValues(po.order_line, [{
+            'price_unit': 55.0,
+            'product_uom_qty': 10.0,
+            'product_uom_id': self.uom_units.id,
+            'discount': 0.0,
+        }])

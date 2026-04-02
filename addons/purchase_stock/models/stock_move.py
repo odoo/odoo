@@ -89,7 +89,7 @@ class StockMove(models.Model):
                 po_line_vals['price_unit'] = 0
             purchase_order_lines_vals.append(po_line_vals)
         if purchase_order_lines_vals:
-            self.env['purchase.order.line'].create(purchase_order_lines_vals)
+            self.env['purchase.order.line'].with_context(bypass_move_update=True).create(purchase_order_lines_vals)
         return super()._action_synch_order()
 
     def _should_ignore_pol_price(self):

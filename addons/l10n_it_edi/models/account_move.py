@@ -1255,28 +1255,7 @@ class AccountMove(models.Model):
             proxy_acks.append(id_transaction)
 
         if attachment_vals:
-            attachments = self.env['ir.attachment'].with_company(proxy_user.company_id).create(attachment_vals)
-
-            # Unwrap the attachments. Potentially each FatturaPA file can get unwrapped into several sub-attachments that
-            # should each create one invoice.
-            files_data = self._to_files_data(attachments)
-            files_data.extend(self._unwrap_attachments(files_data))
-
-            moves = self.with_company(proxy_user.company_id).create([{}] * len(files_data))
-
-            for move, file_data in zip(moves, files_data):
-                attachment = file_data['attachment']
-                attachment.write({'res_model': 'account.move', 'res_id': move.id, 'res_field': 'l10n_it_edi_attachment_file'})
-
-                # Post the attachment in the chatter
-                move.message_post(
-                    body=_("This invoice was retrieved from the SdI."),
-                    attachment_ids=attachment.ids
-                )
-
-            # Extend created moves with the related attachments.
-            for move, file_data in zip(moves, files_data):
-                move._extend_with_attachments([file_data], new=True)
+            self._l10n_it_edi_process_downloads_attachments(proxy_user.company_id, attachment_vals)
 
         return {"retrigger": retrigger, "proxy_acks": proxy_acks}
 
@@ -1309,6 +1288,33 @@ class AccountMove(models.Model):
             return False
 
         return filename, decrypted_content
+
+    def _l10n_it_edi_process_downloads_attachments(self, company_id, attachment_vals):
+        attachments = self.env['ir.attachment'].with_company(company_id).create(attachment_vals)
+
+        # Unwrap the attachments. Potentially each FatturaPA file can get unwrapped into several sub-attachments that
+        # should each create one invoice.
+        files_data = self._to_files_data(attachments)
+        files_data.extend(self._unwrap_attachments(files_data))
+
+        moves = self.with_company(company_id).create([{}] * len(files_data))
+
+        for move, file_data in zip(moves, files_data):
+            # TODO: write to l10n_it_edi_attachment_file directly
+            attachment = file_data['attachment']
+            attachment.write({'res_model': 'account.move', 'res_id': move.id, 'res_field': 'l10n_it_edi_attachment_file'})
+
+            # Post the attachment in the chatter
+            move.message_post(
+                body=_("This invoice was retrieved from the SdI."),
+                attachment_ids=attachment.ids
+            )
+
+        # Extend created moves with the related attachments.
+        for move, file_data in zip(moves, files_data):
+            move._extend_with_attachments([file_data], new=True)
+
+        return moves
 
     def _l10n_it_edi_search_partner(self, company, vat, codice_fiscale, email, destination_code=None):
         base_domain = self.env['res.partner']._check_company_domain(company)
@@ -1374,19 +1380,34 @@ class AccountMove(models.Model):
                 importo_ritenuta = get_float(withholding, './/ImportoRitenuta')
                 withholding_percentage = -float_round((importo_ritenuta / prezzo_totale) * 100, 1)
 
-            withholding_tax = self._l10n_it_edi_search_tax_for_import(
-                company,
-                withholding_percentage,
-                ([('l10n_it_withholding_type', '=', withholding_type),
-                  ('l10n_it_withholding_reason', '=', withholding_reason)]
-                 + type_tax_use_domain))
-            if withholding_tax:
-                withholding_taxes.append(withholding_tax)
+            # Some bills involving ENASARCO come in with a wrong withholding_reason
+            # so we defend ourselves by searching with exact type and reason first,
+            # then with just the type
+            for extra_domain, message in ([(
+                [
+                    ('l10n_it_withholding_type', '=', withholding_type),
+                    ('l10n_it_withholding_reason', '=', withholding_reason),
+                    *type_tax_use_domain
+                ],
+                None
+            ), (
+                [
+                    ('l10n_it_withholding_type', '=', withholding_type),
+                    *type_tax_use_domain
+                ],
+                _("ENASARCO tax (type %(wtype)s) has wrong reason %(reason)s",
+                  wtype=withholding_type, reason=withholding_reason))
+            ]):
+                if withholding_tax := self._l10n_it_edi_search_tax_for_import(
+                    company, withholding_percentage, extra_domain,
+                ):
+                    withholding_taxes.append(withholding_tax)
+                    break
             else:
-                message_to_log.append(Markup("%s<br/>%s") % (
-                    _("Withholding tax not found"),
-                    self.env['account.move']._compose_info_message(body_tree, '.'),
-                ))
+                message = _("Withholding tax not found")
+            if message:
+                message_to_log.append(Markup("%s<br/>%s") % (message, self._compose_info_message(body_tree, '.')))
+
         extra_info["withholding_taxes"] = withholding_taxes
 
         pension_fund_elements = body_tree.xpath('.//DatiGeneraliDocumento/DatiCassaPrevidenziale')
@@ -1616,14 +1637,18 @@ class AccountMove(models.Model):
                 if move_line:
                     message_to_log += self._l10n_it_edi_import_line(element, move_line, extra_info)
 
+            attachment_vals = []
             for element in tree.xpath('.//Allegati'):
                 raw_name = get_text(element, './/NomeAttachment') or ''
                 raw_ext = get_text(element, './/FormatoAttachment') or ''
-                self.l10n_it_edi_attachment_name = f"{raw_name}.{raw_ext}" if raw_ext else raw_name
-                self.l10n_it_edi_attachment_file = get_text(element, './/Attachment')
+                attachment_vals.append((
+                    f"{raw_name}.{raw_ext}" if raw_ext and not raw_name.casefold().endswith(raw_ext.casefold()) else raw_name,
+                    b64decode(get_text(element, './/Attachment')),
+                ))
+            if attachment_vals:
                 self.sudo().message_post(
-                    body=(_("Attachment from XML")),
-                    attachments=[(self.l10n_it_edi_attachment_name, b64decode(self.l10n_it_edi_attachment_file))],
+                    body=(_("Attachments from XML")),
+                    attachments=attachment_vals,
                 )
 
             global_enasarco_lines = []

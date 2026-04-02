@@ -133,7 +133,7 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
     def _get_party_node(self, vals):
         # EXTENDS account.edi.xml.ubl_20
         party_node = super()._get_party_node(vals)
-        partner = vals['partner']
+        partner = vals['partner'].commercial_partner_id
         vat = format_vat_number(partner, partner.vat)
         cvr = format_vat_number(partner, partner.company_registry) or vat
         party_node['cac:PartyLegalEntity'].update({

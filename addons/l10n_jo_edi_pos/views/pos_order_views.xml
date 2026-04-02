@@ -24,8 +24,9 @@
             </xpath>
 
             <group name="other_information" position="inside">
-                <field name="l10n_jo_edi_pos_state" invisible="country_code != 'JO'" readonly="l10n_jo_edi_pos_qr"/>
-                <field name="l10n_jo_edi_pos_return_reason" invisible="country_code !='JO' or not refunded_order_id" readonly="l10n_jo_edi_pos_qr"/>
+                <field name="l10n_jo_edi_pos_qr" invisible='1'/> <!-- Needed for _onchange_l10n_jo_edi_pos_state to update the QR properly -->
+                <field name="l10n_jo_edi_pos_state" invisible="country_code != 'JO'" readonly="l10n_jo_edi_pos_qr and l10n_jo_edi_pos_state == 'sent'"/>
+                <field name="l10n_jo_edi_pos_return_reason" invisible="country_code !='JO' or not refunded_order_id" readonly="l10n_jo_edi_pos_qr and l10n_jo_edi_pos_state == 'sent'"/>
             </group>
         </field>
     </record>

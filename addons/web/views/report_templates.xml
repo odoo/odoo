@@ -632,7 +632,7 @@
         <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}">
             <div class="o_footer_content d-flex border-top pt-2">
                 <div class="flex-grow-1 me-2 text-start" t-field="company.report_footer"/>
-                <div class="text-end text-muted">
+                <div class="text-end text-muted text-nowrap">
                     <div t-if="report_type == 'pdf' and display_name_in_footer" t-out="o.name">(document name)</div>
                     <div t-if="report_type == 'pdf'">Page <span class="page"/> / <span class="topage"/></div>
                 </div>

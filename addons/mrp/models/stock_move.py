@@ -291,10 +291,9 @@ class StockMove(models.Model):
                 updated_product_move._action_confirm()
                 move_to_unlink.unlink()
                 self = other_move + updated_product_move
+        moves_to_update = False
         if self.env.context.get('force_manual_consumption') and 'quantity' in vals:
             moves_to_update = self.filtered(lambda move: move.product_uom_qty != vals['quantity'])
-            if moves_to_update:
-                moves_to_update.write({'manual_consumption': True, 'picked': True})
         if 'product_uom_qty' in vals and 'move_line_ids' in vals:
             # first update lines then product_uom_qty as the later will unreserve
             # so possibly unlink lines
@@ -302,6 +301,8 @@ class StockMove(models.Model):
             super().write({'move_line_ids': move_line_vals})
         old_demand = {move.id: move.product_uom_qty for move in self}
         res = super().write(vals)
+        if moves_to_update:
+            moves_to_update.write({'manual_consumption': True, 'picked': True})
         if 'product_uom_qty' in vals and not self.env.context.get('no_procurement', False):
             # when updating consumed qty need to update related pickings
             # context no_procurement means we don't want the qty update to modify stock i.e create new pickings
@@ -430,6 +431,32 @@ class StockMove(models.Model):
                 mo_to_cancel._action_cancel()
         return res
 
+    def _log_cancel_activity(self):
+        super()._log_cancel_activity()
+        if not self:
+            return
+
+        def _render_note_exception_cancel_dest(moves):
+            values = {
+                'origin_moves': moves,
+                'origin_picking': moves.picking_id[0],
+                'moves_information': ((move, (0.0, move.product_qty)) for move in moves),
+            }
+            return self.env['ir.qweb']._render('stock.exception_on_picking', values)
+
+        cancelled_ids = set(self.ids)
+        impacted_origins = self.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
+        documents = {}
+        for move in impacted_origins:
+            production = move.production_id
+            if not production:
+                continue
+            cancelled_dests = move.move_dest_ids.filtered(lambda m: m.id in cancelled_ids)
+            if not cancelled_dests:
+                continue
+            documents[move.production_id, move.production_id.user_id or self.env.user] = cancelled_dests
+        return self.env['stock.picking']._log_activity(_render_note_exception_cancel_dest, documents)
+
     def _prepare_move_split_vals(self, qty):
         defaults = super()._prepare_move_split_vals(qty)
         defaults['workorder_id'] = False
@@ -496,7 +523,7 @@ class StockMove(models.Model):
 
     def _get_upstream_documents_and_responsibles(self, visited):
         if self.production_id and self.production_id.state not in ('done', 'cancel'):
-            return [(self.production_id, self.production_id.user_id, visited)]
+            return [(self.production_id, self.production_id.user_id or self.env.user, visited)]
         else:
             return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 

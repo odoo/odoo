@@ -412,7 +412,7 @@ class ProductProduct(models.Model):
 
         last_manual_value_by_product = self._get_last_product_value(at_date, lot=lot)
         oldest_manual_value = min(pv.date for pv in last_manual_value_by_product.values()) if last_manual_value_by_product else False
-        if oldest_manual_value:
+        if oldest_manual_value and self.env['product.product'].concat(*last_manual_value_by_product.keys()) == self:
             moves_domain &= Domain([('date', '>=', oldest_manual_value)])
 
         for manual_value in last_manual_value_by_product.values():

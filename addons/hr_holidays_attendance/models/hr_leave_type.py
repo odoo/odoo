@@ -46,7 +46,7 @@ class HrLeaveType(models.Model):
                         {
                             'remaining_leaves': unspent_overtime[employee],
                             'virtual_remaining_leaves': unspent_overtime[employee],
-                            'max_leaves': 0,
+                            'max_leaves': unspent_overtime[employee],
                             'leaves_taken': 0,
                             'virtual_leaves_taken': 0,
                             'closest_allocation_remaining': 0,

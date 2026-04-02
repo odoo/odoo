@@ -92,7 +92,9 @@ test("Update description on product line", async() => {
     const pyEnv = await startServer();
     const productId = pyEnv["product"].browse([1]);
     const accountMove = pyEnv["account.move"].browse([1]);
-    pyEnv["account.move.line"].create({ name: productId[0].name, product_id: productId[0].id, move_id: accountMove[0].id });
+    pyEnv["account.move"].write([accountMove[0].id], {
+        invoice_line_ids: [[0, 0, { name: productId[0].name, product_id: productId[0].id }]],
+    });
     await start();
     onRpc("account.move", "web_save", () => { asyncStep("save")});
     await openFormView("account.move", accountMove[0].id, {

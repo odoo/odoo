@@ -72,7 +72,11 @@ class AccountMove(models.Model):
                     'content': ubl_attachment.raw,
                 }
             elif allow_fallback:
-                if self.partner_id and (suggested_edi_format := self.commercial_partner_id._get_suggested_ubl_cii_edi_format()):
+                if (
+                    self.partner_id
+                    and (suggested_edi_format := self.commercial_partner_id._get_suggested_ubl_cii_edi_format())
+                    and self._need_ubl_cii_xml(suggested_edi_format)
+                ):
                     builder = self.env['res.partner']._get_edi_builder(suggested_edi_format)
                     xml_content, errors = builder._export_invoice(self)
                     filename = builder._export_invoice_filename(self)
@@ -90,7 +94,7 @@ class AccountMove(models.Model):
         suggested_edi_formats = {
             suggested_format
             for partner in posted_moves.commercial_partner_id
-            if (suggested_format := partner ._get_suggested_ubl_cii_edi_format())
+            if (suggested_format := partner._get_suggested_ubl_cii_edi_format())
         }
         if posted_moves.ubl_cii_xml_id or suggested_edi_formats:
             print_items.append({

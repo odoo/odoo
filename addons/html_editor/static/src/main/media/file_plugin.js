@@ -164,7 +164,8 @@ export class FilePlugin extends Plugin {
 
     async uploadAndInsertFiles() {
         // Upload
-        const attachments = await this.services.uploadLocalFiles.upload(this.recordInfo, {
+        const uploadParams = this.config.publicAttachments ? {} : { ...this.recordInfo };
+        const attachments = await this.services.uploadLocalFiles.upload(uploadParams, {
             multiple: true,
             accessToken: true,
         });

@@ -2755,6 +2755,30 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(debit_line.account_id, accounts_data['stock_valuation'])
         self.assertEqual(credit_line.account_id, accounts_data['stock_valuation'])
 
+    def test_valuation_at_date_robustness(self):
+        """ Ensure that when we delete all the product.value for an item. The inventory at date for average cost
+        method replay the valuation from the beginning of time and not from the last product.value. This is to avoid
+        having an incorrect inventory at date when we delete some product.value in the past.
+        """
+        product_1 = self.product_avco
+        product_2 = self.product_avco.copy()
+        self.env['product.value'].search([('product_id', 'in', (product_1.id, product_2.id))]).unlink()
+
+        with freeze_time(Datetime.now() - timedelta(days=5)):
+            self._make_in_move(product_1, 10, unit_cost=10)
+            self._make_in_move(product_2, 10, unit_cost=10)
+
+        with freeze_time(Datetime.now() - timedelta(days=4)):
+            product_1.standard_price = 20
+
+        with freeze_time(Datetime.now() - timedelta(days=3)):
+            self._make_in_move(product_1, 10, unit_cost=20)
+            self._make_in_move(product_2, 10, unit_cost=20)
+
+        valuation_date = Datetime.now() - timedelta(days=2)
+        # Check both value in the same assert since it should be computed together.
+        self.assertEqual((product_1 | product_2).with_context(to_date=valuation_date).mapped('total_value'), [400, 300])
+
     def test_valuation_rounding_method(self):
         uom_g = self.env.ref('uom.product_uom_gram')
         uom_kg = self.env.ref('uom.product_uom_kgm')
@@ -3122,3 +3146,36 @@ class TestStockValuation(TestStockValuationCommon):
         recs[-2:]._compute_cumulative_fields()
         self.assertEqual(recs[-1].total_quantity, 3)
         self.assertEqual(recs[-1].total_value, 30)
+
+    def test_avco_report_after_cost_method_change(self):
+        """Ensure that the AVCO justification report for a product is accurate at all steps, even if
+        the cost method changed after some moves.
+        """
+
+        product_avco = self.env['product.product'].create({
+            'uom_id': self.uom.id,
+            'is_storable': True,
+            'name': "AVCO product",
+            'standard_price': 10,
+        })
+
+        self._make_in_move(product_avco, quantity=10, unit_cost=10)
+        self._make_out_move(product_avco, quantity=5)
+        self._make_in_move(product_avco, quantity=10, unit_cost=25)
+        self._make_out_move(product_avco, quantity=5)
+
+        product_avco.write({'categ_id': self.category_avco.id})
+
+        report_lines = self.env['stock.avco.report'].search([('product_id', '=', product_avco.id)]).sorted('date, id')[1:]
+
+        self.assertEqual(report_lines[-1].avco_value, product_avco.standard_price)
+
+        self.assertRecordValues(
+            report_lines,
+            [
+                {'added_value': 100, 'total_quantity': 10, 'total_value': 100, 'avco_value': 10},
+                {'added_value': -50, 'total_quantity': 5, 'total_value': 50, 'avco_value': 10},
+                {'added_value': 250, 'total_quantity': 15, 'total_value': 300, 'avco_value': 20},
+                {'added_value': -100, 'total_quantity': 10, 'total_value': 200, 'avco_value': 20},
+            ]
+        )

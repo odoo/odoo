@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-24 14:12+0000\n"
-"PO-Revision-Date: 2026-03-20 17:35+0000\n"
+"PO-Revision-Date: 2026-03-26 14:51+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/base/fr/>"
 "\n"
@@ -298,6 +298,85 @@ msgid ""
 "\n"
 "**Købskonto:**      4010 Restaurationsbesøg\n"
 msgstr ""
+"\n"
+"\n"
+"Module de localisation pour le Danemark\n"
+"===============================\n"
+"\n"
+"Il s’agit du module permettant de gérer le **plan comptable pour le "
+"Danemark**. Couvre aussi bien les entreprises individuelles que les I/S, "
+"IVS, ApS et A/S\n"
+"\n"
+"**Modulet opsætter:**\n"
+"\n"
+"- **Dansk kontoplan**\n"
+"\n"
+"- Dansk moms\n"
+"        - 25 % moms\n"
+"        - Restaurationsmoms 6,25 %\n"
+"        - Omvendt betalingspligt\n"
+"\n"
+"- Konteringsgrupper\n"
+"        - EU (Virksomhed)\n"
+"        - EU (Privat)\n"
+"        - Tredjelande\n"
+"\n"
+"- Finansrapporter\n"
+"        - Resultatopgørelse\n"
+"        - Balance\n"
+"        - Momsafregning\n"
+"            - Afregning\n"
+"            - Rubrik A, B og C\n"
+"\n"
+"- **Anglo-saksisk regnskabsmetode**\n"
+"\n"
+".\n"
+"\n"
+"Produktopsætning:\n"
+"=================\n"
+"\n"
+"**Vare**\n"
+"\n"
+"**Salgsmoms:**      Salgsmoms 25 %\n"
+"\n"
+"**Salgskonto:**     1.010 Salg af varer inkl. moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25 %\n"
+"\n"
+"**Købskonto:**      2.010 Direkte vareomkostninger inkl. moms\n"
+"\n"
+".\n"
+"\n"
+"**Ydelse**\n"
+"\n"
+"**Salgsmoms:**      Salgsmoms 25 %, ydelser\n"
+"\n"
+"**Salgskonto:**     1.011 Salg af ydelser inkl. moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25 %, ydelser\n"
+"\n"
+"**Købskonto:**      2.011 Direkte omkostninger ydelser inkl. moms\n"
+"\n"
+".\n"
+"\n"
+"**Vare med omvendt betalingspligt**\n"
+"\n"
+"**Salgsmoms:**      Salg med omvendt betalingspligt\n"
+"\n"
+"**Salgskonto:**     1.012 Salg af varer ekskl. moms\n"
+"\n"
+"**Købsmoms:**       Køb med omvendt betalingspligt\n"
+"\n"
+"**Købskonto:**      2.012 Direkte vareomkostninger ekskl. moms\n"
+"\n"
+"\n"
+".\n"
+"\n"
+"**Restauration**\n"
+"\n"
+"**Købsmoms:**       Restaurationsmoms 6,25 %, købsmoms\n"
+"\n"
+"**Købskonto:**      4010 Restaurationsbesøg\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -579,6 +658,10 @@ msgid ""
 "formats.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Ce module fournit des outils pour exporter les commandes du point de vente "
+"dans différents formats UBL 2.1.\n"
 
 #. module: base
 #. odoo-python
@@ -2885,8 +2968,8 @@ msgstr ""
 "\n"
 "Ajoutez aux formulaires de votre site web la capacité de générer des pistes "
 "ou des opportunités dans l'application CRM.\n"
-"Les formulaires doivent être personnalisés dans le *Constructeur de site "
-"web* afin de générer des pistes.\n"
+"Les formulaires doivent être personnalisés dans le *Créateur de site web* "
+"afin de générer des pistes.\n"
 "\n"
 "Ce module inclut la validation des numéros de téléphone et de portable des "
 "contacts."
@@ -4079,6 +4162,9 @@ msgid ""
 "\n"
 "Backports the tax return functionalities in the Spanish localization\n"
 msgstr ""
+"\n"
+"Rétroporte les fonctionnalités de déclaration fiscale dans la localisation "
+"espagnole\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bd_hr_payroll
@@ -6694,6 +6780,8 @@ msgid ""
 "\n"
 "Extension for accounting returns in Belgium\n"
 msgstr ""
+"\n"
+"Extension pour les déclarations comptables en Belgique\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_generator_sale
@@ -7892,6 +7980,20 @@ msgid ""
 "* FBM: Delivery information is fetched from Lazada, track and synchronize "
 "the stock level to Lazada.\n"
 msgstr ""
+"Importez vos commandes Lazada dans Odoo et synchronisez les livraisons\n"
+"\n"
+"===============================\n"
+"\n"
+"Fonctionnalités clés\n"
+"------------\n"
+"* Importez des commandes depuis plusieurs boutiques\n"
+"* Les commandes sont associées aux produits Odoo sur la base de leur "
+"référence interne (SKU dans Lazada)\n"
+"* Prise en charge à la fois de Fulfillment by Lazada (FBL) et Fulfillment by "
+"Merchant (FBM) :\n"
+"* FBL : importation des commandes finalisées\n"
+"* FBM : les informations de livraison sont récupérées depuis Lazada, suivez "
+"et synchronisez le niveau de stock avec Lazada.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_shopee
@@ -8361,6 +8463,11 @@ msgid ""
 "=============================\n"
 "Provides electronic invoicing for Jordan in the POS.\n"
 msgstr ""
+"\n"
+"Comptabilité jordanienne EDI pour le point de vente\n"
+"=============================\n"
+"Fournit la facturation électronique pour la Jordanie dans le point de "
+"vente.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jo_hr_payroll
@@ -11889,7 +11996,7 @@ msgid ""
 msgstr ""
 "\n"
 "Cet addon contient une application générique de création de HTML.\n"
-"Il est conçu pour être utilisé par l’éditeur de site web et l’éditeur de "
+"Il est conçu pour être utilisé par le créateur de site web et l’éditeur de "
 "mailings en masse.\n"
 
 #. module: base
@@ -12747,6 +12854,12 @@ msgid ""
 "categorisation of products sold to be included in the details of the line of "
 "an invoice.\n"
 msgstr ""
+"\n"
+"Il s'agit du module permettant d'ajouter le numéro d'identification CPV "
+"(Common Procurement Vocabulary) sur les produits.\n"
+"Le format roumain CIUS-RO exige, dans certains cas, que la catégorisation "
+"précise des produits vendus soit incluse dans les détails de la ligne de "
+"facture.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
@@ -13898,6 +14011,9 @@ msgid ""
 "This module also provides the possibility to generate the JPK_KR_PD in xml, "
 "for Poland.\n"
 msgstr ""
+"\n"
+"Ce module offre également la possibilité de générer le JPK_KR_PD en xml, "
+"pour la Pologne.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_hourly_cost
@@ -14236,6 +14352,18 @@ msgid ""
 "    3.Configuration of withholding reasons and exemption reasons\n"
 "    4.Addition of Tax Offices.\n"
 msgstr ""
+"\n"
+"Ce module améliore l'intégration de base de Nilvera en ajoutant des "
+"scénarios et types de factures supplémentaires requis pour la conformité à "
+"la facturation électronique turque.\n"
+"\n"
+"Fonctionnalités incluses :\n"
+"1. Prise en charge des scénarios de facturation : Basique, Export et Secteur "
+"public\n"
+"2. Prise en charge des types de factures : Ventes, Retenue à la source, "
+"Exonéré de taxe et Enregistré pour l’export\n"
+"3. Configuration des motifs de retenue et des motifs d’exonération\n"
+"4. Ajout des administrations fiscales.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch_hr_payroll_elm_transmission_5_3
@@ -15013,6 +15141,12 @@ msgid ""
 "This prevents rounding errors when employees have half-days (0.5)\n"
 "in their leave allocations or taken leaves.\n"
 msgstr ""
+"\n"
+"Ce module corrige le modèle transient "
+"'hr.payslip.employee.depature.holiday.attests.time.off.line' pour utiliser "
+"des Float au lieu d'Integer.\n"
+"Cela évite les erreurs d’arrondi lorsque les employés ont des demi-journées "
+"(0.5) dans leurs allocations de congés ou leurs congés pris.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid_holidays
@@ -16615,6 +16749,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-envelope me-1 text-primary\" title=\"Email\" "
 "invisible=\"login == email\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope me-1 text-primary\" title=\"Email\" "
+"invisible=\"login == email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -16624,6 +16760,10 @@ msgid ""
 "                                        <i class=\"fa fa-fw fa-key me-1 text-"
 "primary\" title=\"Login\" invisible=\"login == email\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope me-1 text-primary\" title=\"Identifiant / E-"
+"mail\" invisible=\"login != email\"/>\n"
+"<i class=\"fa fa-fw fa-key me-1 text-primary\" title=\"Identifiant\" "
+"invisible=\"login == email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -19236,6 +19376,8 @@ msgstr ""
 msgid ""
 "All our contractual relations will be governed exclusively by Belgium law."
 msgstr ""
+"Toutes nos relations contractuelles seront exclusivement régies par le droit "
+"belge."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -22201,6 +22343,12 @@ msgid ""
 "appear as a third party in the context of any claim for damages filed "
 "against the client by an end consumer."
 msgstr ""
+"BE Company CoA s’engage à mettre en œuvre tous les moyens nécessaires pour "
+"fournir des services performants dans les délais convenus. Toutefois, aucune "
+"de ses obligations ne peut être considérée comme une obligation de résultat. "
+"BE Company CoA ne peut, en aucun cas, être contrainte par le client "
+"d’intervenir en tant que tiers dans le cadre d’une réclamation en dommages "
+"introduite par un consommateur final à l’encontre du client."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__layout_background_image
@@ -22623,7 +22771,7 @@ msgstr "Paie belge - Présences"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_fix
 msgid "Belgian Payroll - Holiday Attest Fix"
-msgstr ""
+msgstr "Paie belge - Correction de l'attestation de congés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
@@ -22658,7 +22806,7 @@ msgstr "Belgique - Rapports comptables - SMS"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_reports_client_nihil
 msgid "Belgium - Accounting Reports Client Nihil"
-msgstr ""
+msgstr "Belgique - Rapports comptables client nihil"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_fiscal_categories_fleet
@@ -23963,6 +24111,12 @@ msgid ""
 "entirety and does not include any costs relating to the legislation of the "
 "country in which the client is located."
 msgstr ""
+"Certains pays appliquent une Taxe à la source sur le montant des factures, "
+"conformément à leur législation interne. Toute Taxe à la source sera payée "
+"par le client aux autorités fiscales. En aucun cas, BE Company CoA ne peut "
+"être impliquée dans des coûts liés à la législation d’un pays. Le montant de "
+"la facture est donc dû dans son intégralité à BE Company CoA et n’inclut "
+"aucun coût lié à la législation du pays dans lequel le client est établi."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -28174,7 +28328,7 @@ msgstr "Caractéristiques des entreprises sur les contacts"
 #. module: base
 #: model:ir.module.module,summary:base.module_website
 msgid "Enterprise website builder"
-msgstr "Constructeur de sites web d'entreprise"
+msgstr "Créateur de sites web d'entreprise"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_R
@@ -31991,6 +32145,10 @@ msgid ""
 "payment date, BE Company CoA reserves the right to call on the services of a "
 "debt recovery company. All legal expenses will be payable by the client."
 msgstr ""
+"Si un paiement reste impayé plus de soixante (60) jours après la date "
+"d’échéance, BE Company CoA se réserve le droit de faire appel aux services "
+"d’une société de recouvrement. Tous les frais juridiques seront à la charge "
+"du client."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -32485,6 +32643,9 @@ msgid ""
 "office within 8 days of the delivery of the goods or the provision of the "
 "services."
 msgstr ""
+"Pour être recevable, toute réclamation doit être notifiée à BE Company CoA "
+"par lettre recommandée envoyée à son siège social dans un délai de 8 jours "
+"suivant la livraison des biens ou la prestation des services."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -33787,7 +33948,7 @@ msgstr "Jordanie - Paie avec Comptabilité"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jo_edi_pos
 msgid "Jordan Accounting EDI for POS"
-msgstr ""
+msgstr "Comptabilité jordanienne EDI pour le point de vente"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jo_edi
@@ -34666,7 +34827,7 @@ msgstr "Limite"
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Limit of %s API keys is reached for programmatic creation"
-msgstr ""
+msgstr "La limite de %s clés API pour la création programmatique est atteinte"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__line
@@ -36011,7 +36172,7 @@ msgstr "Club de membres"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mental_therapy
 msgid "Mental Therapy"
-msgstr ""
+msgstr "Psychothérapie"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_menu
@@ -36085,6 +36246,8 @@ msgid ""
 "Merged prematurly, not working correctly. Please don't use. Better solution "
 "coming soon."
 msgstr ""
+"Fusionné prématurément, ne fonctionne pas correctement. Veuillez ne pas "
+"utiliser. Une meilleure solution arrive bientôt."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__message
@@ -40793,6 +40956,12 @@ msgid ""
 "CoA will be authorized to suspend any provision of services without prior "
 "warning in the event of late payment."
 msgstr ""
+"Nos factures sont payables dans un délai de 21 jours ouvrables, sauf si un "
+"autre délai de paiement est indiqué sur la facture ou la commande. En cas de "
+"non-paiement à la date d’échéance, BE Company CoA se réserve le droit de "
+"demander un intérêt fixe de 10 % du montant restant dû. BE Company CoA sera "
+"autorisée à suspendre toute prestation de services sans avertissement "
+"préalable en cas de retard de paiement."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -42316,7 +42485,7 @@ msgstr "Abonnement PdV"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_edi_ubl
 msgid "Point of Sale UBL"
-msgstr ""
+msgstr "Point de vente UBL"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_enterprise
@@ -42362,7 +42531,7 @@ msgstr "Pologne - Paie avec Comptabilité"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pl_reports_account_saft
 msgid "Poland - SAFT Income Tax Report (JPK KR PD)"
-msgstr ""
+msgstr "Pologne - Rapport d’impôt sur les revenus SAFT (JPK KR PD)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pl_edi
@@ -42724,7 +42893,7 @@ msgstr "Résultats du profilage"
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Programmatic API keys are not enabled"
-msgstr ""
+msgstr "Les clés API programmatiques ne sont pas activées"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_cron_progress
@@ -44355,7 +44524,7 @@ msgstr "Roumanie - Rapports comptables"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_cpv_code
 msgid "Romania - CPV Code"
-msgstr ""
+msgstr "Roumanie - Code CPV"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_edi_stock
@@ -46503,7 +46672,7 @@ msgstr "Espagne - Rapports comptables (mise à jour 2024)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports_2025
 msgid "Spain - Accounting Reports (2025 Update)"
-msgstr ""
+msgstr "Espagne - Rapports comptables (mise à jour 2025)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_sale_amazon
@@ -48724,12 +48893,13 @@ msgstr ""
 #: code:addons/base/models/res_users.py:0
 msgid "The provided API key is invalid or does not belong to the current user."
 msgstr ""
+"La clé API fournie est invalide ou n’appartient pas à l’utilisateur actuel."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "The provided API key is invalid."
-msgstr ""
+msgstr "La clé API fournie est invalide."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
@@ -50404,7 +50574,7 @@ msgstr "Turquie - Facture électronique Nilvera"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera_einvoice_extended
 msgid "Türkiye - Nilvera E-Invoice Extended"
-msgstr ""
+msgstr "Turquie - Nilvera facturation électronique étendue"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll
@@ -50429,7 +50599,7 @@ msgstr "U - ACTIVITÉS DES ORGANISMES ET ORGANISMES EXTRATERRITORIAUX"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_edi_ubl
 msgid "UBL in the Point of Sale "
-msgstr ""
+msgstr "UBL dans le point de vente "
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__uct
@@ -53209,7 +53379,7 @@ msgstr "zoulou"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_peppol_advanced_fields
 msgid "[DEPRECATED] Account Peppol Advanced Fields"
-msgstr ""
+msgstr "[OBSOLÈTE] Champs avancés Comptabilité Peppol"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_pos

@@ -9,12 +9,12 @@ import {
 import { execCommand } from "../_helpers/userCommands";
 import { unformat } from "../_helpers/format";
 
-before(
-    () =>
-        document.fonts.add(
-            new FontFace("Roboto", "url(/web/static/fonts/google/Roboto/Roboto-Regular.ttf)")
-        ).ready
-);
+before(async () => {
+    const font = new FontFace("Roboto", "url(/web/static/fonts/google/Roboto/Roboto-Regular.ttf)");
+    await font.load();
+    document.fonts.add(font);
+    await document.fonts.ready;
+});
 
 test.tags("font-dependent");
 test("should apply font-size to completely selected list item (1)", async () => {

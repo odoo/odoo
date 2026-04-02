@@ -659,15 +659,18 @@ function useOperationWithReload(callApply, reload) {
     return async (...args) => {
         const { editingElement } = args[0][0];
         env.services.ui.block();
-        const applyResults = await callApply(...args);
-        if (!applyResults.includes(BuilderAction.cancelReload)) {
-            env.editor.shared.history.addStep();
-            await env.editor.shared.savePlugin.save();
-            const target = env.editor.shared.builderOptions.getReloadSelector(editingElement);
-            const url = reload.getReloadUrl?.();
-            await env.editor.config.reloadEditor({ target, url });
+        try {
+            const applyResults = await callApply(...args);
+            if (!applyResults.includes(BuilderAction.cancelReload)) {
+                env.editor.shared.history.addStep();
+                await env.editor.shared.savePlugin.save();
+                const target = env.editor.shared.builderOptions.getReloadSelector(editingElement);
+                const url = reload.getReloadUrl?.();
+                await env.editor.config.reloadEditor({ target, url });
+            }
+        } finally {
+            env.services.ui.unblock();
         }
-        env.services.ui.unblock();
     };
 }
 

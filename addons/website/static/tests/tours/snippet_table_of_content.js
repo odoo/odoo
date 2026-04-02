@@ -11,7 +11,7 @@ const scrollToHeading = function (position) {
         content: `Scroll to h2 number ${position}`,
         trigger: `:iframe .s_table_of_content h2:eq(${position})`,
         run: function () {
-            this.anchor.scrollIntoView({ behavior: "smooth", block: "center" });
+            this.anchor.scrollIntoView(true);
         },
     };
 };
@@ -63,7 +63,7 @@ registerWebsitePreviewTour(
         scrollToHeading(2),
         checkTOCNavBar(1, 0),
         scrollToHeading(3),
-        checkTOCNavBar(1, 0),
+        checkTOCNavBar(1, 1),
         ...clickOnEditAndWaitEditMode(),
         {
             content: "Click on the first TOC's title",

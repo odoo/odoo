@@ -31,7 +31,7 @@ const httpCapturedRegex = `(https?:\\/\\/)`;
 
 export const URL_REGEX = new RegExp(`((?:(?:${httpCapturedRegex}${urlRegexBase})`, "i");
 export const EMAIL_REGEX = /^(mailto:)?[\w-.]+@(?:[\w-]+\.)+[\w-]{2,4}$/i;
-export const PHONE_REGEX = /^(tel:(?:\/\/)?)?\+?[\d\s.\-()/]{3,25}$/;
+export const PHONE_REGEX = /^(?=.*\d)(tel:(?:\/\/)?)?\+? ?[\d(][\d .\-()/]{2,24}$/;
 
 export function cleanZWChars(text) {
     return text.replace(/\u200B|\uFEFF/g, "");

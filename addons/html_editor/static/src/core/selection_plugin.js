@@ -1,9 +1,11 @@
 import { closestBlock } from "@html_editor/utils/blocks";
 import {
+    getDeepestEditablePosition,
     getDeepestPosition,
     isMediaElement,
     isProtected,
     isProtecting,
+    isSelfClosingElement,
     isUnprotecting,
 } from "@html_editor/utils/dom_info";
 import {
@@ -287,8 +289,8 @@ export class SelectionPlugin extends Plugin {
         const selection = this.getEditableSelection();
         const containerSelector = "#wrap > *, .oe_structure > *, [contenteditable]";
         const container = selection && closestElement(selection.anchorNode, containerSelector);
-        const [anchorNode, anchorOffset] = getDeepestPosition(container, 0);
-        const [focusNode, focusOffset] = getDeepestPosition(container, nodeSize(container));
+        const [anchorNode, anchorOffset] = getDeepestEditablePosition(container, 0);
+        const [focusNode, focusOffset] = getDeepestEditablePosition(container, nodeSize(container));
         if (
             this.delegateTo("select_all_overrides", {
                 anchorNode,
@@ -1075,8 +1077,9 @@ export class SelectionPlugin extends Plugin {
             const selectingBackward = ["ArrowLeft", "ArrowUp"].includes(ev.key);
             const currentBlock = closestBlock(focusNode);
             const isAtBoundary = selectingBackward
-                ? firstLeaf(currentBlock) === focusNode && focusOffset === 0
-                : lastLeaf(currentBlock) === focusNode && focusOffset === nodeSize(focusNode);
+                ? [firstLeaf(currentBlock), currentBlock].includes(focusNode) && focusOffset === 0
+                : [lastLeaf(currentBlock), currentBlock].includes(focusNode) &&
+                  focusOffset === nodeSize(focusNode);
             const adjacentBlock = selectingBackward
                 ? currentBlock.previousElementSibling
                 : currentBlock.nextElementSibling;
@@ -1084,8 +1087,11 @@ export class SelectionPlugin extends Plugin {
                 ? adjacentBlock?.previousElementSibling
                 : adjacentBlock?.nextElementSibling;
             if (!adjacentBlock?.isContentEditable && targetBlock && isAtBoundary) {
-                const leafNode = selectingBackward ? lastLeaf(targetBlock) : firstLeaf(targetBlock);
-                const offset = selectingBackward ? nodeSize(leafNode) : 0;
+                let leafNode = selectingBackward ? lastLeaf(targetBlock) : firstLeaf(targetBlock);
+                let offset = selectingBackward ? nodeSize(leafNode) : 0;
+                if (isSelfClosingElement(leafNode)) {
+                    [leafNode, offset] = selectingBackward ? leftPos(leafNode) : rightPos(leafNode);
+                }
                 selection.extend(leafNode, offset);
                 ev.preventDefault();
             }

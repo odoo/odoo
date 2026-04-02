@@ -61,3 +61,7 @@ registry
 registry
     .category('public.interactions.edit')
     .add('website_sale.dynamic_snippet_category', {Interaction: DynamicSnippetCategory});
+
+registry
+    .category("public.interactions.preview")
+    .add('website_sale.dynamic_snippet_category', {Interaction: DynamicSnippetCategory});

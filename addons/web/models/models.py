@@ -518,10 +518,15 @@ class Base(models.AbstractModel):
                     groupby.remove(group)
                     order_spec.append(f"{group} {direction}")
                     break
-            for agg_spec in aggregates:
-                if agg_spec.startswith(f"{fname}:"):
-                    order_spec.append(f"{agg_spec} {direction}")
-                    break
+            else:
+                for agg_spec in aggregates:
+                    if agg_spec.startswith(f"{fname}:"):
+                        order_spec.append(f"{agg_spec} {direction}")
+                        break
+                else:
+                    field = self._fields.get(fname)
+                    if field and field.aggregator:
+                        order_spec.append(f"{fname}:{field.aggregator} {direction}")
 
         return ", ".join(order_spec + groupby)
 

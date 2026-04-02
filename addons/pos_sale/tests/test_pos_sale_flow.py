@@ -4,6 +4,7 @@ from odoo import fields
 from odoo.fields import Command
 from odoo.tests import Form, tagged
 from odoo.tools import format_date
+from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 import uuid
 
@@ -1046,6 +1047,8 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             final_invoice_downpayment_line._get_downpayment_lines(),
             downpayment_invoice.invoice_line_ids,
         )
+        for line in downpayment_invoice.invoice_line_ids.filtered(self.main_pos_config.down_payment_product_id.id == "product_id"):
+            self.assertTrue(line.is_downpayment)
 
     def test_settle_order_ship_later_effect_on_so(self):
         """This test create an order, settle it in the PoS and ship it later.
@@ -2156,3 +2159,118 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             ]
         })
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settle_changed_price_with_lots', login="accountman")
+
+    def test_advance_payment_with_extra_lines(self):
+        so = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1.0,
+                    'price_unit': 100,
+                    'tax_ids': False,
+                })],
+        })
+        so.action_confirm()
+        self.product_a.write({'available_in_pos': True})
+
+        # Apply 10% down payment and add a product to the PoS order
+        self.main_pos_config.open_ui()
+        self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSApplyDownpaymentWithExtraLine', login="accountman")
+        self.assertEqual(so.amount_unpaid, 90)
+
+
+@tagged('post_install', '-at_install')
+class TestPoSSalePayment(TestPointOfSaleHttpCommon, PaymentCommon):
+
+    def test_pos_settle_so_with_downpayment(self):
+        """Ensure that the POS correctly handles Sale Orders where a down payment was processed
+        via a payment transaction with the automatic invoicing setting enabled.
+        """
+        self.product_a.available_in_pos = True
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
+        self.partner_a.email = "test.customer@example.com"
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': self.product_a.lst_price,
+            })],
+            'require_payment': True,
+            'prepayment_percent': 0.3,
+        })
+        # Manual downpayment invoice
+        down_payment = self.env['sale.advance.payment.inv'].sudo().create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 50,
+            'sale_order_ids': sale_order.ids,
+        })
+        down_payment.create_invoices()
+        down_payment_invoices = sale_order.invoice_ids
+        down_payment_invoices.action_post()
+        # Online payment transaction for 30% downpayment
+        tx = self._create_transaction(
+                flow='direct',
+                amount=sale_order.amount_total * sale_order.prepayment_percent,
+                sale_order_ids=[sale_order.id],
+                state='done',
+                reference='Test Transaction',
+            )
+        tx._set_done()
+        tx._post_process()
+        self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_pos_settle_so_with_downpayment', login="accountman")
+
+    def test_pos_downpayment_sale_invoice_creation(self):
+        account = self.env['account.account'].create({'name': 'Test Downpayment Income Account',
+                                                      'code': '12345',
+                                                      'account_type': "income"})
+        downpayment_product = self.env['product.product'].create({'name': 'Test Down Payment (POS)',
+                                                                  "available_in_pos": False,
+                                                                  'standard_price': 0.00,
+                                                                  'list_price': 0.00,
+                                                                  'weight': 0.00,
+                                                                  'type': 'service',
+                                                                  'purchase_ok': False,
+                                                                  'property_account_income_id': account.id
+                                                                  })
+
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1.0,
+                    'price_unit': 100,
+                    'tax_ids': False,
+                })],
+        })
+        sale_order.action_confirm()
+        self.main_pos_config.open_ui()
+        self.main_pos_config.down_payment_product_id = downpayment_product
+        self.start_pos_tour('PoSApplyDownpaymentInvoice')
+        invoice = sale_order._create_invoices(final=True)
+        invoice.action_post()
+
+        downpayment_invoice = sale_order.pos_order_line_ids.order_id.account_move
+        self.assertTrue(downpayment_invoice._is_downpayment())
+
+        final_invoice_downpayment_line = sale_order.invoice_ids.invoice_line_ids.filtered(lambda r: r.quantity < 0)
+
+        self.assertEqual(
+            final_invoice_downpayment_line._get_downpayment_lines(),
+            downpayment_invoice.invoice_line_ids,
+        )
+
+        downpayment_invoice_lines = downpayment_invoice.invoice_line_ids.filtered(self.main_pos_config.down_payment_product_id.id == "product_id")
+        self.assertTrue(downpayment_invoice_lines.is_downpayment)
+        self.assertEqual(downpayment_invoice_lines.account_id.id, account.id)
+
+        so_downpayment_lines = invoice.invoice_line_ids.filtered('is_downpayment')
+        self.assertTrue(so_downpayment_lines.is_downpayment)
+        self.assertEqual(so_downpayment_lines.account_id.id, account.id)

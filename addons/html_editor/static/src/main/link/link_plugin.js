@@ -1308,7 +1308,10 @@ export class LinkPlugin extends Plugin {
                     }
                 ),
                 isAvailable: link_popover.isAvailable,
-                getProps: link_popover.getProps,
+                getProps: (...args) => ({
+                    ...link_popover.getProps(...args),
+                    publicAttachments: this.config.publicAttachments,
+                }),
             });
         });
     }

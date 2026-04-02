@@ -170,11 +170,13 @@ class SaleOrderLine(models.Model):
         if end_date:
             domain &= Domain('date', '<=', end_date)
         mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
+        timesheet_uom = self.order_id.timesheet_encode_uom_id
 
         for line in lines_by_timesheet:
             qty_to_invoice = mapping.get(line.id, 0.0)
             if qty_to_invoice:
-                units_to_invoice = sum(line.timesheet_ids.filtered(lambda ts: start_date <= ts.date <= end_date and not ts.timesheet_invoice_id).mapped('unit_amount'))
+                unit_amount = sum(line.timesheet_ids.filtered(lambda ts: start_date <= ts.date <= end_date and not ts.timesheet_invoice_id).mapped('unit_amount'))
+                units_to_invoice = timesheet_uom._compute_quantity(unit_amount, line.product_uom_id, rounding_method='HALF-UP')
                 line.qty_to_invoice = units_to_invoice
             else:
                 prev_inv_status = line.invoice_status
