@@ -99,10 +99,10 @@ class PurchaseOrderLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         lines = super().create(vals_list)
+        confirmed_lines = lines.filtered(lambda l: l.order_id.state == 'purchase' and not l.display_type)
         if not self.env.context.get('bypass_move_update'):
-            confirmed_lines = lines.filtered(lambda l: l.order_id.state == 'purchase' and not l.display_type)
             confirmed_lines._create_or_update_picking()
-            confirmed_lines._set_date_promised()
+        confirmed_lines._set_date_promised()
         return lines
 
     def write(self, vals):
