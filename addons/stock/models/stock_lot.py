@@ -320,7 +320,7 @@ class StockLot(models.Model):
     def _get_outgoing_domain(self):
         return [
             '|',
-            '|', ('picking_code', '=', 'outgoing'), ('move_id.picking_code', '=', 'outgoing'),
+            '|', ('picking_code', '=', 'outgoing'), ('picking_id.picking_type_id.code', '=', 'outgoing'),
             ('produce_line_ids', '!=', False),
         ]
 
