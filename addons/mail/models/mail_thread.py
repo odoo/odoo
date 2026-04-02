@@ -432,10 +432,6 @@ class MailThread(models.AbstractModel):
         self.env['mail.scheduled.message'].sudo().search([('model', '=', self._name), ('res_id', 'in', self.ids)]).unlink()
         return res
 
-    def copy_data(self, default=None):
-        # avoid tracking multiple temporary changes during copy
-        return super(MailThread, self.with_context(mail_notrack=True)).copy_data(default=default)
-
     @api.model
     def get_empty_list_help(self, help_message):
         """ Override of BaseModel.get_empty_list_help() to generate an help message
