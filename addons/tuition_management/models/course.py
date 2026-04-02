@@ -214,7 +214,7 @@ class Enquiry(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     # Enquiry identification
-    enquiry_name = fields.Char(string='Enquiry Name', required=True, help='e.g., SAT Enquiry for Tom Thomas', tracking=True)
+    enquiry_name = fields.Char(string='Enquiry Name', compute='_compute_enquiry_name', store=True, readonly=False, tracking=True)
     
     # Personal Information
     name = fields.Char(string='Parent Name', required=True, tracking=True)
@@ -246,19 +246,60 @@ class Enquiry(models.Model):
         for rec in self:
             rec.is_enrolled_stage = rec.stage_id.is_won if rec.stage_id else False
 
-    @api.onchange('subject_id', 'name')
-    def _onchange_enquiry_name(self):
+    @api.depends('subject_id', 'name')
+    def _compute_enquiry_name(self):
         """Auto-populate enquiry name from subject and parent name."""
         for rec in self:
             subject = rec.subject_id.name if rec.subject_id else ''
             parent = rec.name or ''
             if subject and parent:
                 rec.enquiry_name = f"{subject} enquiry for {parent}"
+            elif not rec.enquiry_name:
+                rec.enquiry_name = ''
 
     @api.model
     def _read_group_stage_ids(self, stages, domain):
         """Always display all stages in kanban, even if empty."""
         return self.env['enquiry.stage'].search([], order='sequence')
+
+    @api.constrains('email', 'phone')
+    def _check_email_or_phone(self):
+        for rec in self:
+            if not rec.email and not rec.phone:
+                raise UserError('Please provide either an email address or a phone number.')
+
+    def action_delete_enquiry(self):
+        """Delete the enquiry and redirect to kanban view."""
+        self.ensure_one()
+        self.unlink()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Enquiries',
+            'res_model': 'enquiry',
+            'view_mode': 'kanban,list,form',
+            'target': 'main',
+        }
+
+    def write(self, vals):
+        """Override write to open demo session popup when moving to Demo Scheduled with no demos."""
+        result = super().write(vals)
+        if 'stage_id' in vals:
+            demo_stage = self.env['enquiry.stage'].search([('name', '=', 'Demo Scheduled')], limit=1)
+            if demo_stage and vals.get('stage_id') == demo_stage.id:
+                for rec in self:
+                    if not rec.demo_session_ids:
+                        return {
+                            'type': 'ir.actions.act_window',
+                            'name': 'Schedule Demo Session',
+                            'res_model': 'demo.session',
+                            'view_mode': 'form',
+                            'target': 'new',
+                            'context': {
+                                'default_enquiry_id': rec.id,
+                                'default_subject_id': rec.subject_id.id,
+                            },
+                        }
+        return result
 
     def action_schedule_demo(self):
         """Schedule a demo session for this enquiry."""

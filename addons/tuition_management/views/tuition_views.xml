@@ -505,6 +505,11 @@
 <field name="stage_id" nolabel="1" widget="statusbar" options="{'clickable': True}" readonly="is_enrolled"/>
 </div>
 <sheet>
+<div class="oe_button_box" name="button_box">
+<button name="action_delete_enquiry" type="object" class="oe_stat_button" icon="fa-trash" invisible="not id or is_enrolled" confirm="Are you sure you want to permanently delete this enquiry?">
+<span>Discard</span>
+</button>
+</div>
 <group string="Course Information" invisible="not is_enrolled">
 <field name="course_id"/>
 <field name="enrollment_id"/>
@@ -512,7 +517,7 @@
 <field name="student_profile_id"/>
 </group>
 <group string="Enquiry Information">
-<field name="enquiry_name" readonly="is_enrolled"/>
+<field name="enquiry_name" readonly="1"/>
 <field name="enquiry_date" readonly="is_enrolled"/>
 </group>
 <group string="Parent Information">
@@ -617,7 +622,7 @@
 <field name="name">enquiry.kanban</field>
 <field name="model">enquiry</field>
 <field name="arch" type="xml">
-<kanban default_group_by="stage_id" class="o_kanban_small_column" on_create="quick_create" quick_create_view="tuition_management.view_enquiry_form_quick_create">
+<kanban default_group_by="stage_id" class="o_kanban_small_column" quick_create="false">
 <field name="enquiry_name"/>
 <field name="name"/>
 <field name="student_name"/>
