@@ -800,7 +800,9 @@ class HrAttendance(models.Model):
                                                            ('company_id', 'in', companies.ids),
                                                            ('resource_calendar_id.flexible_hours', '=', False)])
 
-        for emp in absent_employees:
+        filtered_employees = absent_employees.filter_valid(fields.Date.today() - relativedelta(days=1))
+
+        for emp in filtered_employees:
             local_day_start = pytz.utc.localize(yesterday).astimezone(pytz.timezone(emp._get_tz()))
             technical_attendances_vals.append({
                 'check_in': local_day_start.strftime('%Y-%m-%d %H:%M:%S'),

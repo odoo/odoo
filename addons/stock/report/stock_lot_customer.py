@@ -84,8 +84,7 @@ class StockLotReport(models.Model):
             partner.street2,
             sml.quantity,
             sml.product_uom_id,
-            picking.date_done,
-            sml_return.id
+            picking.date_done
         """
 
     def _query(self):

@@ -206,6 +206,11 @@ def _mock_check_company_on_peppol(func, self, *args, **kwargs):
     pass
 
 
+def _mock_peppol_deregister_participant(func, self, *args, **kwargs):
+    self.company_id._reset_peppol_configuration()
+    self.unlink()
+
+
 _demo_behaviour = {
     '_call_peppol_proxy': _mock_call_peppol_proxy,
     'button_account_peppol_check_partner_endpoint': _mock_button_verify_partner_endpoint,
@@ -218,6 +223,7 @@ _demo_behaviour = {
     'button_check_peppol_verification_code': _mock_check_verification_code,
     'button_register_peppol_participant': _mock_user_creation,
     '_check_company_on_peppol': _mock_check_company_on_peppol,
+    '_peppol_deregister_participant': _mock_peppol_deregister_participant,
 }
 
 # -------------------------------------------------------------------------

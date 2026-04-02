@@ -418,6 +418,7 @@ class AccountEdiProxyClientUser(models.Model):
 
         self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger(at=fields.Datetime.now() + timedelta(hours=1))
 
+    @handle_demo
     def _peppol_deregister_participant(self):
         self.ensure_one()
 

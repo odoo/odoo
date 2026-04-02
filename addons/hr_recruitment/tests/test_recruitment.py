@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.fields import Date
+from datetime import datetime
+from freezegun import freeze_time
+from pytz import timezone
+
 from odoo.tests import tagged, TransactionCase
 
 @tagged('recruitment')
@@ -214,7 +217,9 @@ class TestRecruitment(TransactionCase):
         })
         self.assertEqual(candidate.partner_id.name, 'Test Name')
 
+    @freeze_time('2026-01-01 12:30:00')
     def test_job_overdue_activities(self):
+        self.env.user.tz = 'Europe/Brussels'
         job = self.env["hr.job"].create({
             "name": "Test Job",
         })
@@ -239,7 +244,7 @@ class TestRecruitment(TransactionCase):
         })
         activity = self.env["mail.activity"].create({
             "activity_type_id": persistent_activity_type.id,
-            "date_deadline": Date.today(),
+            "date_deadline": datetime.now(tz=timezone(self.env.user.tz)).date(),
             "res_id": applicant.id,
             "res_model_id": self.env["ir.model"]._get_id("hr.applicant"),
             "user_id": self.env.user.id,

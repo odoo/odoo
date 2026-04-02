@@ -403,7 +403,7 @@ class DeliveryCarrier(models.Model):
                 total_delivery += line.price_total
             if not line.product_id or line.is_delivery:
                 continue
-            if line.product_id.type == "service":
+            if line.product_id.type in {"service", "combo"}:
                 continue
             qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
             weight += (line.product_id.weight or 0.0) * qty

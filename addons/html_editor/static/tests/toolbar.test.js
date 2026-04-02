@@ -1,5 +1,5 @@
 import { withSequence } from "@html_editor/utils/resource";
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, mockUserAgent, test } from "@odoo/hoot";
 import {
     click,
     getActiveElement,
@@ -1158,6 +1158,29 @@ describe("toolbar open and close on user interaction", () => {
 
             // Toolbar opens some time after the last keyup
             await advanceTime(500);
+            await expectElementCount(".o-we-toolbar", 1);
+        });
+
+        test("toolbar should open on Cmd+Shift+Arrow on macOS", async () => {
+            mockUserAgent("mac");
+            const { el } = await setupEditor("<p>[]test</p>");
+            await expectElementCount(".o-we-toolbar", 0);
+
+            // Simulate Cmd+Shift+ArrowRight: keydown fires but keyup is suppressed by macOS
+            await keyDown(["Meta", "Shift", "ArrowRight"]);
+            setContent(el, "<p>[test]</p>");
+            await tick(); // selectionChange
+
+            await animationFrame();
+            // Toolbar should still be closed
+            await expectElementCount(".o-we-toolbar", 0);
+
+            // keyup is NOT fired (macOS suppresses it when Cmd is held)
+            // selectionchange fires and acts as the fallback trigger
+            manuallyDispatchProgrammaticEvent(document, "selectionchange");
+            await tick();
+
+            await waitFor(".o-we-toolbar");
             await expectElementCount(".o-we-toolbar", 1);
         });
     });

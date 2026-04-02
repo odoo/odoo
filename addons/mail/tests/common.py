@@ -750,7 +750,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         else:
             raise AssertionError('mail.mail exists for message %s / recipients %s but should not exist' % (mail_message, recipients.ids))
         finally:
-            self.assertNotSentEmail(recipients=recipients, message_id=mail_message.message_id)
+            self.assertNotSentEmail(recipients=recipients, message_id=mail_message.message_id if mail_message else None)
 
     def assertNotSentEmail(self, recipients=None, message_id=None):
         """Check no email was generated during gateway mock.

@@ -635,6 +635,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             grouping_key['tax_name'] = tax.name
         return grouping_key
 
+    def _enumerate_invoice_lines(self, invoice, start=0):
+        invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section') and line._check_edi_line_tax_required())
+        return enumerate(invoice_lines, start=start)
+
     def _export_invoice_vals(self, invoice):
         # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
         # If you change this method, please change the corresponding new helper as well (at the end of this file).
@@ -665,10 +669,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # Compute values for invoice lines.
         line_extension_amount = 0.0
 
-        invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section') and line._check_edi_line_tax_required())
         document_allowance_charge_vals_list = self._get_document_allowance_charge_vals_list(invoice, taxes_vals)
         invoice_line_vals_list = []
-        for line_id, line in enumerate(invoice_lines):
+        for line_id, line in self._enumerate_invoice_lines(invoice):
             line_taxes_vals = taxes_vals['tax_details_per_record'][line]
             line_vals = self._get_invoice_line_vals(line, line_id, {**line_taxes_vals, 'invoice_line': line})
             invoice_line_vals_list.append(line_vals)
