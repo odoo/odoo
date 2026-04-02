@@ -168,10 +168,10 @@ class IrAttachment(models.Model):
         fname, full_path = self._get_path(io.BytesIO(bin_value), checksum)
         if not os.path.exists(full_path):
             try:
-                with open(full_path, 'wb') as fp:
-                    fp.write(bin_value)
                 # add fname to checklist, in case the transaction aborts
                 self._mark_for_gc(fname)
+                with open(full_path, 'wb') as fp:
+                    fp.write(bin_value)
             except OSError:
                 _logger.info("_file_write writing %s", full_path)
                 raise
