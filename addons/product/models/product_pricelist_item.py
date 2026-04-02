@@ -648,7 +648,7 @@ class ProductPricelistItem(models.Model):
 
         return price
 
-    def _compute_base_price(self, product, quantity, uom, date, currency, **kwargs):
+    def _compute_base_price(self, product, quantity, uom, date, currency, *, depth=0, **kwargs):
         """Compute the base price for a given rule.
 
         :param product: recordset of product (product.product/product.template)
@@ -656,6 +656,7 @@ class ProductPricelistItem(models.Model):
         :param uom: unit of measure (uom.uom record)
         :param datetime date: date to use for price computation and currency conversions
         :param currency: currency in which the returned price must be expressed
+        :param int depth: Technical flag tracking the current recursion depth
 
         :returns: base price, expressed in provided pricelist currency
         :rtype: float
@@ -665,8 +666,13 @@ class ProductPricelistItem(models.Model):
         rule_base = self.base or 'list_price'
         if rule_base == 'pricelist' and self.base_pricelist_id:
             price = self.base_pricelist_id._get_product_price(
-                product, quantity, currency=self.base_pricelist_id.currency_id, uom=uom, date=date,
-                **kwargs
+                product,
+                quantity,
+                currency=self.base_pricelist_id.currency_id,
+                uom=uom,
+                date=date,
+                depth=depth + 1,
+                **kwargs,
             )
             src_currency = self.base_pricelist_id.currency_id
         elif rule_base == "standard_price":
