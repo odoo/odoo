@@ -159,18 +159,20 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
                 BusResult(
                     (channel, "internal_users"),
                     "mail.record/insert",
-                    Store(bus_channel=channel, bus_subchannel="internal_users")
-                    .add(channel, ["livechat_status", "livechat_looking_for_help_since_dt"])
-                    .get_result(),
+                    Store(bus_channel=channel, bus_subchannel="internal_users").add(
+                        channel,
+                        ["livechat_status", "livechat_looking_for_help_since_dt"],
+                    ),
                 ),
                 BusResult(
                     (group, "LOOKING_FOR_HELP"),
                     "mail.record/insert",
-                    Store(bus_channel=group, bus_subchannel="LOOKING_FOR_HELP")
-                    .add(channel, "_store_channel_fields")
-                    .get_result(),
+                    Store(bus_channel=group, bus_subchannel="LOOKING_FOR_HELP").add(
+                        channel,
+                        "_store_channel_fields",
+                    ),
                 ),
-            ]
+            ],
         ):
             channel.livechat_status = "need_help"
 

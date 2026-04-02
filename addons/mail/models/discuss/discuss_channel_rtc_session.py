@@ -106,7 +106,7 @@ class DiscussChannelRtcSession(models.Model):
         store = Store(bus_channel=self.channel_id).add(self, "_store_extra_fields")
         self.channel_id._bus_send(
             "discuss.channel.rtc.session/update_and_broadcast",
-            {"data": store.get_result(), "channelId": self.channel_id.id},
+            {"data": store, "channelId": self.channel_id.id},
         )
 
     @api.autovacuum

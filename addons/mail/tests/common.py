@@ -1663,8 +1663,8 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
                     BusResult(
                         message.author_id.user_ids,
                         "mail.record/insert",
-                        Store().add(message, "_store_notification_fields").get_result(),
-                    )
+                        Store().add(message, "_store_notification_fields"),
+                    ),
                 ] * bus_notif_count
                 self._assertBusNotifications(expected)
 

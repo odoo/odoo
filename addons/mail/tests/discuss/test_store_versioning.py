@@ -1,16 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import math
-from unittest.mock import patch
 
 from odoo.http import Controller
 from odoo.tests import new_test_user
 
-from odoo.addons.base.tests.common import HttpCase, TransactionCase
+from odoo.addons.base.tests.common import HttpCase
 from odoo.addons.bus.tests.common import BusResult
-from odoo.addons.mail.models.discuss.discuss_channel import DiscussChannel
 from odoo.addons.mail.tests.common import MailCase
-from odoo.addons.mail.tools.discuss import Store, mail_route, store_version
+from odoo.addons.mail.tools.discuss import Store, mail_route
 
 
 class TestStoreVersioning(HttpCase, MailCase):
@@ -28,7 +26,7 @@ class TestStoreVersioning(HttpCase, MailCase):
                     record = self.env[model_name].browse(int(record_id))
                     record.write(values)
                     store.add(record, list(values.keys()))
-                return store.get_result()
+                return store
 
             @mail_route("/store/version/read_fields", type="jsonrpc")
             def read_fields(self, fields_to_read_by_id):
@@ -36,7 +34,7 @@ class TestStoreVersioning(HttpCase, MailCase):
                 for key, fnames in fields_to_read_by_id.items():
                     model_name, record_id = key.split(":")
                     store.add(self.env[model_name].browse(int(record_id)), fnames)
-                return store.get_result()
+                return store
 
             @mail_route("/store/version/send_bus_notifications", type="jsonrpc")
             def send_bus_notifications(self, fields_by_channel):
@@ -179,68 +177,4 @@ class TestStoreVersioning(HttpCase, MailCase):
                         f"discuss.channel:{general.id}": ["name"],
                     },
                 },
-            )
-
-
-# This test ensures that an "inner" read-only call captures the correct version, and that
-# later writes in an "outer" call update the version independently, without affecting the
-# previously retrieved inner version.
-#
-# Using a transaction case as any database modification would assign a TX id right away
-# (including `HttpCase.setupClass`).
-class TestStoreVersioningTransactionCase(TransactionCase):
-    def test_store_version_nested_calls(self):
-        @store_version
-        def inner(self, fields_to_read):
-            store = Store(bus_channel=self).add(self, fields_to_read)
-            store.bus_send()
-            return store.get_result()
-
-        @store_version
-        def outer(self, fields_to_write, fields_to_read):
-            inner_store_data = self.inner(fields_to_read)
-            self.write(fields_to_write)
-            store = Store(bus_channel=self).add(self, [*fields_to_write.keys()])
-            store.bus_send()
-            return {
-                "outer_store_data": store.get_result(),
-                "inner_store_data": inner_store_data,
-            }
-
-        with (
-            patch.object(DiscussChannel, "inner", inner, create=True),
-            patch.object(DiscussChannel, "outer", outer, create=True),
-        ):
-            channel = self.env.ref("mail.channel_all_employees")
-            self.env.cr.execute("select pg_current_xact_id_if_assigned()")
-            # No TX id at the beginning as the DB wasn't updated.
-            self.assertIsNone(self.env.cr.fetchone()[0])
-            result = channel.outer(
-                fields_to_write={"name": "written"},
-                fields_to_read=["description"],
-            )
-            self.assertEqual(
-                result["inner_store_data"]["discuss.channel"],
-                [
-                    {
-                        "id": channel.id,
-                        "description": "A place to connect and exchange news with colleagues across the company.",
-                    },
-                ],
-            )
-            inner_version = result["inner_store_data"]["__store_version__"]
-            # Writes occured after `inner` execution, version should not be impacted by the
-            # later writes.
-            self.assertFalse(inner_version["snapshot"]["current_xact_id"])
-            self.assertFalse(inner_version["written_fields_by_record"])
-            self.assertEqual(
-                result["outer_store_data"]["discuss.channel"],
-                [{"id": channel.id, "name": "written"}],
-            )
-            outer_version = result["outer_store_data"]["__store_version__"]
-            # But `outer` wrote on some fields, version should have been updated.
-            self.assertTrue(outer_version["snapshot"]["current_xact_id"])
-            self.assertEqual(
-                outer_version["written_fields_by_record"],
-                {"discuss.channel": {channel.id: ["name", "write_date"]}},
             )

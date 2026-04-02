@@ -27,7 +27,7 @@ from markupsafe import Markup, escape
 from requests import Session
 from werkzeug import urls
 
-from odoo import _, api, exceptions, fields, models, tools
+from odoo import _, api, exceptions, fields, models, modules, tools
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import (
     push_to_end_point, DeviceUnreachableError,
@@ -3414,13 +3414,18 @@ class MailThread(models.AbstractModel):
             # sudo: mail.notification - creating notifications is the purpose of notify methods
             self.env["mail.notification"].sudo().create(notif_create_values)
             users = self.env["res.users"].browse(i[1] for i in inbox_pids_uids if i[1])
-            # sudo: mail.followers - reading followers of target users in batch to send it to them
-            followers = self.env["mail.followers"].sudo().search(
-                [
-                    ("res_model", "=", message.model),
-                    ("res_id", "=", message.res_id),
-                    ("partner_id", "in", users.partner_id.ids),
-                ]
+            followers = Store.LazyValue(
+                lambda: (
+                    self.env["mail.followers"]
+                    .sudo()
+                    .search(
+                        [
+                            ("res_model", "=", message.model),
+                            ("res_id", "=", message.res_id),
+                            ("partner_id", "in", users.partner_id.ids),
+                        ],
+                    )
+                ),
             )
             batch_vals = {"msg_vals": msg_vals, "inbox_fields": True, "followers": followers}
             for user in users:
@@ -3429,7 +3434,10 @@ class MailThread(models.AbstractModel):
                     "_store_message_fields",
                     fields_params=batch_vals,
                 )
-                data = store.get_result()
+                # In tests, emails are sent immediately instead of in postcommit. The
+                # resulting mail unlink invalidates the ORM cache; call `as_dict()` now to
+                # benefit from the cache and maintain a realistic query count.
+                data = store.as_dict() if modules.module.current_test else store
                 user._bus_send("mail.message/inbox", {"message_id": message.id, "store_data": data})
 
     def _notify_thread_by_email(self, message, recipients_data, *, msg_vals=False,
@@ -4930,13 +4938,12 @@ class MailThread(models.AbstractModel):
 
     @api.readonly
     def message_get_followers(self, after=None, limit=100, filter_recipients=False):
-        store = Store().add(
+        return Store().add(
             self,
             "_store_message_followers_fields",
             fields_params={"after": after, "limit": limit, "filter_recipients": filter_recipients},
             as_thread=True,
         )
-        return store.get_result()
 
     def _store_message_followers_fields(
         self,

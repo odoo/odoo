@@ -30,7 +30,7 @@ class WebclientController(ThreadController):
         if context:
             request.update_context(**context)
         self._process_request_loop(store, fetch_params)
-        return store.get_result()
+        return store
 
     @classmethod
     def _process_request_loop(self, store: Store, fetch_params):

@@ -55,6 +55,6 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
         return request.render("im_livechat.chatbot_test_script_page", {
             'server_url': chatbot_script.get_base_url(),
             'chatbot_script': chatbot_script,
-            'chatbot_test_store': store.get_result(),
+            'chatbot_test_store': store.as_dict(),
             'title': self.env._("Test %s", chatbot_script.title),
         })

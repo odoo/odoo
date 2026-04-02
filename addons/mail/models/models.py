@@ -25,10 +25,10 @@ class Base(models.AbstractModel):
     # ------------------------------------------------------------
 
     def _flush(self):
-        if mail_store := self.env.context.get("mail_store"):
+        if store_version_ctx := self.env.context.get("store_version_ctx"):
             for field in self._fields.values():
                 if ids := self.env._field_dirty.get(field):
-                    mail_store.mark_field_as_written(field.model_name, ids, field.name)
+                    store_version_ctx.mark_field_as_written(field.model_name, ids, field.name)
         return super()._flush()
 
     def with_user(self, user):

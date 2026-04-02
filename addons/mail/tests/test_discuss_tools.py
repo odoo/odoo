@@ -16,14 +16,14 @@ class TestDiscussTools(MailCase):
         """Test dict is present in result."""
         store = Store()
         store.add_model_values("key1", {"id": 1, "test": True})
-        self.assertEqual(store.get_result(), {"key1": [{"id": 1, "test": True}]})
+        self.assertEqual(store._build_result(), {"key1": [{"id": 1, "test": True}]})
 
     def test_011_store_dict_update_same_id(self):
         """Test dict update same id."""
         store = Store()
         store.add_model_values("key1", {"id": 1, "test": True})
         store.add_model_values("key1", {"id": 1, "test": False, "abc": 1})
-        self.assertEqual(store.get_result(), {"key1": [{"id": 1, "test": False, "abc": 1}]})
+        self.assertEqual(store._build_result(), {"key1": [{"id": 1, "test": False, "abc": 1}]})
 
     def test_012_store_dict_update_multiple_ids(self):
         """Test dict update multiple ids."""
@@ -32,7 +32,7 @@ class TestDiscussTools(MailCase):
         store.add_model_values("key1", {"id": 2, "test": True})
         store.add_model_values("key1", {"id": 2, "test": False, "abc": 1})
         self.assertEqual(
-            store.get_result(),
+            store._build_result(),
             {"key1": [{"id": 1, "test": True}, {"id": 2, "test": False, "abc": 1}]},
         )
 
@@ -41,27 +41,27 @@ class TestDiscussTools(MailCase):
         store = Store()
         store.add_model_values("key1", True)
         with self.assertRaises(TypeError):
-            store.get_result()
+            store._build_result()
 
     def test_042_store_invalid_missing_id(self):
         """Test Thread adding invalid list value."""
         store = Store()
         store.add_model_values("key1", {"test": True})
         with self.assertRaises(AssertionError):
-            store.get_result()
+            store._build_result()
 
     def test_060_store_data_empty_val(self):
         """Test empty values are not present in result."""
         store = Store()
         store.add_model_values("key1", {})
-        self.assertEqual(store.get_result(), {})
+        self.assertEqual(store._build_result(), {})
 
     def test_061_store_data_empty_not_empty(self):
         """Test mixing empty and non-empty values."""
         store = Store()
         store.add_model_values("key1", {})
         store.add_model_values("key2", {"id": 1})
-        self.assertEqual(store.get_result(), {"key2": [{"id": 1}]})
+        self.assertEqual(store._build_result(), {"key2": [{"id": 1}]})
 
     def test_075_store_same_related_field_twice(self):
         """Test adding the same related field twice combines their data"""
@@ -74,7 +74,7 @@ class TestDiscussTools(MailCase):
             ),
         )
         self.assertEqual(
-            store.get_result(),
+            store._build_result(),
             {
                 "res.partner": [
                     {
@@ -94,41 +94,41 @@ class TestDiscussTools(MailCase):
         """Test Store dict is present in result as a singleton."""
         store = Store()
         store.add_global_values(test=True)
-        self.assertEqual(store.get_result(), {"Store": {"test": True}})
+        self.assertEqual(store._build_result(), {"Store": {"test": True}})
 
     def test_111_store_store_dict_update(self):
         """Test Store dict update."""
         store = Store()
         store.add_global_values(test=True)
         store.add_global_values(test=False, abc=1)
-        self.assertEqual(store.get_result(), {"Store": {"test": False, "abc": 1}})
+        self.assertEqual(store._build_result(), {"Store": {"test": False, "abc": 1}})
 
     def test_140_store_store_invalid_bool(self):
         """Test Store adding invalid value."""
         store = Store()
         store.add_model_values("key1", True)
         with self.assertRaises(TypeError):
-            store.get_result()
+            store._build_result()
 
     def test_141_store_store_invalid_list(self):
         """Test adding invalid value."""
         store = Store()
         store.add_model_values("key1", [{"test": True}])
         with self.assertRaises(AssertionError):
-            store.get_result()
+            store._build_result()
 
     def test_160_store_store_data_empty_val(self):
         """Test Store empty values are not present in result."""
         store = Store()
         store.add_global_values()
-        self.assertEqual(store.get_result(), {})
+        self.assertEqual(store._build_result(), {})
 
     def test_161_store_store_data_empty_not_empty(self):
         """Test Store mixing empty and non-empty values."""
         store = Store()
         store.add_global_values()
         store.add_model_values("key2", {"id": 1})
-        self.assertEqual(store.get_result(), {"key2": [{"id": 1}]})
+        self.assertEqual(store._build_result(), {"key2": [{"id": 1}]})
 
     # 2xx Thread specific tests (dual id in ids_by_model)
 
@@ -137,7 +137,7 @@ class TestDiscussTools(MailCase):
         store = Store()
         store.add_model_values("mail.thread", {"id": 1, "model": "res.partner", "test": True})
         self.assertEqual(
-            store.get_result(), {"mail.thread": [{"id": 1, "model": "res.partner", "test": True}]}
+            store._build_result(), {"mail.thread": [{"id": 1, "model": "res.partner", "test": True}]}
         )
 
     def test_211_store_thread_dict_update_same_id(self):
@@ -146,7 +146,7 @@ class TestDiscussTools(MailCase):
         store.add_model_values("mail.thread", {"id": 1, "model": "res.partner", "test": True})
         store.add_model_values("mail.thread", {"id": 1, "model": "res.partner", "test": False, "abc": 1})
         self.assertEqual(
-            store.get_result(),
+            store._build_result(),
             {"mail.thread": [{"id": 1, "model": "res.partner", "test": False, "abc": 1}]},
         )
 
@@ -157,7 +157,7 @@ class TestDiscussTools(MailCase):
         store.add_model_values("mail.thread", {"id": 2, "model": "res.partner", "test": True})
         store.add_model_values("mail.thread", {"id": 2, "model": "res.partner", "test": False, "abc": 1})
         self.assertEqual(
-            store.get_result(),
+            store._build_result(),
             {
                 "mail.thread": [
                     {"id": 1, "model": "res.partner", "test": True},
@@ -175,7 +175,7 @@ class TestDiscussTools(MailCase):
         store.add_model_values("mail.thread", {"id": 2, "model": "discuss.channel", "test": False, "abc": 2})
         store.add_model_values("mail.thread", {"id": 1, "model": "res.partner", "test": False})
         self.assertEqual(
-            store.get_result(),
+            store._build_result(),
             {
                 "mail.thread": [
                     {"id": 1, "model": "res.partner", "test": False},
@@ -190,41 +190,41 @@ class TestDiscussTools(MailCase):
         store = Store()
         store.add_model_values("mail.thread", True)
         with self.assertRaises(TypeError):
-            store.get_result()
+            store._build_result()
 
     def test_241_store_thread_invalid_list(self):
         """Test Thread adding invalid list value."""
         store = Store()
         store.add_model_values("mail.thread", [True])
         with self.assertRaises(AttributeError):
-            store.get_result()
+            store._build_result()
 
     def test_242_store_thread_invalid_missing_id(self):
         """Test Thread adding invalid missing id."""
         store = Store()
         store.add_model_values("mail.thread", {"model": "res.partner"})
         with self.assertRaises(AssertionError):
-            store.get_result()
+            store._build_result()
 
     def test_243_store_thread_invalid_missing_model(self):
         """Test Thread adding invalid list value."""
         store = Store()
         store.add_model_values("mail.thread", {"id": 1})
         with self.assertRaises(AssertionError):
-            store.get_result()
+            store._build_result()
 
     def test_260_store_thread_data_empty_val(self):
         """Test Thread empty values are not present in result."""
         store = Store()
         store.add_model_values("mail.thread", {})
-        self.assertEqual(store.get_result(), {})
+        self.assertEqual(store._build_result(), {})
 
     def test_261_store_thread_data_empty_not_empty(self):
         """Test Thread mixing empty and non-empty values."""
         store = Store()
         store.add_model_values("key1", {})
         store.add_model_values("mail.thread", {"id": 1, "model": "res.partner"})
-        self.assertEqual(store.get_result(), {"mail.thread": [{"id": 1, "model": "res.partner"}]})
+        self.assertEqual(store._build_result(), {"mail.thread": [{"id": 1, "model": "res.partner"}]})
 
     # 3xx Tests with real models
 
@@ -241,7 +241,7 @@ class TestDiscussTools(MailCase):
                 ),
             ),
         )
-        self.assertEqual(store.get_result()["res.partner"][0]["email"], "test_user_350@example.com")
+        self.assertEqual(store._build_result()["res.partner"][0]["email"], "test_user_350@example.com")
 
     def test_355_single_extra_fields_copy_with_records(self):
         """Test that dynamic_fields apply individually to each record even when list extra fields are present."""
@@ -256,7 +256,7 @@ class TestDiscussTools(MailCase):
             user_a + user_b,
             lambda res: res.one("partner_id", lambda res: res.attr("name"), dynamic_fields=fields),
         )
-        data = store.get_result()
+        data = store._build_result()
         self.assertEqual(data["res.partner"][0]["email"], "test_user_355_a@example.com")
         self.assertNotIn("email", data["res.partner"][1])
 
@@ -371,11 +371,11 @@ class TestDiscussTools(MailCase):
         user_a = new_test_user(self.env, "test_user_390@example.com")
         store = Store()
         store.add(user_a, "_store_im_status_fields")
-        data = store.get_result()
+        data = store._build_result()
         self.assertEqual(data["res.partner"][0]["im_status"], "offline")
         self.env["mail.presence"]._update_presence(user_a)
         store.add(user_a, "_store_im_status_fields")
-        data2 = store.get_result()
+        data2 = store._build_result()
         self.assertEqual(data2["res.partner"][0]["im_status"], "online")
 
     def test_391_add_no_loop_callable_identity_obj(self):
@@ -388,18 +388,18 @@ class TestDiscussTools(MailCase):
             res.one("partner_id", _store_partner_test_fields)
 
         user = new_test_user(self.env, "test_user_391@example.com")
-        data = Store().add(user, _store_user_test_fields).get_result()
+        data = Store().add(user, _store_user_test_fields)._build_result()
         self.assertEqual(data["res.partner"][0]["test"], user.partner_id.id)
         self.assertEqual(data["res.users"][0]["test"], user.id)
 
     def test_393_delayed_add(self):
-        """Test that delayed store.add() postpones reading fields until get_result()."""
+        """Test that delayed store.add() postpones reading fields until _build_result()."""
         user_a = new_test_user(self.env, "test_user_390@example.com")
         store = Store()
         store.add(user_a, "_store_im_status_fields")
         self.assertEqual(user_a.partner_id.im_status, "offline")
         self.env["mail.presence"]._update_presence(user_a)
-        data = store.get_result()
+        data = store._build_result()
         self.assertEqual(data["res.partner"][0]["im_status"], "online")
 
     def test_395_delayed_add_ignores_deleted_record(self):
@@ -408,7 +408,7 @@ class TestDiscussTools(MailCase):
         store = Store()
         store.add(user_a, ["name"])
         user_a.unlink()
-        data = store.get_result()
+        data = store._build_result()
         self.assertFalse(data)
 
     def test_397_delayed_delete_keeps_deleted_record(self):
@@ -418,7 +418,7 @@ class TestDiscussTools(MailCase):
         user_a.unlink()
         store.add(user_a, ["name"])
         store.delete(user_a)
-        data = store.get_result()
+        data = store._build_result()
         self.assertEqual({"res.users": [{"id": user_a.id, "_DELETE": True}]}, data)
 
     # 4xx Tests many command modes
@@ -435,7 +435,7 @@ class TestDiscussTools(MailCase):
                 res.many("messages", [], value=general.message_ids[1], mode="REPLACE"),
             ),
         )
-        data = store.get_result()
+        data = store._build_result()
         self.assertEqual(data["discuss.channel"][0]["messages"], general.message_ids[1].ids)
 
     def test_460_replace_wrapped_into_command_when_multiple_commands_are_added(self):
@@ -448,7 +448,7 @@ class TestDiscussTools(MailCase):
             general,
             lambda res: res.many("messages", [], value=general.message_ids, mode="REPLACE"),
         )
-        data = store.get_result()
+        data = store._build_result()
         store = Store()
         self.assertEqual(data["discuss.channel"][0]["messages"], general.message_ids.ids)
         store.add(
@@ -458,7 +458,7 @@ class TestDiscussTools(MailCase):
                 res.many("messages", [], value=general.message_ids[2], mode="DELETE"),
             ),
         )
-        data = store.get_result()
+        data = store._build_result()
         self.assertEqual(
             data["discuss.channel"][0]["messages"],
             [("REPLACE", general.message_ids.ids), ("DELETE", general.message_ids[2].ids)],

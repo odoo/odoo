@@ -379,7 +379,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
 
         def test_fn():
             field_list = self.users[0].with_user(self.users[0])._store_init_global_fields
-            return Store().add_global_values(field_list).get_result()
+            return Store().add_global_values(field_list)._build_result()
 
         self._run_test(
             fn=test_fn,

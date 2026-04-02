@@ -79,10 +79,10 @@ class AttachmentController(ThreadController):
                     res.from_method("_store_ownership_fields"),
                 ),
             )
-            res = {"data": {"store_data": store.get_result(), "attachment_id": attachment.id}}
+            res = {"data": {"store_data": store, "attachment_id": attachment.id}}
         except AccessError:
             res = {"error": _("You are not allowed to upload an attachment here.")}
-        return res
+        return request.make_json_response(res)
 
     @mail_route("/mail/attachment/delete", methods=["POST"], type="jsonrpc", auth="public")
     def mail_attachment_delete(self, attachment_id, access_token=None):

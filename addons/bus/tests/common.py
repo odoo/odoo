@@ -188,7 +188,7 @@ class BusResult:
     def __init__(self, channel, type=None, payload=None):
         self.channel = channel
         self.type = type
-        self.payload = payload
+        self.payload = payload.as_dict() if hasattr(payload, "as_dict") else payload
         self.matched = False
         self.misordered_matched = False
         self.wrong_order_expected_idx = None
@@ -272,7 +272,7 @@ class BusResult:
 
 class BusCase(BaseCase):
     def _reset_bus(self):
-        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        self.env.cr.precommit.data.get("bus.bus.values", []).clear()
         self.env["bus.bus"].sudo().search([]).unlink()
 
     @contextlib.contextmanager

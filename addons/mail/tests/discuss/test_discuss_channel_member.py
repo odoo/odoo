@@ -79,7 +79,7 @@ class TestDiscussChannelMember(MailCommon):
         data = self.env["res.partner"].search_for_channel_invite(
             partner.name,
             channel_id=public_channel.id,
-        )["store_data"]
+        )["store_data"]._build_result()
         self.assertEqual(len(data["res.partner"]), 1)
         self.assertEqual(data["res.partner"][0]["id"], partner.id)
 

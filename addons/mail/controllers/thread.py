@@ -123,7 +123,7 @@ class ThreadController(http.Controller):
         subtypes = record._mail_get_message_subtypes()
         store = Store().add(subtypes, ["name"]).add(follower, ["subtype_ids"])
         return {
-            "store_data": store.get_result(),
+            "store_data": store,
             "subtype_ids": subtypes.sorted(
                 key=lambda s: (
                     s.parent_id.res_model or "",
@@ -214,7 +214,7 @@ class ThreadController(http.Controller):
             **self._prepare_message_data(post_data, thread=thread, from_create=True, **kwargs),
         )
         store.add(message, "_store_message_fields")
-        return {"store_data": store.get_result(), "message_id": message.id}
+        return {"store_data": store, "message_id": message.id}
 
     @mail_route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")
     def mail_message_update_content(self, message_id, update_data, **kwargs):
@@ -228,7 +228,7 @@ class ThreadController(http.Controller):
             message,
             **self._prepare_message_data(update_data, thread=thread, from_create=False, **kwargs),
         )
-        return Store().add(message, "_store_message_fields").get_result()
+        return Store().add(message, "_store_message_fields")
 
     # side check for access
     # ------------------------------------------------------------
@@ -241,13 +241,13 @@ class ThreadController(http.Controller):
     def mail_thread_unsubscribe(self, res_model, res_id, partner_ids):
         thread = self.env[res_model].browse(res_id)
         thread.message_unsubscribe(partner_ids)
-        return Store().add(thread, self._store_thread_follow_fields, as_thread=True).get_result()
+        return Store().add(thread, self._store_thread_follow_fields, as_thread=True)
 
     @mail_route("/mail/thread/subscribe", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_subscribe(self, res_model, res_id, partner_ids):
         thread = self.env[res_model].browse(res_id)
         thread.message_subscribe(partner_ids)
-        return Store().add(thread, self._store_thread_follow_fields, as_thread=True).get_result()
+        return Store().add(thread, self._store_thread_follow_fields, as_thread=True)
 
     @classmethod
     def _store_thread_follow_fields(cls, res: Store.FieldList):

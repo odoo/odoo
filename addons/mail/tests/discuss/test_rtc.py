@@ -124,7 +124,7 @@ class TestChannelRTC(MailCommon, HttpCase):
         with self.assertBus(notifications):
             store = Store()
             channel_member._rtc_join_call(store)
-            res = store.get_result()
+            res = store._build_result()
         self.assertEqual(
             res,
             {
@@ -1526,7 +1526,7 @@ class TestChannelRTC(MailCommon, HttpCase):
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         store = Store()
         channel_member._rtc_join_call(store)
-        join_call_values = store.get_result()
+        join_call_values = store._build_result()
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
         test_channel_member = self.env['discuss.channel.member'].create({
             'guest_id': test_guest.id,

@@ -163,7 +163,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         operator_member = channel.channel_member_ids.filtered(lambda m: m.partner_id == self.operator.partner_id)
         guest_member = channel.channel_member_ids.filtered(lambda m: m.guest_id == guest)
         self.assertEqual(
-            Store().add(channel, "_store_channel_fields").get_result(),
+            Store().add(channel, "_store_channel_fields")._build_result(),
             {
                 "discuss.channel": self._filter_channels_fields(
                     {
@@ -337,7 +337,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             channel.channel_member_ids.filtered(lambda m: m.partner_id == self.operator.partner_id)
         )
         channel_w_user = channel.with_user(self.user_public).with_context(guest=guest)
-        data = Store().add(channel_w_user, "_store_channel_fields").get_result()
+        data = Store().add(channel_w_user, "_store_channel_fields")._build_result()
         self.assertEqual(
             data["discuss.channel"],
             self._filter_channels_fields(

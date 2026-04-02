@@ -755,7 +755,7 @@ class DiscussChannel(models.Model):
                     "feedback": reason,
                     "rating_image_url": rating_url,
                     "channel_id": self.id,
-                    "store_data": store.get_result(),
+                    "store_data": store,
                 },
             )
 

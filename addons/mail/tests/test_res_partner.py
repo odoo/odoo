@@ -123,14 +123,19 @@ class TestPartner(MailCommon):
             mail_new_test_user(self.env, login=f'{name}-{i}-internal-user', groups='base.group_user')
 
         # suggest portal user of this company in another company
-        suggested_partners = self.env["res.partner"].with_user(self.user_employee_c2).get_mention_suggestions("portal-user")
+        suggested_partners = (
+            self.env["res.partner"]
+            .with_user(self.user_employee_c2)
+            .get_mention_suggestions("portal-user")
+            ._build_result()
+        )
 
         porter_user_suggested = [
             p for p in suggested_partners['res.partner']
             if p["name"] == f'{name}-1-portal-user (base.group_portal)'
         ]
         self.assertEqual(len(porter_user_suggested), 1, "porter_user_suggested should contain one user")
-        store_data = self.env["res.partner"].get_mention_suggestions(name, limit=5)
+        store_data = self.env["res.partner"].get_mention_suggestions(name, limit=5)._build_result()
         partners_format = store_data["res.partner"]
         self.assertEqual(len(partners_format), 5, "should have found limit (5) partners")
         # return format for user is either a dict (there is a user and the dict is data) or a list of command (clear)

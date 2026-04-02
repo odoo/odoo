@@ -549,14 +549,14 @@ class TestTrackingAPI(TestTrackingCommon):
             )
         # first record: tracking value should be hidden
         message_0 = records[0].message_ids[0]
-        formatted = Store().add(message_0, "_store_message_fields").get_result()["mail.message"][0]
+        formatted = Store().add(message_0, "_store_message_fields")._build_result()["mail.message"][0]
         self.assertEqual(formatted['trackingValues'], [], 'Hidden values should not be formatted')
         mail_render = records[0]._notify_by_email_prepare_rendering_context(message_0, {})
         self.assertEqual(mail_render['tracking_values'], [])
 
         # second record: all values displayed
         message_1 = records[1].message_ids[0]
-        formatted = Store().add(message_1, "_store_message_fields").get_result()["mail.message"][0]
+        formatted = Store().add(message_1, "_store_message_fields")._build_result()["mail.message"][0]
         self.assertEqual(len(formatted['trackingValues']), 1)
         self.assertDictEqual(
             formatted['trackingValues'][0],
@@ -1392,11 +1392,11 @@ class TestTrackingInternals(TestTrackingCommon):
         }]
         for user, exp_values in [(self.user_employee, []), (self.user_admin, formatted_tracking_values)]:
             self.env.transaction.reset()
-            msg_as_user = Store().add(track_msg.with_user(user), "_store_message_fields").get_result()
+            msg_as_user = Store().add(track_msg.with_user(user), "_store_message_fields")._build_result()
             self.assertEqual(
                 msg_as_user["mail.message"][0].get("trackingValues"), exp_values,
             )
-            msg_as_user = Store().add(track_msg.with_user(user).sudo(), "_store_message_fields").get_result()
+            msg_as_user = Store().add(track_msg.with_user(user).sudo(), "_store_message_fields")._build_result()
             self.assertEqual(
                 msg_as_user["mail.message"][0].get("trackingValues"),
                 formatted_tracking_values,

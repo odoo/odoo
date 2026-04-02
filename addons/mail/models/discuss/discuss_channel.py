@@ -689,7 +689,7 @@ class DiscussChannel(models.Model):
                 payload = {
                     "channel_id": member.channel_id.id,
                     "invite_to_rtc_call": invite_to_rtc_call,
-                    "data": joined_store.get_result(),
+                    "data": joined_store,
                 }
                 if not member.is_self and not self.env.user._is_public():
                     payload["invited_by_user_id"] = self.env.user.id
@@ -979,7 +979,7 @@ class DiscussChannel(models.Model):
         store = Store(bus_channel=self).add(message, "_store_message_fields")
         if message.channel_id.parent_channel_id:
             store.add(message.channel_id, ["message_count"])
-        payload = {"data": store.get_result(), "id": self.id}
+        payload = {"data": store, "id": self.id}
         if temporary_id := self.env.context.get("temporary_id"):
             payload["temporary_id"] = temporary_id
         if kwargs.get("silent"):
@@ -1279,10 +1279,12 @@ class DiscussChannel(models.Model):
         # sudo : discuss.channel.member - prefetching member fields as sudo is acceptable,
         # and its necessary to get channel_role in the same query as the other fields.
         all_members.sudo().mapped("channel_role")
-        # prefetch in batch, including nested relations (member, guest, ...)
-        prefetch_store = Store(bus_channel=res.target.channel, bus_subchannel=res.target.subchannel)
-        prefetch_store.add(all_members, "_store_member_fields")
-        prefetch_store.get_result()  # execute the queued operations, which access the nested fields
+        # prefetch in batch, including nested relations (member, guest, ...).
+        # `_build_result` must be called as store is lazy.
+        Store(bus_channel=res.target.channel, bus_subchannel=res.target.subchannel).add(
+            all_members,
+            "_store_member_fields",
+        )._build_result()
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         res.attr("avatar_cache_key", predicate=is_channel_or_group)
@@ -1567,7 +1569,7 @@ class DiscussChannel(models.Model):
         """ Return 'limit'-first channels' name, channel_type and group_public_id fields such that the
             name matches a 'search' string. Exclude channels of type chat (DM) and group.
         """
-        store = Store().add(
+        return Store().add(
             self.search([("name", "ilike", search), ("channel_type", "=", "channel")], limit=limit),
             lambda res: (
                 res.extend(["name", "channel_type"]),
@@ -1575,7 +1577,6 @@ class DiscussChannel(models.Model):
                 res.attr("parent_channel_id"),
             ),
         )
-        return store.get_result()
 
     def _get_last_messages(self):
         """ Return the last message for each of the given channels."""

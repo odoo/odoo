@@ -121,7 +121,7 @@ class PublicPageController(http.Controller):
         return request.render(
             "mail.discuss_public_channel_template",
             {
-                "data": store.get_result(),
                 "session_info": channel.env["ir.http"].session_info(),
+                "store_data": store.as_dict(),
             },
         )

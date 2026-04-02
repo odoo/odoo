@@ -10,7 +10,7 @@ from odoo.addons.mail.tools.discuss import mail_route
 
 
 class LivechatAttachmentController(AttachmentController):
-    @mail_route(type="http")
+    @mail_route()
     def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
         thread = self._get_thread_with_access_for_post(thread_model, thread_id, **kwargs)
         if not thread:

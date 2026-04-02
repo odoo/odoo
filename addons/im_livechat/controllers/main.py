@@ -192,7 +192,7 @@ class LivechatController(http.Controller):
             )
         if not request.env.user._is_public():
             store.add(request.env.user.partner_id, ["email"])
-        return {"store_data": store.get_result(), "channel_id": channel_id}
+        return {"store_data": store, "channel_id": channel_id}
 
     @mail_route("/im_livechat/feedback", type="jsonrpc", auth="public")
     def feedback(self, channel_id, rate, reason=None, **kwargs):

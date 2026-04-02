@@ -470,6 +470,10 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             }
         )
         channel.with_user(self.operators[0])._add_members(users=john)
-        data = john.partner_id.with_user(john).search_for_channel_invite("bob", channel.id)["store_data"]
+        data = (
+            john.partner_id.with_user(john)
+            .search_for_channel_invite("bob", channel.id)["store_data"]
+            ._build_result()
+        )
         self.assertIn(bob.partner_id.id, [p["id"] for p in data["res.partner"]])
         self.assertFalse(john.has_group("im_livechat.im_livechat_group_user"))

@@ -40,6 +40,9 @@ def get_notify_payload_max_length(default=8000):
 
 # max length in bytes for the NOTIFY query payload
 NOTIFY_PAYLOAD_MAX_LENGTH = get_notify_payload_max_length()
+# Sentinel used by `_prepare_payload` to indicate the notification
+# creation should be aborted.
+SKIP_NOTIFICATION = object()
 
 
 def fetch_bus_notifications(cr, channels, last=0, ignore_ids=None):
@@ -146,18 +149,15 @@ class BusBus(models.Model):
                 " Partners do not receive notifications unless they have dedicated user(s)."
                 " So please send on the expected res.users instead.",
             )
-        self.env.cr.precommit.data["bus.bus.values"].append(
-            {
-                "channel": json_dump(channel),
-                "message": json_dump(
-                    {
-                        "type": notification_type,
-                        "payload": message,
-                    }
-                ),
-            }
-        )
+        self.env.cr.precommit.data["bus.bus.values"].append((channel, notification_type, message))
         self.env.cr.postcommit.data["bus.bus.channels"].add(channel)
+
+    def _prepare_payload(self, payload):
+        """Compute and return the final payload for a bus notification. This method is
+        called **just before sending the notification**, allowing deferred computation.
+        Return the `SKIP_NOTIFICATION` sentinel to cancel the creation of the notification.
+        """
+        return payload
 
     def _ensure_hooks(self):
         if "bus.bus.values" not in self.env.cr.precommit.data:
@@ -165,7 +165,15 @@ class BusBus(models.Model):
 
             @self.env.cr.precommit.add
             def create_bus():
-                self.sudo().create(self.env.cr.precommit.data.pop("bus.bus.values"))
+                if values := [
+                    {
+                        "channel": json_dump(channel),
+                        "message": json_dump({"type": type_, "payload": formatted_payload}),
+                    }
+                    for channel, type_, payload in self.env.cr.precommit.data.pop("bus.bus.values")
+                    if (formatted_payload := self._prepare_payload(payload)) is not SKIP_NOTIFICATION
+                ]:
+                    self.sudo().create(values)
 
         if "bus.bus.channels" not in self.env.cr.postcommit.data:
             self.env.cr.postcommit.data["bus.bus.channels"] = OrderedSet()

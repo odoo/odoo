@@ -70,7 +70,7 @@ class TestSMSActionsCommon(SMSCommon, TestSMSRecipients):
             BusResult(
                 user,
                 "mail.record/insert",
-                Store().add(msg, "_store_notification_fields").get_result(),
+                Store().add(msg, "_store_notification_fields"),
             )
             for user in users
         ]

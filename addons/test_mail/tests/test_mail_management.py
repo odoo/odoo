@@ -51,7 +51,7 @@ class TestMailManagement(MailCommon, TestRecipients):
             BusResult(
                 self.msg.author_id.user_ids,
                 "mail.record/insert",
-                Store().add(self.msg, "_store_notification_fields").get_result(),
+                Store().add(self.msg, "_store_notification_fields"),
             ),
         ]):
             self.test_record.with_user(self.user_employee).notify_cancel_by_type('email')

@@ -22,6 +22,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 if typing.TYPE_CHECKING:
     from odoo.models import BaseModel
+    from odoo.addons.mail.models.mail_followers import MailFollowers
 
 
 _logger = logging.getLogger(__name__)
@@ -955,7 +956,7 @@ class MailMessage(models.Model):
         store = Store().add(notifications.mail_message_id, "_store_message_fields")
         self.env.user._bus_send(
             "mail.message/mark_as_unread",
-            {"message_ids": notifications.mail_message_id.ids, "store_data": store.get_result()},
+            {"message_ids": notifications.mail_message_id.ids, "store_data": store},
         )
 
     @api.model
@@ -1105,7 +1106,7 @@ class MailMessage(models.Model):
         format_reply=True,
         msg_vals=False,
         inbox_fields=False,
-        followers=None,
+        followers: Store.LazyValue[MailFollowers] = None,
     ):
         """
         :param format_reply: if True, also get data about the parent message if it exists.
@@ -1217,6 +1218,8 @@ class MailMessage(models.Model):
                 domain &= Domain("partner_id", "=", target_user.partner_id.id)
                 # sudo: mail.followers - reading followers of current partner
                 followers = self.env["mail.followers"].sudo().search(domain)
+            else:
+                followers = followers.get(self.env)
             for follower in followers:
                 follower_by_record_and_partner[
                     self.env[follower.res_model].browse(follower.res_id),

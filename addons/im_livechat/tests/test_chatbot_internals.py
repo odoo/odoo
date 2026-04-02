@@ -169,38 +169,23 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             self.chatbot_script.operator_partner_id,
         )
         self.assertEqual(discuss_channel.name, "Testing Bot")
-
         member_bot = discuss_channel.channel_member_ids.filtered(
             lambda m: m.partner_id == self.chatbot_script.operator_partner_id
         )
-        member_bot_data = {
-            "channel_role": False,
-            "create_date": fields.Datetime.to_string(member_bot.create_date),
-            "id": member_bot.id,
-            "livechat_member_type": "bot",
-            "last_seen_dt": False,
-            "partner_id": member_bot.partner_id.id,
-            "seen_message_id": False,
-            "channel_id": discuss_channel.id,
-        }
 
         def notifications():
             messages = self.env["mail.message"].search([], order="id desc", limit=3)
             # only data relevant to the test are asserted for simplicity
             store = Store(bus_channel=discuss_channel).add(messages[1], "_store_message_fields")
-            transfer_message_data = store.get_result()
+            transfer_message_data = store._build_result()
             transfer_message_data["mail.message"][0].update(
                 {
                     "author_id": self.chatbot_script.operator_partner_id.id,
                     "body": ["markup", "<p>I will transfer you to a human.</p>"],
-                    # thread not renamed yet at this step
-                    "default_subject": "Testing Bot",
-                    "record_name": "Testing Bot",
                 }
             )
-            transfer_message_data["mail.thread"][0]["display_name"] = "Testing Bot"
             store = Store(bus_channel=discuss_channel).add(messages[0], "_store_message_fields")
-            joined_message_data = store.get_result()
+            joined_message_data = store._build_result()
             joined_message_data["mail.message"][0].update(
                 {
                     "author_id": self.chatbot_script.operator_partner_id.id,
@@ -211,64 +196,25 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                             f'{self.partner_employee.id}" class="o_mail_redirect">@Ernest Employee</a> to the conversation</div>'
                         ),
                     ],
-                    # thread not renamed yet at this step
-                    "default_subject": "Testing Bot",
-                    "record_name": "Testing Bot",
                 }
             )
-            joined_message_data["mail.thread"][0]["display_name"] = "Testing Bot"
             member_emp = discuss_channel.channel_member_ids.filtered(
                 lambda m: m.partner_id == self.partner_employee
             )
-            # data in-between join and leave
             store = Store(bus_channel=member_emp)
             store.add(discuss_channel, "_store_channel_fields")
-            channel_data_join = store.get_result()
-            channel_data_join["discuss.channel"][0]["livechat_outcome"] = "no_agent"
+            channel_data_join = store._build_result()
+            channel_data_join["discuss.channel"][0]["livechat_outcome"] = "no_answer"
             channel_data_join["discuss.channel"][0]["chatbot"]["currentStep"]["message"] = messages[1].id
             channel_data_join["discuss.channel"][0]["chatbot"]["steps"][0]["message"] = messages[1].id
-            channel_data_join["discuss.channel"][0]["member_count"] = 3
-            channel_data_join["discuss.channel"][0]["name"] = "Testing Bot"
-            channel_data_join["discuss.channel.member"].insert(0, member_bot_data)
-            channel_data_join["discuss.channel.member"][2]["last_seen_dt"] = False
-            channel_data_join["discuss.channel.member"][2]["seen_message_id"] = False
-            channel_data_join["discuss.channel.member"][2]["unpin_dt"] = False
-            # adding member_id to livechat history
-            # since the joined message is calculated before removing the bot from members
-            member_bot_history = next(
-                filter(
-                    lambda h: h.get("partner_id", None)
-                    == self.chatbot_script.operator_partner_id.id,
-                    channel_data_join["im_livechat.channel.member.history"],
-                )
-            )
-            member_bot_history["member_id"] = member_bot_data["id"]
-            del channel_data_join["res.partner"][1]
-            channel_data_join["res.partner"].insert(
-                0,
-                self._filter_partners_fields({
-                    "active": False,
-                    "avatar_128_access_token": self.chatbot_script.operator_partner_id._get_avatar_128_access_token(),
-                    "country_id": False,
-                    "id": self.chatbot_script.operator_partner_id.id,
-                    "im_status": "im_partner",
-                    "im_status_access_token": self.chatbot_script.operator_partner_id._get_im_status_access_token(),
-                    "is_public": False,
-                    "main_user_id": False,
-                    "mention_token": self.chatbot_script.operator_partner_id._get_mention_token(),
-                    "name": "Testing Bot",
-                    "user_livechat_username": False,
-                    "write_date": fields.Datetime.to_string(
-                        self.chatbot_script.operator_partner_id.write_date
-                    ),
-                })[0],
-            )
+            channel_data_join["discuss.channel"][0]["member_count"] = 2
+            channel_data_join["discuss.channel.member"][1]["unpin_dt"] = False
             store_1 = Store().add(discuss_channel, "_store_channel_fields")
-            channel_data = store_1.get_result()
+            channel_data = store_1._build_result()
             channel_data["discuss.channel"][0]["message_needaction_counter_bus_id"] = 0
             channel_w_employee = discuss_channel.with_user(self.user_employee)
             store_2 = Store().add(channel_w_employee, "_store_channel_fields")
-            channel_data_emp = store_2.get_result()
+            channel_data_emp = store_2._build_result()
             channel_data_emp["discuss.channel"][0]["message_needaction_counter_bus_id"] = 0
             channel_data_emp["discuss.channel.member"][1]["message_unread_counter_bus_id"] = 0
             agent_history_id = discuss_channel.livechat_channel_member_history_ids.filtered(
@@ -333,7 +279,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     discuss_channel,
                     "mail.record/insert",
                     {
-                        "discuss.channel": [{"id": discuss_channel.id, "member_count": 3}],
+                        "discuss.channel": [{"id": discuss_channel.id, "member_count": 2}],
                         "discuss.channel.member": [
                             {
                                 "channel_role": False,
@@ -349,19 +295,21 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                         "res.country": [
                             {"code": "BE", "id": self.env.ref("base.be").id, "name": "Belgium"}
                         ],
-                        "res.partner": self._filter_partners_fields({
-                            "active": True,
-                            "avatar_128_access_token": self.partner_employee._get_avatar_128_access_token(),
-                            "country_id": self.env.ref("base.be").id,
-                            "id": self.partner_employee.id,
-                            "is_public": False,
-                            "mention_token": self.partner_employee._get_mention_token(),
-                            "name": "Ernest Employee",
-                            "user_livechat_username": False,
-                            "write_date": fields.Datetime.to_string(
-                                self.partner_employee.write_date
-                            ),
-                        }),
+                        "res.partner": self._filter_partners_fields(
+                            {
+                                "active": True,
+                                "avatar_128_access_token": self.partner_employee._get_avatar_128_access_token(),
+                                "country_id": self.env.ref("base.be").id,
+                                "id": self.partner_employee.id,
+                                "is_public": False,
+                                "mention_token": self.partner_employee._get_mention_token(),
+                                "name": "Ernest Employee",
+                                "user_livechat_username": False,
+                                "write_date": fields.Datetime.to_string(
+                                    self.partner_employee.write_date
+                                ),
+                            }
+                        ),
                     },
                 ),
                 BusResult(

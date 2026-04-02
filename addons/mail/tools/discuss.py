@@ -4,19 +4,23 @@ import base64
 import math
 import os
 from collections import UserList, defaultdict
+from contextlib import suppress
 from datetime import date, datetime
 from functools import partial, wraps
 from itertools import product
+from typing import Generic, TypeVar
 
 from markupsafe import Markup
 
 import odoo
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import MissingError
-from odoo.http import Response, request, route
+from odoo.http import request, route
 from odoo.tools import OrderedSet, groupby
 
 from odoo.addons.bus.websocket import wsrequest
+
+T = TypeVar("T")
 
 
 def add_guest_to_context(func):
@@ -49,29 +53,24 @@ def add_guest_to_context(func):
 class StoreVersionInternal:
     """Internal state used by the `@store_version` decorator."""
     def __init__(self):
-        self._pending_bus_sends = []
-        self._snapshot_data = None
-        # Maps model names to record IDs to the set of updated field names.
-        self._written_fields_by_record = defaultdict(lambda: defaultdict(OrderedSet))
-
-    def enqueue_bus_notification(self, bus_channel, notification_type, payload):
-        """Enqueue a bus notification to be sent when the `@store_version` decorator
-        finishes, ensuring it includes the version metadata.
-        """
-        self._pending_bus_sends.append([bus_channel, notification_type, payload])
+        self.__version = None
+        self.__model_name_to_record_id_to_written_fnames = defaultdict(
+            lambda: defaultdict(OrderedSet)
+        )
 
     def mark_field_as_written(self, model_name, record_ids, fname):
         """Mark field as written for the given records. Done automatically when using the
         ORM, should be done manually otherwise.
         """
+        record_id_to_written_fnames = self.__model_name_to_record_id_to_written_fnames[model_name]
         for id_ in record_ids:
-            self._written_fields_by_record[model_name][id_].add(fname)
+            record_id_to_written_fnames[id_].add(fname)
 
-    def _get_formatted_version(self, env):
+    def get_formatted_version(self, env):
         """Get the version metadata, used by the client to determine if an incoming
         store insert is newer than what it already knows.
         """
-        if not self._snapshot_data:
+        if not self.__version:
             env.flush_all()  # Ensure TX id is assigned, if the DB was modified, before building the version.
             env.cr.execute("SELECT pg_current_snapshot(), pg_current_xact_id_if_assigned()")
             snapshot_str, current_xact_id = env.cr.fetchone()
@@ -83,59 +82,19 @@ class StoreVersionInternal:
             for x in xips:
                 offset = x - xmin
                 bitmap[offset // 8] |= 1 << (offset % 8)
-            self._snapshot_data = {
-                "xmin": str(xmin),
-                "xmax": str(xmax),
-                "xip_bitmap": base64.b64encode(bitmap).decode(),
-                "current_xact_id": current_xact_id,
+            self.__version = {
+                "snapshot": {
+                    "xmin": xmin_str,
+                    "xmax": xmax_str,
+                    "xip_bitmap": base64.b64encode(bitmap).decode(),
+                    "current_xact_id": current_xact_id,
+                },
+                "written_fields_by_record": {
+                    model: {record_id: list(fnames) for record_id, fnames in recs.items()}
+                    for model, recs in self.__model_name_to_record_id_to_written_fnames.items()
+                },
             }
-        elif not self._snapshot_data["current_xact_id"]:
-            env.flush_all()  # Ensure written fields are collected.
-            if self._written_fields_by_record:
-                # Snapshot was already fetched below in the stack, but fields have been
-                # updated since then. The snapshot is frozen at the beginning of the TX,
-                # but the current TX id is only assigned once the DB is modified. Update
-                # it now.
-                env.cr.execute("SELECT pg_current_xact_id_if_assigned()")
-                self._snapshot_data["current_xact_id"] = env.cr.fetchone()[0]
-        return {
-            "snapshot": self._snapshot_data.copy(),
-            "written_fields_by_record": {
-                model: {record_id: list(fnames) for record_id, fnames in recs.items()}
-                for model, recs in self._written_fields_by_record.items()
-            },
-        }
-
-    def _inject_version(self, version, payload):
-        """Add the version to the return value of `Store.get_result()`. Either the
-        payload itself, or one of the values of the payload.
-        """
-        if isinstance(payload, Store.Result) and "__store_version__" not in payload:
-            payload["__store_version__"] = version
-            return True
-        if isinstance(payload, dict):
-            return any(self._inject_version(version, v) for v in payload.values())
-        return False
-
-    def _add_version_to_response(self, version, response):
-        """Inject version metadata into the result returned by `Store.get_result()`,
-        which may be either an HTTP response from a controller or a dict returned by the
-        decorated function.
-        """
-        # Response is the result of `request.render()`, inject metadata inside the qweb context.
-        if isinstance(response, Response) and response.template:
-            self._inject_version(version, response.qcontext)
-        else:
-            self._inject_version(version, response)
-
-    def _send_bus_notifications(self, env, version):
-        """Send the notifications enqueued during the decorator method, alongside store
-        version metadata.
-        """
-        for target, n_type, msg in self._pending_bus_sends:
-            self._inject_version(version, msg)
-            env["bus.bus"].with_context(mail_store=None)._sendone(target, n_type, msg)
-        self._pending_bus_sends.clear()
+        return self.__version
 
 
 def store_version(func):
@@ -154,61 +113,44 @@ def store_version(func):
     write transaction. The combination of xmin, xmax, xip and the current transaction id
     is enough to deduce it.
 
-    This decorator injects version metadata into the return value of `Store.get_result()`,
-    both in the value returned by the decorated function and in any bus notifications
-    emitted during its execution.
-
+    This decorator injects the version helper into the context, allowing written fields to
+    be observed and `Store.as_dict` to inject version metadata into its result.
     """
     @wraps(func)
     def store_version__wrapper(self, *args, **kwargs):
-        manager = self.env.context.get("mail_store")
+        if self.env.context.get("store_version_ctx"):
+            return func(self, *args, **kwargs)
         should_cleanup = False
-        if not manager:
-            manager = StoreVersionInternal()
-            if isinstance(self, models.BaseModel):
-                self = self.with_context(mail_store=manager)
-            else:
-                # Clean up only if we inserted the manager in the request context;
-                # otherwise, the original decorator will handle it.
-                should_cleanup = True
-                req = request or wsrequest
-                req.update_context(mail_store=manager)
+        manager = StoreVersionInternal()
+        if isinstance(self, models.BaseModel):
+            self = self.with_context(store_version_ctx=manager)
+        else:
+            # Clean up only if we inserted the manager in the request context;
+            # otherwise, the original decorator will handle it.
+            should_cleanup = True
+            req = request or wsrequest
+            req.update_context(store_version_ctx=manager)
         response = func(self, *args, **kwargs)
-        version = manager._get_formatted_version(self.env)
-        manager._add_version_to_response(version, response)
-        manager._send_bus_notifications(self.env, version)
         if should_cleanup:
-            # Clean context to prevent side effects based on the presence of `mail_store`.
-            req.update_context(mail_store=None)
+            # Clean context to prevent side effects based on the presence of `store_version_ctx`.
+            req.update_context(store_version_ctx=None)
         return response
     return store_version__wrapper
 
 
 def mail_route(*route_args, **route_kwargs):
     """Thin wrapper around `route` that adds guest context and enables versioning.
-    HTTP route results that return a non-Response object will automatically be converted
-    into a proper HTTP JSON response using `request.make_json_response`.
 
     This decorator is equivalent to applying, in order:
         @route(*route_args, **route_kwargs)
         @store_version
         @add_guest_to_context
     """
-    if "type" not in route_kwargs:
-        raise TypeError(_("mail_route() must be called with the `type` keyword argument."))
 
     def decorator(func):
         wrapped_func = add_guest_to_context(func)
         wrapped_func = store_version(wrapped_func)
-
-        @wraps(func)
-        def mail_route__wrapper(*args, **kwargs):
-            result = wrapped_func(*args, **kwargs)
-            if route_kwargs["type"] == "http" and not isinstance(result, Response):
-                return request.make_json_response(result)  # nosemgrep: rules.requests-in-models
-            return result
-
-        return route(*route_args, **route_kwargs)(mail_route__wrapper)
+        return route(*route_args, **route_kwargs)(wrapped_func)
 
     return decorator
 
@@ -258,7 +200,7 @@ NO_VALUE = object()
 
 
 def store_enqueue(func):
-    """Wraps a Store method to postpone its execution until get_result()."""
+    """Wraps a Store method to postpone its execution until `Store._build_result()`."""
 
     @wraps(func)
     def store_enqueue__wrapper(store, *args, **kwargs):
@@ -276,7 +218,14 @@ class Store:
     """Helper to build a dict of data for sending to web client.
     It supports merging of data from multiple sources, either through list extend or dict update.
     The keys of data are the name of models as defined in mail JS code, and the values are any
-    format supported by store.insert() method (single dict or list of dict for each model name)."""
+    format supported by store.insert() method (single dict or list of dict for each model
+    name).
+
+    The store instance is then transformed to a dictionnary to be sent either by the HTTP
+    or the bus stack. If the store was created in the context of the `@store_version` decorator,
+    this dictionnary also includes information about the data version, which will be used
+    by the client to distinguish stale from new data.
+    """
 
     def __init__(self, bus_channel=None, bus_subchannel=None):
         self.add_depth = 0
@@ -289,6 +238,18 @@ class Store:
         self._internal_store = None
         if bus_channel and bus_channel._name == "discuss.channel" and bus_subchannel != "internal_users":
             self._internal_store = Store(bus_channel=bus_channel, bus_subchannel="internal_users")
+        self._env_with_version_ctx = None
+        self.__try_update_version_ctx_from_env(bus_channel)
+
+    def __try_update_version_ctx_from_env(self, records):
+        is_recordset = isinstance(records, models.Model)
+        assert not records or is_recordset, "Records must be a recordset or a falsy value."
+        if (
+            is_recordset
+            and not self._env_with_version_ctx
+            and records.env.context.get("store_version_ctx")
+        ):
+            self._env_with_version_ctx = records.env
 
     @store_enqueue
     def add(self, records, fields, *, as_thread=False, fields_params=None):
@@ -306,9 +267,9 @@ class Store:
 
         Use case: to add records and their fields to store. This is the preferred method.
         """
+        self.__try_update_version_ctx_from_env(records)
         if not records:
             return self
-        assert isinstance(records, models.Model)
         # call _format_fields before checking identifier to always compare the final shape
         field_list = self._format_fields(fields, records, fields_params)
         identifier = Store._deep_freeze((records.env, records, field_list, as_thread))
@@ -363,6 +324,7 @@ class Store:
         Use case: to add fields from inside _to_store() methods to avoid recursive code.
         Note: in all other cases, Store.add() should be called instead.
         """
+        self.__try_update_version_ctx_from_env(field_list.records)
         if field_list and field_list.records:
             for record, record_data_list in self._get_records_data_list(field_list).items():
                 for record_data in record_data_list:
@@ -394,9 +356,9 @@ class Store:
     @store_enqueue
     def delete(self, records, as_thread=False):
         """Delete records from the store."""
+        self.__try_update_version_ctx_from_env(records)
         if not records:
             return self
-        assert isinstance(records, models.Model)
         model_name = "mail.thread" if as_thread else records._name
         for record in records:
             values = (
@@ -412,15 +374,29 @@ class Store:
         """Gets client action to insert this store in the client."""
         return {
             "params": {
-                "store_values": self.get_result(),
+                "store_values": self,
                 "next_action": next_action,
             },
             "tag": "mail.store_insert",
             "type": "ir.actions.client",
         }
 
-    def get_result(self):
-        """Gets resulting data built from adding all data together."""
+    def as_dict(self):
+        """Hook for JSON serialization used by the `json_default` method. Do not call
+        directly. Returns a dictionary representing the aggregated result of all store
+        commands, versioned if the store was created within a `@store_version` context.
+        """
+        result = self._build_result()
+        if result and self._env_with_version_ctx:
+            store_version_ctx = self._env_with_version_ctx.context["store_version_ctx"]
+            result["__store_version__"] = store_version_ctx.get_formatted_version(
+                self._env_with_version_ctx,
+            )
+        return result
+
+    def _build_result(self):
+        """Do not call directly. Executes pending operations and returns the aggregated
+        result, automatically invoked by `as_dict()`."""
         self.is_executing_operation_queue = True
         try:
             for func in self.operation_queue:
@@ -428,7 +404,7 @@ class Store:
             self.operation_queue.clear()
         finally:
             self.is_executing_operation_queue = False
-        res = Store.Result()
+        res = {}
         for model_name, records in sorted(self.data.items()):
             if not ids_by_model[model_name]:  # singleton
                 res[model_name] = dict(sorted(records.items()))
@@ -440,8 +416,7 @@ class Store:
         assert self.target.channel is not None, (
             "Missing `bus_channel`. Pass it to the `Store` constructor to use `bus_send`."
         )
-        if res := self.get_result():
-            self.target.channel._bus_send(notification_type, res, subchannel=self.target.subchannel)
+        self.target.channel._bus_send(notification_type, self, subchannel=self.target.subchannel)
         if self._internal_store:
             self._internal_store.bus_send()
 
@@ -526,15 +501,11 @@ class Store:
 
     def _add_abstract_fields_value(self, abstract_fields, data_list, record=None):
         for field in abstract_fields:
-            if isinstance(field, dict):
-                data_list.append(field)
-            elif not field.predicate or field.predicate(record):
-                try:
-                    data_list.append(
-                        {field.field_name: field._get_value(record)},
-                    )
-                except MissingError:
-                    break
+            with suppress(MissingError):
+                if isinstance(field, dict):
+                    data_list.append(field)
+                elif not field.predicate or field.predicate(record):
+                    data_list.append({field.field_name: field._get_value(record)})
 
     def _get_record_index(self, model_name, data_list):
         # regroup indentifying fields into values as they might be spread accross data_list entries
@@ -571,6 +542,19 @@ class Store:
             return frozenset(Store._deep_freeze(i) for i in obj)
         return obj.__code__ if hasattr(obj, "__code__") else obj
 
+    class LazyValue(Generic[T]):  # noqa: OLS01001
+        def __init__(self, fn):
+            """Helper to lazily compute a recordset, shared across multiple consumers
+            (e.g., stores) while avoiding redundant queries.
+            """
+            self._fn = fn
+            self._value = None
+
+        def get(self, env) -> T:
+            if self._value is None:
+                self._value = self._fn()
+            return self._value.with_env(env)
+
     class Stores(dict[object | tuple, "Store"]):
         """Lazy mapping to manage a list of Store indexed by bus target.
         Store methods are forwarded to all contained Store instances."""
@@ -606,12 +590,6 @@ class Store:
             )
             self.channel = channel
             self.subchannel = subchannel
-
-    class Result(dict):
-        """Marker class for dictionaries returned by `Store.get_result()`.
-        Used to distinguish store results from arbitrary dicts so version
-        metadata can be added (see `store_version` decorator).
-        """
 
     class Attr:
         """Attribute to be added for each record. The value can be a static value or a function

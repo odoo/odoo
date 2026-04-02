@@ -15,7 +15,7 @@ class LivechatChatbotScriptController(http.Controller):
         chatbot_language = chatbot._get_chatbot_language()
         message = discuss_channel.with_context(lang=chatbot_language)._chatbot_restart(chatbot)
         store = Store().add(message, "_store_message_fields")
-        return {"message_id": message.id, "store_data": store.get_result()}
+        return {"message_id": message.id, "store_data": store}
 
     @mail_route("/chatbot/answer/save", type="jsonrpc", auth="public")
     def chatbot_save_answer(self, channel_id, message_id, selected_answer_id):
@@ -84,7 +84,7 @@ class LivechatChatbotScriptController(http.Controller):
             )
             store.resolve_data_request()
             store.bus_send()
-            return store.get_result()
+            return store
         # sudo: discuss.channel - updating current step on the channel is allowed
         discuss_channel.sudo().chatbot_current_step_id = next_step.id
         step_data = next_step._process_step(discuss_channel)
@@ -151,5 +151,5 @@ class LivechatChatbotScriptController(http.Controller):
                         value=posted_message,
                     ),
                 )
-                result["data"] = store.get_result()
+                result["data"] = store
         return result

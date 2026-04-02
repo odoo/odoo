@@ -73,7 +73,7 @@ class ResPartner(models.Model):
             **channel_invites,
             "email_already_sent": email_already_sent,
             "selectable_email": selectable_email,
-            "store_data": store.get_result(),
+            "store_data": store,
         }
 
     @api.readonly
@@ -157,4 +157,4 @@ class ResPartner(models.Model):
             store.add(roles, ["name", "user_ids_count"])
         except AccessError:
             pass
-        return store.get_result()
+        return store

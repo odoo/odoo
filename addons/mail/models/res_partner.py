@@ -294,7 +294,7 @@ class ResPartner(models.Model):
             store.add(roles, ["name", "user_ids_count"])
         except AccessError:
             pass
-        return store.get_result()
+        return store
 
     @api.model
     def _get_mention_suggestions_domain(self, search):

@@ -141,10 +141,7 @@ class ChannelController(http.Controller):
             domain=[("id", "not in", known_member_ids), ("channel_id", "=", channel.id)],
             limit=100,
         )
-        store = Store()
-        store.add(channel, ["member_count"])
-        store.add(unknown_members, "_store_member_fields")
-        return store.get_result()
+        return Store().add(channel, ["member_count"]).add(unknown_members, "_store_member_fields")
 
     @mail_route("/discuss/channel/update_avatar", methods=["POST"], type="jsonrpc")
     def discuss_channel_avatar_update(self, channel_id, data):
@@ -212,7 +209,7 @@ class ChannelController(http.Controller):
         # sudo: ir.attachment - reading attachments of a channel that the current user can access
         attachments = request.env["ir.attachment"].sudo().search(domain, limit=limit, order="id DESC")
         store = Store().add(attachments, "_store_attachment_fields")
-        return {"store_data": store.get_result(), "count": len(attachments)}
+        return {"store_data": store, "count": len(attachments)}
 
     @mail_route("/discuss/channel/sub_channel/create", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_sub_channel_create(self, parent_channel_id, from_message_id=None, name=None):
@@ -227,7 +224,7 @@ class ChannelController(http.Controller):
             )
         sub_channel = channel._create_sub_channel(from_message_id, name)
         store = Store().add(sub_channel, "_store_channel_fields")
-        return {"store_data": store.get_result(), "sub_channel": sub_channel.id}
+        return {"store_data": store, "sub_channel": sub_channel.id}
 
     @mail_route("/discuss/channel/sub_channel/fetch", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_sub_channel_fetch(self, parent_channel_id, search_term=None, before=None, limit=30):
@@ -261,10 +258,7 @@ class ChannelController(http.Controller):
                 self.env["discuss.channel.member"].browse([r[0] for r in self.env.cr.fetchall()]),
                 "_store_member_fields",
             )
-        return {
-            "store_data": store.get_result(),
-            "sub_channel_ids": sub_channels.ids,
-        }
+        return {"store_data": store, "sub_channel_ids": sub_channels.ids}
 
     @mail_route("/discuss/channel/sub_channel/delete", methods=["POST"], type="jsonrpc", auth="user")
     def discuss_delete_sub_channel(self, sub_channel_id):

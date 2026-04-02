@@ -52,7 +52,11 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         ])
 
     def test_mention_suggestions(self):
-        data = self.task_portal.with_user(self.user_portal).get_mention_suggestions(search="")
+        data = (
+            self.task_portal.with_user(self.user_portal)
+            .get_mention_suggestions(search="")
+            ._build_result()
+        )
         suggestion_ids = {partner.get("id") for partner in data.get("res.partner")}
         self.assertEqual(
             suggestion_ids,
