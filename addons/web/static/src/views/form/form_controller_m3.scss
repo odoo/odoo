@@ -36,6 +36,10 @@
                 border: 2px solid var(--o-input-border-color);
             }
 
+            &:has(.o_field_widget.o_readonly_modifier):not(:has(.o_field_widget:not(.o_readonly_modifier))) {
+                background: rgba($body-color, .04);
+            }
+
             &:has(.o_field_invalid) {
                 --o-input-border-color: o-text-color('danger');
                 background: #{$o-input-invalid-bg};
@@ -78,10 +82,6 @@
         .o_inner_group {
             :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box):not(:has(.o_outlined)) {
                 @extend %-o-field-box;
-
-                &:has(.o_field_widget.o_readonly_modifier):not(:has(.o_field_widget:not(.o_readonly_modifier))) {
-                    background: rgba($body-color, .04);
-                }
 
                 a:has(i.fa), button.fa, .o_external_button {
                     height: calc(3 * var(--field-spacing-unit));
