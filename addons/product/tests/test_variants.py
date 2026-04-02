@@ -864,6 +864,8 @@ class TestVariantsManyAttributes(TransactionCase):
                 'value_ids': [Command.create({'name': n}) for n in range(10)]
             } for name in "ABCDEFGHIJ"
         ])
+        # Reset the ICP in case it's been set in another module.
+        cls.env['ir.config_parameter'].sudo().search([('key', '=', 'product.dynamic_variant_limit')]).unlink()
 
     def test_01_create_no_variant(self):
         toto = self.env['product.template'].create({
