@@ -774,6 +774,19 @@ export function isRelational(field) {
 export function useRecordObserver(callback) {
     const component = useComponent();
     let currentId;
+
+    const batchedCallback = batched(
+        (effectId, record, props, resolve, reject) => {
+            if (effectId !== currentId) {
+                // effect doesn't clean up when the component is unmounted.
+                // We must do it manually.
+                return;
+            }
+            return Promise.resolve(callback(record, props)).then(resolve).catch(reject);
+        },
+        () => new Promise((res) => window.requestAnimationFrame(res))
+    );
+
     let disposePreviousEffect = () => {};
     const observeRecord = (props) => {
         disposePreviousEffect();
@@ -792,17 +805,7 @@ export function useRecordObserver(callback) {
                     .then(resolve)
                     .catch(reject);
             } else {
-                batched(
-                    (record) => {
-                        if (effectId !== currentId) {
-                            // effect doesn't clean up when the component is unmounted.
-                            // We must do it manually.
-                            return;
-                        }
-                        return Promise.resolve(callback(record, props)).then(resolve).catch(reject);
-                    },
-                    () => new Promise((res) => window.requestAnimationFrame(res))
-                )(props.record);
+                batched(effectId, props.record, props, resolve, reject);
             }
         });
         return promise;
@@ -816,6 +819,23 @@ export function useRecordObserver(callback) {
             return observeRecord(nextProps);
         }
     });
+
+    const hooks = component.props.record.model.hooks;
+    const hookNames = ["onRootLoaded", "onRecordSaved", "onSavedMulti", "onRecordChanged"];
+    for (const hookName of hookNames) {
+        const previousCb = hooks[hookName];
+        hooks[hookName] = (...args) => {
+            const result = previousCb(...args);
+            batchedCallback(
+                currentId,
+                component.props.record,
+                component.props,
+                () => {},
+                () => {}
+            );
+            return result;
+        };
+    }
 }
 
 /**
