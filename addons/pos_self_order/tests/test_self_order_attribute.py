@@ -120,6 +120,15 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
         self.assertEqual(order.lines[1].attribute_value_ids.ids, chair_product_tmpl.product_variant_ids[1].product_template_attribute_value_ids.ids)
         self.assertEqual(order.lines[1].price_unit, 15.0)
 
+        # test for kiosk
+        self.pos_config.self_ordering_mode = "kiosk"
+        # product with one variant with is_custom = true
+        desk = self.desk_organizer
+        desk.attribute_line_ids = desk.attribute_line_ids.filtered(lambda al: al.display_name == "Fabric")
+        ptvs = desk.attribute_line_ids.value_ids
+        desk.attribute_line_ids.value_ids = [Command.set(ptvs.filtered(lambda pt: pt.is_custom).ids)]
+        self.start_tour(self_route, "selfAlwaysAttributeVariantsKiosk")
+
     def test_self_order_product_info(self):
         self.pos_config.write({
             'self_ordering_default_user_id': self.pos_admin.id,

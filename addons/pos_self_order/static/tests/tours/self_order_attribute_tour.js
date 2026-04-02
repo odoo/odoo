@@ -3,6 +3,7 @@ import * as Utils from "@pos_self_order/../tests/tours/utils/common";
 import * as CartPage from "@pos_self_order/../tests/tours/utils/cart_page_util";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
 import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
+import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 
 registry.category("web_tour.tours").add("self_attribute_selector", {
     steps: () => [
@@ -75,6 +76,20 @@ registry.category("web_tour.tours").add("selfAlwaysAttributeVariants", {
         Utils.clickBtn("Order"),
         Utils.clickBtn("Ok"),
         Utils.checkIsNoBtn("Order Now"),
+    ],
+});
+
+registry.category("web_tour.tours").add("selfAlwaysAttributeVariantsKiosk", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickCategory("Miscellaneous"),
+        ProductPage.clickProduct("Desk Organizer"),
+        Utils.clickBtn("Checkout"),
+        CartPage.checkProduct("Desk Organizer", "5.87", "1"),
+        Utils.clickBtn("Order"),
+        Numpad.click("3"),
+        Utils.clickBtn("Order"),
+        Utils.clickBtn("Close"),
     ],
 });
 

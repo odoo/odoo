@@ -123,6 +123,7 @@ export class ComboPage extends Component {
 
     hasAttribute(product) {
         return (
+            this.selfOrder.isProductConfigurable(product) &&
             product.attribute_line_ids.length > 0 &&
             product.attribute_line_ids.some(
                 (line) => line.attribute_id?.create_variant === "no_variant"
