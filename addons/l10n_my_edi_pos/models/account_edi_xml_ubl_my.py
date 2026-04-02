@@ -18,6 +18,13 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         # EXTENDS 'account_edi_ubl_cii'
         vals = super()._export_invoice_vals(invoice)
 
+        # For individual POS e-invoices, the prepaid amount must be 0.
+        # POS orders are paid immediately at the point of sale, MyInvois requires
+        # the PayableAmount to reflect the full invoice amount (not reduced by prepayment).
+        if invoice.pos_order_ids:
+            vals['vals']['prepaid_payment_vals']['amount'] = 0
+            vals['vals'].get('monetary_total_vals', {})['payable_amount'] = invoice.amount_total
+
         # Support the unlikely case where we invoice a refund of an order included in a consolidated invoice.
         consolidated_invoice = self._is_consolidated_invoice_refund(invoice)
         if consolidated_invoice:
