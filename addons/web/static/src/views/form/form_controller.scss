@@ -343,26 +343,21 @@
 
         @include media-breakpoint-up(sm) {
             max-width: 75%;
-        }
 
-        > h1, > h2, > h3 {
-            width: 100%; // Needed because inline-block when is a hx.o_row
-            margin-top: 0;
-            margin-bottom: 0;
-            line-height: $headings-line-height;
+            > h1, > h2, > h3 {
+                width: 100%; // Needed because inline-block when is a hx.o_row
+                margin-top: 0;
+                margin-bottom: map-get($spacers, 3);
+                line-height: $headings-line-height;
 
-            &.d-flex > .o_input {
-                height: max-content;
+                &.d-flex > .o_input {
+                    height: max-content;
+                }
             }
-        }
-        .o_priority > .o_priority_star, .o_favorite.btn, .o_favorite i.fa {
-            font-size: inherit !important;
-        }
-        > h1 {
-            min-height: 55px;
-        }
-        > h2 {
-            min-height: 42px;
+
+            .o_priority > .o_priority_star, .o_favorite.btn, .o_favorite i.fa {
+                font-size: inherit !important;
+            }
         }
     }
 
@@ -377,12 +372,6 @@
             object-fit: contain;
             vertical-align: top;
             border: 1px solid $o-gray-300;
-        }
-
-        @include media-breakpoint-down(sm) {
-            + .oe_title {
-                max-width: calc(100% - #{$o-form-picture-size} - #{map-get($spacers, 2)});
-            }
         }
     }
 

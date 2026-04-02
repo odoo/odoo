@@ -16,11 +16,11 @@
                                 string="Branches"/>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <div class="d-flex gap-2">
+                    <div class="d-flex flex-column flex-md-row align-items-center gap-3">
                         <field name="logo" widget="contact_image" class="oe_avatar text-start float-none" nolabel="1" options="{'size': [100,100], 'img_class': 'rounded-4'}"/>
-                        <div class="oe_title">
+                        <div class="oe_title w-100">
                             <label for="name"/>
-                            <h1>
+                            <h1 class="o_outlined">
                                 <field name="name" placeholder="e.g. My Company"/>
                             </h1>
                         </div>
