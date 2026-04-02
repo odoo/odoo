@@ -9,16 +9,67 @@ import {
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
+import {
+    DEFAULT_SLASH_COMMANDS,
+    applySlashCommandToHtml,
+    createBlockFromDefinition,
+    detectSlashCommand,
+    enrichBlocks,
+    getProcessHeaderRows,
+    getSummaryRows,
+    renderBlocksToTypst,
+    resolveBlockContent,
+} from "./gov_document_builder_typst";
 
 // ─── Sub-componentes inline ──────────────────────────────────────────────────
 class GovBlockPreview extends Component {
     static template = "gov_processos.GovBlockPreview";
-    static props = { block: Object };
+    static props = { block: Object, bindings: Object };
+
+    get resolvedContent() {
+        return resolveBlockContent(this.props.block, this.props.bindings);
+    }
+
+    get headerRows() {
+        return getProcessHeaderRows(this.props.bindings);
+    }
+
+    get summaryRows() {
+        return getSummaryRows(this.props.block, this.props.bindings);
+    }
 }
 
 class GovBlockEditor extends Component {
     static template = "gov_processos.GovBlockEditor";
-    static props = { block: Object, onUpdate: Function };
+    static props = {
+        block: Object,
+        bindings: Object,
+        slashState: Object,
+        slashCommands: Array,
+        onUpdate: Function,
+        onRichTextInput: Function,
+        onRichTextKeydown: Function,
+        onSlashCommandSelect: Function,
+    };
+
+    get resolvedContent() {
+        return resolveBlockContent(this.props.block, this.props.bindings);
+    }
+
+    get summaryRowsText() {
+        return this.resolvedContent.linhas || "";
+    }
+
+    get summaryLines() {
+        return this.summaryRowsText
+            .split("\n")
+            .map((line) => line.trim())
+            .filter(Boolean);
+    }
+
+    get isSlashMenuOpen() {
+        return this.props.slashState?.open && this.props.slashState.blockId === this.props.block.id;
+    }
 }
 
 const BLOCK_CATALOG = [
@@ -75,7 +126,7 @@ const BLOCK_CATALOG = [
         label: "📊 Quadro Resumo",
         icon: "fa-table",
         description: "Tabela de dados no formato 'Rótulo: Valor'",
-        defaultContent: { linhas: "Valor estimado: R$ 0,00\nFonte: Tesouro Municipal" },
+        defaultContent: { linhas: "" },
         editable: true,
     },
     {
@@ -120,6 +171,7 @@ export class GovDocumentBuilder extends Component {
         this.initialMode = this.props.action?.params?.initial_mode;
         this.returnAction = this.props.action?.params?.return_action;
         this.catalog = BLOCK_CATALOG;
+        this.catalogMap = new Map(this.catalog.map((item) => [item.type, item]));
         this.lastSavedLayoutJson = JSON.stringify([]);
         this.lastSavedTypstSource = "";
 
@@ -127,6 +179,8 @@ export class GovDocumentBuilder extends Component {
             loading: true,
             saving: false,
             doc: null,
+            builderTemplate: null,
+            recordContext: {},
             blocks: [],           // blocos na prancheta (ordenados)
             activeBlockId: null,  // ID do bloco sendo editado
             dragOverIndex: null,  // índice do drop target
@@ -134,6 +188,12 @@ export class GovDocumentBuilder extends Component {
             searchQuery: "",
             editMode: "visual",
             typstSource: "",
+            slashMenu: {
+                open: false,
+                blockId: null,
+                query: "",
+                commands: [],
+            },
             typstValidation: null,
             validatingTypst: false,
             assistantBusy: false,
@@ -160,39 +220,35 @@ export class GovDocumentBuilder extends Component {
             return;
         }
         try {
-            const [doc] = await this.orm.read(
+            const bootstrap = await this.orm.call(
                 "gov.processo.doc",
-                [this.docId],
-                [
-                    "name",
-                    "layout_json",
-                    "processo_id",
-                    "doc_type",
-                    "state",
-                    "typst_source",
-                    "is_visual_builder",
-                ]
+                "action_builder_bootstrap",
+                [[this.docId]]
             );
+            const doc = bootstrap?.doc || {};
             this.state.doc = doc;
-            let parsedBlocks = [];
-            // Restaurar blocos salvos ou iniciar vazio
-            if (doc.layout_json) {
-                try {
-                    parsedBlocks = JSON.parse(doc.layout_json);
-                } catch {
-                    parsedBlocks = [];
-                }
-            }
-            this.state.blocks = parsedBlocks;
-            this.lastSavedLayoutJson = JSON.stringify(parsedBlocks);
-            this.state.typstSource = doc.typst_source || "";
+            this.state.recordContext = bootstrap?.record_context || {};
+            this.state.builderTemplate = bootstrap?.builder_template || null;
+            this.state.assistantInfo = bootstrap?.assistant_info || null;
+            const initialBlocks = enrichBlocks(
+                bootstrap?.initial_blocks || [],
+                this.catalogMap,
+                this.state.recordContext
+            );
+            this.state.blocks = initialBlocks;
+            this.lastSavedLayoutJson = doc.layout_json || JSON.stringify([]);
+            const generatedTypst =
+                doc.typst_source ||
+                (initialBlocks.length
+                    ? renderBlocksToTypst(initialBlocks, this.state.recordContext)
+                    : "");
+            this.state.typstSource = generatedTypst;
             this.lastSavedTypstSource = doc.typst_source || "";
             this.state.editMode =
                 this.initialMode ||
-                ((doc.typst_source || "").trim() && parsedBlocks.length === 0
+                ((doc.typst_source || "").trim() && initialBlocks.length === 0
                     ? "typst"
                     : "visual");
-            await this._loadTypstAssistantInfo();
         } catch (e) {
             this.notification.add(
                 _t("Erro ao carregar documento: ") + e.message,
@@ -261,13 +317,7 @@ export class GovDocumentBuilder extends Component {
     _insertBlock(type, atIndex) {
         const def = this.catalog.find((b) => b.type === type);
         if (!def) return;
-        const newBlock = {
-            id: `block_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
-            type: def.type,
-            label: def.label,
-            editable: def.editable,
-            content: JSON.parse(JSON.stringify(def.defaultContent)),
-        };
+        const newBlock = createBlockFromDefinition(def, this.catalogMap, this.state.recordContext);
         const blocks = [...this.state.blocks];
         const insertAt =
             atIndex !== undefined ? atIndex : blocks.length;
@@ -293,6 +343,9 @@ export class GovDocumentBuilder extends Component {
         if (this.state.activeBlockId === blockId) {
             this.state.activeBlockId = null;
         }
+        if (this.state.slashMenu.blockId === blockId) {
+            this.closeSlashMenu();
+        }
     }
 
     moveUp(index) {
@@ -308,6 +361,9 @@ export class GovDocumentBuilder extends Component {
     toggleEdit(blockId) {
         this.state.activeBlockId =
             this.state.activeBlockId === blockId ? null : blockId;
+        if (this.state.slashMenu.blockId && this.state.slashMenu.blockId !== blockId) {
+            this.closeSlashMenu();
+        }
     }
 
     updateBlockContent(blockId, field, value) {
@@ -318,9 +374,13 @@ export class GovDocumentBuilder extends Component {
     }
 
     setEditMode(mode) {
+        const previousMode = this.state.editMode;
         this.state.editMode = mode;
         if (mode === "typst" && !this.state.assistantInfo) {
             this._loadTypstAssistantInfo();
+        }
+        if (mode === "typst" && previousMode === "visual" && this.state.blocks.length) {
+            this.syncTypstFromVisual();
         }
     }
 
@@ -331,6 +391,35 @@ export class GovDocumentBuilder extends Component {
 
     onAssistantPromptInput(ev) {
         this.state.assistantPrompt = ev.target.value;
+    }
+
+    syncTypstFromVisual() {
+        const generated = renderBlocksToTypst(this.state.blocks, this.state.recordContext);
+        this.state.typstSource = generated;
+        this._resetTypstValidation();
+        return generated;
+    }
+
+    openSlashMenu(blockId, query) {
+        const normalizedQuery = (query || "").toLowerCase();
+        const commands = DEFAULT_SLASH_COMMANDS.filter((command) =>
+            !normalizedQuery || command.name.includes(normalizedQuery)
+        );
+        this.state.slashMenu = {
+            open: !!commands.length,
+            blockId,
+            query: normalizedQuery,
+            commands,
+        };
+    }
+
+    closeSlashMenu() {
+        this.state.slashMenu = {
+            open: false,
+            blockId: null,
+            query: "",
+            commands: [],
+        };
     }
 
     _resetTypstValidation() {
@@ -378,6 +467,53 @@ export class GovDocumentBuilder extends Component {
             selectionStart: editor.selectionStart ?? 0,
             selectionEnd: editor.selectionEnd ?? 0,
         };
+    }
+
+    onRichTextInput(blockId, field, ev) {
+        this.updateBlockContent(blockId, field, ev.target.innerHTML);
+        const block = this.state.blocks.find((item) => item.id === blockId);
+        if (block?.type === "texto_livre") {
+            const slashInfo = detectSlashCommand(ev.target);
+            if (slashInfo) {
+                this.openSlashMenu(blockId, slashInfo.query);
+            } else if (this.state.slashMenu.blockId === blockId) {
+                this.closeSlashMenu();
+            }
+        } else if (this.state.slashMenu.blockId === blockId) {
+            this.closeSlashMenu();
+        }
+    }
+
+    onRichTextKeydown(blockId, ev) {
+        if (!(this.state.slashMenu.open && this.state.slashMenu.blockId === blockId)) {
+            return;
+        }
+        if (ev.key === "Escape") {
+            ev.preventDefault();
+            this.closeSlashMenu();
+            return;
+        }
+        if (ev.key === "Enter") {
+            ev.preventDefault();
+            const [command] = this.state.slashMenu.commands;
+            if (command) {
+                this.onSlashCommandSelect(blockId, command);
+            }
+        }
+    }
+
+    onSlashCommandSelect(blockId, command) {
+        const block = this.state.blocks.find((item) => item.id === blockId);
+        if (!block) {
+            return;
+        }
+        const updatedHtml = applySlashCommandToHtml(block.content.html || "", command);
+        this.updateBlockContent(blockId, "html", updatedHtml);
+        this.closeSlashMenu();
+        this.notification.add(
+            _t("Comando preparado: ") + command.label,
+            { type: "info" }
+        );
     }
 
     _collectErrorMessages(error) {
@@ -634,18 +770,16 @@ export class GovDocumentBuilder extends Component {
         if (!this.docId || this.state.saving) return;
         this.state.saving = true;
         try {
-            const vals = {};
+            const typstSource =
+                this.state.editMode === "visual"
+                    ? this.syncTypstFromVisual()
+                    : this.state.typstSource;
             const layoutJson = JSON.stringify(this.state.blocks);
-            if (layoutJson !== this.lastSavedLayoutJson) {
-                vals.layout_json = layoutJson;
-            }
-            if (this.state.typstSource !== this.lastSavedTypstSource) {
-                vals.typst_source = this.state.typstSource;
-            }
-            if (!this.state.doc?.is_visual_builder) {
-                vals.is_visual_builder = true;
-            }
-            if (!Object.keys(vals).length) {
+            if (
+                layoutJson === this.lastSavedLayoutJson &&
+                typstSource === this.lastSavedTypstSource &&
+                this.state.doc?.is_visual_builder
+            ) {
                 if (!silent) {
                     this.notification.add(_t("Nenhuma alteração pendente para salvar."), {
                         type: "info",
@@ -653,12 +787,21 @@ export class GovDocumentBuilder extends Component {
                 }
                 return true;
             }
-            await this.orm.write("gov.processo.doc", [this.docId], vals);
+            const response = await this.orm.call(
+                "gov.processo.doc",
+                "action_builder_save_payload",
+                [[this.docId], this.state.blocks, typstSource]
+            );
             this.lastSavedLayoutJson = layoutJson;
-            this.lastSavedTypstSource = this.state.typstSource;
+            this.lastSavedTypstSource = response?.typst_source || typstSource;
+            this.state.typstSource = response?.typst_source || typstSource;
+            if (response?.record_context) {
+                this.state.recordContext = response.record_context;
+            }
             this.state.doc = {
                 ...(this.state.doc || {}),
-                ...vals,
+                is_visual_builder: true,
+                name: response?.doc_name || this.state.doc?.name || "",
             };
             if (!silent) {
                 this.notification.add(_t("Documento salvo com sucesso!"), {

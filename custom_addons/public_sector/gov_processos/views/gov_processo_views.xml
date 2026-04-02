@@ -108,7 +108,7 @@
         <field name="name">gov.processo.form</field>
         <field name="model">gov.processo</field>
         <field name="arch" type="xml">
-            <form string="Processo Administrativo">
+            <form string="Processo Administrativo" class="gov-process-form">
                 <header>
                     <field
                         name="state"
@@ -140,16 +140,19 @@
                         groups="gov_base.group_gov_gestor,gov_base.group_gov_admin"
                     />
                 </header>
-                <sheet>
+                <sheet class="gov-process-form-sheet">
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" name="action_tramitar" type="object" icon="fa-exchange">
-                            <field name="tramite_count" widget="statinfo" string="Tramitações"/>
-                        </button>
                         <button class="oe_stat_button" name="action_open_docs" type="object" icon="fa-file-text-o">
                             <field name="doc_count" widget="statinfo" string="Documentos"/>
                         </button>
+                        <button class="oe_stat_button" name="action_tramitar" type="object" icon="fa-exchange">
+                            <field name="tramite_count" widget="statinfo" string="Tramitações"/>
+                        </button>
                         <button class="oe_stat_button" name="action_indicar_dotacao" type="object" icon="fa-calculator">
                             <field name="dotacao_count" widget="statinfo" string="Dotações"/>
+                        </button>
+                        <button class="oe_stat_button" name="action_open_modelos_recomendados" type="object" icon="fa-book">
+                            <field name="recommended_template_count" widget="statinfo" string="Modelos"/>
                         </button>
                         <button class="oe_stat_button" name="action_open_vinculos" type="object" icon="fa-link">
                             <field name="vinculo_count" widget="statinfo" string="Vínculos"/>
@@ -159,9 +162,6 @@
                         </button>
                         <button class="oe_stat_button" name="action_open_empenhos" type="object" icon="fa-money">
                             <field name="empenho_count" widget="statinfo" string="Empenhos"/>
-                        </button>
-                        <button class="oe_stat_button" name="action_open_modelos_recomendados" type="object" icon="fa-book">
-                            <field name="recommended_template_count" widget="statinfo" string="Modelos"/>
                         </button>
                         <button class="oe_stat_button" name="action_open_parametros" type="object" icon="fa-code-fork">
                             <field name="parameter_count" widget="statinfo" string="Variáveis"/>
@@ -222,8 +222,173 @@
                         <strong>⚠️ PROCESSO RETROATIVO</strong>
                     </div>
 
-                    <notebook>
-                        <page name="parametros_template" string="Variáveis do Processo">
+                    <div class="gov-process-notebook">
+                        <notebook>
+                        <page name="dossie" string="Dossiê">
+                            <div class="alert alert-info mb-3" role="alert">
+                                Centralize aqui minutas, documentos Typst, checklists e versões do processo.
+                            </div>
+                            <div class="mb-3 d-flex gap-2 flex-wrap align-items-center">
+                                <button
+                                    name="action_novo_documento_typst"
+                                    string="Novo Documento Typst"
+                                    type="object"
+                                    class="btn-primary"
+                                />
+                                <button
+                                    name="%(action_gov_processo_doc_new)d"
+                                    string="Documento Livre"
+                                    type="action"
+                                    class="btn-secondary"
+                                />
+                                <button
+                                    string="Novo Checklist Manual"
+                                    name="action_novo_checklist_manual"
+                                    type="object"
+                                    class="btn-secondary"
+                                />
+                            </div>
+                            <field name="doc_ids" mode="list">
+                                <list>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="doc_type"/>
+                                    <field name="name"/>
+                                    <field name="version"/>
+                                    <field name="clone_of_id" string="Origem da versão" optional="show"/>
+                                    <field
+                                        name="state"
+                                        widget="badge"
+                                        decoration-success="state == 'assinado'"
+                                        decoration-warning="state == 'revisao'"
+                                        decoration-muted="state == 'rascunho'"
+                                    />
+                                    <field name="ai_generated" optional="show"/>
+                                    <field name="signed_at" optional="show"/>
+                                    <field name="pdf_file" widget="binary" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="tramitacao" string="Tramitação">
+                            <div class="alert alert-info mb-3" role="alert">
+                                Acompanhe o histórico de movimentações, responsáveis e prazos do processo.
+                            </div>
+                            <div class="mb-3">
+                                <button name="action_tramitar" string="Tramitar" type="object" class="btn-primary"/>
+                            </div>
+                            <field name="tramite_ids" mode="list" readonly="1">
+                                <list create="false" edit="false" delete="false">
+                                    <field name="date"/>
+                                    <field name="action"/>
+                                    <field name="from_ug_id"/>
+                                    <field name="to_ug_id"/>
+                                    <field name="user_id"/>
+                                    <field name="duration_hours" string="Tempo (h)" optional="show"/>
+                                    <field name="note"/>
+                                    <field name="prazo_dias" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="planejamento" string="Financeiro">
+                            <div class="alert alert-info mb-3" role="alert">
+                                Consolide aqui a dotação, o valor estimado e os indicadores financeiros do processo.
+                            </div>
+                            <div class="mb-3 d-flex gap-2 flex-wrap align-items-center">
+                                <button
+                                    string="Indicar Dotação"
+                                    name="action_indicar_dotacao"
+                                    type="object"
+                                    class="btn-primary"
+                                    invisible="state not in ('demanda','instrucao','planejamento')"
+                                />
+                                <span class="badge text-bg-success" invisible="not dotacao_indicada">
+                                    ✅ Dotação indicada
+                                </span>
+                                <span class="badge text-bg-secondary" invisible="dotacao_indicada">
+                                    Sem dotação indicada
+                                </span>
+                            </div>
+
+                            <group string="Resumo">
+                                <field name="valor_total_estimado" widget="monetary"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="dotacao_indicada" widget="boolean_toggle" readonly="1"/>
+                            </group>
+
+                            <field name="dotacao_ids" mode="list">
+                                <list editable="bottom">
+                                    <field name="exercicio"/>
+                                    <field name="programa"/>
+                                    <field name="acao"/>
+                                    <field name="natureza_despesa" optional="show"/>
+                                    <field name="fonte_recurso" optional="show"/>
+                                    <field name="valor_estimado" widget="monetary"/>
+                                    <field name="saldo_disponivel" widget="monetary" readonly="1" optional="show"/>
+                                    <field name="alerta_saldo" widget="boolean" string="⚠️ Saldo" readonly="1"/>
+                                    <field name="reservado" widget="boolean_toggle" readonly="1"/>
+                                    <field name="observacao" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="modelos" string="Modelos">
+                            <div class="alert alert-info mb-3" role="alert">
+                                Use esta aba para partir de modelos recomendados e checklists compatíveis com o tipo do processo.
+                            </div>
+                            <div class="mb-3 d-flex gap-2 flex-wrap align-items-center">
+                                <button
+                                    string="Abrir Biblioteca de Modelos"
+                                    name="action_open_modelos_recomendados"
+                                    type="object"
+                                    class="btn-primary"
+                                />
+                                <button
+                                    string="Novo Checklist Manual"
+                                    name="action_novo_checklist_manual"
+                                    type="object"
+                                    class="btn-secondary"
+                                />
+                                <span class="badge text-bg-info">
+                                    Tipo: <field name="process_type" nolabel="1"/>
+                                </span>
+                                <span class="badge text-bg-secondary">
+                                    Escopo: <field name="process_scope" nolabel="1"/>
+                                </span>
+                            </div>
+                            <field name="recommended_template_ids" widget="many2many_tags" readonly="1"/>
+                            <div class="alert alert-info mt-3" role="alert" invisible="recommended_template_ids">
+                                Nenhum modelo padrão cadastrado para este tipo de processo.
+                            </div>
+                        </page>
+                        <page name="vinculos" string="Vínculos">
+                            <div class="alert alert-info mb-3" role="alert">
+                                Conecte aqui empenhos, contratos e outros registros relacionados a este processo.
+                            </div>
+                            <div class="mb-3">
+                                <button
+                                    string="Adicionar Vínculo"
+                                    name="action_open_vinculos"
+                                    type="object"
+                                    class="btn-secondary"
+                                />
+                            </div>
+                            <field name="vinculo_ids" mode="list" readonly="0">
+                                <list editable="bottom">
+                                    <field name="model_name" placeholder="ex: gov.empenho" string="Modelo"/>
+                                    <field name="model_label" string="Tipo" readonly="1"/>
+                                    <field name="record_id" placeholder="ID do registro"/>
+                                    <field name="display_name_cached" string="Descrição" readonly="1"/>
+                                    <field name="vinculo_type"/>
+                                    <field name="created_at" readonly="1"/>
+                                    <field name="created_by" readonly="1" optional="show"/>
+                                    <button
+                                        name="action_abrir_registro"
+                                        type="object"
+                                        icon="fa-external-link"
+                                        string="Abrir"
+                                    />
+                                </list>
+                            </field>
+                        </page>
+                        <page name="parametros_template" string="Variáveis">
                             <div class="alert alert-info mb-3" role="alert">
                                 As variáveis são acumuladas ao longo do processo e só podem ser alteradas
                                 enquanto a fase correspondente estiver aberta.
@@ -251,7 +416,7 @@
                                 </list>
                             </field>
                         </page>
-                        <page name="planilha_xlsx" string="Itens Estruturados XLSX">
+                        <page name="planilha_xlsx" string="Itens XLSX">
                             <div class="alert alert-info mb-3" role="alert">
                                 Preencha os itens da futura planilha em formato amigavel. O sistema sincroniza
                                 automaticamente os datasets JSON usados pelo worker XLSX.
@@ -295,7 +460,7 @@
                                 </list>
                             </field>
                         </page>
-                        <page name="planilha_lotes_xlsx" string="Lotes e Cronograma XLSX">
+                        <page name="planilha_lotes_xlsx" string="Lotes XLSX">
                             <div class="alert alert-info mb-3" role="alert">
                                 Os lotes sao derivados automaticamente a partir dos itens. Aqui o usuario pode
                                 ajustar descricao, classe ABC e cronograma mensal sem precisar editar JSON.
@@ -336,156 +501,8 @@
                                 </list>
                             </field>
                         </page>
-                        <page name="tramitacao" string="Tramitação">
-                            <div class="mb-3">
-                                <button name="action_tramitar" string="Tramitar" type="object" class="btn-primary"/>
-                            </div>
-                            <field name="tramite_ids" mode="list" readonly="1">
-                                <list create="false" edit="false" delete="false">
-                                    <field name="date"/>
-                                    <field name="action"/>
-                                    <field name="from_ug_id"/>
-                                    <field name="to_ug_id"/>
-                                    <field name="user_id"/>
-                                    <field name="duration_hours" string="Tempo (h)" optional="show"/>
-                                    <field name="note"/>
-                                    <field name="prazo_dias" optional="show"/>
-                                </list>
-                            </field>
-                        </page>
-                        <page name="planejamento" string="Planejamento Financeiro">
-                            <div class="mb-3 d-flex gap-2 align-items-center">
-                                <button
-                                    string="Indicar Dotação"
-                                    name="action_indicar_dotacao"
-                                    type="object"
-                                    class="btn-primary"
-                                    invisible="state not in ('demanda','instrucao','planejamento')"
-                                />
-                                <span class="badge text-bg-success" invisible="not dotacao_indicada">
-                                    ✅ Dotação indicada
-                                </span>
-                                <span class="badge text-bg-secondary" invisible="dotacao_indicada">
-                                    Sem dotação indicada
-                                </span>
-                            </div>
-
-                            <group string="Resumo">
-                                <field name="valor_total_estimado" widget="monetary"/>
-                                <field name="currency_id" invisible="1"/>
-                                <field name="dotacao_indicada" widget="boolean_toggle" readonly="1"/>
-                            </group>
-
-                            <field name="dotacao_ids" mode="list">
-                                <list editable="bottom">
-                                    <field name="exercicio"/>
-                                    <field name="programa"/>
-                                    <field name="acao"/>
-                                    <field name="natureza_despesa" optional="show"/>
-                                    <field name="fonte_recurso" optional="show"/>
-                                    <field name="valor_estimado" widget="monetary"/>
-                                    <field name="saldo_disponivel" widget="monetary" readonly="1" optional="show"/>
-                                    <field name="alerta_saldo" widget="boolean" string="⚠️ Saldo" readonly="1"/>
-                                    <field name="reservado" widget="boolean_toggle" readonly="1"/>
-                                    <field name="observacao" optional="show"/>
-                                </list>
-                            </field>
-                        </page>
-                        <page name="modelos" string="Modelos e Checklists">
-                            <div class="mb-3 d-flex gap-2 align-items-center">
-                                <button
-                                    string="Abrir Biblioteca de Modelos"
-                                    name="action_open_modelos_recomendados"
-                                    type="object"
-                                    class="btn-primary"
-                                />
-                                <button
-                                    string="Novo Checklist Manual"
-                                    name="action_novo_checklist_manual"
-                                    type="object"
-                                    class="btn-secondary"
-                                />
-                                <span class="badge text-bg-info">
-                                    Tipo: <field name="process_type" nolabel="1"/>
-                                </span>
-                                <span class="badge text-bg-secondary">
-                                    Escopo: <field name="process_scope" nolabel="1"/>
-                                </span>
-                            </div>
-                            <field name="recommended_template_ids" widget="many2many_tags" readonly="1"/>
-                            <div class="alert alert-info mt-3" role="alert" invisible="recommended_template_ids">
-                                Nenhum modelo padrão cadastrado para este tipo de processo.
-                            </div>
-                        </page>
-                        <page name="dossie" string="Dossiê">
-                            <div class="mb-3 d-flex gap-2 align-items-center">
-                                <button
-                                    name="action_novo_documento_typst"
-                                    string="Novo Documento Typst"
-                                    type="object"
-                                    class="btn-primary"
-                                />
-                                <button
-                                    name="%(action_gov_processo_doc_new)d"
-                                    string="Documento Livre"
-                                    type="action"
-                                    class="btn-secondary"
-                                />
-                                <button
-                                    string="Novo Checklist Manual"
-                                    name="action_novo_checklist_manual"
-                                    type="object"
-                                    class="btn-secondary"
-                                />
-                            </div>
-                            <field name="doc_ids" mode="list">
-                                <list>
-                                    <field name="sequence" widget="handle"/>
-                                    <field name="doc_type"/>
-                                    <field name="name"/>
-                                    <field name="version"/>
-                                    <field name="clone_of_id" string="Origem da versão" optional="show"/>
-                                    <field
-                                        name="state"
-                                        widget="badge"
-                                        decoration-success="state == 'assinado'"
-                                        decoration-warning="state == 'revisao'"
-                                        decoration-muted="state == 'rascunho'"
-                                    />
-                                    <field name="ai_generated" optional="show"/>
-                                    <field name="signed_at" optional="show"/>
-                                    <field name="pdf_file" widget="binary" optional="show"/>
-                                </list>
-                            </field>
-                        </page>
-                        <page name="vinculos" string="Vínculos">
-                            <div class="mb-3">
-                                <button
-                                    string="Adicionar Vínculo"
-                                    name="action_open_vinculos"
-                                    type="object"
-                                    class="btn-secondary"
-                                />
-                            </div>
-                            <field name="vinculo_ids" mode="list" readonly="0">
-                                <list editable="bottom">
-                                    <field name="model_name" placeholder="ex: gov.empenho" string="Modelo"/>
-                                    <field name="model_label" string="Tipo" readonly="1"/>
-                                    <field name="record_id" placeholder="ID do registro"/>
-                                    <field name="display_name_cached" string="Descrição" readonly="1"/>
-                                    <field name="vinculo_type"/>
-                                    <field name="created_at" readonly="1"/>
-                                    <field name="created_by" readonly="1" optional="show"/>
-                                    <button
-                                        name="action_abrir_registro"
-                                        type="object"
-                                        icon="fa-external-link"
-                                        string="Abrir"
-                                    />
-                                </list>
-                            </field>
-                        </page>
-                    </notebook>
+                        </notebook>
+                    </div>
                 </sheet>
                 <chatter/>
             </form>

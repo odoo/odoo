@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="gov_builder_template_dfd_default" model="gov.processo.doc.builder.template">
+        <field name="name">Builder DFD Padrão</field>
+        <field name="sequence">10</field>
+        <field name="doc_type">dfd</field>
+        <field name="process_scope">all</field>
+        <field name="block_payload_json"><![CDATA[
+[
+  {"type": "titulo", "content": {"titulo": "DFD — Formalização de Demanda", "subtitulo": "{{process_subject}}"}},
+  {"type": "cabecalho_processo", "content": {}},
+  {"type": "objeto", "content": {"html": ""}},
+  {"type": "justificativa", "content": {"html": ""}},
+  {"type": "base_legal", "content": {"html": ""}},
+  {"type": "quadro_resumo", "content": {"linhas": ""}},
+  {"type": "encaminhamento", "content": {"html": ""}},
+  {"type": "assinatura", "content": {"nome": "", "cargo": ""}}
+]
+        ]]></field>
+    </record>
+
+    <record id="gov_builder_template_tr_default" model="gov.processo.doc.builder.template">
+        <field name="name">Builder TR Padrão</field>
+        <field name="sequence">10</field>
+        <field name="doc_type">tr</field>
+        <field name="process_scope">all</field>
+        <field name="block_payload_json"><![CDATA[
+[
+  {"type": "titulo", "content": {"titulo": "Termo de Referência", "subtitulo": "{{process_subject}}"}},
+  {"type": "cabecalho_processo", "content": {}},
+  {"type": "objeto", "content": {"html": ""}},
+  {"type": "base_legal", "content": {"html": ""}},
+  {"type": "quadro_resumo", "content": {"linhas": ""}},
+  {"type": "pontos_chave", "content": {"texto": "Objeto delimitado\nCritérios de execução definidos\nFiscalização e aceite previstos"}},
+  {"type": "encaminhamento", "content": {"html": ""}},
+  {"type": "assinatura", "content": {"nome": "", "cargo": ""}}
+]
+        ]]></field>
+    </record>
+
+    <record id="gov_builder_template_generic_default" model="gov.processo.doc.builder.template">
+        <field name="name">Builder Genérico</field>
+        <field name="sequence">90</field>
+        <field name="doc_type">outro</field>
+        <field name="process_scope">all</field>
+        <field name="block_payload_json"><![CDATA[
+[
+  {"type": "titulo", "content": {"titulo": "{{doc_type_label}}", "subtitulo": "{{process_subject}}"}},
+  {"type": "cabecalho_processo", "content": {}},
+  {"type": "texto_livre", "content": {"html": "<p>Redija aqui o conteúdo principal.</p>"}},
+  {"type": "base_legal", "content": {"html": "<p>{{legal_basis_default}}</p>"}},
+  {"type": "encaminhamento", "content": {"html": "<p>{{routing_default}}</p>"}},
+  {"type": "assinatura", "content": {"nome": "{{responsible_name}}", "cargo": "{{responsible_role}}"}}
+]
+        ]]></field>
+    </record>
+</odoo>

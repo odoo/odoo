@@ -91,6 +91,26 @@
 
       <!-- PRANCHETA / CANVAS -->
       <div class="gov-builder-canvas-wrap">
+        <div class="gov-builder-context-strip" t-if="state.recordContext.process_number or state.recordContext.doc_name">
+          <div class="gov-builder-context-main">
+            <span class="gov-builder-context-kicker">Registro Vinculado</span>
+            <strong>
+              <t t-esc="state.recordContext.doc_type_label or state.doc?.name or 'Documento'"/>
+            </strong>
+            <span class="gov-builder-context-text">
+              Processo <t t-esc="state.recordContext.process_number or '—'"/> ·
+              <t t-esc="state.recordContext.process_subject or 'Sem assunto'"/>
+            </span>
+          </div>
+          <div class="gov-builder-context-side">
+            <span class="gov-builder-badge" t-if="state.builderTemplate?.name">
+              <t t-esc="state.builderTemplate.name"/>
+            </span>
+            <span class="gov-builder-badge">
+              <t t-esc="state.recordContext.company_name or 'UG não informada'"/>
+            </span>
+          </div>
+        </div>
 
         <!-- Drop zone: início da lista -->
         <div
@@ -144,13 +164,19 @@
 
             <!-- Preview do bloco -->
             <div class="gov-block-preview" t-if="state.activeBlockId !== block.id">
-              <GovBlockPreview block="block"/>
+              <GovBlockPreview block="block" bindings="state.recordContext"/>
             </div>
 
             <!-- Editor inline quando ativo -->
             <div class="gov-block-editor" t-if="state.activeBlockId === block.id">
               <GovBlockEditor block="block"
-                              onUpdate="(field, val) => this.updateBlockContent(block.id, field, val)"/>
+                              bindings="state.recordContext"
+                              slashState="state.slashMenu"
+                              slashCommands="state.slashMenu.commands"
+                              onUpdate="(field, val) => this.updateBlockContent(block.id, field, val)"
+                              onRichTextInput="(blockId, field, ev) => this.onRichTextInput(blockId, field, ev)"
+                              onRichTextKeydown="(blockId, ev) => this.onRichTextKeydown(blockId, ev)"
+                              onSlashCommandSelect="(blockId, command) => this.onSlashCommandSelect(blockId, command)"/>
             </div>
           </div>
 
@@ -364,25 +390,42 @@
 <t t-name="gov_processos.GovBlockPreview">
   <div class="gov-preview-inner">
     <t t-if="props.block.type === 'titulo'">
-      <strong t-esc="props.block.content.titulo or '(sem título)'"/>
-      <span t-if="props.block.content.subtitulo" class="gov-preview-sub">
-        — <t t-esc="props.block.content.subtitulo"/>
+      <strong t-esc="resolvedContent.titulo or '(sem título)'"/>
+      <span t-if="resolvedContent.subtitulo" class="gov-preview-sub">
+        — <t t-esc="resolvedContent.subtitulo"/>
       </span>
+    </t>
+    <t t-elif="props.block.type === 'cabecalho_processo'">
+      <div class="gov-preview-table">
+        <t t-foreach="headerRows" t-as="row" t-key="row.label">
+          <div class="gov-preview-table-row">
+            <span class="gov-preview-table-label" t-esc="row.label"/>
+            <span class="gov-preview-table-value" t-esc="row.value"/>
+          </div>
+        </t>
+      </div>
     </t>
     <t t-elif="props.block.type === 'texto_livre' or props.block.type === 'objeto'
                or props.block.type === 'justificativa' or props.block.type === 'base_legal'
                or props.block.type === 'encaminhamento'">
-      <div t-out="props.block.content.html or '(vazio)'"/>
+      <div t-out="resolvedContent.html or '(vazio)'"/>
     </t>
     <t t-elif="props.block.type === 'quadro_resumo'">
-      <pre class="gov-preview-pre" t-esc="props.block.content.linhas or '(vazio)'"/>
+      <div class="gov-preview-table">
+        <t t-foreach="summaryRows" t-as="row" t-key="row.label + '_' + row.value">
+          <div class="gov-preview-table-row">
+            <span class="gov-preview-table-label" t-esc="row.label"/>
+            <span class="gov-preview-table-value" t-esc="row.value or '—'"/>
+          </div>
+        </t>
+      </div>
     </t>
     <t t-elif="props.block.type === 'pontos_chave'">
-      <pre class="gov-preview-pre" t-esc="props.block.content.texto or '(vazio)'"/>
+      <pre class="gov-preview-pre" t-esc="resolvedContent.texto or '(vazio)'"/>
     </t>
     <t t-elif="props.block.type === 'assinatura'">
-      <span>✍️ <t t-esc="props.block.content.nome or '(nome)'"/> —
-        <t t-esc="props.block.content.cargo or '(cargo)'"/>
+      <span>✍️ <t t-esc="resolvedContent.nome or '(nome)'"/> —
+        <t t-esc="resolvedContent.cargo or '(cargo)'"/>
       </span>
     </t>
     <t t-else="">
@@ -402,14 +445,33 @@
       <div class="gov-field">
         <label>Título</label>
         <input type="text" class="gov-input"
-               t-att-value="props.block.content.titulo"
+               t-att-value="resolvedContent.titulo"
                t-on-input="(ev) => props.onUpdate('titulo', ev.target.value)"/>
       </div>
       <div class="gov-field">
         <label>Subtítulo</label>
         <input type="text" class="gov-input"
-               t-att-value="props.block.content.subtitulo"
+               t-att-value="resolvedContent.subtitulo"
                t-on-input="(ev) => props.onUpdate('subtitulo', ev.target.value)"/>
+      </div>
+    </t>
+
+    <t t-elif="props.block.type === 'cabecalho_processo'">
+      <div class="gov-field gov-field--full">
+        <label>Dados vinculados ao processo</label>
+        <div class="gov-bound-card">
+          <div class="gov-bound-card-hint">
+            Este bloco é alimentado automaticamente pelo registro atual do Odoo.
+          </div>
+          <div class="gov-preview-table">
+            <t t-foreach="resolvedContent.rows" t-as="row" t-key="row.label">
+              <div class="gov-preview-table-row">
+                <span class="gov-preview-table-label" t-esc="row.label"/>
+                <span class="gov-preview-table-value" t-esc="row.value"/>
+              </div>
+            </t>
+          </div>
+        </div>
       </div>
     </t>
 
@@ -423,12 +485,29 @@
           class="gov-html-editor"
           contenteditable="true"
           t-ref="htmlEditor"
-          t-on-input="(ev) => props.onUpdate('html', ev.target.innerHTML)"
-          t-out="props.block.content.html"
+          t-on-input="(ev) => props.onRichTextInput(props.block.id, 'html', ev)"
+          t-on-keydown="(ev) => props.onRichTextKeydown(props.block.id, ev)"
+          t-out="resolvedContent.html"
         />
         <span class="gov-field-hint">
-          Use / para comandos: /h1, /h2, /lista, /tabela...
+          <t t-if="props.block.type === 'texto_livre'">
+            Use <code>/base-legal</code> para abrir a base dos slash commands.
+          </t>
+          <t t-else="">
+            O conteúdo aceita títulos, listas, tabelas e HTML básico.
+          </t>
         </span>
+        <div class="gov-slash-menu" t-if="isSlashMenuOpen">
+          <button class="gov-slash-item"
+                  t-foreach="props.slashCommands"
+                  t-as="command"
+                  t-key="command.name"
+                  t-on-mousedown.prevent="() => {}"
+                  t-on-click="() => props.onSlashCommandSelect(props.block.id, command)">
+            <span class="gov-slash-item-label" t-esc="command.label"/>
+            <span class="gov-slash-item-desc" t-esc="command.description"/>
+          </button>
+        </div>
       </div>
     </t>
 
@@ -436,10 +515,22 @@
     <t t-elif="props.block.type === 'quadro_resumo'">
       <div class="gov-field gov-field--full">
         <label>Linhas (formato: Rótulo: valor)</label>
+          <div class="gov-bound-card">
+            <div class="gov-bound-card-hint">
+              Deixe em branco para usar automaticamente os dados do processo atual.
+            </div>
+            <div class="gov-preview-table">
+            <t t-foreach="summaryLines" t-as="line" t-key="line">
+              <div class="gov-preview-table-row">
+                <span class="gov-preview-table-value" t-esc="line"/>
+              </div>
+            </t>
+            </div>
+        </div>
         <textarea class="gov-textarea" rows="6"
-                  t-att-value="props.block.content.linhas"
+                  t-att-value="resolvedContent.linhas"
                   t-on-input="(ev) => props.onUpdate('linhas', ev.target.value)"/>
-        <span class="gov-field-hint">Exemplo: Valor estimado: R$ 50.000,00</span>
+        <span class="gov-field-hint">Exemplo: Valor estimado: R$ 50.000,00. Se apagar tudo, o binding volta.</span>
       </div>
     </t>
 
@@ -448,7 +539,7 @@
       <div class="gov-field gov-field--full">
         <label>Pontos (um por linha)</label>
         <textarea class="gov-textarea" rows="6"
-                  t-att-value="props.block.content.texto"
+                  t-att-value="resolvedContent.texto"
                   t-on-input="(ev) => props.onUpdate('texto', ev.target.value)"/>
       </div>
     </t>
@@ -458,13 +549,13 @@
       <div class="gov-field">
         <label>Nome do Assinante</label>
         <input type="text" class="gov-input"
-               t-att-value="props.block.content.nome"
+               t-att-value="resolvedContent.nome"
                t-on-input="(ev) => props.onUpdate('nome', ev.target.value)"/>
       </div>
       <div class="gov-field">
         <label>Cargo / Função</label>
         <input type="text" class="gov-input"
-               t-att-value="props.block.content.cargo"
+               t-att-value="resolvedContent.cargo"
                t-on-input="(ev) => props.onUpdate('cargo', ev.target.value)"/>
       </div>
     </t>

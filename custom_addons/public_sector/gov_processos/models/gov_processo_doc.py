@@ -514,6 +514,200 @@ class GovProcessoDoc(models.Model):
         self.ensure_one()
         return self._build_construtor_visual_action()
 
+    def _format_builder_currency(self, amount):
+        value = float(amount or 0.0)
+        formatted = f"{value:,.2f}"
+        formatted = formatted.replace(",", "X").replace(".", ",").replace("X", ".")
+        return f"R$ {formatted}"
+
+    def _get_builder_legal_basis_default(self):
+        self.ensure_one()
+        defaults = {
+            "dfd": "Lei nº 14.133/2021, art. 18, e regulamentos internos aplicáveis.",
+            "tr": "Lei nº 14.133/2021, art. 6º, XXIII, art. 18 e demais dispositivos pertinentes.",
+        }
+        return defaults.get(
+            self.doc_type,
+            "Lei nº 14.133/2021 e normativos internos aplicáveis à instrução do processo.",
+        )
+
+    def _get_builder_routing_default(self):
+        self.ensure_one()
+        if self.doc_type == "dfd":
+            return "Encaminhe-se para validação técnica e prosseguimento da instrução processual."
+        if self.doc_type == "tr":
+            return "Submeta-se o Termo de Referência à revisão jurídica e à autorização da autoridade competente."
+        return "Encaminhe-se para análise e deliberação da autoridade competente."
+
+    def _get_builder_summary_rows(self):
+        self.ensure_one()
+        processo = self.processo_id
+        value_amount = self.dfd_valor_estimado or processo.valor_total_estimado or 0.0
+        rows = [
+            ("Processo", processo.name or ""),
+            ("Objeto / Assunto", processo.subject or ""),
+            ("Tipo", dict(PROCESS_TYPE_SELECTION).get(self.process_type, self.process_type or "")),
+            ("Escopo", dict(PROCESS_SCOPE_SELECTION).get(self.process_scope, self.process_scope or "")),
+            ("UG", processo.ug_id.name or ""),
+            ("Valor estimado", self._format_builder_currency(value_amount)),
+        ]
+        if self.dfd_area_requisitante:
+            rows.insert(4, ("Área requisitante", self.dfd_area_requisitante))
+        if processo.responsible_id:
+            rows.append(("Responsável", processo.responsible_id.name or ""))
+        return [
+            {"label": label, "value": value}
+            for label, value in rows
+            if value
+        ]
+
+    def _get_builder_record_context(self):
+        self.ensure_one()
+        processo = self.processo_id
+        object_html = self.dfd_objeto or ""
+        justification_html = self.dfd_justificativa or ""
+        object_text = self._plain_text_from_html(object_html) or processo.subject or ""
+        justification_text = self._plain_text_from_html(justification_html)
+        summary_rows = self._get_builder_summary_rows()
+        estimated_amount = self.dfd_valor_estimado or processo.valor_total_estimado or 0.0
+        responsible_name = processo.responsible_id.name if processo.responsible_id else ""
+        data_necessidade = (
+            self.dfd_data_necessidade.strftime("%d/%m/%Y") if self.dfd_data_necessidade else ""
+        )
+        return {
+            "record_model": self._name,
+            "record_id": self.id,
+            "process_id": processo.id,
+            "process_number": processo.name or "",
+            "process_subject": processo.subject or "",
+            "process_type": self.process_type or "",
+            "process_type_label": dict(PROCESS_TYPE_SELECTION).get(self.process_type, self.process_type or ""),
+            "process_scope": self.process_scope or "",
+            "process_scope_label": dict(PROCESS_SCOPE_SELECTION).get(self.process_scope, self.process_scope or ""),
+            "process_state": processo.state or "",
+            "company_name": processo.ug_id.name or "",
+            "doc_name": self.name or "",
+            "doc_type": self.doc_type or "",
+            "doc_type_label": dict(DOC_TYPE_SELECTION).get(self.doc_type, self.doc_type or ""),
+            "requesting_area": self.dfd_area_requisitante or "",
+            "object_html": object_html or "",
+            "object_text": object_text or "",
+            "justification_html": justification_html or "",
+            "justification_text": justification_text or "",
+            "estimated_value": estimated_amount,
+            "estimated_value_label": self._format_builder_currency(estimated_amount),
+            "responsible_name": responsible_name or "",
+            "responsible_role": "Responsável pelo Processo",
+            "legal_basis_default": self._get_builder_legal_basis_default(),
+            "routing_default": self._get_builder_routing_default(),
+            "summary_rows": summary_rows,
+            "summary_rows_text": "\n".join(
+                f"{row['label']}: {row['value']}" for row in summary_rows if row.get("value")
+            ),
+            "data_necessidade": data_necessidade,
+            "vinculo_ppa": self.dfd_vinculo_ppa or "",
+        }
+
+    def _sanitize_builder_blocks(self, blocks):
+        sanitized = []
+        for index, block in enumerate(blocks or [], start=1):
+            if not isinstance(block, dict):
+                continue
+            block_type = (block.get("type") or "").strip()
+            if not block_type:
+                continue
+            content = block.get("content") if isinstance(block.get("content"), dict) else {}
+            sanitized.append(
+                {
+                    "id": block.get("id") or f"block_{index}",
+                    "type": block_type,
+                    "label": block.get("label") or "",
+                    "editable": bool(block.get("editable", True)),
+                    "content": content,
+                }
+            )
+        return sanitized
+
+    def action_builder_bootstrap(self):
+        self.ensure_one()
+        Template = self.env["gov.processo.doc.builder.template"]
+        context = self._get_builder_record_context()
+        try:
+            layout_blocks = json.loads(self.layout_json or "[]")
+        except json.JSONDecodeError:
+            layout_blocks = []
+        layout_blocks = self._sanitize_builder_blocks(layout_blocks)
+        template_data = Template.get_rendered_payload_for_document(self, context)
+        template = template_data.get("template")
+        initial_blocks = layout_blocks or self._sanitize_builder_blocks(template_data.get("blocks"))
+        return {
+            "doc": {
+                "id": self.id,
+                "name": self.name or "",
+                "layout_json": self.layout_json or "",
+                "processo_id": self.processo_id.id,
+                "doc_type": self.doc_type or "",
+                "state": self.state or "",
+                "typst_source": self.typst_source or "",
+                "is_visual_builder": bool(self.is_visual_builder),
+            },
+            "record_context": context,
+            "initial_blocks": initial_blocks,
+            "builder_template": {
+                "id": template.id if template else False,
+                "name": template.name if template else "",
+                "doc_type": template.doc_type if template else self.doc_type,
+                "process_type": template.process_type if template else False,
+                "process_scope": template.process_scope if template else False,
+            },
+            "assistant_info": self.action_typst_assistant_status(),
+        }
+
+    def action_builder_save_payload(self, layout_payload=None, typst_source=""):
+        self.ensure_one()
+        if self.state == "assinado":
+            raise UserError("Documento assinado não pode ser alterado no construtor visual.")
+
+        if isinstance(layout_payload, str):
+            try:
+                layout_payload = json.loads(layout_payload or "[]")
+            except json.JSONDecodeError as exc:
+                raise UserError("O payload do construtor visual não está em JSON válido.") from exc
+
+        blocks = self._sanitize_builder_blocks(layout_payload or [])
+        generated_typst = (typst_source or "").strip()
+        if not generated_typst:
+            raise UserError("Nenhum Typst foi recebido do construtor visual.")
+
+        vals = {
+            "layout_json": json.dumps(blocks, ensure_ascii=False),
+            "typst_source": generated_typst,
+            "is_visual_builder": True,
+            "change_reason": "Documento atualizado pelo construtor visual",
+        }
+
+        object_block = next((item for item in blocks if item["type"] == "objeto"), False)
+        if object_block and object_block["content"].get("html"):
+            vals["dfd_objeto"] = object_block["content"]["html"]
+        justification_block = next((item for item in blocks if item["type"] == "justificativa"), False)
+        if justification_block and justification_block["content"].get("html"):
+            vals["dfd_justificativa"] = justification_block["content"]["html"]
+        title_block = next((item for item in blocks if item["type"] == "titulo"), False)
+        if title_block and title_block["content"].get("titulo"):
+            title = (title_block["content"].get("titulo") or "").strip()
+            subtitle = (title_block["content"].get("subtitulo") or "").strip()
+            vals["name"] = f"{title} - {subtitle}" if subtitle else title
+
+        self.write(vals)
+        return {
+            "ok": True,
+            "doc_id": self.id,
+            "doc_name": self.name or "",
+            "typst_source": self.typst_source or generated_typst,
+            "typst_filename": f"{self.name or 'documento'}.typ",
+            "record_context": self._get_builder_record_context(),
+        }
+
     def _build_act_window_views(self, view_mode):
         mode = (view_mode or "form").strip()
         return [(False, item.strip()) for item in mode.split(",") if item.strip()]

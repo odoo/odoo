@@ -676,6 +676,46 @@
   scrollbar-color: var(--gov-bg-3) transparent;
 }
 
+.gov-builder-context-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border-radius: var(--gov-radius);
+  border: 1px solid var(--gov-border);
+  background:
+    linear-gradient(135deg, rgba(79, 125, 255, 0.1), rgba(124, 92, 255, 0.06)),
+    rgba(17, 22, 34, 0.88);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+.gov-builder-context-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gov-builder-context-kicker {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gov-text-3);
+}
+
+.gov-builder-context-text {
+  font-size: 12px;
+  color: var(--gov-text-2);
+}
+
+.gov-builder-context-side {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 /* ── Drop zone ───────────────────────────────────────────────────────────── */
 .gov-drop-zone {
   height: 8px;
@@ -817,6 +857,37 @@
   font-size: 12px;
 }
 
+.gov-preview-table {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gov-preview-table-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 180px) minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(99, 122, 172, 0.12);
+}
+
+.gov-preview-table-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--gov-text-3);
+}
+
+.gov-preview-table-value {
+  font-size: 12px;
+  color: var(--gov-text-1);
+  line-height: 1.55;
+}
+
 /* ── Editor inline ───────────────────────────────────────────────────────── */
 .gov-block-editor {
   padding: 16px;
@@ -851,6 +922,22 @@
 }
 
 .gov-field--full { flex: 1; }
+
+.gov-bound-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border-radius: var(--gov-radius-sm);
+  border: 1px dashed rgba(99, 122, 172, 0.28);
+  background: rgba(10, 13, 20, 0.66);
+}
+
+.gov-bound-card-hint {
+  font-size: 11px;
+  color: var(--gov-text-2);
+  line-height: 1.5;
+}
 
 .gov-input,
 .gov-textarea {
@@ -899,6 +986,62 @@
 .gov-html-editor ul, .gov-html-editor ol { padding-left: 20px; }
 .gov-html-editor table { border-collapse: collapse; width: 100%; }
 .gov-html-editor td, .gov-html-editor th { border: 1px solid var(--gov-border); padding: 4px 8px; }
+
+.gov-slash-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: var(--gov-radius-sm);
+  border: 1px solid rgba(79, 125, 255, 0.22);
+  background: rgba(10, 13, 20, 0.96);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+.gov-slash-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--gov-text-1);
+  text-align: left;
+  cursor: pointer;
+  transition: var(--gov-transition);
+}
+
+.gov-slash-item:hover {
+  border-color: var(--gov-accent);
+  background: rgba(79, 125, 255, 0.12);
+}
+
+.gov-slash-item-label {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.gov-slash-item-desc {
+  font-size: 11px;
+  color: var(--gov-text-2);
+  line-height: 1.5;
+}
+
+.gov-slash-token {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(79, 125, 255, 0.14);
+  border: 1px solid rgba(79, 125, 255, 0.25);
+  color: var(--gov-accent);
+  font-size: 11px;
+  font-weight: 600;
+}
 
 .gov-field-hint {
   font-size: 10px;
@@ -980,6 +1123,15 @@
     padding: 16px;
   }
 
+  .gov-builder-context-strip {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .gov-builder-context-side {
+    justify-content: flex-start;
+  }
+
   .gov-typst-workbench {
     grid-template-columns: 1fr;
   }
@@ -1017,5 +1169,9 @@
   .gov-typst-inline-validation {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .gov-preview-table-row {
+    grid-template-columns: 1fr;
   }
 }

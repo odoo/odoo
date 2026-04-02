@@ -12,6 +12,7 @@
         "data/gov_ai_template_procurement_seed.xml",
         "data/gov_ai_template_direct_seed.xml",
         "data/gov_ai_quality_policy_seed.xml",
+        "data/gov_document_builder_template_seed.xml",
         "data/gov_timbre_seed.xml",
         "data/gov_xlsx_worker_cron.xml",
         "data/gov_document_ingest_worker_cron.xml",
@@ -52,7 +53,9 @@
         "web.assets_backend": [
             "gov_processos/static/src/css/gov_dashboard.css",
             "gov_processos/static/src/css/gov_document_builder.css",
+            "gov_processos/static/src/css/gov_processo_form.css",
             "gov_processos/static/src/js/gov_dashboard.js",
+            "gov_processos/static/src/js/gov_document_builder_typst.js",
             "gov_processos/static/src/js/gov_document_builder.js",
             "gov_processos/static/src/xml/gov_dashboard.xml",
             "gov_processos/static/src/xml/gov_document_builder.xml",

@@ -21,6 +21,7 @@ from . import gov_processo_parametro
 from . import gov_processo_fase_wizard
 from . import gov_relatorio_wizard
 from . import gov_processo_doc
+from . import gov_processo_doc_builder_template
 from . import gov_processo_doc_render_job
 from . import gov_processo_doc_ingest_job
 from . import gov_processo_dotacao
