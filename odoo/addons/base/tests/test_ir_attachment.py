@@ -453,7 +453,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
     def test_write_error(self):
         # try to write a file in a place where we have no access
         # /proc is not writeable, check if we have an error raised
-        self.patch(IrAttachment, '_get_path', lambda self, binary, _checksum: (binary, '/proc/dummy_test'))
+        self.patch(IrAttachment, '_get_path', lambda self, binary, _checksum: ('dummy_test', '/proc/dummy_test'))
         with self.assertRaises(OSError):
             self.env['ir.attachment']._file_write(b'test', 'test')
 
