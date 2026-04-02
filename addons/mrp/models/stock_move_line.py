@@ -29,6 +29,10 @@ class StockMoveLine(models.Model):
     def create(self, vals_list):
         res = super().create(vals_list)
         for line in res:
+            if self.env.context.get('force_manual_consumption'):
+                if line.quantity:
+                    line.move_id.manual_consumption = True
+                line.move_id.picked = True
             # If the line is added in a done production, we need to map it
             # manually to the produced move lines in order to see them in the
             # traceability report
