@@ -462,9 +462,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductAttribute = request.env['product.attribute']
         if products:
             # get all products without limit
+            search_term = fuzzy_search_term if fuzzy_search_term else search
+            product_query = request.env['product.template']._search(
+                self._get_shop_domain(search_term, category, attribute_value_dict)
+            )
             attributes_grouped = request.env['product.template.attribute.line']._read_group(
                 domain=[
-                    ('product_tmpl_id', 'in', search_product.ids),
+                    ('product_tmpl_id', 'in', product_query),
                     ('attribute_id.visibility', '=', 'visible'),
                 ],
                 groupby=['attribute_id'],
@@ -794,10 +798,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def _prepare_product_values(self, product, category, **kwargs):
         ProductCategory = request.env['product.public.category']
         product_markup_data = [product._to_markup_data(request.website)]
-        category = (
-            (category and ProductCategory.browse(int(category)).exists())
-            or product.public_categ_ids[:1]
-        )
+        original_category = category
+        category = category or product.public_categ_ids[:1]
         if category:
             # Add breadcrumb's SEO data.
             product_markup_data.append(self._prepare_breadcrumb_markup_data(
@@ -806,11 +808,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         if (last_attributes_search := request.session.get('attribute_values', [])):
             keep = QueryURL(
-                self._get_shop_path(category),
+                self._get_shop_path(original_category),
                 attribute_values=last_attributes_search
             )
         else:
-            keep = QueryURL(self._get_shop_path(category))
+            keep = QueryURL(self._get_shop_path(original_category))
 
         if attribute_values := kwargs.get('attribute_values', ''):
             attribute_value_ids = {int(i) for i in attribute_values.split(',')}
@@ -836,6 +838,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return {
             'categories': ProductCategory.search([('parent_id', '=', False)]),
             'category': category,
+            'original_category': original_category,
             'combination_info': combination_info,
             'keep': keep,
             'main_object': product,

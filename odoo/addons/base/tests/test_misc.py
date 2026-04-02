@@ -108,6 +108,9 @@ class TestFormatLangDate(TransactionCase):
         self.assertEqual(misc.format_datetime(lang.env, datetime_str, tz='Europe/Brussels', dt_format=fmt_fr, lang_code='fr_FR'), '31 janvier 2017 à 11:33:00 +0100')
         self.assertEqual(misc.format_datetime(lang.with_context(lang='zh_CN').env, datetime_str, tz='Europe/Brussels', dt_format=fmt_us, lang_code='en_US'), 'January 31, 2017 at 11:33:00 AM +0100')
 
+        # Check given 'short' format
+        self.assertEqual(misc.format_datetime(lang.with_context(lang='fr_FR').env, datetime_str, tz='America/New_York', dt_format='short'), '31/01/2017 05:33')
+
         # -- test `time`
         time_part = datetime.time(16, 30, 22)
         time_part_tz = datetime.time(16, 30, 22, tzinfo=pytz.timezone('America/New_York'))  # 4:30 PM timezoned
@@ -130,6 +133,9 @@ class TestFormatLangDate(TransactionCase):
         # Check given `lang_code` overwites context lang
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='ah:mm', lang_code='zh_CN'), '\u4e0b\u53484:30')
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='ah:mm', lang_code='fr_FR'), 'PM4:30')
+
+        # Check given 'short' format
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='short'), '16:30')
 
     def test_02_tz(self):
         self.env.user.tz = 'Europe/Brussels'
