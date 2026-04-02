@@ -395,6 +395,10 @@ class StockWarehouseOrderpoint(models.Model):
         for orderpoint in self:
             orderpoint.qty_to_order = orderpoint.qty_to_order_manual if orderpoint.qty_to_order_manual else orderpoint.qty_to_order_computed
 
+    def _adjust_qty_to_order(self, qty_to_order, qty_forecast_with_visibility):
+        self.ensure_one()
+        return qty_to_order
+
     def _inverse_qty_to_order(self):
         for orderpoint in self:
             if orderpoint.trigger == 'auto':
@@ -473,6 +477,7 @@ class StockWarehouseOrderpoint(models.Model):
             qty_forecast_with_visibility = self.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + qty_in_progress
             qty_to_order = max(self.product_min_qty, self.product_max_qty) - qty_forecast_with_visibility
             qty_to_order = self._get_multiple_rounded_qty(qty_to_order)
+            qty_to_order = self._adjust_qty_to_order(qty_to_order, qty_forecast_with_visibility)
         return qty_to_order
 
     def _get_lead_days_values(self):
