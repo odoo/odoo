@@ -2,7 +2,7 @@ import { reactive } from "@web/owl2/utils";
 import { PgSnapshot } from "@mail/model/field_version";
 import { Record } from "./record";
 import { STORE_SYM, modelRegistry } from "./misc";
-import { toRaw } from "@odoo/owl";
+import { immediateEffect, toRaw } from "@odoo/owl";
 
 /** @typedef {import("./record_list").RecordList} RecordList */
 
@@ -299,13 +299,17 @@ export class Store extends Record {
             }
             return;
         }
+        let running = false;
         let ready = true;
-        proxy = reactive(record, () => {
-            if (ready) {
+        proxy = reactive(record);
+        immediateEffect(() => {
+            if (!running) {
+                _observe();
+            } else if (ready) {
                 callback(_observe);
             }
         });
-        _observe();
+        running = true;
         return () => {
             ready = false;
         };

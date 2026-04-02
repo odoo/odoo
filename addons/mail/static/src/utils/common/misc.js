@@ -2,6 +2,7 @@ import { reactive, useLayoutEffect } from "@web/owl2/utils";
 import { AssetsLoadingError, getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
 import { effect } from "@web/core/utils/reactive";
+import { immediateEffect } from "@odoo/owl";
 
 export function assignDefined(obj, data, keys = Object.keys(data)) {
     for (const key of keys) {
@@ -100,11 +101,15 @@ export function onChange(target, key, callback) {
         }
         return;
     }
-    proxy = reactive(target, () => {
+    let running = false;
+    proxy = reactive(target);
+    immediateEffect(() => {
         _observe();
-        callback();
+        if (running) {
+            callback();
+        }
     });
-    _observe();
+    running = true;
     return proxy;
 }
 
