@@ -1,0 +1,84 @@
+<templates>
+    <t t-name="account.SectionRow">
+        <li
+            class="list-group-item px-2 mb-1 border-0 o_section"
+            t-att-data-id="this.props.section.id"
+        >
+
+            <!-- ROW -->
+            <div t-att-class="'d-flex align-items-center gap-1 px-2 py-1 cursor-pointer o_section_row ' + (
+                    this.selectedSection.sectionId == this.props.section.id ? 'o_selected_section' : ''
+                )">
+
+                <!-- Expand / collapse -->
+                <i
+                    t-if="this.props.section.children.length"
+                    t-att-class="'fa me-1 ' + (this.props.section.isOpen ? 'fa-caret-down' : 'fa-caret-right')"
+                    t-on-click="() => this.toggle(this.props.section)"
+                />
+
+                <i
+                    t-if="this.props.section.id === false"
+                    class="fa fa-pencil"
+                    t-on-click="() => this.env.enableSectionInput('top')"
+                />
+                <input
+                    t-if="this.props.section.id === false and this.props.state.isAddingSection === 'top'"
+                    class="ms-2 o_section_input"
+                    type="text"
+                    t-custom-model="this.props.state.newSectionName"
+                    t-on-keydown="(ev) => this.env.onSectionInputKeydown(ev)"
+                    t-on-blur="() => this.env.createSection()"
+                />
+
+                <!-- Name -->
+                <div
+                    t-else=""
+                    class="flex-grow-1 d-flex align-items-center gap-2 overflow-hidden"
+                    t-on-click="() => this.env.setSelectedSection(this.props.section.id)"
+                    t-att-title="this.props.section.name"
+                >
+                    <span class="text-truncate" t-out="this.props.section.name"/>
+                    <span class="text-muted ms-2" t-out="this.props.section.line_count"/>
+                    <span class="text-muted ms-2"
+                        t-out="this.getFormattedSubTotal(this.props.section)"/>
+                </div>
+
+                <!-- Actions -->
+                <div class="d-flex align-items-center ms-2 gap-2">
+
+                    <SectionsDropdown t-if="this.props.section.id" t-props="this.props"/>
+
+                    <!-- Add subsection -->
+                    <i
+                        class="fa fa-plus text-muted"
+                        t-on-click="() => this.env.enableSectionInput('subsection', this.props.section.id)"
+                        t-if="this.props.section.display_type === 'line_section'"
+                    />
+                </div>
+            </div>
+
+            <ul t-if="this.props.section.isOpen and this.props.section.children.length"
+                class="list-group border-0 ps-3">
+
+                <t t-foreach="this.props.section.children" t-as="child" t-key="child.id">
+                    <SectionRow
+                        section="child"
+                        state="this.props.state"
+                    />
+                </t>
+            </ul>
+
+            <!-- Input for subsection -->
+            <input
+                t-if="this.props.state.isAddingSection === ('subsection_' + this.props.section.id) and this.props.section.display_type === 'line_section'"
+                class="o_section_input ms-3 mt-1"
+                type="text"
+                t-custom-model="this.props.state.newSectionName"
+                t-on-keydown="(ev) => this.env.onSectionInputKeydown(ev, this.props.section.id)"
+                t-on-blur="() => this.env.createSection(this.props.section.id)"
+            />
+
+        </li>
+    </t>
+</templates>

@@ -30,7 +30,7 @@ class ProductCatalogAccountController(ProductCatalogController):
 
     @route('/product/catalog/create_section', auth='user', type='jsonrpc')
     def product_catalog_create_section(
-        self, res_model, order_id, child_field, name, position, **kwargs,
+        self, res_model, order_id, child_field, name, position, parent_id=None, **kwargs,
     ):
         """Create a new section on the given order.
 
@@ -45,12 +45,12 @@ class ProductCatalogAccountController(ProductCatalogController):
         """
         order = request.env[res_model].browse(order_id)
         return order.with_company(order.company_id)._create_section(
-            child_field, name, position, **kwargs,
+            child_field, name, position, parent_id, **kwargs,
         )
 
     @route('/product/catalog/resequence_sections', auth='user', type='jsonrpc')
     def product_catalog_resequence_sections(
-        self, res_model, order_id, sections, child_field, **kwargs,
+        self, res_model, order_id, child_field, id, parent_id, before_id=None, **kwargs,
     ):
         """Reorder the sections of a given order.
 
@@ -63,5 +63,25 @@ class ProductCatalogAccountController(ProductCatalogController):
         """
         order = request.env[res_model].browse(order_id)
         return order.with_company(order.company_id)._resequence_sections(
-            sections, child_field, **kwargs,
+            child_field, id, parent_id, before_id, **kwargs,
         )
+
+    @route('/product/catalog/delete_section', auth='user', type='jsonrpc')
+    def product_catalog_delete_section(self, res_model, order_id, child_field, section_id, **kwargs):
+        """Delete the given section.
+
+        :param int section_id: The section id.
+        """
+        order = request.env[res_model].browse(order_id)
+        return order.with_company(order.company_id)._delete_section(child_field, section_id, **kwargs)
+
+    @route('/product/catalog/duplicate_section', auth='user', type='jsonrpc')
+    def product_catalog_duplicate_section(self, res_model, order_id, child_field, section_id, parent_id=None, **kwargs):
+        """Duplicate the given section.
+
+        :param int section_id: The section id.
+        :return: A dictionary with duplicated section's 'id' and 'sequence'.
+        :rtype: dict
+        """
+        order = request.env[res_model].browse(order_id)
+        return order.with_company(order.company_id)._duplicate_section(child_field, section_id, parent_id, **kwargs)
