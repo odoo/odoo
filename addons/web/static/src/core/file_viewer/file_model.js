@@ -89,13 +89,35 @@ export const FileModelMixin = (T) =>
         }
 
         get isVideo() {
-            const videoMimeTypes = ["audio/mpeg", "video/x-matroska", "video/mp4", "video/webm"];
+            const videoMimeTypes = [
+                "video/mpeg",
+                "video/x-matroska",
+                "video/mp4",
+                "video/webm",
+                "video/ogg",
+            ];
             return videoMimeTypes.includes(this.mimetype);
+        }
+
+        get isAudio() {
+            const audioMimeTypes = [
+                "audio/mpeg",
+                "audio/ogg",
+                "audio/x-wav",
+                "audio/weba",
+                "audio/acc",
+            ];
+            return audioMimeTypes.includes(this.mimetype);
         }
 
         get isViewable() {
             return (
-                (this.isText || this.isImage || this.isVideo || this.isPdf || this.isUrlYoutube) &&
+                (this.isText ||
+                    this.isImage ||
+                    this.isVideo ||
+                    this.isAudio ||
+                    this.isPdf ||
+                    this.isUrlYoutube) &&
                 !this.uploading
             );
         }

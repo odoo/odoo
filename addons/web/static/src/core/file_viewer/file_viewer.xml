@@ -39,6 +39,14 @@
                     <video t-if="this.state.file.isVideo" class="o-FileViewer-view w-75 h-75" t-att-class="{ 'w-100 h-100': this.ui.isSmall }" t-on-click.stop="" controls="controls">
                         <source t-att-data-type="this.state.file.mimetype" t-att-src="this.state.file.defaultSource"/>
                     </video>
+                    <div t-if="this.state.file.isAudio" t-on-click.stop="" class="o-FileViewer-view w-25 h-25 d-flex flex-column bg-white" t-att-class="{ 'w-100 h-100': this.ui.isSmall }">
+                        <div class="d-flex justify-content-center align-items-center flex-grow-1 rounded-3 rounded-bottom-0">
+                            <div class="o_image w-50 h-50" role="menuitem" aria-label="Preview" tabindex="-1" data-mimetype="audio/mpeg"/>
+                        </div>
+                        <audio class="w-100 rounded-0" controls="controls">
+                            <source t-att-data-type="this.state.file.mimetype" t-att-src="this.state.file.defaultSource" />
+                        </audio>
+                    </div>
                 </div>
                 <div t-if="this.state.file.isImage" class="position-absolute bottom-0 d-flex" t-custom-ref="imageToolbar" role="toolbar">
                     <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="this.zoomIn" title="Zoom In (+)" role="button">

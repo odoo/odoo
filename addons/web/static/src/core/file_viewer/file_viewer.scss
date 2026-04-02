@@ -45,4 +45,10 @@
     &.o-isText {
         background: $white;
     }
+
+    // Remove the radius of the chrome audio player since it doesn't look good
+    // inside our squared file viewer
+    audio::-webkit-media-controls-enclosure {
+        border-radius: 0;
+    }
 }
