@@ -134,6 +134,14 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
+        isActive: ["auto"],
+        trigger: `body${accountTourSteps.postedInvoiceSelector} .o-mail-RecipientsInputTagsListPopover input`,
+        content: "Wait for animation frame",
+        async run(helpers) {
+            await helpers.animationFrame();
+        },
+    },
+    {
         // RecipientsInputTagsListPopover will not display if the customer already has an email address
         // unless it's possible to have optional steps, we will only use it for tests at the moment.
         isActive: ["auto"],
