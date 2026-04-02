@@ -134,12 +134,6 @@ export const productCatalog = {
         return [{ content, trigger }];
     },
 
-    /** Remove a product from the PO by clicking the "trash" button */
-    removeProduct(productName) {
-        const trigger = `.o_kanban_record:contains("${productName}") button:has([data-icon="delete"].oi-filled)`;
-        return [{ trigger, run: "click" }];
-    },
-
     waitForQuantity(productName, quantity) {
         const trigger = `.o_kanban_record:contains("${productName}") input[type=number]:value("${quantity}")`;
         return [{ trigger }];

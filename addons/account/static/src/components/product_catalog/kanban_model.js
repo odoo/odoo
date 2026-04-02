@@ -3,14 +3,13 @@ import { patch } from "@web/core/utils/patch";
 
 patch(ProductCatalogKanbanModel.prototype, {
     async _loadData(params) {
-        const selectedSection = this.env.searchModel.selectedSection;
-        if (selectedSection.filtered) {
+        if (this.env.searchModel.filterBySection) {
             params = {
                 ...params,
                 domain: [...(params.domain || []), ['is_in_selected_section_of_order', '=', true]],
                 context: {
                     ...params.context,
-                    section_id: selectedSection.sectionId,
+                    section_id: this.env.searchModel.selectedSectionId,
                 },
             };
         }
@@ -20,7 +19,7 @@ patch(ProductCatalogKanbanModel.prototype, {
     _getOrderLinesInfoParams(params, productIds) {
         return {
             ...super._getOrderLinesInfoParams(params, productIds),
-            section_id: this.env.searchModel.selectedSection.sectionId,
+            section_id: this.env.searchModel.selectedSectionId,
         };
     }
 })

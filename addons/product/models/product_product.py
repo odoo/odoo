@@ -495,9 +495,10 @@ class ProductProduct(models.Model):
         if not (order_id and order_model and line_field):
             return []
 
-        product_ids = self.env[order_model].browse(order_id)[line_field].filtered(
-            lambda line: line.get_parent_section_line().id == ctx.get('section_id'),
-        ).mapped('product_id').ids
+        order_lines = self.env[order_model].browse(order_id)[line_field]
+        product_ids = (
+            order_lines.filtered(lambda line: line._is_in_section()).mapped("product_id").ids
+        )
 
         return [('id', 'in', product_ids)]
 

@@ -34,7 +34,7 @@ export function addSectionFromProductCatalog() {
         },
         {
             content: "Click 'Add Section' button",
-            trigger: '.o_search_panel_sections button:contains("+ Add Section")',
+            trigger: '.o_search_panel_sections button:contains("Add Section")',
             run: 'click',
         },
         {

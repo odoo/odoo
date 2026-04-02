@@ -1987,12 +1987,6 @@ class SaleOrderLine(models.Model):
             ]
         return res
 
-    def get_parent_section_line(self):
-        if not self.display_type and self.parent_id.display_type == "line_subsection":
-            return self.parent_id.parent_id
-
-        return self.parent_id
-
     def _get_section_totals(self, totals_field):
         """Return the total/subtotal amount sale order lines linked to section."""
         self.ensure_one()
@@ -2019,18 +2013,6 @@ class SaleOrderLine(models.Model):
     def _get_section_lines(self):
         self.ensure_one()
         return self.order_id.order_line.filtered(self._is_line_in_section)
-
-    def _is_line_in_section(self, line):
-        """Return whether the line is a direct or indirect child of the section."""
-        self.ensure_one()
-        is_direct_child = line.parent_id == self
-        is_indirect_child = (
-            self.display_type == "line_section"
-            and line.parent_id
-            and line.parent_id.display_type == "line_subsection"
-            and line.parent_id.parent_id == self
-        )
-        return is_direct_child or is_indirect_child
 
     # === CORE METHODS OVERRIDES ===#
 

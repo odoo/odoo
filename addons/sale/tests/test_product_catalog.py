@@ -163,8 +163,8 @@ class TestProductCatalog(HttpCase, SaleCommon):
         sol = order.order_line
         self.assertEqual(sol.product_id, product)
         self.assertEqual(sol.product_uom_qty, 1.0)
-        self.assertEqual(update_data, sol.price_unit)
-        self.assertEqual(update_data, product.lst_price)
+        self.assertEqual(update_data["price"], sol.price_unit)
+        self.assertEqual(update_data["price"], product.lst_price)
 
     def test_update_with_sections(self):
         """Tests that updating a sale order with sections keeps the lines in the correct
@@ -215,11 +215,11 @@ class TestProductCatalog(HttpCase, SaleCommon):
                 }
             ],
         )
-        self.assertEqual(update_data, product.lst_price)
+        self.assertEqual(update_data["price"], product.lst_price)
 
         # Add a second item --> should trigger the pricelist discount
         update_data = self.request_update_order_line_info(product=product, quantity=2.0)
-        self.assertEqual(update_data, product.lst_price / 2)
+        self.assertEqual(update_data["price"], product.lst_price / 2)
         self.assertRecordValues(
             sol,
             [
@@ -239,7 +239,7 @@ class TestProductCatalog(HttpCase, SaleCommon):
             "group_discount_per_so_line": True,
         }).execute()
         update_data = self.request_update_order_line_info(product=product, quantity=3.0)
-        self.assertEqual(update_data, product.lst_price / 2)
+        self.assertEqual(update_data["price"], product.lst_price / 2)
         self.assertRecordValues(
             sol,
             [
@@ -257,4 +257,4 @@ class TestProductCatalog(HttpCase, SaleCommon):
         product = self.service_product
         update_data = self.request_update_order_line_info(product=product, quantity=0.0)
 
-        self.assertEqual(update_data, product.lst_price)
+        self.assertEqual(update_data["price"], product.lst_price)

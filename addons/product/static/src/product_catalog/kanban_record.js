@@ -26,7 +26,6 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             precision: this.props.record.context.precision,
             productId: this.props.record.resId,
             addProduct: this.addProduct.bind(this),
-            removeProduct: this.removeProduct.bind(this),
             increaseQuantity: this.increaseQuantity.bind(this),
             setQuantity: this.setQuantity.bind(this),
             decreaseQuantity: this.decreaseQuantity.bind(this),
@@ -60,8 +59,12 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
     //--------------------------------------------------------------------------
 
     async _onQuantityChange() {
-        const price = await this._updateQuantityAndGetPrice();
-        this.productCatalogData.price = parseFloat(price);
+        const result = await this._updateQuantityAndGetPrice();
+        this._updateProductCatalogData(result);
+    }
+
+    _updateProductCatalogData(result) {
+        this.productCatalogData.price = parseFloat(result.price);
     }
 
     _updateQuantityAndGetPrice() {
@@ -120,13 +123,6 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
      */
     addProduct(qty=1) {
         this.updateQuantity(qty);
-    }
-
-    /**
-     * Remove the product to the order
-     */
-    removeProduct() {
-        this.updateQuantity(0);
     }
 
     /**

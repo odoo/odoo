@@ -835,12 +835,6 @@ class PurchaseOrderLine(models.Model):
             "force_uom": True,
         }
 
-    def get_parent_section_line(self):
-        if not self.display_type and self.parent_id.display_type == 'line_subsection':
-            return self.parent_id.parent_id
-
-        return self.parent_id
-
     def _get_rounding(self):
         self.ensure_one()
         return self.uom_id.rounding
@@ -849,13 +843,6 @@ class PurchaseOrderLine(models.Model):
         section_lines = self.order_id.order_line.filtered(self._is_line_in_section)
         return sum(section_lines.mapped('price_subtotal'))
 
-    def _is_line_in_section(self, line):
-        if line.display_type:
-            return False
-        if line.parent_id == self:
-            return True
-        return (
-            self.display_type == 'line_section'
-            and line.parent_id.display_type == 'line_subsection'
-            and line.parent_id.parent_id == self
-        )
+    def _get_section_lines(self):
+        self.ensure_one()
+        return self.order_id.order_line.filtered(self._is_line_in_section)
