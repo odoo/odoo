@@ -198,8 +198,47 @@ class ProductPricelist(models.Model):
             date = fields.Datetime.now()
 
         # Fetch all rules potentially matching specified products/templates/categories/uom and date
-        rules = self._get_applicable_rules(products, quantity, date, uom=uom, **kwargs)
+        rules = self._get_applicable_rules(products, quantity, date=date, uom=uom, **kwargs)
 
+        return self._resolve_applicable_rule_and_price(
+            rules,
+            products,
+            quantity,
+            date,
+            currency=currency,
+            uom=uom,
+            compute_price=compute_price,
+            **kwargs,
+        )
+
+    def _resolve_applicable_rule_and_price(
+        self,
+        rule_candidates,
+        products,
+        quantity,
+        date,
+        *,
+        currency=None,
+        uom=None,
+        compute_price=True,
+        **kwargs,
+    ):
+        """Pick the first applicable rule per product and optionally compute its price.
+
+        :param product.pricelist.item rule_candidates: Candidate rules, already pre-filtered and
+            ordered by precedence.
+        :param product.product|product.template products: Products/templates to price.
+        :param float quantity: Quantity to evaluate against rule's ``min_quantity`` conditions.
+        :param datetime date: Pricing/conversion reference date.
+        :param res.currency|None currency: Currency used for price computation.
+        :param uom.uom|None uom: UoM used for applicability checks and pricing.
+            Falls back to each product main UoM when not provided.
+        :param bool compute_price: Whether to compute the price, or only resolve the matching rule.
+        :param dict kwargs: Extra arguments forwarded to rule applicability and price computation
+            hooks.
+        :return: Mapping ``product_id -> (price, rule_id)``.
+        :rtype: dict[int, tuple[float, int]]
+        """
         results = {}
         for product in products:
             suitable_rule = self.env['product.pricelist.item']
@@ -207,7 +246,7 @@ class ProductPricelist(models.Model):
             # If no uom is specified, fallback on the product uom
             quantity_uom = uom or product._get_main_uom()
 
-            for rule in rules:
+            for rule in rule_candidates:
                 if rule._is_applicable_for(product, quantity, uom=quantity_uom, **kwargs):
                     suitable_rule = rule
                     break
@@ -232,34 +271,62 @@ class ProductPricelist(models.Model):
 
         return self.env['product.pricelist.item'].search(
             self._get_applicable_rules_domain(
-                products=products, date=date, quantity=quantity, uom=uom, **kwargs
+                products, date=date, quantity=quantity, uom=uom, **kwargs
             )
         )
 
-    def _get_applicable_rules_domain(self, products, date, *, quantity=None, uom=None, **kwargs):
-        self and self.ensure_one()  # self is at most one record
-        if products._name == 'product.template':
-            templates_domain = ('product_tmpl_id', 'in', products.ids)
-            products_domain = ('product_id.product_tmpl_id', 'in', products.ids)
-        else:
-            templates_domain = ('product_tmpl_id', 'in', products.product_tmpl_id.ids)
-            products_domain = ('product_id', 'in', products.ids)
+    def _get_applicable_rules_domain(
+        self, products, *, date=None, quantity=None, uom=None, **_kwargs
+    ):
+        """Build the base domain used to fetch candidate pricelist rules.
 
-        domain = [
-            ('pricelist_id', '=', self.id),
-            '|', ('categ_id', '=', False), ('categ_id', 'parent_of', products.categ_id.ids),
-            '|', ('product_tmpl_id', '=', False), templates_domain,
-            '|', ('product_id', '=', False), products_domain,
-            '|', ('date_start', '=', False), ('date_start', '<=', date),
-            '|', ('date_end', '=', False), ('date_end', '>=', date),
-        ]
+        This method only builds a SQL/search domain. Final applicability checks that require
+        conversions or extra business logic are done later by
+        ``product.pricelist.item._is_applicable_for``.
+
+        Note: ``self and self.ensure_one()`` self is at most one record
+
+        :param product.product|product.template products: Products/templates for which candidate
+            rules are fetched.
+        :param datetime|None date: Optional reference date used to pre-filter rules by their period
+            of validity.
+        :param float|None quantity: Optional quantity used to pre-filter ``min_quantity`` only when
+            ``uom`` is not provided (quantity is then expected in product main UoM).
+        :param uom.uom|None uom: Optional requested UoM. When provided, only rules for that UoM (or
+            no UoM restriction) are kept.
+        :param dict _kwargs: Extra keyword arguments forwarded by callers and optional module
+            overrides.
+        :return: Domain matching rules potentially applicable to the inputs.
+        :rtype: Domain
+        """
+        self and self.ensure_one()  # self is at most one record
+
+        if products._name == "product.template":
+            templates_domain = Domain("product_tmpl_id", "in", products.ids)
+            products_domain = Domain("product_id.product_tmpl_id", "in", products.ids)
+        else:
+            templates_domain = Domain("product_tmpl_id", "in", products.product_tmpl_id.ids)
+            products_domain = Domain("product_id", "in", products.ids)
+
+        domain = Domain.AND([
+            Domain("pricelist_id", "=", self.id),
+            Domain("categ_id", "=", False) | Domain("categ_id", "parent_of", products.categ_id.ids),
+            Domain("product_tmpl_id", "=", False) | templates_domain,
+            Domain("product_id", "=", False) | products_domain,
+        ])
+
+        if date:
+            domain &= Domain.AND([
+                Domain("date_start", "=", False) | Domain("date_start", "<=", date),
+                Domain("date_end", "=", False) | Domain("date_end", ">=", date),
+            ])
 
         if uom:
-            domain.extend(['|', ('uom_id', '=', False), ('uom_id', '=', uom.id)])
+            domain &= Domain("uom_id", "=", False) | Domain("uom_id", "=", uom.id)
         elif quantity:
             # ONLY if no uom is given, pre-handle min_qty check as quantity will be in product uom
             # already.
-            domain.extend(['|', ('min_quantity', '=', 0), ('min_quantity', '<=', quantity)])
+            domain &= Domain("min_quantity", "=", 0) | Domain("min_quantity", "<=", quantity)
 
         return domain
 
@@ -421,7 +488,7 @@ class ProductPricelist(models.Model):
         :return: UoMs defined on matching pricelist items.
         :rtype: uom.uom
         """
-        domain = self._get_applicable_rules_domain(product, fields.Datetime.now())
+        domain = self._get_applicable_rules_domain(product, date=fields.Datetime.now())
         # filter out pricelist items without UoM
         domain += [('uom_id', '!=', False)]
         return self.env['product.pricelist.item'].search_fetch(domain, ['uom_id']).uom_id
