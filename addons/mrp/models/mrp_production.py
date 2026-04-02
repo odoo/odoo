@@ -2258,7 +2258,6 @@ class MrpProduction(models.Model):
         self.workorder_ids._action_confirm()
 
     def button_mark_done(self):
-
         for production in self:
             if production.product_tracking not in ['lot', 'serial'] or production.lot_producing_ids:
                 continue

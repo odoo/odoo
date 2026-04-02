@@ -5422,6 +5422,40 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             self.assertEqual(len(mo_form.workorder_ids), 0)
 
 
+class TestMrpOrderPostInstall(TestMrpCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_mrp_user.group_ids += cls.env.ref('stock.group_production_lot')
+
+    @users('hilda')
+    def test_basic_flow_with_minimal_access_rigths(self):
+        """
+        Test that an mrp user with minimal access rights can process and split an mo
+        """
+        self.bom_3.product_id.tracking = 'serial'
+        mo = self.env['mrp.production'].create({
+            'product_qty': 3.0,
+            'bom_id': self.bom_3.id,
+        })
+        mo.action_confirm()
+        split_wizard = Form.from_action(self.env, mo.action_split())
+        split_wizard.max_batch_size = 20
+        split_wizard.save().action_split()
+        serials_wizard = Form.from_action(self.env, mo.action_generate_serial())
+        serials_wizard.lot_name = 'sn#013'
+        serials_wizard = Form.from_action(self.env, serials_wizard.save().action_generate_serial_numbers())
+        serials_wizard.save().action_apply()
+        self.assertRecordValues(mo.lot_producing_ids.sorted('name'), [
+            {'name': f"sn#0{13 + i}"} for i in range(20)
+        ])
+        Form.from_action(self.env, mo.button_mark_done()).save().action_confirm()
+        self.assertRecordValues(mo.production_group_id.production_ids.sorted('state'), [
+            {'state': 'confirmed', 'product_qty': 16.0, 'qty_produced': 0.0},
+            {'state': 'done', 'product_qty': 20.0, 'qty_produced': 20.0},
+        ])
+
+
 class TestTourMrpOrder(HttpCase):
     def test_mrp_order_product_catalog(self):
         product = self.env['product.product'].create({
