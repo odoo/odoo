@@ -42,6 +42,7 @@ if typing.TYPE_CHECKING:
 _logger = logging.getLogger(__name__)
 
 DB_NAME_RE = re.compile(r'^[a-zA-Z0-9][a-zA-Z0-9_.-]+$')
+RANDOM_SERIAL = any(map(os.getenv, ('ODOO_RUNBOT', 'ODOO_TEST')))
 
 
 def is_initialized(cr: Cursor) -> bool:
@@ -62,14 +63,16 @@ def initialize(cr: Cursor) -> None:
 
     """
     try:
-        f = odoo.tools.misc.file_path('base/data/base_data.sql')
+        with odoo.tools.misc.file_open('base/data/base_data.sql') as base_sql_file:
+            cr.execute(base_sql_file.read())  # pylint: disable=sql-injection
     except FileNotFoundError:
         m = "File not found: 'base.sql' (provided by module 'base')."
         _logger.critical(m)
         raise OSError(m)
-
-    with odoo.tools.misc.file_open(f) as base_sql_file:
-        cr.execute(base_sql_file.read())  # pylint: disable=sql-injection
+    if RANDOM_SERIAL:
+        _logger.info("Initializing tables with random ids")
+        with odoo.tools.misc.file_open('base/data/base_data_test.sql') as base_sql_file:
+            cr.execute(base_sql_file.read())  # pylint: disable=sql-injection
 
     for info in odoo.modules.Manifest.all_addon_manifests():
         module_name = info.name
@@ -109,7 +112,6 @@ def initialize(cr: Cursor) -> None:
                 (module_id, d, d in (info['auto_install'] or ())),
             )
 
-    from odoo.tools import config  # noqa: PLC0415
     if config.get('skip_auto_install'):
         # even if skip_auto_install is enabled we still want to have base
         cr.execute("""UPDATE ir_module_module SET state='to install' WHERE name = 'base'""")
