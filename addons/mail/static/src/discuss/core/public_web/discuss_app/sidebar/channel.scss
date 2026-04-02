@@ -65,3 +65,18 @@
 .o-mail-DiscussSidebarChannel-subChannelList {
     gap: 1px;
 }
+
+// ThreadPreview popover opened from the discuss sidebar (arrow points left)
+.o-mail-DiscussSidebar-item + .popover-arrow {
+    z-index: 1 !important;
+
+    &::before {
+        border-right-color: $o-gray-300 !important;
+        left: 1px !important;
+    }
+
+    &::after {
+        border-right-color: $gray-100 !important;
+        left: 2px !important;
+    }
+}

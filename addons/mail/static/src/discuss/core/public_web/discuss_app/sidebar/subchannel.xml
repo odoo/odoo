@@ -27,7 +27,7 @@
                     <line x1="0" y1="100%" x2="100%" y2="100%" stroke="currentColor" stroke-width="3"/>
                 </svg>
             </t>
-            <button class="o-mail-DiscussSidebarChannel-subChannel o-mail-DiscussSidebar-item btn btn-secondary border-0 bg-inherit d-flex flex-grow-1 smaller rounded-2 text-start text-truncate align-items-center" t-att-title="this.store.discuss.isSidebarCompact ? undefined : this.channel.displayName" t-on-click="(ev) => this.openChannel(ev, this.channel)" t-att-class="{
+            <button class="o-mail-DiscussSidebarChannel-subChannel o-mail-DiscussSidebar-item btn btn-secondary border-0 bg-inherit d-flex flex-grow-1 smaller rounded-2 text-start text-truncate align-items-center" t-on-click="(ev) => this.openChannel(ev, this.channel)" t-att-class="{
                 'o-active': this.channel.discussAppAsThread,
                 'px-1 py-2 mx-1 text-wrap word-break lh-1': this.store.discuss.isSidebarCompact,
                 'o-nonCompact me-1 pe-0 ps-1 o-py-0_5': !this.store.discuss.isSidebarCompact,

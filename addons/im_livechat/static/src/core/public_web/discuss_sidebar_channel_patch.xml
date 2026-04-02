@@ -12,7 +12,7 @@
             </t>
         </xpath>
         <xpath expr="//*[hasclass('o-mail-DiscussSidebarChannel-itemName')]" position="inside">
-            <div t-if="this.channel.livechat_status === 'need_help' and this.channel.description" t-att-title="this.channel.description" class="text-muted text-truncate smaller" t-out="this.channel.description"/>
+            <div t-if="this.channel.livechat_status === 'need_help' and this.channel.description" class="text-muted text-truncate smaller" t-out="this.channel.description"/>
         </xpath>
     </t>
     <t t-inherit="mail.DiscussSidebarChannel" t-inherit-mode="extension">
@@ -22,6 +22,16 @@
                 <CountryFlag t-if="this.channel.showCorrespondentCountry" country="this.channel.correspondentCountry" class="'o-mail-DiscussSidebarChannel-country my-auto'"/>
                 <span t-if="this.channel.livechat_lang_id" t-out="this.channel.livechat_lang_id.name" class="fw-normal small"/>
             </div>
+        </xpath>
+    </t>
+
+    <t t-inherit="mail.ThreadPreview" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o-mail-ThreadPreview')]/div[1]" position="after">
+            <div
+                t-if="this.props.channel.livechat_status === 'need_help' and this.props.channel.description"
+                class="o-mail-ThreadPreview-livechatTopic mx-2 px-1 text-muted fst-italic o-xsmaller"
+                t-out="this.props.channel.description"
+            />
         </xpath>
     </t>
 </templates>

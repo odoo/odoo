@@ -1,16 +1,18 @@
 import { CountryFlag } from "@mail/core/common/country_flag";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
+import { ThreadPreview } from "@mail/core/common/thread_preview";
 import { DiscussSidebarChannelActions } from "@mail/discuss/core/public_web/discuss_app/sidebar/channel_actions";
 import { DiscussSidebarSubchannel } from "@mail/discuss/core/public_web/discuss_app/sidebar/subchannel";
 import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
 
-import { useService } from "@web/core/utils/hooks";
+import { useChildRef, useService } from "@web/core/utils/hooks";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { markEventHandled } from "@web/core/utils/misc";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 
-import { Component } from "@odoo/owl";
+import { Component, useRef } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 
 export const discussSidebarChannelIndicatorsRegistry = registry.category(
@@ -32,18 +34,42 @@ export class DiscussSidebarChannel extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.hover = useHover(["root"], {
+        this.rootRef = useRef("root");
+        const popoverRef = useChildRef();
+        this.popover = usePopover(ThreadPreview, {
+            animation: false,
+            position: "right-middle",
+            popoverClass:
+                "dropdown-menu bg-view border-0 p-0 overflow-visible o-rounded-bubble mx-1",
+            ref: popoverRef,
+        });
+        this.env.bus.addEventListener("DiscussSidebar:preview-will-open", ({ detail }) => {
+            if (detail === this) {
+                return;
+            }
+            this.popover.close();
+        });
+        this.hover = useHover(["root", popoverRef], {
             onHover: () => {
+                if (this.showingActions?.isOpen) {
+                    this.popover.close();
+                    return;
+                }
                 if (this.store.discuss.isSidebarCompact) {
                     this.floating.isOpen = true;
+                    return;
                 }
+                this.env.bus.trigger("DiscussSidebar:preview-will-open", this);
+                this.popover.open(this.rootRef.el, { channel: this.channel });
             },
             onAway: () => {
                 if (this.store.discuss.isSidebarCompact) {
                     this.floating.isOpen = false;
+                    return;
                 }
+                this.popover.close();
             },
-            stateObserver: () => [this.floating?.isOpen],
+            stateObserver: () => [this.floating?.isOpen, this.showingActions?.isOpen],
         });
         this.floating = useDropdownState();
         this.showingActions = useDropdownState();

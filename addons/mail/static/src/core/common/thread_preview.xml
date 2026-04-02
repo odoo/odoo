@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.ThreadPreview">
+        <div t-if="this.props.channel" class="o-mail-ThreadPreview o-mail-ChatBubble-menu px-0 py-1 shadow-sm border border-secondary bg-100 o-rounded-bubble" t-att-class="this.props.className">
+            <div class="text-truncate base-fs o-fw-600 mb-0 mx-2 px-1" t-out="this.props.channel.displayName"/>
+            <div t-if="this.previewText" class="small mx-2 px-1 text-muted d-flex align-items-start gap-1">
+                <div class="o-mail-ThreadPreview-text min-w-0">
+                    <MessageSeenIndicator t-if="this.message.showSeenIndicator(this.props.channel.thread)" message="this.message"/>
+                    <t t-out="this.previewText" />
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
