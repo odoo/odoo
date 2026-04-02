@@ -5891,7 +5891,7 @@
                 },
                 destroy: () => {
                     this.roots.delete(root);
-                    node.destroy();
+                    node?.destroy();
                     this.scheduler.processTasks();
                 },
             };
