@@ -36,6 +36,7 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
             'weight': 0.01,
             'to_weight': True,
             'pos_categ_ids': [(4, self.category.id)],
+            'company_id': self.env.company.id,
         })
 
         self.example_partner = self.env['res.partner'].create({

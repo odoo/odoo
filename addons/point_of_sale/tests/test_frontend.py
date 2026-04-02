@@ -3870,6 +3870,7 @@ class TestTaxCommonPOS(TestPointOfSaleHttpCommon, TestTaxCommon):
             'list_price': base_line['price_unit'],
             'taxes_id': [Command.set(base_line['tax_ids'].ids)],
             'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
+            'company_id': self.env.company.id,
         })
 
     def ensure_products_on_document(self, document, product_prefix):

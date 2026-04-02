@@ -33,7 +33,7 @@ class ProductProduct(models.Model):
         taxes = self.env['account.tax'].search(self.env['account.tax']._check_company_domain(config.company_id.id))
         product_fields = taxes._eval_taxes_computation_prepare_product_fields()
         return list(product_fields.union({
-            'id', 'lst_price', 'display_name', 'product_tmpl_id', 'product_template_variant_value_ids',
+            'id', 'lst_price', 'display_name', 'product_tmpl_id', 'product_template_variant_value_ids', 'currency_id',
             'product_template_attribute_value_ids', 'barcode', 'product_tag_ids', 'default_code', 'standard_price'
         }))
 
@@ -54,13 +54,20 @@ class ProductProduct(models.Model):
     @api.model
     def _load_pos_data_read(self, records, config):
         read_records = super()._load_pos_data_read(records, config)
-        different_currency = config.currency_id != self.env.company.currency_id
-        if different_currency:
-            for product in read_records:
-                product['lst_price'] = self.env.company.currency_id._convert(
+
+        different_currency = {}
+        for product in read_records:
+            currency_id = product['currency_id']
+            if currency_id != config.currency_id.id:
+                different_currency.setdefault(currency_id, []).append(product)
+
+        for currency_id, products in different_currency.items():
+            currency = self.env['res.currency'].browse(currency_id)
+            for product in products:
+                product['lst_price'] = currency._convert(
                     product['lst_price'], config.currency_id, self.env.company, fields.Date.today()
                 )
-                product['standard_price'] = self.env.company.currency_id._convert(
+                product['standard_price'] = currency._convert(
                     product['standard_price'], config.currency_id, self.env.company, fields.Date.today()
                 )
         return read_records
