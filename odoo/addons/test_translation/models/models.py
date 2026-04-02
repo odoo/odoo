@@ -70,12 +70,12 @@ class TestTranslationModel1(models.Model):
         _("PY Export 26 %s", "NO - PY Export 05" + "".join(terms))
         _("PY Export 27 %s", "".join(terms) + "NO - PY Export 06")
 
-        # pylint: disable=E8502
+        # nosem: gettext-variable
         _(f"PY Export 28")  # noqa: F541, INT001
-        # pylint: disable=E8502
+        # nosem: gettext-variable
         _(f"NO - PY Export 07 {term}")  # noqa: INT001
 
-        # pylint: disable=E8502
+        # nosem: gettext-variable
         _(dummy_function("NO - PY Export 08"))
 
 

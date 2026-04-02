@@ -288,7 +288,7 @@ class IrHttp(models.AbstractModel):
                 raise Unauthorized(e, www_authenticate=WWWAuthenticate('bearer'))
             if request.env.uid and request.env.uid != uid:
                 e = "Session user does not match the used apikey."
-                raise AccessDenied(e)
+                raise AccessDenied(e)  # nosem: missing-gettext
             request.update_env(user=uid)
             request.session.can_save = False  # stateless
         elif not request.env.uid:

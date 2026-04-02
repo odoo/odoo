@@ -67,7 +67,7 @@ class PaymentPostProcessing(http.Controller):
             except (psycopg2.OperationalError, psycopg2.IntegrityError):  # Concurrent update error.
                 request.env.cr.rollback()  # Rollback and try later.
                 msg = "retry"
-                raise UserError(msg) from None
+                raise UserError(msg) from None  # nosem: missing-gettext
             except Exception:
                 request.env.cr.rollback()
                 _logger.error(

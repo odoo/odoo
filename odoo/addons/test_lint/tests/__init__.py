@@ -1,6 +1,7 @@
 from . import test_dunderinit
 from . import test_checkers
 from . import test_pylint
+from . import test_semgrep
 from . import test_pofile
 from . import test_docstring
 from . import test_eslint

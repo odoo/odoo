@@ -35,14 +35,16 @@ class ReportAccount_TestReport_Accounttest(models.AbstractModel):
                 cols = list(item)
             return [(col, item.get(col)) for col in cols if col in item]
 
+        # ruff: disable[PLW0108]
         context = {
             'cr': self.env.cr,
             'uid': self.env.uid,
             'reconciled_inv': reconciled_inv,  # specific function used in different tests
             'result': None,  # used to store the result of the test
             'column_order': None,  # used to choose the display order of columns (in case you are returning a list of dict)
-            '_': lambda *a, **kw: self.env._(*a, **kw),  # pylint: disable=E8502,
+            '_': lambda *a, **kw: self.env._(*a, **kw),  # nosem: gettext-variable
         }
+        # ruff: enable[PLW0108]
         safe_eval(code_exec, context, mode="exec")
         result = context['result']
         column_order = context.get('column_order')

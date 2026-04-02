@@ -105,7 +105,7 @@ class NilveraClient:
 
             for error in errors:
                 code = error.get('Code')
-                description = _(NILVERA_ERROR_CODE_MESSAGES.get(code, error.get('Description')))
+                description = _(NILVERA_ERROR_CODE_MESSAGES.get(code, error.get('Description')))  # nosem: gettext-variable
                 msg += "\n%s - %s:\n%s\n" % (code, description, error.get('Detail'))
                 error_codes.append(code)
 

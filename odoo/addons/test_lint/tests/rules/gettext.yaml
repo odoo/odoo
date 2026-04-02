@@ -1,0 +1,122 @@
+rules:
+- id: missing-gettext
+  languages: [python]
+  severity: HIGH
+  message: All static strings passed to certain exceptions must be translatable
+    (wrapped in a gettext call)
+  patterns:
+  - pattern-either:
+    - pattern: odoo.exceptions.UserError('...')
+    - pattern: odoo.exceptions.UserError(f'...')
+    - pattern: odoo.exceptions.ValidationError('...')
+    - pattern: odoo.exceptions.ValidationError(f'...')
+    - pattern: odoo.exceptions.AccessError('...')
+    - pattern: odoo.exceptions.AccessError(f'...')
+    - pattern: odoo.exceptions.AccessDenied(f'...')
+    - pattern: odoo.exceptions.MissingError(f'...')
+  paths:
+    exclude:
+      - 'tests'
+      - 'test_*'
+
+- id: gettext-variable
+  message: >-
+    Bad usage of `_`, `_lt` functions.
+
+    `_` and `_lt` can not be used with a dynamic first parameter, this is
+    either entirely incorrect or the dynamic segments should be introduced via
+    formatting.
+
+    See https://www.odoo.com/documentation/master/developer/howtos/translations.html#variables
+  languages: [python]
+  severity: HIGH
+  options:
+    constant_propagation: false
+  patterns:
+  - pattern-either:
+    - pattern: _($P, ...)
+    - pattern: $_._($P, ...)
+    - pattern: _lt($P, ...)
+  - metavariable-pattern:
+      metavariable: $P
+      patterns:
+      - pattern-not: "'...'"
+      # WARNING: this also allows concatenations of constant values...
+      - pattern-not: "'...' '...'"
+  paths:
+    exclude:
+      - 'tests'
+      - 'test_*'
+
+# semgrep limitation: confuses f-strings and implicit concatenation
+- id: gettext-variablef
+  message: >-
+    Bad usage of `_`, `_lt` functions.
+
+    `_` and `_lt` can not be used with a dynamic first parameter, this is
+    either entirely incorrect or the dynamic segments should be introduced via
+    formatting.
+
+    See https://www.odoo.com/documentation/master/developer/howtos/translations.html#variables
+  languages: [python]
+  severity: HIGH
+  patterns:
+  - pattern-either:
+    - pattern: _(f"...", ...)
+    - pattern: $_._(f"...", ...)
+    - pattern: _lt(f"...", ...)
+  paths:
+    exclude:
+      - 'tests'
+      - 'test_*'
+
+- id: gettext-placeholders
+  message: >-
+    Use named placeholders (e.g. %(name)s) when you have multiple of them.
+    This allows translators to reorder them if needed.
+  languages: [python]
+  severity: HIGH
+  patterns:
+  - pattern-either:
+    - pattern: _("$P", ...)
+    - pattern: $_._("$P", ...)
+    - pattern: _lt("$P", ...)
+  - metavariable-regex:
+      metavariable: $P
+      regex: |
+        (?x)
+        .*
+        (?<!%)            # exclude if escaped
+        %                 # leading %
+        [#0\- +]*         # conversion flag
+        (?:\d+|\*)?       # minimum width
+        (?:\.(?:\d+|\*))? # precision
+        [hlL]?            # length mod
+        [bcdeEfFgGnorsxX] # conversion type
+        .*
+        (?<!%)%[#0\- +]*(?:\d+|\*)?(?:\.(?:\d+|\*))?[hlL]?[bcdeEfFgGnorsxX]  # second occurrence
+  paths:
+    exclude:
+      - 'tests'
+      - 'test_*'
+
+- id: gettext-repr
+  message: >-
+    Don't use %r to automatically insert quotes in translation strings.
+
+    Quotes can be different depending on the language they must be part
+    of the translated string.
+  languages: [python]
+  severity: HIGH
+  patterns:
+  - pattern-either:
+    - pattern: _("$P", ...)
+    - pattern: $_._("$P", ...)
+    - pattern: _lt("$P", ...)
+  - metavariable-regex:
+      metavariable: $P
+      regex: '.*%(?:\(\w+\))?r'
+  paths:
+    exclude:
+      - 'tests'
+      - 'test_*'

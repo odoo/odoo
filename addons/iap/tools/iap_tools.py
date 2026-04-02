@@ -105,7 +105,7 @@ def iap_jsonrpc(url, method='call', params=None, timeout=15):
     returns JSON-RPC errors as exceptions.
     """
     if modules.module.current_test:
-        raise exceptions.AccessError("Unavailable during tests.")  # pylint: disable=missing-gettext
+        raise exceptions.AccessError("Unavailable during tests.")  # nosem: missing-gettext
 
     payload = {
         'jsonrpc': '2.0',

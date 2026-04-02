@@ -222,4 +222,4 @@ class WithNonDemoConstraint(models.Model):
         if self.env.context.get('install_mode'):
             return  # skipped on demo data
         if any(rec.name and rec.name[0].islower() for rec in self):
-            raise ValidationError('Name must start with an uppercase letter')
+            raise ValidationError('Name must start with an uppercase letter')  # nosem: missing-gettext

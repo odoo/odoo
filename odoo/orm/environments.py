@@ -312,7 +312,7 @@ class Environment(Mapping[str, "BaseModel"]):
         lang = self.context.get('lang')
         if lang and lang != 'en_US' and not self['res.lang']._lang_get(lang):
             # cannot translate here because we do not have a valid language
-            raise UserError(f'Invalid language code: {lang}')  # pylint: disable=missing-gettext
+            raise UserError(f'Invalid language code: {lang}')  # nosem: missing-gettext
         return lang or None
 
     @functools.cached_property

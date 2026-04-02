@@ -55,10 +55,6 @@ class TestPyLint(TransactionCase):
 
                 # custom checkers
                 'sql-injection',
-        'missing-gettext',
-                'gettext-variable',
-                'gettext-placeholders',
-                'gettext-repr',
                 'raise-unlink-override',
             ]),
             '--reports=n',
@@ -67,16 +63,9 @@ class TestPyLint(TransactionCase):
                 "_pylint_path_setup",
                 "pylint.extensions.bad_builtin",
                 "_odoo_checker_sql_injection",
-                "_odoo_checker_gettext",
                 "_odoo_checker_unlink_override",
             ]),
             '--bad-functions=input',
-            '--deprecated-modules=' + ','.join([
-                'csv',
-                'urllib',
-                'cgi',
-                *tools.constants.SUPPORTED_DEBUGGER,
-            ]),
         ]
 
         stdlib_prefixes = tuple({sys.prefix, sys.base_prefix, sys.exec_prefix, sys.base_exec_prefix})

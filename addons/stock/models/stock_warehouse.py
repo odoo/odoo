@@ -735,7 +735,7 @@ class StockWarehouse(models.Model):
         return customer_loc, supplier_loc
 
     def _get_route_name(self, route_type):
-        return self.env._(ROUTE_NAMES[route_type])  # pylint: disable=gettext-variable
+        return self.env._(ROUTE_NAMES[route_type])  # nosem: gettext-variable
 
     def get_rules_dict(self):
         """ Define the rules source/destination locations, picking_type and

@@ -245,7 +245,7 @@ class CertificateKey(models.Model):
         if self.public:
             raise UserError(_("A private key is required to decrypt data."))
         if hashing_algorithm not in STR_TO_HASH:
-            raise UserError(f"Unsupported hashing algorithm '{hashing_algorithm}'. Currently supported: sha1 and sha256.")  # pylint: disable=missing-gettext
+            raise UserError(f"Unsupported hashing algorithm '{hashing_algorithm}'. Currently supported: sha1 and sha256.")  # nosem: missing-gettext
 
         private_key = serialization.load_pem_private_key(self.pem_key.content, None)
         if not isinstance(private_key, rsa.RSAPrivateKey):
@@ -284,7 +284,7 @@ class CertificateKey(models.Model):
             pwd = pwd.encode('utf-8')
 
         if hashing_algorithm not in STR_TO_HASH:
-            raise UserError(f"Unsupported hashing algorithm '{hashing_algorithm}'. Currently supported: sha1 and sha256.")  # pylint: disable=missing-gettext
+            raise UserError(f"Unsupported hashing algorithm '{hashing_algorithm}'. Currently supported: sha1 and sha256.")  # nosem: missing-gettext
 
         try:
             private_key = serialization.load_pem_private_key(pem_key, pwd or None)
@@ -318,7 +318,7 @@ class CertificateKey(models.Model):
 
         def check_valid_signature_algorithm():
             if signature_algorithm not in STR_TO_HASH:
-                raise UserError(f"Unsupported signature algorithm '{signature_algorithm}'. Currently supported: sha1 and sha256.")  # pylint: disable=missing-gettext
+                raise UserError(f"Unsupported signature algorithm '{signature_algorithm}'. Currently supported: sha1 and sha256.")  # nosem: missing-gettext
 
         if not isinstance(signed_message, bytes):
             signed_message = signed_message.encode('utf-8')
@@ -414,7 +414,7 @@ class CertificateKey(models.Model):
         :rtype: certificate.key
         '''
         if curve not in STR_TO_CURVE:
-            raise UserError(f"Unsupported curve algorithm '{curve}'. Currently supported: SECP256R1.")  # pylint: disable=missing-gettext
+            raise UserError(f"Unsupported curve algorithm '{curve}'. Currently supported: SECP256R1.")  # nosem: missing-gettext
 
         private_key = ec.generate_private_key(STR_TO_CURVE[curve])
 

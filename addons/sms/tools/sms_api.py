@@ -67,7 +67,7 @@ class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, an
 
     def _contact_iap(self, local_endpoint, params, timeout=15):
         if not self.env.registry.ready:  # Don't reach IAP servers during module installation
-            raise exceptions.AccessError("Unavailable during module installation.")  # pylint: disable=missing-gettext
+            raise exceptions.AccessError("Unavailable during module installation.")  # nosem: missing-gettext
 
         params['account_token'] = self.account.sudo().account_token
         params['dbuuid'] = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
