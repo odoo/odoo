@@ -1810,7 +1810,7 @@ class AccountMove(models.Model):
         if self.invoice_vendor_bill_id:
             # Copy invoice lines.
             for line in self.invoice_vendor_bill_id.invoice_line_ids:
-                copied_vals = line.copy_data()[0]
+                copied_vals = line.with_context(keep_intrastat_transaction_id=True).copy_data()[0]
                 self.invoice_line_ids += self.env['account.move.line'].new(copied_vals)
 
             self.currency_id = self.invoice_vendor_bill_id.currency_id
