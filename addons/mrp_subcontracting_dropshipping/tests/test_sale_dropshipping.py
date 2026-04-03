@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Command
 from odoo.tests import tagged, Form
 
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
@@ -15,58 +16,70 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
         cls.customer = cls.env["res.partner"].create({"name": "Customer"})
         cls.dropship_route = cls.env.ref('stock_dropshipping.route_drop_shipping')
 
-    def test_dropship_with_different_suppliers(self):
+    def test_kit_delivered_quantity_with_mixed_dropshipped_pick_shipped_components(self):
         """
-        Suppose a kit with 3 components supplied by 3 vendors
-        When dropshipping this kit, if 2 components are delivered and if the last
-        picking is cancelled, we should consider the kit as fully delivered.
+        Test the kit delivered quantity in complex setups.
+
+        Consider a kit with 2 components: one dropshipped and another MTO buy
+        delivered in 2-steps, process partial deliveries and returns.
         """
-        partners = self.env['res.partner'].create([{'name': 'Vendor %s' % i} for i in range(4)])
-        compo01, compo02, compo03, kit = self.env['product.product'].create([{
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.delivery_steps = 'pick_ship'
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route.active = True
+        routes = [self.dropship_route.ids, mto_route.ids, []]
+        compo01, compo02, kit = self.env['product.product'].create([{
             'name': name,
             'type': 'consu',
-            'route_ids': [(6, 0, [self.dropship_route.id])],
-            'seller_ids': [(0, 0, {'partner_id': seller.id})],
-        } for name, seller in zip(['Compo01', 'Compo02', 'Compo03', 'Kit'], partners)])
+            'route_ids': [Command.set(route_ids)],
+            'seller_ids': [Command.create({'partner_id': self.supplier.id})],
+        } for name, route_ids in zip(['Compo01', 'Compo02', 'Compo03', 'Kit'], routes)])
 
         self.env['mrp.bom'].create({
             'product_tmpl_id': kit.product_tmpl_id.id,
             'product_qty': 1,
             'type': 'phantom',
             'bom_line_ids': [
-                (0, 0, {'product_id': compo01.id, 'product_qty': 1}),
-                (0, 0, {'product_id': compo02.id, 'product_qty': 1}),
-                (0, 0, {'product_id': compo03.id, 'product_qty': 1}),
+                Command.create({'product_id': compo01.id, 'product_qty': 1}),
+                Command.create({'product_id': compo02.id, 'product_qty': 1}),
             ],
         })
-
         sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.customer.id,
             'picking_policy': 'direct',
             'order_line': [
-                (0, 0, {'name': kit.name, 'product_id': kit.id, 'product_uom_qty': 1}),
+                Command.create({'name': kit.name, 'product_id': kit.id, 'product_uom_qty': 5}),
             ],
         })
         sale_order.action_confirm()
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
 
-        purchase_orders = self.env['purchase.order'].search([('partner_id', 'in', partners.ids)])
+        purchase_orders = sale_order.stock_reference_ids.purchase_ids
         purchase_orders.button_confirm()
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
 
-        # Deliver the first one
-        picking = sale_order.picking_ids.filtered(lambda p: p.partner_id == partners[0])
-        picking.button_validate()
+        # Deliver 5 units of the dropshipped Compo01
+        dropship = sale_order.picking_ids.filtered(lambda p: p.partner_id == self.supplier)
+        pick = sale_order.picking_ids - dropship
+        dropship.move_ids.quantity = 5.0
+        dropship.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
 
-        # Deliver the third one
-        picking = sale_order.picking_ids.filtered(lambda p: p.partner_id == partners[2])
-        picking.button_validate()
+        # Deliver 3 units of Compo02 in two steps
+        pick.move_ids.quantity = 4.0
+        Form.from_action(self.env, pick.button_validate()).save().process()
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
+        ship = pick.move_ids.move_dest_ids.picking_id
+        ship.move_ids.quantity = 3.0
+        Form.from_action(self.env, ship.button_validate()).save().process()
+        self.assertEqual(sale_order.order_line.qty_delivered, 3.0)
 
-        # Cancel the second one
-        sale_order.picking_ids[1].action_cancel()
-        self.assertEqual(sale_order.order_line.qty_delivered, 1)
+        # Return 3 units of the dropshipped Compo01
+        dropship_return = dropship._create_return()
+        dropship_return.move_ids.product_uom_qty = 3.0
+        dropship_return.action_confirm()
+        dropship_return.button_validate()
+        self.assertEqual(sale_order.order_line.qty_delivered, 2.0)
 
     def test_return_kit_and_delivered_qty(self):
         """
@@ -181,17 +194,15 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(sale_order.order_line.qty_delivered, 0.0, "Delivered components: 2/4")
 
         # Create a return of return01 (with 1 component)
-        picking04 = return01._create_return()
-        picking04.move_ids.product_uom_qty = 1.0
-        picking04.action_assign()
-        picking04.button_validate()
+        picking04 = Form.from_action(self.env, return01.action_exchange()).save()
+        picking04.move_ids.quantity = 1.0
+        Form.from_action(self.env, picking04.button_validate()).save().process_cancel_backorder()
         self.assertEqual(sale_order.order_line.qty_delivered, 0.0, "Delivered components: 3/4")
 
         # Create a second return of return01 (with 1 component, the last one)
-        picking04 = return01._create_return()
-        picking04.move_ids.product_uom_qty = 1.0
-        picking04.action_assign()
-        picking04.button_validate()
+        picking05 = Form.from_action(self.env, return01.action_exchange()).save()
+        picking05.move_ids.quantity = 1.0
+        Form.from_action(self.env, picking05.button_validate()).save().process_cancel_backorder()
         self.assertEqual(sale_order.order_line.qty_delivered, 1, "Delivered components: 4/4")
 
     def test_cancelled_picking_and_delivered_qty(self):

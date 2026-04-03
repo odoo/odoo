@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
-from odoo.tools import float_compare
 
 
 class SaleOrderLine(models.Model):
@@ -35,7 +34,6 @@ class SaleOrderLine(models.Model):
         for order_line in self:
             if order_line.qty_delivered_method == 'stock_move':
                 boms = order_line.move_ids.filtered(lambda m: m.state != 'cancel').bom_line_id.bom_id
-                dropship = any(m._is_dropshipped() for m in order_line.move_ids)
                 # We fetch the BoMs of type kits linked to the order_line,
                 # the we keep only the one related to the finished produst.
                 # This bom should be the only one since bom_line_id was written on the moves
@@ -45,24 +43,6 @@ class SaleOrderLine(models.Model):
                 if not relevant_bom:
                     relevant_bom = boms._bom_find(order_line.product_id, company_id=order_line.company_id.id, bom_type='phantom')[order_line.product_id]
                 if relevant_bom:
-                    # not written on a move coming from a PO: all moves (to customer) must be done
-                    # and the returns must be delivered back to the customer
-                    # FIXME: if the components of a kit have different suppliers, multiple PO
-                    # are generated. If one PO is confirmed and all the others are in draft, receiving
-                    # the products for this PO will set the qty_delivered. We might need to check the
-                    # state of all PO as well... but sale_mrp doesn't depend on purchase.
-                    if dropship:
-                        moves = order_line.move_ids.filtered(lambda m: m.state != 'cancel')
-                        if any((m.location_dest_id.usage == 'customer' and m.state != 'done')
-                               or (m.location_dest_id.usage != 'customer'
-                               and m.state == 'done'
-                               and m.uom_id.compare(m.quantity,
-                                                 sum(sub_m.uom_id._compute_quantity(sub_m.quantity, m.uom_id) for sub_m in m.returned_move_ids if sub_m.state == 'done')) > 0)
-                               for m in moves) or not moves:
-                            delivered_qties[order_line] = 0
-                        else:
-                            delivered_qties[order_line] = order_line.product_uom_qty
-                        continue
                     moves = order_line.move_ids.filtered(lambda m: m.state == 'done' and m.location_dest_usage != 'inventory')
                     filters = {
                         # in/out perspective w/ respect to moves is flipped for sale order document

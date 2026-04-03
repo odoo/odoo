@@ -573,6 +573,12 @@ class StockMove(models.Model):
         return (self.location_id.usage == 'customer' or (self.location_id.usage == 'transit' and not self.location_id.company_id)) \
            and (self.location_dest_id.usage == 'supplier' or (self.location_dest_id.usage == 'transit' and not self.location_dest_id.company_id))
 
+    def _is_incoming(self):
+        return super()._is_incoming() and not self._is_dropshipped()
+
+    def _is_outgoing(self):
+        return super()._is_outgoing() and not self._is_dropshipped_returned()
+
     def _prepare_analytic_lines(self):
         self.ensure_one()
         if not self._get_analytic_distribution() and not self.analytic_account_line_ids:
