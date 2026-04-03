@@ -1,3 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="action_gov_document_block_catalog" model="ir.actions.act_window">
+        <field name="name">Catálogo de Blocos</field>
+        <field name="res_model">gov.document.block.catalog</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="menu_gov_document_root"
+        name="Documentos"
+        sequence="25"
+        groups="gov_document_builder.group_document_elaborador,gov_document_builder.group_document_revisor,gov_document_builder.group_document_aprovador,gov_document_builder.group_document_admin"
+    />
+
+    <menuitem
+        id="menu_gov_document_my"
+        name="Meus Documentos"
+        parent="gov_document_builder.menu_gov_document_root"
+        action="gov_document_builder.action_gov_document_instance_my"
+        sequence="10"
+        groups="gov_document_builder.group_document_elaborador,gov_document_builder.group_document_revisor,gov_document_builder.group_document_aprovador,gov_document_builder.group_document_admin"
+    />
+
+    <menuitem
+        id="menu_gov_document_all"
+        name="Todos os Documentos"
+        parent="gov_document_builder.menu_gov_document_root"
+        action="gov_document_builder.action_gov_document_instance"
+        sequence="20"
+        groups="gov_document_builder.group_document_elaborador,gov_document_builder.group_document_revisor,gov_document_builder.group_document_aprovador,gov_document_builder.group_document_admin"
+    />
+
+    <menuitem
+        id="menu_gov_document_separator"
+        name="────────"
+        parent="gov_document_builder.menu_gov_document_root"
+        sequence="30"
+        groups="gov_document_builder.group_document_elaborador,gov_document_builder.group_document_revisor,gov_document_builder.group_document_aprovador,gov_document_builder.group_document_admin"
+    />
+
+    <menuitem
+        id="menu_gov_document_config"
+        name="Configuração"
+        parent="gov_document_builder.menu_gov_document_root"
+        sequence="40"
+        groups="gov_document_builder.group_document_admin"
+    />
+
+    <menuitem
+        id="menu_gov_document_type"
+        name="Tipos Documentais"
+        parent="gov_document_builder.menu_gov_document_config"
+        action="gov_document_builder.action_gov_document_type"
+        sequence="10"
+        groups="gov_document_builder.group_document_admin"
+    />
+
+    <menuitem
+        id="menu_gov_document_template"
+        name="Templates"
+        parent="gov_document_builder.menu_gov_document_config"
+        action="gov_document_builder.action_gov_document_template"
+        sequence="20"
+        groups="gov_document_builder.group_document_admin"
+    />
+
+    <menuitem
+        id="menu_gov_document_block_catalog"
+        name="Catálogo de Blocos"
+        parent="gov_document_builder.menu_gov_document_config"
+        action="gov_document_builder.action_gov_document_block_catalog"
+        sequence="30"
+        groups="gov_document_builder.group_document_admin"
+    />
 </odoo>

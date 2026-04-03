@@ -1,3 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="view_gov_document_template_list" model="ir.ui.view">
+        <field name="name">gov.document.template.list</field>
+        <field name="model">gov.document.template</field>
+        <field name="arch" type="xml">
+            <list string="Templates de Documento">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="document_type_id"/>
+                <field name="version"/>
+                <field name="instance_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_gov_document_template_duplicate" model="ir.actions.server">
+        <field name="name">Duplicar Template</field>
+        <field name="model_id" ref="model_gov_document_template"/>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    new_template = records.copy()
+    form_view = env.ref('gov_document_builder.view_gov_document_template_form')
+    action = {
+        'type': 'ir.actions.act_window',
+        'res_model': 'gov.document.template',
+        'res_id': new_template.id,
+        'view_mode': 'form',
+        'view_id': form_view.id,
+        'target': 'current',
+    }
+        </field>
+    </record>
+
+    <record id="view_gov_document_template_form" model="ir.ui.view">
+        <field name="name">gov.document.template.form</field>
+        <field name="model">gov.document.template</field>
+        <field name="arch" type="xml">
+            <form string="Template de Documento">
+                <header>
+                    <button
+                        name="%(gov_document_builder.action_gov_document_template_duplicate)d"
+                        string="Duplicar Template"
+                        type="action"
+                        class="btn-secondary"
+                    />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="document_type_id"/>
+                        </group>
+                        <group>
+                            <field name="version"/>
+                            <field name="company_id"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Estrutura">
+                            <field name="block_template_ids" context="{'default_template_id': id}">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="catalog_block_id"/>
+                                    <field name="locked"/>
+                                    <field name="required"/>
+                                    <field name="allow_delete"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Typst">
+                            <group>
+                                <field name="typst_preamble" widget="code"/>
+                                <field name="typst_style_profile"/>
+                            </group>
+                        </page>
+                        <page string="Contexto Padrão">
+                            <field
+                                name="default_context_json"
+                                widget="code"
+                                options="{'mode': 'json'}"
+                            />
+                        </page>
+                        <page string="Notas">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_document_template" model="ir.actions.act_window">
+        <field name="name">Templates</field>
+        <field name="res_model">gov.document.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
 </odoo>

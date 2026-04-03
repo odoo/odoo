@@ -1,3 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="view_gov_document_instance_list" model="ir.ui.view">
+        <field name="name">gov.document.instance.list</field>
+        <field name="model">gov.document.instance</field>
+        <field name="arch" type="xml">
+            <list string="Documentos">
+                <field name="name"/>
+                <field name="document_type_id"/>
+                <field name="process_id"/>
+                <field name="state" widget="badge"/>
+                <field name="owner_id"/>
+                <field name="current_version_no"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_document_instance_form" model="ir.ui.view">
+        <field name="name">gov.document.instance.form</field>
+        <field name="model">gov.document.instance</field>
+        <field name="arch" type="xml">
+            <form string="Documento Administrativo">
+                <header>
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,in_review,approved,archived"
+                    />
+                    <button
+                        name="action_open_builder"
+                        string="Abrir Builder"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button
+                        name="action_approve"
+                        string="Aprovar"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state in ('approved', 'archived')"
+                        groups="gov_document_builder.group_document_aprovador,gov_document_builder.group_document_admin"
+                    />
+                    <button
+                        name="action_archive"
+                        string="Arquivar"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state == 'archived'"
+                    />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="document_type_id"/>
+                            <field name="template_id"/>
+                        </group>
+                        <group>
+                            <field name="process_id"/>
+                            <field name="owner_id"/>
+                            <field name="department_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Versões">
+                            <field name="version_ids" readonly="1">
+                                <list>
+                                    <field name="version_no"/>
+                                    <field name="change_summary"/>
+                                    <field name="edited_by"/>
+                                    <field name="created_at"/>
+                                    <field name="is_major"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Typst">
+                            <group>
+                                <field name="typst_source" widget="code" readonly="1"/>
+                                <field name="compiled_at" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_document_instance" model="ir.actions.act_window">
+        <field name="name">Todos os Documentos</field>
+        <field name="res_model">gov.document.instance</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_gov_document_instance_my" model="ir.actions.act_window">
+        <field name="name">Meus Documentos</field>
+        <field name="res_model">gov.document.instance</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('owner_id', '=', uid)]</field>
+    </record>
 </odoo>
