@@ -390,9 +390,9 @@ export class FormController extends Component {
         this.duplicateId = undefined;
     }
 
-    onRootLoaded() {
+    async onRootLoaded() {
+        await this.model.root.setOfflineChanges(this.props.offlineId);
         this.env.config.setDisplayName(this.displayName());
-        return this.model.root.setOfflineChanges(this.props.offlineId);
     }
 
     onRecordChanged() {
@@ -495,6 +495,7 @@ export class FormController extends Component {
             } else {
                 await this.model.load({ resId: resIds[offset] });
             }
+            this.env.config.setDisplayName(this.displayName());
         } catch (e) {
             if (e instanceof FetchRecordError) {
                 this.model.load({
