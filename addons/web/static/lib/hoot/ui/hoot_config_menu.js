@@ -47,7 +47,7 @@ export class HootConfigMenu extends Component {
                             t-att-title="presetKey ? preset.label : 'No preset'"
                             t-on-click.stop="() => this.onPresetChange(presetKey)"
                         >
-                            <i t-attf-class="fa w-5 h-5 {{ preset.icon or 'fa-ban' }}" />
+                            <i class="oi w-5 h-5" t-attf-data-icon="{{ preset.icon or 'block' }}" />
                         </button>
                     </t>
                 </div>
@@ -65,7 +65,7 @@ export class HootConfigMenu extends Component {
                         t-att-title="order.title"
                         t-on-click.stop="() => this.setExecutionOrder(order.value)"
                     >
-                        <i class="fa w-5 h-5" t-att-class="{ [order.icon]: true }"/>
+                        <i t-attf-class="oi w-5 h-5 #{[order.icon_class]}" t-att-data-icon="[order.icon]"/>
                     </button>
                 </t>
             </div>
@@ -83,7 +83,7 @@ export class HootConfigMenu extends Component {
                         title="Generate new random seed"
                         t-on-click.stop="this.resetSeed"
                     >
-                        <i class="fa fa-repeat" />
+                        <i class="oi" data-icon="redo" />
                     </button>
                     <HootCopyButton text="this.config.random().toString()" />
                 </small>
@@ -198,7 +198,7 @@ export class HootConfigMenu extends Component {
                         t-attf-title="{{ isDisplayed ? 'Hide' : 'Show' }} {{ sType }} events"
                         t-on-click.stop="(ev) => this.toggleEventType(ev, sType)"
                     >
-                        <i class="fa" t-att-class="this.CASE_EVENT_TYPES[sType].icon" />
+                        <i class="oi" t-att-class="this.CASE_EVENT_TYPES[sType].icon_class" t-att-data-icon="this.CASE_EVENT_TYPES[sType].icon"/>
                     </button>
                 </t>
             </div>
@@ -221,7 +221,7 @@ export class HootConfigMenu extends Component {
                     <t t-else="">
                         none
                     </t>
-                    <i t-attf-class="fa fa-sort-numeric-{{ this.ui.sortResults() or 'desc' }}" />
+                    <i class="oi" data-icon="sort" t-att-class="{ 'oi-flip-vertical': this.ui.sortResults() === 'desc' }" />
                 </span>
             </button>
             <label
@@ -252,7 +252,7 @@ export class HootConfigMenu extends Component {
                 title="Toggle the color scheme of the UI"
                 t-on-click.stop="this.toggleColorScheme"
             >
-                <i t-attf-class="fa fa-{{ this.colorScheme() === 'light' ? 'moon' : 'sun' }}-o w-4 h-4" />
+                <i class="oi w-4 h-4" t-att-data-icon="this.colorScheme() === 'light' ? 'dark_mode' : 'light_mode'" />
                 Color scheme
             </button>
 
@@ -280,9 +280,14 @@ export class HootConfigMenu extends Component {
         .filter(([, value]) => value)
         .map(([label, value]) => ({ label, value }));
     executionOrders = [
-        { value: "fifo", title: "First in, first out", icon: "fa-sort-numeric-asc" },
-        { value: "lifo", title: "Last in, first out", icon: "fa-sort-numeric-desc" },
-        { value: "random", title: "Random", icon: "fa-random" },
+        {
+            value: "fifo",
+            title: "First in, first out",
+            icon: "sort",
+            icon_class: "oi-flip-vertical",
+        },
+        { value: "lifo", title: "Last in, first out", icon: "sort" },
+        { value: "random", title: "Random", icon: "shuffle" },
     ];
     refresh = refresh;
     toggleColorScheme = toggleColorScheme;

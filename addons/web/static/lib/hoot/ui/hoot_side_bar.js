@@ -28,11 +28,12 @@ export class HootSideBarSuite extends Component {
     static template = xml`
         <t t-if="this.props.hasSuites">
             <i
-                class="fa fa-chevron-right text-xs transition"
+                class="oi text-xs transition"
                 t-att-class="{
                     'rotate-90': this.props.unfolded,
                     'opacity-25': !this.props.reporting.failed and !this.props.reporting.tests
                 }"
+                data-icon="chevron_right"
             />
         </t>
         <span t-ref="this.rootRef" t-att-class="this.getClassName()" t-out="this.props.name" />
@@ -144,7 +145,7 @@ export class HootSideBar extends Component {
                         t-att-title="this.hideEmpty() ? 'Show all suites' : 'Hide other suites'"
                         t-on-click.stop="this.toggleHideEmpty"
                     >
-                        <i t-attf-class="fa fa-{{ this.hideEmpty() ? 'eye' : 'eye-slash' }}" />
+                        <i class="oi" t-att-data-icon="this.hideEmpty() ? 'visibility' : 'visibility_off'" />
                     </button>
                 </t>
                 <t t-set="expanded" t-value="this.unfoldedSuites().length === this.runner.suites.size" />
@@ -154,7 +155,7 @@ export class HootSideBar extends Component {
                     t-attf-title="{{ expanded ? 'Collapse' : 'Expand' }} all"
                     t-on-click.stop="() => this.toggleExpand(expanded)"
                 >
-                    <i t-attf-class="fa fa-{{ expanded ? 'compress' : 'expand' }}" />
+                    <i class="oi" t-att-data-icon="expanded ? 'close_fullscreen' : 'expand_content'" />
                 </button>
             </form>
             <ul class="overflow-x-hidden overflow-y-auto" t-ref="this.suitesListRef">
