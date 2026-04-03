@@ -15,13 +15,13 @@ from odoo.fields import Command, Domain
 from odoo.http import request, route
 from odoo.http.stream import content_disposition
 from odoo.tools import SQL, BinaryBytes, clean_context, float_round, lazy, str2bool
-from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import LazyTranslate, _
 
 from odoo.addons.html_editor.tools import get_video_thumbnail
 from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website.tools.jsonld_builder import create_breadcrumbs, JsonLd
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_sale.const import SHOP_PATH
 from odoo.addons.website_sale.models.website import (
@@ -567,13 +567,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
             values.update({"all_tags": all_tags, "tags": tags})
         if category:
             values["main_object"] = category
-            values["markup_data_json"] = json_scriptsafe.dumps(
-                [
-                    website._prepare_ecommerce_store_markup_data(),
-                    self._prepare_breadcrumb_markup_data(website.get_base_url(), category),
-                ],
-                indent=2,
+
+        values["ecommerce_json_ld"] = JsonLd.render_structured_data_list(
+            self._prepare_shop_listing_structured_data(
+                website, products, products_prices, category,
             )
+        )
         values.update(self._get_additional_shop_values(values, **post))
         return request.render("website_sale.products", values)
 
@@ -879,13 +878,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
             category and ProductCategory.browse(int(category)).exists()
         ) or product.public_categ_ids[:1]
         markup_data = [
-            website._prepare_ecommerce_store_markup_data(),
-            product._to_markup_data(website),
+            website.organization_structured_data(with_id=True),
+            product._to_structured_data(website),
         ]
         if category:
-            # Add breadcrumb's SEO data.
             markup_data.append(
-                self._prepare_breadcrumb_markup_data(website.get_base_url(), category)
+                self._prepare_shop_breadcrumb_structured_data(website, category=category, product=product)
             )
 
         if last_attributes_search := request.session.get("attribute_values", []):
@@ -933,33 +931,84 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 combination_info["product_id"]
             ),
             "view_track": view_track,
-            "markup_data_json": json_scriptsafe.dumps(markup_data, indent=2),
+            "ecommerce_json_ld": JsonLd.render_structured_data_list(markup_data),
             "shop_path": SHOP_PATH,
         }
 
-    def _prepare_breadcrumb_markup_data(self, base_url, category):
-        """Generate JSON-LD breadcrumb markup data for the given category.
+    # ------------------------------------------------------------------
+    # Structured Data helpers
+    # ------------------------------------------------------------------
 
-        See https://schema.org/BreadcrumbList.
+    def _prepare_shop_listing_structured_data(
+        self, website, products, products_prices, category=None,
+    ):
+        """Build the full JSON-LD graph for the shop / category listing page.
 
-        :param str base_url: The base URL of the current website.
-        :param product.public.category category: The current product category.
-        :return: The JSON-LD markup data.
-        :rtype: dict
+        Returns a list of JsonLd builders:
+          * Organization (with @id)
+          * CollectionPage  ->  ItemList  ->  ListItem(Product …)
+          * BreadcrumbList
         """
-        return {
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-                {
-                    "@type": "ListItem",
-                    "position": i,
-                    "name": cat.name,
-                    "item": f"{base_url}{self._get_shop_path(cat)}",
-                }
-                for i, cat in enumerate(category.parents_and_self, start=1)
-            ],
-        }
+        base_url = website.get_base_url()
+
+        # --- product list items ---
+        list_items = []
+        for position, product in enumerate(products, start=1):
+            price_info = products_prices.get(product.id)
+            product_sd = product._to_structured_data_summary(
+                website, price_info=price_info,
+            )
+            list_item = JsonLd(
+                "ListItem", position=position,
+            ).add_nested(item=product_sd)
+            list_items.append(list_item)
+
+        item_list = (
+            JsonLd("ItemList").add_nested(item_list_element=list_items)
+            if list_items else None
+        )
+
+        # --- collection page ---
+        page_name = category.name if category else _("Shop")
+        page_url = f"{base_url}{self._get_shop_path(category)}"
+        collection = JsonLd(
+            "CollectionPage",
+            name=page_name,
+            url=page_url,
+        )
+        if item_list:
+            collection.add_nested(main_entity=item_list)
+
+        return [
+            website.organization_structured_data(with_id=True),
+            collection,
+            self._prepare_shop_breadcrumb_structured_data(
+                website, category=category,
+            ),
+        ]
+
+    def _prepare_shop_breadcrumb_structured_data(self, website, category=None, product=None):
+        """Build BreadcrumbList for shop pages.
+
+        Always starts with *Shop*; category ancestors are appended when a
+        category page is being viewed.
+
+        :param website: current website record
+        :param category: optional product.public.category
+        :param product: optional product.template
+        :rtype: JsonLd (BreadcrumbList)
+        """
+        base_url = website.get_base_url()
+        items = [
+            (website.name, base_url),
+            (_("Shop"), f"{base_url}{SHOP_PATH}"),
+        ]
+        if category:
+            for cat in category.parents_and_self:
+                items.append((cat.name, f"{base_url}{self._get_shop_path(cat)}"))
+        if product:
+            items.append((product.name, f"{base_url}{product.website_url}"))
+        return create_breadcrumbs(items)
 
     @route(
         '/shop/change_pricelist/<model("product.pricelist"):pricelist>',

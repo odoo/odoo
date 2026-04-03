@@ -154,7 +154,8 @@
         <t t-set="website_sale_sortable" t-value="website._get_product_sort_mapping()"/>
         <t t-call="website.layout"
             additional_title="category.name"
-            website_sale_sortable="website_sale_sortable">
+            website_sale_sortable="website_sale_sortable"
+            structured_data="ecommerce_json_ld">
             <t t-set="grid_block_name">Grid</t>
             <t t-set="product_block_name">Product</t>
 

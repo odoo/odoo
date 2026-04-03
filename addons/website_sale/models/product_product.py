@@ -5,6 +5,8 @@ from collections import OrderedDict
 from odoo import api, fields, models
 from odoo.http import request
 
+from odoo.addons.website.tools.jsonld_builder import JsonLd
+
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
@@ -109,14 +111,50 @@ class ProductProduct(models.Model):
         else:
             self.website_published = False
 
-    def _to_markup_data(self, website):
-        """Generate JSON-LD markup data for the current product.
+    def _to_structured_data_summary(self, website, price_info=None):
+        """Lightweight Product structured data for listing / category pages.
 
-        :param website website: The current website.
-        :return: The JSON-LD markup data.
-        :rtype: dict
+        Delegates to the template implementation so both single-variant and
+        multi-variant products are handled consistently on listing pages.
+
+        :param website: The current website.
+        :param dict price_info: Optional pre-computed pricing values.
+        :return: Product schema for the current variant context.
+        :rtype: JsonLd
         """
         self.ensure_one()
+        return self.product_tmpl_id._to_structured_data_summary(
+            website, price_info=price_info,
+        )
+
+    def _to_structured_data(self, website):
+        """Full structured data for individual product pages.
+
+        Extends the summary with detail-page fields: tax-computed price,
+        seller reference on the offer, richer description, and variant images.
+
+        :param website: The current website.
+        :return: The JSON-LD markup data.
+        :rtype: JsonLd
+        """
+        self.ensure_one()
+
+        product = self._to_structured_data_summary(website)
+        base_url = website.get_base_url()
+
+        # Upgrade the main image in details page to the 1920 version
+        if main_image := product.get("image"):
+            main_image.set(url=f"{base_url}{website.image_url(self, "image_1920")}")
+
+        product.set(
+            name=self.with_context(display_default_code=False).display_name,
+            url=f"{base_url}{self.website_url}",
+        )
+
+        if self.website_meta_description:
+            product.set(description=self.website_meta_description)
+        if self.barcode:
+            product.set(gtin=self.barcode)
 
         product_price = request.pricelist._get_product_price(
             self, quantity=1, currency=website.currency_id
@@ -128,20 +166,21 @@ class ProductProduct(models.Model):
             product_price, website.currency_id, product_taxes_sudo, taxes, self, website=website
         )
 
-        base_url = website.get_base_url()
-        markup_data = {
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "name": self.with_context(display_default_code=False).display_name,
-            "url": f"{base_url}{self.website_url}",
-            "image": f"{base_url}{website.image_url(self, 'image_1920')}",
-            "offers": {"@type": "Offer", "price": price, "priceCurrency": website.currency_id.name},
-        }
-        if self.website_meta_description or self.description_sale:
-            markup_data["description"] = self.website_meta_description or self.description_sale
-        if self.barcode:
-            markup_data["gtin"] = self.barcode
-        return markup_data
+        if offer := product.get("offers"):
+            seller = JsonLd.create_id_reference("Organization", f"{base_url}/#organization")
+            offer.set(price=price)
+            offer.add_nested(seller=seller)
+
+        # Additional variant images.
+        if self.product_variant_image_ids:
+            product.add_nested(
+                image=[
+                    JsonLd("ImageObject", url=f"{base_url}{website.image_url(image, "image_1920")}")
+                    for image in self.product_variant_image_ids
+                ],
+            )
+
+        return product
 
     def _get_image_1920_url(self):
         """Return the local url of the product main image.

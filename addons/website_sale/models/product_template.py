@@ -13,7 +13,8 @@ from odoo.tools.sql import SQL, column_exists, create_column
 from odoo.tools.translate import adapt_translated_field_value, html_translate
 
 from odoo.addons.website.models import ir_http
-from odoo.addons.website.tools import text_from_html
+from odoo.addons.website.tools.jsonld_builder import JsonLd
+from odoo.addons.website.tools.helpers import text_from_html
 
 # A delimiter that users aren't likely to search for in product codes.
 RARE_DELIMITER = "\u241e"
@@ -1006,21 +1007,62 @@ class ProductTemplate(models.Model):
                 ), pricelist_rule_id
         return price, pricelist_rule_id
 
-    def _to_markup_data(self, website):
+    def _to_structured_data_summary(self, website, price_info=None):
+        """Lightweight Product structured data for listing / category pages.
+
+        Only includes fields visible on the product card: name, image, short
+        description and the current selling price.  No variants, no ratings.
+
+        :param website: The current website record.
+        :param dict price_info: Pre-computed price dict from
+            ``_get_sales_prices`` (keys ``price_reduce``, optional
+            ``base_price``).  When *None* the price is computed on the fly.
+        :return: Product summary schema.
+        :rtype: JsonLd
+        """
+        self.ensure_one()
+        base_url = website.get_base_url()
+
+        # Price — prefer the already-computed listing price when available.
+        if price_info:
+            price = price_info['price_reduce']
+        else:
+            price = self._get_contextual_price()
+
+        offer = JsonLd(
+            "Offer",
+            price=price,
+            price_currency=website.currency_id.name,
+        )
+
+        product = JsonLd(
+            "Product",
+            name=self.name,
+            url=f"{base_url}{self.website_url}",
+        ).add_nested(
+            image=JsonLd("ImageObject", url=f"{base_url}{website.image_url(self, 'image_1024')}"),
+            offers=offer,
+        )
+        if self.description_sale:
+            product.set(description=self.description_sale)
+
+        return product
+
+    def _to_structured_data(self, website):
         """Generate JSON-LD markup data for the current product template.
 
         If the template has multiple variants, the https://schema.org/ProductGroup schema is used.
         Otherwise, the markup data generation is delegated to the variant to use the
         https://schema.org/Product schema.
 
-        :param website website: The current website.
+        :param website: The current website.
         :return: The JSON-LD markup data.
-        :rtype: dict
+        :rtype: JsonLd
         """
         self.ensure_one()
 
         if self.product_variant_count == 1:
-            markup_data = self.product_variant_id._to_markup_data(website)
+            structured_data = self.product_variant_id._to_structured_data(website)
         else:
             # perf: temporal solution to avoid slowness when product have many variants and
             # pricelist rules
@@ -1037,25 +1079,44 @@ class ProductTemplate(models.Model):
                 product_variant_ids = self.product_variant_ids
 
             base_url = website.get_base_url()
-            markup_data = {
-                "@context": "https://schema.org",
-                "@type": "ProductGroup",
-                "name": self.name,
-                "image": f"{base_url}{website.image_url(self, 'image_1920')}",
-                "url": f"{base_url}{self.website_url}",
-                "hasVariant": [product._to_markup_data(website) for product in product_variant_ids],
-            }
-            if self.description_ecommerce:
-                markup_data["description"] = text_from_html(self.description_ecommerce)
+            variant = next(
+                (v for v in product_variant_ids if v.default_code),
+                None,
+            )
+            product_group_id = (
+                variant.default_code
+                if variant
+                else f"TEMPLATE-{self.id}"
+            )
+            brand_obj = JsonLd.create_id_reference("Organization", f"{base_url}/#organization")
+            product_group = JsonLd(
+                "ProductGroup",
+                name=self.name,
+                url=f"{base_url}{self.website_url}",
+                description=self.description_sale,
+                product_group_id=product_group_id,
+            ).add_nested(
+                image=JsonLd("ImageObject", url=f"{base_url}{website.image_url(self, 'image_1024')}"),
+                brand=brand_obj,
+                has_variant=[
+                    variant._to_structured_data(website)
+                    for variant in product_variant_ids
+                ],
+            )
 
-        if website.is_view_active("website_sale.product_comment") and self.rating_count:
-            markup_data["aggregateRating"] = {
-                "@type": "AggregateRating",
-                # sudo: product.product - visitor can access product average rating
-                "ratingValue": self.sudo().rating_avg,
-                "reviewCount": self.rating_count,
-            }
-        return markup_data
+            if self.description_ecommerce:
+                product_group.set(description=text_from_html(self.description_ecommerce))
+            structured_data = product_group
+
+        if website.is_view_active('website_sale.product_comment') and self.rating_count:
+            rating = JsonLd(
+                "AggregateRating",
+                rating_value=self.sudo().rating_avg,
+                review_count=self.rating_count,
+            )
+            structured_data.add_nested(aggregate_rating=rating)
+
+        return structured_data
 
     def _get_ribbon(self, price_vals=None, auto_assign_ribbons=None, variant=None):
         """Return the ribbon to display for the current template.
