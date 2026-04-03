@@ -104,7 +104,7 @@ test("link is removed when figure is deleted", async function () {
 
 test("Links of Odoo charts are duplicated when duplicating a sheet", async function () {
     const { model, pivotId } = await createSpreadsheetWithPivot();
-    insertChartInSpreadsheet(model, "odoo_pie");
+    insertChartInSpreadsheet(model, "pie");
     const sheetId = model.getters.getActiveSheetId();
     const secondSheetId = "mySecondSheetId";
     const chartId = model.getters.getChartIds(sheetId)[0];
@@ -180,7 +180,7 @@ test("Datasource link is removed when a list is deleted", async function () {
 
 test("Datasource link is removed when an odoo chart is deleted", async function () {
     const { model } = await createModelWithDataSource();
-    const odooChartId = insertChartInSpreadsheet(model, "odoo_line");
+    const odooChartId = insertChartInSpreadsheet(model, "line");
     createBasicChart(model, chartId);
     model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
         chartId,

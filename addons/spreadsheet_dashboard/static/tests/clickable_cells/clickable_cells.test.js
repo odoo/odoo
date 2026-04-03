@@ -95,7 +95,7 @@ test("list sorting clickable cell", async () => {
                 orderBy: [],
             },
         },
-        version: "19.2.1",
+        version: "19.3.10",
     };
     const { model } = await createDashboardActionWithData(data);
     expect(getCellIcons(model, "A1")).toHaveLength(0);

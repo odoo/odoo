@@ -136,7 +136,7 @@ export async function freezeOdooData(model) {
         for (const figure of sheet.figures) {
             if (
                 figure.tag === "chart" &&
-                (figure.data.type.startsWith("odoo_") || figure.data.type === "geo")
+                (figure.data.dataSource?.type === "odoo" || figure.data.type === "geo")
             ) {
                 const img = odooChartToImage(model, figure, figure.data.chartId);
                 figure.tag = "image";
@@ -151,7 +151,8 @@ export async function freezeOdooData(model) {
                     }
                     const chartDefinition = model.getters.getChartDefinition(item.chartId);
                     return (
-                        chartDefinition.type.startsWith("odoo_") || chartDefinition.type === "geo"
+                        chartDefinition.dataSource?.type === "odoo" ||
+                        chartDefinition.type === "geo"
                     );
                 });
                 if (hasImageChart) {

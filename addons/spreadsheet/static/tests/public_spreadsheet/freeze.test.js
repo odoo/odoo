@@ -28,7 +28,9 @@ defineSpreadsheetModels();
 
 test("odoo pivot functions are replaced with their value", async function () {
     const { model } = await createSpreadsheetWithPivot({ pivotType: "static" });
-    expect(getCell(model, "A3").compiledFormula.toFormulaString(model.getters)).toBe('=PIVOT.HEADER(1,"bar",FALSE)');
+    expect(getCell(model, "A3").compiledFormula.toFormulaString(model.getters)).toBe(
+        '=PIVOT.HEADER(1,"bar",FALSE)'
+    );
     expect(getCell(model, "C3").compiledFormula.toFormulaString(model.getters)).toBe(
         '=PIVOT.VALUE(1,"probability:avg","bar",FALSE,"foo",2)'
     );
@@ -80,7 +82,9 @@ test("Pivot with a type different of ODOO is not converted", async function () {
 
 test("values are not exported formatted", async function () {
     const { model } = await createSpreadsheetWithPivot({ pivotType: "static" });
-    expect(getCell(model, "A3").compiledFormula.toFormulaString(model.getters)).toBe('=PIVOT.HEADER(1,"bar",FALSE)');
+    expect(getCell(model, "A3").compiledFormula.toFormulaString(model.getters)).toBe(
+        '=PIVOT.HEADER(1,"bar",FALSE)'
+    );
     expect(getCell(model, "C3").compiledFormula.toFormulaString(model.getters)).toBe(
         '=PIVOT.VALUE(1,"probability:avg","bar",FALSE,"foo",2)'
     );
@@ -138,7 +142,7 @@ test("computed format is exported", async function () {
 });
 
 test("odoo charts are replaced with an image", async function () {
-    const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+    const { model } = await createSpreadsheetWithChart({ type: "bar" });
     const data = await freezeOdooData(model);
     expect(data.sheets[0].figures.length).toBe(1);
     expect(data.sheets[0].figures[0].tag).toBe("image");
@@ -171,7 +175,7 @@ test("geo charts are replaced with an image", async function () {
 });
 
 test("Carousels figure with odoo data is converted to an image", async function () {
-    const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+    const { model } = await createSpreadsheetWithChart({ type: "bar" });
     const sheetId = model.getters.getActiveSheetId();
     const chartFigureId = model.getters.getFigures(sheetId)[0].id;
     createCarousel(model, { items: [] }, "carouselId");

@@ -208,12 +208,41 @@ migrationStepRegistry.add("19.1.2", {
     },
 });
 
-migrationStepRegistry.add("19.2.1", {
+migrationStepRegistry.add("19.3.10", {
     migrate(data) {
         for (const list of Object.values(data.lists || {})) {
             list.columns = list.columns?.map((col) => ({ name: col, string: col })) || [];
         }
         renameFunctions(data, { "ODOO.LIST": "ODOO.LIST.VALUE" });
+
+        function migrateDefinition(definition) {
+            definition.type = definition.type.replace("odoo_", "");
+            definition.dataSource = {
+                type: "odoo",
+                actionXmlId: definition.actionXmlId,
+                cumulatedStart: definition.cumulatedStart,
+                metaData: definition.metaData,
+                searchParams: definition.searchParams,
+            };
+            delete definition.actionXmlId;
+            delete definition.cumulatedStart;
+            delete definition.metaData;
+            delete definition.searchParams;
+        }
+        for (const sheet of data.sheets || []) {
+            for (const figure of sheet.figures || []) {
+                if (figure.tag === "chart" && figure.data.type.startsWith("odoo_")) {
+                    migrateDefinition(figure.data);
+                }
+                if (figure.tag === "carousel") {
+                    for (const definition of Object.values(figure.data.chartDefinitions) || []) {
+                        if (definition.type.startsWith("odoo_")) {
+                            migrateDefinition(definition);
+                        }
+                    }
+                }
+            }
+        }
         return data;
     },
 });

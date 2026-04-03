@@ -122,11 +122,11 @@ test("Numeric/monetary fields are correctly loaded and displayed", async () => {
 
     // prettier-ignore
     expect(getFormattedValueGrid(model, "A2:C6")).toEqual({
-        A2: "74.40€",    B2: "10.00",  C2: "1",
-        A3: "$74.80",    B3: "11.00",  C3: "2",
-        A4: "4.00€",     B4: "95.00",  C4: "3",
-        A5: "$1,000.00", B5: "15.00",  C5: "4",
-        A6: "$0.00",     B6: "0.00",   C6: "0",
+        A2: "74.40€", B2: "10.00", C2: "1",
+        A3: "$74.80", B3: "11.00", C3: "2",
+        A4: "4.00€", B4: "95.00", C4: "3",
+        A5: "$1,000.00", B5: "15.00", C5: "4",
+        A6: "$0.00", B6: "0.00", C6: "0",
     });
 });
 
@@ -789,19 +789,19 @@ test("can edit list sorting", async () => {
     });
     // prettier-ignore
     const initialGrid = [
-        ["Foo", "Bar",   "Date", "Probability", "Money!"],
-        [12,     true,   42474,  10,                74.4],
-        [1,      true,   42669,  11,                74.8],
-        [17,     true,   42719,  95,                   4],
-        [2,      false,  42715,  15,                1000],
+        ["Foo", "Bar", "Date", "Probability", "Money!"],
+        [12, true, 42474, 10, 74.4],
+        [1, true, 42669, 11, 74.8],
+        [17, true, 42719, 95, 4],
+        [2, false, 42715, 15, 1000],
     ]
     // prettier-ignore
     const orderedGrid = [
-        ["Foo", "Bar",   "Date", "Probability", "Money!"],
-        [17,     true,   42719,   95,                  4],
-        [12,     true,   42474,   10,               74.4],
-        [1,      true,   42669,   11,               74.8],
-        [2,      false,  42715,   15,               1000],
+        ["Foo", "Bar", "Date", "Probability", "Money!"],
+        [17, true, 42719, 95, 4],
+        [12, true, 42474, 10, 74.4],
+        [1, true, 42669, 11, 74.8],
+        [2, false, 42715, 15, 1000],
     ]
     const [listId] = model.getters.getListIds();
     expect(model.getters.getListDefinition(listId).orderBy).toEqual([]);
