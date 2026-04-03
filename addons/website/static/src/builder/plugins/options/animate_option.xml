@@ -78,13 +78,13 @@
             <span class="mx-2">to</span>
             <BuilderNumberInput unit="'%'" dataAttributeAction="'scrollZoneEnd'" action="'forceAnimation'" />
         </BuilderRow>
-        <BuilderContext t-if="this.isActiveItem('animation_on_appearance_opt')">
+        <BuilderContext t-if="this.isActiveItem('animation_on_appearance_opt')"  level="1">
             <!-- Start After -->
-            <BuilderRow label.translate="Start After" level="1">
+            <BuilderRow label.translate="Start After">
                 <BuilderNumberInput styleAction="'animation-delay'" action="'forceAnimation'" unit="'s'" />
             </BuilderRow>
             <!-- Duration -->
-            <BuilderRow label.translate="Duration" level="1">
+            <BuilderRow label.translate="Duration">
                 <BuilderNumberInput styleAction="'animation-duration'" action="'forceAnimation'" default="0.4" unit="'s'" />
             </BuilderRow>
         </BuilderContext>

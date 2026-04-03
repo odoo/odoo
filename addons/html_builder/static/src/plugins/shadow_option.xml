@@ -27,21 +27,21 @@
                 <BuilderButton actionValue="'inset'" title.translate="Inset" iconImg="'/html_builder/static/img/options/shadow_in.svg'"/>
             </BuilderButtonGroup>
         </BuilderRow>
-        <BuilderContext action="this.props.setShadowStyleAction">
-            <BuilderRow label.translate="Color" level="1">
+        <BuilderContext action="this.props.setShadowStyleAction" level="1">
+            <BuilderRow label.translate="Color">
                 <BuilderColorPicker actionParam="'color'" enabledTabs="['solid', 'custom']"/>
             </BuilderRow>
 
-            <BuilderRow label.translate="Offset" tooltip.translate="Horizontal and Vertical offset" level="1">
+            <BuilderRow label.translate="Offset" tooltip.translate="Horizontal and Vertical offset">
                 <BuilderNumberInput actionParam="'offsetX'" unit="'px'" prefixIcon="'oi oi-arrows-h'"/>
                 <BuilderNumberInput actionParam="'offsetY'" unit="'px'" prefixIcon="'oi oi-arrows-v'"/>
             </BuilderRow>
 
-            <BuilderRow label.translate="Blur" level="1">
+            <BuilderRow label.translate="Blur">
                 <BuilderNumberInput actionParam="'blur'" unit="'px'"/>
             </BuilderRow>
 
-            <BuilderRow label.translate="Spread" level="1">
+            <BuilderRow label.translate="Spread">
                 <BuilderNumberInput actionParam="'spread'" unit="'px'"/>
             </BuilderRow>
         </BuilderContext>

@@ -80,11 +80,11 @@
         <BuilderRow label.translate="Description Text" level="1">
             <BuilderTextInput action="'mapDescriptionTextValue'"/>
         </BuilderRow>
-        <BuilderContext applyTo="'.description'">
-            <BuilderRow label.translate="Text Color" level="1">
+        <BuilderContext applyTo="'.description'" level="1">
+            <BuilderRow label.translate="Text Color">
                 <BuilderColorPicker enabledTabs="['custom']" styleAction="'color'"/>
             </BuilderRow>
-            <BuilderRow label.translate="Background Color" level="1">
+            <BuilderRow label.translate="Background Color">
                 <BuilderColorPicker enabledTabs="['custom', 'gradient']" styleAction="'background-color'"/>
             </BuilderRow>
         </BuilderContext>

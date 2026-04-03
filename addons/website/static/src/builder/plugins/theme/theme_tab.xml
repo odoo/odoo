@@ -77,11 +77,11 @@
             </BuilderSelect>
             <BuilderButton icon="'fa-crosshairs'" title.translate="Background Position" preview="false" action="'bodyBgPositionOverlay'"/>
         </BuilderRow>
-        <BuilderContext t-if="this.isActiveItem('body_bg_repeat_opt')" action="'customizeWebsiteVariable'">
-            <BuilderRow label.translate="Width" level="2">
+        <BuilderContext t-if="this.isActiveItem('body_bg_repeat_opt')" action="'customizeWebsiteVariable'" level="2">
+            <BuilderRow label.translate="Width">
                 <BuilderNumberInput actionParam="'body-image-pattern-width'" placeholder.translate="auto" unit="'px'" min="1" default="null"/>
             </BuilderRow>
-            <BuilderRow label.translate="Height" level="2">
+            <BuilderRow label.translate="Height">
                 <BuilderNumberInput actionParam="'body-image-pattern-height'" placeholder.translate="auto" unit="'px'" min="1" default="null"/>
             </BuilderRow>
         </BuilderContext>
