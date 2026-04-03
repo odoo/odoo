@@ -294,6 +294,18 @@ class ProductProduct(models.Model):
             domain.append(('company_id', 'in', (False, company_id)))
         return domain
 
+    def _build_duplicate_barcode_error_string(self, barcode, duplicate_products):
+        """Returns a single line for one duplicated barcode. Override to customise the message."""
+        return _(
+            "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s",
+            barcode=barcode,
+            product_list=duplicate_products.mapped('display_name'),
+        )
+
+    def _build_duplicate_barcode_error_note(self):
+        """Returns a note appended once at the end of the error. Override to customise or remove it."""
+        return _("Note: Some products may be hidden due to access restrictions.")
+
     def _check_duplicated_product_barcodes(self, barcodes_within_company, company_id):
         domain = self._get_barcode_search_domain(barcodes_within_company, company_id)
         products_by_barcode = self.sudo()._read_group(
@@ -301,16 +313,12 @@ class ProductProduct(models.Model):
         )
 
         duplicates_as_str = "\n".join(
-            self.env._(
-                "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s",
-                barcode=barcode, product_list=duplicate_products._filtered_access('read').mapped('display_name'),
-            )
+            self._build_duplicate_barcode_error_string(barcode, duplicate_products._filtered_access('read'))
             for barcode, duplicate_products in products_by_barcode
         )
+
         if duplicates_as_str:
-            duplicates_as_str += _(
-                "\n\nNote: products that you don't have access to will not be shown above."
-            )
+            duplicates_as_str += "\n\n" + self._build_duplicate_barcode_error_note()
             raise ValidationError(_("Barcode(s) already assigned:\n\n%s", duplicates_as_str))
 
     def _check_duplicated_packaging_barcodes(self, barcodes_within_company, company_id):

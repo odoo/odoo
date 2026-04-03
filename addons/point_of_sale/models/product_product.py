@@ -74,3 +74,18 @@ class ProductProduct(models.Model):
         self.product_tmpl_id._ensure_unused_in_pos()
         self.product_tmpl_id._check_is_special_product()
         return super().action_archive()
+
+    def _build_duplicate_barcode_error_string(self, barcode, duplicate_products):
+        if not self.env.context.get("is_pos_product_action"):
+            return super()._build_duplicate_barcode_error_string(barcode, duplicate_products)
+
+        return _(
+            "Barcode \"%(barcode)s\" already assigned to \"%(product_list)s\"",
+            barcode=barcode,
+            product_list=(duplicate_products - self).mapped('display_name'),
+        )
+
+    def _build_duplicate_barcode_error_note(self):
+        if not self.env.context.get("is_pos_product_action"):
+            return super()._build_duplicate_barcode_error_note()
+        return ""
