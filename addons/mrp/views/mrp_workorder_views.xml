@@ -202,7 +202,7 @@
                         <field name="show_json_popover" invisible="1"/>
                         <field name="json_popover" widget="mrp_workorder_popover" class="oe_inline mx-2" invisible="not show_json_popover"/>
                         <label for="duration_expected"/>
-                        <div class="o_input_box">
+                        <div class="o_row">
                             <field name="duration_expected" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" readonly="state in ['cancel', 'done']"/>
                         </div>
                     </group>

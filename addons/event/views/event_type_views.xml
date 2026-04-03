@@ -18,12 +18,14 @@
                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_quick_create': True}"/>
                        </group>
                        <group>
-                            <field name="has_seats_limitation" widget="boolean_toggle"/>
-                            <label for="seats_max" invisible="not has_seats_limitation"/>
-                            <div class="o_input_box" invisible="not has_seats_limitation">
-                               <field name="seats_max" required="not has_seats_limitation"/>
-                               <span class="o_input_box_overlay_end">attendees</span>
-                            </div>
+                           <label for="has_seats_limitation" string="Limit Registrations"/>
+                           <div>
+                               <field name="has_seats_limitation"/>
+                               <span invisible="not has_seats_limitation" required="not has_seats_limitation">
+                                   to <field name="seats_max" class="oe_inline o_input_9ch"/>
+                                   Attendees
+                               </span>
+                           </div>
                        </group>
                    </group>
 
