@@ -16,10 +16,6 @@ export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
         ...super.components,
         Tag: AvatarTag,
     };
-    static props = {
-        ...Many2ManyTagsField.props,
-        withCommand: { type: Boolean, optional: true },
-    };
 
     get assignBtnTooltip() {
         return _t("Assign");
@@ -49,9 +45,8 @@ export const many2ManyTagsAvatarField = {
         relatedFields.push({ name: "write_date", type: "datetime" });
         return relatedFields;
     },
-    extractProps({ viewType }, dynamicInfo) {
+    extractProps(fieldInfo, dynamicInfo) {
         const props = many2ManyTagsField.extractProps(...arguments);
-        props.withCommand = viewType === "form" || viewType === "list";
         props.domain = dynamicInfo.domain;
         return props;
     },
