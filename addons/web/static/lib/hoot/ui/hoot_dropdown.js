@@ -25,7 +25,7 @@ export class HootDropdown extends Component {
                         bg-base text-base mt-1 shadow rounded z-2"
                 >
                     <button class="fixed end-2 top-2 p-1 text-rose sm:hidden" t-on-click="() => this.isOpen.set(false)">
-                        <i class="fa fa-times w-5 h-5" />
+                        <i class="oi w-5 h-5" data-icon="close"/>
                     </button>
                     <t t-call-slot="menu" open="this.isOpen()" />
                 </div>

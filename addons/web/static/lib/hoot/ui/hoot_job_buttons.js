@@ -15,7 +15,7 @@ export class HootJobButtons extends Component {
                 class="'hoot-btn-link border border-primary text-emerald rounded transition-colors'"
                 title="'Run this ' + type + ' only'"
             >
-                <i class="fa fa-play w-5 h-5" />
+                <i class="oi oi-filled w-5 h-5" data-icon="play_arrow" />
             </HootLink>
             <t t-if="type === 'test'">
                 <HootLink
@@ -24,7 +24,7 @@ export class HootJobButtons extends Component {
                     class="'hoot-btn-link border border-primary text-emerald rounded transition-colors'"
                     title="'Run this ' + type + ' only in debug mode'"
                 >
-                    <i class="fa fa-bug w-5 h-5" />
+                    <i class="oi w-5 h-5" data-icon="bug_report" />
                 </HootLink>
             </t>
             <HootLink
@@ -33,7 +33,7 @@ export class HootJobButtons extends Component {
                 class="'hoot-btn-link border border-primary text-rose rounded transition-colors'"
                 title="'Ignore ' + type"
             >
-                <i class="fa fa-ban w-5 h-5" />
+                <i class="oi w-5 h-5" data-icon="block" />
             </HootLink>
         </div>
     `;

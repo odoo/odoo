@@ -103,7 +103,7 @@ export class HootStatusPanel extends Component {
                     Ready
                 </t>
                 <t t-elif="this.runner.status() === 'running'">
-                    <i t-if="this.isDebugging()" class="text-cyan fa fa-bug" title="Debugging" />
+                    <i t-if="this.isDebugging()" class="text-cyan oi" data-icon="bug_report" title="Debugging" />
                     <div
                         t-else=""
                         class="animate-spin shrink-0 grow-0 w-4 h-4 border-2 border-emerald border-t-transparent rounded-full"
@@ -120,7 +120,7 @@ export class HootStatusPanel extends Component {
                         <t t-if="this.runner.aborted">, run aborted by user</t>)
                     </span>
                     <span class="md:hidden flex items-center gap-1">
-                        <i class="fa fa-clock-o" />
+                        <i class="oi" data-icon="schedule" />
                         <strong class="text-primary" t-out="this.runner.totalTime" />
                     </span>
                 </t>
@@ -139,7 +139,7 @@ export class HootStatusPanel extends Component {
                         t-on-click.stop="() => this.ui.statusFilter.set('passed')"
                         t-attf-title="Show {{ this.runner.reporting.passed }} passed tests"
                     >
-                        <i class="fa fa-check-circle" />
+                        <i class="oi oi-filled" data-icon="check_circle" />
                         <t t-out="this.runner.reporting.passed" />
                     </button>
                 </t>
@@ -150,7 +150,7 @@ export class HootStatusPanel extends Component {
                         t-on-click.stop="() => this.ui.statusFilter.set('failed')"
                         t-attf-title="Show {{ this.runner.reporting.failed }} failed tests"
                     >
-                        <i class="fa fa-times-circle" />
+                        <i class="oi oi-filled" data-icon="cancel" />
                         <t t-out="this.runner.reporting.failed" />
                     </button>
                 </t>
@@ -161,7 +161,7 @@ export class HootStatusPanel extends Component {
                         t-on-click.stop="() => this.ui.statusFilter.set('skipped')"
                         t-attf-title="Show {{ this.runner.reporting.skipped }} skipped tests"
                     >
-                        <i class="fa fa-pause-circle" />
+                        <i class="oi oi-filled" data-icon="pause_circle" />
                         <t t-out="this.runner.reporting.skipped" />
                     </button>
                 </t>
@@ -172,7 +172,7 @@ export class HootStatusPanel extends Component {
                         t-on-click.stop="() => this.ui.statusFilter.set('todo')"
                         t-attf-title="Show {{ this.runner.reporting.todo }} tests to do"
                     >
-                        <i class="fa fa-exclamation-circle" />
+                        <i class="oi" data-icon="error" />
                         <t t-out="this.runner.reporting.todo" />
                     </button>
                 </t>
@@ -185,7 +185,7 @@ export class HootStatusPanel extends Component {
                             t-att-disabled="this.ui.resultsPage() === 0"
                             t-on-click.stop="this.previousPage"
                         >
-                            <i class="fa fa-chevron-left" />
+                            <i class="oi" data-icon="chevron_left" />
                         </button>
                         <strong class="text-primary" t-out="this.ui.resultsPage() + 1" />
                         <span class="text-gray">/</span>
@@ -196,7 +196,7 @@ export class HootStatusPanel extends Component {
                             t-att-disabled="this.ui.resultsPage() === lastPage"
                             t-on-click.stop="this.nextPage"
                         >
-                            <i class="fa fa-chevron-right" />
+                            <i class="oi" data-icon="chevron_right" />
                         </button>
                     </div>
                 </t>

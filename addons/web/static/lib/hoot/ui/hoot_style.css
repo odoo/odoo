@@ -98,15 +98,49 @@ ul {
 }
 
 /*---------------------------------------------------------------------------*/
-/* Font awesome default size                                                 */
+/* Icon default size                                                         */
 /*---------------------------------------------------------------------------*/
 
-.fa {
+.oi {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 0.75rem;
-    height: 0.75rem;
+    font-family: var(--icon-font-family, "material_symbols_outlined");
+    font-style: normal;
+    font-size: var(--oi-font-size, 1em);
+    font-weight: 400 !important;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    vertical-align: -11.5%;
+    speak: never;
+    -webkit-font-smoothing: antialiased;
+    -webkit-font-feature-settings: 'liga';
+    -moz-osx-font-smoothing: grayscale;
+    -moz-font-feature-settings: 'liga';
+}
+
+.oi:before {
+    transform: scale(1.214285);
+    display: inline-block;
+    content: attr(data-icon);
+    text-rendering: geometricPrecision;
+    font-size: var(--oi-font-size, 1em);
+}
+
+.oi-filled[data-icon]:not([data-icon=""]):before {
+    content: attr(data-icon) "_f";
+}
+
+.oi-flip-horizontal {
+    transform: scale(-1, 1);
+}
+
+.oi-flip-vertical {
+    transform: scale(1, -1);
 }
 
 /*---------------------------------------------------------------------------*/
