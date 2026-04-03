@@ -4,10 +4,10 @@
     <t t-name="web.NotificationWowl">
         <div t-on-mouseenter="this.freeze" t-on-mouseleave="this.refresh" t-attf-class="o_notification {{this.props.className}} d-flex mb-2 position-relative rounded shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
             <span t-attf-class="o_notification_bar bg-{{this.props.type}} rounded-start"/>
-            <div class="w-100 py-2 ps-3 pe-5 border border-start-0 rounded-end text-break">
-                <button type="button" class="o_notification_close btn-close position-absolute top-0 end-0 mt-2 me-2" aria-label="Close" t-on-click="this.close" data-available-offline=""/>
-                <div class="o_notification_body d-flex align-items-center">
-                    <span class="me-auto o_notification_content w-100">
+            <div class="o_notification_inner w-100 py-2 ps-2 pe-md-5 border border-start-0 rounded-end text-break">
+                <button type="button" class="o_notification_close btn-close mt-md-2 me-2 ms-2 ms-md-0" aria-label="Close" t-on-click="this.close" data-available-offline=""/>
+                <div class="o_notification_body d-flex align-items-center flex-grow-1">
+                    <span class="o_notification_content">
                         <!-- TODO-IPB: at the end, title has to be removed, but the change is too important to do all in once now -->
                         <t t-if="this.props.title"><t t-out="this.props.title"/>. </t>
                         <t t-out="this.props.message"/>
