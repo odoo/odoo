@@ -13,7 +13,7 @@ class AccountMoveSend(models.AbstractModel):
     _inherit = 'account.move.send'
 
     @api.model
-    def _check_move_constrains(self, moves):
+    def _check_move_constraints(self, moves):
         # HR-BR-37: Invoice must contain HR-BT-4: Operator code in accordance with the Fiscalization Act.
         if any((move.country_code == 'HR' and not move.l10n_hr_operator_name) for move in moves):
             raise UserError(self.env._("Operator label is required for sending invoices in Croatia."))
@@ -33,7 +33,7 @@ class AccountMoveSend(models.AbstractModel):
             any(any((tax.tax_exigibility == 'on_payment' and not tax.invoice_legal_notes) for tax in line.tax_ids
              ) for line in move.line_ids if line.display_type == 'product') for move in moves):
             raise ValidationError(self.env._('For Croatia, Legal Notes should be provided for all cash basis taxes.'))
-        super()._check_move_constrains(moves)
+        super()._check_move_constraints(moves)
 
     # -------------------------------------------------------------------------
     # SENDING METHODS
