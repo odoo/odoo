@@ -54,7 +54,9 @@ class ResPartner(models.Model):
         # Fetch fields from db and put them in cache.
         order_lines.read(['date_promised', 'partner_id', 'product_uom_qty'], load='')
         moves.read(['purchase_line_id', 'date'], load='')
-        moves = moves.filtered(lambda m: m.date.date() <= m.purchase_line_id.date_promised.date())
+        moves = moves.filtered(
+            lambda m: (dp := m.purchase_line_id.date_promised) and m.date.date() <= dp.date()
+        )
         for move, quantity in zip(moves, moves.mapped('quantity')):
             lines_quantity[move.purchase_line_id.id] += quantity
         partner_dict = {}

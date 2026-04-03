@@ -864,3 +864,17 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                 'debit': 0.0,
             },
         ])
+
+    def test_partner_on_time_rate_without_pol_promised_date(self):
+        """
+        Test that removing the promised date on a purchase order line
+        correctly computes the partner's on-time rate.
+        """
+        po = self.env['purchase.order'].create(self.po_vals)
+        po.button_confirm()
+
+        picking = po.picking_ids
+        picking.button_validate()
+
+        po.order_line.write({'date_promised': False})
+        self.assertEqual(self.partner_a.on_time_rate, 0)
