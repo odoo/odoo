@@ -115,8 +115,10 @@ class TagsSelector(object):
                     test_filter_module = test_filter[1]
                     if test_filter_module:
                         included_modules.add(test_filter_module)
+                        test.is_test_all = False
                     else:
                         included_modules |= self.available_modules
+                        test.is_test_all = True
                 else:
                     break
 
