@@ -385,6 +385,50 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
 
         self.assertTrue(all(stock_output_amls.mapped('reconciled')))
 
+    def test_no_duplicate_picking_on_repeated_invoice_action(self):
+        """Calling action_pos_order_invoice multiple times (e.g. a backend user
+        clicking 'Customer Invoice' on an already-invoiced order) must not
+        create more than one stock picking for the same POS order.
+
+        Regression test for the guard added to _create_order_picking:
+        the condition at the top of action_pos_order_invoice (anglo_saxon +
+        update_stock_at_closing + session open) would previously call
+        _create_order_picking unconditionally, producing one extra picking on
+        every repeated click.
+        """
+        self.company.point_of_sale_update_stock_quantities = 'closing'
+
+        self.pos_config.open_ui()
+        order = self.PosOrder.create({
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'lines': [(0, 0, {
+                'product_id': self.product.id,
+                'price_unit': 450,
+                'qty': 1.0,
+                'price_subtotal': 450,
+                'price_subtotal_incl': 450,
+            })],
+            'amount_total': 450,
+            'amount_tax': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+        })
+        context_make_payment = {'active_ids': [order.id], 'active_id': order.id}
+        self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 450.0,
+            'payment_method_id': self.cash_payment_method.id,
+        }).with_context({'active_id': order.id}).check()
+
+        # First legitimate call: invoice + picking created
+        order.action_pos_order_invoice()
+        self.assertEqual(len(order.picking_ids), 1, "First call should create exactly one picking")
+
+        # Second call: simulates a backend user clicking 'Customer Invoice' again
+        order.action_pos_order_invoice()
+        self.assertEqual(len(order.picking_ids), 1, "Repeated call must not create a duplicate picking")
+
     def test_action_pos_order_invoice_with_discount(self):
         """This test make sure that the line containing 'Discoun from' is correctly added to the invoice"""
 
