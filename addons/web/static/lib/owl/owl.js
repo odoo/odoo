@@ -308,7 +308,7 @@
         return function batchedCall(...args) {
             if (!scheduled) {
                 scheduled = true;
-                queueMicrotask(() => {
+                Promise.resolve().then(() => {
                     scheduled = false;
                     callback(...args);
                 });
@@ -2175,7 +2175,7 @@
                 }
             }
             catch (e) {
-                // if mountedFibers is not empty, this means that a crash occurred while
+                // if mountedFibers is not empty, this means that a crash occured while
                 // calling the mounted hooks of some component. So, there may still be
                 // some component that have been mounted, but for which the mounted hooks
                 // have not been called. Here, we remove the willUnmount hooks for these
