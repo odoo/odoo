@@ -860,9 +860,16 @@ export const accountTaxHelpers = {
             let current_mode = mode;
             if (current_mode === "mixed") {
                 current_mode = "included";
-                for (const base_line_taxes_data of values.base_line_x_taxes_data) {
-                    const taxes_data = base_line_taxes_data[1];
-                    if (taxes_data.some((tax_data) => !tax_data.price_include)) {
+                for (const [base_line, taxes_data] of values.base_line_x_taxes_data) {
+                    const not_zero_taxes_data = taxes_data.filter(
+                        (tax_data) =>
+                            !floatIsZero(
+                                tax_data.tax_amount_currency,
+                                base_line.currency_id.decimal_places
+                            ) &&
+                            !floatIsZero(tax_data.tax_amount, company.currency_id.decimal_places)
+                    );
+                    if (not_zero_taxes_data.some((tax_data) => !tax_data.price_include)) {
                         current_mode = "excluded";
                         break;
                     }
