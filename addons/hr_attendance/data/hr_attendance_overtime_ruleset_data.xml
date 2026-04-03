@@ -84,5 +84,48 @@
             <field name="amount_rate">2</field>
             <field name="ruleset_id" ref="hr_attendance_overtime_ruleset_eg"/>
         </record>
+<!-- IQ : Iraq -->
+        <record id="l10n_iq_overtime_ruleset" model="hr.attendance.overtime.ruleset">
+            <field name="name">Iraq Ruleset</field>
+            <field name="rate_combination_mode">sum</field>
+            <field name="country_id" ref="base.iq"/>
+        </record>
+        <record id="l10n_iq_day_time_1_overtime_rule" model="hr.attendance.overtime.rule">
+            <field name="name">Day Time Overtime</field>
+            <field name="ruleset_id" ref="l10n_iq_overtime_ruleset"/>
+            <field name="base_off">timing</field>
+            <field name="timing_type">work_days</field>
+            <field name="timing_start">6</field>
+            <field name="timing_stop">9</field>
+            <field name="amount_rate">1.5</field>
+        </record>
+        <record id="l10n_iq_day_time_2_overtime_rule" model="hr.attendance.overtime.rule">
+            <field name="name">Day Time Overtime</field>
+            <field name="ruleset_id" ref="l10n_iq_overtime_ruleset"/>
+            <field name="base_off">timing</field>
+            <field name="timing_type">work_days</field>
+            <field name="timing_start">17</field>
+            <field name="timing_stop">21</field>
+            <field name="amount_rate">1.5</field>
+        </record>
+        <record id="l10n_iq_night_time_1_overtime_rule" model="hr.attendance.overtime.rule">
+            <field name="name">Night Time Overtime</field>
+            <field name="ruleset_id" ref="l10n_iq_overtime_ruleset"/>
+            <field name="base_off">timing</field>
+            <field name="timing_type">work_days</field>
+            <field name="timing_start">21</field>
+            <field name="timing_stop">24</field>
+            <field name="amount_rate">2</field>
+        </record>
+        <record id="l10n_iq_night_time_2_overtime_rule" model="hr.attendance.overtime.rule">
+            <field name="name">Night Time Overtime</field>
+            <field name="ruleset_id" ref="l10n_iq_overtime_ruleset"/>
+            <field name="base_off">timing</field>
+            <field name="timing_type">work_days</field>
+            <field name="timing_start">0</field>
+            <field name="timing_stop">6</field>
+            <field name="amount_rate">2</field>
+        </record>
+        
     </data>
 </odoo>

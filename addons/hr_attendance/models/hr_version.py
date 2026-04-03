@@ -14,13 +14,21 @@ class HrVersion(models.Model):
             ('country_id', 'in', self.env.companies.country_id.ids),
         ]
 
+    def _default_ruleset_id(self):
+        country_ruleset = self.env['hr.attendance.overtime.ruleset'].sudo().search([
+            ('country_id', 'in', self.env.companies.country_id.ids),
+        ], limit=1).sudo(False)
+        if country_ruleset:
+            return country_ruleset
+        return self.env.ref('hr_attendance.hr_attendance_default_ruleset', raise_if_not_found=False)
+
     ruleset_id = fields.Many2one(
          "hr.attendance.overtime.ruleset",
          domain=_domain_current_countries,
          groups="hr.group_hr_manager",
          tracking=True,
          index='btree_not_null',
-         default=lambda self: self.env.ref('hr_attendance.hr_attendance_default_ruleset', raise_if_not_found=False),
+         default=_default_ruleset_id,
     )
 
     @api.model
