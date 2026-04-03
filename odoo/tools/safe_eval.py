@@ -1068,7 +1068,7 @@ def monitoring_call(code, instruction_offset, callee, arg0):
         raise UnsafeContextError(f'{call_id} is overridden')
 
 
-def monitoring_yield(code, instruction_offset, retval):
+def monitoring_check_context(code, *args):
     """ Ensure mutating context of generator is safe """
     frame = sys._getframe(1)
     objs = list(frame.f_locals.values())
@@ -1089,16 +1089,20 @@ EVENTS = sys.monitoring.events
 TOOL_ID = 4  # Not prevent other tools from using "official IDs"
 sys.monitoring.use_tool_id(TOOL_ID, 'ODOO_UNSAFE_POLICY_TOOL')
 sys.monitoring.register_callback(TOOL_ID, EVENTS.CALL, monitoring_call)
-sys.monitoring.register_callback(TOOL_ID, EVENTS.PY_YIELD, monitoring_yield)
+sys.monitoring.register_callback(TOOL_ID, EVENTS.PY_START, monitoring_check_context)
+sys.monitoring.register_callback(TOOL_ID, EVENTS.PY_RESUME, monitoring_check_context)
+sys.monitoring.register_callback(TOOL_ID, EVENTS.PY_RETURN, monitoring_check_context)
+sys.monitoring.register_callback(TOOL_ID, EVENTS.PY_YIELD, monitoring_check_context)
 
 
 def add_monitoring(code):
     codes = [code]
     while codes:
         code = codes.pop()
-        sys.monitoring.set_local_events(TOOL_ID, code, EVENTS.CALL)
+        events = EVENTS.CALL
         if code.co_flags & inspect.CO_GENERATOR:
-            sys.monitoring.set_local_events(TOOL_ID, code, EVENTS.PY_YIELD)
+            events |= EVENTS.PY_START | EVENTS.PY_RESUME | EVENTS.PY_RETURN | EVENTS.PY_YIELD
+        sys.monitoring.set_local_events(TOOL_ID, code, events)
         codes.extend(const for const in code.co_consts if isinstance(const, types.CodeType))
 
 
