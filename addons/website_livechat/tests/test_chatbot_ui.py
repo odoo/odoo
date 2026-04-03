@@ -78,12 +78,8 @@ class TestLivechatChatbotUI(TestLivechatChatbotUICommon):
         ])
         self.assertTrue(bool(livechat_discuss_channel))
         self.assertEqual(len(livechat_discuss_channel), 1)
-
         conversation_messages = livechat_discuss_channel.message_ids.sorted('id')
-        operator_member = livechat_discuss_channel.channel_member_ids.filtered(
-            lambda m: m.partner_id == self.operator.partner_id
-        )
-
+        operator_member = livechat_discuss_channel.with_user(self.operator).self_member_id
         expected_messages = [
             ("Hello! I'm a bot!", operator, False),
             ("I help lost visitors find their way.", operator, False),

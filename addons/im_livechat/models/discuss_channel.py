@@ -594,10 +594,9 @@ class DiscussChannel(models.Model):
         """ Set deactivate the livechat channel and notify (the operator) the reason of closing the session."""
         self.ensure_one()
         if not self.livechat_end_dt:
-            member = self.channel_member_ids.filtered(lambda m: m.is_self)
-            if member:
+            if self.self_member_id:
                 # sudo: discuss.channel.rtc.session - member of current user can leave call
-                member.sudo()._rtc_leave_call()
+                self.self_member_id.sudo()._rtc_leave_call()
             # sudo: discuss.channel - visitor left the conversation, state must be updated
             self.sudo().livechat_end_dt = fields.Datetime.now()
             # avoid useless notification if the channel is empty

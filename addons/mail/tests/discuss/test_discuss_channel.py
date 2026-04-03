@@ -441,21 +441,20 @@ class TestChannelInternals(MailCommon, HttpCase):
         chat = self.env['discuss.channel'].with_user(self.user_admin)._get_or_create_chat(pids)
         msg_1 = self._add_messages(chat, 'Body1', author=self.user_employee.partner_id)
         msg_2 = self._add_messages(chat, 'Body2', author=self.user_employee.partner_id)
-        self_member = chat.channel_member_ids.filtered(lambda m: m.partner_id == self.user_admin.partner_id)
-        self_member._mark_as_read(msg_2.id)
+        chat.self_member_id._mark_as_read(msg_2.id)
         init_data = Store().add(chat, "_store_channel_fields")._build_result()
         self_member_info = next(
-            filter(lambda d: d["id"] == self_member.id, init_data["discuss.channel.member"])
+            filter(lambda d: d["id"] == chat.self_member_id.id, init_data["discuss.channel.member"])
         )
         self.assertEqual(
             self_member_info["seen_message_id"],
             msg_2.id,
             "Last message id should have been updated",
         )
-        self_member._mark_as_read(msg_1.id)
+        chat.self_member_id._mark_as_read(msg_1.id)
         final_data = Store().add(chat, "_store_channel_fields")._build_result()
         self_member_info = next(
-            filter(lambda d: d["id"] == self_member.id, final_data["discuss.channel.member"])
+            filter(lambda d: d["id"] == chat.self_member_id.id, final_data["discuss.channel.member"])
         )
         self.assertEqual(
             self_member_info["seen_message_id"],

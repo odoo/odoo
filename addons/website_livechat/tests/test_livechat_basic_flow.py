@@ -160,7 +160,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         channel = self._common_basic_flow()
         self._reset_bus()
         guest = self.env["mail.guest"].search([], order="id desc", limit=1)
-        operator_member = channel.channel_member_ids.filtered(lambda m: m.partner_id == self.operator.partner_id)
+        operator_member = channel.with_user(self.operator).self_member_id
         guest_member = channel.channel_member_ids.filtered(lambda m: m.guest_id == guest)
         self.assertEqual(
             Store().add(channel, "_store_channel_fields")._build_result(),
@@ -333,9 +333,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         with freeze_time(agent_left_dt):
             channel.with_user(self.operator).action_unfollow()
         self._reset_bus()
-        self.assertFalse(
-            channel.channel_member_ids.filtered(lambda m: m.partner_id == self.operator.partner_id)
-        )
+        self.assertFalse(channel.with_user(self.operator).self_member_id)
         channel_w_user = channel.with_user(self.user_public).with_context(guest=guest)
         data = Store().add(channel_w_user, "_store_channel_fields")._build_result()
         self.assertEqual(

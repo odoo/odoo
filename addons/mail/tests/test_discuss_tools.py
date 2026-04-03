@@ -271,9 +271,6 @@ class TestDiscussTools(MailCase):
             },
         )
         odoobot_partner = self.env.ref("base.partner_root")
-        odoobot_member = public_channel.channel_member_ids.filtered(
-            lambda m: m.partner_id == odoobot_partner,
-        )
         bob_user = new_test_user(self.env, "bob_user", name="Bob", email="bob@secret.com")
         bob_member = public_channel._add_members(users=bob_user)
         portal_user = new_test_user(self.env, login="portal_user", groups="base.group_portal")
@@ -316,7 +313,7 @@ class TestDiscussTools(MailCase):
             ],
             "discuss.channel.member": [
                 {
-                    "id": odoobot_member.id,
+                    "id": public_channel.self_member_id.id,
                     "partner_id": odoobot_partner.id,
                     "seen_message_id": test_message.id,
                 },

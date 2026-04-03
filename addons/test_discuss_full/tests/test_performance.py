@@ -300,9 +300,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             author_id=self.users[2].partner_id.id,
             partner_ids=self.users[0].partner_id.ids,
         )
-        members = self.channel_channel_public_1.channel_member_ids
-        member = members.filtered(lambda m: m.partner_id == self.users[0].partner_id).with_user(self.users[0])
-        member._mark_as_read(message_0.id)
+        self.channel_channel_public_1.with_user(self.users[0]).self_member_id._mark_as_read(
+            message_0.id,
+        )
         # add bookmark
         message_0.bookmarked_partner_ids = [Command.link(self.users[0].partner_id.id)]
         self.env.company.sudo().name = 'YourCompany'
@@ -317,13 +317,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             message_type="comment",
             author_id=self.users[2].partner_id.id,
         )
-        # add folded channel
-        members = self.channel_chat_1.channel_member_ids
-        member = members.with_user(self.users[0]).filtered(lambda m: m.is_self)
         # add call invitation
-        members = self.channel_channel_group_1.channel_member_ids
-        member_0 = members.with_user(self.users[0]).filtered(lambda m: m.is_self)
-        member_2 = members.with_user(self.users[2]).filtered(lambda m: m.is_self)
+        member_0 = self.channel_channel_group_1.with_user(self.users[0]).self_member_id
+        member_2 = self.channel_channel_group_1.with_user(self.users[2]).self_member_id
         self.channel_channel_group_1_invited_member = member_0
         # sudo: discuss.channel.rtc.session - creating a session in a test file
         data = {"channel_id": self.channel_channel_group_1.id, "channel_member_id": member_2.id}
@@ -344,8 +340,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         self._add_reactions(message_1, ["😊", "😁", "👍"])
         # add archive / muted on channels
         self.channel_channel_group_3.active = False
-        channel_group_4_member = self.channel_channel_group_4.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id)
-        channel_group_4_member.mute_until_dt = datetime.max
+        self.channel_channel_group_4.with_user(
+            self.users[0],
+        ).self_member_id.mute_until_dt = datetime.max
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
 
     def _add_reactions(self, message, reactions):
@@ -694,10 +691,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     def _expected_result_for_channel(self, channel):
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
-        members = channel.channel_member_ids
-        member_0 = members.filtered(lambda m: m.partner_id == self.users[0].partner_id)
-        member_2 = members.filtered(lambda m: m.partner_id == self.users[2].partner_id)
-        member_12 = members.filtered(lambda m: m.partner_id == self.users[12].partner_id)
+        member_0 = channel.with_user(self.users[0]).self_member_id
+        member_2 = channel.with_user(self.users[2]).self_member_id
+        member_12 = channel.with_user(self.users[12]).self_member_id
         last_interest_dt = fields.Datetime.to_string(channel.last_interest_dt)
         if channel == self.channel_general:
             return {
@@ -988,17 +984,16 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         return {}
 
     def _res_for_member(self, channel, partner=None, guest=None):
-        members = channel.channel_member_ids
-        member_0 = members.filtered(lambda m: m.partner_id == self.users[0].partner_id)
+        member_0 = channel.with_user(self.users[0]).self_member_id
         member_0_last_interest_dt = fields.Datetime.to_string(member_0.last_interest_dt)
         member_0_last_seen_dt = fields.Datetime.to_string(member_0.last_seen_dt)
         member_0_create_date = fields.Datetime.to_string(member_0.create_date)
-        member_1 = members.filtered(lambda m: m.partner_id == self.users[1].partner_id)
-        member_2 = members.filtered(lambda m: m.partner_id == self.users[2].partner_id)
-        member_3 = members.filtered(lambda m: m.partner_id == self.users[3].partner_id)
-        member_12 = members.filtered(lambda m: m.partner_id == self.users[12].partner_id)
-        member_14 = members.filtered(lambda m: m.partner_id == self.users[14].partner_id)
-        member_15 = members.filtered(lambda m: m.partner_id == self.users[15].partner_id)
+        member_1 = channel.with_user(self.users[1]).self_member_id
+        member_2 = channel.with_user(self.users[2]).self_member_id
+        member_3 = channel.with_user(self.users[3]).self_member_id
+        member_12 = channel.with_user(self.users[12]).self_member_id
+        member_14 = channel.with_user(self.users[14]).self_member_id
+        member_15 = channel.with_user(self.users[15]).self_member_id
         first_message = channel.message_ids.sorted(lambda message: message.id)[:1]
         last_message = channel._get_last_messages()
         last_message_of_partner_0 = self.env["mail.message"].search(
@@ -1008,7 +1003,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             order="id desc",
             limit=1,
         )
-        member_g = members.filtered(lambda m: m.guest_id)
+        member_g = channel.channel_member_ids.filtered(lambda m: m.guest_id)
         guest = member_g.guest_id
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
@@ -1366,6 +1361,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         return {"id": self.im_livechat_channel.id, "name": "support"}
 
     def _expected_result_for_livechat_member_history(self, channel):
+        member_0 = channel.with_user(self.users[0]).self_member_id
+        member_1 = channel.with_user(self.users[1]).self_member_id
+        member_g = channel.channel_member_ids.filtered(lambda m: m.guest_id == self.guest)
         histories = channel.livechat_channel_member_history_ids
         if channel == self.channel_livechat_1:
             return [
@@ -1374,18 +1372,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": histories.filtered(lambda h: h.livechat_member_type == "agent").id,
                     "livechat_member_type": "agent",
                     "partner_id": self.users[0].partner_id.id,
-                    "member_id": channel.channel_member_ids.filtered(
-                        lambda m: m.partner_id == self.users[0].partner_id
-                    ).id,
+                    "member_id": member_0.id,
                 },
                 {
                     "channel_id": channel.id,
                     "id": histories.filtered(lambda h: h.livechat_member_type == "visitor").id,
                     "livechat_member_type": "visitor",
                     "partner_id": self.users[1].partner_id.id,
-                    "member_id": channel.channel_member_ids.filtered(
-                        lambda m: m.partner_id == self.users[1].partner_id
-                    ).id,
+                    "member_id": member_1.id,
                 },
             ]
         if channel == self.channel_livechat_2:
@@ -1395,18 +1389,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": histories.filtered(lambda h: h.livechat_member_type == "agent").id,
                     "livechat_member_type": "agent",
                     "partner_id": self.users[0].partner_id.id,
-                    "member_id": channel.channel_member_ids.filtered(
-                        lambda m: m.partner_id == self.users[0].partner_id
-                    ).id,
+                    "member_id": member_0.id,
                 },
                 {
                     "channel_id": channel.id,
                     "guest_id": self.guest.id,
                     "id": histories.filtered(lambda h: h.livechat_member_type == "visitor").id,
                     "livechat_member_type": "visitor",
-                    "member_id": channel.channel_member_ids.filtered(
-                        lambda m: m.guest_id == self.guest
-                    ).id,
+                    "member_id": member_g.id,
                 },
             ]
         return []
@@ -1419,8 +1409,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         user_0 = self.users[0]
         user_1 = self.users[1]
         user_2 = self.users[2]
-        members = channel.channel_member_ids
-        member_g = members.filtered(lambda m: m.guest_id)
+        member_g = channel.channel_member_ids.filtered(lambda m: m.guest_id)
         guest = member_g.guest_id
         if channel == self.channel_general:
             return {
@@ -1956,8 +1945,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         return {}
 
     def _expected_result_for_rtc_session(self, channel, user):
-        members = channel.channel_member_ids
-        member_2 = members.filtered(lambda m: m.partner_id == self.users[2].partner_id)
+        member_2 = channel.with_user(self.users[2]).self_member_id
         if channel == self.channel_channel_group_1 and user == self.users[2]:
             return {
                 # sudo: discuss.channel.rtc.session - reading a session in a test file

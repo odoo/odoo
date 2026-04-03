@@ -714,11 +714,10 @@ class DiscussChannel(models.Model):
         stores.bus_send()
         if invite_to_rtc_call:
             for channel in self:
-                current_channel_member = self.env['discuss.channel.member'].search([('channel_id', '=', channel.id), ('is_self', '=', True)])
                 # sudo: discuss.channel.rtc.session - reading rtc sessions of current user
-                if current_channel_member and current_channel_member.sudo().rtc_session_ids:
+                if channel.self_member_id.sudo().rtc_session_ids:
                     # sudo: discuss.channel.rtc.session - current user can invite new members in call
-                    current_channel_member.sudo()._rtc_invite_members(member_ids=new_members.ids)
+                    channel.self_member_id.sudo()._rtc_invite_members(member_ids=new_members.ids)
         return all_new_members
 
     def _get_member_join_notification(self, member):
@@ -1196,10 +1195,8 @@ class DiscussChannel(models.Model):
 
     def _find_or_create_member_for_self(self):
         self.ensure_one()
-        domain = [("channel_id", "=", self.id), ("is_self", "=", True)]
-        member = self.env["discuss.channel.member"].search(domain)
-        if member:
-            return member
+        if self.self_member_id:
+            return self.self_member_id
         if not self.env.user._is_public():
             return self._add_members(users=self.env.user)
         guest = self.env["mail.guest"]._get_guest_from_context()
@@ -1227,8 +1224,7 @@ class DiscussChannel(models.Model):
         """
         self.ensure_one()
         guest = self.env["mail.guest"]
-        member = self.env["discuss.channel.member"].search([("channel_id", "=", self.id), ("is_self", "=", True)])
-        if member:
+        if member := self.self_member_id:
             return member.partner_id, member.guest_id
         if not self.env.user._is_public():
             self._add_members(users=self.env.user, post_joined_message=post_joined_message)
@@ -1629,7 +1625,7 @@ class DiscussChannel(models.Model):
                 channel_name=self.name,
             )
         else:
-            if members := self.channel_member_ids.filtered(lambda m: not m.is_self):
+            if members := self.channel_member_ids - self.self_member_id:
                 member_names = html_escape(format_list(self.env, [f"%(member_{member.id})s" for member in members])) % {
                     f"member_{member.id}": member._get_member_html_link()
                     for member in members
@@ -1659,7 +1655,7 @@ class DiscussChannel(models.Model):
         return msg
 
     def execute_command_who(self, **kwargs):
-        if all_other_members := self.channel_member_ids.filtered(lambda m: not m.is_self):
+        if all_other_members := self.channel_member_ids - self.self_member_id:
             members = all_other_members[:30]
             list_params = [f"%(member_{member.id})s" for member in members]
             if len(all_other_members) != len(members):
