@@ -43,8 +43,13 @@ class PaymentProvider(models.Model):
              "are only visible on manage forms.",
     )
     company_id = fields.Many2one(  # Indexed to speed-up ORM searches (from ir_rule or others)
-        string="Company", comodel_name='res.company', default=lambda self: self.env.company.id,
-        required=True, index=True)
+        string="Company",
+        comodel_name="res.company",
+        default=lambda self: self.env.company.id,
+        required=True,
+        index=True,
+        domain=[("parent_id", "=", False)],
+    )
     main_currency_id = fields.Many2one(
         related='company_id.currency_id',
         help="The main currency of the company, used to display monetary fields.",
