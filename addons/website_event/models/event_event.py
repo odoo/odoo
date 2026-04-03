@@ -9,6 +9,8 @@ import werkzeug.urls
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
+from odoo.addons.website.tools.jsonld_builder import JsonLd
+from odoo.addons.website.tools.helpers import text_from_html, truncate_text
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
@@ -650,3 +652,114 @@ class EventEvent(models.Model):
             data['tag_ids'] = event.tag_ids.read(['name'])
             data['image_url'] = event._get_image_url()
         return results_data
+
+    def _to_structured_data_summary(self, website):
+        """Lightweight structured data for listing pages.
+
+        Only includes details visible on the summary page (name, date,
+        location name, url) to comply with Google's visible-content rule.
+
+        :param website: The current website.
+        :return: Event summary schema, or ``None`` when the event should not
+            be indexed.
+        :rtype: JsonLd | None
+        """
+        self.ensure_one()
+
+        if not self.address_id or self.is_ongoing or self.is_done or self.website_visibility != 'public':
+            # Google does not support ongoing or past events, and virtual events
+            # without a physical location. Moreover, as the event is not public,
+            # it is not relevant to have it indexed by google.
+            return None
+
+        base_url = website.get_base_url()
+        image_url = website.image_url(self, 'image_1920')
+
+        image = None
+        if image_url:
+            image_url = f"{base_url}{image_url}"
+            image = JsonLd("ImageObject", url=image_url)
+
+        address = self.address_id.sudo()
+        location = JsonLd(
+            "Place", name=self.address_name,
+        ).add_nested(address=website.postal_address_structured_data(
+            street=address.street,
+            street2=address.street2,
+            city=address.city,
+            zip=address.zip,
+            state_code=address.state_id.code,
+            country_code=address.country_id.code,
+        ))
+
+        return JsonLd(
+            "Event",
+            name=self.name,
+            url=self.website_absolute_url,
+            start_date=JsonLd.datetime(self.date_begin),
+        ).add_nested(image=image, location=location)
+
+    def _to_structured_data(self, website):
+        """Generate full structured data for individual event pages.
+
+        Extends the summary with additional detail-page fields: end date,
+        description, status, attendance mode, image, organizer, and offers.
+
+        :param website: The current website.
+        :return: Full event schema, or ``None`` when summary data is not
+            available.
+        :rtype: JsonLd | None
+        """
+        event_data = self._to_structured_data_summary(website)
+        if not event_data:
+            return None
+
+        description = self.subtitle or (self.description and truncate_text(text_from_html(self.description, True), 300))
+        organizer = None
+        if self.organizer_id:
+            organizer_sudo = self.organizer_id.sudo()
+            organizer = JsonLd("Organization", name=organizer_sudo.name)
+            if organizer_sudo.website:
+                organizer.set(url=organizer_sudo.website)
+
+        event_status = "EventCancelled" if self.kanban_state == 'cancel' else "EventScheduled"
+        tickets = []
+        now = fields.Datetime.now()
+        for ticket in self.event_ticket_ids:
+            offer = self._to_structured_data_ticket_offer(ticket, self.website_absolute_url, now)
+            if offer:
+                tickets.append(offer)
+
+        return event_data.set(
+            end_date=JsonLd.datetime(self.date_end),
+            description=description,
+            event_status=f"https://schema.org/{event_status}",
+            event_attendance_mode="https://schema.org/OfflineEventAttendanceMode",
+        ).add_nested(
+            organizer=organizer,
+            offers=tickets,
+        )
+
+    def _to_structured_data_ticket_offer(self, ticket, event_url, now):
+        """Create a JSON-LD Offer for a single event ticket.
+        :param ticket: An ``event.event.ticket`` record.
+        :param str event_url: The absolute URL of the event page.
+        :param datetime now: Current UTC datetime for expiry checks.
+        :return: A ``JsonLd("Offer", …)`` instance, or *None* to skip.
+        :rtype: JsonLd | None
+        """
+        is_expired = ticket.end_sale_datetime and ticket.end_sale_datetime < now
+        if ticket.is_sold_out or is_expired:
+            availability = "https://schema.org/SoldOut"
+        else:
+            availability = "https://schema.org/InStock"
+
+        offer = JsonLd("Offer",
+            name=ticket.name,
+            availability=availability,
+            valid_from=JsonLd.datetime(ticket.start_sale_datetime),
+            valid_through=JsonLd.datetime(ticket.end_sale_datetime),
+        )
+        if not ticket.is_sold_out:
+            offer.set(url=f"{event_url}/register")
+        return offer

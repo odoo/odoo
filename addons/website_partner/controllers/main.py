@@ -3,15 +3,32 @@
 from odoo import http
 from odoo.http import request
 
+from odoo.addons.website.tools.jsonld_builder import JsonLd, create_breadcrumbs
+
 
 class WebsitePartnerPage(http.Controller):
 
+    def _get_partner_breadcrumb_structured_data(self, website, partner):
+        base_url = website.get_base_url()
+        return create_breadcrumbs([
+            (website.name, base_url),
+            (request.env._('Partners'), f"{base_url}/partners"),
+            (partner.display_name, f"{base_url}{partner.website_url}"),
+        ])
+
     def _get_partners_detail_values(self, partner_id, **post):
         partner_sudo = request.env['res.partner'].sudo().browse(partner_id)
+        website = request.website
+        structured_data = JsonLd.render_structured_data_list([
+            website.organization_structured_data(with_id=True),
+            partner_sudo._to_structured_data(website),
+            self._get_partner_breadcrumb_structured_data(website, partner_sudo),
+        ])
         return {
             'main_object': partner_sudo,
             'partner': partner_sudo,
-            'edit_page': False
+            'edit_page': False,
+            'partner_structured_data': structured_data,
         }
 
     # Do not use semantic controller due to SUPERUSER_ID

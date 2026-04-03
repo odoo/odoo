@@ -4,7 +4,7 @@
 <!-- ======   Overall pages layout   ===========================================
 ============================================================================ -->
 <template id="index" name="Blog Navigation">
-    <t t-call="website.layout">
+    <t t-call="website.layout" head="head">
         <div id="wrap" class="js_blog website_blog">
             <t t-out="0"/>
 
@@ -28,6 +28,7 @@ list of filtered posts (by date or tag).
     </t>
     <t t-call="website_blog.index"
         head="head"
+        structured_data="blog_json_ld"
         opt_blog_readable="is_view_active('website_blog.opt_blog_readable')">
 
         <!-- Check for active options: the stored value may be used in sub-templates too  -->
@@ -165,7 +166,7 @@ list of filtered posts (by date or tag).
 <!-- ====== Blog Post Complete Layout ==========================================
 ============================================================================ -->
 <template id="website_blog.blog_post_complete" name="Blog Post" track="1">
-    <t t-call="website_blog.index">
+    <t t-call="website_blog.index" head="head" structured_data="blog_post_json_ld">
 
         <t t-set="opt_blog_post_regular_cover" t-value="is_view_active('website_blog.opt_blog_post_regular_cover')"/>
         <t t-set="opt_blog_post_breadcrumb" t-value="is_view_active('website_blog.opt_blog_post_breadcrumb')"/>

@@ -2,7 +2,7 @@
 <odoo>
 
 <template id="event_exhibitors" name="Event Exhibitors">
-    <t t-call="website_event.layout">
+    <t t-call="website_event.layout" structured_data="exhibitor_list_json_ld">
         <div class="o_wevent_online o_wesponsor_index container">
             <!-- Topbar -->
             <t t-call="website_event_exhibitor.exhibitors_topbar"/>

@@ -7,6 +7,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website.tools.jsonld_builder import JsonLd, create_breadcrumbs
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.misc import get_lang
@@ -169,6 +170,17 @@ class WebsiteEventController(http.Controller):
 
         searches['search'] = fuzzy_search_term or search
 
+        list_items = [
+            JsonLd(
+                "ListItem",
+                position=index,
+            ).add_nested(item=valid_schema)
+            for index, event in enumerate(events, start=1)
+            if (valid_schema := event._to_structured_data_summary(website)) is not None
+        ]
+        item_list = JsonLd("ItemList").add_nested(item_list_element=list_items) if list_items else None
+        breadcrumb = self._get_event_breadcrumb_structured_data()
+
         values = {
             'current_date': current_date,
             'current_country': current_country,
@@ -187,9 +199,14 @@ class WebsiteEventController(http.Controller):
             'slugify_tags': self._slugify_tags,
             'search_count': event_count,
             'original_search': fuzzy_search_term and search,
-            'website': website
+            'website': website,
+            'event_list_json_ld': JsonLd.render_structured_data_list(
+                [
+                    website.organization_structured_data(with_id=True),
+                    item_list,
+                    breadcrumb,
+                ]),
         }
-
         return request.render("website_event.index", values)
 
     # ------------------------------------------------------------
@@ -256,6 +273,14 @@ class WebsiteEventController(http.Controller):
     @http.route(['''/event/<model("event.event"):event>/register'''], type='http', auth="public", website=True, sitemap=False, readonly=True)
     def event_register(self, event, **post):
         values = self._prepare_event_register_values(event, **post)
+        website = request.website
+        main_schema = event._to_structured_data(website)
+        breadcrumb_list_schema = self._get_event_breadcrumb_structured_data(event)
+        values['event_json_ld'] = JsonLd.render_structured_data_list([
+            website.organization_structured_data(with_id=True),
+            main_schema,
+            breadcrumb_list_schema,
+        ])
         return request.render("website_event.event_description_full", values)
 
     def _prepare_event_register_values(self, event, **post):
@@ -533,6 +558,22 @@ class WebsiteEventController(http.Controller):
     # ------------------------------------------------------------
     # TOOLS (HELPERS)
     # ------------------------------------------------------------
+
+    def _get_event_breadcrumb_structured_data(self, event=None):
+        """Build breadcrumb structured data for event pages.
+
+        :param event: optional event record to append as last breadcrumb item
+        :return: JsonLd BreadcrumbList
+        """
+        website = request.website
+        base_url = website.get_base_url()
+        items = [
+            (website.name, base_url),
+            (request.env._('All Events'), f'{base_url}/events'),
+        ]
+        if event:
+            items.append((event.name, f'{base_url}{event.website_url}'))
+        return create_breadcrumbs(items)
 
     def get_formated_date(self, event):
         start_date = fields.Datetime.from_string(event.date_begin).date()

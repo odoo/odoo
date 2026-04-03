@@ -6,6 +6,7 @@ from random import randint, sample
 from werkzeug.exceptions import Forbidden
 
 from odoo import http
+from odoo.addons.website.tools.jsonld_builder import JsonLd, create_breadcrumbs
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 from odoo.fields import Domain
 from odoo.http import request
@@ -22,6 +23,20 @@ class ExhibitorController(WebsiteEventController):
         if not request.env.user.has_group('event.group_event_registration_desk'):
             search_domain_base = Domain.AND([search_domain_base, [('is_published', '=', True)]])
         return search_domain_base
+
+    def _get_exhibitor_breadcrumb_structured_data(self, event, sponsor=None):
+        website = request.website
+        base_url = website.get_base_url()
+        event_url = f"{base_url}{event.website_url}"
+        exhibitors_url = f"{event_url}/exhibitors"
+        items = [
+            (website.name, base_url),
+            (event.name, event_url),
+            (request.env._("Exhibitors"), exhibitors_url),
+        ]
+        if sponsor:
+            items.append((sponsor.name, f"{base_url}{sponsor.website_url}"))
+        return create_breadcrumbs(items)
 
     # ------------------------------------------------------------
     # MAIN PAGE
@@ -100,6 +115,29 @@ class ExhibitorController(WebsiteEventController):
                 'sponsors': random_sponsors,
             })
 
+        website = request.website
+        base_url = website.get_base_url()
+        event_url = f"{base_url}{event.website_url}"
+        exhibitors_url = f"{event_url}/exhibitors"
+
+        list_items = [
+            JsonLd("ListItem", position=position).add_nested(
+                item=sponsor._to_structured_data_summary(website),
+            )
+            for position, sponsor in enumerate(sorted_sponsors, start=1)
+        ]
+        item_list = JsonLd(
+            "ItemList",
+            name=request.env._("Exhibitors"),
+            url=exhibitors_url,
+        ).add_nested(item_list_element=list_items)
+        breadcrumbs = self._get_exhibitor_breadcrumb_structured_data(event)
+        exhibitor_list_json_ld = JsonLd.render_structured_data_list([
+            website.organization_structured_data(with_id=True),
+            item_list,
+            breadcrumbs,
+        ])
+
         # return rendering values
         return {
             # event information
@@ -115,6 +153,7 @@ class ExhibitorController(WebsiteEventController):
             'search_sponsorships': search_sponsorships,
             'sponsor_types': sponsor_types,
             'sponsor_countries': sponsor_countries,
+            'exhibitor_list_json_ld': exhibitor_list_json_ld,
             # environment
             'hostname': request.httprequest.host.split(':')[0],
             'is_event_user': is_event_user,
@@ -157,6 +196,15 @@ class ExhibitorController(WebsiteEventController):
         option_widescreen = options.get('widescreen', False)
         option_widescreen = bool(option_widescreen) if option_widescreen != '0' else False
 
+        website = request.website
+        breadcrumbs = self._get_exhibitor_breadcrumb_structured_data(event, sponsor=sponsor)
+        exhibitor_json_ld = JsonLd.render_structured_data_list([
+            website.organization_structured_data(with_id=True),
+            event._to_structured_data_summary(website),
+            sponsor._to_structured_data(website),
+            breadcrumbs,
+        ])
+
         return {
             # event information
             'event': event,
@@ -165,6 +213,7 @@ class ExhibitorController(WebsiteEventController):
             'hide_sponsors': True,
             # sidebar
             'sponsors_other': sponsors_other[:30],
+            'exhibitor_json_ld': exhibitor_json_ld,
             # options
             'option_widescreen': option_widescreen,
             'option_can_edit': request.env.user.has_group('event.group_event_user'),

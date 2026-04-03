@@ -187,7 +187,7 @@
 <template id="post_description_full" name="Question Navigation">
     <t t-set="_page_name" t-valuef="single_question"/>
     <t t-set="_question_creator" t-value="question.create_uid.id"/>
-
+    <t t-set="structured_data" t-value="forum_structured_data"/>
     <t t-call="website_forum.header">
         <div class="mw-xl-75 mw-xxl-100">
             <!-- Post Status Messages -->

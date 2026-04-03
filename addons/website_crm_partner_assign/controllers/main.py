@@ -12,6 +12,7 @@ from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website_google_map.controllers.main import GoogleMap
 from odoo.addons.website_partnership.controllers.main import WebsitePartnership
+from odoo.addons.website.tools.jsonld_builder import create_breadcrumbs, JsonLd
 from odoo.fields import Domain
 
 from odoo.tools.translate import _, LazyTranslate
@@ -189,6 +190,14 @@ class WebsiteAccount(CustomerPortal):
 class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
     _references_per_page = 40
 
+    def _get_partners_breadcrumb_structured_data(self):
+        website = request.website
+        base_url = website.get_base_url()
+        return create_breadcrumbs([
+            (website.name, base_url),
+            (request.env._('Partners'), f"{base_url}/partners"),
+        ])
+
     def _get_gmap_domains(self, **kw):
         if kw.get('dom', '') != "website_crm_partner_assign.partners":
             return super()._get_gmap_domains(**kw)
@@ -327,7 +336,10 @@ class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
             country=country,
             **{key: value for key, value in post.items() if (key in ['search', 'country_all', 'industry'])}
         )
-
+        structured_data = [request.website.organization_structured_data()]
+        if partners:
+            structured_data += [partner._to_structured_data(request.website) for partner in partners]
+        structured_data.append(self._get_partners_breadcrumb_structured_data())
         values = {
             'industries': industries,
             'current_industry': current_industry,
@@ -343,7 +355,8 @@ class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
             'search': search,
             'google_maps_api_key': google_maps_api_key,
             'fallback_all_countries': fallback_all_countries,
-            'keep_partners_url': keep
+            'keep_partners_url': keep,
+            'structured_data': JsonLd.render_structured_data_list(structured_data),
         }
         return values
 

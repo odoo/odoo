@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.addons.website.tools.jsonld_builder import JsonLd
 from odoo.tools import mute_logger
 from odoo.tools.urls import urljoin as url_join
 from odoo.tools.translate import html_translate
@@ -164,3 +165,113 @@ spirit. To be successful, you will have solid solving problem skills.''')
                     job_address.country_id.name,
                 ]))
         return results_data
+
+    def _to_structured_data(self):
+        """Build full JobPosting JSON-LD for a single job.
+
+        Extends the shared base payload with detail-page overrides and
+        enrichments: website-specific description, direct apply flag,
+        internal identifier, and applicant location requirements.
+
+        :return: JobPosting schema.
+        :rtype: JsonLd
+        """
+        self.ensure_one()
+        website = self.website_id
+        structured_data = self._to_structured_data_base(website)
+        applicant_location_requirements = None
+        identifier = None
+        if self.department_id:
+            department = self.department_id
+            department_company = department.company_id
+            identifier = JsonLd(
+                "PropertyValue",
+                name=department_company.name,
+                value=f"{department_company.id}-{self.id}",
+            )
+
+        if self.address_id.country_id.code:
+            applicant_location_requirements = JsonLd(
+                "Country",
+                name=self.address_id.country_id.code,
+            )
+
+        return structured_data.set(
+            direct_apply=True,
+            description=self.website_description,
+        ).add_nested(
+            identifier=identifier,
+            applicant_location_requirements=applicant_location_requirements,
+        )
+
+    def _to_structured_data_base(self, website):
+        """Build the shared JobPosting payload used by summary and detail.
+
+        Includes shared attributes such as title, URL, short description,
+        date posted, employment type, location type, department category,
+        total openings, hiring organization reference and job location.
+
+        :param website: The current website.
+        :return: Base JobPosting schema.
+        :rtype: JsonLd
+        """
+        self.ensure_one()
+        base_url = website.get_base_url()
+        location_type = "TELECOMMUTE" if not self.address_id else "ON_SITE"
+        employement_type = None
+        contract_type = self.employee_type_id.sudo()
+        if contract_type:
+            employement_type = {
+                'Permanent': 'FULL_TIME',
+                'Temporary': 'TEMPORARY',
+                'Interim': 'TEMPORARY',
+                'Seasonal': 'TEMPORARY',
+                'Full-Time': 'FULL_TIME',
+                'Part-Time': 'PART_TIME',
+                'Intern': 'INTERN',
+                'Student': 'INTERN',
+                'Apprenticeship': 'INTERN',
+                'Thesis': 'INTERN',
+                'Statutory': 'OTHER',
+                'Employee': 'FULL_TIME',
+            }.get(contract_type.name, 'OTHER')
+        schema = JsonLd(
+            "JobPosting",
+            title=self.name,
+            url=f"{base_url}{self.website_url}",
+            description=self.description,
+            date_posted=JsonLd.datetime(self.create_date),
+            employment_type=employement_type,
+            job_location_type=location_type,
+            occupational_category=self.department_id.name,
+            total_job_openings=self.no_of_recruitment if self.no_of_recruitment >= 1 else None,
+        ).add_nested(
+            hiring_organization=JsonLd.create_id_reference(
+                "Organization",
+                f"{website.get_base_url()}/#organization",
+            ),
+        )
+        address_id = self.address_id.sudo()
+        if address_id:
+            schema.add_nested(
+                job_location=JsonLd("Place").add_nested(
+                    address=website.postal_address_structured_data(
+                        city=address_id.city,
+                        state_code=address_id.state_id.code,
+                        country_code=address_id.country_id.code,
+                    ),
+                ),
+            )
+        return schema
+
+    def _to_structured_data_summary(self, website):
+        """Build lightweight JobPosting schemas for jobs listing pages.
+
+        Reuses the shared base payload so listing data stays aligned with the
+        detail schema source.
+
+        :param website: The current website.
+        :return: One JobPosting schema per job in ``self``.
+        :rtype: list[JsonLd]
+        """
+        return [job._to_structured_data_base(website) for job in self]

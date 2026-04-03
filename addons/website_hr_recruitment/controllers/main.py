@@ -8,6 +8,7 @@ from dateutil.relativedelta import relativedelta
 from functools import partial
 from operator import itemgetter
 
+from odoo.addons.website.tools.jsonld_builder import JsonLd, create_breadcrumbs
 from odoo import http, _
 from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.fields import Domain
@@ -20,6 +21,23 @@ _lt = LazyTranslate(__name__)
 
 class WebsiteHrRecruitment(WebsiteForm):
     _jobs_per_page = 12
+
+    def _get_jobs_breadcrumb_structured_data(self, website, job=None):
+        """Build BreadcrumbList schema for jobs pages.
+
+        :param website: The current website.
+        :param job: Optional ``hr.job`` record for detail pages.
+        :return: Breadcrumb schema.
+        :rtype: JsonLd | None
+        """
+        base_url = website.get_base_url()
+        items = [
+            (website.name, base_url),
+            (request.env._("Jobs"), f"{base_url}/jobs"),
+        ]
+        if job:
+            items.append((job.name, f"{base_url}{job.website_url}"))
+        return create_breadcrumbs(items)
 
     def sitemap_jobs(env, rule, qs):
         if not qs or qs.lower() in '/jobs':
@@ -151,8 +169,16 @@ class WebsiteHrRecruitment(WebsiteForm):
         )
         offset = pager['offset']
         jobs_to_display = found_jobs[offset:offset + self._jobs_per_page]
+        organization_structured_data = website.organization_structured_data(with_id=True)
+        listing_structured_data = jobs_to_display._to_structured_data_summary(website)
+        jobs_structured_data = JsonLd.render_structured_data_list([
+            organization_structured_data,
+            *listing_structured_data,
+            self._get_jobs_breadcrumb_structured_data(website),
+        ])
         return request.render("website_hr_recruitment.index", {
             'jobs': jobs_to_display,
+            'jobs_structured_data': jobs_structured_data,
             'country_id': country,
             'department_id': department,
             'office_id': office,
@@ -189,7 +215,16 @@ class WebsiteHrRecruitment(WebsiteForm):
 
     @http.route('''/jobs/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
     def job(self, job, **kwargs):
+        website = request.website
+        job_structured_data = job._to_structured_data()
+        organization_structured_data = website.organization_structured_data(with_id=True)
+        breadcrumbs = self._get_jobs_breadcrumb_structured_data(website, job=job)
         return request.render("website_hr_recruitment.detail", {
+            'job_structured_data': JsonLd.render_structured_data_list([
+                organization_structured_data,
+                job_structured_data,
+                breadcrumbs,
+            ]),
             'job': job,
             'main_object': job,
         })

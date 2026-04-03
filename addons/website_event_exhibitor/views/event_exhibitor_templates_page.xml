@@ -5,6 +5,7 @@
     <t t-set="no_header" t-value="option_widescreen"/>
     <t t-set="no_footer" t-value="option_widescreen"/>
     <t t-call="website_event.layout"
+        structured_data="exhibitor_json_ld"
         navbar_back_url="'/event/%s/exhibitors' % (slug(event))"
         navbar_back_title.translate="Back to all Exhibitors"
         navbar_back_text.translate="All Exhibitors">

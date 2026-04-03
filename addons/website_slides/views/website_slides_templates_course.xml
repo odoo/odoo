@@ -110,7 +110,7 @@
         <script type="text/javascript" src="/website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js"></script>
     </t>
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
-    <t t-call="website.layout">
+    <t t-call="website.layout" structured_data="course_json_ld">
         <div id="wrap" t-attf-class="wrap mt-0">
             <div class="oe_structure oe_empty">
             <t t-call="website.record_cover" _record="channel" use_filters="True" use_size="True" use_text_align="True">

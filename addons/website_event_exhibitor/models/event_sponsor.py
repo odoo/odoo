@@ -206,3 +206,31 @@ class EventSponsor(models.Model):
     def get_base_url(self):
         """As website_id is not defined on this record, we rely on event website_id for base URL."""
         return self.event_id.get_base_url()
+
+    def _to_structured_data_summary(self, website):
+        """Build lightweight Organization schema for exhibitor listing pages."""
+        self.ensure_one()
+        base_url = website.get_base_url()
+        image_url = self.website_image_url
+        if image_url and image_url.startswith('/'):
+            image_url = f"{base_url}{image_url}"
+
+        return self.partner_id._to_organization_structured_data(
+            website,
+            image_url=image_url,
+            use_logo=True,
+        ).set(
+            name=self.name,
+            url=self.website_absolute_url,
+            description=self.subtitle,
+            telephone=self.phone,
+            email=self.email,
+        )
+
+    def _to_structured_data(self, website):
+        """Build full Organization schema for exhibitor detail pages."""
+        self.ensure_one()
+        structured_data = self._to_structured_data_summary(website)
+        return structured_data.set(
+            description=self.website_description,
+        )

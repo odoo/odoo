@@ -5,7 +5,8 @@ from datetime import datetime
 import random
 
 from odoo import api, models, fields, _
-from odoo.addons.website.tools import text_from_html
+from odoo.addons.website.tools.jsonld_builder import JsonLd
+from odoo.addons.website.tools.helpers import text_from_html, truncate_text, images_from_html
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
 from odoo.tools import html_escape
@@ -104,6 +105,38 @@ class BlogBlog(models.Model):
 
         return tag_by_blog
 
+    def _to_structured_data(self, website):
+        """Build Blog JSON-LD for a single blog page.
+
+        :param website: The current website.
+        :return: Blog schema with optional image.
+        :rtype: JsonLd
+        """
+        self.ensure_one()
+
+        base_url = website.get_base_url()
+        slug = self.env["ir.http"]._slug(self)
+        blog_url = f"{base_url}/blog/{slug}"
+
+        description = (
+            self.subtitle
+            or self.website_meta_description
+            or (text_from_html(self.content, True) if self.content else None)
+        )
+
+        blog_sd = JsonLd(
+            "Blog",
+            id=f"{blog_url}/#blog",
+            name=self.name,
+            url=blog_url,
+            description=description,
+        )
+
+        image = self._get_background_image_url()
+        if image:
+            blog_sd.add_nested(image=JsonLd("ImageObject", url=f"{base_url}{image}"))
+        return blog_sd
+
 
 class BlogTagCategory(models.Model):
     _name = 'blog.tag.category'
@@ -144,6 +177,93 @@ class BlogPost(models.Model):
         'website.cover_properties.mixin', 'website.searchable.mixin']
     _order = 'id DESC'
     _mail_post_access = 'read'
+
+    def _to_structured_data_summary(self, website):
+        """Lightweight structured data for listing pages.
+
+        Only includes details visible on the summary card (headline, snippet,
+        date, image, author, tags, section) to comply with Google's
+        visible-content rule.
+
+        :param website: The current website.
+        :return: One BlogPosting schema per post in ``self``.
+        :rtype: list[JsonLd]
+        """
+        base_url = website.get_base_url()
+        schemas = []
+        for post in self.sudo():
+            post_url = f"{base_url}{post.website_url}"
+            image_url = post._get_background_image_url()
+            image = JsonLd("ImageObject", url=base_url + image_url) if image_url else None
+
+            is_part_of = None
+            if post.blog_id:
+                blog_slug = self.env['ir.http']._slug(post.blog_id)
+                is_part_of = JsonLd.create_id_reference(
+                    "Blog", f"{base_url}/blog/{blog_slug}/#blog",
+                )
+            if post.author_id.is_company:
+                author = JsonLd.create_id_reference("Organization", f"{base_url}/#organization")
+            else:
+                author = JsonLd("Person",
+                                name=post.author_id.display_name,
+                                url=f"{base_url}{website.image_url(post, 'author_avatar')}")
+
+            blog_post = JsonLd(
+                "BlogPosting",
+                headline=post.name,
+                url=post_url,
+                date_published=JsonLd.datetime(post.publish_on or post.create_date),
+                keywords=", ".join(post.tag_ids.mapped("name")) or None,
+                article_section=post.blog_id.name or None,
+                article_body=post.teaser,
+            ).add_nested(
+                image=image,
+                author=author,
+                publisher=JsonLd.create_id_reference("Organization", f"{base_url}/#organization"),
+                is_part_of=is_part_of,
+            )
+            schemas.append(blog_post)
+
+        return schemas
+
+    def _to_structured_data(self, website):
+        """Full structured data for individual blog post pages.
+
+        Extends the summary with detail-page fields: articleBody,
+        dateModified, inLanguage, and wordCount.
+
+        :param website: The current website.
+        :return: One enriched BlogPosting schema per post in ``self``.
+        :rtype: list[JsonLd]
+        """
+        schemas = self._to_structured_data_summary(website)
+        lang_code = self.env.lang or website.default_lang_id.code
+        in_language = lang_code.replace("_", "-") if lang_code else None
+
+        for blog_post_sd, post in zip(schemas, self.sudo()):
+            content_text = text_from_html(post.content, True) if post.content else None
+            article_body = truncate_text(content_text, 500) if content_text else None
+            description = (
+                post.website_meta_description
+                or post.subtitle
+                or post.teaser_manual
+                or post.teaser
+            )
+            word_count = len(content_text.split()) if content_text else None
+            images = images_from_html(post.content, website.get_base_url())
+            images_schema = [JsonLd("ImageObject", url=image_url) for image_url in images]
+
+            blog_post_sd.set(
+                description=description,
+                article_body=article_body,
+                date_modified=JsonLd.datetime(post.write_date),
+                in_language=in_language,
+                word_count=word_count,
+            ).add_nested(
+                image=images_schema,
+            )
+        return schemas
 
     def _compute_website_url(self):
         super(BlogPost, self)._compute_website_url()

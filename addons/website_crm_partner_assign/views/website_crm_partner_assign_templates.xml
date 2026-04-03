@@ -3,6 +3,9 @@
 
 <!-- Page -->
 <template id="index" inherit_id="website_partnership.index_layout" name="Find Resellers">
+    <xpath expr="//t[@t-call='website.layout']" position="attributes">
+        <attribute name="structured_data">structured_data</attribute>
+    </xpath>
     <xpath expr="//t[@t-set='additional_title']" position="replace">
         <t t-set="additional_title">Resellers</t>
     </xpath>

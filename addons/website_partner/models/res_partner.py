@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models
+from odoo import fields, models
 from odoo.tools.translate import html_translate
 
 
@@ -25,3 +25,10 @@ class ResPartner(models.Model):
                 return self.env.ref('website_partner.mt_partner_published', raise_if_not_found=False) or super()._track_log_get_default_subtype(track_init_values)
             return self.env.ref('website_partner.mt_partner_unpublished', raise_if_not_found=False) or super()._track_log_get_default_subtype(track_init_values)
         return super()._track_log_get_default_subtype(track_init_values)
+
+    def _to_structured_data(self, website):
+        """Build Organization schema for a partner detail page."""
+        self.ensure_one()
+        return self._to_organization_structured_data(website).set(
+            description=self.website_short_description,
+        )
