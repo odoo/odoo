@@ -450,3 +450,5 @@ async function mount(C, target, config = {}) {
     return new App(config).createRoot(C, config).mount(target, config);
 }
 owl.mount = mount;
+
+owl.__ODOO_COMPATIBILITY_LAYER_ADDED__ = true;
