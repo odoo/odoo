@@ -13,7 +13,7 @@ from odoo.http import Response
 from odoo.tools import SQL, escape_psql
 
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
-from odoo.addons.website.tools import text_from_html
+from odoo.addons.website.tools.helpers import text_from_html
 
 logger = logging.getLogger(__name__)
 

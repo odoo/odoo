@@ -37,7 +37,7 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
 from odoo.addons.web.controllers.binary import Binary
 from odoo.addons.web.controllers.session import Session
-from odoo.addons.website.tools import get_base_domain
+from odoo.addons.website.tools.helpers import get_base_domain
 
 _lt = LazyTranslate(__name__)
 logger = logging.getLogger(__name__)

@@ -8,7 +8,7 @@ from odoo import models
 from odoo.http import request
 from odoo.tools import lazy
 from odoo.addons.website.models import ir_http
-from odoo.addons.website.tools import add_form_signature
+from odoo.addons.website.tools.helpers import add_form_signature
 from odoo.exceptions import AccessError
 
 

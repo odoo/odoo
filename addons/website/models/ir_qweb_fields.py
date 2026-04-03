@@ -4,7 +4,7 @@ from lxml import etree
 from markupsafe import Markup
 
 from odoo import api, models, _
-from odoo.addons.website.tools import add_form_signature
+from odoo.addons.website.tools.helpers import add_form_signature
 
 
 class IrQwebFieldContact(models.AbstractModel):

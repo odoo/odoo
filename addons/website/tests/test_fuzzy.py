@@ -11,7 +11,7 @@ from odoo.tests.common import TransactionCase
 
 from odoo.addons.website.controllers.main import Website
 from odoo.addons.http_routing.tests.common import MockRequest
-from odoo.addons.website.tools import distance
+from odoo.addons.website.tools.helpers import distance
 
 _logger = logging.getLogger(__name__)
 

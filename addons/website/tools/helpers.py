@@ -2,7 +2,7 @@
 import re
 
 import werkzeug.urls
-from lxml import etree
+from lxml import etree, html
 
 from odoo.tools.misc import hmac
 
@@ -85,12 +85,36 @@ def text_from_html(html_fragment, collapse_whitespace=False):
         '//*[@class="css_non_editable_mode_hidden"]',
     ]
     for xpath_filter in xpath_filters:
-        for element in tree.xpath(xpath_filter): element.getparent().remove(element)
+        for element in tree.xpath(xpath_filter):
+            element.getparent().remove(element)
 
     content = ' '.join(tree.itertext())
     if collapse_whitespace:
         content = re.sub(r'\s+', ' ', content).strip()
     return content
+
+
+def images_from_html(html_fragment, website_url):
+    """
+    Extract unique image URLs from an HTML fragment.
+    Preserves order.
+    :param html_fragment: document from which image URLs must be extracted
+    :param website_url: base URL of the website to resolve relative URLs
+    :return: list of image URLs extracted from the html
+    """
+    if not html_fragment:
+        return []
+
+    tree = html.fromstring(html_fragment)
+    image_paths = []
+    seen = set()
+
+    for img in tree.xpath("//img[@src]"):
+        src = website_url + img.get("src")
+        if src not in seen:
+            seen.add(src)
+            image_paths.append(src)
+    return image_paths
 
 
 def get_base_domain(url, strip_www=False):
@@ -162,3 +186,17 @@ def create_image_attachment(env, image_path, image_name):
         'url': Attachments.get_base_url() + image_path,
     })
     return img
+
+
+def truncate_text(text, max_length=100, suffix='...'):
+    """
+    Truncates a text to a maximum length, adding a suffix if truncation occurs.
+
+    :param text: the text to truncate
+    :param max_length: the maximum length of the text including the suffix
+    :param suffix: the suffix to add if truncation occurs
+    :return: the truncated text
+    """
+    if not text or len(text) <= max_length:
+        return text
+    return text[:max_length - len(suffix)].strip() + suffix

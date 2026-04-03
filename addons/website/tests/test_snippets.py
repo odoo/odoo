@@ -6,7 +6,7 @@ from werkzeug.urls import url_encode
 
 from odoo.tests import HttpCase, tagged
 from odoo.addons.http_routing.tests.common import MockRequest
-from odoo.addons.website.tools import create_image_attachment
+from odoo.addons.website.tools.helpers import create_image_attachment
 
 _logger = logging.getLogger(__name__)
 

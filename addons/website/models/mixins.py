@@ -5,7 +5,7 @@ import urllib.parse
 
 from odoo import api, fields, models, _
 from odoo.fields import Domain
-from odoo.addons.website.tools import text_from_html
+from odoo.addons.website.tools.helpers import text_from_html
 from odoo.http import request
 from odoo.exceptions import AccessError, UserError
 from odoo.models import Query
