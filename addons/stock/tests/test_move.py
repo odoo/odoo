@@ -6726,3 +6726,140 @@ class TestStockMove(TestStockCommon):
         # All the move lines are also picked
         for move_line in delivery.move_ids.move_line_ids:
             self.assertTrue(move_line.picked)
+
+    def test_action_assign_respects_picking_owner(self):
+        """ When a picking has owner_id set and multiple owners hold quants in
+        the same location, action_assign() must only reserve quants belonging
+        to the picking's owner.
+
+        Without the fix, _action_assign() calls _update_reserved_quantity()
+        without forwarding picking.owner_id, so quants from any owner can be
+        reserved indiscriminately.
+        """
+        partner_2 = self.env['res.partner'].create({'name': 'Partner 2'})
+
+        # Two owners hold 5 units each of productA in the same location.
+        self.env['stock.quant']._update_available_quantity(
+            self.productA, self.stock_location, 5.0, owner_id=self.partner_1)
+        self.env['stock.quant']._update_available_quantity(
+            self.productA, self.stock_location, 5.0, owner_id=partner_2)
+
+        self.assertEqual(
+            self.env['stock.quant']._get_available_quantity(
+                self.productA, self.stock_location, owner_id=self.partner_1), 5.0)
+        self.assertEqual(
+            self.env['stock.quant']._get_available_quantity(
+                self.productA, self.stock_location, owner_id=partner_2), 5.0)
+
+        # Create a picking owned by partner_1 and a move for 5 units.
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'owner_id': self.partner_1.id,
+        })
+        move = self.env['stock.move'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.productA.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 7.0,
+            'picking_id': picking.id,
+        })
+
+        picking.action_confirm()
+        picking.action_assign()
+
+        # Odoo sets picking.state = 'assigned' even when moves are only partially
+        # reserved (see StockPicking._compute_state). The partial reservation is
+        # visible at the move level.
+        self.assertEqual(picking.state, 'assigned')
+        self.assertEqual(move.state, 'partially_available')
+
+        # Every reserved move line must belong to partner_1 only.
+        for ml in picking.move_line_ids:
+            self.assertEqual(
+                ml.owner_id, self.partner_1,
+                "Reserved move line owner should be partner_1, got %s" % ml.owner_id.name)
+
+        # 5 units effectively reserved on the move (not 7).
+        self.assertEqual(move.quantity, 5.0)
+
+        # partner_1's quants are fully reserved; partner_2's are untouched.
+        self.assertEqual(
+            self.env['stock.quant']._get_available_quantity(
+                self.productA, self.stock_location, owner_id=self.partner_1), 0.0)
+        self.assertEqual(
+            self.env['stock.quant']._get_available_quantity(
+                self.productA, self.stock_location, owner_id=partner_2), 5.0)
+
+    def test_action_assign_two_pickings_different_owners(self):
+        """ When two pickings each belong to a different owner and both owners
+        hold quants in the same location, action_assign() must reserve each
+        picking's moves exclusively from its own owner's quants.
+        """
+        partner_2 = self.env['res.partner'].create({'name': 'Partner 2'})
+
+        # Two owners hold 5 units each of productA in the same location.
+        self.env['stock.quant']._update_available_quantity(
+            self.productA, self.stock_location, 5.0, owner_id=self.partner_1)
+        self.env['stock.quant']._update_available_quantity(
+            self.productA, self.stock_location, 5.0, owner_id=partner_2)
+
+        # picking_1 owned by partner_1, picking_2 owned by partner_2.
+        picking_1 = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'owner_id': self.partner_1.id,
+        })
+        self.env['stock.move'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.productA.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+            'picking_id': picking_1.id,
+        })
+
+        picking_2 = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'owner_id': partner_2.id,
+        })
+        self.env['stock.move'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.productA.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+            'picking_id': picking_2.id,
+        })
+
+        (picking_1 | picking_2).action_confirm()
+        (picking_1 | picking_2).action_assign()
+
+        # Both pickings must be fully assigned.
+        self.assertEqual(picking_1.state, 'assigned')
+        self.assertEqual(picking_2.state, 'assigned')
+
+        # picking_1 move lines belong exclusively to partner_1.
+        for ml in picking_1.move_line_ids:
+            self.assertEqual(
+                ml.owner_id, self.partner_1,
+                "picking_1 move line owner should be partner_1, got %s" % ml.owner_id.name)
+
+        # picking_2 move lines belong exclusively to partner_2.
+        for ml in picking_2.move_line_ids:
+            self.assertEqual(
+                ml.owner_id, partner_2,
+                "picking_2 move line owner should be partner_2, got %s" % ml.owner_id.name)
+
+        # All quants of both owners are now reserved.
+        self.assertEqual(
+            self.env['stock.quant']._get_available_quantity(
+                self.productA, self.stock_location, owner_id=self.partner_1), 0.0)
+        self.assertEqual(
+            self.env['stock.quant']._get_available_quantity(
+                self.productA, self.stock_location, owner_id=partner_2), 0.0)
