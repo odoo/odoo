@@ -240,27 +240,29 @@
                                     <sheet>
                                         <field name="parent_id" invisible="1"/>  <!-- Used for partner_autocomplete -->
                                         <field name="type" required="1" widget="radio" options="{'horizontal': true}"/>
-                                        <div class="d-flex align-items-center gap-3">
+                                        <div class="d-flex flex-column flex-md-row align-items-center gap-3">
                                             <field name="image_1920" widget="contact_image" nolabel="1" options="{'preview_image': 'avatar_128', 'size': [100,100], 'img_class': 'rounded border'}"/>
-                                            <div class="flex-grow-1">
+                                            <group class="w-100">
+                                                <label for="name" class="d-md-none"/>
                                                 <h3>
-                                                    <field name="name" class="d-block" string="Name" default_focus="1" required="type == 'contact'" placeholder="e.g. Brandon Freeman"/>
+                                                    <field name="name" string="Name" default_focus="1" required="type == 'contact'" placeholder="e.g. Brandon Freeman"/>
                                                 </h3>
-                                                <div>
-                                                    <div class="o_input_box">
-                                                        <i class="o_input_box_overlay_start fa fa-envelope" title="Email"/>
-                                                        <field name="email" widget="email" context="{'gravatar_image': True}" required="user_ids" placeholder="Email"/>
-                                                    </div>
-                                                    <div class="o_input_box">
-                                                        <i class="o_input_box_overlay_start fa fa-phone" title="Phone"/>
-                                                        <field name="phone" widget="phone" placeholder="Phone"/>
-                                                    </div>
-                                                    <div invisible="type != 'contact'" class="o_input_box">
-                                                        <i class="o_input_box_overlay_start fa fa-suitcase" title="Position"/>
-                                                        <field name="function" placeholder="Job title"/>
-                                                    </div>
+                                                <label for="email" class="d-md-none"/>
+                                                <div class="d-flex align-items-baseline w-md-50 gap-2">
+                                                    <i class="d-none d-md-block fa fa-envelope" title="Email"/>
+                                                    <field name="email" widget="email" context="{'gravatar_image': True}" required="user_ids" placeholder="Email"/>
                                                 </div>
-                                            </div>
+                                                <label for="phone" class="d-md-none"/>
+                                                <div class="d-flex align-items-baseline w-md-50 gap-2">
+                                                    <i class="d-none d-md-block fa fa-phone" title="Phone"/>
+                                                    <field name="phone" widget="phone" placeholder="Phone"/>
+                                                </div>
+                                                <label for="function" class="d-md-none" invisible="type != 'contact'"/>
+                                                <div class="d-flex align-items-baseline w-md-50 gap-2" invisible="type != 'contact'">
+                                                    <i class="d-none d-md-block fa fa-suitcase" title="Position"/>
+                                                    <field name="function" placeholder="Job title"/>
+                                                </div>
+                                            </group>
                                         </div>
                                         <group invisible="type == 'contact'" name="other_info">
                                             <group>

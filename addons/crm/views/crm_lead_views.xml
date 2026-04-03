@@ -52,7 +52,7 @@
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active or won_status in ['lost', 'won']"/>
                         <widget name="web_ribbon" title="Lost" bg_color="text-bg-danger" invisible="won_status != 'lost'"/>
                         <widget name="web_ribbon" title="Won" invisible="won_status != 'won'"/>
-                        <div class="d-flex flex-column-reverse flex-md-row align-items-center">
+                        <div class="d-flex flex-column-reverse flex-md-row">
                             <div class="oe_title w-100">
                                 <h1 class="o_outlined">
                                     <field class="text-break" options="{'line_breaks': False}" widget="text" name="name" placeholder="e.g. Product Pricing"/>
@@ -71,8 +71,8 @@
                                 <field name="company_currency" invisible="1"/>
                                 <label for="expected_revenue" class="oe_edit_only"/>
                                 <field name="expected_revenue" widget='monetary' options="{'currency_field': 'company_currency'}"/>
-                                <div class="o_input_box" groups="crm.group_use_recurring_revenues">
-                                    <span class="o_input_box_overlay_start"> + </span>
+                                <div groups="crm.group_use_recurring_revenues">
+                                    <span> + </span>
                                     <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                                 </div>
                             </div>
@@ -99,11 +99,12 @@
                                         ~ <field class="w-auto" name="automated_probability" force_save="1"/> %
                                     </small>
                                 </div>
-                                <div id="probability" class="o_input_box mb-0" style="width: 10ch;">
+                                <div id="probability" class="d-flex" style="width: 10ch;">
                                     <field name="is_automated_probability" invisible="1"/>
-                                    <span class="o_input_box_overlay_start">at</span>
-                                    <field name="probability" widget="float" readonly="won_status != 'pending'"/>
-                                    <span class="o_input_box_overlay_end">%</span>
+                                    <span>at</span>
+                                    <field name="probability" widget="float" class="text-center"
+                                        readonly="won_status != 'pending'"/>
+                                    <span>%</span>
                                 </div>
                             </div>
                         </h2>
@@ -118,18 +119,18 @@
                             <group>
                                 <!-- probability -->
                                 <label for="probability"/>
-                                <div class="o_input_box">
+                                <div class="d-flex align-items-baseline">
                                     <field name="probability" widget="float" readonly="won_status != 'pending'"/>
-                                    <span class="o_input_box_overlay_end">%</span>
-                                    <widget name="pls_tooltip_button" class="o_input_box_overlay_end" invisible="won_status != 'pending' or not is_automated_probability" />
+                                    <span>%</span>
+                                    <widget name="pls_tooltip_button" invisible="won_status != 'pending' or not is_automated_probability" />
                                 </div>
                                 <!-- IA -->
                                 <label for="automated_probability" invisible="is_automated_probability or won_status == 'lost'"/>
-                                <div class="o_input_box" invisible="is_automated_probability or won_status == 'lost'">
-                                    <span class="o_input_box_overlay_start">~</span>
+                                <div class="d-flex align-items-baseline" invisible="is_automated_probability or won_status == 'lost'">
+                                    <span>~ </span>
                                     <field name="automated_probability" force_save="1"/>
-                                    <span class="o_input_box_overlay_end">%</span>
-                                    <a class="o_input_box_overlay_end btn btn-link"
+                                    <span> %</span>
+                                    <a class="btn btn-link"
                                        name="action_set_automated_probability"
                                        role="button" type="object"
                                        invisible="is_automated_probability or won_status == 'lost'">

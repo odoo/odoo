@@ -59,17 +59,17 @@
                 </xpath>
                 <xpath expr="//*[hasclass('o_form_header_details')]" position="inside">
                     <label for="work_email" class="d-md-none"/>
-                    <div class="o_input_box d-flex align-items-baseline w-md-50 gap-2">
+                    <div class="d-flex align-items-baseline w-md-50 gap-2">
                         <i class="d-none d-md-inline-flex fa fa-envelope" title="Work Email"/>
                         <field name="work_email" widget="email" placeholder="Work Email"/>
                     </div>
                     <label for="work_phone" class="d-md-none"/>
-                    <div class="o_input_box d-flex align-items-baseline w-md-50 gap-2">
+                    <div class="d-flex align-items-baseline w-md-50 gap-2">
                         <i class="d-none d-md-inline-flex fa fa-phone" title="Work Phone"/>
                         <field name="work_phone" widget="phone" placeholder="Work Phone"/>
                     </div>
                     <label for="mobile_phone" class="d-md-none"/>
-                    <div class="o_input_box d-flex align-items-baseline w-md-50 gap-2">
+                    <div class="d-flex align-items-baseline w-md-50 gap-2">
                         <i class="d-none d-md-inline-flex fa fa-mobile" title="Work Mobile"/>
                         <field name="mobile_phone" widget="phone" placeholder="Work Mobile"/>
                     </div>
@@ -224,10 +224,16 @@
                         widget="contact_image" options="{'preview_image': 'avatar_128', 'img_class': 'rounded-4'}"/>
                 </field>
                 <!-- Must be replaced by work_email when the user has an employee_id. -->
+                <xpath expr="//label[@for='email']" position="attributes">
+                    <attribute name="invisible">employee_id or login == email</attribute>
+                </xpath>
                 <xpath expr="//div[@name='email']" position="attributes">
                     <attribute name="invisible">employee_id or login == email</attribute>
                 </xpath>
                 <!-- Must be replaced by work_phone when the user has an employee_id. -->
+                <xpath expr="//label[@for='phone']" position="attributes">
+                    <attribute name="invisible">employee_id</attribute>
+                </xpath>
                 <xpath expr="//div[@name='phone']" position="attributes">
                     <attribute name="invisible">employee_id</attribute>
                 </xpath>
@@ -239,18 +245,18 @@
                 </xpath>
                 <xpath expr="//*[hasclass('o_form_header_details')]" position="inside">
                     <label for="work_email" class="d-md-none" invisible="not employee_id or login == work_email"/>
-                    <div class="o_input_box" invisible="not employee_id or login == work_email">
+                    <div class="d-flex align-items-baseline w-md-50 gap-2" invisible="not employee_id or login == work_email">
                         <i class="d-none d-md-inline-flex fa fa-envelope fa-fw" title="Work Email"/>
                         <field name="email_domain_placeholder" invisible="1" />
                         <field name="work_email" widget="email" options="{'placeholder_field': 'email_domain_placeholder'}"/>
                     </div>
                     <label for="work_phone" class="d-md-none" invisible="not employee_id"/>
-                    <div class="o_input_box" invisible="not employee_id">
+                    <div class="d-flex align-items-baseline w-md-50 gap-2" invisible="not employee_id">
                         <i class="d-none d-md-inline-flex fa fa-phone fa-fw" title="Work Phone"/>
                         <field name="work_phone" widget="phone" placeholder="Work Phone"/>
                     </div>
                     <label for="mobile_phone" class="d-md-none" invisible="not employee_id"/>
-                    <div class="o_input_box" invisible="not employee_id">
+                    <div class="d-flex align-items-baseline w-md-50 gap-2" invisible="not employee_id">
                         <i class="d-none d-md-inline-flex fa fa-mobile fa-fw" title="Work Mobile"/>
                         <field name="mobile_phone" widget="phone" placeholder="Work Mobile"/>
                     </div>

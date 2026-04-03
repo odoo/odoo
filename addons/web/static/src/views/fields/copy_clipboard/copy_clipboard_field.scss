@@ -1,16 +1,4 @@
-.o_field_widget {
-    &.o_field_CopyClipboardChar :is(span, input):not(.fa-clipboard) {
-        white-space: unset;
-        width: calc(100% - var(--inputbox-overlay-end-size));
-        display: block;
-        overflow: hidden;
-        text-wrap: nowrap;
-        text-overflow: ellipsis;
-    }
-}
-.o_field_CopyClipboardChar {
-    &.o_readonly_modifier .o_input_box {
-        --inputbox-overlay-end-size: 0;
-    }
-    --inputbox-inner-padding-end: 0;
+.o_field_CopyClipboardChar :is(span, input):not(.fa-clipboard) {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

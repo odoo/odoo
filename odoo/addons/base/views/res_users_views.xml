@@ -70,19 +70,19 @@
                                     <field name="name" class="w-100" placeholder="e.g. John Doe" required="1"/>
                                 </h1>
                                 <label for="login" class="d-md-none"/>
-                                <div class="o_input_box">
+                                <div class="d-flex align-items-baseline w-md-50 gap-2">
                                     <field name="email" invisible="1"/> <!-- needed to update partner's email from on_change_login() -->
                                     <i class="d-none d-md-inline-flex fa fa-envelope" title="Email"/>
                                     <field name="email_domain_placeholder" invisible="1" /> <!-- needed to compute the placeholder whenever the dialog opens -->
                                     <field name="login" options="{'placeholder_field': 'email_domain_placeholder'}"/>
                                 </div>
                                 <label for="phone" class="d-md-none"/>
-                                <div class="o_input_box">
+                                <div class="d-flex align-items-baseline w-md-50 gap-2">
                                     <i class="d-none d-md-inline-flex fa fa-phone" title="Phone"/>
                                     <field name="phone" widget="phone" placeholder="Phone"/>
                                 </div>
                                 <label for="company_id" class="d-md-none" groups="base.group_multi_company"/>
-                                <div class="o_input_box" groups="base.group_multi_company">
+                                <div class="d-flex align-items-baseline w-md-50 gap-2" groups="base.group_multi_company">
                                     <i class="d-none d-md-inline-flex fa fa-building" title="Company"/>
                                     <field name="company_id" context="{'user_preference': 0}" placeholder="Company"/>
                                 </div>
@@ -139,19 +139,19 @@
                                     <field name="name" placeholder="e.g. John Doe" required="1"/>
                                 </h1>
                                 <label for="login" class="d-md-none"/>
-                                <div name="login" class="o_input_box d-flex align-items-baseline w-md-50 gap-2">
-                                    <i class="d-none d-md-inline-flex fa fa-envelope" title="Login / Email" invisible="login != email"/>
-                                    <i class="d-none d-md-inline-flex fa fa-key" title="Login" invisible="login == email"/>
+                                <div name="login" class="d-flex align-items-baseline w-md-50 gap-2">
+                                    <i class="d-none d-md-block fa fa-envelope" title="Login / Email" invisible="login != email"/>
+                                    <i class="d-none d-md-block fa fa-key" title="Login" invisible="login == email"/>
                                     <field name="login" placeholder="Login"/>
                                 </div>
                                 <label for="email" class="d-md-none" invisible="login == email"/>
-                                <div name="email" class="o_input_box d-flex align-items-baseline w-md-50 gap-2" invisible="login == email">
-                                    <i class="d-none d-md-inline-flex fa fa-envelope" title="Email"/>
+                                <div name="email" class="d-flex align-items-baseline w-md-50 gap-2" invisible="login == email">
+                                    <i class="d-none d-md-block fa fa-envelope" title="Email"/>
                                     <field name="email" placeholder="Email"/>
                                 </div>
                                 <label for="phone" class="d-md-none"/>
-                                <div name="phone" class="o_input_box d-flex align-items-baseline w-md-50 gap-2">
-                                    <i class="d-none d-md-inline-flex fa fa-phone" title="Phone"/>
+                                <div name="phone" class="d-flex align-items-baseline w-md-50 gap-2">
+                                    <i class="d-none d-md-block fa fa-phone" title="Phone"/>
                                     <field name="phone" placeholder="Phone"/>
                                 </div>
                             </group>

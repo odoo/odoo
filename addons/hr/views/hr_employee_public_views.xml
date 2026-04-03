@@ -55,32 +55,34 @@
                         <div class="oe_button_box" name="button_box">
                             <!-- Used by other modules-->
                         </div>
-                        <div class="row flex-column flex-sm-row align-items-center">
+                        <div class="d-flex flex-column flex-md-row align-items-center gap-3">
                             <div class="o_employee_avatar ms-2 p-0 h-100">
                                 <field name="hr_icon_display" invisible="not show_hr_icon_display or not id or not active" widget="hr_presence_status"/>
                                 <field name="image_1920" widget='image' class="m-0" options='{"size": [175,175], "zoom": true, "preview_image":"avatar_128"}'/>
                                 <field name="show_hr_icon_display" invisible="1" />
                             </div>
-                            <div class="col-12 col-sm-6 col-md-7 col-lg-8 px-4 o_employee_form_header_info">
-                                <div class="oe_title mw-100 ps-0 pe-sm-2">
-                                    <h1 class="d-flex flex-row align-items-center o_employee_form_header_info">
-                                        <field name="name" placeholder="Employee's Name"
-                                            required="True" style="font-size: min(4vw, 2.6rem);"/>
-                                    </h1>
-                                    <div class="o_input_box">
-                                        <i class="fa fa-envelope o_input_box_overlay_start" title="Work Email"/>
-                                        <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com" string="Work Email"/>
-                                    </div>
-                                    <div class="o_input_box">
-                                        <i class="fa fa-phone o_input_box_overlay_start" title="Work Phone"/>
-                                        <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"/>
-                                    </div>
-                                    <div class="o_input_box">
-                                        <i class="fa fa-mobile o_input_box_overlay_start" title="Work Mobile"/>
-                                        <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"/>
-                                    </div>
+                            <group class="d-flex flex-column gap-md-0 w-100">
+                                <label for="name" class="d-md-none"/>
+                                <h1>
+                                    <field name="name" placeholder="Employee's Name"
+                                        required="True" style="font-size: min(4vw, 2.6rem);"/>
+                                </h1>
+                                <label for="work_email" class="d-md-none"/>
+                                <div class="d-flex align-items-baseline w-md-50 gap-2">
+                                    <i class="d-none d-md-block fa fa-envelope" title="Work Email"/>
+                                    <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com" string="Work Email"/>
                                 </div>
-                            </div>
+                                <label for="work_phone" class="d-md-none"/>
+                                <div class="d-flex align-items-baseline w-md-50 gap-2">
+                                    <i class="d-none d-md-block fa fa-phone" title="Work Phone"/>
+                                    <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"/>
+                                </div>
+                                <label for="mobile_phone" class="d-md-none"/>
+                                <div class="d-flex align-items-baseline w-md-50 gap-2">
+                                    <i class="d-none d-md-block fa fa-mobile" title="Work Mobile"/>
+                                    <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"/>
+                                </div>
+                            </group>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <notebook>
