@@ -111,7 +111,7 @@ class TestQwebFieldContact(common.TransactionCase):
 
     def test_value_to_html_with_website_and_phone(self):
         Contact = self.env["ir.qweb.field.contact"]
-        result = Contact.value_to_html(self.partner, {"fields": ["phone", "website"]})
+        result = Contact.value_to_html(self.partner, {"fields": ["phone", "website"], "with_microdata": True})
         self.assertIn('itemprop="website"', result)
         self.assertIn(self.partner.website, result)
         self.assertIn('itemprop="telephone"', result)
@@ -120,7 +120,7 @@ class TestQwebFieldContact(common.TransactionCase):
 
     def test_value_to_html_without_phone(self):
         Contact = self.env["ir.qweb.field.contact"]
-        result = Contact.value_to_html(self.partner, {"fields": ["name", "website"]})
+        result = Contact.value_to_html(self.partner, {"fields": ["name", "website"], "with_microdata": True})
         self.assertIn('itemprop="website"', result)
         self.assertIn(self.partner.website, result)
         self.assertNotIn(self.partner.phone, result)

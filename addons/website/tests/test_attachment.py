@@ -1,5 +1,5 @@
 import odoo.tests
-from ..tools import create_image_attachment
+from odoo.addons.website.tools.helpers import create_image_attachment
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')

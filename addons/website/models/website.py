@@ -17,6 +17,7 @@ from lxml import etree, html
 from urllib.parse import urlparse
 from werkzeug import urls
 
+from odoo.addons.website.tools.jsonld_builder import JsonLd
 from odoo import api, fields, models, tools, release
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools.helpers import similarity_score, text_from_html, get_base_domain
@@ -2413,4 +2414,63 @@ class Website(models.CachedModel):
             menu.is_visible
             and menu.url not in ('/', '', '#')
             and not menu.url.startswith(('/?', '/#', ' '))
+        )
+
+    def organization_structured_data(self, with_id=False):
+        """Generate Organization structured data using only website context."""
+        base_url = self.get_base_url()
+        schema = JsonLd(
+            "Organization",
+            name=self.name,
+            url=base_url,
+        )
+
+        if with_id:
+            schema.set(id=f"{base_url}/#organization")
+
+        social_links = [
+            self[f'social_{media}']
+            for media in [
+                'facebook', 'linkedin', 'twitter',
+                'instagram', 'tiktok', 'youtube',
+                'github', 'discord',
+            ]
+        ]
+        if same_as := list(filter(None, social_links)):
+            schema.set(same_as=same_as)
+
+        logo_url = f"{base_url}/logo.png?company={self.company_id.id}"
+        schema.add_nested(logo=JsonLd("ImageObject", url=logo_url))
+        return schema
+
+    @api.model
+    def postal_address_structured_data(self, **kwargs):
+        """
+        Generate PostalAddress structured data.
+        Accepted kwargs:
+            street
+            street2
+            city
+            zip
+            state_code
+            country_code
+        """
+        street = kwargs.get("street") or None
+        street2 = kwargs.get("street2") or None
+        street_address = " ".join(filter(None, [street, street2])).strip() or None
+        zip_code = kwargs.get("zip") or None
+        city = kwargs.get("city") or None
+        state = kwargs.get("state_code") or None
+        country = kwargs.get("country_code") or None
+
+        if not any([street, street2, city, zip_code, state, country]):
+            return None
+
+        return JsonLd(
+            "PostalAddress",
+            street_address=street_address,
+            address_locality=city,
+            postal_code=zip_code,
+            address_region=state,
+            address_country=country,
         )

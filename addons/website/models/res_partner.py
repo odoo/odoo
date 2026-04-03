@@ -3,6 +3,7 @@
 import werkzeug.urls
 
 from odoo import models, fields, api
+from odoo.addons.website.tools.jsonld_builder import JsonLd
 
 
 class ResPartner(models.Model):
@@ -40,3 +41,32 @@ class ResPartner(models.Model):
         for partner in self:
             if partner.website_id:
                 partner.display_name += f' [{partner.website_id.name}]'
+
+    def _to_organization_structured_data(self, website, image_url=None, use_logo=False):
+        """Build partner-based Organization JSON-LD."""
+        self.ensure_one()
+        base_url = website.get_base_url()
+
+        org_schema = JsonLd(
+            "Organization",
+            name=self.display_name,
+            url=(self.website and self.website.strip()) or f"{base_url}{self.website_url}",
+            telephone=self.phone,
+            email=self.email,
+        )
+        if image_url is None and self.image_1920:
+            image_url = f"{base_url}{website.image_url(self, 'image_1920')}"
+        if image_url:
+            org_schema.add_nested(**{('logo' if use_logo else 'image'): JsonLd("ImageObject", url=image_url)})
+
+        org_schema.add_nested(
+            address=website.postal_address_structured_data(
+                street=self.street,
+                street2=self.street2,
+                city=self.city,
+                zip=self.zip,
+                state_code=self.state_id.code,
+                country_code=self.country_id.code,
+            ),
+        )
+        return org_schema

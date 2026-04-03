@@ -175,6 +175,8 @@
         preconnect is actually not connecting to the google servers. -->
         <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin=""/>
         <link rel="apple-touch-icon" t-att-href="x_icon"/>
+        <!-- Consider caching below code TODO -->
+        <script type="application/ld+json" t-out="structured_data or website.organization_structured_data(with_id=True).render_json()"/>
     </xpath>
 
     <xpath expr="//head/script" position="before">

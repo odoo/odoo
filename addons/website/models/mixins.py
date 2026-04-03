@@ -131,6 +131,18 @@ class WebsiteCover_PropertiesMixin(models.AbstractModel):
         match = re.search(r"url\(\s*(['\"]?)(?P<url>.*?)\1\s*\)", img)
         return match.group('url') if match else None
 
+    def _get_background_image_url(self):
+        """Return the absolute URL of the background image, or False."""
+        self.ensure_one()
+        background = self._get_background()
+        if background == 'none' or not background.startswith('url('):
+            return False
+        # CSS background uses url('...') syntax
+        path = background[4:-1].strip().strip('\'"')
+        # Defensive guard for malformed values (manual changes or migration errors)
+        # like url(), url(''), url(""), url(   ), etc.
+        return path if not path or not path.startswith('/') else False
+
     def write(self, vals):
         if 'cover_properties' not in vals:
             return super().write(vals)
