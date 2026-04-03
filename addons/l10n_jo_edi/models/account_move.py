@@ -5,6 +5,7 @@ from werkzeug.urls import url_encode
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import BinaryBytes
+from odoo.tools.sql import column_exists, create_column
 
 
 class AccountMove(models.Model):
@@ -62,6 +63,11 @@ class AccountMove(models.Model):
         tracking=True,
         help="Invoice Types as per the Income and Sales Tax Department for JoFotara",
     )
+
+    def _auto_init(self):
+        if not column_exists(self.env.cr, 'account_move', 'l10n_jo_edi_uuid'):
+            create_column(self.env.cr, 'account_move', 'l10n_jo_edi_uuid', 'char')
+        return super()._auto_init()
 
     @api.depends("country_code", "move_type")
     def _compute_l10n_jo_edi_is_needed(self):
