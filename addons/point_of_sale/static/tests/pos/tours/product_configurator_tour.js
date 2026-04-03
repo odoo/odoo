@@ -143,7 +143,6 @@ registry.category("web_tour.tours").add("test_attribute_order", {
 });
 
 registry.category("web_tour.tours").add("test_combo_variant_mix", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -155,7 +154,7 @@ registry.category("web_tour.tours").add("test_combo_variant_mix", {
             Dialog.is("Attribute selection"),
             ProductConfigurator.pickRadio("Blue"),
             Dialog.confirm("Add"),
-            Dialog.confirm(),
+            Dialog.confirm("Add to order"),
             inLeftSide(
                 [
                     Order.hasLine({

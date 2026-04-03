@@ -146,7 +146,6 @@ registry.category("web_tour.tours").add("OrderModificationAfterValidationError",
 });
 
 registry.category("web_tour.tours").add("test_tracking_number_closing_session", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),

@@ -193,7 +193,6 @@ registry.category("web_tour.tours").add("test_combo_refund_different_qty", {
 });
 
 registry.category("web_tour.tours").add("ProductComboMaxFreeQtyTour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -209,6 +208,7 @@ registry.category("web_tour.tours").add("ProductComboMaxFreeQtyTour", {
             combo.select("Combo Product 5"),
             combo.checkProductQty("Combo Product 5", "1"),
             combo.select("Combo Product 5"),
+            combo.checkProductQty("Combo Product 5", "1"),
             combo.select("Combo Product 5"),
             // Check that we cannot exceed the combo 'max_qty' which is 2
             combo.checkProductQty("Combo Product 5", "2"),

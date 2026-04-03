@@ -275,6 +275,10 @@ export function fillPaymentLineAmountMobile(lineName, keys, nth = null) {
             run: "click",
         })),
         {
+            isActive: ["mobile"],
+            trigger: `.modal .popup-input .input-value:contains(/^${keys}$/)`,
+        },
+        {
             ...Dialog.confirm(),
             isActive: ["mobile"],
             run: "click",

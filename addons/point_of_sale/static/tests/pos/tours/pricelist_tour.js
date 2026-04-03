@@ -123,6 +123,7 @@ const test_pricelists_in_pos_steps = [
 
     // Test if post-loaded product with attribute open the configrator
     scan_barcode("cherry_3"),
+    ProductScreen.selectedOrderlineHas("Cherry", "1", "5.0", "MEDIUM"),
     Chrome.waitRequest(),
     {
         content: "Click hided product with attribute",
@@ -149,7 +150,6 @@ const test_pricelists_in_pos_steps = [
 ];
 
 registry.category("web_tour.tours").add("test_pricelists_in_pos", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
