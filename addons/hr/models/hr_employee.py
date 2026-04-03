@@ -1870,7 +1870,7 @@ class HrEmployee(models.Model):
         )
         for employee, versions in versions_by_employee:
             if versions:
-                res[employee.id] = versions[0].resource_calendar_id.sudo(False)
+                res[employee.id] = versions[0].resource_calendar_id.sudo(self.env.su)
         return res
 
     def _get_hours_per_week_batch(self, date_from=None):
