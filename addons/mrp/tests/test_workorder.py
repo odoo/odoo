@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import timedelta
+from odoo import fields
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tests import Form
 
@@ -37,3 +39,42 @@ class TestWorkorder(TestMrpCommon):
         })
         wiz.change_prod_qty()
         self.assertEqual(wo.duration_expected, wiz.product_qty * initial_duration)
+
+    def test_workorder_gantt_reschedule(self):
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_3.id,
+        })
+        mo.action_confirm()
+        mo.button_plan()
+
+        #  related work-orders
+        wos = mo.workorder_ids
+        self.assertEqual(len(wos), 3)
+
+        # Reset middle WO dates
+        wo_from = Form(wos[1])
+        wo_from.date_start = False
+        wo_from.date_finished = False
+        wo_from.save()
+
+        # Compute new dates for first WO
+        base_dt = fields.Datetime.now() + timedelta(days=7)
+        end_dt = base_dt + timedelta(hours=wos[0].duration_expected)
+        vals = {
+            'date_start':  fields.Datetime.to_string(base_dt),
+            'date_finished': fields.Datetime.to_string(end_dt)
+        }
+        reschedule = self.env['mrp.workorder'].web_gantt_reschedule(
+            vals,
+            'maintainBuffer',
+            wos[0].id,
+            'blocked_by_workorder_ids',
+            'needed_by_workorder_ids',
+            'date_start',
+            'date_finished',
+        )
+        self.assertEqual(reschedule.get('type'), "success")
+        self.assertEqual(
+            fields.Datetime.to_string(wos[0].date_start),
+            fields.Datetime.to_string(base_dt),
+        )
