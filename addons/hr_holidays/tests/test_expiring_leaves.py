@@ -1,8 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date
+from datetime import date, datetime, time
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
+import pytz
 
 from odoo.addons.base.tests.common import HttpCase
 from odoo.tests.common import tagged
@@ -581,9 +582,11 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                          "All the remaining days of the allocation will expire")
 
         # Days between the target date and the expiration date (accrual_plan's carryover date)
-        remaining_days_before_expiration = (allocation._get_carryover_date(target_date) - target_date).days
-        working_days_equivalent_needed = remaining_days_before_expiration * 24 / self.flex_40h_calendar.hours_per_day
-    
+        # Adapt to the updated resource_calendar logic that uses precise datetimes instead of dates for flexible calendars
+        start_dt = datetime.combine(target_date, time.min).replace(tzinfo=pytz.UTC)
+        end_dt = datetime.combine(allocation._get_carryover_date(target_date), time.max).replace(tzinfo=pytz.UTC)
+        expected_hours = self.flex_40h_calendar.get_work_hours_count(start_dt, end_dt, compute_leaves=False)
+        working_days_equivalent_needed = expected_hours / self.flex_40h_calendar.hours_per_day
         # Assert the closest allocation duration (number of working days equivalent (8 hours/day) remaining before the allocation expires)
         self.assertEqual(round(allocation_data[logged_in_emp][0][1]['closest_allocation_duration']), working_days_equivalent_needed,
                             "The closest allocation duration should be the number of working days equivalent (8 hours/day) remaining before the allocation expires")
