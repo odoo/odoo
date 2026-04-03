@@ -687,6 +687,7 @@ class TestItEdiImport(TestItEdi, TestAccountEdiProxyUser):
             ('res_field', '=', 'l10n_it_edi_attachment_file'),
         ])
         self.assertEqual(len(it_edi_attachment), 1)
+        self.assertEqual(move.l10n_it_edi_attachment_name, 'IT01234567890_FPR02.xml')
         self.assertEqual(move.l10n_it_edi_attachment_file.decode(), import_content.decode())
 
         # ensure that the embedded files are imported correctly
