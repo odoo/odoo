@@ -989,7 +989,7 @@ class DiscussChannel(models.Model):
             if chatbot_script_step.operator_expertise_ids:
                 create_member_params['agent_expertise_ids'] = chatbot_script_step.operator_expertise_ids.ids
                 channel_sudo.livechat_expertise_ids |= chatbot_script_step.operator_expertise_ids
-            channel_sudo._add_new_members_to_channel(
+            channel_sudo._add_members(
                 create_member_params=create_member_params,
                 inviting_partner=bot_partner_id,
                 users=human_operator,
@@ -1027,17 +1027,6 @@ class DiscussChannel(models.Model):
         if chatbot_script_step and chatbot_script_step.message:
             posted_message = self._chatbot_post_message(chatbot_script_step.chatbot_script_id, chatbot_script_step.message)
         return posted_message
-
-    def _add_new_members_to_channel(self, create_member_params, inviting_partner, users=None, partners=None):
-        member_params = {
-            'create_member_params': create_member_params,
-            'inviting_partner': inviting_partner
-        }
-        if users:
-            member_params['users'] = users
-        if partners:
-            member_params['partners'] = partners
-        self._add_members(**member_params)
 
     def _update_forwarded_channel_data(self, /, *, livechat_failure, operator_name):
         self.write(
