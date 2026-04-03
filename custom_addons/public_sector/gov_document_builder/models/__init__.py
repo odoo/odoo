@@ -1,2 +1,4 @@
 from . import gov_document_block_catalog
+from . import gov_document_template
+from . import gov_document_template_block
 from . import gov_document_type
