@@ -33,7 +33,7 @@ class HrEmployeeDeparture(models.Model):
     dismissal_date = fields.Date(string="Dismissal Date", default=fields.Date.today, required=True,
         help="Date at which the departure process starts. Differs from the actual departure date in case of a notice period.")
     departure_date = fields.Date(string="Departure Date", compute="_compute_departure_date",
-        store=True, help="Date at which the departure actually takes place.")
+        store=True, readonly=False, help="Date at which the departure actually takes place.")
     action_at_departure = fields.Boolean(string="Action at", default=True)
     action_other_date = fields.Date(string="Apply date")
     is_user_employee = fields.Boolean(
