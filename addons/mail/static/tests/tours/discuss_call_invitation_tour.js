@@ -11,14 +11,14 @@ registry.category("web_tour.tours").add("discuss_call_invitation.js", {
             { trigger: ".o-discuss-CallInvitation" },
             {
                 trigger:
-                    ".o-mail-CallInvitation-avatar[title='View the bob (base.group_user) and john (base.group_user) channel']",
+                    ".o-mail-CallInvitation-avatar[title='View the A group with user_employee, test_user and guest inside channel']",
             },
             {
                 trigger:
-                    ".o-discuss-CallInvitation-channelName:contains('bob (base.group_user) and john (base.group_user)')",
+                    ".o-discuss-CallInvitation-channelName:text('A group with user_employee, test_user and guest inside')",
             },
             {
-                trigger: ".o-discuss-CallInvitation-description:contains('Incoming call...')",
+                trigger: ".o-discuss-CallInvitation-description:text('Incoming call...')",
             },
             {
                 trigger: ".o-discuss-CallInvitation-cameraPreview:not(:visible)",
