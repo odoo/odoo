@@ -52,7 +52,7 @@
                                             </t>
                                             <t t-if="not question.is_page and not answer or (question in answer.predefined_question_ids &amp; questions_to_display)" >
                                                 <t t-set="answer_lines" t-value="answer.user_input_line_ids.filtered(lambda line: line.question_id == question)"/>
-                                                <t t-set="answer_line" t-value="answer_lines[0]"/>
+                                                <t t-set="answer_line" t-value="answer_lines[:1]"/>
                                                 <div t-att-id="question.id" t-attf-class="o_survey_question px-4 px-md-5">
                                                     <div class="d-flex justify-content-between gap-4">
                                                         <h3 class="h5">
