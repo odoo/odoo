@@ -25,6 +25,7 @@ class TagsSelector(object):
         self.exclude = set()
         self.include = set()
         self.parameters = OrderedSet()
+        implicit_standard_filters = []
 
         for filter_spec in filter_specs:
             match = self.filter_spec_re.match(filter_spec)
@@ -36,9 +37,11 @@ class TagsSelector(object):
             is_include = sign != '-'
             is_exclude = not is_include
 
+            implicit_standard = False
             if not tag and is_include:
                 # including /module:class.method implicitly requires 'standard'
                 tag = 'standard'
+                implicit_standard = True
             elif not tag or tag == '*':
                 # '*' indicates all tests (instead of 'standard' tests only)
                 tag = None
@@ -56,8 +59,15 @@ class TagsSelector(object):
 
             if is_include:
                 self.include.add(test_filter)
+                if implicit_standard:
+                    implicit_standard_filters.append(test_filter)
             if is_exclude:
                 self.exclude.add(test_filter)
+
+        if ('standard', None, None, None, None) in self.exclude:
+            for test_filter in implicit_standard_filters:
+                self.include.discard(test_filter)
+                self.include.add((None,) + test_filter[1:])
 
         if (self.exclude or self.parameters) and not self.include:
             self.include.add(('standard', None, None, None, None))
