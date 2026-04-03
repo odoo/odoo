@@ -56,7 +56,6 @@ class DocumentPage(models.Model):
         "HEAD",
         compute="_compute_history_head",
         store=True,
-        auto_join=True,
     )
     history_ids = fields.One2many(
         "document.page.history",

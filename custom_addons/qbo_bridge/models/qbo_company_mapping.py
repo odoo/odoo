@@ -94,13 +94,10 @@ class QboCompanyMapping(models.Model):
             )
 
     # ── SQL constraint ─────────────────────────────────────────────────────────
-    _sql_constraints = [
-        (
-            "unique_company_realm",
-            "UNIQUE(company_id, realm_id)",
-            "An Odoo company can only have one mapping per QBO realm.",
-        )
-    ]
+    _unique_company_realm = models.Constraint(
+        "UNIQUE(company_id, realm_id)",
+        "An Odoo company can only have one mapping per QBO realm.",
+    )
 
     # ── Actions ───────────────────────────────────────────────────────────────
 
