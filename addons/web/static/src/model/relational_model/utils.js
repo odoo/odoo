@@ -778,7 +778,13 @@ export function useRecordObserver(callback) {
     const setHooks = (props) => {
         hooksSet = true;
         const hooks = props.record.model.hooks;
-        const hookNames = ["onRootLoaded", "onRecordSaved", "onSavedMulti", "onRecordChanged"];
+        const hookNames = [
+            "onRootLoaded",
+            "onRecordSaved",
+            "onSavedMulti",
+            "onRecordChanged",
+            "onRecordDiscarded",
+        ];
         const previousCbs = [];
         for (const hookName of hookNames) {
             const previousCb = hooks[hookName];
