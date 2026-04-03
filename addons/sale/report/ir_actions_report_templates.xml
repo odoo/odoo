@@ -9,6 +9,7 @@
             <t t-else="">Tax ID</t>: <span t-field="doc.partner_id.vat"/>
         </p>
     </t>
+    <t t-set="is_proforma" t-value="env.context.get('proforma', False) or is_pro_forma"/>
     <t t-set="layout_document_title">
         <span t-if="is_proforma">Pro Forma Invoice # </span>
         <span t-elif="doc.state in ['draft','sent']">Quotation # </span>
@@ -43,8 +44,6 @@
         </t>
         <div class="page">
             <div class="oe_structure"/>
-
-            <t t-set="is_proforma" t-value="env.context.get('proforma', False) or is_pro_forma"/>
 
             <div class="row mb-4" id="informations">
                 <div t-if="doc.client_order_ref" class="col" name="informations_reference">
