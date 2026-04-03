@@ -55,7 +55,7 @@ class GovDocumentInstance(models.Model):
     legal_snapshot_date = fields.Date(string="Data do Snapshot Jurídico")
     version_ids = fields.One2many(
         "gov.document.version",
-        "document_id",
+        "document_instance_id",
         string="Versões",
     )
     version_count = fields.Integer(
@@ -66,7 +66,7 @@ class GovDocumentInstance(models.Model):
     def _compute_version_count(self):
         Version = self.env["gov.document.version"]
         for rec in self:
-            rec.version_count = Version.search_count([("document_id", "=", rec.id)])
+            rec.version_count = Version.search_count([("document_instance_id", "=", rec.id)])
 
     def get_layout(self):
         self.ensure_one()
@@ -95,15 +95,13 @@ class GovDocumentInstance(models.Model):
             version_no = max(existing_version_nos, default=base_version_no) + 1
             created_versions |= Version.create(
                 {
-                    "document_id": rec.id,
+                    "document_instance_id": rec.id,
                     "version_no": version_no,
-                    "summary": summary,
-                    "snapshot_layout_json": rec.layout_json or "[]",
-                    "snapshot_resolved_context_json": rec.resolved_context_json or "{}",
-                    "snapshot_typst_source": rec.typst_source or False,
-                    "snapshot_typst_hash": rec.typst_hash or False,
-                    "snapshot_state": rec.state,
-                    "snapshot_legal_date": rec.legal_snapshot_date or False,
+                    "layout_json": rec.layout_json or "[]",
+                    "resolved_context_json": rec.resolved_context_json or "{}",
+                    "typst_source": rec.typst_source or False,
+                    "typst_hash": rec.typst_hash or False,
+                    "change_summary": summary,
                 }
             )
             rec.current_version_no = version_no
