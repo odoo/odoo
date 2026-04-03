@@ -126,11 +126,16 @@ describe("visibility", () => {
         expect(getContent(el)).toBe(
             `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p><p><br></p><p><br></p><p><br></p><p><br></p>`
         );
+        await expectElementCount(".o_we_power_buttons:not(.invisible)", 1);
+        expect(".o_we_power_buttons").toBeVisible();
         await simulateArrowKeyPress(editor, "ArrowDown");
+        await animationFrame();
         expect(".o_we_power_buttons").not.toBeVisible();
         await simulateArrowKeyPress(editor, "ArrowDown");
+        await animationFrame();
         expect(".o_we_power_buttons").not.toBeVisible();
         await simulateArrowKeyPress(editor, "ArrowDown");
+        await animationFrame();
         expect(".o_we_power_buttons").not.toBeVisible();
         await simulateArrowKeyPress(editor, "ArrowDown");
         await animationFrame();
