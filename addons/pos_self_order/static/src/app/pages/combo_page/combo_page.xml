@@ -26,7 +26,7 @@
                         <div class="d-flex flex-column align-items-center">
                             <h1 class="mt-kiosk-p-3 mb-3" t-out="this.currentCombo.name" t-custom-ref="productName"/>
                             <div class="o_self_combo_image ratio ratio-1x1 rounded-4 w-70 w-m-50 ">
-                                <img class="rounded-4" t-attf-src="/web/image/product.template/{{ this.props.productTemplate.id }}/image_512?unique=#{this.props.productTemplate.write_date}" loading="lazy"/>
+                                <img class="rounded-4 object-fit-cover" t-attf-src="/web/image/product.template/{{ this.props.productTemplate.id }}/image_512?unique=#{this.props.productTemplate.write_date}" loading="lazy"/>
                             </div>
                         </div>
                     </div>
