@@ -24,11 +24,11 @@ export class PropertiesPanel extends Component {
     }
 
     get supportsBinding() {
-        return Boolean(this.blockDefinition?.supports_binding);
+        return Boolean(this.blockDefinition && this.blockDefinition.supports_binding);
     }
 
     get hasBinding() {
-        const binding = this.selectedNode?.binding || {};
+        const binding = (this.selectedNode && this.selectedNode.binding) || {};
         return Boolean(binding.source || binding.path || binding.fallback || binding.transform);
     }
 
@@ -108,39 +108,48 @@ export class PropertiesPanel extends Component {
     }
 
     get bulletItemsText() {
-        const items = this.selectedNode?.props?.items;
+        const items = ((this.selectedNode && this.selectedNode.props) || {}).items;
         return Array.isArray(items) ? items.join("\n") : "";
     }
 
     get blockName() {
-        return this.blockDefinition ? this.blockDefinition.name : this.selectedNode?.type || "";
+        return this.blockDefinition ? this.blockDefinition.name : (this.selectedNode && this.selectedNode.type) || "";
     }
 
     get nodeText() {
-        return (this.selectedNode?.props || {}).text || "";
+        return ((this.selectedNode && this.selectedNode.props) || {}).text || "";
     }
 
     get nodeLabel() {
-        return (this.selectedNode?.props || {}).label || "";
+        return ((this.selectedNode && this.selectedNode.props) || {}).label || "";
     }
 
     get nodeContent() {
-        return (this.selectedNode?.props || {}).content || "";
+        return ((this.selectedNode && this.selectedNode.props) || {}).content || "";
     }
 
     get bindingSource() {
-        return (this.selectedNode?.binding || {}).source || "";
+        return ((this.selectedNode && this.selectedNode.binding) || {}).source || "";
     }
 
     get bindingPath() {
-        return (this.selectedNode?.binding || {}).path || "";
+        return ((this.selectedNode && this.selectedNode.binding) || {}).path || "";
     }
 
     get bindingFallback() {
-        return (this.selectedNode?.binding || {}).fallback || "";
+        return ((this.selectedNode && this.selectedNode.binding) || {}).fallback || "";
     }
 
     get bindingTransform() {
-        return (this.selectedNode?.binding || {}).transform || "";
+        return ((this.selectedNode && this.selectedNode.binding) || {}).transform || "";
+    }
+
+    get bindingDisplayPath() {
+        if (!this.hasBinding) {
+            return "binding inativo";
+        }
+        const source = this.bindingSource || "source";
+        const path = this.bindingPath || "*";
+        return `${source}.${path}`;
     }
 }

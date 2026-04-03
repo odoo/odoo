@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Construtor Visual de Documentos — Kodoo/GRP</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gov-navy: #1a2744;
+  --gov-navy-light: #243258;
+  --gov-indigo: #3d5296;
+  --gov-indigo-mid: #4a63b4;
+  --gov-blue-acc: #5b8af5;
+  --gov-cyan: #4ecdc4;
+  --gov-amber: #f59e0b;
+  --gov-red: #ef4444;
+  --gov-green: #22c55e;
+  --gov-green-dark: #16a34a;
+  --canvas-bg: #f4f3ef;
+  --paper: #ffffff;
+  --sidebar-bg: #1e2a3a;
+  --sidebar-border: rgba(255,255,255,0.07);
+  --panel-bg: #f8f7f4;
+  --panel-border: #e5e3db;
+  --text-dark: #1a1a2e;
+  --text-mid: #4a5568;
+  --text-muted: #8492a6;
+  --text-light: #b8c2cc;
+  --block-hover: rgba(93, 130, 245, 0.06);
+  --block-selected: rgba(93, 130, 245, 0.12);
+  --block-border: #e2e0d8;
+  --font-sans: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-serif: 'IBM Plex Serif', serif;
+}
+
+html, body { height: 100%; overflow: hidden; font-family: var(--font-sans); background: var(--gov-navy); }
+
+/* ── LAYOUT ── */
+.app { display: grid; grid-template-rows: 52px 1fr 28px; height: 100vh; }
+.main-area { display: grid; grid-template-columns: 244px 1fr 268px; overflow: hidden; }
+
+/* ── TOOLBAR ── */
+.toolbar {
+  background: var(--gov-navy);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; padding: 0 16px; gap: 12px;
+}
+.toolbar-back {
+  display: flex; align-items: center; gap: 6px;
+  color: rgba(255,255,255,0.5); font-size: 12px; cursor: pointer;
+  padding: 6px 8px; border-radius: 6px; transition: all .15s;
+  border: none; background: none;
+}
+.toolbar-back:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.75); }
+.toolbar-back svg { opacity: .6; }
+
+.toolbar-title { display: flex; flex-direction: column; flex: 1; padding: 0 8px; }
+.toolbar-title .doc-name { font-size: 13px; font-weight: 500; color: #fff; letter-spacing: .01em; }
+.toolbar-title .doc-meta { font-size: 10.5px; color: rgba(255,255,255,0.38); margin-top: 1px; }
+
+.mode-toggle {
+  display: flex; background: rgba(255,255,255,0.06);
+  border-radius: 8px; padding: 3px; gap: 2px;
+}
+.mode-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 12px; border-radius: 6px; font-size: 11.5px; font-weight: 500;
+  cursor: pointer; border: none; transition: all .15s;
+  color: rgba(255,255,255,0.45); background: none;
+}
+.mode-btn.active { background: var(--gov-indigo-mid); color: #fff; }
+.mode-btn:not(.active):hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,.7); }
+
+.toolbar-actions { display: flex; align-items: center; gap: 6px; margin-left: 4px; }
+.btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 12px; border-radius: 7px; font-size: 11.5px; font-weight: 500;
+  cursor: pointer; border: none; transition: all .15s; font-family: var(--font-sans);
+}
+.btn-ghost { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.6); }
+.btn-ghost:hover { background: rgba(255,255,255,0.11); color: rgba(255,255,255,.85); }
+.btn-primary { background: var(--gov-blue-acc); color: #fff; }
+.btn-primary:hover { background: #4a78e8; }
+.block-count {
+  font-size: 11px; font-family: var(--font-mono);
+  background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.45);
+  padding: 3px 8px; border-radius: 5px;
+}
+
+/* ── LEFT SIDEBAR ── */
+.palette {
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.palette-header {
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--sidebar-border);
+  flex-shrink: 0;
+}
+.palette-header h3 {
+  font-size: 9.5px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 10px;
+}
+.search-box {
+  display: flex; align-items: center; gap: 7px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 7px; padding: 6px 10px;
+}
+.search-box input {
+  background: none; border: none; outline: none; color: rgba(255,255,255,0.75);
+  font-size: 12px; width: 100%; font-family: var(--font-sans);
+}
+.search-box input::placeholder { color: rgba(255,255,255,0.25); }
+.search-icon { color: rgba(255,255,255,0.25); flex-shrink: 0; }
+
+.palette-scroll { flex: 1; overflow-y: auto; padding: 8px 8px; }
+.palette-scroll::-webkit-scrollbar { width: 3px; }
+.palette-scroll::-webkit-scrollbar-track { background: transparent; }
+.palette-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
+
+.cat-label {
+  font-size: 9px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: rgba(255,255,255,0.22);
+  padding: 10px 6px 5px; display: block;
+}
+
+.block-item {
+  display: flex; align-items: flex-start; gap: 9px;
+  padding: 8px 8px; border-radius: 7px; cursor: pointer;
+  transition: all .12s; margin-bottom: 2px; user-select: none;
+  border: 1px solid transparent;
+}
+.block-item:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.07); }
+.block-item:active { transform: scale(.98); }
+
+.block-icon {
+  width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; margin-top: 1px;
+}
+.block-item-text { flex: 1; min-width: 0; }
+.block-item-name { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.78); display: block; }
+.block-item-desc { font-size: 10.5px; color: rgba(255,255,255,0.32); margin-top: 1px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.block-drag-hint { font-size: 9px; color: rgba(255,255,255,0.18); margin-top: 3px; display: block; }
+
+/* ── CANVAS ── */
+.canvas-area {
+  background: var(--canvas-bg);
+  overflow-y: auto; position: relative;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 32px 24px;
+}
+.canvas-area::-webkit-scrollbar { width: 6px; }
+.canvas-area::-webkit-scrollbar-track { background: transparent; }
+.canvas-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
+
+.process-band {
+  width: 720px; max-width: 100%;
+  background: linear-gradient(135deg, #1e2d4a 0%, #243258 100%);
+  border-radius: 10px; padding: 14px 20px;
+  display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.process-badge {
+  background: rgba(93,138,245,0.2); border: 1px solid rgba(93,138,245,0.3);
+  color: #7ea8f8; font-size: 10px; font-weight: 600; letter-spacing: .05em;
+  padding: 3px 8px; border-radius: 5px; white-space: nowrap; font-family: var(--font-mono);
+}
+.process-info { flex: 1; min-width: 0; }
+.process-title { font-size: 12px; font-weight: 500; color: rgba(255,255,255,.8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.process-sub { font-size: 10.5px; color: rgba(255,255,255,.35); margin-top: 2px; }
+.process-status {
+  display: flex; align-items: center; gap: 5px; font-size: 10.5px;
+  color: rgba(var(--gov-green), .8); white-space: nowrap;
+}
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gov-green); }
+
+.document-paper {
+  width: 720px; max-width: 100%;
+  background: var(--paper);
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 8px 32px rgba(0,0,0,0.06);
+  padding: 52px 64px;
+  min-height: 600px;
+  position: relative;
+}
+
+.drop-zone-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 360px; gap: 12px;
+  border: 2px dashed #ddd8cc; border-radius: 8px;
+  color: var(--text-light); cursor: default;
+}
+.drop-zone-empty .dz-icon { font-size: 32px; opacity: .4; }
+.drop-zone-empty p { font-size: 13px; color: var(--text-muted); }
+.drop-zone-empty span { font-size: 11.5px; color: var(--text-light); }
+
+/* ── DOCUMENT NODES ── */
+.doc-nodes { display: flex; flex-direction: column; gap: 0; }
+
+.doc-node {
+  position: relative; cursor: pointer;
+  border-radius: 6px; border: 2px solid transparent;
+  transition: border-color .12s, background .12s;
+  margin: 0 -12px; padding: 2px 12px;
+}
+.doc-node:hover { background: var(--block-hover); }
+.doc-node.selected { border-color: var(--gov-blue-acc); background: var(--block-selected); }
+
+.node-controls {
+  position: absolute; right: -2px; top: 50%; transform: translateY(-50%);
+  display: none; align-items: center; gap: 3px; z-index: 10;
+}
+.doc-node:hover .node-controls,
+.doc-node.selected .node-controls { display: flex; }
+.nc-btn {
+  width: 26px; height: 26px; border-radius: 5px; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; transition: all .12s;
+  background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  color: var(--text-mid);
+}
+.nc-btn:hover { background: var(--gov-red); color: #fff; }
+.nc-btn.move-up:hover, .nc-btn.move-dn:hover { background: var(--gov-indigo); color: #fff; }
+
+.node-locked-badge {
+  position: absolute; left: -2px; top: 50%; transform: translateY(-50%);
+  width: 4px; height: 32px; background: var(--gov-amber); border-radius: 0 2px 2px 0;
+}
+
+/* Node types */
+.n-heading-1 { padding-top: 10px; padding-bottom: 8px; }
+.n-heading-1 h1 {
+  font-family: var(--font-serif); font-size: 15px; font-weight: 500;
+  color: var(--text-dark); text-align: center; text-transform: uppercase;
+  letter-spacing: .08em; line-height: 1.5; border-bottom: 1.5px solid var(--text-dark);
+  padding-bottom: 8px;
+}
+.n-heading-2 { padding-top: 12px; padding-bottom: 4px; }
+.n-heading-2 h2 { font-family: var(--font-sans); font-size: 12.5px; font-weight: 600; color: var(--text-dark); text-transform: uppercase; letter-spacing: .06em; }
+
+.n-process-field { padding: 6px 0; }
+.pf-row { display: flex; gap: 0; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; }
+.pf-label {
+  background: #f5f4f0; padding: 7px 12px; font-size: 11px; font-weight: 600;
+  color: var(--text-mid); white-space: nowrap; letter-spacing: .02em;
+  border-right: 1px solid #ddd; min-width: 130px;
+  display: flex; align-items: center;
+}
+.pf-value {
+  padding: 7px 12px; font-size: 12px; color: var(--text-dark);
+  display: flex; align-items: center; gap: 6px; flex: 1;
+}
+.pf-binding { font-size: 9px; font-family: var(--font-mono); color: var(--gov-indigo-mid); background: rgba(61,82,150,.08); padding: 1px 5px; border-radius: 3px; }
+
+.n-legal-basis { padding: 8px 0; }
+.lb-box {
+  background: #f8f7f0; border-left: 3px solid var(--gov-indigo);
+  border-radius: 0 4px 4px 0; padding: 10px 14px;
+}
+.lb-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--gov-indigo); margin-bottom: 4px; }
+.lb-text { font-size: 12px; color: var(--text-dark); line-height: 1.6; font-family: var(--font-serif); }
+
+.n-richtext { padding: 5px 0; }
+.rt-content { font-size: 12.5px; color: var(--text-dark); line-height: 1.7; font-family: var(--font-serif); }
+.rt-placeholder { font-size: 12.5px; color: var(--text-light); font-style: italic; line-height: 1.7; }
+
+.n-table { padding: 8px 0; }
+.doc-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+.doc-table th { background: #f0ede4; padding: 7px 10px; text-align: left; font-weight: 600; font-size: 10.5px; letter-spacing: .04em; color: var(--text-mid); border: 1px solid #ddd; }
+.doc-table td { padding: 6px 10px; border: 1px solid #e5e2d9; color: var(--text-dark); }
+.doc-table tr:nth-child(even) td { background: #faf9f5; }
+
+.n-signature { padding: 8px 0; }
+.sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.sig-block { border-top: 1px solid var(--text-dark); padding-top: 8px; text-align: center; }
+.sig-name { font-size: 12px; font-weight: 500; color: var(--text-dark); }
+.sig-role { font-size: 10.5px; color: var(--text-muted); margin-top: 2px; }
+.sig-locked .sig-block { opacity: .7; }
+
+.n-divider { padding: 8px 0; }
+.divider-line { height: 1px; background: #ddd8cc; }
+
+.insert-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 2px 0; opacity: 0; transition: opacity .15s;
+}
+.doc-node:hover + .insert-row { opacity: 1; }
+.insert-line { flex: 1; height: 1px; background: rgba(93,138,245,.3); }
+.insert-btn {
+  width: 20px; height: 20px; border-radius: 50%; background: var(--gov-blue-acc);
+  color: #fff; font-size: 12px; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .12s; flex-shrink: 0;
+}
+.insert-btn:hover { transform: scale(1.15); }
+
+/* ── TYPST VIEW ── */
+.typst-panel {
+  background: #0d1117; height: 100%; padding: 20px 24px; overflow-y: auto;
+  font-family: var(--font-mono); font-size: 12.5px; line-height: 1.75;
+  display: none;
+}
+.typst-panel.active { display: block; }
+.typst-panel::-webkit-scrollbar { width: 4px; }
+.typst-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+.ty-comment { color: #6e7787; }
+.ty-keyword { color: #ff7b72; }
+.ty-fn { color: #d2a8ff; }
+.ty-string { color: #a5d6ff; }
+.ty-value { color: #79c0ff; }
+.ty-heading { color: #ffa657; font-weight: 500; }
+.ty-body { color: #c9d1d9; }
+.ty-line { display: block; }
+.typst-readonly-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25);
+  color: #d4a017; font-size: 10.5px; padding: 3px 8px; border-radius: 4px;
+  margin-bottom: 16px; font-family: var(--font-sans);
+}
+
+/* ── RIGHT PANEL ── */
+.right-panel {
+  background: var(--panel-bg);
+  border-left: 1px solid var(--panel-border);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.rp-header {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--panel-border);
+  flex-shrink: 0;
+}
+.rp-header h3 { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
+.rp-scroll { flex: 1; overflow-y: auto; padding: 12px 14px; }
+.rp-scroll::-webkit-scrollbar { width: 3px; }
+.rp-scroll::-webkit-scrollbar-thumb { background: #d0cfc7; }
+
+.rp-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: 180px; gap: 8px; color: var(--text-light); text-align: center;
+}
+.rp-empty p { font-size: 12px; color: var(--text-muted); }
+.rp-empty span { font-size: 11px; color: var(--text-light); }
+
+.prop-section { margin-bottom: 18px; }
+.prop-label { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; display: block; }
+.prop-input {
+  width: 100%; padding: 6px 9px; border: 1px solid var(--panel-border);
+  border-radius: 6px; font-size: 12px; background: var(--paper); color: var(--text-dark);
+  font-family: var(--font-sans); outline: none; transition: border-color .12s;
+}
+.prop-input:focus { border-color: var(--gov-indigo-mid); }
+.prop-select {
+  width: 100%; padding: 6px 9px; border: 1px solid var(--panel-border);
+  border-radius: 6px; font-size: 12px; background: var(--paper); color: var(--text-dark);
+  font-family: var(--font-sans); outline: none; appearance: none; cursor: pointer;
+}
+
+.binding-chip {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(61,82,150,0.07); border: 1px solid rgba(61,82,150,0.18);
+  border-radius: 6px; padding: 6px 9px;
+}
+.binding-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gov-indigo-mid); flex-shrink: 0; }
+.binding-path { font-size: 11px; font-family: var(--font-mono); color: var(--gov-indigo-mid); flex: 1; }
+.binding-badge { font-size: 9px; background: rgba(34,197,94,.12); color: #16a34a; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+
+.toggle-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.toggle-label { font-size: 12px; color: var(--text-dark); }
+.toggle-switch { width: 34px; height: 18px; background: var(--gov-indigo-mid); border-radius: 9px; position: relative; cursor: pointer; transition: background .15s; }
+.toggle-switch::after { content: ''; position: absolute; left: 3px; top: 3px; width: 12px; height: 12px; border-radius: 50%; background: #fff; transition: left .15s; }
+.toggle-switch.off { background: #ccc; }
+.toggle-switch.off::after { left: 19px; }
+
+.node-type-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  padding: 3px 7px; border-radius: 4px; margin-bottom: 12px;
+  background: rgba(61,82,150,0.1); color: var(--gov-indigo);
+}
+
+.rp-actions { padding: 12px 14px; border-top: 1px solid var(--panel-border); display: flex; flex-direction: column; gap: 6px; }
+.rp-action-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 7px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 500;
+  cursor: pointer; border: none; font-family: var(--font-sans); transition: all .12s;
+  background: none;
+}
+.rp-action-btn.danger { color: var(--gov-red); }
+.rp-action-btn.danger:hover { background: rgba(239,68,68,0.08); }
+.rp-action-btn.muted { color: var(--text-muted); }
+.rp-action-btn.muted:hover { background: rgba(0,0,0,0.05); }
+
+/* ── STATUS BAR ── */
+.status-bar {
+  background: var(--gov-navy); border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex; align-items: center; padding: 0 14px; gap: 16px;
+}
+.sb-item { display: flex; align-items: center; gap: 5px; font-size: 10.5px; color: rgba(255,255,255,0.3); font-family: var(--font-mono); }
+.sb-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gov-green); }
+.sb-sep { color: rgba(255,255,255,0.1); }
+.sb-spacer { flex: 1; }
+.sb-version { font-size: 10px; color: rgba(255,255,255,0.2); font-family: var(--font-mono); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 44px; left: 50%; transform: translateX(-50%) translateY(10px);
+  background: var(--gov-navy-light); color: rgba(255,255,255,.85);
+  padding: 8px 16px; border-radius: 8px; font-size: 12px;
+  opacity: 0; transition: all .2s; pointer-events: none; z-index: 999;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── PALETTE ANIM ── */
+@keyframes nodeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.doc-node { animation: nodeIn .18s ease forwards; }
+
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <button class="toolbar-back" onclick="showToast('Voltando ao painel...')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Voltar
+    </button>
+    <div style="width:1px;height:24px;background:rgba(255,255,255,0.08)"></div>
+    <div class="toolbar-title">
+      <span class="doc-name">Documento de Formalização de Demanda — DFD</span>
+      <span class="doc-meta">SEMSA · Processo 047/2026 · gov_document_builder</span>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="btn-visual" onclick="setMode('visual')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Visual
+      </button>
+      <button class="mode-btn" id="btn-typst" onclick="setMode('typst')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Typst
+      </button>
+    </div>
+    <div class="toolbar-actions">
+      <span class="block-count" id="block-count">0 blocos</span>
+      <button class="btn btn-ghost" onclick="showToast('Gerando PDF via Typst...')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Gerar PDF
+      </button>
+      <button class="btn btn-ghost" onclick="showToast('Exportando .typ...')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Exportar .typ
+      </button>
+      <button class="btn btn-primary" onclick="showToast('Versão salva com sucesso.')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Salvar
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN AREA -->
+  <div class="main-area">
+
+    <!-- LEFT: BLOCK PALETTE -->
+    <div class="palette">
+      <div class="palette-header">
+        <h3>Biblioteca de Blocos</h3>
+        <div class="search-box">
+          <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" placeholder="Buscar bloco..." id="search-input" oninput="filterBlocks(this.value)">
+        </div>
+      </div>
+      <div class="palette-scroll" id="palette-scroll">
+        <!-- dynamically rendered -->
+      </div>
+    </div>
+
+    <!-- CENTER: CANVAS -->
+    <div class="canvas-area" id="canvas-area">
+
+      <!-- Visual view -->
+      <div id="visual-view" style="width:720px;max-width:100%;display:flex;flex-direction:column;gap:0">
+
+        <!-- Process band -->
+        <div class="process-band">
+          <div class="process-badge">047/2026</div>
+          <div class="process-info">
+            <div class="process-title">Aquisição de Medicamentos Essenciais — Programa Farmácia Cidadã</div>
+            <div class="process-sub">SEMSA · Unidade Demandante: DAF — Diretoria de Assistência Farmacêutica</div>
+          </div>
+          <div class="process-status">
+            <div class="status-dot" style="background:#22c55e"></div>
+            <span style="color:#4ade80;font-size:10.5px;">Rascunho</span>
+          </div>
+        </div>
+
+        <!-- Document paper -->
+        <div class="document-paper">
+          <div id="doc-nodes-container">
+            <div class="drop-zone-empty" id="drop-zone" style="display:none">
+              <div class="dz-icon">⬡</div>
+              <p>Nenhum bloco adicionado</p>
+              <span>Clique nos itens da biblioteca ou arraste-os aqui</span>
+            </div>
+            <div class="doc-nodes" id="doc-nodes"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Typst view -->
+      <div id="typst-view" style="width:100%;display:none;height:100%">
+        <div class="typst-panel active" id="typst-content">
+          <div class="typst-readonly-badge">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Somente leitura — edição via modo avançado
+          </div>
+          <div id="typst-code"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: PROPERTIES PANEL -->
+    <div class="right-panel">
+      <div class="rp-header">
+        <h3>Propriedades</h3>
+      </div>
+      <div class="rp-scroll" id="props-scroll">
+        <div class="rp-empty" id="rp-empty">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--text-light)"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <p>Nenhum bloco selecionado</p>
+          <span>Clique em um bloco no canvas para editar suas propriedades</span>
+        </div>
+        <div id="props-content" style="display:none"></div>
+      </div>
+      <div class="rp-actions" id="rp-actions" style="display:none">
+        <button class="rp-action-btn muted" onclick="duplicateNode()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Duplicar bloco
+        </button>
+        <button class="rp-action-btn danger" onclick="deleteSelectedNode()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          Remover bloco
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <div class="sb-item"><div class="sb-dot"></div> Conectado ao processo</div>
+    <div class="sb-sep">·</div>
+    <div class="sb-item">SEMSA · DAF</div>
+    <div class="sb-sep">·</div>
+    <div class="sb-item" id="sb-doc-type">DFD</div>
+    <div class="sb-sep">·</div>
+    <div class="sb-item" id="sb-block-count-sb">0 blocos</div>
+    <div class="sb-spacer"></div>
+    <div class="sb-version">gov_document_builder v1.0 · Kodoo/GRP</div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const BLOCKS_CATALOG = [
+  { cat: 'Estrutura', items: [
+    { type: 'heading1', icon: '📄', color: '#3d5296', bg: 'rgba(61,82,150,.15)', name: 'Título Principal', desc: 'Título e tipo do documento', locked: true },
+    { type: 'heading2', icon: '📌', color: '#4a63b4', bg: 'rgba(74,99,180,.15)', name: 'Seção', desc: 'Cabeçalho de seção numerada' },
+    { type: 'divider', icon: '—', color: '#8492a6', bg: 'rgba(132,146,166,.15)', name: 'Divisor', desc: 'Separador horizontal' },
+  ]},
+  { cat: 'Dados do Processo', items: [
+    { type: 'process_header', icon: '🏛', color: '#0f766e', bg: 'rgba(15,118,110,.15)', name: 'Cabeçalho do Processo', desc: 'Número, objeto e dados gerais', locked: true, binding: 'process_id.*' },
+    { type: 'process_field', icon: '🔗', color: '#0f766e', bg: 'rgba(15,118,110,.15)', name: 'Campo do Processo', desc: 'Campo vinculado ao processo', binding: 'process_id.{campo}' },
+    { type: 'quadro_resumo', icon: '📊', color: '#7c3aed', bg: 'rgba(124,58,237,.15)', name: 'Quadro Resumo', desc: 'Tabela Rótulo:Valor do processo', binding: 'process_id.*' },
+  ]},
+  { cat: 'Conteúdo Jurídico', items: [
+    { type: 'legal_basis', icon: '⚖', color: '#b45309', bg: 'rgba(180,83,9,.15)', name: 'Base Legal', desc: 'Fundamentos legais aplicáveis', binding: 'resolver:dfd_legal_basis' },
+    { type: 'richtext', icon: '✍', color: '#374151', bg: 'rgba(55,65,81,.15)', name: 'Texto Livre', desc: 'Parágrafo com editor rico' },
+    { type: 'bullet_list', icon: '•', color: '#374151', bg: 'rgba(55,65,81,.15)', name: 'Pontos-Chave', desc: 'Lista de conclusões ou pontos' },
+    { type: 'conditional', icon: '↔', color: '#6b21a8', bg: 'rgba(107,33,168,.15)', name: 'Bloco Condicional', desc: 'Visível por regra/contexto' },
+  ]},
+  { cat: 'Identificação', items: [
+    { type: 'signature', icon: '✒', color: '#1e3a5f', bg: 'rgba(30,58,95,.15)', name: 'Assinaturas', desc: 'Bloco de assinaturas de responsáveis', locked: true },
+    { type: 'metadata', icon: '🗂', color: '#374151', bg: 'rgba(55,65,81,.15)', name: 'Metadados', desc: 'Dados de local, data e protocolo', binding: 'process_id.metadata' },
+  ]},
+];
+
+let nodes = [];
+let selectedId = null;
+let nodeCounter = 0;
+let currentMode = 'visual';
+
+function genId() { return 'n_' + (++nodeCounter) + '_' + Date.now().toString(36).slice(-4); }
+
+function renderPalette(filter) {
+  const scroll = document.getElementById('palette-scroll');
+  scroll.innerHTML = '';
+  const q = (filter || '').toLowerCase();
+  BLOCKS_CATALOG.forEach(cat => {
+    const items = cat.items.filter(b => !q || b.name.toLowerCase().includes(q) || b.desc.toLowerCase().includes(q));
+    if (!items.length) return;
+    const label = document.createElement('span');
+    label.className = 'cat-label';
+    label.textContent = cat.cat;
+    scroll.appendChild(label);
+    items.forEach(b => {
+      const el = document.createElement('div');
+      el.className = 'block-item';
+      el.innerHTML = `
+        <div class="block-icon" style="background:${b.bg};color:${b.color}">${b.icon}</div>
+        <div class="block-item-text">
+          <span class="block-item-name">${b.name}</span>
+          <span class="block-item-desc">${b.desc}</span>
+          ${b.binding ? `<span class="block-drag-hint">${b.binding}</span>` : ''}
+        </div>
+      `;
+      el.onclick = () => addBlock(b.type);
+      scroll.appendChild(el);
+    });
+  });
+}
+
+function filterBlocks(q) { renderPalette(q); }
+
+function addBlock(type) {
+  const id = genId();
+  nodes.push({ id, type, locked: false, selected: false });
+  renderCanvas();
+  selectNode(id);
+  updateCounts();
+  updateTypst();
+  showToast(`Bloco adicionado: ${getBlockDef(type)?.name || type}`);
+}
+
+function getBlockDef(type) {
+  for (const cat of BLOCKS_CATALOG) {
+    const found = cat.items.find(b => b.type === type);
+    if (found) return found;
+  }
+  return null;
+}
+
+function renderCanvas() {
+  const container = document.getElementById('doc-nodes');
+  const dz = document.getElementById('drop-zone');
+  container.innerHTML = '';
+  if (!nodes.length) { dz.style.display = 'flex'; return; }
+  dz.style.display = 'none';
+  nodes.forEach((node, idx) => {
+    const el = renderNode(node, idx);
+    container.appendChild(el);
+    // insert row
+    const ir = document.createElement('div');
+    ir.className = 'insert-row';
+    ir.innerHTML = `<div class="insert-line"></div><button class="insert-btn" onclick="showToast('Insira um bloco aqui via palette')">+</button><div class="insert-line"></div>`;
+    container.appendChild(ir);
+  });
+}
+
+function renderNode(node, idx) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'doc-node' + (node.id === selectedId ? ' selected' : '');
+  wrapper.setAttribute('data-id', node.id);
+  wrapper.onclick = (e) => { e.stopPropagation(); selectNode(node.id); };
+
+  if (node.locked) {
+    const lb = document.createElement('div');
+    lb.className = 'node-locked-badge';
+    wrapper.appendChild(lb);
+  }
+
+  // Controls
+  const controls = document.createElement('div');
+  controls.className = 'node-controls';
+  controls.style.right = '-38px';
+  controls.innerHTML = `
+    ${idx > 0 ? `<button class="nc-btn move-up" title="Mover para cima" onclick="moveNode('${node.id}',-1,event)">↑</button>` : ''}
+    ${idx < nodes.length-1 ? `<button class="nc-btn move-dn" title="Mover para baixo" onclick="moveNode('${node.id}',1,event)">↓</button>` : ''}
+    ${!node.locked ? `<button class="nc-btn" title="Remover" onclick="removeNode('${node.id}',event)">×</button>` : ''}
+  `;
+  wrapper.appendChild(controls);
+
+  const inner = document.createElement('div');
+  inner.innerHTML = getNodeHTML(node);
+  wrapper.appendChild(inner);
+
+  return wrapper;
+}
+
+function getNodeHTML(node) {
+  switch(node.type) {
+    case 'heading1': return `<div class="n-heading-1"><h1>DOCUMENTO DE FORMALIZAÇÃO DE DEMANDA</h1></div>`;
+    case 'heading2': return `<div class="n-heading-2"><h2>${node.text || '1. Nome da Seção'}</h2></div>`;
+    case 'divider': return `<div class="n-divider"><div class="divider-line"></div></div>`;
+    case 'process_header': return `
+      <div class="n-process-field" style="margin:8px 0">
+        <div class="pf-row"><div class="pf-label">Processo</div><div class="pf-value">047/2026 <span class="pf-binding">process_id.numero</span></div></div>
+        <div class="pf-row" style="border-top:none"><div class="pf-label">Objeto</div><div class="pf-value">Aquisição de Medicamentos Essenciais — Programa Farmácia Cidadã <span class="pf-binding">process_id.objeto</span></div></div>
+        <div class="pf-row" style="border-top:none"><div class="pf-label">Modalidade</div><div class="pf-value">Pregão Eletrônico <span class="pf-binding">process_id.modalidade</span></div></div>
+      </div>`;
+    case 'process_field': return `
+      <div class="n-process-field">
+        <div class="pf-row"><div class="pf-label">${node.label || 'Campo'}</div><div class="pf-value"><em style="color:var(--text-light);font-style:italic;font-size:11.5px">— valor resolvido em runtime —</em> <span class="pf-binding">process_id.${node.field || 'campo'}</span></div></div>
+      </div>`;
+    case 'quadro_resumo': return `
+      <div class="n-table">
+        <table class="doc-table">
+          <thead><tr><th>Campo</th><th>Valor</th></tr></thead>
+          <tbody>
+            <tr><td>Número do Processo</td><td>047/2026</td></tr>
+            <tr><td>Unidade Demandante</td><td>DAF — Diretoria de Assistência Farmacêutica</td></tr>
+            <tr><td>Valor Estimado</td><td>R$ 1.240.000,00</td></tr>
+            <tr><td>Categoria</td><td>Material de Consumo — Medicamentos</td></tr>
+          </tbody>
+        </table>
+      </div>`;
+    case 'legal_basis': return `
+      <div class="n-legal-basis">
+        <div class="lb-box">
+          <div class="lb-title">Base Legal</div>
+          <div class="lb-text">Art. 18 da Lei nº 14.133/2021 — Planejamento da contratação. A fase preparatória do processo licitatório é caracterizada pelo planejamento e deve compatibilizar-se com o plano de contratações anual de que trata o inciso VII do caput do art. 12 desta Lei, sempre que elaborado.</div>
+        </div>
+      </div>`;
+    case 'richtext': return `
+      <div class="n-richtext">
+        <p class="rt-content">${node.content || ''}</p>
+        ${!node.content ? `<p class="rt-placeholder">Clique para editar o conteúdo deste parágrafo. Suporte a /comandos para inserção de trechos jurídicos normalizados.</p>` : ''}
+      </div>`;
+    case 'bullet_list': return `
+      <div class="n-richtext">
+        <ul style="padding-left:20px;margin:0">
+          <li class="rt-content" style="margin-bottom:4px">A necessidade decorre da renovação anual do estoque estratégico de medicamentos essenciais.</li>
+          <li class="rt-content" style="margin-bottom:4px">A contratação está prevista no Plano de Contratações Anual — PCA 2026.</li>
+          <li class="rt-content">O quantitativo foi definido com base na série histórica de consumo dos últimos 24 meses.</li>
+        </ul>
+      </div>`;
+    case 'conditional': return `
+      <div class="n-richtext" style="border:1px dashed #c4b5fd;border-radius:6px;padding:8px 12px;background:rgba(196,181,253,0.05)">
+        <div style="font-size:9.5px;font-weight:600;letter-spacing:.07em;color:#7c3aed;margin-bottom:4px;text-transform:uppercase">Bloco Condicional</div>
+        <p class="rt-placeholder">Visível quando: <code style="font-size:10px;background:rgba(124,58,237,.1);padding:1px 4px;border-radius:3px;color:#7c3aed">process_id.modalidade == 'dispensa'</code></p>
+      </div>`;
+    case 'signature': return `
+      <div class="n-signature" style="margin-top:24px">
+        <div class="sig-grid">
+          <div class="sig-block">
+            <div class="sig-name">Dr. Paulo Henrique Farias</div>
+            <div class="sig-role">Secretário Municipal de Saúde</div>
+          </div>
+          <div class="sig-block">
+            <div class="sig-name">Farmacêutica Ana Beatriz Lemos</div>
+            <div class="sig-role">Diretora de Assistência Farmacêutica</div>
+          </div>
+        </div>
+      </div>`;
+    case 'metadata': return `
+      <div class="n-process-field">
+        <div class="pf-row"><div class="pf-label">Local e Data</div><div class="pf-value">Manaus/AM, ${new Date().toLocaleDateString('pt-BR')} <span class="pf-binding">process_id.metadata.local_data</span></div></div>
+      </div>`;
+    default: return `<div class="n-richtext"><p class="rt-placeholder">[${node.type}]</p></div>`;
+  }
+}
+
+function selectNode(id) {
+  selectedId = id;
+  renderCanvas();
+  renderProps();
+}
+
+function moveNode(id, dir, e) {
+  e.stopPropagation();
+  const idx = nodes.findIndex(n => n.id === id);
+  if (idx < 0) return;
+  const ni = idx + dir;
+  if (ni < 0 || ni >= nodes.length) return;
+  [nodes[idx], nodes[ni]] = [nodes[ni], nodes[idx]];
+  renderCanvas();
+  updateTypst();
+}
+
+function removeNode(id, e) {
+  e.stopPropagation();
+  nodes = nodes.filter(n => n.id !== id);
+  if (selectedId === id) { selectedId = null; renderProps(); }
+  renderCanvas();
+  updateCounts();
+  updateTypst();
+}
+
+function deleteSelectedNode() {
+  if (!selectedId) return;
+  const node = nodes.find(n => n.id === selectedId);
+  if (node && node.locked) { showToast('Este bloco é obrigatório e não pode ser removido.'); return; }
+  nodes = nodes.filter(n => n.id !== selectedId);
+  selectedId = null;
+  renderCanvas();
+  renderProps();
+  updateCounts();
+  updateTypst();
+}
+
+function duplicateNode() {
+  if (!selectedId) return;
+  const node = nodes.find(n => n.id === selectedId);
+  if (!node) return;
+  const newNode = { ...node, id: genId(), locked: false };
+  const idx = nodes.findIndex(n => n.id === selectedId);
+  nodes.splice(idx + 1, 0, newNode);
+  selectedId = newNode.id;
+  renderCanvas();
+  renderProps();
+  updateCounts();
+  updateTypst();
+  showToast('Bloco duplicado.');
+}
+
+function renderProps() {
+  const empty = document.getElementById('rp-empty');
+  const content = document.getElementById('props-content');
+  const actions = document.getElementById('rp-actions');
+  if (!selectedId) {
+    empty.style.display = 'flex';
+    content.style.display = 'none';
+    actions.style.display = 'none';
+    return;
+  }
+  const node = nodes.find(n => n.id === selectedId);
+  if (!node) { empty.style.display = 'flex'; content.style.display = 'none'; actions.style.display = 'none'; return; }
+  empty.style.display = 'none';
+  content.style.display = 'block';
+  actions.style.display = 'flex';
+  const def = getBlockDef(node.type);
+  content.innerHTML = buildPropsHTML(node, def);
+}
+
+function buildPropsHTML(node, def) {
+  const typeName = def ? def.name : node.type;
+  const hasBinding = def && def.binding;
+  let html = `<div class="node-type-badge" style="background:${def ? def.bg : 'rgba(61,82,150,.1)'};color:${def ? def.color : 'var(--gov-indigo)'}">${def ? def.icon : '◻'} ${typeName}</div>`;
+
+  if (node.locked) {
+    html += `<div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:6px;padding:7px 10px;margin-bottom:12px;font-size:11px;color:#b45309;display:flex;align-items:center;gap:6px">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Bloco obrigatório — estrutura travada
+    </div>`;
+  }
+
+  html += `<div class="prop-section">
+    <span class="prop-label">Identificador</span>
+    <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);padding:5px 8px;background:#f1f0eb;border-radius:5px">${node.id}</div>
+  </div>`;
+
+  if (['heading2','richtext','process_field'].includes(node.type)) {
+    html += `<div class="prop-section">
+      <span class="prop-label">Conteúdo</span>
+      <textarea class="prop-input" rows="3" placeholder="Digite o conteúdo..." style="resize:vertical;line-height:1.5" onchange="updateNodeProp('${node.id}','content',this.value)">${node.content || ''}</textarea>
+    </div>`;
+  }
+
+  if (node.type === 'heading2') {
+    html += `<div class="prop-section">
+      <span class="prop-label">Texto da Seção</span>
+      <input class="prop-input" type="text" value="${node.text || ''}" placeholder="Ex: 1. Objeto da Contratação" onchange="updateNodeProp('${node.id}','text',this.value)">
+    </div>`;
+  }
+
+  if (hasBinding) {
+    html += `<div class="prop-section">
+      <span class="prop-label">Vinculação (Binding)</span>
+      <div class="binding-chip">
+        <div class="binding-dot"></div>
+        <span class="binding-path">${def.binding}</span>
+        <span class="binding-badge">ATIVO</span>
+      </div>
+    </div>`;
+  }
+
+  html += `<div class="prop-section">
+    <span class="prop-label">Visibilidade</span>
+    <select class="prop-select">
+      <option>Sempre visível</option>
+      <option>Por regra de contexto</option>
+      <option>Somente em modo avançado</option>
+    </select>
+  </div>`;
+
+  html += `<div class="prop-section">
+    <span class="prop-label">Configurações</span>
+    <div class="toggle-row">
+      <span class="toggle-label">Permitir edição</span>
+      <div class="toggle-switch ${node.locked ? 'off' : ''}"></div>
+    </div>
+    <div class="toggle-row">
+      <span class="toggle-label">Incluir no Typst</span>
+      <div class="toggle-switch"></div>
+    </div>
+  </div>`;
+
+  return html;
+}
+
+function updateNodeProp(id, key, val) {
+  const node = nodes.find(n => n.id === id);
+  if (node) { node[key] = val; renderCanvas(); updateTypst(); }
+}
+
+function updateCounts() {
+  const c = nodes.length;
+  document.getElementById('block-count').textContent = `${c} bloco${c !== 1 ? 's' : ''}`;
+  document.getElementById('sb-block-count-sb').textContent = `${c} bloco${c !== 1 ? 's' : ''}`;
+}
+
+function updateTypst() {
+  const lines = [];
+  lines.push(`<span class="ty-comment">// Gerado por gov_document_builder — Kodoo/GRP</span>`);
+  lines.push(`<span class="ty-comment">// Processo: 047/2026 · SEMSA · ${new Date().toLocaleDateString('pt-BR')}</span>`);
+  lines.push('');
+  lines.push(`<span class="ty-keyword">#import</span> <span class="ty-string">"base.typ"</span>: semsa_doc`);
+  lines.push(`<span class="ty-keyword">#import</span> <span class="ty-string">"law_14133.typ"</span>: artigo, base_legal_box`);
+  lines.push('');
+  lines.push(`<span class="ty-keyword">#show</span>: semsa_doc(`);
+  lines.push(`  <span class="ty-value">title</span>: <span class="ty-string">"Documento de Formalização de Demanda"</span>,`);
+  lines.push(`  <span class="ty-value">process_no</span>: <span class="ty-string">"047/2026"</span>,`);
+  lines.push(`  <span class="ty-value">unit</span>: <span class="ty-string">"SEMSA / DAF"</span>`);
+  lines.push(`)`);
+  lines.push('');
+  nodes.forEach(node => {
+    switch(node.type) {
+      case 'heading1': lines.push(`<span class="ty-heading">= DOCUMENTO DE FORMALIZAÇÃO DE DEMANDA</span>`); break;
+      case 'heading2': lines.push(`<span class="ty-heading">== ${node.text || 'Seção'}</span>`); break;
+      case 'divider': lines.push(`<span class="ty-comment">// --- divisor ---</span>`); break;
+      case 'process_header':
+        lines.push(`<span class="ty-fn">#process_header</span>(`);
+        lines.push(`  <span class="ty-value">numero</span>: context.process.numero,`);
+        lines.push(`  <span class="ty-value">objeto</span>: context.process.objeto`);
+        lines.push(`)`);
+        break;
+      case 'legal_basis':
+        lines.push(`<span class="ty-fn">#base_legal_box</span>[`);
+        lines.push(`  <span class="ty-fn">#artigo</span>(<span class="ty-string">"Lei 14.133/2021"</span>, <span class="ty-string">"art. 18"</span>)`);
+        lines.push(`]`);
+        break;
+      case 'richtext':
+        lines.push(`<span class="ty-body">${node.content || '// Parágrafo — texto livre'}</span>`);
+        break;
+      case 'signature':
+        lines.push(`<span class="ty-fn">#signature_block</span>(context.signatories)`);
+        break;
+      case 'quadro_resumo':
+        lines.push(`<span class="ty-fn">#quadro_resumo</span>(context.process)`);
+        break;
+      default:
+        lines.push(`<span class="ty-fn">#block_${node.type}</span>(context)`);
+    }
+    lines.push('');
+  });
+  document.getElementById('typst-code').innerHTML = lines.map(l => `<span class="ty-line">${l}</span>`).join('\n');
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('btn-visual').classList.toggle('active', mode === 'visual');
+  document.getElementById('btn-typst').classList.toggle('active', mode === 'typst');
+  document.getElementById('visual-view').style.display = mode === 'visual' ? 'flex' : 'none';
+  document.getElementById('typst-view').style.display = mode === 'typst' ? 'block' : 'none';
+  if (mode === 'typst') document.getElementById('typst-view').style.height = '100%';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// Deselect on canvas click
+document.getElementById('canvas-area').addEventListener('click', function(e) {
+  if (e.target === this || e.target.id === 'visual-view' || e.target.classList.contains('document-paper') || e.target.id === 'doc-nodes-container') {
+    selectedId = null;
+    renderCanvas();
+    renderProps();
+  }
+});
+
+// Load default DFD template
+function loadDFDTemplate() {
+  nodes = [
+    { id: genId(), type: 'heading1', locked: true },
+    { id: genId(), type: 'process_header', locked: true },
+    { id: genId(), type: 'heading2', text: '1. Objeto da Contratação', locked: false },
+    { id: genId(), type: 'richtext', content: 'Contratação de empresa especializada para fornecimento de medicamentos essenciais constantes da Relação Municipal de Medicamentos (REMUME), destinados ao abastecimento das Unidades Básicas de Saúde (UBS) e farmácias da rede municipal de Manaus, no âmbito do Programa Farmácia Cidadã.', locked: false },
+    { id: genId(), type: 'heading2', text: '2. Justificativa da Necessidade', locked: false },
+    { id: genId(), type: 'richtext', content: 'A necessidade da contratação decorre da essencialidade dos medicamentos para a continuidade das ações de atenção básica à saúde, bem como da obrigação legal do Município em garantir o acesso da população às ações e serviços de saúde, conforme art. 196 da Constituição Federal.', locked: false },
+    { id: genId(), type: 'bullet_list', locked: false },
+    { id: genId(), type: 'heading2', text: '3. Base Legal', locked: false },
+    { id: genId(), type: 'legal_basis', locked: false },
+    { id: genId(), type: 'quadro_resumo', locked: false },
+    { id: genId(), type: 'signature', locked: true },
+    { id: genId(), type: 'metadata', locked: false },
+  ];
+  renderCanvas();
+  updateCounts();
+  updateTypst();
+}
+
+// Init
+renderPalette();
+loadDFDTemplate();
+</script>
+</body>
+</html>

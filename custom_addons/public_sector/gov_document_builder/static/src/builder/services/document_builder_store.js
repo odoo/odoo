@@ -7,6 +7,7 @@ const INITIAL_STATE = {
     documentId: null,
     documentName: "",
     documentTypeCode: "",
+    documentTypeName: "",
     documentState: "draft",
     documentVersion: 1,
     templateId: null,
@@ -43,6 +44,7 @@ export class DocumentBuilderStore {
             documentId: data.id,
             documentName: data.name,
             documentTypeCode: data.document_type?.code || "",
+            documentTypeName: data.document_type?.name || "",
             documentState: data.state || "draft",
             documentVersion: data.version || 1,
             nodes: JSON.parse(data.layout_json || "[]"),
@@ -51,6 +53,17 @@ export class DocumentBuilderStore {
             dirty: false,
         });
         await this.loadBlockCatalog(data.document_type?.code);
+    }
+
+    async resolveContext() {
+        if (!this.state.documentId) {
+            return {};
+        }
+        const context = await this.rpc("/gov/document/resolve_context", {
+            document_id: this.state.documentId,
+        });
+        this.state.resolvedContext = context || {};
+        return this.state.resolvedContext;
     }
 
     async loadBlockCatalog(documentTypeCode) {
