@@ -111,7 +111,7 @@ class GovDocumentInstance(models.Model):
         self.ensure_one()
         return {
             "type": "ir.actions.client",
-            "tag": "gov_document_builder",
+            "tag": "gov_document_builder.instance",
             "context": {
                 **self.env.context,
                 "document_id": self.id,
