@@ -211,6 +211,18 @@ export const uiService = {
             }
         }
 
+        const pointerQuery = window.matchMedia("(pointer: coarse)");
+
+        // Update the class on the body element when touch capability changes
+        const handlePointerChange = (event) => {
+            if (event.matches) {
+                document.body.classList.add("o_touch_device");
+            } else {
+                document.body.classList.remove("o_touch_device");
+            }
+        };
+        pointerQuery.addEventListener("change", handlePointerChange);
+
         const ui = reactive({
             bus,
             size: utils.getSize(),
