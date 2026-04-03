@@ -5,7 +5,7 @@
     'description': 'Composição visual por blocos semânticos, renderização Typst e exportação de documentos do setor público.',
     'category': 'Government/Documents',
     'author': 'Kodoo',
-    'depends': ['base', 'mail', 'gov_processos'],
+    'depends': ['base', 'mail', 'hr', 'gov_processos'],
     'data': [
         'security/ir.model.access.csv',
         'security/gov_document_security.xml',
