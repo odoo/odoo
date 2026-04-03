@@ -15,12 +15,7 @@
                     <span class="o_accrual_bg border w-100 position-relative text-center px-3 py-1 rounded-3" role="button" t-on-click="this.editMilestone.bind(this, level.data.id)">
                         <span class="new-text position-absolute fw-bold" t-if="this.getNewMilestoneClass(level.data.id)">New !</span>
                         <span class="text">
-                            <t t-if="level.data.milestone_date == 'creation'">
-                                Immediately
-                            </t>
-                                <t t-else="">
-                                After <t t-out="level.data.start_count"/> <t t-out="level.data.start_type"/>(s)
-                            </t>
+                            After <t t-out="level.data.start_count"/> <t t-out="level.data.start_type"/>(s)
                         </span>
                     </span>
                 </div>
