@@ -189,7 +189,9 @@
             <header
                 class="o_search_panel_category_value_header list-group-item list-group-item-action d-flex align-items-center border-0"
                 t-att-class="{'active text-black fw-bold': this.state.active[section.id] === valueId}"
+                tabindex="0"
                 t-on-click="() => this.toggleCategory(section, value)"
+                t-on-keydown="(ev) => this.onCategoryKeydown(ev, section, value)"
                 >
                 <div
                     class="o_search_panel_label d-flex align-items-center overflow-hidden w-100 cursor-pointer mb-0"
@@ -199,7 +201,8 @@
                         }"
                     t-att-data-tooltip="value.display_name"
                     >
-                    <button class="o_toggle_fold btn border-0 py-0 px-1 flex-shrink-0 text-center" t-att-class="{'o_toggle_fold_with_children' : value.childrenIds.length}">
+                    <button class="o_toggle_fold btn flex-shrink-0 border-0 py-0 px-1 text-center" t-att-class="{'o_toggle_fold_with_children' : value.childrenIds.length}"
+                    tabindex="-1">
                         <i
                             t-if="value.childrenIds.length"
                             class="fa"
@@ -236,11 +239,16 @@
 <t t-name="web.SearchPanel.FiltersGroup">
     <li t-foreach="[...values.keys()]" t-as="valueId" t-key="valueId"
         class="o_search_panel_filter_value list-group-item border-0 mt-0 ps-1 cursor-pointer"
-        t-att-class="{'text-black active': this.state.active[section.id][valueId] }"
+        t-att-class="{ 'text-black active': this.state.active[section.id][valueId] }"
+        role="checkbox"
+        t-att-aria-checked="this.state.active[section.id][valueId] ? 'true' : 'false'"
+        tabindex="0"
+        t-on-keydown="(ev) => this.onFilterValueKeydown(ev, section.id, valueId)"
     >
         <t t-set="value" t-value="values.get(valueId)"/>
         <div class="form-check w-100">
             <input type="checkbox"
+                tabindex="-1"
                 t-attf-id="{{ section.id }}_input_{{ valueId }}"
                 t-att-checked="this.state.active[section.id][valueId]"
                 class="o_search_panel_filter_value_checkbox form-check-input"

@@ -313,6 +313,13 @@ export class SearchPanel extends Component {
         }
     }
 
+    onCategoryKeydown(ev, category, value) {
+        if (ev.key === "Enter" || ev.key === " ") {
+            ev.preventDefault();
+            this.toggleCategory(category, value);
+        }
+    }
+
     toggleSidebar() {
         this.state.sidebarExpanded = !this.state.sidebarExpanded;
         browser.localStorage.setItem(this.keyExpandSidebar, this.state.sidebarExpanded);
@@ -344,6 +351,15 @@ export class SearchPanel extends Component {
         this.state.active[filterId][valueId] = currentTarget.checked;
         this.updateGroupHeadersChecked();
         this.env.searchModel.toggleFilterValues(filterId, [valueId]);
+    }
+
+    onFilterValueKeydown(ev, filterId, valueId) {
+        if (ev.key === "Enter" || ev.key === " ") {
+            ev.preventDefault();
+            this.state.active[filterId][valueId] = !this.state.active[filterId][valueId];
+            this.updateGroupHeadersChecked();
+            this.env.searchModel.toggleFilterValues(filterId, [valueId]);
+        }
     }
 
     updateActiveValues() {
