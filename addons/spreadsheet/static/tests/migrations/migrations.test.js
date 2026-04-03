@@ -593,12 +593,12 @@ test("Chart cumulatedStart is set to true if cumulative at migration", () => {
     };
     const migratedData = load(data);
     const sheet = migratedData.sheets[0];
-    expect(sheet.figures[0].data.metaData.cumulatedStart).toBe(true);
-    expect(sheet.figures[0].data.cumulatedStart).toBe(true);
-    expect(sheet.figures[1].data.metaData.cumulatedStart).toBe(false);
-    expect(sheet.figures[1].data.cumulatedStart).toBe(false);
-    expect(sheet.figures[2].data.metaData.cumulatedStart).toBe(false);
-    expect(sheet.figures[2].data.cumulatedStart).toBe(false);
+    expect(sheet.figures[0].data.dataSource.metaData.cumulatedStart).toBe(true);
+    expect(sheet.figures[0].data.dataSource.cumulatedStart).toBe(true);
+    expect(sheet.figures[1].data.dataSource.metaData.cumulatedStart).toBe(false);
+    expect(sheet.figures[1].data.dataSource.cumulatedStart).toBe(false);
+    expect(sheet.figures[2].data.dataSource.metaData.cumulatedStart).toBe(false);
+    expect(sheet.figures[2].data.dataSource.cumulatedStart).toBe(false);
 });
 
 test("text global filter default value is now an array of strings", () => {

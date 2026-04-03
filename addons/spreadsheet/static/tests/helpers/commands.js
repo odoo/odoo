@@ -202,12 +202,16 @@ export function createBasicChart(
         sheetId: sheetId,
         definition: {
             title: { text: "test" },
-            dataSets: [{ dataRange: "A1" }],
+            dataSource: {
+                type: "range",
+                dataSets: [{ dataRange: "A1" }],
+            },
             type: "bar",
             background: "#fff",
             verticalAxisPosition: "left",
             legendPosition: "top",
             stackedBar: false,
+            dataSetStyles: {},
             ...definition,
         },
     });

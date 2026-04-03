@@ -13,10 +13,14 @@ const uuidGenerator = new spreadsheet.helpers.UuidGenerator();
  *
  * @param {Model} model
  * @param {string} type
- * @param {import("@spreadsheet/chart/odoo_chart/odoo_chart").OdooChartDefinition} definition
  */
-export function insertChartInSpreadsheet(model, type = "odoo_bar", definition = {}) {
-    definition = { ...getChartDefinition(type), ...definition };
+export function insertChartInSpreadsheet(model, type = "bar", definition = {}) {
+    const defaultDefinition = getChartDefinition(type);
+    definition = {
+        ...defaultDefinition,
+        ...definition,
+        dataSource: { ...defaultDefinition.dataSource, ...definition.dataSource },
+    };
     model.dispatch("CREATE_CHART", {
         sheetId: model.getters.getActiveSheetId(),
         chartId: definition.id,
@@ -52,18 +56,21 @@ export async function createSpreadsheetWithChart(params = {}) {
 
 function getChartDefinition(type) {
     return {
-        metaData: {
-            groupBy: ["foo", "bar"],
-            measure: "__count",
-            order: null,
-            resModel: "partner",
-        },
-        searchParams: {
-            comparison: null,
-            context: {},
-            domain: [],
-            groupBy: [],
-            orderBy: [],
+        dataSource: {
+            type: "odoo",
+            metaData: {
+                groupBy: ["foo", "bar"],
+                measure: "__count",
+                order: null,
+                resModel: "partner",
+            },
+            searchParams: {
+                comparison: null,
+                context: {},
+                domain: [],
+                groupBy: [],
+                orderBy: [],
+            },
         },
         stacked: true,
         title: { text: "Partners" },

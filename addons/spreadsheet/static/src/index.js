@@ -94,7 +94,7 @@ globalFieldMatchingRegistry.add("chart", {
     getFieldMatching: (getters, chartId, filterId) =>
         getters.getOdooChartFieldMatching(chartId, filterId),
     getModel: (getters, chartId) =>
-        getters.getChart(chartId).getDefinitionForDataSource().metaData.resModel,
+        getters.getChart(chartId).getDefinition().dataSource.metaData.resModel,
     getTag: (getters, chartId) => {
         const odooChartId = getters.getOdooChartIds().indexOf(chartId) + 1;
         return _t("Chart #%(odooChartId)s", { odooChartId });

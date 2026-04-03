@@ -90,21 +90,24 @@ export class OdooChartFeaturePlugin extends OdooUIPlugin {
         const { fieldName } = this.getters.getChartGranularity(chartId);
         const newGroupBy = [
             `${fieldName}:${granularity}`,
-            ...definition.searchParams.groupBy.slice(1),
+            ...definition.dataSource.searchParams.groupBy.slice(1),
         ];
         this.dispatch("UPDATE_CHART", {
             chartId,
             figureId: this.getters.getFigureIdFromChartId(chartId),
             definition: {
                 ...definition,
-                // I don't know why it's in both searchParams and metaData.
-                searchParams: {
-                    ...definition.searchParams,
-                    groupBy: newGroupBy,
-                },
-                metaData: {
-                    ...definition.metaData,
-                    groupBy: newGroupBy,
+                dataSource: {
+                    ...definition.dataSource,
+                    // I don't know why it's in both searchParams and metaData.
+                    searchParams: {
+                        ...definition.searchParams,
+                        groupBy: newGroupBy,
+                    },
+                    metaData: {
+                        ...definition.dataSource.metaData,
+                        groupBy: newGroupBy,
+                    },
                 },
             },
         });

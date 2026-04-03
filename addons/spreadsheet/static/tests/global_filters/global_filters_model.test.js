@@ -83,7 +83,10 @@ function getFiltersMatchingPivot(model, formula) {
     const pivotUIPlugin = model["handlers"].find(
         (handler) => handler instanceof PivotUIGlobalFilterPlugin
     );
-    return pivotUIPlugin._getFiltersMatchingPivot(sheetId, CompiledFormula.Compile(formula, sheetId, model.getters));
+    return pivotUIPlugin._getFiltersMatchingPivot(
+        sheetId,
+        CompiledFormula.Compile(formula, sheetId, model.getters)
+    );
 }
 
 test("Can add a global filter", async function () {
@@ -2531,7 +2534,7 @@ test("field matching is removed when list is deleted", async function () {
 });
 
 test("field matching is removed when an Odoo chart is deleted", async function () {
-    const { model } = await createSpreadsheetWithChart({ type: "odoo_pie" });
+    const { model } = await createSpreadsheetWithChart({ type: "pie" });
     const sheetId = model.getters.getActiveSheetId();
     const [chartId] = model.getters.getChartIds(sheetId);
     await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER, {
