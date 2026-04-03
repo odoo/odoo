@@ -411,7 +411,7 @@ class AccountMove(models.Model):
         # EXTENDS 'account'
         self.ensure_one()
         if filetype == 'fatturapa':
-            if fatturapa_attachment := self.l10n_it_edi_attachment_file:
+            if (fatturapa_attachment := self.l10n_it_edi_attachment_file) and self.l10n_it_edi_attachment_name:
                 return {
                     'filename': self.l10n_it_edi_attachment_name,
                     'filetype': 'xml',
@@ -1303,6 +1303,7 @@ class AccountMove(models.Model):
             # TODO: write to l10n_it_edi_attachment_file directly
             attachment = file_data['attachment']
             attachment.write({'res_model': 'account.move', 'res_id': move.id, 'res_field': 'l10n_it_edi_attachment_file'})
+            move.l10n_it_edi_attachment_name = file_data['name']
 
             # Post the attachment in the chatter
             move.message_post(
