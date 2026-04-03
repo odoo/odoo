@@ -138,6 +138,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
 
         invoice = vals['invoice']
 
+        invoice._compute_l10n_jo_edi_uuid()
         document_node.update({
             'cbc:UBLVersionID': None,
             'cbc:ProfileID': {'_text': 'reporting:1.0'},
