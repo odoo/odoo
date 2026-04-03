@@ -24,11 +24,10 @@ from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpress
 _logger = logging.getLogger(__name__)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def setUp(self):
         # for tests methods that create custom models/fields
-        self.addCleanup(self.drop_ormcaches)
         super().setUp()
         self.env.ref('test_orm.discussion_0').write({'participants': [Command.link(self.user_demo.id)]})
         # YTI FIX ME: The cache shouldn't be inconsistent (rco is gonna fix it)

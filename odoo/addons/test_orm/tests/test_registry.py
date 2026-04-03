@@ -8,6 +8,10 @@ from odoo.tests.common import TransactionCase, tagged
 class TestRegistry(TransactionCase):
     def test_setup_models_field_leak(self, model_names=None):
         registry = self.registry
+        # start with an empty cache
+        for cache_name in self.env.transaction.ormcaches__:
+            if '.' not in cache_name:
+                self.env.transaction.invalidate_ormcache(cache_name)
         registry._setup_models__(self.cr)  # clean start
 
         # Take the snapshot of instantiated fields
@@ -34,7 +38,10 @@ class TestRegistry(TransactionCase):
             registry._setup_models__(self.cr, model_names)
             registry.field_setup_dependents.clear()  # filled during incremental setup
 
-        self.drop_ormcaches()  # stuff may remain in the cache
+        # stuff may remain in the cache, clear it
+        for cache_name in self.env.transaction.ormcaches__:
+            if '.' not in cache_name:
+                self.env.transaction.invalidate_ormcache(cache_name)
 
         # Now collect objects
         # This test may fail if your debugger stores references to previous fields.

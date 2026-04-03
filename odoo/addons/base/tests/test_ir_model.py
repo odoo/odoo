@@ -410,8 +410,6 @@ class TestCommonCustomFields(TransactionCase):
         def check_registry():
             assert set(self.registry[self.MODEL]._fields) == fnames
 
-        self.addCleanup(self.drop_ormcaches)
-
         super().setUp()
         self.env.transaction.will_change_registry()
 
