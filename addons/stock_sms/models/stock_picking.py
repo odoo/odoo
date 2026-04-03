@@ -45,7 +45,7 @@ class StockPicking(models.Model):
 
     def _send_confirmation_email(self):
         super()._send_confirmation_email()
-        if not self.env.context.get('skip_sms') and not modules.module.current_test:
+        if not self.env.context.get('skip_sms') and not modules.module.current_test and not self.env.context.get('install_demo'):
             pickings = self.filtered(lambda p: p.company_id._get_text_validation('sms') and p.picking_type_id.code == 'outgoing' and p.partner_id.phone)
             for picking in pickings:
                 # Sudo as the user has not always the right to read this sms template.
