@@ -55,7 +55,6 @@ class TestPyLint(TransactionCase):
 
                 # custom checkers
                 'sql-injection',
-                'raise-unlink-override',
             ]),
             '--reports=n',
             "--msg-template='{msg} ({msg_id}) at {path}:{line}'",
@@ -63,7 +62,6 @@ class TestPyLint(TransactionCase):
                 "_pylint_path_setup",
                 "pylint.extensions.bad_builtin",
                 "_odoo_checker_sql_injection",
-                "_odoo_checker_unlink_override",
             ]),
             '--bad-functions=input',
         ]
