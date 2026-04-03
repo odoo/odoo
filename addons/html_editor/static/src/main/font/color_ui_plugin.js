@@ -51,7 +51,7 @@ export class ColorUIPlugin extends Plugin {
         this.selectedColors = reactive({ color: "", backgroundColor: "" });
         this.previewableApplyColor = this.dependencies.history.makePreviewableOperation(
             (color, mode, previewMode) =>
-                this.dependencies.color.applyColor(color, mode, previewMode)
+                this.dependencies.color.requestColor(color, mode, previewMode)
         );
     }
 

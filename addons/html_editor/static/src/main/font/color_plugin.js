@@ -50,7 +50,8 @@ export class ColorPlugin extends Plugin {
         "removeAllColor",
         "getElementColors",
         "getColorCombination",
-        "applyColor",
+        "applyColor", //check
+        "requestColor",
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -58,7 +59,7 @@ export class ColorPlugin extends Plugin {
             {
                 id: "applyColor",
                 run: ({ color, mode }) => {
-                    this.applyColor(color, mode);
+                    this.requestColor(color, mode);
                     this.dependencies.history.addStep();
                 },
                 isAvailable: isHtmlContentSupported,
@@ -67,6 +68,7 @@ export class ColorPlugin extends Plugin {
         /** Handlers */
         on_all_formats_removed_handlers: this.removeAllColor.bind(this),
         color_combination_providers: getColorCombinationFromClass,
+        on_beforeinput_handlers: this.onBeforeInput.bind(this),
 
         /** Predicates */
         has_format_predicates: (node) => {
@@ -89,6 +91,18 @@ export class ColorPlugin extends Plugin {
         for (const el of selectElements(root, "font")) {
             if (isRedundantElement(el)) {
                 unwrapContents(el);
+            }
+        }
+    }
+
+    onBeforeInput(ev) {
+        if (ev.inputType === "insertText") {
+            const selection = this.dependencies.selection.getEditableSelection();
+            if (!selection.isCollapsed) {
+                return;
+            }
+            if (this.activeColorInfo && Object.keys(this.activeColorInfo).length) {
+                this.applyColor(this.activeColorInfo.color, this.activeColorInfo.mode);
             }
         }
     }
@@ -141,6 +155,15 @@ export class ColorPlugin extends Plugin {
                 }
             }
         }
+    }
+
+    requestColor(color, mode, previewMode = false) {
+        const sel = this.dependencies.selection.getEditableSelection();
+        if (sel.isCollapsed) {
+            this.activeColorInfo = { color, mode };
+            return;
+        }
+        this.applyColor(color, mode, previewMode);
     }
 
     /**
@@ -345,6 +368,14 @@ export class ColorPlugin extends Plugin {
             fonts = getFonts(selectedNodes);
         }
 
+        if (
+            fonts.length === 1 &&
+            fonts[0].childNodes.length === 1 &&
+            isTextNode(fonts[0].firstChild) &&
+            isZWS(fonts[0].firstChild)
+        ) {
+            fonts[0].setAttribute("data-oe-zws-empty-inline", "");
+        }
         // Color the selected <font>s and remove uncolored fonts.
         const fontsSet = new Set(fonts);
         for (const font of fontsSet) {
@@ -353,7 +384,8 @@ export class ColorPlugin extends Plugin {
                 !hasColor(font, "color") &&
                 !hasColor(font, "backgroundColor") &&
                 ["FONT", "SPAN"].includes(font.nodeName) &&
-                (!font.hasAttribute("style") || !color)
+                (!font.hasAttribute("style") || !color) &&
+                (!this.activeColorInfo || !Object.keys(this.activeColorInfo).length)
             ) {
                 cursors.update(callbacksForCursorUpdate.unwrap(font));
                 unwrapContents(font);
@@ -361,6 +393,7 @@ export class ColorPlugin extends Plugin {
             }
         }
         cursors.restore();
+        this.activeColorInfo = {};
     }
 
     /**
