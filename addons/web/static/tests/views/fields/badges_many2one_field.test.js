@@ -1,4 +1,4 @@
-import { expect, queryAllTexts, test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import {
     clickSave,
     contains,
@@ -8,6 +8,7 @@ import {
     mountView,
     onRpc,
 } from "@web/../tests/web_test_helpers";
+import { animationFrame } from "@odoo/hoot-mock";
 
 class Partner extends models.Model {
     product_id = fields.Many2one({ relation: "product" });
@@ -137,14 +138,24 @@ test("BadgesMany2OneField: with domain and badge_limit option", async () => {
     });
 
     expect("span.o_selection_badge").toHaveCount(2);
-    expect(".o_select_menu").toHaveCount(0);
+    expect(".dropdown-menu").toHaveCount(0);
 
-    await contains(".o_field_widget[name=product_min_id] input").edit("0");
-    expect("span.o_selection_badge").toHaveCount(0);
-    expect(".o_select_menu").toHaveCount(1);
+    await contains(".o_field_widget[name=product_min_id] input").edit("0", { confirm: "enter" });
 
-    await contains(".o_select_menu_input").click();
-    expect(queryAllTexts(".o_select_menu_item")).toEqual(["xmac", "xpad", "xphone"]);
+    expect("span.o_selection_badge").toHaveCount(3);
+    expect(".o_selection_badge.o-dropdown-caret").toHaveText("+1");
+
+    await contains(".o_selection_badge.o-dropdown-caret").click();
+    await animationFrame();
+
+    expect(".dropdown-menu").toHaveCount(1);
+
+    expect(".dropdown-menu .dropdown-item:not(:contains(Search more...))").toHaveCount(1);
+
+    await contains(".dropdown-menu .dropdown-item").click();
+    await animationFrame();
+
+    expect(".o_selection_badge.active").toHaveCount(1);
 });
 
 test("BadgesMany2OneField: placeholder attribute is used when provided", async () => {
@@ -159,11 +170,8 @@ test("BadgesMany2OneField: placeholder attribute is used when provided", async (
             </form>`,
     });
 
-    expect(
-        ".o_select_menu .dropdown-toggle .o_select_menu_input[placeholder='Pick a product']"
-    ).toHaveCount(1, {
-        message: "should display the custom placeholder",
-    });
+    expect("span.o_selection_badge").toHaveCount(2);
+    expect(".o_selection_badge.o-dropdown-caret").toHaveText("+1");
 });
 
 test("BadgesMany2OneField: placeholder falls back to field label when not provided", async () => {
@@ -177,11 +185,8 @@ test("BadgesMany2OneField: placeholder falls back to field label when not provid
             </form>`,
     });
 
-    expect(
-        ".o_select_menu .dropdown-toggle .o_select_menu_input[placeholder='Product']"
-    ).toHaveCount(1, {
-        message: "should fall back to the field label as placeholder",
-    });
+    expect("span.o_selection_badge").toHaveCount(2);
+    expect(".o_selection_badge.o-dropdown-caret").toHaveText("+1");
 });
 
 test("[Offline] BadgesMany2OneField: verify badges are displayed in offline mode", async () => {

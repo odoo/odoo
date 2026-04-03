@@ -11,7 +11,6 @@ export class BadgesSelectionField extends Component {
         iconMapping: { type: Object, optional: true },
         allowedSelectionField: { type: String, optional: true },
         badgeLimit: { type: Number, optional: true },
-        placeholder: { type: String, optional: true },
         defaultIcon: { type: String, optional: true },
         canDeselect: { type: Boolean, optional: true },
     };
@@ -65,7 +64,6 @@ export class BadgesSelectionField extends Component {
             ...extractStandardFieldProps(this.props),
             onChange: this.onChange.bind(this),
             badgeLimit: this.props.badgeLimit,
-            placeholder: this.props.placeholder,
             canDeselect: this.props.canDeselect,
             options: this.options,
             string: this.string,
@@ -88,8 +86,7 @@ export const badgesSelectionField = {
             help: _t("Displays a dropdown if the badge count is higher than this value."),
         },
     ],
-    extractProps: ({ options, placeholder }, dynamicInfo) => ({
-        placeholder,
+    extractProps: ({ options }, dynamicInfo) => ({
         defaultIcon: options.default_icon,
         badgeLimit: options.badge_limit,
         canDeselect: !dynamicInfo.required,

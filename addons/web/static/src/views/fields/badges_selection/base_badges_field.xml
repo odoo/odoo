@@ -6,31 +6,40 @@
                 <span t-out="this.string" t-att-raw-value="this.value" class="o_selection_badge pe-none btn btn-sm btn-secondary mb-1" t-att-class="this.getBadgeClassNames()" />
             </t>
             <t t-else="">
-                <t t-if="this.hasMoreThanMax">
-                    <SelectMenu 
-                        id="this.props.id" 
-                        value="this.value" 
-                        choices="this.selectOptions" 
-                        onSelect.bind="this.onChange" 
-                        placeholder="this.placeholder"
-                        searchable="!this.isBottomSheet"
-                        required="!this.props.canDeselect"
-                    />
+                <t t-foreach="this.badgesOptions" t-as="option" t-key="option[0]">
+                    <span
+                        class="o_selection_badge btn btn-sm btn-secondary mb-1"
+                        t-att-class="this.getBadgeClassNames(option)"
+                        t-att-value="this.stringify(option[0])"
+                        t-on-click="() => this.onChange(option[0])"
+                    >
+                        <t t-if="option[2]">
+                            <span t-att-class="`fa ${option[2]} pe-1`"/>
+                        </t>
+                        <span t-out="option[1]" t-att-value="this.stringify(option[0])"/>
+                    </span>
                 </t>
-                <t t-else="">
-                    <t t-foreach="this.options" t-as="option" t-key="option[0]">
-                        <span
-                            class="o_selection_badge btn btn-sm btn-secondary mb-1"
-                            t-att-class="this.getBadgeClassNames(option)"
-                            t-att-value="this.stringify(option[0])"
-                            t-on-click="() => this.onChange(option[0])"
-                        >
-                            <t t-if="option[2]">
-                                <span t-att-class="`fa ${option[2]} pe-1`"/>
+                <t t-if="this.hasMoreThanMax">
+                    <Dropdown>
+                        <span class="o_selection_badge btn btn-sm btn-secondary mb-1 o-dropdown-caret" t-out="this.extraBadgeLabel"/>
+                        <t t-set-slot="content">
+                            <t t-foreach="this.dropdownOptions" t-as="option" t-key="option[0]">
+                                <DropdownItem onSelected="() => this.onChange(option[0])">
+                                    <t t-if="option[2]">
+                                        <span t-att-class="`fa ${option[2]} pe-1`"/>
+                                    </t>
+                                    <t t-out="option[1]"/>
+                                </DropdownItem>
                             </t>
-                            <span t-out="option[1]" t-att-value="this.stringify(option[0])"/>
-                        </span>
-                    </t>
+                            <div t-if="this.props.onSearchMore" class="o-autocomplete">
+                                <span class="ui-menu-item o_m2o_dropdown_option ">
+                                    <DropdownItem tag="'a'" onSelected="() => this.props.onSearchMore()">
+                                        <t t-out="'Search more...'"/>
+                                    </DropdownItem>
+                                </span>
+                            </div>
+                        </t>
+                    </Dropdown>
                 </t>
             </t>
         </div>

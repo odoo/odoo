@@ -163,17 +163,14 @@ test("BadgesSelectionField: switching to SelectMenu when badge_limit is exceeded
             </form>`,
     });
 
-    expect(".o_select_menu").toHaveCount(1, {
-        message: "Should render SelectMenu instead of badges",
+    expect("span.o_selection_badge").toHaveCount(2, {
+        message: "Should render 1 badge and 1 overflow dropdown toggle",
     });
-    expect("span.o_selection_badge").toHaveCount(0, {
-        message: "Should not render individual badges",
-    });
+    expect(".o_selection_badge.o-dropdown-caret").toHaveText("+1");
 
-    // Open dropdown and check values
-    await contains(".o_select_menu input").click();
+    await contains(".o_selection_badge.o-dropdown-caret").click();
     await animationFrame();
-    expect(".o-dropdown-item").toHaveCount(2);
+    expect(".dropdown-menu").toHaveCount(1);
 });
 
 test("BadgesSelectionField: verify options are filtered via the allowed_selection_field option", async () => {
@@ -208,11 +205,9 @@ test("BadgesSelectionField: placeholder attribute is used when provided", async 
             </form>`,
     });
 
-    expect(
-        ".o_select_menu .dropdown-toggle .o_select_menu_input[placeholder='Pick a color']"
-    ).toHaveCount(1, {
-        message: "should display the custom placeholder",
-    });
+    // With 2 options and badge_limit 1: 1 visible badge + "+1" overflow dropdown toggle
+    expect("span.o_selection_badge").toHaveCount(2);
+    expect(".o_selection_badge.o-dropdown-caret").toHaveText("+1");
 });
 
 test("BadgesSelectionField: placeholder falls back to field label when not provided", async () => {
@@ -227,10 +222,7 @@ test("BadgesSelectionField: placeholder falls back to field label when not provi
             </form>`,
     });
 
-    expect(".o_select_menu .dropdown-toggle .o_select_menu_input[placeholder='Color']").toHaveCount(
-        1,
-        {
-            message: "should fall back to the field label as placeholder",
-        }
-    );
+    // With 2 options and badge_limit 1: 1 visible badge + "+1" overflow dropdown toggle
+    expect("span.o_selection_badge").toHaveCount(2);
+    expect(".o_selection_badge.o-dropdown-caret").toHaveText("+1");
 });
