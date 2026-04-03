@@ -330,7 +330,7 @@ test("BinaryField in list view (formatter)", async () => {
         type: "list",
         arch: `<list><field name="document"/></list>`,
     });
-    expect(`.o_data_row .o_data_cell`).toHaveText("93.43 Bytes");
+    expect(`.o_data_row .o_data_cell`).toHaveText("96 Bytes");
 });
 
 test("BinaryField in list view with filename", async () => {

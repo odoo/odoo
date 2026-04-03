@@ -14,7 +14,7 @@ export function isBinarySize(value) {
  * @returns {number} number of char
  */
 export function toBase64Length(maxBytes) {
-    return Math.ceil(maxBytes * 4 / 3);
+    return Math.ceil((maxBytes * 4) / 3);
 }
 
 /**
@@ -22,11 +22,11 @@ export function toBase64Length(maxBytes) {
  * @param {string}
  */
 export function humanSize(size) {
-    const units = _t("Bytes|Kb|Mb|Gb|Tb|Pb|Eb|Zb|Yb").split("|");
+    const units = _t("Bytes|kB|MB|GB|TB|PB|EB|ZB|YB").split("|");
     let i = 0;
     while (size >= 1024) {
         size /= 1024;
         ++i;
     }
-    return `${size.toFixed(2)} ${units[i].trim()}`;
+    return `${i === 0 ? size : size.toFixed(2)} ${units[i].trim()}`;
 }

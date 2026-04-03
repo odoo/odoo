@@ -19,6 +19,7 @@ import {
     formatX2many,
     formatDate,
     formatDateTime,
+    formatBinary,
 } from "@web/views/fields/formatters";
 
 const { DateTime } = luxon;
@@ -248,13 +249,17 @@ test("formatFloatTime special cases", () => {
 
     localization.locale = "ar-SY";
     expect(formatFloatTime(1.25 + 45 / 3600, options)).toBe("١س ١٥د ٤٥ث");
-    expect(formatFloatTime(1.25 + 45 / 3600, { ...options, numeric: true })).toBe(
-        "1:15:45"
-    );
+    expect(formatFloatTime(1.25 + 45 / 3600, { ...options, numeric: true })).toBe("1:15:45");
 
     localization.locale = "th-TH";
     expect(formatFloatTime(1.25 + 45 / 3600, options)).toBe("1ชม. 15นาที 45วิ");
 
     localization.locale = "hi-IN";
     expect(formatFloatTime(1.25 + 45 / 3600, options)).toBe("1घं 15मि 45से");
+});
+
+test("formatBinary", () => {
+    expect(formatBinary("1.5 MB")).toBe("1.5 MB", { message: "binary sizes are not modified" });
+    expect(formatBinary("aGVsbG8=")).toBe("6 Bytes");
+    expect(formatBinary("a".repeat(3000))).toBe("2.20 kB");
 });
