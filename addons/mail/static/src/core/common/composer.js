@@ -465,6 +465,7 @@ export class Composer extends Component {
         return {
             content: this.props.composer.composerHtml,
             placeholder: this.placeholder,
+            allowChecklist: false,
             baseContainers: ["DIV", "P"],
             Plugins: this.ui.isSmall ? MAIL_SMALL_UI_PLUGINS : MAIL_PLUGINS,
             composerPluginDependencies: {

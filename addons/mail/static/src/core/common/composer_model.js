@@ -72,7 +72,7 @@ export class Composer extends Record {
         this.attachments.length = 0;
         this.replyToMessage = undefined;
         this.restoredFromFullComposer = false;
-        if (this.updateFrom === "html") {
+        if (this.store.env.services["mail.composer"].htmlEnabled) {
             this.composerHtml = markup("<div class='o-paragraph'><br></div>");
         } else {
             this.composerText = "";

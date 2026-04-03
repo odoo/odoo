@@ -254,6 +254,12 @@ test("inlineElement inserts spaces between adjacent block elements", () => {
     expect(inlineHtml(markup`<div>Before</div><p>After</p>`).toString()).toBe("Before\u00a0After");
 });
 
+test("inlineElement inserts spaces between list items", () => {
+    expect(inlineHtml(markup`<p>Fruits</p><ul><li>Apple</li><li>Banana</li></ul>`).toString()).toBe(
+        "Fruits\u00a0Apple\u00a0Banana"
+    );
+});
+
 test("inlineElement copies rel and target attributes from links", () => {
     expect(
         inlineHtml(

@@ -215,6 +215,10 @@ class TestSanitizer(BaseCase):
                 '<span style="width">Coincoin</span>',
                 [],
                 ['width'],
+            ), (
+                '<ol style="list-style: lower-alpha; position: fixed"><li>Apple</li></ol>',
+                ['list-style:lower-alpha', 'Apple'],
+                ['position'],
             ),
         ]
 
