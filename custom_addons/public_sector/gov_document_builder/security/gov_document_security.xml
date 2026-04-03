@@ -1,3 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="module_category_gov_documents" model="ir.module.category">
+        <field name="name">Documentos Governamentais</field>
+        <field name="sequence">95</field>
+    </record>
+
+    <record id="group_document_elaborador" model="res.groups">
+        <field name="name">Elaborador</field>
+        <field name="category_id" ref="gov_document_builder.module_category_gov_documents"/>
+    </record>
+
+    <record id="group_document_revisor" model="res.groups">
+        <field name="name">Revisor</field>
+        <field name="category_id" ref="gov_document_builder.module_category_gov_documents"/>
+    </record>
+
+    <record id="group_document_aprovador" model="res.groups">
+        <field name="name">Aprovador</field>
+        <field name="category_id" ref="gov_document_builder.module_category_gov_documents"/>
+    </record>
+
+    <record id="group_document_admin" model="res.groups">
+        <field name="name">Administrador</field>
+        <field name="category_id" ref="gov_document_builder.module_category_gov_documents"/>
+        <field
+            name="implied_ids"
+            eval="[
+                (4, ref('gov_document_builder.group_document_elaborador')),
+                (4, ref('gov_document_builder.group_document_revisor')),
+                (4, ref('gov_document_builder.group_document_aprovador'))
+            ]"
+        />
+    </record>
 </odoo>
