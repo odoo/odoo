@@ -184,10 +184,8 @@
           <!-- P_13_11: Total value of sales under the margin scheme referred to in Article 119 and Article 120 TO-CHECK -->
 
           <!-- P_15: Total gross amount of the invoice (including all taxes). -->
-        <P_15 t-out="float_repr(invoice.amount_total_signed, 2)"/>
+        <P_15 t-out="float_repr(invoice.amount_total_in_currency_signed, 2)"/>
 
-          <!-- KursWalutyZ: Exchange rate of the currency to PLN on the invoice date. TO-CHECK -->
-          <KursWalutyZ t-out="invoice.invoice_currency_rate"/>
         <!--
           ======================================================================
           Adnotacje (Annotations)
@@ -205,7 +203,7 @@
             <!-- P_17: Self-billing. 1=Yes, 2=No. -->
             <P_17 t-out="2"/>
             <!-- P_18: Reverse charge mechanism. 1=Yes, 2=No. -->
-            <P_18 t-out="2"/>
+            <P_18 t-out="intra_community_reverse_charge"/>
             <!-- P_18A: Split payment mechanism. 1=Yes, 2=No. -->
             <P_18A t-out="2"/>
             <!-- Zwolnienie: Tax exemption details. -->
@@ -274,6 +272,7 @@
             <P_11 t-out="line['P_11']"/>
             <!-- P_12: VAT rate applicable to the line (e.g., 23, 8, 5, "zw" for exempt). -->
             <P_12 t-out="line['P_12']"/>
+            <KursWaluty t-out="float_repr(invoice._fa3_get_currency_rate(), 6)"/>
           </FaWiersz>
         </t>
 
