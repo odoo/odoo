@@ -1252,7 +1252,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             lang = request.lang.code if request.lang.code in request.website.mapped('language_ids.code') else None
             if lang:
                 new_values['lang'] = lang
-            new_values['company_id'] = request.website.company_id.id
             new_values['team_id'] = request.website.salesteam_id and request.website.salesteam_id.id
             new_values['user_id'] = request.website.salesperson_id.id
 
@@ -1571,7 +1570,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             request.env['res.partner'].browse(partner_id).sudo().write(sanitized_values)
         else:
             sanitized_values = dict(sanitized_values, **{
-                'company_id': request.website.company_id.id,
                 'team_id': request.website.salesteam_id and request.website.salesteam_id.id,
                 'user_id': request.website.salesperson_id.id,
                 **sanitized_custom_values
