@@ -125,7 +125,9 @@ class DeliveryCarrier(models.Model):
             location_countries.add(wh.partner_id.country_id)
             # Calculate the distance between the partner address and the warehouse location.
             pickup_location_values.update({
-                "additional_data": {"in_store_stock_data": in_store_stock_data},
+                "additional_data": (
+                    {"in_store_stock_data": in_store_stock_data} if in_store_stock_data else {}
+                ),
                 "distance": utils.calculate_partner_distance(partner_address, wh.partner_id),
             })
             pickup_locations.append(pickup_location_values)
