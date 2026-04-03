@@ -9,9 +9,9 @@ class HrEmployeeDeparture(models.Model):
     _inherit = 'hr.employee.departure'
 
     def action_register(self):
-        super().action_register()
+        res = super().action_register()
         if not self:
-            return
+            return res
         all_leaves_sudo = self.sudo().env['hr.leave'].search([
             ('employee_id', 'in', self.employee_id.ids),
             ('date_to', '>', min(self.mapped('departure_date'))),
@@ -76,3 +76,4 @@ class HrEmployeeDeparture(models.Model):
                 to_modify.date_to = departure.departure_date
 
             departure.employee_id.message_post(body=self.env._("Time off and allocation requests have been cleaned for %s", departure.employee_id.name))
+        return res

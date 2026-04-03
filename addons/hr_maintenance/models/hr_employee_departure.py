@@ -7,7 +7,7 @@ class HrEmployeeDeparture(models.Model):
     _inherit = 'hr.employee.departure'
 
     def action_register(self):
-        super().action_register()
+        res = super().action_register()
         all_equipments = self.employee_id.equipment_ids
         for departure in self:
             equipments = departure.employee_id.equipment_ids
@@ -27,3 +27,4 @@ class HrEmployeeDeparture(models.Model):
                     departure.employee_id.name,
                 ))
         all_equipments.sudo().write({'employee_id': False})
+        return res
