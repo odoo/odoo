@@ -1,3 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="block_heading1" model="gov.document.block.catalog">
+        <field name="code">heading1</field>
+        <field name="name">Título Principal</field>
+        <field name="block_kind">heading</field>
+        <field name="category">Estrutura</field>
+        <field name="icon">📄</field>
+        <field name="sequence">10</field>
+        <field name="is_locked_by_default" eval="True"/>
+        <field name="typst_renderer_key">heading1</field>
+        <field name="supports_binding" eval="False"/>
+        <field name="default_props_json"><![CDATA[{"text":"Título","level":1}]]></field>
+    </record>
+
+    <record id="block_heading2" model="gov.document.block.catalog">
+        <field name="code">heading2</field>
+        <field name="name">Seção</field>
+        <field name="block_kind">heading</field>
+        <field name="category">Estrutura</field>
+        <field name="icon">📌</field>
+        <field name="sequence">20</field>
+        <field name="is_locked_by_default" eval="False"/>
+        <field name="typst_renderer_key">heading2</field>
+        <field name="supports_binding" eval="False"/>
+        <field name="default_props_json"><![CDATA[{"text":"Seção","level":2}]]></field>
+    </record>
+
+    <record id="block_divider" model="gov.document.block.catalog">
+        <field name="code">divider</field>
+        <field name="name">Divisor</field>
+        <field name="block_kind">divider</field>
+        <field name="category">Estrutura</field>
+        <field name="icon">—</field>
+        <field name="sequence">30</field>
+        <field name="is_locked_by_default" eval="False"/>
+        <field name="typst_renderer_key">divider</field>
+        <field name="supports_binding" eval="False"/>
+        <field name="default_props_json"><![CDATA[{}]]></field>
+    </record>
+
+    <record id="block_process_header" model="gov.document.block.catalog">
+        <field name="code">process_header</field>
+        <field name="name">Cabeçalho do Processo</field>
+        <field name="block_kind">process_field</field>
+        <field name="category">Dados do Processo</field>
+        <field name="icon">🏛</field>
+        <field name="sequence">40</field>
+        <field name="is_locked_by_default" eval="True"/>
+        <field name="typst_renderer_key">process_header</field>
+        <field name="supports_binding" eval="True"/>
+        <field name="default_props_json"><![CDATA[{}]]></field>
+    </record>
+
+    <record id="block_process_field" model="gov.document.block.catalog">
+        <field name="code">process_field</field>
+        <field name="name">Campo do Processo</field>
+        <field name="block_kind">process_field</field>
+        <field name="category">Dados do Processo</field>
+        <field name="icon">🔗</field>
+        <field name="sequence">50</field>
+        <field name="is_locked_by_default" eval="False"/>
+        <field name="typst_renderer_key">process_field</field>
+        <field name="supports_binding" eval="True"/>
+        <field name="default_props_json"><![CDATA[{"label":"Campo"}]]></field>
+    </record>
+
+    <record id="block_quadro_resumo" model="gov.document.block.catalog">
+        <field name="code">quadro_resumo</field>
+        <field name="name">Quadro Resumo</field>
+        <field name="block_kind">table</field>
+        <field name="category">Dados do Processo</field>
+        <field name="icon">📊</field>
+        <field name="sequence">60</field>
+        <field name="is_locked_by_default" eval="False"/>
+        <field name="typst_renderer_key">quadro_resumo</field>
+        <field name="supports_binding" eval="True"/>
+        <field name="default_props_json"><![CDATA[{}]]></field>
+    </record>
+
+    <record id="block_legal_basis" model="gov.document.block.catalog">
+        <field name="code">legal_basis</field>
+        <field name="name">Base Legal</field>
+        <field name="block_kind">legal_basis</field>
+        <field name="category">Conteúdo Jurídico</field>
+        <field name="icon">⚖</field>
+        <field name="sequence">70</field>
+        <field name="is_locked_by_default" eval="False"/>
+        <field name="typst_renderer_key">legal_basis</field>
+        <field name="supports_binding" eval="True"/>
+        <field name="default_props_json"><![CDATA[{"law":"Lei 14.133/2021","article":"art. 18"}]]></field>
+    </record>
+
+    <record id="block_richtext" model="gov.document.block.catalog">
+        <field name="code">richtext</field>
+        <field name="name">Texto Livre</field>
+        <field name="block_kind">rich_text</field>
+        <field name="category">Conteúdo Jurídico</field>
+        <field name="icon">✍</field>
+        <field name="sequence">80</field>
+        <field name="is_locked_by_default" eval="False"/>
+        <field name="typst_renderer_key">richtext</field>
+        <field name="supports_binding" eval="False"/>
+        <field name="default_props_json"><![CDATA[{"content":""}]]></field>
+    </record>
+
+    <record id="block_bullet_list" model="gov.document.block.catalog">
+        <field name="code">bullet_list</field>
+        <field name="name">Pontos-Chave</field>
+        <field name="block_kind">bullet_list</field>
+        <field name="category">Conteúdo Jurídico</field>
+        <field name="icon">•</field>
+        <field name="sequence">90</field>
+        <field name="is_locked_by_default" eval="False"/>
+        <field name="typst_renderer_key">bullet_list</field>
+        <field name="supports_binding" eval="False"/>
+        <field name="default_props_json"><![CDATA[{"items":[]}]]></field>
+    </record>
+
+    <record id="block_conditional" model="gov.document.block.catalog">
+        <field name="code">conditional</field>
+        <field name="name">Bloco Condicional</field>
+        <field name="block_kind">conditional</field>
+        <field name="category">Conteúdo Jurídico</field>
+        <field name="icon">↔</field>
+        <field name="sequence">100</field>
+        <field name="is_locked_by_default" eval="False"/>
+        <field name="typst_renderer_key">conditional</field>
+        <field name="supports_binding" eval="False"/>
+        <field name="default_props_json"><![CDATA[{"expression":""}]]></field>
+    </record>
+
+    <record id="block_signature" model="gov.document.block.catalog">
+        <field name="code">signature</field>
+        <field name="name">Assinaturas</field>
+        <field name="block_kind">signature</field>
+        <field name="category">Identificação</field>
+        <field name="icon">✒</field>
+        <field name="sequence">110</field>
+        <field name="is_locked_by_default" eval="True"/>
+        <field name="typst_renderer_key">signature</field>
+        <field name="supports_binding" eval="True"/>
+        <field name="default_props_json"><![CDATA[{"signatory_role":"Responsável"}]]></field>
+    </record>
+
+    <record id="block_metadata" model="gov.document.block.catalog">
+        <field name="code">metadata</field>
+        <field name="name">Metadados</field>
+        <field name="block_kind">metadata</field>
+        <field name="category">Identificação</field>
+        <field name="icon">🗂</field>
+        <field name="sequence">120</field>
+        <field name="is_locked_by_default" eval="False"/>
+        <field name="typst_renderer_key">metadata</field>
+        <field name="supports_binding" eval="True"/>
+        <field name="default_props_json"><![CDATA[{}]]></field>
+    </record>
 </odoo>

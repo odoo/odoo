@@ -1,3 +1,225 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="template_dfd_semsa_padrao" model="gov.document.template">
+        <field name="name">DFD — Template Padrão SEMSA</field>
+        <field name="code">dfd_semsa_padrao</field>
+        <field name="document_type_id" ref="gov_document_builder.dfd"/>
+        <field name="version">1.0</field>
+        <field name="default_context_json"><![CDATA[{}]]></field>
+        <field name="layout_schema_json"><![CDATA[
+[
+  {
+    "id": "heading1_10",
+    "type": "heading1",
+    "sequence": 10,
+    "props": {"text": "Título", "level": 1},
+    "binding": {},
+    "children": [],
+    "locked": true,
+    "required": true,
+    "allow_delete": false
+  },
+  {
+    "id": "process_header_20",
+    "type": "process_header",
+    "sequence": 20,
+    "props": {},
+    "binding": {},
+    "children": [],
+    "locked": true,
+    "required": true,
+    "allow_delete": false
+  },
+  {
+    "id": "heading2_30",
+    "type": "heading2",
+    "sequence": 30,
+    "props": {"text": "1. Objeto da Contratação", "level": 2},
+    "binding": {},
+    "children": [],
+    "locked": false
+  },
+  {
+    "id": "richtext_40",
+    "type": "richtext",
+    "sequence": 40,
+    "props": {"content": ""},
+    "binding": {},
+    "children": [],
+    "locked": false
+  },
+  {
+    "id": "heading2_50",
+    "type": "heading2",
+    "sequence": 50,
+    "props": {"text": "2. Justificativa da Necessidade", "level": 2},
+    "binding": {},
+    "children": [],
+    "locked": false
+  },
+  {
+    "id": "richtext_60",
+    "type": "richtext",
+    "sequence": 60,
+    "props": {"content": ""},
+    "binding": {},
+    "children": [],
+    "locked": false
+  },
+  {
+    "id": "bullet_list_70",
+    "type": "bullet_list",
+    "sequence": 70,
+    "props": {"items": []},
+    "binding": {},
+    "children": [],
+    "locked": false
+  },
+  {
+    "id": "heading2_80",
+    "type": "heading2",
+    "sequence": 80,
+    "props": {"text": "3. Base Legal", "level": 2},
+    "binding": {},
+    "children": [],
+    "locked": false
+  },
+  {
+    "id": "legal_basis_90",
+    "type": "legal_basis",
+    "sequence": 90,
+    "props": {"law": "Lei 14.133/2021", "article": "art. 18"},
+    "binding": {},
+    "children": [],
+    "locked": true,
+    "required": true
+  },
+  {
+    "id": "quadro_resumo_100",
+    "type": "quadro_resumo",
+    "sequence": 100,
+    "props": {},
+    "binding": {"source": "process", "path": "*"},
+    "children": [],
+    "locked": false
+  },
+  {
+    "id": "signature_110",
+    "type": "signature",
+    "sequence": 110,
+    "props": {"signatory_role": "Responsável"},
+    "binding": {},
+    "children": [],
+    "locked": true,
+    "required": true,
+    "allow_delete": false
+  },
+  {
+    "id": "metadata_120",
+    "type": "metadata",
+    "sequence": 120,
+    "props": {},
+    "binding": {},
+    "children": [],
+    "locked": false
+  }
+]
+        ]]></field>
+    </record>
+
+    <record id="template_dfd_block_heading1" model="gov.document.template.block">
+        <field name="template_id" ref="gov_document_builder.template_dfd_semsa_padrao"/>
+        <field name="catalog_block_id" ref="gov_document_builder.block_heading1"/>
+        <field name="sequence">10</field>
+        <field name="props_json"><![CDATA[{"text":"Título","level":1}]]></field>
+        <field name="required" eval="True"/>
+        <field name="locked" eval="True"/>
+        <field name="allow_delete" eval="False"/>
+    </record>
+
+    <record id="template_dfd_block_process_header" model="gov.document.template.block">
+        <field name="template_id" ref="gov_document_builder.template_dfd_semsa_padrao"/>
+        <field name="catalog_block_id" ref="gov_document_builder.block_process_header"/>
+        <field name="sequence">20</field>
+        <field name="props_json"><![CDATA[{}]]></field>
+        <field name="required" eval="True"/>
+        <field name="locked" eval="True"/>
+        <field name="allow_delete" eval="False"/>
+    </record>
+
+    <record id="template_dfd_block_heading_objeto" model="gov.document.template.block">
+        <field name="template_id" ref="gov_document_builder.template_dfd_semsa_padrao"/>
+        <field name="catalog_block_id" ref="gov_document_builder.block_heading2"/>
+        <field name="sequence">30</field>
+        <field name="props_json"><![CDATA[{"text":"1. Objeto da Contratação","level":2}]]></field>
+    </record>
+
+    <record id="template_dfd_block_richtext_objeto" model="gov.document.template.block">
+        <field name="template_id" ref="gov_document_builder.template_dfd_semsa_padrao"/>
+        <field name="catalog_block_id" ref="gov_document_builder.block_richtext"/>
+        <field name="sequence">40</field>
+        <field name="props_json"><![CDATA[{"content":""}]]></field>
+    </record>
+
+    <record id="template_dfd_block_heading_justificativa" model="gov.document.template.block">
+        <field name="template_id" ref="gov_document_builder.template_dfd_semsa_padrao"/>
+        <field name="catalog_block_id" ref="gov_document_builder.block_heading2"/>
+        <field name="sequence">50</field>
+        <field name="props_json"><![CDATA[{"text":"2. Justificativa da Necessidade","level":2}]]></field>
+    </record>
+
+    <record id="template_dfd_block_richtext_justificativa" model="gov.document.template.block">
+        <field name="template_id" ref="gov_document_builder.template_dfd_semsa_padrao"/>
+        <field name="catalog_block_id" ref="gov_document_builder.block_richtext"/>
+        <field name="sequence">60</field>
+        <field name="props_json"><![CDATA[{"content":""}]]></field>
+    </record>
+
+    <record id="template_dfd_block_bullet_list" model="gov.document.template.block">
+        <field name="template_id" ref="gov_document_builder.template_dfd_semsa_padrao"/>
+        <field name="catalog_block_id" ref="gov_document_builder.block_bullet_list"/>
+        <field name="sequence">70</field>
+        <field name="props_json"><![CDATA[{"items":[]}]]></field>
+    </record>
+
+    <record id="template_dfd_block_heading_base_legal" model="gov.document.template.block">
+        <field name="template_id" ref="gov_document_builder.template_dfd_semsa_padrao"/>
+        <field name="catalog_block_id" ref="gov_document_builder.block_heading2"/>
+        <field name="sequence">80</field>
+        <field name="props_json"><![CDATA[{"text":"3. Base Legal","level":2}]]></field>
+    </record>
+
+    <record id="template_dfd_block_legal_basis" model="gov.document.template.block">
+        <field name="template_id" ref="gov_document_builder.template_dfd_semsa_padrao"/>
+        <field name="catalog_block_id" ref="gov_document_builder.block_legal_basis"/>
+        <field name="sequence">90</field>
+        <field name="props_json"><![CDATA[{"law":"Lei 14.133/2021","article":"art. 18"}]]></field>
+        <field name="required" eval="True"/>
+        <field name="locked" eval="True"/>
+    </record>
+
+    <record id="template_dfd_block_quadro_resumo" model="gov.document.template.block">
+        <field name="template_id" ref="gov_document_builder.template_dfd_semsa_padrao"/>
+        <field name="catalog_block_id" ref="gov_document_builder.block_quadro_resumo"/>
+        <field name="sequence">100</field>
+        <field name="props_json"><![CDATA[{}]]></field>
+        <field name="binding_json"><![CDATA[{"source":"process","path":"*"}]]></field>
+    </record>
+
+    <record id="template_dfd_block_signature" model="gov.document.template.block">
+        <field name="template_id" ref="gov_document_builder.template_dfd_semsa_padrao"/>
+        <field name="catalog_block_id" ref="gov_document_builder.block_signature"/>
+        <field name="sequence">110</field>
+        <field name="props_json"><![CDATA[{"signatory_role":"Responsável"}]]></field>
+        <field name="required" eval="True"/>
+        <field name="locked" eval="True"/>
+        <field name="allow_delete" eval="False"/>
+    </record>
+
+    <record id="template_dfd_block_metadata" model="gov.document.template.block">
+        <field name="template_id" ref="gov_document_builder.template_dfd_semsa_padrao"/>
+        <field name="catalog_block_id" ref="gov_document_builder.block_metadata"/>
+        <field name="sequence">120</field>
+        <field name="props_json"><![CDATA[{}]]></field>
+    </record>
 </odoo>
