@@ -45,7 +45,7 @@ test("FavoriteField in kanban view", async () => {
             </kanban>
         `,
     });
-    expect(`.o_kanban_record .o_field_widget .o_favorite i.fa.fa-star`).toHaveCount(1, {
+    expect(`.o_kanban_record .o_field_widget .o_favorite i[data-icon="star"].oi-filled`).toHaveCount(1, {
         message: "should be favorite",
     });
     expect(`.o_kanban_record .o_field_widget .o_favorite`).toHaveText("Remove from Favorites", {
@@ -54,7 +54,7 @@ test("FavoriteField in kanban view", async () => {
 
     // click on favorite
     await contains(`.o_field_widget .o_favorite`).click();
-    expect(`.o_kanban_record .o_field_widget .o_favorite i.fa.fa-star`).toHaveCount(0, {
+    expect(`.o_kanban_record .o_field_widget .o_favorite i[data-icon="star"].oi-filled`).toHaveCount(0, {
         message: "should not be favorite",
     });
     expect(`.o_kanban_record .o_field_widget .o_favorite`).toHaveText("Add to Favorites", {
@@ -85,7 +85,7 @@ test("FavoriteField saves changes by default", async () => {
 
     // click on favorite
     await contains(`.o_field_widget .o_favorite`).click();
-    expect(`.o_kanban_record .o_field_widget .o_favorite i.fa.fa-star`).toHaveCount(0, {
+    expect(`.o_kanban_record .o_field_widget .o_favorite i[data-icon="star"].oi-filled`).toHaveCount(0, {
         message: "should not be favorite",
     });
     expect(`.o_kanban_record .o_field_widget .o_favorite`).toHaveText("Add to Favorites", {
@@ -101,7 +101,7 @@ test("FavoriteField in form view", async () => {
         type: "form",
         arch: `<form><field name="bar" widget="boolean_favorite"/></form>`,
     });
-    expect(`.o_field_widget .o_favorite i.fa.fa-star`).toHaveCount(1, {
+    expect(`.o_field_widget .o_favorite i[data-icon="star"].oi-filled`).toHaveCount(1, {
         message: "should be favorite",
     });
     expect(`.o_field_widget .o_favorite`).toHaveText("Remove from Favorites", {
@@ -110,10 +110,10 @@ test("FavoriteField in form view", async () => {
 
     // click on favorite
     await contains(`.o_field_widget .o_favorite`).click();
-    expect(`.o_field_widget .o_favorite i.fa.fa-star`).toHaveCount(0, {
+    expect(`.o_field_widget .o_favorite i[data-icon="star"].oi-filled`).toHaveCount(0, {
         message: "should not be favorite",
     });
-    expect(`.o_field_widget .o_favorite i.fa.fa-star-o`).toHaveCount(1, {
+    expect(`.o_field_widget .o_favorite i[data-icon="star"]:not(.oi-filled)`).toHaveCount(1, {
         message: "should not be favorite",
     });
     expect(`.o_field_widget .o_favorite`).toHaveText("Add to Favorites", {
@@ -122,7 +122,7 @@ test("FavoriteField in form view", async () => {
 
     // click on favorite
     await contains(`.o_field_widget .o_favorite`).click();
-    expect(`.o_field_widget .o_favorite i.fa.fa-star`).toHaveCount(1, {
+    expect(`.o_field_widget .o_favorite i[data-icon="star"].oi-filled`).toHaveCount(1, {
         message: "should be favorite",
     });
     expect(`.o_field_widget .o_favorite`).toHaveText("Remove from Favorites", {
@@ -143,25 +143,25 @@ test("FavoriteField in editable list view without label", async () => {
             </list>
         `,
     });
-    expect(`.o_data_row:first .o_field_widget .o_favorite i.fa.fa-star`).toHaveCount(1, {
+    expect(`.o_data_row:first .o_field_widget .o_favorite i[data-icon="star"].oi-filled`).toHaveCount(1, {
         message: "should be favorite",
     });
 
     // switch to edit mode
     await contains(`tbody td:not(.o_list_record_selector)`).click();
-    expect(`.o_data_row:first .o_field_widget .o_favorite i.fa.fa-star`).toHaveCount(1, {
+    expect(`.o_data_row:first .o_field_widget .o_favorite i[data-icon="star"].oi-filled`).toHaveCount(1, {
         message: "should be favorite",
     });
 
     // click on favorite
     await contains(`.o_data_row .o_field_widget .o_favorite`).click();
-    expect(`.o_data_row:first .o_field_widget .o_favorite i.fa.fa-star`).toHaveCount(0, {
+    expect(`.o_data_row:first .o_field_widget .o_favorite i[data-icon="star"].oi-filled`).toHaveCount(0, {
         message: "should not be favorite",
     });
 
     // save
     await contains(`.o_list_button_save`).click();
-    expect(`.o_data_row:first .o_field_widget .o_favorite i.fa.fa-star-o`).toHaveCount(1, {
+    expect(`.o_data_row:first .o_field_widget .o_favorite i[data-icon="star"]:not(.oi-filled)`).toHaveCount(1, {
         message: "should not be favorite",
     });
 });
@@ -208,7 +208,7 @@ test("FavoriteField in kanban view with readonly attribute", async () => {
             </kanban>
         `,
     });
-    expect(`.o_kanban_record .o_field_widget .o_favorite i.fa.fa-star`).toHaveCount(1, {
+    expect(`.o_kanban_record .o_field_widget .o_favorite i[data-icon="star"].oi-filled`).toHaveCount(1, {
         message: "should be favorite",
     });
     expect(`.o_kanban_record .o_field_widget .o_favorite`).toHaveClass("pe-none");
@@ -218,7 +218,7 @@ test("FavoriteField in kanban view with readonly attribute", async () => {
     // click on favorite
     await contains(`.o_field_widget .o_favorite`).click();
     // expect nothing to change since its readonly
-    expect(`.o_kanban_record .o_field_widget .o_favorite i.fa.fa-star`).toHaveCount(1, {
+    expect(`.o_kanban_record .o_field_widget .o_favorite i[data-icon="star"].oi-filled`).toHaveCount(1, {
         message: "should remain favorite",
     });
     expect.verifySteps([]);

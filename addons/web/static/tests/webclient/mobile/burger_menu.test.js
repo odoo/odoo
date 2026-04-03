@@ -142,7 +142,7 @@ test("Burger menu closes when click on menu item", async () => {
         queryAll(".o_app_menu_sidebar nav.o_burger_menu_content", { root: document.body })
     ).toHaveText("App2");
 
-    await contains(".oi-apps", { root: document.body }).click();
+    await contains("[data-icon='apps']", { root: document.body }).click();
     expect(
         queryAll(".o_app_menu_sidebar nav.o_burger_menu_content", { root: document.body })
     ).toHaveText("App0\nApp1\nApp2");

@@ -62,7 +62,7 @@ describe("file command", () => {
         expect(fileCard).toHaveStyle({ display: "inline-block" });
         expect(fileCard.firstElementChild).toHaveClass(["alert", "alert-info"]);
         // No download button in file card.
-        expect(".o_file_box .fa-download").toHaveCount(0);
+        expect(".o_file_box [data-icon='download']").toHaveCount(0);
     });
 
     describe("static file box interactions", () => {
@@ -336,7 +336,7 @@ describe("powerbutton", () => {
         const { editor } = await setupEditor("<p>[]<br></p>");
         const mockedUpload = patchUpload(editor);
         // Click on the upload powerbutton.
-        await click(".power_button.fa-upload");
+        await click(".power_button[data-icon='upload']");
         await animationFrame();
         // Check that there's no media dialog.
         expect(".o_select_media_dialog").toHaveCount(0);
@@ -349,7 +349,7 @@ describe("powerbutton", () => {
         const { editor } = await setupEditor("<p>[]<br></p>", { config: configWithEmbeddedFile });
         const mockedUpload = patchUpload(editor);
         // Click on the upload powerbutton.
-        await click(".power_button.fa-upload");
+        await click(".power_button[data-icon='upload']");
         await animationFrame();
         // Check that there's no media dialog.
         expect(".o_select_media_dialog").toHaveCount(0);

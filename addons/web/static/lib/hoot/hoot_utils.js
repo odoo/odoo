@@ -2005,37 +2005,37 @@ export class TestReporting {
 export const CASE_EVENT_TYPES = {
     assertion: {
         value: 0b1,
-        icon: "fa-check",
+        icon: "check",
         color: "emerald",
     },
     error: {
         value: 0b10,
-        icon: "fa-exclamation",
+        icon: "priority_high",
         color: "rose",
     },
     interaction: {
         value: 0b100,
-        icon: "fa-bolt",
+        icon: "flash_on",
         color: "purple",
     },
     query: {
         value: 0b1000,
-        icon: "fa-search text-sm",
+        icon: "search",
         color: "amber",
     },
     server: {
         value: 0b10000,
-        icon: "fa-globe",
+        icon: "public",
         color: "lime",
     },
     step: {
         value: 0b100000,
-        icon: "fa-arrow-right text-sm",
+        icon: "arrow_forward",
         color: "orange",
     },
     time: {
         value: 0b1000000,
-        icon: "fa fa-hourglass text-sm",
+        icon: "hourglass_empty",
         color: "blue",
     },
 };

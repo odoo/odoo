@@ -114,7 +114,7 @@
                         class="btn btn-link"
                         data-bs-toggle="collapse"
                 >
-                    Choose another method <i class="oi oi-arrow-down"/>
+                    Choose another method <i class="oi" data-icon="south"/>
                 </button>
                 <!-- === Submit button === -->
                 <t t-if="display_submit_button" t-call="payment.submit_button"/>
@@ -144,7 +144,7 @@
                                  + (' d-none' if mode != 'validation' else '')"
                     t-attf-data-linked-radio="o_payment_token_{{token_sudo.id}}"
             >
-                <i class="fa fa-trash"
+                <i class="oi oi-filled" data-icon="delete"
                    title="Delete payment method"
                    data-bs-toggle="tooltip"
                    data-bs-placement="top"
@@ -179,12 +179,12 @@
                             <div class="d-flex flex-nowrap gap-2">
                                 <!-- === "Unpublished" icon === -->
                                 <t t-if="is_unpublished" t-call="payment.form_icon"
-                                    icon_name.f="eye-slash"
+                                    icon_name.f="visibility_off"
                                     color_name.f="danger"
                                     title.translate="Unpublished"/>
                                 <!-- === "Test mode" icon === -->
                                 <t t-if="is_test" t-call="payment.form_icon"
-                                    icon_name.f="exclamation-triangle"
+                                    icon_name.f="warning"
                                     color_name.f="warning"
                                     title.translate="Test mode"/>
                             </div>
@@ -205,7 +205,7 @@
                                     + (' ms-4 ms-md-0' if allow_token_selection else '')
                                     + (' d-none' if hide_secured_by else '')"
                     >
-                        <span><i class="fa fa-lock"/> Secured by</span>
+                        <span><i class="oi" data-icon="lock"/> Secured by</span>
                         <span t-out="dict(provider_sudo._fields['code']._description_selection(
                                          provider_sudo.env
                                      ))[provider_sudo.code]"
@@ -231,7 +231,7 @@
            t-att-class="'align-self-center d-block d-md-none mb-0 small text-600'
                         + (' d-none' if hide_secured_by else '')"
         >
-            <span><i class="fa fa-lock"/> Secured by</span>
+            <span><i class="oi" data-icon="lock"/> Secured by</span>
             <span t-out="dict(provider_sudo._fields['code']._description_selection(
                              provider_sudo.env
                          ))[provider_sudo.code]"
@@ -279,12 +279,12 @@
                         <div class="d-flex flex-nowrap gap-2 mt-1">
                             <!-- === "Unpublished" icon === -->
                             <t t-if="is_unpublished" t-call="payment.form_icon"
-                                icon_name.f="eye-slash"
+                                icon_name.f="visibility_off"
                                 color_name.f="danger"
                                 title.translate="Unpublished"/>
                             <!-- === "Test mode" icon === -->
                             <t t-if="is_test" t-call="payment.form_icon"
-                                icon_name.f="exclamation-triangle"
+                                icon_name.f="warning"
                                 color_name.f="warning"
                                 title.translate="Test mode"/>
                         </div>
@@ -333,7 +333,7 @@
                    t-att-class="'align-self-end mb-0 mx-auto me-sm-0 small text-600'
                                 + (' d-none' if hide_secured_by else '')"
                 >
-                    <span><i class="fa fa-lock"/> Secured by</span>
+                    <span><i class="oi" data-icon="lock"/> Secured by</span>
                     <span t-out="dict(provider_sudo._fields['code']._description_selection(
                                      provider_sudo.env
                                  ))[provider_sudo.code]"
@@ -346,11 +346,12 @@
 
     <template id="payment.form_icon" name="Form Icon">
         <!-- Parameters description:
-            - icon_name: The name of the FontAwesome icon.
+            - icon_name: The name of the Material Symbols icon.
             - color_name: The class name of the color (`warning`, `danger`...).
             - title: The title to display on hover.
         -->
-        <i t-attf-class="fa fa-{{icon_name}} text-{{color_name}} position-relative z-1"
+        <i t-attf-class="oi text-{{color_name}} position-relative z-1"
+           t-att-data-icon="icon_name"
            t-att-title="title"
            data-bs-toggle="tooltip"
            data-bs-placement="top"
@@ -452,7 +453,7 @@
                         data-bs-toggle="collapse"
                         href="#payment_availability_report"
                     >
-                        <strong><i class="fa fa-file-text"/> Show availability report</strong>
+                        <strong><i class="oi oi-filled" data-icon="article"/> Show availability report</strong>
                     </a>
                 </div>
             </div>
@@ -478,7 +479,7 @@
             aria-expanded="false"
             aria-controls="payment_availability_report"
         >
-            <i class="fa fa-bug"/>
+            <i class="oi" data-icon="bug_report"/>
         </a>
     </template>
 
@@ -510,7 +511,8 @@
                     <div class="d-flex gap-2">
                         <div class="ms-2">
                             <i
-                                t-attf-class="fa fa-fw fa-{{'check-circle' if available else 'times-circle'}}"
+                                t-attf-class="oi oi-fw {{'' if available else 'oi-filled'}}"
+                                t-attf-data-icon="{{'check_circle' if available else 'cancel'}}"
                                 t-attf-style="color: {{'green' if available else 'red'}};"
                             />
                         </div>

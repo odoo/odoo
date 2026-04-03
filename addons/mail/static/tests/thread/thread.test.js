@@ -525,10 +525,10 @@ test("basic rendering of canceled notification", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message-notification .fa-envelope-o");
+    await contains(".o-mail-Message-notification [data-icon='mail']");
     await click(".o-mail-Message-notification");
     await contains(".o-mail-MessageNotificationPopover");
-    await contains(".o-mail-MessageNotificationPopover .fa-trash-o");
+    await contains(".o-mail-MessageNotificationPopover [data-icon='delete']");
     await contains(".o-mail-MessageNotificationPopover:text('Someone (test@test.be)')");
 });
 

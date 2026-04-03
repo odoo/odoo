@@ -12,7 +12,7 @@
                             <t t-foreach="this.floorStore.floors" t-as="floor" t-key="floor.uuid">
                                 <DropdownItem class="{'toolbar-floor-selector-item btn btn-lg ps-2 py-2':true}"
                                               onSelected="()=>this.selectFloor(floor.uuid)">
-                                    <i class="fa fa-fw fa-check me-1 fs-5" style="color:var(--success)"
+                                    <i class="oi oi-fw me-1 fs-5" data-icon="check" style="color:var(--success)"
                                        t-attf-class="{{floor === this.floorStore.selectedFloor ? 'visible' : 'invisible' }}"/>
                                     <span t-out="floor.name"/>
                                 </DropdownItem>
@@ -20,7 +20,7 @@
                             <div class="dropdown-divider mx-1 my-1"/>
                         </t>
                         <DropdownItem class="{'toolbar-floor-selector-item btn btn-lg ps-2 py-2':true}" onSelected="()=>this.addFloor()">
-                            <i class="fa fa-fw fa-plus me-1 fs-5"/>Add Floor
+                            <i class="oi oi-fw me-1 fs-5" data-icon="add"/>Add Floor
                         </DropdownItem>
                     </t>
                 </Dropdown>
@@ -28,7 +28,7 @@
             <div class="d-flex  gap-3">
                 <button t-on-click="this.addTable" class="btn btn-outline-secondary btn-lg" title="Add Table">
                     <span class="text-nowrap d-none d-sm-inline ">Add Table</span>
-                    <i class="fa fa-fw fa-plus d-sm-none "/>
+                    <i class="oi oi-fw d-sm-none" data-icon="add"/>
                 </button>
                 <button t-on-click="this.addDecor" class="d-none d-sm-block btn btn-outline-secondary btn-lg">
                     <span class="text-nowrap">Add Decor</span>
@@ -36,7 +36,7 @@
                 <Dropdown menuClass="'py-1'">
                     <button class="d-flex d-sm-none o-dropdown dropdown-toggle dropdown btn btn-lg btn-outline-secondary align-items-center"
                             title="More">
-                        <i class="oi oi-fw oi-ellipsis-v"/>
+                        <i class="oi oi-fw" data-icon="more_vert"/>
                     </button>
                     <t t-set-slot="content">
                         <DropdownItem onSelected="()=>this.addDecor()" class="'py-2'">Add decor</DropdownItem>
@@ -47,7 +47,7 @@
             <div class="d-none d-sm-flex flex-fill justify-content-end ">
                 <button class="btn btn-secondary  btn-lg  d-flex align-items-center" title="Edit Floor"
                         t-on-click="this.editFloor">
-                    <i class="fa fa-fw fa-pencil "/>
+                    <i class="oi oi-fw oi-filled" data-icon="edit"/>
                 </button>
             </div>
         </div>

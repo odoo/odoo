@@ -124,7 +124,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
 },
 {
     isActive: ["auto"],
-    trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
+    trigger: ".ui-autocomplete > li > a:not(:has(i.oi))",
     run: "click",
 }, {
     trigger: '.o_field_widget[name="name"] textarea',

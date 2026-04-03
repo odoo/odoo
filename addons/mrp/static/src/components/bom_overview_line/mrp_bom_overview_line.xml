@@ -8,12 +8,12 @@
                     <t t-set="title_fold">Fold</t>
                     <t t-set="title_unfold">Unfold</t>
                     <span class="o_mrp_bom_unfoldable btn btn-light p-0" t-att-aria-label="this.props.isFolded ? title_unfold : title_fold" t-att-title="this.props.isFolded ? title_unfold : title_fold" style="margin-right: 1px">
-                        <i t-attf-class="fa fa-fw fa-caret-{{ this.props.isFolded ? 'right' : 'down' }}" role="img"/>
+                        <i class="oi oi-fw" t-attf-data-icon="{{ this.props.isFolded ? 'arrow_right' : 'arrow_drop_down' }}" role="img"/>
                     </span>
                 </t>
                 <a href="#" t-on-click.prevent="() => this.goToAction(this.data.link_id, this.data.link_model)" t-out="this.data.name"/>
                 <t t-if="this.data.phantom_bom">
-                    <div class="fa fa-dropbox" title="This is a BoM of type Kit!" role="img" aria-label="This is a BoM of type Kit!"/>
+                    <div class="oi" data-icon="oi_dropbox" title="This is a BoM of type Kit!" role="img" aria-label="This is a BoM of type Kit!"/>
                 </t>
             </div>
         </td>
@@ -51,7 +51,7 @@
         <td t-attf-class="text-end {{ this.data.type == 'component' ? 'opacity-50' : '' }}" t-attf-colspan="{{ this.forecastMode ? 1 : 2 }}" t-out="this.formatMonetary(this.data.bom_cost)"/>
         <td t-if="this.showAttachments" class="text-center">
             <span t-if="this.data.has_attachments">
-                <a href="#" role="button" t-on-click.prevent="this.goToAttachment" class="fa fa-fw o_button_icon fa-files-o"/>
+                <a href="#" role="button" t-on-click.prevent="this.goToAttachment" class="o_button_icon oi oi-fw" data-icon="content_copy"/>
             </span>
         </td>
     </tr>

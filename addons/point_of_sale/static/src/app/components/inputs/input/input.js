@@ -18,7 +18,7 @@ export class Input extends TModelInput {
         icon: {
             type: Object,
             optional: true,
-            shape: { type: String, value: String },
+            shape: { type: String, value: String, class: { type: String, optional: true } },
         },
         getRef: { type: Function, optional: true },
         autofocus: { type: Boolean, optional: true },

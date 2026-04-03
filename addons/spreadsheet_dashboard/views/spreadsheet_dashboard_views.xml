@@ -11,7 +11,7 @@
                 <field name="group_ids" widget="many2many_tags" required="1"/>
                 <field name="company_ids" options="{'no_create': True}" widget="many2many_tags" groups="base.group_multi_company" placeholder="Visible to all"/>
                 <field name="is_published" widget="boolean_toggle"/>
-                <button name="action_open_dashboard" type="object" string="View" icon="fa-eye"/>
+                <button name="action_open_dashboard" type="object" string="View" icon="visibility"/>
             </list>
         </field>
     </record>

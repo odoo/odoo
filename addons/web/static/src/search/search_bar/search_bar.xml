@@ -13,7 +13,7 @@
                 <!-- :hover overlay -->
                 <div class="position-absolute start-0 top-0 bottom-0 end-0 bg-view border rounded-2 shadow opacity-0 opacity-100-hover"/>
 
-                <div class="o_searchview_facet_label position-relative rounded-start-2 px-1 rounded-end-0 p-0"
+                <div class="o_searchview_facet_label position-relative rounded-start-2 px-1 rounded-end-0 p-0 oi-natural-scale"
                     t-on-click="(ev) => this.onFacetLabelClick(ev.target, facet)"
                     t-att-role="facet.domain ? 'button' : 'img'"
                     t-att-class="{
@@ -22,7 +22,7 @@
                         'btn btn-favourite': facet.type == 'favorite'
                     }"
                     >
-                    <i t-if="facet.icon" class="small fa-fw" t-att-class="facet.icon" role="image"/>
+                    <i t-if="facet.icon" class="oi oi-fw oi-filled small" t-att-class="{'oi-flip-vertical': facet.type == 'groupBy' and this.env.searchModel.orderByCount === 'Asc'}" t-att-data-icon="facet.icon" role="image"/>
                     <small t-else="" class="px-1" t-out="facet.title"/>
 
                     <!-- Editable facets' overlay -->
@@ -30,7 +30,7 @@
                         class="position-absolute start-0 top-0 bottom-0 end-0 bg-inherit opacity-0 opacity-100-hover"
                         t-att-class="{'px-2 transition-base': !facet.icon}"
                         >
-                        <i class="fa fa-fw fa-pencil"/>
+                        <i class="oi oi-fw oi-filled" data-icon="edit"/>
                     </span>
                 </div>
 
@@ -39,7 +39,7 @@
                         <em t-if="!facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-out="facet.separator"/>
                         <small class="o_facet_value text-truncate" t-out="facetValue" t-att-title="facet.tooltip or facetValue"/>
                     </t>
-                    <button class="o_facet_remove oi oi-close btn btn-link py-0 px-2 text-danger d-print-none"
+                    <button class="o_facet_remove oi btn btn-link py-0 px-2 text-danger d-print-none" data-icon="close_small"
                         aria-label="Remove"
                         title="Remove"
                         t-on-click="() => this.onFacetRemove(facet)"
@@ -63,7 +63,7 @@
                         href="#"
                         t-on-click.stop.prevent="() => this.toggleItem(item, !item.isExpanded)"
                         >
-                        <i t-attf-class="fa fa-caret-{{ item.isExpanded ? 'down' : 'right' }}"/>
+                        <i class="oi" t-attf-data-icon="{{ item.isExpanded ? 'arrow_drop_down' : 'arrow_right' }}"/>
                     </a>
                 </t>
                 <a href="#" t-on-click.prevent="" t-att-class="{'ps-3 pe-2 text-truncate': item.isFieldProperty }" t-att-title="item.title">
@@ -98,7 +98,7 @@
                         title="Search..."
                         t-on-click="this.onClickSearchIcon"
                     >
-                        <i class="o_searchview_icon oi oi-search me-2"
+                        <i class="o_searchview_icon oi me-2" data-icon="search"
                             role="img"
                         />
                     </button>

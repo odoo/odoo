@@ -7,13 +7,13 @@
                         t-on-click="() => this.props.onClickBack()"
                         class="o_hr_attendance_back_button btn btn-secondary rounded-pill d-flex flex-row align-items-center"
                         t-if="this.props.displayBackButton">
-                        <i class="oi oi-chevron-left me-1" role="img" aria-label="Go back" title="Go back"/>
+                        <i class="oi me-1" data-icon="chevron_backward" role="img" aria-label="Go back" title="Go back"/>
                         Back
                     </button>
                 <div class="o_control_panel_main d-flex justify-content-between align-items-lg-center flex-grow-1">
                     <div class="o_cp_searchview d-flex input-group h-100">
                         <div class="d-flex flex-row align-items-center rounded-pill border flex-grow-1">
-                            <i class="o_searchview_icon d-print-none oi oi-search m-2" aria-label="Search..." title="Search..."/>
+                            <i class="o_searchview_icon oi d-print-none m-2" data-icon="search" aria-label="Search..." title="Search..."/>
                             <div class="o_searchview_input_container position-relative w-100">
                                 <input t-on-input="this.onSearchInput" type="text" class="d-print-none border-0" style="width: 95%; outline: none;" placeholder="Search..."/>
                             </div>
@@ -49,7 +49,7 @@
                     <Dropdown>
                         <button class="btn btn-light m-2 me-auto align-self-start">
                             <span id="departmentButton" ><i class="fa fa-users me-2"/><t t-out="this.departmentName"/></span>
-                            <i class="fa fa-caret-down ms-2"/>
+                            <i class="oi ms-2" data-icon="arrow_drop_down"/>
                         </button>
                         <t t-set-slot="content">
                             <a t-on-click="() => this.onDepartmentClick()" class="d-flex text-start text-reset p-3">

@@ -707,7 +707,7 @@ class Website(Home):
             for record in search_result['results_data']:
                 mapping = record['_mapping']
                 mapped = {
-                    '_fa': record.get('_fa'),
+                    '_icon': record.get('_icon'),
                 }
                 skip_matching_area = False
                 for mapped_name, field_meta in mapping.items():

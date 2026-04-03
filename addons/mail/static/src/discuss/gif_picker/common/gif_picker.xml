@@ -9,12 +9,12 @@
             </div>
             <t t-else="">
                 <div class="o-EmojiPicker-search d-flex align-items-center m-2 rounded">
-                    <i t-if="!this.state.showCategories" aria-label="back" t-on-click="this.openCategories" class="oi oi-arrow-left cursor-pointer p-2 fs-5"/>
+                    <i t-if="!this.state.showCategories" aria-label="back" t-on-click="this.openCategories" class="oi cursor-pointer p-2 fs-5" data-icon="west"/>
                     <span class="d-flex mx-1 w-100 rounded o-active">
                         <t t-if="this.props.state" t-set="localState" t-value="this.props.state"/>
                         <t t-else="" t-set="localState" t-value="this.state"/>
                         <t t-call="discuss.GifPicker.searchInput"/>
-                        <i class="oi oi-search p-2 fs-5 rounded-start-0 rounded-3 o-active" title="Search..." role="img" aria-label="Search..."/>
+                        <i class="oi p-2 fs-5 rounded-start-0 rounded-3 o-active" data-icon="search" title="Search..." role="img" aria-label="Search..."/>
                     </span>
                 </div>
                 <div class="o-discuss-GifPicker-content overflow-y-auto overflow-x-hidden ps-2 pe-3 pb-2 h-100" t-custom-ref="scroller">
@@ -73,10 +73,10 @@
                             </div>
                         </div>
                         <div t-if="this.state.loadingGif" class="text-center fs-6 h-100 d-flex flex-column justify-content-center">
-                            <i class="fa fa-spin fa-circle-o-notch"/>
+                            <i class="oi oi-spin" data-icon="autorenew"/>
                         </div>
                         <div t-elif="this.showFavorite and this.state.evenGif.gifs.size === 0 and this.state.oddGif.gifs.size === 0" class="d-flex flex-column h-100 align-items-center justify-content-center text-center text-muted gap-2">
-                            <i class="o-discuss-GifPicker-noFavoritesIcon o-yellow fa fa-star fs-1"/>
+                            <i class="o-discuss-GifPicker-noFavoritesIcon oi oi-filled o-yellow fs-1" data-icon="star"/>
                             <span class="fs-5">So uhh... maybe go favorite some GIFs?</span>
                         </div>
                     </t>
@@ -89,8 +89,9 @@
         <div class="o-discuss-Gif position-relative mt-1 fs-5 cursor-pointer rounded overflow-hidden">
             <i
                 t-if="this.store.self_user"
-                class="position-absolute top-0 end-0 me-3 mt-3 p-2 o-bg-black bg-opacity-75 fa cursor-pointer opacity-0"
-                t-att-class="{ 'o-text-white fa-star-o': !this.isFavorite(gif_value), 'fa-star o-starred': this.isFavorite(gif_value) }"
+                class="position-absolute top-0 end-0 me-3 mt-3 p-2 o-bg-black bg-opacity-75 oi cursor-pointer opacity-0"
+                t-att-class="{ 'o-text-white': !this.isFavorite(gif_value), 'oi-filled o-starred': this.isFavorite(gif_value) }"
+                data-icon="star"
                 t-on-click="() => this.onClickFavorite(gif_value)"
             />
             <Gif class="'img-fluid'" style="this.style" alt="'GIF'" onClick="() => this.onClickGif(gif_value)" src="gif_value.media_formats.tinygif.url" loading="'lazy'" paused="!this.state.focused"/>

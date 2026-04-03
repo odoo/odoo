@@ -18,7 +18,7 @@
                         <button name="action_create_sidebar_action" type="object"
                                 groups="base.group_no_one"
                                 class="oe_stat_button"
-                                invisible="sidebar_action_id" icon="fa-plus"
+                                invisible="sidebar_action_id" icon="add"
                                 help="Add a contextual action on the related model to open a sms composer with this template">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_text">Add</span>
@@ -27,7 +27,7 @@
                         </button>
                         <button name="action_unlink_sidebar_action" type="object"
                                 groups="base.group_no_one"
-                                class="oe_stat_button" icon="fa-minus"
+                                class="oe_stat_button" icon="remove"
                                 invisible="not sidebar_action_id"
                                 help="Remove the contextual action of the related model" widget="statinfo">
                             <div class="o_field_widget o_stat_info">
@@ -35,7 +35,7 @@
                                 <span class="o_stat_text">Context Action</span>
                             </div>
                         </button>
-                        <button class="oe_stat_button" name="%(sms_template_preview_action)d" icon="fa-search-plus" type="action" target="new">
+                        <button class="oe_stat_button" name="%(sms_template_preview_action)d" icon="zoom_in" type="action" target="new">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_text">Preview</span>
                             </div>

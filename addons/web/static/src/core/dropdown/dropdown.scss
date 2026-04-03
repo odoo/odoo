@@ -40,28 +40,29 @@
         gap: 5px;
 
         &:after {
-            content: "\f0d7";
-            font-family: FontAwesome;
+            content: "arrow_drop_down";
+            font-family: 'material_symbols_outlined';
             display: inline-block;
             margin-left: auto;
+            font-size: 1em;
 
-            transform: rotate(0deg);
+            transform: scale(1.4) rotate(0deg);
             transition: .25s ease-in-out;
         }
 
         &.show:after {
-            transform: rotate(180deg);
+            transform: scale(1.4) rotate(180deg);
         }
 
         &.o-dropdown--has-parent {
             padding-right: 8px;
 
             &:after {
-                transform: rotate(-90deg);
+                transform: scale(1.4) rotate(-90deg);
             }
 
             &.o-dropdown--open:after {
-                transform: rotate(90deg);
+                transform: scale(1.4) rotate(90deg);
             }
         }
     }

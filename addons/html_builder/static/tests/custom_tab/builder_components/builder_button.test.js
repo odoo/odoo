@@ -872,8 +872,8 @@ describe("LTR - RTL compatibility", () => {
             selector: ".selector",
             template: xml`
                 <BuilderButtonGroup>
-                    <BuilderButton ltrRtlMapping="'left-right'" title="'Left'" icon="'fa-arrow-left'" classAction="'class-a'"/>
-                    <BuilderButton ltrRtlMapping="'left-right'" title="'Right'" icon="'fa-arrow-right'" classAction="'class-b'"/>
+                    <BuilderButton ltrRtlMapping="'left-right'" title="'Left'" icon="'arrow_back'" classAction="'class-a'"/>
+                    <BuilderButton ltrRtlMapping="'left-right'" title="'Right'" icon="'arrow_forward'" classAction="'class-b'"/>
                 </BuilderButtonGroup>
             `,
         });

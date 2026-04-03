@@ -27,7 +27,7 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_open_document"
-                                type="object" class="oe_link" icon="fa-file-text-o"
+                                type="object" class="oe_link" icon="article"
                                 invisible="not model or res_id == 0">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_text">Open Document</span>
@@ -147,7 +147,7 @@
                             <aside class="o_kanban_image m-1">
                                 <div class="o_kanban_image_wrapper d-flex align-items-center justify-content-center">
                                     <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png|webp)').test(record.mimetype.value)"/>
-                                    <div t-if="record.type.raw_value == 'url'" class="fa fa-link fa-3x text-muted" aria-label="Image is a link"/>
+                                    <div t-if="record.type.raw_value == 'url'" class="oi oi-3x text-muted" data-icon="link" aria-label="Image is a link"/>
                                     <img t-elif="webimage" t-attf-src="/web/image/#{record.id.raw_value}" width="100" height="100" alt="Document" class="o_attachment_image"/>
                                     <div t-else="!webimage" class="o_image o_image_thumbnail" t-att-data-mimetype="record.mimetype.value"/>
                                 </div>
@@ -157,7 +157,7 @@
                                     <field name="name" class="text-truncate fw-bold fs-5"/>
                                     <div class="d-flex flex-grow-1 align-items-center">
                                         <t t-if="record.type.raw_value == 'url'">
-                                            <i class="fa fa-globe" aria-label="Document url"/> <field name="url" widget="url"/>
+                                            <i class="oi" data-icon="public" aria-label="Document url"/> <field name="url" widget="url"/>
                                         </t>
                                     </div>
                                     <div class="d-flex">

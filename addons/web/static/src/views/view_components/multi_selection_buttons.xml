@@ -7,7 +7,7 @@
                 <span class="list-group-item active d-flex align-items-center pe-0 py-0 rounded-1 gap-1 flex-grow-1">
                     <b t-out="this.props.reactive.nbSelected"/> selected
                     <button data-tooltip="Unselect All" class="o_unselect_all btn btn-link ms-auto border-0" t-on-click="() => this.props.reactive.onCancel()">
-                        <i class="oi oi-close"/>
+                        <i class="oi" data-icon="close_small"/>
                     </button>
                 </span>
             </div>
@@ -15,7 +15,7 @@
                 Add
             </button>
             <button t-if="this.props.reactive.nbSelected > 0" class="btn btn-secondary" data-tooltip="Delete" t-on-click="() => this.onDelete()">
-                <i class="fa fa-trash text-danger"/>
+                <i class="oi oi-filled text-danger" data-icon="delete"/>
             </button>
         </div>
     </t>

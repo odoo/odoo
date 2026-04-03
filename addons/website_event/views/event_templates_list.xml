@@ -86,7 +86,7 @@
                 <button class="o_not_editable btn btn-light position-relative ms-2 d-lg-none"
                     data-bs-toggle="offcanvas"
                     data-bs-target="#o_wevent_index_offcanvas">
-                    <i class="fa fa-sliders"/>
+                    <i class="oi" data-icon="tune"/>
                 </button>
             </div>
             <t t-if="search_tags" t-call="website_event.searched_tags"/>
@@ -141,7 +141,7 @@
                 <t t-out="tag.display_name"/>
                 <span t-att-data-post="keep_event_url(tags=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), prevent_redirect=True)"
                     class="post_link cursor-pointer btn border-0 py-1 px-2 text-reset opacity-75-hover">
-                    <i class="oi oi-close" role="img"/>
+                    <i class="oi" data-icon="close_small" role="img"/>
                 </span>
             </span>
         </t>
@@ -304,7 +304,7 @@
         <p t-else="">We couldn't find any event scheduled at this moment.</p>
         <div class="o_not_editable my-3" groups="event.group_event_user">
             <a class="o_wevent_cta btn" target="_blank" href="/odoo/action-event.action_event_view?view_type=form">
-                <span class="fa fa-plus me-1"/> Create an Event
+                <span class="oi me-1" data-icon="add"/> Create an Event
             </a>
         </div>
     </div>
@@ -333,7 +333,7 @@
                                     </div>
                                     <div class="o_wevent_event_country_flag">
                                         <img t-if="event.country_id and event.country_id.image_url" class="h-100 align-baseline" t-att-src="event.country_id.image_url" t-att-alt="event.country_id.name"/>
-                                        <i t-elif="not event.country_id" class="fa fa-video-camera h-100"/>
+                                        <i t-elif="not event.country_id" class="oi oi-filled h-100" data-icon="videocam"/>
                                     </div>
                                 </div>
                                 <div t-elif="not event.is_multi_slots" t-attf-class="o_wevent_event_date position-absolute shadow-sm o_not_editable #{(not opt_events_list_columns) and 'left'} ">
@@ -357,7 +357,7 @@
                                 </span>
                                 <!-- Participating -->
                                 <small t-if="event.is_participating" class="o_wevent_participating position-absolute bottom-0 px-3 py-2 w-100 text-bg-success">
-                                    <i class="fa fa-check me-2"/>Registered
+                                    <i class="oi me-2" data-icon="check"/>Registered
                                 </small>
                                 <!-- Scheduled -->
                                 <small t-if="event.publish_on" class="o_wevent_scheduled  position-absolute bottom-0 px-3 py-2 w-100 text-bg-warning">
@@ -386,7 +386,7 @@
                             <div t-if="not opt_events_list_columns" class="d-inline-flex flex-wrap gap-3">
                                 <!-- Location (List View) -->
                                 <div class="d-flex align-items-center">
-                                    <i class="fa fa-map-marker me-2 text-muted" title="Location"/>
+                                    <i class="oi me-2 text-muted" data-icon="location_on" title="Location"/>
                                     <small class="o_not_editable fw-bold text-muted" itemprop="location"
                                         t-out="event.address_id"
                                         t-options="{'widget': 'contact', 'fields': ['city', 'country_id'], 'null_text': 'Online event', 'no_marker': 'true'}"/>
@@ -416,12 +416,12 @@
                                         <t t-else="">Registrations Closed</t>
                                     </small>
                                     <button type="button" class="btn btn-light mt-auto">
-                                        Event Info <i class="fa fa-chevron-right"/>
+                                        Event Info <i class="oi" data-icon="chevron_right"/>
                                     </button>
                                 </t>
                                 <t t-else="">
                                     <button type="button" class="btn btn-primary mt-auto">
-                                        Get Tickets <i class="fa fa-chevron-right"/>
+                                        Get Tickets <i class="oi" data-icon="chevron_right"/>
                                     </button>
                                 </t>
                             </div>

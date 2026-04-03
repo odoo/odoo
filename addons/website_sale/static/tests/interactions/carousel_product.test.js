@@ -64,10 +64,10 @@ test("scroll miniatures", async () => {
                         </div>
                     </div>
                     <a class="carousel-control-prev" href="#o-carousel-product" role="button" data-bs-slide="prev">
-                        <i class="oi oi-chevron-left oe_unmovable border bg-white text-900" role="img" aria-label="Previous" title="Previous"></i>
+                        <i class="oi oe_unmovable border bg-white text-900" data-icon="chevron_backward" role="img" aria-label="Previous" title="Previous"></i>
                     </a>
                     <a class="carousel-control-next" href="#o-carousel-product" role="button" data-bs-slide="next">
-                        <i class="oi oi-chevron-right oe_unmovable border bg-white text-900" role="img" aria-label="Next" title="Next"></i>
+                        <i class="oi oe_unmovable border bg-white text-900" data-icon="chevron_forward" role="img" aria-label="Next" title="Next"></i>
                     </a>
                 </div>
                 <div class="o_carousel_product_indicators pt-2 overflow-hidden">

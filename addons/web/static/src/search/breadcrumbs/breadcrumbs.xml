@@ -10,7 +10,7 @@
         <div t-if="collapsedBreadcrumbs.length || previousBreadcrumb" class="o_breadcrumb d-flex flex-row flex-md-column align-self-stretch justify-content-between min-w-0">
             <t t-if="this.env.isSmall">
                 <button class="o_back_button btn btn-link d-print-none px-1 py-0" t-on-click.prevent="previousBreadcrumb.onSelected" data-available-offline="">
-                    <i class="oi oi-fw oi-arrow-left"/>
+                    <i class="oi oi-fw" data-icon="west"/>
                 </button>
             </t>
             <t t-else="">
@@ -18,7 +18,7 @@
                     <li t-if="collapsedBreadcrumbs.length" class="breadcrumb-item d-inline-flex">
                         <Dropdown>
                             <button class="btn btn-light btn-sm px-1 p-0">
-                                <i class="oi oi-ellipsis-h align-middle"/>
+                                <i class="oi align-middle" data-icon="more_horiz"/>
                             </button>
                             <t t-set-slot="content">
                                 <t t-foreach="collapsedBreadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">

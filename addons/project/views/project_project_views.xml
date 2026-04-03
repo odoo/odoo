@@ -41,7 +41,7 @@
                     </header>
                 <sheet string="Project">
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
-                        <button class="oe_stat_button" type="object" name="action_view_tasks" icon="fa-check">
+                        <button class="oe_stat_button" type="object" name="action_view_tasks" icon="check">
                             <div class="o_field_widget o_stat_info">
                                 <field class="o_stat_text" name="label_tasks" readonly="1"/>
                                 <span class="o_stat_value">
@@ -60,9 +60,9 @@
                             </div>
                         </button>
                         <button class="oe_stat_button" name="action_get_list_view" type="object" groups="project.group_project_milestone" invisible="not allow_milestones or milestone_count &lt;= 0 or is_template">
-                            <i class="fa o_button_icon fa-check" invisible="next_milestone_status == False or next_milestone_status != 'on_track'" title="On Track"/>
-                            <i class="fa o_button_icon fa-check text-success" invisible="next_milestone_status != 'next_track'" title="On Track"/>
-                            <i class="fa o_button_icon fa-check text-danger" invisible="next_milestone_status != 'off_track'" title="Off Track"/>
+                            <i class="oi o_button_icon" data-icon="check" invisible="next_milestone_status == False or next_milestone_status != 'on_track'" title="On Track"/>
+                            <i class="oi o_button_icon text-success" data-icon="check" invisible="next_milestone_status != 'next_track'" title="On Track"/>
+                            <i class="oi o_button_icon text-danger" data-icon="check" invisible="next_milestone_status != 'off_track'" title="Off Track"/>
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_text">Milestones</span>
                                 <span class="o_stat_value">
@@ -74,7 +74,7 @@
                             </div>
                         </button>
                         <button class="oe_stat_button" type="object" name="action_project_task_burndown_chart_report"
-                            icon="fa-area-chart" groups="project.group_project_user">
+                            icon="area_chart" groups="project.group_project_user">
                             <div class="o_stat_info flex-row flex-md-column">
                                 <span class="o_stat_text">Burndown</span>
                                 <span class="o_stat_text">Chart</span>
@@ -107,22 +107,22 @@
                         <group>
                             <label for="partner_id" class="d-md-none"/>
                             <div class="d-flex align-items-baseline">
-                                <i class="d-none d-md-inline fa fa-fw fa-user me-2" title="Customer" name="partner_id"/>
+                                <i class="d-none d-md-inline oi oi-fw oi-filled me-2" data-icon="person" title="Customer" name="partner_id"/>
                                 <field name="partner_id" nolabel="1" widget="res_partner_many2one" placeholder="Select Customer" context="{'show_address': True}"/>
                             </div>
                             <label for="partner_phone" class="d-md-none" invisible="not partner_phone"/>
                             <div class="d-flex align-items-baseline" invisible="not partner_phone">
-                                <i class="d-none d-md-inline fa fa-fw fa-user me-2 fa fa-phone" title="Phone"/>
+                                <i class="d-none d-md-inline oi oi-fw oi-filled me-2" data-icon="phone" title="Phone"/>
                                 <field name="partner_phone" nolabel="1" widget="phone"/>
                             </div>
                             <label for="partner_email" class="d-md-none" invisible="not partner_email"/>
                             <div class="d-flex align-items-baseline" invisible="not partner_email">
-                                <i class="d-none d-md-inline fa fa-fw fa-user me-2 fa fa-envelope" title="Email"/>
+                                <i class="d-none d-md-inline oi oi-fw oi-filled me-2" data-icon="mail" title="Email"/>
                                 <field name="partner_email" nolabel="1" widget="email"/>
                             </div>
                             <label for="tag_ids" class="d-md-none"/>
                             <div class="d-flex align-items-baseline">
-                                <i class="d-none d-md-inline fa fa-fw fa-user me-2 fa fa-tag" title="Tags"/>
+                                <i class="d-none d-md-inline oi oi-fw me-2" data-icon="label" title="Tags"/>
                                 <field name="tag_ids" nolabel="1" widget="many2many_tags" placeholder="Select Tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                             </div>
                         </group>
@@ -167,10 +167,10 @@
                                     <field name="privacy_visibility" widget="radio"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
                                     <span colspan="2" class="text-muted o_row ps-1" invisible="access_instruction_message == ''">
-                                        <i class="fa fa-lightbulb-o pe-2" title="Info"/><field class="d-inline" name="access_instruction_message" nolabel="1"/>
+                                        <i class="oi pe-2" data-icon="lightbulb" title="Info"/><field class="d-inline" name="access_instruction_message" nolabel="1"/>
                                     </span>
                                     <span colspan="2" class="text-muted o_row ps-1" invisible="privacy_visibility_warning == ''">
-                                        <i class="fa fa-warning pe-2" title="Warning"/><field class="d-inline" name="privacy_visibility_warning" nolabel="1"/>
+                                        <i class="oi pe-2" data-icon="warning" title="Warning"/><field class="d-inline" name="privacy_visibility_warning" nolabel="1"/>
                                     </span>
                                 </group>
                                 <div class="o_col">
@@ -511,20 +511,20 @@
                                 </div>
                                 <div class="o_project_kanban_body min-w-0 pb-4 me-2">
                                     <span name="partner_name" class="text-muted d-flex align-items-baseline" t-if="record.partner_id.value">
-                                        <span class="fa fa-user me-2" aria-label="Partner" title="Partner"></span><field class="text-truncate" name="partner_id"/>
+                                        <span class="oi oi-filled me-2" data-icon="person" aria-label="Partner" title="Partner"></span><field class="text-truncate" name="partner_id"/>
                                     </span>
                                     <div t-if="record.date.raw_value or record.date_start.raw_value" class="text-muted d-flex align-items-baseline">
-                                        <span class="fa fa-clock-o me-2" title="Dates"/>
+                                        <span class="oi me-2" data-icon="schedule" title="Dates"/>
                                         <field name="date_start" widget="daterange" options="{'end_date_field': 'date'}"/>
                                     </div>
                                     <div t-if="record.alias_email.value" class="text-muted text-truncate" t-att-title="record.alias_email.value">
-                                        <span class="fa fa-envelope-o me-2" aria-label="Domain Alias" title="Domain Alias"></span><field name="alias_email"/>
+                                        <span class="oi me-2" data-icon="mail" aria-label="Domain Alias" title="Domain Alias"></span><field name="alias_email"/>
                                     </div>
                                     <div t-if="record.show_ratings.raw_value and record.rating_count.raw_value &gt; 0" class="d-flex text-muted">
                                         <b class="me-1">
-                                            <span class="fa mt4 fa-smile-o fw-bolder text-success" t-if="record.rating_avg.raw_value &gt;= 3.66" title="Average Rating: Happy" role="img" aria-label="Happy face"/>
-                                            <span class="fa mt4 fa-meh-o fw-bolder text-warning" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Neutral" role="img" aria-label="Neutral face"/>
-                                            <span class="fa mt4 fa-frown-o fw-bolder text-danger" t-else="" title="Average Rating: Unhappy" role="img" aria-label="Unhappy face"/>
+                                            <span class="oi mt4 fw-bolder text-success" data-icon="sentiment_satisfied" t-if="record.rating_avg.raw_value &gt;= 3.66" title="Average Rating: Happy" role="img" aria-label="Happy face"/>
+                                            <span class="oi mt4 fw-bolder text-warning" data-icon="sentiment_neutral" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Neutral" role="img" aria-label="Neutral face"/>
+                                            <span class="oi mt4 fw-bolder text-danger" data-icon="sentiment_sad" t-else="" title="Average Rating: Unhappy" role="img" aria-label="Unhappy face"/>
                                         </b>
                                         <t t-if="record.rating_avg.raw_value % 1 == 0">
                                             <field name="rating_avg" nolabel="1" widget="float" digits="[1, 0]"/>
@@ -552,7 +552,7 @@
                                             type="object"
                                             t-attf-title="#{record.milestone_count_reached.value} Milestones reached out of #{record.milestone_count.value}"
                                         >
-                                            <span class="fa fa-flag me-1"/>
+                                            <span class="oi oi-filled me-1" data-icon="flag"/>
                                             <field name="milestone_count_reached"/>/<field name="milestone_count"/>
                                         </a>
                                     </div>

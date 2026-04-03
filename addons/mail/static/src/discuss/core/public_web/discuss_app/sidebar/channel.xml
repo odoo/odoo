@@ -62,7 +62,7 @@
         }">
             <Dropdown state="this.showingActions" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu o-discuss-dropdownMenu border-secondary my-0 min-w-0 mx-1 ' + this.store.discussDropdownMenuClass(this)">
                 <button class="btn btn-light rounded-circle d-flex o-p-0_5 align-items-center justify-content-center o-mail-discussSidebarBgColor border" t-att-class="{ 'o-showingActions': this.showingActions.isOpen, 'me-1': this.channel.parent_channel_id }" t-att-title="this.actionsTitle">
-                    <i role="img" class="oi oi-fw oi-lg oi-ellipsis-h"/>
+                    <i role="img" class="oi oi-fw oi-lg" data-icon="more_horiz"/>
                 </button>
                 <t t-set-slot="content">
                     <DiscussSidebarChannelActions channel="this.channel"/>

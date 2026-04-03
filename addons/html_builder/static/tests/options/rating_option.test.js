@@ -6,17 +6,17 @@ import { contains } from "@web/../tests/web_test_helpers";
 describe.current.tags("desktop");
 
 const websiteContent = `
-    <div class="s_rating pt16 pb16" data-icon="fa-star" data-snippet="s_rating" data-name="Rating">
+    <div class="s_rating pt16 pb16" data-rating-icon="star" data-snippet="s_rating" data-name="Rating">
         <strong class="s_rating_title">Quality</strong>
         <div class="s_rating_icons o_not_editable">
             <span class="s_rating_active_icons">
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
+                <i class="oi oi-filled" data-icon="star"></i>
+                <i class="oi oi-filled" data-icon="star"></i>
+                <i class="oi oi-filled" data-icon="star"></i>
             </span>
             <span class="s_rating_inactive_icons">
-                <i class="fa fa-star-o"></i>
-                <i class="fa fa-star-o"></i>
+                <i class="oi" data-icon="star"></i>
+                <i class="oi" data-icon="star"></i>
             </span>
         </div>
     </div>`;
@@ -40,18 +40,18 @@ test("change rating score", async () => {
         `<strong class="s_rating_title">Quality</strong>
         <div class="s_rating_icons o_not_editable" contenteditable="false">
             <span class="s_rating_active_icons">
-                <i class="fa fa-star" contenteditable="false">
+                <i class="oi oi-filled" data-icon="star" contenteditable="false">
                     &ZeroWidthSpace;
                 </i>
             </span>
             <span class="s_rating_inactive_icons">
-                <i class="fa fa-star-o" contenteditable="false">
+                <i class="oi" data-icon="star" contenteditable="false">
                     &ZeroWidthSpace;
                 </i>
-                <i class="fa fa-star-o" contenteditable="false">
+                <i class="oi" data-icon="star" contenteditable="false">
                     &ZeroWidthSpace;
                 </i>
-                <i class="fa fa-star-o" contenteditable="false">
+                <i class="oi" data-icon="star" contenteditable="false">
                     &ZeroWidthSpace;
                 </i>
             </span>
@@ -65,19 +65,19 @@ test("Ensure order of operations when clicking very fast on two options", async 
     expect("[data-label='Icon'] .dropdown-toggle").toHaveText("Stars");
     expect(":iframe .s_rating").not.toHaveAttribute("data-active-custom-icon");
     await click(".options-container [data-action-id='customIcon']");
-    await click(".options-container [data-class-action='fa-2x']");
+    await click(".options-container [data-class-action='oi-2x']");
     await animationFrame();
-    expect(":iframe .s_rating_icons").not.toHaveClass("fa-2x");
-    await contains(".modal-dialog .fa-glass").click();
-    expect(":iframe .s_rating").toHaveAttribute("data-active-custom-icon", "fa fa-glass");
+    expect(":iframe .s_rating_icons").not.toHaveClass("oi-2x");
+    await contains(".modal-dialog [data-icon='local_bar']").click();
+    expect(":iframe .s_rating").toHaveAttribute("data-active-custom-icon", "local_bar");
     expect("[data-label='Icon'] .dropdown-toggle").toHaveText("Custom");
-    expect(":iframe .s_rating_icons").toHaveClass("fa-2x");
-    await contains(".o-snippets-top-actions .fa-undo").click();
+    expect(":iframe .s_rating_icons").toHaveClass("oi-2x");
+    await contains(".o-snippets-top-actions [data-icon='undo']").click();
     expect("[data-label='Icon'] .dropdown-toggle").toHaveText("Custom");
-    expect(":iframe .s_rating").toHaveAttribute("data-active-custom-icon", "fa fa-glass");
-    expect(":iframe .s_rating_icons").not.toHaveClass("fa-2x");
-    await contains(".o-snippets-top-actions .fa-undo").click();
+    expect(":iframe .s_rating").toHaveAttribute("data-active-custom-icon", "local_bar");
+    expect(":iframe .s_rating_icons").not.toHaveClass("oi-2x");
+    await contains(".o-snippets-top-actions [data-icon='undo']").click();
     expect("[data-label='Icon'] .dropdown-toggle").toHaveText("Stars");
     expect(":iframe .s_rating").not.toHaveAttribute("data-active-custom-icon");
-    expect(":iframe .s_rating_icons").not.toHaveClass("fa-2x");
+    expect(":iframe .s_rating_icons").not.toHaveClass("oi-2x");
 });

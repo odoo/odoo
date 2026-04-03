@@ -5,7 +5,7 @@
         <div class="d-flex align-items-center cursor-pointer user-select-none" t-on-click="() => { this.state.folded = !this.state.folded; }">
             <div class="o_embedded_toc_label p-1 fw-bold">
                 Table of Contents
-                <i t-attf-class="align-self-center fa fa-fw fa-caret-#{ this.state.folded ? 'right' : 'down' }"/>
+                <i class="align-self-center oi oi-fw" t-attf-data-icon="#{ this.state.folded ? 'arrow_right' : 'arrow_drop_down' }"/>
             </div>
         </div>
         <div t-if="!this.state.folded" class="o_embedded_toc_content">

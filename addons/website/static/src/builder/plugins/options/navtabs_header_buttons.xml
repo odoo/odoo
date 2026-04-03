@@ -6,14 +6,14 @@
             title="Add Tab"
             aria-label="Add Tab"
             t-on-click="this.addItem">
-        <span class="oi oi-fw oi-plus mt-1" aria-hidden="true"/>
+        <span class="oi oi-fw mt-1" data-icon="add" aria-hidden="true"/>
     </button>
     <button class="btn py-0 px-1"
             t-att-class="this.state.tabEls.length gt 2 ? 'btn-danger' : 'disabled text-muted'"
             title="Remove Tab"
             aria-label="Remove Tab"
             t-on-click="this.removeItem">
-        <span class="oi oi-fw oi-minus mt-1" aria-hidden="true"/>
+        <span class="oi oi-fw mt-1" data-icon="remove" aria-hidden="true"/>
     </button>
 </t>
 

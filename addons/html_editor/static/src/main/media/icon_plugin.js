@@ -54,7 +54,7 @@ export class IconPlugin extends Plugin {
             {
                 id: "toggleSpinIcon",
                 description: _t("Toggle icon spin"),
-                icon: "fa-play",
+                icon: "play_arrow",
                 run: this.toggleSpinIcon.bind(this),
                 isAvailable: isHtmlContentSupported,
             },
@@ -181,7 +181,7 @@ export class IconPlugin extends Plugin {
         if (!selectedIcon) {
             return;
         }
-        selectedIcon.classList.toggle("fa-spin");
+        selectedIcon.classList.toggle("oi-spin");
         this.dependencies.history.commit();
     }
 
@@ -204,7 +204,7 @@ export class IconPlugin extends Plugin {
         if (!selectedIcon) {
             return;
         }
-        return selectedIcon.classList.contains("fa-spin");
+        return selectedIcon.classList.contains("oi-spin");
     }
 
     openIconDialog() {

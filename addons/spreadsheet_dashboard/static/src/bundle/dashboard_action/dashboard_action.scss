@@ -105,11 +105,13 @@
     .o_dashboard_star {
         margin: auto 0;
         cursor: pointer;
-        &.fa-star-o {
+
+        &[data-icon="star"] {
             @include o-hover-text-color($o-main-color-muted, $o-main-favorite-color);
-        }
-        &.fa-star {
-            color: $o-main-favorite-color;
+
+            &.oi-filled {
+                color: $o-main-favorite-color;
+            }
         }
     }
 }

@@ -876,7 +876,7 @@ test("don't close parent dropdown when clicking in a child active element", asyn
     expect(DROPDOWN_MENU).toHaveCount(1);
 
     if (getMockEnv().isSmall) {
-        await click(".modal-dialog .oi-arrow-left");
+        await click(".modal-dialog [data-icon='west']");
     } else {
         await click(".modal-dialog .btn-close");
     }

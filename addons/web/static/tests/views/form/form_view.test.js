@@ -349,7 +349,7 @@ test(`[Offline] save a form view offline (click save icon)`, async () => {
     expect.verifySteps(["web_save"]);
 
     // The edited record will be saved the next time we are online
-    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).click();
     expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
         "PARTNER",
         "first record",
@@ -420,7 +420,7 @@ test(`[Offline] save a form view offline (autosave when leaving)`, async () => {
     ]);
 
     // The edited record will be save the next time we are online
-    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).click();
     expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
         "PARTNER",
         "first record",
@@ -3261,7 +3261,7 @@ test(`form with custom cog action that has a confirmation target="new" action`, 
     await getService("action").doAction(1);
     expect(".o_form_view").toHaveCount(1);
 
-    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+    await contains(`.o_cp_action_menus button:has([data-icon="settings"])`).click();
     await contains(`.o-dropdown-item:contains(Sort of confirmation dialog)`).click();
     expect(".o_dialog").toHaveCount(1);
 
@@ -3317,14 +3317,14 @@ test(`buttons in form view`, async () => {
                 </header>
                 <sheet>
                     <group>
-                        <button string="Geolocate" name="geo_localize" icon="fa-check" type="object"/>
+                        <button string="Geolocate" name="geo_localize" icon="check" type="object"/>
                     </group>
                 </sheet>
             </form>
         `,
         resId: 2,
     });
-    expect(`button.btn i.fa.fa-check`).toHaveCount(1);
+    expect(`button.btn i[data-icon="check"]`).toHaveCount(1);
     expect(`.o_form_statusbar button`).toHaveCount(2);
     expect(`button.child_ids[name="post"]:contains(Confirm)`).toHaveCount(1);
 
@@ -3429,7 +3429,7 @@ test(`buttons should be in .o_statusbar_buttons in form view header on mobile`, 
     });
 
     expect(`.o_statusbar_buttons > button:eq(0)`).toHaveAttribute("name", "0");
-    await contains(".o_statusbar_buttons .dropdown-toggle:has(.oi-ellipsis-v)").click();
+    await contains(".o_statusbar_buttons .dropdown-toggle:has([data-icon='more_vert'])").click();
     expect(`.o-dropdown--menu div.o_field_widget`).toHaveAttribute("name", "foo");
 });
 
@@ -3517,7 +3517,7 @@ test(`buttons in form view, new record`, async () => {
                 </header>
                 <sheet>
                     <group>
-                        <button string="Geolocate" name="geo_localize" icon="fa-check" type="object"/>
+                        <button string="Geolocate" name="geo_localize" icon="check" type="object"/>
                     </group>
                 </sheet>
             </form>
@@ -4251,7 +4251,7 @@ test(`[Offline] archiving a record`, async () => {
     await contains(`.modal-footer .btn-primary`).click();
 
     // The edited record will be saved the next time we are online
-    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).click();
     expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
         "ACTION 1",
         "first record",
@@ -4300,7 +4300,7 @@ test(`[Offline] Unarchiving a record`, async () => {
     await toggleMenuItem("Unarchive");
 
     // The edited record will be saved the next time we are online
-    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).click();
     expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
         "ACTION 1",
         "first record",
@@ -5870,10 +5870,10 @@ test(`handling dirty state: switching to another record`, async () => {
     await contains(`.o_form_button_save`).click();
     await contains(`.o_pager_next`).click();
     expect(`.o_breadcrumb`).toHaveText("second record");
-    expect(`.o_priority .fa-star-o`).toHaveCount(2);
+    expect(`.o_priority [data-icon="star"]:not(.oi-filled)`).toHaveCount(2);
 
-    await contains(`.o_priority .fa-star-o`).click();
-    expect(`.o_priority .fa-star`).toHaveCount(1);
+    await contains(`.o_priority [data-icon="star"]:not(.oi-filled)`).click();
+    expect(`.o_priority [data-icon="star"].oi-filled`).toHaveCount(1);
 
     await contains(`.o_pager_next`).click();
     expect(`.o_breadcrumb`).toHaveText("first record");
@@ -5916,7 +5916,7 @@ test(`handling dirty state: switching to another record on desktop`, async () =>
     await contains(`.o_pager_next`).click();
     expect(`.o_pager_counter`).toHaveText("2 / 2");
 
-    await contains(`.o_priority .fa-star-o`).click();
+    await contains(`.o_priority [data-icon="star"]:not(.oi-filled)`).click();
 
     await contains(`.o_pager_next`).click();
     expect(`.o_pager_counter`).toHaveText("1 / 2");
@@ -6342,7 +6342,7 @@ test(`[Offline] deleting a record`, async () => {
     await contains(`.modal-footer button.btn-danger`).click();
 
     // The edited record will be saved the next time we are online
-    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).click();
     expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
         "ACTION 1",
         "first record",
@@ -6604,7 +6604,7 @@ test(`button box is rendered in create mode`, async () => {
         arch: `
             <form>
                 <div name="button_box" class="oe_button_box">
-                    <button type="object" class="oe_stat_button" icon="fa-check-square">
+                    <button type="object" class="oe_stat_button oi-filled" icon="check_box">
                         <field name="bar"/>
                     </button>
                 </div>
@@ -6626,7 +6626,7 @@ test(`button box is not rendered in form views in dialogs`, async () => {
         arch: `
             <form>
                 <div name="button_box" class="oe_button_box">
-                    <button type="object" class="oe_stat_button" icon="fa-check-square">
+                    <button type="object" class="oe_stat_button oi-filled" icon="check_box">
                         <field name="bar"/>
                     </button>
                 </div>
@@ -6767,7 +6767,7 @@ test(`delete a line in a one2many while editing another line`, async () => {
     });
     await contains(`.o_data_cell:eq(0)`).click();
     await contains(`.o_field_widget[name=name] input`).clear();
-    await contains(`.fa-trash-o:eq(1)`).click();
+    await contains(`[data-icon="delete"]:eq(1)`).click();
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_data_cell:eq(0)`).toHaveClass(["o_invalid_cell"]);
 });
@@ -7520,7 +7520,7 @@ test(`display something else than a button in a buttonbox on desktop`, async () 
         arch: `
             <form>
                 <div name="button_box" class="oe_button_box">
-                    <button type="recordect" class="oe_stat_button" icon="fa-check-square">
+                    <button type="recordect" class="oe_stat_button oi-filled" icon="check_box">
                         <field name="bar"/>
                     </button>
                     <label/>
@@ -7542,7 +7542,7 @@ test(`display something else than a button in a buttonbox on mobile`, async () =
         arch: `
             <form>
                 <div name="button_box" class="oe_button_box">
-                    <button type="recordect" class="oe_stat_button" icon="fa-check-square">
+                    <button type="recordect" class="oe_stat_button oi-filled" icon="check_box">
                         <field name="bar"/>
                     </button>
                     <label/>
@@ -7573,7 +7573,7 @@ test(`invisible fields are not considered as visible in a buttonbox on desktop`,
                     <field name="state" invisible="1"/>
                     <field name="date" invisible="1"/>
                     <field name="datetime" invisible="1"/>
-                    <button type="recordect" class="oe_stat_button" icon="fa-check-square"/>
+                    <button type="recordect" class="oe_stat_button oi-filled" icon="check_box"/>
                 </div>
             </form>
         `,
@@ -7599,7 +7599,7 @@ test(`invisible fields are not considered as visible in a buttonbox on mobile`, 
                     <field name="state" invisible="1"/>
                     <field name="date" invisible="1"/>
                     <field name="datetime" invisible="1"/>
-                    <button type="recordect" class="oe_stat_button" icon="fa-check-square"/>
+                    <button type="recordect" class="oe_stat_button oi-filled" icon="check_box"/>
                 </div>
             </form>
         `,
@@ -7631,10 +7631,10 @@ test(`display correctly buttonbox, in large size class`, async () => {
         arch: `
             <form>
                 <div name="button_box" class="oe_button_box">
-                    <button type="recordect" class="oe_stat_button" icon="fa-check-square">
+                    <button type="recordect" class="oe_stat_button oi-filled" icon="check_box">
                         <field name="bar"/>
                     </button>
-                    <button type="recordect" class="oe_stat_button" icon="fa-check-square">
+                    <button type="recordect" class="oe_stat_button oi-filled" icon="check_box">
                         <field name="foo"/>
                     </button>
                 </div>
@@ -8021,7 +8021,7 @@ test(`render stat button with string inline on desktop`, async () => {
             <form>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button string="Inventory Moves" class="oe_stat_button" icon="oi-arrows-v"/>
+                        <button string="Inventory Moves" class="oe_stat_button" icon="height"/>
                     </div>
                 </sheet>
             </form>
@@ -8040,7 +8040,7 @@ test(`render stat button with string inline on mobile`, async () => {
             <form>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button string="Inventory Moves" class="oe_stat_button" icon="oi-arrows-v"/>
+                        <button string="Inventory Moves" class="oe_stat_button" icon="height"/>
                     </div>
                 </sheet>
             </form>
@@ -8275,7 +8275,7 @@ test(`correct amount of buttons`, async () => {
     });
 
     const buttons = Array(8).join(`
-        <button type="recordect" class="oe_stat_button" icon="fa-check-square">
+        <button type="recordect" class="oe_stat_button oi-filled" icon="check_box">
             <field name="bar"/>
         </button>
     `);
@@ -8664,7 +8664,7 @@ test(`support anchor tags with action type`, async () => {
         type: "form",
         arch: `
             <form>
-                <a type="action" name="42" class="btn-primary"><i class="oi oi-arrow-right"/> Click me !</a>
+                <a type="action" name="42" class="btn-primary"><i class="oi" data-icon="east"/> Click me !</a>
             </form>
         `,
         resId: 1,
@@ -9240,7 +9240,7 @@ test(`buttons are disabled until status bar action is resolved`, async () => {
         resId: 1,
     });
     // Contains invisible buttons that are only displayed under xl screens
-    expect(`.o_control_panel_breadcrumbs button:not(.fa):not(:disabled)`).toHaveCount(3);
+    expect(`.o_control_panel_breadcrumbs button:not(.oi):not(:disabled)`).toHaveCount(3);
     expect(`.o_form_statusbar button:not(:disabled)`).toHaveCount(2);
     expect(`.o-form-buttonbox button:not(:disabled)`).toHaveCount(1);
 
@@ -9248,13 +9248,13 @@ test(`buttons are disabled until status bar action is resolved`, async () => {
     await animationFrame();
 
     // The unresolved promise lets us check the state of the buttons
-    expect(`.o_control_panel_breadcrumbs button:not(.fa):disabled`).toHaveCount(3);
+    expect(`.o_control_panel_breadcrumbs button:not(.oi):disabled`).toHaveCount(3);
     expect(`.o_form_statusbar button:disabled`).toHaveCount(2);
     expect(`.o-form-buttonbox button:disabled`).toHaveCount(1);
 
     deferred.resolve();
     await animationFrame();
-    expect(`.o_control_panel_breadcrumbs button:not(.fa):not(:disabled)`).toHaveCount(3);
+    expect(`.o_control_panel_breadcrumbs button:not(.oi):not(:disabled)`).toHaveCount(3);
     expect(`.o_form_statusbar button:not(:disabled)`).toHaveCount(2);
     expect(`.o-form-buttonbox button:not(:disabled)`).toHaveCount(1);
 });
@@ -10042,7 +10042,7 @@ test(`support header button as widgets on form statusbar on mobile`, async () =>
         type: "form",
         arch: `<form><header><widget name="attach_document" string="Attach document"/></header></form>`,
     });
-    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+    await contains(`.o_cp_action_menus button:has([data-icon="settings"])`).click();
     expect(`button.o_attachment_button`).toHaveCount(1);
     expect(`span.o_attach_document`).toHaveText("Attach document");
 });
@@ -10075,7 +10075,7 @@ test("support header button as widgets in submenu on form statusbar on mobile", 
         </header></form>`,
     });
 
-    await contains(".o_statusbar_buttons button:has(.oi-ellipsis-v)").click();
+    await contains(".o_statusbar_buttons button:has([data-icon='more_vert'])").click();
     expect(".o-dropdown--menu button:contains(Upload Test)").toHaveCount(1);
     await contains(".o-dropdown--menu button:contains(Upload Test)").click();
     expect(".o-dropdown--menu button:contains(Upload Test)").toHaveCount(1);
@@ -11813,7 +11813,7 @@ test(`setting : boolean field`, async () => {
             <form>
                 <setting help="this is bar" documentation="/applications/technical/web/settings/this_is_a_test.html">
                     <field name="bar"/>
-                    <button name="buttonName" icon="oi-arrow-right" type="action" string="Manage Users" class="btn-link"/>
+                    <button name="buttonName" icon="east" type="action" string="Manage Users" class="btn-link"/>
                 </setting>
             </form>
         `,
@@ -11849,7 +11849,7 @@ test(`setting : char field`, async () => {
     expect(`.o_setting_left_pane > *`).toHaveCount(0);
     expect(`.o_form_label`).toHaveText("Foo");
     expect(`.text-muted`).toHaveText("this is foo");
-    expect(`.fa-building-o`).toHaveCount(1);
+    expect(`[data-icon="business"]`).toHaveCount(1);
     expect(`.o_field_char input`).toHaveCount(1);
 });
 
@@ -11886,7 +11886,7 @@ test(`action button in x2many should display a notification if the record is vir
                 <field name="child_ids">
                     <list editable="bottom">
                         <field name="foo"/>
-                        <button class="oe_stat_button" name="test_action" type="object" icon="fa-check">MyButton</button>
+                        <button class="oe_stat_button" name="test_action" type="object" icon="check">MyButton</button>
                     </list>
                 </field>
             </form>
@@ -13043,7 +13043,7 @@ test(`statusbar buttons are correctly rendered in mobile`, async () => {
 
     expect(".o_statusbar_buttons button:eq(0)").toHaveText("Confirm");
     // open the dropdown
-    await contains(".o_statusbar_buttons button:has(.oi-ellipsis-v)").click();
+    await contains(".o_statusbar_buttons button:has([data-icon='more_vert'])").click();
     await animationFrame();
     expect(".o-dropdown--menu:visible").toHaveCount(1, { message: "dropdown should be visible" });
     expect(".o-dropdown--menu button").toHaveCount(1, {
@@ -13074,11 +13074,11 @@ test(`statusbar widgets should appear in the CogMenu dropdown`, async () => {
 
     expect(".o_statusbar_buttons button:eq(0)").toHaveText("Attach document");
     // Now there should an action dropdown, because there are two visible buttons
-    expect(".o_statusbar_buttons button:has(.oi-ellipsis-v)").toHaveCount(1, {
+    expect(".o_statusbar_buttons button:has([data-icon='more_vert'])").toHaveCount(1, {
         message: "should have 'More' dropdown",
     });
 
-    await contains(".o_statusbar_buttons button:has(.oi-ellipsis-v)").click();
+    await contains(".o_statusbar_buttons button:has([data-icon='more_vert'])").click();
     expect(".o-dropdown--menu button").toHaveCount(1, {
         message: "should have 1 button in the dropdown",
     });
@@ -13086,7 +13086,7 @@ test(`statusbar widgets should appear in the CogMenu dropdown`, async () => {
     // change display_name to update buttons modifiers and make one button visible
     await contains(".o_field_widget[name=name] input").edit("first record");
     expect(".o_statusbar_buttons button:eq(0)").toHaveText("Attach document");
-    expect(".o_statusbar_buttons button:has(.oi-ellipsis-v)").toHaveCount(0, {
+    expect(".o_statusbar_buttons button:has([data-icon='more_vert'])").toHaveCount(0, {
         message: "shouldn't have 'More' dropdown",
     });
 });
@@ -13119,23 +13119,23 @@ test(`CogMenu dropdown's open/close state shouldn't be modified after 'onchange'
             `,
     });
 
-    expect(".o_cp_action_menus button:has(.fa-cog)").toHaveCount(1, {
+    expect(".o_cp_action_menus button:has([data-icon='settings'])").toHaveCount(1, {
         message: "statusbar should contain a dropdown",
     });
-    expect(".o_cp_action_menus button:has(.fa-cog)").not.toHaveClass("show", {
+    expect(".o_cp_action_menus button:has([data-icon='settings'])").not.toHaveClass("show", {
         message: "dropdown should be opened",
     });
 
     await contains(".o_field_widget[name=name] input").edit("before onchange");
-    await contains(".o_cp_action_menus button:has(.fa-cog)").click();
-    expect(".o_cp_action_menus button:has(.fa-cog)").toHaveClass("show", {
+    await contains(".o_cp_action_menus button:has([data-icon='settings'])").click();
+    expect(".o_cp_action_menus button:has([data-icon='settings'])").toHaveClass("show", {
         message: "dropdown should be opened",
     });
 
     onchangeDef.resolve({ value: { name: "after onchange" } });
     await animationFrame();
     expect(".o_field_widget[name=name] input").toHaveValue("after onchange");
-    expect(".o_cp_action_menus button:has(.fa-cog)").toHaveClass("show", {
+    expect(".o_cp_action_menus button:has([data-icon='settings'])").toHaveClass("show", {
         message: "dropdown should be opened",
     });
 });
@@ -13261,7 +13261,7 @@ test(`preserve current scroll position on form view while closing dialog`, async
     });
 
     // click on back button
-    await contains(".modal .modal-header .oi-arrow-left").click();
+    await contains(".modal .modal-header [data-icon='west']").click();
 
     expect(window.scrollY).toBe(265, { message: "Should have scrolled 265 px vertically" });
     expect(window.scrollX).toBe(0, { message: "Should be 0 px from left as it is" });
@@ -13305,7 +13305,7 @@ test("attach_document widget also works inside a dropdown", async () => {
         `,
     });
 
-    await contains(".o_statusbar_buttons button:has(.oi-ellipsis-v)").click();
+    await contains(".o_statusbar_buttons button:has([data-icon='more_vert'])").click();
     await contains(".o_attach_document").click();
     await manuallyDispatchProgrammaticEvent(fileInput, "change");
     await animationFrame();

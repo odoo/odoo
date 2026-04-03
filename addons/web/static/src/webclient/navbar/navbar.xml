@@ -75,7 +75,7 @@
       <div t-if="!this.isScopedApp" class="o_navbar_apps_menu">
         <Dropdown>
           <button data-hotkey="h" title="Home Menu" data-available-offline="">
-            <i class="oi oi-apps" />
+            <i class="oi" data-icon="apps"/>
           </button>
           <t t-set-slot="content">
             <DropdownItem
@@ -95,15 +95,15 @@
   </t>
 
   <t t-name="web.NavBar.AppsMenu.Sidebar">
-    <i class="fa fa-bars" aria-hidden="true"/>
+    <i class="oi" data-icon="menu" aria-hidden="true"/>
     <t t-custom-portal="'body'">
       <Transition name="'o-app-menu-sidebar'" visible="this.state.isAppMenuSidebarOpened" leaveDuration="200" t-slot-scope="transition">
         <div class="o_app_menu_sidebar position-fixed top-0 bottom-0 end-100 d-flex flex-column flex-nowrap" t-att-class="transition.className" t-on-touchstart.stop="this._onSwipeStart" t-on-touchend.stop="this._onSwipeEnd">
           <div class="o_sidebar_topbar d-flex align-items-center justify-content-between flex-shrink-0 py-0 fs-4">
               <small class="d-flex align-items-center justify-content-between ms-2">
-                  <a href="/odoo" class="btn btn-primary" t-on-click.prevent="this.onAllAppsBtnClick"><i class="oi oi-apps"></i><span class="px-2">All Apps</span></a>
+                  <a href="/odoo" class="btn btn-primary" t-on-click.prevent="this.onAllAppsBtnClick"><i class="oi" data-icon="apps"></i><span class="px-2">All Apps</span></a>
               </small>
-              <button class="o_sidebar_close oi oi-close btn d-flex align-items-center h-100 bg-transparent border-0 fs-2 text-reset" aria-label="Close menu" title="Close menu" t-on-click.stop="this._closeAppMenuSidebar" data-available-offline=""/>
+              <button class="o_sidebar_close oi btn d-flex align-items-center h-100 bg-transparent border-0 fs-2 text-reset" data-icon="close" aria-label="Close menu" title="Close menu" t-on-click.stop="this._closeAppMenuSidebar" data-available-offline=""/>
           </div>
           <nav class="o_burger_menu_content flex-grow-1 flex-shrink-1 overflow-auto o_burger_menu_app">
                 <div t-if="!this.state.isAllAppsMenuOpened and this.currentApp" class="d-flex align-items-center m-3 mb-0">
@@ -228,7 +228,7 @@
     <div class="o_menu_sections_more">
       <Dropdown>
         <button title="More Menu" t-att-data-hotkey="hotkey">
-          <i class="fa fa-plus"/>
+          <i class="oi" data-icon="add"/>
         </button>
 
         <t t-set-slot="content">

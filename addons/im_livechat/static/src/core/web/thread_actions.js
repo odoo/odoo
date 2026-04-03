@@ -13,7 +13,7 @@ registerThreadAction("livechat-info", {
         channel?.channel_type === "livechat" &&
         store.self_user?.share === false &&
         !owner.isDiscussSidebarChannelActions,
-    icon: "fa fa-fw fa-info",
+    icon: "info",
     name: _t("Information"),
     actionPanelOpen: ({ store }) => {
         store.discuss.isLivechatInfoPanelOpenByDefault = true;

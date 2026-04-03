@@ -4,7 +4,7 @@
     <div t-custom-ref="tour_recorder" class="d-flex position-fixed ms-2 mb-2 p-1 rounded bg-primary shadow-sm o_tour_recorder" t-attf-style="left: {{this.state.position.x}}px; bottom: {{this.state.position.y}}px;">
         <div class="d-flex align-items-center">
             <div class="bg-primary text-secondary o_tour_recorder_handler px-1" style="cursor: grab;">
-                <span class="oi oi-draggable"/>
+                <span class="oi" data-icon="drag_indicator"/>
             </div>
             <button class="o_button_record btn btn-primary " t-on-click.prevent.stop="this.toggleRecording">
                 <span class="px-2 me-1 rounded-circle" t-att-class="this.state.recording ? 'bg-danger': 'bg-white'" role="status" aria-hidden="true"></span>
@@ -33,7 +33,7 @@
                                             <t t-out="step.trigger"/>
                                             <span t-if="step.run and step.run != 'click'" class="fst-italic fw-lighter"><br/>(run: <t t-out="step.run"/>) </span>
                                         </td>
-                                        <td><button class="o_button_delete_step btn btn-link text-danger fa fa-trash mx-1" t-on-click.prevent.stop="() => this.removeStep(step_index)"/></td>
+                                        <td><button class="o_button_delete_step btn btn-link oi oi-filled text-danger mx-1" data-icon="delete" t-on-click.prevent.stop="() => this.removeStep(step_index)"/></td>
                                     </tr>
                                 </t>
                             </tbody>
@@ -43,7 +43,7 @@
             </Dropdown>
             <Dropdown t-if="this.state.steps.length" position="'top-end'">
                 <button class="o_button_save btn btn-primary px-2 rounded-0" data-tooltip="Save">
-                    <i class="fa fa-cloud-upload"></i>
+                    <i class="oi" data-icon="cloud_upload"></i>
                 </button>
                 <t t-set-slot="content">
                     <div class="o_tour_recorder p-1" style="width: 400px;">
@@ -75,7 +75,7 @@
                     </div>
                 </t>
             </Dropdown>
-            <button class="btn btn-primary o_tour_recorder_close_button" t-on-click.prevent.stop="this.openCloseRecorderDialog" data-tooltip="Close"><i class="fa fa-close"></i></button>
+            <button class="btn btn-primary o_tour_recorder_close_button" t-on-click.prevent.stop="this.openCloseRecorderDialog" data-tooltip="Close"><i class="oi" data-icon="close"></i></button>
         </div>
     </div>
 </t>

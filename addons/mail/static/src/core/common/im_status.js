@@ -11,11 +11,18 @@ imStatusDataRegistry.add(
     {
         condition: () => true,
         icon: {
-            online: "fa fa-circle",
-            away: "fa fa-adjust",
-            busy: "fa fa-minus-circle",
-            offline: "fa fa-circle-o",
-            default: "fa fa-question-circle",
+            online: "circle",
+            away: "contrast",
+            busy: "remove_circle",
+            offline: "circle",
+            default: "help",
+        },
+        icon_class: {
+            online: "oi-filled",
+            away: "",
+            busy: "",
+            offline: "",
+            default: "",
         },
         title: {
             online: _t("User is online"),
@@ -32,7 +39,8 @@ imStatusDataRegistry.add(
     "bot",
     {
         condition: ({ persona }) => persona?.isBot,
-        icon: "fa fa-heart o-xsmaller o-pt-0_5",
+        icon: "favorite",
+        icon_class: "oi-filled o-xsmaller o-pt-0_5",
         title: _t("User is a bot"),
     },
     { sequence: 90 }
@@ -70,7 +78,7 @@ export class ImStatus extends Component {
         return attClassObjectToString({
             [`o-mail-ImStatus d-flex ${this.colorClass} ${this.props.className}`]: true,
             "o-fs-small": !this.persona?.isBot,
-            [`rounded-circle bg-transparent ${this.icon}`]: !this.showTypingIndicator,
+            [`rounded-circle bg-transparent ${this.iconClass}`]: !this.showTypingIndicator,
             "rounded-pill": this.showTypingIndicator,
         });
     }
@@ -86,6 +94,11 @@ export class ImStatus extends Component {
     get icon() {
         const data = this.activeImStatusData;
         return data.icon[this.persona.imStatusUI] || data.icon.default || data.icon;
+    }
+
+    get iconClass() {
+        const data = this.activeImStatusData;
+        return data.icon_class[this.persona.imStatusUI] || data.icon_class.default || data.icon_class;
     }
 
     get title() {

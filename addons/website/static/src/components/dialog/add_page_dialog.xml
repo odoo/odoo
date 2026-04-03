@@ -50,7 +50,7 @@
     <div class="container-fluid py-3 py-xl-4">
         <div class="row g-0" t-custom-ref="previews-container">
             <div t-if="this.props.isCustom and !this.props.templates.length" class="col-12 alert alert-info d-flex">
-                <i class="fa fa-2x fa-info-circle me-3"/>
+                <i class="oi oi-2x me-3" data-icon="info"/>
                 To add your page to this category, open the page properties: "Site -&gt; Properties".<br/>
                 Then enable the "Is a Template" option.
             </div>
@@ -95,7 +95,7 @@
                             t-att-aria-controls="'pane_' + page.id"
                             t-custom-ref="{{this.state.activePageId === page.id ? 'autofocus' : page.id}}"
                         >
-                            <span t-if="page.isPreloading" class="fa fa-spin fa-circle-o-notch me-1"/>
+                            <span t-if="page.isPreloading" class="oi oi-spin me-1" data-icon="autorenew"/>
                             <t t-out="page.title"/>
                         </button>
                     </t>

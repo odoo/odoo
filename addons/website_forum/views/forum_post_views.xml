@@ -8,7 +8,7 @@
         <form string="Forum Post">
             <sheet>
                 <div class="oe_button_box" name="button_box">
-                    <button type="object" class="oe_stat_button" icon="fa-globe" name="go_to_website">
+                    <button type="object" class="oe_stat_button" icon="public" name="go_to_website">
                         <div class="o_form_field o_stat_info">
                             <span class="o_stat_text">Go to <br/>Website</span>
                         </div>
@@ -136,15 +136,15 @@
                 <t t-name="card">
                     <field name="name" class="text-truncate fw-bold"/>
                     <div class="text-muted text-truncate fw-bold" t-if="record.website_id.value" groups="website.group_multi_website">
-                        <i class="fa fa-globe me-1" title="Website"/>
+                        <i class="oi me-1" data-icon="public" title="Website"/>
                         <field name="website_id"/>
                     </div>
                     <div class="text-muted text-truncate fw-bold">
-                        <i class="fa fa-comments-o me-1" title="Forum"/><field name="forum_id"/>
+                        <i class="oi me-1" data-icon="forum" title="Forum"/><field name="forum_id"/>
                         <span t-if="!record.parent_id.raw_value" class="ms-3"><field name="child_count"/> Answers</span>
                     </div>
                     <div class="row">
-                        <div class="col-6 text-primary"><i class="fa fa-eye me-1" title="Views"/><field name="views"/></div>
+                        <div class="col-6 text-primary"><i class="oi me-1" data-icon="visibility" title="Views"/><field name="views"/></div>
                         <div class="col-6"><field name="create_uid" widget="many2one_avatar_user" class="float-end"/></div>
                     </div>
                 </t>

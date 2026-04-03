@@ -11,11 +11,14 @@
                         <t t-name="card">
                             <t t-value="record.allow_out_payment.raw_value" t-set="trusted"/>
                             <div class="d-flex">
-                                <i class="fa me-1 align-self-center" 
+                                <i class="oi me-1 align-self-center"
                                    t-att-class="{
-                                        'fa-shield text-success': trusted,
-                                        'fa-exclamation-circle text-danger': !trusted,
-                                   }"/>
+                                        'text-success': trusted,
+                                        'text-danger': !trusted,
+                                   }"
+                                   t-attf-data-icon="{{trusted ? 'security' : 'error'}}"
+                                   t-att-title="trusted ? 'Trusted' : 'Untrusted'"
+                                   />
                                 <field name="display_name"/>
                             </div>
                         </t>

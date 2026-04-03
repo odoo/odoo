@@ -40,7 +40,7 @@ registerMessageAction("reaction", {
     }),
     componentCondition: ({ owner }) => !isMobileOS() && !owner.isMessageContextMenu,
     condition: ({ message, thread }) => message.canAddReaction(thread),
-    icon: "oi oi-smile-add",
+    icon: "add_reaction",
     name: _t("Add a Reaction"),
     onSelected({ owner }) {
         const anchorEl = owner.isMessageContextMenu
@@ -72,7 +72,7 @@ registerMessageAction("reply-to", {
         }
         return !message.isEmpty && message.isNote && !message.isSelfAuthored;
     },
-    icon: "fa fa-reply",
+    icon: "reply",
     name: _t("Reply"),
     onSelected: ({ message, owner, thread }) => {
         const composer = thread.composer;
@@ -100,35 +100,36 @@ registerMessageAction("reply-to", {
 registerMessageAction("add-bookmark", {
     condition: ({ message }) =>
         message.canToggleBookmark && !message.isEmpty && !message.is_bookmarked,
-    icon: "fa fa-bookmark-o",
+    icon: "bookmark",
     name: _t("Bookmark"),
     onSelected: ({ message }) => message.addBookmark(),
     sequence: 80,
 });
 registerMessageAction("remove-bookmark", {
     condition: ({ message }) => message.canToggleBookmark && message.is_bookmarked,
-    icon: "fa fa-bookmark",
+    icon: "bookmark",
+    iconClass: "oi-filled",
     name: _t("Remove from Bookmarks"),
     onSelected: ({ message, thread }) => message.removeBookmark(thread),
     sequence: 80,
 });
 registerMessageAction("mark-as-read", {
     condition: ({ store, thread }) => thread?.eq(store.inbox),
-    icon: "fa fa-check",
+    icon: "check",
     name: _t("Mark as Read"),
     onSelected: ({ message }) => message.setDone(),
     sequence: 35,
 });
 registerMessageAction("mark-as-unread", {
     condition: ({ message, thread }) => message.canMarkAsUnread(thread),
-    icon: "fa fa-eye-slash",
+    icon: "visibility_off",
     name: _t("Mark as Unread"),
     onSelected: ({ message, thread }) => message.markAsUnread(thread),
     sequence: 50,
 });
 registerMessageAction("reactions", {
     condition: ({ message }) => message.reactions.length,
-    icon: "fa fa-smile-o",
+    icon: "sentiment_satisfied",
     name: _t("View Reactions"),
     onSelected: ({ message, owner, store }) => {
         store.env.services.dialog.add(MessageReactionMenu, { message }, { rootRef: owner.rootRef });
@@ -137,14 +138,16 @@ registerMessageAction("reactions", {
 });
 registerMessageAction("unfollow", {
     condition: ({ message, thread }) => message.canUnfollow(thread),
-    icon: "fa fa-user-times",
+    icon: "person_remove",
+    iconClass: "oi-filled",
     name: _t("Unfollow"),
     onSelected: ({ message }) => message.unfollow(),
     sequence: 110,
 });
 registerMessageAction("edit", {
     condition: ({ message }) => message.editable,
-    icon: "fa fa-pencil",
+    icon: "edit",
+    iconClass: "oi-filled",
     name: _t("Edit"),
     onSelected: ({ message, owner, thread }) => {
         message.enterEditMode(thread);
@@ -155,7 +158,8 @@ registerMessageAction("edit", {
 });
 registerMessageAction("delete", {
     condition: ({ message }) => message.deletable,
-    icon: "fa fa-trash",
+    icon: "delete",
+    iconClass: "oi-filled",
     name: _t("Delete"),
     onSelected: ({ message, owner }) => message.showDeleteConfirm(owner),
     sequence: 120,
@@ -164,7 +168,8 @@ registerMessageAction("delete", {
 registerMessageAction("download_files", {
     condition: ({ message, store }) =>
         message.attachment_ids.length > 1 && store.self_user?.share === false,
-    icon: "fa fa-download",
+    icon: "download",
+    iconClass: "oi-filled",
     name: _t("Download Files"),
     onSelected: ({ message }) =>
         download({
@@ -178,8 +183,8 @@ registerMessageAction("download_files", {
 });
 registerMessageAction("toggle-translation", {
     condition: ({ message }) => message.isTranslatable,
-    icon: ({ message }) =>
-        `fa fa-language ${message.showTranslation ? "o-mail-Message-translated" : ""}`,
+    icon: "translate",
+    iconClass: ({ message }) => message.showTranslation ? "o-mail-Message-translated" : "",
     name: ({ message }) => (message.showTranslation ? _t("Revert") : _t("Translate")),
     onSelected: ({ message }) => message.onClickToggleTranslation(),
     sequence: 100,
@@ -188,7 +193,7 @@ registerMessageAction("copy-message", {
     condition: ({ message }) => !message.isBodyEmpty,
     onSelected: ({ message }) => message.copyMessageText(),
     name: _t("Copy Text"),
-    icon: "fa fa-copy",
+    icon: "content_copy",
     sequence: 40,
 });
 registerMessageAction("copy-link", {
@@ -197,7 +202,7 @@ registerMessageAction("copy-link", {
         message.message_type !== "user_notification" &&
         thread &&
         (!thread.access_token || thread.hasReadAccess),
-    icon: "fa fa-link",
+    icon: "link",
     name: _t("Copy Link"),
     onSelected: ({ message }) => message.copyLink(),
     sequence: 90,
@@ -205,7 +210,7 @@ registerMessageAction("copy-link", {
 registerMessageAction("end-poll", {
     condition: ({ message }) =>
         message.poll && !message.poll.end_message_id && message.poll.createdBySelf,
-    icon: " oi oi-view-cohort",
+    icon: "oi_view-cohort",
     name: _t("End Poll"),
     onSelected: ({ message }) => rpc("/mail/poll/end", { poll_id: message.poll.id }),
     sequence: 115,

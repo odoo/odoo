@@ -4,11 +4,11 @@
     <t t-name="mass_mailing.portal.feedback_update_info">
         <span>
             <t t-if="this.infoKey == 'feedback_sent'">
-                <i class="fa fa-check me-1"/>
+                <i class="oi me-1" data-icon="check"/>
                 <span>Sent. Thanks you for your feedback!</span>
             </t>
             <t t-else="">
-                <i class="fa fa-exclamation-triangle me-1"/>
+                <i class="oi me-1" data-icon="warning"/>
                 <span>An error occurred. Please retry later or contact us.</span>
             </t>
         </span>

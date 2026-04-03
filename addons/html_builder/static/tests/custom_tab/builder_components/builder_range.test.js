@@ -40,8 +40,8 @@ test("should commit changes", async () => {
     expect(":iframe .test-options-target").toHaveInnerHTML("50");
     await click(document.body);
     await animationFrame();
-    expect(".o-snippets-top-actions .fa-undo").toBeEnabled();
-    expect(".o-snippets-top-actions .fa-repeat").not.toBeEnabled();
+    expect(".o-snippets-top-actions [data-icon='undo']").toBeEnabled();
+    expect(".o-snippets-top-actions [data-icon='redo']").not.toBeEnabled();
 });
 
 test("range input should step up or down with arrow keys", async () => {

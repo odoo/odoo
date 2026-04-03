@@ -43,19 +43,19 @@
                 <t t-if="this.props.warehouses.length > 1" class="btn-group flex-grow-1 flex-md-grow-0">
                     <Dropdown items="this.warehousesItems">
                         <button class="btn btn-light o-dropdown-caret">
-                            <span class="fa fa-home"/> Warehouse: <t t-out="this.props.currentWarehouse.name"/>
+                            <span class="oi" data-icon="home"/> Warehouse: <t t-out="this.props.currentWarehouse.name"/>
                         </button>
                     </Dropdown>
                 </t>
                 <t t-if="this.props.showOptions.mode == 'overview'">
                     <div class="o_row" t-on-click="() => this.props.changeMode('forecast')" >
-                        <i class="btn fa fa-toggle-off fa-lg pe-1"/>
+                        <i class="btn oi oi-lg pe-1" data-icon="toggle_off"/>
                         <span>Forecast</span>
                     </div>
                 </t>
                 <t t-else="">
                     <div class="o_row" t-on-click="() => this.props.changeMode('overview')" >
-                        <i class="btn fa fa-toggle-on fa-lg pe-1"/>
+                        <i class="btn oi oi-lg pe-1" data-icon="toggle_on"/>
                         <span>Forecast</span>
                     </div>
                 </t>

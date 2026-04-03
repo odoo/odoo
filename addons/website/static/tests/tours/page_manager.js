@@ -151,7 +151,7 @@ const deleteSelectedPage = [
         trigger: "body:not(:has(.modal))",
     },
 ];
-const homePage = "tr:has(td:contains(Home):has(.fa-home))";
+const homePage = "tr:has(td:contains(Home):has([data-icon='home']))";
 
 const duplicateSinglePage = [
     {

@@ -54,7 +54,7 @@ registry.category("web_tour.tours").add("project_todo_history_tour", {
     },
     {
         content: "Open History Dialog",
-        trigger: ".o_form_view .o_cp_action_menus i.fa-cog",
+        trigger: ".o_form_view .o_cp_action_menus i[data-icon='settings']",
         run: "click",
     },
     {
@@ -62,7 +62,7 @@ registry.category("web_tour.tours").add("project_todo_history_tour", {
     },
     {
         content: "Open History Dialog",
-        trigger: ".o_menu_item i.fa-history",
+        trigger: ".o_menu_item i[data-icon='history']",
         run: "click",
 
     }, {

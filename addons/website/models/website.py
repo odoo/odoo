@@ -686,6 +686,7 @@ class Website(models.CachedModel):
             'description': feature.description,
             'type': 'page' if feature.page_view_id else 'app',
             'icon': feature.icon,
+            'icon_class': feature.icon_class,
             'website_config_preselection': feature.website_config_preselection,
             'module_state': feature.module_id.state,
         } for feature in configurator_features]

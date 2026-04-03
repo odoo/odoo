@@ -17,6 +17,7 @@ const builderButtonProps = {
     iconImgAlt: { type: String, optional: true },
     iconImgStyle: { type: String, optional: true },
     icon: { type: String, optional: true },
+    iconClass: { type: String, optional: true },
     className: { type: String, optional: true },
     classActive: { type: String, optional: true },
     style: { type: String, optional: true },
@@ -63,15 +64,6 @@ export class BuilderButtonInternal extends Component {
             className += ` o-hb-btn-has-img-icon`;
         }
         return className;
-    }
-
-    get iconClassName() {
-        if (this.props.icon.startsWith("fa-")) {
-            return `fa ${this.props.icon}`;
-        } else if (this.props.icon.startsWith("oi-")) {
-            return `oi ${this.props.icon}`;
-        }
-        return "";
     }
 }
 

@@ -253,7 +253,7 @@ export class DiscussCommandPalette {
                 },
                 name: _t("Create Channel"),
                 className: "o-mail-DiscussCommand-createChannel d-flex",
-                props: { action: { icon: "fa fa-fw fa-hashtag", searchValueSuffix: true } },
+                props: { action: { icon: "tag", searchValueSuffix: true } },
             };
         }
         if (channelOrPersona === VIEW_HIDDEN) {

@@ -997,13 +997,20 @@ export class ListRenderer extends Component {
         return (sortable || options.allow_order) && hasLabel;
     }
 
+    getSortableIcon(column) {
+        const { orderBy } = this.props.list;
+        if (orderBy.length && orderBy[0].name === column.name) {
+            return orderBy[0].asc ? "arrow_upward" : "arrow_downward";
+        } else {
+            return "swap_vert";
+        }
+    }
+
     getSortableIconClass(column) {
         const { orderBy } = this.props.list;
-        const classNames = this.isSortable(column) ? ["fa"] : ["d-none"];
-        if (orderBy.length && orderBy[0].name === column.name) {
-            classNames.push(orderBy[0].asc ? "fa-sort-asc" : "fa-sort-desc");
-        } else {
-            classNames.push("fa-sort", "opacity-0", "opacity-100-hover");
+        const classNames = this.isSortable(column) ? ["oi"] : ["d-none"];
+        if (!(orderBy.length && orderBy[0].name === column.name)) {
+            classNames.push("opacity-0", "opacity-100-hover");
         }
 
         return classNames.join(" ");

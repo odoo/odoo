@@ -13,31 +13,31 @@
                 <DropdownItem
                     class="`d-flex align-items-center`"
                     onSelected="() => this.setState('blocked')">
-                        <span t-attf-class="fa fa-lg fa-exclamation-circle text-warning me-2"/>
+                        <span class="oi oi-lg text-warning me-2" data-icon="error"/>
                         <span>Blocked</span>
                 </DropdownItem>
                 <DropdownItem
                     class="`d-flex align-items-center`"
                     onSelected="() => this.setState('ready')">
-                        <span t-attf-class="fa fa-lg fa-circle text-muted me-2"/>
+                        <span t-attf-class="oi oi-lg oi-filled text-muted me-2" data-icon="circle"/>
                         <span>To Do</span>
                 </DropdownItem>
                 <DropdownItem
                     class="`d-flex align-items-center`"
                     onSelected="() => this.setState('progress')">
-                        <span t-attf-class="fa fa-lg fa-play-circle text-info me-2"/>
+                        <span t-attf-class="oi oi-lg oi-filled text-info me-2" data-icon="play_circle"/>
                         <span>In Progress</span>
                 </DropdownItem>
                 <DropdownItem
                     class="`d-flex align-items-center`"
                     onSelected="() => this.setState('cancel')">
-                        <span t-attf-class="fa fa-lg fa-times-circle text-danger me-2"/>
+                        <span t-attf-class="oi oi-lg oi-filled text-danger me-2" data-icon="cancel"/>
                         <span>Cancelled</span>
                 </DropdownItem>
                 <DropdownItem
                     class="`d-flex align-items-center`"
                     onSelected="() => this.setState('done')">
-                        <span t-attf-class="fa fa-lg fa-check-circle text-success me-2"/>
+                        <span t-attf-class="oi oi-lg oi-filled text-success me-2" data-icon="check_circle"/>
                         <span>Done</span>
                 </DropdownItem>
             </t>

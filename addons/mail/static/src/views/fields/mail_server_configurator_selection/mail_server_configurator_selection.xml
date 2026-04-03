@@ -21,13 +21,13 @@
                 class="btn btn-link o_mail_server_configurator_selection_test_connection py-0"
                 t-on-click="() => this.onTestConnection()">
                 <div t-if="!this.state.connectionFailed">
-                    <i class="fa fa-check"/> Emails sent via <t t-out="this.string"/>
+                    <i class="oi" data-icon="check"/> Emails sent via <t t-out="this.string"/>
                 </div>
                 <div t-else="" class="text-danger">
                     Connection failed
                 </div>
                 <div>
-                    <i class="fa fa-plug"/> Test Connection
+                    <i class="oi" data-icon="power"/> Test Connection
                 </div>
             </button>
         </t>

@@ -1,5 +1,5 @@
 .s_icon_list {
-    --icon-list-icon-content: "\f00c";
+    --icon-list-icon-content: "check";
     --icon-list-icon-width: 1.5em;
     --icon-list-icon-color: var(--o-cc1-btn-primary);
     --icon-list-icon-bg-color: #{fade-currentColor(10%)};
@@ -25,7 +25,7 @@
                 border-radius: 100%;
                 background: var(--icon-list-icon-bg-color);
                 color: var(--icon-list-icon-color);
-                font-family: FontAwesome, odoo_ui_icons;
+                font-family: var(--icon-font-family, "material_symbols_outlined");
             }
 
             &:not(.oe-nested) > :is(ul, ol) {

@@ -250,7 +250,7 @@
                     t-att-data-product-type="product.type"
                     t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                 >
-                    <i class="fa fa-fw fa-shopping-cart o_not-animable" role="presentation"/>
+                    <i class="oi oi-fw o_not-animable" data-icon="shopping_cart" role="presentation"/>
                     <span class="o_label small ms-1">Add to Cart</span>
                 </button>
             </t>
@@ -261,7 +261,7 @@
                     t-att-href="website._get_contact_us_url(product.with_context(display_default_code=False).display_name)"
                     class="o_wsale_product_btn_primary btn btn-outline-primary"
                 >
-                    <i class="fa fa-fw fa-envelope o_not-animable" role="presentation"/>
+                    <i class="oi oi-fw oi-filled o_not-animable" data-icon="mail" role="presentation"/>
                     <span class="o_label small ms-1">Contact Us</span>
                 </a>
             </t>
@@ -311,7 +311,7 @@
                     comparison button
                 -->
                 <div class="o_add_compare_placeholder pe-none opacity-0 btn">
-                    <span class="fa fa-exchange fa-fw"/>
+                    <span class="oi oi-fw" data-icon="swap_horiz"/>
                 </div>
             </t>
         </xpath>

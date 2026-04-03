@@ -23,7 +23,7 @@ test("chathub compact is 'on'", async () => {
     localStorage.setItem("mail.user_setting.chathub_compact", "true");
     await start();
     await contains(".o-mail-ChatBubble", { count: 1 });
-    await contains(".o-mail-ChatBubble i.fa.fa-comments");
+    await contains(".o-mail-ChatBubble i.oi.oi-filled[data-icon='forum']");
     const isChathubCompact = makeRecordFieldLocalId(ChatHub.localId(), "compact");
     expect(localStorage.getItem(isChathubCompact)).toBe(toRawValue(true));
     expect(localStorage.getItem("mail.user_setting.chathub_compact")).toBe(null);

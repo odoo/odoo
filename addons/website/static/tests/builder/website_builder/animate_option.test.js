@@ -481,7 +481,7 @@ describe("animate text in toolbar", () => {
         expect(":iframe span:contains('bc')").not.toHaveClass("o_anim_fade_in");
 
         // undo restore the classes
-        await contains("button.fa-undo").click();
+        await contains("button[data-icon='undo']").click();
         expect(":iframe span:contains('bc')").not.toHaveClass("o_anim_rotate_in");
         expect(":iframe span:contains('bc')").toHaveClass("o_anim_fade_in");
 

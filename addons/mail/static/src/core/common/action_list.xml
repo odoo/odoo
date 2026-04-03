@@ -123,15 +123,15 @@
 <t t-name="mail.Action.content">
     <t t-if="this.action.icon?.template" t-call="{{ this.action.icon.template }}"
         templateParams="this.action.icon.params"/>
-    <i t-elif="this.action.icon" t-attf-class="{{ this.action.icon }}" t-att-class="{ 'o-fs-small': this.props.dropdown, 'fa-fw': this.props.fw, 'fa-lg': inMeetingViewCallButtonsFullscreen }"/>
-    <i t-elif="this.props.dropdown" class="fa-question fa-fw opacity-0" t-att-class="this.props.fw ? 'fa-fw' : ''"/>
+    <i t-elif="this.action.icon" class="oi" t-att-class="{ 'oi-fw': this.props.fw, 'oi-lg': inMeetingViewCallButtonsFullscreen }" t-attf-class="{{ this.action.iconClass }}" t-att-data-icon="this.action.icon"/>
+    <i t-elif="this.props.dropdown" class="oi opacity-0" t-att-class="this.props.fw ? 'oi-fw' : ''" data-icon="help"/>
     <span t-if="this.action.name and (this.props.dropdown or (this.props.inline and (!this.action.icon or this.action.inlineName)))" class="o-mail-ActionList-actionLabel" t-attf-class="{{ this.action.nameClass }}" t-att-class="{ 'mx-1': this.props.dropdown }" t-out="(this.props.inline and this.action.inlineName) or this.action.name"/>
     <t t-if="this.props.dropdown and this.action.badge" t-call="mail.Action.badge"/>
 </t>
 
 <t t-name="mail.Action.badge">
     <span class="o-fw-600 badge p-0 rounded-circle d-flex justify-content-center align-items-center" t-attf-class="{{ extraBadgeClass }}" t-att-class="{ 'bg-warning o-discuss-warningBadge': this.action.tags.includes('WARNING_BADGE'), 'o-discuss-badge': this.action.tags.includes('IMPORTANT_BADGE') }" style="aspect-ratio: 1; font-size: 0.6rem;">
-        <i t-if="this.action.badgeIcon" t-att-class="this.action.badgeIcon"/><span t-elif="this.action.badgeText" t-out="this.action.badgeText"/>
+        <i t-if="this.action.badgeIcon" class="oi" t-att-class="this.action.badgeIconClass" t-att-data-icon="this.action.badgeIcon"/><span t-elif="this.action.badgeText" t-out="this.action.badgeText"/>
     </span>
 </t>
 

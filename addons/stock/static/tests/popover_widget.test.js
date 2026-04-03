@@ -28,8 +28,8 @@ test("Test creation/usage form popover widget", async () => {
         resId: 1,
     });
     expect(".popover").toHaveCount(0);
-    expect(".fa-info-circle.text-danger").toHaveCount(1);
-    await contains(".fa-info-circle.text-danger").click();
+    expect("[data-icon='info'].text-danger").toHaveCount(1);
+    await contains("[data-icon='info'].text-danger").click();
     expect(".popover").toHaveCount(1);
     expect(".popover").toHaveText("JS Master\nvar that = self // why not?");
 });

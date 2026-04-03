@@ -98,13 +98,13 @@ describe("collapsed selection", () => {
                 editor.shared.dom.insert(
                     parseHTML(
                         editor.document,
-                        '<p>unwrapped</p><div><i class="fa fa-circle-o-notch"></i></div><p>culprit</p><p>after</p>'
+                        '<p>unwrapped</p><div><i class="oi" data-icon="autorenew"></i></div><p>culprit</p><p>after</p>'
                     )
                 );
                 editor.shared.history.commit();
             },
             contentAfter:
-                '<p>contentunwrapped</p><div><i class="fa fa-circle-o-notch"></i></div><p>culprit</p><p>after[]</p>',
+                '<p>contentunwrapped</p><div><i class="oi" data-icon="autorenew"></i></div><p>culprit</p><p>after[]</p>',
         });
     });
 

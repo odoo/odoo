@@ -12,7 +12,7 @@
                                 name="action_all_company_branches"
                                 type="object"
                                 invisible="not all_child_ids"
-                                icon="fa-sitemap"
+                                icon="account_tree"
                                 string="Branches"/>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
@@ -84,11 +84,11 @@
                             <main>
                                 <field class="h5" name="name"/>
                                 <div t-if="record.email.value" class="text-truncate">
-                                    <i class="fa fa-fw me-1 fa-envelope" title="Email"/>
+                                    <i class="oi oi-fw oi-filled me-1" data-icon="mail" title="Email"/>
                                     <field name="email"/>
                                 </div>
                                 <div t-if="record.phone.value" class="text-truncate">
-                                    <i class="fa fa-fw me-1 fa-phone" title="Phone"/>
+                                    <i class="oi oi-fw oi-filled me-1" data-icon="phone" title="Phone"/>
                                     <field name="phone"/>
                                 </div>
                             </main>

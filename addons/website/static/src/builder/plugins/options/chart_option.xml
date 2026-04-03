@@ -84,7 +84,9 @@
                                 <th class="o_builder_matrix_sticky_top" t-on-click.capture="this.onButtonCellClick">
                                     <BuilderButton
                                         action="'addColumn'"
-                                        className="'add_column fa fa-fw fa-plus text-success d-inline-block'"
+                                        className="'add_column text-success d-inline-block'"
+                                        icon="'add'"
+                                        iconClass="'oi-fw'"
                                         title.translate="Add Dataset"
                                         type="''"
                                         preview="false"/>
@@ -118,7 +120,9 @@
                                     <BuilderButton t-if="this.domState.data.labels.length > 1"
                                         action="'removeRow'"
                                         actionParam="label_index"
-                                        className="'o_builder_matrix_remove_row visually-hidden-focusable text-danger fa fa-fw fa-minus'"
+                                        className="'o_builder_matrix_remove_row visually-hidden-focusable text-danger'"
+                                        icon="'remove'"
+                                        iconClass="'oi-fw'"
                                         title.translate="Remove Row"
                                         type="''"
                                         preview="false"/>
@@ -129,7 +133,9 @@
                                 <th class="o_builder_matrix_sticky_left" t-on-click.capture="this.onButtonCellClick">
                                     <BuilderButton
                                         action="'addRow'"
-                                        className="'add_row fa fa-fw fa-plus text-success d-inline-block'"
+                                        className="'add_row text-success d-inline-block'"
+                                        icon="'add'"
+                                        iconClass="'oi-fw'"
                                         title.translate="Add Row"
                                         type="''"
                                         preview="false"/>
@@ -139,7 +145,9 @@
                                         <BuilderButton t-if="this.domState.data.datasets.length > 1"
                                             action="'removeColumn'"
                                             actionParam="dataset.key"
-                                            className="'o_builder_matrix_remove_col visually-hidden-focusable text-danger fa fa-fw fa-minus'"
+                                            className="'o_builder_matrix_remove_col visually-hidden-focusable text-danger'"
+                                            icon="'remove'"
+                                            iconClass="'oi-fw'"
                                             title.translate="Remove Column"
                                             type="''"
                                             preview="false"/>

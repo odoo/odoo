@@ -219,7 +219,7 @@ defineModels([Foo, Bar, Currency, ResCompany, ResPartner, ResUsers]);
 
 async function clickControlPanelAction(buttonName) {
     if (getMockEnv().isSmall) {
-        await contains(".o_control_panel_breadcrumbs .o_cp_action_menus .fa-cog").click();
+        await contains(".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='settings']").click();
         await contains(`.o-dropdown-item button[name="${buttonName}"]`).click();
     } else {
         await contains(`.o_control_panel_actions button[name="${buttonName}"]`).click();
@@ -601,7 +601,7 @@ test(`[Offline] editable list (create)`, async () => {
     expect(queryAllTexts(".o_data_cell")).toEqual(["Offline", "yop", "blip", "gnap", "blip"]);
 
     // The edited record will be save the next time we are online
-    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon="link_off"]`).click();
     expect(queryAllTexts(`.o-dropdown--menu .o_offline_systray_content div`)).toEqual([
         "ACTION 1",
         "Record",
@@ -657,7 +657,7 @@ test(`[Offline] editable list (edit)`, async () => {
     expect(queryAllTexts(".o_data_cell")).toEqual(["Offline", "blip", "gnap", "blip"]);
 
     // The edited record will be save the next time we are online
-    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).click();
     expect(queryAllTexts(`.o-dropdown--menu .o_offline_systray_content div`)).toEqual([
         "ACTION 1",
         "Record",
@@ -741,7 +741,7 @@ test(`[Offline] create record when offline`, async () => {
     await contains(`.o_back_button`).click();
 
     // The edited record will be save the next time we are online
-    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).click();
     expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
         "ACTION 1",
         "Record",
@@ -827,7 +827,7 @@ test(`[Offline] edit record when offline`, async () => {
     ]);
 
     // The edited record will be save the next time we are online
-    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).click();
     expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
         "ACTION 1",
         "foo,1",
@@ -1138,11 +1138,11 @@ test(`list view with adjacent buttons`, async () => {
         type: "list",
         arch: `
             <list>
-                <button name="a" type="object" icon="fa-car"/>
+                <button name="a" type="object" icon="directions_car"/>
                 <field name="foo"/>
-                <button name="x" type="object" icon="fa-star"/>
-                <button name="y" type="object" icon="fa-refresh"/>
-                <button name="z" type="object" icon="fa-exclamation"/>
+                <button name="x" type="object" icon="star" icon_class="oi-filled"/>
+                <button name="y" type="object" icon="refresh"/>
+                <button name="z" type="object" icon="priority_high"/>
             </list>
         `,
     });
@@ -1158,14 +1158,14 @@ test(`list view with adjacent buttons and invisible field and button`, async () 
         resModel: "foo",
         arch: `
             <list>
-                <button name="a" type="object" icon="fa-car"/>
+                <button name="a" type="object" icon="directions_car"/>
                 <field name="foo" column_invisible="1"/>
                 <!--Here the column_invisible=1 is used to simulate a group on the case that the user
                     don't have the rights to see the button.-->
-                <button name="b" type="object" icon="fa-car" column_invisible="1"/>
-                <button name="x" type="object" icon="fa-star"/>
-                <button name="y" type="object" icon="fa-refresh"/>
-                <button name="z" type="object" icon="fa-exclamation"/>
+                <button name="b" type="object" icon="directions_car" column_invisible="1"/>
+                <button name="x" type="object" icon="star" icon_class="oi-filled"/>
+                <button name="y" type="object" icon="refresh"/>
+                <button name="z" type="object" icon="priority_high"/>
             </list>
         `,
     });
@@ -1182,11 +1182,11 @@ test(`list view with adjacent buttons and invisible field (modifier)`, async () 
         type: "list",
         arch: `
             <list>
-                <button name="a" type="object" icon="fa-car"/>
+                <button name="a" type="object" icon="directions_car"/>
                 <field name="foo" invisible="foo == 'blip'"/>
-                <button name="x" type="object" icon="fa-star"/>
-                <button name="y" type="object" icon="fa-refresh"/>
-                <button name="z" type="object" icon="fa-exclamation"/>
+                <button name="x" type="object" icon="star" icon_class="oi-filled"/>
+                <button name="y" type="object" icon="refresh"/>
+                <button name="z" type="object" icon="priority_high"/>
             </list>
         `,
     });
@@ -1202,11 +1202,11 @@ test(`list view with adjacent buttons and optional field`, async () => {
         type: "list",
         arch: `
             <list>
-                <button name="a" type="object" icon="fa-car"/>
+                <button name="a" type="object" icon="directions_car"/>
                 <field name="foo" optional="hide"/>
-                <button name="x" type="object" icon="fa-star"/>
-                <button name="y" type="object" icon="fa-refresh"/>
-                <button name="z" type="object" icon="fa-exclamation"/>
+                <button name="x" type="object" icon="star" icon_class="oi-filled"/>
+                <button name="y" type="object" icon="refresh"/>
+                <button name="z" type="object" icon="priority_high"/>
             </list>
         `,
     });
@@ -1238,7 +1238,7 @@ test(`wait the view reload before closing the dialog (save)`, async () => {
         arch: `
             <list editable="bottom">
                 <field name="foo"/>
-                <button name="a" type="object" icon="fa-car"/>
+                <button name="a" type="object" icon="directions_car"/>
             </list>
         `,
     });
@@ -1279,7 +1279,7 @@ test(`wait the view reload before closing the dialog (cancel)`, async () => {
         arch: `
             <list editable="bottom">
                 <field name="foo"/>
-                <button name="a" type="object" icon="fa-car"/>
+                <button name="a" type="object" icon="directions_car"/>
             </list>
         `,
     });
@@ -1305,9 +1305,9 @@ test(`list view with adjacent buttons with invisible modifier`, async () => {
         arch: `
             <list>
                 <field name="foo"/>
-                <button name="x" type="object" icon="fa-star" invisible="foo == 'blip'"/>
-                <button name="y" type="object" icon="fa-refresh" invisible="foo == 'yop'"/>
-                <button name="z" type="object" icon="fa-exclamation" invisible="foo == 'gnap'"/>
+                <button name="x" type="object" icon="star" icon_class="oi-filled" invisible="foo == 'blip'"/>
+                <button name="y" type="object" icon="refresh" invisible="foo == 'yop'"/>
+                <button name="z" type="object" icon="priority_high" invisible="foo == 'gnap'"/>
             </list>
         `,
     });
@@ -1317,9 +1317,9 @@ test(`list view with adjacent buttons with invisible modifier`, async () => {
     expect(`.o_data_row`).toHaveCount(4);
     expect(`.o_data_row td.o_list_button`).toHaveCount(4);
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["yop", "", "blip", "", "gnap", "", "blip", ""]);
-    expect(`td button i.fa-star`).toHaveCount(2);
-    expect(`td button i.fa-refresh`).toHaveCount(3);
-    expect(`td button i.fa-exclamation`).toHaveCount(3);
+    expect(`td button i[data-icon="star"].oi-filled`).toHaveCount(2);
+    expect(`td button i[data-icon="refresh"]`).toHaveCount(3);
+    expect(`td button i[data-icon="priority_high"]`).toHaveCount(3);
 });
 
 test(`list view with adjacent buttons with width attribute`, async () => {
@@ -1329,20 +1329,20 @@ test(`list view with adjacent buttons with width attribute`, async () => {
         arch: `
             <list>
                 <field name="foo"/>
-                <button icon="fa-play"/>
-                <button icon="fa-heart" width="25px"/>
-                <button icon="fa-cog"/>
-                <button icon="fa-list"/>
+                <button icon="play_arrow"/>
+                <button icon="favorite" icon_class="oi-filled" width="25px"/>
+                <button icon="settings" icon_class="oi-filled"/>
+                <button icon="format_list_bulleted"/>
             </list>
         `,
     });
     expect(`th:not(.o_list_record_selector)`).toHaveCount(4, {
         message: "adjacent buttons with no width in the arch must be grouped in a single column",
     });
-    expect(".o_data_row td:not(.o_list_record_selector):eq(1) .fa-play").toHaveCount(1);
-    expect(".o_data_row td:not(.o_list_record_selector):eq(2) .fa-heart").toHaveCount(1);
-    expect(".o_data_row td:not(.o_list_record_selector):eq(3) .fa-cog").toHaveCount(1);
-    expect(".o_data_row td:not(.o_list_record_selector):eq(3) .fa-list").toHaveCount(1);
+    expect(".o_data_row td:not(.o_list_record_selector):eq(1) [data-icon='play_arrow']").toHaveCount(1);
+    expect(".o_data_row td:not(.o_list_record_selector):eq(2) [data-icon='favorite']").toHaveCount(1);
+    expect(".o_data_row td:not(.o_list_record_selector):eq(3) [data-icon='settings']").toHaveCount(1);
+    expect(".o_data_row td:not(.o_list_record_selector):eq(3) [data-icon='format_list_bulleted']").toHaveCount(1);
 });
 
 test(`list view with icon buttons`, async () => {
@@ -1353,17 +1353,17 @@ test(`list view with icon buttons`, async () => {
         type: "list",
         arch: `
             <list>
-                <button name="x" type="object" icon="fa-asterisk"/>
-                <button name="x" type="object" icon="fa-star" class="o_yeah"/>
-                <button name="x" type="object" icon="fa-refresh" string="Refresh" class="o_yeah"/>
-                <button name="x" type="object" icon="fa-exclamation" string="Danger" class="o_yeah btn-danger"/>
+                <button name="x" type="object" icon="emergency"/>
+                <button name="x" type="object" icon="star" icon_class="oi-filled" class="o_yeah"/>
+                <button name="x" type="object" icon="refresh" string="Refresh" class="o_yeah"/>
+                <button name="x" type="object" icon="priority_high" string="Danger" class="o_yeah btn-danger"/>
             </list>
         `,
     });
-    expect(`button.btn.btn-link i.fa.fa-asterisk`).toHaveCount(1);
-    expect(`button.btn.btn-link.o_yeah i.fa.fa-star`).toHaveCount(1);
-    expect(`button.btn.btn-link.o_yeah:contains(Refresh) i.fa.fa-refresh`).toHaveCount(1);
-    expect(`button.btn.btn-danger.o_yeah:contains(Danger) i.fa.fa-exclamation`).toHaveCount(1);
+    expect(`button.btn.btn-link i[data-icon="emergency"]`).toHaveCount(1);
+    expect(`button.btn.btn-link.o_yeah i[data-icon="star"].oi-filled`).toHaveCount(1);
+    expect(`button.btn.btn-link.o_yeah:contains(Refresh) i[data-icon="refresh"]`).toHaveCount(1);
+    expect(`button.btn.btn-danger.o_yeah:contains(Danger) i[data-icon="priority_high"]`).toHaveCount(1);
     expect(`button.btn.btn-link.btn-danger`).toHaveCount(0);
 });
 
@@ -1373,8 +1373,8 @@ test(`list view with disabled button`, async () => {
         type: "list",
         arch: `
             <list>
-                <button name="a" icon="fa-coffee"/>
-                <button name="b" icon="fa-car" disabled="disabled"/>
+                <button name="a" icon="coffee"/>
+                <button name="b" icon="directions_car" disabled="disabled"/>
             </list>
         `,
     });
@@ -1432,10 +1432,10 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
         `,
     });
     expect(`.o_control_panel_actions > *`).toHaveCount(0);
-    await contains(".o_control_panel_breadcrumbs .o_cp_action_menus .fa-cog").click();
+    await contains(".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='settings']").click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
     await clickRecordSelector();
-    await contains(".o_control_panel_breadcrumbs .o_cp_action_menus .fa-cog").click();
+    await contains(".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='settings']").click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "plaf",
         "Export",
@@ -1443,7 +1443,7 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
         "Delete",
     ]);
     await clickRecordSelector();
-    await contains(".o_control_panel_breadcrumbs .o_cp_action_menus .fa-cog").click();
+    await contains(".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='settings']").click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
 });
 
@@ -1524,7 +1524,7 @@ test(`list view: action button in controlPanel with display='always' on mobile`,
     ]);
 
     await clickRecordSelector();
-    await contains(".o_control_panel_breadcrumbs .o_cp_action_menus .fa-cog").click();
+    await contains(".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='settings']").click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "",
         "default-selection",
@@ -2254,7 +2254,7 @@ test(`discard a new record in editable="top" list with less than 4 records`, asy
     expect(`tbody tr:eq(0)`).toHaveClass("o_selected_row");
 
     if (getMockEnv().isSmall) {
-        await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
+        await contains(".o_control_panel_main_buttons button > [data-icon='more_vert']").click();
         expect(`.o_list_button_discard`).toHaveCount(0);
         expect(`.o_control_panel .o_list_button_add`).toHaveCount(1);
     } else {
@@ -3412,12 +3412,12 @@ test(`change a record field in readonly should change same record in other group
     await contains(`.o_group_header`).click(); // open Value 1 group
     await contains(`.o_group_header:eq(1)`).click(); // open Value 2 group
     expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip", "yop"]);
-    expect(`.o_priority_star.fa-star`).toHaveCount(0, {
+    expect(`.o_priority_star[data-icon="star"].oi-filled`).toHaveCount(0, {
         message: "should not have any starred records",
     });
 
     await contains(`.o_priority_star`).click();
-    expect(`.o_priority_star.fa-star`).toHaveCount(2, {
+    expect(`.o_priority_star[data-icon="star"].oi-filled`).toHaveCount(2, {
         message: "both 'yop' records should have been starred",
     });
     expect.verifySteps(["web_save"]);
@@ -7457,7 +7457,7 @@ test(`can display button in edit mode`, async () => {
         arch: `
             <list editable="top">
                 <field name="foo"/>
-                <button name="notafield" type="object" icon="fa-asterisk" class="o_yeah"/>
+                <button name="notafield" type="object" icon="emergency" class="o_yeah"/>
             </list>
         `,
     });
@@ -8473,7 +8473,7 @@ test(`edit button does not trigger fold group`, async () => {
             <list>
                 <field name="foo"/>
                 <groupby name="currency_id">
-                    <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
+                    <button name="edit" type="edit" icon="edit" icon_class="oi-filled" title="Edit"/>
                 </groupby>
             </list>
         `,
@@ -8618,7 +8618,7 @@ test(`list view, editable, without data`, async () => {
                 <field name="foo"/>
                 <field name="date"/>
                 <field name="m2o"/>
-                <button type="object" icon="fa-plus-square" name="method"/>
+                <button type="object" icon="add_box" icon_class="oi-filled" name="method"/>
             </list>
         `,
         noContentHelp: "click to add a partner",
@@ -8676,12 +8676,12 @@ test(`list view, editable, with a button`, async () => {
         arch: `
             <list editable="top">
                 <field name="foo"/>
-                <button string="abc" icon="fa-phone" type="object" name="schedule_another_phonecall"/>
+                <button string="abc" icon="phone" type="object" name="schedule_another_phonecall"/>
             </list>
         `,
     });
     await contains(`.o_list_button_add`).click();
-    expect(`table button i.o_button_icon.fa-phone`).toHaveCount(1, {
+    expect(`table button i.o_button_icon[data-icon="phone"]`).toHaveCount(1, {
         message: "should have rendered a button",
     });
     expect(`table button:eq(0)`).toHaveProperty("disabled", false, {
@@ -8877,7 +8877,7 @@ test(`click on a button in a list view`, async () => {
         arch: `
             <list>
                 <field name="foo"/>
-                <button string="a button" name="button_action" icon="fa-car" type="object"/>
+                <button string="a button" name="button_action" icon="directions_car" type="object"/>
             </list>
         `,
     });
@@ -8891,7 +8891,7 @@ test(`click on a button in a list view`, async () => {
     expect(`tbody .o_list_button`).toHaveCount(4, {
         message: "there should be one button per row",
     });
-    expect(`.o_data_row .o_list_button .o_button_icon.fa.fa-car`).toHaveCount(4);
+    expect(`.o_data_row .o_list_button .o_button_icon[data-icon="directions_car"]`).toHaveCount(4);
 
     await contains(`.o_data_row .o_list_button button`).click();
     // should have reloaded the view (after the action is complete)
@@ -8915,7 +8915,7 @@ test("click on a button in a list view on second page", async () => {
         arch: `
             <list limit="3">
                 <field name="foo"/>
-                <button string="a button" name="button_action" icon="fa-car" type="object"/>
+                <button string="a button" name="button_action" icon="directions_car" type="object"/>
             </list>
         `,
     });
@@ -8943,7 +8943,7 @@ test(`invisible attrs in readonly and editable list`, async () => {
         type: "list",
         arch: `
             <list editable="top">
-                <button string="a button" name="button_action" icon="fa-car" type="object" invisible="id == 1"/>
+                <button string="a button" name="button_action" icon="directions_car" type="object" invisible="id == 1"/>
                 <field name="int_field"/>
                 <field name="qux"/>
                 <field name="foo" invisible="id == 1"/>
@@ -9099,7 +9099,7 @@ test(`list view with nested groups`, async () => {
     // basic rendering tests
     expect(`.o_group_header`).toHaveCount(2);
     expect(queryAllTexts(`.o_group_name`)).toEqual(["Value 1", "Value 2"]);
-    expect(`.o_group_name .fa-caret-right`).toHaveCount(2);
+    expect(`.o_group_name [data-icon='arrow_right']`).toHaveCount(2);
     expect(`.o_group_header:eq(0) span:first`).toHaveStyle({ "--o-list-group-level": "0" });
     expect(queryAllTexts(`.o_group_header .o_list_number`)).toEqual(["16", "14"]);
 
@@ -9107,7 +9107,7 @@ test(`list view with nested groups`, async () => {
     await contains(`.o_group_header:eq(0)`).click();
     expect.verifySteps(["web_read_group"]);
     expect(queryAllTexts(`.o_group_name`)).toEqual(["Value 1", "blip", "gnap", "yop", "Value 2"]);
-    expect(`.o_group_name:eq(0) .fa-caret-down`).toHaveCount(1);
+    expect(`.o_group_name:eq(0) [data-icon="arrow_drop_down"]`).toHaveCount(1);
     expect(`.o_group_header:eq(1) span:first`).toHaveStyle({ "--o-list-group-level": "1" });
     expect(queryAllTexts(`.o_group_header .o_list_number`)).toEqual([
         "16",
@@ -9139,7 +9139,7 @@ test(`list view with nested groups`, async () => {
     await contains(`.o_group_header:eq(1)`).click();
     expect.verifySteps([]);
     expect(`.o_group_header`).toHaveCount(2);
-    expect(`.o_group_name .fa-caret-right`).toHaveCount(2);
+    expect(`.o_group_name [data-icon='arrow_right']`).toHaveCount(2);
     expect(`.o_data_row`).toHaveCount(0);
 });
 
@@ -13135,13 +13135,13 @@ test(`grouped list edition with boolean_favorite widget`, async () => {
     });
 
     await contains(`.o_group_header`).click();
-    expect(`.o_data_row:eq(0) .fa-star`).toHaveCount(1, {
+    expect(`.o_data_row:eq(0) [data-icon="star"].oi-filled`).toHaveCount(1, {
         message: "boolean value of the first record should be true",
     });
 
-    await contains(".o_data_row:eq(0) .fa-star", { visible: false }).click();
+    await contains(".o_data_row:eq(0) [data-icon='star'].oi-filled", { visible: false }).click();
     expect.verifySteps(["web_save"]);
-    expect(`.o_data_row:eq(0) .fa-star-o`).toHaveCount(1, {
+    expect(`.o_data_row:eq(0) [data-icon="star"]`).toHaveCount(1, {
         message: "boolean value of the first record should have been updated",
     });
 });
@@ -17180,7 +17180,7 @@ test(`list view does not crash when clicked button cell`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<list><button name="a" type="object" icon="fa-car"/></list>`,
+        arch: `<list><button name="a" type="object" icon="directions_car"/></list>`,
     });
     expect(`.o_data_row:eq(0) td.o_list_button`).toHaveCount(1);
     await contains(`.o_data_row:eq(0) td.o_list_button`).click();
@@ -17222,7 +17222,7 @@ test(`sort on a non sortable field with allow_order option`, async () => {
     expect(queryAllProperties(`[name=bar] input`, "checked")).toEqual([false, true, true]);
     expect(`th[data-name=bar]`).toHaveClass("o_column_sortable");
     expect(`th[data-name=bar]`).toHaveClass("table-active");
-    expect(`th[data-name=bar] i`).toHaveClass("fa-sort-asc");
+    expect(`th[data-name=bar] i`).toHaveAttribute("data-icon", "arrow_upward");
 });
 
 test(`sort rows in a grouped list view`, async () => {
@@ -17239,7 +17239,7 @@ test(`sort rows in a grouped list view`, async () => {
     await contains(`th[data-name=int_field]`).click();
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["9", "10", "17"]);
     expect(`th[data-name=int_field]`).toHaveClass("o_column_sortable");
-    expect(`th[data-name=int_field] i`).toHaveClass("fa-sort-asc");
+    expect(`th[data-name=int_field] i`).toHaveAttribute("data-icon", "arrow_upward");
 });
 
 test.tags("desktop");
@@ -19065,7 +19065,7 @@ test("selection is properly displayed (single page) on mobile", async () => {
 
     expect(".o_data_row").toHaveCount(4);
     expect(".o_selection_box").toHaveCount(0);
-    expect(".o_control_panel .fa-search").toHaveCount(1);
+    expect(".o_control_panel [data-icon='search']").toHaveCount(1);
 
     // select a record
     await contains(".o_data_row:nth-child(1)").drag();
@@ -19091,7 +19091,7 @@ test("selection is properly displayed (single page) on mobile", async () => {
     // unselect all
     await unselectAllRecords();
     expect(".o_selection_box").toHaveCount(0);
-    expect(".o_control_panel .fa-search").toHaveCount(1);
+    expect(".o_control_panel [data-icon='search']").toHaveCount(1);
 });
 
 test.tags("mobile");
@@ -19483,7 +19483,7 @@ test(`list with custom cog action that has a confirmation target="new" action`, 
     expect(".o_list_view").toHaveCount(1);
 
     await selectAllRecords();
-    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+    await contains(`.o_cp_action_menus button:has([data-icon="settings"])`).click();
     await contains(`.o-dropdown-item:contains(Sort of confirmation dialog)`).click();
     expect(".o_dialog").toHaveCount(1);
 
@@ -19984,9 +19984,9 @@ test(`cache web_read_group: do not send opening_info if not necessary`, async ()
     // Do not follow the same steps as earlier, directly remove the filter
     if (getMockEnv().isSmall) {
         // Toggle searchbar in mobile
-        await contains(`.o_control_panel_navigation .fa-search`).click();
+        await contains(`.o_control_panel_navigation [data-icon="search"]`).click();
     }
-    await contains(".o_searchview_facet .oi-close").click();
+    await contains(".o_searchview_facet [data-icon='close']").click();
     expect(`.o_group_header`).toHaveCount(4);
 
     expect.verifyErrors([
@@ -20076,7 +20076,7 @@ test(`[Offline] delete records`, async () => {
     await contains(`.modal-footer .btn-danger`).click(); // confirm the delete action
 
     // The deleted records will be saved the next time we are online
-    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).click();
     expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
         "ACTION 1",
         "2 Records",
@@ -20126,7 +20126,7 @@ test(`[Offline] archiving records`, async () => {
     await contains(`.modal-footer .btn-primary`).click(); // confirm the archive action
 
     // The deleted records will be saved the next time we are online
-    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).click();
     expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
         "ACTION 1",
         "2 Records",
@@ -20175,7 +20175,7 @@ test(`[Offline] unarchiving records`, async () => {
     await toggleMenuItem("Unarchive"); // toggle archive action
 
     // The deleted records will be saved the next time we are online
-    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).click();
     expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
         "ACTION 1",
         "2 Records",
@@ -20240,7 +20240,7 @@ test(`[Offline] cache web_search_read: enable filter online/offline`, async () =
     expect(".o_search_bar_menu_offline .o-dropdown-item").toHaveCount(1);
     await contains(".o_search_bar_menu_offline .o-dropdown-item").click();
     expect(queryAllTexts(`.o_list_char`)).toEqual(["blip", "blip"]);
-    await contains(".o_searchview_facet .oi-close").click();
+    await contains(".o_searchview_facet [data-icon='close']").click();
     expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip", "gnap", "blip"]);
 
     expect.verifyErrors([

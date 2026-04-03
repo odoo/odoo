@@ -255,7 +255,7 @@ test("basic rendering of a component with search panel", async () => {
     expect(`.o_search_panel_section`).toHaveCount(2);
 
     const firstSection = `.o_search_panel_section:eq(0)`;
-    expect(`${firstSection} .o_search_panel_section_header i`).toHaveClass("fa-folder");
+    expect(`${firstSection} .o_search_panel_section_header i`).toHaveAttribute("data-icon", "folder");
     expect(`${firstSection} .o_search_panel_section_header`).toHaveText(/company/i);
     expect(`${firstSection} .o_search_panel_category_value`).toHaveCount(3);
     expect(`${firstSection} .o_search_panel_category_value:first .active`).toHaveCount(1);
@@ -266,7 +266,7 @@ test("basic rendering of a component with search panel", async () => {
     ]);
 
     const secondSection = `.o_search_panel_section:eq(1)`;
-    expect(`${secondSection} .o_search_panel_section_header i`).toHaveClass("fa-filter");
+    expect(`${secondSection} .o_search_panel_section_header i`).toHaveAttribute("data-icon", "filter_alt");
     expect(`${secondSection} .o_search_panel_section_header`).toHaveText(/category/i);
     expect(`${secondSection} .o_search_panel_filter_value`).toHaveCount(2);
     expect(queryAllTexts`${secondSection} .o_search_panel_filter_value`).toEqual([
@@ -587,8 +587,8 @@ test("sections with custom icon and color", async () => {
         search: /* xml */ `
             <search>
                 <searchpanel view_types="toy">
-                    <field name="company_id" icon="fa-car" color="blue" enable_counters="1"/>
-                    <field name="state" select="multi" icon="fa-star" color="#000" enable_counters="1"/>
+                    <field name="company_id" icon="directions_car" color="blue" enable_counters="1"/>
+                    <field name="state" select="multi" icon="star" icon_class="oi-filled" color="#000" enable_counters="1"/>
                 </searchpanel>
             </search>
         `,
@@ -598,9 +598,9 @@ test("sections with custom icon and color", async () => {
         searchViewId: false,
     });
 
-    expect(`.o_search_panel_section_header:eq(0) i`).toHaveClass("fa-car");
+    expect(`.o_search_panel_section_header:eq(0) i`).toHaveAttribute("data-icon", "directions_car");
     expect(`.o_search_panel_section_header:eq(0) i`).toHaveStyle({ color: "rgb(0, 0, 255)" });
-    expect(`.o_search_panel_section_header:eq(1) i`).toHaveClass("fa-star");
+    expect(`.o_search_panel_section_header:eq(1) i`).toHaveAttribute("data-icon", "star");
     expect(`.o_search_panel_section_header:eq(1) i`).toHaveStyle({ color: "rgb(0, 0, 0)" });
     expect(component.domain).toEqual([]);
 });
@@ -1047,7 +1047,7 @@ test("can (un)fold parent category values", async () => {
     expect(`.o_search_panel_category_value:contains(agrolait) .o_toggle_fold > i`).toHaveCount(1);
     expect(
         `.o_search_panel_category_value header:contains(agrolait) .o_toggle_fold > i`
-    ).toHaveClass("fa-caret-right");
+    ).toHaveAttribute("data-icon", "arrow_right");
     expect(`.o_search_panel_category_value`).toHaveCount(3);
 
     // unfold agrolait
@@ -1056,7 +1056,7 @@ test("can (un)fold parent category values", async () => {
     ).click();
     expect(
         `.o_search_panel_category_value header:contains(agrolait) .o_toggle_fold > i`
-    ).toHaveClass("fa-caret-down");
+    ).toHaveAttribute("data-icon", "arrow_drop_down");
     expect(`.o_search_panel_category_value`).toHaveCount(5);
 
     // fold agrolait
@@ -1065,7 +1065,7 @@ test("can (un)fold parent category values", async () => {
     ).click();
     expect(
         `.o_search_panel_category_value header:contains(agrolait) .o_toggle_fold > i`
-    ).toHaveClass("fa-caret-right");
+    ).toHaveAttribute("data-icon", "arrow_right");
     expect(`.o_search_panel_category_value`).toHaveCount(3);
 });
 
@@ -1095,14 +1095,14 @@ test("fold status is kept at reload", async () => {
     await contains(queryFirst`.o_search_panel_category_value > header:contains(agrolait)`).click();
     expect(
         queryFirst`.o_search_panel_category_value > header:contains(agrolait) .o_toggle_fold > i`
-    ).toHaveClass("fa-caret-down");
+    ).toHaveAttribute("data-icon", "arrow_drop_down");
     expect(`.o_search_panel_category_value`).toHaveCount(5);
 
     await toggleSearchBarMenu();
     await toggleMenuItem("True Domain");
     expect(
         queryFirst`.o_search_panel_category_value > header:contains(agrolait) .o_toggle_fold > i`
-    ).toHaveClass("fa-caret-down");
+    ).toHaveAttribute("data-icon", "arrow_drop_down");
     expect(`.o_search_panel_category_value`).toHaveCount(5);
 });
 

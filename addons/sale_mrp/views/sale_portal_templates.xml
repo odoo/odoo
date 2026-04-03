@@ -24,19 +24,19 @@
                             </div>
                             <span t-if="mo.state in ['to_close', 'done']"
                                 class="small badge text-bg-success orders_label_text_align">
-                                <i class="fa fa-fw fa-check"/> <b>Manufactured</b>
+                                <i class="oi oi-fw" data-icon="check"/> <b>Manufactured</b>
                             </span>
                             <span t-elif="mo.state == 'cancel'"
                                 class="small badge text-bg-danger orders_label_text_align">
-                                <i class="fa fa-fw fa-times"/> <b>Cancelled</b>
+                                <i class="oi oi-fw" data-icon="close"/> <b>Cancelled</b>
                             </span>
                             <span t-elif="mo.state in ['confirmed']"
                                 class="small badge text-bg-info orders_label_text_align">
-                                <i class="fa fa-fw fa-clock-o"/> <b>Confirmed</b>
+                                <i class="oi oi-fw" data-icon="schedule"/> <b>Confirmed</b>
                             </span>
                             <span t-elif="mo.state in ['progress']"
                                 class="small badge text-bg-warning orders_label_text_align">
-                                <i class="fa fa-fw fa-clock-o"/> <b>In progress</b>
+                                <i class="oi oi-fw" data-icon="schedule"/> <b>In progress</b>
                             </span>
                         </div>
                     </t>

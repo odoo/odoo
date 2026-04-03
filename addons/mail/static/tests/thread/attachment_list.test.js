@@ -427,7 +427,7 @@ test("download url of non-viewable binary file", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".fa-download");
+    await contains("[data-icon='download']");
 
     patchWithCleanup(download, {
         _download: (options) => {
@@ -436,7 +436,7 @@ test("download url of non-viewable binary file", async () => {
             );
         },
     });
-    await click(".fa-download");
+    await click("[data-icon='download']");
 });
 
 test("check actions in mobile view", async () => {

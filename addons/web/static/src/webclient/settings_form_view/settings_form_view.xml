@@ -9,7 +9,7 @@
                 <t t-if="this.searchBarToggler.state.showSearchBar">
                     <div class="o_cp_searchview d-flex w-100" role="search">
                         <div class="o_searchview form-control d-flex align-items-center py-1" role="search" aria-autocomplete="list">
-                            <i class="o_searchview_icon oi oi-search me-2" role="img" aria-label="Search..." title="Search..." />
+                            <i class="o_searchview_icon oi me-2" data-icon="search" role="img" aria-label="Search..." title="Search..." />
                             <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1">
                                 <input type="text" class="o_searchview_input o_input flex-grow-1 w-auto border-0" accesskey="Q" placeholder="Search..." role="searchbox" t-on-input="(ev) => this.debounceSearch(ev.target.value)" t-custom-ref="autofocus"/>
                             </div>

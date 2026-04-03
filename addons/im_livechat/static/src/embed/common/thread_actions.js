@@ -7,7 +7,7 @@ import { patch } from "@web/core/utils/patch";
 registerThreadAction("restart", {
     condition: ({ channel, owner }) =>
         channel?.chatbot?.canRestart && !owner.isDiscussSidebarChannelActions,
-    icon: "fa fa-fw fa-refresh",
+    icon: "refresh",
     name: _t("Restart Conversation"),
     onSelected: ({ channel, owner }) => {
         owner.props.chatWindow.feedbackDoneResolver?.resolve(false);

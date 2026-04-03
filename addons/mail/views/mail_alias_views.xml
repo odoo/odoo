@@ -16,10 +16,10 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="open_document" string="Open Document"
-                                    type="object" class="oe_link" icon="fa-sitemap"
+                                    type="object" class="oe_link" icon="account_tree"
                                     invisible="not alias_model_id or alias_force_thread_id == 0"/>
                             <button name="open_parent_document"
-                                    type="object" class="oe_link" icon="fa-sitemap"
+                                    type="object" class="oe_link" icon="account_tree"
                                     invisible="not alias_parent_model_id or alias_parent_thread_id == 0">
                                     <div class="o_field_widget o_stat_info">
                                         <span class="o_stat_text">Open Parent Document</span>
@@ -85,10 +85,10 @@
                            decoration-warning="alias_status == 'not_tested'"
                            decoration-danger="alias_status == 'invalid'"/>
                     <button name="open_document" type="object"
-                            string="Open Document" icon="fa-sitemap"
+                            string="Open Document" icon="account_tree"
                             invisible="not alias_model_id or alias_force_thread_id == 0"/>
                     <button name="open_parent_document" type="object"
-                            string="Open Owner" icon="fa-sitemap"
+                            string="Open Owner" icon="account_tree"
                             invisible="not alias_parent_model_id or alias_parent_thread_id == 0"/>
                 </list>
             </field>

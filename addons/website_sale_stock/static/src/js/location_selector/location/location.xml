@@ -27,7 +27,7 @@
                     <small class="opacity-75" t-out="this.getCityAndZipCode()"/>
                 </span>
                 <small name="location_opening_hours" t-attf-class="d-flex align-items-center mb-1 mb-md-0 gap-1 fw-bold {{Object.keys(this.props.openingHours).length > 0 ? 'd-md-none' : 'd-none'}}">
-                    <i class="fa fa-clock-o" role="img"/>
+                    <i class="oi" data-icon="schedule" role="img"/>
                     <t t-out="this.openingHoursLabel"/>
                     <i class="o_location_selector_hours_caret fa fa-caret-up ms-auto transition-base"/>
                 </small>

@@ -187,7 +187,7 @@ class EventSponsor(models.Model):
             'search_fields': ['name', 'website_description'],
             'fetch_fields': ['name', 'website_url', 'website_description'],
             'mapping': mapping,
-            'icon': 'fa-black-tie',
+            'icon': 'oi_black-tie',
             'order': order,
             'group_name': self.env._("Sponsors"),
         }

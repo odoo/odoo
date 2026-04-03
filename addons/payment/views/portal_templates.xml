@@ -212,7 +212,7 @@
                         <div class="row">
                             <div class="col offset-md-3 ps-0">
                                 <a role="button" class="btn btn-primary float-end" href="/my/home">
-                                    Go to my Account <i class="oi oi-arrow-right ms-2"/>
+                                    Go to my Account <i class="oi ms-2" data-icon="east"/>
                                 </a>
                             </div>
                         </div>
@@ -233,7 +233,7 @@
                 <ol class="breadcrumb px-0 mt16">
                     <li id="o_payment_portal_home" class="breadcrumb-item">
                         <a href="/my/home">
-                            <i class="fa fa-home"
+                            <i class="oi" data-icon="home"
                                role="img"
                                title="Home"
                                aria-label="Home"/>
@@ -301,7 +301,7 @@
             t-attf-class="{{o_payment_status_alert_class}}"
         >
             <div id="o_payment_status_icon">
-                <i t-attf-class="fa {{alert_icon}}"/>
+                <i t-attf-class="oi {{alert_icon_class}}" t-att-data-icon="alert_icon"/>
             </div>
             <div id="o_payment_status_message" class="w-100">
                 <t t-out="status_message"/>

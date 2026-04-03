@@ -26,7 +26,7 @@ patch(PhoneField.prototype, {
         return [
             ...super.actionButtons,
             {
-                icon: "fa-mobile",
+                icon: "smartphone",
                 onSelected: async () => {
                     await this.props.record.save();
                     this.action.doAction(

@@ -59,7 +59,7 @@
                             </small>
                             <div t-if="this.props.message.scheduledDatetime" t-att-class="{ 'ms-2': (this.env.inChatWindow and this.isAlignedRight) or (this.isPersistentMessageFromAnotherThread) }" t-att-title="this.props.message.scheduledDateSimple">
                                 <span class="text-600 cursor-pointer">
-                                    <i class="fa fa-calendar-o"/>
+                                    <i class="oi" data-icon="calendar_today"/>
                                 </span>
                             </div>
                             <t t-if="this.isAlignedRight" t-call="mail.Message.notification"/>
@@ -122,7 +122,7 @@
                                                             <t t-if="this.message.translationSource" t-out="this.translatedFromText"/>
                                                         </p>
                                                         <p class="fst-italic text-muted small" t-if="this.message.translationErrors">
-                                                            <i class="text-danger fa fa-warning" role="img" aria-label="Translation Failure"/>
+                                                            <i class="oi text-danger" data-icon="warning" role="img" aria-label="Translation Failure"/>
                                                             <t t-if="this.message.translationErrors" t-out="this.translationFailureText"/>
                                                         </p>
                                                         <t t-if="this.showSubtypeDescription" t-out="this.props.messageSearch?.highlight(this.message.subtype_id?.description) ?? this.message.subtype_id?.description"/>
@@ -192,19 +192,19 @@
 
 <t t-name="mail.Message.emptyQuickAction">
     <button class="btn border-0 o-p-0_5 rounded-0 opacity-0 pe-none">
-        <i class="fa-lg fa fa-question"/>
+        <i class="oi oi-lg" data-icon="help"/>
     </button>
 </t>
 
 <t t-name="mail.Message.notification">
     <div t-if="this.message.thread?.eq(this.props.thread) and this.message.notification_ids.length > 0" class="mx-1">
         <span class="o-mail-Message-notification cursor-pointer opacity-100-hover" t-att-class="this.message.failureNotifications.length > 0 ? 'text-danger opacity-75' : 'opacity-50'" role="button" tabindex="0" t-on-click="this.onClickNotification">
-            <i t-att-class="this.message.notification_ids[0].icon" role="img" aria-label="Delivery failure"/> <span class="fw-bold small" t-if="this.message.notification_ids[0].label" t-out="this.message.notification_ids[0].label"/>
+            <i class="oi" t-att-class="this.message.notification_ids[0].iconClass" t-att-data-icon="this.message.notification_ids[0].icon" role="img" aria-label="Delivery failure"/> <span class="fw-bold small" t-if="this.message.notification_ids[0].label" t-out="this.message.notification_ids[0].label"/>
         </span>
     </div>
     <div t-elif="this.message.thread?.eq(this.props.thread) and (this.message.incoming_email_to?.length or this.message.incoming_email_cc?.length)" class="mx-1">
         <span class="o-mail-Message-notification cursor-pointer" t-att-class="this.message.failureNotifications.length > 0 ? 'text-danger' : this.text-600" role="button" tabindex="0" t-on-click="this.onClickNotification">
-            <i class="fa fa-envelope-o" role="img"/>
+            <i class="oi" data-icon="mail" role="img"/>
         </span>
     </div>
 </t>
@@ -216,25 +216,25 @@
 </t>
 
 <t t-name="mail.Message.pendingStatus">
-    <button t-if="this.message.postFailRedo" class="btn p-0" title="Failed to post the message. Click to retry" t-on-click="() => this.message.postFailRedo?.()"><i class="fa fa-fw fa-warning text-warning"/></button>
-    <span t-else="" class="o-mail-Message-pendingProgress"><i class="fa fa-fw fa-circle-o-notch fa-spin opacity-50"/></span>
+    <button t-if="this.message.postFailRedo" class="btn p-0" title="Failed to post the message. Click to retry" t-on-click="() => this.message.postFailRedo?.()"><i class="oi oi-fw text-warning" data-icon="warning"/></button>
+    <span t-else="" class="o-mail-Message-pendingProgress"><i class="oi oi-fw oi-spin opacity-50" data-icon="autorenew"/></span>
 </t>
 
 <t t-name="mail.Message.mentionedChannelIcon">
-    <i t-att-class="icon"/>
+    <i class="oi" t-att-data-icon="icon"/>
 </t>
 
 <t t-name="mail.Message.sidebarBookmark">
     <small class="text-center lh-1 o-opacity-35" t-att-class="{ 'align-self-start ms-1': this.isAlignedRight, 'align-self-end me-1': !this.isAlignedRight, 'mt-2': this.props.squashed, 'mt-1': !this.props.squashed }" title="Bookmarked">
-        <i class="fa fa-bookmark"/>
+        <i class="oi oi-filled" data-icon="bookmark"/>
     </small>
 </t>
 
     <t t-name="mail.Message.messageLink">
         <span>
             <span class="me-1" t-out="message.thread.displayName"/>
-            <span class="fa fa-angle-right me-1" aria-hidden="true"/>
-            <span class="fa fa-comment" aria-hidden="true"/>
+            <span class="oi me-1" data-icon="keyboard_arrow_right" aria-hidden="true"/>
+            <span class="oi oi-filled" data-icon="chat_bubble" aria-hidden="true"/>
         </span>
     </t>
 

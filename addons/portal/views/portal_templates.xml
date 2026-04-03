@@ -119,19 +119,19 @@
                     <img t-att-src="avatar_source" t-attf-class="rounded-circle object-fit-cover #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
                 </t>
                 <div t-if="_icon" t-attf-class="#{_icon_wrap_class}">
-                    <i t-attf-class="fa fa-1x fa-fw fa-user #{_icon_class}"/>
+                    <i t-attf-class="oi oi-1x oi-fw oi-filled #{_icon_class}" data-icon="person"/>
                 </div>
                 <span t-if="_user_name" t-attf-class="#{_user_name_class}" t-out="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
             </a>
             <div t-attf-class="dropdown-menu js_usermenu #{_dropdown_menu_class}" role="menu">
                 <a groups="base.group_user" href="/odoo" role="menuitem" class="dropdown-item ps-3" id="o_backend_user_dropdown_link">
-                    <i class="fa fa-fw fa-th me-1 small text-primary-emphasis"/> Apps
+                    <i class="oi oi-fw me-1 small text-primary-emphasis" data-icon="grid_view"/> Apps
                 </a>
                 <div id="o_logout_divider" class="dropdown-divider"/>
                 <form method="POST" action="/web/session/logout?redirect=/" role="menuitem" class="dropdown-item p-0">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <button id="o_logout" type="submit" class="btn w-100 ps-3 text-start">
-                        <i class="fa fa-fw fa-sign-out small text-primary-emphasis"/> Logout
+                        <i class="oi oi-fw small text-primary-emphasis" data-icon="logout"/> Logout
                     </button>
                 </form>
             </div>
@@ -140,7 +140,7 @@
 
     <template id="portal_breadcrumbs" name="Portal Breadcrumbs">
         <ol t-if="page_name != 'home'" class="o_portal_submenu breadcrumb mb-0 flex-grow-1 px-0">
-            <li class="breadcrumb-item ms-1"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
+            <li class="breadcrumb-item ms-1"><a href="/my/home" aria-label="Home" title="Home"><i class="oi" data-icon="home"/></a></li>
             <li t-if="page_name == 'my_addresses'" class="breadcrumb-item">Addresses</li>
             <li t-elif="page_name == 'address_form'" class="breadcrumb-item">
                 <a href="/my/addresses" aria-label="Addresses" title="Addresses">Addresses</a>
@@ -153,7 +153,7 @@
         <div t-ignore="true" class="text-center">
             <t t-if="custom_html" t-out="custom_html"/>
             <t t-else="">This is a preview of the customer portal.</t>
-            <a t-att-href="backend_url" class="alert-link"><i class="oi oi-arrow-right me-1"/>Back to edit mode</a>
+            <a t-att-href="backend_url" class="alert-link"><i class="oi me-1" data-icon="east"/>Back to edit mode</a>
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </template>
@@ -204,7 +204,7 @@
     <template id="user_sign_in" name="User Sign In" inherit_id="portal.placeholder_user_sign_in">
         <xpath expr="." position="inside">
             <li groups="base.group_public" t-attf-class="#{_item_class} o_no_autohide_item">
-                <a t-attf-href="/web/login" t-attf-class="#{_link_class}">Sign in<span t-if="request.session.get('profile_session')" class="text-danger fa fa-circle"/></a>
+                <a t-attf-href="/web/login" t-attf-class="#{_link_class}">Sign in<span t-if="request.session.get('profile_session')" class="oi oi-filled text-danger" data-icon="circle"/></a>
             </li>
         </xpath>
     </template>
@@ -348,7 +348,7 @@
 
             <!--  Collapse button -->
             <button t-if="searchbar_sortings or searchbar_filters or searchbar_groupby or searchbar_inputs" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#o_portal_navbar_content" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle filters">
-                <span class="fa fa-fw fa-bars"/>
+                <span class="oi oi-fw" data-icon="menu"/>
             </button>
 
             <!--  Collapsable content  -->
@@ -417,7 +417,7 @@
                         </div>
                         <input type="search" class="form-control border-0 bg-light" placeholder="Search" t-att-value='search' name="search"/>
                         <button class="btn btn-light" type="submit">
-                            <span class="oi oi-search"/>
+                            <span class="oi" data-icon="search"/>
                         </button>
                     </div>
                 </form>
@@ -431,15 +431,15 @@
             <hr class="mt-1"/>
             <h6 t-out="sales_user.name"/>
             <div t-if="sales_user.email_normalized" class="d-flex align-items-baseline mb-1">
-                <i class="fa fa-envelope fa-fw me-1 text-600"/>
+                <i class="oi oi-fw oi-filled me-1 text-600" data-icon="mail"/>
                 <a class="text-break w-100" t-att-href="'mailto:'+sales_user.email" t-out="sales_user.email"/>
             </div>
             <div t-if="sales_user.phone" class="d-flex flex-nowrap align-items-center mb-1">
-                <i class="fa fa-phone fa-fw me-1 text-600"/>
+                <i class="oi oi-fw oi-filled me-1 text-600" data-icon="phone"/>
                 <span t-out="sales_user.phone"/>
             </div>
             <div t-if="sales_user.city" class="d-flex flex-nowrap align-items-center mb-1">
-                <i class="fa fa-map-marker fa-fw me-1 text-600"/>
+                <i class="oi oi-fw me-1 text-600" data-icon="location_on"/>
                 <span t-out="sales_user.city"/>
             </div>
         </div>
@@ -464,7 +464,7 @@
                 <t t-out="errors"/>
             </div>
             <div class="d-flex gap-2 my-3">
-                <a href="/my/" title="Go Back" class="btn btn-light px-2"><i class="oi oi-chevron-left"/></a>
+                <a href="/my/" title="Go Back" class="btn btn-light px-2"><i class="oi" data-icon="chevron_backward"/></a>
                 <h3 class="my-0">Connection &amp; Security</h3>
             </div>
             <section name="portal_change_password">
@@ -485,7 +485,7 @@
                                    id="current" name="old"
                                    autocomplete="current-password" required="required"/>
                             <button class="btn border border-start-0 o_show_password rounded-end" type="button">
-                                <i class="fa fa-eye"/>
+                                <i class="oi" data-icon="visibility"/>
                             </button>
                             <div class="invalid-feedback">
                                 <t t-out="get_error(errors, 'password.old')"/>
@@ -500,7 +500,7 @@
                                 id="new" name="new1"
                                 autocomplete="new-password" required="required"/>
                             <button type="button" class="btn border border-start-0 o_show_password rounded-end">
-                                <i class="fa fa-eye"/>
+                                <i class="oi" data-icon="visibility"/>
                             </button>
                             <div class="invalid-feedback">
                                 <t t-out="get_error(errors, 'password.new1')"/>
@@ -514,7 +514,7 @@
                                 id="new2" name="new2"
                                 autocomplete="new-password" required="required"/>
                             <button type="button" class="btn border border-start-0 o_show_password rounded-end">
-                                <i class="fa fa-eye"/>
+                                <i class="oi" data-icon="visibility"/>
                             </button>
                             <div class="invalid-feedback">
                                 <t t-out="get_error(errors, 'password.new2')"/>
@@ -534,7 +534,7 @@
                 <h4>
                 Developer API Keys
                     <a href="https://www.odoo.com/documentation/latest/developer/reference/external_api.html#api-key" target="_blank">
-                        <i title="Documentation" class="fa fa-fw o_button_icon fa-info-circle"></i>
+                        <i title="Documentation" class="oi oi-fw o_button_icon" data-icon="info"></i>
                     </a>
                 </h4>
                 <div>
@@ -556,7 +556,7 @@
                                     <td><span t-field="key.create_date"/></td>
                                     <td><span t-field="key.expiration_date"/></td>
                                     <td>
-                                        <i class="fa fa-trash text-danger o_portal_remove_api_key" type="button" t-att-id="key.id"/>
+                                        <i class="oi oi-filled text-danger o_portal_remove_api_key" data-icon="delete" type="button" t-att-id="key.id"/>
                                     </td>
                                 </tr>
                             </t>
@@ -590,7 +590,7 @@
                                     <p class="text-muted">
                                         Disable your account, preventing any further login.<br/>
                                         <b>
-                                            <i class="fa fa-exclamation-triangle text-danger"></i>
+                                            <i class="oi text-danger" data-icon="warning"></i>
                                             This action cannot be undone.
                                         </b>
                                     </p>
@@ -638,8 +638,8 @@
     <template id="record_pager" name="Portal Record Pager">
         <t t-if='prev_record or next_record'>
             <div class="record_pager btn-group" role="group">
-                <a role="button" t-att-class="'btn btn-light %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="oi oi-chevron-left" role="img" aria-label="Previous" title="Previous"></i></a>
-                <a role="button" t-att-class="'btn btn-light %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="oi oi-chevron-right" role="img" aria-label="Next" title="Next"></i></a>
+                <a role="button" t-att-class="'btn btn-light %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="oi" data-icon="chevron_backward" role="img" aria-label="Previous" title="Previous"></i></a>
+                <a role="button" t-att-class="'btn btn-light %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="oi" data-icon="chevron_forward" role="img" aria-label="Next" title="Next"></i></a>
             </div>
         </t>
     </template>
@@ -648,7 +648,7 @@
         <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination m-0 #{_classes}" t-att-style="style or None">
             <li t-attf-class="page-item #{'disabled' if pager['page']['num'] == 1 else ''}">
                 <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None" t-attf-class="page-link #{extraLinkClass}">
-                    <span class="oi oi-chevron-left" role="img" aria-label="Previous" title="Previous"/>
+                    <span class="oi" data-icon="chevron_backward" role="img" aria-label="Previous" title="Previous"/>
                 </a>
             </li>
             <t t-foreach="pager['pages']" t-as="page">
@@ -658,7 +658,7 @@
             </t>
             <li t-attf-class="page-item #{'disabled' if pager['page']['num'] == pager['page_count'] else ''}">
                 <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None" t-attf-class="page-link #{extraLinkClass}">
-                    <span class="oi oi-chevron-right" role="img" aria-label="Next" title="Next"/>
+                    <span class="oi" data-icon="chevron_forward" role="img" aria-label="Next" title="Next"/>
                 </a>
             </li>
         </ul>
@@ -667,7 +667,7 @@
     <template id="my_account_link" name="Link to frontend portal" inherit_id="portal.user_dropdown">
         <xpath expr="//*[@id='o_logout_divider']" position="before">
             <a href="/my/home" role="menuitem" class="dropdown-item ps-3">
-                <i class="fa fa-fw fa-id-card-o me-1 small text-primary-emphasis"/> My Account
+                <i class="oi oi-fw me-1 small text-primary-emphasis" data-icon="badge"/> My Account
             </a>
         </xpath>
     </template>
@@ -757,7 +757,7 @@
             <div class="o_portal_my_details">
                 <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address"]}'/>
             </div>
-            <a role="button" href="/my/account" class="btn btn-link p-0 mt-3"><i class="fa fa-pencil"/> Edit information</a>
+            <a role="button" href="/my/account" class="btn btn-link p-0 mt-3"><i class="oi oi-filled" data-icon="edit"/> Edit information</a>
             <div name="portal_contact" class="o_my_contact mt-5" t-if="sales_user">
                 <t t-call="portal.portal_contact"/>
             </div>

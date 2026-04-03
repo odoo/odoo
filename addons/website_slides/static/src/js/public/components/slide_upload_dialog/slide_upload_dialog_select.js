@@ -18,6 +18,7 @@ export class SlideCategoryIcon extends Component {
             type: Object,
             shape: {
                 icon: String,
+                icon_class: String,
                 label: String,
             },
         },

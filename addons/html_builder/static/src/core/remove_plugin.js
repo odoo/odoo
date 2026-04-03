@@ -98,7 +98,8 @@ export class RemovePlugin extends Plugin {
         this.overlayTarget = target;
         const disabledReason = this.dependencies.builderOptions.getRemoveDisabledReason(target);
         buttons.push({
-            class: "oe_snippet_remove text-danger fa fa-trash",
+            class: "oe_snippet_remove text-danger oi oi-filled",
+            icon: "delete",
             title: _t("Remove"),
             disabledReason,
             handler: () => {

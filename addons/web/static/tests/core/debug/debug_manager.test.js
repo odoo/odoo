@@ -146,7 +146,7 @@ describe("DebugMenu", () => {
             props: { close: () => {} },
         });
         expect(".o_dialog").toHaveCount(1);
-        expect(".o_dialog .o_debug_manager .fa-bug").toHaveCount(0);
+        expect(".o_dialog .o_debug_manager [data-icon='bug_report']").toHaveCount(0);
     });
 
     test("Display the DebugMenu correctly in a ActionDialog if debug mode is enabled", async () => {
@@ -190,7 +190,7 @@ describe("DebugMenu", () => {
             props: { close: () => {} },
         });
         expect(".o_dialog").toHaveCount(1);
-        expect(".o_dialog .o_debug_manager .fa-bug").toHaveCount(1);
+        expect(".o_dialog .o_debug_manager [data-icon='bug_report']").toHaveCount(1);
         await contains(".o_dialog .o_debug_manager button").click();
         expect(".dropdown-menu .dropdown-item").toHaveCount(2);
         // Check that global debugManager elements are not displayed (global_1)

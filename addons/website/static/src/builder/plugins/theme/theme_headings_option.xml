@@ -25,14 +25,15 @@
         <BuilderRow label.translate="Font Family" tooltip.translate="Heading 1">
             <ThemeFontFamilyOption
                 cssVariable="'headings-font'"
-                buttonIcon="'fa-trash'"
+                buttonIcon="'delete'"
+                buttonIconClass="'oi-filled'"
                 buttonTitle.translate="Reset to Default Font Family"/>
             <t t-set-slot="collapse">
                 <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="heading_label + ' ' + depth">
                         <ThemeFontFamilyOption
                             cssVariable="'h' + depth + '-font'"
-                            buttonIcon="'fa-remove'"
+                            buttonIcon="'close'"
                             buttonTitle.translate="Reset to Headings Font Family"/>
                     </BuilderRow>
                 </t>
@@ -40,7 +41,7 @@
                     <BuilderRow level="1" label="display_label + ' ' + depth">
                         <ThemeFontFamilyOption
                             cssVariable="'display-' + depth + '-font'"
-                            buttonIcon="'fa-remove'"
+                            buttonIcon="'close'"
                             buttonTitle.translate="Reset to Headings Font Family"/>
                     </BuilderRow>
                 </t>

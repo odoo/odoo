@@ -42,7 +42,7 @@ test("hide invisible element after reload from 'theme' tab should stay on 'theme
     expect(":iframe .s_invisible_el").toHaveAttribute("data-applied");
 
     await contains(
-        ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element') i.fa-eye"
+        ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element') i[data-icon='visibility']"
     ).click();
     expect(":iframe .o_snippet_invisible").toHaveAttribute("data-invisible", "1");
 
@@ -61,12 +61,12 @@ test("hide invisible element after reload from 'theme' tab should stay on 'theme
     expect(".o-snippets-tabs button[data-name=theme]").toHaveClass("active");
 
     await contains(
-        ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element') i.fa-eye"
+        ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element') i[data-icon='visibility']"
     ).click();
     expect(":iframe .s_invisible_el").not.toHaveAttribute("data-applied");
 
     expect(
         ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element') i"
-    ).toHaveClass("fa-eye-slash");
+    ).toHaveAttribute("data-icon", "visibility_off");
     expect(".o-snippets-tabs button[data-name=theme]").toHaveClass("active");
 });

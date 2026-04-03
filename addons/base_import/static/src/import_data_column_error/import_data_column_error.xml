@@ -11,7 +11,7 @@
                 <ul>
                     <t t-foreach="this.props.errors" t-as="error" t-key="error_index">
                         <a t-if="error_index === 3" href="#" class="o_import_report_count" t-on-click="() => this.state.isExpanded = !this.state.isExpanded">
-                            <i t-attf-class="fa fa-chevron-{{this.state.isExpanded ? 'up' : 'down'}}"></i> <t t-out="this.props.errors.length - error_index"/> more
+                            <i class="oi" t-attf-data-icon="{{this.state.isExpanded ? 'expand_less' : 'expand_more'}}"></i> <t t-out="this.props.errors.length - error_index"/> more
                         </a>
                         <li t-if="this.isErrorVisible(error_index)" t-attf-class="o_import_report_more p-0 text-{{error.priority}} {{error_index > 2 ? 'list-unstyled' : ''}}">
                             <t t-if="error.rows.from === error.rows.to">
@@ -30,7 +30,7 @@
                 <t t-if="typeof this.moreInfo === 'string'" t-out="this.moreInfo"/>
                 <div t-else="" class="o_import_moreinfo" t-on-click="this.onMoreInfoClicked">
                     <a href="#" class="o_import_see_all">
-                        <i class="oi oi-arrow-right"></i> See possible values
+                        <i class="oi" data-icon="east"></i> See possible values
                     </a>
                 </div>
                 <ul t-if="this.state.moreInfoContent" class="o_import_report_more">

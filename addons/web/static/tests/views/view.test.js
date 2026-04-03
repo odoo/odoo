@@ -46,7 +46,7 @@ class ToyControllerImp extends ToyController {
 
 before(() => {
     patchWithCleanup(serverState.view_info, {
-        toy: { multi_record: true, display_name: "Toy", icon: "fab fa-android" },
+        toy: { multi_record: true, display_name: "Toy", icon: "oi_android" },
     });
     viewRegistry.add("toy", toyView);
     viewRegistry.add("toy_imp", { ...toyView, Controller: ToyControllerImp });

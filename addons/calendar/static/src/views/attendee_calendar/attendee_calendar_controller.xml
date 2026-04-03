@@ -20,8 +20,8 @@
                         <button class="btn text-nowrap"
                         t-on-click="this.model.syncStatus.google_calendar == 'sync_active' ? this.onStopGoogleSynchronization : this.onStopMicrosoftSynchronization">
                             <div>
-                                <i id="check_symbol" class='fa fa-check px-1 o_text_green o_calendar_check'/>
-                                <i id="stop_symbol" class='fa fa-square px-1 o_text_red o_calendar_stop'/>
+                                <i id="check_symbol" class='oi px-1 o_text_green o_calendar_check' data-icon="check"/>
+                                <i id="stop_symbol" class='oi oi-filled px-1 o_text_red o_calendar_stop' data-icon="squarestop"/>
                                 <span id="check_text" class='o_calendar_check'>
                                     <t t-if="this.model.syncStatus.google_calendar == 'sync_active'">Google</t>
                                     <t t-else="">Outlook</t>
@@ -34,8 +34,8 @@
                 <t t-elif="this.model.syncStatus.google_calendar == 'sync_paused' or this.model.syncStatus.microsoft_calendar =='sync_paused'">
                     <button class="btn text-nowrap" t-on-click="this.model.syncStatus.google_calendar == 'sync_paused' ? this.onUnpauseGoogleSynchronization : this.onUnpauseMicrosoftSynchronization">
                         <div>
-                            <i id="pause_symbol" class='fa fa-pause px-1 o_text_orange o_calendar_pause'/>
-                            <i id="stop_symbol" class='fa fa-square px-1 o_text_red o_calendar_stop'/>
+                            <i id="pause_symbol" class='oi oi-filled px-1 o_text_orange o_calendar_pause' data-icon="pause"/>
+                            <i id="stop_symbol" class='oi oi-filled px-1 o_text_red o_calendar_stop' data-icon="square"/>
                             <span id="pause_text" class='o_text_orange o_calendar_pause'>Synchro is paused</span>
                             <span id="stop_text" class="o_text_red o_calendar_stop">Stop synchro</span>
                         </div>

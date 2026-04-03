@@ -4,8 +4,8 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 export const addToCartValues = {
-    addToCart: { action: "add_to_cart", icon: "fa-cart-plus", label: _t("Add to Cart") },
-    buyNow: { action: "buy_now", icon: "fa-credit-card", label: _t("Buy Now") },
+    addToCart: { action: "add_to_cart", icon: "add_shopping_cart", label: _t("Add to Cart") },
+    buyNow: { action: "buy_now", icon: "credit_card", label: _t("Buy Now") },
 };
 
 export class AddToCartOption extends BaseOptionComponent {

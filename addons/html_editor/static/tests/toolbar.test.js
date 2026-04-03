@@ -647,32 +647,32 @@ test("toolbar works: show the correct text alignment", async () => {
     const { el } = await setupEditor("<p>[test</p><p><br>]</p>");
     await expandToolbar();
     expect("button[name='text_align']").toHaveCount(1);
-    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="fa fa-align-left"> </i>`);
+    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="oi" data-icon="format_align_left"> </i>`);
     await click("button[name='text_align']");
-    await contains(".o-we-toolbar-dropdown .btn.fa-align-right").click();
+    await contains(".o-we-toolbar-dropdown .btn[data-icon='format_align_right']").click();
     expect(getContent(el)).toBe(
         `<p style="text-align: end;">[test</p><p style="text-align: end;"><br>]</p>`
     );
-    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="fa fa-align-right"> </i>`);
+    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="oi" data-icon="format_align_right"> </i>`);
 });
 
 test("toolbar works: show the correct text alignment after undo/redo", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await expandToolbar();
     expect("button[name='text_align']").toHaveCount(1);
-    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="fa fa-align-left"> </i>`);
+    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="oi" data-icon="format_align_left"> </i>`);
     await click("button[name='text_align']");
-    await contains(".o-we-toolbar-dropdown .btn.fa-align-center").click();
+    await contains(".o-we-toolbar-dropdown .btn[data-icon='format_align_center']").click();
     expect(getContent(el)).toBe(`<p style="text-align: center;">[test]</p>`);
-    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="fa fa-align-center"> </i>`);
+    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="oi" data-icon="format_align_center"> </i>`);
     await press(["ctrl", "z"]);
     await animationFrame();
     expect(getContent(el)).toBe(`<p>[test]</p>`);
-    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="fa fa-align-left"> </i>`);
+    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="oi" data-icon="format_align_left"> </i>`);
     await press(["ctrl", "y"]);
     await animationFrame();
     expect(getContent(el)).toBe(`<p style="text-align: center;">[test]</p>`);
-    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="fa fa-align-center"> </i>`);
+    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="oi" data-icon="format_align_center"> </i>`);
 });
 
 test.tags("desktop");
@@ -1387,7 +1387,8 @@ test("toolbar correctly show namespace button group and stop showing when namesp
                     groupId: "test_group",
                     commandId: "test_cmd",
                     description: "Test Button",
-                    icon: "fa-square",
+                    icon: "square",
+                    icon_class: "oi-filled",
                 },
             ],
         };
@@ -1413,7 +1414,8 @@ test("toolbar does not evaluate isActive when namespace does not match", async (
                     groupId: "test_group",
                     commandId: "test_cmd",
                     description: "Test Button",
-                    icon: "fa-square",
+                    icon: "square",
+                    icon_class: "oi-filled",
                     isActive: () => {
                         expect.step("image format evaluated");
                         resolveIsActive();
@@ -1467,7 +1469,8 @@ describe("compact toolbar", () => {
         groupId: "test_group",
         commandId: "test_cmd",
         description: "Test Button",
-        icon: "fa-square",
+        icon: "square",
+        icon_class: "oi-filled",
         ...obj,
     });
     const repeat = (count, fn) => range(count).map(fn);
@@ -1589,7 +1592,7 @@ test("toolbar items without namespace default to 'expanded'", async () => {
                     groupId: "test_group",
                     commandId: "test_cmd",
                     description: "Test Button",
-                    icon: "fa-square",
+                    icon: "square",
                 },
             ],
         };
@@ -1776,7 +1779,7 @@ test.tags("desktop");
 test("toolbar should close on open link popover", async () => {
     await setupEditor("<p>[a]</p>");
     await expectElementCount(".o-we-toolbar", 1);
-    await click(".o-we-toolbar .fa-link");
+    await click(".o-we-toolbar [data-icon='link']");
     await expectElementCount(".o-we-toolbar", 0);
 });
 
@@ -1784,7 +1787,7 @@ test.tags("desktop", "iframe");
 test("toolbar should close on open link popover (iframe)", async () => {
     await setupEditor("<p>[a]</p>", { props: { iframe: true } });
     await expectElementCount(".o-we-toolbar", 1);
-    await click(".o-we-toolbar .fa-link");
+    await click(".o-we-toolbar [data-icon='link']");
     await expectElementCount(".o-we-toolbar", 0);
 });
 
@@ -1792,7 +1795,7 @@ test.tags("desktop");
 test("toolbar should close on edit link from preview", async () => {
     await setupEditor(`<p><a href="http://test.test/">[a]</a></p>`);
     await expectElementCount(".o-we-toolbar", 1);
-    await click(".o-we-toolbar .fa-link");
+    await click(".o-we-toolbar [data-icon='link']");
     await waitFor(".o-we-linkpopover");
     await click(".o_we_edit_link");
     await expectElementCount(".o-we-toolbar", 0);

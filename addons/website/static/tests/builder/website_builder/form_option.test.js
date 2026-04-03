@@ -916,7 +916,7 @@ describe("Many2one Field", () => {
     });
 
     test("Update button", async () => {
-        await contains(".we-bg-options-container .fa-refresh").click();
+        await contains(".we-bg-options-container [data-icon='refresh']").click();
         expect(addRecordButtonSelector).toHaveProperty("disabled", true, {
             message: "Add button should be disabled when all records are included",
         });
@@ -935,16 +935,16 @@ describe("Many2one Field", () => {
     });
 
     describe("Dialog", () => {
-        const dialogButtonSelector = ".we-bg-options-container .fa-gear";
+        const dialogButtonSelector = ".we-bg-options-container [data-icon='settings']";
 
         test("Add all and remove all", async () => {
             await contains(dialogButtonSelector).click();
             // Add all
-            await contains(".modal-dialog .o_left_panel .fa-plus").click();
+            await contains(".modal-dialog .o_left_panel [data-icon='add']").click();
             await expectElementCount(".modal-dialog .o_left_panel .o_list_item", 0);
             await expectElementCount(".modal-dialog .o_right_panel .o_list_item", records.length);
             // Remove all
-            await contains(".modal-dialog .o_right_panel .fa-minus").click();
+            await contains(".modal-dialog .o_right_panel [data-icon='remove']").click();
             await expectElementCount(".modal-dialog .o_right_panel .o_list_item", 0);
             await expectElementCount(".modal-dialog .o_left_panel .o_list_item", records.length);
 

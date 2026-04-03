@@ -10,7 +10,7 @@
                 <div name="button_box" position="inside">
                     <button string="Putaway Rules"
                         class="oe_stat_button"
-                        icon="fa-random" name="%(category_open_putaway)d" type="action"
+                        icon="shuffle" name="%(category_open_putaway)d" type="action"
                         groups="stock.group_stock_multi_locations"/>
                 </div>
                 <group name="first" position="after">
@@ -228,7 +228,7 @@
                         <label for="route_ids" invisible="not has_available_route_ids"/>
                         <div invisible="not has_available_route_ids">
                             <field name="route_ids" class="mb-0" widget="many2many_checkboxes"/>
-                            <button id="stock.view_diagram_button" string="View Diagram" type="action" name="%(action_open_routes)d" icon="oi-arrow-right"
+                            <button id="stock.view_diagram_button" string="View Diagram" type="action" name="%(action_open_routes)d" icon="east"
                                 class="btn btn-link pt-0" context="{'default_product_tmpl_id': id}"/>
                         </div>
                         <field name="route_from_categ_ids" widget="many2many_tags" invisible="not route_from_categ_ids"/>
@@ -346,7 +346,7 @@
                                 name="action_product_forecast_report"
                                 invisible="not show_forecasted_qty_status_button"
                                 context="{'default_product_id': id, 'active_model': 'product.template'}"
-                                class="oe_stat_button" icon="fa-area-chart">
+                                class="oe_stat_button" icon="area_chart">
                                 <div class="d-flex flex-row gap-1 ms-1">
                                     <div class="o_field_widget o_stat_info flex-column align-items-end gap-1">
                                         <span class="o_stat_value">
@@ -376,7 +376,7 @@
                             <button type="object"
                                 name= "action_view_stock_move_lines"
                                 invisible="type != 'consu'"
-                                class="oe_stat_button" icon="fa-exchange"
+                                class="oe_stat_button" icon="swap_horiz"
                                 groups="stock.group_stock_user">
                                 <div class="d-flex flex-column">
                                     <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
@@ -391,7 +391,7 @@
                             </button>
                             <button name="action_view_orderpoints" type="object"
                                 invisible="type != 'consu' or nbr_reordering_rules != 1"
-                                class="oe_stat_button" icon="fa-refresh">
+                                class="oe_stat_button" icon="refresh">
                                 <div class="d-flex flex-column">
                                     <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
                                         <span class="o_stat_text">Min:</span>
@@ -406,20 +406,20 @@
                             <button type="object"
                                 name="action_view_orderpoints"
                                 invisible="not is_storable or nbr_reordering_rules == 1"
-                                class="oe_stat_button" icon="fa-refresh">
+                                class="oe_stat_button" icon="refresh">
                                 <field name="nbr_reordering_rules" widget="statinfo"/>
                             </button>
                             <button type="object"
                                 name="action_open_product_lot"
                                 invisible="tracking not in ['lot', 'serial']"
-                                class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot">
+                                class="oe_stat_button" icon="menu" groups="stock.group_production_lot">
                                 <div class="o_stat_info">
                                     <span class="o_stat_text">Lot/Serial Numbers</span>
                                 </div>
                             </button>
                             <button type="object"
                                 name="action_view_related_putaway_rules"
-                                class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
+                                class="oe_stat_button" icon="shuffle" groups="stock.group_stock_multi_locations"
                                 invisible="type == 'service'"
                                 context="{
                                     'invisible_handle': True,
@@ -434,7 +434,7 @@
                                 groups="stock.group_stock_multi_locations"
                                 invisible="type == 'service'"
                                 class="oe_stat_button"
-                                icon="fa-cubes"/>
+                                icon="inventory_2"/>
                         </t>
                     </div>
                     <xpath expr="//button[@name='%(action_open_routes)d']" position="attributes">
@@ -463,7 +463,7 @@
                                 name="action_product_tmpl_forecast_report"
                                 invisible="not show_forecasted_qty_status_button"
                                 context="{'default_product_tmpl_id': id}"
-                                class="oe_stat_button" icon="fa-area-chart">
+                                class="oe_stat_button" icon="area_chart">
                                 <div class="d-flex flex-row gap-1 ms-1">
                                     <div class="o_field_widget o_stat_info flex-column align-items-end gap-1">
                                         <span class="o_stat_value">
@@ -497,7 +497,7 @@
                             <button type="object"
                                 name="action_view_orderpoints"
                                 invisible="not is_storable or nbr_reordering_rules != 1"
-                                class="oe_stat_button" icon="fa-refresh">
+                                class="oe_stat_button" icon="refresh">
                                 <div class="d-flex flex-column">
                                     <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
                                         <span class="o_stat_text">Min:</span>
@@ -513,13 +513,13 @@
                                 name="action_view_orderpoints"
                                 invisible="not is_storable or nbr_reordering_rules == 1"
                                 class="oe_stat_button"
-                                icon="fa-refresh">
+                                icon="refresh">
                                 <field name="nbr_reordering_rules" widget="statinfo"/>
                             </button>
                             <button type="object"
                                 name= "action_view_stock_move_lines"
                                 invisible="type != 'consu'"
-                                class="oe_stat_button" icon="fa-exchange"
+                                class="oe_stat_button" icon="swap_horiz"
                                 groups="stock.group_stock_user">
                                 <div class="d-flex flex-column">
                                     <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
@@ -535,14 +535,14 @@
                             <button type="object"
                                 name="action_open_product_lot"
                                 invisible="tracking not in ['lot', 'serial']"
-                                class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot">
+                                class="oe_stat_button" icon="menu" groups="stock.group_production_lot">
                                 <div class="o_stat_info">
                                     <span class="o_stat_text">Lot/Serial Numbers</span>
                                 </div>
                             </button>
                             <button type="object"
                                 name="action_view_related_putaway_rules"
-                                class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
+                                class="oe_stat_button" icon="shuffle" groups="stock.group_stock_multi_locations"
                                 invisible="type == 'service'"
                                 context="{
                                     'invisible_handle': True,
@@ -557,7 +557,7 @@
                                 groups="stock.group_stock_multi_locations"
                                 invisible="type == 'service'"
                                 class="oe_stat_button"
-                                icon="fa-cubes">
+                                icon="inventory_2">
                                 <div class="o_stat_info">
                                     <span class="o_stat_text">Storage Capacities</span>
                                 </div>
@@ -604,13 +604,13 @@
                     <field name="virtual_available" string="Forecasted" optional="hide" sum="Total Forecasted"/>
                     <field name="uom_id" widget="many2one_uom" groups="uom.group_uom" options="{'no_create': True}"/>
                     <button name="%(stock_move_line_action)d" string="History" type="action" class="btn-link"
-                        icon="fa-history" context="{'search_default_product_id': id, 'default_product_id': id}"/>
+                        icon="history" context="{'search_default_product_id': id, 'default_product_id': id}"/>
                     <button name="action_view_orderpoints" string="Replenishment" type="object" class="btn-link"
-                        icon="fa-refresh" context="{'search_default_product_id': id, 'is_stock_report': True}" />
+                        icon="refresh" context="{'search_default_product_id': id, 'is_stock_report': True}" />
                     <button name="%(action_view_quants)d" string="Locations" type="action" class="btn-link" groups="stock.group_stock_multi_locations"
-                        icon="fa-cubes" context="{'search_default_product_id': id, 'default_product_id': id}" invisible="qty_available == 0"/>
+                        icon="inventory_2" context="{'search_default_product_id': id, 'default_product_id': id}" invisible="qty_available == 0"/>
                     <button name="action_product_forecast_report" string="Forecast" type="object" class="btn-link"
-                        icon="fa-area-chart" context="{'default_product_id': id}" invisible="incoming_qty == 0 and outgoing_qty == 0"/>
+                        icon="area_chart" context="{'default_product_id': id}" invisible="incoming_qty == 0 and outgoing_qty == 0"/>
                 </list>
             </field>
         </record>
@@ -630,7 +630,7 @@
                 </filter>
                 <filter name="real_stock_negative" position="after">
                     <searchpanel>
-                        <field name="categ_id" icon="fa-filter" string="Category" enable_counters="1"/>
+                        <field name="categ_id" icon="filter_alt" icon_class="oi-filled" string="Category" enable_counters="1"/>
                     </searchpanel>
                 </filter>
             </field>

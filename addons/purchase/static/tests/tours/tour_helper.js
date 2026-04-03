@@ -119,7 +119,7 @@ export const purchaseForm = {
 
 export const productCatalog = {
     addProduct(productName) {
-        const trigger = `.o_kanban_record:contains("${productName}") button:has(.oi-plus,.fa-shopping-cart)`;
+        const trigger = `.o_kanban_record:contains("${productName}") button:has([data-icon="add"],[data-icon="shopping_cart"])`;
         return [{ trigger, run: "click" }];
     },
 
@@ -137,7 +137,7 @@ export const productCatalog = {
 
     /** Remove a product from the PO by clicking the "trash" button */
     removeProduct(productName) {
-        const trigger = `.o_kanban_record:contains("${productName}") button:has(.fa-trash)`;
+        const trigger = `.o_kanban_record:contains("${productName}") button:has([data-icon="delete"].oi-filled)`;
         return [{ trigger, run: "click" }];
     },
 

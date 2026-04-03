@@ -98,7 +98,7 @@ export const CLIPBOARD_WHITELISTS = {
         /^btn/,
         ...iconClasses.map((cls) => new RegExp(`^${cls}`)),
     ],
-    attributes: ["class", "href", "src", "target", "colspan", "rowspan"],
+    attributes: ["class", "href", "src", "target", "colspan", "rowspan", "data-icon"],
     styledTags: ["SPAN", "B", "STRONG", "I", "S", "U", "FONT", "TD", "COL", "TR", "TH"],
 };
 

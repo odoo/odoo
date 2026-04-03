@@ -9,7 +9,7 @@
                 <t t-if="firstSlot" t-call-slot="{{ firstSlot }}" />
                 <Dropdown t-if="otherSlots.length">
                     <button class="btn btn-secondary" title="More">
-                        <i class="oi oi-fw oi-ellipsis-v" />
+                        <i class="oi oi-fw" data-icon="more_vert"/>
                     </button>
                     <t t-set-slot="content">
                         <t t-foreach="otherSlots" t-as="slot" t-key="slot">

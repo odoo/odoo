@@ -24,7 +24,7 @@
                                 </a>
                                 <div t-if="picking.state == 'done'">
                                     <span class="small badge rounded-pill text-bg-success orders_label_text_align">
-                                        <i class="fa fa-fw fa-truck"/> Shipped
+                                        <i class="oi oi-fw" data-icon="local_shipping"/> Shipped
                                     </span>
                                     <a class="badge rounded-pill text-bg-secondary orders_label_text_align" target="_blank"
                                         t-att-href="'/my/picking/return/pdf/%s?%s' % (picking.id, keep_query())">
@@ -33,11 +33,11 @@
                                 </div>
                                 <span t-elif="picking.state == 'cancel'"
                                     class="small badge rounded-pill text-bg-danger orders_label_text_align">
-                                    <i class="fa fa-fw fa-times"/>Cancelled
+                                    <i class="oi oi-fw" data-icon="close"/>Cancelled
                                 </span>
                                 <span t-elif="picking.state in ['draft', 'waiting', 'confirmed', 'assigned']"
                                     class="small badge rounded-pill text-bg-info orders_label_text_align">
-                                    <i class="fa fa-fw fa-clock-o"/>Preparation
+                                    <i class="oi oi-fw" data-icon="schedule"/>Preparation
                                 </span>
                             </div>
                             <div class="small d-lg-inline-block" t-if="picking.date_done or picking.scheduled_date">
@@ -68,15 +68,15 @@
                             </a>
                             <span t-if="picking.state == 'done'"
                                 class="small badge rounded-pill text-bg-success orders_label_text_align">
-                                <i class="fa fa-fw fa-truck"/> Received
+                                <i class="oi oi-fw" data-icon="local_shipping"/> Received
                             </span>
                             <span t-elif="picking.state == 'cancel'"
                                 class="small badge rounded-pill text-bg-danger orders_label_text_align">
-                                <i class="fa fa-fw fa-times"/> Cancelled
+                                <i class="oi oi-fw" data-icon="close"/> Cancelled
                             </span>
                             <span t-elif="picking.state in ['draft', 'waiting', 'confirmed', 'assigned']"
                                 class="small badge rounded-pill text-bg-info orders_label_text_align">
-                                <i class="fa fa-fw fa-clock-o"/> Awaiting arrival
+                                <i class="oi oi-fw" data-icon="schedule"/> Awaiting arrival
                             </span>
                         </div>
                         <div class="small d-lg-inline-block">

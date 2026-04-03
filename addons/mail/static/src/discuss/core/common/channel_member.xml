@@ -6,13 +6,13 @@
             <div t-custom-ref="displayName" class="d-flex overflow-hidden flex-column lh-sm">
                 <span class="ms-2 text-truncate text-muted fw-bold" t-out="this.member.name" t-att-title="this.member.name"/>
             </div>
-            <i t-if="this.member.channel_role === 'owner'" class="ms-1 fa fa-star text-warning lh-sm" role="img" title="Channel Owner" aria-label="Channel Owner"/>
-            <i t-if="this.member.channel_role === 'admin'" class="ms-1 fa fa-star text-primary lh-sm" role="img" title="Channel Admin" aria-label="Channel Admin"/>
+            <i t-if="this.member.channel_role === 'owner'" class="ms-1 oi oi-filled text-warning lh-sm" data-icon="star" role="img" title="Channel Owner" aria-label="Channel Owner"/>
+            <i t-if="this.member.channel_role === 'admin'" class="ms-1 oi oi-filled text-primary lh-sm" data-icon="star" role="img" title="Channel Admin" aria-label="Channel Admin"/>
             <span class="ms-auto">
-                <span t-if="this.member.in(this.member.channel_id.invited_member_ids)" class="p-1 oi oi-user-plus opacity-75"/>
-                <span t-if="this.member.rtcSession?.is_muted and !this.member.rtcSession?.is_deaf" class="p-1 fa fa-microphone-slash opacity-75"/>
-                <span t-elif="this.member.rtcSession?.is_deaf" class="p-1 fa fa-deaf opacity-75"/>
-                <span t-if="this.member.rtcSession?.raisingHand" class="p-1 fa fa-hand-paper-o"/>
+                <span t-if="this.member.in(this.member.channel_id.invited_member_ids)" class="p-1 oi oi-filled opacity-75" data-icon="person_add"/>
+                <span t-if="this.member.rtcSession?.is_muted and !this.member.rtcSession?.is_deaf" class="p-1 oi opacity-75" data-icon="mic_off"/>
+                <span t-elif="this.member.rtcSession?.is_deaf" class="p-1 oi opacity-75" data-icon="hearing_disabled"/>
+                <span t-if="this.member.rtcSession?.raisingHand" class="p-1 oi" data-icon="back_hand"/>
             </span>
             <div t-if="this.actions.actions.length" class="o-discuss-ChannelMember-actions" t-att-class="{
                 'd-none': !this.showingActions.isOpen and !this.store.useMobileView,
@@ -20,7 +20,7 @@
             }">
                 <Dropdown state="this.showingActions" position="'bottom-end'" menuClass="'my-1 ' + this.store.discussDropdownMenuClass(this)">
                     <button class="btn btn-light rounded-circle d-flex o-p-0_5 ms-1 align-items-center justify-content-center o-mail-discussSidebarBgColor border" t-att-class="{ 'o-showingActions': this.showingActions.isOpen }" title="Member Actions">
-                        <i role="img" class="oi oi-fw oi-lg oi-ellipsis-h"/>
+                        <i role="img" class="oi oi-fw oi-lg" data-icon="more_horiz"/>
                     </button>
                     <t t-set-slot="content">
                         <ActionList actions="this.actions.actions" dropdown="true"/>

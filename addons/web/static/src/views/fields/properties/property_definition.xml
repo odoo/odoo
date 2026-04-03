@@ -3,13 +3,13 @@
     <t t-name="web.PropertyDefinition">
         <div class="o_field_property_definition o_field_widget o_form_view d-block" t-custom-ref="propertyDefinition">
             <div t-if="this.env.isSmall" class="d-flex justify-content-between px-3 border-bottom">
-                <button class="btn oi oi-arrow-left my-2" t-on-click="() => this.props.close()"/>
+                <button class="btn oi my-2" data-icon="west" t-on-click="() => this.props.close()"/>
                 <button
                     t-if="!this.props.readonly and this.props.canChangeDefinition"
                     class="btn pe-0 text-danger float-end o_field_property_definition_delete"
                     title="Remove Property"
                     t-on-click="this.props.onDelete">
-                    <i class="fa fa-trash"/> Delete
+                    <i class="oi oi-filled" data-icon="delete"/> Delete
                 </button>
             </div>
             <div class="o_modal_container p-3 o_inner_group grid">
@@ -104,7 +104,7 @@
                             className="'d-inline-block me-2'"
                         />
                         <div t-if="this.state.matchingRecordsCount !== undefined" class="d-inline-block">
-                            <i class="oi oi-arrow-right" role="img" title="Domain"/>
+                            <i class="oi" data-icon="east" role="img" title="Domain"/>
                             <button class="btn btn-sm btn-secondary" type="button"
                                 t-on-click.stop="this.onButtonDomainClick">
                                 <t t-out="this.state.matchingRecordsCount"/> record(s)
@@ -194,7 +194,7 @@
                     class="ms-auto btn btn-danger o_field_property_definition_delete"
                     title="Remove Property"
                     t-on-click="this.props.onDelete">
-                    <i class="fa fa-trash"/> Delete
+                    <i class="oi oi-filled" data-icon="delete"/> Delete
                 </button>
             </div>
         </div>

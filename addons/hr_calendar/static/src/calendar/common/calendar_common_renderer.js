@@ -87,8 +87,8 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
             showLine,
             userFilterActive: this.props.model.data.userFilterActive,
             iconMap: {
-                "office": "fa-building",
-                "home": "fa-home",
+                "office": "business",
+                "home": "home",
             },
         }
     }

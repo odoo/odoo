@@ -11,7 +11,7 @@
                         groups="point_of_sale.group_pos_user"
                         context="{'default_partner_id': id}"
                         invisible="pos_order_count == 0"
-                        icon="fa-shopping-bag">
+                        icon="shopping_bag">
                         <field string="PoS Orders" name="pos_order_count" widget="statinfo"/>
                     </button>
                 </div>
@@ -36,7 +36,7 @@
                                 </h1>
                                 <label for="parent_id" class="d-md-none"/>
                                 <div class="d-flex align-items-baseline w-md-50 gap-2">
-                                    <i class="d-none d-md-inline-flex fa fa-building" title="Company"/>
+                                    <i class="d-none d-md-inline-flex oi oi-filled" data-icon="business" title="Company"/>
                                     <field name="parent_id"
                                         widget="res_partner_many2one"
                                         placeholder="Company Employer"
@@ -45,12 +45,12 @@
                                 </div>
                                 <label for="email" class="d-md-none"/>
                                 <div class="d-flex align-items-baseline w-md-50 gap-2">
-                                    <i class="d-none d-md-inline-flex fa fa-envelope" title="Email"/>
+                                    <i class="d-none d-md-inline-flex oi oi-filled" data-icon="mail" title="Email"/>
                                     <field name="email" widget="email" required="user_ids" placeholder="Email"/>
                                 </div>
                                 <label for="phone" class="d-md-none"/>
                                 <div class="d-flex align-items-baseline w-md-50 gap-2">
-                                    <i class="d-none d-md-inline-flex fa fa-phone" title="Phone"/>
+                                    <i class="d-none d-md-inline-flex oi oi-filled" data-icon="phone" title="Phone"/>
                                     <field name="phone" widget="phone" placeholder="Phone"/>
                                 </div>
                             </group>

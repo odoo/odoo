@@ -16,12 +16,12 @@
                                     <div class="mt8">
                                         <button type="action"
                                         name="%(action_email_server_tree)d"
-                                        string="Incoming Email Servers" icon="oi-arrow-right" class="btn-link"/>
+                                        string="Incoming Email Servers" icon="east" class="btn-link"/>
                                     </div>
                                     <div class="mt8">
                                         <button type="action"
                                         name="%(base.action_ir_mail_server_list)d"
-                                        string="Outgoing Email Servers" icon="oi-arrow-right" class="btn-link"/>
+                                        string="Outgoing Email Servers" icon="east" class="btn-link"/>
                                     </div>
                                 </div>
                             </div>
@@ -64,10 +64,10 @@
                             <setting id="activities_setting" string="Activities" help="Set up activity types and use activity plans to assign multiple activities">
                                 <div class="content-group">
                                     <div class="mt8">
-                                        <button name="%(mail.mail_activity_type_action)d" string="Activity Types" type="action" class="oe_link" icon="oi-arrow-right"/>
+                                        <button name="%(mail.mail_activity_type_action)d" string="Activity Types" type="action" class="oe_link" icon="east"/>
                                     </div>
                                     <div class="mt8">
-                                        <button name="%(mail.mail_activity_plan_action)d" string="Activity Plans" type="action" class="oe_link" icon="oi-arrow-right"/>
+                                        <button name="%(mail.mail_activity_plan_action)d" string="Activity Plans" type="action" class="oe_link" icon="east"/>
                                     </div>
                                 </div>
                             </setting>
@@ -91,7 +91,7 @@
                                 invisible="not use_call_server"
                             >
                                 <div class="content-group">
-                                    <button type="action" name="%(mail.action_ice_servers)d" string="Configure ICE Servers" icon="oi-arrow-right" class="btn-link"/>
+                                    <button type="action" name="%(mail.action_ice_servers)d" string="Configure ICE Servers" icon="east" class="btn-link"/>
                                 </div>
                             </setting>
                             <setting string="Custom SFU Server" help="Set up your own server for large group calls by routing connections centrally" invisible="not use_call_server">
@@ -138,11 +138,11 @@
                             <span class="d-block w-75 py-2">Button Color</span>
                             <field name="email_secondary_color" class="d-block w-25 p-0 m-0" widget="color"/>
                         </div>
-                        <button name="open_email_layout" icon="oi-arrow-right"
+                        <button name="open_email_layout" icon="east"
                             type="object" string="Update Mail Layout"
                             groups="base.group_no_one" class="btn-link"/>
                         <br groups="base.group_no_one"/>
-                        <button name="open_mail_templates" icon="oi-arrow-right" type="object" string="Review All Templates" class="btn-link"/>
+                        <button name="open_mail_templates" icon="east" type="object" string="Review All Templates" class="btn-link"/>
                     </setting>
                 </setting>
             </field>

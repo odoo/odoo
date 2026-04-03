@@ -15,7 +15,7 @@
                 <MetaImage active="image.active" custom="image.custom" src="image.src" selectImage="src => this.selectImage(src)"/>
             </t>
             <button class="o_meta_img_upload o_btn_reset mb-2 me-2" title="Click to choose more images" t-on-click="this.openMediaDialog">
-                <i class="fa fa-upload"/>
+                <i class="oi" data-icon="upload"/>
             </button>
         </div>
     </section>
@@ -27,31 +27,31 @@
         <td class="text-center o_seo_mentioned_keyword">
             <div t-if="this.usedInH1">
                 <span class="visually-hidden" t-out="this.translatedStrings.usedInH1"/>
-                <i aria-hidden="true" class="fa fa-check text-success" t-att-title="this.translatedStrings.usedInH1"/>
+                <i aria-hidden="true" class="oi text-success" data-icon="check" t-att-title="this.translatedStrings.usedInH1"/>
             </div>
         </td>
         <td class="text-center o_seo_mentioned_keyword">
             <div t-if="this.usedInH2">
                 <span class="visually-hidden" t-out="this.translatedStrings.usedInH2"/>
-                <i aria-hidden="true" class="fa fa-check text-success" t-att-title="this.translatedStrings.usedInH2"/>
+                <i aria-hidden="true" class="oi text-success" data-icon="check" t-att-title="this.translatedStrings.usedInH2"/>
             </div>
         </td>
         <td class="text-center o_seo_mentioned_keyword">
             <div t-if="this.usedInTitle">
                 <span class="visually-hidden" t-out="this.translatedStrings.usedInTitle"/>
-                <i aria-hidden="true" class="fa fa-check text-success" t-att-title="this.translatedStrings.usedInTitle"/>
+                <i aria-hidden="true" class="oi text-success" data-icon="check" t-att-title="this.translatedStrings.usedInTitle"/>
             </div>
         </td>
         <td class="text-center o_seo_mentioned_keyword">
             <div t-if="this.usedInDescription">
                 <span class="visually-hidden" t-out="this.translatedStrings.usedInDescription"/>
-                <i aria-hidden="true" class="fa fa-check text-success" t-att-title="this.translatedStrings.usedInDescription"/>
+                <i aria-hidden="true" class="oi text-success" data-icon="check" t-att-title="this.translatedStrings.usedInDescription"/>
             </div>
         </td>
         <td class="text-center o_seo_mentioned_keyword">
             <div t-if="this.usedInContent">
                 <span class="visually-hidden" t-out="this.translatedStrings.usedInContent"/>
-                <i aria-hidden="true" class="fa fa-check text-success" t-att-title="this.translatedStrings.usedInContent"/>
+                <i aria-hidden="true" class="oi text-success" data-icon="check" t-att-title="this.translatedStrings.usedInContent"/>
             </div>
         </td>
         <td class="o_seo_keyword_suggestion">
@@ -64,11 +64,11 @@
                 </t>
             </ul>
         </td>
-        <td class="text-center"><a target="_blank" t-att-href="this.getGoogleTrendsURL()" t-att-title="this.translatedStrings.googleTrendsTitle"><i class="fa fa-external-link opacity-75 mt-1"/></a></td>
+        <td class="text-center"><a target="_blank" t-att-href="this.getGoogleTrendsURL()" t-att-title="this.translatedStrings.googleTrendsTitle"><i class="oi opacity-75 mt-1" data-icon="open_in_new"/></a></td>
         <td class="text-center" t-on-click="() => this.props.removeKeyword(this.props.keyword)">
             <button class="border-0 oe_remove text-danger" t-att-title="this.translatedStrings.removeBtn">
                 <span class="visually-hidden" t-out="this.translatedStrings.removeBtn"/>
-                <i class="fa fa-trash" aria-hidden="true"/>
+                <i class="oi oi-filled" data-icon="delete" aria-hidden="true"/>
             </button>
         </td>
     </tr>
@@ -80,7 +80,7 @@
             Images Optimization
         </h4>
         <t t-if="!this.state.altAttributes.filter(alt => !alt.decorative and alt.alt == '').length > 0">
-            <p><i class="fa fa-check text-success me-2"></i>No warning on images</p>
+            <p><i class="oi text-success me-2" data-icon="check"></i>No warning on images</p>
         </t>
         <div class="row">
             <t t-foreach="this.state.altAttributes" t-as="img" t-key="img.id">
@@ -92,7 +92,7 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" t-att-id="'decorative-' + img.id" t-custom-model="img.decorative" t-on-change="() => this.imgUpdated(img)"/>
                             <label t-att-for="'decorative-' + img.id">Mark as decorative
-                                <i class="fa fa-question-circle text-primary" data-tooltip-position="right" data-tooltip="The alt attribute is used to describe the image, optimizing both accessibility and SEO. If you select this option, the image will be hidden from screen readers and not considered for your SEO."/>
+                                <i class="oi text-primary" data-icon="help" data-tooltip-position="right" data-tooltip="The alt attribute is used to describe the image, optimizing both accessibility and SEO. If you select this option, the image will be hidden from screen readers and not considered for your SEO."/>
                             </label>
                         </div>
                         <div t-if="!img.decorative" class="input-group mt-2">
@@ -107,7 +107,7 @@
             Broken Links
         </h4>
         <div class="mt-2" t-if="this.state.checkingLinks">
-            <div><i class="fa fa-spin fa-circle-o-notch text-info me-2"></i>Checking hyperlinks...</div>
+            <div><i class="oi oi-spin text-info me-2" data-icon="autorenew"></i>Checking hyperlinks...</div>
             <div class="progress rounded mt-2" style="height: 10px;">
                 <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" t-att-aria-valuenow="this.state.counterLinks" aria-valuemin="0" t-att-aria-valuemax="this.state.totalLinks" t-attf-style="width:#{(this.state.counterLinks / this.state.totalLinks) * 100}%;" aria-label="Progress bar"/>
             </div>
@@ -115,7 +115,7 @@
         <div class="mt-2" t-elif="this.state.checkedLinks">
             <t t-if="this.seoContext.brokenLinks.length > 0">
                 <t t-if="!this.seoContext.brokenLinks.filter(link => link.broken).length">
-                    <p><i class="fa fa-check text-success me-2"></i>No broken link</p>
+                    <p><i class="oi text-success me-2" data-icon="check"></i>No broken link</p>
                 </t>
                 <t t-foreach="this.seoContext.brokenLinks" t-as="link" t-key="link_index">
                      <div t-if="!link.remove" class="row align-items-center mb-2">
@@ -124,7 +124,7 @@
                 </t>
             </t>
             <t t-else="">
-                <p><i class="fa fa-check text-success me-2"></i>No broken link</p>
+                <p><i class="oi text-success me-2" data-icon="check"></i>No broken link</p>
             </t>
         </div>
     </section>
@@ -133,7 +133,7 @@
 <t t-name="website.BrokenLink">
     <div class="col-2">
         <label class="align-middle text-truncate w-100" t-att-title="this.link.label">
-            <i t-if="this.link.isImageLink" class="fa fa-picture-o text-400 me-2"/>
+            <i t-if="this.link.isImageLink" class="oi text-400 me-2" data-icon="image"/>
             <t t-out="this.link.label"/>
         </label>
     </div>
@@ -244,7 +244,7 @@
                 <div class="alert alert-info py-2 rounded-0 border-0">
                     <span class="text-info">Need help to optimize?</span>
                     <button class="btn btn-link ps-1" t-on-click="this.autoFill">
-                        <i class="oi oi-fw oi-arrow-right me-1"/>
+                        <i class="oi oi-fw me-1" data-icon="east"/>
                         <span>Fill with AI</span>
                     </button>
                 </div>
@@ -252,14 +252,14 @@
             <div class="col-lg-5">
                 <div class="mb-3">
                     <label for="website_meta_title">
-                        Title <i class="fa fa-question-circle text-primary" data-tooltip-position="right" t-att-data-tooltip="this.titleTooltip"/>
+                        Title <i class="oi text-primary" data-icon="help" data-tooltip-position="right" t-att-data-tooltip="this.titleTooltip"/>
                     </label>
                     <input type="text" t-custom-model="this.seoContext.title" t-att-disabled="!this.props.canEditTitle" class="form-control" t-att-placeholder="this.props.defaultTitle" maxlength="70" size="70" t-custom-ref="autofocus"/>
                 </div>
                 <div class="mb-3">
                     <div class="d-flex justify-content-between align-items-center">
                         <label for="website_meta_description">
-                            Description <i class="fa fa-question-circle text-primary" data-tooltip-position="right" t-att-data-tooltip="this.props.previewDescription"/>
+                            Description <i class="oi text-primary" data-icon="help" data-tooltip-position="right" t-att-data-tooltip="this.props.previewDescription"/>
                         </label>
                         <t t-if="this.descriptionWarning.length">
                             <small class="text-warning" t-out="this.descriptionWarning"/>
@@ -269,7 +269,7 @@
                 </div>
                 <div class="mb-3" t-if='this.props.canEditUrl'>
                     <label for="website_seo_name">
-                        Custom Url <i class="fa fa-question-circle text-primary" data-tooltip-position="right" t-att-data-tooltip="this.props.seoNameHelp" />
+                        Custom Url <i class="oi text-primary" data-icon="help" data-tooltip-position="right" t-att-data-tooltip="this.props.seoNameHelp" />
                     </label>
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -285,7 +285,7 @@
             </div>
             <div class="col-lg-7">
                 <label>
-                    Preview <i class="fa fa-question-circle text-primary" data-tooltip-position="right"
+                    Preview <i class="oi text-primary" data-icon="help" data-tooltip-position="right"
                         data-tooltip="See how this page might look in search results and on social media."/>
                 </label>
                 <div class="card mb0 p-0">

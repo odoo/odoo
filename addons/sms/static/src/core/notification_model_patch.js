@@ -38,7 +38,7 @@ const notificationPatch = {
     },
     get icon() {
         if (this.notification_type === "sms") {
-            return "fa fa-mobile";
+            return "smartphone";
         }
         return super.icon;
     },

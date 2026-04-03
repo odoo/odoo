@@ -28,7 +28,7 @@
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="%(resource_calendar_leaves_action_from_calendar)d" type="action"
-                                icon="fa-plane"
+                                icon="travel"
                                 class="oe_stat_button"
                                 groups="base.group_no_one">
                                 <div class="o_field_widget o_stat_info">
@@ -36,7 +36,7 @@
                                 </div>
                         </button>
                         <button name="%(resource_resource_action_from_calendar)d" type="action"
-                                icon="fa-cogs"
+                                icon="settings_applications"
                                 class="oe_stat_button"
                                 groups="base.group_user">
                                 <div class="o_field_widget o_stat_info">
@@ -57,11 +57,11 @@
                             <group name="switch_calendar">
                                 <label for="switch_calendar_type" string="2 Week's Calendar" class="o_form_label"/>
                                 <button name="switch_calendar_type" invisible="two_weeks_calendar" type="object"
-                                    icon="fa-square-o" title="Switch to 2-weeks calendar" class="btn p-0"
+                                    icon="square" title="Switch to 2-weeks calendar" class="btn p-0"
                                     confirm="Are you sure you want to switch to a 2-week calendar? All work entries will be lost."
                                     confirm-label="Switch"/>
                                 <button name="switch_calendar_type" invisible="not two_weeks_calendar" type="object"
-                                    icon="fa-check-square" title="Switch to 1-week calendar" class="btn p-0"
+                                    icon="check_box" icon_class="oi-filled" title="Switch to 1-week calendar" class="btn p-0"
                                     confirm="Are you sure you want to switch to a 1-week calendar? All work entries will be lost."
                                     confirm-label="Switch"/>
                             </group>

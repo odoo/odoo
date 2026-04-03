@@ -14,7 +14,7 @@
                     class="'ms-auto'"
                     isSmall="this.ui.isSmall"
                     placeholder.translate="Search Customers..."
-                    icon="{type: 'fa', value: 'fa-search'}"
+                    icon="{type: 'icon', value: 'search'}"
                     t-on-enter="() => this.searchPartner()"
                     autofocus="true"
                     debounceMillis="100" />
@@ -51,7 +51,7 @@
                 </table>
                 <div t-else="" t-att-class="{'p-4': this.ui.isSmall}">
                     <div class="text-muted">
-                        <i class="fa fa-users fa-3x"></i>
+                        <i class="oi oi-filled oi-3x" data-icon="group"></i>
                         <p class="mt-3 fs-4 text-dark">No customers found, press <strong>Enter</strong> to load more.</p>
                     </div>
                 </div>

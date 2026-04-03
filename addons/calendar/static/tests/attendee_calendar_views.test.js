@@ -33,16 +33,16 @@ const arch = /*xml*/ `
         all_day="allday"
         mode="month"
     >
-        <field name="partner_ids" options="{'block': True, 'icon': 'fa fa-users'}"
+        <field name="partner_ids" options="{'block': True, 'icon': 'group', 'icon_class': 'oi-filled'}"/>
             filters="1" widget="many2manyattendeeexpandable" write_model="calendar.filters"
             write_field="partner_id" filter_field="partner_checked" avatar_field="avatar_128"/>
-        <field name="partner_id" string="Organizer" options="{'icon': 'fa fa-user-o'}"/>
+        <field name="partner_id" string="Organizer" options="{'icon': 'person'}"/>
         <field name="user_id"/>
         <field name="start"/>
         <field name="stop"/>
         <field name="allday"/>
         <field name="res_model_name" invisible="not res_model_name"
-            options="{'icon': 'fa fa-link', 'shouldOpenRecord': true}"/>
+            options="{'icon': 'link', 'shouldOpenRecord': true}"/>
     </calendar>
 `;
 
@@ -176,7 +176,7 @@ test("Linked record rendering", async () => {
 
     await changeScale("week");
     await clickEvent(eventId);
-    expect(".fa-link").toHaveCount(1, { message: "A link icon should be present" });
+    expect("[data-icon='link']").toHaveCount(1, { message: "A link icon should be present" });
     expect("li a[href='#']").toHaveText(display_name);
 });
 

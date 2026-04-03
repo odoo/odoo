@@ -16,7 +16,7 @@ test("Notification Processing", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await _assertContainsSmsNotification();
-    await _assertContainsPopoverWithIcon("fa-hourglass-half");
+    await _assertContainsPopoverWithIcon("hourglass_bottom");
 });
 
 test("Notification Pending", async () => {
@@ -24,14 +24,14 @@ test("Notification Pending", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await _assertContainsSmsNotification();
-    await _assertContainsPopoverWithIcon("fa-paper-plane-o");
+    await _assertContainsPopoverWithIcon("send");
 });
 
 test("Notification Sent", async () => {
     const { partnerId } = await _prepareSmsNotification("sent");
     await start();
     await openFormView("res.partner", partnerId);
-    await _assertContainsPopoverWithIcon("fa-check");
+    await _assertContainsPopoverWithIcon("check");
 });
 
 test("Notification Error", async () => {
@@ -66,13 +66,13 @@ const _assertContainsSmsNotification = async () => {
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-notification");
     await contains(".o-mail-Message-notification i");
-    await contains(".o-mail-Message-notification i.fa-mobile");
+    await contains(".o-mail-Message-notification i[data-icon='smartphone']");
 };
 
 const _assertContainsPopoverWithIcon = async (iconClassName) => {
     await click(".o-mail-Message-notification");
     await contains(".o-mail-MessageNotificationPopover");
     await contains(".o-mail-MessageNotificationPopover i");
-    await contains(`.o-mail-MessageNotificationPopover i.${iconClassName}`);
+    await contains(`.o-mail-MessageNotificationPopover i[data-icon="${iconClassName}"]`);
     await contains(".o-mail-MessageNotificationPopover", { text: "Someone" });
 };

@@ -95,7 +95,7 @@ export function editLineMatching(productName, text) {
 
 export function editConfiguration() {
     return {
-        trigger: '[name=product_template_id] button.fa-pencil',
+        trigger: '[name=product_template_id] button[data-icon="edit"]',
         run: 'click',
     }
 }

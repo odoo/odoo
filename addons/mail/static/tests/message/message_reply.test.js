@@ -245,7 +245,7 @@ test("Replying to a message containing attachments should display an attachment 
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-MessageInReply .fa-file");
+    await contains(".o-mail-MessageInReply [data-icon='description']");
 });
 
 test("reply with only attachment shows parent message context", async () => {

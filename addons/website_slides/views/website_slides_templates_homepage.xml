@@ -39,10 +39,10 @@
                     </div>
                     <div class="col-5 d-flex justify-content-between align-items-center">
                         <div t-if="channel.completed" class="badge rounded-pill text-bg-success pull-right">
-                            <i class="fa fa-check"/> Completed
+                            <i class="oi" data-icon="check"/> Completed
                         </div>
                         <t t-elif="not channel.completion">
-                            <small class="text-muted d-none d-md-inline"><i class="fa fa-check me-1" role="img"/>You are enrolled</small>
+                            <small class="text-muted d-none d-md-inline"><i class="oi me-1" data-icon="check" role="img"/>You are enrolled</small>
                             <div class="d-md-none">0 %</div>
                         </t>
                         <t t-else="">
@@ -60,10 +60,10 @@
                     </div>
                     <div t-if="not channel.completed" class="col-2 d-flex flex-row-reverse align-items-center">
                         <a t-if="not channel.completion" role="button" class="btn btn-sm btn-primary" t-attf-href="/slides/#{slug(channel)}">
-                            <span class="d-none d-md-inline me-2 me-md-0">Start now</span><i class="oi oi-arrow-right d-md-none" aria-hidden="true"/>
+                            <span class="d-none d-md-inline me-2 me-md-0">Start now</span><i class="oi d-md-none" data-icon="east" aria-hidden="true"/>
                         </a>
                         <a t-else="" role="button" class="align-items-center" t-attf-href="/slides/#{slug(channel)}">
-                            <span class="me-2 d-none d-md-inline">Continue</span><i class="oi oi-arrow-right" aria-hidden="true"/>
+                            <span class="me-2 d-none d-md-inline">Continue</span><i class="oi" data-icon="east" aria-hidden="true"/>
                         </a>
                     </div>
                     <div t-else="" class="col-2">&amp;nbsp;</div>
@@ -229,7 +229,7 @@
                 <button class="o_not_editable btn btn-light position-relative d-lg-none"
                     data-bs-toggle="offcanvas"
                     data-bs-target="#o_wslides_index_offcanvas">
-                    <i class="fa fa-sliders"/>
+                    <i class="oi" data-icon="tune"/>
                     <span t-if="search_tags or search_my"
                         class="position-absolute top-0 start-100 translate-middle border border-light rounded-circle bg-danger p-1"
                     />
@@ -246,7 +246,7 @@
 <template id="courses_search_tags">
     <t t-if="search_my">
           <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
-          <i class="fa fa-tag me-2 text-muted"/>
+          <i class="oi me-2 text-muted" data-icon="label"/>
           My Courses
           <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids), search=search_term, prevent_redirect=True)"
              class="post_link cursor-pointer btn border-0 py-1">×</span>
@@ -254,7 +254,7 @@
     </t>
     <t t-if="search_term">
           <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
-          <i class="fa fa-tag me-2 text-muted"/>
+          <i class="oi me-2 text-muted" data-icon="label"/>
           <t t-out="search_term"/>
           <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids), my=search_my, slide_category=search_slide_category, prevent_redirect=True)"
                          class="post_link cursor-pointer btn border-0 py-1">×</span>
@@ -262,7 +262,7 @@
     </t>
     <t t-foreach="search_tags" t-as="tag">
         <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
-            <i class="fa fa-tag me-2 text-muted"/>
+            <i class="oi me-2 text-muted" data-icon="label"/>
             <t t-out="tag.display_name"/>
             <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
                          class="post_link cursor-pointer btn border-0 py-1">×</span>
@@ -348,7 +348,7 @@
                 <small t-if="channel.total_time" t-out="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute', 'format': 'narrow'}"/>
                 <button class="btn btn-sm btn-primary">Start now</button>
             </t>
-            <span t-elif="channel.is_member and channel.completed" class="badge text-bg-success"><i class="fa fa-check" aria-hidden="true"/> Completed</span>
+            <span t-elif="channel.is_member and channel.completed" class="badge text-bg-success"><i class="oi" data-icon="check" aria-hidden="true"/> Completed</span>
             <t t-else="">
                 <small t-if="channel.total_time" t-out="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute', 'format': 'narrow'}"/>
                 <small><t t-out="channel.total_slides"/> steps</small>
@@ -471,7 +471,7 @@
                     <div class="lh-1" t-out="challenge.reward_id.name"/>
                     <small class="text-muted" t-out="challenge.reward_id.description"/>
                 </div>
-                <i t-if="challenge_done" class="fa fa-check text-success" aria-label="Done" title="Done" role="img"/>
+                <i t-if="challenge_done" class="oi text-success" data-icon="check" aria-label="Done" title="Done" role="img"/>
             </div>
         </t>
     </div>

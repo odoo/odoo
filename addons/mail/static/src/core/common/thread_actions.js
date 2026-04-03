@@ -28,7 +28,7 @@ export function registerThreadAction(id, definition) {
 
 registerThreadAction("fold-chat-window", {
     condition: ({ owner }) => owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,
-    icon: "oi oi-fw oi-minus",
+    icon: "remove",
     name: ({ owner }) => (!owner.props.chatWindow?.isOpen ? _t("Open") : _t("Fold")),
     onSelected: ({ owner }) => owner.toggleFold(),
     displayActive: ({ owner }) => !owner.props.chatWindow?.isOpen,
@@ -41,7 +41,7 @@ registerThreadAction("rename-thread", {
         channel.isAllowedToRename &&
         owner.props.chatWindow?.isOpen &&
         !owner.isDiscussSidebarChannelActions,
-    icon: "fa fa-fw fa-pencil",
+    icon: "edit",
     name: _t("Rename Thread"),
     onSelected: ({ owner }) => (owner.state.editingName = true),
     sequence: 30,
@@ -49,7 +49,7 @@ registerThreadAction("rename-thread", {
 });
 registerThreadAction("close", {
     condition: ({ owner }) => owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,
-    icon: "oi fa-fw oi-close",
+    icon: "close_small",
     name: _t("Close Chat Window (ESC)"),
     onSelected: ({ owner }) => owner.close(),
     sequence: 100,
@@ -64,7 +64,7 @@ registerThreadAction("search-messages", {
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
         !owner.isDiscussSidebarChannelActions,
     hotkey: "f",
-    icon: "oi oi-fw oi-search",
+    icon: "search",
     name: ({ action }) => (action.isActive ? _t("Close Search") : _t("Search Messages")),
     sequence: 20,
     sequenceGroup: 20,
@@ -84,10 +84,11 @@ registerThreadAction("meeting-chat", {
     actionPanelComponent: MeetingChat,
     actionPanelOuterClass: "bg-100 border border-secondary",
     badge: ({ thread }) => thread.isUnread,
-    badgeIcon: ({ channel }) => !channel.importantCounter && "fa fa-circle o-text-white opacity-75",
+    badgeIcon: ({ channel }) => !channel.importantCounter && "circle",
+    badgeIconClass: ({ channel }) => !channel.importantCounter && "oi-filled o-text-white opacity-75",
     badgeText: ({ channel }) => channel.importantCounter || undefined,
     condition: ({ owner }) => owner.env.inMeetingView,
-    icon: "fa fa-fw fa-comments",
+    icon: "forum",
     name: _t("Chat"),
     sequence: 30,
     tags: ({ channel }) => {

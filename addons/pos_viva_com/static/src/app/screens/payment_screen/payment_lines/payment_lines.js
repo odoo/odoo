@@ -14,7 +14,7 @@ patch(PaymentScreenPaymentLines.prototype, {
             return {
                 id: "viva_continue_app",
                 title: _t("Continue on Viva app"),
-                icon: "fa fa-mobile",
+                icon: "smartphone",
                 actions: [
                     {
                         id: "viva_reset_integration",

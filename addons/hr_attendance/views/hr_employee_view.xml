@@ -18,7 +18,7 @@
                 <field name="hours_last_month" groups="hr_attendance.group_hr_attendance_officer" invisible="1"/>
                 <button name="action_open_last_month_attendances"
                         class="oe_stat_button"
-                        icon="fa-clock-o"
+                        icon="schedule"
                         type="object"
                         groups="hr_attendance.group_hr_attendance_officer"
                         help="Worked hours this month">
@@ -73,11 +73,10 @@
                         <main class="w-100 ms-2">
                             <div>
                                 <div class="float-end" t-if="record.attendance_state.raw_value == 'checked_in'">
-                                    <span class="fa fa-circle text-success me-1" role="img" aria-label="Available" title="Available"></span>
+                                    <span class="oi oi-filled text-success me-1" data-icon="circle" role="img" aria-label="Available" title="Available"></span>
                                 </div>
                                 <div class="float-end" t-if="record.attendance_state.raw_value == 'checked_out'">
-                                    <span class="fa fa-circle text-warning me-1"
-                                          role="img" aria-label="Not available" title="Not available">
+                                    <span class="oi oi-filled text-warning me-1" data-icon="circle" role="img" aria-label="Not available" title="Not available">
                                     </span>
                                 </div>
                                 <field class="fw-bolder" name="name"/>

@@ -466,7 +466,8 @@
                    t-att-data-max-date="question.validation_max_date">
             </input>
             <i t-if="not survey_form_readonly"
-                class="fa fa-calendar position-absolute end-0 top-50 translate-middle pe-1 text-muted pe-none"
+                class="oi oi-filled position-absolute end-0 top-50 translate-middle pe-1 text-muted pe-none"
+                data-icon="calendar_today"
                 aria-hidden="true"/>
         </div>
     </template>
@@ -481,7 +482,8 @@
                    t-att-data-min-date="question.validation_min_datetime"
                    t-att-data-max-date="question.validation_max_datetime"/>
             <i t-if="not survey_form_readonly"
-                class="fa fa-calendar position-absolute end-0 top-50 translate-middle pe-1 text-muted pe-none"
+                class="oi oi-filled position-absolute end-0 top-50 translate-middle pe-1 text-muted pe-none"
+                data-icon="calendar_today"
                 aria-hidden="true"/>
         </div>
     </template>
@@ -532,11 +534,13 @@
                                 selection_key_class.f="position-relative o_survey_radio_btn d-flex ms-auto"/>
                             <t t-if="has_correct_answer">
                                 <i t-if="label.is_correct"
-                                    class="d-inline fa fa-check text-success ms-auto"
+                                    class="d-inline oi text-success ms-auto"
+                                    data-icon="check"
                                     aria-label="Correct"
                                     role="img"/>
                                 <i t-elif="answer_selected and not label.is_correct"
-                                    class="d-inline fa fa-times text-danger ms-auto"
+                                    class="d-inline oi text-danger ms-auto"
+                                    data-icon="close"
                                     aria-label="Incorrect"
                                     role="img"/>
                             </t>
@@ -603,12 +607,14 @@
                             <t t-call="survey.survey_selection_key"
                                 selection_key_class.f="position-relative d-flex ms-auto"/>
                             <t t-if="has_correct_answer and label.is_correct and (not answer_selected or answer_selected)">
-                                <i class="fa fa-check fa-fw ms-auto text-success"
+                                <i class="oi oi-fw ms-auto text-success"
+                                    data-icon="check"
                                     aria-label="Correct"
                                     role="img"/>
                             </t>
                             <t t-if="answer_line and not label.is_correct and has_correct_answer">
-                                <i class="fa fa-times fa-fw ms-auto text-danger"
+                                <i class="oi oi-fw ms-auto text-danger"
+                                    data-icon="close"
                                     aria-label="Incorrect"
                                     role="img"/>
                             </t>

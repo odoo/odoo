@@ -57,7 +57,7 @@ test("Account Number Widget full flow", async () => {
     await contains(".o_account_number", { count: 0 }); // "Shouldn't change its state of display"
     await advanceTime(DELAY);
     await contains(".o_account_number"); // "Should contain a validation icon 400ms after edition"
-    await contains(".o_account_number i.fa.fa-check"); // "The validation icon should be the successful one"
+    await contains(".o_account_number i[data-icon='check']"); // "The validation icon should be the successful one"
     await click(".o_form_button_save");
     await advanceTime(DELAY);
     await contains(".o_account_number"); // "Should display validation icon at all time even when not editing"

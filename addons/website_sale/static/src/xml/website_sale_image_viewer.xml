@@ -8,7 +8,7 @@
                     <div class="o_wsale_image_viewer_header d-flex w-100 text-white">
                         <div class="flex-grow-1"/>
                         <div class="d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer">
-                            <span class="fa fa-times" t-on-click="this.data.close"/>
+                            <span class="oi" data-icon="close" t-on-click="this.data.close"/>
                         </div>
                     </div>
                     <!-- Content -->
@@ -60,7 +60,8 @@
                                 role="button"
                             >
                                 <i
-                                    class="oi oi-chevron-left border bg-white text-900"
+                                    class="oi border bg-white text-900"
+                                    data-icon="chevron_backward"
                                     role="img"
                                     aria-label="Previous"
                                     title="Previous"
@@ -75,7 +76,8 @@
                                 role="button"
                             >
                                 <i
-                                    class="oi oi-chevron-right border bg-white text-900"
+                                    class="oi border bg-white text-900"
+                                    data-icon="chevron_forward"
                                     role="img"
                                     aria-label="Next"
                                     title="Next"

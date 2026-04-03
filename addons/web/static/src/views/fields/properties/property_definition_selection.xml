@@ -9,7 +9,7 @@
                     class="o_field_property_selection_option d-flex flex-row align-items-center justify-content-between mb-2 rounded"
                     t-att-option-name="option[0]">
                     <i t-if="!this.props.readonly and this.props.canChangeDefinition"
-                        class="o_field_property_selection_drag oi oi-draggable ui-sortable-handle me-2 text-center"/>
+                        class="o_field_property_selection_drag oi ui-sortable-handle me-2 text-center" data-icon="drag_indicator"/>
                     <span t-if="this.props.readonly" t-out="option[1]"/>
                     <input
                         t-else=""
@@ -25,14 +25,14 @@
                         class="btn btn-link m-0 p-0 text-muted fs-5"
                         title="Select Default"
                         t-on-click="() => this.onOptionSetDefault(option_index)">
-                        <i t-att-class="option[0] === this.props.default ? 'fa fa-star align-bottom' : 'fa fa-star-o align-bottom'"/>
+                        <i class="oi align-bottom" t-att-class="{'oi-filled': option[0] === this.props.default}" data-icon="star"/>
                     </button>
                     <button
                         t-if="!this.props.readonly"
                         class="btn btn-link link-danger ms-2 p-0 fs-5"
                         title="Remove Property"
                         t-on-click="() => this.onOptionDelete(option_index)">
-                        <i class="fa fa-trash-o align-bottom"/>
+                        <i class="oi align-bottom" data-icon="delete"/>
                     </button>
                 </div>
                 <button
@@ -40,7 +40,7 @@
                     class="btn btn-link btn-sm"
                     t-on-click="() => this.onOptionCreate(this.options.length)"
                     t-custom-ref="addButton">
-                    <i class="fa fa-plus"/>
+                    <i class="oi" data-icon="add"/>
                     Add a Value
                 </button>
             </div>

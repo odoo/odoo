@@ -70,7 +70,7 @@ test("BinaryField is correctly rendered (readonly)", async () => {
         `,
     });
 
-    expect(`.o_field_widget[name="document"] a > .fa-download`).toHaveCount(1, {
+    expect(`.o_field_widget[name="document"] a > [data-icon="download"]`).toHaveCount(1, {
         message: "the binary field should be rendered as a downloadable link in readonly",
     });
     expect(`.o_field_widget[name="document"]`).toHaveText("coucou.txt", {
@@ -168,7 +168,7 @@ test("BinaryField is correctly rendered", async () => {
         `,
     });
 
-    expect(`.o_field_widget[name="document"] a > .fa-download`).toHaveCount(0, {
+    expect(`.o_field_widget[name="document"] a > [data-icon="download"]`).toHaveCount(0, {
         message: "the binary field should not be rendered as a downloadable link in edit",
     });
     expect(`.o_field_widget[name="document"].o_field_binary .o_input`).toHaveValue("coucou.txt", {
@@ -195,7 +195,7 @@ test("BinaryField is correctly rendered", async () => {
     document.addEventListener("click", downloadOnClick);
     after(() => document.removeEventListener("click", downloadOnClick));
 
-    await click(`.fa-download`);
+    await click(`[data-icon="download"]`);
     await deferred;
     expect.verifySteps(["/web/content"]);
 
@@ -210,7 +210,7 @@ test("BinaryField is correctly rendered", async () => {
     });
 
     await clickSave();
-    expect(`.o_field_widget[name="document"] a > .fa-download`).toHaveCount(0, {
+    expect(`.o_field_widget[name="document"] a > [data-icon="download"]`).toHaveCount(0, {
         message:
             "the binary field should not render as a downloadable link since we removed the file",
     });
@@ -239,13 +239,13 @@ test("BinaryField is correctly rendered (isDirty)", async () => {
     const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
     await setInputFiles([file]);
     await waitFor(`.o_form_button_save:visible`);
-    expect(`.o_field_widget[name="document"] .fa-download`).toHaveCount(0, {
+    expect(`.o_field_widget[name="document"] [data-icon="download"]`).toHaveCount(0, {
         message:
             "the binary field should not be rendered as a downloadable since the record is dirty",
     });
 
     await clickSave();
-    expect(`.o_field_widget[name="document"] .fa-download`).toHaveCount(1, {
+    expect(`.o_field_widget[name="document"] [data-icon="download"]`).toHaveCount(1, {
         message:
             "the binary field should render as a downloadable link since the record is not dirty",
     });
@@ -262,7 +262,7 @@ test("file name field is not defined", async () => {
     expect(`.o_field_binary`).toHaveText("", {
         message: "there should be no text since the name field is not in the view",
     });
-    expect(`.o_field_binary .fa-download`).toBeVisible({
+    expect(`.o_field_binary [data-icon="download"]`).toBeVisible({
         message: "download icon should be visible",
     });
 });
@@ -358,7 +358,7 @@ test("readonly in create mode does not download", async () => {
     expect(`.o_field_widget[name="document"] a`).toHaveCount(0, {
         message: "The link to download the binary should not be present",
     });
-    expect(`.o_field_widget[name="document"] a > .fa-download`).toHaveCount(0, {
+    expect(`.o_field_widget[name="document"] a > [data-icon="download"]`).toHaveCount(0, {
         message: "The download icon should not be present",
     });
     expect.verifySteps([]);
@@ -396,7 +396,7 @@ test("new record has no download button", async () => {
         type: "form",
         arch: `<form><field name="document" filename="foo"/></form>`,
     });
-    expect(`button.fa-download`).toHaveCount(0);
+    expect(`button[data-icon="download"]`).toHaveCount(0);
 });
 
 test("filename doesn't exceed 255 bytes", async () => {

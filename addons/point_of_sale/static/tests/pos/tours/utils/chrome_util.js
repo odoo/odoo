@@ -10,7 +10,7 @@ export function confirmPopup() {
 export function clickMenuButton() {
     return {
         content: "Click on the menu button",
-        trigger: ".pos-rightheader button:has(.fa-bars)",
+        trigger: ".pos-rightheader button:has([data-icon='menu'])",
         run: "click",
     };
 }
@@ -25,7 +25,7 @@ export function clickMenuOption(name, options) {
 export function waitForMenuButtons() {
     return {
         content: "Wait for the menu buttons to be available",
-        trigger: ".pos-rightheader button:has(.fa-bars)",
+        trigger: ".pos-rightheader button:has([data-icon='menu'])",
     };
 }
 export function waitForMenuOptionsToOpen() {
@@ -176,7 +176,7 @@ function _hasFloatingOrder(name, yes, click) {
         },
         {
             isActive: ["mobile"],
-            trigger: ".pos-leftheader button.fa-caret-down",
+            trigger: ".pos-leftheader button[data-icon='arrow_drop_down']",
             run: "click",
         },
         {
@@ -188,7 +188,7 @@ function _hasFloatingOrder(name, yes, click) {
         },
         {
             isActive: ["mobile"],
-            trigger: ".oi-arrow-left",
+            trigger: "[data-icon='west']",
             run: "click",
         },
     ];
@@ -212,7 +212,7 @@ export function selectPresetTimingSlotHour({ title, hour } = {}) {
         },
         {
             content: `Wait the slot hour ${hour} is set and loading is done (to avoid currency error)`,
-            trigger: `body:not(:has(.modal)):not(:has(.oe_status .fa-spin)) .pos-leftheader .preset-time-btn:contains(${hour})`,
+            trigger: `body:not(:has(.modal)):not(:has(.oe_status .oi-spin)) .pos-leftheader .preset-time-btn:contains(${hour})`,
         },
     ];
 }
@@ -257,12 +257,14 @@ export function waitRequest() {
             async run({ waitFor }) {
                 let isLoading = false;
                 try {
-                    isLoading = await waitFor("body:has(.fa-circle-o-notch)", { timeout: 2000 });
+                    isLoading = await waitFor("body:has([data-icon='autorenew'])", {
+                        timeout: 2000,
+                    });
                 } catch {
-                    /* fa-circle-o-notch will certainly never appears :'( */
+                    /* autorenew icon will certainly never appears :'( */
                 }
                 if (isLoading) {
-                    await waitFor("body:not(:has(.fa-circle-o-notch))", { timeout: 10000 });
+                    await waitFor("body:not(:has([data-icon='autorenew']))", { timeout: 10000 });
                 }
             },
         },
@@ -294,14 +296,14 @@ export function checkButtonDisabled(text) {
 export function isSynced() {
     return {
         content: "Check if the request is proceeded",
-        trigger: negate(".fa-spin", ".status-buttons"),
+        trigger: negate(".oi-spin", ".status-buttons"),
     };
 }
 
 export function clickOnScanButton() {
     return {
         content: "Click the Scan button located in the top header.",
-        trigger: ".pos-topheader .status-buttons .fa-barcode",
+        trigger: ".pos-topheader .status-buttons [data-icon='barcode']",
         run: "click",
     };
 }
@@ -309,7 +311,7 @@ export function clickOnScanButton() {
 export function ClickOnCustomerDisplayButton() {
     return {
         content: "Click on the customer display button inside the burger menu",
-        trigger: "span i.fa-desktop",
+        trigger: "span i[data-icon='desktop_windows']",
         run: "click",
     };
 }

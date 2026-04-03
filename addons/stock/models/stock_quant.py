@@ -456,7 +456,7 @@ class StockQuant(models.Model):
                     {}
                 </p>
                 <p>
-                    {} <span class="fa fa-cog"/>
+                    {} <span class="oi oi-filled" data-icon="settings"/>
                 </p>
                 """.format(escape(_('Your stock is currently empty')),
                            escape(_('Press the "New" button to define the quantity for a product in your stock or import quantities from a spreadsheet via the Actions menu'))),

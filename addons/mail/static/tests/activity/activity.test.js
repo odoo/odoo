@@ -21,7 +21,7 @@ mailModels.MailActivity._views = {
     form: `
         <form>
             <footer>
-                <button string="Delete" type="object" name="unlink" icon="fa-trash" class="btn-danger ms-auto"/>
+                <button string="Delete" type="object" name="unlink" icon="delete" icon_class="oi-filled" class="btn-danger ms-auto"/>
             </footer>
         </form>`,
 };
@@ -41,7 +41,7 @@ test("activity upload document is available", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity .btn:text('Upload Document')");
-    await contains(".btn .fa-upload");
+    await contains(".btn [data-icon='upload']");
     await contains(".o-mail-Activity .o_input_file");
 });
 

@@ -122,14 +122,23 @@ class OfflineSystray extends Component {
     }
 
     get labelIcon() {
+        if (this.inError) {
+            return "error";
+        }
+        if (this.offlineService.offline) {
+            return "link_off";
+        }
+    }
+
+    get labelIconClass() {
         if (this.offlineService.syncingORM) {
             return "spinner-border";
         }
         if (this.inError) {
-            return "fa fa-exclamation-circle";
+            return "oi";
         }
         if (this.offlineService.offline) {
-            return "fa fa-chain-broken";
+            return "oi";
         }
         return "spinner-border";
     }

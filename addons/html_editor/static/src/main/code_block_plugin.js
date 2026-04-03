@@ -33,7 +33,7 @@ export class CodeBlockPlugin extends Plugin {
                 id: "setTagPre",
                 title: _t("Code"),
                 description: _t("Add a code section"),
-                icon: "fa-code",
+                icon: "code",
                 run: () => this.dependencies.dom.setBlock({ tagName: "pre" }),
                 isAvailable: this.blockFormatIsAvailable.bind(this),
             },

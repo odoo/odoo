@@ -79,10 +79,10 @@ kbd {
     &:not(.dropdown-item_active_noarrow) {
       &:before {
         @include o-position-absolute(0);
-        transform: translate(-1.5em, 90%);
-        font: .7em/1em FontAwesome;
+        transform: translate(-1.25em, 50%);
+        font: 1em/1 "material_symbols_outlined";
         color: $link-color;
-        content: "\f00c";
+        content: "check";
       }
 
       &.disabled:before {
@@ -97,11 +97,11 @@ kbd {
   &.active, &.selected {
     &::after {
       @include o-position-absolute(0, $left: 90%);
-      transform: translate(0, 90%);
-      font: .7em/1em FontAwesome;
+      transform: translate(0, 50%);
+      font: 1em/1 "material_symbols_outlined";
       color: $link-color;
       display: inline-block;
-      content: "\f00c";
+      content: "check";
       border: 0;
     }
 
@@ -149,7 +149,7 @@ kbd {
         }
       }
 
-      &:has(.fa-fw:only-child, .oi-fw:only-child) {
+      &:has(.oi-fw:only-child, .oi-fw:only-child) {
           padding: $o-touch-btn-with-icon-padding;
       }
   }

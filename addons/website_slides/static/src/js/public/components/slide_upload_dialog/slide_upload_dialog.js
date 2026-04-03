@@ -21,11 +21,11 @@ export class SlideUploadDialog extends Component {
         installModuleData: null,
     };
     static categoryData = {
-        document: { icon: "fa-file-pdf-o", label: _t("Presentation / Doc") },
-        infographic: { icon: "fa-file-image-o", label: _t("Image") },
-        article: { icon: "fa-file-text", label: _t("Article") },
-        video: { icon: "fa-file-video-o", label: _t("Video") },
-        quiz: { icon: "fa-question-circle", label: _t("Quiz") },
+        document: { icon: "picture_as_pdf", label: _t("Presentation / Doc") },
+        infographic: { icon: "image", label: _t("Image") },
+        article: { icon: "article", icon_class: "oi-filled", label: _t("Article") },
+        video: { icon: "movie", label: _t("Video") },
+        quiz: { icon: "help", label: _t("Quiz") },
     };
     static components = {
         Dialog,

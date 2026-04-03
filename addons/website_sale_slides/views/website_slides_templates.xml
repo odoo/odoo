@@ -16,7 +16,7 @@
 <template name="Buy Course To Download Resource" id="slide_aside_training_category_buy_course" inherit_id="website_slides.slide_aside_training_category">
     <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')]" position="inside">
         <li t-elif="aside_slide.channel_id.enroll == 'payment'" class="text-decoration-none small">
-            <i class="fa fa-download me-1"/>
+            <i class="oi me-1" data-icon="download"/>
             <t t-call="website_sale_slides.course_buy_course_link" for_resources="1" slide="aside_slide"/>
         </li>
     </xpath>
@@ -64,7 +64,7 @@
 <template name="Buy Course To Download Resource Fullscreen" id="slide_fullscreen_sidebar_category_buy_course" inherit_id="website_slides.slide_fullscreen_sidebar_category">
     <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')]" position="inside">
         <li t-elif="slide.channel_id.enroll == 'payment'" class="o_wslides_fs_slide_link mb-1">
-            <i class="fa fa-download me-1"/>
+            <i class="oi me-1" data-icon="download"/>
             <t t-call="website_sale_slides.course_buy_course_link" for_resources="1"/>
         </li>
     </xpath>
@@ -165,7 +165,7 @@
                 t-att-data-product-type="product.product_tmpl_id.type"
                 t-att-data-show-quantity="False"
             >
-                <i class="fa fa-shopping-cart"></i> Add to Cart
+                <i class="oi" data-icon="shopping_cart"></i> Add to Cart
             </button>
         </div>
     </t>
@@ -187,7 +187,7 @@
             t-att-data-product-type="product.product_tmpl_id.type"
             t-att-data-show-quantity="False"
         >
-            <i class="fa fa-bolt"></i> Buy Now
+            <i class="oi" data-icon="flash_on"></i> Buy Now
         </button>
     </button>
     <button name="add_to_cart" position="attributes">

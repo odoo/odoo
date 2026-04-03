@@ -48,7 +48,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check that only the banner is marked as invisible",
-            trigger: "li > .o_we_invisible_entry i.fa-eye-slash",
+            trigger: "li > .o_we_invisible_entry i[data-icon='visibility_off']",
         },
         {
             content: "And the column entry does not appear in the panel.",
@@ -58,7 +58,7 @@ registerWebsitePreviewTour(
         ...clickOnEditAndWaitEditMode(),
         {
             content: "Check that only the popup entry is displayed...",
-            trigger: ".o_we_invisible_root_parent > i.fa-eye-slash",
+            trigger: ".o_we_invisible_root_parent > i[data-icon='visibility_off']",
         },
         {
             content: "...and that it is invisible",
@@ -75,13 +75,13 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            trigger: ".o_we_invisible_root_parent i.fa-eye",
+            trigger: ".o_we_invisible_root_parent i[data-icon='visibility']",
         },
         {
-            trigger: "li .o_we_invisible_entry i.fa-eye",
+            trigger: "li .o_we_invisible_entry i[data-icon='visibility']",
         },
         {
-            trigger: "li li .o_we_invisible_entry i.fa-eye-slash",
+            trigger: "li li .o_we_invisible_entry i[data-icon='visibility_off']",
         },
         {
             content: "Click on the popup entry to hide it.",
@@ -92,7 +92,7 @@ registerWebsitePreviewTour(
             trigger: "li .o_we_invisible_entry",
         },
         {
-            trigger: ".o_we_invisible_root_parent > i.fa-eye-slash",
+            trigger: ".o_we_invisible_root_parent > i[data-icon='visibility_off']",
         },
         {
             content: "Click on the popup entry to show it.",
@@ -100,13 +100,13 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            trigger: ".o_we_invisible_root_parent i.fa-eye",
+            trigger: ".o_we_invisible_root_parent i[data-icon='visibility']",
         },
         {
-            trigger: "li .o_we_invisible_entry i.fa-eye",
+            trigger: "li .o_we_invisible_entry i[data-icon='visibility']",
         },
         {
-            trigger: "li li .o_we_invisible_entry i.fa-eye-slash",
+            trigger: "li li .o_we_invisible_entry i[data-icon='visibility_off']",
         },
     ]
 );

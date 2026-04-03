@@ -22,17 +22,17 @@ according to the enabled options.
                 <div class="btn-group btn-group-sm">
                     <a t-attf-class="btn #{state == 'published' and 'btn-success' or 'bg-white border'}"
                        t-attf-href="#{state == 'published' and blog_url(state='') or blog_url(state='published')}">
-                        <i t-attf-class="fa me-1 #{state == 'published' and 'fa-check-square-o' or 'fa-square-o'}"/>
+                        <i class="oi me-1" t-attf-data-icon="#{state == 'published' and 'check_box' or 'square'}"/>
                         Published (<t t-out="state_info['published']" />)
                     </a>
                     <a t-attf-class="btn #{state == 'unpublished' and 'btn-success' or 'bg-white border'}"
                        t-attf-href="#{state == 'unpublished' and blog_url(state='') or blog_url(state='unpublished')}">
-                        <i t-attf-class="fa me-1 #{state == 'unpublished' and 'fa-check-square-o' or 'fa-square-o'}"/>
+                        <i class="oi me-1" t-attf-data-icon="#{state == 'unpublished' and 'check_box' or 'square'}"/>
                         Unpublished (<t t-out="state_info['unpublished']" />)
                     </a>
                     <a t-attf-class="btn #{state == 'scheduled' and 'btn-success' or 'btn-default bg-white border'}"
                        t-attf-href="#{state == 'scheduled' and blog_url(state='') or blog_url(state='scheduled')}">
-                        <i t-attf-class="fa me-1 #{state == 'scheduled' and 'fa-check-square-o' or 'fa-square-o'}"/>
+                        <i class="oi me-1" t-attf-data-icon="#{state == 'scheduled' and 'check_box' or 'square'}"/>
                         Scheduled (<t t-out="state_info['scheduled']" />)
                     </a>
                 </div>
@@ -49,7 +49,7 @@ according to the enabled options.
                     <t t-else="">Articles</t>
                 </div>
                 <span t-if="search" class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
-                    <i class="fa fa-search me-2 text-muted"/>
+                    <i class="oi me-2 text-muted" data-icon="search"/>
                     <t t-out="search"/>
                     <a t-att-href="blog_url(search=False, tag=tag)" class="btn border-0 py-1 post_link">×</a>
                 </span>
@@ -63,7 +63,7 @@ according to the enabled options.
                     <t t-call="website_blog.tags_list" tags="other_tags" dismissibleBtn="True"/>
                 </t>
                 <span t-if="date_begin" class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
-                    <i class="fa fa-calendar-o me-2 text-muted"/>
+                    <i class="oi me-2 text-muted" data-icon="calendar_today"/>
                     <t t-out="date_begin" t-options="{'widget': 'date', 'format': 'MMM yyyy'}"/>
                     <a t-attf-href="#{blog_url(date_begin=False, date_end=False, tag=tag)}" class="btn border-0 py-1 post_link">×</a>
                 </span>
@@ -118,7 +118,7 @@ according to the enabled options.
                             </div>
                             <div t-else="" class="mt-3">
                                 <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" class="btn btn-primary">
-                                    Read more <i class="oi oi-chevron-right ms-2"/>
+                                    Read more <i class="oi ms-2" data-icon="chevron_forward"/>
                                 </a>
                             </div>
                         </t>
@@ -171,11 +171,11 @@ according to the enabled options.
             <time t-if="blog_post.published_date" t-field="blog_post.published_date" class="text-nowrap fw-bold px-2" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'medium'}"/>
             <time t-elif="blog_post.publish_on" t-field="blog_post.publish_on" class="text-nowrap fw-bold px-2" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'medium'}"/>
             <div t-if="is_view_active('website_blog.opt_posts_loop_show_stats')" class="px-2">
-                <b class="text-nowrap" title="Comments"><i class="fa fa-comment text-muted me-1"/><t t-out="len(blog_post.message_ids)"/></b>
-                <b class="text-nowrap ps-2" title="Views"><i class="fa fa-eye text-muted me-1"/><t t-out="blog_post.visits"/></b>
+                <b class="text-nowrap" title="Comments"><i class="oi oi-filled text-muted me-1" data-icon="chat_bubble"/><t t-out="len(blog_post.message_ids)"/></b>
+                <b class="text-nowrap ps-2" title="Views"><i class="oi text-muted me-1" data-icon="visibility"/><t t-out="blog_post.visits"/></b>
             </div>
             <b t-if="posts_list_show_parent_blog" class="text-nowrap text-truncate px-2">
-                <i class="fa fa-folder-open text-muted"/>
+                <i class="oi oi-filled text-muted" data-icon="folder_open"/>
                 <a t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id"/>
             </b>
         </div>

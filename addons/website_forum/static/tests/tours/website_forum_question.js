@@ -65,7 +65,7 @@ registry.category("web_tour.tours").add('forum_question', {
         expectUnloadPage: true,
     }, {
         content: "This page contain new created question.",
-        trigger: '#wrap:has(.fa-star)',
+        trigger: '#wrap:has([data-icon="star"].oi-filled)',
     },
     {
         trigger: ".o_wforum_question:contains(marc demo)",

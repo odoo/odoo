@@ -453,10 +453,10 @@ test("Shows owner / admin in members panel + member actions", async () => {
     await contains(
         ".o-discuss-ChannelMember:text('" +
             serverState.partnerName +
-            "') .fa-star.text-warning[title='Channel Owner']"
+            "') [data-icon='star'].text-warning[title='Channel Owner']"
     );
     await contains(
-        ".o-discuss-ChannelMember:text('Demo') .fa-star.text-primary[title='Channel Admin']"
+        ".o-discuss-ChannelMember:text('Demo') [data-icon='star'].text-primary[title='Channel Admin']"
     );
     await click(
         ".o-discuss-ChannelMember:text('" + serverState.partnerName + "') [title='Member Actions']"

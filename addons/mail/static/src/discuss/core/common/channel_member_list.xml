@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.ChannelMemberList">
-        <ActionPanel close="this.props.close" title.translate="Members" minWidth="200" initialWidth="this.env.inMeetingView ? 400 : 250" icon="'oi oi-users'">
+        <ActionPanel close="this.props.close" title.translate="Members" minWidth="200" initialWidth="this.env.inMeetingView ? 400 : 250" icon="'group'">
             <div class="o-discuss-ChannelMemberList-search input-group input-group-sm flex-nowrap">
                 <SearchInput search="this.search" placeholder.translate="Search members"/>
-                <button name="inviteButton" t-on-click="() => this.onClickInviteButton()" class="btn btn-outline-secondary" title="Invite People" aria-label="Invite People"><i class="oi oi-user-plus"/></button>
+                <button name="inviteButton" t-on-click="() => this.onClickInviteButton()" class="btn btn-outline-secondary" title="Invite People" aria-label="Invite People"><i class="oi" data-icon="person_add"/></button>
             </div>
             <t t-foreach="this.categories()" t-as="category" t-key="category_index">
                 <t t-if="category.filtered.length > 0">

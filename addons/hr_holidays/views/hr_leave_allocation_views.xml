@@ -83,7 +83,7 @@
                 </group>
                 <searchpanel>
                     <field name="state" string="Status"/>
-                    <field name="department_id" string="Department" icon="fa-users"/>
+                    <field name="department_id" string="Department" icon="group" icon_class="oi-filled"/>
                 </searchpanel>
             </search>
         </field>
@@ -137,7 +137,7 @@
                                 <field name="date_from" nolabel="1"
                                     readonly="state == 'refuse' or (accrual_plan_id and state != 'confirm')"
                                     invisible="not accrual_plan_id and state != 'confirm'"/>
-                                <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"
+                                <i class="oi mx-2" data-icon="east" aria-label="Arrow icon" title="Arrow"
                                     invisible="accrual_plan_id or state != 'confirm'"/>
                                 <label class="mx-2" for="date_to" string="Run until"
                                     invisible="not accrual_plan_id"/>
@@ -214,8 +214,8 @@
             <field name="date_from" position="attributes">
                 <attribute name="invisible">0</attribute>
             </field>
-            <xpath expr="//i[hasclass('fa-long-arrow-right')]" position="replace">
-                <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" invisible="accrual_plan_id"/>
+            <xpath expr="//i[@data-icon='east']" position="replace">
+                <i class="oi oi-fw mx-2" data-icon="east" aria-label="Arrow icon" title="Arrow" invisible="accrual_plan_id"/>
             </xpath>
             <field name="date_to" position="attributes">
                 <attribute name="invisible">0</attribute>
@@ -295,13 +295,13 @@
                     <button type="object"
                         name="action_approve"
                         string="Approve"
-                        icon="fa-thumbs-up"
+                        icon="thumb_up" icon_class="oi-filled"
                         class="btn btn-outline-success"
                     />
                     <button type="object"
                         name="action_refuse"
                         string="Refuse"
-                        icon="fa-times"
+                        icon="close"
                         class="btn btn-outline-danger"
                     />
                 </header>
@@ -318,13 +318,13 @@
                 <field name="active_employee" column_invisible="True"/>
                 <field name="state" widget="badge" decoration-warning="state in ['confirm', 'validate1']" decoration-success="state == 'validate'" decoration-danger="state == 'refuse'"/>
                 <button string="Approve" name="action_approve" type="object" class="text-success"
-                    icon="fa-thumbs-up"
+                    icon="thumb_up" icon_class="oi-filled"
                     invisible="not can_approve"/>
                 <button string="Validate" name="action_approve" type="object" class="text-success"
-                    icon="fa-check"
+                    icon="check"
                     invisible="not can_validate or can_approve"/>
                 <button string="Refuse" name="action_refuse" type="object" class="text-danger"
-                    icon="fa-times"
+                    icon="close"
                     invisible="not can_refuse"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </list>

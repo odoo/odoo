@@ -68,6 +68,7 @@ export class PaymentScreenPaymentLines extends Component {
      * @property {string} title                   - Title of the payment status section.
      * @property {Array<PaymentAction>} actions   - Actions available for the current payment state.
      * @property {string} [icon]                  - Optional icon representing the payment state.
+     * @property {string} [icon_class]            - Additional classes for the icon.
      *
      * @type {PaymentActionState}
      */
@@ -75,7 +76,8 @@ export class PaymentScreenPaymentLines extends Component {
         const status = line.payment_status;
         const isRefund = this.props.isRefundOrder;
         const camelToSnakeCase = (id) => id.replace(/([A-Z])/g, "_$1").toLowerCase();
-        const SPINNER_ICON = "fa fa-circle-o-notch fa-spin";
+        const SPINNER_ICON = "autorenew";
+        const SPINNER_ICON_CLASS = "oi-spin";
         const ACTIONS = {
             send: {
                 id: "send",
@@ -157,6 +159,7 @@ export class PaymentScreenPaymentLines extends Component {
             state.id = isRefund ? "waiting_refund" : camelToSnakeCase(status);
             state.title = isRefund ? _t("Refund in process") : titles[status];
             state.icon = SPINNER_ICON;
+            state.icon_class = SPINNER_ICON_CLASS;
             state.actions = [ACTIONS.forceDone, ACTIONS.cancel];
         }
 
@@ -165,6 +168,7 @@ export class PaymentScreenPaymentLines extends Component {
             state.id = camelToSnakeCase(status);
             state.title = _t("Request sent");
             state.icon = SPINNER_ICON;
+            state.icon_class = SPINNER_ICON_CLASS;
             state.actions = [
                 { ...ACTIONS.forceDone, show: status === "waiting" },
                 { ...ACTIONS.forceCancel, show: status === "waitingCancel" },

@@ -313,7 +313,7 @@ test("Change existing order", async () => {
     });
     await mountLunchView();
 
-    await contains("div.o_lunch_banner li[name='o_lunch_order_line']:contains(Big Plate) i.oi-plus").click();
+    await contains("div.o_lunch_banner li[name='o_lunch_order_line']:contains(Big Plate) i[data-icon='add']").click();
 });
 
 test("Confirm existing order", async () => {

@@ -8,7 +8,7 @@
             <div class="o_self_combo_page_header text-bg-primary"  t-att-class="{'o_self_shadow_top': this.scrollShadow.top}">
                 <div class="container o_self_container py-3 d-flex align-items-center position-relative" >
                     <button class="btn btn-link btn-lg d-inline-flex align-items-center gap-2 p-0" t-on-click="() => this.goBack()">
-                        <i class="oi oi-close fa-fw" aria-hidden="true"/>
+                        <i class="oi oi-fw" data-icon="close_small" aria-hidden="true"/>
                         <span  t-att-class="{'invisible': this.state.showStickyTitle}">Discard</span>
                     </button>
                     <h2 class="o_self_combo_name position-absolute mb-0 text-truncate text-center" t-att-class="{'d-none': !this.state.showStickyTitle}"   >
@@ -86,12 +86,12 @@
                                                 <div t-else="" class="btn-group">
                                                     <button type="button"
                                                             t-on-click="(evt) => this.changeItemQuantity(evt, comboItem, -1)"
-                                                            class="btn btn-secondary btn py-2 px-3 px-lg-2 "><i class="oi oi-minus fa-fw"/></button>
+                                                            class="btn btn-secondary btn py-2 px-3 px-lg-2 "><i class="oi oi-fw" data-icon="remove"/></button>
                                                     <div class="o-so-tabular-nums d-flex justify-content-center align-items-center m-0 py-2 px-3 text-bg-secondary fs-4 fw-bold" t-out="itemQty"/>
                                                     <button type="button"
                                                         t-on-click="(evt) => this.changeItemQuantity(evt, comboItem, 1)"
                                                         t-att-disabled="!addItemEnabled"
-                                                        class="btn btn-secondary btn py-2 px-3 px-lg-2" ><i class="oi oi-plus fa-fw" /></button>
+                                                        class="btn btn-secondary btn py-2 px-3 px-lg-2" ><i class="oi oi-fw" data-icon="add"/></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -177,7 +177,7 @@
                     </div>
                     <div class="d-flex justify-content-between align-items-center gap-2 gap-md-5">
                         <button class="btn btn-lg btn-secondary" t-on-click="!this.isBackVisible() ? this.goBack : this.back">
-                            <i class="oi oi-chevron-left d-md-none" />
+                            <i class="oi d-md-none" data-icon="chevron_backward"/>
                             <span class="d-none d-md-inline">Back</span>
                         </button>
                         <div class="d-flex justify-content-between align-items-center  gap-2 gap-md-5">

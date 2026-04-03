@@ -358,7 +358,7 @@
                             type="action"
                             class="oe_stat_button"
                             context="{'default_company_id': company_id, 'default_maintenance_team_id': maintenance_team_id}"
-                            icon="fa-wrench">
+                            icon="build">
                             <field string="Maintenance" name="maintenance_count" widget="statinfo"/>
                         </button>
                     </div>
@@ -577,14 +577,14 @@
                 <div class="oe_button_box" name="button_box">
                     <button name="%(hr_equipment_action_from_category_form)d"
                         class="oe_stat_button"
-                        icon="fa-cubes"
+                        icon="inventory_2"
                         type="action">
                         <field string="Equipment" name="equipment_count" widget="statinfo"/>
                     </button>
                     <button name="%(hr_equipment_request_action_link)d"
                         type="action"
                         class="oe_stat_button"
-                        icon="fa-wrench">
+                        icon="build">
                         <field string="Maintenance" name="maintenance_count" widget="statinfo"/>
                     </button>
                 </div>

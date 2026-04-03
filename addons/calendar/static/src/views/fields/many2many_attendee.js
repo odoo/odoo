@@ -8,9 +8,9 @@ import { registry } from "@web/core/registry";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 
 const ICON_BY_STATUS = {
-    accepted: "fa-check",
-    declined: "fa-times",
-    tentative: "fa-question",
+    accepted: "check",
+    declined: "close",
+    tentative: "help",
 };
 
 export class AttendeeTag extends AvatarTag {

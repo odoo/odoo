@@ -67,7 +67,7 @@
                 <button class="btn btn-light position-relative ms-2 d-lg-none"
                     data-bs-toggle="offcanvas"
                     data-bs-target="#o_wevent_talk_offcanvas">
-                    <i class="fa fa-sliders"/>
+                    <i class="oi" data-icon="tune"/>
                 </button>
             </div>
         </div>
@@ -192,7 +192,7 @@
         <p t-else="">We could not find any track at this moment.</p>
         <div class="o_not_editable my-3" groups="event.group_event_user">
             <a class="o_wevent_cta btn" target="_blank" t-att-href="'/odoo/%s/action-website_event_track.action_event_track_from_event' % event.id">
-                <span class="fa fa-plus me-1"/> Schedule Tracks
+                <span class="oi me-1" data-icon="add"/> Schedule Tracks
             </a>
         </div>
     </div>
@@ -249,7 +249,7 @@
                         t-attf-aria-controls="collapse_session_list_{{ tracks_info_index }}"
                         t-att-aria-expanded="'false' if tracks_info['default_collapsed'] else 'true'"
                         data-bs-toggle="collapse">
-                        <i class="oi oi-chevron-down"/>
+                        <i class="oi" data-icon="keyboard_arrow_down"/>
                     </a>
                     <hr class="mt-2 mb-2"/>
                 </div>
@@ -305,7 +305,7 @@
                     <span t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))" class="position-absolute h3 mt-2 me-2" style="right: 0; top: 0;">
                         <t t-call="website_event_track.track_widget_reminder" reminder_light="True"/>
                     </span>
-                    <i class="fa fa-glass fa-2x mx-2 mb-3 position-absolute text-white-75" style="right:0; bottom: 0;"/>
+                    <i class="oi oi-2x mx-2 mb-3 position-absolute text-white-75" data-icon="local_bar" style="right:0; bottom: 0;"/>
                 </div>
             </header>
             <div class="col-12">
@@ -371,7 +371,7 @@
                 </div>
                 <span t-if="tracks_date and today_tz &lt;= tracks_date and track.location_id">-</span>
                 <div t-if="track.location_id">
-                    <i class="fa fa-map-marker" role="img"/> <span t-field="track.location_id"/>
+                    <i class="oi" data-icon="location_on" role="img"/> <span t-field="track.location_id"/>
                 </div>
             </div>
             <!-- reminder -->
@@ -415,7 +415,7 @@
     <div t-if="search_wishlist or search_tags" class="d-flex flex-wrap align-items-center my-3 gap-2">
         <span t-if="search_wishlist"
             class="align-items-baseline border d-inline-flex rounded">
-            <i class="fa fa-bell mx-2 text-muted"/> Favorite Talks
+            <i class="oi oi-filled mx-2 text-muted" data-icon="notifications"/> Favorite Talks
             <a t-att-href="'/event/%s/track?%s' % (slug(event), keep_query('*', search_wishlist=''))"
                 class="btn border-0 py-1">
                 ×
@@ -424,7 +424,7 @@
 
         <t t-foreach="search_tags" t-as="tag">
             <span class="align-items-baseline border d-inline-flex rounded">
-                <i class="fa fa-tag mx-2 text-muted"/>
+                <i class="oi mx-2 text-muted" data-icon="label"/>
                 <t t-out="tag.display_name"/>
                 <span t-att-data-post="'/event/%s/track?%s' % (slug(event), keep_query('*', tags=str((search_tags - tag).ids), prevent_redirect=True))"
                     class="post_link cursor-pointer btn border-0 py-1">

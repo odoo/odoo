@@ -59,7 +59,8 @@ export class TimelineOptionPlugin extends Plugin {
         const direction = hasPreviousCard !== reverseButtons ? "left" : "right";
         return [
             {
-                class: `fa fa-fw fa-angle-${direction}`,
+                class: "oi oi-fw",
+                icon: `keyboard_arrow_${direction}`,
                 title: hasPreviousCard !== this.isEditableRTL ? _t("Move left") : _t("Move right"),
                 handler: this.moveTimelineCard.bind(this),
             },

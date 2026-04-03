@@ -5,7 +5,8 @@ imStatusDataRegistry.add(
     "hr-homeworking-home",
     {
         condition: ({ user }) => user?.employee_id?.work_location_type === "home",
-        icon: "fa fa-home",
+        icon: "home",
+        icon_class: "",
         title: {
             online: _t("User is at home and online"),
             away: _t("User is at home and idle"),
@@ -20,7 +21,8 @@ imStatusDataRegistry.add(
     "hr-homeworking-office",
     {
         condition: ({ user }) => user?.employee_id?.work_location_type === "office",
-        icon: "fa fa-building",
+        icon: "business",
+        icon_class: "oi-filled",
         title: {
             online: _t("User is at the office and online"),
             away: _t("User is at the office and idle"),
@@ -35,7 +37,8 @@ imStatusDataRegistry.add(
     "hr-homeworking-other",
     {
         condition: ({ user }) => user?.employee_id?.work_location_type === "other",
-        icon: "fa fa-map-marker",
+        icon: "location_on",
+        icon_class: "",
         title: {
             online: _t("User is at other location and online"),
             away: _t("User is at other location and idle"),

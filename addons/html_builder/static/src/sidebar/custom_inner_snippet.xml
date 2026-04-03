@@ -15,10 +15,12 @@
             <t t-if="this.state.isRenaming">
                 <div class="rename-input w-100 z-1">
                     <input t-custom-ref="rename-input" type="text" autocomplete="chrome-off" t-att-value="this.snippet.title" class="text-start o-hb-input-text o-hb-input-base" t-on-pointerdown.stop=""/>
-                    <button class="o_we_text_success fa fa-check btn btn-outline-success border-0"
+                    <button class="o_we_text_success oi btn btn-outline-success border-0"
+                            data-icon="check"
                             data-tooltip="Confirm"
                             t-on-click="this.onConfirmRename"/>
-                    <button class="o_we_text_danger fa fa-times btn btn-outline-danger border-0"
+                    <button class="o_we_text_danger btn btn-outline-danger border-0"
+                            data-icon="close"
                             data-tooltip="Discard"
                             t-on-click="this.toggleRenamingState"/>
                 </div>
@@ -28,10 +30,12 @@
             </t>
         </div>
         <div t-if="!this.state.isRenaming" class="rename-delete-buttons me-2 float-end z-1">
-            <button class="fa fa-pencil btn o_we_hover_success btn-outline-info border-0"
+            <button class="oi oi-filled btn o_we_hover_success btn-outline-info border-0"
+                    data-icon="edit"
                     t-att-data-tooltip="this.renameButtonTooltip"
                     t-on-click.stop="this.toggleRenamingState"/>
-            <button class="fa fa-trash btn o_we_hover_danger btn-outline-danger border-0"
+            <button class="oi oi-filled btn o_we_hover_danger btn-outline-danger border-0"
+                    data-icon="delete"
                     t-att-data-tooltip="this.deleteButtonTooltip"
                     t-on-click="() => this.props.snippetModel.deleteCustomSnippet(this.snippet)"/>
         </div>

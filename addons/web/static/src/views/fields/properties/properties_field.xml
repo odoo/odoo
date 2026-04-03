@@ -13,15 +13,16 @@
                             t-att-class="{'invisible': propertiesListGroup.columnSeparator, 'folded': propertiesListGroup.isFolded}"
                             t-on-click="() => this.onSeparatorClick(propertiesListGroup.name)">
                             <div t-if="foldable" class="me-2">
-                                <i class="fa fa-fw" t-att-class="propertiesListGroup.isFolded ? 'fa-caret-right' : 'fa-caret-down'"/>
+                                <i class="oi oi-fw" t-att-data-icon="propertiesListGroup.isFolded ? 'arrow_right' : 'arrow_drop_down'"/>
                             </div>
                             <span t-if="propertiesListGroup.title" t-out="propertiesListGroup.title"/>
                             <i
                                 t-if="this.state.isInEditMode and !propertiesListGroup.columnSeparator"
-                                class="o_field_property_open_popover fa fa-pencil ms-3"
+                                class="o_field_property_open_popover oi oi-filled ms-3"
+                                data-icon="edit"
                                 t-on-click.prevent.stop="(event) => this.onPropertyEdit(event, propertiesListGroup.name)"/>
                             <i t-if="this.state.isInEditMode"
-                                class="oi oi-draggable ms-1 d-none d-sm-block"/>
+                                class="oi ms-1 d-none d-sm-block" data-icon="drag_indicator"/>
                         </div>
                     </div>
                     <div
@@ -50,10 +51,11 @@
                             </i>
                             <i
                                 t-if="this.state.isInEditMode"
-                                class="o_field_property_open_popover fa fa-pencil ms-2"
+                                class="o_field_property_open_popover oi oi-filled ms-2"
+                                data-icon="edit"
                                 t-on-click="(event) => this.onPropertyEdit(event, propertyConfiguration.name)"/>
                             <i t-if="this.state.isInEditMode"
-                                class="oi oi-draggable ms-1 d-none d-sm-block mt-1"/>
+                                class="oi ms-1 d-none d-sm-block mt-1" data-icon="drag_indicator"/>
                         </label>
                         <div class="o_property_field_value d-flex w-100">
                             <div class="w-100">
@@ -86,7 +88,7 @@
                             t-if="this.state.isInEditMode and this.definitionRecordId"
                             class="btn btn-link text-break m-0"
                             t-on-click="this.onPropertyCreate">
-                            <i class="fa fa-plus"/>
+                            <i class="oi" data-icon="add"/>
                             Add Property
                         </button>
                     </div>

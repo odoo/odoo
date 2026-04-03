@@ -349,11 +349,11 @@ test("Local sidebar category state is shared between tabs", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(undefined, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
-    await contains(`${env1.selector} .o-mail-DiscussSidebarCategory-livechat .oi-chevron-down`);
-    await contains(`${env2.selector} .o-mail-DiscussSidebarCategory-livechat .oi-chevron-down`);
+    await contains(`${env1.selector} .o-mail-DiscussSidebarCategory-livechat [data-icon='keyboard_arrow_down']`);
+    await contains(`${env2.selector} .o-mail-DiscussSidebarCategory-livechat [data-icon='keyboard_arrow_down']`);
     await click(`${env1.selector} .o-mail-DiscussSidebarCategory-livechat .btn`);
-    await contains(`${env1.selector} .o-mail-DiscussSidebarCategory-livechat .oi-chevron-right`);
-    await contains(`${env2.selector} .o-mail-DiscussSidebarCategory-livechat .oi-chevron-right`);
+    await contains(`${env1.selector} .o-mail-DiscussSidebarCategory-livechat [data-icon='chevron_forward']`);
+    await contains(`${env2.selector} .o-mail-DiscussSidebarCategory-livechat [data-icon='chevron_forward']`);
 });
 
 test("live chat is displayed in the Live Chat category", async () => {
@@ -537,7 +537,7 @@ test("sidebar: leave non-livechat channel removes it from sidebar", async () => 
     await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel-itemName:text('General')");
-    await click(".o-mail-DiscussSidebarChannel:text('General') .oi-ellipsis-h");
+    await click(".o-mail-DiscussSidebarChannel:text('General') [data-icon='more_horiz']");
     await click(".o-dropdown-item:contains('Leave Channel')");
     await contains(
         ".modal-body:text('You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?')"

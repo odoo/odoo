@@ -52,11 +52,13 @@ class ResUserGroupIdsPrivilegeField extends Component {
             btn: true,
             "btn-link": true,
             "py-0": true,
-            fa: true,
-            "fa-info-circle": !isDisjoint,
-            "fa-exclamation-triangle": isDisjoint,
+            "oi": true,
             "link-danger": isDisjoint,
         };
+    }
+
+    get infoButtonIcon() {
+        return this.isDisjoint ? "warning" : "info";
     }
 
     get isDisjoint() {

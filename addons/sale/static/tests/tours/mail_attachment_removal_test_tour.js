@@ -15,7 +15,7 @@ registry.category("web_tour.tours").add("mail_attachment_removal_tour", {
     },
     {
         content: "delete attachment",
-        trigger: ".o_field_widget[name='attachment_ids'] li > button .fa-times",
+        trigger: ".o_field_widget[name='attachment_ids'] li > button [data-icon='close']",
         run: "click"
     },
     // Also check that additional attachments are not kept in chatter composer

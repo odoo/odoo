@@ -16,7 +16,7 @@ patch(MessagingMenu.prototype, {
             return {
                 ...res,
                 action: () => thread.channel.unpinChannel(),
-                icon: "fa-times-circle",
+                icon: "cancel",
                 bgColor: "bg-danger",
             };
         }

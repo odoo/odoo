@@ -51,7 +51,7 @@ registerWebsitePreviewTour(
         ...clickOnSnippet("#o_wblog_post_top .o_wblog_post_page_cover"),
         {
             content: "Remove tag",
-            trigger: "[data-label='Tags'] table tr:has(input[data-name='testtag']) button.fa-minus",
+            trigger: "[data-label='Tags'] table tr:has(input[data-name='testtag']) button[data-icon='remove']",
             run: "click",
         },
         {
@@ -81,7 +81,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Verify we are still on the backend",
-            trigger: ":iframe span:contains(adventure) i.fa-tag",
+            trigger: ":iframe span:contains(adventure) i[data-icon='label']",
         },
     ]
 );

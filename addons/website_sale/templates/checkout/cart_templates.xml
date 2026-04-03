@@ -155,7 +155,7 @@
                                 title="Remove"
                                 aria-label="Remove"
                             >
-                                <i class="fa fa-fw fa-trash-o"/>
+                                <i class="oi oi-fw" data-icon="delete"/>
                             </button>
                         </div>
                     </div>
@@ -180,7 +180,7 @@
                     aria-label="Remove one"
                     title="Remove one"
                 >
-                    <i class="oi oi-minus position-relative z-1"/>
+                    <i class="oi position-relative z-1" data-icon="remove"/>
                 </button>
                 <input
                     type="text"
@@ -205,7 +205,7 @@
                     aria-label="Add one"
                     title="Add one"
                 >
-                    <i class="oi oi-plus position-relative z-1"/>
+                    <i class="oi position-relative z-1" data-icon="add"/>
                 </button>
             </t>
             <t t-else="">
@@ -359,7 +359,7 @@
                 aria-controls="quick_reorder_sidebar"
                 t-att-disabled="not order_history"
             >
-                <i class="fa fa-rotate-left me-2"/>Quick reorder
+                <i class="oi me-2" data-icon="undo"/>Quick reorder
             </button>
         </span>
         <t t-call="website_sale.quick_reorder_sidebar"/>
@@ -477,7 +477,7 @@
                                 t-att-data-product-type="order_line.product_id.type"
                                 t-att-data-selected-combo-items="json.dumps(order_line._get_selected_combo_items())"
                             >
-                                <i class="fa fa-cart-plus"/>
+                                <i class="oi" data-icon="add_shopping_cart"/>
                             </button>
                         </div>
                     </div>
@@ -558,7 +558,7 @@
                                     t-att-data-product-type="product.type"
                                     t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                                 >
-                                    <i class="d-md-none fa fa-shopping-cart" role="presentation"/>
+                                    <i class="oi d-md-none" data-icon="shopping_cart" role="presentation"/>
                                     <span class="d-none d-md-inline">Add to cart</span>
                                 </button>
                             </div>
@@ -596,7 +596,7 @@
                 title="Wishlist"
                 aria-label="Wishlist"
             >
-                <i class="fa fa-fw fa-heart-o"/>
+                <i class="oi oi-fw" data-icon="favorite"/>
             </button>
         </xpath>
     </template>

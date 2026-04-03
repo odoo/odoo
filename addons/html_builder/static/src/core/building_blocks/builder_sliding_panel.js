@@ -13,6 +13,7 @@ export class BuilderSlidingPanel extends Component {
         ...basicContainerBuilderComponentProps,
         label: { type: String, optional: false },
         extraClasses: { type: String, optional: true },
+        icon: { type: String, optional: true },
         fullHeight: { type: Boolean, optional: true },
         darkBackground: { type: Boolean, optional: true },
         openByDefault: { type: Boolean, optional: true },

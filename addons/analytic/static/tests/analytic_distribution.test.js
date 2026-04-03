@@ -190,7 +190,7 @@ test("analytic field in form view basic features", async () => {
     ).toHaveCount(1);
 
     // tags
-    await contains(".fa-close").click();
+    await contains(".btn.o_button[title='Close']").click();
     expect(".analytic_distribution_popup").toHaveCount(0);
     expect(".badge").toHaveCount(2);
     expect(".badge:eq(0) .o_tag_badge_text").toHaveText("30.3% RD | 50% HR | 19.7% FI");
@@ -244,7 +244,7 @@ test("analytic field in multi_edit list view + search more", async () => {
     await contains(".modal-dialog .o_data_row:nth-of-type(4) .o_data_cell:first-of-type").click();
     expect(".modal-dialog .o_list_renderer").toHaveCount(0);
 
-    await contains(".fa-close").click();
+    await contains("[data-icon='close']").click();
     await contains(".modal-dialog .btn-primary").click();
     await animationFrame();
     expect(".o_data_row .badge").toHaveCount(4);

@@ -104,12 +104,12 @@
             <p class="mb-1">This is a Test Survey Entry.</p>
             <div class="survey_button_form_view_hook d-inline-block">
                 <a t-if="env.user.has_group('survey.group_survey_user')" class="alert-link" t-attf-href="/odoo/action-survey.action_survey_form/{{survey.id}}">
-                    <i class="oi oi-fw oi-arrow-right"/>Go to Survey</a>
+                    <i class="oi oi-fw" data-icon="east"/>Go to Survey</a>
             </div>
         </div>
         <div groups="survey.group_survey_user" t-if="survey.scoring_type != 'no_scoring' and survey.scoring_max_obtainable &lt;= 0"
             t-ignore="true" class="alert alert-warning p-2 border-0 rounded-0 d-print-none css_editable_mode_hidden mb-0 text-center">
-            <i class="fa fa-exclamation-triangle"/> It is currently not possible to pass this assessment because no question is configured to give any points.
+            <i class="oi" data-icon="warning"/> It is currently not possible to pass this assessment because no question is configured to give any points.
         </div>
     </template>
 
@@ -173,7 +173,7 @@
                 value="previous"
                 t-att-data-previous-page-id="previous_page_id"
                 aria-label="Go to previous question">
-                <i class="oi oi-chevron-left p-2" aria-hidden="true"/>
+                <i class="oi p-2" data-icon="chevron_backward" aria-hidden="true"/>
             </button>
             <t t-set="can_go_forward"
                 t-value="survey and survey.questions_layout in ['page_per_question', 'page_per_section'] and answer and answer.state != 'done' and not answer.is_session_answer"/>
@@ -183,7 +183,7 @@
                 t-att-value="'next' if not survey_last else 'finish'"
                 t-att-aria-label="'Submit survey' if survey_last else 'Go to next question'">
                 <t t-if="survey_last">Submit</t>
-                <i class="oi oi-chevron-right p-2" aria-hidden="true"/>
+                <i class="oi p-2" data-icon="chevron_forward" aria-hidden="true"/>
             </button>
         </div>
     </template>

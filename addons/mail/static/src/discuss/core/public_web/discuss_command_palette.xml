@@ -7,7 +7,7 @@
             <span class="o-mail-DiscussCommand-nameContainer pe-1 text-ellipsis d-flex align-items-center fw-bold" t-att-class="{ 'o-action': this.props.action }">
                 <t t-if="this.props.channel?.parent_channel_id">
                     <span class="text-truncate flex-shrink-0 opacity-75 mw-75 small" t-out="this.props.channel?.parent_channel_id.displayName"/>
-                    <i class="oi oi-chevron-right o-xsmaller mx-1"/>
+                    <i class="oi o-xsmaller mx-1" data-icon="chevron_forward"/>
                 </t>
                 <t t-call-slot="name" />
             </span>
@@ -15,7 +15,7 @@
                 <span class="pe-1">-</span>
                 <t t-out="this.formattedEmail"/>
             </span>
-            <i t-if="this.props.action?.icon" class="o-mail-DiscussCommand-actionIcon fa fa-fw opacity-75 o-action" t-attf-class="{{ this.props.action.icon }}"/>
+            <i t-if="this.props.action?.icon" class="o-mail-DiscussCommand-actionIcon oi oi-fw opacity-75 o-action" t-attf-data-icon="{{ this.props.action.icon }}"/>
             <span t-if="this.props.action?.searchValueSuffix" class="o-action fw-bold" t-out="this.props.searchValue"/>
             <span class="flex-grow-1"/>
             <div t-if="this.props.counter > 0">
@@ -27,7 +27,7 @@
     <t t-name="mail.CreateChannelDialog">
         <Dialog size="'sm'" title.translate="New Channel" contentClass="'o-mail-CreateChannelDialog'" bodyClass="'py-0'">
             <div class="d-flex flex-column" t-on-keydown="this.onKeydown">
-                <span class="ms-1 text-uppercase text-muted o-xsmaller opacity-75"><i class="fa fa-hashtag"/> Channel name</span>
+                <span class="ms-1 text-uppercase text-muted o-xsmaller opacity-75"><i class="oi" data-icon="tag"/> Channel name</span>
                 <input type="text" class="form-control" t-att-class="{ 'is-invalid': this.state.isInvalid }" placeholder="Channel name" t-custom-model="this.state.name" tabindex="1"/>
                 <div class="invalid-feedback">Channel must have a name.</div>
                 <div class="form-check mt-2">

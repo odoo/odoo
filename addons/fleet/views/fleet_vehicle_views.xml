@@ -23,13 +23,13 @@
                         <button name="open_assignation_logs"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-history">
+                            icon="history">
                             <field name="history_count" widget="statinfo" string="Drivers History"/>
                         </button>
                         <button name="return_action_to_open"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-book"
+                            icon="book"
                             context="{'xml_id':'fleet_vehicle_log_contract_action', 'search_default_inactive': not active}"
                             help="show the contract for this vehicle">
                             <field name="contract_count" widget="statinfo" string="Contracts"/>
@@ -37,7 +37,7 @@
                         <button name="return_action_to_open"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-wrench"
+                            icon="build"
                             context="{'xml_id':'fleet_vehicle_log_services_action', 'search_default_inactive': not active}"
                             invisible="service_activity != 'none'"
                             help="show the services logs for this vehicle">
@@ -46,7 +46,7 @@
                         <button name="return_action_to_open"
                             type="object"
                             class="oe_stat_button text-danger"
-                            icon="fa-wrench"
+                            icon="build"
                             context="{'xml_id':'fleet_vehicle_log_services_action', 'search_default_inactive': not active}"
                             invisible="service_activity != 'overdue'"
                             help="show the services logs for this vehicle">
@@ -55,7 +55,7 @@
                         <button name="return_action_to_open"
                             type="object"
                             class="oe_stat_button text-warning"
-                            icon="fa-wrench"
+                            icon="build"
                             context="{'xml_id':'fleet_vehicle_log_services_action', 'search_default_inactive': not active}"
                             invisible="service_activity != 'today'"
                             help="show the services logs for this vehicle">
@@ -64,7 +64,7 @@
                         <button name="return_action_to_open"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-tachometer"
+                            icon="speed"
                             context="{'xml_id':'fleet_vehicle_odometer_action'}"
                             help="show the odometer logs for this vehicle"
                             invisible="vehicle_type != 'car'">
@@ -102,7 +102,7 @@
                             <div class="o_row o_fleet_narrow_field" invisible="vehicle_type != 'car'">
                                 <field class="o_fleet_odometer_value" name="odometer"/>
                                 <field class="o_fleet_odometer_unit" name="odometer_unit"/>
-                                <button name="action_open_odometer_report" type="object" class="fa fa-line-chart me-1" title="Odometer Report"/>
+                                <button name="action_open_odometer_report" type="object" class="oi me-1" data-icon="show_chart" title="Odometer Report"/>
                             </div>
                             <field name="manager_id" widget="many2one_avatar_user"/>
                             <field name="location"/>
@@ -303,7 +303,7 @@
                             <div class="small">
                                 <t t-if="record.future_driver_id.raw_value">Future Driver : <field name="future_driver_id"/></t>
                             </div>
-                            <t t-if="record.location.raw_value"><small><i class="fa fa-map-marker" title="Location"></i> <field name="location"/></small></t>
+                            <t t-if="record.location.raw_value"><small><i class="oi" data-icon="location_on" title="Location"></i> <field name="location"/></small></t>
                             <field name="vehicle_properties" widget="properties"/>
                             <footer class="pt-0 mt-0" t-if="!selection_mode">
                                 <div class="d-flex fs-6">
@@ -312,10 +312,10 @@
                                         <field name="contract_count"/>
                                         Contract(s)
                                         <span t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value"
-                                            class="fa fa-exclamation-triangle text-warning" role="img" aria-label="Warning: renewal due soon" title="Warning: renewal due soon">
+                                            class="oi text-warning" data-icon="warning" role="img" aria-label="Warning: renewal due soon" title="Warning: renewal due soon">
                                         </span>
                                         <span t-if="record.contract_renewal_overdue.raw_value"
-                                            class="fa fa-exclamation-triangle text-danger" role="img" aria-label="Attention: renewal overdue" title="Attention: renewal overdue">
+                                            class="oi text-danger" data-icon="warning" role="img" aria-label="Attention: renewal overdue" title="Attention: renewal overdue">
                                         </span>
                                     </a>
                                     <field name="activity_ids" widget="kanban_activity" class="ms-2"/>

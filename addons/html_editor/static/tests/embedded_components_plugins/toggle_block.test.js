@@ -78,7 +78,7 @@ describe("deleteBackward applied to toggle", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                            <i class="fa align-self-center fa-caret-down"></i>
+                            <i class="oi align-self-center" data-icon="arrow_drop_down"></i>
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -122,7 +122,7 @@ describe("deleteBackward applied to toggle", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                            <i class="fa align-self-center fa-caret-right"></i>
+                            <i class="oi align-self-center" data-icon="arrow_right"></i>
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -268,7 +268,7 @@ describe("deleteBackward applied to toggle", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                            <i class="fa align-self-center fa-caret-right"></i>
+                            <i class="oi align-self-center" data-icon="arrow_right"></i>
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -286,7 +286,7 @@ describe("deleteBackward applied to toggle", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "2" }' contenteditable="false">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                            <i class="fa align-self-center fa-caret-right"></i>
+                            <i class="oi align-self-center" data-icon="arrow_right"></i>
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -310,7 +310,7 @@ describe("deleteBackward applied to toggle", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                            <i class="fa align-self-center fa-caret-right"></i>
+                            <i class="oi align-self-center" data-icon="arrow_right"></i>
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -328,7 +328,7 @@ describe("deleteBackward applied to toggle", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "2" }' contenteditable="false">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                            <i class="fa align-self-center fa-caret-right"></i>
+                            <i class="oi align-self-center" data-icon="arrow_right"></i>
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -376,7 +376,7 @@ describe("deleteForward applied to toggle", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                            <i class="fa align-self-center fa-caret-right"></i>
+                            <i class="oi align-self-center" data-icon="arrow_right"></i>
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -452,7 +452,7 @@ describe("deleteForward applied to toggle", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                            <i class="fa align-self-center fa-caret-down"></i>
+                            <i class="oi align-self-center" data-icon="arrow_drop_down"></i>
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -501,7 +501,7 @@ describe("deleteForward applied to toggle", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                            <i class="fa align-self-center fa-caret-right"></i>
+                            <i class="oi align-self-center" data-icon="arrow_right"></i>
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -552,7 +552,7 @@ describe("deleteForward applied to toggle", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                            <i class="fa align-self-center fa-caret-down"></i>
+                            <i class="oi align-self-center" data-icon="arrow_drop_down"></i>
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -594,7 +594,7 @@ describe("deleteForward applied to toggle", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                            <i class="fa align-self-center fa-caret-right"></i>
+                            <i class="oi align-self-center" data-icon="arrow_right"></i>
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -638,7 +638,7 @@ describe("deleteForward applied to toggle", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                            <i class="fa align-self-center fa-caret-down"></i>
+                            <i class="oi align-self-center" data-icon="arrow_drop_down"></i>
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -693,7 +693,7 @@ describe("Enter applied to toggle title", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{"toggleBlockId":"2"}'>
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                            <i class="fa align-self-center fa-caret-right"></i>
+                            <i class="oi align-self-center" data-icon="arrow_right"></i>
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -711,7 +711,7 @@ describe("Enter applied to toggle title", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "1" }'>
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                            <i class="fa align-self-center fa-caret-down"></i>
+                            <i class="oi align-self-center" data-icon="arrow_drop_down"></i>
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -761,7 +761,7 @@ describe("Enter applied to toggle title", () => {
             <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
                 <div class="d-flex flex-row align-items-center">
                     <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                        <i class="fa align-self-center fa-caret-right"></i>
+                        <i class="oi align-self-center" data-icon="arrow_right"></i>
                     </button>
                     <div class="flex-fill ms-1">
                         <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -779,7 +779,7 @@ describe("Enter applied to toggle title", () => {
             <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{"toggleBlockId":"2"}'>
                 <div class="d-flex flex-row align-items-center">
                     <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                        <i class="fa align-self-center fa-caret-right"></i>
+                        <i class="oi align-self-center" data-icon="arrow_right"></i>
                     </button>
                     <div class="flex-fill ms-1">
                         <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -823,7 +823,7 @@ describe("Enter applied to toggle title", () => {
             <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "1" }'>
                 <div class="d-flex flex-row align-items-center">
                     <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                        <i class="fa align-self-center fa-caret-down"></i>
+                        <i class="oi align-self-center" data-icon="arrow_drop_down"></i>
                     </button>
                     <div class="flex-fill ms-1">
                         <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -957,7 +957,7 @@ describe("Tab applied to toggle title", () => {
             <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "1" }'>
                 <div class="d-flex flex-row align-items-center">
                     <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                        <i class="fa align-self-center fa-caret-down"></i>
+                        <i class="oi align-self-center" data-icon="arrow_drop_down"></i>
                     </button>
                     <div class="flex-fill ms-1">
                         <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -971,7 +971,7 @@ describe("Tab applied to toggle title", () => {
                         <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "2" }'>
                             <div class="d-flex flex-row align-items-center">
                                 <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                                    <i class="fa align-self-center fa-caret-right"></i>
+                                    <i class="oi align-self-center" data-icon="arrow_right"></i>
                                 </button>
                                 <div class="flex-fill ms-1">
                                     <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -1028,7 +1028,7 @@ describe("Tab applied to toggle title", () => {
             <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "1" }'>
                 <div class="d-flex flex-row align-items-center">
                     <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                        <i class="fa align-self-center fa-caret-down"></i>
+                        <i class="oi align-self-center" data-icon="arrow_drop_down"></i>
                     </button>
                     <div class="flex-fill ms-1">
                         <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -1042,7 +1042,7 @@ describe("Tab applied to toggle title", () => {
                         <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "2" }'>
                             <div class="d-flex flex-row align-items-center">
                                 <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                                    <i class="fa align-self-center fa-caret-down"></i>
+                                    <i class="oi align-self-center" data-icon="arrow_drop_down"></i>
                                 </button>
                                 <div class="flex-fill ms-1">
                                     <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -1100,7 +1100,7 @@ describe("Shift+Tab applied to toggle title", () => {
             <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "1" }'>
                 <div class="d-flex flex-row align-items-center">
                     <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                        <i class="fa align-self-center fa-caret-down"></i>
+                        <i class="oi align-self-center" data-icon="arrow_drop_down"></i>
                     </button>
                     <div class="flex-fill ms-1">
                         <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -1118,7 +1118,7 @@ describe("Shift+Tab applied to toggle title", () => {
             <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "2" }'>
                 <div class="d-flex flex-row align-items-center">
                     <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                        <i class="fa align-self-center fa-caret-down"></i>
+                        <i class="oi align-self-center" data-icon="arrow_drop_down"></i>
                     </button>
                     <div class="flex-fill ms-1">
                         <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -1245,7 +1245,7 @@ describe("Insert (paste, drop) inside toggle title", () => {
                 <p data-selection-placeholder=""><br></p>
                 <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "1" }'>
                     <div class="d-flex flex-row align-items-center">
-                        <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button"><i class="fa align-self-center fa-caret-right"></i></button>
+                        <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button"><i class="oi align-self-center" data-icon="arrow_right"></i></button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
                                 <div class="o-paragraph">HelloNew</div>
@@ -1327,7 +1327,7 @@ describe("Toggle block: Switch Direction", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false" dir="rtl">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                            <i class="fa align-self-center fa-caret-right"></i>
+                            <i class="oi align-self-center" data-icon="arrow_right"></i>
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -1378,7 +1378,7 @@ describe("Toggle block: Switch Direction", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false" dir="rtl">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                            <i class="fa align-self-center fa-caret-right"></i>
+                            <i class="oi align-self-center" data-icon="arrow_right"></i>
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -1396,7 +1396,7 @@ describe("Toggle block: Switch Direction", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{"toggleBlockId":"2"}' dir="rtl">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
-                            <i class="fa align-self-center fa-caret-right"></i>
+                            <i class="oi align-self-center" data-icon="arrow_right"></i>
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">

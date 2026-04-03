@@ -12,7 +12,7 @@
                 t-attf-class="o-mail-DeviceSelect-button btn btn-secondary o-dropdown-caret w-100"
                 t-att-data-kind="this.props.kind"
              >
-                <i t-if="this.props.icon" t-att-class="this.props.icon"/>
+                <i t-if="this.props.icon" class="oi" t-att-class="this.props.icon_class" t-att-data-icon="this.props.icon"/>
                 <span
                     class="pe-2 text-start text-truncate"
                     t-attf-class="{{ this.props.icon ? 'ps-2' : '' }}"
@@ -25,7 +25,7 @@
                 t-on-pointerdown.prevent="() => this.showPermissionDialog(this.props.kind)"
                 t-on-keydown.prevent="() => this.showPermissionDialog(this.props.kind)"
             >
-                <i t-if="this.props.icon" t-att-class="this.props.icon"/>
+                <i t-if="this.props.icon" class="oi" t-att-class="this.props.icon_class" t-att-data-icon="this.props.icon"/>
                 <span
                     class="text-truncate flex-grow-1"
                     t-attf-class="{{ this.props.icon ? 'ps-2' : '' }}"

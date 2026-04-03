@@ -227,9 +227,9 @@ test("no conversation selected when opening non-existing channel in discuss", as
     await start();
     await openDiscuss(200); // non-existing id
     await contains("h4:text('No conversation selected.')");
-    await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-down");
+    await contains(".o-mail-DiscussSidebarCategory-channel [data-icon='keyboard_arrow_down']");
     await click(".o-mail-DiscussSidebar .btn:text('Channels')"); // check no crash
-    await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-right");
+    await contains(".o-mail-DiscussSidebarCategory-channel [data-icon='chevron_forward']");
 });
 
 test("can access portal partner profile from avatar popover", async () => {

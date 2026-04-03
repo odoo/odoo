@@ -272,13 +272,21 @@ export class SwitchCompanyMenu extends Component {
         if (
             this.visibleCompanies.every((c) => this.companySelector.isCompanySelected(c.company.id))
         ) {
-            return "fa-check-square text-primary";
+            return "check_box";
         } else if (
             this.visibleCompanies.some((c) => this.companySelector.isCompanySelected(c.company.id))
         ) {
-            return "fa-minus-square-o";
+            return "indeterminate_check_box";
         } else {
-            return "fa-square-o";
+            return "square";
+        }
+    }
+
+    get selectAllIconClass() {
+        if (
+            this.visibleCompanies.every((c) => this.companySelector.isCompanySelected(c.company.id))
+        ) {
+            return "oi-filled text-primary";
         }
     }
 

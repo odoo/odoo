@@ -13,7 +13,7 @@
                                 <button class="btn py-0">
                                     <span class="o_mass_mailing_add_filter">
                                         <span t-attf-class="o_mass_mailing_no_filter {{ this.props.record.data.mailing_filter_count || this.props.noLabel ? 'd-none' : '' }}">Save as Favorite Filter</span>
-                                        <i class="fa fa-floppy-o px-1 py-1"/>
+                                        <i class="oi px-1 py-1" data-icon="save"/>
                                     </span>
                                 </button>
                                 <t t-set-slot="content">
@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <a t-attf-class="o_mass_mailing_remove_filter btn px-1 pt-1 pb-0 {{ !this.filter.canRemoveFilter ? 'd-none': '' }}" t-on-click="this.onRemoveFilter">
-                        <i class="fa fa-trash px-3 py-1 align-bottom" title="Remove from Favorites"/>
+                        <i class="oi oi-filled px-3 py-1 align-bottom" data-icon="delete" title="Remove from Favorites"/>
                     </a>
                 </div>
             </t>

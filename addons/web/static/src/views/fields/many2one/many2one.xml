@@ -9,7 +9,7 @@
             <t t-elif="!this.props.readonly">
                 <span class="o_avatar o_m2o_avatar d-flex">
                     <a class="o_quick_assign btn-link d-flex align-items-center text-dark" href="#" role="button" tabindex="-1" aria-label="Assign" data-tooltip="Assign" t-on-click.stop.prevent="(e) => this.openAssignPopover(e.currentTarget)">
-                        <i class="fa fa-user-plus"/>
+                        <i class="oi oi-filled" data-icon="person_add"/>
                     </a>
                 </span>
             </t>
@@ -33,7 +33,7 @@
                     <Many2XAutocomplete t-props="this.many2XAutocompleteProps"/>
                     <t t-if="this.hasLinkButton">
                         <button class="o_external_button btn btn-link text-action px-1 py-0" draggable="false" tabindex="-1" type="button" aria-label="Internal link" data-tooltip="Internal link" t-custom-click="(_, isMiddleClick) => this.openRecord(isMiddleClick ? 'tab' : this.env.inDialog ? 'dialog' : 'action')">
-                            <i class="oi" t-att-class="this.env.inDialog ? 'oi-launch' : 'oi-arrow-right'"/>
+                            <i class="oi" t-att-data-icon="this.env.inDialog ? 'open_in_browser' : 'east'"/>
                         </button>
                     </t>
                     <t t-if="this.hasBarcodeButton">

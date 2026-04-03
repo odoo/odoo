@@ -18,7 +18,7 @@
                 <t t-if="this.env.searchModel.searchMenuTypes.has('filter')">
                     <div class="o_dropdown_container o_filter_menu w-100 w-lg-auto h-100 px-3 mb-4 mb-lg-0 border-end">
                         <div class="px-3 fs-5 mb-2">
-                            <i class="me-2 text-primary" t-att-class="this.facet_icons.filter"/>
+                            <i class="oi oi-filled me-2 text-primary" t-att-data-icon="this.facet_icons.filter"/>
                             <h5 class="o_dropdown_title d-inline">Filters</h5>
                         </div>
                         <t t-set="currentGroup" t-value="null"/>
@@ -70,7 +70,7 @@
                 <t t-if="this.env.searchModel.searchMenuTypes.has('groupBy')">
                     <div class="o_dropdown_container o_group_by_menu w-100 w-lg-auto h-100 px-3 mb-4 mb-lg-0 border-end">
                         <div class="px-3 fs-5 mb-2">
-                            <i class="me-2 text-action" t-att-class="this.facet_icons.groupBy"/>
+                            <i class="oi me-2 text-action" t-att-data-icon="this.facet_icons.groupBy"/>
                             <h5 class="o_dropdown_title d-inline">Group By</h5>
                         </div>
                         <t t-set="currentGroup" t-value="null"/>
@@ -122,7 +122,7 @@
                         <t t-set="sharedFavoritesItems" t-value="this.sharedFavorites" />
                         <t t-set="favoriteItems" t-value="this.favorites" />
                         <div class="px-3 fs-5 mb-2">
-                            <i class="me-2 text-favourite" t-att-class="this.facet_icons.favorite"/>
+                            <i class="oi oi-filled me-2 text-favourite" t-att-data-icon="this.facet_icons.favorite"/>
                             <h5 class="o_dropdown_title d-inline">Favorites</h5>
                         </div>
                         <t t-foreach="favoriteItems" t-as="item" t-key="item.id">
@@ -167,7 +167,8 @@
                     t-att-class="item.isInvalid ? 'text-muted' : ''"
                     t-att-data-tooltip="item.isInvalid and invalidTooltip"
                 />
-                <i class="ms-1 fa fa-pencil"
+                <i class="oi oi-filled ms-1"
+                    data-icon="edit"
                     title="Edit favorite"
                     t-on-click.stop="() => this.editFavorite(item.id)"
                 />

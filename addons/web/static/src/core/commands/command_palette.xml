@@ -14,8 +14,8 @@
               aria-haspopup="listbox"
           />
           <div class="input-group-text border-0 bg-transparent">
-              <i t-if="this.state.isLoading" title="Loading..." role="img" aria-label="Loading..." class="fa fa-circle-o-notch fa-spin"/>
-              <i t-else="" t-att-title="this.state.placeholder" role="img"  t-att-aria-label="this.state.placeholder" class="oi oi-search"/>
+              <i t-if="this.state.isLoading" title="Loading..." role="img" aria-label="Loading..." class="oi oi-spin" data-icon="autorenew"/>
+              <i t-else="" t-att-title="this.state.placeholder" role="img"  t-att-aria-label="this.state.placeholder" class="oi" data-icon="search"/>
           </div>
         </div>
 

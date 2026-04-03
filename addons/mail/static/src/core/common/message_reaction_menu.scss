@@ -4,11 +4,11 @@
 }
 
 .o-mail-MessageReactionMenu-persona:not(.o-isDeviceSmall) {
-    &:not(:hover) button.fa-trash {
+    &:not(:hover) button[data-icon="delete"] {
         opacity: 0;
     }
 
-    &:hover button.fa-trash {
+    &:hover button[data-icon="delete"] {
         opacity: 100;
 
         &:hover {

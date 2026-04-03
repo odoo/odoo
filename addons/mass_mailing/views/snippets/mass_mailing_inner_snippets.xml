@@ -8,17 +8,17 @@
 
 
 <template id="s_rating" name="Rating">
-    <div class="s_rating o_mail_snippet_general pt16 pb16 s_rating_no_title" style="padding: 0 15px;" data-vcss="001" data-vxml="001" data-icon="fa-star">
+    <div class="s_rating o_mail_snippet_general pt16 pb16 s_rating_no_title" style="padding: 0 15px;" data-vcss="001" data-vxml="001" data-rating-icon="star">
         <h3 class="s_rating_title">Quality</h3>
         <div class="s_rating_icons o_not_editable">
             <span class="s_rating_active_icons" style="color: #f3cc00;">
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
+                <i class="oi oi-filled" data-icon="star"></i>
+                <i class="oi oi-filled" data-icon="star"></i>
+                <i class="oi oi-filled" data-icon="star"></i>
             </span>
             <span class="s_rating_inactive_icons" style="color: var(--border-color);">
-                <i class="fa fa-star-o"></i>
-                <i class="fa fa-star-o"></i>
+                <i class="oi" data-icon="star"></i>
+                <i class="oi" data-icon="star"></i>
             </span>
         </div>
     </div>
@@ -36,7 +36,7 @@
 
 <template id="s_alert" name="Alert">
     <div class="oe_unmovable s_alert s_mail_alert s_alert_md alert alert-info w-100 row" style="border-width: 1px !important; border-color: rgb(190 229 235) !important;">
-        <i class="fa fa-2x fa-info-circle fa-stack o_not_editable s_alert_icon rounded-1 col-auto"/>
+        <i class="oi oi-2x oi-stack o_not_editable s_alert_icon rounded-1 col-auto" data-icon="info"/>
         <div class="s_alert_content col-9">
             <p class="mb-0">Explain the benefits you offer. <br/>Don't write about products or services here, write about solutions.</p>
         </div>
@@ -46,7 +46,7 @@
 <template name="CTA Badge" id="s_cta_badge">
     <div class="s_cta_badge badge d-block mx-auto o_mail_snippet_general border rounded py-2 px-3" data-name="CTA Badge" style="border-radius: 32px !important;">
         <p class="mb-0">
-            <span class="fa fa-fw fa-info-circle" role="img"/>&#160;&#160;What do you want to promote&amp;nbsp;? &#160;&#160;&#160;&#160;<a href="#">See more <span class="fa fa-long-arrow-right" role="img"/></a>
+            <span class="oi oi-fw" data-icon="info" role="img"/>&#160;&#160;What do you want to promote&amp;nbsp;? &#160;&#160;&#160;&#160;<a href="#">See more <span class="oi" data-icon="east" role="img"/></a>
         </p>
     </div>
 </template>
@@ -85,7 +85,7 @@
 <template name="Badge" id="s_badge">
     <div class="s_badge badge text-bg-secondary o_mail_snippet_general" data-name="Badge" data-vxml="001">
         <p class="mb-0">
-            <span class="fa fa-fw fa-folder"/>Category
+            <span class="oi oi-fw oi-filled" data-icon="folder"/>Category
         </p>
     </div>
 </template>
@@ -124,7 +124,7 @@
     <t t-foreach="updated_links.items() if fillSocialLinks else []" t-as="link">
         <t t-set="platform" t-value="link[0].split('social_')[1]"/>
         <a t-att-data-platform="link[0] if social_links.get(link[0]) else 'customLink-' + link[0]" t-att-href="link[1]" t-att-aria-label="platform.capitalize()" t-att-title="platform.capitalize()">
-            <i t-attf-style="{{optionalTextStyle}}" t-attf-class="fa fa-{{platform}} {{ optionalIconLayout or 'fa-stack'}} o_editable_media"></i>
+            <i t-attf-style="{{optionalTextStyle}}" t-attf-class="oi {{ optionalIconLayout or 'oi-stack'}} o_editable_media" t-attf-data-icon="oi_{{platform}}"></i>
         </a>
     </t>
 </template>

@@ -10,14 +10,14 @@
             border-radius: 0;
             outline: none;
             &:before {
-                content: '\f056';
-                font-family: 'FontAwesome';
+                content: 'remove_circle';
+                font-family: var(--icon-font-family, "material_symbols_outlined");
                 color: $gray-600;
                 position: absolute;
                 margin-left: -1.5em;
             }
             &.collapsed:before {
-                content: '\f055';
+                content: 'remove_circle';
             }
             &:hover,
             &:focus {

@@ -46,7 +46,7 @@
                             <label id="date_start_label" for="date_start" string="Duration" invisible="is_course"/>
                             <div class="o_row" invisible="is_course">
                                 <field name="date_start"/>
-                                <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
+                                <i class="oi mx-2" data-icon="east" aria-label="Arrow icon" title="Arrow"/>
                                 <field name="date_end" placeholder="Forever"/>
                             </div>
                             <label for="date_start" string="Date" invisible="not is_course"/>
@@ -300,8 +300,8 @@
         <field name="arch" type="xml">
             <search string="Resume Lines">
                 <searchpanel view_types="list,kanban">
-                    <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
-                    <field name="department_id" icon="fa-users" enable_counters="1"/>
+                    <field name="company_id" groups="base.group_multi_company" icon="business" icon_class="oi-filled" enable_counters="1"/>
+                    <field name="department_id" icon="group" icon_class="oi-filled" enable_counters="1"/>
                 </searchpanel>
             </search>
         </field>

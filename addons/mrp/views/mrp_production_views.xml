@@ -265,58 +265,58 @@
                     <field name="workorder_ids" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_reception_report" string="Allocation" type="object"
-                            class="oe_stat_button" icon="fa-list"
+                            class="oe_stat_button" icon="format_list_bulleted"
                             invisible="not show_allocation"
                             groups="mrp.group_mrp_reception_report"/>
-                        <button class="oe_stat_button" name="action_view_mrp_production_all_childs" type="object" icon="fa-wrench" invisible="mrp_production_all_child_count == 0">
+                        <button class="oe_stat_button" name="action_view_mrp_production_all_childs" type="object" icon="build" invisible="mrp_production_all_child_count == 0">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="mrp_production_all_child_count"/></span>
                                 <span class="o_stat_text">Child MO</span>
                             </div>
                         </button>
-                        <button class="oe_stat_button" name="action_view_mrp_production_sources" type="object" icon="fa-wrench" invisible="mrp_production_source_count == 0">
+                        <button class="oe_stat_button" name="action_view_mrp_production_sources" type="object" icon="build" invisible="mrp_production_source_count == 0">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="mrp_production_source_count"/></span>
                                 <span class="o_stat_text">Source MO</span>
                             </div>
                         </button>
-                        <button class="oe_stat_button" name="action_view_mrp_production_backorders" type="object" icon="fa-wrench" invisible="mrp_production_backorder_count &lt; 2">
+                        <button class="oe_stat_button" name="action_view_mrp_production_backorders" type="object" icon="build" invisible="mrp_production_backorder_count &lt; 2">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="mrp_production_backorder_count"/></span>
                                 <span class="o_stat_text">Backorders</span>
                             </div>
                         </button>
-                        <button class="oe_stat_button" name="action_view_mrp_production_unbuilds" type="object" icon="fa-undo" invisible="unbuild_count == 0">
+                        <button class="oe_stat_button" name="action_view_mrp_production_unbuilds" type="object" icon="undo" invisible="unbuild_count == 0">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="unbuild_count"/></span>
                                 <span class="o_stat_text">Unbuilds</span>
                             </div>
                         </button>
-                        <button class="oe_stat_button" name="action_see_move_scrap" type="object" icon="oi-arrows-v" invisible="scrap_count == 0">
+                        <button class="oe_stat_button" name="action_see_move_scrap" type="object" icon="height" invisible="scrap_count == 0">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="scrap_count"/></span>
                                 <span class="o_stat_text">Scraps</span>
                             </div>
                         </button>
-                        <button type="object" name="action_view_mo_delivery" class="oe_stat_button" icon="fa-truck"  groups="base.group_user" invisible="delivery_count == 0">
+                        <button type="object" name="action_view_mo_delivery" class="oe_stat_button" icon="local_shipping"  groups="base.group_user" invisible="delivery_count == 0">
                             <field name="delivery_count" widget="statinfo" string="Transfers"/>
                         </button>
-                        <button name="%(stock.action_stock_report)d" icon="oi-arrow-up" class="oe_stat_button" string="Traceability" type="action" invisible="state != 'done'" groups="stock.group_production_lot">
+                        <button name="%(stock.action_stock_report)d" icon="north" class="oe_stat_button" string="Traceability" type="action" invisible="state != 'done'" groups="stock.group_production_lot">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Traceability</span>
                             </div>
                         </button>
-                        <button name="%(action_mrp_production_moves)d" type="action" class="oe_stat_button" icon="fa-exchange" invisible="state not in ('progress', 'done')">
+                        <button name="%(action_mrp_production_moves)d" type="action" class="oe_stat_button" icon="swap_horiz" invisible="state not in ('progress', 'done')">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Product Moves</span>
                             </div>
                         </button>
-                        <button name="%(action_report_mo_overview)d" type="action" class="oe_stat_button" icon="fa-bars">
+                        <button name="%(action_report_mo_overview)d" type="action" class="oe_stat_button" icon="menu">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Overview</span>
                             </div>
                         </button>
-                        <button class="oe_stat_button" name="action_view_serial_numbers" type="object" icon="fa-wrench" invisible="serial_numbers_count == 0">
+                        <button class="oe_stat_button" name="action_view_serial_numbers" type="object" icon="build" invisible="serial_numbers_count == 0">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="serial_numbers_count"/></span>
                                 <span class="o_stat_text">Serial Numbers</span>
@@ -356,8 +356,8 @@
                                 <label for="uom_id" string="" class="oe_inline"/>
                                 <field name="uom_id" options="{'no_open': True, 'no_create': True, 'quantity_field': 'product_qty'}" groups="uom.group_uom" widget="many2one_uom" readonly="state != 'draft'" class="flex-grow-0" style="width:auto!important"/>
                                 <span name="to_produce" class='fw-bold text-nowrap'>To Produce</span>
-                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="forecasted_issue"/>
-                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not forecasted_issue" class="text-danger"/>
+                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="area_chart" invisible="forecasted_issue"/>
+                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="area_chart" invisible="not forecasted_issue" class="text-danger"/>
                             </div>
                             <label for="bom_id" name="bom_label"/>
                             <div class='o_row' name="bom_div">
@@ -366,7 +366,7 @@
                                     context="{'default_product_tmpl_id': product_tmpl_id}"
                                     invisible="state != 'draft' and not bom_id"
                                     readonly="state != 'draft'"/>
-                                <button name="action_generate_bom" type="object" icon="fa-plus"
+                                <button name="action_generate_bom" type="object" icon="add"
                                     title="Generate a new BoM from this Manufacturing Order" groups="mrp.group_mrp_manager"
                                     invisible="not show_generate_bom">
                                     <span>Generate BOM</span>
@@ -571,8 +571,8 @@
                                         create="parent.use_create_components_lots"
                                         context="{'default_product_id': product_id}"
                                         domain="[('product_id','=',product_id)]"/>
-                                    <button name="action_show_details" type="object" title="Show Details" icon="fa-list" invisible="has_tracking not in ['lot', 'serial'] or not show_details_visible"/>
-                                    <button class="o_optional_button btn btn-light" name="action_show_details" type="object" title="Show Details" icon="fa-list" invisible="has_tracking in ['lot', 'serial'] or not show_details_visible"/>
+                                    <button name="action_show_details" type="object" title="Show Details" icon="format_list_bulleted" invisible="has_tracking not in ['lot', 'serial'] or not show_details_visible"/>
+                                    <button class="o_optional_button btn btn-light" name="action_show_details" type="object" title="Show Details" icon="format_list_bulleted" invisible="has_tracking in ['lot', 'serial'] or not show_details_visible"/>
                                 </list>
                             </field>
                         </page>
@@ -645,7 +645,7 @@
                                         <field name="components_availability"/>
                                     </div>
                                     <div t-if="record.mrp_production_all_child_count.raw_value &gt; 0" class="d-flex text-nowrap overflow-hidden text-overflow-ellipsis">
-                                        <i class="fa fa-wrench mx-1 mt-1" role="img" title="Child MO's"/>
+                                        <i class="oi mx-1 mt-1" data-icon="build" role="img" title="Child MO's"/>
                                         <a name="action_view_mrp_production_all_childs" type="object" role="button">
                                             <field name="mrp_production_all_child_done_count"/>
                                             /

@@ -43,7 +43,7 @@ test("Show looking for help in the sidebar while active or still seeking help", 
     });
     await start();
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-down");
+    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp [data-icon='keyboard_arrow_down']");
     await contains(".o-mail-DiscussSidebarChannel", { text: "bob" });
     await waitForChannels(["im_livechat.looking_for_help"]);
     await rpc("/im_livechat/session/update_status", {
@@ -103,21 +103,21 @@ test("Enable/disable looking for help when category is opened/folded", async () 
         }
     });
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-right");
+    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp [data-icon='chevron_forward']");
     await expect.waitForSteps([]);
     await click(".o-mail-DiscussSidebarCategory-livechatNeedHelp button");
-    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-down");
+    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp [data-icon='keyboard_arrow_down']");
     await expect.waitForSteps([
         "addChannel - im_livechat.looking_for_help",
         "fetch looking_for_help",
     ]);
     await click(".o-mail-DiscussSidebarCategory-livechatNeedHelp button");
-    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-right");
+    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp [data-icon='chevron_forward']");
     await expect.waitForSteps([]);
     await advanceTime(LFH_UNSUBSCRIBE_DELAY + 1000);
     await expect.waitForSteps(["deleteChannel - im_livechat.looking_for_help"]);
     await click(".o-mail-DiscussSidebarCategory-livechatNeedHelp button");
-    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-down");
+    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp [data-icon='keyboard_arrow_down']");
     await expect.waitForSteps([
         "addChannel - im_livechat.looking_for_help",
         "fetch looking_for_help",
@@ -142,7 +142,7 @@ test("Show join button when help is required and self is not a member", async ()
     });
     await start();
     await openDiscuss(channel);
-    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-down");
+    await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp [data-icon='keyboard_arrow_down']");
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "Looking for help" });
     await click("button[name='join-channel']");
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "In progress" });

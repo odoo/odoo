@@ -34,7 +34,7 @@ $ms-size-multiplier: 1.214285; // Compensate pictogram's inner spacing
     -moz-font-feature-settings: 'liga';
 
     &:before {
-        transform: scale(1.214285);
+        transform: scale(var(--oi-before-scale, 1.214285));
         display: inline-block;
         content: attr(data-icon);
         text-rendering: geometricPrecision;
@@ -97,7 +97,7 @@ $ms-size-multiplier: 1.214285; // Compensate pictogram's inner spacing
 // SCSS VARIABLES
 // ================================
 
-$ms-font-family: 'material_symbols_rounded';
+$ms-font-family: 'material_symbols_outlined';
 $oi-font-family: 'odoo_ui_icons';
 $default-icon-size: $oi-default-size;
 // TODO : review large size and get rid of $fa- variables
@@ -3976,4 +3976,9 @@ $ms-rtl-icons:
 
 .oi-outlined {
     --o-mi-fill: 0;
+}
+
+// Skip transform computation
+.oi-natural-scale {
+    --oi-before-scale: 1;
 }

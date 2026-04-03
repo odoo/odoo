@@ -7,11 +7,11 @@
                     <button class="new-order btn btn-lg lh-lg" t-attf-class="{{ this.pos.getOrder()?.isDirectSale ? 'btn-secondary' : 'btn-primary'}}"
                             t-on-click="() => this.clickNewOrder()">
                         <t t-if="this.pos.getOrder()?.isDirectSale">
-                            <i class="fa fa-angle-double-left fa-fw" role="img" aria-label="Back" title="Back"/>
+                            <i class="oi oi-fw" data-icon="keyboard_double_arrow_left" role="img" aria-label="Back" title="Back"/>
                             <span t-if="!this.ui.isSmall" class="ms-1">Back</span>
                         </t>
                         <t t-else="">
-                            <i class="fa fa-plus fa-fw" role="img" aria-label="New Order" title="New Order"/>
+                            <i class="oi oi-fw" data-icon="add" role="img" aria-label="New Order" title="New Order"/>
                             <span t-if="!this.ui.isSmall" class="ms-1">New Order</span>
                         </t>
                     </button>
@@ -30,10 +30,10 @@
                     <!-- Right Side Div -->
                     <div class="right-buttons d-flex gap-1 pe-0">
                          <button t-if="this.pos.showEditPlanButton and !this.ui.isSmall" class="btn btn-secondary btn-lg lh-lg edit-plan" title="Edit Floor Plan" t-on-click="()=>this.startFloorPlanEditing()">
-                             <i class="fa fa-fw fa-pencil-square-o"/>
+                             <i class="oi oi-fw" data-icon="edit_square"/>
                          </button>
                         <button class="button-table-selector btn btn-secondary btn-lg lh-lg" t-on-click="() => this.toggleTableSelector()">
-                            <i class="fa fa-fw fa-hashtag" aria-hidden="true"/>
+                            <i class="oi oi-fw" data-icon="tag" aria-hidden="true"/>
                         </button>
 
                     </div>

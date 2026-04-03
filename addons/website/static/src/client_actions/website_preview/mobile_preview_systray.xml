@@ -5,7 +5,8 @@
          t-att-class="{ 'o_mobile_preview_active': this.state.isMobile }">
         <a href="#" accesskey="v" class="o_nav_entry mx-1 px-3"
            t-on-click="this.onClick">
-            <span title="Mobile preview" role="img" aria-label="Mobile preview" class="fa fa-2x fa-mobile"/>
+            <span title="Mobile preview" role="img" aria-label="Mobile preview" class="oi oi-lg"
+                  t-att-data-icon="this.state.isMobile? 'monitor' : 'smartphone'"/>
         </a>
     </div>
 </t>

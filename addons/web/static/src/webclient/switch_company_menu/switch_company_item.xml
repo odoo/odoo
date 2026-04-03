@@ -23,7 +23,7 @@
             t-on-click.stop="() => this.toggleCompany()"
         >
             <span class="btn border-0 px-2" t-att-class="this.isCompanyAllowed ? 'btn-link text-primary' : 'disabled'">
-                <i class="fa fa-fw py-1" t-att-class="this.isCompanySelected ? 'fa-check-square text-primary' : 'fa-square-o'"/>
+                <i class="oi oi-fw py-1" t-att-class="{'oi-filled text-primary': this.isCompanySelected}" t-att-data-icon="this.isCompanySelected ? 'check_box' : 'square'"/>
             </span>
         </div>
 

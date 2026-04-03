@@ -135,8 +135,8 @@ test("'active' and 'selected' classes shows a checked icon", async () => {
     await animationFrame();
 
     expect(getHexcode(".o-dropdown-item.no-check", ":before")).toEqual("none");
-    expect(getHexcode(".o-dropdown-item.selected", ":before")).toEqual("\\f00c");
-    expect(getHexcode(".o-dropdown-item.active", ":before")).toEqual("\\f00c");
+    expect(getHexcode(".o-dropdown-item.selected", ":before")).toEqual("\\63");
+    expect(getHexcode(".o-dropdown-item.active", ":before")).toEqual("\\63");
 });
 
 test.tags("mobile");

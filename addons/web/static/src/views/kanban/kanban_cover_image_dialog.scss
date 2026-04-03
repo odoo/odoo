@@ -13,10 +13,11 @@
             @include o-position-absolute(.5rem, .5rem);
             overflow: hidden;
             border-radius: 100%;
-            font: normal normal normal 1rem/0.87 FontAwesome;
+            font: normal normal normal 1rem/1 "material_symbols_outlined";
             color: $o-action;
             backdrop-filter: brightness(100);
-            content: "\f058"; //fa-check-circle
+            content: "check";
+            aspect-ratio: 1;
         }
     }
 }

@@ -26,12 +26,12 @@
                        decoration-muted="state == 'cancel'" widget="badge"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide" readonly="state != 'draft'"/>
                 <field name="message_needaction" column_invisible="True"/>
-                <button name="action_confirm" string="Registered" type="object" icon="fa-check"
+                <button name="action_confirm" string="Registered" type="object" icon="check"
                         invisible="not active or state != 'draft'"/>
-                <button name="action_set_done" string="Mark as Attending" type="object" icon="fa-level-down"
+                <button name="action_set_done" string="Mark as Attending" type="object" icon="subdirectory_arrow_right"
                         invisible="not active or state != 'open'"/>
                 <button name="action_cancel" string="Cancel" type="object"
-                        class="o_btn_cancel_registration" icon="fa-times"
+                        class="o_btn_cancel_registration" icon="close"
                         invisible="not active or (state != 'open' and state != 'draft')"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </list>
@@ -143,16 +143,16 @@
                                 <field class="text-truncate text-primary" name="event_id" invisible="context.get('default_event_id')"/>
                             </div>
                             <span class="text-truncate" invisible="not company_name">
-                                <i class="fa fa-building" title="Attendee Company"/> <field name="company_name"/>
+                                <i class="oi oi-filled" data-icon="business" title="Attendee Company"/> <field name="company_name"/>
                             </span>
                             <div id="event_ticket_id">
                                 <field name="registration_properties"/>
                                 <div t-if="record.event_slot_id.raw_value">
-                                    <i class="fa fa-calendar" title="Slot"/>
+                                    <i class="oi oi-filled" data-icon="calendar_today" title="Slot"/>
                                     <field name="event_slot_id" class="fw-bold text-truncate ms-1"/>
                                 </div>
                                 <div t-if="record.event_ticket_id.raw_value">
-                                    <i class="fa fa-ticket" title="Ticket type"/>
+                                    <i class="oi" data-icon="confirmation_number" title="Ticket type"/>
                                     <field name="event_ticket_id" class="fw-bold text-truncate ms-1"/>
                                 </div>
                             </div>

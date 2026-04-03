@@ -35,10 +35,7 @@ export class ReplaceListIconAction extends BuilderAction {
         editingElement.appendChild(savedIconEl);
         const iconContent = getComputedStyle(savedIconEl, "::before").content;
         editingElement.removeChild(savedIconEl);
-        // Convert the raw character to a readable "\fXXX" CSS escape.
-        const char = iconContent.slice(1, -1);
-        const iconUnicode = `"\\${char.charCodeAt(0).toString(16)}"`;
-        editingElement.style.setProperty("--icon-list-icon-content", iconUnicode);
+        editingElement.style.setProperty("--icon-list-icon-content", iconContent);
     }
 }
 

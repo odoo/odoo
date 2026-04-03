@@ -87,10 +87,13 @@ export class Notification extends Record {
     }
 
     get icon() {
+        return "mail";
+    }
+
+    get iconClass() {
         if (this.isFailure) {
-            return "fa fa-envelope";
+            return "oi-filled";
         }
-        return "fa fa-envelope-o";
     }
 
     get label() {
@@ -106,24 +109,30 @@ export class Notification extends Record {
     get statusIcon() {
         switch (this.notification_status) {
             case "process":
-                return "fa fa-hourglass-half";
+                return "hourglass_bottom";
             case "pending":
-                return "fa fa-paper-plane-o";
+                return "send";
             case "sent":
-                return "fa fa-check";
+                return "check";
             case "bounce":
-                return "fa fa-exclamation";
+                return "priority_high";
             case "exception":
-                return "fa fa-times text-danger";
+                return "close";
             case "ready":
-                return "fa fa-send-o";
+                return "send";
             case "canceled":
                 if (this.autoCanceledFailureType) {
-                    return "fa fa-remove";
+                    return "close";
                 }
-                return "fa fa-trash-o";
+                return "delete";
         }
         return "";
+    }
+
+    get statusClass() {
+        if (this.notification_status === "exception") {
+            return "text-danger";
+        }
     }
 
     get statusTitle() {

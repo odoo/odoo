@@ -131,7 +131,8 @@ patch(Message.prototype, {
             const ellipsisbtnEl = document.createElement("button");
             ellipsisbtnEl.className = "o-mail-ellipsis badge rounded-pill border-0 py-0 px-1";
             const iconellipsisEl = document.createElement("i");
-            iconellipsisEl.className = "oi oi-ellipsis-h oi-large";
+            iconellipsisEl.className = "oi oi-lg";
+            iconellipsisEl.dataset.icon = "more_horiz";
             ellipsisbtnEl.append(iconellipsisEl);
             group[0].parentNode.insertBefore(ellipsisbtnEl, group[0]);
             // Toggle All next nodes

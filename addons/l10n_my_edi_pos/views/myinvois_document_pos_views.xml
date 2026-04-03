@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="l10n_my_edi.myinvois_document_form_view"/>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
-                    <button name="action_view_linked_orders" type="object" icon="fa-shopping-basket" class="oe_stat_button" invisible="linked_order_count == 0">
+                    <button name="action_view_linked_orders" type="object" icon="shopping_basket" class="oe_stat_button" invisible="linked_order_count == 0">
                          <field name="linked_order_count" string="PoS Orders" widget="statinfo"/>
                     </button>
                 </div>

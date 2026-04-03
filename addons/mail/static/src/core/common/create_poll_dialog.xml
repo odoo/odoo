@@ -13,7 +13,7 @@
         <div class="mb-3">
             <span class="mb-2 d-inline-block fw-bold">Options</span>
             <CreatePollOptionDialog t-foreach="this.state.options" t-as="option" t-key="option_index" model="option" deletable="this.state.options.length > 2" onClickRemove="() => this.onClickRemoveOption(option_index)"/>
-            <button class="btn btn-link align-self-end" t-on-click="this.onClickAddOption"><i class="fa fa-plus me-1"/> Add another option</button>
+            <button class="btn btn-link align-self-end" t-on-click="this.onClickAddOption"><i class="oi me-1" data-icon="add"/> Add another option</button>
             <div t-if="this.optionsMissing" class="text-danger form-text ms-1">At least two options are required</div>
         </div>
         <div class="d-flex justify-content-between gap-3">

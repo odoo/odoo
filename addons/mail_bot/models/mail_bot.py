@@ -48,7 +48,7 @@ class MailBot(models.AbstractModel):
             "document_link_end": Markup("</a>"),
             "slides_link_start": Markup("<a href='https://www.odoo.com/slides' target='_blank'>"),
             "slides_link_end": Markup("</a>"),
-            "paperclip_icon": Markup("<i class='fa fa-paperclip' aria-hidden='true'/>"),
+            "paperclip_icon": Markup("<i class='oi' data-icon='attach_file' aria-hidden='true'/>"),
         }
 
     def _get_answer(self, channel, body, values, command=False):

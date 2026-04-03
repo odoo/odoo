@@ -58,7 +58,7 @@
                     </t>
                     <tr t-if="info.exchangeInfo?.line_ids and info.exchangeInfo.line_ids.length">
                         <td>
-                            <a role="button" tabindex="0" class="js_exchange_info fa fa-info-circle" style="margin-right:5px;" t-on-click.stop="() => this.onExchangeInfoClick(info.exchangeInfo.line_ids)"></a>
+                            <a role="button" tabindex="0" class="js_exchange_info oi" data-icon="info" style="margin-right:5px;" t-on-click.stop="() => this.onExchangeInfoClick(info.exchangeInfo.line_ids)"></a>
                         </td>
                         <td colspan="2">
                             <i class="o_field_widget text-start text-muted text-start">
@@ -85,7 +85,7 @@
                             <td class="ps-1">
                                 <t t-out="this.props.amount_company_currency"></t>
                                 <t t-if="this.props.amount_foreign_currency">
-                                    (<span class="fa fa-money"/> <t t-out="this.props.amount_foreign_currency"/>)
+                                    (<span class="oi" data-icon="payments"/> <t t-out="this.props.amount_foreign_currency"/>)
                                 </t>
                             </td>
                         </tr>

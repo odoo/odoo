@@ -22,7 +22,7 @@ registerThreadAction("show-threads", {
     condition: ({ channel, owner }) =>
         (channel?.hasSubChannelFeature || channel?.parent_channel_id?.hasSubChannelFeature) &&
         !owner.isDiscussSidebarChannelActions,
-    icon: "fa fa-fw fa-comments-o",
+    icon: "forum",
     name: _t("Threads"),
     setup({ owner, store }) {
         if (owner.env.inDiscussApp && !store.env.isSmall) {

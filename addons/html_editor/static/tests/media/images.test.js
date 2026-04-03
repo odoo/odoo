@@ -84,12 +84,12 @@ test("Replace an image by icon should remove invalid classes", async () => {
     await animationFrame();
     await click(".nav-link:contains('Icons')");
     await animationFrame();
-    await click("span.fa-envelope-o");
+    await click("span[data-icon='mail']");
     await animationFrame();
     expect("img[src='/web/static/img/logo.png']").toHaveCount(0);
-    expect("p > span.fa-envelope-o").toHaveCount(1);
-    expect("p > span.fa-envelope-o").not.toHaveClass("img-fluid");
-    expect("p > span.fa-envelope-o").not.toHaveClass("w-100");
+    expect("p > span[data-icon='mail']").toHaveCount(1);
+    expect("p > span[data-icon='mail']").not.toHaveClass("img-fluid");
+    expect("p > span[data-icon='mail']").not.toHaveClass("w-100");
 });
 
 test.tags("focus required");
@@ -133,10 +133,10 @@ test("should not preserve image styles when replacing an image with an icon", as
     await animationFrame();
     await click(".nav-link:contains('Icons')");
     await animationFrame();
-    await click(".fa-glass");
+    await click("[data-icon='local_bar']");
     await animationFrame();
     expect(getContent(el).replace(/<img.*?>/, "<img>")).toBe(
-        `<p>\ufeff[<span class="fa fa-glass" style="" contenteditable="false">\u200b</span>]\ufeff</p>`
+        `<p>\ufeff[<span class="oi" data-icon="local_bar" style="" contenteditable="false">\u200b</span>]\ufeff</p>`
     );
 });
 
@@ -153,10 +153,10 @@ test("should not preserve image shape classes when replacing an image with an ic
     await animationFrame();
     await click(".nav-link:contains('Icons')");
     await animationFrame();
-    await click(".fa-glass");
+    await click("[data-icon='local_bar']");
     await animationFrame();
     expect(getContent(el).replace(/<img.*?>/, "<img>")).toBe(
-        `<p>\ufeff[<span class="fa fa-glass" contenteditable="false">\u200b</span>]\ufeff</p>`
+        `<p>\ufeff[<span class="oi" data-icon="local_bar" contenteditable="false">\u200b</span>]\ufeff</p>`
     );
 });
 

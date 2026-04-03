@@ -150,7 +150,7 @@
                                 name="action_bill_matching"
                                 type="object"
                                 groups="account.group_account_invoice"
-                                icon="fa-bullseye"
+                                icon="crisis_alert"
                                 invisible="not partner_id or state != 'purchase' or not partner_bill_count or invoice_status == 'invoiced'">
                             <div class="o_field_statinfo">
                                 <span class="o_stat_text">Bill Matching</span>
@@ -158,13 +158,13 @@
                         </button>
                         <button type="object"  name="action_view_invoice"
                             class="oe_stat_button"
-                            icon="fa-pencil-square-o" invisible="invoice_count == 0 or state in ('draft', 'sent', 'to approve')">
+                            icon="edit_square" invisible="invoice_count == 0 or state in ('draft', 'sent', 'to approve')">
                             <field name="invoice_count" widget="statinfo" string="Vendor Bills"/>
                             <field name='invoice_ids' invisible="1"/>
                         </button>
                         <button type="object"  name="action_purchase_comparison"
                             class="oe_stat_button" invisible="not show_comparison"
-                            icon="fa-dollar">
+                            icon="attach_money">
                             <div class="o_field_statinfo">
                                 <span class="o_stat_text">Price Comparison</span>
                             </div>
@@ -173,7 +173,7 @@
                     </div>
                     <div class="badge rounded-pill text-bg-secondary float-end fs-6 border-0"
                         invisible="not locked">
-                        <i class="fa fa-lock"/>
+                        <i class="oi" data-icon="lock"/>
                         Locked
                     </div>
                     <div class="oe_title">
@@ -210,7 +210,7 @@
                                     and previous information from the RFQ."
                                     name="button_reset_date_order"
                                     type="object"
-                                    icon="fa-refresh"
+                                    icon="refresh"
                                     class="btn-link p-0 ms-2"
                                     invisible="date_order and date_order &gt;= context_today().strftime('%Y-%m-%d')"/>
                             </div>

@@ -28,7 +28,7 @@ export class PhoneField extends Component {
     get actionButtons() {
         return [
             {
-                icon: "fa-phone",
+                icon: "phone",
                 onSelected: () => this.onLinkClicked(),
                 name: _t("Call"),
             },

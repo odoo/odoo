@@ -74,6 +74,6 @@ registerWebsitePreviewTour("blog_no_manager", {}, () => [
     },
     {
         content: "Check if delete action is available or not",
-        trigger: ".o_popover:not(:has(i.fa-trash-o))",
+        trigger: ".o_popover:not(:has(i[data-icon='delete']))",
     },
 ]);

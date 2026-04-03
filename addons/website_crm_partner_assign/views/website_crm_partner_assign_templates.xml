@@ -51,7 +51,7 @@
     </xpath>
     <xpath expr="//div[@t-elif='not partners']" position="after">
         <div t-elif="fallback_all_countries" class="mt-4 alert alert-primary alert-dismissible fade show" role="alert">
-            <i class="fa fa-info-circle me-2"/>
+            <i class="oi me-2" data-icon="info"/>
             There are no matching partners found for the selected country. Displaying results across all countries instead.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -159,10 +159,10 @@
             <!-- modal end -->
             <div class="btn-group ms-2">
                 <button class="btn btn-light border-primary active">
-                    <i class="fa fa-th-large"/>
+                    <i class="oi" data-icon="view_module"/>
                 </button>
                 <button class="btn btn-light" data-bs-toggle="modal" data-bs-target=".partner_map_modal">
-                    <i class="fa fa-map-marker" role="img" aria-label="Open map" title="Open map"/>
+                    <i class="oi" data-icon="location_on" role="img" aria-label="Open map" title="Open map"/>
                 </button>
             </div>
         </t>
@@ -186,7 +186,7 @@
 <template id="partner_detail" inherit_id="website_partnership.partner_detail">
     <xpath expr="//a[@id='link_back_to_partners']" position="replace">
         <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }" aria-label="Back to resellers list">
-            <i class="oi oi-chevron-left me-2"/>Back
+            <i class="oi me-2" data-icon="chevron_backward"/>Back
         </a>
     </xpath>
 </template>
@@ -376,7 +376,7 @@
                     <span t-field="lead.name"/>
                     <span title="Rating" role="img" t-attf-aria-label="Rating: #{lead.priority} on 3" class="fs-6">
                         <t t-foreach="range(1, 4)" t-as="i">
-                            <span t-attf-class="fa fa-lg fa-star#{' text-warning' if i &lt;= int(lead.priority) else '-o'}"/>
+                            <span t-attf-class="oi oi-lg #{'oi-filled text-warning' if i &lt;= int(lead.priority) else ''}" data-icon="star"/>
                         </t>
                     </span>
                 </h4>
@@ -392,10 +392,10 @@
                                     <span t-if="not lead.partner_name" itemprop="name" t-field="lead.contact_name"/>
                                 </div>
                                 <div t-if="lead.phone">
-                                    <span class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="lead.phone" />
+                                    <span class="oi oi-filled" data-icon="phone" role="img" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="lead.phone" />
                                 </div>
                                 <div t-if="lead.email_from">
-                                    <span class="fa fa-envelope" role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-field="lead.email_from" />
+                                    <span class="oi oi-filled" data-icon="mail" role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-field="lead.email_from" />
                                 </div>
                             </address>
                         </td>
@@ -546,7 +546,7 @@
                 <div class="d-flex justify-content-between align-items-center gap-2">
                     <p class="mb-0 fw-bold">Stage:</p>
                     <div t-foreach="stages[::-1]" t-as="stage" class="d-flex justify-content-between align-items-center gap-2">
-                        <i t-if="not stage_first" class="oi oi-chevron-right small" style="opacity: 0.5"/>
+                        <i t-if="not stage_first" class="oi small" data-icon="chevron_forward" style="opacity: 0.5"/>
                         <button type="button" t-att-data="stage.id" t-att-opp="opportunity.id" t-attf-class="btn btn-sm px-2 opp-stage-button #{'btn-light' if opportunity.stage_id.name != stage.name else 'btn-primary disabled'}">
                             <span t-field="stage.name"/>
                         </button>
@@ -563,7 +563,7 @@
                                 <t t-else="" t-out="opportunity.expected_revenue"/> at  </span>
                             <span class="badge text-bg-info"><span t-field="opportunity.probability"/>%</span>
                         </h5>
-                        <button type="button" data-bs-toggle="modal" data-bs-target=".modal_edit_opp" class="btn btn-link btn-sm"><i class="fa fa-pencil me-1"/>Edit</button>
+                        <button type="button" data-bs-toggle="modal" data-bs-target=".modal_edit_opp" class="btn btn-link btn-sm"><i class="oi oi-filled me-1" data-icon="edit"/>Edit</button>
                     </div>
                     <div class="row mb-2">
                         <strong class="col-12 col-sm-4">Expected Closing</strong>
@@ -577,7 +577,7 @@
                         <div class="col">
                             <span class="" title="Rating" role="img" t-attf-aria-label="Rating: #{opportunity.priority} on 4">
                                 <t t-foreach="range(1, 4)" t-as="i">
-                                    <span t-attf-class="fa text-warning fa-lg fa-star#{'' if i &lt;= int(opportunity.priority) else '-o'}" role="img" t-att-aria-label="'Star %d of 3' % i"/>
+                                    <span t-attf-class="oi oi-lg text-warning #{'oi-filled' if i &lt;= int(opportunity.priority) else ''}" data-icon="star" role="img" t-att-aria-label="'Star %d of 3' % i"/>
                                 </t>
                             </span>
                         </div>
@@ -599,7 +599,7 @@
                 <div class="col-lg-6 offset-lg-1 col-xl-5 offset-xl-2">
                     <div class="d-flex justify-content-between py-2 mb-3 border-bottom align-items-center">
                         <h5 class="card-title mb-0">Contact</h5>
-                        <button type="button" data-bs-toggle="modal" data-bs-target=".modal_edit_contact" class="btn btn-link btn-sm"><i class="fa fa-pencil me-1"/>Edit</button>
+                        <button type="button" data-bs-toggle="modal" data-bs-target=".modal_edit_contact" class="btn btn-link btn-sm"><i class="oi oi-filled me-1" data-icon="edit"/>Edit</button>
                     </div>
                     <div class="row mb-3" t-if="opportunity.partner_name or opportunity.email_from or opportunity.contact_name">
                         <strong class="col-12 col-sm-3">Customer</strong>
@@ -619,7 +619,7 @@
                             <address t-if="opportunity.street or opportunity.street2 or opportunity.city or opportunity.zip or opportunity.state_id or opportunity.country_id"
                             class="col d-flex align-items-baseline mb-0 mt-2">
                                 <div class="d-flex flex-nowrap gap-3">
-                                    <div class="fa fa-map-marker fa-fw text-muted"></div>
+                                    <div class="oi oi-fw text-muted" data-icon="location_on"></div>
                                     <div>
                                         <div t-if="opportunity.street"><span t-field="opportunity.street"/></div>
                                         <span t-else="" class="text-muted"> - </span>
@@ -669,22 +669,22 @@
                                                 <div class="input-group">
                                                     <label class="radio-inline">
                                                         <input type="radio" name="PriorityRadioOptions" value="0" t-att-checked="opportunity.priority not in ['1','2','3']" aria-label="Rating: 0 on 3" title="Rating: 0 on 3"/>
-                                                        <i class="ms-1 fa fa-star-o"></i>
+                                                        <i class="ms-1 oi" data-icon="star"></i>
                                                     </label>
                                                     <label class="radio-inline ms-2">
                                                         <input type="radio" name="PriorityRadioOptions" value="1" t-att-checked="opportunity.priority == '1'" aria-label="Rating: 1 on 3" title="Rating: 1 on 3"/>
-                                                        <i class="ms-1 fa text-warning fa-star"></i>
+                                                        <i class="oi oi-filled ms-1 text-warning" data-icon="star"></i>
                                                     </label>
                                                     <label class="radio-inline ms-2">
                                                         <input type="radio" name="PriorityRadioOptions" value="2" t-att-checked="opportunity.priority == '2'" aria-label="Rating: 2 on 3" title="Rating: 2 on 3"/>
-                                                        <i class="ms-1 fa text-warning fa-star"></i>
-                                                        <i class="ms-1 fa text-warning fa-star"></i>
+                                                        <i class="oi oi-filled ms-1 text-warning" data-icon="star"></i>
+                                                        <i class="oi oi-filled ms-1 text-warning" data-icon="star"></i>
                                                     </label>
                                                     <label class="radio-inline ms-2">
                                                         <input type="radio" name="PriorityRadioOptions" value="3" t-att-checked="opportunity.priority == '3'" aria-label="Rating: 3 on 3" title="Rating: 3 on 3"/>
-                                                        <i class="ms-1 fa text-warning fa-star"></i>
-                                                        <i class="ms-1 fa text-warning fa-star"></i>
-                                                        <i class="ms-1 fa text-warning fa-star"></i>
+                                                        <i class="oi oi-filled ms-1 text-warning" data-icon="star"></i>
+                                                        <i class="oi oi-filled ms-1 text-warning" data-icon="star"></i>
+                                                        <i class="oi oi-filled ms-1 text-warning" data-icon="star"></i>
                                                     </label>
                                                 </div>
                                             </div>
@@ -694,7 +694,7 @@
                                                     <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-out="opportunity.date_deadline"/></t>
                                                     <input type="text" data-widget="datetime-picker" data-widget-type="date" name="date_deadline" t-att-value="date_formatted" class="datetimepicker-input form-control date_deadline" t-att-name="prefix"/>
                                                     <span class="input-group-text o_input_group_date_icon">
-                                                        <span class="fa fa-calendar" role="img" aria-label="Calendar"></span>
+                                                        <span class="oi oi-filled" data-icon="calendar_today" role="img" aria-label="Calendar"></span>
                                                     </span>
                                                 </div>
                                             </div>
@@ -719,7 +719,7 @@
                                                     <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-out="user_activity.date_deadline"/></t>
                                                     <input type="text" data-widget="datetime-picker" data-widget-type="date" name="activity_date_deadline" t-att-value="date_formatted" class="form-control activity_date_deadline datetimepicker-input" t-att-name="prefix"/>
                                                     <span class="input-group-text o_input_group_date_icon">
-                                                        <span class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"></span>
+                                                        <span class="oi oi-filled" data-icon="calendar_today" role="img" aria-label="Calendar" title="Calendar"></span>
                                                     </span>
                                                 </div>
                                             </div>

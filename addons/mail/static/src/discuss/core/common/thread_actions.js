@@ -20,7 +20,7 @@ registerThreadAction("pinned-messages", {
         channel &&
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
         !owner.isDiscussSidebarChannelActions,
-    icon: "fa fa-fw fa-thumb-tack",
+    icon: "push_pin",
     name: ({ action }) => (action.isActive ? _t("Hide Pinned Messages") : _t("Pinned Messages")),
     sequence: 20,
     sequenceGroup: 10,
@@ -48,7 +48,8 @@ registerThreadAction("add-to-favorites", {
         channel.self_member_id &&
         !channel.self_member_id.is_favorite &&
         !owner.isDiscussContent,
-    icon: "fa fa-fw fa-star",
+    icon: "star",
+    iconClass: "oi-filled",
     name: _t("Add to Favorites"),
     /**
      * @param {Object} param0
@@ -79,7 +80,7 @@ registerThreadAction("remove-from-favorites", {
      */
     condition: ({ channel, owner }) =>
         channel?.self_member_id?.is_favorite && !owner.isDiscussContent,
-    icon: "fa fa-fw fa-star-o",
+    icon: "star",
     name: _t("Remove from Favorites"),
     /**
      * @param {Object} param0
@@ -132,8 +133,12 @@ registerThreadAction("notification-settings", {
     },
     icon: ({ channel }) =>
         channel?.self_member_id?.mute_until_dt
-            ? "fa fa-fw text-danger fa-bell-slash"
-            : "fa fa-fw fa-bell",
+            ? "notifications_off"
+            : "notifications",
+    iconClass: ({ channel }) =>
+        channel?.self_member_id?.mute_until_dt
+            ? "oi-filled oi-fw text-danger"
+            : "oi-filled oi-fw",
     name: ({ channel }) =>
         channel.channel_type == "channel" ? _t("Notification Settings") : _t("Mute Conversation"),
     sequence: 10,
@@ -146,7 +151,7 @@ registerThreadAction("attachments", {
         channel?.hasAttachmentPanel &&
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
         !owner.isDiscussSidebarChannelActions,
-    icon: "fa fa-fw fa-paperclip",
+    icon: "attach_file",
     name: _t("Attachments"),
     sequence: 10,
     sequenceGroup: 10,
@@ -183,7 +188,7 @@ registerThreadAction("invite-people", {
         !owner.env.pipWindow &&
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
         !(owner.isDiscussContent && channel?.hasMemberList),
-    icon: "oi oi-fw oi-user-plus",
+    icon: "person_add",
     name: _t("Invite People"),
     sequence: 20,
     sequenceGroup: ({ owner }) => (owner.isDiscussContent ? 10 : 20),
@@ -198,7 +203,8 @@ registerThreadAction("invite-people", {
 });
 registerThreadAction("copy-invite-link", {
     condition: ({ channel, owner }) => owner.env.pipWindow && channel?.invitationLink,
-    icon: "oi oi-fw oi-user-plus",
+    icon: "person_add",
+    icon_class: "oi-fw oi-filled",
     name: _t("Copy Invite Link"),
     onSelected: ({ channel, owner }) =>
         channel.copyInvitationLink({
@@ -236,7 +242,7 @@ registerThreadAction("member-list", {
         channel?.hasMemberList &&
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
         !owner.isDiscussSidebarChannelActions,
-    icon: "oi oi-fw oi-users",
+    icon: "group",
     name: _t("Members"),
     sequence: 30,
     sequenceGroup: 10,
@@ -248,7 +254,7 @@ registerThreadAction("mark-read", {
         !channel.self_member_id.mute_until_dt &&
         owner.isDiscussSidebarChannelActions,
     onSelected: ({ channel }) => channel.markAsRead(),
-    icon: "fa fa-fw fa-check",
+    icon: "check",
     name: _t("Mark Read"),
     sequence: 10,
     sequenceGroup: 20,
@@ -263,7 +269,7 @@ registerThreadAction("hide", {
         (channel?.canHide || channel?.sub_channel_ids.some((subChannel) => subChannel.canHide)) &&
         !channel?.isSelfInCall &&
         !owner.isDiscussContent,
-    icon: "fa fa-fw fa-eye-slash",
+    icon: "visibility_off",
     /**
      * @param {Object} param0
      * @param {import("models").DiscussChannel} param0.channel
@@ -290,7 +296,7 @@ registerThreadAction("leave", {
         channel.allowedToLeaveChannelTypes.includes(channel.channel_type) &&
         channel.group_ids.length === 0 &&
         !owner.isDiscussContent,
-    icon: "fa fa-fw fa-sign-out",
+    icon: "logout",
     name: _t("Leave Channel"),
     /**
      * @param {Object} param0
@@ -313,8 +319,8 @@ registerThreadAction("delete-thread", {
             !owner.isDiscussContent
         );
     },
-    icon: "fa fa-fw fa-trash",
-    iconLarge: "fa fa-fw fa-lg fa-trash",
+    icon: "delete",
+    iconClass: "oi-filled",
     name: _t("Delete Thread"),
     actionPanelOpen: ({ channel, owner, store }) => {
         if (owner.isDiscussSidebarChannelActions) {

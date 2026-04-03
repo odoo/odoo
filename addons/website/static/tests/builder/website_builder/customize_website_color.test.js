@@ -125,7 +125,7 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     // Clear clears everything
     expect.step("reset");
     await contains("button.o_we_color_preview").click();
-    await contains(".o_font_color_selector .fa-trash").click();
+    await contains(".o_font_color_selector [data-icon='delete'].oi-filled").click();
     // Should wait for 3 ticks (debounced): customizeWebsiteColors, customizeWebsiteVariables, reloadBundles
     await def.promise;
     expect.verifySteps([

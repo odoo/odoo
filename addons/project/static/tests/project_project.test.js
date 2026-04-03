@@ -28,8 +28,8 @@ test("project.project (list) show archive/unarchive action for project manager",
     await mountView(listViewParams);
     await contains("input.form-check-input").click();
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
-    expect(`.oi-archive`).toHaveCount(1, { message: "Archive action should be visible" });
-    expect(`.oi-unarchive`).toHaveCount(1, { message: "Unarchive action should be visible" });
+    expect(`[data-icon="archive"]`).toHaveCount(1, { message: "Archive action should be visible" });
+    expect(`[data-icon="unarchive"]`).toHaveCount(1, { message: "Unarchive action should be visible" });
 });
 
 test("project.project (list) hide archive/unarchive action for project user", async () => {

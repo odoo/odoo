@@ -42,20 +42,18 @@ export class SlideLike extends Interaction {
         }))
         if (!data.error) {
             const likeButtonEl = this.el.querySelector('span.o_wslides_js_slide_like_up');
-            const likesIcon = likeButtonEl.querySelector('i.fa');
+            const likesIcon = likeButtonEl.querySelector('i.oi');
             const dislikeButtonEl = this.el.querySelector('span.o_wslides_js_slide_like_down');
-            const dislikesIcon = dislikeButtonEl.querySelector('i.fa');
+            const dislikesIcon = dislikeButtonEl.querySelector('i.oi');
 
             // update 'thumbs-up' button with latest state
             likeButtonEl.dataset.userVote = data.user_vote;
             likeButtonEl.querySelector('span').innerText = data.likes;
-            likesIcon.classList.toggle("fa-thumbs-up", data.user_vote === 1);
-            likesIcon.classList.toggle("fa-thumbs-o-up", data.user_vote !== 1);
+            likesIcon.classList.toggle("oi-filled", data.user_vote === 1);
             // update 'thumbs-down' button with latest state
             dislikeButtonEl.dataset.userVote = data.user_vote;
             dislikeButtonEl.querySelector('span').innerText = data.dislikes;
-            dislikesIcon.classList.toggle("fa-thumbs-down", data.user_vote === -1);
-            dislikesIcon.classList.toggle("fa-thumbs-o-down", data.user_vote !== -1);
+            dislikesIcon.classList.toggle("oi-filled", data.user_vote === -1);
         } else {
             if (data.error === 'public_user') {
                 const tags = {

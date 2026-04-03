@@ -38,7 +38,7 @@ export class SearchBar extends Interaction {
         this.inputEl = this.el.querySelector(".search-query");
         this.buttonEl = this.el.querySelector(".oe_search_button");
         this.resultsEl = this.buttonEl.querySelector(".o_search_found_results");
-        this.iconEl = this.buttonEl.querySelector(".oi-search");
+        this.iconEl = this.buttonEl.querySelector("[data-icon='search']");
         this.spinnerEl = this.buttonEl.querySelector(".o_search_spinner");
         this.searchInputGroup = this.el.querySelector(".o_search_input_group");
         this.menuEl = null;

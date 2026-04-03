@@ -11,15 +11,15 @@
                             <span t-field="object.website" class="o_forum_tooltip_line"/>
                         </a>
                 </div>
-                <b class="mt-4"><i class="fa fa-diamond text-secondary"/> <t t-out="object.karma"/></b>
+                <b class="mt-4"><i class="oi text-secondary" data-icon="diamond"/> <t t-out="object.karma"/></b>
                 <div t-if="options.get('badges')" style="display: inline-block">
                     <t t-out="separator"/>
                     <b>|</b>
-                    <span class="fa fa-trophy o-text-gold ms-2" role="img" aria-label="Gold badge" title="Gold badge"/>
+                    <span class="oi oi-filled o-text-gold ms-2" data-icon="trophy" role="img" aria-label="Gold badge" title="Gold badge"/>
                     <t t-out="object.gold_badge"/>
-                    <span class="fa fa-trophy o-text-silver ms-2" role="img" aria-label="Silver badge" title="Silver badge"/>
+                    <span class="oi oi-filled o-text-silver ms-2" data-icon="trophy" role="img" aria-label="Silver badge" title="Silver badge"/>
                     <t t-out="object.silver_badge"/>
-                    <span class="fa fa-trophy o-text-bronze ms-2" role="img" aria-label="Bronze badge" title="Bronze badge"/>
+                    <span class="oi oi-filled o-text-bronze ms-2" data-icon="trophy" role="img" aria-label="Bronze badge" title="Bronze badge"/>
                     <t t-out="object.bronze_badge"/>
                 </div>
                 <t t-out="0"/>

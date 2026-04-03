@@ -1003,7 +1003,7 @@ test("related start date, required, both start date and end date set", async () 
     });
 
     expect(".o_field_daterange button:eq(0)").toHaveValue("02/03/2017");
-    expect(".fa-long-arrow-right").toHaveCount(1);
+    expect("[data-icon='east']").toHaveCount(1);
     expect(".o_field_daterange button:eq(1)").toHaveValue("02/03/2017");
 });
 
@@ -1020,7 +1020,7 @@ test("list daterange with start date and empty end date", async () => {
     });
 
     expect(".o_field_daterange").toHaveText("Feb 3, 2017");
-    expect(".o_field_daterange .fa-long-arrow-right").toHaveCount(0);
+    expect(".o_field_daterange [data-icon='east']").toHaveCount(0);
 });
 
 test("list daterange with empty start date and end date", async () => {
@@ -1038,7 +1038,7 @@ test("list daterange with empty start date and end date", async () => {
     });
 
     expect(".o_field_daterange").toHaveText("Feb 3, 2017");
-    expect(".o_field_daterange .fa-long-arrow-right").toHaveCount(0);
+    expect(".o_field_daterange [data-icon='east']").toHaveCount(0);
 });
 
 test("list daterange: column widths", async () => {
@@ -1282,7 +1282,7 @@ test("there is no arrow between the dates with option always_range if nothing is
     await contains(".o_form_button_save").click();
     await animationFrame();
     expect(".o_datetime_picker").toHaveCount(0);
-    expect(".fa-long-arrow-right").toHaveCount(1);
+    expect("[data-icon='east']").toHaveCount(1);
 });
 
 test("invalid empty date with optional end date", async () => {
@@ -1535,6 +1535,6 @@ test("DateRangeField contains a calendar icon on touch devices", async () => {
         resId: 1,
     });
     expect(".o_field_daterange .o_input").toHaveCount(2);
-    expect(".fa-calendar").toHaveCount(1);
-    expect(".fa-calendar").toBeVisible();
+    expect("[data-icon='calendar_today']").toHaveCount(1);
+    expect("[data-icon='calendar_today']").toBeVisible();
 });

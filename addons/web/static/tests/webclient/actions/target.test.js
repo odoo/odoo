@@ -265,7 +265,7 @@ describe("new", () => {
         expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
         await getService("action").doAction(4);
         expect.verifySteps(["/web/action/load", "get_views", "onchange"]);
-        await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+        await contains(`.o_cp_action_menus button:has([data-icon="settings"])`).click();
         await contains(`button[name="5"]`).click();
         expect.verifySteps(["web_save", "/web/action/load", "get_views", "onchange"]);
         expect(".modal").toHaveCount(1);
@@ -662,7 +662,7 @@ describe("fullscreen", () => {
             </form>`;
         Partner._views["form,666"] = `
             <form>
-                <button type="action" name="15" icon="fa-star" context="{'default_partner': id}" class="oe_stat_button"/>
+                <button type="action" name="15" icon="star" icon_class="oi-filled" context="{'default_partner': id}" class="oe_stat_button"/>
             </form>`;
 
         await mountWithCleanup(WebClient);

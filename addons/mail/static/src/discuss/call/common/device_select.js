@@ -23,6 +23,10 @@ export class DeviceSelect extends Component {
             type: String,
             optional: true,
         },
+        icon_class: {
+            type: String,
+            optional: true,
+        },
         permissionDialogConfiguration: {
             type: Object,
             optional: true,

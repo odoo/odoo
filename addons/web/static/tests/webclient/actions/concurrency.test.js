@@ -692,7 +692,7 @@ test("dialog will only open once for two rapid actions with the target new", asy
 test.tags("desktop");
 test("local state, global state, and race conditions", async () => {
     patchWithCleanup(serverState.view_info, {
-        toy: { multi_record: true, display_name: "Toy", icon: "fab fa-android" },
+        toy: { multi_record: true, display_name: "Toy", icon: "oi_android" },
     });
     Partner._views = {
         toy: `<toy/>`,

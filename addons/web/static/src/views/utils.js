@@ -233,6 +233,7 @@ export function processButton(node) {
         className: node.getAttribute("class") || "",
         disabled: !!node.getAttribute("disabled") || false,
         icon: node.getAttribute("icon") || false,
+        icon_class: node.getAttribute("icon_class") || "",
         title: node.getAttribute("title") || undefined,
         string: node.getAttribute("string") || undefined,
         options: JSON.parse(node.getAttribute("options") || "{}"),

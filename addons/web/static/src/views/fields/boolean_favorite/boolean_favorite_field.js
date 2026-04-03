@@ -16,7 +16,7 @@ export class BooleanFavoriteField extends Component {
     };
 
     get iconClass() {
-        return this.props.record.data[this.props.name] ? "fa fa-star" : "fa fa-star-o";
+        return this.props.record.data[this.props.name] ? "oi-filled" : "";
     }
 
     get label() {

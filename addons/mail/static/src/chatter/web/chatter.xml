@@ -30,13 +30,13 @@
                 </div>
                 <span class="o-mail-Chatter-topbarGrow flex-grow-1 pe-2"/>
                 <button class="btn btn-link text-action px-1" aria-label="Search Messages" title="Search Messages" t-on-click="this.onClickSearch">
-                    <i class="oi oi-search fa-fw" role="img"/>
+                    <i class="oi oi-fw" data-icon="search" role="img"/>
                 </button>
                 <button t-if="this.hasPinnedMessages" class="btn btn-link text-action p-1" aria-label="Pinned Messages" title="Pinned Messages" t-on-click="this.onClickPinnedMessages" t-att-disabled="this.state.isSearchOpen">
-                    <i class="fa fa-fw fa-thumb-tack" role="img"/>
+                    <i class="oi oi-fw" data-icon="push_pin" role="img"/>
                 </button>
                 <button t-if="this.props.hasAttachmentPreview and this.state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action px-1" t-on-click="this.popoutAttachment">
-                    <i class="fa fa-window-restore fa-fw" aria-hidden="Pop out Attachments" title="Pop out Attachments"/>
+                    <i class="oi oi-fw" data-icon="fullscreen_exit" aria-hidden="Pop out Attachments" title="Pop out Attachments"/>
                 </button>
                 <FileUploader t-if="this.attachments.length === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" showUploadingText="false" multiUpload="true" onUploaded="this.onUploaded({ thread: this.state.thread })" onClick="(ev) => this.onClickAttachFile(ev)" t-key="this.state.thread.localId">
                     <t t-set-slot="toggler">
@@ -47,8 +47,8 @@
                 <div class="o-mail-Followers d-flex">
                     <Dropdown position="'bottom-end'" menuClass="'o-mail-Followers-dropdown ' + this.store.discussDropdownMenuClass(this)" state="this.followerListDropdown">
                         <button t-att-class="'o-mail-Followers-button btn btn-link d-flex align-items-center text-action px-1 my-2 ' + (this.state.thread.selfFollower ? 'active' : '')" t-att-disabled="this.isDisabled" t-att-title="this.followerButtonLabel">
-                            <i class="fa fa-fw" role="img" t-attf-class="{{ this.state.thread.selfFollower ? 'fa-user' : 'fa-user-o' }}"/>
-                            <i t-if="this.state.thread.id and this.state.thread.followersCount === undefined" class="fa fa-circle-o-notch fa-spin"/>
+                            <i class="oi oi-fw" role="img" t-att-class="{ 'oi-filled': this.state.thread.selfFollower }" data-icon="person"/>
+                            <i t-if="this.state.thread.id and this.state.thread.followersCount === undefined" class="oi oi-spin" data-icon="autorenew"/>
                             <sup t-else="" class="o-mail-Followers-counter" t-out="this.state.thread.followersCount ?? 0"/>
                         </button>
                         <t t-set-slot="content">
@@ -84,7 +84,7 @@
                         <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded="this.onUploaded({ thread: this.state.thread })" onClick="(ev) => this.onClickAttachFile(ev)" t-key="this.state.thread.localId">
                             <t t-set-slot="toggler">
                                 <button class="btn btn-link px-1" type="button" t-att-disabled="!this.state.thread.canPostMessage">
-                                    <i class="fa fa-plus-square"/>
+                                    <i class="oi oi-filled" data-icon="add_box"/>
                                     Attach files
                                 </button>
                             </t>
@@ -119,7 +119,7 @@
         <div class="d-flex pt-2 px-2 cursor-pointer fw-bold" t-on-click="this.toggleActivities">
             <hr class="flex-grow-1 fs-3"/>
             <div class="d-flex align-items-center px-3">
-                <i class="fa fa-fw" t-att-class="this.state.showActivities ? 'fa-caret-down' : 'fa-caret-right'"/>
+                <i class="oi oi-fw" t-att-data-icon="this.state.showActivities ? 'arrow_drop_down' : 'arrow_right'"/>
                 Planned Activities
                 <span t-if="!this.state.showActivities" class="badge rounded-pill ms-2 text-bg-success"><t t-out="this.activities.length"/></span>
             </div>
@@ -138,7 +138,7 @@
         <div class="d-flex pt-2 cursor-pointer fw-bold" t-on-click="this.toggleScheduledMessages">
             <hr class="flex-grow-1 fs-3"/>
             <div class="d-flex align-items-center px-3">
-                <i class="fa fa-fw" t-att-class="this.state.showScheduledMessages ? 'fa-caret-down' : 'fa-caret-right'"/>
+                <i class="oi oi-fw" t-att-data-icon="this.state.showScheduledMessages ? 'arrow_drop_down' : 'arrow_right'"/>
                 Scheduled Messages
                 <span t-if="!this.state.showScheduledMessages" class="badge rounded-pill ms-2 text-bg-success" t-out="this.scheduledMessages.length"/>
             </div>
@@ -155,9 +155,9 @@
 <t t-name="mail.Chatter.attachFiles">
     <button class="o-mail-Chatter-attachFiles btn btn-link text-action px-1 d-flex align-items-center" aria-label="Attach files" t-on-click="this.onClickAddAttachments"
             t-att-disabled="this.state.isSearchOpen || (!this.state.thread.canPostMessage and this.attachments.length === 0)">
-        <i class="fa fa-paperclip fa-lg fa-fw"/>
+        <i class="oi oi-fw" data-icon="attach_file"/>
         <sup t-if="this.attachments.length > 0" t-out="this.attachments.length"/>
-        <i t-if="!this.state.thread.areAttachmentsLoaded and this.state.thread.isLoadingAttachments and this.state.showAttachmentLoading" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
+        <i t-if="!this.state.thread.areAttachmentsLoaded and this.state.thread.isLoadingAttachments and this.state.showAttachmentLoading" class="oi oi-spin" data-icon="autorenew" aria-label="Attachment counter loading..."/>
     </button>
 </t>
 

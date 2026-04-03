@@ -96,13 +96,15 @@
                 title.translate="Image on the left"
                 actionParam="{ previewClass: '' }"
                 actionValue="'regular'"
-                iconImg="'/website/static/src/img/snippets_options/image_left.svg'"
+                icon="'format_image_left'"
+                iconClass="'oi-filled'"
             />
             <BuilderButton ltrRtlMapping="'left-right'"
                 title.translate="Image on the right"
                 actionParam="{ previewClass: 'flex-lg-row-reverse' }"
                 actionValue="'inverse'"
-                iconImg="'/website/static/src/img/snippets_options/image_right.svg'"
+                icon="'format_image_right'"
+                iconClass="'oi-flip-horizontal oi-filled'"
             />
         </BuilderButtonGroup>
     </BuilderRow>
@@ -136,7 +138,7 @@
                 </BuilderSelectItem>
 	            <BuilderSelectItem actionValue="'grid'">
                     <div class="d-flex align-items-center gap-2">
-                        <i class="oi oi-apps"/>Grid
+                        <i class="oi" data-icon="apps"/>Grid
                     </div>
                 </BuilderSelectItem>
 	        </BuilderSelect>
@@ -153,13 +155,15 @@
                 <t t-set="right">Right</t>
                 <BuilderButton t-if="isSameLangDir"
                     title="this.env.langDir.builder === 'ltr' ? left : right"
-                    icon="'fa-fw fa-long-arrow-left'"
+                    iconClass="'oi-fw'"
+                    icon="'west'"
                     actionParam="{ views: ['website_sale.carousel_product_indicators_left'] }"
                 />
-                <BuilderButton icon="'fa-fw fa-long-arrow-down'" actionParam="{ views: ['website_sale.carousel_product_indicators_bottom'] }" title.translate="Bottom"/>
+                <BuilderButton icon="'south'" iconClass="'oi-fw'" actionParam="{ views: ['website_sale.carousel_product_indicators_bottom'] }" title.translate="Bottom"/>
                 <BuilderButton t-if="!isSameLangDir"
                     title="this.env.langDir.builder === 'ltr' ? right : left"
-                    icon="'fa-fw fa-long-arrow-right'"
+                    icon="'east'"
+                    iconClass="'oi-fw'"
                     actionParam="{ views: ['website_sale.carousel_product_indicators_left'] }"
                 />
 	        </BuilderButtonGroup>
@@ -366,7 +370,7 @@
             action="'websiteConfig'"
             actionParam="{ views: ['website_sale.product_buy_now'] }"
         >
-            <i class="fa fa-fw fa-bolt"/>
+            <i class="oi oi-fw" data-icon="flash_on"/>
             Buy Now
         </BuilderButton>
         <BuilderButton title.translate="Select Quantity" className="'o_we_buy_now_btn'"
@@ -381,14 +385,14 @@
             action="'websiteConfig'"
             actionParam="{views:['website_sale.product_add_to_compare']}"
         >
-            <i class="fa fa-fw fa-exchange"/>
+            <i class="oi oi-fw" data-icon="swap_horiz"/>
             Compare
         </BuilderButton>
         <BuilderButton title.translate="Wishlist"
             action="'websiteConfig'"
             actionParam="{views:['website_sale.product_add_to_wishlist']}"
         >
-            <i class="fa fa-fw fa-heart"/>
+            <i class="oi oi-fw oi-filled" data-icon="favorite"/>
             Wishlist
         </BuilderButton>
     </BuilderRow>

@@ -215,10 +215,10 @@
             @include o-position-absolute(50%, $list-group-item-padding-x);
             transform: translateY(-50%);
             color: $o-action;
-            // .fa
+            // .oi
             text-rendering: auto;
-            font: normal normal normal 14px/1 FontAwesome;
-            // .fa-check
+            font: normal normal normal 14px/1 'material_symbols_outlined';
+            // [data-icon="check"]
             content: "";
         }
     }
@@ -270,15 +270,13 @@
 
             @include o-position-absolute(var(--dropdown-item-padding-y), $list-group-item-padding-x);
             padding-block: map-get($spacers, 2);
-            // .fa
+            // .oi
             text-rendering: auto;
-            font: normal normal normal 14px/1 FontAwesome;
-            // .fa-caret-down
-            content: "\f0d7";
+            font: normal normal normal 14px/1 'material_symbols_outlined';
+            content: "arrow_drop_down";
         }
         &.open::after {
-            // .fa-caret-up
-            content: "\f0d8";
+            content: "arrow_drop_up";
         }
     }
 

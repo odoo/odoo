@@ -28,8 +28,10 @@ $o-we-switch-inactive-color: rgba($text-muted, 0.4) !default;
             transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
 
             &:after {
-                content: "\f057"; // fa-times-circle
-                font-family: 'FontAwesome';
+                --o-mi-fill: 1;
+
+                content: "cancel";
+                font-family: 'material_symbols_outlined';
                 color: white;
                 transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
             }
@@ -39,7 +41,9 @@ $o-we-switch-inactive-color: rgba($text-muted, 0.4) !default;
             background: $o-brand-primary;
 
             &:after {
-                content: "\f058"; // fa-check-circle
+                --o-mi-fill: 1;
+
+                content: "check_circle";
                 margin-left: ($o-we-switch-size * 1.7) - $o-we-switch-size;
             }
         }

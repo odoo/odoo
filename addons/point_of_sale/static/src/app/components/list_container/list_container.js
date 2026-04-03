@@ -40,7 +40,7 @@ export class ListContainer extends Component {
     static template = xml`
         <div class="d-flex gap-1 align-items-center flex-grow-1" t-attf-class="{{this.props.class}}" t-att-class="{'overflow-hidden': !this.isUiSmall}">
             <button t-if="this.props.onClickPlus" class="list-plus-btn btn btn-secondary btn-lg flex-shrink-0 lh-lg" t-on-click="this.props.onClickPlus">
-                <i class="fa fa-fw fa-plus-circle" aria-hidden="true"/>
+                <i class="oi oi-fw" data-icon="add_circle" aria-hidden="true"/>
             </button>
             <span t-if="this.props.onClickPlus" class="navbar-separator mx-1"/>
             <div class="overflow-hidden flex-grow-1">
@@ -51,7 +51,7 @@ export class ListContainer extends Component {
                     <button t-if="this.sizing.isLarger or this.props.forceSmall" t-on-click="this.toggle"
                         class="btn btn-lg btn-secondary order-1 flex-shrink-0 fw-bolder lh-lg"
                         t-att-class="this.props.forceSmall ? '' : 'px-3 fw-bold'">
-                        <i t-if="this.props.forceSmall" class="fa fa-fw fa-caret-down"/>
+                        <i t-if="this.props.forceSmall" class="oi oi-fw" data-icon="arrow_drop_down"/>
                         <t t-else="">+<t t-out="this.hiddenCount"/></t>
                     </button>
                 </div>

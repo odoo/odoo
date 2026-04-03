@@ -7,8 +7,10 @@
     white-space: nowrap;
     min-height: var(--o-hb-btn-minHeight);
 
-    &.o-hb-btn-has-icon, &.fa, &.oi {
+    &.o-hb-btn-has-icon, &.oi {
         --btn-padding-x: var(--o-hb-btn-has-icon-paddingX, #{map-get($spacers , 2)});
+        --btn-padding-y: 1px;
+        --oi-before-scale: 1.33;
 
         flex: 0 1 auto;
         min-width: fit-content;
@@ -41,7 +43,7 @@
         }
     }
 
-    .fa, .oi, &:before {
+    .oi, &:before {
         line-height: inherit;
     }
 }

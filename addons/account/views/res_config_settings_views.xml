@@ -32,7 +32,7 @@
                                             <field name="chart_template" readonly="has_accounting_entries" required="chart_template" class="w-100" placeholder="Package"/>
                                         </div>
                                         <div class="mt16">
-                                            <button name="reload_template" type="object" string="Reload" class="btn-secondary ps-2 w-100" icon="fa-refresh"
+                                            <button name="reload_template" type="object" string="Reload" class="btn-secondary ps-2 w-100" icon="refresh"
                                                     title="Reload accounting data (taxes, accounts, ...) if you notice inconsistencies. This action is irreversible."
                                                     invisible="not has_accounting_entries or not chart_template"/>
                                         </div>
@@ -55,7 +55,7 @@
                                     <div class="row">
                                         <div class="col-lg-3">
                                             <label string="Prices" for="account_price_include" class="o_light_label"/>
-                                            <div class="fa fa-question-circle" title="This setting locks once a journal entry is created."/>
+                                            <div class="oi" data-icon="help" title="This setting locks once a journal entry is created."/>
                                         </div>
                                         <field name="account_price_include" readonly="has_accounting_entries"/>
                                     </div>
@@ -77,7 +77,7 @@
                                 documentation="/applications/finance/accounting/taxation/taxes/eu_distance_selling.html"
                                 help="Apply VAT of the EU country to which goods and services are delivered."
                                 invisible="not('EU' in company_country_group_codes or company_country_code in ('CH', 'UK'))">
-                                <button type="object" name="action_eu_oss_tax_mapping" icon="fa-refresh" string="OSS Tax mapping" class="btn-link"/>
+                                <button type="object" name="action_eu_oss_tax_mapping" icon="refresh" string="OSS Tax mapping" class="btn-link"/>
                             </setting>
                             <setting id="tax_exigibility" company_dependent="1" help="Allow to configure taxes using cash basis" title="Select this if the taxes should use cash basis, which will create an entry for such taxes on a given account during reconciliation."
                                 documentation="/applications/finance/accounting/taxation/taxes/cash_basis_taxes.html">
@@ -107,7 +107,7 @@
                                         <field name="group_multi_currency" invisible="1"/>
                                     </div>
                                     <div class="mt8">
-                                        <button type="action" name="%(base.action_currency_form)d" string="Currencies" class="btn-link" icon="oi-arrow-right"/>
+                                        <button type="action" name="%(base.action_currency_form)d" string="Currencies" class="btn-link" icon="east"/>
                                     </div>
                                 </div>
                             </setting>
@@ -128,7 +128,7 @@
                                 documentation="/applications/finance/accounting/receivables/customer_invoices/cash_rounding.html">
                                 <field name="group_cash_rounding"/>
                                 <div class="mt8">
-                                    <button name="%(account.rounding_list_action)d" icon="oi-arrow-right"
+                                    <button name="%(account.rounding_list_action)d" icon="east"
                                             type="action" string="Cash Roundings" class="btn-link"
                                             invisible="not group_cash_rounding"/>
                                 </div>
@@ -156,12 +156,12 @@
                                                     placeholder="Insert your terms &amp; conditions here..."/>
                                         </div>
                                         <div class="mt8" invisible="terms_type != 'html'">
-                                            <button name="action_update_terms" icon="oi-arrow-right" type="object" string="Update Terms" class="btn-link"/>
+                                            <button name="action_update_terms" icon="east" type="object" string="Update Terms" class="btn-link"/>
                                         </div>
                                         <field name="preview_ready" invisible="1"/>
                                         <div class="mt4 ms-1" invisible="not preview_ready">
                                             <a class="btn-link" href="/terms" role="button">
-                                                <i class="oi oi-arrow-right"/>
+                                                <i class="oi" data-icon="east"/>
                                                 Preview
                                             </a>
                                         </div>
@@ -192,7 +192,7 @@
                                 <div class="content-group" invisible="not group_uom">
                                     <button
                                         name="%(uom.product_uom_form_action)d"
-                                        icon="oi-arrow-right"
+                                        icon="east"
                                         type="action"
                                         string="Units &amp; Packagings"
                                         class="btn-link"/>

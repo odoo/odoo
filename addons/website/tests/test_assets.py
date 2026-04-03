@@ -148,9 +148,9 @@ class TestWebsiteAssets(odoo.tests.HttpCase):
 
         # Verify that links actually return expected binary for latest version
         old_version = 'aaaaaaa'  # dummy version unrelated to the actual one
-        font = self.url_open(f'/web/assets/{old_version}/web.fontawesome.min.woff')
-        self.assertEqual('font/woff', font.headers.get('Content-Type'), "Should be woff")
-        self.assertEqual(b'wOFF', font.content[:4])
+        font = self.url_open(f'/web/assets/{old_version}/web.material_symbols_outlined.min.woff2')
+        self.assertEqual('font/woff2', font.headers.get('Content-Type'), "Should be woff")
+        self.assertEqual(b'wOF2', font.content[:4])
         new_version = urlsplit(font.url).path.split("/assets/")[1].split("/")[0]
         self.assertNotEqual(old_version, new_version)
 

@@ -234,7 +234,7 @@ test("[Offline] Many2ManyTagsField", async () => {
     await clickSave();
 
     // The created record will be save the next time we are online
-    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon="link_off"]`).click();
     expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
         "PARTNER",
         "first record",
@@ -2346,7 +2346,7 @@ test("many2many_tags widget enforces limit in desktop form view", async () => {
     expect("article.o_kanban_record:contains('gold')").toHaveCount(1); // New screen with list of tags
 
     // When coming back we should see all tags
-    await click(".modal-header button.oi-arrow-left");
+    await click(".modal-header button[data-icon='west']");
     expect(".o_field_many2many_tags .o_tag").toHaveCount(4);
 });
 

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallSettings">
-        <ActionPanel t-if="this.props.withActionPanel" close="this.props.close" title.translate="Voice &amp; Video Settings" icon="'fa fa-gear'">
+        <ActionPanel t-if="this.props.withActionPanel" close="this.props.close" title.translate="Voice &amp; Video Settings" icon="'settings'" icon_class="'oi-filled'">
             <t t-call="discuss.CallSettings.content" />
         </ActionPanel>
         <t t-else="" t-call="discuss.CallSettings.content" />
@@ -28,13 +28,13 @@
                             <div class="d-flex gap-2" t-att-class="this.props.isCompact or this.isMobileOS ? 'flex-column' : 'flex-row'">
                                 <div class="d-flex flex-column flex-grow-1 gap-1 overflow-hidden" t-att-class="this.props.isCompact or this.isMobileOS ? 'w-100' : 'w-50'" aria-label="Microphone">
                                     <span class="flex-shrink-0 fw-bold text-muted small text-uppercase">
-                                        <i class="fa fa-microphone text-muted ms-1 me-2"/>Microphone
+                                        <i class="oi text-muted ms-1 me-2" data-icon="mic"/>Microphone
                                     </span>
                                     <DeviceSelect kind="'audioinput'"/>
                                 </div>
                                 <div class="d-flex flex-column flex-grow-1 gap-1 overflow-hidden" t-att-class="this.props.isCompact or this.isMobileOS ? 'w-100' : 'w-50'" aria-label="Speakers">
                                     <span class="flex-shrink-0 fw-bold text-muted small text-uppercase">
-                                        <i class="fa fa-volume-up text-muted ms-1 me-2"/>Speakers
+                                        <i class="oi text-muted ms-1 me-2" data-icon="volume_up"/>Speakers
                                     </span>
                                     <DeviceSelect kind="'audiooutput'"/>
                                 </div>

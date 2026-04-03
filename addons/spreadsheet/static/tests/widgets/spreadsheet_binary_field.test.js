@@ -47,7 +47,7 @@ test("Download button for dashboard json file should be hidden in list view", as
                     />
                 </list>`,
     });
-    expect(`.o_field_widget[name="spreadsheet_binary_data"] .fa-download`).toHaveCount(0, {
+    expect(`.o_field_widget[name="spreadsheet_binary_data"] [data-icon="download"]`).toHaveCount(0, {
         message: "The download button should be hidden",
     });
 });

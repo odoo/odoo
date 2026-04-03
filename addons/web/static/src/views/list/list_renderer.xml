@@ -34,7 +34,7 @@
                                         <span class="d-block min-w-0 text-truncate flex-grow-1 flex-shrink-1" t-att-class="isNumeric ? 'o_list_number_th' : ''"
                                               t-out="column.label"/>
                                         <div class="o_list_header_label_spacer"/>
-                                        <i class="o_list_sortable_icon" t-att-class="this.getSortableIconClass(column)"/>
+                                        <i class="o_list_sortable_icon" t-att-class="this.getSortableIconClass(column)" t-att-data-icon="this.getSortableIcon(column)"/>
                                     </div>
                                     <span
                                           class="o_resize position-absolute top-0 end-0 bottom-0 ps-1 bg-black-25 opacity-0 opacity-50-hover z-1"
@@ -78,7 +78,7 @@
                             <div t-if="this.displayOptionalFields or this.hasOptionalOpenFormViewColumn" class="o_optional_columns_dropdown d-print-none text-center border-top-0">
                                 <Dropdown position="'bottom-end'" menuRef="this.optionalColumnsDropdownRef">
                                     <button class="btn p-0" tabindex="-1" data-available-offline="">
-                                        <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
+                                        <i class="o_optional_columns_dropdown_toggle oi oi-fw" data-icon="tune"/>
                                     </button>
 
                                     <t t-set-slot="content">
@@ -137,10 +137,10 @@
                                     t-on-keydown="(ev) => this.onGroupInputKeydown(ev)"
                                 />
                                 <button class="btn btn-primary o_list_group_confirm" type="button" t-on-click="this.addNewGroup">
-                                    <i class="fa fa-check"/>
+                                    <i class="oi" data-icon="check"/>
                                 </button>
                                 <button class="btn btn-danger o_list_group_cancel" type="button" t-on-click="() => this.state.showGroupInput = false">
-                                    <i class="fa fa-times"/>
+                                    <i class="oi" data-icon="close"/>
                                 </button>
                             </div>
                         </td>
@@ -190,6 +190,7 @@
                             className="`${control.className} ${control_index !== 0 ? 'ml16' : ''}`"
                             clickParams="control.clickParams"
                             icon="control.icon"
+                            icon_class="control.icon_class"
                             attrs="control.attrs"
                             record="this.props.list"
                             string="control.string"
@@ -244,7 +245,7 @@
                     <t t-else="">Click to collapse all groups</t>
                 </div>
                 <div class="d-flex align-items-center">
-                    <span t-attf-class="o_group_caret fa fa-fw {{group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }} me-1"
+                    <span class="o_group_caret oi oi-fw me-1" t-attf-data-icon="{{ group.isFolded ? 'arrow_right' : 'arrow_drop_down' }}"
                         t-attf-style="--o-list-group-level: {{this.getGroupLevel(group)}}"/>
                     <span class="fw-normal">
                         <t t-out="this.odoomark(group.displayName)"/>
@@ -262,6 +263,7 @@
                                         className="button.className"
                                         clickParams="button.clickParams"
                                         icon="button.icon"
+                                        icon_class="button.icon_class"
                                         record="group.record"
                                         string="button.string"
                                         title="button.title"
@@ -383,6 +385,7 @@
                                     defaultRank="button.defaultRank"
                                     disabled="button.disabled"
                                     icon="button.icon"
+                                    icon_class="button.icon_class"
                                     record="record"
                                     string="button.string"
                                     title="button.title"
@@ -427,12 +430,11 @@
                         t-on-click.stop="hasDeleteButton ? (ev) => this.onRemoveCellClicked(record, ev) : () => {}"
                         tabindex="-1"
                     >
-                        <button class="fa d-print-none btn btn-link text-danger"
+                        <button class="oi d-print-none btn btn-link text-danger"
                             t-if="hasDeleteButton"
-                            t-att-class="{
-                                'fa-trash-o': !useUnlink and this.activeActions.delete,
-                                'fa-times': useUnlink and this.activeActions.unlink,
-                            }"
+                            t-attf-data-icon="{{
+                                !useUnlink and this.activeActions.delete ? 'delete' : useUnlink and this.activeActions.unlink ? 'close' : ''
+                            }}"
                             name="delete"
                             aria-label="Delete row"
                             tabindex="-1"

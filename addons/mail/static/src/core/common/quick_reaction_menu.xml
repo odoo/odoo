@@ -10,7 +10,7 @@
                         <span class="fs-2" t-out="emoji"/>
                     </button>
                     <button class="o-mail-QuickReactionMenu-emojiPicker o-mail-QuickReactionMenu-popEffect o-mail-QuickReactionMenu-popEffect--smaller o-navigable text-muted d-flex justify-content-center align-items-center btn btn-secondary o-rounded-bubble border border-dark-subtle" title="Toggle Emoji Picker" t-on-click="() => this.togglePicker()">
-                        <i class="oi oi-close"/>
+                        <i class="oi" data-icon="close_small"/>
                     </button>
                 </div>
             </t>
@@ -19,7 +19,7 @@
 
     <t t-name="mail.QuickReactionMenu.toggler">
         <button class="btn border-0 o-px-0_5 py-0 o-inline o-mail-QuickReactionMenu-toggler" t-att-class="this.attClass" t-att-title="this.props.action.name" t-att-aria-label="this.props.action.name" t-on-click="this.onClick">
-            <i t-att-class="this.props.action.icon"/>
+            <i class="oi" t-att-data-icon="this.props.action.icon"/>
         </button>
     </t>
 </templates>

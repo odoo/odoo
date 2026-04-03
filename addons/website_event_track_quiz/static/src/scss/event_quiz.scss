@@ -33,7 +33,7 @@ $o-wslides-fs-side-width: 300px;
         .list-group-item  {
             @include font-size(1rem);
 
-            input:checked + i.fa-circle {
+            input:checked + [data-icon="circle"] {
                 color: $primary !important;
             }
         }
@@ -50,7 +50,7 @@ $o-wslides-fs-side-width: 300px;
 
     a.o_quiz_js_quiz_is_correct {
         color: black;
-        input:checked + i.fa-check-circle-o {
+        input:checked + i[data-icon="check_circle"]:not(.oi-filled) {
             color: $primary !important;
         }
     }

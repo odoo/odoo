@@ -63,8 +63,8 @@ export class CustomAccordionIconAction extends BuilderAction {
         const accordionButtonEls = editingElement.querySelectorAll(
             ":scope > .accordion-item > .accordion-button"
         );
-        const activeCustomIcon = editingElement.dataset.activeCustomIcon || "fa fa-arrow-up";
-        const inactiveCustomIcon = editingElement.dataset.inactiveCustomIcon || "fa fa-arrow-down";
+        const activeCustomIcon = editingElement.dataset.activeCustomIcon || "arrow_upward";
+        const inactiveCustomIcon = editingElement.dataset.inactiveCustomIcon || "arrow_downward";
         if (value) {
             if (value === "custom") {
                 editingElement.dataset.activeCustomIcon = activeCustomIcon;
@@ -91,14 +91,16 @@ export class CustomAccordionIconAction extends BuilderAction {
                 customIconActiveEl.className = customIconsClasses;
                 customIconActiveEl.classList.add("o_custom_icon_active");
                 const customIconActiveIEl = document.createElement("i");
-                customIconActiveIEl.className = activeCustomIcon;
+                customIconActiveIEl.className = "oi";
+                customIconActiveIEl.dataset.icon = activeCustomIcon;
                 customIconActiveEl.appendChild(customIconActiveIEl);
                 el.appendChild(customIconActiveEl);
                 const customIconInactiveEl = document.createElement("span");
                 customIconInactiveEl.className = customIconsClasses;
                 customIconInactiveEl.classList.add("o_custom_icon_inactive");
                 const customIconInactiveIEl = document.createElement("i");
-                customIconInactiveIEl.className = inactiveCustomIcon;
+                customIconInactiveIEl.className = "oi";
+                customIconInactiveIEl.dataset.icon = inactiveCustomIcon;
                 customIconInactiveEl.appendChild(customIconInactiveIEl);
                 el.appendChild(customIconInactiveEl);
             });

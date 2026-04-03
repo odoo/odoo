@@ -16,6 +16,7 @@ class WebsiteConfiguratorFeature(models.Model):
     name = fields.Char(translate=True)
     description = fields.Char(translate=True)
     icon = fields.Char()
+    icon_class = fields.Char()
     iap_page_code = fields.Char(help='Page code used to tell IAP website_service for which page a snippet list should be generated')
     website_config_preselection = fields.Char(help='Comma-separated list of website type/purpose for which this feature should be pre-selected')
     page_view_id = fields.Many2one('ir.ui.view', ondelete='cascade')

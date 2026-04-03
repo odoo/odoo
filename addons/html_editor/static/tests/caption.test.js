@@ -628,11 +628,11 @@ test("remove caption when replacing an image with other media", async () => {
     await click("button[name='replace_image']");
     await waitFor(".o_select_media_dialog");
     await click(".modal .modal-body .nav-item:nth-child(3) button"); // Icons
-    await waitFor(".modal .modal-body .fa-heart");
-    await click(".modal .modal-body .fa-heart");
+    await waitFor(".modal .modal-body [data-icon='favorite']");
+    await click(".modal .modal-body [data-icon='favorite']");
     expect("img[src='/web/static/img/logo.png']").toHaveCount(0);
     expect(getContent(el)).toBe(
-        '<p>\ufeff<span class="fa fa-heart" contenteditable="false">\u200b</span>[]\ufeff</p><p>abc</p>'
+        '<p>\ufeff<span class="oi" data-icon="favorite" contenteditable="false">\u200b</span>[]\ufeff</p><p>abc</p>'
     );
 });
 

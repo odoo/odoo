@@ -16,7 +16,7 @@
                             role="button"
                             href="https://www.odoo.com/documentation/latest/applications/marketing/sms_marketing/twilio.html">
                             Need help ?
-                            <i class="fa fa-external-link" aria-hidden="true"/>
+                            <i class="oi" data-icon="open_in_new" aria-hidden="true"/>
                         </a>
                     </div>
                     <field name="sms_twilio_auth_token" password="True" placeholder="abcde12345abcde12345abcde12345ab"
@@ -25,7 +25,7 @@
                     <div class="d-flex align-items-center">
                         <field name="test_number" placeholder="+1 555-123-4567" class="w-auto"/>
                         <button name="action_send_test" string="Send test SMS"
-                            icon="fa-send" type="object"
+                            icon="send" icon_class="oi-filled" type="object"
                             class="btn btn-link w-auto ms-1 p-0"/>
                     </div>
                 </group>
@@ -33,7 +33,7 @@
                     <button
                         class="btn btn-secondary" colspan="2"
                         type="object" name="action_reload_numbers"
-                        string="Load from Twilio" icon="fa-refresh"/>
+                        string="Load from Twilio" icon="refresh"/>
                     <field name="sms_twilio_number_ids" colspan="2" nolabel="1">
                         <list editable="bottom">
                             <field name="sequence" widget="handle"/>

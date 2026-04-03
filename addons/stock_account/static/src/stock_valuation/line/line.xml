@@ -21,7 +21,9 @@
                 <button t-attf-class="btn btn_foldable#{this.props.sublines ? '' : '_empty'}"
                         t-att-tabindex="this.props.lines ? 0 : -1">
                     <i t-if="this.hasSublines"
-                        t-attf-class="fa fa-folder#{this.state.displaySublines ? '-open' : ''}-o"/>
+                        class="oi"
+                        t-att-class="{'oi-filled': this.state.displaySubline}"
+                        t-att-data-icon="this.state.displaySubline ? 'folder_open' : 'folder'"/>
                 </button>
             </td>
         </tr>

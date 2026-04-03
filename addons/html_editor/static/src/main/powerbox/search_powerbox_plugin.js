@@ -32,7 +32,7 @@ export class SearchPowerboxPlugin extends Plugin {
         power_buttons: withSequence(100, {
             commandId: "openSearchPowerbox",
             description: _t("More options"),
-            icon: "oi-ellipsis-v",
+            icon: "more_vert",
         }),
     };
     setup() {

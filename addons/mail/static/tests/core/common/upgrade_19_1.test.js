@@ -160,7 +160,7 @@ test("category 'Channels' is folded", async () => {
     localStorage.setItem("discuss_sidebar_category_folded_channels", "true");
     await start();
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebarCategory:contains('Channels') .oi.oi-chevron-right");
+    await contains(".o-mail-DiscussSidebarCategory:contains('Channels') .oi[data-icon='chevron_forward']");
     const channels_is_open = makeRecordFieldLocalId(
         DiscussAppCategory.localId("channels"),
         "is_open"
@@ -174,7 +174,7 @@ test("category 'Direct messages' is folded", async () => {
     await start();
     await openDiscuss();
     await contains(
-        ".o-mail-DiscussSidebarCategory:contains('Direct messages') .oi.oi-chevron-right"
+        ".o-mail-DiscussSidebarCategory:contains('Direct messages') .oi[data-icon='chevron_forward']"
     );
     const chats_is_open = makeRecordFieldLocalId(DiscussAppCategory.localId("chats"), "is_open");
     expect(localStorage.getItem(chats_is_open)).toBe(toRawValue(false));

@@ -25,7 +25,7 @@
                     <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" name="action_open_related_taxes"
-                                type="object" icon="fa-bars"
+                                type="object" icon="menu"
                                 invisible="not tax_ids">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">
@@ -136,7 +136,7 @@
             <field name="priority" eval="5"/>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
-                    <button type="object" class="oe_stat_button" icon="fa-pencil-square-o" name="action_view_partner_invoices"
+                    <button type="object" class="oe_stat_button" icon="edit_square" name="action_view_partner_invoices"
                         groups="account.group_account_invoice,account.group_account_readonly"
                         context="{'default_partner_id': id}">
                         <div class="o_form_field o_stat_info">
@@ -152,7 +152,7 @@
                         type="action"
                         name="%(account.res_partner_action_supplier_bills)d"
                         groups="account.group_account_invoice"
-                        icon="fa-pencil-square-o" help="Vendor Bills"
+                        icon="edit_square" help="Vendor Bills"
                         invisible="supplier_invoice_count == 0"
                     >
                         <field string="Vendor Bills" name="supplier_invoice_count" widget="statinfo"/>

@@ -383,9 +383,9 @@
                         <field name="rating_avg" invisible="1"/>
                         <field name="rating_active" invisible="1"/>
                         <button name="action_open_ratings" type="object" invisible="rating_count == 0 or not rating_active or has_template_ancestor or has_project_template" class="oe_stat_button">
-                            <i class="fa fa-fw o_button_icon fa-smile-o text-success" invisible="rating_avg &lt; 3.66" title="Happy"/>
-                            <i class="fa fa-fw o_button_icon fa-meh-o text-warning" invisible="rating_avg &lt; 2.33 or rating_avg &gt;= 3.66" title="Neutral"/>
-                            <i class="fa fa-fw o_button_icon fa-frown-o text-danger" invisible="rating_avg &gt;= 2.33" title="Unhappy"/>
+                            <i class="oi oi-fw o_button_icon" data-icon="sentiment_satisfied" invisible="rating_avg &lt; 3.66" title="Happy"/>
+                            <i class="oi oi-fw o_button_icon" data-icon="sentiment_neutral" invisible="rating_avg &lt; 2.33 or rating_avg &gt;= 3.66" title="Neutral"/>
+                            <i class="oi oi-fw o_button_icon" data-icon="sentiment_sad" invisible="rating_avg &gt;= 2.33" title="Unhappy"/>
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="rating_avg_text" nolabel="1"/></span>
                                 <span class="o_stat_text">Last Rating</span>
@@ -393,15 +393,15 @@
                         </button>
                         <!-- Dummy tag used to organize buttons -->
                         <span id="end_rating_buttons" invisible="1"/>
-                        <button name="action_open_parent_task" type="object" class="oe_stat_button" icon="fa-check" invisible="not parent_id">
+                        <button name="action_open_parent_task" type="object" class="oe_stat_button" icon="check" invisible="not parent_id">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Parent Task</span>
                             </div>
                         </button>
-                        <button name="action_recurring_tasks" type="object" invisible="not active or not recurrence_id or not allow_recurring_tasks" class="oe_stat_button" icon="fa-repeat" groups="project.group_project_recurring_tasks">
+                        <button name="action_recurring_tasks" type="object" invisible="not active or not recurrence_id or not allow_recurring_tasks" class="oe_stat_button" icon="redo" groups="project.group_project_recurring_tasks">
                             <field name="recurring_count" widget="statinfo" string="Recurring Tasks"/>
                         </button>
-                        <button name="action_open_subtasks" type="object" class="oe_stat_button" icon="fa-check"
+                        <button name="action_open_subtasks" type="object" class="oe_stat_button" icon="check"
                             invisible="not id or subtask_count == 0"
                         >
                             <div class="o_field_widget o_stat_info">
@@ -412,7 +412,7 @@
                                 </span>
                             </div>
                         </button>
-                        <button name="action_dependent_tasks" type="object" invisible="dependent_tasks_count == 0 or not allow_task_dependencies" class="oe_stat_button" icon="fa-check" groups="project.group_project_task_dependencies">
+                        <button name="action_dependent_tasks" type="object" invisible="dependent_tasks_count == 0 or not allow_task_dependencies" class="oe_stat_button" icon="check" groups="project.group_project_task_dependencies">
                             <field name="dependent_tasks_count" widget="statinfo" string="Blocked Tasks" />
                         </button>
                         <!-- Dummy tag used to organize buttons -->
@@ -460,7 +460,7 @@
                             <div id="date_deadline_and_recurring_task" class="d-inline-flex w-100">
                                 <field name="date_deadline" nolabel="1" decoration-danger="date_deadline and date_deadline &lt; current_date and state not in ['1_done', '1_canceled']"/>
                                 <field name="recurring_task" nolabel="1" class="w-auto w-lg-100"
-                                       widget="boolean_icon" options="{'icon': 'fa-repeat'}"
+                                       widget="boolean_icon" options="{'icon': 'redo'}"
                                        invisible="not active or parent_id or not allow_recurring_tasks"
                                        groups="project.group_project_recurring_tasks"/>
                             </div>
@@ -713,7 +713,7 @@
                         <t t-name="card">
                             <main t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
                                 <a t-if="record.parent_id.raw_value" class="o_kanban_parent mw-100 me-auto pe-3 btn-link o_small-fs text-dark text-truncate" title="See Parent Task" name="action_open_parent_task" type="object" role="button">
-                                    <i class="fa fa-level-down me-1"/>
+                                    <i class="oi me-1" data-icon="subdirectory_arrow_right"/>
                                     <field name="parent_id"/>
                                 </a>
                                 <field name="name" class="fw-bold fs-5"/>
@@ -730,12 +730,12 @@
                                     <div class="d-flex align-items-center gap-1">
                                         <field name="activity_ids" widget="kanban_activity" style="margin-right: 2px"/>
                                         <b t-if="record.rating_active.raw_value and record.rating_count.raw_value &gt; 0">
-                                            <span class="fa fa-fw fa-smile-o text-success rating_face" t-if="record.rating_avg.raw_value &gt;= 3.66" title="Average Rating: Happy" role="img" aria-label="Happy face"/>
-                                            <span class="fa fa-fw fa-meh-o text-warning rating_face" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Neutral" role="img" aria-label="Neutral face"/>
-                                            <span class="fa fa-fw fa-frown-o text-danger rating_face" t-else="" title="Average Rating: Unhappy" role="img" aria-label="Unhappy face"/>
+                                            <span class="oi oi-fw o_button_icon text-success rating_face" data-icon="sentiment_satisfied" t-if="record.rating_avg.raw_value &gt;= 3.66" title="Average Rating: Happy" role="img" aria-label="Happy face"/>
+                                            <span class="oi oi-fw o_button_icon text-warning rating_face" data-icon="sentiment_neutral" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Neutral" role="img" aria-label="Neutral face"/>
+                                            <span class="oi oi-fw o_button_icon text-danger rating_face" data-icon="sentiment_sad" t-else="" title="Average Rating: Unhappy" role="img" aria-label="Unhappy face"/>
                                         </b>
                                         <a t-if="!record.project_id.raw_value and !record.is_template.raw_value" class="text-muted" style="font-size: 17px; margin-left: 1.5px">
-                                            <i title="Private Task" class="fa fa-lock"/>
+                                            <i title="Private Task" class="oi" data-icon="lock"/>
                                         </a>
                                         <t t-if="record.project_id.raw_value and record.subtask_count.raw_value">
                                             <widget name="subtask_counter" class="me-1"/>
@@ -909,7 +909,7 @@
                                 <field name="name" display="full" class="o_text_block"/>
                                 <div t-att-title="record.project_id.value" invisible="context.get('default_project_id', False)">
                                     <field t-if="record.project_id.value" name="project_id" muted="1" class="o_text_block"/>
-                                    <div t-else="" class="fst-italic text-muted"><i class="fa fa-lock"/> Private</div>
+                                    <div t-else="" class="fst-italic text-muted"><i class="oi" data-icon="lock"/> Private</div>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end gap-2 flex-grow-1">

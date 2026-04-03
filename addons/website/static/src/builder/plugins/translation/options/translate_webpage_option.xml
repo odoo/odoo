@@ -7,7 +7,7 @@
             tooltip.translate="Translate your content (yellow part) with AI">
             <BuilderButton action="'translateWebpageAI'" type="'success'" className="this.translationState.isTranslating ? 'disabled': ''">
                 <t t-if="this.translationState.isTranslating">
-                    <i class="fa fa-circle-o-notch fa-spin lh-1"/> Translating...
+                    <i class="oi oi-spin lh-1" data-icon="autorenew"/> Translating...
                 </t>
                 <t t-else="" t-out="this.env.services.website.currentWebsite.metadata.langName"/>
             </BuilderButton>

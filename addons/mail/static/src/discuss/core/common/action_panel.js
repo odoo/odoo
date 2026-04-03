@@ -18,6 +18,7 @@ export class ActionPanel extends Component {
         "close?",
         "contentRef?",
         "icon?",
+        "icon_class?",
         "title?",
         "resizable?",
         "slots?",

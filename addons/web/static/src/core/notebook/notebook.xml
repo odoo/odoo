@@ -7,7 +7,7 @@
                 <ul t-attf-class="nav nav-tabs {{ this.props.orientation === 'horizontal' ? 'flex-row flex-nowrap' : 'flex-column p-0' }}">
                     <li t-foreach="this.navItems" t-as="navItem" t-key="navItem[0]" class="nav-item flex-nowrap" t-if="navItem[1].isVisible" t-attf-class="{{ navItem[1].isDisabled ? 'disabled' : '' }}">
                         <button class="nav-link" t-att-class="{'active position-relative cursor-default z-1': navItem[0] === this.state.currentPage, 'p-3 rounded-0': this.props.orientation === 'vertical', 'o_page_invalid': this.invalidPages.has(navItem[0])}" t-attf-class="{{ navItem[1].className || '' }}" t-att-name="navItem[1].name" t-on-click="() => this.activatePage(navItem[0])" role="tab" tabindex="0" data-available-offline="">
-                            <i t-if="this.props.icons and this.props.icons[navItem[0]]" t-attf-class="fa {{ this.props.icons[navItem[0]] }} me-2" />
+                            <i t-if="this.props.icons and this.props.icons[navItem[0]]"  class="oi me-2" t-att-data-icon="this.props.icons[navItem[0]]" />
                             <t t-out="navItem[1].title" />
                         </button>
                     </li>

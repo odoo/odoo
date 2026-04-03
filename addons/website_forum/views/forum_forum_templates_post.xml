@@ -10,12 +10,13 @@
                 title="Your favourite"
                 aria-label="Your favourite"
                 data-bs-toggle="tooltip"
-                class="fa fa-star o_wforum_gold"/>
+                class="oi oi-filled o_wforum_gold" data-icon="star"/>
             <small t-if="question.is_follower and not (my == 'followed' or hide_fav_icon)"
                 title="You're following this post"
                 aria-label="You're following this post"
                 data-bs-toggle="tooltip"
-                class="fa fa-bell"/>
+                class="oi oi-filled"
+                data-icon="notifications"/>
             <a t-attf-href="/forum/#{slug(question.forum_id)}/#{slug(question)}#{ ('/#answer-%s' % answer.id) if answer else '' }"
                 t-attf-title="Read: #{question.name}"
                 t-attf-class="stretched-link text-body #{_link_classes}">
@@ -25,7 +26,7 @@
                   title="Solved"
                   aria-label="Solved"
                   class="badge bg-success">
-                    <i class="fa fa-check me-1"/>Solved
+                    <i class="oi me-1" data-icon="check"/>Solved
             </span>
         </div>
     </div>
@@ -65,7 +66,7 @@
                     <div t-if="not answer">Created on <span t-field="question.create_date" t-options='{"format": "d MMM yy "}'/></div>
                     <div t-if="answer">Answered on <span t-field="answer.create_date" t-options='{"format": "d MMM yy "}'/></div>
                     <div class="text-muted" title="Last Activity">
-                        <i class="fa fa-calendar me-1"/><span t-field="question.last_activity_date" t-options='{"format":"short"}'/>
+                        <i class="oi oi-filled me-1" data-icon="calendar_today"/><span t-field="question.last_activity_date" t-options='{"format":"short"}'/>
                     </div>
                 </div>
             </div>
@@ -98,11 +99,11 @@
         </td>
         <td class="o_wforum_reply_count order-3 d-flex d-lg-table-cell flex-column text-end text-lg-center">
             <a t-if="question.child_count" class="text-reset" t-attf-href="/forum/#{ slug(question.forum_id) }/#{ slug(question) }">
-                <i class="fa fa-reply me-1 d-lg-none" />
+                <i class="oi me-1 d-lg-none" data-icon="reply"/>
                 <t t-out="question.child_count"/>
             </a>
             <span t-else="" class="opacity-50">
-                <i class="fa fa-reply me-1 d-lg-none" />
+                <i class="oi me-1 d-lg-none" data-icon="reply"/>
                 0
             </span>
             <div class="d-lg-none flex-grow-1"/>
@@ -130,7 +131,7 @@
             <img t-if="uid" t-attf-class="o_wforum_avatar me-2 rounded-circle" t-att-src="request.website.image_url(user, 'avatar_128', '24x24')" alt="Avatar"/>
             <h4 class="my-0">Your Answer</h4>
         </div>
-        <button class="o_wforum_expand_toggle btn fa fa-expand ms-auto" data-bs-toggle="collapse"/>
+        <button class="o_wforum_expand_toggle btn oi ms-auto" data-icon="expand_content" data-bs-toggle="collapse"/>
     </div>
     <t t-if="request.params.get('nocontent')">
         <p class="alert alert-danger" role="alert">You cannot post an empty answer</p>
@@ -196,9 +197,9 @@
                     As a moderator you can either <b>Accept</b> or <b>Reject</b> this post.</p>
                 <div>
                     <a role="button" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" type="button" class="btn btn-success">
-                        <i class="fa fa-check fa-fw me-1"/>Accept</a>
+                        <i class="oi oi-fw me-1" data-icon="check"/>Accept</a>
                     <a role="button" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" type="button" class="btn btn-danger">
-                        <i class="fa fa-times fa-fw me-1"/>Reject</a>
+                        <i class="oi oi-fw me-1" data-icon="close"/>Reject</a>
                 </div>
             </div>
             <div t-if="question.state == 'pending' and user.karma &lt; forum.karma_moderate" class="alert alert-warning mb-0 text-center" role="status" >
@@ -231,7 +232,8 @@
                     <t t-call="website_forum.link_button"
                         url="'/forum/' + slug(forum) + '/question/' + slug(question) + '/reopen'"
                         label.translate="Reopen"
-                        icon.f="fa-folder-open"
+                        icon.f="folder_open"
+                        icon_class.f="oi-filled"
                         karma="question.karma_close if not question.can_close else 0"
                         classes.f="btn-info"/>
                 </div>
@@ -258,7 +260,7 @@
                         data-bs-toggle="collapse"
                         data-bs-target=".answer_collapse"
                         href="#">
-                        <i class="fa fa-reply me-1"/>Reply
+                        <i class="oi me-1" data-icon="reply"/>Reply
                     </a>
                 </div>
                 <t t-if="question.state != 'close' and question.active != False and question.can_answer and forum">
@@ -363,7 +365,10 @@
                                 data-bs-toggle="tooltip"
                                 t-attf-data-target="#answer-#{post_id.id}"
                                 t-attf-data-href="/forum/#{ slug(question.forum_id) }/post/#{ slug(answer) }/toggle_correct">
-                                <i t-attf-class="fa fa-lg #{ 'fa-check-circle text-success' if answer.is_correct else 'fa-check-circle-o' }"/>
+                                <i
+                                    t-attf-class="oi oi-lg #{ 'oi-filled text-success' if answer.is_correct else '' }"
+                                    t-attf-data-icon="#{ 'check_circle' if answer.is_correct else 'check_circle' }"
+                                />
                             </a>
                         </t>
                     </t>
@@ -376,19 +381,19 @@
                                     data-bs-toggle="collapse" data-bs-target=".answer_collapse"
                                     href="#"
                                 >
-                                    <i class="fa fa-reply me-1"/>Reply
+                                    <i class="oi me-1" data-icon="reply"/>Reply
                                 </a>
                             </div>
                             <a t-if="user_answer" class="btn btn-sm btn-primary"
                                 t-attf-href="#answer-#{user_answer.id}"
                             >
-                                View my answer <i class="oi oi-arrow-right ms-1"/>
+                                View my answer <i class="oi ms-1" data-icon="east"/>
                             </a>
                         </t>
                         <div class="d-flex ms-auto me-2" t-if="post_id == answer and post_id.create_uid.id == uid">
                             <a class="btn btn-sm btn-outline-primary"
                                 t-attf-href="/forum/#{slug(forum)}/question/#{slug(question)}/edit_answer">
-                                <i class="fa fa-pencil"/>
+                                <i class="oi oi-filled" data-icon="edit"/>
                                 Edit<span class="d-none d-lg-inline"> your answer</span>
                             </a>
                         </div>
@@ -398,13 +403,13 @@
                                t-att-data-bs-toggle="'collapse' if post_id.can_comment else None"
                                t-attf-href="##{ _answer_comment_collapse_uid if post_id == answer else _question_comment_collapse_uid}"
                             >
-                                <i t-attf-class="fa fa-comment #{ 'karma_required' if not post_id.can_comment else ''}" title="Comment" data-bs-toggle="tooltip" data-bs-placement="top" />
+                                <i t-attf-class="oi oi-filled #{ 'karma_required' if not post_id.can_comment else ''}" data-icon="chat_bubble" title="Comment" data-bs-toggle="tooltip" data-bs-placement="top" />
                             </a>
                             <t t-call="website_forum.follow_button" t-if="post_id.parent_id"
                                 object="post_id" btn_classes.f="opacity-50 opacity-100-hover"/>
                             <div class="dropdown">
                                 <a type="button" class="btn opacity-50 opacity-100-hover px-2" data-bs-toggle="dropdown">
-                                    <i class="fa fa-share-alt" data-bs-toggle="tooltip" data-bs-placement="top" title="Share"/>
+                                    <i class="oi" data-icon="family_history" data-bs-toggle="tooltip" data-bs-placement="top" title="Share"/>
                                 </a>
                                 <div class="dropdown-menu css_editable_mode_hidden">
                                     <div class="s_share o_no_link_popover text-center">
@@ -438,7 +443,7 @@
 
 <template id="post_dropdown">
     <a class="btn opacity-50 opacity-100-hover px-2" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="oi oi-ellipsis-h"  data-bs-toggle="tooltip" data-bs-placement="top" title="More"/>
+        <i class="oi" data-icon="more_horiz"  data-bs-toggle="tooltip" data-bs-placement="top" title="More"/>
     </a>
     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
         <t t-if="post_id == question">
@@ -446,33 +451,38 @@
                 url="'/forum/' + slug(forum) +'/question/' + slug(post_id) + '/reopen'"
                 label.translate="Reopen"
                 inDropdown="True"
-                icon.f="fa-undo fa-fw"
+                icon.f="undo"
+                icon_class.f="oi-fw"
                 karma="post_id.karma_close if not post_id.can_close else 0"/>
         </t>
         <t t-call="website_forum.link_button"
             url="'/forum/' + slug(forum) +'/post/' + slug(post_id) + '/edit'"
             label.translate="Edit"
             inDropdown="True"
-            icon.f="fa-pencil fa-fw"
+            icon.f="edit"
+            icon_class.f="oi-fw"
             karma="post_id.karma_edit if not post_id.can_edit else 0"/>
         <t t-if="post_id == question">
             <t t-if="post_id.state != 'close'" t-call="website_forum.link_button"
                 url="'/forum/' + slug(forum) +'/question/' + slug(post_id) + '/ask_for_close'"
                 label.translate="Close"
                 inDropdown="True"
-                icon.f="fa-times fa-fw"
+                icon.f="close"
+                icon_class.f="oi-fw"
                 karma="post_id.karma_close if not post_id.can_close else 0"/>
             <t t-if="not post_id.active and post_id.state != 'offensive'" t-call="website_forum.link_button"
                 url="'/forum/' + slug(forum) +'/question/' + slug(post_id) + '/undelete'"
                 label.translate="Undelete"
                 inDropdown="True"
-                icon.f="fa-upload fa-fw"
+                icon.f="upload"
+                icon_class.f="oi-fw"
                 karma="post_id.karma_unlink if not post_id.can_unlink else 0"/>
             <t t-if="not post_id.active and post_id.state == 'offensive'" t-call="website_forum.link_button"
                 url="'/forum/' + slug(forum) +'/post/' + slug(post_id) + '/validate'"
                 label.translate="Validate"
                 inDropdown="True"
-                icon.f="fa-check fa-fw"
+                icon.f="check"
+                icon_class.f="oi-fw"
                 karma.f="post_id.forum_id.karma_moderate if not post_id.can_moderate else 0"/>
         </t>
         <t t-else="">
@@ -480,14 +490,16 @@
                 url.f="/forum/#{slug(forum)}/post/#{slug(post_id)}/convert_to_comment"
                 label.translate="Convert to Comment"
                 inDropdown="True"
-                icon.f="fa-comment fa-fw"
+                icon.f="chat_bubble"
+                icon_class.f="oi-fw oi-filled"
                 karma="post_id.karma_comment_convert if not post_id.can_comment_convert else 0"/>
         </t>
         <t t-if="post_id.active and post_id.state != 'flagged'" t-call="website_forum.link_button"
             url="'/forum/' + slug(forum) +'/post/' + slug(post_id) + '/flag'"
             label.translate="Flag"
             inDropdown="True"
-            icon="'fa-flag-o' if not post_id.can_flag else 'fa-flag'"
+            icon.f="flag"
+            icon_class="'' if not post_id.can_flag else 'oi-filled'"
             karma="post_id.forum_id.karma_flag if not post_id.can_flag else 0"
             classes.f="o_wforum_flag"
             object="post_id"/>
@@ -544,7 +556,7 @@
                 </div>
                 <div t-if="can_interact_with_post" class="dropdown ms-auto">
                     <a class="btn text-muted" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="oi oi-ellipsis-h"/>
+                        <i class="oi" data-icon="more_horiz"/>
                     </a>
                     <div class="dropdown-menu">
                         <t t-set="comment_url" t-valuef="/forum/#{ slug(forum) }/post/#{ slug(object) }/comment/#{ slug(comment) }"/>
@@ -553,7 +565,8 @@
                             label.translate="Delete"
                             title.translate="Delete"
                             inDropdown="True"
-                            icon.f="fa-trash-o text-muted"
+                            icon.f="delete"
+                            icon_class.f="text-muted"
                             classes.f="comment_delete"
                             karma="unlink_comment_required_karma if not can_unlink_comment and unlink_comment_required_karma else 0"/>
                         <t t-if="comment.create_uid.id not in question.child_ids.create_uid.ids">
@@ -561,7 +574,8 @@
                                 url.f="#{ comment_url }/convert_to_answer"
                                 label.translate="Convert to answer"
                                 inDropdown="True"
-                                icon.f="fa-magic text-muted"
+                                icon.f="wand_stars"
+                                icon_class.f="text-muted"
                                 karma="object.karma_comment_convert if not object.can_comment_convert else 0"/>
                         </t>
                     </div>

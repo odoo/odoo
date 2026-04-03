@@ -13,7 +13,7 @@ const ensureSearchView = async () => {
         queryAll`.o_control_panel_navigation`.length &&
         !queryAll`.o_searchview`.length
     ) {
-        await contains(`.o_control_panel_navigation .fa-search`).click();
+        await contains(`.o_control_panel_navigation [data-icon="search"]`).click();
     }
 };
 
@@ -217,7 +217,7 @@ export async function toggleFavoriteMenu() {
  */
 export async function editFavorite(text) {
     await ensureSearchBarMenu();
-    await contains(`.o_favorite_menu .o_menu_item:text(${text}) i.fa-pencil`, {
+    await contains(`.o_favorite_menu .o_menu_item:text(${text}) i[data-icon="edit"]`, {
         visible: false,
     }).click();
 }

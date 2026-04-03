@@ -64,7 +64,7 @@ export class ToggleBlockPlugin extends Plugin {
                 id: "insertToggleBlock",
                 title: _t("Toggle list"),
                 description: _t("Hide Text under foldable toggles"),
-                icon: "fa-caret-square-o-right",
+                icon: "arrow_circle_right",
                 isAvailable: (selection) =>
                     isHtmlContentSupported(selection) &&
                     !closestElement(selection.anchorNode, `${toggleSelector} ${titleSelector}`),

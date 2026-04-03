@@ -45,28 +45,28 @@ test("Use the 'move arrows' overlay buttons", async () => {
 
     await contains(":iframe section").click();
     expect(".overlay .o_overlay_options").toHaveCount(1);
-    expect(".overlay .fa-angle-down").toHaveCount(1);
-    expect(".overlay .fa-angle-up").toHaveCount(0);
-    expect(".overlay .fa-angle-left, .overlay .fa-angle-right").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_down']").toHaveCount(1);
+    expect(".overlay [data-icon='keyboard_arrow_up']").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_left'], .overlay [data-icon='keyboard_arrow_right']").toHaveCount(0);
 
     await contains(":iframe .col-lg-5").click();
     expect(".overlay .o_overlay_options").toHaveCount(1);
-    expect(".overlay .fa-angle-right").toHaveCount(1);
-    expect(".overlay .fa-angle-left").toHaveCount(0);
-    expect(".overlay .fa-angle-up, .overlay .fa-angle-down").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_right']").toHaveCount(1);
+    expect(".overlay [data-icon='keyboard_arrow_left']").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_up'], .overlay [data-icon='keyboard_arrow_down']").toHaveCount(0);
 
     await contains(":iframe .col-lg-3").click();
-    expect(".overlay .fa-angle-right").toHaveCount(0);
-    expect(".overlay .fa-angle-left").toHaveCount(1);
+    expect(".overlay [data-icon='keyboard_arrow_right']").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_left']").toHaveCount(1);
 
     await contains(":iframe .col-lg-4").click();
-    expect(".overlay .fa-angle-right").toHaveCount(1);
-    expect(".overlay .fa-angle-left").toHaveCount(1);
+    expect(".overlay [data-icon='keyboard_arrow_right']").toHaveCount(1);
+    expect(".overlay [data-icon='keyboard_arrow_left']").toHaveCount(1);
 
-    await contains(".overlay .fa-angle-left").click();
+    await contains(".overlay [data-icon='keyboard_arrow_left']").click();
     expect(":iframe .col-lg-4:nth-child(1)").toHaveCount(1);
-    expect(".overlay .fa-angle-right").toHaveCount(1);
-    expect(".overlay .fa-angle-left").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_right']").toHaveCount(1);
+    expect(".overlay [data-icon='keyboard_arrow_left']").toHaveCount(0);
 });
 
 test("Full-width columns use vertical move arrows", async () => {
@@ -86,19 +86,19 @@ test("Full-width columns use vertical move arrows", async () => {
     );
 
     await contains(":iframe .col-lg-12:nth-child(1)").click();
-    expect(".overlay .fa-angle-up").toHaveCount(0);
-    expect(".overlay .fa-angle-down").toHaveCount(1);
-    expect(".overlay .fa-angle-left, .overlay .fa-angle-right").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_up']").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_down']").toHaveCount(1);
+    expect(".overlay [data-icon='keyboard_arrow_left'], .overlay [data-icon='keyboard_arrow_right']").toHaveCount(0);
 
     await contains(":iframe .col-lg-12:nth-child(2)").click();
-    expect(".overlay .fa-angle-up").toHaveCount(1);
-    expect(".overlay .fa-angle-down").toHaveCount(1);
-    expect(".overlay .fa-angle-left, .overlay .fa-angle-right").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_up']").toHaveCount(1);
+    expect(".overlay [data-icon='keyboard_arrow_down']").toHaveCount(1);
+    expect(".overlay [data-icon='keyboard_arrow_left'], .overlay [data-icon='keyboard_arrow_right']").toHaveCount(0);
 
     await contains(":iframe .col-lg-12:nth-child(3)").click();
-    expect(".overlay .fa-angle-up").toHaveCount(1);
-    expect(".overlay .fa-angle-down").toHaveCount(0);
-    expect(".overlay .fa-angle-left, .overlay .fa-angle-right").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_up']").toHaveCount(1);
+    expect(".overlay [data-icon='keyboard_arrow_down']").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_left'], .overlay [data-icon='keyboard_arrow_right']").toHaveCount(0);
 });
 
 test("Use the 'move arrows' overlay buttons within an editable div", async () => {
@@ -130,28 +130,28 @@ test("Use the 'move arrows' overlay buttons within an editable div", async () =>
 
     await contains(":iframe section").click();
     expect(".overlay .o_overlay_options").toHaveCount(1);
-    expect(".overlay .fa-angle-down").toHaveCount(1);
-    expect(".overlay .fa-angle-up").toHaveCount(0);
-    expect(".overlay .fa-angle-left, .overlay .fa-angle-right").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_down']").toHaveCount(1);
+    expect(".overlay [data-icon='keyboard_arrow_up']").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_left'], .overlay [data-icon='keyboard_arrow_right']").toHaveCount(0);
 
     await contains(":iframe .col-lg-5").click();
     expect(".overlay .o_overlay_options").toHaveCount(1);
-    expect(".overlay .fa-angle-right").toHaveCount(1);
-    expect(".overlay .fa-angle-left").toHaveCount(0);
-    expect(".overlay .fa-angle-up, .overlay .fa-angle-down").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_right']").toHaveCount(1);
+    expect(".overlay [data-icon='keyboard_arrow_left']").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_up'], .overlay [data-icon='keyboard_arrow_down']").toHaveCount(0);
 
     await contains(":iframe .col-lg-3").click();
-    expect(".overlay .fa-angle-right").toHaveCount(0);
-    expect(".overlay .fa-angle-left").toHaveCount(1);
+    expect(".overlay [data-icon='keyboard_arrow_right']").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_left']").toHaveCount(1);
 
     await contains(":iframe .col-lg-4").click();
-    expect(".overlay .fa-angle-right").toHaveCount(1);
-    expect(".overlay .fa-angle-left").toHaveCount(1);
+    expect(".overlay [data-icon='keyboard_arrow_right']").toHaveCount(1);
+    expect(".overlay [data-icon='keyboard_arrow_left']").toHaveCount(1);
 
-    await contains(".overlay .fa-angle-left").click();
+    await contains(".overlay [data-icon='keyboard_arrow_left']").click();
     expect(":iframe .col-lg-4:nth-child(1)").toHaveCount(1);
-    expect(".overlay .fa-angle-right").toHaveCount(1);
-    expect(".overlay .fa-angle-left").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_right']").toHaveCount(1);
+    expect(".overlay [data-icon='keyboard_arrow_left']").toHaveCount(0);
 });
 
 test("Use the 'grid' overlay buttons", async () => {
@@ -207,13 +207,13 @@ test("Refresh the overlay buttons when toggling the mobile preview", async () =>
     await contains(":iframe .g-col-lg-4").click();
     await toggleMobilePreview();
     expect(".overlay .o_send_back, .overlay .o_bring_front").toHaveCount(0);
-    expect(".overlay .fa-angle-up").toHaveCount(1);
-    expect(".overlay .fa-angle-down").toHaveCount(1);
+    expect(".overlay [data-icon='keyboard_arrow_up']").toHaveCount(1);
+    expect(".overlay [data-icon='keyboard_arrow_down']").toHaveCount(1);
 
     await toggleMobilePreview();
     expect(".overlay .o_send_back").toHaveCount(1);
     expect(".overlay .o_bring_front").toHaveCount(1);
-    expect(".overlay .fa-angle-left, .overlay .fa-angle-right").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_left'], .overlay [data-icon='keyboard_arrow_right']").toHaveCount(0);
 });
 
 test("Use the 'remove' overlay buttons: removing a grid item", async () => {
@@ -511,8 +511,8 @@ test("Should hide 'move up' button when previous sibling is 'o_we_no_overlay'", 
     expect(".overlay .o_overlay_options").toHaveCount(1);
 
     // Can't move up since the previous sibling is excluded
-    expect(".overlay .fa-angle-up").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_up']").toHaveCount(0);
 
     // Moving down is still valid
-    expect(".overlay .fa-angle-down").toHaveCount(1);
+    expect(".overlay [data-icon='keyboard_arrow_down']").toHaveCount(1);
 });

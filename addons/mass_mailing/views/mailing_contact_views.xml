@@ -79,7 +79,7 @@
                     <t t-name="card">
                         <field name="name" class="fw-bolder fs-5 mb-1"/>
                         <div name="contact_email" invisible="not email">
-                            <i class="fa fa-envelope text-primary me-2" title="Email"/>
+                            <i class="oi oi-filled text-primary me-2" data-icon="mail" title="Email"/>
                             <field name="email"/>
                         </div>
                         <field name="tag_ids" class="mb-1" options="{'color_field': 'color'}"/>
@@ -109,7 +109,7 @@
                         <group>
                             <label for="email" class="oe_inline"/>
                             <div class="o_row o_row_readonly" name="email_details">
-                                 <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
+                                 <button name="mail_action_blacklist_remove" class="oi text-danger" data-icon="block"
                                     title="This email is blacklisted for mass mailings. Click to unblacklist."
                                     type="object" context="{'default_email': email}" groups="base.group_user"
                                     invisible="not is_blacklisted"/>

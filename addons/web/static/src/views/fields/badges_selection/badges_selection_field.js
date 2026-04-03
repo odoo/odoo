@@ -9,13 +9,16 @@ export class BadgesSelectionField extends Component {
     static props = {
         ...standardFieldProps,
         iconMapping: { type: Object, optional: true },
+        iconClassMapping: { type: Object, optional: true },
         allowedSelectionField: { type: String, optional: true },
         badgeLimit: { type: Number, optional: true },
         defaultIcon: { type: String, optional: true },
+        defaultIconClass: { type: String, optional: true },
         canDeselect: { type: Boolean, optional: true },
     };
     static defaultProps = {
         iconMapping: {},
+        iconClassMapping: {},
     };
     static components = {
         BaseBadgesField,
@@ -33,7 +36,8 @@ export class BadgesSelectionField extends Component {
         // Map icons to options
         return options.map(([value, label]) => {
             const icon = this.props.iconMapping[value] ?? this.props.defaultIcon;
-            return [value, label, icon];
+            const iconClass = this.props.iconClassMapping[value] ?? '';
+            return [value, label, icon, iconClass];
         });
     }
 
@@ -91,6 +95,7 @@ export const badgesSelectionField = {
         badgeLimit: options.badge_limit,
         canDeselect: !dynamicInfo.required,
         iconMapping: options.icon_mapping,
+        iconClassMapping: options.icon_class_mapping,
         allowedSelectionField: options.allowed_selection_field,
     }),
 };

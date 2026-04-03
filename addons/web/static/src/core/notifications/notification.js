@@ -28,6 +28,7 @@ export class Notification extends Component {
                 shape: {
                     name: { type: String },
                     icon: { type: String, optional: true },
+                    icon_class: { type: String, optional: true },
                     primary: { type: Boolean, optional: true },
                     onClick: Function,
                 },
