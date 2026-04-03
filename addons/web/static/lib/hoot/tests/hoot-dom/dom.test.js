@@ -852,7 +852,7 @@ describe(parseUrl(import.meta.url), () => {
             expect(() => $$`[href=/]`).toThrow(); // missing quotes
             expect(
                 () =>
-                    $$`_o_wblog_posts_loop:has(span:has(i.fa-calendar-o):has(a[href="/blog?search=a"])):has(span:has(i.fa-search):has(a[href^="/blog?date_begin"]))`
+                    $$`_o_wblog_posts_loop:has(span:has(i[data-icon="calendar_today"]):has(a[href="/blog?search=a"])):has(span:has(i[data-icon="search"]):has(a[href^="/blog?date_begin"]))`
             ).toThrow(); // nested :has statements
         });
 
