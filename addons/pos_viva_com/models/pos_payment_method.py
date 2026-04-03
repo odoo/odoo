@@ -80,7 +80,7 @@ class PosPaymentMethod(models.Model):
 
         access_token = resp.json().get('access_token')
         if access_token:
-            self.viva_com_bearer_token = access_token
+            self.sudo().write({'viva_com_bearer_token': access_token})
             return {'Authorization': f"Bearer {access_token}"}
         else:
             raise UserError(_(
