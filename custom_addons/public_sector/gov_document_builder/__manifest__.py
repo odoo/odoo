@@ -1,0 +1,31 @@
+{
+    'name': 'Gov Document Builder',
+    'version': '19.0.1.0.0',
+    'summary': 'Construtor visual de documentos administrativos — Lei 14.133/2021',
+    'description': 'Composição visual por blocos semânticos, renderização Typst e exportação de documentos do setor público.',
+    'category': 'Government/Documents',
+    'author': 'Kodoo',
+    'depends': ['base', 'mail', 'gov_processos'],
+    'data': [
+        'security/ir.model.access.csv',
+        'security/gov_document_security.xml',
+        'views/gov_document_type_views.xml',
+        'views/gov_document_template_views.xml',
+        'views/gov_document_instance_views.xml',
+        'views/gov_document_menus.xml',
+        'data/gov_document_type_data.xml',
+        'data/gov_document_block_catalog_data.xml',
+        'data/gov_document_template_dfd.xml',
+    ],
+    'assets': {
+        'web.assets_backend': [
+            'gov_document_builder/static/src/builder/**/*.js',
+            'gov_document_builder/static/src/builder/**/*.xml',
+            'gov_document_builder/static/src/builder/**/*.css',
+        ],
+    },
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+    'license': 'LGPL-3',
+}
