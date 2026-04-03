@@ -12,10 +12,13 @@ QUnit.module("Name Service", {
         serverData = {
             models: {
                 dev: {
-                    fields: {},
+                    fields: {
+                        active: { string: "Active", type: "boolean", default: true },
+                    },
                     records: [
                         { id: 1, display_name: "Julien" },
                         { id: 2, display_name: "Pierre" },
+                        { id: 5, display_name: "Paul", active: false },
                     ],
                 },
             },
@@ -121,6 +124,21 @@ QUnit.test("inaccessible or missing id", async (assert) => {
     const env = await makeTestEnv({ serverData, mockRPC });
     const displayNames = await env.services.name.loadDisplayNames("dev", [3]);
     assert.deepEqual(displayNames, { 3: ERROR_INACCESSIBLE_OR_MISSING });
+    assert.verifySteps(["web_search_read"]);
+});
+
+QUnit.test("loadDisplayNames fetches archived records", async (assert) => {
+    const mockRPC = (_, { method, model, kwargs }) => {
+        if (method === "web_search_read") {
+            assert.step(method);
+            assert.strictEqual(model, "dev");
+            assert.deepEqual(kwargs.domain, [["id", "in", [5]]]);
+            assert.strictEqual(kwargs.context.active_test, false);
+        }
+    };
+    const env = await makeTestEnv({ serverData, mockRPC });
+    const displayNames = await env.services.name.loadDisplayNames("dev", [5]);
+    assert.deepEqual(displayNames, { 5: "Paul" });
     assert.verifySteps(["web_search_read"]);
 });
 
