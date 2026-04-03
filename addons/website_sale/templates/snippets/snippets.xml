@@ -3,7 +3,7 @@
 
 <template id="website_sale.snippets" inherit_id="website.snippets" name="e-commerce snippets">
     <xpath expr="//t[@id='sale_products_hook']" position="replace">
-        <t t-snippet="website_sale.s_dynamic_snippet_products" string="Products" label="Dynamic Content" group="catalog"/>
+        <t t-snippet="website_sale.s_dynamic_snippet_products" string="Products" label="Dynamic Carousel" group="catalog"/>
         <t t-snippet="website_sale.s_dynamic_snippet_category_list" string="Category List" label="Dynamic Content" group="catalog"/>
     </xpath>
     <xpath expr="//t[@id='snippet_add_to_cart_hook']" position="replace">

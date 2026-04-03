@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_blog.DynamicSnippetBlogPostsCarouselOption" t-inherit="website.DynamicSnippetCarouselOption">
+    <xpath expr="//BuilderRow[*[@id=&quot;'filter_opt'&quot;]]" position="after">
+        <t t-call="website_blog.BlogPostsFilterOptions"/>
+    </xpath>
+    <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="after">
+        <t t-call="website_blog.BlogPostsTemplateOptions"/>
+    </xpath>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//device_visibility_option" position="after">
+        <dynamic_snippet_blog_posts_carousel_option selector=".s_blog_posts_carousel"/>
+    </xpath>
+</t>
+
+</templates>
