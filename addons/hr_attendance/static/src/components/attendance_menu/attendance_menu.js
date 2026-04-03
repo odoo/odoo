@@ -117,8 +117,14 @@ export class ActivityMenu extends Component {
         });
     }
 
+    get closeSystrayOnCheckIn() {
+        return true;
+    }
+
     async signInOut() {
-        this.dropdown.close();
+        if (this.closeSystrayOnCheckIn) {
+            this.dropdown.close();
+        }
         if (this._attendanceInProgress) {
             return;
         }
