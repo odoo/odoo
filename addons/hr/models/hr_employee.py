@@ -1800,10 +1800,11 @@ class HrEmployee(models.Model):
             return res
 
         date_from = fields.Date.to_date(date_from)
-        for employee in self:
-            employee_versions_sudo = employee.sudo().version_ids.filtered(lambda v: v._is_in_contract(date_from))
+        employees_sudo = self if self.env.su else self.sudo()
+        for employee in employees_sudo:
+            employee_versions_sudo = employee.version_ids.filtered(lambda v: v._is_in_contract(date_from))
             if employee_versions_sudo:
-                res[employee.id] = employee_versions_sudo[0].resource_calendar_id.sudo(False)
+                res[employee.id] = employee_versions_sudo[0].resource_calendar_id.sudo(self.env.su)
         return res
 
     def _get_version_periods(self, start, stop, field=None, check_contract=False):
