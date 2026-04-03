@@ -22,7 +22,7 @@ class StockMove(models.Model):
         help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
     company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', string='Company Currency', readonly=True)
     value = fields.Monetary(
-        "Value", currency_field='company_currency_id',
+        "Value", currency_field='company_currency_id', copy=False,
         help="The current value of the move. It's zero if the move is not valued.")
     value_justification = fields.Text(
         "Value Description", compute="_compute_value_justification")
