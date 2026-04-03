@@ -16059,6 +16059,27 @@ test(`quickcreate in a many2one in a list`, async () => {
     expect(`.o_data_cell:eq(0)`).toHaveText("aaa");
 });
 
+test.tags("desktop");
+test(`quickcreate (grouped) multiple records`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list editable="top"><field name="foo"/></list>`,
+        groupBy: ["bar"],
+    });
+
+    await contains(".o_group_header:eq(1)").click();
+
+    expect(queryAllTexts(`.o_data_cell`)).toEqual(["yop", "blip", "gnap"]);
+
+    await contains(".o_group_field_row_add a").click();
+    await contains(`.o_data_row .o_data_cell input`).edit("aaa");
+    await contains(`.o_data_row .o_data_cell input`).edit("ooo");
+    await contains(`.o_data_row .o_data_cell input`).edit("ttt");
+
+    expect(queryAllTexts(`.o_data_cell`)).toEqual(["", "ttt", "ooo", "aaa", "yop", "blip", "gnap"]);
+});
+
 test(`float field render with digits attribute on listview`, async () => {
     await mountView({
         resModel: "foo",

@@ -379,7 +379,7 @@ export class ListRenderer extends Component {
     async addInGroup(group) {
         const left = await this.props.list.leaveEditMode({ canAbandon: false });
         if (left) {
-            group.addNewRecord({}, this.props.editable === "top");
+            group.addNewRecord(this.props.editable === "top");
         }
     }
 

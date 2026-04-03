@@ -66,7 +66,7 @@ export class Group extends DataPoint {
         return record;
     }
 
-    async addNewRecord(_unused, atFirstPosition = false) {
+    async addNewRecord(atFirstPosition = false) {
         const canProceed = await this.model.root.leaveEditMode();
         if (canProceed) {
             const record = await this.list.addNewRecord(atFirstPosition);

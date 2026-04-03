@@ -179,6 +179,7 @@ test("Work in grouped list", async function () {
     // Edit the freshly created record...
     await contains(".o_data_row:eq(3) .o_field_cell").click();
     await contains("[name=age] input").edit("66");
+    await contains(".o_list_renderer").click();
 
     // Check both records have been updated...
     expect(queryOne('.o_data_row:eq(0) [name="age"]').textContent).toBe(
