@@ -224,7 +224,7 @@ class OfflineManager extends Reactive {
      * Mark an action, view type and optionally record as available offline.
      *
      * @param {number} actionId
-     * @param {"kanban"|"list"|"form"} viewType
+     * @param {"kanban"|"list"|"form"|"kanban_quick_create"|"list_quick_create"} viewType
      * @param {Object} params
      * @param {number} [params.resId] the record id, when viewType is "form"
      * @param {Object} [params.search] the current search view state
@@ -233,7 +233,7 @@ class OfflineManager extends Reactive {
         if (!this.offline) {
             const key = this._generateKey(actionId, viewType, resId);
             let value;
-            if (["form", "kanban_quick_create"].includes(viewType)) {
+            if (["form", "kanban_quick_create", "list_quick_create"].includes(viewType)) {
                 value = true;
             } else {
                 value = (await this._idb.read(this._visitedUITable, key)) || {};

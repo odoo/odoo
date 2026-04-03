@@ -271,13 +271,14 @@ export class ListController extends Component {
     }
 
     get isNewButtonAvailableOffline() {
-        if (
-            !this.archInfo.editable &&
-            this.offlineService.isAvailableOffline(this.env.config.actionId, "form", false)
-        ) {
-            return true;
+        if (this.archInfo.editable && !this.model.root.isGrouped) {
+            return this.offlineService.isAvailableOffline(
+                this.env.config.actionId,
+                "list_quick_create",
+                false
+            );
         }
-        return false;
+        return this.offlineService.isAvailableOffline(this.env.config.actionId, "form", false);
     }
 
     getExportableFields() {

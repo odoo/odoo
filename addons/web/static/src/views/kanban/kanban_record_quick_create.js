@@ -315,7 +315,7 @@ export class KanbanRecordQuickCreate extends Component {
                 ...getDefaultConfig(),
                 actionId: this.env.config.actionId,
                 actionName: this.env.config.actionName,
-                viewType: "kanban_quick_create",
+                viewType: "kanban",
                 resId: false,
             },
         });

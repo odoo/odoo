@@ -104,14 +104,22 @@ export class DynamicRecordList extends DynamicList {
     // -------------------------------------------------------------------------
 
     async _addNewRecord(atFirstPosition) {
-        const values = await this.model._loadNewRecord({
-            resModel: this.resModel,
-            activeFields: this.activeFields,
-            fields: this.fields,
-            context: this.context,
-        });
+        const { promise, resolve } = Promise.withResolvers();
+        const values = await this.model._loadNewRecord(
+            {
+                resModel: this.resModel,
+                activeFields: this.activeFields,
+                fields: this.fields,
+                context: this.context,
+                isMonoRecord: true,
+            },
+            {
+                cache: this.model._getCacheParams({ ...this.config, isMonoRecord: true }, promise),
+            }
+        );
         const record = this._createRecordDatapoint(values, "edit");
         this._addRecord(record, atFirstPosition ? 0 : this.records.length);
+        resolve({ root: record, loadId: this.config.loadId });
         return record;
     }
 

@@ -718,8 +718,13 @@ export class RelationalModel extends Model {
      * @param {Object} result the data loaded with the given config (rpc result)
      */
     _setAvailableOffline(config, result) {
-        const { actionId, viewType } = this.env.config;
+        let { actionId, viewType } = this.env.config;
+        let resId = config.resId;
         let markAsAvailableOffline = actionId;
+        if (config.isMonoRecord && ["list", "kanban"].includes(viewType)) {
+            viewType = viewType + "_quick_create"; // list_quick_create or kanban_quick_create
+            resId = false;
+        }
         if (!config.isMonoRecord) {
             const hasRecords = config.groupBy.length
                 ? result.groups.some((group) => group.__count > 0)
@@ -728,7 +733,7 @@ export class RelationalModel extends Model {
         }
         if (markAsAvailableOffline) {
             const params = config.isMonoRecord
-                ? { resId: config.resId }
+                ? { resId }
                 : { search: this.env.searchModel.getCurrentSearch() };
             this.offline.setAvailableOffline(actionId, viewType, params);
         }
