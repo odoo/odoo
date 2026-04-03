@@ -380,3 +380,29 @@ registerWebsitePreviewTour(
         ...testWebsitePageProperties().finalize(),
     ],
 );
+
+registerWebsitePreviewTour(
+    "change_page_url_and_set_as_homepage",
+    {
+        url: "/",
+    },
+    () => [
+        ...openPagePropertiesDialog,
+        {
+            content: "Unset as homepage",
+            trigger: "#is_homepage_0",
+            run: "uncheck",
+        },
+        {
+            content: "Change url to /cool-page",
+            trigger: "#url_0",
+            run: `edit cool-page && press Enter`,
+        },
+        {
+            content: "Set as homepage",
+            trigger: "#is_homepage_0",
+            run: "check",
+        },
+        ...clickOnSaveButtonStep,
+    ]
+);
