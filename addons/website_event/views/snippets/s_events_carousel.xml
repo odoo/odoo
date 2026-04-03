@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_events_carousel" name="Events Carousel">
+    <t t-call="website.s_dynamic_snippet_template"
+        snippet_name.f="s_events_carousel"
+        main_page_url.f="/event"
+        snippet_classes.f="s_events s_event_event_picture o_dynamic_carousel_snippet"
+        custom_template_data.f='{"events_event_time_active":true, "events_event_location_active":true}'
+        snippet_title.f="Upcoming Events"
+        snippet_description.f="Explore what’s happening next and join the moments that matter.">
+        <t t-call="website_event.s_event_upcoming_snippet_preview_data_carousel"/>
+    </t>
+</template>
+
+</odoo>
