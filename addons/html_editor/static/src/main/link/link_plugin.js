@@ -1207,9 +1207,14 @@ export class LinkPlugin extends Plugin {
             // In case of multiple matches, only the last one will be converted.
             const match = [...potentialUrl.matchAll(new RegExp(URL_REGEX, "g"))].pop();
 
-            if (match && !EMAIL_REGEX.test(match[0])) {
+            if (match) {
                 selection.anchorNode.splitText(selection.anchorOffset);
-                const url = match[2] ? match[0] : "https://" + match[0];
+                let url;
+                if (!EMAIL_REGEX.test(match[0])) {
+                    url = match[2] ? match[0] : "https://" + match[0];
+                } else {
+                    url = "mailto:" + match[0];
+                }
                 const startOffset = selection.anchorOffset - potentialUrl.length + match.index;
                 const text = selection.anchorNode.textContent.slice(
                     startOffset,

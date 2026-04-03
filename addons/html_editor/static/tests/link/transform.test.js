@@ -186,11 +186,11 @@ describe("transform on enter and shift+enter", () => {
 });
 
 describe("should not transform url", () => {
-    test("should not transform an email url after space", async () => {
+    test("should transform an email to url after space", async () => {
         await testEditor({
             contentBefore: "<p>user@domain.com[]</p>",
             stepFunction: (editor) => insertSpace(editor),
-            contentAfter: "<p>user@domain.com&nbsp;[]</p>",
+            contentAfter: '<p><a href="mailto:user@domain.com">user@domain.com</a>&nbsp;[]</p>',
         });
     });
     test("should not transform url after two space", async () => {
