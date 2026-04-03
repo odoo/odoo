@@ -71,7 +71,7 @@ export class WebsiteVisitor extends websiteModels.WebsiteVisitor {
         res.many(
             "last_track_ids",
             (trackRes) => {
-                trackRes.one("page_id", ["name"]);
+                trackRes.one("page_id", ["name", "url"]);
                 trackRes.attr("visit_datetime");
             },
             {

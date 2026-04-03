@@ -290,8 +290,8 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     {"id": self.env.ref("base.default_website").id, "name": "My Website"}
                 ],
                 "website.page": [
-                    {"id": self.page_1.id, "name": "Test Page 1"},
-                    {"id": self.page_2.id, "name": "Test Page 2"},
+                    {"id": self.page_1.id, "name": "Test Page 1", "url": self.page_1.url},
+                    {"id": self.page_2.id, "name": "Test Page 2", "url": self.page_2.url},
                 ],
                 "website.track": [
                     {

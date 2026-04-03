@@ -3,27 +3,44 @@
     <t t-name="website_livechat.LivechatChannelInfoList" t-inherit="im_livechat.LivechatChannelInfoList" t-inherit-mode="extension">
         <xpath expr="//t[@t-name='extra_infos']" position="inside">
             <t t-set="visitor" t-value="this.props.thread.livechat_visitor_id"/>
-            <div t-if="visitor?.pageVisitHistoryText" class="d-flex flex-column bg-inherit gap-1">
-                <h6 class="pt-3">Recent page views</h6>
+            <div t-if="visitor?.last_track_ids.length" class="d-flex flex-column bg-inherit gap-1">
+                <h6 class="pt-3 mb-0">Recent page views</h6>
                 <div t-if="visitor.website_id">
                     <i class="me-1 fa fa-globe" aria-label="Website"/>
                     <span t-out="visitor.website_id.name"/>
                 </div>
-                <span t-out="visitor.pageVisitHistoryText"/>
+                <div class="d-flex flex-column o-gap-0_5">
+                    <a
+                        t-foreach="visitor.last_track_ids" t-as="track" t-key="track.localId"
+                        class="o-livechat-LivechatChannelInfoList-recentPageView btn btn-sm btn-secondary d-flex align-items-center gap-2 w-100 m-0 px-3 py-1"
+                        t-att-href="track.page_id.url"
+                        target="_blank"
+                        t-att-class="{
+                            'o-rounded-top-bubble rounded-bottom-0': track_first,
+                            'o-rounded-bottom-bubble rounded-top-0': track_last,
+                            'rounded-bottom-0': !track_last,
+                            'rounded-top-0': !track_first,
+                        }"
+                    >
+                        <i class="fa fa-external-link o-mt-0_5 opacity-75"/>
+                        <span class="fw-bold text-start text-truncate" t-out="track.page_id.name"/>
+                        <span class="ms-auto text-muted smaller" t-out="this.RECENT_PAGE_VIEW_TIME(track)"/>
+                    </a>
+                </div>
             </div>
             <div t-if="!this.props.thread.channel.livechat_end_dt and this.recentConversations.length" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3">Recent conversations</h6>
-                <div class="btn btn-group o-rounded-bubble d-flex flex-column w-100 p-0 m-0" style="gap: 1px;">
+                <div class="d-flex flex-column o-gap-0_5">
                     <a
                         t-foreach="this.recentConversations" t-as="channel" t-key="channel.localId"
                         class="o-livechat-LivechatChannelInfoList-recentConversation btn btn-sm btn-secondary btn-group-item d-flex flex-column w-100 m-0 px-3 py-1"
                         t-attf-href="/odoo/discuss?active_id=discuss.channel_{{channel.id}}"
                         target="_blank"
                         t-att-class="{
-                            'o-rounded-top-bubble': channel_first,
-                            'o-rounded-bottom-bubble': channel_last,
+                            'o-rounded-top-bubble rounded-bottom-0': channel_first,
+                            'o-rounded-bottom-bubble rounded-top-0': channel_last,
+                            'rounded-bottom-0': !channel_last,
                             'rounded-top-0': !channel_first,
-                            'rounded-bottom-0 border-bottom': !channel_last,
                         }"
                     >
                         <div class="d-flex align-items-center">
