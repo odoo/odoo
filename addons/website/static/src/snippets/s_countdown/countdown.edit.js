@@ -19,3 +19,8 @@ registry
         Interaction: Countdown,
         mixin: CountdownEdit,
     });
+registry
+    .category("public.interactions.preview")
+    .add("website.countdown", {
+        Interaction: Countdown,
+    });
