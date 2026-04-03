@@ -16,8 +16,8 @@
 
             <t t-set-slot="content">
                 <div class="att_container d-flex flex-column">
-                    <div class="d-flex justify-content-between align-items-center gap-5 border-bottom p-3">
-                        <h3 class="mb-0">
+                    <div class="d-flex justify-content-between align-items-center gap-5 p-3">
+                        <h3 class="mb-0 ps-1">
                             <t t-if="this.hasCheckedInToday">
                                 <small>Welcome back</small> <span class="d-block"><t t-out="this.employeeName"/>!</span>
                             </t>
@@ -26,9 +26,9 @@
                             </t>
                         </h3>
                     </div>
-                    
+
                     <div class="o_att_today_wrap px-3">
-                        <table class="table mb-0">
+                        <table class="table table-sm table-borderless">
                             <tbody>
                                 <tr t-foreach="this.attendancesToday" t-as="attendance" t-key="attendance.id">
                                     <td>
@@ -50,11 +50,11 @@
                                         <t t-out="duration.h"/>h<span class="text-muted"><t t-out="duration.m"/></span>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td colspan="3" class="border-bottom-0">
+                                <tr class="border-top">
+                                    <td colspan="3">
                                         Today
                                     </td>
-                                    <td class="border-bottom-0 ps-4 text-end">
+                                    <td class="ps-4 text-end">
                                         <t t-set="total" t-value="this.splitTime(this.hoursToday)"/>
                                         <t t-out="total.h"/>h<span class="text-muted"><t t-out="total.m"/></span>
                                     </td>
@@ -63,7 +63,7 @@
                         </table>
                     </div>
 
-                    <div class="o_wrap_btn_sign_out position-md-sticky bottom-0 p-3 z-2">
+                    <div class="o_wrap_btn_sign_out position-md-sticky bottom-0 p-3 pt-0 z-2">
                         <button t-on-click="() => this.signInOut()"
                                 t-attf-class="btn btn-{{ this.state.checkedIn ? 'warning' : 'primary' }} w-100">
                             <span t-if="!this.state.checkedIn">Check in</span>
