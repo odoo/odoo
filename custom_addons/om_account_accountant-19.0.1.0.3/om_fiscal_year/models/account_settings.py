@@ -11,18 +11,23 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.fiscalyear_last_month', readonly=False
     )
     tax_lock_date = fields.Date(
-        related='company_id.hard_lock_date', readonly=False
+        string='Tax Return Lock Date',
+        related='company_id.tax_lock_date', readonly=False
     )
     sale_lock_date = fields.Date(
-        related='company_id.hard_lock_date', readonly=False
+        string='Sales Lock Date',
+        related='company_id.sale_lock_date', readonly=False
     )
     purchase_lock_date = fields.Date(
-        related='company_id.hard_lock_date', readonly=False
+        string='Purchase Lock Date',
+        related='company_id.purchase_lock_date', readonly=False
     )
     hard_lock_date = fields.Date(
+        string='Hard Lock Date',
         related='company_id.hard_lock_date', readonly=False
     )
     fiscalyear_lock_date = fields.Date(
+        string='Lock Date for All Users',
         related='company_id.fiscalyear_lock_date', readonly=False
     )
     group_fiscal_year = fields.Boolean(

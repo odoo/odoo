@@ -1,4 +1,6 @@
-from odoo import fields, models, api
+from odoo import api, fields, models
+from odoo.fields import Domain
+from odoo.tools import Query
 
 
 class AccountAnalyticAccount(models.Model):
@@ -14,24 +16,20 @@ class AccountAnalyticLine(models.Model):
 
     @api.model
     def _where_calc(self, domain, active_test=True):
-        """Computes the WHERE clause needed to implement an OpenERP domain.
+        domain = Domain(domain or [])
+        if (
+            self._active_name
+            and active_test
+            and self.env.context.get("active_test", True)
+            and not any(leaf.field_expr == self._active_name for leaf in domain.iter_conditions())
+        ):
+            domain &= Domain(self._active_name, "=", True)
 
-        :param list domain: the domain to compute
-        :param bool active_test: whether the default filtering of records with
-            ``active`` field set to ``False`` should be applied.
-        :return: the query expressing the given domain as provided in domain
-        :rtype: Query
-        """
-        # if the object has an active field ('active', 'x_active'), filter out all
-        # inactive records unless they were explicitly asked for
-        if self._active_name and active_test and self._context.get('active_test', True):
-            # the item[0] trick below works for domain items and '&'/'|'/'!'
-            # operators too
-            if not any(item[0] == self._active_name for item in domain):
-                domain = [(self._active_name, '=', 1)] + domain
+        domain = domain.optimize_full(self)
+        if domain.is_false():
+            return self.browse()._as_query()
 
-        if domain:
-            return expression.expression(domain, self).query
-        else:
-            return Query(self.env, self._table, self._table_sql)
-
+        query = Query(self.env, self._table, self._table_sql)
+        if not domain.is_true():
+            query.add_where(domain._to_sql(self, self._table, query))
+        return query
