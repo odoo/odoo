@@ -5,7 +5,7 @@ import {
     prettifyMessageText,
 } from "@mail/utils/common/format";
 import { markup } from "@odoo/owl";
-import { isHtmlEmpty } from "@web/core/utils/html";
+import { createDocumentFragmentFromContent, isHtmlEmpty } from "@web/core/utils/html";
 
 export class Composer extends Record {
     static id = OR("thread", "message");
@@ -125,6 +125,29 @@ export class Composer extends Record {
 
     get syncHtmlWithMessage() {
         return this.message && !this.isDirty;
+    }
+
+    get isSimpleContent() {
+        if (isHtmlEmpty(this.composerHtml)) {
+            return true;
+        }
+        const body = createDocumentFragmentFromContent(this.composerHtml).body;
+        if (body.querySelector("ul, ol, li, br")) {
+            return false;
+        }
+        const meaningfulChildren = [...body.childNodes].filter((node) => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                return node.textContent.trim();
+            }
+            if (node.nodeType !== Node.ELEMENT_NODE) {
+                return false;
+            }
+            return node.textContent.trim();
+        });
+        const topLevelBlocks = meaningfulChildren.filter(
+            (node) => node.nodeType === Node.ELEMENT_NODE && ["DIV", "P"].includes(node.tagName)
+        );
+        return topLevelBlocks.length <= 1 && meaningfulChildren.length <= 1;
     }
 
     get targetThread() {
