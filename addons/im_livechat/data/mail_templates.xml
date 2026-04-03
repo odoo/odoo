@@ -43,6 +43,7 @@
                                 </div>
                                 <t t-if="is_html_empty" t-set="is_body_empty" t-value="is_html_empty(message.body)"/>
                                 <t t-else="" t-set="is_body_empty" t-value="not message.body"/>
+                                <t t-set="is_deleted_message" t-value="message in deleted_messages"/>
                                 <div t-if="not is_body_empty or is_deleted_message" style="background-color: #E2F3F6; padding: 12px; border-radius: 0 0.46875rem 0.46875rem 0.46875rem; display: inline-block; max-width: 100%;">
                                     <span class="o-LivechatReport-bodyContent" style="font-size: 13px; word-break: break-word;">
                                         <p t-if="is_deleted_message" style="color: #6c757d; font-style: italic;">This message has been removed</p>
