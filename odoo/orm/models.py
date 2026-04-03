@@ -3418,9 +3418,15 @@ class BaseModel(metaclass=MetaModel):
             return all(map(access.__getitem__, origin._ids))
 
         domain = self._access_domain(operation)
+        # resolve the 'access' operator if just checking model access
+        # so that a rule `('order_id', 'access', 'read')` may become false
+        if not origin:
+            domain = domain.map_conditions(
+                lambda cond: cond.optimize_dynamic(self.sudo()) if cond.operator == 'access' else cond)
+            return not domain.is_false()
         if domain.is_false():
             return False
-        if not origin or domain.is_true():
+        if domain.is_true():
             return True
         return origin == origin.sudo().with_context(active_test=False).filtered_domain(domain)
 
