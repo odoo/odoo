@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="gov_document_builder.PropertiesPanel">
+        <aside class="gdb-panel card h-100 border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom">
+                <h3 class="h6 mb-1">Propriedades</h3>
+                <p class="text-muted small mb-0">Configure o bloco selecionado e seus bindings.</p>
+            </div>
+
+            <div t-if="!this.selectedNode" class="card-body d-flex align-items-center justify-content-center text-center">
+                <div>
+                    <div class="fs-3 mb-2">[]</div>
+                    <h4 class="h6 mb-1">Nenhum bloco selecionado</h4>
+                    <p class="text-muted small mb-0">Clique em um bloco no canvas para editar o conteúdo.</p>
+                </div>
+            </div>
+
+            <div t-else="" class="card-body d-flex flex-column gap-3 overflow-auto">
+                <div class="d-flex align-items-center flex-wrap gap-2">
+                    <span class="badge text-bg-primary">
+                        <t t-esc="this.blockName" />
+                    </span>
+                    <span t-if="this.selectedNode.locked" class="badge text-bg-warning">Fixo</span>
+                    <span class="badge text-bg-light">Seq <t t-esc="this.selectedNode.sequence" /></span>
+                </div>
+
+                <div
+                    t-if="this.selectedNode.type === 'heading' || this.selectedNode.type === 'heading1' || this.selectedNode.type === 'heading2'"
+                    class="d-flex flex-column gap-2"
+                >
+                    <label class="form-label small mb-0">Texto do Título</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        t-att-value="this.nodeText"
+                        t-on-input="updateText"
+                    />
+                </div>
+
+                <div t-if="this.selectedNode.type === 'process_field'" class="d-flex flex-column gap-2">
+                    <label class="form-label small mb-0">Rótulo</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        t-att-value="this.nodeLabel"
+                        t-on-input="updateLabel"
+                    />
+                </div>
+
+                <div
+                    t-if="this.selectedNode.type === 'rich_text' || this.selectedNode.type === 'richtext' || this.selectedNode.type === 'legal_basis'"
+                    class="d-flex flex-column gap-2"
+                >
+                    <label class="form-label small mb-0">Conteúdo</label>
+                    <textarea
+                        class="form-control"
+                        rows="8"
+                        t-att-value="this.nodeContent"
+                        t-on-input="updateContent"
+                    />
+                </div>
+
+                <div t-if="this.selectedNode.type === 'bullet_list'" class="d-flex flex-column gap-2">
+                    <label class="form-label small mb-0">Itens da Lista</label>
+                    <textarea
+                        class="form-control"
+                        rows="8"
+                        placeholder="Um item por linha"
+                        t-att-value="this.bulletItemsText"
+                        t-on-input="updateBulletItems"
+                    />
+                </div>
+
+                <div t-if="this.supportsBinding" class="card bg-light border-0">
+                    <div class="card-body d-flex flex-column gap-3">
+                        <div class="form-check form-switch">
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                id="gdbBindingToggle"
+                                t-att-checked="this.hasBinding ? true : undefined"
+                                t-on-change="toggleBinding"
+                            />
+                            <label class="form-check-label" for="gdbBindingToggle">Usar binding declarativo</label>
+                        </div>
+
+                        <div t-if="this.hasBinding" class="d-flex flex-column gap-2">
+                            <label class="form-label small mb-0">Fonte</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                placeholder="process"
+                                t-att-value="this.bindingSource"
+                                t-on-input="(ev) => this.updateBindingField('source', ev)"
+                            />
+
+                            <label class="form-label small mb-0">Caminho</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                placeholder="objeto"
+                                t-att-value="this.bindingPath"
+                                t-on-input="(ev) => this.updateBindingField('path', ev)"
+                            />
+
+                            <label class="form-label small mb-0">Fallback</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                t-att-value="this.bindingFallback"
+                                t-on-input="(ev) => this.updateBindingField('fallback', ev)"
+                            />
+
+                            <label class="form-label small mb-0">Transformador</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                placeholder="strip, upper, lower..."
+                                t-att-value="this.bindingTransform"
+                                t-on-input="(ev) => this.updateBindingField('transform', ev)"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 bg-light">
+                    <div class="card-body d-flex flex-column gap-1">
+                        <div class="small text-muted">ID do Nó</div>
+                        <code><t t-esc="this.selectedNode.id" /></code>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-auto">
+                    <button type="button" class="btn btn-outline-secondary flex-fill" t-on-click="duplicateNode">
+                        Duplicar
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-outline-danger flex-fill"
+                        t-att-disabled="this.selectedNode.locked ? true : undefined"
+                        t-on-click="deleteNode"
+                    >
+                        Remover
+                    </button>
+                </div>
+            </div>
+        </aside>
+    </t>
+</templates>

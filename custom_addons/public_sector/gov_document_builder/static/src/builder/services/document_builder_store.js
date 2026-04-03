@@ -7,6 +7,8 @@ const INITIAL_STATE = {
     documentId: null,
     documentName: "",
     documentTypeCode: "",
+    documentState: "draft",
+    documentVersion: 1,
     templateId: null,
     mode: "visual", // 'visual' | 'typst'
     nodes: [], // lista de nós do layout
@@ -41,6 +43,8 @@ export class DocumentBuilderStore {
             documentId: data.id,
             documentName: data.name,
             documentTypeCode: data.document_type?.code || "",
+            documentState: data.state || "draft",
+            documentVersion: data.version || 1,
             nodes: JSON.parse(data.layout_json || "[]"),
             resolvedContext: data.resolved_context || {},
             typstSource: "",
@@ -148,6 +152,7 @@ export class DocumentBuilderStore {
         this._recalcSequences();
         this.state.dirty = true;
         this.selectNode(copy.id);
+        this._debouncedRebuildTypst();
     }
 
     selectNode(nodeId) {

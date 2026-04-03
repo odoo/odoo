@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="gov_document_builder.DocumentBuilderRoot">
+        <div class="gdb-root d-flex flex-column gap-3 p-3 h-100">
+            <header class="card border-0 shadow-sm">
+                <div class="card-body d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <button type="button" class="btn btn-outline-secondary" t-on-click="closeBuilder">
+                            Voltar
+                        </button>
+                        <div>
+                            <h1 class="h4 mb-1">
+                                <t t-esc="this.store.state.documentName || 'Documento administrativo'" />
+                            </h1>
+                            <div class="text-muted small">
+                                <t t-esc="this.processMeta" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center flex-wrap gap-2">
+                        <div class="btn-group" role="group" aria-label="Modo de edição">
+                            <button
+                                type="button"
+                                t-attf-class="btn {{ this.store.state.mode === 'visual' ? 'btn-primary' : 'btn-outline-primary' }}"
+                                t-on-click="() => this.setMode('visual')"
+                            >
+                                Visual
+                            </button>
+                            <button
+                                type="button"
+                                t-attf-class="btn {{ this.store.state.mode === 'typst' ? 'btn-primary' : 'btn-outline-primary' }}"
+                                t-on-click="() => this.setMode('typst')"
+                            >
+                                Typst
+                            </button>
+                        </div>
+
+                        <span t-if="this.store.state.dirty" class="badge text-bg-warning">Alterações pendentes</span>
+
+                        <button
+                            type="button"
+                            class="btn btn-success"
+                            t-att-disabled="this.store.state.saving ? true : undefined"
+                            t-on-click="saveLayout"
+                        >
+                            <t t-if="this.store.state.saving">Salvando...</t>
+                            <t t-else="">Salvar</t>
+                        </button>
+
+                        <button type="button" class="btn btn-outline-secondary" t-on-click="exportTypst">
+                            Exportar .typ
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="d-flex gap-3 flex-grow-1 align-items-stretch" style="min-height: 70vh;">
+                <div class="flex-shrink-0" style="width: 320px; min-width: 280px;">
+                    <BlockPalette />
+                </div>
+
+                <div class="flex-grow-1">
+                    <div t-if="this.store.state.mode === 'typst'" class="card h-100 border-0 shadow-sm">
+                        <div class="card-header bg-white border-bottom d-flex align-items-center justify-content-between">
+                            <h3 class="h6 mb-0">Código Typst</h3>
+                            <span class="badge text-bg-light">somente leitura</span>
+                        </div>
+                        <div class="card-body overflow-auto">
+                            <pre class="mb-0"><t t-esc="this.store.state.typstSource || '// Nenhum Typst renderizado ainda.'" /></pre>
+                        </div>
+                    </div>
+                    <div t-else="" class="card h-100 border-0 shadow-sm">
+                        <div class="card-header bg-white border-bottom">
+                            <h3 class="h6 mb-0">Canvas do Documento</h3>
+                        </div>
+                        <div class="card-body overflow-auto">
+                            <DocumentCanvas />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0" style="width: 340px; min-width: 300px;">
+                    <PropertiesPanel />
+                </div>
+            </div>
+
+            <footer class="card border-0 shadow-sm">
+                <div class="card-body py-2 d-flex flex-wrap gap-3 small text-muted">
+                    <span>Estado: <strong><t t-esc="this.stateLabel" /></strong></span>
+                    <span>Tipo: <strong><t t-esc="this.store.state.documentTypeCode || '-'" /></strong></span>
+                    <span>Blocos: <strong><t t-esc="this.store.state.nodes.length" /></strong></span>
+                    <span>Versão: <strong><t t-esc="this.store.state.documentVersion" /></strong></span>
+                </div>
+            </footer>
+        </div>
+    </t>
+</templates>

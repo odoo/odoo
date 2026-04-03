@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="gov_document_builder.DocumentNode">
+        <div
+            t-attf-class="doc-node card border-0 shadow-sm {{ props.isSelected ? 'selected ring ring-primary' : '' }}"
+            t-on-click.stop="selectNode"
+        >
+            <div class="card-header bg-white border-bottom py-2">
+                <div class="d-flex align-items-center justify-content-between gap-2">
+                    <div class="d-flex align-items-center flex-wrap gap-2">
+                        <span class="badge text-bg-light">
+                            #<t t-esc="props.index + 1" />
+                        </span>
+                        <span class="badge text-bg-secondary">
+                            <t t-esc="props.node.type" />
+                        </span>
+                        <span t-if="props.node.locked" class="badge text-bg-warning">
+                            Fixo
+                        </span>
+                    </div>
+                    <div class="doc-node-controls btn-group btn-group-sm">
+                        <button type="button" class="btn btn-outline-secondary" t-on-click.stop="moveUp">
+                            ↑
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" t-on-click.stop="moveDown">
+                            ↓
+                        </button>
+                        <button
+                            t-if="!props.node.locked"
+                            type="button"
+                            class="btn btn-outline-danger"
+                            t-on-click.stop="deleteNode"
+                        >
+                            Excluir
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <t t-if="props.node.type === 'heading1'">
+                    <h1 class="h3 mb-0">
+                        <t t-esc="this.headingText || 'Título Principal'" />
+                    </h1>
+                </t>
+                <t t-elif="props.node.type === 'heading2'">
+                    <h2 class="h5 mb-0">
+                        <t t-esc="this.headingText || 'Seção'" />
+                    </h2>
+                </t>
+                <t t-elif="props.node.type === 'heading'">
+                    <h3 class="h6 mb-0">
+                        <t t-esc="this.headingText || 'Título'" />
+                    </h3>
+                </t>
+                <t t-elif="props.node.type === 'process_header'">
+                    <div class="border rounded-3 p-3 bg-light-subtle">
+                        <div class="fw-semibold mb-1">Cabeçalho do Processo</div>
+                        <div class="text-muted small">Preenchido automaticamente com os dados do processo.</div>
+                    </div>
+                </t>
+                <t t-elif="props.node.type === 'process_field'">
+                    <div class="d-flex flex-column gap-1">
+                        <div class="fw-semibold">
+                            <t t-esc="this.nodeLabel" />
+                        </div>
+                        <div class="text-muted small">
+                            <t t-esc="this.bindingLabel" />
+                        </div>
+                    </div>
+                </t>
+                <t t-elif="props.node.type === 'rich_text' || props.node.type === 'richtext'">
+                    <p class="mb-0 text-break">
+                        <t t-esc="this.nodeContent" />
+                    </p>
+                </t>
+                <t t-elif="props.node.type === 'legal_basis'">
+                    <div class="border-start border-4 ps-3">
+                        <div class="fw-semibold">Base Legal</div>
+                        <div class="text-muted small">Lei 14.133/2021 e dispositivos correlatos.</div>
+                    </div>
+                </t>
+                <t t-elif="props.node.type === 'signature'">
+                    <div class="d-flex flex-column gap-2">
+                        <div class="border-bottom pb-3 text-center text-muted">Assinatura eletrônica</div>
+                        <div class="small text-muted">Responsáveis e signatários do documento.</div>
+                    </div>
+                </t>
+                <t t-elif="props.node.type === 'table' || props.node.type === 'quadro_resumo'">
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0">
+                            <tbody>
+                                <tr>
+                                    <th>Resumo</th>
+                                    <td>Tabela gerada a partir do contexto do processo.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+                <t t-elif="props.node.type === 'divider'">
+                    <hr class="my-2" />
+                </t>
+                <t t-elif="props.node.type === 'bullet_list'">
+                    <ul class="mb-0 ps-3">
+                        <t t-if="this.bulletItems.length">
+                            <t t-foreach="this.bulletItems" t-as="item" t-key="item">
+                                <li><t t-esc="item" /></li>
+                            </t>
+                        </t>
+                        <li t-else="" class="text-muted">Nenhum item configurado.</li>
+                    </ul>
+                </t>
+                <t t-elif="props.node.type === 'metadata'">
+                    <div class="text-muted small">
+                        Rodapé institucional com local, UF e data do documento.
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="alert alert-light border mb-0">
+                        Placeholder para o bloco <strong><t t-esc="props.node.type" /></strong>.
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="gov_document_builder.BlockPalette">
+        <aside class="gdb-panel card h-100 border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom">
+                <div class="d-flex flex-column gap-2">
+                    <div>
+                        <h3 class="h6 mb-1">Biblioteca de Blocos</h3>
+                        <p class="text-muted small mb-0">Arraste a estrutura do documento a partir do catálogo.</p>
+                    </div>
+                    <input
+                        type="search"
+                        class="form-control form-control-sm"
+                        placeholder="Buscar bloco..."
+                        t-att-value="this.localState.query"
+                        t-on-input="updateQuery"
+                    />
+                </div>
+            </div>
+            <div class="card-body d-flex flex-column gap-3 overflow-auto">
+                <t t-if="this.groupedBlocks.length">
+                    <t t-foreach="this.groupedBlocks" t-as="group" t-key="group.name">
+                        <section class="d-flex flex-column gap-2">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h4 class="text-uppercase text-muted small fw-semibold mb-0">
+                                    <t t-esc="group.name" />
+                                </h4>
+                                <span class="badge text-bg-light">
+                                    <t t-esc="group.blocks.length" />
+                                </span>
+                            </div>
+                            <div class="d-flex flex-column gap-2">
+                                <t t-foreach="group.blocks" t-as="block" t-key="block.id">
+                                    <button
+                                        type="button"
+                                        class="btn btn-light text-start border rounded-3 p-3"
+                                        t-on-click="() => this.insertBlock(block.code)"
+                                    >
+                                        <div class="d-flex align-items-start gap-3">
+                                            <span class="fs-5 lh-1">
+                                                <t t-esc="block.icon || '[]'" />
+                                            </span>
+                                            <div class="flex-grow-1">
+                                                <div class="d-flex align-items-center gap-2 mb-1">
+                                                    <span class="fw-semibold">
+                                                        <t t-esc="block.name" />
+                                                    </span>
+                                                    <span
+                                                        t-if="block.is_locked_by_default"
+                                                        class="badge text-bg-warning"
+                                                    >
+                                                        Fixo
+                                                    </span>
+                                                </div>
+                                                <p class="text-muted small mb-0">
+                                                    <t t-esc="block.description || 'Sem descrição.'" />
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </t>
+                            </div>
+                        </section>
+                    </t>
+                </t>
+                <div t-else="" class="alert alert-light border mb-0">
+                    Nenhum bloco encontrado para o filtro atual.
+                </div>
+            </div>
+        </aside>
+    </t>
+</templates>
