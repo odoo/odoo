@@ -2853,8 +2853,9 @@ class MrpProduction(models.Model):
         for move in self.move_raw_ids:
             if move.state in ('done', 'cancel') or not move.product_uom_qty:
                 continue
+            rounding = move.product_uom.rounding
             if move.manual_consumption:
-                if move.has_tracking in ('serial', 'lot') and (not move.picked or any(not line.lot_id for line in move.move_line_ids if line.quantity and line.picked)):
+                if move.has_tracking in ('serial', 'lot') and (not move.picked or any(not (line.lot_id or line.lot_name) for line in move.move_line_ids if not float_is_zero(line.quantity, precision_rounding=rounding) and line.picked)):
                     missing_lot_id_products += "\n  - %s" % move.product_id.display_name
         if missing_lot_id_products:
             error_msg = _(
