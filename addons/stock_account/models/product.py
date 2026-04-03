@@ -446,6 +446,11 @@ class ProductProduct(models.Model):
             field_names=['id'],
             order='product_id, date, id'
         )
+
+        dropship_moves = moves.filtered(lambda m: m.is_dropship)
+        if len(dropship_moves) > 1:
+            self._get_moves_with_manual_value(product_ids=self.ids)
+
         # PERF avoid memoryerror
         move_fields = ['date', 'is_dropship', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids', 'picked', 'value', 'product_id']
         move_line_fields = ['company_id', 'location_id', 'location_dest_id', 'lot_id', 'owner_id', 'picked', 'quantity_product_uom']
@@ -486,7 +491,10 @@ class ProductProduct(models.Model):
                         in_qty = move._get_valued_qty()
                         in_value = move.value
                         if move.is_dropship:
-                            in_value = move._get_value(forced_std_price=average_cost)
+                            ignore_manual_update = False
+                            if self.env.cr.cache.get('moves_with_manual_value', {}).get((at_date, move.product_id)):
+                                ignore_manual_update = move.id not in self.env.cr.cache['moves_with_manual_value'][at_date, move.product_id]
+                            in_value = move._get_value(at_date=at_date, forced_std_price=average_cost, ignore_manual_update=ignore_manual_update)
                         if lot:
                             lot_qty = move._get_valued_qty(lot)
                             in_value = (in_value * lot_qty / in_qty) if in_qty else 0
@@ -517,6 +525,7 @@ class ProductProduct(models.Model):
             std_price_by_product_id[product.id] = average_cost
             value_by_product_id[product.id] = value
 
+        self.env.cr.cache.pop('moves_with_manual_value', None)
         return std_price_by_product_id, value_by_product_id
 
     def _run_fifo_batch(self, at_date=None, lot=None, location=None):
@@ -679,6 +688,27 @@ class ProductProduct(models.Model):
                 for product in products:
                     if product.id in new_standard_price_by_product:
                         product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_standard_price_by_product[product.id]
+
+    def _get_moves_with_manual_value(self, product_ids, at_date=False):
+        """Get the move IDs with manual product.value to populate the cursor cache."""
+        if not product_ids:
+            return
+        if not self.env.cr.cache.get('moves_with_manual_value'):
+            self.env.cr.cache['moves_with_manual_value'] = {}
+        query = """
+            SELECT sm.product_id, array_agg(DISTINCT pv.move_id)
+            FROM product_value pv
+            JOIN stock_move sm ON pv.move_id = sm.id
+            WHERE pv.move_id IS NOT NULL
+            AND sm.product_id IN %s
+        """
+        params = [tuple(product_ids)]
+        if at_date:
+            query += " AND sm.date <= %s"
+            params.append(at_date)
+        query += " GROUP BY sm.product_id"
+        for product, moves in self.env.execute_query(SQL(query, *params)):
+            self.env.cr.cache['moves_with_manual_value'][at_date, product] = set(moves)
 
     # -------------------------------------------------------------------------
     # Old to remove
