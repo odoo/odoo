@@ -190,6 +190,8 @@ class ProductProduct(models.Model):
         if at_date:
             products = products.with_context(at_date=at_date, to_date=at_date)
 
+        self._get_moves_with_manual_value(product_ids=products.ids, at_date=at_date)
+
         # PERF: Pre-compute:the sum of 'total_value' of lots per product in go
         std_price_by_company_id = {}
         total_value_by_company_id = {}
@@ -483,7 +485,10 @@ class ProductProduct(models.Model):
                         in_qty = move._get_valued_qty()
                         in_value = move.value
                         if move.is_dropship:
-                            in_value = move._get_value(forced_std_price=average_cost)
+                            ignore_manual_update = False
+                            if self.env.cr.cache.get('moves_with_manual_value', {}).get((at_date, move.product_id)):
+                                ignore_manual_update = move.id not in self.env.cr.cache.get('moves_with_manual_value').get((at_date, move.product_id))
+                            in_value = move._get_value(at_date=at_date, forced_std_price=average_cost, ignore_manual_update=ignore_manual_update)
                         if lot:
                             lot_qty = move._get_valued_qty(lot)
                             in_value = (in_value * lot_qty / in_qty) if in_qty else 0
@@ -676,6 +681,28 @@ class ProductProduct(models.Model):
                 for product in products:
                     if product.id in new_standard_price_by_product:
                         product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_standard_price_by_product[product.id]
+
+    def _get_moves_with_manual_value(self, product_ids, at_date):
+        """Get the move IDs with manual product.value to populate the cursor cache."""
+        if not self.env.cr.cache.get('moves_with_manual_value'):
+            self.env.cr.cache['moves_with_manual_value'] = {}
+        if not product_ids:
+            return
+        query = """
+            SELECT sm.product_id, array_agg(DISTINCT pv.move_id)
+            FROM product_value pv
+            JOIN stock_move sm ON pv.move_id = sm.id
+            WHERE pv.move_id IS NOT NULL
+            AND sm.product_id IN %s
+        """
+        params = [tuple(product_ids)]
+        if at_date:
+            query += " AND sm.date <= %s"
+            params.append(at_date)
+        query += " GROUP BY sm.product_id"
+        self.env.cr.execute(query, params)
+        for product, moves in self.env.cr.fetchall():
+            self.env.cr.cache['moves_with_manual_value'][at_date, product] = set(moves)
 
     # -------------------------------------------------------------------------
     # Old to remove
