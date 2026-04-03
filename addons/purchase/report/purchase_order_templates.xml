@@ -10,20 +10,16 @@
         <t t-if="o.state == 'purchase'">Purchase Order #<span t-field="o.name"/></t>
         <t t-if="o.state == 'cancel'">Cancelled Purchase Order #<span t-field="o.name"/></t>
     </t>
+    <t t-set="information_block" t-if="o.dest_address_id">
+        <strong class="d-block mt-3">Shipping address</strong>
+        <div t-field="o.dest_address_id"
+            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}' name="purchase_shipping_address"/>
+    </t>
     <t t-call="web.external_layout"
         address="address"
-        layout_document_title="layout_document_title">
+        layout_document_title="layout_document_title"
+        information_block="information_block">
         <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
-        <t t-if="o.dest_address_id">
-            <t t-set="information_block">
-                <strong class="d-block mt-3">Shipping address</strong>
-                <div t-if="o.dest_address_id">
-                    <div t-field="o.dest_address_id"
-                        t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}' name="purchase_shipping_address"/>
-                </div>
-
-            </t>
-        </t>
         <div class="page">
             <div class="oe_structure"/>
 
