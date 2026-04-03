@@ -308,7 +308,7 @@
         return function batchedCall(...args) {
             if (!scheduled) {
                 scheduled = true;
-                queueMicrotask(() => {
+                Promise.resolve().then(() => {
                     scheduled = false;
                     callback(...args);
                 });
