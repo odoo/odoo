@@ -39,7 +39,13 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { Composer } from "@mail/core/common/composer";
-import { edit, press, queryFirst } from "@odoo/hoot-dom";
+import {
+    edit,
+    manuallyDispatchProgrammaticEvent,
+    press,
+    queryFirst,
+    waitFor,
+} from "@odoo/hoot-dom";
 import { browser } from "@web/core/browser/browser";
 import { MailComposerFormController } from "@mail/chatter/web/mail_composer_form";
 import { useSubEnv } from "@odoo/owl";
@@ -636,6 +642,42 @@ test("post message on channel with 'Enter' keyboard shortcut", async () => {
     await press("Enter", { isComposing: true });
     await animationFrame();
     await contains(".o-mail-Message");
+});
+
+test.tags("html composer");
+test("Shift+Enter adds a list item or leaves the list from an empty one, Enter posts the list", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    const pressShiftEnter = async () => {
+        await press("shift+Enter");
+        // the browser follows a Shift+Enter keydown with this input
+        await manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
+            inputType: "insertLineBreak",
+        });
+    };
+    await htmlInsertText(editor, "- Apple");
+    await waitFor(".o-mail-Composer-html ul > li:only-child:text('Apple')");
+    await pressShiftEnter();
+    await htmlInsertText(editor, "Banana");
+    await waitFor(".o-mail-Composer-html ul > li:first-child:text('Apple')");
+    await waitFor(".o-mail-Composer-html ul > li:last-child:text('Banana')");
+    await pressShiftEnter();
+    await pressShiftEnter();
+    await htmlInsertText(editor, "Total");
+    await waitFor(".o-mail-Composer-html ul + *:text('Total')");
+    await press("Enter");
+    await waitFor(".o-mail-Message-body ul > li:first-child:text('Apple')");
+    await waitFor(".o-mail-Message-body ul > li:last-child:text('Banana')");
+    await waitFor(".o-mail-Message-body ul + *:text('Total')");
 });
 
 test("leave command on channel", async () => {

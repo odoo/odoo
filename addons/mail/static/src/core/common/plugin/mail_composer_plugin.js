@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isEmptyBlock } from "@html_editor/utils/dom_info";
-import { childNodes } from "@html_editor/utils/dom_traversal";
+import { childNodes, closestElement } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 
 const ALLOWED_TAGS = [
@@ -28,7 +28,7 @@ const PRESERVED_CLASSNAMES = new Set(["o_mail_redirect", "o_channel_redirect", "
  */
 export class MailComposerPlugin extends Plugin {
     static id = "mail_composer";
-    static dependencies = ["clipboard", "dom", "hint", "history", "input", "selection"];
+    static dependencies = ["clipboard", "dom", "hint", "history", "input", "selection", "split"];
     resources = {
         before_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
         bypass_paste_image_files: () => true,
@@ -54,6 +54,7 @@ export class MailComposerPlugin extends Plugin {
             }
         },
         input_handlers: this.config.composerPluginDependencies.onInput.bind(this),
+        insert_line_break_element_overrides: this.splitListItemOnLineBreak.bind(this),
     };
 
     setup() {
@@ -105,6 +106,20 @@ export class MailComposerPlugin extends Plugin {
         [...sanitizedFragment.childNodes].forEach(removeStyle);
         this.dependencies.dom.insert(sanitizedFragment);
         this.dependencies.history.addStep();
+        return true;
+    }
+
+    /**
+     * Enter can send the message, so Shift+Enter in a list item acts as Enter does in a document:
+     * it adds an item, or leaves the list when the item is empty.
+     *
+     * @param {{ targetNode: Node, targetOffset: number }} params
+     */
+    splitListItemOnLineBreak({ targetNode, targetOffset }) {
+        if (!closestElement(targetNode, "LI")) {
+            return;
+        }
+        this.dependencies.split.splitBlockNode({ targetNode, targetOffset });
         return true;
     }
 }
