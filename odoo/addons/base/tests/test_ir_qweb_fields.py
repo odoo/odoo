@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
 from odoo.tests import tagged, common
 
 
@@ -103,7 +102,6 @@ class TestQwebFieldContact(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env = cls.env(context=dict(cls.env.context, **DISABLED_MAIL_CONTEXT))
         cls.partner = cls.env['res.partner'].create({
             'name': 'Wood Corner',
             'email': 'wood.corner26@example.com',

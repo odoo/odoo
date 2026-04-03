@@ -348,6 +348,7 @@ class TestAccountLockException(AccountTestInvoicingCommon, MailCase):
         for lock_date_field, move_type in self.soft_lock_date_info:
             with self.subTest(lock_date_field=lock_date_field, move_type=move_type), closing(self.cr.savepoint()):
                 self.company[lock_date_field] = fields.Date.to_date('2020-01-01')
+                self.env.cr.flush()
 
                 revoked_exception = self.env['account.lock_exception'].create({
                     'company_id': self.company.id,
@@ -379,6 +380,7 @@ class TestAccountLockException(AccountTestInvoicingCommon, MailCase):
                 })
 
                 # Check that the company lock date field was set correcyly on exception creation
+                self.assertEqual(self.company[lock_date_field], fields.Date.to_date('2020-01-01'))
                 self.assertEqual(revoked_exception.company_lock_date, fields.Date.to_date('2020-01-01'))
                 self.assertEqual(active_exception.company_lock_date, fields.Date.to_date('2020-01-01'))
 
@@ -388,7 +390,7 @@ class TestAccountLockException(AccountTestInvoicingCommon, MailCase):
                     self.env.cr.flush()
 
                 self.assertEqual(revoked_exception.company_lock_date, fields.Date.to_date('2020-01-01'))
-
+                self.assertEqual(self.company[lock_date_field], fields.Date.to_date('2021-01-01'))
                 self.assertEqual(active_exception.state, 'revoked')
 
                 exceptions = self.env['account.lock_exception'].with_context(active_test=False).search([])
@@ -412,7 +414,7 @@ class TestAccountLockException(AccountTestInvoicingCommon, MailCase):
                     'model': self.env.company._name,
                     'res_id': self.env.company.id,
                     'subtype_id': self.env.ref('mail.mt_note'),
-                    'tracking_values': [(lock_date_field, 'date', datetime(2021, 1, 1, 0, 0, 0), datetime(2010, 3, 1, 0, 0, 0))],
+                    'tracking_values': [(lock_date_field, 'date', datetime(2020, 1, 1, 0, 0, 0), datetime(2010, 3, 1, 0, 0, 0))],
                 })
 
     def test_user_exception_remove_lock_date(self):

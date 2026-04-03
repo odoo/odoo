@@ -4,7 +4,7 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 
-from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 from odoo.addons.website_sale_loyalty.controllers.cart import Cart
@@ -19,7 +19,7 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         cls.Controller = WebsiteSaleLoyaltyDelivery()
 
         # Disable mail logic
-        cls.env = cls.env["base"].with_context(**DISABLED_MAIL_CONTEXT).env
+        cls.env = cls.env["base"].with_context(**DISABLED_MAIL_CREATE_CONTEXT).env
         # Disable existing pricelists
         cls.env["product.pricelist"].with_context(active_test=False).search([]).unlink()
         # Disable existing reward programs
