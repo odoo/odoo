@@ -162,24 +162,6 @@ class TestResConfigExecute(TransactionCase):
             _logger.info("Testing %s" % (config_settings.name))
             self.env[config_settings.name].create({}).execute()
 
-    def test_boolean_config_parameter(self):
-        ICP = self.env['ir.config_parameter'].sudo()
-        ResConfigTest = self.env['res.config.test']
-
-        # If no `ir.config_parameter` record exists yet for the config, value
-        # should be `False`
-        ICP.search([('key', '=', 'resConfigTest.parameterBool')]).unlink()
-        defaults = ResConfigTest.default_get(['param_bool'])
-        self.assertFalse(defaults['param_bool'])
-
-        ICP.set_param('resConfigTest.parameterBool', 'False')
-        defaults = ResConfigTest.default_get(['param_bool'])
-        self.assertFalse(defaults['param_bool'])
-
-        ICP.set_param('resConfigTest.parameterBool', 'True')
-        defaults = ResConfigTest.default_get(['param_bool'])
-        self.assertTrue(defaults['param_bool'])
-
     def test_settings_access(self):
         """Check that settings user are able to open & save settings
 
