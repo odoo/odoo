@@ -65,7 +65,7 @@ class TestDiscussSubChannels(HttpCase):
         parent.action_unfollow()
         self.assertFalse(parent.self_member_id)
         self.assertFalse(sub_channel.self_member_id)
-        # Member created for sub channel (add_members): should also be created
+        # Member created for sub channel (_add_members): should also be created
         # for parent.
         sub_channel._add_members(users=self.env.user)
         self.assertTrue(parent.self_member_id)

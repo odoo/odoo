@@ -35,7 +35,7 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
             ).livechat_member_type,
             "visitor",
         )
-        channel.add_members(partner_ids=john.partner_id.ids)
+        channel._add_members(users=john)
         self.assertEqual(len(channel.channel_member_ids.livechat_member_history_ids), 3)
         self.assertEqual(
             channel.channel_member_ids.livechat_member_history_ids.filtered(
@@ -44,7 +44,7 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
             "agent",
         )
         channel.livechat_end_dt = fields.Datetime.now()
-        channel.add_members(partner_ids=michel.partner_id.ids)
+        channel._add_members(users=michel)
         self.assertEqual(len(channel.channel_member_ids.livechat_member_history_ids), 3)
 
     def test_get_session_create_history_with_bot(self):
@@ -70,7 +70,7 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
             ).livechat_member_type,
             "visitor",
         )
-        channel.add_members(partner_ids=john.partner_id.ids)
+        channel._add_members(users=john)
         self.assertEqual(len(channel.channel_member_ids.livechat_member_history_ids), 3)
         self.assertEqual(
             channel.channel_member_ids.livechat_member_history_ids.filtered(
@@ -124,7 +124,7 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
     def test_can_only_create_history_for_livechats(self):
         john = self._create_operator("fr_FR")
         channel = self.env["discuss.channel"]._create_channel(name="General", group_id=None)
-        member = channel.add_members(partner_ids=john.partner_id.ids)
+        member = channel._add_members(users=john)
         with self.assertRaises(ValidationError):
             self.env["im_livechat.channel.member.history"].create({"member_id": member.id}).channel_id
 
@@ -146,7 +146,7 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
         self.assertEqual(og_history.livechat_member_type, "agent")
         self.assertEqual(og_history.member_id, john_member)
         # Add another agent so the channel stays active and the history can be updated.
-        channel.add_members(partner_ids=bob.partner_id.ids)
+        channel._add_members(users=bob)
         channel.with_user(john).action_unfollow()
         john_history = channel.channel_member_ids.livechat_member_history_ids.filtered(
             lambda m: m.partner_id == john.partner_id

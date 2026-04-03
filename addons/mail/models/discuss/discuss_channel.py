@@ -632,9 +632,14 @@ class DiscussChannel(models.Model):
         member.unlink()
 
     def add_members(
-        self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, post_joined_message=True
+        self,
+        partner_ids=None,
+        guest_ids=None,
+        invite_to_rtc_call=False,
+        post_joined_message=True,
     ):
-        """ Adds the given partner_ids and guest_ids as member of self channels. """
+        """Adds the given partner_ids and guest_ids as member of self channels.
+        Prefer calling _add_members with recordsets directly when possible."""
         return self._add_members(
             partners=self.env["res.partner"].browse(partner_ids or []).exists(),
             guests=self.env["mail.guest"].browse(guest_ids or []).exists(),
@@ -653,6 +658,8 @@ class DiscussChannel(models.Model):
         post_joined_message=True,
         inviting_partner=None,
     ):
+        """Adds the given users, partners and guests as member of self channels.
+        Prefer giving users rather than partners when possible."""
         stores = Store.Stores()
         inviting_partner = inviting_partner or self.env["res.partner"]
         partners = partners or self.env["res.partner"]
@@ -1455,12 +1462,9 @@ class DiscussChannel(models.Model):
 
     def channel_join(self):
         """Shortcut to add the current user as member of self channels.
-        Prefer calling add_members() directly when possible.
-        """
-        if not self.self_member_id:
-            self._add_members(users=self.env.user)
-        else:
-            self.self_member_id.last_interest_dt = fields.Datetime.now()
+        If the user is already a member, updates the last_interest_dt."""
+        self.self_member_id.last_interest_dt = fields.Datetime.now()
+        (self - self.self_member_id.channel_id)._add_members(users=self.env.user)
 
     def open_chat_window_action(self):
         """Return an action the web client can use to open this channel."""
@@ -1539,7 +1543,11 @@ class DiscussChannel(models.Model):
                 "parent_channel_id": self.id,
             }
         )
-        sub_channel.add_members(partner_ids=(self.env.user.partner_id | message.author_id).ids, post_joined_message=False)
+        sub_channel._add_members(
+            users=self.env.user,
+            partners=message.author_id,
+            post_joined_message=False,
+        )
         notification = (
             Markup('<div class="o_mail_notification">%s</div>')
             % _(
