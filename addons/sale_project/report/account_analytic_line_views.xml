@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='date']" position="after">
                 <field name="category" type="row"/>
+                <field name="category_report" type="col"/>
             </xpath>
             <xpath expr="//field[@name='date']" position="replace">
                 <field name="account_id" type="col"/>
@@ -42,11 +43,23 @@
         </field>
     </record>
 
+    <record id="sale_project_line_search" model="ir.ui.view">
+        <field name="name">sale_project.account.analytic.margins.search</field>
+        <field name="model">account.analytic.line</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="account.view_account_analytic_line_filter_inherit_account"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='category']" position="replace">
+                <filter string="Category" name='category' context="{'group_by': 'category_report'}"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="action_analytic_reporting_inherit_sale_project" model="ir.actions.act_window">
         <field name="name">Real Margins</field>
         <field name="res_model">account.analytic.line</field>
         <field name="path">project-actual-margins</field>
-        <field name="search_view_id" ref="account.view_account_analytic_line_filter_inherit_account"/>
+        <field name="search_view_id" ref="sale_project.sale_project_line_search"/>
         <field name="view_id" ref="view_account_analytic_line_inherit_sale_project_pivot"/>
         <field name="view_mode">pivot,list,kanban,graph</field>
         <field name="context">{

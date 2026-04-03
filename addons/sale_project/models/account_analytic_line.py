@@ -8,7 +8,8 @@ BILLABLE_TYPES = [
     ('07_revenues_manual', 'Revenues (Manual)'),
     ('10_service_revenues', 'Service Revenues'),
     ('11_other_revenues', 'Other Revenues'),
-    ('12_other_costs', 'Other Costs'),
+    ('12_vendor_bill', 'Vendor Bills'),
+    ('30_other_costs', 'Other Costs'),
 ]
 
 
@@ -18,7 +19,11 @@ class AccountAnalyticLine(models.Model):
     billable_type = fields.Selection(BILLABLE_TYPES, string="Billable Type",
         compute='_compute_project_billable_type', compute_sudo=True, store=True, readonly=True)
 
-    @api.depends('so_line.product_id', 'amount')
+    category_report = fields.Selection(
+        [('costs', 'Costs'), ('revenues', 'Revenues')],
+        compute='_compute_category_report', compute_sudo=True, store=True, readonly=True)
+
+    @api.depends('so_line.product_id', 'amount', 'category')
     def _compute_project_billable_type(self):
         for line in self:
             if line.amount >= 0 and line.unit_amount >= 0:
@@ -37,9 +42,27 @@ class AccountAnalyticLine(models.Model):
                         invoice_type = '01_revenues_fixed'
                     else:
                         invoice_type = '11_other_revenues'
-                    line.billable_type = invoice_type
+                    line.billable_type = line._get_invoice_type(invoice_type)
             else:
-                line.billable_type = '12_other_costs'
+                line._set_billable_cost()
+
+    def _set_billable_cost(self):
+        if self.category == 'vendor_bill':
+            self.billable_type = '12_vendor_bill'
+        else:
+            self.billable_type = '30_other_costs'
+
+    def _get_invoice_type(self, invoice_type):
+        return invoice_type
+
+    @api.depends('billable_type')
+    def _compute_category_report(self):
+        for line in self:
+            if line.billable_type in ['01_revenues_fixed', '05_revenues_milestones', '07_revenues_manual',
+                                      '10_service_revenues', '11_other_revenues']:
+                line.category_report = 'revenues'
+            else:
+                line.category_report = 'costs'
 
     def action_open_account_analytic_line_origine(self):
         self.ensure_one()

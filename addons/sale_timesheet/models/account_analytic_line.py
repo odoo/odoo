@@ -9,7 +9,7 @@ from odoo.tools.misc import unquote
 from odoo.addons.sale_project.models.account_analytic_line import BILLABLE_TYPES
 
 TIMESHEET_BILLABLE_TYPES = [
-    ('02_billable_fixed', 'Timesheet (Fixed price)'),
+    ('02_billable_fixed', 'Timesheets (Fixed Price)'),
     ('03_timesheet_revenues', 'Revenues (Time & Material)'),
     ('04_billable_time', 'Timesheets (Time & Materials)'),
     ('06_billable_milestones', 'Timesheets (Milestones)'),
@@ -50,7 +50,7 @@ class AccountAnalyticLine(models.Model):
         for timesheet in self:
             timesheet.commercial_partner_id = timesheet.task_id.sudo().partner_id.commercial_partner_id or timesheet.project_id.sudo().partner_id.commercial_partner_id
 
-    @api.depends('so_line.product_id', 'project_id.billing_type', 'amount')
+    @api.depends('so_line.product_id', 'project_id.billing_type', 'amount', 'category')
     def _compute_project_billable_type(self):
         timesheets_with_project = self.filtered(lambda t: t.project_id)
         for timesheet in timesheets_with_project:
@@ -73,6 +73,16 @@ class AccountAnalyticLine(models.Model):
                     invoice_type = '02_billable_fixed'
             timesheet.billable_type = invoice_type
         super(AccountAnalyticLine, self - timesheets_with_project)._compute_project_billable_type()
+
+    @api.depends('billable_type')
+    def _compute_category_report(self):
+        timesheets = self.filtered(lambda t: t.project_id)
+        for timesheet in timesheets:
+            if timesheet.billable_type == '03_timesheet_revenues':
+                timesheet.category_report = 'revenues'
+            else:
+                timesheet.category_report = 'costs'
+        super(AccountAnalyticLine, self - timesheets)._compute_category_report()
 
     @api.depends('task_id.sale_line_id', 'project_id.sale_line_id', 'employee_id', 'project_id.allow_billable')
     def _compute_so_line(self):

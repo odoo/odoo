@@ -15,3 +15,9 @@ class AccountMoveLine(models.Model):
         mapping_from_expense = self._get_so_mapping_from_expense()
         mapping_from_project.update(mapping_from_expense)
         return mapping_from_project
+
+    def _prepare_analytic_distribution_line(self, distribution, account_ids, distribution_on_each_plan):
+        vals = super()._prepare_analytic_distribution_line(distribution, account_ids, distribution_on_each_plan)
+        if self.expense_id:
+            vals['category'] = 'expense'
+        return vals
