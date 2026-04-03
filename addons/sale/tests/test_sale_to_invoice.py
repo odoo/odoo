@@ -1762,7 +1762,7 @@ class TestSaleToInvoice(TestSaleCommon):
         ])
         self.assertEqual(salesperson.sale_team_id, team1)
         self.sale_order.write({
-            "user_id": salesperson,
+            "user_id": salesperson.id,
             "team_id": team2.id,
             "order_line": [
                 Command.update(sol_id, {"price_unit": -10})  # negative prices to force a refund
