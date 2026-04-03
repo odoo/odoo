@@ -226,9 +226,6 @@ class BusResult:
         return None
 
     def format_log(self, idx, *, show_store_versioning):
-        payload = json.loads(json_dump(self.payload)) if self.payload is not None else None
-        if not show_store_versioning:
-            BusResult._pop_store_version(payload)
         if self.wrong_order_received_idx is not None:
             status = f"⚠️ wrong order: expected #{idx} -> received #{self.wrong_order_received_idx}"
         elif self.wrong_order_expected_idx is not None:
@@ -237,14 +234,21 @@ class BusResult:
             status = f"✅ matched #{idx}"
         else:
             status = f"❌ missing #{idx}"
+        channel, type_, payload = self.to_tuple(show_store_versioning=show_store_versioning)
         return (
             f"# {status}\n"
             "(\n"
-            f"    {json_dump(self._normalized_channel())},\n"
-            f"    {json_dump(self.type)},\n"
+            f"    {json_dump(channel)},\n"
+            f"    {json_dump(type_)},\n"
             f"    {json_dump(payload)},\n"
             "),"
         )
+
+    def to_tuple(self, *, show_store_versioning):
+        payload = json.loads(json_dump(self.payload)) if self.payload is not None else None
+        if not show_store_versioning:
+            BusResult._pop_store_version(payload)
+        return (self._normalized_channel(), self.type, payload)
 
     @staticmethod
     def _pop_store_version(data):
@@ -301,6 +305,7 @@ class BusCase(BaseCase):
             or callable returning one of those forms.
         Expected notifications must appear in order.
         """
+        self.maxDiff = None
         notifications = notifications() if callable(notifications) else notifications
         if isinstance(notifications, BusResult):
             notifications = [notifications]
@@ -350,4 +355,12 @@ class BusCase(BaseCase):
             error_parts = ["Bus notifications."]
             format_notifications("\nExpected notifications:", expected_list)
             format_notifications("\nReceived notifications:", received_list)
+            for idx, (expected, actual) in enumerate(zip_longest(expected_list, received_list), 1):
+                with self.subTest(idx=idx):
+                    if expected is not None and actual is not None and not expected.matched:
+                        self.assertEqual(
+                            expected.to_tuple(show_store_versioning=show_store_versioning),
+                            actual.to_tuple(show_store_versioning=show_store_versioning),
+                            f"\n❌ mismatch at comparison #{idx}",
+                        )
             raise AssertionError("\n".join(error_parts))
