@@ -85,7 +85,7 @@ class HrLeaveAllocation(models.Model):
         tracking=True, required=True)
     date_to = fields.Date('End Date', copy=False, tracking=True)
     work_entry_type_id = fields.Many2one(
-        "hr.work.entry.type", compute='_compute_work_entry_type_id', store=True, string="Time Type", required=True, readonly=False,
+        "hr.work.entry.type", compute='_compute_work_entry_type_id', store=True, string="Time Type", required=True, index=True, readonly=False,
         domain=_domain_work_entry_type_id)
     allowed_work_entry_type_ids = fields.Many2many(
         'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')

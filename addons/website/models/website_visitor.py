@@ -54,7 +54,7 @@ class WebsiteVisitor(models.Model):
     partner_image = fields.Binary(related='partner_id.image_1920')
 
     # localisation and info
-    country_id = fields.Many2one('res.country', 'Country', readonly=True)
+    country_id = fields.Many2one('res.country', 'Country', readonly=True, index='btree_not_null')
     country_flag = fields.Char(related="country_id.image_url", string="Country Flag")
     lang_id = fields.Many2one('res.lang', string='Language', help="Language from the website when visitor has been created")
     timezone = fields.Selection(_tz_get, string='Timezone')

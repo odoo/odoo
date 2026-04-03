@@ -438,7 +438,7 @@ class AccountMove(models.Model):
     commercial_partner_id = fields.Many2one(
         'res.partner',
         string='Commercial Entity',
-        compute='_compute_commercial_partner_id', store=True, readonly=True,
+        compute='_compute_commercial_partner_id', store=True, readonly=True, index=True,
         ondelete='restrict',
         check_company=True,
     )

@@ -101,7 +101,7 @@ class AccountMoveLine(models.Model):
         string='Account',
         compute='_compute_account_id', store=True, readonly=False, precompute=True,
         inverse='_inverse_account_id',
-        index=False,  # covered by account_move_line_account_id_date_idx defined in init()
+        index=False,  # covered by _account_id_date_idx
         bypass_search_access=True,
         ondelete="restrict",
         domain="[('account_type', '!=', 'off_balance')]",
@@ -216,6 +216,7 @@ class AccountMoveLine(models.Model):
         string='Originator Tax',
         related='tax_repartition_line_id.tax_id', store=True, precompute=True,
         ondelete='restrict',
+        index='btree_not_null',
         help="Indicates that this journal item is a tax line")
     tax_group_id = fields.Many2one(  # used in the widget tax-group-custom-field
         string='Originator tax group',
@@ -230,6 +231,7 @@ class AccountMoveLine(models.Model):
         comodel_name='account.tax.repartition.line',
         string="Originator Tax Distribution Line",
         ondelete='restrict',
+        index='btree_not_null',
         readonly=True,
         check_company=True,
         help="Tax distribution line that caused the creation of this move line, if any")

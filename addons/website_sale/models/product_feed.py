@@ -23,7 +23,7 @@ class ProductFeed(models.Model):
 
     name = fields.Char(required=True)
     website_id = fields.Many2one(
-        "website", required=True, default=lambda self: self.env.company.website_id
+        "website", required=True, index=True, default=lambda self: self.env.company.website_id
     )
     pricelist_id = fields.Many2one(
         "product.pricelist",

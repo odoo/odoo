@@ -54,7 +54,7 @@ class StockQuant(models.Model):
         'uom.uom', 'Unit',
         readonly=True, related='product_id.uom_id')
     is_favorite = fields.Boolean(related='product_tmpl_id.is_favorite')
-    company_id = fields.Many2one(related='location_id.company_id', string='Company', store=True, readonly=True)
+    company_id = fields.Many2one(related='location_id.company_id', string='Company', store=True, readonly=True, index='btree_not_null')
     location_id = fields.Many2one(
         'stock.location', 'Location',
         domain=lambda self: self._domain_location_id(),

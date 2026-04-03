@@ -44,7 +44,7 @@ class EventSponsor(models.Model):
         readonly=False, store=True)
     show_on_ticket = fields.Boolean("Show on ticket", default=True)
     # contact information
-    partner_id = fields.Many2one('res.partner', 'Partner', required=True, bypass_search_access=True)
+    partner_id = fields.Many2one('res.partner', 'Partner', required=True, index=True, bypass_search_access=True)
     partner_name = fields.Char('Name', related='partner_id.name')
     partner_email = fields.Char('Email', related='partner_id.email')
     partner_phone = fields.Char('Phone', related='partner_id.phone')

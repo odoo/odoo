@@ -116,12 +116,12 @@ class AccountJournal(models.Model):
     )
     default_account_type = fields.Char(string='Default Account Type', compute="_compute_default_account_type")
     default_account_id = fields.Many2one(
-        comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
+        comodel_name='account.account', check_company=True, copy=False, ondelete='restrict', index='btree_not_null',
         string='Default Account',
         domain=_get_default_account_domain)
     default_account_active = fields.Boolean(related='default_account_id.active', string="Default Account Active")
     suspense_account_id = fields.Many2one(
-        comodel_name='account.account', check_company=True, ondelete='restrict', readonly=False, store=True,
+        comodel_name='account.account', check_company=True, ondelete='restrict', readonly=False, store=True, index='btree_not_null',
         compute='_compute_suspense_account_id',
         help="Bank statements transactions will be posted on the suspense account until the final reconciliation "
              "allowing finding the right account.", string='Suspense Account',
@@ -134,6 +134,7 @@ class AccountJournal(models.Model):
         string='Private Share Account',
         readonly=False,
         store=True,
+        index='btree_not_null',
         help="Account used to register the private part of mixed expenses.",
     )
     non_deductible_account_active = fields.Boolean(related='non_deductible_account_id.active', string="Private Share Account Active")
@@ -227,13 +228,13 @@ class AccountJournal(models.Model):
         "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
     )
     profit_account_id = fields.Many2one(
-        comodel_name='account.account', check_company=True,
+        comodel_name='account.account', check_company=True, index='btree_not_null',
         help="Used to register a profit when the ending balance of a cash register differs from what the system computes",
         string='Profit Account',
         domain="[('account_type', 'in', ('income', 'income_other'))]")
     profit_account_active = fields.Boolean(related='profit_account_id.active', string="Profit Account Active")
     loss_account_id = fields.Many2one(
-        comodel_name='account.account', check_company=True,
+        comodel_name='account.account', check_company=True, index='btree_not_null',
         help="Used to register a loss when the ending balance of a cash register differs from what the system computes",
         string='Loss Account',
         domain="[('account_type', '=', 'expense')]")

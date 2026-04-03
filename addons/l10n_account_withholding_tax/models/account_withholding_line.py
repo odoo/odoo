@@ -48,6 +48,7 @@ class AccountWithholdingLine(models.AbstractModel):
         comodel_name='account.tax',
         check_company=True,
         required=True,
+        index=True,
         domain="[('type_tax_use', '=', type_tax_use), ('is_withholding_tax_on_payment', '=', True)]",
     )
     withholding_sequence_id = fields.Many2one(related='tax_id.withholding_sequence_id')
@@ -107,6 +108,7 @@ class AccountWithholdingLine(models.AbstractModel):
         compute='_compute_company_id',
         precompute=True,
         required=True,
+        index=True,
         store=True,
     )
     comodel_company_currency_id = fields.Many2one(

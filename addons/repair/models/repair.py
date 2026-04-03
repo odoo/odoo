@@ -85,7 +85,7 @@ class RepairOrder(models.Model):
     product_id = fields.Many2one(
         'product.product', string='Product to Repair',
         domain="[('type', '=', 'consu'), '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('id', 'in', picking_product_ids), ('id', '=?', picking_product_id)]",
-        check_company=True)
+        check_company=True, index='btree_not_null')
     product_qty = fields.Float(
         'Product Quantity', compute='_compute_product_qty', readonly=False, store=True,
         default=1.0, digits='Product Unit')
@@ -171,7 +171,7 @@ class RepairOrder(models.Model):
         copy=False, help="Sale Order from which the Repair Order comes from.")
     sale_order_line_id = fields.Many2one(
         'sale.order.line', check_company=True, readonly=True,
-        copy=False, help="Sale Order Line from which the Repair Order comes from.")
+        copy=False, index='btree_not_null', help="Sale Order Line from which the Repair Order comes from.")
     repair_request = fields.Text(
         related='sale_order_line_id.name',
         string='Repair Request',

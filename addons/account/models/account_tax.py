@@ -5004,6 +5004,7 @@ class AccountTaxRepartitionLine(models.Model):
         comodel_name='account.account',
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
         check_company=True,
+        index='btree_not_null',
         help="Account on which to post the tax amount")
     account_active = fields.Boolean(related='account_id.active', string="Account Active")
     tag_ids = fields.Many2many(string="Tax Grids", comodel_name='account.account.tag', domain=[('applicability', '=', 'taxes')], copy=True, ondelete='restrict')

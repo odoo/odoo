@@ -12,6 +12,7 @@ class SaleOrder(models.Model):
         help="Fill this field if you plan to invoice the shipping based on picking.",
         comodel_name="delivery.carrier",
         check_company=True,
+        index='btree_not_null',
     )
     delivery_message = fields.Char(readonly=True, copy=False)
     delivery_set = fields.Boolean(compute="_compute_delivery_state")

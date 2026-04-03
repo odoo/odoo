@@ -57,7 +57,7 @@ class AccountPartialReconcile(models.Model):
     # ==== Other fields ====
     company_id = fields.Many2one(
         comodel_name='res.company',
-        string="Company", store=True, readonly=False,
+        string="Company", store=True, readonly=False, index=True,
         precompute=True,
         compute='_compute_company_id')
     max_date = fields.Date(

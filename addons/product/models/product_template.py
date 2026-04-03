@@ -89,6 +89,7 @@ class ProductTemplate(models.Model):
         string="Product Category",
         comodel_name='product.category',
         group_expand='_read_group_categ_id',
+        index='btree_not_null',
         tracking=True,
     )
 
@@ -143,7 +144,7 @@ class ProductTemplate(models.Model):
     purchase_ok = fields.Boolean('Purchase', default=True, compute='_compute_purchase_ok', store=True, readonly=False)
     uom_id = fields.Many2one(
         'uom.uom', 'Unit', tracking=True,
-        default=_default_uom_id, required=True,
+        default=_default_uom_id, required=True, index=True,
         help="Default unit of measure used for all stock operations.")
     uom_ids = fields.Many2many('uom.uom', string='Packagings', help="Additional packagings for this product which can be used for sales", domain="[('id', '!=', uom_id)]")
     uom_name = fields.Char(string='Unit Name', related='uom_id.name', readonly=True)

@@ -8,7 +8,7 @@ class LoyaltyCard(models.Model):
     _name = 'loyalty.card'
     _inherit = ['loyalty.card', 'pos.load.mixin']
 
-    source_pos_order_id = fields.Many2one('pos.order', "PoS Order Reference",
+    source_pos_order_id = fields.Many2one('pos.order', "PoS Order Reference", index=True,
         help="PoS order where this coupon was generated.")
     source_pos_order_partner_id = fields.Many2one(
         'res.partner', "PoS Order Customer",

@@ -532,7 +532,7 @@ class StockRoute(models.Model):
     warehouse_selectable = fields.Boolean('Applicable on Warehouse', help="When a warehouse is selected for this route, this route should be seen as the default route when products pass through this warehouse.")
     package_type_selectable = fields.Boolean('Applicable on Package Type', help="When checked, the route will be selectable on package types")
     supplied_wh_id = fields.Many2one('stock.warehouse', 'Supplied Warehouse', index='btree_not_null')
-    supplier_wh_id = fields.Many2one('stock.warehouse', 'Supplying Warehouse')
+    supplier_wh_id = fields.Many2one('stock.warehouse', 'Supplying Warehouse', index='btree_not_null')
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env.company, index=True,

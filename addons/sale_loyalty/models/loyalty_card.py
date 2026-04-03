@@ -11,6 +11,7 @@ class LoyaltyCard(models.Model):
         help="The sales order from which coupon is generated",
         comodel_name="sale.order",
         readonly=True,
+        index='btree_not_null',
     )
     order_id_partner_id = fields.Many2one(
         string="Sale Order Customer", comodel_name="res.partner", related="order_id.partner_id"

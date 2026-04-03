@@ -16,7 +16,7 @@ class LunchOrder(models.Model):
     topping_ids_1 = fields.Many2many('lunch.topping', 'lunch_order_topping', 'order_id', 'topping_id', string='Extras 1', domain=[('topping_category', '=', 1)])
     topping_ids_2 = fields.Many2many('lunch.topping', 'lunch_order_topping', 'order_id', 'topping_id', string='Extras 2', domain=[('topping_category', '=', 2)])
     topping_ids_3 = fields.Many2many('lunch.topping', 'lunch_order_topping', 'order_id', 'topping_id', string='Extras 3', domain=[('topping_category', '=', 3)])
-    product_id = fields.Many2one('lunch.product', string="Product", required=True)
+    product_id = fields.Many2one('lunch.product', string="Product", required=True, index=True)
     category_id = fields.Many2one(
         string='Product Category', related='product_id.category_id', store=True)
     date = fields.Date('Order Date', required=True, readonly=False,
@@ -39,7 +39,7 @@ class LunchOrder(models.Model):
                               ('cancelled', 'Cancelled')],
                              'Status', readonly=True, index=True, default='new')
     notified = fields.Boolean(default=False)
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id, index=True)
     currency_id = fields.Many2one(related='company_id.currency_id', store=True)
     quantity = fields.Float('Quantity', required=True, default=1)
 

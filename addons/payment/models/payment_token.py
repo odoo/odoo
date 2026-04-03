@@ -11,13 +11,13 @@ class PaymentToken(models.Model):
     _check_company_auto = True
     _rec_names_search = ["payment_details", "partner_id", "provider_id"]
 
-    provider_id = fields.Many2one(string="Provider", comodel_name="payment.provider", required=True)
+    provider_id = fields.Many2one(string="Provider", comodel_name="payment.provider", required=True, index=True)
     provider_code = fields.Selection(string="Provider Code", related="provider_id.code")
     company_id = fields.Many2one(
         related="provider_id.company_id", store=True, index=True
     )  # Indexed to speed-up ORM searches (from ir_rule or others).
     payment_method_id = fields.Many2one(
-        string="Payment Method", comodel_name="payment.method", readonly=True, required=True
+        string="Payment Method", comodel_name="payment.method", readonly=True, required=True, index=True,
     )
     payment_method_code = fields.Char(
         string="Payment Method Code", related="payment_method_id.code"

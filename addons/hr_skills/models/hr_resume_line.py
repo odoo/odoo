@@ -19,7 +19,7 @@ class HrResumeLine(models.Model):
     date_end = fields.Date()
     duration = fields.Integer(string="Duration")
     description = fields.Html(string="Description", translate=True)
-    line_type_id = fields.Many2one('hr.resume.line.type', string="Type")
+    line_type_id = fields.Many2one('hr.resume.line.type', string="Type", index=True)
     is_course = fields.Boolean(related='line_type_id.is_course')
     course_type = fields.Selection(
         string="Course Type",

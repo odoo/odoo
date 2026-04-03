@@ -20,7 +20,7 @@ class UtmCampaign(models.Model):
         groups="sales_team.group_sale_salesman",
     )
     company_id = fields.Many2one(
-        "res.company", string="Company", default=lambda self: self.env.company
+        "res.company", string="Company", index='btree_not_null', default=lambda self: self.env.company
     )
     currency_id = fields.Many2one(
         "res.currency", related="company_id.currency_id", string="Currency"

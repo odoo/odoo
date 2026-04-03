@@ -47,10 +47,10 @@ class HrIndividualSkillMixin(models.AbstractModel):
     skill_id = fields.Many2one('hr.skill', compute='_compute_skill_id', store=True,
         domain="[('skill_type_id', '=', skill_type_id)]", readonly=False, required=True, ondelete='cascade')
     skill_level_id = fields.Many2one('hr.skill.level', compute='_compute_skill_level_id',
-        domain="[('skill_type_id', '=', skill_type_id)]", store=True, readonly=False, required=True, ondelete='cascade')
+        domain="[('skill_type_id', '=', skill_type_id)]", store=True, readonly=False, required=True, index=True, ondelete='cascade')
     skill_type_id = fields.Many2one('hr.skill.type',
                                     default=_default_skill_type_id,
-                                    required=True, ondelete='cascade')
+                                    required=True, index=True, ondelete='cascade')
     level_progress = fields.Integer(related='skill_level_id.level_progress')
     color = fields.Integer(related="skill_type_id.color")
     valid_from = fields.Date(string="Validity Start", default=fields.Date.today())

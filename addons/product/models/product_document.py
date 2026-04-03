@@ -17,6 +17,7 @@ class ProductDocument(models.Model):
         'ir.attachment',
         string="Related attachment",
         required=True,
+        index=True,
         ondelete='cascade')
 
     active = fields.Boolean(default=True)

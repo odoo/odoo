@@ -51,7 +51,7 @@ class StockMoveLine(models.Model):
     lot_name = fields.Char('Lot/Serial Number Name')
     result_package_id = fields.Many2one(
         'stock.package', 'Destination Package',
-        ondelete='restrict', required=False, check_company=True,
+        ondelete='restrict', required=False, check_company=True, index='btree_not_null',
         domain="['|', '|', ('location_id', '=', location_dest_id), ('id', '=', package_id), '&', ('location_id', '=', False), '|', ('move_line_ids', '=', False), ('move_line_ids.location_dest_id', '=', location_dest_id)]",
         help="If set, the operations are packed into this package")
     result_package_dest_name = fields.Char('Destination Package Name', related='result_package_id.dest_complete_name')

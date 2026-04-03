@@ -37,7 +37,7 @@ class RatingRating(models.Model):
     parent_ref = fields.Reference(
         string='Parent Ref', selection='_selection_target_model',
         compute='_compute_parent_ref', readonly=True)
-    rated_partner_id = fields.Many2one('res.partner', string="Rated Operator")
+    rated_partner_id = fields.Many2one('res.partner', string="Rated Operator", index='btree_not_null')
     rated_partner_name = fields.Char(related="rated_partner_id.name")
     partner_id = fields.Many2one('res.partner', string='Customer')
     rating = fields.Float(string="Rating Value", aggregator="avg", default=0)

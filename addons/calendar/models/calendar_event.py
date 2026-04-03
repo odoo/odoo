@@ -227,7 +227,7 @@ class CalendarEvent(models.Model):
     duration = fields.Float('Duration', compute='_compute_duration', store=True, readonly=False)
     # linked document
     res_id = fields.Many2oneReference('Document ID', model_field='res_model')
-    res_model_id = fields.Many2one('ir.model', 'Document Model', ondelete='cascade')
+    res_model_id = fields.Many2one('ir.model', 'Document Model', ondelete='cascade', index=True)
     res_model = fields.Char(
         'Document Model Name', related='res_model_id.model', readonly=True, store=True)
     res_model_name = fields.Char(related='res_model_id.name')

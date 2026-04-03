@@ -22,6 +22,7 @@ class HrEmployeeDeparture(models.Model):
         'hr.employee', string='Employee', required=True,
         default=_get_default_employee_id,
         domain=lambda self: self._get_domain_employee_id(),
+        index=True,
         ondelete="cascade",
     )
     country_code = fields.Char(related="employee_id.company_id.partner_id.country_id.code")
@@ -29,7 +30,7 @@ class HrEmployeeDeparture(models.Model):
         "hr.departure.reason",
         string="End Reason",
         default=lambda self: self.env['hr.departure.reason'].search([], limit=1),
-        required=True, ondelete='restrict')
+        required=True, index=True, ondelete='restrict')
     departure_description = fields.Html(string="Additional Information")
     dismissal_date = fields.Date(string="Dismissal Date", default=fields.Date.today, required=True,
         help="Date at which the departure process starts. Differs from the actual departure date in case of a notice period.")

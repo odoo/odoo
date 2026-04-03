@@ -91,7 +91,7 @@ class MrpProduction(models.Model):
         'product.product', 'Product',
         domain="[('type', '=', 'consu')]",
         compute='_compute_product_id', store=True, copy=True, precompute=True,
-        readonly=False, required=True, check_company=True)
+        readonly=False, required=True, index=True, check_company=True)
     product_name = fields.Char(compute='_compute_product_name')  # technical: used in views only
     product_default_code = fields.Char(related='product_id.default_code')  # technical: used in views only
 
@@ -135,7 +135,7 @@ class MrpProduction(models.Model):
     location_src_id = fields.Many2one(
         'stock.location', 'Components Location',
         compute='_compute_locations', store=True, check_company=True,
-        readonly=False, required=True, precompute=True,
+        readonly=False, required=True, precompute=True, index=True,
         domain="[('usage','=','internal')]",
         help="Location where the system will look for components.")
     # this field was added to be passed a default in view for manual raw moves
@@ -176,7 +176,7 @@ class MrpProduction(models.Model):
                         ('product_tmpl_id.product_variant_ids','=',product_id),
                         ('product_id','=',False),
         ('type', '=', 'normal')]""",
-        check_company=True, compute='_compute_bom_id', store=True, precompute=True,
+        check_company=True, compute='_compute_bom_id', store=True, precompute=True, index=True,
         help="Bills of Materials, also called recipes, are used to autocomplete components and work order instructions.")
 
     state = fields.Selection([

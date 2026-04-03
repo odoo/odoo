@@ -26,7 +26,7 @@ class FleetVehicleLogServices(models.Model):
     date_from = fields.Date(string='Start of Service', help='Date when the cost has been executed',
         default=fields.Date.context_today)
     date_to = fields.Date(string='End of Service')
-    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company, index=True)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     purchaser_id = fields.Many2one('res.partner', string="Driver", compute='_compute_purchaser_id', readonly=False, store=True)
     inv_ref = fields.Char('Vendor Reference')

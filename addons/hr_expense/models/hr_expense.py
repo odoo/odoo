@@ -89,6 +89,7 @@ class HrExpense(models.Model):
         comodel_name='res.company',
         string="Company",
         required=True,
+        index=True,
         readonly=True,
         default=lambda self: self.env.company,
     )
@@ -233,7 +234,7 @@ class HrExpense(models.Model):
     payment_method_line_id = fields.Many2one(
         comodel_name='account.payment.method.line',
         string="Payment Method",
-        compute='_compute_payment_method_line_id', store=True, readonly=False,
+        compute='_compute_payment_method_line_id', store=True, index=True, readonly=False,
         domain="[('id', 'in', selectable_payment_method_line_ids)]",
         help="The payment method used when the expense is paid by the company.",
     )

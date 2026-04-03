@@ -12,7 +12,7 @@ class HrRecruitmentSource(models.Model):
     email = fields.Char(related='alias_id.display_name', string="Email", readonly=True)
     has_domain = fields.Char(compute='_compute_has_domain')
     job_id = fields.Many2one('hr.job', "Job", index=True, ondelete='cascade')
-    alias_id = fields.Many2one('mail.alias', "Alias ID", ondelete='restrict')
+    alias_id = fields.Many2one('mail.alias', "Alias ID", ondelete='restrict', index='btree_not_null')
     medium_id = fields.Many2one('utm.medium', default=lambda self: self.env['utm.mixin']._utm_ref('utm.utm_medium_social_media'))
     campaign_id = fields.Many2one('utm.campaign')
     source_id = fields.Many2one('utm.source', string='Source', required=True, ondelete='restrict',

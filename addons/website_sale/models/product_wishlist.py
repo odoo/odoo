@@ -24,7 +24,7 @@ class ProductWishlist(models.Model):
         string="Price",
         help="Price of the product when it has been added in the wishlist",
     )
-    website_id = fields.Many2one("website", ondelete="cascade", required=True)
+    website_id = fields.Many2one("website", ondelete="cascade", required=True, index=True)
     active = fields.Boolean(default=True, required=True)
     stock_notification = fields.Boolean(compute="_compute_stock_notification", default=False, required=True)
 

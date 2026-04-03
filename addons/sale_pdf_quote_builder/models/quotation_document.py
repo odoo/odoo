@@ -13,7 +13,7 @@ class QuotationDocument(models.Model):
     _check_company_auto = True
 
     ir_attachment_id = fields.Many2one(
-        string="Related attachment", comodel_name="ir.attachment", ondelete="cascade", required=True
+        string="Related attachment", comodel_name="ir.attachment", ondelete="cascade", required=True, index=True
     )
     document_type = fields.Selection(
         string="Document Type",

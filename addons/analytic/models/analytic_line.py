@@ -207,6 +207,7 @@ class AccountAnalyticLine(models.Model):
         'res.company',
         string='Company',
         required=True,
+        index=True,
         readonly=True,
         default=lambda self: self.env.company,
     )

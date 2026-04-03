@@ -11,7 +11,7 @@ class SpreadsheetDashboardShare(models.Model):
     _description = 'Copy of a shared dashboard'
     _order = 'create_date desc'
 
-    dashboard_id = fields.Many2one('spreadsheet.dashboard', required=True, ondelete='cascade')
+    dashboard_id = fields.Many2one('spreadsheet.dashboard', required=True, index=True, ondelete='cascade')
     dashboard_group_id = fields.Many2one(related='dashboard_id.dashboard_group_id')
     excel_export = fields.Binary()
     active = fields.Boolean(default=True)

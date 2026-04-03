@@ -93,7 +93,7 @@ class MailActivity(models.Model):
     # activity
     activity_type_id = fields.Many2one(
         'mail.activity.type', string='Activity Type',
-        domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]", ondelete='restrict',
+        domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]", ondelete='restrict', index='btree_not_null',
         default=_default_activity_type)
     activity_category = fields.Selection(related='activity_type_id.category', readonly=True)
     activity_decoration = fields.Selection(related='activity_type_id.decoration_type', readonly=True)

@@ -17,7 +17,7 @@ class PosOrderLine(models.Model):
     company_id = fields.Many2one('res.company', string='Company', related='order_id.company_id', store=True)
     name = fields.Char(string='Line No', required=True, copy=False)
     notice = fields.Char(string='Discount Notice')
-    product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True)
+    product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True, index=True)
     attribute_value_ids = fields.Many2many('product.template.attribute.value', string="Selected Attributes")
     custom_attribute_value_ids = fields.One2many(
         comodel_name='product.attribute.custom.value', inverse_name='pos_order_line_id',

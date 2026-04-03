@@ -63,6 +63,7 @@ class HrEmployee(models.Model):
         string="Current Employee Record",
         compute='_compute_current_version_id',
         store=True,
+        index=True,
         bypass_search_access=True,
     )
     current_date_version = fields.Date(

@@ -41,7 +41,7 @@ class HrVersion(models.Model):
         )
 
     company_id = fields.Many2one('res.company', compute='_compute_company_id', readonly=False,
-                                 store=True, default=lambda self: self.env.company, tracking=1)
+                                 store=True, index=True, default=lambda self: self.env.company, tracking=1)
     employee_id = fields.Many2one(
         'hr.employee',
         string='Employee',
@@ -60,7 +60,7 @@ class HrVersion(models.Model):
 
     # Personal Information
     country_id = fields.Many2one(
-        'res.country', 'Nationality (Country)', groups="hr.group_hr_user", tracking=1)
+        'res.country', 'Nationality (Country)', index='btree_not_null', groups="hr.group_hr_user", tracking=1)
     identification_id = fields.Char(
         string='Identification No',
         help="Enter the employee's National Identification Number issued by the government (e.g., Aadhaar, SIN, NIN). This is used for official records and statutory compliance.",
@@ -83,7 +83,7 @@ class HrVersion(models.Model):
         domain="[('id', 'in', allowed_country_state_ids)]",
         groups="hr.group_hr_user", tracking=1)
     private_zip = fields.Char(string="Private Zip", groups="hr.group_hr_user", tracking=1)
-    private_country_id = fields.Many2one("res.country", string="Private Country",
+    private_country_id = fields.Many2one("res.country", string="Private Country", index='btree_not_null',
                                          groups="hr.group_hr_user", tracking=1)
 
     distance_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user", tracking=1)
@@ -118,13 +118,14 @@ class HrVersion(models.Model):
         string='Work Address',
         default=_get_default_address_id,
         store=True,
+        index='btree_not_null',
         readonly=False,
         check_company=True,
         tracking=1)
     work_location_id = fields.Many2one('hr.work.location', 'Work Location',
                                        domain="[('address_id', '=', address_id)]", tracking=1)
 
-    departure_id = fields.Many2one('hr.employee.departure', string="Departure", copy=False)
+    departure_id = fields.Many2one('hr.employee.departure', string="Departure", copy=False, index='btree_not_null')
     departure_reason_id = fields.Many2one(related='departure_id.departure_reason_id', readonly=False, groups="hr.group_hr_user", tracking=1)
     departure_description = fields.Html(related='departure_id.departure_description', readonly=False, groups="hr.group_hr_user")
     dismissal_date = fields.Date(related='departure_id.dismissal_date', readonly=False, groups="hr.group_hr_user", tracking=1)
@@ -133,7 +134,7 @@ class HrVersion(models.Model):
     departure_apply_immediately = fields.Boolean(related='departure_id.apply_immediately', groups="hr.group_hr_user")
     departure_apply_date = fields.Date(related='departure_id.apply_date', groups="hr.group_hr_user")
 
-    resource_calendar_id = fields.Many2one('resource.calendar', inverse='_inverse_resource_calendar_id', check_company=True, string="Working Hours", tracking=1)
+    resource_calendar_id = fields.Many2one('resource.calendar', inverse='_inverse_resource_calendar_id', check_company=True, string="Working Hours", index='btree_not_null', tracking=1)
     hours_per_week = fields.Float(string="Hours per Week", compute='_compute_hours_per_week', store=True, readonly=False)
     hours_per_day = fields.Float(string="Hours per Day", compute='_compute_hours_per_day', store=True, readonly=False)
     is_flexible = fields.Boolean(compute='_compute_is_flexible', store=True, groups="hr.group_hr_user")
@@ -160,7 +161,7 @@ class HrVersion(models.Model):
         domain="[('company_id', '=', company_id), ('employee_id', '=', False)]", tracking=1,
         help="Select a contract template to auto-fill the contract form with predefined values. You can still edit the fields as needed after applying the template.")
     structure_type_id = fields.Many2one('hr.payroll.structure.type', string="Salary Structure Type",
-                                        compute="_compute_structure_type_id", readonly=False, store=True, tracking=1,
+                                        compute="_compute_structure_type_id", readonly=False, store=True, index='btree_not_null', tracking=1,
                                         groups="hr.group_hr_manager", default=_default_salary_structure)
     active_employee = fields.Boolean(related="employee_id.active", string="Active Employee", groups="hr.group_hr_user")
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)

@@ -38,6 +38,7 @@ class LoyaltyProgram(models.Model):
         store=True,
         readonly=False,
         required=True,
+        index=True,
     )
     currency_symbol = fields.Char(related="currency_id.symbol")
     pricelist_ids = fields.Many2many(

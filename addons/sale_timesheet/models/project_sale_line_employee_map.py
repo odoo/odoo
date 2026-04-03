@@ -22,7 +22,7 @@ class ProjectSaleLineEmployeeMap(models.Model):
         return domain
 
     project_id = fields.Many2one('project.project', "Project", domain=[('is_template', '=', False)], required=True, index=True)
-    employee_id = fields.Many2one('hr.employee', "Employee", required=True, domain="[('id', 'not in', existing_employee_ids)]")
+    employee_id = fields.Many2one('hr.employee', "Employee", required=True, index=True, domain="[('id', 'not in', existing_employee_ids)]")
     existing_employee_ids = fields.Many2many('hr.employee', compute="_compute_existing_employee_ids", export_string_translation=False, compute_sudo=True)
     sale_line_id = fields.Many2one(
         'sale.order.line', "Sales Order Item",

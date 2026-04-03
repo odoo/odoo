@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -16,7 +15,7 @@ class MailAliasMixin(models.AbstractModel):
     _inherits = {'mail.alias': 'alias_id'}
     _description = 'Email Aliases Mixin'
 
-    alias_id = fields.Many2one(required=True)
+    alias_id = fields.Many2one(required=True, index=True)
     alias_name = fields.Char(inherited=True)
     alias_defaults = fields.Text(inherited=True)
 

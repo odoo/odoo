@@ -200,7 +200,7 @@ class CrmLead(models.Model):
     website = fields.Char('Website', help="Website of the contact", compute="_compute_website", readonly=False, store=True, tracking=35)
     lang_id = fields.Many2one(
         'res.lang', string='Language',
-        compute='_compute_lang_id', readonly=False, store=True)
+        compute='_compute_lang_id', readonly=False, store=True, index=True)
     lang_code = fields.Char(related='lang_id.code')
     lang_active_count = fields.Integer(compute='_compute_lang_active_count')
     # Address fields

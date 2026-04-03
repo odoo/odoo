@@ -18,6 +18,7 @@ class AccountPaymentWithholdingLine(models.Model):
     payment_id = fields.Many2one(
         comodel_name='account.payment',
         required=True,
+        index=True,
         ondelete='cascade',
     )
 

@@ -11,6 +11,7 @@ class AccountPaymentMethodLine(models.Model):
         comodel_name='payment.provider',
         compute='_compute_payment_provider_id',
         store=True,
+        index=True,
         readonly=False,
         domain="[('code', '=', code)]",
     )

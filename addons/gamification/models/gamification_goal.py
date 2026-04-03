@@ -21,10 +21,10 @@ class GamificationGoal(models.Model):
     _rec_name = 'definition_id'
     _order = 'start_date desc, end_date desc, definition_id, id'
 
-    definition_id = fields.Many2one('gamification.goal.definition', string="Goal Definition", required=True, ondelete="cascade")
+    definition_id = fields.Many2one('gamification.goal.definition', string="Goal Definition", required=True, index=True, ondelete="cascade")
     user_id = fields.Many2one('res.users', string="User", required=True, bypass_search_access=True, index=True, ondelete="cascade")
     user_partner_id = fields.Many2one('res.partner', related='user_id.partner_id')
-    line_id = fields.Many2one('gamification.challenge.line', string="Challenge Line", ondelete="cascade")
+    line_id = fields.Many2one('gamification.challenge.line', string="Challenge Line", index=True, ondelete="cascade")
     challenge_id = fields.Many2one(
         related='line_id.challenge_id', store=True, readonly=True, index=True,
         help="Challenge that generated the goal, assign challenge to users "

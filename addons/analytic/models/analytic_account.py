@@ -62,6 +62,7 @@ class AccountAnalyticAccount(models.Model):
         'res.company',
         string='Company',
         default=lambda self: self.env.company,
+        index=True,
     )
 
     partner_id = fields.Many2one(

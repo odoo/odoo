@@ -143,7 +143,7 @@ class HrLeave(models.Model):
     work_entry_type_id = fields.Many2one(
         "hr.work.entry.type", compute='_compute_work_entry_type_id',
         store=True, string="Time Type",
-        required=True, readonly=False,
+        required=True, index=True, readonly=False,
         domain="""[
             [('id', 'in', allowed_work_entry_type_ids)],
             '|',
@@ -162,7 +162,7 @@ class HrLeave(models.Model):
         'hr.employee', string='Employee', index=True, ondelete="restrict", required=True,
         tracking=True, domain=lambda self: self._get_employee_domain(), default=lambda self: self.env.user.employee_id)
     employee_company_id = fields.Many2one(related='employee_id.company_id', string="Employee Company", store=True)
-    company_id = fields.Many2one('res.company', compute='_compute_company_id', store=True)
+    company_id = fields.Many2one('res.company', compute='_compute_company_id', store=True, index=True)
     active_employee = fields.Boolean(related='employee_id.active', string='Employee Active')
     tz_mismatch = fields.Boolean(compute='_compute_tz_mismatch')
     tz = fields.Selection(_tz_get, compute='_compute_tz')
