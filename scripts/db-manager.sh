@@ -47,6 +47,7 @@ DEV_HOST_NAME="${DEV_HOST_DB:-kodoo}"
 DEV_TEST_NAME="${DEV_HOST_TEST_DB:-ktest}"
 DEV_PROJECT_NAME="${DEV_PROJECT_DB:-ktest}"
 DB_MANAGER_BACKEND="${DB_MANAGER_BACKEND:-auto}"
+DB_MANAGER_CONFIRM="${DB_MANAGER_CONFIRM:-}"
 
 detect_backend() {
     case "$DB_MANAGER_BACKEND" in
@@ -225,13 +226,17 @@ drop_database() {
         name="$(choose_database)"
     fi
     case "$name" in
-        postgres|template0|template1)
+        postgres|template0|template1|"$PROD_NAME")
             echo "[db-manager] Refusing to drop protected database: $name" >&2
             exit 1
             ;;
     esac
-    printf "Type '%s' to confirm drop: " "$name"
-    read -r confirmation
+    if [ -n "$DB_MANAGER_CONFIRM" ]; then
+        confirmation="$DB_MANAGER_CONFIRM"
+    else
+        printf "Type '%s' to confirm drop: " "$name"
+        read -r confirmation
+    fi
     if [ "$confirmation" != "$name" ]; then
         echo "[db-manager] Confirmation did not match. Aborted."
         exit 1

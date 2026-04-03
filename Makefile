@@ -141,7 +141,7 @@ CONFIG_FIND_CMD = find . \
 	ops-status ops-patch ops-release ops-hotfix ops-experiment ops-rollback \
 	odoo-lnav build build-base up up-base up-cpu up-gpu down down-base logs logs-base status status-base \
 	probe certbot certbot-renew \
-	db-init db-check db-list db-manager prod-db-create prod-db-init prod-db-ensure \
+	db-init db-check db-list db-drop db-manager prod-db-create prod-db-init prod-db-ensure \
 	tenant-provision tenant-install-modules tenant-check tenant-smoke tenant-bootstrap-defaults tenant-adjust tenant-reset tenant-user-list tenant-user-password tenant-user-role tenant-user-create-portal tenant-user-create-client tenant-user-create-operator root-smoke \
 	stop ports-clean \
 	refresh-safe safe-refresh \
@@ -261,6 +261,7 @@ help:
 	@echo "  make db-init        # Open Odoo database manager over Docker PostgreSQL to create/use DB ($(DB))"
 	@echo "  make db-check       # Check if base module exists in DB"
 	@echo "  make db-list        # List reachable PostgreSQL databases and tags"
+	@echo "  make db-drop DB=name [DB_BACKEND=docker|local] # Drop one database with explicit confirmation handled by the caller"
 	@echo "  make db-replica-status # Show primary/replica streaming replication state"
 	@echo "  make db-replica-lag # Estimate replica replay lag on the standby"
 	@echo "  make db-replica-logs # Tail replica bootstrap and PostgreSQL logs"
@@ -1182,6 +1183,19 @@ db-check:
 
 db-list:
 	@./scripts/db-manager.sh list || true
+
+db-drop:
+	@db_name="$(strip $(DB))"; \
+	if [ -z "$$db_name" ]; then \
+	  echo "Usage: make db-drop DB=name [DB_BACKEND=docker|local]"; \
+	  exit 1; \
+	fi; \
+	backend="$(strip $(DB_BACKEND))"; \
+	if [ -z "$$backend" ]; then \
+	  backend="auto"; \
+	fi; \
+	echo "Dropping database '$$db_name' on backend '$$backend'..."; \
+	DB_MANAGER_BACKEND="$$backend" DB_MANAGER_CONFIRM="$$db_name" ./scripts/db-manager.sh drop "$$db_name"
 
 db-replica-status:
 	@$(MAKE) guard-prod-host

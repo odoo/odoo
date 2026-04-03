@@ -271,6 +271,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				if summary := summarizeRunSuccess(m.overlay.request, m.overlay.lines); summary != "" {
 					m.overlay.lines = append([]string{"Summary: " + summary, ""}, m.overlay.lines...)
 				}
+				if m.overlay.request != nil && m.overlay.request.Target == "db-drop" {
+					dropped := strings.TrimSpace(m.overlay.request.Vars["DB"])
+					if dropped != "" && m.activeDB == dropped {
+						m.activeDB = ""
+					}
+				}
 			}
 			if m.overlay.sessionIndex >= 0 && m.overlay.sessionIndex < len(m.sessionRuns) {
 				m.sessionRuns[m.overlay.sessionIndex].StatusText = m.overlay.statusText
@@ -308,6 +314,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return next, cmd
 		}
 		return m.updateActive(msg)
+	case tea.MouseMsg:
+		return m.handleMouse(msg)
 	}
 
 	return m.updateAll(msg)
@@ -345,6 +353,19 @@ func (m Model) View() string {
 
 	parts = append(parts, m.statusBar(width))
 	return strings.Join(parts, "\n")
+}
+
+func (m Model) mainHeight() int {
+	height := m.height
+	if height <= 0 {
+		height = 40
+	}
+	bodyHeight := height - 3
+	mainHeight := bodyHeight
+	if m.overlay.visible || m.helpVisible || m.paletteVisible {
+		mainHeight = bodyHeight / 2
+	}
+	return max(10, mainHeight)
 }
 
 func (m Model) handleGlobalKey(msg tea.KeyMsg) (bool, Model, tea.Cmd) {
@@ -480,6 +501,67 @@ func (m Model) handleGlobalKey(msg tea.KeyMsg) (bool, Model, tea.Cmd) {
 	return false, m, nil
 }
 
+func (m Model) handleMouse(msg tea.MouseMsg) (tea.Model, tea.Cmd) {
+	if m.helpVisible || m.paletteVisible {
+		return m, nil
+	}
+
+	if m.overlay.visible {
+		next, cmd := m.handleOverlayMouse(msg)
+		return next, cmd
+	}
+
+	if msg.Action == tea.MouseActionPress && msg.Button == tea.MouseButtonLeft && msg.Y == 0 {
+		if tab, ok := m.tabAt(msg.X); ok {
+			m.activeTab = tab
+			return m, nil
+		}
+	}
+
+	if m.activeTab != 3 {
+		return m, nil
+	}
+
+	switch msg.Button {
+	case tea.MouseButtonWheelUp:
+		m.databases = m.databases.MoveSelection(-1)
+		return m, nil
+	case tea.MouseButtonWheelDown:
+		m.databases = m.databases.MoveSelection(1)
+		return m, nil
+	}
+
+	if msg.Action == tea.MouseActionPress && msg.Button == tea.MouseButtonLeft {
+		contentY := msg.Y - 1
+		if contentY < 0 {
+			return m, nil
+		}
+		next, handled := m.databases.Click(m.width, m.mainHeight(), msg.X, contentY)
+		if handled {
+			m.databases = next
+		}
+	}
+
+	return m, nil
+}
+
+func (m Model) handleOverlayMouse(msg tea.MouseMsg) (Model, tea.Cmd) {
+	if !m.overlay.visible {
+		return m, nil
+	}
+	if m.overlay.running || m.overlay.done {
+		switch msg.Button {
+		case tea.MouseButtonWheelUp:
+			m.overlay.autoFollow = false
+			m.overlay.viewport.LineUp(3)
+		case tea.MouseButtonWheelDown:
+			m.overlay.autoFollow = false
+			m.overlay.viewport.LineDown(3)
+		}
+	}
+	return m, nil
+}
+
 func (m Model) handleOverlayKey(msg tea.KeyMsg) (Model, tea.Cmd) {
 	if m.overlay.running {
 		if handled, next, cmd := m.handleOverlayViewportKey(msg); handled {
@@ -578,7 +660,7 @@ func (m Model) handleOverlayKey(msg tea.KeyMsg) (Model, tea.Cmd) {
 			if strings.EqualFold(strings.TrimSpace(m.overlay.input.Value()), request.ConfirmWord) {
 				return m.startAction()
 			}
-			m.overlay.errorText = "Type 'sim' to confirm."
+			m.overlay.errorText = fmt.Sprintf("Type '%s' to confirm.", confirmationWord(request))
 			return m, cmd
 		}
 		return m, cmd
@@ -663,6 +745,9 @@ func (m Model) prepareActionRequest(request event.RequestMakeTargetMsg) (Model, 
 		m = m.preparePromptStep()
 	}
 	if request.RequireTypedCheck {
+		request.ConfirmWord = confirmationWord(&request)
+		m.overlay.request = &request
+		m.overlay.input = configureConfirmInput(m.overlay.input, request.ConfirmWord)
 		m.overlay.input.Focus()
 	}
 	m.syncOverlayViewport()
@@ -767,15 +852,10 @@ func (m Model) updateActive(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m Model) tabsView() string {
-	tabs := []string{
-		m.renderTab(0, "1 Dashboard"),
-		m.renderTab(1, "2 Runtime"),
-		m.renderTab(2, "3 Cockpit"),
-		m.renderTab(3, "4 Databases"),
-		m.renderTab(4, "5 Doctor"),
-		m.renderTab(5, "6 Logs"),
-		m.renderTab(6, "7 Shell"),
-		m.renderTab(7, "8 Config"),
+	labels := m.tabLabels()
+	tabs := make([]string, 0, len(labels))
+	for index, label := range labels {
+		tabs = append(tabs, m.renderTab(index, label))
 	}
 	return lipgloss.JoinHorizontal(lipgloss.Top, tabs...)
 }
@@ -785,6 +865,34 @@ func (m Model) renderTab(index int, label string) string {
 		return activeTabStyle.Render(label)
 	}
 	return inactiveTabStyle.Render(label)
+}
+
+func (m Model) tabAt(x int) (int, bool) {
+	if x < 0 {
+		return 0, false
+	}
+	offset := 0
+	for index, label := range m.tabLabels() {
+		width := lipgloss.Width(m.renderTab(index, label))
+		if x >= offset && x < offset+width {
+			return index, true
+		}
+		offset += width
+	}
+	return 0, false
+}
+
+func (m Model) tabLabels() []string {
+	return []string{
+		"1 Dashboard",
+		"2 Runtime",
+		"3 Cockpit",
+		"4 Databases",
+		"5 Doctor",
+		"6 Logs",
+		"7 Shell",
+		"8 Config",
+	}
 }
 
 func (m Model) activeTabView(width, height int) string {
@@ -864,7 +972,7 @@ func (m Model) overlayView(width, height int) string {
 			lines = append(lines, fmt.Sprintf("  DB=%s", selected))
 		}
 		if m.overlay.request.RequireTypedCheck {
-			lines = append(lines, "", warningStyle.Render("Type 'sim' to confirm this destructive action."))
+			lines = append(lines, "", warningStyle.Render(fmt.Sprintf("Type '%s' to confirm this destructive action.", confirmationWord(m.overlay.request))))
 			if m.overlay.errorText != "" {
 				lines = append(lines, failureStyle.Render(m.overlay.errorText))
 			}
@@ -979,8 +1087,7 @@ func (m Model) databaseSelectionView() []string {
 
 func (m Model) newOverlay() overlayState {
 	input := textinput.New()
-	input.Prompt = "type 'sim' > "
-	input.CharLimit = 16
+	input = configureConfirmInput(input, "sim")
 	input.Blur()
 	promptInput := textinput.New()
 	promptInput.Prompt = "> "
@@ -998,6 +1105,27 @@ func (m Model) newOverlay() overlayState {
 
 func (m overlayState) prompting() bool {
 	return m.request != nil && m.promptIndex < len(m.request.PromptFields)
+}
+
+func confirmationWord(request *event.RequestMakeTargetMsg) string {
+	if request == nil {
+		return "sim"
+	}
+	word := strings.TrimSpace(request.ConfirmWord)
+	if word == "" {
+		return "sim"
+	}
+	return word
+}
+
+func configureConfirmInput(input textinput.Model, word string) textinput.Model {
+	word = strings.TrimSpace(word)
+	if word == "" {
+		word = "sim"
+	}
+	input.Prompt = fmt.Sprintf("type '%s' > ", word)
+	input.CharLimit = max(16, len(word)+8)
+	return input
 }
 
 func (m Model) preparePromptStep() Model {
@@ -1134,6 +1262,8 @@ func summarizeRunFailure(request *event.RequestMakeTargetMsg, lines []string) st
 		return "User login not found in the selected database."
 	case strings.Contains(body, "refusing tenant-reset for primary db"), strings.Contains(body, "refusing reset of primary db"):
 		return "Primary database reset is blocked."
+	case strings.Contains(body, "refusing to drop protected database"):
+		return "Protected databases cannot be deleted from the TUI."
 	case strings.Contains(body, "could not resolve host"), request != nil && request.Target == "root-smoke":
 		return "Public apex hostname is not resolving. Publish the apex domain in Cloudflare."
 	case strings.Contains(body, "www resolves, but apex"), strings.Contains(body, "apex dns"):
@@ -1176,6 +1306,10 @@ func summarizeRunSuccess(request *event.RequestMakeTargetMsg, lines []string) st
 	case "tenant-reset":
 		if line := findLineContains(lines, "Tenant database '"); line != "" {
 			return line
+		}
+	case "db-drop":
+		if line := findLineContains(lines, "[db-manager] Dropped database: "); line != "" {
+			return strings.TrimPrefix(line, "[db-manager] ")
 		}
 	case "tenant-user-list":
 		if count := countUserRows(lines); count > 0 {

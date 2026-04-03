@@ -43,6 +43,7 @@ func main() {
 	program := tea.NewProgram(
 		app.New(cfg, cwd),
 		tea.WithAltScreen(),
+		tea.WithMouseCellMotion(),
 	)
 	if _, err := program.Run(); err != nil {
 		fmt.Fprintf(os.Stderr, "kodoo-tui: %v\n", err)

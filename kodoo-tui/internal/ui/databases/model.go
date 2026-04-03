@@ -19,13 +19,17 @@ type Model struct {
 }
 
 var (
-	titleStyle    = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("86"))
-	panelStyle    = lipgloss.NewStyle().Border(lipgloss.RoundedBorder()).Padding(0, 1)
-	selectedStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("86"))
-	mutedStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("244"))
-	okStyle       = lipgloss.NewStyle().Foreground(lipgloss.Color("42"))
-	warnStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("214"))
-	errStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("196"))
+	titleStyle       = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("86"))
+	panelStyle       = lipgloss.NewStyle().Border(lipgloss.RoundedBorder()).Padding(0, 1)
+	selectedStyle    = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("86"))
+	mutedStyle       = lipgloss.NewStyle().Foreground(lipgloss.Color("244"))
+	okStyle          = lipgloss.NewStyle().Foreground(lipgloss.Color("42"))
+	warnStyle        = lipgloss.NewStyle().Foreground(lipgloss.Color("214"))
+	errStyle         = lipgloss.NewStyle().Foreground(lipgloss.Color("196"))
+	actionChipStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("16")).Background(lipgloss.Color("86")).Padding(0, 1)
+	neutralChipStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("252")).Background(lipgloss.Color("240")).Padding(0, 1)
+	dangerChipStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("255")).Background(lipgloss.Color("160")).Padding(0, 1)
+	blockedChipStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("252")).Background(lipgloss.Color("238")).Padding(0, 1)
 )
 
 func New(cfg *envconfig.Config) Model {
@@ -39,8 +43,9 @@ func (m Model) Title() string {
 func (m Model) HelpLines() []string {
 	return []string{
 		"↑/↓ move between databases",
+		"mouse click selects a database, wheel scrolls the list, tab click switches screens",
 		"enter use selected database in the best matching mode",
-		"m manager, o bootstrap defaults, a adjust, x reset, u users, p reset password, y operator, g portal, i internal, c create client, v validate via db-list",
+		"m manager, o bootstrap defaults, a adjust, D delete db, x reset, u users, p reset password, y operator, g portal, i internal, c create client, v validate via db-list",
 	}
 }
 
@@ -133,6 +138,10 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 					ConfirmWord:       "sim",
 					Vars:              map[string]string{"DB": current.Name},
 				})
+			}
+		case "D", "delete":
+			if req, ok := m.dropRequest(); ok {
+				return m, requestCmd(req)
 			}
 		case "u":
 			if current, ok := m.current(); ok {
@@ -252,6 +261,37 @@ func (m Model) SetSnapshot(snapshot state.Snapshot) Model {
 	return m
 }
 
+func (m Model) MoveSelection(delta int) Model {
+	if len(m.snapshot.Databases) == 0 || delta == 0 {
+		return m
+	}
+	next := m.selected + delta
+	if next < 0 {
+		next = 0
+	}
+	if next >= len(m.snapshot.Databases) {
+		next = len(m.snapshot.Databases) - 1
+	}
+	m.selected = next
+	return m
+}
+
+func (m Model) Click(width, height, x, y int) (Model, bool) {
+	if width <= 0 || height <= 0 || x < 0 || y < 0 {
+		return m, false
+	}
+	leftWidth := max(54, (width*3)/5)
+	if x >= leftWidth {
+		return m, false
+	}
+	rowIndex := y - 3
+	if rowIndex < 0 || rowIndex >= len(m.snapshot.Databases) {
+		return m, false
+	}
+	m.selected = rowIndex
+	return m, true
+}
+
 func (m Model) View(width, height int) string {
 	if width <= 0 || height <= 0 {
 		return ""
@@ -311,24 +351,18 @@ func (m Model) detailView() string {
 		fmt.Sprintf("make %s DB=%s", item.ActionTarget, item.Name),
 		databaseActionHint(item.Backend),
 	}
-	if m.cfg != nil && item.Name == m.cfg.ProdDBName {
-		lines = append(lines, "", warnStyle.Render("primary database: reset is blocked"))
+	lines = append(lines, "", titleStyle.Render("Quick Actions"))
+	lines = append(lines, m.quickActionRows(item)...)
+	if reason := m.blockedOpsReason(item); reason != "" {
+		lines = append(lines, "", warnStyle.Render(reason))
 	} else {
 		lines = append(lines, "", titleStyle.Render("Tenant Ops"))
-		lines = append(lines, "o bootstrap defaults")
-		lines = append(lines, "a adjust url/check")
-		lines = append(lines, "x reset database")
-		lines = append(lines, "u list users")
-		lines = append(lines, "p reset one user password")
-		lines = append(lines, "g grant portal")
-		lines = append(lines, "i grant internal")
-		lines = append(lines, "y create operator user")
-		lines = append(lines, "c create client portal user")
+		lines = append(lines, mutedStyle.Render("Delete drops the database. Reset drops and recreates the tenant profile."))
 	}
 	if item.Alert != "" {
 		lines = append(lines, "", warnStyle.Render("alert: "+item.Alert))
 	}
-	lines = append(lines, "", mutedStyle.Render("enter use this DB  |  m manager  |  o/a/x/u/p/g/i/c tenant ops  |  b/r local backup+restore  |  v validate"))
+	lines = append(lines, "", mutedStyle.Render("enter use this DB  |  click select  |  m manager  |  D delete  |  b/r local backup+restore  |  v validate"))
 	return strings.Join(lines, "\n")
 }
 
@@ -360,6 +394,68 @@ func (m Model) useRequest() (event.RequestMakeTargetMsg, bool) {
 	}, true
 }
 
+func (m Model) dropRequest() (event.RequestMakeTargetMsg, bool) {
+	item, ok := m.current()
+	if !ok || item.Name == "" || m.blockedOpsReason(item) != "" {
+		return event.RequestMakeTargetMsg{}, false
+	}
+	return event.RequestMakeTargetMsg{
+		Target:            "db-drop",
+		Description:       "Delete the selected database from the current PostgreSQL backend.",
+		RelevantKeys:      []string{"PROD_DB_NAME"},
+		RequireTypedCheck: true,
+		ConfirmWord:       item.Name,
+		Vars: map[string]string{
+			"DB":         item.Name,
+			"DB_BACKEND": item.Backend,
+		},
+	}, true
+}
+
+func (m Model) quickActionRows(item state.DatabaseInfo) []string {
+	rows := []string{
+		renderChipRow(
+			chip(actionChipStyle, "enter open"),
+			chip(neutralChipStyle, "m manager"),
+			chip(neutralChipStyle, "v validate"),
+		),
+	}
+	if reason := m.blockedOpsReason(item); reason != "" {
+		rows = append(rows, renderChipRow(chip(blockedChipStyle, "tenant ops blocked")))
+		return rows
+	}
+	rows = append(rows,
+		renderChipRow(
+			chip(actionChipStyle, "o bootstrap"),
+			chip(neutralChipStyle, "a adjust"),
+			chip(neutralChipStyle, "u users"),
+		),
+		renderChipRow(
+			chip(neutralChipStyle, "p password"),
+			chip(neutralChipStyle, "g portal"),
+			chip(neutralChipStyle, "i internal"),
+		),
+		renderChipRow(
+			chip(neutralChipStyle, "y operator"),
+			chip(neutralChipStyle, "c client"),
+			chip(dangerChipStyle, "x reset tenant"),
+			chip(dangerChipStyle, "D delete db"),
+		),
+	)
+	return rows
+}
+
+func (m Model) blockedOpsReason(item state.DatabaseInfo) string {
+	switch item.Name {
+	case "", "postgres":
+		return "system database: tenant operations are unavailable"
+	}
+	if m.cfg != nil && item.Name == m.cfg.ProdDBName {
+		return "primary database: reset/delete are blocked"
+	}
+	return ""
+}
+
 func databaseActionHint(backend string) string {
 	if backend == "local" {
 		return "Use local PostgreSQL via make dev-safe DB=<name>."
@@ -381,6 +477,14 @@ func connectivityStyle(status string) lipgloss.Style {
 func headerRow(contentWidth int) string {
 	header := fmt.Sprintf("  %-18s %-7s %-10s %-10s %-12s %s", "name", "backend", "owner", "size", "tags", "connectivity")
 	return mutedStyle.Render(trim(header, contentWidth))
+}
+
+func chip(style lipgloss.Style, label string) string {
+	return style.Render(label)
+}
+
+func renderChipRow(chips ...string) string {
+	return strings.Join(chips, " ")
 }
 
 func trim(value string, width int) string {
