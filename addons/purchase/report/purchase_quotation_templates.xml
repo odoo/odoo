@@ -8,22 +8,21 @@
     <t t-set="layout_document_title">
         <span>Request for Quotation <span t-field="o.name"/></span>
     </t>
+    <t t-set="information_block" t-if="o.dest_address_id">
+        <strong class="d-block mt-3">Shipping address</strong>
+        <div t-field="o.dest_address_id"
+            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}' name="purchase_shipping_address"/>
+        <div>
+            <strong>Requested Ship Date:</strong>
+            <span t-field="o.date_planned" t-options="{'date_only': 'true'}"/>
+        </div>
+    </t>
     <t t-call="web.external_layout"
         forced_vat="o.fiscal_position_id.foreign_vat"
         address="address"
-        layout_document_title="layout_document_title">
+        layout_document_title="layout_document_title"
+        information_block="information_block">
         <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/> <!-- So that it appears in the footer of the report instead of the company VAT if it's set -->
-        <t t-if="o.dest_address_id">
-            <t t-set="information_block">
-                <strong class="d-block mt-3">Shipping address</strong>
-                <div t-field="o.dest_address_id"
-                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}' name="purchase_shipping_address"/>
-                <div>
-                    <strong>Requested Ship Date:</strong>
-                    <span t-field="o.date_planned" t-options="{'date_only': 'true'}"/>
-                </div>
-            </t>
-        </t>
         <div class="page">
             <div class="oe_structure"/>
 
