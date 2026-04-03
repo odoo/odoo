@@ -240,6 +240,7 @@
         font-size: $h5-font-size;
         font-weight: $o-font-weight-medium;
         text-align: start !important;
+        white-space: normal;
     }
 
     .dropdown-item .o_stat_value {
@@ -247,6 +248,11 @@
     }
 
     .o_bottom_sheet_body:not(.o_custom_bottom_sheet) {
+        // Leave space for the active checkmark icon
+        &:has(.dropdown-item.active, .dropdown-item.selected) .dropdown-item {
+            padding-right: $spacer * 2.5;
+        }
+
         // Dropdown
         .dropdown-item {
             &.active, &.selected {
