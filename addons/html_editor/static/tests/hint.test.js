@@ -1,5 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, tick } from "@odoo/hoot-mock";
+import { waitFor } from "@odoo/hoot-dom";
 import { setupEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import {
@@ -231,13 +232,22 @@ test("should debounce hint on selection change", async () => {
             config: { debounceHints: true },
         }
     );
-    expect(getContent(el)).toBe(`<p>[]<br></p><p><br></p><p><br></p><p><br></p><p><br></p>`);
+    await waitFor(".o-we-hint"); // Let the initial state settle.
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p><p><br></p><p><br></p><p><br></p><p><br></p>`
+    );
     await simulateArrowKeyPress(editor, "ArrowDown");
-    expect(getContent(el)).toBe(`<p><br></p><p>[]<br></p><p><br></p><p><br></p><p><br></p>`);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><br></p><p>[]<br></p><p><br></p><p><br></p><p><br></p>`
+    );
     await simulateArrowKeyPress(editor, "ArrowDown");
-    expect(getContent(el)).toBe(`<p><br></p><p><br></p><p>[]<br></p><p><br></p><p><br></p>`);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><br></p><p><br></p><p>[]<br></p><p><br></p><p><br></p>`
+    );
     await simulateArrowKeyPress(editor, "ArrowDown");
-    expect(getContent(el)).toBe(`<p><br></p><p><br></p><p><br></p><p>[]<br></p><p><br></p>`);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><br></p><p><br></p><p><br></p><p>[]<br></p><p><br></p>`
+    );
     await simulateArrowKeyPress(editor, "ArrowDown");
     await animationFrame();
     await new Promise((resolve) => setTimeout(resolve, 30));
