@@ -2454,3 +2454,52 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
         tax_10.active = False
         invoice.env.invalidate_all()
         self._assert_tax_totals_summary(invoice.tax_totals, expected_values)
+
+    def _test_price_included_taxes_with_0_price_excluded_tax(self):
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        tax_21 = self.percent_tax(21.0, price_include_override='tax_included')
+        tax_6 = self.percent_tax(6.0, price_include_override='tax_included')
+        tax_0 = self.percent_tax(0.0, price_include_override='tax_excluded')
+
+        document_params = self.init_document([
+            {'price_unit': 27.80, 'tax_ids': tax_21},
+            {'price_unit': 97.25, 'tax_ids': tax_6},
+            {'price_unit': 9.0, 'tax_ids': tax_0},
+        ])
+
+        document = self.populate_document(document_params)
+        expected_values = {
+            'same_tax_base': True,
+            'currency_id': self.currency.id,
+            'base_amount_currency': 123.73,
+            'tax_amount_currency': 10.32,
+            'total_amount_currency': 134.05,
+            'subtotals': [
+                {
+                    'name': "Untaxed Amount",
+                    'base_amount_currency': 123.73,
+                    'tax_amount_currency': 10.32,
+                    'tax_groups': [
+                        {
+                            'id': self.tax_groups[0].id,
+                            'base_amount_currency': 123.73,
+                            'tax_amount_currency': 10.32,
+                            'display_base_amount_currency': 123.73,
+                        },
+                    ],
+                },
+            ],
+        }
+        yield 1, document, expected_values
+
+    def test_price_included_taxes_with_0_price_excluded_tax_generic_helpers(self):
+        for test_index, document, expected_values in self._test_price_included_taxes_with_0_price_excluded_tax():
+            with self.subTest(test_index=test_index):
+                self.assert_tax_totals_summary(document, expected_values)
+        self._run_js_tests()
+
+    def test_price_included_taxes_with_0_price_excluded_tax_invoices(self):
+        for test_index, document, expected_values in self._test_price_included_taxes_with_0_price_excluded_tax():
+            with self.subTest(test_index=test_index):
+                invoice = self.convert_document_to_invoice(document)
+                self.assert_invoice_tax_totals_summary(invoice, expected_values)
