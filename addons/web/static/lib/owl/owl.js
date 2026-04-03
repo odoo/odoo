@@ -1796,7 +1796,17 @@
         currentComputation.sources.add(atom);
         atom.observers.add(currentComputation);
     }
+    let canWrite = true;
+    exports.preventWrite = function preventWrite(cb) {
+        const w = canWrite;
+        canWrite = false;
+        cb();
+        canWrite = w;
+    }
     function onWriteAtom(atom) {
+        if (!canWrite) {
+            return;
+        }
         for (const ctx of atom.observers) {
             if (ctx.state === ComputationState.EXECUTED) {
                 if (ctx.isDerived) {
