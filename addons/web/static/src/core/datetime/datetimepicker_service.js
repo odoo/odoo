@@ -103,29 +103,43 @@ export const datetimePickerService = {
                     stringProps.value = stringValue;
                 }
 
+                function disable() {
+                    dateTimePickerList.delete(picker);
+                    disposeEffect();
+                }
+
                 function enable() {
-                    for (const [el, value] of zip(
-                        getInputs(),
-                        ensureArray(pickerProps.value),
-                        true
-                    )) {
-                        updateInput(el, value);
-                        if (el && !el.disabled && !el.readOnly && !listenedElements.has(el)) {
-                            listenedElements.add(el);
-                            el.addEventListener("change", onInputChange);
-                            el.addEventListener("click", onInputClick);
-                            el.addEventListener("focus", onInputFocus);
-                            el.addEventListener("keydown", onInputKeydown);
+                    if (!params.useOwlHooks) {
+                        initInputs();
+                    }
+
+                    let firstTime = true;
+                    disposeEffect = immediateEffect(() => {
+                        JSON.stringify(pickerProps);
+                        if (firstTime) {
+                            firstTime = false;
+                            return;
                         }
-                    }
-                    const calendarIconGroupEl = getInput(0)?.parentElement.querySelector(
-                        ".o_input_group_date_icon"
-                    );
-                    if (calendarIconGroupEl) {
-                        calendarIconGroupEl.classList.add("cursor-pointer");
-                        calendarIconGroupEl.addEventListener("click", () => open(0));
-                    }
-                    return () => {};
+                        // Update inputs
+                        for (const [el, value] of zip(
+                            getInputs(),
+                            ensureArray(pickerProps.value),
+                            true
+                        )) {
+                            if (el) {
+                                updateInput(el, value);
+                                // Apply changes immediately if the popover is already closed.
+                                // Otherwise ´apply()´ will be called later on close.
+                                if (!isOpen()) {
+                                    apply();
+                                }
+                            }
+                        }
+
+                        shouldFocus = true;
+                    });
+
+                    return disable;
                 }
 
                 /**
@@ -185,6 +199,30 @@ export const datetimePickerService = {
 
                 function getTarget() {
                     return targetRef ? targetRef.el : params.target;
+                }
+
+                function initInputs() {
+                    for (const [el, value] of zip(
+                        getInputs(),
+                        ensureArray(pickerProps.value),
+                        true
+                    )) {
+                        updateInput(el, value);
+                        if (el && !el.disabled && !el.readOnly && !listenedElements.has(el)) {
+                            listenedElements.add(el);
+                            el.addEventListener("change", onInputChange);
+                            el.addEventListener("click", onInputClick);
+                            el.addEventListener("focus", onInputFocus);
+                            el.addEventListener("keydown", onInputKeydown);
+                        }
+                    }
+                    const calendarIconGroupEl = getInput(0)?.parentElement.querySelector(
+                        ".o_input_group_date_icon"
+                    );
+                    if (calendarIconGroupEl) {
+                        calendarIconGroupEl.classList.add("cursor-pointer");
+                        calendarIconGroupEl.addEventListener("click", () => open(0));
+                    }
                 }
 
                 function isBottomSheet() {
@@ -460,30 +498,6 @@ export const datetimePickerService = {
                     ...markValuesRaw(params.pickerProps),
                 };
                 const pickerProps = reactive(rawPickerProps);
-                let disposeEffect;
-                onMounted(() => {
-                    disposeEffect = immediateEffect(() => {
-                        JSON.stringify(pickerProps);
-                        // Update inputs
-                        for (const [el, value] of zip(
-                            getInputs(),
-                            ensureArray(pickerProps.value),
-                            true
-                        )) {
-                            if (el) {
-                                updateInput(el, value);
-                                // Apply changes immediately if the popover is already closed.
-                                // Otherwise ´apply()´ will be called later on close.
-                                if (!isOpen()) {
-                                    apply();
-                                }
-                            }
-                        }
-
-                        shouldFocus = true;
-                    });
-                });
-                onWillDestroy(() => disposeEffect?.());
 
                 const popover = createPopover(DateTimePickerPopover, {
                     useBottomSheet: isBottomSheet(),
@@ -500,6 +514,7 @@ export const datetimePickerService = {
                     },
                 });
 
+                let disposeEffect = () => {};
                 /** @type {boolean[]} */
                 let inputsChanged = [];
                 let lastAppliedStringValue = "";
@@ -536,7 +551,9 @@ export const datetimePickerService = {
                         }
                     });
 
-                    useLayoutEffect(enable, getInputs);
+                    onMounted(enable);
+                    onWillDestroy(disable);
+                    useLayoutEffect(initInputs, getInputs);
 
                     // Note: this `onPatched` callback must be called after the `useLayoutEffect` since
                     // the effect may change input values that will be selected by the patch callback.
@@ -552,7 +569,7 @@ export const datetimePickerService = {
                 }
                 const picker = {
                     enable,
-                    disable: () => dateTimePickerList.delete(picker),
+                    disable,
                     isOpen,
                     open,
                     close: () => popover.close(),
