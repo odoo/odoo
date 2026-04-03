@@ -2070,7 +2070,14 @@ class AccountTax(models.Model):
             if mode == 'mixed':
                 current_mode = 'included'
                 for base_line, taxes_data in values['base_line_x_taxes_data']:
-                    if any(not tax_data['price_include'] for tax_data in taxes_data):
+                    if any(
+                        not tax_data['price_include']
+                        for tax_data in taxes_data
+                        if (
+                            not base_line['currency_id'].is_zero(tax_data['tax_amount_currency'])
+                            or not company.currency_id.is_zero(tax_data['tax_amount'])
+                        )
+                    ):
                         current_mode = 'excluded'
                         break
 
