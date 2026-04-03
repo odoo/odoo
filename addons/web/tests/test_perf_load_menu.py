@@ -30,7 +30,9 @@ class TestPerfSessionInfo(common.HttpCase):
 
     def _prepare(self):
         self.env.invalidate_all()
-        self.drop_ormcaches()
+        for cache_name in self.env.registry.registry_caches__:
+            if '.' not in cache_name:
+                self.env.transaction.invalidate_ormcache(cache_name)
 
     def test_performance_session_info(self):
         self.authenticate(self.user.login, "info")

@@ -1053,13 +1053,6 @@ class BaseCase(case.TestCase):
             return BinaryBytes(f.read())
 
     @classmethod
-    def drop_ormcaches(cls) -> None:
-        """ Remove all data in ORM caches without signaling, just like in a new Registry. """
-        _logger.debug("Clearing all ORM caches")
-        for _seq, lru in cls.registry.registry_caches__.values():
-            lru.clear()
-
-    @classmethod
     @contextmanager
     def registry_test_mode(cls, *, cr: Cursor | None = None, registry: Registry | None = None):
         """ Entering registry test mode.
@@ -1318,7 +1311,6 @@ class TransactionCase(BaseCase):
 
         cls.startClassPatcher(patch.object(cls.registry, '_signal_changes', signal_changes))
         cls.startClassPatcher(patch.object(cls.registry, 'get_sequences', get_sequences))
-        cls.addClassCleanup(cls.drop_ormcaches)
         cls.addClassCleanup(cls._gc_filestore)
 
         cls.cr = cls.registry.cursor()
@@ -1381,8 +1373,6 @@ class TransactionCase(BaseCase):
                 )
 
         self.addCleanup(_check_registry_lock)
-
-        self.addCleanup(self.drop_ormcaches)
 
         # flush everything in setUpClass before introducing a savepoint
         cr = self.cr
