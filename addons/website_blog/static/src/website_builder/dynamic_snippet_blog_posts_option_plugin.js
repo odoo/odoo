@@ -8,7 +8,7 @@ import { registry } from "@web/core/registry";
 
 export class DynamicSnippetBlogPostsOptionPlugin extends Plugin {
     static id = "dynamicSnippetBlogPostsOption";
-    static dependencies = ["dynamicSnippetOption"];
+    static dependencies = ["dynamicSnippetCarouselOption", "dynamicSnippetOption"];
     static shared = ["getModelNameFilter"];
     modelNameFilter = "blog.post";
     /** @type {import("plugins").WebsiteResources} */
@@ -19,8 +19,11 @@ export class DynamicSnippetBlogPostsOptionPlugin extends Plugin {
         return this.modelNameFilter;
     }
     async onSnippetDropped({ snippetEl }) {
-        if (snippetEl.matches(".s_dynamic_snippet_blog_posts")) {
-            await this.dependencies.dynamicSnippetOption.setOptionsDefaultValues(
+        if (snippetEl.matches(".s_dynamic_snippet_blog_posts, .s_blog_posts_carousel")) {
+            const optionKey = snippetEl.matches(".s_dynamic_snippet_blog_posts")
+                ? "dynamicSnippetOption"
+                : "dynamicSnippetCarouselOption";
+            await this.dependencies[optionKey].setOptionsDefaultValues(
                 snippetEl,
                 this.modelNameFilter
             );
