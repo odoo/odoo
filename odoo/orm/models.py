@@ -3403,6 +3403,10 @@ class BaseModel(metaclass=MetaModel):
             # if there is an overwrite, it may be based on context, in which
             # case we want to fill the cache
             return True
+        # resolve the access operator so that a rule `('order_id', 'access', 'read')`
+        # may become false if the user has no access
+        domain = domain.map_conditions(
+            lambda cond: cond.optimize_dynamic(self) if cond.operator == 'access' else cond)
         if domain.is_false():
             return False
         if not origin:  # no real ids
