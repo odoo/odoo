@@ -2255,6 +2255,7 @@ class MrpProduction(models.Model):
             production._set_quantities()
         # Produce by-products also for not auto productions.
         (self - productions_auto)._mark_byproducts_as_produced()
+        self._check_missing_lot_id_in_raw_move()
 
         consumption_issues = self._get_consumption_issues()
         if consumption_issues:
@@ -2831,7 +2832,6 @@ class MrpProduction(models.Model):
 
     def _set_quantities(self):
         self.ensure_one()
-        missing_lot_id_products = ""
         if self.product_tracking in ('lot', 'serial') and not self.lot_producing_id:
             self.action_generate_serial()
         if self.product_tracking == 'serial' and float_compare(self.qty_producing, 1, precision_rounding=self.product_uom_id.rounding) == 1:
@@ -2841,12 +2841,14 @@ class MrpProduction(models.Model):
         self._set_qty_producing()
         self._mark_byproducts_as_produced()
 
+    def _check_missing_lot_id_in_raw_move(self):
+        missing_lot_id_products = ""
         for move in self.move_raw_ids:
             if move.state in ('done', 'cancel') or not move.product_uom_qty:
                 continue
             rounding = move.product_uom.rounding
             if move.manual_consumption:
-                if move.has_tracking in ('serial', 'lot') and (not move.picked or any(not line.lot_id for line in move.move_line_ids if line.quantity and line.picked)):
+                if move.has_tracking in ('serial', 'lot') and (not move.picked or any(not (line.lot_id or line.lot_name) for line in move.move_line_ids if not float_is_zero(line.quantity, precision_rounding=rounding) and line.picked)):
                     missing_lot_id_products += "\n  - %s" % move.product_id.display_name
         if missing_lot_id_products:
             error_msg = _(
