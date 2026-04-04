@@ -46,6 +46,40 @@
                     />
                 </div>
 
+                <div t-if="this.selectedNode.type === 'sumario'" class="prop-section">
+                    <label class="prop-label">Título do Sumário</label>
+                    <input
+                        type="text"
+                        class="prop-input"
+                        t-att-value="this.tocTitle"
+                        t-on-input="updateTocTitle"
+                    />
+                </div>
+
+                <div t-if="this.selectedNode.type === 'sumario'" class="prop-section">
+                    <label class="prop-label">Profundidade</label>
+                    <select class="prop-input" t-att-value="this.tocDepth" t-on-change="updateTocDepth">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+
+                <div t-if="this.selectedNode.type === 'sumario'" class="prop-section">
+                    <label class="prop-label">Exibição</label>
+                    <div class="toggle-row">
+                        <span class="toggle-label">Mostrar números</span>
+                        <div t-attf-class="toggle-switch {{ this.showTocNumbers ? '' : 'off' }}">
+                            <input
+                                class="gdb-toggle-input"
+                                type="checkbox"
+                                id="gdbTocNumbersToggle"
+                                t-att-checked="this.showTocNumbers ? true : undefined"
+                                t-on-change="toggleTocNumbers"
+                            />
+                        </div>
+                    </div>
+                </div>
+
                 <div t-if="this.selectedNode.type === 'process_field'" class="prop-section">
                     <label class="prop-label">Rótulo</label>
                     <input

@@ -116,6 +116,7 @@ class GovDocumentTypstRenderer(models.AbstractModel):
             "divider": self._render_divider,
             "bullet_list": self._render_bullet_list,
             "metadata": self._render_metadata,
+            "sumario": self._render_sumario,
         }
         renderer = renderers.get(node["type"])
         if not renderer:
@@ -191,3 +192,28 @@ class GovDocumentTypstRenderer(models.AbstractModel):
         inst = context.get("institution", {})
         doc = context.get("document", {})
         return f'{inst.get("city", "")}/{inst.get("state", "")}, {doc.get("date", "")}'
+
+    def _render_sumario(self, node, context):
+        props = node.get("props", {})
+        title = props.get("titulo") or "Sumário"
+        try:
+            depth = int(props.get("profundidade") or 2)
+        except (TypeError, ValueError):
+            depth = 2
+        depth = max(1, min(depth, 2))
+        show_numbers = props.get("mostrar_numeros", True)
+
+        outline_line = f"#outline(title: [{title}], depth: {depth})"
+        if show_numbers:
+            return outline_line
+
+        return "\n".join(
+            [
+                "#set outline.entry(fill: none)",
+                "#show outline.entry: it => link(",
+                "  it.element.location(),",
+                "  it.indented(it.prefix(), it.body()),",
+                ")",
+                outline_line,
+            ]
+        )

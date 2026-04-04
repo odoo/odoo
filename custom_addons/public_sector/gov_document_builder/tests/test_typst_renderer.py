@@ -179,3 +179,37 @@ class TestTypstRenderer(TransactionCase):
             rendered = self.renderer._render_layout(self.instance, self.instance.layout_json, {})
 
         self.assertEqual(rendered, "\n\n\nConteúdo final\n")
+
+    def test_sumario_renderer_outputs_outline_with_title_and_depth(self):
+        rendered = self.renderer._render_sumario(
+            {
+                "id": "toc",
+                "type": "sumario",
+                "props": {
+                    "titulo": "Sumário",
+                    "profundidade": 2,
+                    "mostrar_numeros": True,
+                },
+            },
+            {},
+        )
+
+        self.assertEqual(rendered, "#outline(title: [Sumário], depth: 2)")
+
+    def test_sumario_renderer_hides_page_numbers_when_disabled(self):
+        rendered = self.renderer._render_sumario(
+            {
+                "id": "toc",
+                "type": "sumario",
+                "props": {
+                    "titulo": "Índice do Documento",
+                    "profundidade": 1,
+                    "mostrar_numeros": False,
+                },
+            },
+            {},
+        )
+
+        self.assertIn("#set outline.entry(fill: none)", rendered)
+        self.assertIn("it.indented(it.prefix(), it.body())", rendered)
+        self.assertIn("#outline(title: [Índice do Documento], depth: 1)", rendered)

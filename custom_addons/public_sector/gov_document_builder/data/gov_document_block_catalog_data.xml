@@ -39,6 +39,20 @@
         <field name="default_props_json"><![CDATA[{}]]></field>
     </record>
 
+    <record id="block_sumario" model="gov.document.block.catalog">
+        <field name="code">sumario</field>
+        <field name="name">Sumário</field>
+        <field name="block_kind">metadata</field>
+        <field name="category">Estrutura</field>
+        <field name="icon">fa-list-ol</field>
+        <field name="sequence">35</field>
+        <field name="supports_children" eval="False"/>
+        <field name="supports_binding" eval="False"/>
+        <field name="is_locked_by_default" eval="False"/>
+        <field name="typst_renderer_key">sumario</field>
+        <field name="default_props_json"><![CDATA[{"titulo":"Sumário","profundidade":2,"mostrar_numeros":true}]]></field>
+    </record>
+
     <record id="block_process_header" model="gov.document.block.catalog">
         <field name="code">process_header</field>
         <field name="name">Cabeçalho do Processo</field>

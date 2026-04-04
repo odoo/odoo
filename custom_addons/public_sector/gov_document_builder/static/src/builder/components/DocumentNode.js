@@ -42,6 +42,10 @@ export class DocumentNode extends Component {
         return Array.isArray(items) ? items.filter(Boolean) : [];
     }
 
+    get isToc() {
+        return this.props.node.type === "sumario";
+    }
+
     get bindingLabel() {
         const binding = this.props.node.binding || {};
         if (!binding.source || !binding.path) {
@@ -95,6 +99,27 @@ export class DocumentNode extends Component {
         const state = institution.state || "AM";
         const date = document.date || "";
         return `${city}/${state}, ${date}`.trim();
+    }
+
+    get tocTitle() {
+        return (this.props.node.props || {}).titulo || "Sumário";
+    }
+
+    get tocDepth() {
+        const depth = Number.parseInt((this.props.node.props || {}).profundidade, 10);
+        if (Number.isNaN(depth)) {
+            return 2;
+        }
+        return Math.min(Math.max(depth, 1), 2);
+    }
+
+    get tocEntries() {
+        return (this.store.state.nodes || []).filter((candidate) => {
+            if (candidate.type === "heading1") {
+                return true;
+            }
+            return this.tocDepth >= 2 && candidate.type === "heading2";
+        });
     }
 
     get signatureBlocks() {

@@ -76,6 +76,28 @@ export class PropertiesPanel extends Component {
         this.store.updateNodeProps(this.selectedNode.id, { items });
     }
 
+    updateTocTitle(ev) {
+        if (!this.selectedNode) {
+            return;
+        }
+        this.store.updateNodeProps(this.selectedNode.id, { titulo: ev.target.value });
+    }
+
+    updateTocDepth(ev) {
+        if (!this.selectedNode) {
+            return;
+        }
+        const depth = Number.parseInt(ev.target.value, 10) || 2;
+        this.store.updateNodeProps(this.selectedNode.id, { profundidade: depth });
+    }
+
+    toggleTocNumbers(ev) {
+        if (!this.selectedNode) {
+            return;
+        }
+        this.store.updateNodeProps(this.selectedNode.id, { mostrar_numeros: ev.target.checked });
+    }
+
     toggleBinding(ev) {
         if (!this.selectedNode) {
             return;
@@ -137,6 +159,19 @@ export class PropertiesPanel extends Component {
 
     get nodeContent() {
         return ((this.selectedNode && this.selectedNode.props) || {}).content || "";
+    }
+
+    get tocTitle() {
+        return ((this.selectedNode && this.selectedNode.props) || {}).titulo || "Sumário";
+    }
+
+    get tocDepth() {
+        return `${((this.selectedNode && this.selectedNode.props) || {}).profundidade || 2}`;
+    }
+
+    get showTocNumbers() {
+        const props = (this.selectedNode && this.selectedNode.props) || {};
+        return props.mostrar_numeros !== false;
     }
 
     get bindingSource() {

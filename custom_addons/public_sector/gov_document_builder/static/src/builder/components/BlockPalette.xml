@@ -30,7 +30,12 @@
                                         t-on-click="() => this.insertBlock(block.code)"
                                     >
                                         <div class="gdb-block-icon">
-                                            <span>
+                                            <i
+                                                t-if="block.icon &amp;&amp; block.icon.startsWith('fa-')"
+                                                t-att-class="'fa ' + block.icon"
+                                                aria-hidden="true"
+                                            />
+                                            <span t-else="">
                                                 <t t-esc="block.icon || '[]'" />
                                             </span>
                                         </div>

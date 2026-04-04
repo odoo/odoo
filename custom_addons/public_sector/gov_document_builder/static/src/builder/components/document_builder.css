@@ -697,6 +697,46 @@
     text-transform: uppercase;
 }
 
+.n-toc {
+    border: 1px solid #e6e2d8;
+    border-radius: 8px;
+    margin: 8px 0;
+    padding: 12px 14px;
+}
+
+.gdb-toc-title {
+    color: var(--gdb-text-dark);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-bottom: 10px;
+}
+
+.gdb-toc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.gdb-toc-item {
+    border-left: 2px solid #d9d4c7;
+    color: var(--gdb-text-mid);
+    font-size: 11.5px;
+    line-height: 1.45;
+    padding-left: 10px;
+}
+
+.gdb-toc-item.is-sub {
+    color: var(--gdb-text-muted);
+    margin-left: 18px;
+}
+
+.gdb-toc-empty {
+    color: var(--gdb-text-light);
+    font-size: 11.5px;
+    margin: 0;
+}
+
 .gdb-stack {
     display: flex;
     flex-direction: column;

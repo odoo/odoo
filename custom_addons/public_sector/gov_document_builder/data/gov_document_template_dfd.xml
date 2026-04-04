@@ -20,6 +20,15 @@
     "allow_delete": false
   },
   {
+    "id": "sumario_15",
+    "type": "sumario",
+    "sequence": 15,
+    "props": {"titulo": "Sumário", "profundidade": 2, "mostrar_numeros": true},
+    "binding": {},
+    "children": [],
+    "locked": false
+  },
+  {
     "id": "process_header_20",
     "type": "process_header",
     "sequence": 20,
@@ -175,6 +184,13 @@
         <field name="required" eval="True"/>
         <field name="locked" eval="True"/>
         <field name="allow_delete" eval="False"/>
+    </record>
+
+    <record id="template_dfd_block_sumario" model="gov.document.template.block">
+        <field name="template_id" ref="gov_document_builder.template_dfd_semsa_padrao"/>
+        <field name="catalog_block_id" ref="gov_document_builder.block_sumario"/>
+        <field name="sequence">15</field>
+        <field name="props_json"><![CDATA[{"titulo":"Sumário","profundidade":2,"mostrar_numeros":true}]]></field>
     </record>
 
     <record id="template_dfd_block_process_header" model="gov.document.template.block">

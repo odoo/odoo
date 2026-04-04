@@ -35,6 +35,21 @@
             <div t-elif="props.node.type === 'heading'" class="n-heading-2">
                 <h2><t t-esc="this.headingText || 'Título'" /></h2>
             </div>
+            <div t-elif="this.isToc" class="n-toc">
+                <div class="gdb-toc-title"><t t-esc="this.tocTitle" /></div>
+                <div t-if="this.tocEntries.length" class="gdb-toc-list">
+                    <t t-foreach="this.tocEntries" t-as="entry" t-key="entry.id">
+                        <div t-attf-class="gdb-toc-item {{ entry.type === 'heading2' ? 'is-sub' : '' }}">
+                            <span class="gdb-toc-text">
+                                <t
+                                    t-esc="(entry.props || {}).text || (entry.type === 'heading1' ? 'Título Principal' : 'Seção')"
+                                />
+                            </span>
+                        </div>
+                    </t>
+                </div>
+                <p t-else="" class="gdb-toc-empty">Nenhum título encontrado no documento</p>
+            </div>
             <div t-elif="props.node.type === 'process_header'" class="n-process-field gdb-stack">
                 <t t-foreach="this.processRows" t-as="row" t-key="row.label">
                     <div class="pf-row">
