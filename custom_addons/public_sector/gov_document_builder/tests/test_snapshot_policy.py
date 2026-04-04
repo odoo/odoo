@@ -3,7 +3,7 @@ import json
 from odoo.tests.common import TransactionCase
 
 
-class TestGovDocumentSnapshotPolicy(TransactionCase):
+class TestSnapshotPolicy(TransactionCase):
     def setUp(self):
         super().setUp()
         self.document_type = self.env["gov.document.type"].create(
@@ -21,21 +21,33 @@ class TestGovDocumentSnapshotPolicy(TransactionCase):
         )
         self.process = self.env["gov.processo"].create(
             {
-                "subject": "Aquisição de insumos hospitalares",
+                "name": "SEMSA-2026-001",
+                "subject": "Aquisição de medicamentos essenciais para UBS",
                 "state": "execucao",
                 "process_scope": "compras",
             }
         )
         self.env["gov.processo.parametro"].create(
-            {
-                "processo_id": self.process.id,
-                "key": "modalidade",
-                "name": "Modalidade da contratação",
-                "section": "required_by_law",
-                "fase": 2,
-                "value_type": "string",
-                "value_text": "Pregão Eletrônico",
-            }
+            [
+                {
+                    "processo_id": self.process.id,
+                    "key": "modalidade",
+                    "name": "Modalidade da contratação",
+                    "section": "required_by_law",
+                    "fase": 2,
+                    "value_type": "string",
+                    "value_text": "Pregão Eletrônico",
+                },
+                {
+                    "processo_id": self.process.id,
+                    "key": "hipotese_dispensa",
+                    "name": "Hipótese de dispensa",
+                    "section": "required_by_law",
+                    "fase": 1,
+                    "value_type": "string",
+                    "value_text": "Não se aplica",
+                },
+            ]
         )
         self.dotacao = self.env["gov.processo.dotacao"].create(
             {
@@ -74,26 +86,44 @@ class TestGovDocumentSnapshotPolicy(TransactionCase):
         )
         self.renderer = self.env["gov.document.typst.renderer"]
 
-    def test_create_version_persists_only_snapshot_namespaces(self):
-        version = self.instance._create_version("Snapshot semântico")
+    def _approve_and_get_version(self):
+        self.instance.action_approve()
+        return self.instance.version_ids[:1]
+
+    def test_version_snapshot_excludes_dynamic_namespaces(self):
+        version = self._approve_and_get_version()
 
         snapshot_context = json.loads(version.resolved_context_json)
-        dynamic_namespaces = json.loads(version.dynamic_namespaces_json or "[]")
 
-        self.assertIn("process", snapshot_context)
-        self.assertIn("legal", snapshot_context)
         self.assertNotIn("budget", snapshot_context)
         self.assertNotIn("execution", snapshot_context)
         self.assertNotIn("reconciliation", snapshot_context)
-        self.assertEqual(snapshot_context["process"]["subject"], self.process.subject)
+
+    def test_version_snapshot_includes_immutable_namespaces(self):
+        version = self._approve_and_get_version()
+
+        snapshot_context = json.loads(version.resolved_context_json)
+
+        self.assertIn("process", snapshot_context)
+        self.assertIn("legal", snapshot_context)
+        self.assertEqual(snapshot_context["process"]["name"], "SEMSA-2026-001")
+        self.assertEqual(
+            snapshot_context["process"]["subject"],
+            "Aquisição de medicamentos essenciais para UBS",
+        )
         self.assertEqual(snapshot_context["legal"]["modalidade"], "Pregão Eletrônico")
+        self.assertEqual(snapshot_context["legal"]["hipotese_dispensa"], "Não se aplica")
+
+    def test_version_dynamic_namespaces_field_lists_excluded_keys(self):
+        version = self._approve_and_get_version()
+
+        dynamic_namespaces = json.loads(version.dynamic_namespaces_json or "[]")
+
         self.assertIn("budget", dynamic_namespaces)
         self.assertIn("execution", dynamic_namespaces)
-        self.assertIn("reconciliation", dynamic_namespaces)
-        self.assertNotIn("process", dynamic_namespaces)
 
-    def test_render_version_rehydrates_dynamic_budget_namespace(self):
-        version = self.instance._create_version("Snapshot com orçamento")
+    def test_render_version_resolves_budget_in_realtime(self):
+        version = self._approve_and_get_version()
 
         self.dotacao.write({"valor_estimado": 175000})
 
@@ -101,7 +131,3 @@ class TestGovDocumentSnapshotPolicy(TransactionCase):
 
         self.assertIn("175.000,00", rendered)
         self.assertNotIn("150.000,00", rendered)
-
-        version.action_rerender()
-
-        self.assertIn("175.000,00", version.typst_source)

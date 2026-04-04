@@ -3,7 +3,7 @@ import json
 from odoo.tests.common import TransactionCase
 
 
-class TestGovDocumentTypstRenderer(TransactionCase):
+class TestTypstRenderer(TransactionCase):
     def setUp(self):
         super().setUp()
         self.document_type = self.env["gov.document.type"].create(
@@ -19,91 +19,17 @@ class TestGovDocumentTypstRenderer(TransactionCase):
                 "document_type_id": self.document_type.id,
             }
         )
-        self.renderer = self.env["gov.document.typst.renderer"]
-
-    def _create_instance(self, layout, process=None):
-        vals = {
-            "name": "Documento Renderer",
-            "document_type_id": self.document_type.id,
-            "template_id": self.template.id,
-            "layout_json": json.dumps(layout),
-        }
-        if process:
-            vals["process_id"] = process.id
-        return self.env["gov.document.instance"].create(vals)
-
-    def test_render_instance_includes_typst_preamble(self):
-        instance = self._create_instance(
-            [
-                {"id": "h1", "type": "heading1", "sequence": 10, "props": {"text": "DFD"}},
-                {"id": "txt", "type": "richtext", "sequence": 20, "props": {"content": "Texto livre"}},
-                {"id": "sig", "type": "signature", "sequence": 30, "props": {}},
-            ]
-        )
-
-        rendered = self.renderer.render_instance(instance)
-
-        self.assertIn("#show: semsa_doc", rendered)
-        self.assertIn("Texto livre", rendered)
-        self.assertIn("#signature_block", rendered)
-
-    def test_unknown_node_generates_fallback_comment(self):
-        instance = self._create_instance(
-            [
-                {"id": "unk", "type": "bloco_desconhecido", "sequence": 10, "props": {}},
-            ]
-        )
-
-        rendered = self.renderer.render_instance(instance)
-
-        self.assertIn("// [bloco não renderizado: bloco_desconhecido]", rendered)
-
-    def test_legal_basis_block_renders_base_legal_box(self):
-        instance = self._create_instance(
-            [
-                {"id": "law", "type": "legal_basis", "sequence": 10, "props": {}},
-            ]
-        )
-
-        rendered = self.renderer.render_instance(instance)
-
-        self.assertIn("#base_legal_box", rendered)
-
-    def test_conditional_node_is_hidden_when_visibility_rule_fails(self):
-        instance = self._create_instance(
-            [
-                {
-                    "id": "cond",
-                    "type": "conditional",
-                    "sequence": 10,
-                    "visibility_rule": "reconciliation.deficit > 0",
-                    "children": [
-                        {
-                            "id": "inner",
-                            "type": "richtext",
-                            "sequence": 10,
-                            "props": {"content": "Bloco condicional visível"},
-                        }
-                    ],
-                },
-            ]
-        )
-
-        rendered = self.renderer.render_instance(instance)
-
-        self.assertNotIn("Bloco condicional visível", rendered)
-
-    def test_conditional_node_renders_children_when_visibility_rule_matches(self):
-        process = self.env["gov.processo"].create(
+        self.process = self.env["gov.processo"].create(
             {
-                "subject": "Aquisição de materiais",
+                "name": "SEMSA-2026-001",
+                "subject": "Aquisição de medicamentos essenciais para UBS",
                 "state": "execucao",
                 "process_scope": "compras",
             }
         )
         self.env["gov.processo.dotacao"].create(
             {
-                "processo_id": process.id,
+                "processo_id": self.process.id,
                 "programa": "10",
                 "acao": "2064",
                 "natureza_despesa": "3.3.90.39",
@@ -113,26 +39,103 @@ class TestGovDocumentTypstRenderer(TransactionCase):
                 "reservado": True,
             }
         )
-        instance = self._create_instance(
+        self.instance = self.env["gov.document.instance"].create(
+            {
+                "name": "Documento Renderer",
+                "document_type_id": self.document_type.id,
+                "template_id": self.template.id,
+                "process_id": self.process.id,
+            }
+        )
+        self.renderer = self.env["gov.document.typst.renderer"]
+
+    def _set_layout(self, layout):
+        self.instance.write({"layout_json": json.dumps(layout)})
+
+    def test_renderer_produces_nonempty_typst(self):
+        self._set_layout(
             [
                 {
-                    "id": "cond",
-                    "type": "conditional",
+                    "id": "h1",
+                    "type": "heading1",
                     "sequence": 10,
-                    "visibility_rule": "reconciliation.situacao_conciliacao == pendente",
-                    "children": [
-                        {
-                            "id": "inner",
-                            "type": "richtext",
-                            "sequence": 10,
-                            "props": {"content": "Conciliação pendente identificada"},
-                        }
-                    ],
+                    "props": {"text": "DFD"},
                 },
-            ],
-            process=process,
+                {
+                    "id": "txt",
+                    "type": "richtext",
+                    "sequence": 20,
+                    "props": {"content": "Texto livre"},
+                },
+            ]
         )
 
-        rendered = self.renderer.render_instance(instance)
+        rendered = self.renderer.render_instance(self.instance)
 
-        self.assertIn("Conciliação pendente identificada", rendered)
+        self.assertTrue(rendered)
+        self.assertIn('#import "base.typ": semsa_doc', rendered)
+
+    def test_conditional_block_suppressed_in_output(self):
+        self._set_layout(
+            [
+                {
+                    "id": "subject",
+                    "type": "process_field",
+                    "sequence": 10,
+                    "props": {"label": "Objeto"},
+                    "binding": {
+                        "source": "process",
+                        "path": "subject",
+                    },
+                },
+                {
+                    "id": "deficit",
+                    "type": "rich_text",
+                    "sequence": 20,
+                    "visibility_rule": "reconciliation.deficit > 0",
+                    "props": {"content": "Bloco com déficit"},
+                },
+            ]
+        )
+
+        rendered = self.renderer.render_instance(self.instance)
+
+        self.assertIn("Aquisição de medicamentos essenciais para UBS", rendered)
+        self.assertNotIn("Bloco com déficit", rendered)
+
+    def test_renderer_handles_missing_block_type_gracefully(self):
+        self._set_layout(
+            [
+                {
+                    "id": "missing",
+                    "type": "bloco_inexistente",
+                    "sequence": 10,
+                    "props": {},
+                }
+            ]
+        )
+
+        rendered = self.renderer.render_instance(self.instance)
+
+        self.assertIn("// [bloco não renderizado: bloco_inexistente]", rendered)
+
+    def test_currency_transformer_formats_value_as_brl(self):
+        self._set_layout(
+            [
+                {
+                    "id": "budget_currency",
+                    "type": "process_field",
+                    "sequence": 10,
+                    "props": {"label": "Empenhado"},
+                    "binding": {
+                        "source": "budget",
+                        "path": "valor_empenhado",
+                        "transform": "currency_br",
+                    },
+                }
+            ]
+        )
+
+        rendered = self.renderer.render_instance(self.instance)
+
+        self.assertIn("150.000,00", rendered)

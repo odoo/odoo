@@ -52,7 +52,7 @@ class TestGovDocumentContextResolver(TransactionCase):
         self.assertEqual(value, "não informado")
 
 
-class TestGovDocumentContextResolverFinancialNamespaces(TransactionCase):
+class TestContextResolverFinancialCycle(TransactionCase):
     def setUp(self):
         super().setUp()
         self.document_type = self.env["gov.document.type"].create(
@@ -70,6 +70,7 @@ class TestGovDocumentContextResolverFinancialNamespaces(TransactionCase):
         )
         self.process = self.env["gov.processo"].create(
             {
+                "name": "SEMSA-2026-001",
                 "subject": "Aquisição de medicamentos essenciais para UBS",
                 "state": "execucao",
                 "process_scope": "compras",
@@ -126,6 +127,15 @@ class TestGovDocumentContextResolverFinancialNamespaces(TransactionCase):
                     "annual_quantity": 100,
                     "unit_price": 89.90,
                 },
+                {
+                    "processo_id": self.process.id,
+                    "lot_code": "1",
+                    "item_number": 3,
+                    "description": "Soro fisiológico 500ml",
+                    "unit": "un",
+                    "annual_quantity": 50,
+                    "unit_price": 120.00,
+                },
             ]
         )
         self.env["gov.processo.dotacao"].create(
@@ -162,6 +172,48 @@ class TestGovDocumentContextResolverFinancialNamespaces(TransactionCase):
         )
         self.resolver = self.env["gov.document.context.resolver"]
 
+    def test_namespace_process_extracts_subject(self):
+        context = self.resolver.resolve_instance_context(self.instance)
+
+        self.assertEqual(
+            context["process"]["subject"],
+            "Aquisição de medicamentos essenciais para UBS",
+        )
+
+    def test_namespace_procurement_total_is_sum_of_items(self):
+        context = self.resolver.resolve_instance_context(self.instance)
+
+        self.assertAlmostEqual(context["procurement"]["valor_estimado_total"], 24090.0)
+
+    def test_namespace_budget_empenhado_only_reserved(self):
+        context = self.resolver.resolve_instance_context(self.instance)
+
+        self.assertEqual(context["budget"]["valor_empenhado"], 150000)
+        self.assertNotEqual(context["budget"]["valor_empenhado"], 230000)
+
+    def test_namespace_reconciliation_is_computed(self):
+        context = self.resolver.resolve_instance_context(self.instance)
+
+        self.assertIn("reconciliation", context)
+        self.assertIn(
+            context["reconciliation"]["situacao_conciliacao"],
+            {"regular", "pendente", "com_devolucao"},
+        )
+
+    def test_namespace_auction_returns_empty_dict_when_no_model(self):
+        context = self.resolver.resolve_instance_context(self.instance)
+
+        self.assertEqual(
+            context["auction"],
+            {
+                "valor_arrematado": 0.0,
+                "preco_unitario_final": 0.0,
+                "fornecedor": "",
+                "desconto_percentual": 0.0,
+                "data_homologacao": "",
+            },
+        )
+
     def test_process_id_is_many2one_to_gov_processo(self):
         process_field = self.env["gov.document.instance"]._fields["process_id"]
 
@@ -197,9 +249,9 @@ class TestGovDocumentContextResolverFinancialNamespaces(TransactionCase):
     def test_procurement_namespace_aggregates_planilha_items(self):
         context = self.resolver.resolve_instance_context(self.instance)
 
-        self.assertAlmostEqual(context["procurement"]["valor_estimado_total"], 18090.0)
+        self.assertAlmostEqual(context["procurement"]["valor_estimado_total"], 24090.0)
         self.assertEqual(context["procurement"]["preco_unitario_referencia"], 45.50)
-        self.assertEqual(context["procurement"]["quantidade_estimada_total"], 300)
+        self.assertEqual(context["procurement"]["quantidade_estimada_total"], 350)
         self.assertEqual(context["procurement"]["data_pesquisa_preco"], "2026-04-04")
 
     def test_budget_namespace_sums_only_reserved_dotacoes(self):
@@ -210,17 +262,3 @@ class TestGovDocumentContextResolverFinancialNamespaces(TransactionCase):
         self.assertEqual(context["budget"]["exercicio"], 2026)
         self.assertEqual(context["budget"]["natureza_despesa"], ["3.3.90.39", "3.3.90.30"])
         self.assertEqual(context["budget"]["fonte_recurso"], ["100", "200"])
-
-    def test_auction_namespace_is_defensive_when_model_is_missing(self):
-        context = self.resolver.resolve_instance_context(self.instance)
-
-        self.assertEqual(
-            context["auction"],
-            {
-                "valor_arrematado": 0.0,
-                "preco_unitario_final": 0.0,
-                "fornecedor": "",
-                "desconto_percentual": 0.0,
-                "data_homologacao": "",
-            },
-        )
