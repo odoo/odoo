@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2026-03-18 10:21+0000\n"
+"PO-Revision-Date: 2026-04-04 12:46+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-2/"
 "hr_attendance/it/>\n"
@@ -372,7 +372,7 @@ msgstr "Approvatore presenza"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Attendance Error"
-msgstr ""
+msgstr "Errore presenza"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_from_systray
@@ -748,7 +748,7 @@ msgstr "Collega un lettore RFID e scansiona un token."
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Connection lost. Check in/out could not be recorded."
-msgstr ""
+msgstr "Connessione persa. Impossibile registrare il check-in/out."
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime_ruleset__rate_combination_mode
@@ -911,6 +911,8 @@ msgid ""
 "Do not have access, user cannot edit the attendances that are not their own "
 "or if they are not the attendance manager of the employee."
 msgstr ""
+"L'utente non ha accesso e non può modificare le presenze di altri dipendenti "
+"se non è responsabile di un dipendente."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
@@ -1289,6 +1291,8 @@ msgid ""
 "Invalid domain, use 'name' and/or 'department_id' fields with '=' and/or "
 "'ilike' operators."
 msgstr ""
+"Dominio non valido, utilizza i campi 'name' e/o 'department_id' con gli "
+"operatori '=' e/o 'ilike'."
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1400,12 +1404,12 @@ msgstr "Carica dati di esempio"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Location (In)"
-msgstr ""
+msgstr "Posizione (dentro)"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Location (Out)"
-msgstr ""
+msgstr "Posizione (fuori)"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_longitude
@@ -1538,7 +1542,7 @@ msgstr "Nuova configurazione (dipendente/badge)"
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_version_list_view
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_version_list_view_add
 msgid "No Records."
-msgstr ""
+msgstr "Nessun record."
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1564,7 +1568,7 @@ msgstr "Nessun dipendente corrisponde all'ID tesserino \"%(barcode)s\"."
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Now"
-msgstr ""
+msgstr "Ora"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_needaction_counter
@@ -1796,7 +1800,7 @@ msgstr "Stampa"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Proceed Anyway"
-msgstr ""
+msgstr "Procedi comunque"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
@@ -1904,7 +1908,7 @@ msgstr "Rigenera straordinari per questo insieme di regole"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_version_list_view_enhanced_hr_attendance
 msgid "Remove"
-msgstr ""
+msgstr "Rimuovi"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_reporting
@@ -2178,11 +2182,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_version_list_view
 msgid "There are no employees assigned to this overtime ruleset."
 msgstr ""
+"Non ci sono dipendenti assegnati a questo set di regole sugli straordinari."
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_version_list_view_add
 msgid "There are no employees without an overtime ruleset."
-msgstr ""
+msgstr "Non ci sono dipendenti senza un regolamento sugli straordinari."
 
 #. module: hr_attendance
 #. odoo-python
@@ -2246,7 +2251,7 @@ msgstr "Oggi"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__today_attendance_ids
 msgid "Today Attendance"
-msgstr ""
+msgstr "Presenze di oggi"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_company_threshold
@@ -2304,6 +2309,8 @@ msgid ""
 "Unable to get a valid location. Do you want to proceed with your check-in/"
 "out anyway?"
 msgstr ""
+"Impossibile ottenere una posizione valida. Desideri comunque procedere con "
+"il check-in/check-out?"
 
 #. module: hr_attendance
 #. odoo-python
@@ -2347,12 +2354,12 @@ msgstr "Errore di convalida"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__version_ids
 msgid "Version"
-msgstr ""
+msgstr "Versione"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__versions_count
 msgid "Versions Count"
-msgstr ""
+msgstr "Numero di versioni"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
@@ -2384,13 +2391,13 @@ msgstr "Benvenuto"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Welcome back"
-msgstr ""
+msgstr "Bentornato"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Welcome,"
-msgstr ""
+msgstr "Ti diamo il benvenuto,"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__timing_type__leave
@@ -2442,7 +2449,7 @@ msgstr "Ore lavorative mese corrente"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_version_search_view_enhanced_hr_attendance
 msgid "Working Hours"
-msgstr ""
+msgstr "Ore lavorative"
 
 #. module: hr_attendance
 #. odoo-javascript

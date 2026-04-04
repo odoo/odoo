@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
-"PO-Revision-Date: 2026-03-14 13:03+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
+"PO-Revision-Date: 2026-04-04 12:59+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/"
 "project/fr/>\n"
@@ -187,8 +187,9 @@ msgid ""
 "            Please take a moment to rate our services related to the <strong "
 "t-out=\"object.name or ''\">Planning and budget</strong> task\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                assigned to <strong t-out=\"object._rating_get_operator()."
-"name or ''\">Mitchell Admin</strong>.<br/>\n"
+"                assigned to <strong t-"
+"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/"
+">\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
@@ -209,25 +210,22 @@ msgid ""
 "top:2rem;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/"
-"{{ access_token }}/5\" t-att-class=\"'pe-none' if object."
-"_rating_get_operator() else ''\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
 "                                    <img alt=\"Happy\" src=\"/rating/static/"
 "src/img/rating_5.png\" title=\"Happy\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/"
-"{{ access_token }}/3\" t-att-class=\"'pe-none' if object."
-"_rating_get_operator() else ''\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
 "                                    <img alt=\"Neutral\" src=\"/rating/"
 "static/src/img/rating_3.png\" title=\"Neutral\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/"
-"{{ access_token }}/1\" t-att-class=\"'pe-none' if object."
-"_rating_get_operator() else ''\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
 "                                    <img alt=\"Unhappy\" src=\"/rating/"
 "static/src/img/rating_1.png\" title=\"Unhappy\"/>\n"
 "                                </a>\n"
@@ -247,9 +245,10 @@ msgid ""
 "            </t>\n"
 "            <t t-if=\"object.stage_id.rating_status == 'periodic'\">\n"
 "                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
-"color: #454748;\">This satisfaction survey is sent <b t-out=\"object."
-"stage_id.rating_status_period or ''\">weekly</b> as long as the task is in "
-"the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
+"color: #454748;\">This satisfaction survey is sent <b t-"
+"out=\"object.stage_id.rating_status_period or ''\">weekly</b> as long as the "
+"task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage."
+"</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td><br/>Best regards,</td></tr>\n"
@@ -261,14 +260,16 @@ msgid ""
 "            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
 "650-123-4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:{{ object.project_id.company_id."
-"email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object."
-"project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:"
+"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
-"                | <a t-attf-href=\"{{ object.project_id.company_id."
-"website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object."
-"project_id.company_id.website or ''\">http://www.example.com</a>\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
+"\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
+"a>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -295,8 +296,9 @@ msgstr ""
 "la tâche <strong t-out=\"object.name or ''\">Planification et budget</"
 "strong>\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                attribuée à <strong t-out=\"object._rating_get_operator()."
-"name or ''\">Mitchell Admin</strong>.<br/>\n"
+"                attribuée à <strong t-"
+"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/"
+">\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
@@ -317,25 +319,22 @@ msgstr ""
 "top:2rem;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/"
-"{{ access_token }}/5\" t-att-class=\"'pe-none' if object."
-"_rating_get_operator() else ''\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
 "                                    <img alt=\"Satisfait\" src=\"/rating/"
 "static/src/img/rating_5.png\" title=\"Satisfait\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/"
-"{{ access_token }}/3\" t-att-class=\"'pe-none' if object."
-"_rating_get_operator() else ''\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
 "                                    <img alt=\"Neutre\" src=\"/rating/static/"
 "src/img/rating_3.png\" title=\"Neutre\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/"
-"{{ access_token }}/1\" t-att-class=\"'pe-none' if object."
-"_rating_get_operator() else ''\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
 "                                    <img alt=\"Insatisfait\" src=\"/rating/"
 "static/src/img/rating_1.png\" title=\"Insatisfait\"/>\n"
 "                                </a>\n"
@@ -371,14 +370,16 @@ msgstr ""
 "            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
 "650-123-4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:{{ object.project_id.company_id."
-"email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object."
-"project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:"
+"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
-"                | <a t-attf-href=\"{{ object.project_id.company_id."
-"website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object."
-"project_id.company_id.website or ''\">http://www.example.com</a>\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
+"\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
+"a>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -420,8 +421,8 @@ msgstr ""
 "</div>\n"
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
 "color: #454748;\" groups=\"project.group_project_stages\">Vous recevez cet "
-"email car votre projet a été déplacé vers l’étape <b t-out=\"object.stage_id."
-"name or ''\">Terminé</b></span>\n"
+"email car votre projet a été déplacé vers l’étape <b t-"
+"out=\"object.stage_id.name or ''\">Terminé</b></span>\n"
 "            "
 
 #. module: project
@@ -540,11 +541,21 @@ msgstr "<i class=\"fa fa-warning pe-2\" title=\"Avertissement\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+#, fuzzy
+#| msgid ""
+#| "<i class=\"fa o_button_icon fa-check text-success\" "
+#| "invisible=\"next_milestone_status == 'off_track'\" title=\"On Track\"/>\n"
+#| "                            <i class=\"fa o_button_icon fa-check text-"
+#| "danger\" invisible=\"next_milestone_status == 'on_track'\" title=\"Off "
+#| "Track\"/>"
 msgid ""
-"<i class=\"fa o_button_icon fa-check text-success\" "
-"invisible=\"next_milestone_status == 'off_track'\" title=\"On Track\"/>\n"
+"<i class=\"fa o_button_icon fa-check\" invisible=\"next_milestone_status == "
+"False or next_milestone_status != 'on_track'\" title=\"On Track\"/>\n"
 "                            <i class=\"fa o_button_icon fa-check text-"
-"danger\" invisible=\"next_milestone_status == 'on_track'\" title=\"Off "
+"success\" invisible=\"next_milestone_status != 'next_track'\" title=\"On "
+"Track\"/>\n"
+"                            <i class=\"fa o_button_icon fa-check text-"
+"danger\" invisible=\"next_milestone_status != 'off_track'\" title=\"Off "
 "Track\"/>"
 msgstr ""
 "<i class=\"fa o_button_icon fa-check text-success\" "
@@ -612,13 +623,64 @@ msgstr "<span class=\"fw-normal\"> Tâches</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "<span class=\"o_stat_text\">Average Rating</span>"
-msgstr "<span class=\"o_stat_text\">Note moyenne</span>"
+msgid ""
+"<span class=\"o_field_widget ps-1\" invisible=\"closed_task_count == 0\">(</"
+"span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+#, fuzzy
+#| msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
+msgid "<span class=\"o_field_widget ps-1\">(</span>"
+msgstr "<span class=\"o_stat_text\">Sous-tâches</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+#, fuzzy
+#| msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
+msgid "<span class=\"o_field_widget ps-2\">)</span>"
+msgstr "<span class=\"o_stat_text\">Sous-tâches</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<span class=\"o_field_widget\" invisible=\"closed_task_count == 0\"> ) </"
+"span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+#, fuzzy
+#| msgid "<span class=\"o_stat_text\">Last Rating</span>"
+msgid "<span class=\"o_field_widget\"> / 5 </span>"
+msgstr "<span class=\"o_stat_text\">Dernière évaluation</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+#, fuzzy
+#| msgid "<span class=\"o_stat_text\">Last Rating</span>"
+msgid "<span class=\"o_field_widget\"> / </span>"
+msgstr "<span class=\"o_stat_text\">Dernière évaluation</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+#, fuzzy
+#| msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
+msgid "<span class=\"o_field_widget\">%)</span>"
+msgstr "<span class=\"o_stat_text\">Sous-tâches</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "<span class=\"o_stat_text\">Blocked Tasks</span>"
 msgstr "<span class=\"o_stat_text\">Tâches bloquées</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+#, fuzzy
+#| msgid "<span class=\"o_stat_text\">Parent Task</span>"
+msgid "<span class=\"o_stat_text\">Burndown<br/> Chart</span>"
+msgstr "<span class=\"o_stat_text\">Tâche parente</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -635,6 +697,13 @@ msgstr "<span class=\"o_stat_text\">Jalons</span>"
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Parent Task</span>"
 msgstr "<span class=\"o_stat_text\">Tâche parente</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+#, fuzzy
+#| msgid "<span class=\"o_stat_text\">Last Rating</span>"
+msgid "<span class=\"o_stat_text\">Rating</span>"
+msgstr "<span class=\"o_stat_text\">Dernière évaluation</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1206,10 +1275,10 @@ msgstr "Statut Kanban automatique"
 msgid ""
 "Automatically modify the state when the customer replies to the feedback for "
 "this stage.\n"
-" * Good feedback from the customer will update the state to "
-"'Approved' (green bullet).\n"
-" * Neutral or bad feedback will set the kanban state to 'Changes "
-"Requested' (orange bullet).\n"
+" * Good feedback from the customer will update the state to 'Approved' "
+"(green bullet).\n"
+" * Neutral or bad feedback will set the kanban state to 'Changes Requested' "
+"(orange bullet).\n"
 msgstr ""
 "Modifiez automatiquement le statut lorsque le client répond au feedback sur "
 "cette étape.\n"
@@ -1321,7 +1390,6 @@ msgstr "Bug"
 #: model:ir.embedded.actions,name:project.project_embedded_action_project_burndown_chart
 #: model:ir.embedded.actions,name:project.project_embedded_action_update_burndown_chart
 #: model:ir.model,name:project.model_project_task_burndown_chart_report
-#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_graph
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -2335,7 +2403,7 @@ msgstr "Pour toujours"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Future"
-msgstr "Futur(e)(s)"
+msgstr "À venir"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -6002,13 +6070,13 @@ msgstr "Années"
 #: code:addons/project/models/project_project_stage.py:0
 msgid ""
 "You are not able to switch the company of this stage to %(company_name)s "
-"since it currently includes projects associated with "
-"%(project_company_name)s. Please ensure that this stage exclusively consists "
+"since it currently includes projects associated with %"
+"(project_company_name)s. Please ensure that this stage exclusively consists "
 "of projects linked to %(company_name)s."
 msgstr ""
 "Vous ne pouvez pas modifier la société de cette étape en %(company_name)s, "
-"car elle comprend actuellement des projets associés à "
-"%(project_company_name)s. Veuillez vous assurer que cette étape ne comporte "
+"car elle comprend actuellement des projets associés à %"
+"(project_company_name)s. Veuillez vous assurer que cette étape ne comporte "
 "que des projets associés à %(company_name)s."
 
 #. module: project
@@ -6362,3 +6430,6 @@ msgstr "👤 Non assigné"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privé"
+
+#~ msgid "<span class=\"o_stat_text\">Average Rating</span>"
+#~ msgstr "<span class=\"o_stat_text\">Note moyenne</span>"

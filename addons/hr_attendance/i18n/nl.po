@@ -14,16 +14,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2026-01-24 12:19+0000\n"
+"PO-Revision-Date: 2026-04-04 12:46+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-2/"
 "hr_attendance/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: hr_attendance
 #. odoo-python
@@ -47,7 +47,7 @@ msgstr "%(worked_hours)s (%(check_in)s-%(check_out)s)"
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance_overtime_ruleset.py:0
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopie)"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -164,6 +164,9 @@ msgid ""
 "                                    <span class=\"o_stat_text\">Employees</"
 "span>"
 msgstr ""
+"<span class=\"o_stat_text\">Werknemers</span>\n"
+"                                   <span class=\"o_stat_value\">toevoegen</"
+"span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
@@ -221,12 +224,12 @@ msgstr "Actieve werknemers"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_version_list_view_enhanced_hr_attendance_add
 msgid "Add"
-msgstr ""
+msgstr "Toevoegen"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_version_list_view_enhanced_hr_attendance
 msgid "Add Employees"
-msgstr ""
+msgstr "Werknemers toevoegen"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -367,7 +370,7 @@ msgstr "Aanwezigheidsgoedkeurder"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Attendance Error"
-msgstr ""
+msgstr "Aanwezigheidsfout"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_from_systray
@@ -740,7 +743,7 @@ msgstr "Sluit een RFID-lezer aan en scan een token."
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Connection lost. Check in/out could not be recorded."
-msgstr ""
+msgstr "Verbinding verbroken. In-/uitchecken kon niet worden geregistreerd."
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime_ruleset__rate_combination_mode
@@ -905,6 +908,8 @@ msgid ""
 "Do not have access, user cannot edit the attendances that are not their own "
 "or if they are not the attendance manager of the employee."
 msgstr ""
+"Geen toegang, gebruiker kan de aanwezigheden die niet van hemzelf zijn niet "
+"bewerken, of als hij niet de aanwezigheidsbeheerder van de werknemer is."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
@@ -1283,6 +1288,8 @@ msgid ""
 "Invalid domain, use 'name' and/or 'department_id' fields with '=' and/or "
 "'ilike' operators."
 msgstr ""
+"Ongeldig domein, gebruik de velden 'name' en/of 'department_id' met de "
+"operatoren '=' en/of 'ilike'."
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1394,12 +1401,12 @@ msgstr "Demodata laden"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Location (In)"
-msgstr ""
+msgstr "Locatie (In)"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Location (Out)"
-msgstr ""
+msgstr "Locatie (Uit)"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_longitude
@@ -1532,7 +1539,7 @@ msgstr "Nieuwe instelling (werknemer/badge)"
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_version_list_view
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_version_list_view_add
 msgid "No Records."
-msgstr ""
+msgstr "Geen records."
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1558,7 +1565,7 @@ msgstr "Geen werknemer die overeenkomt met badge-ID '%(barcode)s.'"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Now"
-msgstr ""
+msgstr "Nu"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_needaction_counter
@@ -1790,7 +1797,7 @@ msgstr "Afdrukken"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Proceed Anyway"
-msgstr ""
+msgstr "Verdergaan"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
@@ -1832,7 +1839,7 @@ msgstr "RFID/badgenummer"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__amount_rate
 msgid "Rate"
-msgstr "Tarief"
+msgstr "Hoeveel"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__rate_combination_mode
@@ -1897,7 +1904,7 @@ msgstr "Overturen opnieuw genereren voor deze regelset"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_version_list_view_enhanced_hr_attendance
 msgid "Remove"
-msgstr ""
+msgstr "Verwijderen"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_reporting
@@ -2173,12 +2180,12 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_version_list_view
 msgid "There are no employees assigned to this overtime ruleset."
-msgstr ""
+msgstr "Er zijn geen werknemers toegewezen aan deze regelset voor overuren."
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_version_list_view_add
 msgid "There are no employees without an overtime ruleset."
-msgstr ""
+msgstr "Er zijn geen werknemers zonder een regelset voor overuren."
 
 #. module: hr_attendance
 #. odoo-python
@@ -2242,7 +2249,7 @@ msgstr "Vandaag"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__today_attendance_ids
 msgid "Today Attendance"
-msgstr ""
+msgstr "Aanwezigheid vandaag"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_company_threshold
@@ -2300,6 +2307,7 @@ msgid ""
 "Unable to get a valid location. Do you want to proceed with your check-in/"
 "out anyway?"
 msgstr ""
+"Kan geen geldige locatie vinden. Wil je toch doorgaan met in- of uitchecken?"
 
 #. module: hr_attendance
 #. odoo-python
@@ -2342,12 +2350,12 @@ msgstr "Validatiefout"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__version_ids
 msgid "Version"
-msgstr ""
+msgstr "Versie"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__versions_count
 msgid "Versions Count"
-msgstr ""
+msgstr "Aantal versies"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
@@ -2379,13 +2387,13 @@ msgstr "Welkom"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Welcome back"
-msgstr ""
+msgstr "Welkom terug"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Welcome,"
-msgstr ""
+msgstr "Welkom,"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__timing_type__leave
@@ -2437,7 +2445,7 @@ msgstr "Gewerkte uren deze maand"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_version_search_view_enhanced_hr_attendance
 msgid "Working Hours"
-msgstr ""
+msgstr "Werkuren"
 
 #. module: hr_attendance
 #. odoo-javascript

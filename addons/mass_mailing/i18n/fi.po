@@ -34,17 +34,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
-"PO-Revision-Date: 2026-01-15 21:51+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
+"PO-Revision-Date: 2026-04-04 12:54+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-2/"
 "mass_mailing/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -588,15 +588,15 @@ msgstr "<i class=\"oi oi-arrow-right\"></i> Määritä kieltäytymisen syyt"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
-"contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
+"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
 "                                                    To track replies, this "
 "address must belong to this database.\n"
 "                                                </small>"
 msgstr ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
-"contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
+"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
 "                                                    Jotta vastauksia voidaan "
 "seurata, osoitteen on kuuluttava tähän tietokantaan.\n"
 "                                                </small>"
@@ -1488,9 +1488,15 @@ msgid ""
 "visible in any case to allow leads and partners to re-subscribe."
 msgstr ""
 "Anna vastaanottajan hallita itse mustalla listalla oloaan tilauksen "
-"peruuttamissivun kautta. Jos vaihtoehto on aktiivinen, 'Mustalle listalle' -"
-"painike on piilotettu tilauksen peruutussivulla. Tule takaisin -painike on "
+"peruuttamissivun kautta. Jos vaihtoehto on aktiivinen, 'Mustalle listalle' "
+"-painike on piilotettu tilauksen peruutussivulla. Tule takaisin -painike on "
 "aina näkyvissä, jotta liidit ja partnerit voivat tilata uudelleen."
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+msgid "Alright, let's send this mailing"
+msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1774,11 +1780,11 @@ msgstr "Estoluettelon poistopyyntö portaalista"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist removal request from portal of mailing %(mailing_link)s (document "
-"%(record_link)s)"
+"Blocklist removal request from portal of mailing %(mailing_link)s (document %"
+"(record_link)s)"
 msgstr ""
-"Estoluettelon poistopyyntö postiportaalista %(mailing_link)s (asiakirja "
-"%(record_link)s)"
+"Estoluettelon poistopyyntö postiportaalista %(mailing_link)s (asiakirja %"
+"(record_link)s)"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1790,8 +1796,8 @@ msgstr "Estolistapyyntö portaalista"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist request from portal of mailing %(mailing_link)s (document "
-"%(record_link)s)"
+"Blocklist request from portal of mailing %(mailing_link)s (document %"
+"(record_link)s)"
 msgstr ""
 "Postiportaalin %(mailing_link)s (asiakirja %(record_link)s) estolistapyyntö"
 
@@ -2102,15 +2108,17 @@ msgid "Chief Technical Officer"
 msgstr "CTO"
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+#, fuzzy
+#| msgid "Choose this <b>theme</b>."
+msgid "Choose a <b>template</b>."
+msgstr "Valitse tämä <b>teema</b>."
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
 msgid "Choose a date"
 msgstr "Valitse päivämäärä"
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
-msgid "Choose this <b>theme</b>."
-msgstr "Valitse tämä <b>teema</b>."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2131,19 +2139,23 @@ msgid ""
 "Classic pizza with fresh mozzarella, San Marzano tomatoes, and basil leaves, "
 "drizzled with extra virgin olive oil."
 msgstr ""
-"Klassinen pizza, jonka päällä on tuoretta mozzarellaa, San Marzano -"
-"tomaatteja ja basilikanlehtiä, viimeisteltynä ekstra-neitsytoliiviöljyllä."
+"Klassinen pizza, jonka päällä on tuoretta mozzarellaa, San Marzano "
+"-tomaatteja ja basilikanlehtiä, viimeisteltynä ekstra-neitsytoliiviöljyllä."
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
-msgid "Click on this button to add this mailing to your templates."
+#, fuzzy
+#| msgid "Click on this button to add this mailing to your templates."
+msgid "Click on the star to add this mailing to your templates."
 msgstr "Napsauta tätä painiketta lisätäksesi tämän postituksen malleihisi."
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
-msgid "Click on this paragraph to edit it."
+#, fuzzy
+#| msgid "Click on this paragraph to edit it."
+msgid "Click on this block to edit it."
 msgstr "Klikkaa tätä kappaletta muokataksesi sitä."
 
 #. module: mass_mailing
@@ -3105,7 +3117,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_showcase
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_showcase
 msgid "Features showcase"
-msgstr "Esittely-toiminto"
+msgstr "Ominaisuuksien esittely"
 
 #. module: mass_mailing
 #. odoo-python
@@ -5516,6 +5528,13 @@ msgid "Select a list..."
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
+#, fuzzy
+#| msgid "Select a Target Model..."
+msgid "Select a record"
+msgstr "Valitse kohdemalli..."
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
 msgid "Select and delete blocks to remove features."
 msgstr "Valitse ja poista lohkoja poistaaksesi ominaisuuksia."
@@ -6720,8 +6739,8 @@ msgstr ""
 "suodattamiseksi.\n"
 "                Voit tallentaa samat kriteerit myöhempää käyttöä varten "
 "lisäämällä ne suosikkiluetteloon\n"
-"                klikkaamalla <i class=\"fa fa-floppy-o text-warning\"></i> -"
-"kuvaketta \"Vastaanottajat\" -kohdan vieressä."
+"                klikkaamalla <i class=\"fa fa-floppy-o text-warning\"></i> "
+"-kuvaketta \"Vastaanottajat\" -kohdan vieressä."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_link_list

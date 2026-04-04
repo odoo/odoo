@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:36+0000\n"
+"POT-Creation-Date: 2026-04-03 18:38+0000\n"
 "PO-Revision-Date: 2025-10-08 18:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -432,34 +432,6 @@ msgstr "To‘lanadigan vaqt"
 #, fuzzy
 msgid "Billable Type"
 msgstr "To‘lov turi"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__08_billable_manual
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__08_billable_manual
-#, fuzzy
-msgid "Billed Manually"
-msgstr "Qo‘lda hisoblangan"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__02_billable_fixed
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__02_billable_fixed
-#, fuzzy
-msgid "Billed at a Fixed price"
-msgstr "Belgilangan narxda hisoblangan"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__06_billable_milestones
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__06_billable_milestones
-#, fuzzy
-msgid "Billed on Milestones"
-msgstr "Bosqichlar bo‘yicha hisoblangan"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__04_billable_time
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__04_billable_time
-#, fuzzy
-msgid "Billed on Timesheets"
-msgstr "Vaqt jadvallari asosida hisoblangan"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -940,6 +912,11 @@ msgid "Milestone services"
 msgstr "Bosqichli xizmatlar"
 
 #. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_search
+msgid "Mine"
+msgstr ""
+
+#. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
@@ -1022,8 +999,6 @@ msgstr ""
 "Korxona jarayonlarida vaqt yo‘qotish yo‘q, haqiqiy mas'uliyat va mustaqillik"
 
 #. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__09_non_billable
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__09_non_billable
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 #, fuzzy
 msgid "Non-Billable"
@@ -1246,23 +1221,24 @@ msgstr "Majburiyatlar"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__01_revenues_fixed
-msgid "Revenues Fixed Price"
+msgid "Revenues (Fixed Price)"
 msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__07_revenues_manual
-msgid "Revenues Manual"
+msgid "Revenues (Manual)"
 msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__05_revenues_milestones
-msgid "Revenues Milestones"
-msgstr ""
+#, fuzzy
+msgid "Revenues (Milestones)"
+msgstr "Oshxonani yig‘ish (bosqichlar)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__03_timesheet_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__03_timesheet_revenues
-msgid "Revenues Timesheets"
+msgid "Revenues (Time & Material)"
 msgstr ""
 
 #. module: sale_timesheet
@@ -1591,6 +1567,13 @@ msgid "Timesheet"
 msgstr "Vaqt jadvali"
 
 #. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__02_billable_fixed
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__02_billable_fixed
+#, fuzzy
+msgid "Timesheet (Fixed price)"
+msgstr "Vaqt jadvali hisoboti"
+
+#. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 #, fuzzy
 msgid "Timesheet Activities"
@@ -1645,6 +1628,13 @@ msgstr "Vaqt jadvalining umumiy davomiyligi"
 #, fuzzy
 msgid "Timesheets"
 msgstr "Vaqt jadvallari"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__09_non_billable
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__09_non_billable
+#, fuzzy
+msgid "Timesheets (Non-Billable)"
+msgstr "To‘lanmaydigan"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
@@ -1706,6 +1696,26 @@ msgstr "Vaqtingizni hisoblashda hisobga olinadigan vaqt jadvallari"
 #, fuzzy
 msgid "Timesheets taken when invoicing time spent"
 msgstr "Sarflangan vaqtni hisoblashda olinadigan vaqt jadvallari"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__08_billable_manual
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__08_billable_manual
+#, fuzzy
+msgid "Timesheets (Manual) "
+msgstr "Vaqt jadvallari tahlili"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__06_billable_milestones
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__06_billable_milestones
+#, fuzzy
+msgid "Timesheets (Milestones)"
+msgstr "Vaqt jadvali daromadlari"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__04_billable_time
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__04_billable_time
+msgid "Timesheets (Time & Materials)"
+msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_list_inherited
@@ -1889,3 +1899,19 @@ msgstr "project_id"
 #, fuzzy
 msgid "remaining"
 msgstr "qoldiq"
+
+#, fuzzy
+#~ msgid "Billed Manually"
+#~ msgstr "Qo‘lda hisoblangan"
+
+#, fuzzy
+#~ msgid "Billed at a Fixed price"
+#~ msgstr "Belgilangan narxda hisoblangan"
+
+#, fuzzy
+#~ msgid "Billed on Milestones"
+#~ msgstr "Bosqichlar bo‘yicha hisoblangan"
+
+#, fuzzy
+#~ msgid "Billed on Timesheets"
+#~ msgstr "Vaqt jadvallari asosida hisoblangan"

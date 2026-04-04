@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:35+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
 "PO-Revision-Date: 2026-03-17 15:48+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -9387,6 +9387,11 @@ msgid "For percent enter a ratio between 0-100."
 msgstr "للنسبة المئوية أدخل نسبة بين 0-100."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
+msgid "For the Last 365 Days"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "For this entry to be automatically posted, it required a bill date."
@@ -12007,6 +12012,8 @@ msgid "Leave empty to create new"
 msgstr "اتركه فارغاً لإنشاء واحد جديد"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_group_id
 #: model:ir.model.fields,field_description:account.field_account_journal__journal_group_id
 #: model:ir.model.fields,field_description:account.field_account_move__journal_group_id
@@ -12183,6 +12190,8 @@ msgid "Loans Digitization"
 msgstr "رقمنة القروض"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Local Gaap"
 msgstr ""
@@ -15743,11 +15752,6 @@ msgstr "المتبقي بالعملة (في التاريخ)"
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_user_id
 msgid "Responsible User"
 msgstr "المستخدم المسؤول"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_tax__tax_scope
-msgid "Restrict the use of taxes to a type of product."
-msgstr "قم بتقييد استخدام الضرائب لنوع معين من المنتجات."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -22352,6 +22356,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} الفاتورة الذاتية (المرجع {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "Restrict the use of taxes to a type of product."
+#~ msgstr "قم بتقييد استخدام الضرائب لنوع معين من المنتجات."
 
 #~ msgid "(*) Goods Delivered not Invoiced (perpetual valuation)"
 #~ msgstr "(*) البضائع المسلّمة غير المفوترة (تقييم دائم)"

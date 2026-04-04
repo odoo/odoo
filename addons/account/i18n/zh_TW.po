@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:35+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
 "PO-Revision-Date: 2026-03-19 08:36+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -8831,6 +8831,11 @@ msgid "For percent enter a ratio between 0-100."
 msgstr "輸入一個從0-100的百分比."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
+msgid "For the Last 365 Days"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "For this entry to be automatically posted, it required a bill date."
@@ -11398,6 +11403,8 @@ msgid "Leave empty to create new"
 msgstr "留空以建立新一項"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_group_id
 #: model:ir.model.fields,field_description:account.field_account_journal__journal_group_id
 #: model:ir.model.fields,field_description:account.field_account_move__journal_group_id
@@ -11571,6 +11578,8 @@ msgid "Loans Digitization"
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Local Gaap"
 msgstr ""
@@ -15079,11 +15088,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_user_id
 msgid "Responsible User"
 msgstr "責任使用者"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_tax__tax_scope
-msgid "Restrict the use of taxes to a type of product."
-msgstr "限制該稅金設定使用在某種產品類型."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -21492,6 +21496,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} 自助開立賬單發票 (參考編號：{{ object.name or "
 "'不適用' }})"
+
+#~ msgid "Restrict the use of taxes to a type of product."
+#~ msgstr "限制該稅金設定使用在某種產品類型."
 
 #~ msgid ""
 #~ "Value for the amount of the writeoff line\n"

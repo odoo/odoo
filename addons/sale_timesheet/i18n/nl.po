@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:36+0000\n"
-"PO-Revision-Date: 2026-03-14 13:04+0000\n"
+"POT-Creation-Date: 2026-04-03 18:38+0000\n"
+"PO-Revision-Date: 2026-04-04 13:02+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-2/"
 "sale_timesheet/nl/>\n"
@@ -224,6 +224,8 @@ msgid ""
 "<span class=\"text-muted\">Timesheets without a sales order item are "
 "reported as</span>"
 msgstr ""
+"<span class=\"text-muted\">Urenstaten zonder een verkooporderitem worden "
+"gerapporteerd als</span>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_rating:sale_timesheet.job_engineer
@@ -376,6 +378,18 @@ msgid ""
 "done\"\n"
 "spirit. To be successful, you will have solid solving problem skills."
 msgstr ""
+"Als werknemer van ons bedrijf werk je <b>samen met elke afdeling\n"
+"om baanbrekende producten te creëren en op de markt te brengen.</b> Kom "
+"werken bij een groeiend bedrijf\n"
+"dat uitstekende arbeidsvoorwaarden biedt, met kansen om te groeien en te "
+"leren\n"
+"van ervaren leiders. We zijn op zoek naar een ervaren en uitzonderlijke\n"
+"werknemer.\n"
+"<br><br>\n"
+"Deze functie is zowel <b>creatief als veeleisend</b>; je moet\n"
+"out-of-the-box kunnen denken. We verwachten dat de kandidaat proactief is en "
+"een \"get it done\"-mentaliteit\n"
+"heeft. Voor deze functie heb je een sterk probleemoplossende vermogen nodig."
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -406,30 +420,6 @@ msgstr "Factureerbare tijd"
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__billable_type
 msgid "Billable Type"
 msgstr "Factureerbaar soort"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__08_billable_manual
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__08_billable_manual
-msgid "Billed Manually"
-msgstr "Handmatig gefactureerd"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__02_billable_fixed
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__02_billable_fixed
-msgid "Billed at a Fixed price"
-msgstr "Gefactureerd met een vaste prijs"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__06_billable_milestones
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__06_billable_milestones
-msgid "Billed on Milestones"
-msgstr "Gefactureerd op mijlpalen"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__04_billable_time
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__04_billable_time
-msgid "Billed on Timesheets"
-msgstr "Gefactureerd op urenstaten"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -852,6 +842,11 @@ msgid "Milestone services"
 msgstr "Mijlpaal diensten"
 
 #. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_search
+msgid "Mine"
+msgstr ""
+
+#. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
@@ -861,17 +856,17 @@ msgstr "Vereist"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_analytic_lines_service_search
 msgid "My Department"
-msgstr ""
+msgstr "Mijn afdeling"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_analytic_lines_service_search
 msgid "My Projects"
-msgstr ""
+msgstr "Mijn projecten"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_analytic_lines_service_search
 msgid "My Team"
-msgstr ""
+msgstr "Mijn team"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -925,8 +920,6 @@ msgstr ""
 "autonomie"
 
 #. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__09_non_billable
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__09_non_billable
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Non-Billable"
 msgstr "Niet factureerbaar"
@@ -959,6 +952,8 @@ msgid ""
 "Notify the salesperson about an upsell opportunity when completed work "
 "exceeds"
 msgstr ""
+"Breng de verkoper op de hoogte van een verkoopkans wanneer het voltooide "
+"werk meer bedraagt dan"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
@@ -993,12 +988,12 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__12_other_costs
 msgid "Other Costs"
-msgstr ""
+msgstr "Andere kosten"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__11_other_revenues
 msgid "Other Revenues"
-msgstr ""
+msgstr "Andere inkomsten"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1122,24 +1117,32 @@ msgstr "Verantwoordelijkheden"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__01_revenues_fixed
-msgid "Revenues Fixed Price"
-msgstr ""
+#, fuzzy
+#| msgid "Revenues Fixed Price"
+msgid "Revenues (Fixed Price)"
+msgstr "Inkomsten Vaste prijs"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__07_revenues_manual
-msgid "Revenues Manual"
-msgstr ""
+#, fuzzy
+#| msgid "Revenues Manual"
+msgid "Revenues (Manual)"
+msgstr "Inkomsten Handmatig"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__05_revenues_milestones
-msgid "Revenues Milestones"
-msgstr ""
+#, fuzzy
+#| msgid "Revenues Milestones"
+msgid "Revenues (Milestones)"
+msgstr "Inkomsten Mijlpalen"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__03_timesheet_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__03_timesheet_revenues
-msgid "Revenues Timesheets"
-msgstr ""
+#, fuzzy
+#| msgid "Revenues Manual"
+msgid "Revenues (Time & Material)"
+msgstr "Inkomsten Handmatig"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
@@ -1427,6 +1430,14 @@ msgid "Timesheet"
 msgstr "Urenstaat"
 
 #. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__02_billable_fixed
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__02_billable_fixed
+#, fuzzy
+#| msgid "Timesheet Report"
+msgid "Timesheet (Fixed price)"
+msgstr "Urenstaatrapport"
+
+#. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Timesheet Activities"
 msgstr "Urenstaat activiteiten"
@@ -1474,6 +1485,14 @@ msgstr "Totale duur urenstaat"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 msgid "Timesheets"
 msgstr "Urenstaten"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__09_non_billable
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__09_non_billable
+#, fuzzy
+#| msgid "Non-Billable"
+msgid "Timesheets (Non-Billable)"
+msgstr "Niet factureerbaar"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
@@ -1526,6 +1545,28 @@ msgstr ""
 #: model:ir.model.fields,help:sale_timesheet.field_res_config_settings__invoice_policy
 msgid "Timesheets taken when invoicing time spent"
 msgstr "Urenstaten genomen bij het factureren van bestede tijd"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__08_billable_manual
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__08_billable_manual
+#, fuzzy
+#| msgid "Timesheets Analysis"
+msgid "Timesheets (Manual) "
+msgstr "Analyse urenstaten"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__06_billable_milestones
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__06_billable_milestones
+#, fuzzy
+#| msgid "Revenues Milestones"
+msgid "Timesheets (Milestones)"
+msgstr "Inkomsten Mijlpalen"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__04_billable_time
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__04_billable_time
+msgid "Timesheets (Time & Materials)"
+msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_list_inherited
@@ -1654,13 +1695,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_timesheet/models/hr_timesheet.py:0
 msgid "You cannot modify timsheets that are already invoiced."
-msgstr ""
+msgstr "Je kunt geen urenstaten wijzigen die al zijn gefactureerd."
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/hr_timesheet.py:0
 msgid "You cannot remove timsheets that are already invoiced."
-msgstr ""
+msgstr "Je kunt geen urenstaten verwijderen die al zijn gefactureerd."
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billing_type__manually
@@ -1681,7 +1722,7 @@ msgstr "niet factureerbaar"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
 msgid "of the hours sold."
-msgstr ""
+msgstr "van de verkochte uren."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1694,6 +1735,21 @@ msgstr "project_id"
 #: code:addons/sale_timesheet/models/sale_order_line.py:0
 msgid "remaining"
 msgstr "resterend"
+
+#~ msgid "Billed Manually"
+#~ msgstr "Handmatig gefactureerd"
+
+#~ msgid "Billed at a Fixed price"
+#~ msgstr "Gefactureerd met een vaste prijs"
+
+#~ msgid "Billed on Milestones"
+#~ msgstr "Gefactureerd op mijlpalen"
+
+#~ msgid "Billed on Timesheets"
+#~ msgstr "Gefactureerd op urenstaten"
+
+#~ msgid "Revenues Timesheets"
+#~ msgstr "Inkomsten Urenstaten"
 
 #~ msgid "Timesheets without a sales order item are reported as"
 #~ msgstr "Urenstaten zonder verkooporderitem worden gerapporteerd als"

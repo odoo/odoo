@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-13 18:35+0000\n"
-"PO-Revision-Date: 2026-03-17 12:34+0000\n"
+"PO-Revision-Date: 2026-04-04 13:01+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-2/purchase/pt_BR/>\n"
@@ -2194,7 +2194,7 @@ msgstr "Prazo do pedido"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Order Deadline: Last 365 Days"
-msgstr ""
+msgstr "Prazo do pedido: Últimos 365 dias"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__order_line
@@ -2228,7 +2228,7 @@ msgstr "Prazo do pedido %(date)s"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Other Info"
-msgstr ""
+msgstr "Outras informações"
 
 #. module: purchase
 #: model:portal.entry,name:purchase.portal_purchase_orders
@@ -2238,12 +2238,12 @@ msgstr "Nossos pedidos"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__parent_id
 msgid "Parent Section Line"
-msgstr ""
+msgstr "Linha da seção principal"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__partial
 msgid "Partially Received"
-msgstr ""
+msgstr "Recebido parcialmente"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__partner_id
@@ -2281,7 +2281,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Please select bill lines with the same vendor."
-msgstr ""
+msgstr "Selecione as linhas de fatura com o mesmo fornecedor."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__pol_id
@@ -2410,7 +2410,7 @@ msgstr "Acordos de compra"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_alternative
 msgid "Purchase Alternative"
-msgstr ""
+msgstr "Alternativas de compra"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_amount_untaxed
@@ -2456,7 +2456,7 @@ msgstr "Histórico de compras para %s"
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__purchase_line_warn_msg
 msgid "Purchase Line Warn Msg"
-msgstr ""
+msgstr "Mensagem de aviso da linha de compra"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_line_match
@@ -2638,6 +2638,8 @@ msgid ""
 "Purchased in the last 365 days. Incoming represents confirmed purchase "
 "orders not received or partially received"
 msgstr ""
+"Adquirido nos últimos 365 dias. “Pendentes” representa pedidos de compra "
+"confirmados não recebidos ou recebidos parcialmente"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -2645,6 +2647,8 @@ msgid ""
 "Purchased in the last 365 days. Incoming represents confirmed sales order "
 "not received, or partially received"
 msgstr ""
+"Adquirido nos últimos 365 dias. “Pendentes” representa pedidos de venda "
+"confirmados não recebidos ou recebidos parcialmente"
 
 #. module: purchase
 #. odoo-python
@@ -2773,13 +2777,13 @@ msgstr "E-mail de lembrete de recebimento"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_status
 msgid "Receipt Status"
-msgstr ""
+msgstr "Status do recebimento"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Receive"
-msgstr ""
+msgstr "Receber"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_at_date
@@ -2965,7 +2969,7 @@ msgstr "Selecione um produto ou crie um novo na hora."
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "Select a purchase document"
-msgstr ""
+msgstr "Selecione um documento de compra"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__selected_seller_id
@@ -3001,7 +3005,7 @@ msgstr "Enviar um lembrete automático por e-mail para confirmar a entrega"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_mass_mail
 msgid "Send by mail"
-msgstr ""
+msgstr "Enviar por e-mail"
 
 #. module: purchase
 #. odoo-javascript
@@ -3061,7 +3065,7 @@ msgstr "Mostrar comparação"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__show_receive_button
 msgid "Show Receive Button"
-msgstr ""
+msgstr "Botão Mostrar/Receber"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -3125,12 +3129,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_subsection
 msgid "Subsection"
-msgstr ""
+msgstr "Subseção"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Subsection Name"
-msgstr ""
+msgstr "Nome da subseção"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal
@@ -3224,7 +3228,7 @@ msgstr "Campo técnico para fins de UX."
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__technical_price_unit
 msgid "Technical field for price computation"
-msgstr ""
+msgstr "Campo técnico para cálculo de preço"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__tax_country_id
@@ -3264,7 +3268,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__price_unit_product_uom
 msgid "The Price of one unit of the product's Unit of Measure"
-msgstr ""
+msgstr "O preço de uma unidade da Unidade de Medida do produto"
 
 #. module: purchase
 #. odoo-python
@@ -3273,6 +3277,8 @@ msgid ""
 "The following purchase orders %(invalid_orders) can't be received. Cancelled "
 "all receptions."
 msgstr ""
+"Os seguintes pedidos de compra %(invalid_orders) não foram recebidos. Todos "
+"os recebimentos cancelados."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -3439,7 +3445,7 @@ msgstr "Valor total da compra"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__translated_product_name
 msgid "Translated Product Name"
-msgstr ""
+msgstr "Nome do produto traduzido"
 
 #. module: purchase
 #. odoo-javascript
@@ -3467,6 +3473,8 @@ msgstr ""
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Unable to cancel purchase order(s): %s. You must first unlock them."
 msgstr ""
+"Não é possível cancelar pedidos de compra: %s. Você deve primeiro desbloqueá-"
+"los."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
@@ -3489,7 +3497,7 @@ msgstr "Preço unitário (com desconto)"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit_product_uom
 msgid "Unit Price Product UoM"
-msgstr ""
+msgstr "Preço unitário Unidade de medida do produto"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3511,7 +3519,7 @@ msgstr "Destravar"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Unsupported operator"
-msgstr ""
+msgstr "Operador sem suporte"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
@@ -3802,7 +3810,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "billing"
-msgstr ""
+msgstr "faturamento"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3834,7 +3842,7 @@ msgstr "partner_id"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "purchase"
-msgstr ""
+msgstr "compra"
 
 #. module: purchase
 #. odoo-python
@@ -3868,7 +3876,7 @@ msgstr "para conhecer todas as maneiras de conectar seu software com"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "tracking"
-msgstr ""
+msgstr "rastreamento"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -634,16 +634,16 @@ msgstr "<i class=\"oi oi-arrow-right\"></i> Rad etish sabablarini sozlash"
 #, fuzzy
 msgid ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
-"contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
+"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
 "                                                    To track replies, this "
 "address must belong to this database.\n"
 "                                                </small>"
 msgstr ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
-"contact','res.partner','mailing.list']\">Javoblarni kuzatish uchun bu manzil "
-"ushbu ma'lumotlar bazasiga tegishli bo‘lishi shart.</small>"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
+"['mailing.contact','res.partner','mailing.list']\">Javoblarni kuzatish uchun "
+"bu manzil ushbu ma'lumotlar bazasiga tegishli bo‘lishi shart.</small>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_describing_benefits
@@ -1657,6 +1657,12 @@ msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+msgid "Alright, let's send this mailing"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/masonry_block_template_option.xml:0
 #, fuzzy
 msgid "Alternate Image Text"
@@ -1978,8 +1984,8 @@ msgstr "Portaldan bloklash ro‘yxatini olib tashlash so‘rovi"
 #: code:addons/mass_mailing/controllers/main.py:0
 #, fuzzy
 msgid ""
-"Blocklist removal request from portal of mailing %(mailing_link)s (document "
-"%(record_link)s)"
+"Blocklist removal request from portal of mailing %(mailing_link)s (document %"
+"(record_link)s)"
 msgstr ""
 "%(mailing_link)s xabarining portalidan bloklash ro‘yxatini olib tashlash "
 "so‘rovi (hujjat %(record_link)s)"
@@ -1996,11 +2002,11 @@ msgstr "Portaldan bloklash ro‘yxati so‘rovi"
 #: code:addons/mass_mailing/controllers/main.py:0
 #, fuzzy
 msgid ""
-"Blocklist request from portal of mailing %(mailing_link)s (document "
-"%(record_link)s)"
+"Blocklist request from portal of mailing %(mailing_link)s (document %"
+"(record_link)s)"
 msgstr ""
-"%(mailing_link)s xabarining portalidan bloklash ro‘yxati so‘rovi (hujjat "
-"%(record_link)s)"
+"%(mailing_link)s xabarining portalidan bloklash ro‘yxati so‘rovi (hujjat %"
+"(record_link)s)"
 
 #. module: mass_mailing
 #. odoo-python
@@ -2357,17 +2363,17 @@ msgid "Chief Technical Officer"
 msgstr "Bosh texnik direktor"
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+#, fuzzy
+msgid "Choose a <b>template</b>."
+msgstr "Ushbu <b>mavzuni</b> tanlang."
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
 #, fuzzy
 msgid "Choose a date"
 msgstr "Sanani tanlang"
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
-#, fuzzy
-msgid "Choose this <b>theme</b>."
-msgstr "Ushbu <b>mavzuni</b> tanlang."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2397,14 +2403,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, fuzzy
-msgid "Click on this button to add this mailing to your templates."
+msgid "Click on the star to add this mailing to your templates."
 msgstr "Ushbu xatni andozalaringizga qo‘shish uchun bu tugmani bosing."
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, fuzzy
-msgid "Click on this paragraph to edit it."
+msgid "Click on this block to edit it."
 msgstr "Tahrirlash uchun ushbu paragrafni bosing."
 
 #. module: mass_mailing
@@ -5412,8 +5418,8 @@ msgid ""
 msgstr ""
 "E-mail yuborishda tanlanadigan ixtiyoriy tarjima tili (ISO kodi). Agar "
 "belgilanmasa, asosiy hamkorning tili ishlatiladi. Bu odatda tegishli tilni "
-"ta'minlaydigan to‘ldiruvchi ifoda bo‘lishi kerak, masalan {{ object."
-"partner_id.lang }}."
+"ta'minlaydigan to‘ldiruvchi ifoda bo‘lishi kerak, masalan "
+"{{ object.partner_id.lang }}."
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_subscription_optout_action
@@ -6234,6 +6240,12 @@ msgstr "Maqsadli modelni tanlang..."
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
 msgid "Select a list..."
 msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
+#, fuzzy
+msgid "Select a record"
+msgstr "Maqsadli modelni tanlang..."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid

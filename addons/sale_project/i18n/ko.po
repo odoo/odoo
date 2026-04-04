@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"POT-Creation-Date: 2026-04-03 18:38+0000\n"
 "PO-Revision-Date: 2026-02-28 13:50+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -132,7 +132,9 @@ msgstr ""
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
-msgid "<span class=\"o_stat_text\">Preview</span>"
+#, fuzzy
+#| msgid "<span class=\"o_stat_text\">Preview</span>"
+msgid "<span class=\"o_stat_text\">Customer View</span>"
 msgstr "<span class=\"o_stat_text\">미리 보기</span>"
 
 #. module: sale_project
@@ -153,8 +155,8 @@ msgstr "<span>)</span>"
 msgid ""
 "A project must be defined on the quotation %(order)s or on the form of "
 "products creating a task on order.\n"
-"The following product need a project in which to put its task: "
-"%(product_name)s"
+"The following product need a project in which to put its task: %"
+"(product_name)s"
 msgstr ""
 "프로젝트에 대한 내용은 반드시 견적 %(order)s 또는 주문을 할 때 작업을 생성하"
 "는 품목 양식에서 지정해야 합니다.\n"
@@ -221,26 +223,6 @@ msgstr "청구 가능"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_account_analytic_line__billable_type
 msgid "Billable Type"
-msgstr ""
-
-#. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__08_billable_manual
-msgid "Billed Manually"
-msgstr ""
-
-#. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__02_billable_fixed
-msgid "Billed at a Fixed price"
-msgstr ""
-
-#. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__06_billable_milestones
-msgid "Billed on Milestones"
-msgstr ""
-
-#. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__04_billable_time
-msgid "Billed on Timesheets"
 msgstr ""
 
 #. module: sale_project
@@ -505,11 +487,6 @@ msgid "New project"
 msgstr "신규 프로젝트"
 
 #. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__09_non_billable
-msgid "Non-Billable"
-msgstr "청구 불가"
-
-#. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
@@ -655,22 +632,24 @@ msgstr "견적 서식 명세"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__01_revenues_fixed
-msgid "Revenues Fixed Price"
+msgid "Revenues (Fixed Price)"
 msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__07_revenues_manual
-msgid "Revenues Manual"
+msgid "Revenues (Manual)"
 msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__05_revenues_milestones
-msgid "Revenues Milestones"
-msgstr ""
+#, fuzzy
+#| msgid "Based on Milestones"
+msgid "Revenues (Milestones)"
+msgstr "마일스톤 기준"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__03_timesheet_revenues
-msgid "Revenues Timesheets"
+msgid "Revenues (Time & Material)"
 msgstr ""
 
 #. module: sale_project
@@ -687,6 +666,13 @@ msgstr "판매 및 청구서 발행"
 #: model:ir.model,name:sale_project.model_sale_report
 msgid "Sales Analysis Report"
 msgstr "판매 분석 보고서"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+#, fuzzy
+#| msgid "Sales Order Items"
+msgid "Sales Items"
+msgstr "판매 주문 항목"
 
 #. module: sale_project
 #. odoo-python
@@ -742,7 +728,6 @@ msgstr ""
 #: code:addons/sale_project/models/project_project.py:0
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_order_items
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_order_items_dashboard
-#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales Order Items"
 msgstr "판매 주문 항목"
 
@@ -900,6 +885,33 @@ msgstr ""
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "This task has been created from: %(order_link)s (%(product_name)s)"
 msgstr "이 작업은 다음에서 생성되었습니다: %(order_link)s (%(product_name)s)"
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__02_billable_fixed
+msgid "Timesheet (Fixed price)"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__09_non_billable
+#, fuzzy
+#| msgid "Non-Billable"
+msgid "Timesheets (Non-Billable)"
+msgstr "청구 불가"
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__08_billable_manual
+msgid "Timesheets (Manual) "
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__06_billable_milestones
+msgid "Timesheets (Milestones)"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__04_billable_time
+msgid "Timesheets (Time & Materials)"
+msgstr ""
 
 #. module: sale_project
 #. odoo-python

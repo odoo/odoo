@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"POT-Creation-Date: 2026-04-03 18:38+0000\n"
 "PO-Revision-Date: 2026-03-14 12:49+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -73,6 +73,11 @@ msgid "49-098-576 or 49098576"
 msgstr "49-098-576 oder 49098576"
 
 #. module: base_vat
+#: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
+msgid "Base VAT: Sync updates from IAP VIES"
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
@@ -118,12 +123,6 @@ msgstr "DE123456788 oder 12/345/67890"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "Error while checking the VAT number '%s' against the VIES service."
-msgstr "Fehler beim Abgleich der USt-IdNr. „%s“ mit dem MIAS-Dienst."
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
@@ -201,6 +200,12 @@ msgstr "Innergemeinschaft gültig"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "Invalid IAP VIES endpoint"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 msgid "Note: the expected format is %(expected_format)s"
 msgstr "Hinweis: Das erwartete Format ist %(expected_format)s"
 
@@ -220,11 +225,11 @@ msgstr "USt-IdNr."
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. "
-"%(expected_note)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
+"(expected_note)s"
 msgstr ""
-"Die %(vat_label)s-Nummer [%(wrong_vat)s] scheint nicht gültig zu sein. "
-"%(expected_note)s"
+"Die %(vat_label)s-Nummer [%(wrong_vat)s] scheint nicht gültig zu sein. %"
+"(expected_note)s"
 
 #. module: base_vat
 #. odoo-python
@@ -237,6 +242,12 @@ msgstr ""
 "gültig zu sein. %(expected_note)s"
 
 #. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The Intra-Community validity has been updated."
+msgstr ""
+
+#. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vat
 #: model:ir.model.fields,help:base_vat.field_res_users__vat
 msgid ""
@@ -247,6 +258,18 @@ msgstr ""
 "Die Steueridentifikationsnummer. Die Werte hier werden auf der Grundlage des "
 "Länderformats validiert. Sie können „/“ verwenden, um anzuzeigen, dass der "
 "Partner nicht steuerpflichtig ist."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check failed. Please check the Tax ID manually."
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check is pending. The status will be updated soon."
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -292,3 +315,6 @@ msgstr "entweder 11 Ziffern für CPF oder 14 Ziffern für CNPJ"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "Partner [%s]"
+
+#~ msgid "Error while checking the VAT number '%s' against the VIES service."
+#~ msgstr "Fehler beim Abgleich der USt-IdNr. „%s“ mit dem MIAS-Dienst."

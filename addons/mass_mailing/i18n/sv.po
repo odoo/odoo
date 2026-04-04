@@ -28,17 +28,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
-"PO-Revision-Date: 2026-01-15 20:33+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
+"PO-Revision-Date: 2026-04-04 12:58+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
-"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-2/"
 "mass_mailing/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -569,15 +569,15 @@ msgstr "<i class=\"oi oi-arrow-right\"></i> Konfigurera skäl för borttagning"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
-"contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
+"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
 "                                                    To track replies, this "
 "address must belong to this database.\n"
 "                                                </small>"
 msgstr ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
-"contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
+"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
 "                                                    För att spåra svar måste "
 "denna adress tillhöra denna databas.\n"
 "                                                </small>"
@@ -1473,6 +1473,12 @@ msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+msgid "Alright, let's send this mailing"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/masonry_block_template_option.xml:0
 msgid "Alternate Image Text"
 msgstr "Alternativ bildtext"
@@ -1753,11 +1759,11 @@ msgstr "Begäran om borttagning av blocklista från portal"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist removal request from portal of mailing %(mailing_link)s (document "
-"%(record_link)s)"
+"Blocklist removal request from portal of mailing %(mailing_link)s (document %"
+"(record_link)s)"
 msgstr ""
-"Begäran om borttagning av blocklista från portalen för utskick "
-"%(mailing_link)s (dokument %(record_link)s)"
+"Begäran om borttagning av blocklista från portalen för utskick %"
+"(mailing_link)s (dokument %(record_link)s)"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1769,11 +1775,11 @@ msgstr "Begäran om blocklista från portal"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist request from portal of mailing %(mailing_link)s (document "
-"%(record_link)s)"
+"Blocklist request from portal of mailing %(mailing_link)s (document %"
+"(record_link)s)"
 msgstr ""
-"Begäran om blocklista från portalen för utskick %(mailing_link)s (dokument "
-"%(record_link)s)"
+"Begäran om blocklista från portalen för utskick %(mailing_link)s (dokument %"
+"(record_link)s)"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1782,8 +1788,8 @@ msgid ""
 "Blocklist request from unsubscribe link of mailing %(mailing_link)s (direct "
 "link usage)"
 msgstr ""
-"Begäran om blocklista från avregistreringslänk i e-postutskick "
-"%(mailing_link)s (användning av direktlänk)"
+"Begäran om blocklista från avregistreringslänk i e-postutskick %"
+"(mailing_link)s (användning av direktlänk)"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1792,8 +1798,8 @@ msgid ""
 "Blocklist request from unsubscribe link of mailing %(mailing_link)s "
 "(document %(record_link)s)"
 msgstr ""
-"Begäran om blocklista från avregistreringslänk i e-postutskick "
-"%(mailing_link)s (dokument %(record_link)s)"
+"Begäran om blocklista från avregistreringslänk i e-postutskick %"
+"(mailing_link)s (dokument %(record_link)s)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -2084,15 +2090,17 @@ msgid "Chief Technical Officer"
 msgstr "Chief Technical Officer"
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+#, fuzzy
+#| msgid "Choose this <b>theme</b>."
+msgid "Choose a <b>template</b>."
+msgstr "Välj detta <b>tema</b>."
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
 msgid "Choose a date"
 msgstr "Välj ett datum"
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
-msgid "Choose this <b>theme</b>."
-msgstr "Välj detta <b>tema</b>."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2119,13 +2127,17 @@ msgstr ""
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
-msgid "Click on this button to add this mailing to your templates."
+#, fuzzy
+#| msgid "Click on this button to add this mailing to your templates."
+msgid "Click on the star to add this mailing to your templates."
 msgstr "Klicka på denna knapp för att lägga till detta utskick i dina mallar."
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
-msgid "Click on this paragraph to edit it."
+#, fuzzy
+#| msgid "Click on this paragraph to edit it."
+msgid "Click on this block to edit it."
 msgstr "Klicka på detta stycke för att redigera det."
 
 #. module: mass_mailing
@@ -4773,8 +4785,8 @@ msgid ""
 msgstr ""
 "Valfritt översättningsspråk (ISO-kod) att välja när ett e-postmeddelande "
 "skickas ut. Om det inte anges kommer huvudpartnerns språk att användas. "
-"Detta bör vanligtvis vara ett platshållaruttryck som anger lämpligt språk, t."
-"ex. {{ object.partner_id.lang }}."
+"Detta bör vanligtvis vara ett platshållaruttryck som anger lämpligt språk, "
+"t.ex. {{ object.partner_id.lang }}."
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_subscription_optout_action
@@ -5495,6 +5507,13 @@ msgstr "Välj en målmodell..."
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
 msgid "Select a list..."
 msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
+#, fuzzy
+#| msgid "Select a Target Model..."
+msgid "Select a record"
+msgstr "Välj en målmodell..."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid

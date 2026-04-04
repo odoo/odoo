@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"POT-Creation-Date: 2026-04-03 18:38+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -77,6 +77,11 @@ msgid "49-098-576 or 49098576"
 msgstr "49-098-576 yoki 49098576"
 
 #. module: base_vat
+#: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
+msgid "Base VAT: Sync updates from IAP VIES"
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, fuzzy
@@ -129,12 +134,6 @@ msgstr "DE123456788 yoki 12/345/67890"
 #, fuzzy
 msgid "Display Name"
 msgstr "Ko‘rsatiladigan nom"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "Error while checking the VAT number '%s' against the VIES service."
-msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
@@ -218,6 +217,12 @@ msgstr "Hamjamiyat ichida amal qiluvchi"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "Invalid IAP VIES endpoint"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 #, fuzzy
 msgid "Note: the expected format is %(expected_format)s"
 msgstr "Eslatma: kutilayotgan format: %(expected_format)s"
@@ -241,8 +246,8 @@ msgstr "Soliq ID"
 #: code:addons/base_vat/models/res_partner.py:0
 #, fuzzy
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. "
-"%(expected_note)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
+"(expected_note)s"
 msgstr ""
 "%(vat_label)s raqami [%(wrong_vat)s] to‘g‘ri ko‘rinmaydi. %(expected_note)s"
 
@@ -258,6 +263,12 @@ msgstr ""
 "ko‘rinmaydi. %(expected_note)s"
 
 #. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The Intra-Community validity has been updated."
+msgstr ""
+
+#. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vat
 #: model:ir.model.fields,help:base_vat.field_res_users__vat
 #, fuzzy
@@ -269,6 +280,18 @@ msgstr ""
 "Soliq identifikatsiya raqami. Bu yerda kiritilgan qiymatlar davlat formatiga "
 "asosan tekshiriladi. Hamkor soliqqa tortilmasligini ko‘rsatish uchun '/' "
 "belgisidan foydalanishingiz mumkin."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check failed. Please check the Tax ID manually."
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check is pending. The status will be updated soon."
+msgstr ""
 
 #. module: base_vat
 #. odoo-python

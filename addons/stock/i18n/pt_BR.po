@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-13 18:35+0000\n"
-"PO-Revision-Date: 2026-03-17 12:35+0000\n"
+"PO-Revision-Date: 2026-04-04 13:09+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-2/stock/pt_BR/>\n"
@@ -1968,6 +1968,8 @@ msgid ""
 "Can't move a container having packages in another location (%"
 "(old_location)s) to a different location (%(new_location)s)."
 msgstr ""
+"Não é possível mover um contêiner com pacotes em outro local (%(old_location)"
+"s) para um local diferente (%(new_location)s)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -2125,7 +2127,7 @@ msgstr "Escolha o tipo de etiquetas a serem impressas"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Choose Warehouses"
-msgstr ""
+msgstr "Escolher armazéns"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__inventory_datetime
@@ -2341,6 +2343,10 @@ msgid ""
 "delays, or trigger it just-in-time\n"
 "                                ('0 days') to avoid overstocking."
 msgstr ""
+"Configure o horizon para acionar regras de reposição mais cedo, a fim de\n"
+"                                ter uma vantagem inicial no reabastecimento "
+"e evitar atrasos, ou acione-as no momento certo\n"
+"                                ('0 dias') para evitar excesso de estoque."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2349,6 +2355,9 @@ msgid ""
 "start on replenishment and avoid delays, or trigger it just-in-time ('0 "
 "days') to avoid overstocking."
 msgstr ""
+"Configure o horizon para acionar regras de reposição mais cedo, a fim de ter "
+"uma vantagem inicial na reposição e evitar atrasos, ou acione-as no momento "
+"certo ('0 dias') para evitar excesso de estoque."
 
 #. module: stock
 #: model:res.company,pay_later_label:stock.res_company_1
@@ -2367,12 +2376,12 @@ msgstr "Confirmar"
 #. module: stock
 #: model:res.company,free_order_label:stock.res_company_1
 msgid "Confirm Order"
-msgstr ""
+msgstr "Confirmar Pedido"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Confirmation Email"
-msgstr ""
+msgstr "E-mail de confirmação"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_conflict
@@ -2412,12 +2421,12 @@ msgstr "Contato"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__child_package_ids
 msgid "Contained Packages"
-msgstr ""
+msgstr "Pacotes contidos"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__contained_quant_ids
 msgid "Contained Quant"
-msgstr ""
+msgstr "Quantidade contida"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__parent_package_id
@@ -2508,7 +2517,7 @@ msgstr "Locais de contrapartida"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_adjustment_name__counting_date
 msgid "Counting Date"
-msgstr ""
+msgstr "Data de contagem"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__partner_country_id
@@ -2855,7 +2864,7 @@ msgstr "Conector DHL Express"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Daily Demand:"
-msgstr ""
+msgstr "Demanda diária:"
 
 #. module: stock
 #. odoo-javascript
@@ -2887,7 +2896,7 @@ msgstr "Data em que a reposição deve ocorrer."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_adjustment_name__counting_date
 msgid "Date at which the resulting moves will be dated."
-msgstr ""
+msgstr "Data em que as mudanças resultantes serão datadas."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__date_done
@@ -2902,6 +2911,10 @@ msgid ""
 "future arrival is expected after the minimum quantity is reached (potential "
 "stockout). Check the Forecast Report."
 msgstr ""
+"Data antes da qual você deve fazer o pedido para evitar ficar abaixo do "
+"mínimo. Se você não tiver nada para pedir enquanto um prazo for encontrado, "
+"pode ser porque uma chegada futura é esperada após a quantidade mínima ser "
+"atingida (possível falta de estoque). Verifique o Relatório de Previsão."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__next_inventory_date
@@ -3005,7 +3018,7 @@ msgstr "Nome padrão de retorno"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__default_stock_location_id
 msgid "Default Stock Location"
-msgstr ""
+msgstr "Localização padrão do estoque"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__reception_steps
@@ -3367,12 +3380,12 @@ msgstr "Endereço de destino "
 #: model:ir.model.fields,field_description:stock.field_stock_package__package_dest_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__parent_dest_id
 msgid "Destination Container"
-msgstr ""
+msgstr "Contêiner de destino"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__parent_dest_name
 msgid "Destination Container Name"
-msgstr ""
+msgstr "Nome do contêiner de destino"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -3419,7 +3432,7 @@ msgstr "Embalagem de destino"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__result_package_dest_name
 msgid "Destination Package Name"
-msgstr ""
+msgstr "Nome do pacote de destino"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -3469,7 +3482,7 @@ msgstr "Diferença"
 #. module: stock
 #: model:ir.model,name:stock.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Resumo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -3656,6 +3669,8 @@ msgstr ""
 msgid ""
 "Dummy field to store procurement values to propagate them to later steps"
 msgstr ""
+"Campo fictício para armazenar valores de aquisição e propagá-los para etapas "
+"posteriores"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__sn_duplicated
@@ -3671,7 +3686,7 @@ msgstr "Dymo"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Earliest Possible Arrival"
-msgstr ""
+msgstr "Chegada o mais cedo possível"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
@@ -3703,7 +3718,7 @@ msgstr "Data efetiva"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__effective_route_id
 msgid "Effective Route"
-msgstr ""
+msgstr "Rota efetiva"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__effective_route_id
@@ -3711,6 +3726,8 @@ msgid ""
 "Either the route set directly or the one computed to be used by this "
 "replenishment"
 msgstr ""
+"Seja a rota definida diretamente ou aquela calculada para ser usada por esta "
+"reposição"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_move_email_validation
@@ -3805,7 +3822,7 @@ msgstr "Exceções:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Exchange"
-msgstr ""
+msgstr "Trocar"
 
 #. module: stock
 #. odoo-javascript
@@ -4089,7 +4106,7 @@ msgstr "Nome completo do local"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__complete_name
 msgid "Full Package Name"
-msgstr ""
+msgstr "Nome completo do pacote"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -4195,12 +4212,12 @@ msgstr "Hardware"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__has_quants
 msgid "Has Contents"
-msgstr ""
+msgstr "Tem conteúdos"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__has_lines_without_result_package
 msgid "Has Lines Without Result Package"
-msgstr ""
+msgstr "Tem linhas sem pacote de resultado"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__has_message
@@ -4446,7 +4463,7 @@ msgstr "Se o mesmo número de série está em outro quant"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_request_count__show_expected_quantity
 msgid "If the user can see the expected quantity or not"
-msgstr ""
+msgstr "Se o usuário consegue ver a quantidade esperada ou não"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_delivery_slip
@@ -4595,6 +4612,8 @@ msgid ""
 "If ticked, packages to move will be directly displayed in Barcode instead of "
 "the products they contain"
 msgstr ""
+"Se marcado, em vez dos produtos que contêm, serão exibidos no Código de "
+"Barras os pacotes a mover"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__set_package_type
@@ -4602,6 +4621,8 @@ msgid ""
 "If ticked, you will be able to select which package or package type to use "
 "in a put in pack"
 msgstr ""
+"Se marcado, você poderá selecionar qual pacote ou tipo de pacote usar em um "
+"put in pack"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__active
@@ -4647,7 +4668,7 @@ msgstr "Modelo de importação para ajustes de estoque"
 #. odoo-python
 #: code:addons/stock/wizard/stock_replenishment_info.py:0
 msgid "In %s day(s)"
-msgstr ""
+msgstr "Em %s dia(s)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
@@ -4935,7 +4956,7 @@ msgstr "Perda de inventário"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Inventory Loss Locations"
-msgstr ""
+msgstr "Locais de perda de inventário"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__inventory_name
@@ -4960,12 +4981,12 @@ msgstr "Motivo do inventário"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_request_count
 msgid "Inventory Request"
-msgstr ""
+msgstr "Solicitação de inventário"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_route
 msgid "Inventory Route"
-msgstr ""
+msgstr "Rota de inventário"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
@@ -4982,7 +5003,7 @@ msgstr "Inventário na data"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_date_editable
 msgid "Is Date Editable"
-msgstr ""
+msgstr "É data editável"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__is_empty
@@ -5015,18 +5036,18 @@ msgstr "É embalagem parcial"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_date_editable
 msgid "Is Scheduled Date Editable"
-msgstr ""
+msgstr "É data agendada editável"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_scrap
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__is_scrap
 msgid "Is Scrap"
-msgstr ""
+msgstr "É sucata"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__is_scrap
 msgid "Is Scrapped"
-msgstr ""
+msgstr "É sucateado"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_signed
@@ -5036,7 +5057,7 @@ msgstr "Está assinado"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__is_entire_pack
 msgid "Is added through entire package"
-msgstr ""
+msgstr "É adicionado em todo o pacote"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_initial_demand_editable
@@ -5082,7 +5103,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__json_popover
 msgid "JSON data for popover widget"
-msgstr ""
+msgstr "Dados JSON para o aplicativo de popover"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__json_popover
@@ -5118,7 +5139,7 @@ msgstr "Popup JSON"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_replenishment_graph
 msgid "Json Replenishment Graph"
-msgstr ""
+msgstr "Gráfico de reposição JSON"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__7
@@ -5170,12 +5191,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_digest_digest__kpi_stock_delivery_count_value
 msgid "Kpi Stock Delivery Count Value"
-msgstr ""
+msgstr "Valor da contagem de entrega de estoque de KPI"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_digest_digest__kpi_stock_receipt_count_value
 msgid "Kpi Stock Receipt Count Value"
-msgstr ""
+msgstr "KPI Valor da contagem de recebimento de estoque"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_print_labels
@@ -5377,12 +5398,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_days
 msgid "Lead Days"
-msgstr ""
+msgstr "Dias de prazo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_horizon_date
 msgid "Lead Horizon Date"
-msgstr ""
+msgstr "Data do horizonte do prazo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__lead_time
@@ -5394,13 +5415,13 @@ msgstr "Prazo de entrega"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Lead Time Information"
-msgstr ""
+msgstr "Informações sobre prazo de entrega"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Lead Time:"
-msgstr ""
+msgstr "Prazo de entrega:"
 
 #. module: stock
 #: model:product.removal,name:stock.removal_least_packages
@@ -5639,7 +5660,7 @@ msgstr "Número de série/lote realocado"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_scrap_move_form
 msgid "Lot/Serial Numbers"
-msgstr ""
+msgstr "Números de Série/Lote"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -5702,7 +5723,7 @@ msgstr "Regra de PSE"
 #: model_terms:ir.ui.view,arch_db:stock.package_history_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_search
 msgid "Main Packages"
-msgstr ""
+msgstr "Pacotes principais"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
@@ -5769,7 +5790,7 @@ msgstr "Março"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Mark as To Do"
-msgstr ""
+msgstr "Marcar como A fazer"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__product_max_qty
@@ -5864,7 +5885,7 @@ msgstr "Mín"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "Min - Max"
-msgstr ""
+msgstr "Mín. - Máx."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_min_qty
@@ -5939,12 +5960,12 @@ msgstr "Mover quantidade"
 #. odoo-javascript
 #: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
 msgid "Move a Pack"
-msgstr ""
+msgstr "Mover um pacote"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_put_in_pack__move_line_ids
 msgid "Move lines"
-msgstr ""
+msgstr "Linhas de Movimentação"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__origin_returned_move_id
@@ -5979,7 +6000,7 @@ msgstr "Rotas com várias etapas"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
 msgid "Multiple"
-msgstr ""
+msgstr "Múltiplos"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_package_type
@@ -5995,7 +6016,7 @@ msgstr "Várias regras de capacidade para um produto."
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
 msgid "Multiple destinations"
-msgstr ""
+msgstr "Vários destinos"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search

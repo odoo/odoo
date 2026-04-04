@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:36+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
 "PO-Revision-Date: 2025-11-16 22:42+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
@@ -44,6 +44,28 @@ msgstr ""
 "        การวางแผน: รายการงานจะถูกสร้างขึ้นจากการวางแผนของพนักงาน "
 "(ต้องใช้แอปการวางแผน)\n"
 "    "
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+msgid ""
+"\n"
+"Cannot insert \"%(insert_name)s\":\n"
+"Work entry type \"%(name)s\" of code \"%(code)s\" already exists for country "
+"\"%(country)s\".\n"
+"                    "
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+msgid ""
+"\n"
+"Cannot insert \"%(insert_name)s\":\n"
+"Work entry type \"%(name)s\" of code \"%(code)s\", with no country assigned, "
+"already exists.\n"
+"                    "
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_adoption_company
@@ -104,6 +126,12 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_adoption_legal
 msgid "Adoption leave and foster parent leave not paid by the employer"
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+msgid "All"
 msgstr ""
 
 #. module: hr_work_entry
@@ -2023,14 +2051,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_work_entry
-#. odoo-python
-#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
-msgid ""
-"The same code cannot be associated to multiple work entry types for the same "
-"company (%s)"
-msgstr ""
-
-#. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__display_code
 msgid ""
 "This code can be changed, it is only for a display purpose (3 letters max)"
@@ -2377,6 +2397,14 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_youth_time_off
 msgid "YSO"
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+msgid ""
+"You cannot create more than one work entry type of code \"%(code)s\" for the "
+"same country (%(country)s)"
 msgstr ""
 
 #. module: hr_work_entry

@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2026-03-17 23:44+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
+"PO-Revision-Date: 2026-04-04 12:48+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-2/account/es_419/>\n"
@@ -9628,6 +9628,11 @@ msgid "For percent enter a ratio between 0-100."
 msgstr "Para el porcentaje, introduzca una razón entre 0-100."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
+msgid "For the Last 365 Days"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "For this entry to be automatically posted, it required a bill date."
@@ -12293,6 +12298,8 @@ msgid "Leave empty to create new"
 msgstr "Dejar en blanco para crear nuevo"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_group_id
 #: model:ir.model.fields,field_description:account.field_account_journal__journal_group_id
 #: model:ir.model.fields,field_description:account.field_account_move__journal_group_id
@@ -12472,6 +12479,8 @@ msgid "Loans Digitization"
 msgstr "Digitalización de préstamos"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Local Gaap"
 msgstr "Normas contables locales"
@@ -16092,11 +16101,6 @@ msgid "Responsible User"
 msgstr "Usuario responsable"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_tax__tax_scope
-msgid "Restrict the use of taxes to a type of product."
-msgstr "Restringir el uso de impuestos a un tipo de producto."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Restricted"
@@ -19657,6 +19661,7 @@ msgid ""
 "There was an error while importing the bill, you can find attached the "
 "incoming XML"
 msgstr ""
+"Ocurrió un error al importar la factura, adjunto encontrarás el XML recibido"
 
 #. module: account
 #. odoo-python
@@ -21808,6 +21813,7 @@ msgid ""
 "You cannot delete taxes that are currently in use. Consider archiving them "
 "instead."
 msgstr ""
+"No puedes eliminar los impuestos que están en uso, considera archivarlos."
 
 #. module: account
 #. odoo-python
@@ -22002,7 +22008,7 @@ msgstr "No puede publicar un asiento en un diario archivado (%(journal)s)"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
-msgstr ""
+msgstr "No puedes registrar un asiento con una cuenta analítica archivada: %s"
 
 #. module: account
 #. odoo-python
@@ -22941,6 +22947,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Factura autofacturada (Referencia "
 "{{ object.name or 'n/a' }})"
+
+#~ msgid "Restrict the use of taxes to a type of product."
+#~ msgstr "Restringir el uso de impuestos a un tipo de producto."
 
 #~ msgid "(*) Goods Delivered not Invoiced (perpetual valuation)"
 #~ msgstr "(*) Bienes entregados y sin facturar (valuación perpetua)"

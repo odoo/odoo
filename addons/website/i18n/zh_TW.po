@@ -14,17 +14,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-02-07 12:41+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
+"PO-Revision-Date: 2026-04-04 13:11+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-1/website/zh_Hant/>\n"
+"projects/odoo-s19-2/website/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
@@ -324,7 +324,7 @@ msgstr "%(error)s（網站：%(website_id)s）"
 #. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 msgid "%(url)s not found"
-msgstr ""
+msgstr "找不到 %(url)s"
 
 #. module: website
 #. odoo-python
@@ -372,7 +372,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
 msgid "' is already in use."
-msgstr ""
+msgstr "\" 已在使用中。"
 
 #. module: website
 #. odoo-javascript
@@ -446,6 +446,35 @@ msgid ""
 "                    }\n"
 "                }"
 msgstr ""
+".headShake {\n"
+"                    animation: headShake 1.3s ease-in-out forwards;\n"
+"                    animation-delay: 0.75s;\n"
+"                }\n"
+"                @keyframes headShake {\n"
+"                    0% {\n"
+"                        transform: translateX(0)\n"
+"                    }\n"
+"\n"
+"                    6.5% {\n"
+"                        transform: translateX(-6px) rotateY(-9deg)\n"
+"                    }\n"
+"\n"
+"                    18.5% {\n"
+"                        transform: translateX(5px) rotateY(7deg)\n"
+"                    }\n"
+"\n"
+"                    31.5% {\n"
+"                        transform: translateX(-3px) rotateY(-5deg)\n"
+"                    }\n"
+"\n"
+"                    43.5% {\n"
+"                        transform: translateX(2px) rotateY(3deg)\n"
+"                    }\n"
+"\n"
+"                    50% {\n"
+"                        transform: translateX(0)\n"
+"                    }\n"
+"                }"
 
 #. module: website
 #: model:website,contact_us_link_url:website.default_website
@@ -508,7 +537,7 @@ msgstr "10 米"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_avatars
 msgid "10+"
-msgstr ""
+msgstr "10+"
 
 #. module: website
 #. odoo-javascript
@@ -618,7 +647,7 @@ msgstr "25%"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega_columns
 msgid "250 Executive Park Blvd, Suite 3400 <br/>San Francisco CA 94134"
-msgstr ""
+msgstr "250 Executive Park Blvd, Suite 3400 <br/>San Francisco CA 94134"
 
 #. module: website
 #. odoo-javascript
@@ -651,7 +680,7 @@ msgstr "首單即減 30%"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_grid_avatars
 msgid "30% off wooden desks"
-msgstr ""
+msgstr "木質書桌七折優惠"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website_page_properties__redirect_type__301
@@ -784,7 +813,7 @@ msgstr "超過 50,000 間公司信賴 Odoo。"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 msgid "50,000+ companies use our services <br/>to grow their businesses."
-msgstr ""
+msgstr "全球超過 5 萬間公司<br/>使用 Odoo 服務去拓展業務。"
 
 #. module: website
 #. odoo-javascript
@@ -813,12 +842,12 @@ msgstr "8 公里"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "8000 Marina Blvd, Suite 300 <br/> Brisbane CA 94005 <br/>United States"
-msgstr ""
+msgstr "8000 Marina Blvd, Suite 300 <br/>Brisbane CA 94005 <br/>United States"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_call_to_action
 msgid "8000 Marina Blvd, Suite 300 • Brisbane CA 94005 • United States"
-msgstr ""
+msgstr "8000 Marina Blvd, Suite 300 • Brisbane CA 94005 • United States"
 
 #. module: website
 #. odoo-javascript
@@ -872,6 +901,8 @@ msgid ""
 "<a class=\"o_translate_inline\" "
 "href=\"mailto:info@yourcompany.example.com\">info@yourcompany.example.com</a>"
 msgstr ""
+"<a class=\"o_translate_inline\" "
+"href=\"mailto:info@yourcompany.example.com\">info@yourcompany.example.com</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_contact_info
@@ -944,11 +975,13 @@ msgstr ""
 msgid ""
 "<a href=\"#\" class=\"o_translate_inline btn btn-primary\">Get in touch</a>"
 msgstr ""
+"<a href=\"#\" class=\"o_translate_inline btn btn-primary\">聯絡我們</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner_categories
 msgid "<a href=\"#\" class=\"o_translate_inline text-reset\">Shop all →</a>"
 msgstr ""
+"<a href=\"#\" class=\"o_translate_inline text-reset\">查看所有商品 →</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_ecomm_categories_showcase
@@ -956,6 +989,8 @@ msgid ""
 "<a href=\"#\" role=\"button\" class=\"btn btn-secondary "
 "o_translate_inline\">View All</a>"
 msgstr ""
+"<a href=\"#\" role=\"button\" class=\"btn btn-secondary o_translate_inline\">"
+"查看所有</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -1064,6 +1099,8 @@ msgid ""
 "<b>My Company</b><br/>8000 Marina Blvd, Suite 300 <br/> Brisbane CA 94005 "
 "<br/>United States"
 msgstr ""
+"<b>My Company</b><br/>8000 Marina Blvd, Suite 300 <br/>Brisbane CA 94005 <br/"
+">United States"
 
 #. module: website
 #. odoo-javascript
@@ -1351,7 +1388,7 @@ msgstr "<i class=\"fa fa-check text-success\" role=\"img\"/> 無限制自訂功�
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_inline_default_template
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_inline_text_template
 msgid "<i class=\"fa fa-clock-o\"/> Sale ends in"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\"/> 優惠只剩餘"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_contact_info
@@ -1408,6 +1445,7 @@ msgid ""
 "<i class=\"fa fa-fw fa-info-circle o_not-animable\" role=\"img\"/> What's "
 "new ?"
 msgstr ""
+"<i class=\"fa fa-fw fa-info-circle o_not-animable\" role=\"img\"/> 最新資訊"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_contact_info
@@ -1979,17 +2017,17 @@ msgstr "<span class=\"fa fa-check-circle-o\"/> 無限制自訂功能"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 msgid "<span class=\"flex-grow-1\">By Bike</span>"
-msgstr ""
+msgstr "<span class=\"flex-grow-1\">踏單車/自行車</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 msgid "<span class=\"flex-grow-1\">By Car</span>"
-msgstr ""
+msgstr "<span class=\"flex-grow-1\">駕車</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 msgid "<span class=\"flex-grow-1\">By Train</span>"
-msgstr ""
+msgstr "<span class=\"flex-grow-1\">乘搭火車</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_accordion
@@ -2094,6 +2132,11 @@ msgid ""
 "                        <strong>New Dashboard Features for Custom Reports</"
 "strong>"
 msgstr ""
+"<span class=\"o_dot o_not_editable position-absolute translate-middle-x "
+"rounded-circle pe-none\" contenteditable=\"false\"/>\n"
+"                        <small class=\"text-muted\">2024 年 4 月 3 日</"
+"small>\n"
+"                        <strong>儀錶板新功能：自訂報表</strong>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_list
@@ -2104,6 +2147,11 @@ msgid ""
 "                        <strong>Improved Security Protocols Implemented</"
 "strong>"
 msgstr ""
+"<span class=\"o_dot o_not_editable position-absolute translate-middle-x "
+"rounded-circle pe-none\" contenteditable=\"false\"/>\n"
+"                        <small class=\"text-muted\">2024 年 8 月 27 日</"
+"small>\n"
+"                        <strong>實施更強的保安協定</strong>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_list
@@ -2113,6 +2161,11 @@ msgid ""
 "                        <small class=\"text-muted\">Dec 22, 2024</small>\n"
 "                        <strong>Advanced Analytics Tools Introduced</strong>"
 msgstr ""
+"<span class=\"o_dot o_not_editable position-absolute translate-middle-x "
+"rounded-circle pe-none\" contenteditable=\"false\"/>\n"
+"                        <small class=\"text-muted\">2024 年 12 月 22 日</"
+"small>\n"
+"                        <strong>引入進階分析工具</strong>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_list
@@ -2123,6 +2176,11 @@ msgid ""
 "                        <strong>Enhanced User Interface for Better "
 "Navigation</strong>"
 msgstr ""
+"<span class=\"o_dot o_not_editable position-absolute translate-middle-x "
+"rounded-circle pe-none\" contenteditable=\"false\"/>\n"
+"                        <small class=\"text-muted\">2024 年 2 月 11 日</"
+"small>\n"
+"                        <strong>操作介面增強，導航及瀏覽體驗更佳</strong>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_list
@@ -2133,6 +2191,11 @@ msgid ""
 "                        <strong>Integrated Multi-Language Support Added</"
 "strong>"
 msgstr ""
+"<span class=\"o_dot o_not_editable position-absolute translate-middle-x "
+"rounded-circle pe-none\" contenteditable=\"false\"/>\n"
+"                        <small class=\"text-muted\">2024 年 6 月 15 日</"
+"small>\n"
+"                        <strong>加入整合式多國語言支援</strong>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_list
@@ -2142,6 +2205,11 @@ msgid ""
 "                        <small class=\"text-muted\">Oct 09, 2024</small>\n"
 "                        <strong>Mobile App Compatibility Expanded</strong>"
 msgstr ""
+"<span class=\"o_dot o_not_editable position-absolute translate-middle-x "
+"rounded-circle pe-none\" contenteditable=\"false\"/>\n"
+"                        <small class=\"text-muted\">2024 年 10 月 9 日</"
+"small>\n"
+"                        <strong>擴展流動應用程式相容性</strong>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_copyright_company_name
@@ -2149,11 +2217,13 @@ msgid ""
 "<span class=\"o_footer_copyright_name me-2 small\">Copyright &amp;copy; "
 "Company name</span>"
 msgstr ""
+"<span class=\"o_footer_copyright_name me-2 small\">版權所有 &amp;copy; 公司名"
+"稱</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "<span class=\"o_force_ltr\">+1 555-555-5556\"</span>"
-msgstr ""
+msgstr "<span class=\"o_force_ltr\">+1 555-555-5556</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -2423,6 +2493,9 @@ msgid ""
 "                                                        <span "
 "class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">訊息 / 查詢內容</span>\n"
+"                                                        <span "
+"class=\"s_website_form_mark\"> *（必填）</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -2592,7 +2665,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_rating
 #: model_terms:ir.ui.view,arch_db:website.s_reviews_wall
 msgid "<strong class=\"s_rating_title\">Rating</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">評分</strong>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_avatars
@@ -2600,6 +2673,8 @@ msgid ""
 "<strong>100+</strong><br/>\n"
 "            Happy customers"
 msgstr ""
+"<strong>100+</strong><br/>\n"
+"            滿意客戶"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_boxed
@@ -3008,7 +3083,7 @@ msgstr "如果訪問者的最後一個網頁檢視是在最後 5 分鐘內，則
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 msgid "ACME Corp"
-msgstr ""
+msgstr "好成功有限公司"
 
 #. module: website
 #. odoo-javascript
@@ -3180,7 +3255,7 @@ msgstr "加入"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 msgid "Add \"%(suggestion)s\""
-msgstr ""
+msgstr "加入「%(suggestion)s」"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
@@ -3195,13 +3270,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
 msgid "Add Avatar"
-msgstr ""
+msgstr "加入頭像"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/floating_blocks/floating_blocks_option.xml:0
 msgid "Add Card"
-msgstr ""
+msgstr "加入卡片"
 
 #. module: website
 #. odoo-javascript
@@ -3280,7 +3355,7 @@ msgstr "新增"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 msgid "Add New Option"
-msgstr ""
+msgstr "新增選項"
 
 #. module: website
 #. odoo-javascript
@@ -3292,7 +3367,7 @@ msgstr "加入新的社交網絡"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Add Other"
-msgstr ""
+msgstr "加入其他"
 
 #. module: website
 #. odoo-javascript
@@ -3323,7 +3398,7 @@ msgstr "新增分頁"
 #. odoo-python
 #: code:addons/website/models/res_config_settings.py:0
 msgid "Add Website"
-msgstr ""
+msgstr "加入網站"
 
 #. module: website
 #. odoo-javascript
@@ -3347,7 +3422,7 @@ msgstr "在導航圖示周圍加入背景"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/background_option.xml:0
 msgid "Add a background video"
-msgstr ""
+msgstr "加入背景影片"
 
 #. module: website
 #. odoo-javascript
@@ -3359,13 +3434,13 @@ msgstr "此處加入描述"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_switcher_systray_item.js:0
 msgid "Add a domain to your website."
-msgstr ""
+msgstr "為你的網站新增網域名稱。"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/new_content_systray_item.js:0
 msgid "Add a live chat widget"
-msgstr ""
+msgstr "加入線上客服小工具"
 
 #. module: website
 #. odoo-javascript
@@ -3389,7 +3464,7 @@ msgstr "在表單最尾加入新欄位"
 #. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor_warning.xml:0
 msgid "Add analytics or marketing tags? Inject code in <head> or <body>."
-msgstr ""
+msgstr "想加入分析功能或推廣標籤？可在 <head> 或 <body> 部份加入程式碼。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3434,7 +3509,7 @@ msgstr "新增頁面範本"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Add predefined error message"
-msgstr ""
+msgstr "加入預先設定的錯誤訊息"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__is_new_page_template
@@ -3465,7 +3540,7 @@ msgstr "新增至選單"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 msgid "Add your keyword"
-msgstr ""
+msgstr "加入關鍵字"
 
 #. module: website
 #. odoo-javascript
@@ -3474,6 +3549,8 @@ msgid ""
 "Add your own title or leave empty to use \"%(defaultTitle)s\". Your page "
 "title should contain max 65 characters."
 msgstr ""
+"你可自己撰寫標題，或留空以使用預設標題：「%(defaultTitle)s」。頁面標題長度上"
+"限為 65 個字元。"
 
 #. module: website
 #. odoo-javascript
@@ -3722,7 +3799,7 @@ msgstr "你需要的所有資訊"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/navtabs_images_style_option.xml:0
 msgid "All items"
-msgstr ""
+msgstr "所有項目"
 
 #. module: website
 #. odoo-javascript
@@ -3762,7 +3839,7 @@ msgstr "允許所有 Cookie"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Allow people to add their own option"
-msgstr ""
+msgstr "允許使用者自行加入選項"
 
 #. module: website
 #. odoo-javascript
@@ -5600,7 +5677,7 @@ msgstr "欄位"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 msgid "Come Visit Us"
-msgstr ""
+msgstr "親臨探訪"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_0_s_cover
@@ -5821,7 +5898,7 @@ msgstr "聯絡我們"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 msgid "Contact us about anything related to our company or services."
-msgstr ""
+msgstr "若對我們公司或服務有任何疑問，歡迎聯絡我們。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -6357,6 +6434,9 @@ msgid ""
 "Geneva Avenue. Head toward Executive Park Blvd, where bike racks are "
 "available at 250 Executive Park Blvd, Suite 3400."
 msgstr ""
+"騎單車朋友可從市中心出發，沿 Bay Trail 一直向南行，然後轉入 Geneva Avenue，前"
+"往 Executive Park Blvd 方向。目的地是 Executive Park Blvd 250 號 3400 單位，"
+"該處設有單車停放架。"
 
 #. module: website
 #. odoo-javascript
@@ -6651,7 +6731,7 @@ msgstr "在這裏輸入附加說明。"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 msgid "Describe your request"
-msgstr ""
+msgstr "請描述你的請求"
 
 #. module: website
 #. odoo-javascript
@@ -6852,7 +6932,7 @@ msgstr "捨棄"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/website_builder.js:0
 msgid "Discard all changes?"
-msgstr ""
+msgstr "放棄所有變更？"
 
 #. module: website
 #. odoo-javascript
@@ -7166,7 +7246,7 @@ msgstr "在網站上顯示此標誌。"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display this website for this web address"
-msgstr ""
+msgstr "為此網址顯示此網站"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -7443,7 +7523,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 msgid "Easy ways to reach us, no matter your favorite transport."
-msgstr ""
+msgstr "任何交通方式，都能輕易到訪。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_text_cover
@@ -8128,7 +8208,7 @@ msgstr "看看我們的<br/>關鍵統計數據"
 #: model_terms:ir.ui.view,arch_db:website.s_discovery
 #: model_terms:ir.ui.view,arch_db:website.s_empowerment
 msgid "Explore <i class=\"fa fa-long-arrow-right\" role=\"img\"/>"
-msgstr ""
+msgstr "探索 <i class=\"fa fa-long-arrow-right\" role=\"img\"/>"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__mode__extension
@@ -8820,6 +8900,9 @@ msgid ""
 "you reach 250 Executive Park Blvd. Parking is available on-site near Suite "
 "3400."
 msgstr ""
+"由三藩市市中心出發，沿 US-101 公路向南行，在 Bayshore Boulevard 出口駛出。左"
+"轉進入 Executive Park Blvd，一直前行至 Executive Park Blvd 250 號。現場設有停"
+"車場，在 3400 單位附近。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_text_image
@@ -9125,6 +9208,7 @@ msgstr "Google Analytics 密鑰"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/theme/theme_advanced_option.xml:0
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Google Map"
 msgstr "Google 地圖"
 
@@ -10124,7 +10208,7 @@ msgstr ""
 msgid ""
 "Improve navigation and hierarchy of site by adding parent page in "
 "breadcrumbs format."
-msgstr ""
+msgstr "在導航麵包屑中加入母級頁面資料，增強網站的導覽表現及層級結構。"
 
 #. module: website
 #. odoo-javascript
@@ -10443,7 +10527,7 @@ msgstr "安裝"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/new_content_systray_item.js:0
 msgid "Install \"%s\""
-msgstr ""
+msgstr "安裝「%s」"
 
 #. module: website
 #: model:ir.model,name:website.model_base_language_install
@@ -10914,7 +10998,7 @@ msgstr "工作"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 msgid "John Doe"
-msgstr ""
+msgstr "Chris Wong / 陳大文"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -12035,7 +12119,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website/models/website_menu.py:0
 msgid "Menus with child menus cannot be added as a submenu."
-msgstr ""
+msgstr "選單若已有子級選單，便不可作為子選單加入。"
 
 #. module: website
 #: model:ir.model,name:website.model_base_partner_merge_automatic_wizard
@@ -13682,7 +13766,7 @@ msgstr "未設定頁面描述。"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 msgid "Page not found"
-msgstr ""
+msgstr "找不到頁面"
 
 #. module: website
 #. odoo-javascript
@@ -15597,7 +15681,7 @@ msgstr "發送電子郵件"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 msgid "Send Message"
-msgstr ""
+msgstr "傳送訊息"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_cover
@@ -15914,7 +15998,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/theme/theme_advanced_option.xml:0
 msgid "Show/Hide the header on all pages"
-msgstr ""
+msgstr "顯示/隱藏所有頁面的頁首"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -16359,7 +16443,7 @@ msgstr "現在開始"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
 msgid "Start Now <span class=\"fa fa-angle-right ms-2\"/>"
-msgstr ""
+msgstr "立即開始使用 <span class=\"fa fa-angle-right ms-2\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_grid_avatars
@@ -16673,6 +16757,9 @@ msgid ""
 "Bayview and get off at Executive Park. The building at 250 Executive Park "
 "Blvd, Suite 3400, is just a short walk from the stop."
 msgstr ""
+"乘搭 BART 地鐵前往 Balboa Park 站，轉乘 29 號巴士前往 Bayview 方向，然後在 "
+"Executive Park 站下車。我們在 Executive Park Blvd 250 號大樓 3400 單位，大樓"
+"距離巴士站只是很短步程。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_closer_look
@@ -16683,7 +16770,7 @@ msgstr "詳細檢視"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/ecomm_categories_showcase_option.xml:0
 msgid "Tall"
-msgstr ""
+msgstr "高"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__target
@@ -18120,6 +18207,10 @@ msgid ""
 "class=\"o_translate_inline\" href=\"https://support.google.com/analytics/"
 "answer/11397207?hl=en\">Analytics cookies and privacy information.</a>"
 msgstr ""
+"利用 Google Analytics（分析），理解訪客如何與我們的網站互動。\n"
+"                                                了解更多關於 <a "
+"class=\"o_translate_inline\" href=\"https://support.google.com/analytics/"
+"answer/11397207?hl=zh-Hant\">Analytics（分析）的 cookie 及私隱權資訊</a>。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quadrant
@@ -18467,7 +18558,7 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 msgid "Vertical and Horizontal padding"
-msgstr ""
+msgstr "垂直及水平內間距"
 
 #. module: website
 #. odoo-javascript
@@ -18650,7 +18741,7 @@ msgstr "訪問我們的 Facebook 頁面，了解您是否是幸運的獲獎者�
 msgid ""
 "Visit us: Our office is located in the northeast of Brussels. TEL (555) 432 "
 "2365"
-msgstr ""
+msgstr "歡迎到訪：我們的辦公室位於布魯塞爾東北部。電話：(555) 432 2365"
 
 #. module: website
 #: model:ir.model,name:website.model_website_track
@@ -18733,7 +18824,7 @@ msgstr "等待訪問者訪問您的網站以檢視他們的歷史記錄並與他
 #. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor_warning.xml:0
 msgid "Want to add code on this page? Use the “Embed Code” building block."
-msgstr ""
+msgstr "想在此頁面加入程式碼？可使用「嵌入程式碼」內容方塊。"
 
 #. module: website
 #. odoo-javascript
@@ -19012,7 +19103,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 msgid "We typically respond within 1-2 business days."
-msgstr ""
+msgstr "我們通常會在 1 至 2 個工作天內回覆。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_horizontal
@@ -19617,7 +19708,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 msgid "Write down your message"
-msgstr ""
+msgstr "寫下你的訊息"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
@@ -19956,7 +20047,7 @@ msgstr "你的旅程，從這裏開始"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
 msgid "Your message has been sent. <br/>We will get back to you shortly."
-msgstr ""
+msgstr "你的訊息已發送。<br/>我們將會很快回覆。"
 
 #. module: website
 #. odoo-javascript
@@ -20501,7 +20592,7 @@ msgstr "範例"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 msgid "example@mail.com"
-msgstr ""
+msgstr "name@example.com"
 
 #. module: website
 #. odoo-javascript

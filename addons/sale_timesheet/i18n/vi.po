@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:36+0000\n"
+"POT-Creation-Date: 2026-04-03 18:38+0000\n"
 "PO-Revision-Date: 2026-03-14 13:04+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -421,30 +421,6 @@ msgstr "Thời gian tính phí"
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__billable_type
 msgid "Billable Type"
 msgstr "Loại tính phí"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__08_billable_manual
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__08_billable_manual
-msgid "Billed Manually"
-msgstr "Đã tính phí thủ công"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__02_billable_fixed
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__02_billable_fixed
-msgid "Billed at a Fixed price"
-msgstr "Đã tính phí với giá cố định"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__06_billable_milestones
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__06_billable_milestones
-msgid "Billed on Milestones"
-msgstr "Đã tính phí theo mốc thời gian"
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__04_billable_time
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__04_billable_time
-msgid "Billed on Timesheets"
-msgstr "Đã tính phí theo bảng chấm công"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -868,6 +844,11 @@ msgid "Milestone services"
 msgstr "Dịch vụ theo mốc"
 
 #. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_search
+msgid "Mine"
+msgstr ""
+
+#. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
@@ -942,8 +923,6 @@ msgstr ""
 "tự chủ thực sự"
 
 #. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__09_non_billable
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__09_non_billable
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Non-Billable"
 msgstr "Không tính phí"
@@ -1139,23 +1118,25 @@ msgstr "Chịu trách nhiệm"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__01_revenues_fixed
-msgid "Revenues Fixed Price"
+msgid "Revenues (Fixed Price)"
 msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__07_revenues_manual
-msgid "Revenues Manual"
+msgid "Revenues (Manual)"
 msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__05_revenues_milestones
-msgid "Revenues Milestones"
-msgstr ""
+#, fuzzy
+#| msgid "Kitchen Assembly (Milestones)"
+msgid "Revenues (Milestones)"
+msgstr "Lắp đặt nhà bếp (Theo mốc thời gian)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__03_timesheet_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__03_timesheet_revenues
-msgid "Revenues Timesheets"
+msgid "Revenues (Time & Material)"
 msgstr ""
 
 #. module: sale_timesheet
@@ -1444,6 +1425,14 @@ msgid "Timesheet"
 msgstr "Bảng chấm công"
 
 #. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__02_billable_fixed
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__02_billable_fixed
+#, fuzzy
+#| msgid "Timesheet Report"
+msgid "Timesheet (Fixed price)"
+msgstr "Báo cáo bảng chấm công"
+
+#. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Timesheet Activities"
 msgstr "Hoạt động bảng chấm công"
@@ -1491,6 +1480,14 @@ msgstr "Tổng thời lượng bảng chấm công"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 msgid "Timesheets"
 msgstr "Bảng chấm công"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__09_non_billable
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__09_non_billable
+#, fuzzy
+#| msgid "Non-Billable"
+msgid "Timesheets (Non-Billable)"
+msgstr "Không tính phí"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
@@ -1542,6 +1539,28 @@ msgstr "Bảng chấm công được tính đến khi xuất hóa đơn thời g
 #: model:ir.model.fields,help:sale_timesheet.field_res_config_settings__invoice_policy
 msgid "Timesheets taken when invoicing time spent"
 msgstr "Bảng chấm công được tính đến khi xuất hóa đơn thời gian đã sử dụng"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__08_billable_manual
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__08_billable_manual
+#, fuzzy
+#| msgid "Timesheets Analysis"
+msgid "Timesheets (Manual) "
+msgstr "Phân tích bảng chấm công"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__06_billable_milestones
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__06_billable_milestones
+#, fuzzy
+#| msgid "Timesheet Revenues"
+msgid "Timesheets (Milestones)"
+msgstr "Doanh thu bảng chấm công"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__04_billable_time
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__04_billable_time
+msgid "Timesheets (Time & Materials)"
+msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_list_inherited
@@ -1710,6 +1729,18 @@ msgstr "project_id"
 #: code:addons/sale_timesheet/models/sale_order_line.py:0
 msgid "remaining"
 msgstr "còn lại"
+
+#~ msgid "Billed Manually"
+#~ msgstr "Đã tính phí thủ công"
+
+#~ msgid "Billed at a Fixed price"
+#~ msgstr "Đã tính phí với giá cố định"
+
+#~ msgid "Billed on Milestones"
+#~ msgstr "Đã tính phí theo mốc thời gian"
+
+#~ msgid "Billed on Timesheets"
+#~ msgstr "Đã tính phí theo bảng chấm công"
 
 #~ msgid "Timesheets without a sales order item are reported as"
 #~ msgstr "Bảng chấm công không có mục đơn bán hàng được báo cáo dưới dạng"

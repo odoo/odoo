@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:35+0000\n"
-"PO-Revision-Date: 2026-03-18 11:50+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
+"PO-Revision-Date: 2026-04-04 12:59+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/"
 "point_of_sale/fr/>\n"
@@ -1178,7 +1178,7 @@ msgstr "Permet de savoir si le coût total a déjà été calculé ou non"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_printbill
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_printbill
 msgid "Allows to print the Bill before payment."
-msgstr "Permet d'imprimer la facture avant le paiement."
+msgstr "Permet d'imprimer l'addition avant le paiement."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1695,13 +1695,13 @@ msgstr "Avant l'écart à la fermeture"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Bill"
-msgstr "Facture"
+msgstr "Addition"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_printbill
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_printbill
 msgid "Bill Printing"
-msgstr "Impression de facture"
+msgstr "Impression de l'addition"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -3124,6 +3124,12 @@ msgstr "Récapitulatif quotidien des ventes"
 msgid "Daily sessions hold sales from your Point of Sale."
 msgstr ""
 "Les sessions quotidiennes retiennent les ventes de votre Point de Vente."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
+msgid "Dangerous: Too Many Products"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
@@ -4865,6 +4871,12 @@ msgstr "Ordinateur portable"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Laptop model x"
 msgstr "Ordinateur portable modèle x"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
+msgid "Large Product Count Detected"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_big_scrollbars
@@ -7618,7 +7630,7 @@ msgid ""
 "customers."
 msgstr ""
 "Les imprimantes sont généralement utilisées par les restaurants et les bars "
-"pour imprimer les commandes en cuisine/au bar, les factures ou les reçus "
+"pour imprimer les commandes en cuisine/au bar, les additions ou les tickets "
 "pour les clients."
 
 #. module: point_of_sale
@@ -9764,6 +9776,18 @@ msgstr ""
 "tous les produits disponibles seront affichés."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+#, fuzzy
+#| msgid ""
+#| "The payment methods for the point of sale %s must belong to its company."
+msgid ""
+"The points of sale for the payment method %s must belong to its company."
+msgstr ""
+"Les modes de paiement du point de vente %s doivent appartenir à son "
+"entreprise."
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_bank_statement_line__reversed_pos_order_id
 #: model:ir.model.fields,help:point_of_sale.field_account_move__reversed_pos_order_id
 msgid ""
@@ -10042,6 +10066,25 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
 msgid "Theoretical Closing Balance"
 msgstr "Solde de clôture théorique"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
+msgid ""
+"There are %(count)s products available for this PoS (configured limit: %"
+"(limit)s). Loading all products may slow down the Point of Sale. Do you want "
+"to continue with Full Synchronization?"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
+msgid ""
+"There are %(count)s products available for this PoS (configured limit: %"
+"(limit)s). Loading this many products will severely slow down the system and "
+"may cause it to crash or become unresponsive. It is strongly recommended to "
+"use Limited Synchronization instead. Do you still want to proceed?"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

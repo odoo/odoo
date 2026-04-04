@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2026-03-17 12:31+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
+"PO-Revision-Date: 2026-04-04 12:49+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-2/account/"
 "nl/>\n"
@@ -9260,7 +9260,7 @@ msgstr "Februari"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__state_id
 msgid "Fed. State"
-msgstr ""
+msgstr "Staat / Provincie"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_federal_income_tax
@@ -9362,7 +9362,7 @@ msgstr "Eerste nieuwe reeks"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post_origin_id
 msgid "First recurring entry"
-msgstr "Eerste herhalende invoer"
+msgstr "Eerste terugkerende invoer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_fiscal_country_id
@@ -9581,6 +9581,11 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value_amount
 msgid "For percent enter a ratio between 0-100."
 msgstr "Geef een ratio in tussen 0-100 voor percentage."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
+msgid "For the Last 365 Days"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -11446,7 +11451,7 @@ msgstr "Gefactureerd"
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Invoices"
-msgstr "Verkoopfacturen"
+msgstr "Facturen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -12249,6 +12254,8 @@ msgid "Leave empty to create new"
 msgstr "Leeglaten om een nieuw aan te maken"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_group_id
 #: model:ir.model.fields,field_description:account.field_account_journal__journal_group_id
 #: model:ir.model.fields,field_description:account.field_account_move__journal_group_id
@@ -12428,6 +12435,8 @@ msgid "Loans Digitization"
 msgstr "Digitalisering van leningen"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Local Gaap"
 msgstr "Lokale GAAP"
@@ -16045,11 +16054,6 @@ msgid "Responsible User"
 msgstr "Verantwoordelijke gebruiker"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_tax__tax_scope
-msgid "Restrict the use of taxes to a type of product."
-msgstr "Beperk het gebruik van btw tot een soort product."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Restricted"
@@ -17348,7 +17352,7 @@ msgid ""
 "and any similar recurring invoices."
 msgstr ""
 "Geef op of deze boeking automatisch wordt geboekt op de boekhouddatum en "
-"eventuele soortgelijke herhalende facturen."
+"eventuele soortgelijke terugkerende facturen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__strategy
@@ -19604,6 +19608,8 @@ msgid ""
 "There was an error while importing the bill, you can find attached the "
 "incoming XML"
 msgstr ""
+"Er is een fout opgetreden tijdens het importeren van de leveranciersfactuur. "
+"Je vindt de binnenkomende XML in de bijlage"
 
 #. module: account
 #. odoo-python
@@ -19944,7 +19950,7 @@ msgstr "Dit aflettermodel heeft tot dusver geen boeking opgeleverd"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This recurring entry originated from %s"
-msgstr "Deze herhalende boeking is afkomstig van %s"
+msgstr "Deze terugkerende boeking is afkomstig van %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post_until
@@ -21763,6 +21769,8 @@ msgid ""
 "You cannot delete taxes that are currently in use. Consider archiving them "
 "instead."
 msgstr ""
+"Je kunt belastingen die momenteel in gebruik zijn niet verwijderen. Overweeg "
+"in plaats daarvan om ze te archiveren."
 
 #. module: account
 #. odoo-python
@@ -21861,6 +21869,9 @@ msgid ""
 "unless the name is removed or set to \"/\". This might create a gap in the "
 "sequence."
 msgstr ""
+"Je kunt het dagboek van een boeking niet bewerken als deze eenmaal is "
+"geboekt, tenzij de naam wordt verwijderd of ingesteld op \"/\". Dit kan een "
+"gat in de volgorde veroorzaken."
 
 #. module: account
 #. odoo-python
@@ -21870,6 +21881,9 @@ msgid ""
 "assigned, unless the name is removed or set to \"/\". This might create a "
 "gap in the sequence."
 msgstr ""
+"Je kunt de melding van een boeking waaraan een volgordenummer is toegewezen "
+"niet bewerken, tenzij de naam wordt verwijderd of ingesteld op \"/\". Dit "
+"kan een gat in de volgorde veroorzaken."
 
 #. module: account
 #. odoo-python
@@ -21957,6 +21971,7 @@ msgstr "Je kunt geen item in een gearchiveerd dagboek (%(journal)s) plaatsen"
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
 msgstr ""
+"Je kunt geen boeking maken met een gearchiveerde analytische rekening: %s"
 
 #. module: account
 #. odoo-python
@@ -22200,12 +22215,16 @@ msgstr ""
 #: code:addons/account/models/account_tax.py:0
 msgid "You must select a payable account for 'Tax Payable Account'."
 msgstr ""
+"Je moet een crediteurenrekening selecteren voor 'Rekening te betalen "
+"belasting'."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "You must select a receivable account for 'Tax Receivable Account'."
 msgstr ""
+"Je moet een debiteurenrekening selecteren voor 'Rekening te ontvangen "
+"belasting'."
 
 #. module: account
 #. odoo-python
@@ -22223,7 +22242,7 @@ msgstr "Je moet een winstrekening bepalen (naargelang het bedrijf)"
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "You must use non-trade accounts for tax groups."
-msgstr ""
+msgstr "Je moet niet-handelsrekeningen gebruiken voor belastinggroepen."
 
 #. module: account
 #. odoo-python
@@ -22601,7 +22620,7 @@ msgstr "factu(u)r(en)"
 #: code:addons/account/controllers/download_docs.py:0
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "invoices"
-msgstr "verkoopfacturen"
+msgstr "facturen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_enabled_tax_country_ids
@@ -22888,6 +22907,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Self-billing verkoopfactuur (Ref {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid "Restrict the use of taxes to a type of product."
+#~ msgstr "Beperk het gebruik van btw tot een soort product."
 
 #~ msgid "(*) Goods Delivered not Invoiced (perpetual valuation)"
 #~ msgstr ""

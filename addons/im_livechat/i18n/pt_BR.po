@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:35+0000\n"
-"PO-Revision-Date: 2026-03-17 12:32+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
+"PO-Revision-Date: 2026-04-04 12:52+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-2/im_livechat/pt_BR/>\n"
@@ -894,6 +894,7 @@ msgstr "Canal de discussão"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_ir_qweb__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_ir_websocket__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_mail_message__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_rating_rating__display_name
@@ -1276,6 +1277,7 @@ msgstr "Eu tenho uma dúvida sobre preço"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__id
+#: model:ir.model.fields,field_description:im_livechat.field_ir_qweb__id
 #: model:ir.model.fields,field_description:im_livechat.field_ir_websocket__id
 #: model:ir.model.fields,field_description:im_livechat.field_mail_message__id
 #: model:ir.model.fields,field_description:im_livechat.field_rating_rating__id
@@ -1975,7 +1977,7 @@ msgstr "Notas"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Notification Text"
-msgstr ""
+msgstr "Texto da notificação"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_needaction_counter
@@ -2141,6 +2143,11 @@ msgid "Question"
 msgstr "Pergunta"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_ir_qweb
+msgid "Qweb"
+msgstr ""
+
+#. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 #: model:ir.model,name:im_livechat.model_rating_rating
@@ -2247,7 +2254,7 @@ msgstr "Mensagem de e-mail relacionada"
 #: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_patch.xml:0
 #: code:addons/im_livechat/static/src/core/web/discuss_app/sidebar/category_patch.xml:0
 msgid "Relevant to your expertise"
-msgstr ""
+msgstr "Relevante para sua área de especialização"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__remaining_session_capacity
@@ -2262,7 +2269,7 @@ msgstr "Relatórios"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_looking_for_help_since_dt
 msgid "Requested At"
-msgstr ""
+msgstr "Solicitado em"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2495,13 +2502,13 @@ msgstr "Exibir com notificação"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/thread_actions.js:0
 msgid "Someone has already joined this conversation"
-msgstr ""
+msgstr "Alguém já participou desta conversa"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Spoken Languages"
-msgstr ""
+msgstr "Idiomas falados"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date
@@ -2572,7 +2579,7 @@ msgstr "Bot de suporte"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/composer_patch.js:0
 msgid "Tab to next live chat"
-msgstr ""
+msgstr "Tab para ir ao próximo chat ao vivo"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.livechat_technical
@@ -2660,6 +2667,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/discuss_channel_model_patch.js:0
 msgid "This live chat conversation has ended."
+msgstr "Esta conversa no chat ao vivo foi encerrada."
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "This message has been removed"
 msgstr ""
 
 #. module: im_livechat
@@ -2682,7 +2694,7 @@ msgstr "Tempo gasto pela persona na sessão, em horas"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
 msgid "Time to Open"
-msgstr ""
+msgstr "Hora de abrir"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_response
@@ -2715,6 +2727,13 @@ msgid ""
 "installed on your server to geolocate visitors. Without it, rules that "
 "include country restrictions will be ignored."
 msgstr ""
+"Para aplicar a regra apenas a determinadas páginas do seu site, insira uma "
+"expressão regular de URL como /shop. Isso corresponderá a qualquer página "
+"que comece com /shop, como /shop/product. Deixe o campo vazio para aplicar a "
+"regra a todas as páginas.<br/>\n"
+"                                    Para bases de dados locais, o GeoIP deve "
+"estar instalado no seu servidor para geolocalizar visitantes. Sem ele, "
+"regras que incluem restrições por país serão ignoradas."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_agent_history_action
@@ -2761,7 +2780,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_utm_mixin
 msgid "UTM Mixin"
-msgstr ""
+msgstr "Mixin do UTM"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__uuid
@@ -2794,6 +2813,9 @@ msgid ""
 "To load a canned response, start your sentence with '::' and select the "
 "template."
 msgstr ""
+"Use respostas predefinidas para definir modelos de mensagens no aplicativo "
+"Chat Ao Vivo. Para carregar uma resposta predefinida, inicie sua frase com "
+"'::' e selecione o modelo."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users
@@ -2831,13 +2853,13 @@ msgstr "Resposta raw do usuário"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "View Channel"
-msgstr ""
+msgstr "Ver canal"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "View Contact"
-msgstr ""
+msgstr "Ver Contato"
 
 #. module: im_livechat
 #. odoo-python
@@ -2978,7 +3000,7 @@ msgstr "Widget"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Window Colors"
-msgstr ""
+msgstr "Cores da janela"
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email
@@ -2994,6 +3016,7 @@ msgstr ""
 #: code:addons/im_livechat/controllers/channel.py:0
 msgid "Write expertises: Only LINK and UNLINK commands are allowed."
 msgstr ""
+"Escrever especializações: Somente os comandos LINK e UNLINK são permitidos."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -3038,7 +3061,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_category_patch.xml:0
 msgid "You have joined this live chat channel"
-msgstr ""
+msgstr "Você entrou neste canal de chat ao vivo"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -3086,7 +3109,7 @@ msgstr "ex.: olá, como posso ajudar?"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. Need help? Chat with us."
-msgstr ""
+msgstr "ex.: Precisa de ajuda? Converse conosco."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -3103,19 +3126,19 @@ msgstr "em uma chamada"
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "invited %s to the conversation"
-msgstr ""
+msgstr "convidou %s para a conversa"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_category_patch.xml:0
 msgid "joined"
-msgstr ""
+msgstr "Entrou"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "joined the conversation"
-msgstr ""
+msgstr "entrou na conversa"
 
 #. module: im_livechat
 #. odoo-javascript

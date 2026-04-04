@@ -16,10 +16,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2026-03-14 13:03+0000\n"
+"PO-Revision-Date: 2026-04-04 12:57+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-2/mrp/nl/"
-">\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-2/mrp/nl/>"
+"\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -526,7 +526,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "<span invisible=\"time_mode == 'manual'\"> / last </span>"
-msgstr ""
+msgstr "<span invisible=\"time_mode == 'manual'\"> / laatste </span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -594,7 +594,7 @@ msgstr "<strong class=\"mr8 oe_inline\">t/m</strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Actual Duration</strong>"
-msgstr ""
+msgstr "<strong>Werkelijke duur</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -614,7 +614,7 @@ msgstr "<strong>Omschrijving:</strong><br/>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Duration</strong>"
-msgstr ""
+msgstr "<strong>Duur</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
@@ -779,7 +779,7 @@ msgstr "Werkelijke tijd"
 #. odoo-javascript
 #: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_header.js:0
 msgid "Add Work Orders to planning"
-msgstr ""
+msgstr "Werkorders toevoegen aan planning"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
@@ -820,12 +820,14 @@ msgstr "Label toevoegen voor de werkplaats"
 msgid ""
 "Add this note on the manufacturing order to share any additional information"
 msgstr ""
+"Voeg deze notitie toe aan de productieorder om eventuele aanvullende "
+"informatie te delen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__note
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__note
 msgid "Additional Notes"
-msgstr ""
+msgstr "Aanvullende notities"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -1422,7 +1424,7 @@ msgstr "Stuklijstoverzicht"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_product_qty
 msgid "BoM Quantity"
-msgstr ""
+msgstr "Stuklijst hoeveelheid"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
@@ -1435,7 +1437,7 @@ msgstr "Stuklijsttype"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_product_uom_id
 msgid "BoM Unit"
-msgstr ""
+msgstr "Stuklijst eenheid"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
@@ -1710,7 +1712,7 @@ msgstr "Onderdeel"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_list
 msgid "Component Quantity"
-msgstr ""
+msgstr "Hoeveelheid onderdelen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability
@@ -1720,12 +1722,12 @@ msgstr "Onderdeelstatus"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_list
 msgid "Component Unit"
-msgstr ""
+msgstr "Onderdeeleenheid"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_list
 msgid "Component Variant"
-msgstr ""
+msgstr "Onderdelenvariant"
 
 #. module: mrp
 #. odoo-javascript
@@ -2129,7 +2131,7 @@ msgstr "Aangepaste omschrijving"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_workorder_dependencies
 msgid "Custom Work Order Dependencies"
-msgstr ""
+msgstr "Aangepaste werkorderafhankelijkheden"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle
@@ -2224,6 +2226,9 @@ msgid ""
 "If you are in the computed duration mode, enter an estimate since there "
 "aren't any work orders yet."
 msgstr ""
+"Standaard bewerkingstijd. Basiseenheid in minuten.\n"
+"Zit je in de modus 'berekende duur', voer dan een schatting in, aangezien er "
+"nog geen werkorders zijn."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
@@ -2294,6 +2299,11 @@ msgid ""
 "- Based on Theoretical time: the cost will be calculated based on estimated "
 "time and costs."
 msgstr ""
+"Bepaalt de manier waarop Odoo de kosten van de bewerking berekent:\n"
+"- Op basis van werkelijke tijd: de kosten worden berekend op basis van "
+"geregistreerde tijd en werkelijke kosten van werknemers.\n"
+"- Op basis van theoretische tijd: de kosten worden berekend op basis van "
+"geschatte tijd en kosten."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unbuild_id
@@ -2527,7 +2537,7 @@ msgstr "Geschat"
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "Estimated %(date)s %(workcenter_name)s"
-msgstr ""
+msgstr "Geschat %(date)s %(workcenter_name)s"
 
 #. module: mrp
 #. odoo-python
@@ -2849,12 +2859,12 @@ msgstr "Uren"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__hours_per_day
 msgid "Hours per Day"
-msgstr ""
+msgstr "Uren per dag"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__hours_per_week
 msgid "Hours per Week"
-msgstr ""
+msgstr "Uren per week"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__id
@@ -3130,7 +3140,7 @@ msgstr "Is Vergrendeld"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_planned
 msgid "Is Planned"
-msgstr ""
+msgstr "Is gepland"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__manual
@@ -5126,7 +5136,7 @@ msgstr "Resterende dagen"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__remaining_time
 msgid "Remaining Working Time"
-msgstr ""
+msgstr "Resterende werktijd"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__cycle_number
@@ -5295,7 +5305,7 @@ msgstr "Stuklijst zoeken"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_search
 msgid "Search BoM Line"
-msgstr ""
+msgstr "Stuklijst-regel zoeken"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -5957,7 +5967,7 @@ msgstr "Het te demonteren aantal moet positief zijn!"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__remaining_time
 msgid "The remaining time to finish this work order in hours."
-msgstr ""
+msgstr "De resterende tijd om deze werkorder af te ronden in uren."
 
 #. module: mrp
 #. odoo-python
@@ -6016,7 +6026,7 @@ msgstr "De werkorder zou al verwerkt moeten zijn."
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__cost_mode__estimated
 msgid "Theoretical time"
-msgstr ""
+msgstr "Theoretische tijd"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -6037,7 +6047,7 @@ msgstr "Er is geen agenda ingesteld op de werkplek %s."
 #. odoo-python
 #: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
 msgid "There is no serial numbers to apply."
-msgstr ""
+msgstr "Er zijn geen serienummers om toe te passen."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
@@ -6228,7 +6238,7 @@ msgstr "Te bestellen"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "To Plan"
-msgstr ""
+msgstr "Te plannen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -6333,6 +6343,7 @@ msgstr "Totale verwachte duur (in minuten)"
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__cost
 msgid "Total real cost of the work order based on duration and hourly cost."
 msgstr ""
+"Totale werkelijke kosten van de werkorder op basis van duur en uurtarief."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -6521,7 +6532,7 @@ msgstr "Stuklijst bijwerken"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Update Planning"
-msgstr ""
+msgstr "Planning bijwerken"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__1
@@ -6561,7 +6572,7 @@ msgstr "Gebruikt voor producties"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_line_action_used_in_boms
 msgid "Used in BoM"
-msgstr ""
+msgstr "Gebruikt in stuklijst"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__user_id
@@ -6763,6 +6774,8 @@ msgid ""
 "Wizard for warning about mismatching expected vs actual component "
 "consumption quantities for MOs"
 msgstr ""
+"Wizard voor waarschuwing over afwijking tussen verwachte en werkelijke "
+"hoeveelheden van onderdelen voor PO's"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_multi
@@ -7201,6 +7214,11 @@ msgid ""
 "the bill of materials.\n"
 "                        Please confirm it has been done on purpose."
 msgstr ""
+"Je hebt voor de volgende producten een andere hoeveelheid verbruikt dan "
+"verwacht\n"
+"                        en/of een product verbruikt dat niet in de stuklijst "
+"staat.\n"
+"                        Bevestig alsjeblieft dat dit met opzet is gedaan."
 
 #. module: mrp
 #. odoo-python

@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:36+0000\n"
-"PO-Revision-Date: 2026-03-14 12:57+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
+"PO-Revision-Date: 2026-04-04 12:51+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-2/"
 "hr_work_entry/nl/>\n"
@@ -48,6 +48,28 @@ msgstr ""
 "        Planning: Werkboekingen worden gegenereerd op basis van de planning "
 "van werknemers (Planning-app vereist)\n"
 "    "
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+msgid ""
+"\n"
+"Cannot insert \"%(insert_name)s\":\n"
+"Work entry type \"%(name)s\" of code \"%(code)s\" already exists for country "
+"\"%(country)s\".\n"
+"                    "
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+msgid ""
+"\n"
+"Cannot insert \"%(insert_name)s\":\n"
+"Work entry type \"%(name)s\" of code \"%(code)s\", with no country assigned, "
+"already exists.\n"
+"                    "
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_adoption_company
@@ -112,9 +134,15 @@ msgstr ""
 "Adoptieverlof en pleegouderverlof dat niet door de werkgever wordt betaald"
 
 #. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+msgid "All"
+msgstr ""
+
+#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "All Countries"
-msgstr ""
+msgstr "Alle landen"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_defence
@@ -166,7 +194,7 @@ msgstr "Beschikbaarheidstijd wordt niet als werktijd beschouwd"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_tr_work_entry_type_bereavement_leave
 msgid "BER"
-msgstr ""
+msgstr "BER"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_breast_feeding
@@ -404,7 +432,7 @@ msgstr "Berekening"
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Configuratie-instellingen"
 
 #. module: hr_work_entry
 #: model:ir.ui.menu,name:hr_work_entry.menu_hr_payroll_configuration
@@ -423,8 +451,9 @@ msgstr "Corona werkloosheid"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__count_as
+#, fuzzy
 msgid "Count As"
-msgstr ""
+msgstr "Tellen als"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_id
@@ -462,12 +491,12 @@ msgstr "Tijdskrediet"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_death
 msgid "Death Leave"
-msgstr ""
+msgstr "Overlijdensverlof"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.resource_calendar_attendance_view_tree
 msgid "Default: Attendance"
-msgstr ""
+msgstr "Standaard: Aanwezigheid"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__description
@@ -579,7 +608,7 @@ msgstr "Opleidingsverlof"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_tr_work_entry_type_excuse_leave
 msgid "Excuse Leave"
-msgstr ""
+msgstr "Verlof met geldige reden"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_end_of_carreer_exemption
@@ -647,7 +676,7 @@ msgstr "FSJ"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_simple_holiday_pay_variable_salary
 msgid "FVS"
-msgstr ""
+msgstr "FVS"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_family_reason_leave
@@ -657,7 +686,7 @@ msgstr "Verlof om familiale redenen"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_simple_holiday_pay_variable_salary
 msgid "Fictitious Variable Salary"
-msgstr ""
+msgstr "Fictief variabel salaris"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_construction_bad_weather_first_day
@@ -776,7 +805,7 @@ msgstr "TW"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_hajj
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_hajj
 msgid "Hajj Leave"
-msgstr ""
+msgstr "Hadj-verlof"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_home_working
@@ -880,7 +909,7 @@ msgstr "IWM"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_iddah
 msgid "Iddah Leave"
-msgstr ""
+msgstr "Iddah-verlof"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__active
@@ -1354,7 +1383,7 @@ msgstr "Overuren (betaald tegen 150%)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_overtime_no_onss
 msgid "Overtime Hours not subject to social security contribution"
-msgstr ""
+msgstr "Overuren die niet onderworpen zijn aan sociale zekerheidsbijdragen"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_overtime_rest_days
@@ -1419,7 +1448,7 @@ msgstr "PAR"
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_jo_work_entry_type_paternity
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_tr_work_entry_type_paternity_leave
 msgid "PAT"
-msgstr ""
+msgstr "PAT"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_bank_holiday
@@ -1434,7 +1463,7 @@ msgstr "PHC"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_jo_work_entry_type_pilgrimage
 msgid "PIL"
-msgstr ""
+msgstr "PIL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_partial_incapacity
@@ -1542,7 +1571,7 @@ msgstr "Betaald verlof"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.hr_work_entry_type_dv
 msgid "Parental Leaves"
-msgstr ""
+msgstr "Ouderschapsverlof"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_parental_time_off
@@ -1598,7 +1627,7 @@ msgstr "Persoonlijk verlof"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_pilgrimage
 msgid "Pilgrimage Leave"
-msgstr ""
+msgstr "Pelgrimsverlof"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_prophylactic_time_off
@@ -1648,7 +1677,7 @@ msgstr "RBH"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__amount_rate
 msgid "Rate"
-msgstr "Hoeveel"
+msgstr "Tarief"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_recovery_additional
@@ -1754,7 +1783,7 @@ msgstr "STR"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_jo_work_entry_type_study
 msgid "STU"
-msgstr ""
+msgstr "STU"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_small_unemployment
@@ -1920,7 +1949,7 @@ msgstr "Staking / Buitensluiting"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_study
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_study
 msgid "Study Leave"
-msgstr ""
+msgstr "Studieverlof"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_environmental_protection
@@ -2067,14 +2096,7 @@ msgstr ""
 msgid ""
 "The color selected here will be used in every screen with the time off type."
 msgstr ""
-
-#. module: hr_work_entry
-#. odoo-python
-#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
-msgid ""
-"The same code cannot be associated to multiple work entry types for the same "
-"company (%s)"
-msgstr ""
+"De geselecteerde kleur wordt gebruikt in elk scherm met dit verloftype."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__display_code
@@ -2105,7 +2127,7 @@ msgstr "Opleiding"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_training
 msgid "Training Time Off"
-msgstr ""
+msgstr "Opleidingsverlof"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_other_training
@@ -2414,7 +2436,7 @@ msgstr "Werktijden"
 #. module: hr_work_entry
 #: model:ir.ui.menu,name:hr_work_entry.menu_resource_calendar_view
 msgid "Working Schedules"
-msgstr ""
+msgstr "Werktijden"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry_type__count_as__working_time
@@ -2441,6 +2463,20 @@ msgstr "XSH"
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_youth_time_off
 msgid "YSO"
 msgstr "YSO"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+#, fuzzy
+#| msgid ""
+#| "The same code cannot be associated to multiple work entry types for the "
+#| "same company (%s)"
+msgid ""
+"You cannot create more than one work entry type of code \"%(code)s\" for the "
+"same country (%(country)s)"
+msgstr ""
+"Dezelfde code kan niet worden gekoppeld aan meerdere werkboekingstypes voor "
+"hetzelfde bedrijf (%s)"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique

@@ -28,8 +28,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2026-03-17 12:31+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
+"PO-Revision-Date: 2026-04-04 12:48+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-2/"
 "account/de/>\n"
@@ -223,6 +223,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(qty_invoiced)s invoiced, %(qty_delivered)s "
 "delivered at %(unit_price)s"
 msgstr ""
+"%(order)s - %(order_line)s; %(qty_invoiced)s abgerechnet, %(qty_delivered)s "
+"geliefert zum Preis von %(unit_price)s"
 
 #. module: account
 #. odoo-python
@@ -9635,6 +9637,11 @@ msgid "For percent enter a ratio between 0-100."
 msgstr "Für Prozent geben Sie eine Zahl zwischen 0-100 ein."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
+msgid "For the Last 365 Days"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "For this entry to be automatically posted, it required a bill date."
@@ -9999,13 +10006,13 @@ msgstr "Güter"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Goods Delivered not Invoiced (perpetual valuation)"
-msgstr ""
+msgstr "Gelieferte, aber abgerechnete Waren (fortlaufende Bewertung)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Goods Invoiced not Delivered (perpetual valuation)"
-msgstr ""
+msgstr "Abgerechnete, aber gelieferte Waren (fortlaufende Bewertung)"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_ground_transportation
@@ -12305,6 +12312,8 @@ msgid "Leave empty to create new"
 msgstr "Leer lassen, um neue zu erstellen"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_group_id
 #: model:ir.model.fields,field_description:account.field_account_journal__journal_group_id
 #: model:ir.model.fields,field_description:account.field_account_move__journal_group_id
@@ -12483,6 +12492,8 @@ msgid "Loans Digitization"
 msgstr "Digitalisierung von Darlehen"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Local Gaap"
 msgstr "HGB-Rechnungslegung"
@@ -16119,13 +16130,6 @@ msgid "Responsible User"
 msgstr "Verantwortlicher Benutzer"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_tax__tax_scope
-msgid "Restrict the use of taxes to a type of product."
-msgstr ""
-"Beschränken Sie die Verwendung von Steuern auf eine bestimmte Art von "
-"Produkten."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Restricted"
@@ -19711,6 +19715,8 @@ msgid ""
 "There was an error while importing the bill, you can find attached the "
 "incoming XML"
 msgstr ""
+"Beim Importieren der Rechnung ist ein Fehler aufgetreten. Die eingehende XML-"
+"Datei finden Sie im Anhang"
 
 #. module: account
 #. odoo-python
@@ -20471,7 +20477,7 @@ msgstr "Übertragung nach %s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__translated_product_name
 msgid "Translated Product Name"
-msgstr ""
+msgstr "Übersetzter Produktname"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_661
@@ -21897,6 +21903,8 @@ msgid ""
 "You cannot delete taxes that are currently in use. Consider archiving them "
 "instead."
 msgstr ""
+"Sie können keine Steuern löschen, die derzeit verwendet werden. Ziehen Sie "
+"stattdessen eine Archivierung in Betracht."
 
 #. module: account
 #. odoo-python
@@ -22101,6 +22109,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
 msgstr ""
+"Sie können keinen Posten mit einer archivierten Kostenstelle buchen: %s"
 
 #. module: account
 #. odoo-python
@@ -23048,6 +23057,11 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Selbstfakturierte Rechnung (Ref. {{ object.name "
 "or 'k. A.' }})"
+
+#~ msgid "Restrict the use of taxes to a type of product."
+#~ msgstr ""
+#~ "Beschränken Sie die Verwendung von Steuern auf eine bestimmte Art von "
+#~ "Produkten."
 
 #~ msgid "(*) Goods Delivered not Invoiced (perpetual valuation)"
 #~ msgstr "(*) Gelieferte, aber abgerechnete Waren (fortlaufende Bewertung)"

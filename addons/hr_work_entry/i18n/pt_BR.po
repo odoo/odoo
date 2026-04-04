@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:36+0000\n"
-"PO-Revision-Date: 2026-03-17 12:32+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
+"PO-Revision-Date: 2026-04-04 12:51+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-2/hr_work_entry/pt_BR/>\n"
@@ -51,6 +51,28 @@ msgstr ""
 "Planejamento: os registros de trabalho serão gerados a partir do "
 "planejamento do funcionário (requer o aplicativo Planejamento).\n"
 "    "
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+msgid ""
+"\n"
+"Cannot insert \"%(insert_name)s\":\n"
+"Work entry type \"%(name)s\" of code \"%(code)s\" already exists for country "
+"\"%(country)s\".\n"
+"                    "
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+msgid ""
+"\n"
+"Cannot insert \"%(insert_name)s\":\n"
+"Work entry type \"%(name)s\" of code \"%(code)s\", with no country assigned, "
+"already exists.\n"
+"                    "
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_adoption_company
@@ -114,6 +136,12 @@ msgid "Adoption leave and foster parent leave not paid by the employer"
 msgstr ""
 "Licença por adoção e licença para pais adotivos não remuneradas pelo "
 "empregador"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+msgid "All"
+msgstr ""
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -1970,22 +1998,22 @@ msgstr "TUM"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_dismissal
 msgid "TUP"
-msgstr ""
+msgstr "TUP"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_collective_closure_reduction
 msgid "TUR"
-msgstr ""
+msgstr "TUR"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_strike
 msgid "TUS"
-msgstr ""
+msgstr "TUS"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_incident
 msgid "TUT"
-msgstr ""
+msgstr "TUT"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_environmental_protection
@@ -1993,11 +2021,13 @@ msgid ""
 "Technical malfunction in the company or closure of the company for "
 "environmental protection purposes"
 msgstr ""
+"Falha técnica na empresa ou encerramento da empresa por motivos de proteção "
+"ambiental"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_bad_weather
 msgid "Temporary unemployment due to bad weather"
-msgstr ""
+msgstr "Desemprego temporário devido ao mau tempo"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_collective_closure
@@ -2005,6 +2035,8 @@ msgid ""
 "Temporary unemployment due to collective closure of the company due to "
 "annual holidays"
 msgstr ""
+"Desemprego temporário devido ao fechamento coletivo da empresa por motivo de "
+"férias anuais"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_collective_closure_agreeement
@@ -2012,6 +2044,8 @@ msgid ""
 "Temporary unemployment due to collective closure of the company due to "
 "compulsory leave under a collective labor agreement"
 msgstr ""
+"Desemprego temporário devido ao fechamento coletivo da empresa em virtude de "
+"licença compulsória nos termos de um acordo coletivo de trabalho"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_collective_closure_reduction
@@ -2019,27 +2053,29 @@ msgid ""
 "Temporary unemployment due to collective closure of the company for "
 "compensatory rest as part of a reduction in working hours"
 msgstr ""
+"Desemprego temporário devido ao fechamento coletivo da empresa para descanso "
+"compensatório como parte de uma redução da jornada de trabalho"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_force_majeure_medical
 msgid "Temporary unemployment due to force majeure for medical reasons"
-msgstr ""
+msgstr "Desemprego temporário por motivo de força maior por razões médicas"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_strike
 msgid "Temporary unemployment due to strike or lockout"
-msgstr ""
+msgstr "Desemprego temporário devido a greve ou bloqueio"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_force_majeure
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_incident
 msgid "Temporary unemployment due to technical incident"
-msgstr ""
+msgstr "Desemprego temporário devido a incidente técnico"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_dismissal
 msgid "Temporary unemployment in the event of dismissal of a protected worker"
-msgstr ""
+msgstr "Desemprego temporário em caso de demissão de um trabalhador protegido"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__country_code
@@ -2066,16 +2102,6 @@ msgid ""
 msgstr ""
 "A cor selecionada aqui será usada em todas as telas com o tipo de tempo de "
 "inatividade."
-
-#. module: hr_work_entry
-#. odoo-python
-#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
-msgid ""
-"The same code cannot be associated to multiple work entry types for the same "
-"company (%s)"
-msgstr ""
-"O mesmo código não pode ser associado a vários tipos de registro de trabalho "
-"para a mesma empresa (%s)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__display_code
@@ -2106,23 +2132,23 @@ msgstr "Treinamento"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_training
 msgid "Training Time Off"
-msgstr ""
+msgstr "Folga de Treinamento"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_other_training
 msgid "Training with the exception of social promotion and educational leave"
-msgstr ""
+msgstr "Formação, com exceção da promoção social e da licença de estudos"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_tree
 msgid "Type of Work"
-msgstr ""
+msgstr "Tipo de trabalho"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_unjustified_reason
 msgid "UJR"
-msgstr ""
+msgstr "UJR"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_union_mission
@@ -2227,6 +2253,8 @@ msgid ""
 "Unpaid compensatory rest at the time of recovery following hours worked at "
 "another time"
 msgstr ""
+"Descanso compensatório não remunerado no momento da recuperação após horas "
+"trabalhadas em outro momento"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_unpredictable
@@ -2281,7 +2309,6 @@ msgstr "WA1"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_accident_guaranteed_monthly
-#, fuzzy
 msgid "WAM"
 msgstr "WAM"
 
@@ -2313,17 +2340,17 @@ msgstr "Fim de semana"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_welcome_leave
 msgid "Welcome Leave"
-msgstr ""
+msgstr "Licença de Boas-Vindas"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident_unpaid
 msgid "Work Accident (Unpaid)"
-msgstr ""
+msgstr "Acidente de Trabalho (Não Remunerado)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident
 msgid "Work Accident / Occupational Disease (Paid)"
-msgstr ""
+msgstr "Acidente de Trabalho / Doença ocupacional (Remunerado)"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_attendance
@@ -2338,7 +2365,7 @@ msgstr "Registros de trabalho"
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_user_work_entry_employee
 msgid "Work Entries Employee"
-msgstr ""
+msgstr "Funcionários dos registros de trabalho"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__work_entry_source
@@ -2378,11 +2405,14 @@ msgid ""
 "Work accident or occupational illness with employer supplement from the 2nd "
 "week of CCT 12bis/13bis"
 msgstr ""
+"Acidente de trabalho ou doença profissional com complemento do empregador a "
+"partir da 2ª semana do CCT 12bis/13bis"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident_guaranteed_monthly
 msgid "Work accident or occupational illness with guaranteed monthly salary"
 msgstr ""
+"Acidente de trabalho ou doença profissional com salário mensal garantido"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident_first_week
@@ -2390,6 +2420,8 @@ msgid ""
 "Work accident or occupational illness with normal daily pay at 100% for the "
 "first week"
 msgstr ""
+"Acidente de trabalho ou doença ocupacional com remuneração diária normal de "
+"100% na primeira semana"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_work_risk_imss
@@ -2409,7 +2441,7 @@ msgstr "Horário de trabalho"
 #. module: hr_work_entry
 #: model:ir.ui.menu,name:hr_work_entry.menu_resource_calendar_view
 msgid "Working Schedules"
-msgstr ""
+msgstr "Horários de trabalho"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry_type__count_as__working_time
@@ -2420,22 +2452,36 @@ msgstr "Tempo de Trabalho"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_extra_legal
 msgid "XLT"
-msgstr ""
+msgstr "XLT"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_extra_legal_public_holiday
 msgid "XPH"
-msgstr ""
+msgstr "XPH"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_extra_legal_sectoral_holiday
 msgid "XSH"
-msgstr ""
+msgstr "XSH"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_youth_time_off
 msgid "YSO"
+msgstr "YSO"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+#, fuzzy
+#| msgid ""
+#| "The same code cannot be associated to multiple work entry types for the "
+#| "same company (%s)"
+msgid ""
+"You cannot create more than one work entry type of code \"%(code)s\" for the "
+"same country (%(country)s)"
 msgstr ""
+"O mesmo código não pode ser associado a vários tipos de registro de trabalho "
+"para a mesma empresa (%s)"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique
@@ -2445,17 +2491,17 @@ msgstr "Você não pode ter o mesmo funcionário duas vezes."
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_youth_time_off
 msgid "Youth / Senior Time Off"
-msgstr ""
+msgstr "Folga para jovens/idosos"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "e.g. ATT, PTO, STO, OT, RW, ..."
-msgstr ""
+msgstr "ex.: ATT, PTO, STO, OT, RW, ..."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "e.g. WORK100, LEAVE210, OUT, ..."
-msgstr ""
+msgstr "ex.: WORK100, LEAVE210, OUT, ..."
 
 #~ msgid "Overtime Hours not suject to social security contribution"
 #~ msgstr "Horas extras não sujeitas a contribuição previdenciária"

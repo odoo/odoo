@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
 "PO-Revision-Date: 2026-03-17 23:44+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -601,15 +601,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
-"contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
+"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
 "                                                    To track replies, this "
 "address must belong to this database.\n"
 "                                                </small>"
 msgstr ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
-"contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
+"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
 "                                                    Para rastrear "
 "respuestas, esta dirección de correo debe pertenecer a esta base de datos.\n"
 "                                                </small>"
@@ -1019,7 +1019,8 @@ msgstr "<strong>8h:</strong>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_content_card_5
 msgid "<strong><font class=\"text-white\">Innovation Hub</font></strong>"
-msgstr "<strong><font class=\"text-white\">Centro de innovación</font></strong>"
+msgstr ""
+"<strong><font class=\"text-white\">Centro de innovación</font></strong>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_content_card_5
@@ -1112,8 +1113,8 @@ msgid ""
 "<strong>John DOE</strong><br/><span class=\"h6-fs\"><font "
 "class=\"text-600\">CEO of MyCompany</font></span>"
 msgstr ""
-"<strong>Juan PÉREZ</strong><br/><span class=\"h6-fs\"><font class=\"text-"
-"600\">Director general de MiEmpresa</font></span>"
+"<strong>Juan PÉREZ</strong><br/><span class=\"h6-fs\"><font "
+"class=\"text-600\">Director general de MiEmpresa</font></span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_schedule
@@ -1581,6 +1582,12 @@ msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+msgid "Alright, let's send this mailing"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/masonry_block_template_option.xml:0
 msgid "Alternate Image Text"
 msgstr "Alternar Imagen - Texto"
@@ -1865,11 +1872,11 @@ msgstr "Solicitud de quitar de la lista de bloqueo desde el portal"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist removal request from portal of mailing %(mailing_link)s (document "
-"%(record_link)s)"
+"Blocklist removal request from portal of mailing %(mailing_link)s (document %"
+"(record_link)s)"
 msgstr ""
-"Solicitud de quitar de la lista de bloqueo desde el portal de correo "
-"%(mailing_link)s (documento%(record_link)s)"
+"Solicitud de quitar de la lista de bloqueo desde el portal de correo %"
+"(mailing_link)s (documento%(record_link)s)"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1881,8 +1888,8 @@ msgstr "Solicitud de lista de bloqueo desde el portal"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist request from portal of mailing %(mailing_link)s (document "
-"%(record_link)s)"
+"Blocklist request from portal of mailing %(mailing_link)s (document %"
+"(record_link)s)"
 msgstr ""
 "Solicitud de lista de bloqueo desde el portal de correo %(mailing_link)s "
 "(documento %(record_link)s)"
@@ -2194,15 +2201,17 @@ msgid "Chief Technical Officer"
 msgstr "Director técnico"
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+#, fuzzy
+#| msgid "Choose this <b>theme</b>."
+msgid "Choose a <b>template</b>."
+msgstr "Elegir este <b>tema</b>."
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
 msgid "Choose a date"
 msgstr "Elija una fecha"
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
-msgid "Choose this <b>theme</b>."
-msgstr "Elegir este <b>tema</b>."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2229,13 +2238,17 @@ msgstr ""
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
-msgid "Click on this button to add this mailing to your templates."
+#, fuzzy
+#| msgid "Click on this button to add this mailing to your templates."
+msgid "Click on the star to add this mailing to your templates."
 msgstr "Haga clic en este botón para agregar este correo a sus plantillas."
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
-msgid "Click on this paragraph to edit it."
+#, fuzzy
+#| msgid "Click on this paragraph to edit it."
+msgid "Click on this block to edit it."
 msgstr "De clic en este párrafo para editarlo."
 
 #. module: mass_mailing
@@ -3689,7 +3702,8 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_need_help
 msgid "In this section, you can address common questions efficiently."
-msgstr "En esta sección puedes responder las preguntas frecuentes con claridad."
+msgstr ""
+"En esta sección puedes responder las preguntas frecuentes con claridad."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -5388,9 +5402,9 @@ msgid ""
 "ease."
 msgstr ""
 "Redefine tus rituales diarios con interiores que inspiran. Desde el momento "
-"en que entras por la puerta, nuestras piezas evocan una sensación de <strong>"
-"alegría pura</strong> y convierten cada rincón de tu hogar en un santuario "
-"de felicidad y calma."
+"en que entras por la puerta, nuestras piezas evocan una sensación de "
+"<strong>alegría pura</strong> y convierten cada rincón de tu hogar en un "
+"santuario de felicidad y calma."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -5668,6 +5682,13 @@ msgstr "Seleccione un modelo objetivo..."
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
 msgid "Select a list..."
 msgstr "Selecciona una lista..."
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
+#, fuzzy
+#| msgid "Select a Target"
+msgid "Select a record"
+msgstr "Selecciona un objetivo"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid

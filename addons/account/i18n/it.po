@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2026-03-18 11:50+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
+"PO-Revision-Date: 2026-04-04 12:49+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-2/"
 "account/it/>\n"
@@ -1481,11 +1481,14 @@ msgid ""
 "<span class=\"me-1\">One or more Bank Accounts set on this partner are also "
 "used by others:</span>"
 msgstr ""
+"<span class=\"me-1\">Uno o più conti bancari selezionati per questo partner "
+"sono già utilizzati da altri:</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "<span class=\"me-1\">The Bank Account could be a duplicate of</span>"
 msgstr ""
+"<span class=\"me-1\">Il conto bancario potrebbe essere un duplicato di</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2778,7 +2781,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
 msgid "A Ledger group name must be unique."
-msgstr ""
+msgstr "Il nome del gruppo del libro mastro deve essere unico."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_defaults
@@ -2826,6 +2829,9 @@ msgid ""
 "and is used by domestic money transfer protocols (from/to bank accounts in "
 "the same country)."
 msgstr ""
+"Un numero di clearing (o numero di routing) si riferisce a una banca, una "
+"filiale o una sede ed è utilizzato dai protocolli di trasferimento di denaro "
+"nazionali (da/verso conti bancari nello stesso Paese)."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_credit_statement_tree
@@ -3318,6 +3324,7 @@ msgstr "Gruppi conto"
 msgid ""
 "Account holder name in case it is different than the name of the partner."
 msgstr ""
+"Nome del titolare del conto nel caso in cui sia diverso dal nome del partner."
 
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard
@@ -3580,37 +3587,37 @@ msgstr "Totale cumulato"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_depreciation_buildings
 msgid "Accumulated Amortization - Buildings"
-msgstr ""
+msgstr "Ammortamento accumulato - Edifici"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_depreciation_furniture
 msgid "Accumulated Amortization - Furniture & Fixtures"
-msgstr ""
+msgstr "Ammortamento accumulato - Mobili e arredi"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_depreciation_improvements
 msgid "Accumulated Amortization - Improvements"
-msgstr ""
+msgstr "Ammortamento accumulato - Miglioramenti"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_depreciation_machines
 msgid "Accumulated Amortization - Machines & Tools"
-msgstr ""
+msgstr "Ammortamento accumulato - Macchine e strumenti"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_depreciation_other_property
 msgid "Accumulated Amortization - Other Property"
-msgstr ""
+msgstr "Ammortamento accumulato - Altra proprietà"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_depreciation_technology
 msgid "Accumulated Amortization - Technology"
-msgstr ""
+msgstr "Ammortamento accumulato - Tecnologia"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_depreciation_vehicles
 msgid "Accumulated Amortization - Vehicles"
-msgstr ""
+msgstr "Ammortamento accumulato - Veicoli"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_acc_depreciation
@@ -4585,7 +4592,7 @@ msgstr "Aprile"
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
 msgid "Archive"
-msgstr ""
+msgstr "Archivio"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_incoterms_form
@@ -4881,7 +4888,7 @@ msgstr "IT71096123456769"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_bic
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__bank_bic
 msgid "BIC/SWIFT"
-msgstr ""
+msgstr "BIC/SWIFT"
 
 #. module: account
 #. odoo-python
@@ -5051,6 +5058,9 @@ msgid ""
 "letters) + Country Code (2 letters) + Location Code (2 letters/numbers) + "
 "Optional Branch Code (3 letters/numbers)."
 msgstr ""
+"Codice identificativo bancario per bonifici internazionali nel formato "
+"Codice bancario (4 lettere) + Codice Paese (2 lettere) + Codice località (2 "
+"lettere/numeri) + Codice filiale opzionale (3 lettere/numeri)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__bank_journal_ids
@@ -5061,7 +5071,7 @@ msgstr "Registri banca"
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_name
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_name
 msgid "Bank Name"
-msgstr ""
+msgstr "Nome banca"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__bank_partner_id
@@ -5147,6 +5157,8 @@ msgid ""
 "Bank account type: Normal, IBAN, CLABE, or other from localization. Inferred "
 "from the bank account number."
 msgstr ""
+"Tipo di conto bancario: normale, IBAN, CLABE o altro dalla localizzazione. "
+"Dedotto dal numero del conto bancario."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -5526,13 +5538,13 @@ msgstr "PORTO PAGATO FINO A"
 #: code:addons/account/models/res_partner_bank.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_partner_bank__account_type__clabe
 msgid "CLABE"
-msgstr ""
+msgstr "CLABE"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/bank_account_number.py:0
 msgid "CLABE should be a string of 18 digits."
-msgstr ""
+msgstr "CLABE deve essere una stringa di 18 cifre."
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CFR
@@ -6056,7 +6068,7 @@ msgstr "Città"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__clearing_label_id
 msgid "Clearing Label"
-msgstr ""
+msgstr "Etichetta clearing"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__clearing_number
@@ -7009,7 +7021,7 @@ msgstr "Nota di credito"
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 msgid "Credit Note :"
-msgstr ""
+msgstr "Nota di credito:"
 
 #. module: account
 #. odoo-python
@@ -7073,43 +7085,50 @@ msgstr "Saldo cumulato"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__cumulated_balance
 msgid "Cumulated balance for the account."
-msgstr ""
+msgstr "Saldo cumulativo del conto."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_depreciation_buildings
 msgid "Cumulative amortization recorded for building assets."
-msgstr ""
+msgstr "Ammortamento cumulativo registrato per gli asset immobiliari."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_depreciation_technology
 msgid "Cumulative amortization recorded for capitalized technology assets."
-msgstr ""
+msgstr "Ammortamento cumulativo registrato per gli asset tecnologici."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_depreciation_furniture
 msgid "Cumulative amortization recorded for furniture and fixture assets."
 msgstr ""
+"Ammortamento cumulativo registrato per gli asset relativi a mobili e arredi."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_depreciation_improvements
 msgid ""
 "Cumulative amortization recorded for leasehold or property improvements."
 msgstr ""
+"Ammortamento cumulativo registrato per i beni in locazione o le migliorie "
+"immobiliari."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_depreciation_machines
 msgid "Cumulative amortization recorded for machinery and tool assets."
 msgstr ""
+"Ammortamento cumulativo registrato per gli asset relativi a macchinari e "
+"attrezzature."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_depreciation_other_property
 msgid "Cumulative amortization recorded for other depreciable property assets."
 msgstr ""
+"Ammortamento cumulativo registrato per altri asset immobiliari "
+"ammortizzabili."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_depreciation_vehicles
 msgid "Cumulative amortization recorded for vehicle assets."
-msgstr ""
+msgstr "Ammortamento cumulativo registrato per gli asset relativi ai veicoli."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -7852,37 +7871,37 @@ msgstr "Ammortamento"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_expense_buildings
 msgid "Depreciation Expense - Buildings"
-msgstr ""
+msgstr "Spese di ammortamento - Edifici"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_expense_furniture
 msgid "Depreciation Expense - Furniture & Fixtures"
-msgstr ""
+msgstr "Spese di ammortamento - Mobili e arredi"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_expense_improvements
 msgid "Depreciation Expense - Improvements"
-msgstr ""
+msgstr "Spese di ammortamento - Miglioramenti"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_expense_machines
 msgid "Depreciation Expense - Machines & Tools"
-msgstr ""
+msgstr "Spese di ammortamento - Macchine e strumenti"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_expense_other_property
 msgid "Depreciation Expense - Other Property"
-msgstr ""
+msgstr "Spese di ammortamento - Altre proprietà"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_expense_technology
 msgid "Depreciation Expense - Technology"
-msgstr ""
+msgstr "Spese di ammortamento - Tecnologia"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_expense_vehicles
 msgid "Depreciation Expense - Vehicles"
-msgstr ""
+msgstr "Spese di ammortamento - Veicoli"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__description
@@ -9046,7 +9065,7 @@ msgstr "Registro utili/perdite sui cambi"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Exchange Loss"
-msgstr ""
+msgstr "Perdita di scambio"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__exchange_move_id
@@ -9057,12 +9076,12 @@ msgstr "Movimento di cambio"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Exchange Profit"
-msgstr ""
+msgstr "Guadagno di cambio"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__exchange_rate
 msgid "Exchange Rate"
-msgstr ""
+msgstr "Tasso di cambio"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__exchange_rate_currency_code
@@ -9273,7 +9292,7 @@ msgstr "Febbraio"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__state_id
 msgid "Fed. State"
-msgstr ""
+msgstr "Provincia"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_federal_income_tax
@@ -9595,6 +9614,11 @@ msgid "For percent enter a ratio between 0-100."
 msgstr "Come percentuale indicare un rapporto fra 0 e 100"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
+msgid "For the Last 365 Days"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "For this entry to be automatically posted, it required a bill date."
@@ -9858,7 +9882,7 @@ msgstr "I futuri"
 #: model:ir.model.fields,field_description:account.field_res_partner__global_location_number
 #: model:ir.model.fields,field_description:account.field_res_users__global_location_number
 msgid "GLN"
-msgstr ""
+msgstr "GLN"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9923,7 +9947,7 @@ msgstr "Acquisizione risultato integrità hash come PDF."
 #: model:ir.model.fields,help:account.field_res_partner__global_location_number
 #: model:ir.model.fields,help:account.field_res_users__global_location_number
 msgid "Global Location Number"
-msgstr ""
+msgstr "Global Location Number"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__fiscalyear_lock_date
@@ -10087,7 +10111,7 @@ msgstr "Ha estratti non validi"
 #: model:ir.model.fields,field_description:account.field_account_journal__has_ledger
 #: model:ir.model.fields,field_description:account.field_res_company__has_ledger
 msgid "Has Ledger"
-msgstr ""
+msgstr "Ha libro mastro"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__has_message
@@ -10112,7 +10136,7 @@ msgstr "Ha fattore negativo"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_phishing_warnings
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__has_phishing_warnings
 msgid "Has Phishing Warnings"
-msgstr ""
+msgstr "Presenta avvisi di phishing"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_posted_entries
@@ -10235,7 +10259,7 @@ msgstr "Evidenzia pulsante Invia"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__holder_name
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__holder_name
 msgid "Holder Name"
-msgstr ""
+msgstr "Nome titolare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__horizontal_split_side
@@ -10262,7 +10286,7 @@ msgstr "Metodo di calcolo dell'importo totale imposte per ordini e fatture"
 #: code:addons/account/models/res_partner_bank.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_partner_bank__account_type__iban
 msgid "IBAN"
-msgstr ""
+msgstr "IBAN"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -10825,7 +10849,7 @@ msgstr "Includere nel costo analitico"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__included_journal_ids
 msgid "Included Journals"
-msgstr ""
+msgstr "Registri inclusi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include_override
@@ -11194,7 +11218,7 @@ msgstr "Fattura n°"
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 msgid "Invoice :"
-msgstr ""
+msgstr "Fattura:"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
@@ -12260,7 +12284,7 @@ msgstr "Attività in ritardo"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Learn more"
-msgstr ""
+msgstr "Scopri di più"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -12269,6 +12293,8 @@ msgid "Leave empty to create new"
 msgstr "Lascia vuoto per creare nuovo"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_group_id
 #: model:ir.model.fields,field_description:account.field_account_journal__journal_group_id
 #: model:ir.model.fields,field_description:account.field_account_move__journal_group_id
@@ -12447,9 +12473,11 @@ msgid "Loans Digitization"
 msgstr "Digitalizzazione prestiti"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Local Gaap"
-msgstr ""
+msgstr "GAAP locale"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_property_tax
@@ -12762,7 +12790,7 @@ msgstr "Analisi dei margini"
 #. module: account
 #: model:ir.actions.server,name:account.action_mark_payment_as_reconciled
 msgid "Mark as Reconciled"
-msgstr ""
+msgstr "Contrassegna come riconciliato"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -14455,7 +14483,7 @@ msgstr "Segnaposto IVA partner"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Partner set to %s"
-msgstr ""
+msgstr "Partner impostato su %s"
 
 #. module: account
 #. odoo-python
@@ -14808,6 +14836,8 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 msgid "Payments linked to an Asset Cash account cannot be reconciled."
 msgstr ""
+"I pagamenti collegati a un conto asset contanti non possono essere "
+"riconciliati."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -14898,48 +14928,53 @@ msgstr "Periodo del confronto"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_expense_buildings
 msgid "Periodic depreciation expense for building assets."
-msgstr ""
+msgstr "Spese di ammortamento periodiche per asset relativi a immobili."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_expense_technology
 msgid "Periodic depreciation expense for capitalized technology assets."
 msgstr ""
+"Spese di ammortamento periodiche per gli asset di tecnologiche capitalizzate."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_expense_furniture
 msgid "Periodic depreciation expense for furniture and fixture assets."
-msgstr ""
+msgstr "Spese di ammortamento periodiche per asset di beni e impianti."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_expense_improvements
 msgid "Periodic depreciation expense for leasehold or property improvements."
 msgstr ""
+"Spese di ammortamento periodiche per migliorie su beni in locazione o "
+"immobili."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_expense_machines
 msgid "Periodic depreciation expense for machinery and tool assets."
 msgstr ""
+"Spese di ammortamento periodiche per asset relativi a macchinari e "
+"attrezzature."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_expense_other_property
 msgid "Periodic depreciation expense for other depreciable property assets."
-msgstr ""
+msgstr "Spese di ammortamento periodiche per altri asset di beni immobili."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_expense_vehicles
 msgid "Periodic depreciation expense for vehicle assets."
-msgstr ""
+msgstr "Spese di ammortamento periodiche per asset di veicoli."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__phishing_warnings
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__phishing_warnings
 msgid "Phishing Warnings"
-msgstr ""
+msgstr "Avvisi di phishing"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Phishing risk"
-msgstr ""
+msgstr "Rischio di phishing"
 
 #. module: account
 #. odoo-python
@@ -14948,6 +14983,8 @@ msgid ""
 "Phishing risk: %(label1)s is in %(country1)s but %(label2)s is in %"
 "(country2)s"
 msgstr ""
+"Rischio di phishing: %(label1)s si trova in %(country1)s ma %(label2)s si "
+"trova in %(country2)s"
 
 #. module: account
 #. odoo-python
@@ -14956,6 +14993,9 @@ msgid ""
 "Phishing risk: %(money_transfer_service)s is a money transfer service and "
 "not a bank. Double check if the account can be trusted by calling the vendor."
 msgstr ""
+"Rischio di phishing: %(money_transfer_service)s è un servizio di "
+"trasferimento di denaro e non una banca. Verifica che il conto sia "
+"affidabile contattando il fornitore."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_internet
@@ -15046,7 +15086,7 @@ msgstr "Registra la differenza in"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid "Post Entry?"
-msgstr ""
+msgstr "Pubblicare la registrazione?"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
@@ -16062,11 +16102,6 @@ msgid "Responsible User"
 msgstr "Utente responsabile"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_tax__tax_scope
-msgid "Restrict the use of taxes to a type of product."
-msgstr "Limita l'utilizzo delle imposte a una tipologia di prodotto."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Restricted"
@@ -16634,7 +16669,7 @@ msgstr "Token di sicurezza"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "See exchange information"
-msgstr ""
+msgstr "Vedi informazioni di scambio"
 
 #. module: account
 #. odoo-python
@@ -16752,12 +16787,12 @@ msgstr "Invia copia a"
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_batch_wizard
 msgid "Send Invoice Batch Wizard"
-msgstr ""
+msgstr "Procedura guidata invio fatture in gruppi"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_wizard
 msgid "Send Invoice Wizard"
-msgstr ""
+msgstr "Procedura guidata invio fattura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__allow_out_payment
@@ -17101,7 +17136,7 @@ msgstr "Condividi"
 #. module: account
 #: model:ir.model,name:account.model_account_move_send
 msgid "Shared Send Invoice Wizard Functions"
-msgstr ""
+msgstr "Funzioni condivise della procedura guidata di invio delle fatture"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -17121,7 +17156,7 @@ msgstr "Mostrare funzionalità contabili - Sola lettura"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__show_clearing_number
 msgid "Show Clearing Number"
-msgstr ""
+msgstr "Mostra numero di clearing"
 
 #. module: account
 #. odoo-javascript
@@ -17534,7 +17569,7 @@ msgstr "Contabilità storno"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__street
 msgid "Street"
-msgstr ""
+msgstr "Via"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
@@ -17549,7 +17584,7 @@ msgstr "Indirizzo…"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__street2
 msgid "Street2"
-msgstr ""
+msgstr "Indirizzo 2"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__strict_range
@@ -17914,7 +17949,7 @@ msgstr "Codice fiscale nazione"
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 msgid "Tax Distribution"
-msgstr ""
+msgstr "Ripartizione imposte"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_excluded
@@ -18235,6 +18270,8 @@ msgstr "Campo tecnico per ottenere il dominio della banca"
 msgid ""
 "Technical field used to display warnings if there's a potential phishing risk"
 msgstr ""
+"Campo tecnico utilizzato per visualizzare avvisi in caso di potenziale "
+"rischio di phishing"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence_override_regex
@@ -18444,12 +18481,16 @@ msgid ""
 "Where B = National bank code, S = Branch code, C = Account No, k = Check "
 "digit"
 msgstr ""
+"L'IBAN non sembra essere corretto. È necessario inserire un codice di tipo "
+"%s\n"
+"Dove B = Codice banca, S = Codice filiale, C = Numero conto, k = Codice di "
+"controllo"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/bank_account_number.py:0
 msgid "The IBAN is invalid, it should begin with the country code"
-msgstr ""
+msgstr "Il codice IBAN non è valido, deve iniziare con il codice nazione"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__country_code
@@ -19571,7 +19612,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/tools/bank_account_number.py:0
 msgid "There is no IBAN code."
-msgstr ""
+msgstr "Nessun codice IBAN presente."
 
 #. module: account
 #. odoo-python
@@ -19626,6 +19667,8 @@ msgid ""
 "There was an error while importing the bill, you can find attached the "
 "incoming XML"
 msgstr ""
+"Si è verificato un errore durante l'importazione del file, in allegato è "
+"disponibile il file XML in entrata"
 
 #. module: account
 #. odoo-python
@@ -19648,13 +19691,13 @@ msgstr "Trentuno dollari e cinque centesimi"
 #. odoo-python
 #: code:addons/account/tools/bank_account_number.py:0
 msgid "This CLABE does not pass the checksum check, please verify it."
-msgstr ""
+msgstr "Il CLABE non ha superato il controllo di validità, verificarlo."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/bank_account_number.py:0
 msgid "This IBAN does not pass the validation check, please verify it."
-msgstr ""
+msgstr "L'IBAN non ha superato il controllo di validità, verificarlo."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_month
@@ -19701,6 +19744,8 @@ msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
 "this screen."
 msgstr ""
+"Questa azione è irreversibile: l'accredito/debito non può essere modificato "
+"nuovamente da questa schermata."
 
 #. module: account
 #. odoo-python
@@ -20616,7 +20661,7 @@ msgstr "Registrazioni non riconciliate"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__unreconciled_paid_amount
 msgid "Unreconciled Paid Amount"
-msgstr ""
+msgstr "Importo pagato non riconciliato"
 
 #. module: account
 #. odoo-python
@@ -20941,7 +20986,7 @@ msgstr "Convalida registrazione contabile"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid "Validate and Post"
-msgstr ""
+msgstr "Convalida e pubblica"
 
 #. module: account
 #: model:res.groups,name:account.group_validate_bank_account
@@ -21396,6 +21441,8 @@ msgid ""
 "You are attempting to validate opening entries belonging to another company. "
 "Please switch to the correct company."
 msgstr ""
+"Stai tentando di convalidare registrazioni di apertura appartenenti a "
+"un'altra azienda. Passa all'azienda corretta."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
@@ -21780,6 +21827,8 @@ msgid ""
 "You cannot delete taxes that are currently in use. Consider archiving them "
 "instead."
 msgstr ""
+"Non è possibile eliminare le imposte attualmente in uso. Valuta invece la "
+"possibilità di archiviarle."
 
 #. module: account
 #. odoo-python
@@ -21978,6 +22027,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
 msgstr ""
+"Non è possibile pubblicare una registrazione con un conto analitico "
+"archiviato: %s"
 
 #. module: account
 #. odoo-python
@@ -22222,12 +22273,14 @@ msgstr ""
 #: code:addons/account/models/account_tax.py:0
 msgid "You must select a payable account for 'Tax Payable Account'."
 msgstr ""
+"È necessario selezionare un conto di debito per \"Imposta conto fornitore\"."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "You must select a receivable account for 'Tax Receivable Account'."
 msgstr ""
+"È necessario selezionare un conto di credito per \"Imposta conto cliente\"."
 
 #. module: account
 #. odoo-python
@@ -22245,7 +22298,7 @@ msgstr "È necessario specificare il conto utili (dipendente dall'azienda)"
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "You must use non-trade accounts for tax groups."
-msgstr ""
+msgstr "È necessario utilizzare conti non commerciali per i gruppi fiscali."
 
 #. module: account
 #. odoo-python
@@ -22302,7 +22355,7 @@ msgstr "ZIP"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__zip
 msgid "Zip"
-msgstr ""
+msgstr "CAP"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -22911,6 +22964,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Fattura in autofatturazione (Rif {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid "Restrict the use of taxes to a type of product."
+#~ msgstr "Limita l'utilizzo delle imposte a una tipologia di prodotto."
 
 #~ msgid "(*) Goods Delivered not Invoiced (perpetual valuation)"
 #~ msgstr "(*) Merci consegnate non fatturate (valutazione perpetua)"

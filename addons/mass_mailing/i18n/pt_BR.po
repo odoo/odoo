@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
-"PO-Revision-Date: 2026-03-17 12:33+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
+"PO-Revision-Date: 2026-04-04 12:57+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-2/mass_mailing/pt_BR/>\n"
@@ -610,15 +610,15 @@ msgstr "<i class=\"oi oi-arrow-right\"></i> Configurar motivos de recusa"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
-"contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
+"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
 "                                                    To track replies, this "
 "address must belong to this database.\n"
 "                                                </small>"
 msgstr ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
-"contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
+"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
 "                                                    Para rastrear as "
 "respostas, o endereço deve pertencer a esta base de dados.\n"
 "                                                </small>"
@@ -748,8 +748,8 @@ msgid ""
 "<span class=\"fa fa-fw fa-shopping-cart\" contenteditable=\"false\"/>  Huge "
 "holiday sale savings. Don't miss out."
 msgstr ""
-"<span class=\"fa fa-fw fa-shopping-cart\" contenteditable=\"false\"/>  "
-"Grandes descontos nas promoções de fim de ano. Não perca."
+"<span class=\"fa fa-fw fa-shopping-cart\" contenteditable=\"false\"/"
+">  Grandes descontos nas promoções de fim de ano. Não perca."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_special_offer_cta
@@ -1118,8 +1118,8 @@ msgid ""
 "<strong>John DOE</strong><br/><span class=\"h6-fs\"><font "
 "class=\"text-600\">CEO of MyCompany</font></span>"
 msgstr ""
-"<strong>João da Silva</strong><br/><span class=\"h6-fs\"><font class=\"text-"
-"600\"> Diretor executivo da MyCompany</font></span>"
+"<strong>João da Silva</strong><br/><span class=\"h6-fs\"><font "
+"class=\"text-600\"> Diretor executivo da MyCompany</font></span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_schedule
@@ -1141,10 +1141,10 @@ msgid ""
 "product, inspiring a deeper connection beyond simple features."
 msgstr ""
 "<strong>Substitua este bloco pela história autêntica e singular do seu "
-"produto.</strong> Concentre-se no brilho que lhe dá personalidade. <strong>"
-"Seja breve, específico e deixe a voz da sua marca brilhar</strong> através "
-"de escolhas de trabalho únicas. Isso explica a <em>alma </em> por trás do "
-"produto, inspirando uma conexão mais profunda além das simples "
+"produto.</strong> Concentre-se no brilho que lhe dá personalidade. "
+"<strong>Seja breve, específico e deixe a voz da sua marca brilhar</strong> "
+"através de escolhas de trabalho únicas. Isso explica a <em>alma </em> por "
+"trás do produto, inspirando uma conexão mais profunda além das simples "
 "características."
 
 #. module: mass_mailing
@@ -1581,6 +1581,12 @@ msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+msgid "Alright, let's send this mailing"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/masonry_block_template_option.xml:0
 msgid "Alternate Image Text"
 msgstr "Imagem e texto alternados"
@@ -1867,8 +1873,8 @@ msgstr "Solicitação de remoção da lista de bloqueio a partir do portal"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist removal request from portal of mailing %(mailing_link)s (document "
-"%(record_link)s)"
+"Blocklist removal request from portal of mailing %(mailing_link)s (document %"
+"(record_link)s)"
 msgstr ""
 "Solicitação de remoção da lista de bloqueio a partir do portal de "
 "distribuição %(mailing_link)s (documento %(record_link)s)"
@@ -1883,11 +1889,11 @@ msgstr "Solicitação de lista de bloqueio a partir do portal"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist request from portal of mailing %(mailing_link)s (document "
-"%(record_link)s)"
+"Blocklist request from portal of mailing %(mailing_link)s (document %"
+"(record_link)s)"
 msgstr ""
-"Solicitação de lista de bloqueio a partir do portal de distribuição "
-"%(mailing_link)s (documento %(record_link)s)"
+"Solicitação de lista de bloqueio a partir do portal de distribuição %"
+"(mailing_link)s (documento %(record_link)s)"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1906,8 +1912,8 @@ msgid ""
 "Blocklist request from unsubscribe link of mailing %(mailing_link)s "
 "(document %(record_link)s)"
 msgstr ""
-"Solicitação de lista de bloqueio a partir do link da "
-"distribuição%(mailing_link)s (documento %(record_link)s)"
+"Solicitação de lista de bloqueio a partir do link da distribuição%"
+"(mailing_link)s (documento %(record_link)s)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -2039,12 +2045,12 @@ msgstr "Rótulo do botão"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_left_cta
 msgid "Buy Now"
-msgstr ""
+msgstr "Comprar agora"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_blog_title
 msgid "By John Doe"
-msgstr ""
+msgstr "Por John Doe"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2198,15 +2204,17 @@ msgid "Chief Technical Officer"
 msgstr "Diretor Técnico de Empresa"
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+#, fuzzy
+#| msgid "Choose this <b>theme</b>."
+msgid "Choose a <b>template</b>."
+msgstr "Escolher este <b>tema</b>."
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
 msgid "Choose a date"
 msgstr "Escolha uma data"
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
-msgid "Choose this <b>theme</b>."
-msgstr "Escolher este <b>tema</b>."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2219,7 +2227,7 @@ msgstr "Selecione suas inscrições de listas de distribuição"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
 msgid "Circle"
-msgstr ""
+msgstr "Círculo"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_pricelist_boxed
@@ -2233,14 +2241,18 @@ msgstr ""
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
-msgid "Click on this button to add this mailing to your templates."
+#, fuzzy
+#| msgid "Click on this button to add this mailing to your templates."
+msgid "Click on the star to add this mailing to your templates."
 msgstr ""
 "Clique neste botão para adicionar esta comunicação à sua lista de modelos."
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
-msgid "Click on this paragraph to edit it."
+#, fuzzy
+#| msgid "Click on this paragraph to edit it."
+msgid "Click on this block to edit it."
 msgstr "Clique neste parágrafo para editá-lo."
 
 #. module: mass_mailing
@@ -2270,13 +2282,13 @@ msgstr "Depoimentos de clientes"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_contact
 msgid "Closed"
-msgstr ""
+msgstr "Encerrado"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/mass_mailing_builder.xml:0
 msgid "Code View"
-msgstr ""
+msgstr "Visualização do código"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2330,7 +2342,7 @@ msgstr ""
 #: code:addons/mass_mailing/static/src/builder/options/social_media_links.xml:0
 #: model:ir.model,name:mass_mailing.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__company_name
@@ -2371,7 +2383,7 @@ msgstr "Configuração"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_links.xml:0
 msgid "Configure Company"
-msgstr ""
+msgstr "Configurar empresa"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
@@ -2382,13 +2394,13 @@ msgstr "Configurar servidores de envio de comunicações"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/components/company_update_dialog.js:0
 msgid "Configure your Social Media Links for %s"
-msgstr ""
+msgstr "Configure seus links de redes sociais para %s"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_links.xml:0
 msgid "Configure your social media links."
-msgstr ""
+msgstr "Configure seus links de rede social."
 
 #. module: mass_mailing
 #: model_terms:web_tour.tour,rainbow_man_message:mass_mailing.mass_mailing_tour
@@ -2406,6 +2418,8 @@ msgid ""
 "Consistent performance and uptime ensure efficient, reliable service with "
 "minimal interruptions and quick response times."
 msgstr ""
+"O desempenho e o tempo de atividade consistentes garantem um serviço "
+"eficiente e confiável com interrupções mínimas e tempos de resposta rápidos."
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_res_partner
@@ -2438,7 +2452,7 @@ msgstr "Nome do contato"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_logo_and_stacked_menu
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_name_and_inline_menu
 msgid "Contact Us"
-msgstr ""
+msgstr "Entre em contato"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact_import__contact_list
@@ -2459,19 +2473,20 @@ msgstr "Contatos"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Content Card"
-msgstr ""
+msgstr "Cartão de Conteúdo"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/company_team_options.xml:0
 msgid "Content Width"
-msgstr ""
+msgstr "Largura do conteúdo"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_media_list
 msgid ""
 "Continue reading <span class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 msgstr ""
+"Continuar lendo <span class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 
 #. module: mass_mailing
 #. odoo-python
@@ -2499,17 +2514,17 @@ msgstr "Capa"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
 msgid "Create Date"
-msgstr ""
+msgstr "Criar data"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form_simplified
 msgid "Create Mailing List"
-msgstr ""
+msgstr "Criar lista de distribuição"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mass_mailing_create
 msgid "Create Mass Mailing"
-msgstr ""
+msgstr "Criar envio em massa"
 
 #. module: mass_mailing
 #: model:ir.model,website_form_label:mass_mailing.model_res_partner
@@ -2596,17 +2611,17 @@ msgstr "Personalizado"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
 msgid "Custom Color"
-msgstr ""
+msgstr "Cor personalizada"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Customer Quote"
-msgstr ""
+msgstr "Cotação do cliente"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Customer testimonials"
-msgstr ""
+msgstr "Depoimentos de clientes"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_reviews_wall
@@ -2666,7 +2681,7 @@ msgstr "Padrão"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
 msgid "Default Colors"
-msgstr ""
+msgstr "Cores padrão"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2731,28 +2746,29 @@ msgstr ""
 msgid ""
 "Design for the Soul: Why Your Home Should Be a Reflection of Your Best Self"
 msgstr ""
+"Design para a Alma: Por que sua casa deve ser um reflexo do seu melhor eu"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/themes/theme_selector/theme_selector.js:0
 msgid "Design removed from the templates!"
-msgstr ""
+msgstr "Design removido dos modelos!"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_cta_card
 msgid "Designed for You"
-msgstr ""
+msgstr "Projetado para você"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mailing_preview_mode_toggle/mailing_preview_mode_toggle.xml:0
 msgid "Desktop Preview"
-msgstr ""
+msgstr "Visualização na área de trabalho"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_spam
 msgid "Detected As Spam"
-msgstr ""
+msgstr "Detectado como spam"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_pricelist_boxed
@@ -2771,17 +2787,17 @@ msgstr "Cancelar"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/components/company_update_dialog.js:0
 msgid "Discord Account"
-msgstr ""
+msgstr "Conta do Discord"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_image_text
 msgid "Discover New <strong>Opportunities</strong>"
-msgstr ""
+msgstr "Descubra novas <strong>Oportunidades</strong>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_showcase
 msgid "Discover all features"
-msgstr ""
+msgstr "Ver todos os recursos"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_showcase
@@ -2792,7 +2808,7 @@ msgstr "Descobrir todos os recursos"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_media_list
 msgid ""
 "Discover more <span class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-msgstr ""
+msgstr "Saiba mais <span class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_content_card_4
@@ -2801,12 +2817,16 @@ msgid ""
 "just decor; it's about creating a space so vibrant and curated that "
 "<strong>you'll beam with pride</strong> every time you step inside."
 msgstr ""
+"Descubra a emoção de um lar que reflete verdadeiramente a sua alma. É mais "
+"do que apenas decoração; trata-se de criar um espaço tão vibrante e "
+"cuidadosamente projetado que <strong>você sentirá orgulho</strong> sempre "
+"que entrar!"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
 msgid "Disk"
-msgstr ""
+msgstr "Disco"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_http__display_name
@@ -2878,6 +2898,8 @@ msgid ""
 "Don't settle for the ordinary. Our artisans obsess over every detail to "
 "create the perfection your home demands. Own a masterpiece today."
 msgstr ""
+"Não se contente com o comum. Nossos artesãos se dedicam a cada detalhe para "
+"criar a perfeição que sua casa exige. Adquira uma obra-prima hoje mesmo."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2914,7 +2936,7 @@ msgstr "Rascunho"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_social_media
 msgid "Drop here to add your social media links."
-msgstr ""
+msgstr "Coloque aqui para adicionar seus links de redes sociais."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
@@ -2944,6 +2966,8 @@ msgid ""
 "Each piece is more than just furniture; it's a recognized masterpiece of "
 "craftsmanship and style."
 msgstr ""
+"Cada peça é mais do que apenas um móvel; é uma obra-prima reconhecida de "
+"artesanato e estilo."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2954,13 +2978,13 @@ msgstr "Espaçamento entre bordas"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
 msgid "Edit"
-msgstr ""
+msgstr "Editar"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/snippet_visibility_option.xml:0
 msgid "Edit Conditions"
-msgstr ""
+msgstr "Condições de edição"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
@@ -2970,7 +2994,7 @@ msgstr "Editar estilos"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_content_card_4
 msgid "Elegance That Inspires"
-msgstr ""
+msgstr "Elegância que inspira"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__email
@@ -3050,7 +3074,7 @@ msgstr "Envolve os visitantes"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_image
 msgid "Enhance Your <strong>Experience</strong>"
-msgstr ""
+msgstr "Aprimore sua <strong>experiência</strong>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_content_card_6
@@ -3058,6 +3082,8 @@ msgid ""
 "Enhance your experience with our user-focused designs, ensuring you get the "
 "best value."
 msgstr ""
+"Aprimore sua experiência com nossos designs voltados para o usuário, "
+"garantindo a obtenção do melhor valor."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__error
@@ -3102,6 +3128,9 @@ msgid ""
 "meticulously designed with <strong>premium materials</strong>, ensuring that "
 "your interior reflects a sophisticated yet inviting atmosphere."
 msgstr ""
+"Experimente a harmonia perfeita entre forma e função. Cada peça é "
+"meticulosamente projetada com <strong>materiais premium</strong> , "
+"garantindo que seu interior reflita uma atmosfera sofisticada e acolhedora."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_picture
@@ -3127,7 +3156,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/components/company_update_dialog.js:0
 msgid "Facebook Account"
-msgstr ""
+msgstr "Conta do Facebook"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__failed
@@ -3147,7 +3176,7 @@ msgstr "Tipo de falha"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_describing_benefits
 msgid "Fair pricing"
-msgstr ""
+msgstr "Preço justo"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__favorite
@@ -3193,12 +3222,12 @@ msgstr "Característica 2"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Features Column"
-msgstr ""
+msgstr "Coluna de Recursos"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Features Showcase"
-msgstr ""
+msgstr "Vitrine de recursos"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_showcase
@@ -3247,7 +3276,7 @@ msgstr "Primeira lista de características"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_links.xml:0
 msgid "Follow Us on"
-msgstr ""
+msgstr "Siga-nos no"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_follower_ids
@@ -3309,7 +3338,7 @@ msgstr "Tela cheia"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_card
 msgid "Gain real-time insights."
-msgstr ""
+msgstr "Obtenha insights em tempo real."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__is_test_trace
@@ -3320,12 +3349,12 @@ msgstr "Gerado para teste"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/components/company_update_dialog.js:0
 msgid "Github Account"
-msgstr ""
+msgstr "Conta do GitHub"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_section_mobile
 msgid "Google Play Store"
-msgstr ""
+msgstr "Google Play Store"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
@@ -3341,6 +3370,12 @@ msgid ""
 "traditional craftsmanship. Every detail is a deliberate choice, intended to "
 "turn your house into a personal gallery where you can truly relax in style."
 msgstr ""
+"Um ótimo design vai além de apenas preencher um ambiente; trata-se de criar "
+"um estilo de vida que transmita luxo e significado. Nossas peças são "
+"cuidadosamente confeccionadas para dar alma ao seu espaço, combinando ideias "
+"modernas com o calor do artesanato tradicional. Cada detalhe é uma escolha "
+"deliberada, com o objetivo de transformar sua casa em uma galeria pessoal "
+"onde você possa realmente relaxar com estilo."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_block
@@ -3351,6 +3386,11 @@ msgid ""
 "one will be interested. Write for one person. If it's genuine for the one, "
 "it's genuine for the rest."
 msgstr ""
+"Grandes histórias são <strong>para todos</strong>, mesmo quando escritas "
+"<strong>apenas para uma pessoa</strong>. Se tentar escrever tendo em mente "
+"um público amplo e geral, sua história soará falsa e sem emoção. Ninguém se "
+"interessará. Escreva para uma pessoa. Se for genuíno para essa pessoa, será "
+"genuíno para as demais."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_block
@@ -3361,6 +3401,12 @@ msgid ""
 "shows up in small quirks like word choices or phrases. Write from your point "
 "of view, not from someone else's experience."
 msgstr ""
+"As boas histórias têm <strong>personalidade</strong>. Pense em contar uma "
+"boa história que transmita autenticidade. Escrever uma história com "
+"personalidade para clientes em potencial ajudará a estabelecer uma conexão. "
+"Isso se manifesta em pequenos detalhes, como a escolha de palavras ou "
+"expressões. Escreva a partir do seu ponto de vista, não da experiência de "
+"outra pessoa."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_column
@@ -3368,6 +3414,9 @@ msgid ""
 "Growth capability is a system's ability to scale and adapt, meeting "
 "increasing demands and evolving needs for long-term success."
 msgstr ""
+"A capacidade de crescimento é a capacidade de um sistema de se expandir e se "
+"adaptar, atendendo a demandas crescentes e necessidades em evolução para o "
+"sucesso a longo prazo."
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_ir_http
@@ -3443,7 +3492,7 @@ msgstr "Atributos horizontais"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_need_help
 msgid "How is your data secured?"
-msgstr ""
+msgstr "Como seus dados são protegidos?"
 
 #. module: mass_mailing
 #: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_1
@@ -3648,17 +3697,23 @@ msgid ""
 "your most important moments. We believe your surroundings should be a "
 "testament to your taste, offering the perfect l ease you need to unwind."
 msgstr ""
+"Em um mundo acelerado, sua casa deve ser seu refúgio definitivo — um lugar "
+"privado que lhe traga uma sensação de calma e clareza. Nossa coleção se "
+"concentra em linhas simples e formas confortáveis, proporcionando um cenário "
+"sofisticado para seus momentos mais importantes. Acreditamos que seu "
+"ambiente deve ser um reflexo do seu bom gosto, oferecendo o conforto "
+"perfeito de que você precisa para relaxar."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_need_help
 msgid "In this section, you can address common questions efficiently."
-msgstr ""
+msgstr "Nesta seção, você pode abordar perguntas comuns de maneira eficiente."
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/fields/mass_mailing_domain_field/mass_mailing_domain_selector.xml:0
 msgid "Include Blacklisted Recipients"
-msgstr ""
+msgstr "Incluir destinatários na lista de bloqueio"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -3669,12 +3724,12 @@ msgstr "Conteúdo interno"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/components/company_update_dialog.js:0
 msgid "Instagram Account"
-msgstr ""
+msgstr "Conta do Instagram"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_card
 msgid "Integrate with your favorite apps."
-msgstr ""
+msgstr "Integre com seus aplicativos favoritos."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_schedule
@@ -3694,7 +3749,7 @@ msgstr "Inválido do endereço"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_center_cta
 msgid "Invest in the Future"
-msgstr ""
+msgstr "Invista no Futuro"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
@@ -3736,12 +3791,12 @@ msgstr "É a versão da campanha que ganhou"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_need_help
 msgid "Is the website user-friendly?"
-msgstr ""
+msgstr "O site é fácil de usar?"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_logo_col
 msgid "Issue<br/><strong>#42</strong>"
-msgstr ""
+msgstr "Issue<br/><strong>#42</strong>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_showcase
@@ -3764,6 +3819,9 @@ msgid ""
 "Join our inner circle to enjoy exclusive privileges and turn every curated "
 "choice into a journey of refined inspiration."
 msgstr ""
+"Junte-se ao nosso círculo de membros para desfrutar de privilégios "
+"exclusivos e transformar cada escolha cuidadosamente selecionada em uma "
+"jornada de inspiração refinada."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mailing_list_advertisement
@@ -3771,6 +3829,8 @@ msgid ""
 "Join our mailing list to receive carefully curated resources, tips, and "
 "updates straight to your inbox."
 msgstr ""
+"Cadastre-se em nossa lista de e-mails para receber recursos, dicas e "
+"atualizações cuidadosamente selecionados direto em sua caixa de entrada."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__kpi_mail_required
@@ -3856,7 +3916,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
 msgid "Layout"
-msgstr ""
+msgstr "Layout"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_content_card_2
@@ -3864,7 +3924,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_membership_advertisement
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_card
 msgid "Learn More"
-msgstr ""
+msgstr "Saiba Mais"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_image
@@ -3886,7 +3946,7 @@ msgstr "Logo à esquerda"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_contact
 msgid "Let's get in touch"
-msgstr ""
+msgstr "Entre em contato"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -3904,7 +3964,7 @@ msgstr "Link"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
 msgid "Link Style"
-msgstr ""
+msgstr "Estilo do link"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_link_tracker
@@ -3941,12 +4001,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/components/company_update_dialog.js:0
 msgid "Linkedin Account"
-msgstr ""
+msgstr "Conta no LinkedIn"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Links List"
-msgstr ""
+msgstr "Lista de links"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__links_click_ids
@@ -3956,7 +4016,7 @@ msgstr "Cliques no link"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form_simplified
 msgid "List Name"
-msgstr ""
+msgstr "Nome da lista"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_import__mailing_list_ids
@@ -3966,17 +4026,17 @@ msgstr "Listas"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Logo + Button"
-msgstr ""
+msgstr "Logotipo + Botão"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Logo + Inline Menu"
-msgstr ""
+msgstr "Logotipo + Menu embutido"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Logo + Stacked Menu"
-msgstr ""
+msgstr "Logotipo + Menu Empilhado"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__mail_mail_id
@@ -4059,7 +4119,7 @@ msgstr "Comunicação"
 #: model:ir.actions.act_window,name:mass_mailing.mailing_trace_report_action_mail
 #: model:ir.ui.menu,name:mass_mailing.mailing_menu_report_mailing
 msgid "Mailing Analysis"
-msgstr ""
+msgstr "Análise de e-mails"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__campaign
@@ -4075,7 +4135,7 @@ msgstr "Campanhas de comunicação"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
 msgid "Mailing Color"
-msgstr ""
+msgstr "Cor do e-mail"
 
 #. module: mass_mailing
 #. odoo-python
@@ -4104,7 +4164,7 @@ msgstr "Comunicação em massa ativada"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_filter
 msgid "Mailing Favorite Filter"
-msgstr ""
+msgstr "Filtro de Favoritos de E-mail"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_search
@@ -4349,7 +4409,7 @@ msgstr "Estatísticas de envio em massa"
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__ir_ui_view__technical_usage__mass_mailing
 msgid "Mass Mailing Technical"
-msgstr ""
+msgstr "Envio em massa de e-mails técnicos"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__mailing_ids
@@ -4385,7 +4445,7 @@ msgstr "Conheça nossa equipe"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Membership"
-msgstr ""
+msgstr "Associação"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -4396,7 +4456,7 @@ msgstr "Associação atualizada"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Menu"
-msgstr ""
+msgstr "Menu"
 
 #. module: mass_mailing
 #: model:ir.actions.server,name:mass_mailing.mailing_list_merge_action
@@ -4457,12 +4517,12 @@ msgstr "Ausente no endereço"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mailing_preview_mode_toggle/mailing_preview_mode_toggle.xml:0
 msgid "Mobile Preview"
-msgstr ""
+msgstr "Visualização com dispositivo Móvel"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_ir_model
 msgid "Model"
-msgstr ""
+msgstr "Modelo"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -4506,17 +4566,17 @@ msgstr "Nome"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Name + Button"
-msgstr ""
+msgstr "Nome + Botão"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Name + Inline Menu"
-msgstr ""
+msgstr "Nome + Menu embutido"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Name + Social"
-msgstr ""
+msgstr "Nome + Redes sociais"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
@@ -4527,18 +4587,18 @@ msgstr "Nome/e-mail"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_need_help
 msgid "Need help?"
-msgstr ""
+msgstr "Precisa de ajuda?"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_blog_post_card
 msgid "New Blog post"
-msgstr ""
+msgstr "Nova publicação no blog"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
 msgid "New Mailing"
-msgstr ""
+msgstr "Nova lista de discussão"
 
 #. module: mass_mailing
 #. odoo-python
@@ -4686,7 +4746,7 @@ msgstr "Nenhum endereço de e-mail válido encontrado."
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
 msgid "None"
-msgstr ""
+msgstr "Nenhum"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__email_normalized
@@ -4783,7 +4843,7 @@ msgstr "ABERTOS (%i)"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_section_mobile
 msgid "Odoo Mobile"
-msgstr ""
+msgstr "Odoo Mobile"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -4888,6 +4948,10 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Idioma de tradução opcional (código ISO) a ser selecionado ao enviar um e-"
+"mail. Se não for definido, será utilizado o idioma do parceiro principal. "
+"Normalmente, deve ser uma expressão de espaço reservado que forneça o idioma "
+"apropriado, por exemplo, {{ object.partner_id.lang }}."
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_subscription_optout_action
@@ -4926,6 +4990,9 @@ msgid ""
 "Our product line offers a range of innovative solutions designed to meet "
 "your needs. Each product is crafted for quality and reliability."
 msgstr ""
+"Nossa linha de produtos oferece uma gama de soluções inovadoras projetadas "
+"para atender às suas necessidades. Cada produto é criado para oferecer "
+"qualidade e confiabilidade."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_describing_benefits
@@ -4933,6 +5000,9 @@ msgid ""
 "Our support team is available 24/7 to assist with any inquiries or issues, "
 "ensuring you get help whenever you need it."
 msgstr ""
+"Nossa equipe de suporte está disponível 24 horas por dia, 7 dias por semana, "
+"para ajudar com quaisquer dúvidas ou problemas, garantindo que você receba "
+"ajuda sempre que precisar."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team_shapes
@@ -4945,6 +5015,8 @@ msgid ""
 "Our website is designed for easy navigation, allowing you to find the "
 "information you need quickly and efficiently."
 msgstr ""
+"Nosso site foi projetado para facilitar a navegação, permitindo que você "
+"encontre as informações de que precisa de forma rápida e eficiente."
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_status__outgoing
@@ -4954,7 +5026,7 @@ msgstr "Saída"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mail
 msgid "Outgoing Mail"
-msgstr ""
+msgstr "E-mail enviado"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -4984,7 +5056,7 @@ msgstr "Parágrafo"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
 msgid "Paste"
-msgstr ""
+msgstr "Colar"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__pending
@@ -5038,7 +5110,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_column
 msgid "Performance"
-msgstr ""
+msgstr "Desempenho"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
@@ -5083,7 +5155,7 @@ msgstr "Forneça um nome para o filtro"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_link_list
 msgid "Popular Links"
-msgstr ""
+msgstr "Links populares"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_media_list
@@ -5101,6 +5173,8 @@ msgid ""
 "Prevent sending messages to blacklisted contacts. Disable only when "
 "absolutely necessary."
 msgstr ""
+"Impedir o envio de mensagens para contatos na lista negra. Desative apenas "
+"quando for absolutamente necessário."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__preview
@@ -5113,12 +5187,12 @@ msgstr "Visualizar"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Preview & Test"
-msgstr ""
+msgstr "Pré-visualização e teste"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_test__body_html
 msgid "Preview Body"
-msgstr ""
+msgstr "Visualizar corpo"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_test__preview_text
@@ -5129,7 +5203,7 @@ msgstr "Texto de visualização"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_test__preview_record_ref
 msgid "Preview for"
-msgstr ""
+msgstr "Pré-visualização de"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -5140,7 +5214,7 @@ msgstr "Lista de preços em caixa"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
 msgid "Primary Button"
-msgstr ""
+msgstr "Botão principal"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__process
@@ -5157,12 +5231,12 @@ msgstr "Processando"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Product Description"
-msgstr ""
+msgstr "Decrição do produto"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Product Showcase"
-msgstr ""
+msgstr "Vitrine de Produtos"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -5183,7 +5257,7 @@ msgstr "Propriedades"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__properties_base_definition_id
 msgid "Properties Base Definition"
-msgstr ""
+msgstr "Definição básica de propriedades"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_rating
@@ -5227,12 +5301,12 @@ msgstr "Avaliações"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_product_showcase
 msgid "Read More"
-msgstr ""
+msgstr "Ler mais"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_blog_post_card
 msgid "Read Now"
-msgstr ""
+msgstr "Ler agora"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -5243,7 +5317,7 @@ msgstr "Pronto para decolar!"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Ready to unleash emails?"
-msgstr ""
+msgstr "Pronto para enviar e-mails?"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__opt_out_reason_id
@@ -5321,7 +5395,7 @@ msgstr "Modelo real de destinatário"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/plugins/record_snapshot_option_plugin.js:0
 msgid "Record"
-msgstr ""
+msgstr "Registro"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_content_card_4
@@ -5331,6 +5405,10 @@ msgid ""
 "strong>, turning every corner of your home into a sanctuary of happiness and "
 "ease."
 msgstr ""
+"Redefina seus rituais diários com interiores que inspiram. Desde o momento "
+"em que você entra pela porta, nossas peças evocam uma sensação de "
+"<strong>puro deleite</strong>, transformando cada canto da sua casa em um "
+"santuário de felicidade e tranquilidade."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -5340,7 +5418,7 @@ msgstr "Referências"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_column
 msgid "Reliability"
-msgstr ""
+msgstr "Confiabilidade"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -5433,7 +5511,7 @@ msgstr "Redimensionar 1/4"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
 msgid "Resize Three Quarters"
-msgstr ""
+msgstr "Redimensionar para três quartos"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__user_id
@@ -5483,7 +5561,7 @@ msgstr "Assistente de exemplo de e-mail"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/components/company_update_dialog.xml:0
 msgid "Save"
-msgstr ""
+msgstr "Salvar"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -5494,7 +5572,7 @@ msgstr "Salvar como filtro favorito"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Save as favorite"
-msgstr ""
+msgstr "Salvar como favorito"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_filter__create_uid
@@ -5514,7 +5592,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_column
 msgid "Scalability"
-msgstr ""
+msgstr "Escalabilidade"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__schedule_type
@@ -5572,32 +5650,32 @@ msgstr "Segunda lista de características"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
 msgid "Secondary Button"
-msgstr ""
+msgstr "Botão secundário"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Section Mobile"
-msgstr ""
+msgstr "Seção Mobile"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_card
 msgid "See how"
-msgstr ""
+msgstr "Veja como"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_special_offer_cta
 msgid "See more"
-msgstr ""
+msgstr "Veja mais"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_cta_badge
 msgid "See more <span class=\"fa fa-long-arrow-right\" role=\"img\"/>"
-msgstr ""
+msgstr "Ver mais<span class=\"fa fa-long-arrow-right\" role=\"img\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Select a Target"
-msgstr ""
+msgstr "Selecione um destino"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_form
@@ -5607,7 +5685,14 @@ msgstr "Selecione um modelo alvo…"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
 msgid "Select a list..."
-msgstr ""
+msgstr "Selecione uma lista..."
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
+#, fuzzy
+#| msgid "Select a Target"
+msgid "Select a record"
+msgstr "Selecione um destino"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
@@ -5655,7 +5740,7 @@ msgstr "Enviar comunicação em massa"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Send Test"
-msgstr ""
+msgstr "Enviar teste"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"POT-Creation-Date: 2026-04-03 18:38+0000\n"
 "PO-Revision-Date: 2026-02-07 12:16+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -70,6 +70,11 @@ msgid "49-098-576 or 49098576"
 msgstr "49-098-576 或 49098576"
 
 #. module: base_vat
+#: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
+msgid "Base VAT: Sync updates from IAP VIES"
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
@@ -115,12 +120,6 @@ msgstr "DE123456788 或 12/345/67890"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "Error while checking the VAT number '%s' against the VIES service."
-msgstr "向 VIES 服務查核增值稅號碼「%s」時，發生錯誤。"
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
@@ -189,6 +188,12 @@ msgstr "共同體內部有效"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "Invalid IAP VIES endpoint"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 msgid "Note: the expected format is %(expected_format)s"
 msgstr "請留意：預期格式為 %(expected_format)s"
 
@@ -208,8 +213,8 @@ msgstr "稅務編號"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. "
-"%(expected_note)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
+"(expected_note)s"
 msgstr "%(vat_label)s 的號碼 [%(wrong_vat)s] 似乎無效。%(expected_note)s"
 
 #. module: base_vat
@@ -219,8 +224,14 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
 "to be valid. %(expected_note)s"
 msgstr ""
-"以下記錄的 %(vat_label)s 號碼 [%(wrong_vat)s] 似乎無效。記錄："
-"%(record_label)s。%(expected_note)s"
+"以下記錄的 %(vat_label)s 號碼 [%(wrong_vat)s] 似乎無效。記錄：%"
+"(record_label)s。%(expected_note)s"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The Intra-Community validity has been updated."
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vat
@@ -232,6 +243,18 @@ msgid ""
 msgstr ""
 "稅務識別號碼。此處的值將根據國家/地區格式進行驗證。可使用「/」表示合作夥伴不"
 "須納稅。"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check failed. Please check the Tax ID manually."
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check is pending. The status will be updated soon."
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -275,3 +298,6 @@ msgstr "CPF 為 11 位數字，或者 CNPJ 則是 14 位數字"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "合作夥伴 [%s]"
+
+#~ msgid "Error while checking the VAT number '%s' against the VIES service."
+#~ msgstr "向 VIES 服務查核增值稅號碼「%s」時，發生錯誤。"
