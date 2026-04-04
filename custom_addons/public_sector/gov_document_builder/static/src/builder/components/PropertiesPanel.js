@@ -3,6 +3,18 @@
 import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
+const TRANSFORMER_OPTIONS = [
+    { value: "", label: "Sem transformação" },
+    { value: "strip", label: "strip" },
+    { value: "upper", label: "upper" },
+    { value: "lower", label: "lower" },
+    { value: "title", label: "title" },
+    { value: "date_br", label: "date_br" },
+    { value: "currency_br", label: "currency_br" },
+    { value: "percentual", label: "percentual" },
+    { value: "lista_br", label: "lista_br" },
+];
+
 export class PropertiesPanel extends Component {
     static template = "gov_document_builder.PropertiesPanel";
 
@@ -141,7 +153,8 @@ export class PropertiesPanel extends Component {
     }
 
     get bindingTransform() {
-        return ((this.selectedNode && this.selectedNode.binding) || {}).transform || "";
+        const binding = (this.selectedNode && this.selectedNode.binding) || {};
+        return binding.transform || (this.selectedFieldDefinition && this.selectedFieldDefinition.default_transformer) || "";
     }
 
     get bindingDisplayPath() {
@@ -151,5 +164,92 @@ export class PropertiesPanel extends Component {
         const source = this.bindingSource || "source";
         const path = this.bindingPath || "*";
         return `${source}.${path}`;
+    }
+
+    get transformerOptions() {
+        return TRANSFORMER_OPTIONS;
+    }
+
+    get availableNamespaces() {
+        const namespaces = new Set(
+            (this.store.state.fieldDefinitions || []).map((field) => field.namespace)
+        );
+        return Array.from(namespaces).sort();
+    }
+
+    get fieldsForSelectedNamespace() {
+        if (!this.bindingSource) {
+            return [];
+        }
+        return (this.store.state.fieldDefinitions || []).filter(
+            (field) => field.namespace === this.bindingSource
+        );
+    }
+
+    get selectedFieldDefinition() {
+        if (!this.bindingSource || !this.bindingPath) {
+            return null;
+        }
+        return (
+            (this.store.state.fieldDefinitions || []).find(
+                (field) =>
+                    field.namespace === this.bindingSource &&
+                    field.variable_key === this.bindingPath
+            ) || null
+        );
+    }
+
+    get mutabilityBadge() {
+        if (!this.selectedFieldDefinition) {
+            return null;
+        }
+        const badgeByPolicy = {
+            immutable: { label: "Imutável", class: "gdb-badge-success" },
+            snapshot: { label: "Snapshot", class: "gdb-badge-info" },
+            dynamic: { label: "Dinâmico", class: "gdb-badge-warning" },
+        };
+        return badgeByPolicy[this.selectedFieldDefinition.mutability_policy] || null;
+    }
+
+    get bindingPreview() {
+        if (!this.hasBinding) {
+            return "";
+        }
+        return this.store.resolveBindingPreview(this.selectedNode.binding || {});
+    }
+
+    get isRuntimePreview() {
+        return this.bindingPreview === "[valor.em.runtime]";
+    }
+
+    selectNamespace(ev) {
+        if (!this.selectedNode) {
+            return;
+        }
+        const namespace = ev.target.value;
+        const currentBinding = this.selectedNode.binding || {};
+        this.store.updateNodeBinding(this.selectedNode.id, {
+            ...currentBinding,
+            source: namespace,
+            path: "",
+            transform: "",
+        });
+    }
+
+    selectField(ev) {
+        if (!this.selectedNode) {
+            return;
+        }
+        const variableKey = ev.target.value;
+        const definition = this.fieldsForSelectedNamespace.find(
+            (field) => field.variable_key === variableKey
+        );
+        const currentBinding = this.selectedNode.binding || {};
+        this.store.updateNodeBinding(this.selectedNode.id, {
+            ...currentBinding,
+            source: this.bindingSource,
+            path: variableKey,
+            transform: definition?.default_transformer || currentBinding.transform || "",
+        });
     }
 }

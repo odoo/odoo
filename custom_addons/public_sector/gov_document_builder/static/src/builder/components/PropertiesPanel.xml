@@ -103,23 +103,44 @@
                         </div>
 
                         <div t-if="this.hasBinding" class="gdb-binding-fields">
-                            <label class="prop-label">Fonte</label>
-                            <input
-                                type="text"
+                            <label class="prop-label">Namespace</label>
+                            <select
                                 class="prop-input"
-                                placeholder="process"
                                 t-att-value="this.bindingSource"
-                                t-on-input="(ev) => this.updateBindingField('source', ev)"
-                            />
+                                t-on-change="selectNamespace"
+                            >
+                                <option value="">Selecione um namespace</option>
+                                <t t-foreach="this.availableNamespaces" t-as="namespace" t-key="namespace">
+                                    <option t-att-value="namespace"><t t-esc="namespace" /></option>
+                                </t>
+                            </select>
 
-                            <label class="prop-label">Caminho</label>
-                            <input
-                                type="text"
-                                class="prop-input"
-                                placeholder="objeto"
-                                t-att-value="this.bindingPath"
-                                t-on-input="(ev) => this.updateBindingField('path', ev)"
-                            />
+                            <div t-if="this.bindingSource">
+                                <label class="prop-label">Campo</label>
+                                <select
+                                    class="prop-input"
+                                    t-att-value="this.bindingPath"
+                                    t-on-change="selectField"
+                                >
+                                    <option value="">Selecione uma variável</option>
+                                    <t t-foreach="this.fieldsForSelectedNamespace" t-as="field" t-key="field.id">
+                                        <option t-att-value="field.variable_key">
+                                            <t t-esc="field.name" />
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+
+                            <div t-if="this.mutabilityBadge" class="gdb-binding-meta">
+                                <span t-attf-class="gdb-binding-badge {{ this.mutabilityBadge.class }}">
+                                    <t t-esc="this.mutabilityBadge.label" />
+                                </span>
+                            </div>
+
+                            <div t-if="this.bindingPreview" t-attf-class="gdb-binding-preview {{ this.isRuntimePreview ? 'is-runtime' : '' }}">
+                                <span class="gdb-binding-preview-label">Preview</span>
+                                <span class="gdb-binding-preview-value"><t t-esc="this.bindingPreview" /></span>
+                            </div>
 
                             <label class="prop-label">Fallback</label>
                             <input
@@ -130,13 +151,15 @@
                             />
 
                             <label class="prop-label">Transformador</label>
-                            <input
-                                type="text"
+                            <select
                                 class="prop-input"
-                                placeholder="strip, upper, lower..."
                                 t-att-value="this.bindingTransform"
-                                t-on-input="(ev) => this.updateBindingField('transform', ev)"
-                            />
+                                t-on-change="(ev) => this.updateBindingField('transform', ev)"
+                            >
+                                <t t-foreach="this.transformerOptions" t-as="option" t-key="option.value || 'empty'">
+                                    <option t-att-value="option.value"><t t-esc="option.label" /></option>
+                                </t>
+                            </select>
                         </div>
                     </div>
                 </div>

@@ -26,6 +26,7 @@ const INITIAL_STATE = {
     validationErrors: [],
     resolvedContext: {},
     blockCatalog: [],
+    fieldDefinitions: [],
 };
 
 export class DocumentBuilderStore {
@@ -54,6 +55,7 @@ export class DocumentBuilderStore {
             dirty: false,
         });
         await this.loadBlockCatalog(data.document_type?.code);
+        await this.loadFieldDefinitions();
     }
 
     async resolveContext() {
@@ -72,6 +74,42 @@ export class DocumentBuilderStore {
             document_type_code: documentTypeCode || null,
         });
         this.state.blockCatalog = catalog;
+    }
+
+    async loadFieldDefinitions() {
+        const definitions = await this.rpc("/gov/document/field_definitions", {});
+        this.state.fieldDefinitions = definitions || [];
+    }
+
+    resolveBindingPreview(binding) {
+        const source = binding?.source || "";
+        const path = binding?.path || "";
+        if (!source || !path) {
+            return "";
+        }
+
+        let value = this.state.resolvedContext?.[source];
+        const keys = path.split(".").filter(Boolean);
+        let missing = value === undefined || value === null;
+        for (const key of keys) {
+            if (missing || value === null || typeof value !== "object" || !(key in value)) {
+                missing = true;
+                break;
+            }
+            value = value[key];
+        }
+
+        if (missing || value === undefined || value === null) {
+            return "[valor.em.runtime]";
+        }
+
+        const definition = this.state.fieldDefinitions.find(
+            (field) => field.namespace === source && field.variable_key === path
+        );
+        const transformer =
+            binding?.transform || definition?.default_transformer || "";
+
+        return this._applyBindingTransformer(value, transformer);
     }
 
     // ── MUTAÇÕES DE NÓS ────────────────────────────────────────
@@ -232,6 +270,96 @@ export class DocumentBuilderStore {
             clearTimeout(timer);
             timer = setTimeout(() => fn.apply(this, args), delay);
         };
+    }
+
+    _applyBindingTransformer(value, transformer) {
+        if (!transformer) {
+            return this._formatPreviewValue(value);
+        }
+        if (transformer === "date_br") {
+            const date = value instanceof Date ? value : new Date(value);
+            if (!Number.isNaN(date.getTime())) {
+                return date.toLocaleDateString("pt-BR");
+            }
+            return this._formatPreviewValue(value);
+        }
+        if (transformer === "currency_br") {
+            const numeric = this._coerceNumber(value);
+            if (numeric !== null) {
+                return new Intl.NumberFormat("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                }).format(numeric);
+            }
+            return this._formatPreviewValue(value);
+        }
+        if (transformer === "percentual") {
+            const numeric = this._coerceNumber(value);
+            if (numeric !== null) {
+                return new Intl.NumberFormat("pt-BR", {
+                    style: "percent",
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                }).format(numeric);
+            }
+            return this._formatPreviewValue(value);
+        }
+        if (transformer === "lista_br") {
+            if (Array.isArray(value)) {
+                const items = value.filter((item) => item !== null && item !== undefined && item !== "");
+                if (!items.length) {
+                    return "";
+                }
+                if (items.length === 1) {
+                    return `${items[0]}`;
+                }
+                if (items.length === 2) {
+                    return `${items[0]} e ${items[1]}`;
+                }
+                return `${items.slice(0, -1).join(", ")} e ${items[items.length - 1]}`;
+            }
+            return this._formatPreviewValue(value);
+        }
+        if (typeof value !== "string") {
+            return this._formatPreviewValue(value);
+        }
+        const transformers = {
+            strip: (current) => current.trim(),
+            upper: (current) => current.toUpperCase(),
+            lower: (current) => current.toLowerCase(),
+            title: (current) =>
+                current.replace(/\w\S*/g, (word) => {
+                    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+                }),
+        };
+        return (transformers[transformer] || ((current) => current))(value);
+    }
+
+    _formatPreviewValue(value) {
+        if (Array.isArray(value)) {
+            return value.join(", ");
+        }
+        if (typeof value === "boolean") {
+            return value ? "Sim" : "Não";
+        }
+        if (value && typeof value === "object") {
+            return JSON.stringify(value);
+        }
+        return `${value}`;
+    }
+
+    _coerceNumber(value) {
+        if (typeof value === "number") {
+            return Number.isFinite(value) ? value : null;
+        }
+        if (typeof value === "string" && value.trim()) {
+            const normalized = value.includes(",") && value.includes(".")
+                ? value.replace(/\./g, "").replace(",", ".")
+                : value.replace(",", ".");
+            const parsed = Number.parseFloat(normalized);
+            return Number.isFinite(parsed) ? parsed : null;
+        }
+        return null;
     }
 }
 

@@ -1129,6 +1129,62 @@
     margin-top: 12px;
 }
 
+.gdb-binding-meta {
+    margin-top: 2px;
+}
+
+.gdb-binding-badge {
+    border-radius: 999px;
+    display: inline-flex;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 9px;
+}
+
+.gdb-badge-success {
+    background: rgba(34, 197, 94, 0.14);
+    color: #166534;
+}
+
+.gdb-badge-info {
+    background: rgba(59, 130, 246, 0.14);
+    color: #1d4ed8;
+}
+
+.gdb-badge-warning {
+    background: rgba(245, 158, 11, 0.18);
+    color: #92400e;
+}
+
+.gdb-binding-preview {
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px dashed var(--gdb-panel-border);
+    border-radius: 6px;
+    color: var(--gdb-text-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 8px 10px;
+}
+
+.gdb-binding-preview.is-runtime {
+    border-color: rgba(245, 158, 11, 0.35);
+    color: #9a6a14;
+}
+
+.gdb-binding-preview-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.gdb-binding-preview-value {
+    color: var(--gdb-text-mid);
+    font-size: 11px;
+    line-height: 1.4;
+}
+
 .toggle-row {
     align-items: center;
     display: flex;
