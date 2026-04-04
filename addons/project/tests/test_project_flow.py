@@ -239,6 +239,7 @@ class TestProjectFlow(TestProjectCommon, MailCase):
         self.assertEqual(task.personal_stage_id.stage_id.name, stages[0].get('name'), "tasks assigned to the current user should be in the right default stage")
 
     def test_send_rating_review(self):
+        self.project_goats.message_subscribe(partner_ids=self.user_projectmanager.partner_id.ids)
         won_stage = self.project_goats.type_ids[-1]
         won_stage.write({
             'rating_active': True,

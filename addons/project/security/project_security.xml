@@ -55,10 +55,21 @@
     </record>
 
     <record model="ir.rule" id="project_project_manager_rule">
-        <field name="name">Project: project manager: see all</field>
+        <field name="name">Project: Administrator: see all</field>
         <field name="model_id" ref="model_project_project"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+
+    <record model="ir.rule" id="project_project_manager_create_rule">
+        <field name="name">Project: project manager: create any project</field>
+        <field name="model_id" ref="model_project_project"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_project_manager'))]"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
     </record>
 
     <record model="ir.rule" id="project_public_members_rule">
@@ -95,13 +106,13 @@
     </record>
 
     <record model="ir.rule" id="project_manager_all_project_tasks_rule">
-        <field name="name">Project/Task: project manager: see all tasks linked to a project or its own tasks</field>
+        <field name="name">Project/Task: Administrator: see all tasks linked to a project or its own tasks</field>
         <field name="model_id" ref="model_project_task"/>
         <field name="domain_force">[
             '|', ('project_id', '!=', False),
                  ('user_ids', 'in', user.id),
         ]</field>
-        <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
     </record>
 
     <record model="ir.rule" id="task_type_manager_rule">
@@ -271,17 +282,17 @@
     </record>
 
     <record model="ir.rule" id="report_project_task_manager_rule">
-        <field name="name">Tasks Analysis: project visibility Manager</field>
+        <field name="name">Tasks Analysis: project visibility Administrator</field>
         <field name="model_id" ref="model_report_project_task_user"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
     </record>
 
     <record id="update_visibility_project_admin" model="ir.rule">
-        <field name="name">Project updates : Project user can see all project updates</field>
+        <field name="name">Project updates: Administrator can see all project updates</field>
         <field name="model_id" ref="project.model_project_update"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
     </record>
 
     <record model="ir.rule" id="burndown_chart_project_user_rule">
@@ -298,10 +309,10 @@
     </record>
 
     <record model="ir.rule" id="burndown_chart_project_manager_rule">
-        <field name="name">Burndown chart: project visibility User</field>
+        <field name="name">Burndown chart: project visibility Administrator</field>
         <field name="model_id" ref="model_project_task_burndown_chart_report"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
     </record>
 
     <record model="ir.rule" id="milestone_comp_rule">
@@ -324,10 +335,10 @@
     </record>
 
     <record id="milestone_visibility_project_admin" model="ir.rule">
-        <field name="name">Project/Milestone: Project manager can see all project milestones</field>
+        <field name="name">Project/Milestone: Administrator can see all project milestones</field>
         <field name="model_id" ref="project.model_project_milestone"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('project.group_project_manager'))]"/>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
     </record>
 
     <record id="project_milestone_rule_portal_project_sharing" model="ir.rule">
