@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:36+0000\n"
+"POT-Creation-Date: 2026-04-03 18:40+0000\n"
 "PO-Revision-Date: 2025-11-16 08:53+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -790,6 +790,14 @@ msgstr ""
 "उन खर्चों को ग्राहकों से वापस लिया जा सकता है जिनके लिए उन्हें इनवॉइस किया गया है।"
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, fuzzy
+#| msgid "Expense reset to Draft"
+msgid "Expense created from a split."
+msgstr "खर्च को वापस ड्राफ़्ट के लिए रीसेट करें"
+
+#. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
 msgid "Expense paid"
 msgstr "खर्च के लिए चुकाया गया"
@@ -823,6 +831,7 @@ msgstr "मंजू़री के लिए खर्च"
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/account_move.py:0
+#: code:addons/hr_expense/models/account_payment.py:0
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__can_be_expensed
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__can_be_expensed
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
@@ -1967,6 +1976,15 @@ msgstr ""
 "इस रिपोर्ट में कुछ ऐसे खर्च हैं जो पहले से मंजूर किए गए खर्चों जैसे ही लग रहे हैं, क्योंकि उनमें "
 "कर्मचारी, रकम और कैटगरी एक जैसी है. कृपया जांच लें कि इस रिपोर्ट में कोई भी खर्च दो बार "
 "तो नहीं लिखा गया है."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid ""
+"The following expenses payment method leads to several accounts payable and "
+"this isn't supported:\n"
+"%(expenses)s"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_post_wizard__employee_journal_id

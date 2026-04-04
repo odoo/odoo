@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:37+0000\n"
+"POT-Creation-Date: 2026-04-03 18:40+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
@@ -711,6 +711,7 @@ msgstr "Kanal za razprave"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_ir_qweb__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_mail_message__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_mail_message_reaction__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_rating_rating__display_name
@@ -960,6 +961,7 @@ msgstr "Imam vprašanje glede cen"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__id
+#: model:ir.model.fields,field_description:im_livechat.field_ir_qweb__id
 #: model:ir.model.fields,field_description:im_livechat.field_mail_message__id
 #: model:ir.model.fields,field_description:im_livechat.field_mail_message_reaction__id
 #: model:ir.model.fields,field_description:im_livechat.field_rating_rating__id
@@ -1572,6 +1574,11 @@ msgid "Question"
 msgstr "Vprašanje"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_ir_qweb
+msgid "Qweb"
+msgstr ""
+
+#. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/controllers/main.py:0
 #: model:ir.model,name:im_livechat.model_rating_rating
@@ -1969,7 +1976,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
 #: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
-msgid "This livechat conversation has ended"
+#, fuzzy
+#| msgid "This livechat conversation has ended"
+msgid "This livechat conversation has ended."
 msgstr "Ta pogovor v živo se je končal"
 
 #. module: im_livechat

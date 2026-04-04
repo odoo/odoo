@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:37+0000\n"
+"POT-Creation-Date: 2026-04-03 18:40+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -196,6 +196,7 @@ msgid "Discount & Loyalty"
 msgstr "할인 및 적립"
 
 #. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__display_name
@@ -282,6 +283,7 @@ msgid "How many point this reward cost on the coupon."
 msgstr "쿠폰을 받으려면 리워드에서 차감되는 포인트."
 
 #. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_account_move_line__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__id
@@ -329,6 +331,11 @@ msgstr "잘못된 기프트 카드 프로그램입니다. 규칙이 하나 이�
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__is_reward_line
 msgid "Is Reward Line"
 msgstr "보상 내역입니다"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_account_move_line
+msgid "Journal Item"
+msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_mail

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:37+0000\n"
+"POT-Creation-Date: 2026-04-03 18:40+0000\n"
 "PO-Revision-Date: 2026-03-28 21:00+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-2/hr/"
@@ -1899,6 +1899,13 @@ msgid "Employee's Country"
 msgstr "従業員の国"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_country_code
+#, fuzzy
+#| msgid "Employee's Country"
+msgid "Employee's Country Code"
+msgstr "従業員の国"
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2410,7 +2417,8 @@ msgstr "チェックした場合は、一部のメッセージに配信エラー
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr "有効項目をFalse にセットすると、リソースレコードは削除することなく非表示にで"
+msgstr ""
+"有効項目をFalse にセットすると、リソースレコードは削除することなく非表示にで"
 "きます。"
 
 #. module: hr
@@ -3945,6 +3953,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_reason__country_code
 #: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
+#: model:ir.model.fields,help:hr.field_res_users__employee_country_code
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
@@ -4314,7 +4323,8 @@ msgstr "この職の素晴らしい点"
 msgid ""
 "Whether the employee is a member of the active user's department or one of "
 "it's child department."
-msgstr "その従業員が、有効ユーザの所属部門またはその子部門のメンバであるかどうか。"
+msgstr ""
+"その従業員が、有効ユーザの所属部門またはその子部門のメンバであるかどうか。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_res_partner__employee
