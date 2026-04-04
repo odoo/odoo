@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:37+0000\n"
-"PO-Revision-Date: 2026-03-21 09:29+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-04-03 18:39+0000\n"
+"PO-Revision-Date: 2026-03-31 10:47+0000\n"
+"Last-Translator: Oakarmin Iron <oakarminiron@gmail.com>\n"
 "Language-Team: Burmese <https://translate.odoo.com/projects/odoo-18/"
 "point_of_sale/my/>\n"
 "Language: my\n"
@@ -1396,18 +1396,6 @@ msgid "Cannot return change without a cash payment method"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
-msgid "Cannot weigh product - IoT Box is disconnected"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
-msgid "Cannot weigh product - Scale is not connected to IoT Box"
-msgstr ""
-
-#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Card"
@@ -2471,6 +2459,14 @@ msgstr ""
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
 msgid "Dashboard"
 msgstr "ဒက်ရှ်ဘုတ်"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+#, fuzzy
+#| msgid "Connection Lost"
+msgid "Database Connection Lost"
+msgstr "ချိတ်ဆက်မှူ ပြတ်သွားပြီ"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4474,7 +4470,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_note_tree
 msgid "Note Models"
-msgstr ""
+msgstr "မှတ်စု မော်ဒယ်များ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4992,7 +4988,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_session_id
 msgid "POS Session"
-msgstr ""
+msgstr "POS ဆက်ရှင်"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_session_ids
@@ -5665,7 +5661,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__pos_session_id
 msgid "Pos Session"
-msgstr ""
+msgstr "Pos ဆက်ရှင်"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_duration
@@ -6388,6 +6384,12 @@ msgid "Related Session: %(link)s"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid "Reload"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
 msgid "Reload POS Menu"
 msgstr ""
@@ -6624,7 +6626,7 @@ msgstr "အရောင်း"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_daily_sales_reports_wizard
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_details_wizard
 msgid "Sales Details"
-msgstr ""
+msgstr "အရောင်းအသေးစိတ်များ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__sale_journal
@@ -6888,7 +6890,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_daily_sales_reports
 #: model:ir.ui.menu,name:point_of_sale.menu_report_daily_details
 msgid "Session Report"
-msgstr ""
+msgstr "ဆက်ရှင် ရီပို့"
 
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
@@ -7559,6 +7561,14 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
 "The cash rounding strategy of the point of sale %(pos)s must be: '%(value)s'"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid ""
+"The connection to the local database was lost. Reloading the page will "
+"restore it and prevent any loss of unsaved orders."
 msgstr ""
 
 #. module: point_of_sale

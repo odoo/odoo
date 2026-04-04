@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-15 18:38+0000\n"
+"POT-Creation-Date: 2026-04-03 18:39+0000\n"
 "PO-Revision-Date: 2025-11-17 10:30+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -3889,18 +3889,23 @@ msgstr "發佈訊息失敗。按一下再試"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
-"Failed to render QWeb template: %(template_src)s\n"
+"Failed to render QWeb template for %(template_label)s\n"
+"Target Model: %(model_name)s\n"
+"Language context: %(lang_context)s\n"
+"Error: %(error_details)s\n"
 "\n"
-"%(template_traceback)s)"
+"Template Source Snippet:\n"
+"%(template_src)s"
 msgstr ""
-"繪製 QWeb 範本失敗：%(template_src)s\n"
-"\n"
-"%(template_traceback)s)"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-msgid "Failed to render inline_template template: %(template_txt)s"
+#, fuzzy
+#| msgid "Failed to render inline_template template: %(template_txt)s"
+msgid ""
+"Failed to render inline_template template: %(template_txt)s\n"
+"Error details: %(error)s"
 msgstr "未能繪製 inline_template 範本：%(template_txt)s"
 
 #. module: mail
@@ -5777,6 +5782,14 @@ msgid "Mail Template Reset"
 msgstr "郵件範本重設"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "alias %(name)s: %(error)s"
+msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
+msgstr "別名 %(name)s：%(error)s"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Thread"
 msgstr "信件線程"
@@ -5919,6 +5932,12 @@ msgstr "標記為未讀"
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.xml:0
 msgid "Mark as done"
 msgstr "標記為完成"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -6547,6 +6566,14 @@ msgstr "暫無對話..."
 #: code:addons/mail/static/src/core/web/thread_patch.xml:0
 msgid "No history messages"
 msgstr "沒有歷史訊息"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "Result of the language detection based on its content."
+msgid "No language detected in context"
+msgstr "基於語言內容的語言偵測結果。"
 
 #. module: mail
 #. odoo-python
@@ -9390,6 +9417,14 @@ msgstr "若要從編寫器創建範本，需要有效的模型。"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "Message unique identifier"
+msgid "Template name not identified"
+msgstr "訊息唯一編號"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
 "Template rendering should only be called with a list of IDs. Received “%"
 "(res_ids)s” instead."
@@ -10351,6 +10386,20 @@ msgstr "取消靜音對話"
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_value.py:0
 msgid "Unnamed %(record_model_name)s (%(record_id)s)"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "Related Mail Template"
+msgid "Unnamed Mail Template"
+msgstr "相關信件範本"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Unnamed Mailing"
 msgstr ""
 
 #. module: mail
@@ -11922,6 +11971,15 @@ msgstr "{{ object.partner_id.lang }}"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "\"%(channel_name)s\" 中的 \"%(member_name)s\""
+
+#~ msgid ""
+#~ "Failed to render QWeb template: %(template_src)s\n"
+#~ "\n"
+#~ "%(template_traceback)s)"
+#~ msgstr ""
+#~ "繪製 QWeb 範本失敗：%(template_src)s\n"
+#~ "\n"
+#~ "%(template_traceback)s)"
 
 #~ msgid "%(user)s connected. This is their first connection. Wish them luck."
 #~ msgstr "%(user)s 已連線。這是他們第一次連線。祝他們好運。"

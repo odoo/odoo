@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-15 18:38+0000\n"
+"POT-Creation-Date: 2026-04-03 18:39+0000\n"
 "PO-Revision-Date: 2026-01-27 23:51+0000\n"
 "Last-Translator: \"Pedro Silva (Exo)\" <pedrocs@exo.pt>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-18/mail/"
@@ -34,8 +34,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : "
-"((n != 0 && n % 1000000 == 0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: mail
@@ -180,9 +180,9 @@ msgstr ""
 "%(new_line)s%(new_line)sDigite %(bold_start)s@username%(bold_end)s para "
 "mencionar alguém e chamar a atenção dessa pessoa.%(new_line)sDigite %"
 "(bold_start)s#channel%(bold_end)s para mencionar um canal.%(new_line)sDigite "
-"%(bold_start)s/command%(bold_end)s para executar um comando.%(new_line)"
-"sDigite %(bold_start)s:shortcut%(bold_end)s para inserir uma resposta "
-"predefinida na sua mensagem."
+"%(bold_start)s/command%(bold_end)s para executar um comando.%"
+"(new_line)sDigite %(bold_start)s:shortcut%(bold_end)s para inserir uma "
+"resposta predefinida na sua mensagem."
 
 #. module: mail
 #. odoo-javascript
@@ -237,8 +237,8 @@ msgid ""
 "%(user)s started a thread: %(goto)s%(thread_name)s%(goto_end)s. %"
 "(goto_all)sSee all threads%(goto_all_end)s."
 msgstr ""
-"%(user)s iniciou uma thread: %(goto)s%(thread_name)s%(goto_end)s. %(goto_all)"
-"sVer todas as threads%(goto_all_end)s."
+"%(user)s iniciou uma thread: %(goto)s%(thread_name)s%(goto_end)s. %"
+"(goto_all)sVer todas as threads%(goto_all_end)s."
 
 #. module: mail
 #. odoo-javascript
@@ -559,8 +559,8 @@ msgstr ""
 #: model_terms:web_tour.tour,rainbow_man_message:mail.discuss_channel_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
-"<span><b>Bom trabalho!</b> Passou por todas as etapas desta visita "
-"guiada.</span>"
+"<span><b>Bom trabalho!</b> Passou por todas as etapas desta visita guiada.</"
+"span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
@@ -2234,8 +2234,8 @@ msgid ""
 "persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
 "O chat é privado e exclusivo entre 2 pessoas. O grupo é privado entre as "
-"pessoas convidadas. O canal pode ser aberto a todos "
-"(dependendo de sua configuração)."
+"pessoas convidadas. O canal pode ser aberto a todos (dependendo de sua "
+"configuração)."
 
 #. module: mail
 #. odoo-javascript
@@ -4004,18 +4004,23 @@ msgstr "Falha ao publicar a mensagem. Clique para tentar novamente"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
-"Failed to render QWeb template: %(template_src)s\n"
+"Failed to render QWeb template for %(template_label)s\n"
+"Target Model: %(model_name)s\n"
+"Language context: %(lang_context)s\n"
+"Error: %(error_details)s\n"
 "\n"
-"%(template_traceback)s)"
+"Template Source Snippet:\n"
+"%(template_src)s"
 msgstr ""
-"Falha ao renderizar o modelo QWeb: %(template_src)s\n"
-"\n"
-"%(template_traceback)s)"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-msgid "Failed to render inline_template template: %(template_txt)s"
+#, fuzzy
+#| msgid "Failed to render inline_template template: %(template_txt)s"
+msgid ""
+"Failed to render inline_template template: %(template_txt)s\n"
+"Error details: %(error)s"
 msgstr "Falha ao renderizar o modelo inline_template: %(template_txt)s"
 
 #. module: mail
@@ -4102,13 +4107,15 @@ msgstr "O campo \"Atividade de E-mail\" não pode ser alterado para \"Falso\"."
 #. odoo-python
 #: code:addons/mail/models/ir_model.py:0
 msgid "Field \"Mail Blacklist\" cannot be changed to \"False\"."
-msgstr "O campo \"Lista Negra de E-mail\" não pode ser alterado para \"Falso\"."
+msgstr ""
+"O campo \"Lista Negra de E-mail\" não pode ser alterado para \"Falso\"."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_model.py:0
 msgid "Field \"Mail Thread\" cannot be changed to \"False\"."
-msgstr "O campo \"Conversação de E-mail\" não pode ser alterado para \"Falso\"."
+msgstr ""
+"O campo \"Conversação de E-mail\" não pode ser alterado para \"Falso\"."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -4730,8 +4737,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task "
 "creation alias)"
 msgstr ""
-"ID do registo parent que armazena o alias "
-"(Ex.: projeto que armazena o alias de criação de tarefas)"
+"ID do registo parent que armazena o alias (Ex.: projeto que armazena o alias "
+"de criação de tarefas)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__im_status
@@ -5222,7 +5229,8 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "Invalid value when creating a channel with memberships, only 0 is allowed."
-msgstr "Valor inválido ao criar um canal com subscrições, apenas 0 é permitido."
+msgstr ""
+"Valor inválido ao criar um canal com subscrições, apenas 0 é permitido."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__invitation_url
@@ -5935,6 +5943,14 @@ msgid "Mail Template Reset"
 msgstr "Redefinição do Modelo de E-mail"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "Unnamed %(record_model_name)s (%(record_id)s)"
+msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
+msgstr "Sem nome %(record_model_name)s (%(record_id)s)"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Thread"
 msgstr "Tópico de Correio"
@@ -6083,6 +6099,12 @@ msgstr "Marcar como não lido"
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.xml:0
 msgid "Mark as done"
 msgstr "Marcar como feito"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -6733,6 +6755,14 @@ msgstr "Nenhuma mensagem de histórico"
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "Result of the language detection based on its content."
+msgid "No language detected in context"
+msgstr "Resultado da detecção de idiomas com base no contexto."
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/wizard/mail_resend_message.py:0
 msgid "No message_id found in context"
 msgstr "Nenhum message_id encontrado no contexto"
@@ -7203,7 +7233,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Only messages type comment can have their content updated"
-msgstr "Apenas mensagens do tipo comentário podem ter o seu conteúdo atualizado"
+msgstr ""
+"Apenas mensagens do tipo comentário podem ter o seu conteúdo atualizado"
 
 #. module: mail
 #. odoo-python
@@ -7545,8 +7576,8 @@ msgid ""
 "(parent_model) and task (model))"
 msgstr ""
 "Modelo parent que armazena o alias. O modelo que armazena a referência ao "
-"alias não é necessariamente o modelo determinado por alias_model_id "
-"(Ex.: project (parent_model) e task (model))"
+"alias não é necessariamente o modelo determinado por alias_model_id (Ex.: "
+"project (parent_model) e task (model))"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
@@ -9633,6 +9664,14 @@ msgstr "A criação de modelo pelo compositor requer um modelo válido."
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "Message unique identifier"
+msgid "Template name not identified"
+msgstr "Identificador de mensagem exclusivo"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
 "Template rendering should only be called with a list of IDs. Received “%"
 "(res_ids)s” instead."
@@ -10632,6 +10671,20 @@ msgstr "Para Silenciamento da Conversa"
 #: code:addons/mail/models/mail_tracking_value.py:0
 msgid "Unnamed %(record_model_name)s (%(record_id)s)"
 msgstr "Sem nome %(record_model_name)s (%(record_id)s)"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "Related Mail Template"
+msgid "Unnamed Mail Template"
+msgstr "Modelo de Email Relacionado"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Unnamed Mailing"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -12249,6 +12302,15 @@ msgstr "{{ object.partner_id.lang }}"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "\"%(member_name)s\" em \"%(channel_name)s\""
+
+#~ msgid ""
+#~ "Failed to render QWeb template: %(template_src)s\n"
+#~ "\n"
+#~ "%(template_traceback)s)"
+#~ msgstr ""
+#~ "Falha ao renderizar o modelo QWeb: %(template_src)s\n"
+#~ "\n"
+#~ "%(template_traceback)s)"
 
 #~ msgid "%(user)s connected. This is their first connection. Wish them luck."
 #~ msgstr ""

@@ -14,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:37+0000\n"
-"PO-Revision-Date: 2026-03-21 09:24+0000\n"
-"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"POT-Creation-Date: 2026-04-03 18:39+0000\n"
+"PO-Revision-Date: 2026-04-04 18:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-18/"
 "point_of_sale/it/>\n"
 "Language: it\n"
@@ -1489,19 +1489,6 @@ msgid "Cannot return change without a cash payment method"
 msgstr "Impossibile dare il resto senza un metodo di pagamento di cassa"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
-msgid "Cannot weigh product - IoT Box is disconnected"
-msgstr "Impossibile pesare il prodotto - La box IoT è scollegata"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
-msgid "Cannot weigh product - Scale is not connected to IoT Box"
-msgstr ""
-"Impossibile pesare il prodotto - La bilancia non è collegata alla box IoT"
-
-#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Card"
@@ -2585,6 +2572,14 @@ msgstr "Le sessioni giornaliere mantengono le vendite dal punto vendita."
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
 msgid "Dashboard"
 msgstr "Dashboard"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+#, fuzzy
+#| msgid "Connection Lost"
+msgid "Database Connection Lost"
+msgstr "Connessione persa"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6641,6 +6636,12 @@ msgid "Related Session: %(link)s"
 msgstr "Sessione relativa: %(link)s"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid "Reload"
+msgstr "Ricarica"
+
+#. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
 msgid "Reload POS Menu"
 msgstr "Ricarica menu POS"
@@ -7854,6 +7855,14 @@ msgid ""
 msgstr ""
 "La strategia di arrotondamento dei contanti del punto vendita %(pos)s deve "
 "essere: '%(value)s'"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid ""
+"The connection to the local database was lost. Reloading the page will "
+"restore it and prevent any loss of unsaved orders."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -9691,6 +9700,13 @@ msgstr "per attivare i pulsanti."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "usando"
+
+#~ msgid "Cannot weigh product - IoT Box is disconnected"
+#~ msgstr "Impossibile pesare il prodotto - La box IoT è scollegata"
+
+#~ msgid "Cannot weigh product - Scale is not connected to IoT Box"
+#~ msgstr ""
+#~ "Impossibile pesare il prodotto - La bilancia non è collegata alla box IoT"
 
 #~ msgid ""
 #~ "You cannot reset to draft an invoice linked to a POS order. You must "

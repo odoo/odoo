@@ -8,13 +8,14 @@
 # Thi Huong Nguyen, 2025
 # Duy BQ <duybq86@gmail.com>, 2025
 # "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-15 18:38+0000\n"
-"PO-Revision-Date: 2026-01-10 09:09+0000\n"
-"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
+"POT-Creation-Date: 2026-04-03 18:39+0000\n"
+"PO-Revision-Date: 2026-04-04 18:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-18/mail/"
 "vi/>\n"
 "Language: vi\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: mail
 #. odoo-python
@@ -217,7 +218,7 @@ msgstr "Thêm %(recipientCount)s "
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
 msgid "%(user)s just connected for the first time. Wish them luck!"
-msgstr ""
+msgstr "%(user)s vừa mới kết nối lần đầu. Chúc họ may mắn!"
 
 #. module: mail
 #. odoo-python
@@ -3982,18 +3983,23 @@ msgstr "Đăng nội dung không thành công. Nhấp để thử lại"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
-"Failed to render QWeb template: %(template_src)s\n"
+"Failed to render QWeb template for %(template_label)s\n"
+"Target Model: %(model_name)s\n"
+"Language context: %(lang_context)s\n"
+"Error: %(error_details)s\n"
 "\n"
-"%(template_traceback)s)"
+"Template Source Snippet:\n"
+"%(template_src)s"
 msgstr ""
-"Không thể kết xuất mẫu QWeb: %(template_src)s\n"
-"\n"
-"%(template_traceback)s)"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-msgid "Failed to render inline_template template: %(template_txt)s"
+#, fuzzy
+#| msgid "Failed to render inline_template template: %(template_txt)s"
+msgid ""
+"Failed to render inline_template template: %(template_txt)s\n"
+"Error details: %(error)s"
 msgstr "Không thể kết xuất mẫu inline_template: %(template_txt)s"
 
 #. module: mail
@@ -5914,6 +5920,14 @@ msgid "Mail Template Reset"
 msgstr "Đặt lại mẫu email"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "alias %(name)s: %(error)s"
+msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
+msgstr "alias %(name)s: %(error)s"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Thread"
 msgstr "Chủ đề email"
@@ -6060,6 +6074,12 @@ msgstr "Đánh dấu là chưa đọc"
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.xml:0
 msgid "Mark as done"
 msgstr "Đánh dấu xong"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -6706,6 +6726,14 @@ msgstr "Chưa có cuộc trò chuyện nào..."
 #: code:addons/mail/static/src/core/web/thread_patch.xml:0
 msgid "No history messages"
 msgstr "Không có lịch sử tin nhắn"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "Result of the language detection based on its content."
+msgid "No language detected in context"
+msgstr "Kết quả phát hiện ngôn ngữ dựa trên nội dung của nó."
 
 #. module: mail
 #. odoo-python
@@ -8912,6 +8940,8 @@ msgstr "Chọn bộ lọc nội dung được sử dụng để lọc GIF"
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
 msgstr ""
+"Người dùng đã chọn '%(user)s' không thể tải lên tài liệu trên mô hình '%"
+"(model)s'"
 
 #. module: mail
 #. odoo-javascript
@@ -9590,6 +9620,14 @@ msgstr "Mixin đặt lại mẫu"
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Template creation from composer requires a valid model."
 msgstr "Việc tạo mẫu từ trình soạn thảo yêu cầu một mô hình hợp lệ."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "Message unique identifier"
+msgid "Template name not identified"
+msgstr "ID duy nhất của tin nhắn"
 
 #. module: mail
 #. odoo-python
@@ -10587,6 +10625,20 @@ msgstr "Bật lại thông báo cuộc trò chuyện"
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_value.py:0
 msgid "Unnamed %(record_model_name)s (%(record_id)s)"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "Related Mail Template"
+msgid "Unnamed Mail Template"
+msgstr "Mẫu thư liên quan"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Unnamed Mailing"
 msgstr ""
 
 #. module: mail
@@ -12208,6 +12260,15 @@ msgstr "{{ object.partner_id.lang }}"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” trong “%(channel_name)s”"
+
+#~ msgid ""
+#~ "Failed to render QWeb template: %(template_src)s\n"
+#~ "\n"
+#~ "%(template_traceback)s)"
+#~ msgstr ""
+#~ "Không thể kết xuất mẫu QWeb: %(template_src)s\n"
+#~ "\n"
+#~ "%(template_traceback)s)"
 
 #~ msgid "%(user)s connected. This is their first connection. Wish them luck."
 #~ msgstr ""

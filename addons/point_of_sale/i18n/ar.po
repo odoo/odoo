@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:37+0000\n"
-"PO-Revision-Date: 2026-02-21 18:01+0000\n"
+"POT-Creation-Date: 2026-04-03 18:39+0000\n"
+"PO-Revision-Date: 2026-04-04 12:28+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-18/"
 "point_of_sale/ar/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1474,18 +1474,6 @@ msgid "Cannot return change without a cash payment method"
 msgstr "لا يمكن رد الباقي دون طريقة دفع نقدية "
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
-msgid "Cannot weigh product - IoT Box is disconnected"
-msgstr "تعذّر وزن المنتج - جهاز IoT غير متصل بصندوق إنترنت الأشياء "
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
-msgid "Cannot weigh product - Scale is not connected to IoT Box"
-msgstr "تعذّر وزن المنتج - الميزان غير متصل بجهاز IoT "
-
-#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Card"
@@ -2562,6 +2550,14 @@ msgstr "تحتوي الجلسات اليومية على مبيعات من نقط
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
 msgid "Dashboard"
 msgstr "لوحة البيانات "
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+#, fuzzy
+#| msgid "Connection Lost"
+msgid "Database Connection Lost"
+msgstr "تم فقد الإتصال"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6564,6 +6560,12 @@ msgid "Related Session: %(link)s"
 msgstr "الجلسات ذات الصلة: %(link)s "
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid "Reload"
+msgstr "إعادة تحميل"
+
+#. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
 msgid "Reload POS Menu"
 msgstr "إعادة تحميل قائمة نقطة البيع "
@@ -7762,6 +7764,14 @@ msgstr "العلامة التجارية للبطاقة المستخدمة للد
 msgid ""
 "The cash rounding strategy of the point of sale %(pos)s must be: '%(value)s'"
 msgstr "يجب أن تكون استراتيجية تقريب المال لنقطة البيع %(pos)s : '%(value)s' "
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid ""
+"The connection to the local database was lost. Reloading the page will "
+"restore it and prevent any loss of unsaved orders."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -9528,6 +9538,12 @@ msgstr "لتفعيل الأزرار. "
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "باستخدام"
+
+#~ msgid "Cannot weigh product - IoT Box is disconnected"
+#~ msgstr "تعذّر وزن المنتج - جهاز IoT غير متصل بصندوق إنترنت الأشياء "
+
+#~ msgid "Cannot weigh product - Scale is not connected to IoT Box"
+#~ msgstr "تعذّر وزن المنتج - الميزان غير متصل بجهاز IoT "
 
 #~ msgid "Please register the voucher number"
 #~ msgstr "يُرجى تسجيل رقم القسيمة "
