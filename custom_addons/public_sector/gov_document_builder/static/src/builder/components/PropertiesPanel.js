@@ -86,7 +86,6 @@ export class PropertiesPanel extends Component {
                 source: "process",
                 path: "",
                 fallback: "",
-                transform: "",
             });
             return;
         }
@@ -154,7 +153,10 @@ export class PropertiesPanel extends Component {
 
     get bindingTransform() {
         const binding = (this.selectedNode && this.selectedNode.binding) || {};
-        return binding.transform || (this.selectedFieldDefinition && this.selectedFieldDefinition.default_transformer) || "";
+        if (Object.prototype.hasOwnProperty.call(binding, "transform")) {
+            return binding.transform || "";
+        }
+        return (this.selectedFieldDefinition && this.selectedFieldDefinition.default_transformer) || "";
     }
 
     get bindingDisplayPath() {
@@ -228,11 +230,11 @@ export class PropertiesPanel extends Component {
         }
         const namespace = ev.target.value;
         const currentBinding = this.selectedNode.binding || {};
+        const { transform, ...bindingWithoutTransform } = currentBinding;
         this.store.updateNodeBinding(this.selectedNode.id, {
-            ...currentBinding,
+            ...bindingWithoutTransform,
             source: namespace,
             path: "",
-            transform: "",
         });
     }
 
@@ -245,11 +247,16 @@ export class PropertiesPanel extends Component {
             (field) => field.variable_key === variableKey
         );
         const currentBinding = this.selectedNode.binding || {};
-        this.store.updateNodeBinding(this.selectedNode.id, {
+        const nextBinding = {
             ...currentBinding,
             source: this.bindingSource,
             path: variableKey,
-            transform: definition?.default_transformer || currentBinding.transform || "",
-        });
+        };
+        if (definition?.default_transformer) {
+            nextBinding.transform = definition.default_transformer;
+        } else if (!Object.prototype.hasOwnProperty.call(currentBinding, "transform")) {
+            delete nextBinding.transform;
+        }
+        this.store.updateNodeBinding(this.selectedNode.id, nextBinding);
     }
 }

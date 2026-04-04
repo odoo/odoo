@@ -106,8 +106,7 @@ export class DocumentBuilderStore {
         const definition = this.state.fieldDefinitions.find(
             (field) => field.namespace === source && field.variable_key === path
         );
-        const transformer =
-            binding?.transform || definition?.default_transformer || "";
+        const transformer = this._getBindingTransformer(binding, definition);
 
         return this._applyBindingTransformer(value, transformer);
     }
@@ -360,6 +359,16 @@ export class DocumentBuilderStore {
             return Number.isFinite(parsed) ? parsed : null;
         }
         return null;
+    }
+
+    _getBindingTransformer(binding, definition) {
+        if (
+            binding &&
+            Object.prototype.hasOwnProperty.call(binding, "transform")
+        ) {
+            return binding.transform || "";
+        }
+        return definition?.default_transformer || "";
     }
 }
 
