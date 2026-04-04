@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { reactive } from "@odoo/owl";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
 const INITIAL_STATE = {
@@ -30,7 +31,7 @@ const INITIAL_STATE = {
 export class DocumentBuilderStore {
     constructor(env) {
         this.env = env;
-        this.rpc = env.services.rpc;
+        this.rpc = rpc;
         this.notification = env.services.notification;
         this.state = reactive({ ...INITIAL_STATE });
         this._debouncedRebuildTypst = this._debounce(() => this.rebuildTypst(), 800);
@@ -235,7 +236,7 @@ export class DocumentBuilderStore {
 }
 
 registry.category("services").add("gov_document_builder_store", {
-    dependencies: ["rpc", "notification"],
+    dependencies: ["notification"],
     start(env) {
         return new DocumentBuilderStore(env);
     },

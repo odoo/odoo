@@ -31,7 +31,7 @@ class FollowupPrint(models.TransientModel):
                                  related='followup_id.company_id')
     email_conf = fields.Boolean('Send Email Confirmation')
     email_subject = fields.Char('Email Subject', size=64,
-                                default=_('Invoices Reminder'))
+                                default=lambda self: self.env._('Invoices Reminder'))
     partner_lang = fields.Boolean(
         'Send Email in Partner Language', default=True,
         help='Do not change message text, if you want to send email in '

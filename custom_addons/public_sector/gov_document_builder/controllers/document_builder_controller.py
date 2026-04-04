@@ -34,7 +34,7 @@ class DocumentBuilderController(http.Controller):
                     return f"gov.procurement.process,{process.id}"
         return False
 
-    @http.route("/gov/document/load", type="json", auth="user")
+    @http.route("/gov/document/load", type="jsonrpc", auth="user")
     def load_document(self, document_id):
         """Retorna payload completo para o builder."""
         instance = self._get_document_instance(document_id, "read")
@@ -53,7 +53,7 @@ class DocumentBuilderController(http.Controller):
             "version": instance.current_version_no,
         }
 
-    @http.route("/gov/document/save_layout", type="json", auth="user")
+    @http.route("/gov/document/save_layout", type="jsonrpc", auth="user")
     def save_layout(self, document_id, layout_json):
         """Persiste o layout_json e regenera o Typst."""
         instance = self._get_document_instance(document_id, "write")
@@ -65,7 +65,7 @@ class DocumentBuilderController(http.Controller):
         instance.write({"typst_source": typst})
         return {"success": True, "typst_source": typst}
 
-    @http.route("/gov/document/resolve_context", type="json", auth="user")
+    @http.route("/gov/document/resolve_context", type="jsonrpc", auth="user")
     def resolve_context(self, document_id):
         """Resolve e retorna o contexto completo do documento."""
         instance = self._get_document_instance(document_id, "read")
@@ -75,7 +75,7 @@ class DocumentBuilderController(http.Controller):
         instance.resolved_context_json = json.dumps(ctx)
         return ctx
 
-    @http.route("/gov/document/render_typst", type="json", auth="user")
+    @http.route("/gov/document/render_typst", type="jsonrpc", auth="user")
     def render_typst(self, document_id):
         """Renderiza e retorna o Typst atualizado."""
         instance = self._get_document_instance(document_id, "read")
@@ -84,7 +84,7 @@ class DocumentBuilderController(http.Controller):
         typst = request.env["gov.document.typst.renderer"].render_instance(instance)
         return {"typst_source": typst}
 
-    @http.route("/gov/document/block_catalog", type="json", auth="user")
+    @http.route("/gov/document/block_catalog", type="jsonrpc", auth="user")
     def get_block_catalog(self, document_type_code=None):
         """Retorna catálogo de blocos disponíveis, opcionalmente filtrado por tipo."""
         domain = [("active", "=", True)]
@@ -117,7 +117,7 @@ class DocumentBuilderController(http.Controller):
             for block in blocks
         ]
 
-    @http.route("/gov/document/create_from_template", type="json", auth="user")
+    @http.route("/gov/document/create_from_template", type="jsonrpc", auth="user")
     def create_from_template(self, document_type_code, process_id=None):
         """Cria nova instância a partir do template padrão do tipo documental."""
         doc_type = request.env["gov.document.type"].search(

@@ -11,9 +11,10 @@ class DocumentPageTag(models.Model):
     color = fields.Integer(string="Color Index")
     active = fields.Boolean(default=True)
 
-    _sql_constraints = [
-        ("unique_name", "unique(name)", "Tags must be unique"),
-    ]
+    _unique_name = models.Constraint(
+        "unique(name)",
+        "Tags must be unique",
+    )
 
     @api.model_create_multi
     def create(self, vals_list):

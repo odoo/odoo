@@ -1,6 +1,8 @@
 import ast
-from odoo.osv import expression
-from odoo import api, models, fields
+
+from odoo import api, fields, models
+from odoo.fields import Domain
+from odoo.tools import Query
 
 
 class AccountMoveLine(models.Model):
@@ -8,42 +10,36 @@ class AccountMoveLine(models.Model):
 
     @api.model
     def _where_calc(self, domain, active_test=True):
-        """Computes the WHERE clause needed to implement an OpenERP domain.
+        domain = Domain(domain or [])
+        if (
+            self._active_name
+            and active_test
+            and self.env.context.get("active_test", True)
+            and not any(leaf.field_expr == self._active_name for leaf in domain.iter_conditions())
+        ):
+            domain &= Domain(self._active_name, "=", True)
 
-        :param list domain: the domain to compute
-        :param bool active_test: whether the default filtering of records with
-            ``active`` field set to ``False`` should be applied.
-        :return: the query expressing the given domain as provided in domain
-        :rtype: Query
-        """
-        # if the object has an active field ('active', 'x_active'), filter out all
-        # inactive records unless they were explicitly asked for
-        if self._active_name and active_test and self.env.context.get('active_test', True):
-            # the item[0] trick below works for domain items and '&'/'|'/'!'
-            # operators too
-            if not any(item[0] == self._active_name for item in domain):
-                domain = [(self._active_name, '=', 1)] + domain
+        domain = domain.optimize_full(self)
+        if domain.is_false():
+            return self.browse()._as_query()
 
-        if domain:
-            return expression.expression(domain, self).query
-        else:
-            return Query(self.env, self._table, self._table_sql)
+        query = Query(self.env, self._table, self._table_sql)
+        if not domain.is_true():
+            query.add_where(domain._to_sql(self, self._table, query))
+        return query
 
     @api.model
     def _apply_ir_rules(self, query, mode='read'):
-        """Add what's missing in ``query`` to implement all appropriate ir.rules
-          (using the ``model_name``'s rules or the current model's rules if ``model_name`` is None)
-
-        :param query: the current query object
-        """
         if self.env.su:
             return
 
-        # apply main rules on the object
-        Rule = self.env['ir.rule']
-        domain = Rule._compute_domain(self._name, mode)
-        if domain:
-            expression.expression(domain, self.sudo(), self._table, query)
+        self_sudo = self.sudo().with_context(active_test=False)
+        domain = self.env["ir.rule"]._compute_domain(self._name, mode)
+        domain = domain.optimize_full(self_sudo)
+        if domain.is_false():
+            query.add_where("FALSE")
+        elif not domain.is_true():
+            query.add_where(domain._to_sql(self_sudo, self._table, query))
 
     @api.model
     def _query_get(self, domain=None):

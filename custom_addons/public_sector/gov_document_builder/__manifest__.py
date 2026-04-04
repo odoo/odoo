@@ -7,8 +7,8 @@
     'author': 'Kodoo',
     'depends': ['base', 'mail', 'hr', 'gov_processos'],
     'data': [
-        'security/ir.model.access.csv',
         'security/gov_document_security.xml',
+        'security/ir.model.access.csv',
         'views/gov_document_type_views.xml',
         'views/gov_document_template_views.xml',
         'views/gov_document_instance_views.xml',

@@ -18,7 +18,7 @@ try:
     _PYLATEXENC_AVAILABLE = True
 except ImportError:
     _PYLATEXENC_AVAILABLE = False
-    _logger.warning(
+    _logger.debug(
         "pylatexenc nao instalado. Validacao previa de LaTeX desabilitada."
     )
 

@@ -35,13 +35,10 @@ class GovDocumentType(models.Model):
         string="Templates",
     )
 
-    _sql_constraints = [
-        (
-            "gov_document_type_code_active_uniq",
-            "unique(code, active)",
-            "Já existe um tipo documental com este código para este estado de ativação.",
-        ),
-    ]
+    _code_active_unique = models.Constraint(
+        "unique(code, active)",
+        "Já existe um tipo documental com este código para este estado de ativação.",
+    )
 
     @api.constrains("code")
     def _check_code(self):

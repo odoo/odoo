@@ -212,4 +212,4 @@ export class DocumentBuilderRoot extends Component {
     }
 }
 
-registry.category("actions").add("gov_document_builder", DocumentBuilderRoot);
+registry.category("actions").add("gov_document_builder.instance", DocumentBuilderRoot);
