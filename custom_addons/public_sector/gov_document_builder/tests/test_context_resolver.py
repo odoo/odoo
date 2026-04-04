@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from odoo.tests.common import TransactionCase
 
 
@@ -211,7 +213,15 @@ class TestContextResolverFinancialCycle(TransactionCase):
         )
 
     def test_namespace_auction_returns_empty_dict_when_no_model(self):
-        context = self.resolver.resolve_instance_context(self.instance)
+        original_get = type(self.env).get
+
+        with patch.object(type(self.env), "get", autospec=True) as mocked_get:
+            mocked_get.side_effect = (
+                lambda env, model_name, *args, **kwargs: None
+                if model_name == "gov.licitacao"
+                else original_get(env, model_name, *args, **kwargs)
+            )
+            context = self.resolver.resolve_instance_context(self.instance)
 
         self.assertEqual(
             context["auction"],

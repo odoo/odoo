@@ -155,9 +155,7 @@ class TestConditionalVisibility(TransactionCase):
         result = self.resolver.evaluate_visibility_rule(
             "auction.fornecedor not_exists",
             {
-                "auction": {
-                    "fornecedor": None,
-                }
+                "auction": {}
             },
         )
 
