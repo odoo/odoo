@@ -14,26 +14,6 @@ class DocumentBuilderController(http.Controller):
             return None
         return instance
 
-    def _prepare_process_value(self, process_id):
-        if not process_id:
-            return False
-
-        instance_model = request.env["gov.document.instance"]
-        process_field = instance_model._fields.get("process_id")
-        if not process_field:
-            return False
-
-        if process_field.type == "many2one":
-            return process_id
-
-        if process_field.type == "reference" and "gov.procurement.process" in request.env:
-            allowed_models = process_field.get_values(request.env)
-            if "gov.procurement.process" in allowed_models:
-                process = request.env["gov.procurement.process"].browse(process_id).exists()
-                if process:
-                    return f"gov.procurement.process,{process.id}"
-        return False
-
     @http.route("/gov/document/load", type="jsonrpc", auth="user")
     def load_document(self, document_id):
         """Retorna payload completo para o builder."""
@@ -136,8 +116,7 @@ class DocumentBuilderController(http.Controller):
             "template_id": template.id if template else False,
             "layout_json": template.layout_schema_json if template else "[]",
         }
-        process_value = self._prepare_process_value(process_id)
-        if process_value:
-            vals["process_id"] = process_value
+        if process_id not in (None, False, ""):
+            vals["process_id"] = int(process_id)
         instance = request.env["gov.document.instance"].create(vals)
         return {"document_id": instance.id}

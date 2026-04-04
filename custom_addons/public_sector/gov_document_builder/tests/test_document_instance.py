@@ -77,3 +77,24 @@ class TestGovDocumentInstance(TransactionCase):
         self.assertEqual(version.document_instance_id, instance)
         self.assertEqual(version.typst_source, expected_typst)
         self.assertEqual(version.layout_json, self.template_layout)
+
+    def test_create_instance_from_template_sets_gov_processo_many2one(self):
+        process = self.env["gov.processo"].create(
+            {
+                "subject": "Aquisição de testes laboratoriais",
+                "state": "execucao",
+                "process_scope": "compras",
+            }
+        )
+        controller = controller_module.DocumentBuilderController()
+        fake_request = SimpleNamespace(env=self.env)
+
+        with patch.object(controller_module, "request", fake_request):
+            result = controller.create_from_template(
+                self.document_type.code,
+                process_id=process.id,
+            )
+
+        instance = self.env["gov.document.instance"].browse(result["document_id"])
+
+        self.assertEqual(instance.process_id, process)

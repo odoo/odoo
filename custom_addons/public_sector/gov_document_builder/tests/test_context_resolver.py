@@ -50,3 +50,177 @@ class TestGovDocumentContextResolver(TransactionCase):
         value = self.resolver.resolve_binding(binding, context)
 
         self.assertEqual(value, "não informado")
+
+
+class TestGovDocumentContextResolverFinancialNamespaces(TransactionCase):
+    def setUp(self):
+        super().setUp()
+        self.document_type = self.env["gov.document.type"].create(
+            {
+                "name": "Tipo Financeiro Teste",
+                "code": "finance_context_test",
+            }
+        )
+        self.template = self.env["gov.document.template"].create(
+            {
+                "name": "Template Financeiro Teste",
+                "code": "template_finance_context_test",
+                "document_type_id": self.document_type.id,
+            }
+        )
+        self.process = self.env["gov.processo"].create(
+            {
+                "subject": "Aquisição de medicamentos essenciais para UBS",
+                "state": "execucao",
+                "process_scope": "compras",
+            }
+        )
+        self.env["gov.processo.parametro"].create(
+            [
+                {
+                    "processo_id": self.process.id,
+                    "key": "modalidade",
+                    "name": "Modalidade da contratação",
+                    "section": "required_by_law",
+                    "fase": 2,
+                    "value_type": "string",
+                    "value_text": "Pregão Eletrônico",
+                },
+                {
+                    "processo_id": self.process.id,
+                    "key": "hipotese_dispensa",
+                    "name": "Hipótese de dispensa",
+                    "section": "required_by_law",
+                    "fase": 1,
+                    "value_type": "string",
+                    "value_text": "Não se aplica",
+                },
+                {
+                    "processo_id": self.process.id,
+                    "key": "data_pesquisa_preco",
+                    "name": "Data da pesquisa de preço",
+                    "section": "optional",
+                    "fase": 2,
+                    "value_type": "date",
+                    "value_text": "2026-04-04",
+                },
+            ]
+        )
+        self.env["gov.processo.planilha.item"].create(
+            [
+                {
+                    "processo_id": self.process.id,
+                    "lot_code": "1",
+                    "item_number": 1,
+                    "description": "Dipirona 500mg",
+                    "unit": "un",
+                    "annual_quantity": 200,
+                    "unit_price": 45.50,
+                },
+                {
+                    "processo_id": self.process.id,
+                    "lot_code": "1",
+                    "item_number": 2,
+                    "description": "Amoxicilina 500mg",
+                    "unit": "un",
+                    "annual_quantity": 100,
+                    "unit_price": 89.90,
+                },
+            ]
+        )
+        self.env["gov.processo.dotacao"].create(
+            [
+                {
+                    "processo_id": self.process.id,
+                    "programa": "10",
+                    "acao": "2064",
+                    "natureza_despesa": "3.3.90.39",
+                    "fonte_recurso": "100",
+                    "valor_estimado": 150000,
+                    "exercicio": 2026,
+                    "reservado": True,
+                },
+                {
+                    "processo_id": self.process.id,
+                    "programa": "10",
+                    "acao": "2065",
+                    "natureza_despesa": "3.3.90.30",
+                    "fonte_recurso": "200",
+                    "valor_estimado": 80000,
+                    "exercicio": 2026,
+                    "reservado": False,
+                },
+            ]
+        )
+        self.instance = self.env["gov.document.instance"].create(
+            {
+                "name": "Documento Financeiro",
+                "document_type_id": self.document_type.id,
+                "template_id": self.template.id,
+                "process_id": self.process.id,
+            }
+        )
+        self.resolver = self.env["gov.document.context.resolver"]
+
+    def test_process_id_is_many2one_to_gov_processo(self):
+        process_field = self.env["gov.document.instance"]._fields["process_id"]
+
+        self.assertEqual(process_field.type, "many2one")
+        self.assertEqual(process_field.comodel_name, "gov.processo")
+
+    def test_resolve_instance_context_includes_financial_namespaces(self):
+        context = self.resolver.resolve_instance_context(self.instance)
+
+        for namespace in (
+            "process",
+            "legal",
+            "procurement",
+            "auction",
+            "contract",
+            "budget",
+            "execution",
+            "reconciliation",
+        ):
+            self.assertIn(namespace, context)
+
+    def test_process_and_legal_namespaces_use_real_process_data(self):
+        context = self.resolver.resolve_instance_context(self.instance)
+
+        self.assertEqual(context["process"]["name"], self.process.name)
+        self.assertEqual(
+            context["process"]["subject"],
+            "Aquisição de medicamentos essenciais para UBS",
+        )
+        self.assertEqual(context["legal"]["modalidade"], "Pregão Eletrônico")
+        self.assertIn("Modalidade da contratação", context["legal"]["base_legal"])
+
+    def test_procurement_namespace_aggregates_planilha_items(self):
+        context = self.resolver.resolve_instance_context(self.instance)
+
+        self.assertAlmostEqual(context["procurement"]["valor_estimado_total"], 18090.0)
+        self.assertEqual(context["procurement"]["preco_unitario_referencia"], 45.50)
+        self.assertEqual(context["procurement"]["quantidade_estimada_total"], 300)
+        self.assertEqual(context["procurement"]["data_pesquisa_preco"], "2026-04-04")
+
+    def test_budget_namespace_sums_only_reserved_dotacoes(self):
+        context = self.resolver.resolve_instance_context(self.instance)
+
+        self.assertEqual(context["budget"]["valor_empenhado"], 150000)
+        self.assertEqual(context["budget"]["saldo_disponivel"], 0.0)
+        self.assertEqual(context["budget"]["exercicio"], 2026)
+        self.assertEqual(context["budget"]["natureza_despesa"], ["3.3.90.39", "3.3.90.30"])
+        self.assertEqual(context["budget"]["fonte_recurso"], ["100", "200"])
+
+    def test_auction_namespace_is_defensive_when_model_is_missing(self):
+        context = self.resolver.resolve_instance_context(self.instance)
+
+        self.assertEqual(
+            context["auction"],
+            {
+                "valor_arrematado": 0.0,
+                "preco_unitario_final": 0.0,
+                "fornecedor": "",
+                "desconto_percentual": 0.0,
+                "data_homologacao": "",
+            },
+        )

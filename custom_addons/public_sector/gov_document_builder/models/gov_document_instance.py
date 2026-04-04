@@ -17,11 +17,11 @@ class GovDocumentInstance(models.Model):
         string="Tipo Documental",
     )
     template_id = fields.Many2one("gov.document.template", string="Template")
-    # TODO: substituir por fields.Many2one("gov.procurement.process", ...) assim que
-    # o modelo estiver disponível no registry deste módulo.
-    process_id = fields.Reference(
-        selection=[],
-        string="Processo Licitatório",
+    process_id = fields.Many2one(
+        "gov.processo",
+        string="Processo",
+        ondelete="cascade",
+        tracking=True,
     )
     state = fields.Selection(
         [
