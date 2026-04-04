@@ -320,6 +320,7 @@ class PosOrder(models.Model):
 
             if index == len(child_line_free) - 1:
                 price_unit += remaining_total
+                remaining_total = 0
 
             selected_attributes = child.attribute_value_ids
             price_extra = sum(attr.price_extra for attr in selected_attributes)

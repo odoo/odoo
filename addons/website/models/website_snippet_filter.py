@@ -88,6 +88,13 @@ class WebsiteSnippetFilter(models.Model):
         self and self.ensure_one()
 
         model_name = options.get('res_model') or self.filter_id.sudo().model_id
+        website_filter_models = list({
+            website_filter.action_server_id.model_id.model if website_filter.action_server_id
+            else website_filter.filter_id.model_id
+            for website_filter in self.env['website.snippet.filter'].search([])
+        })
+        if model_name and model_name not in website_filter_models:
+            return []
         res_id = options.get('res_id')
         # The "limit" field is there to prevent loading an arbitrary number of
         # records asked by the client side. This here makes sure you can always
@@ -116,7 +123,7 @@ class WebsiteSnippetFilter(models.Model):
                     domain,
                     order=','.join(literal_eval(filter_sudo.sort)) or None,
                     limit=limit
-                ) if not single_record_filter else self.env[model_name].browse([res_id])
+                ) if not single_record_filter else self.env[model_name].sudo(False).search([('id', '=', res_id)], limit=1)
                 return self._filter_records_to_values(records.sudo(), res_model=model_name)
             except MissingError:
                 if not single_record_filter:
