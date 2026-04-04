@@ -97,6 +97,32 @@ class DocumentBuilderController(http.Controller):
             for block in blocks
         ]
 
+    @http.route("/gov/document/field_definitions", type="jsonrpc", auth="user")
+    def get_field_definitions(self, namespace=None):
+        """Retorna catálogo de campos disponíveis para bindings do builder."""
+        domain = [("active", "=", True)]
+        if namespace:
+            domain.append(("namespace", "=", namespace))
+        definitions = request.env["gov.document.field.definition"].search(
+            domain,
+            order="namespace, sequence, id",
+        )
+        return [
+            {
+                "id": definition.id,
+                "name": definition.name,
+                "namespace": definition.namespace,
+                "variable_key": definition.variable_key,
+                "value_type": definition.value_type,
+                "mutability_policy": definition.mutability_policy,
+                "default_transformer": definition.default_transformer,
+                "example_value": definition.example_value,
+                "description": definition.description,
+                "display_path": definition.display_path,
+            }
+            for definition in definitions
+        ]
+
     @http.route("/gov/document/create_from_template", type="jsonrpc", auth="user")
     def create_from_template(self, document_type_code, process_id=None):
         """Cria nova instância a partir do template padrão do tipo documental."""

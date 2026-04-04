@@ -16,6 +16,7 @@
         'data/gov_document_type_data.xml',
         'data/gov_document_block_catalog_data.xml',
         'data/gov_document_template_dfd.xml',
+        'data/gov_document_field_definition_data.xml',
     ],
     'assets': {
         'web.assets_backend': [

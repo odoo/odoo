@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="field_definition_process_subject" model="gov.document.field.definition">
+        <field name="name">Objeto da contratação</field>
+        <field name="namespace">process</field>
+        <field name="variable_key">subject</field>
+        <field name="value_type">text</field>
+        <field name="mutability_policy">immutable</field>
+        <field name="example_value">Aquisição de medicamentos essenciais para UBS</field>
+        <field name="description">Objeto principal do processo administrativo.</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="field_definition_process_name" model="gov.document.field.definition">
+        <field name="name">Identificador do processo</field>
+        <field name="namespace">process</field>
+        <field name="variable_key">name</field>
+        <field name="value_type">text</field>
+        <field name="mutability_policy">immutable</field>
+        <field name="example_value">SEMSA-2026-001</field>
+        <field name="description">Identificador único do processo.</field>
+        <field name="sequence">15</field>
+    </record>
+    <record id="field_definition_process_number" model="gov.document.field.definition">
+        <field name="name">Número do processo</field>
+        <field name="namespace">process</field>
+        <field name="variable_key">number</field>
+        <field name="value_type">text</field>
+        <field name="mutability_policy">immutable</field>
+        <field name="example_value">SEMSA-2026-001</field>
+        <field name="description">Alias compatível com templates legados para o número do processo.</field>
+        <field name="sequence">16</field>
+    </record>
+    <record id="field_definition_process_objeto" model="gov.document.field.definition">
+        <field name="name">Objeto do processo</field>
+        <field name="namespace">process</field>
+        <field name="variable_key">objeto</field>
+        <field name="value_type">text</field>
+        <field name="mutability_policy">immutable</field>
+        <field name="example_value">Aquisição de medicamentos essenciais para UBS</field>
+        <field name="description">Alias compatível com templates que usam o campo objeto.</field>
+        <field name="sequence">17</field>
+    </record>
+    <record id="field_definition_process_ug_id_name" model="gov.document.field.definition">
+        <field name="name">Unidade demandante</field>
+        <field name="namespace">process</field>
+        <field name="variable_key">ug_id_name</field>
+        <field name="value_type">text</field>
+        <field name="mutability_policy">immutable</field>
+        <field name="example_value">SEMSA</field>
+        <field name="description">Nome da unidade gestora vinculada ao processo.</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="field_definition_process_responsible_name" model="gov.document.field.definition">
+        <field name="name">Responsável pelo processo</field>
+        <field name="namespace">process</field>
+        <field name="variable_key">responsible_name</field>
+        <field name="value_type">text</field>
+        <field name="mutability_policy">immutable</field>
+        <field name="example_value">Maria da Silva</field>
+        <field name="description">Usuário responsável pela condução do processo.</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="field_definition_process_state" model="gov.document.field.definition">
+        <field name="name">Fase atual</field>
+        <field name="namespace">process</field>
+        <field name="variable_key">state</field>
+        <field name="value_type">text</field>
+        <field name="mutability_policy">dynamic</field>
+        <field name="example_value">execucao</field>
+        <field name="description">Fase corrente do processo licitatório.</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="field_definition_process_process_scope" model="gov.document.field.definition">
+        <field name="name">Escopo do processo</field>
+        <field name="namespace">process</field>
+        <field name="variable_key">process_scope</field>
+        <field name="value_type">text</field>
+        <field name="mutability_policy">immutable</field>
+        <field name="example_value">compras</field>
+        <field name="description">Escopo administrativo do processo.</field>
+        <field name="sequence">45</field>
+    </record>
+    <record id="field_definition_process_valor_total_estimado" model="gov.document.field.definition">
+        <field name="name">Valor total estimado</field>
+        <field name="namespace">process</field>
+        <field name="variable_key">valor_total_estimado</field>
+        <field name="value_type">currency</field>
+        <field name="mutability_policy">immutable</field>
+        <field name="default_transformer">currency_br</field>
+        <field name="example_value">150000,00</field>
+        <field name="description">Valor global estimado consolidado do processo.</field>
+        <field name="sequence">50</field>
+    </record>
+    <record id="field_definition_process_valor_estimado" model="gov.document.field.definition">
+        <field name="name">Valor estimado (compatibilidade)</field>
+        <field name="namespace">process</field>
+        <field name="variable_key">valor_estimado</field>
+        <field name="value_type">currency</field>
+        <field name="mutability_policy">immutable</field>
+        <field name="default_transformer">currency_br</field>
+        <field name="example_value">150000,00</field>
+        <field name="description">Alias legado para o valor total estimado do processo.</field>
+        <field name="sequence">60</field>
+    </record>
+
+    <record id="field_definition_legal_modalidade" model="gov.document.field.definition">
+        <field name="name">Modalidade</field>
+        <field name="namespace">legal</field>
+        <field name="variable_key">modalidade</field>
+        <field name="value_type">text</field>
+        <field name="mutability_policy">immutable</field>
+        <field name="example_value">Pregão Eletrônico</field>
+        <field name="description">Modalidade jurídica da contratação.</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="field_definition_legal_hipotese_dispensa" model="gov.document.field.definition">
+        <field name="name">Hipótese de dispensa</field>
+        <field name="namespace">legal</field>
+        <field name="variable_key">hipotese_dispensa</field>
+        <field name="value_type">text</field>
+        <field name="mutability_policy">immutable</field>
+        <field name="example_value">Art. 75, inciso II</field>
+        <field name="description">Hipótese legal aplicável quando houver dispensa.</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="field_definition_legal_base_legal" model="gov.document.field.definition">
+        <field name="name">Base legal</field>
+        <field name="namespace">legal</field>
+        <field name="variable_key">base_legal</field>
+        <field name="value_type">list</field>
+        <field name="mutability_policy">immutable</field>
+        <field name="default_transformer">lista_br</field>
+        <field name="example_value">Lei 14.133/2021, art. 18 e regulamento local</field>
+        <field name="description">Lista de fundamentos legais requeridos por lei.</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="field_definition_procurement_valor_estimado_total" model="gov.document.field.definition">
+        <field name="name">Valor estimado total</field>
+        <field name="namespace">procurement</field>
+        <field name="variable_key">valor_estimado_total</field>
+        <field name="value_type">currency</field>
+        <field name="mutability_policy">snapshot</field>
+        <field name="default_transformer">currency_br</field>
+        <field name="example_value">18090,00</field>
+        <field name="description">Soma estimada dos itens da planilha de compras.</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="field_definition_procurement_preco_unitario_referencia" model="gov.document.field.definition">
+        <field name="name">Preço unitário de referência</field>
+        <field name="namespace">procurement</field>
+        <field name="variable_key">preco_unitario_referencia</field>
+        <field name="value_type">currency</field>
+        <field name="mutability_policy">snapshot</field>
+        <field name="default_transformer">currency_br</field>
+        <field name="example_value">45,50</field>
+        <field name="description">Preço unitário de referência capturado da planilha.</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="field_definition_procurement_quantidade_estimada_total" model="gov.document.field.definition">
+        <field name="name">Quantidade estimada total</field>
+        <field name="namespace">procurement</field>
+        <field name="variable_key">quantidade_estimada_total</field>
+        <field name="value_type">integer</field>
+        <field name="mutability_policy">snapshot</field>
+        <field name="example_value">300</field>
+        <field name="description">Soma das quantidades anuais previstas nos itens.</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="field_definition_procurement_data_pesquisa_preco" model="gov.document.field.definition">
+        <field name="name">Data da pesquisa de preço</field>
+        <field name="namespace">procurement</field>
+        <field name="variable_key">data_pesquisa_preco</field>
+        <field name="value_type">date</field>
+        <field name="mutability_policy">snapshot</field>
+        <field name="default_transformer">date_br</field>
+        <field name="example_value">04/04/2026</field>
+        <field name="description">Data informada para a pesquisa de preços do processo.</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <record id="field_definition_auction_valor_arrematado" model="gov.document.field.definition">
+        <field name="name">Valor arrematado</field>
+        <field name="namespace">auction</field>
+        <field name="variable_key">valor_arrematado</field>
+        <field name="value_type">currency</field>
+        <field name="mutability_policy">snapshot</field>
+        <field name="default_transformer">currency_br</field>
+        <field name="example_value">17200,00</field>
+        <field name="description">Valor homologado na etapa licitatória.</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="field_definition_auction_fornecedor" model="gov.document.field.definition">
+        <field name="name">Fornecedor vencedor</field>
+        <field name="namespace">auction</field>
+        <field name="variable_key">fornecedor</field>
+        <field name="value_type">text</field>
+        <field name="mutability_policy">snapshot</field>
+        <field name="example_value">Fornecedor Exemplo Ltda.</field>
+        <field name="description">Nome do fornecedor homologado.</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="field_definition_auction_preco_unitario_final" model="gov.document.field.definition">
+        <field name="name">Preço unitário final</field>
+        <field name="namespace">auction</field>
+        <field name="variable_key">preco_unitario_final</field>
+        <field name="value_type">currency</field>
+        <field name="mutability_policy">snapshot</field>
+        <field name="default_transformer">currency_br</field>
+        <field name="example_value">42,90</field>
+        <field name="description">Preço unitário final apurado na licitação.</field>
+        <field name="sequence">25</field>
+    </record>
+    <record id="field_definition_auction_desconto_percentual" model="gov.document.field.definition">
+        <field name="name">Desconto percentual</field>
+        <field name="namespace">auction</field>
+        <field name="variable_key">desconto_percentual</field>
+        <field name="value_type">percent</field>
+        <field name="mutability_policy">snapshot</field>
+        <field name="default_transformer">percentual</field>
+        <field name="example_value">5,50%</field>
+        <field name="description">Desconto percentual obtido entre estimado e arrematado.</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="field_definition_auction_data_homologacao" model="gov.document.field.definition">
+        <field name="name">Data de homologação</field>
+        <field name="namespace">auction</field>
+        <field name="variable_key">data_homologacao</field>
+        <field name="value_type">date</field>
+        <field name="mutability_policy">snapshot</field>
+        <field name="default_transformer">date_br</field>
+        <field name="example_value">04/04/2026</field>
+        <field name="description">Data de homologação da licitação.</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <record id="field_definition_contract_valor_contratado" model="gov.document.field.definition">
+        <field name="name">Valor contratado</field>
+        <field name="namespace">contract</field>
+        <field name="variable_key">valor_contratado</field>
+        <field name="value_type">currency</field>
+        <field name="mutability_policy">snapshot</field>
+        <field name="default_transformer">currency_br</field>
+        <field name="example_value">17000,00</field>
+        <field name="description">Valor total do contrato firmado.</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="field_definition_contract_numero_contrato" model="gov.document.field.definition">
+        <field name="name">Número do contrato</field>
+        <field name="namespace">contract</field>
+        <field name="variable_key">numero_contrato</field>
+        <field name="value_type">text</field>
+        <field name="mutability_policy">snapshot</field>
+        <field name="example_value">023/2026</field>
+        <field name="description">Número administrativo do contrato.</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="field_definition_contract_data_inicio_vigencia" model="gov.document.field.definition">
+        <field name="name">Início da vigência</field>
+        <field name="namespace">contract</field>
+        <field name="variable_key">data_inicio_vigencia</field>
+        <field name="value_type">date</field>
+        <field name="mutability_policy">snapshot</field>
+        <field name="default_transformer">date_br</field>
+        <field name="example_value">10/04/2026</field>
+        <field name="description">Data de início da vigência contratual.</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="field_definition_contract_data_fim_vigencia" model="gov.document.field.definition">
+        <field name="name">Fim da vigência</field>
+        <field name="namespace">contract</field>
+        <field name="variable_key">data_fim_vigencia</field>
+        <field name="value_type">date</field>
+        <field name="mutability_policy">snapshot</field>
+        <field name="default_transformer">date_br</field>
+        <field name="example_value">10/04/2027</field>
+        <field name="description">Data final da vigência do contrato.</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="field_definition_contract_saldo_restante" model="gov.document.field.definition">
+        <field name="name">Saldo restante</field>
+        <field name="namespace">contract</field>
+        <field name="variable_key">saldo_restante</field>
+        <field name="value_type">currency</field>
+        <field name="mutability_policy">dynamic</field>
+        <field name="default_transformer">currency_br</field>
+        <field name="example_value">8500,00</field>
+        <field name="description">Saldo remanescente atualizado do contrato.</field>
+        <field name="sequence">50</field>
+    </record>
+    <record id="field_definition_contract_quantidade_aditivos" model="gov.document.field.definition">
+        <field name="name">Quantidade de aditivos</field>
+        <field name="namespace">contract</field>
+        <field name="variable_key">quantidade_aditivos</field>
+        <field name="value_type">integer</field>
+        <field name="mutability_policy">dynamic</field>
+        <field name="example_value">2</field>
+        <field name="description">Quantidade atual de aditivos vinculados ao contrato.</field>
+        <field name="sequence">60</field>
+    </record>
+
+    <record id="field_definition_budget_valor_empenhado" model="gov.document.field.definition">
+        <field name="name">Valor empenhado</field>
+        <field name="namespace">budget</field>
+        <field name="variable_key">valor_empenhado</field>
+        <field name="value_type">currency</field>
+        <field name="mutability_policy">dynamic</field>
+        <field name="default_transformer">currency_br</field>
+        <field name="example_value">150000,00</field>
+        <field name="description">Valor empenhado a partir das dotações reservadas.</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="field_definition_budget_saldo_disponivel" model="gov.document.field.definition">
+        <field name="name">Saldo disponível</field>
+        <field name="namespace">budget</field>
+        <field name="variable_key">saldo_disponivel</field>
+        <field name="value_type">currency</field>
+        <field name="mutability_policy">dynamic</field>
+        <field name="default_transformer">currency_br</field>
+        <field name="example_value">32000,00</field>
+        <field name="description">Saldo orçamentário disponível no momento da consulta.</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="field_definition_budget_exercicio" model="gov.document.field.definition">
+        <field name="name">Exercício</field>
+        <field name="namespace">budget</field>
+        <field name="variable_key">exercicio</field>
+        <field name="value_type">integer</field>
+        <field name="mutability_policy">dynamic</field>
+        <field name="example_value">2026</field>
+        <field name="description">Exercício fiscal da dotação consultada.</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="field_definition_budget_natureza_despesa" model="gov.document.field.definition">
+        <field name="name">Natureza da despesa</field>
+        <field name="namespace">budget</field>
+        <field name="variable_key">natureza_despesa</field>
+        <field name="value_type">list</field>
+        <field name="mutability_policy">dynamic</field>
+        <field name="default_transformer">lista_br</field>
+        <field name="example_value">3.3.90.30 e 3.3.90.39</field>
+        <field name="description">Naturezas de despesa consolidadas nas dotações do processo.</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="field_definition_budget_fonte_recurso" model="gov.document.field.definition">
+        <field name="name">Fonte de recurso</field>
+        <field name="namespace">budget</field>
+        <field name="variable_key">fonte_recurso</field>
+        <field name="value_type">list</field>
+        <field name="mutability_policy">dynamic</field>
+        <field name="default_transformer">lista_br</field>
+        <field name="example_value">100 e 200</field>
+        <field name="description">Fontes de recurso associadas às dotações do processo.</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <record id="field_definition_execution_valor_empenhado_acumulado" model="gov.document.field.definition">
+        <field name="name">Valor empenhado acumulado</field>
+        <field name="namespace">execution</field>
+        <field name="variable_key">valor_empenhado_acumulado</field>
+        <field name="value_type">currency</field>
+        <field name="mutability_policy">dynamic</field>
+        <field name="default_transformer">currency_br</field>
+        <field name="example_value">120000,00</field>
+        <field name="description">Soma atual dos empenhos vinculados ao processo.</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="field_definition_execution_ordens_fornecimento_count" model="gov.document.field.definition">
+        <field name="name">Ordens de fornecimento</field>
+        <field name="namespace">execution</field>
+        <field name="variable_key">ordens_fornecimento_count</field>
+        <field name="value_type">integer</field>
+        <field name="mutability_policy">dynamic</field>
+        <field name="example_value">3</field>
+        <field name="description">Quantidade de ordens de fornecimento emitidas.</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="field_definition_execution_valor_liquidado_acumulado" model="gov.document.field.definition">
+        <field name="name">Valor liquidado acumulado</field>
+        <field name="namespace">execution</field>
+        <field name="variable_key">valor_liquidado_acumulado</field>
+        <field name="value_type">currency</field>
+        <field name="mutability_policy">dynamic</field>
+        <field name="default_transformer">currency_br</field>
+        <field name="example_value">45000,00</field>
+        <field name="description">Soma atual dos valores liquidados dos empenhos vinculados.</field>
+        <field name="sequence">25</field>
+    </record>
+    <record id="field_definition_execution_quantidade_entregue" model="gov.document.field.definition">
+        <field name="name">Quantidade entregue</field>
+        <field name="namespace">execution</field>
+        <field name="variable_key">quantidade_entregue</field>
+        <field name="value_type">integer</field>
+        <field name="mutability_policy">dynamic</field>
+        <field name="example_value">120</field>
+        <field name="description">Quantidade já entregue na execução quando o módulo respectivo existir.</field>
+        <field name="sequence">27</field>
+    </record>
+    <record id="field_definition_execution_status_aceite_fiscal" model="gov.document.field.definition">
+        <field name="name">Status do aceite fiscal</field>
+        <field name="namespace">execution</field>
+        <field name="variable_key">status_aceite_fiscal</field>
+        <field name="value_type">text</field>
+        <field name="mutability_policy">dynamic</field>
+        <field name="example_value">pendente</field>
+        <field name="description">Situação consolidada do aceite fiscal da execução.</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="field_definition_reconciliation_valor_a_conciliar" model="gov.document.field.definition">
+        <field name="name">Valor a conciliar</field>
+        <field name="namespace">reconciliation</field>
+        <field name="variable_key">valor_a_conciliar</field>
+        <field name="value_type">currency</field>
+        <field name="mutability_policy">dynamic</field>
+        <field name="default_transformer">currency_br</field>
+        <field name="example_value">5000,00</field>
+        <field name="description">Diferença entre o valor empenhado e o valor já liquidado.</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="field_definition_reconciliation_superavit" model="gov.document.field.definition">
+        <field name="name">Superávit</field>
+        <field name="namespace">reconciliation</field>
+        <field name="variable_key">superavit</field>
+        <field name="value_type">currency</field>
+        <field name="mutability_policy">dynamic</field>
+        <field name="default_transformer">currency_br</field>
+        <field name="example_value">890,00</field>
+        <field name="description">Economia entre o valor estimado e o valor arrematado.</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="field_definition_reconciliation_deficit" model="gov.document.field.definition">
+        <field name="name">Déficit</field>
+        <field name="namespace">reconciliation</field>
+        <field name="variable_key">deficit</field>
+        <field name="value_type">currency</field>
+        <field name="mutability_policy">dynamic</field>
+        <field name="default_transformer">currency_br</field>
+        <field name="example_value">1250,00</field>
+        <field name="description">Diferença desfavorável entre estimado e arrematado.</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="field_definition_reconciliation_situacao_conciliacao" model="gov.document.field.definition">
+        <field name="name">Situação da conciliação</field>
+        <field name="namespace">reconciliation</field>
+        <field name="variable_key">situacao_conciliacao</field>
+        <field name="value_type">text</field>
+        <field name="mutability_policy">dynamic</field>
+        <field name="example_value">pendente</field>
+        <field name="description">Status calculado da conciliação financeira.</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="field_definition_reconciliation_prazo_conciliacao" model="gov.document.field.definition">
+        <field name="name">Prazo de conciliação</field>
+        <field name="namespace">reconciliation</field>
+        <field name="variable_key">prazo_conciliacao</field>
+        <field name="value_type">date</field>
+        <field name="mutability_policy">dynamic</field>
+        <field name="default_transformer">date_br</field>
+        <field name="example_value">10/05/2027</field>
+        <field name="description">Prazo limite calculado para regularização da conciliação.</field>
+        <field name="sequence">50</field>
+    </record>
+</odoo>
