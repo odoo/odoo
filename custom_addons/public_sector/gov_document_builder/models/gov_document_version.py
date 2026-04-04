@@ -17,6 +17,7 @@ class GovDocumentVersion(models.Model):
     version_no = fields.Integer(string="Versão", required=True)
     layout_json = fields.Text(string="Layout (JSON)")
     resolved_context_json = fields.Text(string="Contexto Resolvido (JSON)")
+    dynamic_namespaces_json = fields.Text(string="Namespaces Dinâmicos")
     typst_source = fields.Text(string="Fonte Typst")
     typst_hash = fields.Char(string="Hash do Typst")
     change_summary = fields.Char(string="Resumo da Mudança")
@@ -35,3 +36,9 @@ class GovDocumentVersion(models.Model):
         default=False,
         string="Versão Principal",
     )
+
+    def action_rerender(self):
+        renderer = self.env["gov.document.typst.renderer"]
+        for rec in self:
+            rec.write({"typst_source": renderer.render_version(rec)})
+        return True

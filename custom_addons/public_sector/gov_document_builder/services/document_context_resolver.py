@@ -25,7 +25,7 @@ class GovDocumentContextResolver(models.AbstractModel):
         }
         if context["process"]:
             context["process"].setdefault("modalidade", context["legal"].get("modalidade", ""))
-        context["reconciliation"] = self._resolve_reconciliation_namespace(context)
+        context["reconciliation"] = self.compute_reconciliation_namespace(context)
         context["document"] = self._resolve_document(instance)
         context["institution"] = self._resolve_institution(instance)
         return context
@@ -356,6 +356,10 @@ class GovDocumentContextResolver(models.AbstractModel):
             "situacao_conciliacao": situacao,
             "prazo_conciliacao": prazo_conciliacao,
         }
+
+    def compute_reconciliation_namespace(self, context):
+        """Recalcula o namespace de conciliação a partir de um contexto já montado."""
+        return self._resolve_reconciliation_namespace(context)
 
     def _resolve_institution(self, instance):
         company = getattr(instance, "company_id", False) or self.env.company

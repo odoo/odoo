@@ -1,3 +1,4 @@
+import json
 import logging
 
 from odoo import models
@@ -16,9 +17,46 @@ class GovDocumentTypstRenderer(models.AbstractModel):
         Ponto de entrada principal.
         Retorna string com o código Typst completo do documento.
         """
-        normalizer = self.env["gov.document.layout.normalizer"]
         resolver = self.env["gov.document.context.resolver"]
-        nodes = normalizer.normalize(instance.layout_json)
+        context = resolver.resolve_instance_context(instance)
+        return self._render_layout(instance, instance.layout_json, context)
+
+    def render_version(self, version):
+        """Renderiza uma versão persistida recompondo apenas os namespaces dinâmicos."""
+        resolver = self.env["gov.document.context.resolver"]
+        instance = version.document_instance_id
+        try:
+            snapshot_context = json.loads(version.resolved_context_json or "{}")
+        except json.JSONDecodeError:
+            snapshot_context = {}
+        try:
+            dynamic_namespaces = json.loads(version.dynamic_namespaces_json or "[]")
+        except json.JSONDecodeError:
+            dynamic_namespaces = []
+        snapshot_context.pop("dynamic_namespaces", None)
+
+        current_context = resolver.resolve_instance_context(instance)
+        merged_context = dict(snapshot_context)
+        for namespace in dynamic_namespaces:
+            if namespace == "reconciliation":
+                continue
+            if namespace in current_context:
+                merged_context[namespace] = current_context[namespace]
+
+        if "document" not in merged_context:
+            merged_context["document"] = current_context.get("document", {})
+        if "institution" not in merged_context:
+            merged_context["institution"] = current_context.get("institution", {})
+        if "reconciliation" in dynamic_namespaces or "reconciliation" not in merged_context:
+            merged_context["reconciliation"] = resolver.compute_reconciliation_namespace(
+                merged_context
+            )
+
+        return self._render_layout(instance, version.layout_json, merged_context)
+
+    def _render_layout(self, instance, layout_json, context):
+        normalizer = self.env["gov.document.layout.normalizer"]
+        nodes = normalizer.normalize(layout_json)
         errors = normalizer.validate(nodes)
         if errors:
             _logger.warning(
@@ -26,7 +64,6 @@ class GovDocumentTypstRenderer(models.AbstractModel):
                 instance.id,
                 errors,
             )
-        context = resolver.resolve_instance_context(instance)
         lines = []
         lines += self._render_preamble(instance, context)
         lines.append("")

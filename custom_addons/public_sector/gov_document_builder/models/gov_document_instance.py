@@ -88,17 +88,46 @@ class GovDocumentInstance(models.Model):
 
     def _create_version(self, summary=""):
         Version = self.env["gov.document.version"]
+        FieldDefinition = self.env["gov.document.field.definition"]
+        resolver = self.env["gov.document.context.resolver"]
         created_versions = self.env["gov.document.version"]
+        definitions = FieldDefinition.search([("active", "=", True)])
+        namespace_policies = {}
+        for definition in definitions:
+            namespace_policies.setdefault(definition.namespace, set()).add(
+                definition.mutability_policy
+            )
         for rec in self:
             existing_version_nos = rec.version_ids.mapped("version_no")
             base_version_no = (rec.current_version_no or 1) - 1
             version_no = max(existing_version_nos, default=base_version_no) + 1
+            full_context = resolver.resolve_instance_context(rec)
+            full_context.setdefault("document", {})
+            full_context["document"]["version"] = version_no
+            rec.resolved_context_json = json.dumps(full_context, ensure_ascii=False)
+
+            dynamic_namespaces = sorted(
+                namespace
+                for namespace, policies in namespace_policies.items()
+                if "dynamic" in policies
+            )
+            if "reconciliation" not in dynamic_namespaces:
+                dynamic_namespaces.append("reconciliation")
+
+            snapshot_context = {}
+            for namespace, values in full_context.items():
+                if namespace in dynamic_namespaces:
+                    continue
+                snapshot_context[namespace] = values
+            snapshot_context["dynamic_namespaces"] = dynamic_namespaces
+
             created_versions |= Version.create(
                 {
                     "document_instance_id": rec.id,
                     "version_no": version_no,
                     "layout_json": rec.layout_json or "[]",
-                    "resolved_context_json": rec.resolved_context_json or "{}",
+                    "resolved_context_json": json.dumps(snapshot_context, ensure_ascii=False),
+                    "dynamic_namespaces_json": json.dumps(dynamic_namespaces, ensure_ascii=False),
                     "typst_source": rec.typst_source or False,
                     "typst_hash": rec.typst_hash or False,
                     "change_summary": summary,
