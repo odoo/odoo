@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:35+0000\n"
-"PO-Revision-Date: 2026-03-21 13:12+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
+"PO-Revision-Date: 2026-04-01 07:57+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "im_livechat/da/>\n"
@@ -82,7 +82,8 @@ msgstr "%s (kopi)"
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid ""
 "'%(input_email)s' does not look like a valid email. Can you please try again?"
-msgstr "'%(input_email)s' har ikke en gyldig e-mailadresse. Prøv venligst igen."
+msgstr ""
+"'%(input_email)s' har ikke en gyldig e-mailadresse. Prøv venligst igen."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__action
@@ -185,8 +186,8 @@ msgid ""
 "<span>Tip: Plan further steps for the Bot in case no operator is available.</"
 "span>"
 msgstr ""
-"<span>Tip: Planlæg yderligere trin for botten, hvis ingen operatør er "
-"ledig.</span>"
+"<span>Tip: Planlæg yderligere trin for botten, hvis ingen operatør er ledig."
+"</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
@@ -458,8 +459,9 @@ msgid ""
 "Chat is private and unique between 2 persons. Group is private among invited "
 "persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
-"Chatten er privat og kun mellem to personer. Gruppen er privat og kun for "
-"inviterede. Kanalen kan tilsluttes frit, afhængigt af dens konfiguration."
+"En chat er privat og foregår mellem to personer. Gruppen er privat og kun "
+"for inviterede. En kanal kan frit tilsluttes (afhængigt af dens "
+"indstillinger)."
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.chatbot_script_action
@@ -827,6 +829,7 @@ msgstr "Diskussionskanal"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_ir_qweb__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_mail_message__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_rating_rating__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_res_groups__display_name
@@ -1206,6 +1209,7 @@ msgstr "Jeg har et spørgsmål vedr. prisen"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__id
+#: model:ir.model.fields,field_description:im_livechat.field_ir_qweb__id
 #: model:ir.model.fields,field_description:im_livechat.field_mail_message__id
 #: model:ir.model.fields,field_description:im_livechat.field_rating_rating__id
 #: model:ir.model.fields,field_description:im_livechat.field_res_groups__id
@@ -1306,8 +1310,8 @@ msgstr "Oplysninger"
 msgid ""
 "Invalid URL '%s'. The Review Link must start with 'http://' or 'https://'."
 msgstr ""
-"Ugyldig URL '%s'. Gennemgangslinket skal starte med 'http://' eller 'https://"
-"'."
+"Ugyldig URL '%s'. Gennemgangslinket skal starte med 'http://' eller "
+"'https://'."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_is_follower
@@ -1469,7 +1473,8 @@ msgstr "Forlad kanal"
 #: code:addons/im_livechat/static/src/core/common/close_confirmation.xml:0
 #: code:addons/im_livechat/static/src/core/public_web/thread_model_patch.js:0
 msgid "Leaving will end the livechat. Proceed leaving?"
-msgstr "Hvis du forlader livechatten, afsluttes den. Vil du stadig forlade den?"
+msgstr ""
+"Hvis du forlader livechatten, afsluttes den. Vil du stadig forlade den?"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_module_info_expert_text_step_demo
@@ -1667,7 +1672,7 @@ msgstr "Leder efter hjælp"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_discuss_channel_rtc_session
 msgid "Mail RTC session"
-msgstr "Send RTC-session"
+msgstr "E-mail RTC-session"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__sequence
@@ -2057,6 +2062,11 @@ msgstr "Drevet af"
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__question_selection
 msgid "Question"
 msgstr "Spørgsmål"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_ir_qweb
+msgid "Qweb"
+msgstr ""
 
 #. module: im_livechat
 #. odoo-python

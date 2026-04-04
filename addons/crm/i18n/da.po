@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 18:35+0000\n"
-"PO-Revision-Date: 2026-03-21 13:08+0000\n"
+"PO-Revision-Date: 2026-04-03 10:12+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/crm/"
 "da/>\n"
@@ -750,7 +750,7 @@ msgstr "Aliasstatus"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr "Aliasstatus vurderet ud fra den seneste modtagne besked."
+msgstr "Aliasstatus vurderet ud fra den senest modtagne besked."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_model_id
@@ -1429,7 +1429,7 @@ msgstr "Valuta"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr "Brugerdefineret fejlmeddelelse ved leveringsfejl"
+msgstr "Tilpasset meddelelse om ikke-leveret post"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__partner_id
@@ -1665,7 +1665,7 @@ msgstr "E-mail-CC:"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr "E-maildomæne f.eks. 'example.com' i 'odoo@example.com'"
+msgstr "E-maildomæne f.eks. 'eksempel.com' i 'odoo@eksempel.com'"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -1960,8 +1960,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task "
 "creation alias)"
 msgstr ""
-"ID for det overordnede alias-datasæt (f.eks. et projekt, der indeholder "
-"aliasset til oprettelse af opgaver)"
+"ID for den overordnede aliaspost (f.eks. et projekt, der indeholder aliasset "
+"til oprettelse af opgaver)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_exception_icon
@@ -2482,7 +2482,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr "Lokal-del baseret indgående detektion"
+msgstr "Indgående detektion baseret på lokal del"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_code
@@ -3171,9 +3171,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Valgfrit ID for en tråd (datasæt), som alle indgående meddelelser tilknyttes "
-"– også selv om de ikke er svar på en eksisterende meddelelse. Hvis dette "
-"felt er markeret, forhindres oprettelsen af nye datasæt fuldstændigt."
+"Valgfrit ID for en tråd (post), som alle indgående meddelelser vil blive "
+"knyttet til, selvom de ikke er svar på tråden. Hvis det er angivet, vil "
+"oprettelsen af nye poster blive fuldstændigt deaktiveret."
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_over_3_years
@@ -3204,7 +3204,7 @@ msgstr "Overordnet model"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "Tråd-ID for overordnet datasæt"
+msgstr "Tråd-ID for overordnet post"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_parent_model_id
@@ -3431,7 +3431,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "Datasættets tråd-ID"
+msgstr "Postens tråd-ID"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_plan
@@ -3915,8 +3915,8 @@ msgid ""
 "new record of this model (e.g. a Project Task)"
 msgstr ""
 "Modellen (Odoo-dokumenttype), som dette alias svarer til. Enhver indgående e-"
-"mail, der ikke svarer til en eksisterende post, vil medføre oprettelse af et "
-"nyt datasæt af denne model (f.eks. en projektopgave)"
+"mail, der ikke svarer til en eksisterende post, vil medføre oprettelse af en "
+"ny post af denne model (f.eks. en projektopgave)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_name
@@ -3924,8 +3924,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Navnet på e-mailaliasset, f.eks. 'jobs', hvis du ønsker at fange e-mails "
-"sendt til <jobs@example.odoo.com>"
+"Navnet på e-mailaliasset, f.eks. 'jobs', hvis du vil modtage e-mails sendt "
+"til <jobs@eksempel.odoo.com>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_name

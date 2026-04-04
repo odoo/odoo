@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2026-03-21 13:22+0000\n"
+"PO-Revision-Date: 2026-04-03 10:12+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "project/da/>\n"
@@ -859,7 +859,7 @@ msgstr "E-mailalias"
 #: model:ir.model.fields,field_description:project.field_project_project__alias_name
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__alias_name
 msgid "Alias Name"
-msgstr "Alias navn"
+msgstr "Aliasnavn"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_status
@@ -869,7 +869,7 @@ msgstr "Aliasstatus"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr "Aliasstatus vurderet ud fra den seneste modtagne besked."
+msgstr "Aliasstatus vurderet ud fra den senest modtagne besked."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_model_id
@@ -994,7 +994,7 @@ msgstr "Er du sikker på, at du vil slette disse stadier?"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_one2many_field/subtask_list_renderer.js:0
 msgid "Are you sure you want to delete this record?"
-msgstr "Er du sikker på du vil slette dette datasæt?"
+msgstr "Er du sikker på, at du vil slette denne post?"
 
 #. module: project
 #. odoo-javascript
@@ -1631,7 +1631,7 @@ msgstr "Denne opgaves aktuelle fase"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr "Tilpasset Ikke modtaget Besked"
+msgstr "Tilpasset meddelelse om ikke-leveret post"
 
 #. module: project
 #. odoo-python
@@ -2063,7 +2063,7 @@ msgstr "Email cc"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr "E-maildomæne f.eks. 'example.com' i 'odoo@example.com'"
+msgstr "E-maildomæne f.eks. 'eksempel.com' i 'odoo@eksempel.com'"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -2380,8 +2380,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task "
 "creation alias)"
 msgstr ""
-"ID for det overordnede alias-datasæt (f.eks. et projekt, der indeholder "
-"aliasset til oprettelse af opgaver)"
+"ID for den overordnede aliaspost (f.eks. et projekt, der indeholder aliasset "
+"til oprettelse af opgaver)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_exception_icon
@@ -2748,7 +2748,7 @@ msgstr "Indlæs mere"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr "Lokal-del baseret indgående detektion"
+msgstr "Indgående detektion baseret på lokal del"
 
 #. module: project
 #. odoo-javascript
@@ -3278,9 +3278,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Valgfri ID for en tråd (record), som alle indgående meddelelser vil blive "
-"vedhæftet, selv om de ikke svarede på det. Hvis opsat, vil dette "
-"fuldstændigt deaktivere oprettelsen af nye poster."
+"Valgfrit ID for en tråd (post), som alle indgående meddelelser vil blive "
+"knyttet til, selvom de ikke er svar på tråden. Hvis det er angivet, vil "
+"oprettelsen af nye poster blive fuldstændigt deaktiveret."
 
 #. module: project
 #. odoo-javascript
@@ -3323,7 +3323,7 @@ msgstr "Overordnet model"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "Tråd-ID for overordnet datasæt"
+msgstr "Tråd-ID for overordnet post"
 
 #. module: project
 #. odoo-python
@@ -3963,7 +3963,7 @@ msgstr "Modtagere"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "Optag tråd ID"
+msgstr "Postens tråd-ID"
 
 #. module: project
 #. odoo-javascript
@@ -4900,8 +4900,8 @@ msgid ""
 "new record of this model (e.g. a Project Task)"
 msgstr ""
 "Modellen (Odoo-dokumenttype), som dette alias svarer til. Enhver indgående e-"
-"mail, der ikke svarer til en eksisterende post, vil medføre oprettelse af et "
-"nyt datasæt af denne model (f.eks. en projektopgave)"
+"mail, der ikke svarer til en eksisterende post, vil medføre oprettelse af en "
+"ny post af denne model (f.eks. en projektopgave)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
@@ -4910,7 +4910,7 @@ msgid ""
 "<jobs@example.odoo.com>"
 msgstr ""
 "Navnet på e-mailaliasset, f.eks. 'jobs', hvis du vil modtage e-mails sendt "
-"til <jobs@example.odoo.com>"
+"til <jobs@eksempel.odoo.com>"
 
 #. module: project
 #. odoo-python

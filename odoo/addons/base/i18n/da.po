@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-11 16:34+0000\n"
-"PO-Revision-Date: 2026-03-21 13:16+0000\n"
+"PO-Revision-Date: 2026-04-01 10:01+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/base/"
 "da/>\n"
@@ -14603,8 +14603,8 @@ msgstr ""
 "\n"
 "* factur-x-dokumentet (fra FNFE)\n"
 "* peppol-bis-invoice-3-dokumentet (GitHub-arkivet: https://github.com/"
-"OpenPEPPOL/peppol-bis-invoice-3/tree/master/rules/examples contains "
-"examples)\n"
+"OpenPEPPOL/peppol-bis-invoice-3/tree/master/rules/examples contains examples)"
+"\n"
 "* Odoo, disse filer består alle af valideringstests (ved hjælp af ecosio "
 "eller FNFE-validatoren)\n"
 "\n"
@@ -15272,7 +15272,7 @@ msgid ""
 msgstr ""
 "\n"
 "Hvis tidsregistreringerne skjules i portalen, giver dette modul dig også "
-"mulighed for at skjule tidsregistreringsoplysninger i andre datasæt.\n"
+"mulighed for at skjule tidsregistreringsoplysninger i andre poster.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet_enterprise
@@ -16013,7 +16013,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>record</code>: record on which the action is triggered"
-msgstr "<code>record</code>: Datasæt, som handlingen udløses på"
+msgstr "<code>record</code>: Post, som handlingen udløses på"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -16028,7 +16028,7 @@ msgid ""
 "<code>records</code>: recordset of all records on which the action is "
 "triggered in multi mode"
 msgstr ""
-"<code>records</code>: Datasæt for alle data, der udløser handlingen i "
+"<code>records</code>: Post for alle data, der udløser handlingen i "
 "multitilstand"
 
 #. module: base
@@ -16037,8 +16037,8 @@ msgid ""
 "<code>records</code>: recordset of all records on which the action is "
 "triggered in multi mode; may be void"
 msgstr ""
-"<code>records</code>: Datasæt af alle data, som udløser en handling i "
-"multitilstand; kan være ugyldigt"
+"<code>records</code>: Poster af alle data, som udløser en handling i "
+"multitilstand; kan være ugyldig"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -23163,7 +23163,7 @@ msgstr "Chon"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Choose a record..."
-msgstr "Vælg et datasæt ..."
+msgstr "Vælg en post ..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
@@ -23367,12 +23367,12 @@ msgid ""
 "Modules time, datetime, dateutil are available."
 msgstr ""
 "Kode til at beregne værdien af et felt.\n"
-"Gennemgå posteringslisten 'self', og tildel værdier til felterne:\n"
+"Gennemgå posteringslisten 'self', og tildel felterne værdier:\n"
 "\n"
-"     for datasæt i self:\n"
+"     for post i self:\n"
 "          record['size'] = len(record.name)\n"
 "\n"
-"Modulerne time, datetime, dateutil er tilgængelige."
+"Modulerne tid, dato og klokkeslæt, dateutil er tilgængelige."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_cohort
@@ -23778,8 +23778,8 @@ msgid ""
 "Computed field to check if the record should be visible according to the "
 "domain"
 msgstr ""
-"Beregnet felt, der kontrollerer, om datasættet skal være synlig i henhold "
-"til domænet"
+"Beregnet felt, der kontrollerer, om posten skal være synlig i henhold til "
+"domænet"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -24353,7 +24353,7 @@ msgstr "Assistent til oprettelse af menuer"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__object_create
 msgid "Create Record"
-msgstr "Opret datasæt"
+msgstr "Opret post"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm_report
@@ -26053,7 +26053,7 @@ msgstr "Vis telefonikoner"
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "Display the country image if the field is present on the record"
-msgstr "Vis landebilledet, hvis feltet er til stede i datasættet"
+msgstr "Vis landebilledet, hvis feltet er til stede i posten"
 
 #. module: base
 #. odoo-python
@@ -26378,7 +26378,7 @@ msgstr "Duplikér ..."
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__object_copy
 msgid "Duplicate Record"
-msgstr "Duplikér datasæt"
+msgstr "Duplikér post"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -26578,8 +26578,8 @@ msgid ""
 "Easily format text data across multiple records. Find duplicate records and "
 "easily merge them."
 msgstr ""
-"Formatér nemt tekstdata på tværs af flere datasæt. Find og forén duplikerede "
-"datasæt enkelt."
+"Formatér nemt tekstdata på tværs af flere poster. Find og forén nemt "
+"duplikerede poster."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_easypost
@@ -28545,9 +28545,9 @@ msgid ""
 "always sent as '_id' and '_model'. The name of the action that triggered the "
 "webhook is always sent as '_name'."
 msgstr ""
-"Felter, der sendes i POST-forespørgslen: ID’et og modellen for datasættet "
-"sendes altid som '_id' og '_model', og navnet på handlingen, der udløste "
-"webhooken, sendes altid som '_name'."
+"Felter, der sendes i POST-forespørgslen: ID’et og modellen for posten sendes "
+"altid som '_id' og '_model', og navnet på handlingen, der udløste webhooken, "
+"sendes altid som '_name'."
 
 #. module: base
 #: model:res.country,name:base.fj
@@ -28693,7 +28693,7 @@ msgstr "Finans/forsikring"
 #: model:ir.module.module,summary:base.module_data_merge_crm
 #: model:ir.module.module,summary:base.module_data_merge_utm
 msgid "Find duplicate records and merge them"
-msgstr "Find duplikerede datasæt og slå dem sammen"
+msgstr "Find duplikerede poster og slå dem sammen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_unsplash
@@ -28704,7 +28704,7 @@ msgstr "Find gratis højopløsningsbilleder fra Unsplash"
 #: model:ir.module.module,description:base.module_data_recycle
 #: model:ir.module.module,summary:base.module_data_recycle
 msgid "Find old records and archive/delete them"
-msgstr "Find og arkivér/slet gamle datasæt"
+msgstr "Find og arkivér/slet gamle poster"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_restaurant
@@ -30643,7 +30643,7 @@ msgstr "Handlingens ID, hvis defineret i en XML-fil"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data__res_id
 msgid "ID of the target record in the database"
-msgstr "ID på måldatasættet i databasen"
+msgstr "ID på målposten i databasen"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__xml_id
@@ -30755,13 +30755,13 @@ msgid ""
 "of the field contains a lot of records; usually used on models with\n"
 "few records (e.g. Stages, Job Positions, Event Types, etc.)."
 msgstr ""
-"Hvis dette felt er markeret, inkluderes alle datasæt, der er knyttet til "
+"Hvis dette felt er markeret, inkluderes alle poster, der er knyttet til "
 "målmodellen,\n"
 "i et grupperet resultat (f.eks. i 'Grupper'-filtre, opslagstavlekolonner "
 "osv.).\n"
 "Bemærk, at dette kan påvirke ydeevnen væsentligt, hvis målmodellen\n"
-"indeholder mange datasæt. Feltet anvendes normalt på modeller med\n"
-"få datasæt (f.eks. faser, stillinger, arrangementstyper osv.)."
+"indeholder mange poster. Feltet anvendes normalt på modeller med\n"
+"få poster (f.eks. faser, stillinger, arrangementstyper osv.)."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_debug
@@ -30830,7 +30830,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_ir_actions_report__domain
 msgid "If set, the action will only appear on records that matches the domain."
 msgstr ""
-"Hvis denne indstilling er aktiveret, vises handlingen kun på datasæt, der "
+"Hvis denne indstilling er aktiveret, vises handlingen kun på poster, der "
 "matcher domænet."
 
 #. module: base
@@ -31517,8 +31517,8 @@ msgid ""
 "Inherited view cannot have 'Groups' define on the record. Use 'groups' "
 "attributes inside the view definition"
 msgstr ""
-"Der kan ikke defineres 'Grupper' for datasættet i en nedarvet visning. Brug "
-"i stedet 'gruppe'-attributterne i visningsdefinitionen"
+"Der kan ikke defineres 'Grupper' for posten i en nedarvet visning. Brug i "
+"stedet 'gruppe'-attributterne i visningsdefinitionen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_setup
@@ -36157,7 +36157,7 @@ msgstr "Antallet af opdaterede moduler"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__rules_count
 msgid "Number of record rules that apply to the current user"
-msgstr "Antal datasætregler, der gælder for den aktuelle bruger"
+msgstr "Antal postregler, der gælder for den aktuelle bruger"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__all_users_count
@@ -40713,7 +40713,7 @@ msgid ""
 "restricted menus).\n"
 "                They usually do not belong to the usual Odoo groups."
 msgstr ""
-"Portalmedlemmer har specifikke adgangsrettigheder (såsom datasætsregler og "
+"Portalmedlemmer har specifikke adgangsrettigheder (såsom postregler og "
 "begrænsede menuer).\n"
 "              De tilhører typisk ikke de sædvanlige Odoo-grupper."
 
@@ -40908,7 +40908,7 @@ msgstr "Privilegier"
 #. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 msgid "Problematic record(s)"
-msgstr "Problematiske datasæt"
+msgstr "Problematisk(e) post(er)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_mrp
@@ -41460,8 +41460,8 @@ msgid ""
 "restricted menus).\n"
 "                They usually do not belong to the usual Odoo groups."
 msgstr ""
-"Offentlige brugere har specifikke adgangsrettigheder (såsom datasætsregler "
-"og begrænsede menuer).\n"
+"Offentlige brugere har specifikke adgangsrettigheder (såsom postregler og "
+"begrænsede menuer).\n"
 "                 De tilhører normalt ikke de typiske Odoo-grupper."
 
 #. module: base
@@ -41958,13 +41958,13 @@ msgstr "Faktisk forløbet tid"
 #: model:ir.model.fields,field_description:base.field_ir_cron__resource_ref
 #: model_terms:ir.ui.view,arch_db:base.view_model_data_form
 msgid "Record"
-msgstr "Datasæt"
+msgstr "Post"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__res_id
 #: model:ir.model.fields,field_description:base.field_ir_model_data__res_id
 msgid "Record ID"
-msgstr "Datasæt-ID"
+msgstr "Post-ID"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
@@ -41992,8 +41992,8 @@ msgid ""
 "Record cannot be modified right now: This cron task is currently being "
 "executed and may not be modified Please try again in a few minutes"
 msgstr ""
-"Datasættet kan ikke ændres lige nu: Denne cron-opgave kører i øjeblikket og "
-"må ikke modificeres. Prøv venligst igen om et par minutter"
+"Posten kan ikke ændres lige nu: Denne cron-opgave kører i øjeblikket og må "
+"ikke modificeres. Prøv venligst igen om et par minutter"
 
 #. module: base
 #. odoo-python
@@ -42015,7 +42015,7 @@ msgstr "Registrér tid"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__crud_model_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__crud_model_id
 msgid "Record to Create"
-msgstr "Dataset, der skal oprettes"
+msgstr "Post, der skal oprettes"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_recruitment
@@ -42856,7 +42856,7 @@ msgid ""
 "SQL expression for ordering records in the model; e.g. \"x_sequence asc, id "
 "desc\""
 msgstr ""
-"SQL-udtryk til sortering af datasæt i modellen; f.eks. \"x_sequence ASC, id "
+"SQL-udtryk til sortering af poster i modellen; f.eks. \"x_sequence ASC, id "
 "DESC\""
 
 #. module: base
@@ -43528,7 +43528,7 @@ msgstr "Vælg den korrekte papirstørrelse"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Select a field to link the record to"
-msgstr "Vælg et felt, så datasættet knyttes til"
+msgstr "Vælg et felt, så posten knyttes til"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -44719,8 +44719,8 @@ msgid ""
 "Specify which kind of record should be created. Set this field only to "
 "specify a different model than the base model."
 msgstr ""
-"Angiv typen af datasæt, der skal oprettes. Brug kun dette felt, hvis du vil "
-"vælge en anden model end basismodellen."
+"Angiv posttypen, der skal oprettes. Brug kun dette felt, hvis du vil vælge "
+"en anden model end basismodellen."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__speedscope
@@ -46223,7 +46223,7 @@ msgid ""
 "record to be selected beforehand."
 msgstr ""
 "Handlingen \"%s\" kan ikke vælges som starthandling, da der først skal "
-"vælges et datasæt."
+"vælges en post."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -46382,9 +46382,9 @@ msgid ""
 msgstr ""
 "Feltet <strong>Udregn</strong> indeholder Python-koden,\n"
 "                                                      der beregner værdien "
-"af feltet i et datasæt. Feltets\n"
+"af feltet i postgrupper. Feltets\n"
 "                                                      værdi skal tilskrives "
-"hvert datasæt ved hjælp af en ordbogs-lignende\n"
+"hver post via en ordbogslignende\n"
 "                                                      tilskrivning."
 
 #. module: base
@@ -46399,9 +46399,9 @@ msgid ""
 msgstr ""
 "Feltet <strong>Udregn</strong> indeholder Python-koden,\n"
 "                                                      der beregner værdien "
-"af feltet i et datasæt. Feltets\n"
+"af feltet i postgrupper. Feltets\n"
 "                                                      værdi skal tilskrives "
-"hvert datasæt ved hjælp af en ordbogs-lignende\n"
+"hver post via en ordbogslignende\n"
 "                                                      tilskrivning."
 
 #. module: base
@@ -46641,7 +46641,7 @@ msgstr "Modulets navn skal være entydigt!"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "The name of the record to create"
-msgstr "Navnet på det datasæt, der skal oprettes"
+msgstr "Navnet på den post, der skal oprettes"
 
 #. module: base
 #. odoo-python
@@ -48053,7 +48053,7 @@ msgstr "Handlinger på højeste niveau"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__count
 msgid "Total number of records in this model"
-msgstr "Samlede antal datasæt i denne model"
+msgstr "Samlede antal poster i denne model"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_tour
@@ -48682,7 +48682,7 @@ msgstr "Fjern moduler"
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module_dependency__state__uninstallable
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module_exclusion__state__uninstallable
 msgid "Uninstallable"
-msgstr "Ikke installerbart"
+msgstr "Kan ikke installeres"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__uninstalled_l10n_module_ids
@@ -48955,7 +48955,7 @@ msgstr "Opdatér modulliste"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__object_write
 msgid "Update Record"
-msgstr "Opdatér datasæt"
+msgstr "Opdatér post"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_related_model_id
@@ -49613,7 +49613,7 @@ msgstr "Navn på visning"
 #. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 msgid "View Problematic Record(s)"
-msgstr "Vis problematisk(e) datasæt"
+msgstr "Vis problematisk(e) post(er)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_id
@@ -50266,7 +50266,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__copied
 msgid "Whether the value is copied when duplicating a record."
-msgstr "Angiver, om værdien kopieres, når et datasæt kopieres."
+msgstr "Angiver, om værdien kopieres, når en post kopieres."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__store
@@ -50314,11 +50314,11 @@ msgid ""
 "number upon assignment, there can still be gaps in the sequence if records "
 "are deleted. The 'no gap' implementation is slower than the standard one."
 msgstr ""
-"Når et talinterval tilknyttes et datasæt, sikrer 'no gap'-"
-"sekvensimplementeringen, at det forrige sekvensnummer allerede er tildelt. "
+"Når et talinterval tildeles en post, sikrer ‘no gap’-"
+"sekvensimplementeringen, at alle tidligere sekvensnumre allerede er tildelt. "
 "Selvom denne implementering ikke springer sekvensnumre over ved tildeling, "
-"kan der stadig opstå huller, hvis datasæt slettes. 'No gap'-implementeringen "
-"er langsommere end den almindelige sekvens."
+"kan der stadig opstå huller, hvis poster slettes. ‘No gap’-implementeringen "
+"er langsommere end den standardmæssige sekvens."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_G
@@ -50551,7 +50551,7 @@ msgid ""
 "records."
 msgstr ""
 "Du har ikke tilladelse til at få adgang til '%(document_kind)s' (%"
-"(document_model)s)-datasæt."
+"(document_model)s)-poster."
 
 #. module: base
 #. odoo-python
@@ -50560,8 +50560,8 @@ msgid ""
 "You are not allowed to create '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
-"Du har ikke tilladelse til at oprette '%(document_kind)s' (%"
-"(document_model)s)-datasæt."
+"Du har ikke tilladelse til at oprette '%(document_kind)s' (%(document_model)"
+"s)-poster."
 
 #. module: base
 #. odoo-python
@@ -50570,8 +50570,8 @@ msgid ""
 "You are not allowed to delete '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
-"Du har ikke tilladelse til at slette '%(document_kind)s' (%"
-"(document_model)s)-datasæt."
+"Du har ikke tilladelse til at slette '%(document_kind)s' (%(document_model)"
+"s)-poster."
 
 #. module: base
 #. odoo-python
@@ -50580,8 +50580,8 @@ msgid ""
 "You are not allowed to modify '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
-"Du har ikke tilladelse til at redigere '%(document_kind)s' (%"
-"(document_model)s)-datasæt."
+"Du har ikke tilladelse til at redigere '%(document_kind)s' (%(document_model)"
+"s)-poster."
 
 #. module: base
 #. odoo-python
@@ -50815,7 +50815,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_config_parameter.py:0
 msgid "You cannot delete the %s record."
-msgstr "Du kan ikke slette %s-datasættet."
+msgstr "Du kan ikke slette %s-posten."
 
 #. module: base
 #. odoo-python
@@ -51391,7 +51391,7 @@ msgid ""
 "for record in self:\n"
 "        record['size'] = len(record.name)"
 msgstr ""
-"til datasæt i self:\n"
+"til post i self:\n"
 "        record['size'] = len(record.name)"
 
 #. module: base
