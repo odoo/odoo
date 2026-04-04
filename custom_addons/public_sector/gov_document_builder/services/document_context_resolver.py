@@ -25,12 +25,12 @@ class GovDocumentContextResolver(models.AbstractModel):
             "contract": self._resolve_contract_namespace(process),
             "budget": self._resolve_budget_namespace(process),
             "execution": self._resolve_execution_namespace(process),
+            "document": self._resolve_document(instance),
+            "institution": self._resolve_institution(instance),
         }
         if context["process"]:
             context["process"].setdefault("modalidade", context["legal"].get("modalidade", ""))
         context["reconciliation"] = self.compute_reconciliation_namespace(context)
-        context["document"] = self._resolve_document(instance)
-        context["institution"] = self._resolve_institution(instance)
         return context
 
     def resolve_block_value(self, instance, block_node):
@@ -213,9 +213,23 @@ class GovDocumentContextResolver(models.AbstractModel):
             section="required_by_law",
         )
         legal["base_legal"] = [param.name for param in parameters if param.name]
-        legal["modalidade"] = self._get_parameter_value(process, "modalidade", parameters=parameters) or ""
+        legal["modalidade"] = (
+            self._get_parameter_value(
+                process,
+                "modalidade",
+                parameters=parameters,
+                fallback_to_all=False,
+            )
+            or ""
+        )
         legal["hipotese_dispensa"] = (
-            self._get_parameter_value(process, "hipotese_dispensa", parameters=parameters) or ""
+            self._get_parameter_value(
+                process,
+                "hipotese_dispensa",
+                parameters=parameters,
+                fallback_to_all=False,
+            )
+            or ""
         )
         return legal
 
@@ -392,7 +406,7 @@ class GovDocumentContextResolver(models.AbstractModel):
             elif valor_arrematado > valor_estimado_total:
                 deficit = valor_arrematado - valor_estimado_total
 
-        valor_a_conciliar = max(valor_empenhado - valor_liquidado, 0.0)
+        valor_a_conciliar = valor_empenhado - valor_liquidado
         situacao = "regular"
         if valor_contratado and valor_empenhado > valor_contratado:
             situacao = "com_devolucao"
@@ -417,6 +431,19 @@ class GovDocumentContextResolver(models.AbstractModel):
     def compute_reconciliation_namespace(self, context):
         """Recalcula o namespace de conciliação a partir de um contexto já montado."""
         return self._resolve_reconciliation_namespace(context)
+
+    def get_dynamic_fields_by_namespace(self):
+        """Retorna as chaves dinâmicas ativas agrupadas por namespace."""
+        definitions = self.env["gov.document.field.definition"].search(
+            [
+                ("active", "=", True),
+                ("mutability_policy", "=", "dynamic"),
+            ]
+        )
+        dynamic_fields = {}
+        for definition in definitions:
+            dynamic_fields.setdefault(definition.namespace, set()).add(definition.variable_key)
+        return dynamic_fields
 
     def _normalize_visibility_literal(self, literal):
         cleaned = (literal or "").strip()
@@ -458,12 +485,12 @@ class GovDocumentContextResolver(models.AbstractModel):
             parameters = parameters.filtered(lambda rec: rec.section == section)
         return parameters
 
-    def _get_parameter_value(self, process, key, parameters=None):
+    def _get_parameter_value(self, process, key, parameters=None, fallback_to_all=True):
         if not process:
             return ""
         parameter_records = parameters if parameters is not None else process.parameter_ids
         parameter = parameter_records.filtered(lambda rec: rec.key == key)[:1]
-        if not parameter:
+        if not parameter and fallback_to_all:
             parameter = process.parameter_ids.filtered(lambda rec: rec.key == key)[:1]
         if not parameter:
             return ""

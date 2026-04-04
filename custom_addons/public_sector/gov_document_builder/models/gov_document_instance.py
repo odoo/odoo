@@ -21,6 +21,7 @@ class GovDocumentInstance(models.Model):
         "gov.processo",
         string="Processo",
         ondelete="cascade",
+        required=False,
         tracking=True,
     )
     state = fields.Selection(
@@ -88,15 +89,9 @@ class GovDocumentInstance(models.Model):
 
     def _create_version(self, summary=""):
         Version = self.env["gov.document.version"]
-        FieldDefinition = self.env["gov.document.field.definition"]
         resolver = self.env["gov.document.context.resolver"]
         created_versions = self.env["gov.document.version"]
-        definitions = FieldDefinition.search([("active", "=", True)])
-        namespace_policies = {}
-        for definition in definitions:
-            namespace_policies.setdefault(definition.namespace, set()).add(
-                definition.mutability_policy
-            )
+        dynamic_fields_by_namespace = resolver.get_dynamic_fields_by_namespace()
         for rec in self:
             existing_version_nos = rec.version_ids.mapped("version_no")
             base_version_no = (rec.current_version_no or 1) - 1
@@ -106,19 +101,25 @@ class GovDocumentInstance(models.Model):
             full_context["document"]["version"] = version_no
             rec.resolved_context_json = json.dumps(full_context, ensure_ascii=False)
 
-            dynamic_namespaces = sorted(
-                namespace
-                for namespace, policies in namespace_policies.items()
-                if "dynamic" in policies
-            )
+            dynamic_namespaces = sorted(dynamic_fields_by_namespace)
             if "reconciliation" not in dynamic_namespaces:
                 dynamic_namespaces.append("reconciliation")
 
             snapshot_context = {}
             for namespace, values in full_context.items():
-                if namespace in dynamic_namespaces:
+                if namespace == "reconciliation":
                     continue
-                snapshot_context[namespace] = values
+                dynamic_fields = dynamic_fields_by_namespace.get(namespace, set())
+                if not dynamic_fields:
+                    snapshot_context[namespace] = values
+                    continue
+                if not isinstance(values, dict):
+                    continue
+                static_values = {
+                    key: value for key, value in values.items() if key not in dynamic_fields
+                }
+                if static_values:
+                    snapshot_context[namespace] = static_values
             snapshot_context["dynamic_namespaces"] = dynamic_namespaces
 
             created_versions |= Version.create(

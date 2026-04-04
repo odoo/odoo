@@ -282,10 +282,10 @@
         <field name="namespace">contract</field>
         <field name="variable_key">saldo_restante</field>
         <field name="value_type">currency</field>
-        <field name="mutability_policy">snapshot</field>
+        <field name="mutability_policy">dynamic</field>
         <field name="default_transformer">currency_br</field>
         <field name="example_value">8500,00</field>
-        <field name="description">Saldo remanescente atualizado do contrato.</field>
+        <field name="description">Saldo remanescente atualizado do contrato, sempre recalculado em tempo real.</field>
         <field name="sequence">50</field>
     </record>
     <record id="field_definition_contract_quantidade_aditivos" model="gov.document.field.definition">
@@ -293,9 +293,9 @@
         <field name="namespace">contract</field>
         <field name="variable_key">quantidade_aditivos</field>
         <field name="value_type">integer</field>
-        <field name="mutability_policy">snapshot</field>
+        <field name="mutability_policy">dynamic</field>
         <field name="example_value">2</field>
-        <field name="description">Quantidade atual de aditivos vinculados ao contrato.</field>
+        <field name="description">Quantidade atual de aditivos vinculados ao contrato, sempre refletindo o estado corrente.</field>
         <field name="sequence">60</field>
     </record>
 

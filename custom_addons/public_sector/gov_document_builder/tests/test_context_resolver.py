@@ -39,6 +39,16 @@ class TestGovDocumentContextResolver(TransactionCase):
         self.assertEqual(self.resolver.apply_transformer("  semsa  ", "strip"), "semsa")
         self.assertEqual(self.resolver.apply_transformer("semsa", "upper"), "SEMSA")
 
+    def test_apply_transformer_percentual_and_lista_br(self):
+        self.assertEqual(self.resolver.apply_transformer(0.125, "percentual"), "12,50%")
+        self.assertEqual(
+            self.resolver.apply_transformer(
+                ["Lei 14.133/2021", "regulamento local", "parecer jurídico"],
+                "lista_br",
+            ),
+            "Lei 14.133/2021, regulamento local e parecer jurídico",
+        )
+
     def test_resolve_binding_returns_fallback_for_missing_path(self):
         context = {"process": {"numero": "001/2026"}}
         binding = {
@@ -262,3 +272,78 @@ class TestContextResolverFinancialCycle(TransactionCase):
         self.assertEqual(context["budget"]["exercicio"], 2026)
         self.assertEqual(context["budget"]["natureza_despesa"], ["3.3.90.39", "3.3.90.30"])
         self.assertEqual(context["budget"]["fonte_recurso"], ["100", "200"])
+
+    def test_legal_namespace_ignores_parameters_outside_required_by_law_filter(self):
+        process = self.env["gov.processo"].create(
+            {
+                "name": "SEMSA-2026-002",
+                "subject": "Aquisição de kits laboratoriais",
+                "state": "execucao",
+                "process_scope": "compras",
+            }
+        )
+        self.env["gov.processo.parametro"].create(
+            {
+                "processo_id": process.id,
+                "key": "modalidade",
+                "name": "Modalidade fora da base legal",
+                "section": "optional",
+                "fase": 5,
+                "value_type": "string",
+                "value_text": "Registro de preços",
+            }
+        )
+        instance = self.env["gov.document.instance"].create(
+            {
+                "name": "Documento sem base legal",
+                "document_type_id": self.document_type.id,
+                "template_id": self.template.id,
+                "process_id": process.id,
+            }
+        )
+
+        context = self.resolver.resolve_instance_context(instance)
+
+        self.assertEqual(context["legal"]["base_legal"], [])
+        self.assertEqual(context["legal"]["modalidade"], "")
+        self.assertEqual(context["legal"]["hipotese_dispensa"], "")
+
+    def test_contract_and_execution_namespaces_return_default_shapes_when_unavailable(self):
+        context = self.resolver.resolve_instance_context(self.instance)
+
+        self.assertEqual(
+            context["contract"],
+            {
+                "valor_contratado": 0.0,
+                "numero_contrato": "",
+                "data_inicio_vigencia": "",
+                "data_fim_vigencia": "",
+                "quantidade_aditivos": 0,
+                "saldo_restante": 0.0,
+            },
+        )
+        self.assertEqual(
+            context["execution"],
+            {
+                "valor_empenhado_acumulado": 0.0,
+                "valor_liquidado_acumulado": 0.0,
+                "ordens_fornecimento_count": 0,
+                "quantidade_entregue": 0.0,
+                "status_aceite_fiscal": "",
+            },
+        )
+
+    def test_reconciliation_uses_liquidado_value_and_contract_deadline(self):
+        context = self.resolver.resolve_instance_context(self.instance)
+        context["auction"]["valor_arrematado"] = 21000.0
+        context["contract"]["valor_contratado"] = 200000.0
+        context["contract"]["data_fim_vigencia"] = "2026-05-31"
+        context["execution"]["valor_liquidado_acumulado"] = 12500.0
+
+        reconciliation = self.resolver.compute_reconciliation_namespace(context)
+
+        self.assertEqual(reconciliation["valor_a_conciliar"], 137500.0)
+        self.assertEqual(reconciliation["superavit"], 3090.0)
+        self.assertEqual(reconciliation["deficit"], 0.0)
+        self.assertEqual(reconciliation["situacao_conciliacao"], "pendente")
+        self.assertEqual(reconciliation["prazo_conciliacao"], "2026-06-30")

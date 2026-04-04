@@ -1,4 +1,5 @@
 import json
+from unittest.mock import patch
 
 from odoo.tests.common import TransactionCase
 
@@ -121,6 +122,92 @@ class TestSnapshotPolicy(TransactionCase):
 
         self.assertIn("budget", dynamic_namespaces)
         self.assertIn("execution", dynamic_namespaces)
+
+    def test_contract_snapshot_keeps_static_fields_and_refreshes_dynamic_ones(self):
+        resolver = self.env["gov.document.context.resolver"]
+        self.instance.write(
+            {
+                "layout_json": json.dumps(
+                    [
+                        {
+                            "id": "contract_total",
+                            "type": "process_field",
+                            "sequence": 10,
+                            "props": {"label": "Valor contratado"},
+                            "binding": {
+                                "source": "contract",
+                                "path": "valor_contratado",
+                                "transform": "currency_br",
+                            },
+                        },
+                        {
+                            "id": "contract_balance",
+                            "type": "process_field",
+                            "sequence": 20,
+                            "props": {"label": "Saldo restante"},
+                            "binding": {
+                                "source": "contract",
+                                "path": "saldo_restante",
+                                "transform": "currency_br",
+                            },
+                        },
+                    ]
+                )
+            }
+        )
+        initial_context = json.loads(
+            json.dumps(resolver.resolve_instance_context(self.instance), ensure_ascii=False)
+        )
+        initial_context["contract"] = {
+            "valor_contratado": 17000.0,
+            "numero_contrato": "023/2026",
+            "data_inicio_vigencia": "2026-04-10",
+            "data_fim_vigencia": "2027-04-10",
+            "quantidade_aditivos": 1,
+            "saldo_restante": 8500.0,
+        }
+        initial_context["reconciliation"] = resolver.compute_reconciliation_namespace(initial_context)
+
+        updated_context = json.loads(json.dumps(initial_context, ensure_ascii=False))
+        updated_context["contract"] = {
+            "valor_contratado": 19000.0,
+            "numero_contrato": "099/2026",
+            "data_inicio_vigencia": "2026-06-01",
+            "data_fim_vigencia": "2027-06-01",
+            "quantidade_aditivos": 3,
+            "saldo_restante": 4000.0,
+        }
+        updated_context["reconciliation"] = resolver.compute_reconciliation_namespace(updated_context)
+
+        with patch.object(
+            type(resolver),
+            "resolve_instance_context",
+            autospec=True,
+            return_value=initial_context,
+        ):
+            version = self.instance._create_version("Snapshot híbrido de contrato")
+
+        snapshot_context = json.loads(version.resolved_context_json or "{}")
+        dynamic_namespaces = json.loads(version.dynamic_namespaces_json or "[]")
+
+        self.assertIn("contract", snapshot_context)
+        self.assertEqual(snapshot_context["contract"]["valor_contratado"], 17000.0)
+        self.assertNotIn("saldo_restante", snapshot_context["contract"])
+        self.assertNotIn("quantidade_aditivos", snapshot_context["contract"])
+        self.assertIn("contract", dynamic_namespaces)
+
+        with patch.object(
+            type(resolver),
+            "resolve_instance_context",
+            autospec=True,
+            return_value=updated_context,
+        ):
+            rendered = self.renderer.render_version(version)
+
+        self.assertIn("17.000,00", rendered)
+        self.assertIn("4.000,00", rendered)
+        self.assertNotIn("19.000,00", rendered)
+        self.assertNotIn("8.500,00", rendered)
 
     def test_render_version_resolves_budget_in_realtime(self):
         version = self._approve_and_get_version()
