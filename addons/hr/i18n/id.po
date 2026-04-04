@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:37+0000\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -1956,6 +1956,13 @@ msgstr "Nomor Akun Bank Karyawan"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_country_id
 msgid "Employee's Country"
+msgstr "Negara Karyawan"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_country_code
+#, fuzzy
+#| msgid "Employee's Country"
+msgid "Employee's Country Code"
 msgstr "Negara Karyawan"
 
 #. module: hr
@@ -4034,6 +4041,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_reason__country_code
 #: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
+#: model:ir.model.fields,help:hr.field_res_users__employee_country_code
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
@@ -4090,6 +4098,14 @@ msgid ""
 "employee public profiles."
 msgstr ""
 "Field “%s”, yang Anda coba baca, tidak tersedia untuk profil publik karyawan."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, fuzzy
+#| msgid "You need to set the work email address for %s"
+msgid "The following employees have the same work email address: %s"
+msgstr "Anda harus menetapkan alamat email kerja untuk %s"
 
 #. module: hr
 #. odoo-python

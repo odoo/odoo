@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:37+0000\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Naser mars, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
@@ -724,6 +724,7 @@ msgstr "نمایش ساعات اضافی."
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_resource_calendar_leaves__display_name
 msgid "Display Name"
 msgstr "نام نمایش داده شده"
 
@@ -944,6 +945,7 @@ msgstr "جستجوی حضوروغیاب منابع انسانی"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__id
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__id
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__id
+#: model:ir.model.fields,field_description:hr_attendance.field_resource_calendar_leaves__id
 msgid "ID"
 msgstr "شناسه"
 
@@ -993,6 +995,14 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Install"
 msgstr "نصب"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/controllers/main.py:0
+msgid ""
+"Invalid domain, use 'name' and/or 'department_id' fields with '=' and/or "
+"'ilike' operators."
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1400,6 +1410,11 @@ msgstr "رد شده"
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_reporting
 msgid "Reporting"
 msgstr "گزارش"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_has_sms_error

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:37+0000\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Naser mars, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
@@ -1784,6 +1784,13 @@ msgstr "شماره حساب بانکی کارمند"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_country_id
 msgid "Employee's Country"
+msgstr "کشور کارمند"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_country_code
+#, fuzzy
+#| msgid "Employee's Country"
+msgid "Employee's Country Code"
 msgstr "کشور کارمند"
 
 #. module: hr
@@ -3855,6 +3862,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_reason__country_code
 #: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
+#: model:ir.model.fields,help:hr.field_res_users__employee_country_code
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
@@ -3902,6 +3910,12 @@ msgstr "تعداد پیش‌بینی‌شده کارکنان جدید باید �
 msgid ""
 "The fields “%s”, which you are trying to read, are not available for "
 "employee public profiles."
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "The following employees have the same work email address: %s"
 msgstr ""
 
 #. module: hr

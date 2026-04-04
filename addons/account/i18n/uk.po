@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:38+0000\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
 "PO-Revision-Date: 2025-11-15 11:23+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -7488,6 +7488,11 @@ msgid "Expired"
 msgstr "Протерміновано"
 
 #. module: account
+#: model:ir.actions.server,name:account.action_move_export_zip
+msgid "Export ZIP"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
 msgid "Expression Label"
 msgstr "Мітка виразу"
@@ -11439,6 +11444,14 @@ msgstr "Примітки"
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Nothing to do"
 msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, fuzzy
+#| msgid "Accounting Report"
+msgid "Nothing to export."
+msgstr "Звіт бухобліку"
 
 #. module: account
 #: model:mail.template,description:account.mail_template_einvoice_notification
@@ -18680,6 +18693,20 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, fuzzy
+#| msgid ""
+#| "You cannot delete this mail template, it is used in the invoice sending "
+#| "flow."
+msgid ""
+"You cannot delete taxes that are currently in use. Consider archiving them "
+"instead."
+msgstr ""
+"Ви не можете видалити цей шаблон електронної пошти, він використовується в "
+"процесі надсилання рахунків-фактур."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
@@ -19306,6 +19333,14 @@ msgstr "закрити"
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "dates for"
 msgstr "дати для"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, fuzzy
+#| msgid "Generated Documents"
+msgid "documents"
+msgstr "Згенеровані документи"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document

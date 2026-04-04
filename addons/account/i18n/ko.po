@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:38+0000\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
 "PO-Revision-Date: 2026-02-14 11:31+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -7692,6 +7692,13 @@ msgid "Expired"
 msgstr "만료됨"
 
 #. module: account
+#: model:ir.actions.server,name:account.action_move_export_zip
+#, fuzzy
+#| msgid "0% Exports"
+msgid "Export ZIP"
+msgstr "0% 내보내기"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
 msgid "Expression Label"
 msgstr "표시 라벨"
@@ -11588,6 +11595,14 @@ msgstr "메모"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Nothing to do"
+msgstr "할 일 없음"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, fuzzy
+#| msgid "Nothing to do"
+msgid "Nothing to export."
 msgstr "할 일 없음"
 
 #. module: account
@@ -18717,6 +18732,19 @@ msgstr "잠겨진 전표 항목에 속한 전표 항목은 삭제할 수 없습�
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, fuzzy
+#| msgid ""
+#| "You cannot delete this mail template, it is used in the invoice sending "
+#| "flow."
+msgid ""
+"You cannot delete taxes that are currently in use. Consider archiving them "
+"instead."
+msgstr ""
+"이 메일 템플릿은 삭제할 수 없습니다. 청구서 발송 흐름에 사용되고 있습니다."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
@@ -19316,6 +19344,14 @@ msgstr "닫기"
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "dates for"
 msgstr "날짜"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, fuzzy
+#| msgid "Generated Documents"
+msgid "documents"
+msgstr "생성된 문서"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document

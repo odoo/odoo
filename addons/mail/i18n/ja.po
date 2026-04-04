@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 18:37+0000\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
 "PO-Revision-Date: 2026-03-28 22:09+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-3/mail/"
@@ -4399,18 +4399,23 @@ msgstr "メッセージの投稿に失敗しました。クリックして再試
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
-"Failed to render QWeb template: %(template_src)s\n"
+"Failed to render QWeb template for %(template_label)s\n"
+"Target Model: %(model_name)s\n"
+"Language context: %(lang_context)s\n"
+"Error: %(error_details)s\n"
 "\n"
-"%(template_traceback)s)"
+"Template Source Snippet:\n"
+"%(template_src)s"
 msgstr ""
-"QWebテンプレートのレンダリングに失敗しました: %(template_src)s\n"
-"\n"
-"%(template_traceback)s)"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-msgid "Failed to render inline_template template: %(template_txt)s"
+#, fuzzy
+#| msgid "Failed to render inline_template template: %(template_txt)s"
+msgid ""
+"Failed to render inline_template template: %(template_txt)s\n"
+"Error details: %(error)s"
 msgstr "テンプレートのレンダリングに失敗しました: %(template_txt)s"
 
 #. module: mail
@@ -5092,7 +5097,8 @@ msgstr "メッセージにカーソルを合わせ、ToDoとします。"
 msgid ""
 "How long the audio broadcast will remain active after passing the volume "
 "threshold"
-msgstr "音量のしきい値を超えた後、音声のブロードキャストはどれくらいの間有効な状態を"
+msgstr ""
+"音量のしきい値を超えた後、音声のブロードキャストはどれくらいの間有効な状態を"
 "保つか"
 
 #. module: mail
@@ -6528,6 +6534,14 @@ msgid "Mail Template Reset"
 msgstr "メールテンプレートリセット"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "alias %(name)s: %(error)s"
+msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
+msgstr "エイリアス%(name)s:%(error)s"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Thread"
 msgstr "メールスレッド"
@@ -6694,6 +6708,12 @@ msgstr "未読にする"
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.xml:0
 msgid "Mark as done"
 msgstr "完了とする"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -7428,6 +7448,14 @@ msgstr "選択したレコードのドキュメントが見つかりません。
 #: code:addons/mail/static/src/core/web/thread_patch.xml:0
 msgid "No history messages"
 msgstr "過去メッセージはありません。"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "Result of the language detection based on its content."
+msgid "No language detected in context"
+msgstr "コンテンツに基づく言語検出の結果"
 
 #. module: mail
 #. odoo-javascript
@@ -10619,6 +10647,14 @@ msgstr "Composerからテンプレートを作成するには、有効なモデ�
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "Message unique identifier"
+msgid "Template name not identified"
+msgstr "メッセージ識別番号"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
 "Template rendering should only be called with a list of IDs. Received “%"
 "(res_ids)s” instead."
@@ -11714,6 +11750,22 @@ msgstr "無名"
 #: code:addons/mail/models/mail_tracking_value.py:0
 msgid "Unnamed %(record_model_name)s (%(record_id)s)"
 msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "Related Mail Template"
+msgid "Unnamed Mail Template"
+msgstr "関連メールテンプレート"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "Unnamed"
+msgid "Unnamed Mailing"
+msgstr "無名"
 
 #. module: mail
 #. odoo-javascript
@@ -13349,6 +13401,15 @@ msgstr "{{ object.partner_id.lang }}"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” 、 “%(channel_name)s内”"
+
+#~ msgid ""
+#~ "Failed to render QWeb template: %(template_src)s\n"
+#~ "\n"
+#~ "%(template_traceback)s)"
+#~ msgstr ""
+#~ "QWebテンプレートのレンダリングに失敗しました: %(template_src)s\n"
+#~ "\n"
+#~ "%(template_traceback)s)"
 
 #~ msgid "%(user)s connected. This is their first connection. Wish them luck."
 #~ msgstr "%(user)s接続済。彼らは初めての接続です。幸運を祈りましょう。"

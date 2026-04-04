@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:38+0000\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
 "PO-Revision-Date: 2026-03-21 22:09+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -7836,6 +7836,13 @@ msgid "Expired"
 msgstr "Abgelaufen"
 
 #. module: account
+#: model:ir.actions.server,name:account.action_move_export_zip
+#, fuzzy
+#| msgid "0% Exports"
+msgid "Export ZIP"
+msgstr "Exporte 0 %"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
 msgid "Expression Label"
 msgstr "Ausdrucksbezeichnung"
@@ -11826,6 +11833,14 @@ msgstr "Notizen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Nothing to do"
+msgstr "Nichts zu tun"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, fuzzy
+#| msgid "Nothing to do"
+msgid "Nothing to export."
 msgstr "Nichts zu tun"
 
 #. module: account
@@ -16233,11 +16248,11 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
-"Das mit dieser Rechnung verknüpfte Unternehmensbankkonto (%(account_number)"
-"s) ist nicht vertrauenswürdig. Gehen Sie zu den Bankeinstellungen, "
-"überprüfen Sie, ob es sich um Ihr Konto handelt, oder korrigieren Sie die "
-"Nummer und klicken Sie auf „Geld senden“, um es als vertrauenswürdig zu "
-"markieren."
+"Das mit dieser Rechnung verknüpfte Unternehmensbankkonto (%"
+"(account_number)s) ist nicht vertrauenswürdig. Gehen Sie zu den "
+"Bankeinstellungen, überprüfen Sie, ob es sich um Ihr Konto handelt, oder "
+"korrigieren Sie die Nummer und klicken Sie auf „Geld senden“, um es als "
+"vertrauenswürdig zu markieren."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -19230,6 +19245,20 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, fuzzy
+#| msgid ""
+#| "You cannot delete this mail template, it is used in the invoice sending "
+#| "flow."
+msgid ""
+"You cannot delete taxes that are currently in use. Consider archiving them "
+"instead."
+msgstr ""
+"Diese E-Mail-Vorlage können Sie nicht löschen, sie wird im Rechnungsversand "
+"verwendet."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
@@ -19440,7 +19469,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
-msgstr "Sie können keinen Posten mit einer archivierten Kostenstelle buchen: %s"
+msgstr ""
+"Sie können keinen Posten mit einer archivierten Kostenstelle buchen: %s"
 
 #. module: account
 #. odoo-python
@@ -19881,6 +19911,14 @@ msgstr "schließen"
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "dates for"
 msgstr "Daten für"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, fuzzy
+#| msgid "Generated Documents"
+msgid "documents"
+msgstr "Generierte Dokumente"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document

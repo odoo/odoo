@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:38+0000\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
 "PO-Revision-Date: 2026-03-21 22:09+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -7467,6 +7467,13 @@ msgid "Expired"
 msgstr "到期"
 
 #. module: account
+#: model:ir.actions.server,name:account.action_move_export_zip
+#, fuzzy
+#| msgid "0% Exports"
+msgid "Export ZIP"
+msgstr "0% 出口"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
 msgid "Expression Label"
 msgstr "表達式標籤"
@@ -11318,6 +11325,14 @@ msgstr "備註"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Nothing to do"
+msgstr "無需處理"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, fuzzy
+#| msgid "Nothing to do"
+msgid "Nothing to export."
 msgstr "無需處理"
 
 #. module: account
@@ -18295,6 +18310,18 @@ msgstr "你不可刪除已鎖定日記賬記項的日記賬項目。"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, fuzzy
+#| msgid ""
+#| "You cannot delete this mail template, it is used in the invoice sending "
+#| "flow."
+msgid ""
+"You cannot delete taxes that are currently in use. Consider archiving them "
+"instead."
+msgstr "你不可刪除此郵件範本，因為會在發票傳送的流程使用。"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
@@ -18868,6 +18895,14 @@ msgstr "關閉"
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "dates for"
 msgstr "以下項目的日期："
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, fuzzy
+#| msgid "Generated Documents"
+msgid "documents"
+msgstr "已建立文件"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document

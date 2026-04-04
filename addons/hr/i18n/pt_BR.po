@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:37+0000\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Maitê Dietze, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/"
@@ -1955,6 +1955,13 @@ msgstr "Número da conta bancária do funcionário"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_country_id
 msgid "Employee's Country"
+msgstr "País do funcionário"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_country_code
+#, fuzzy
+#| msgid "Employee's Country"
+msgid "Employee's Country Code"
 msgstr "País do funcionário"
 
 #. module: hr
@@ -4037,6 +4044,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_reason__country_code
 #: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
+#: model:ir.model.fields,help:hr.field_res_users__employee_country_code
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
@@ -4093,6 +4101,14 @@ msgid ""
 msgstr ""
 "Os campos \"%s\", que você está tentando ler, não estão disponíveis para "
 "perfis públicos de funcionários."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, fuzzy
+#| msgid "You need to set the work email address for %s"
+msgid "The following employees have the same work email address: %s"
+msgstr "É necessário definir o endereço de e-mail profissional de %s"
 
 #. module: hr
 #. odoo-python

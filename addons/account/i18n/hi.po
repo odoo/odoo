@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:38+0000\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
 "PO-Revision-Date: 2026-02-28 12:03+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/account/"
@@ -7715,6 +7715,13 @@ msgid "Expired"
 msgstr "खत्म हो चुका"
 
 #. module: account
+#: model:ir.actions.server,name:account.action_move_export_zip
+#, fuzzy
+#| msgid "0% Exports"
+msgid "Export ZIP"
+msgstr "0% एक्सपोर्ट"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
 msgid "Expression Label"
 msgstr "एक्सप्रेशन लेबल"
@@ -11658,6 +11665,14 @@ msgstr "टिप्पणियाँ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Nothing to do"
+msgstr "कुछ नहीं करना है"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, fuzzy
+#| msgid "Nothing to do"
+msgid "Nothing to export."
 msgstr "कुछ नहीं करना है"
 
 #. module: account
@@ -18839,6 +18854,18 @@ msgstr "आप लॉक की हुई जर्नल एंट्री क
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, fuzzy
+#| msgid ""
+#| "You cannot delete this mail template, it is used in the invoice sending "
+#| "flow."
+msgid ""
+"You cannot delete taxes that are currently in use. Consider archiving them "
+"instead."
+msgstr "आप यह ईमेल टेम्पलेट नहीं मिटा सकते, क्योंकि इसका इस्तेमाल इनवॉइस भेजने में हो रहा है."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
@@ -19451,6 +19478,14 @@ msgstr "बंद करें"
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "dates for"
 msgstr "के लिए तारीख"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, fuzzy
+#| msgid "Generated Documents"
+msgid "documents"
+msgstr "जनरेट किए गए दस्तावेज़"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document

@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:37+0000\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Leaanika Randmets, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
@@ -198,6 +198,7 @@ msgid "Discount & Loyalty"
 msgstr "Allahindlus ja lojaalsusprogramm"
 
 #. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__display_name
@@ -284,6 +285,7 @@ msgid "How many point this reward cost on the coupon."
 msgstr "Mitu punkti maksab see preemia kupongil?"
 
 #. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_account_move_line__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__id
@@ -332,6 +334,11 @@ msgstr "Kehtetu kinkekaartide programm. Rohkem kui üks reegel."
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__is_reward_line
 msgid "Is Reward Line"
 msgstr "On preemiarida"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_account_move_line
+msgid "Journal Item"
+msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_mail

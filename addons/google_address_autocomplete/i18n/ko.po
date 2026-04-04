@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:37+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
 "PO-Revision-Date: 2025-05-17 15:02+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -54,6 +54,14 @@ msgstr "주소 자동 완성"
 #. module: google_address_autocomplete
 #. odoo-javascript
 #: code:addons/google_address_autocomplete/static/src/address_autocomplete/google_address_autocomplete.js:0
+#, fuzzy
+#| msgid "City field"
+msgid "City Id field"
+msgstr "도시명 필드"
+
+#. module: google_address_autocomplete
+#. odoo-javascript
+#: code:addons/google_address_autocomplete/static/src/address_autocomplete/google_address_autocomplete.js:0
 msgid "City field"
 msgstr "도시명 필드"
 
@@ -63,13 +71,24 @@ msgid "Config Settings"
 msgstr "환경설정"
 
 #. module: google_address_autocomplete
+#: model:ir.model,name:google_address_autocomplete.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: google_address_autocomplete
 #. odoo-javascript
 #: code:addons/google_address_autocomplete/static/src/address_autocomplete/google_address_autocomplete.js:0
 msgid "Country field"
 msgstr "국가명 필드"
 
 #. module: google_address_autocomplete
+#: model:ir.model,website_form_label:google_address_autocomplete.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: google_address_autocomplete
 #: model:ir.model.fields,field_description:google_address_autocomplete.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:google_address_autocomplete.field_res_partner__display_name
 msgid "Display Name"
 msgstr "표시명"
 
@@ -80,6 +99,7 @@ msgstr "Google 플레이스 API 키"
 
 #. module: google_address_autocomplete
 #: model:ir.model.fields,field_description:google_address_autocomplete.field_res_config_settings__id
+#: model:ir.model.fields,field_description:google_address_autocomplete.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:38+0000\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
 "PO-Revision-Date: 2025-11-15 11:21+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-s18-3/account/"
@@ -7573,6 +7573,13 @@ msgid "Expired"
 msgstr "Vypršelo"
 
 #. module: account
+#: model:ir.actions.server,name:account.action_move_export_zip
+#, fuzzy
+#| msgid "0% Exports"
+msgid "Export ZIP"
+msgstr "0% Exportů"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
 msgid "Expression Label"
 msgstr "Popis vzorce"
@@ -11518,6 +11525,14 @@ msgstr "Poznámky"
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Nothing to do"
 msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, fuzzy
+#| msgid "Accounting Report"
+msgid "Nothing to export."
+msgstr "Účetní výkaz"
 
 #. module: account
 #: model:mail.template,description:account.mail_template_einvoice_notification
@@ -18691,6 +18706,19 @@ msgstr "Nemůžete odstranit položky deníku patřící k uzamčenému záznamu
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, fuzzy
+#| msgid ""
+#| "You cannot delete this mail template, it is used in the invoice sending "
+#| "flow."
+msgid ""
+"You cannot delete taxes that are currently in use. Consider archiving them "
+"instead."
+msgstr ""
+"Tuto šablonu email nelze smazat, používá se v procesu odesílání faktur."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
@@ -19302,6 +19330,14 @@ msgstr "zavřít"
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "dates for"
 msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, fuzzy
+#| msgid "Generated Documents"
+msgid "documents"
+msgstr "Vygenerované dokumenty"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
