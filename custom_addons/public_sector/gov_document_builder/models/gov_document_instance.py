@@ -91,7 +91,9 @@ class GovDocumentInstance(models.Model):
         Version = self.env["gov.document.version"]
         resolver = self.env["gov.document.context.resolver"]
         created_versions = self.env["gov.document.version"]
-        dynamic_fields_by_namespace = resolver.get_dynamic_fields_by_namespace()
+        dynamic_namespaces = sorted(resolver.get_dynamic_fields_by_namespace())
+        if "reconciliation" not in dynamic_namespaces:
+            dynamic_namespaces.append("reconciliation")
         for rec in self:
             existing_version_nos = rec.version_ids.mapped("version_no")
             base_version_no = (rec.current_version_no or 1) - 1
@@ -101,25 +103,11 @@ class GovDocumentInstance(models.Model):
             full_context["document"]["version"] = version_no
             rec.resolved_context_json = json.dumps(full_context, ensure_ascii=False)
 
-            dynamic_namespaces = sorted(dynamic_fields_by_namespace)
-            if "reconciliation" not in dynamic_namespaces:
-                dynamic_namespaces.append("reconciliation")
-
             snapshot_context = {}
             for namespace, values in full_context.items():
-                if namespace == "reconciliation":
+                if namespace in dynamic_namespaces:
                     continue
-                dynamic_fields = dynamic_fields_by_namespace.get(namespace, set())
-                if not dynamic_fields:
-                    snapshot_context[namespace] = values
-                    continue
-                if not isinstance(values, dict):
-                    continue
-                static_values = {
-                    key: value for key, value in values.items() if key not in dynamic_fields
-                }
-                if static_values:
-                    snapshot_context[namespace] = static_values
+                snapshot_context[namespace] = values
             snapshot_context["dynamic_namespaces"] = dynamic_namespaces
 
             created_versions |= Version.create(

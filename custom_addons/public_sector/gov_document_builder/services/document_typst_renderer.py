@@ -36,28 +36,12 @@ class GovDocumentTypstRenderer(models.AbstractModel):
         snapshot_context.pop("dynamic_namespaces", None)
 
         current_context = resolver.resolve_instance_context(instance)
-        dynamic_fields_by_namespace = resolver.get_dynamic_fields_by_namespace()
         merged_context = dict(snapshot_context)
         for namespace in dynamic_namespaces:
             if namespace == "reconciliation":
                 continue
-            if namespace not in current_context:
-                continue
-
-            current_values = current_context[namespace]
-            dynamic_fields = dynamic_fields_by_namespace.get(namespace, set())
-            if not dynamic_fields or not isinstance(current_values, dict):
-                merged_context[namespace] = current_values
-                continue
-
-            existing_values = merged_context.get(namespace, {})
-            merged_values = dict(existing_values) if isinstance(existing_values, dict) else {}
-            for field_name in dynamic_fields:
-                if field_name in current_values:
-                    merged_values[field_name] = current_values[field_name]
-                else:
-                    merged_values.pop(field_name, None)
-            merged_context[namespace] = merged_values
+            if namespace in current_context:
+                merged_context[namespace] = current_context[namespace]
 
         if "document" not in merged_context:
             merged_context["document"] = current_context.get("document", {})

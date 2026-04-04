@@ -65,9 +65,9 @@
         <field name="namespace">process</field>
         <field name="variable_key">state</field>
         <field name="value_type">text</field>
-        <field name="mutability_policy">dynamic</field>
+        <field name="mutability_policy">immutable</field>
         <field name="example_value">execucao</field>
-        <field name="description">Fase corrente do processo licitatório, sempre refletindo o estado atual.</field>
+        <field name="description">Fase corrente do processo licitatório no momento do snapshot do documento.</field>
         <field name="sequence">40</field>
     </record>
     <record id="field_definition_process_process_scope" model="gov.document.field.definition">
@@ -282,10 +282,10 @@
         <field name="namespace">contract</field>
         <field name="variable_key">saldo_restante</field>
         <field name="value_type">currency</field>
-        <field name="mutability_policy">dynamic</field>
+        <field name="mutability_policy">snapshot</field>
         <field name="default_transformer">currency_br</field>
         <field name="example_value">8500,00</field>
-        <field name="description">Saldo remanescente atualizado do contrato, sempre recalculado em tempo real.</field>
+        <field name="description">Saldo remanescente registrado no momento do snapshot do contrato.</field>
         <field name="sequence">50</field>
     </record>
     <record id="field_definition_contract_quantidade_aditivos" model="gov.document.field.definition">
@@ -293,9 +293,9 @@
         <field name="namespace">contract</field>
         <field name="variable_key">quantidade_aditivos</field>
         <field name="value_type">integer</field>
-        <field name="mutability_policy">dynamic</field>
+        <field name="mutability_policy">snapshot</field>
         <field name="example_value">2</field>
-        <field name="description">Quantidade atual de aditivos vinculados ao contrato, sempre refletindo o estado corrente.</field>
+        <field name="description">Quantidade de aditivos registrada no momento do snapshot do contrato.</field>
         <field name="sequence">60</field>
     </record>
 

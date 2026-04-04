@@ -107,6 +107,9 @@ class TestSnapshotPolicy(TransactionCase):
 
         self.assertIn("process", snapshot_context)
         self.assertIn("legal", snapshot_context)
+        self.assertIn("procurement", snapshot_context)
+        self.assertIn("auction", snapshot_context)
+        self.assertIn("contract", snapshot_context)
         self.assertEqual(snapshot_context["process"]["name"], "SEMSA-2026-001")
         self.assertEqual(
             snapshot_context["process"]["subject"],
@@ -118,12 +121,17 @@ class TestSnapshotPolicy(TransactionCase):
     def test_version_dynamic_namespaces_field_lists_excluded_keys(self):
         version = self._approve_and_get_version()
 
+        snapshot_context = json.loads(version.resolved_context_json or "{}")
         dynamic_namespaces = json.loads(version.dynamic_namespaces_json or "[]")
 
+        self.assertEqual(snapshot_context["dynamic_namespaces"], dynamic_namespaces)
         self.assertIn("budget", dynamic_namespaces)
         self.assertIn("execution", dynamic_namespaces)
+        self.assertIn("reconciliation", dynamic_namespaces)
+        self.assertNotIn("process", dynamic_namespaces)
+        self.assertNotIn("contract", dynamic_namespaces)
 
-    def test_contract_snapshot_keeps_static_fields_and_refreshes_dynamic_ones(self):
+    def test_contract_namespace_is_persisted_as_full_snapshot(self):
         resolver = self.env["gov.document.context.resolver"]
         self.instance.write(
             {
@@ -185,16 +193,16 @@ class TestSnapshotPolicy(TransactionCase):
             autospec=True,
             return_value=initial_context,
         ):
-            version = self.instance._create_version("Snapshot híbrido de contrato")
+            version = self.instance._create_version("Snapshot semântico de contrato")
 
         snapshot_context = json.loads(version.resolved_context_json or "{}")
         dynamic_namespaces = json.loads(version.dynamic_namespaces_json or "[]")
 
         self.assertIn("contract", snapshot_context)
         self.assertEqual(snapshot_context["contract"]["valor_contratado"], 17000.0)
-        self.assertNotIn("saldo_restante", snapshot_context["contract"])
-        self.assertNotIn("quantidade_aditivos", snapshot_context["contract"])
-        self.assertIn("contract", dynamic_namespaces)
+        self.assertEqual(snapshot_context["contract"]["saldo_restante"], 8500.0)
+        self.assertEqual(snapshot_context["contract"]["quantidade_aditivos"], 1)
+        self.assertNotIn("contract", dynamic_namespaces)
 
         with patch.object(
             type(resolver),
@@ -205,9 +213,9 @@ class TestSnapshotPolicy(TransactionCase):
             rendered = self.renderer.render_version(version)
 
         self.assertIn("17.000,00", rendered)
-        self.assertIn("4.000,00", rendered)
+        self.assertIn("8.500,00", rendered)
         self.assertNotIn("19.000,00", rendered)
-        self.assertNotIn("8.500,00", rendered)
+        self.assertNotIn("4.000,00", rendered)
 
     def test_render_version_resolves_budget_in_realtime(self):
         version = self._approve_and_get_version()
@@ -218,3 +226,11 @@ class TestSnapshotPolicy(TransactionCase):
 
         self.assertIn("175.000,00", rendered)
         self.assertNotIn("150.000,00", rendered)
+
+    def test_action_rerender_updates_typst_source_on_version(self):
+        version = self._approve_and_get_version()
+
+        result = version.action_rerender()
+
+        self.assertTrue(result)
+        self.assertTrue(version.typst_source)

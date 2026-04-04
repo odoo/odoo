@@ -56,7 +56,7 @@ class TestGovDocumentFieldDefinition(TransactionCase):
                 }
             )
 
-    def test_seeded_process_state_definition_is_dynamic(self):
+    def test_seeded_process_state_definition_is_immutable(self):
         definition = self.env["gov.document.field.definition"].search(
             [
                 ("namespace", "=", "process"),
@@ -68,7 +68,7 @@ class TestGovDocumentFieldDefinition(TransactionCase):
         self.assertTrue(definition)
         self.assertEqual(definition.name, "Fase atual")
         self.assertEqual(definition.value_type, "text")
-        self.assertEqual(definition.mutability_policy, "dynamic")
+        self.assertEqual(definition.mutability_policy, "immutable")
         self.assertEqual(definition.display_path, "process.state")
 
     def test_field_definitions_endpoint_returns_expected_payload_keys(self):
