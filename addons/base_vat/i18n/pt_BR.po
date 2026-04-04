@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-13 18:36+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
 "PO-Revision-Date: 2025-11-14 11:43+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
@@ -71,6 +71,11 @@ msgid "49-098-576 or 49098576"
 msgstr "49-098-576 ou 49098576"
 
 #. module: base_vat
+#: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
+msgid "Base VAT: Sync updates from IAP VIES"
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
@@ -85,16 +90,6 @@ msgstr "Empresas"
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
 msgstr "Configurações"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"Connection with the VIES server failed. The VAT number %s could not be "
-"validated."
-msgstr ""
-"Falha na conexão com o servidor VIES. O número de IVA %s não pôde ser "
-"validado."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -200,6 +195,12 @@ msgstr "Válido dentro da comunidade"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "Invalid IAP VIES endpoint"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 msgid "Note: the expected format is %(expected_format)s"
 msgstr "Observação: o formato esperado é %(expected_format)s"
 
@@ -236,6 +237,12 @@ msgstr ""
 "inválido. %(expected_note)s"
 
 #. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The Intra-Community validity has been updated."
+msgstr ""
+
+#. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vat
 #: model:ir.model.fields,help:base_vat.field_res_users__vat
 msgid ""
@@ -250,20 +257,14 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VAT number %s could not be interpreted by the VIES server."
+msgid "The VIES check failed. Please check the Tax ID manually."
 msgstr ""
-"O número de identificação fiscal %s não pôde ser interpretado pelo servidor "
-"VIES."
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"The request for VAT validation was not processed. VIES service has responded "
-"with the following error: %s"
+msgid "The VIES check is pending. The status will be updated soon."
 msgstr ""
-"A solicitação de validação do número de identificação fiscal não foi "
-"processada. O serviço VIES respondeu com o seguinte erro: %s"
 
 #. module: base_vat
 #. odoo-python
@@ -310,6 +311,25 @@ msgstr "11 dígitos para CPF ou 14 dígitos para CNPJ"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "usuário [%s]"
+
+#~ msgid ""
+#~ "Connection with the VIES server failed. The VAT number %s could not be "
+#~ "validated."
+#~ msgstr ""
+#~ "Falha na conexão com o servidor VIES. O número de IVA %s não pôde ser "
+#~ "validado."
+
+#~ msgid "The VAT number %s could not be interpreted by the VIES server."
+#~ msgstr ""
+#~ "O número de identificação fiscal %s não pôde ser interpretado pelo "
+#~ "servidor VIES."
+
+#~ msgid ""
+#~ "The request for VAT validation was not processed. VIES service has "
+#~ "responded with the following error: %s"
+#~ msgstr ""
+#~ "A solicitação de validação do número de identificação fiscal não foi "
+#~ "processada. O serviço VIES respondeu com o seguinte erro: %s"
 
 #~ msgid "17291716060 (NIN) or 1729171602 (VKN)"
 #~ msgstr "17291716060 (NIN) ou 1729171602 (VKN)"

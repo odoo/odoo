@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2026-03-17 11:42+0000\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
+"PO-Revision-Date: 2026-04-02 06:11+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/account/nl/"
 ">\n"
@@ -11339,7 +11339,7 @@ msgstr "Gefactureerd"
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Invoices"
-msgstr "Verkoopfacturen"
+msgstr "Facturen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -15833,11 +15833,6 @@ msgstr "Rest in valuta"
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_user_id
 msgid "Responsible User"
 msgstr "Verantwoordelijke gebruiker"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_tax__tax_scope
-msgid "Restrict the use of taxes to a type of product."
-msgstr "Beperk het gebruik van btw tot een soort product."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -21456,6 +21451,20 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, fuzzy
+#| msgid ""
+#| "You cannot delete this mail template, it is used in the invoice sending "
+#| "flow."
+msgid ""
+"You cannot delete taxes that are currently in use. Consider archiving them "
+"instead."
+msgstr ""
+"Je kunt deze e-mailsjabloon niet verwijderen, hij wordt gebruikt in de "
+"factuurverzendstroom."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
@@ -22280,7 +22289,7 @@ msgstr "factu(u)r(en)"
 #: code:addons/account/controllers/download_docs.py:0
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "invoices"
-msgstr "verkoopfacturen"
+msgstr "facturen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -22595,6 +22604,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Self-billing verkoopfactuur (Ref {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid "Restrict the use of taxes to a type of product."
+#~ msgstr "Beperk het gebruik van btw tot een soort product."
 
 #~ msgid "(*) Goods Delivered not Invoiced (perpetual valuation)"
 #~ msgstr ""

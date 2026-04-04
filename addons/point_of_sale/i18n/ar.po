@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:36+0000\n"
-"PO-Revision-Date: 2026-02-20 09:19+0000\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
+"PO-Revision-Date: 2026-04-02 15:33+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/ar/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2937,6 +2937,12 @@ msgid "Daily sessions hold sales from your Point of Sale."
 msgstr "تحتوي الجلسات اليومية على مبيعات من نقطة البيع الخاصة بك."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
+msgid "Dangerous: Too Many Products"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
 msgid "Dashboard"
 msgstr "لوحة البيانات"
@@ -4782,6 +4788,12 @@ msgid "Laptop model x"
 msgstr "لابتوب موديل X"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
+msgid "Large Product Count Detected"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_big_scrollbars
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_big_scrollbars
 msgid "Large Scrollbars"
@@ -5042,6 +5054,10 @@ msgid ""
 "browser communicate with \n"
 "                your devices without the need for importing certificates."
 msgstr ""
+"الوصول إلى الشبكة المحلية (LNA) هي ميزة في Chrome تسمح لمتصفحك بالتواصل \n"
+"                مباشرة مع شبكتك المحلية. وهذا يعني أنه يمكنك جعل متصفحك "
+"يتواصل مع \n"
+"                أجهزتك دون الحاجة إلى استيراد الشهادات."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9129,7 +9145,6 @@ msgstr "المسائل التقنية"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_receipt/cash_move_receipt.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
 msgid "Tel:"
 msgstr "هاتف:"
 
@@ -9522,6 +9537,16 @@ msgstr ""
 "لم يتم تحديد أي فئة، سوف يتم إظهار كافة المنتجات المتاحة"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+#, fuzzy
+#| msgid ""
+#| "The payment methods for the point of sale %s must belong to its company."
+msgid ""
+"The points of sale for the payment method %s must belong to its company."
+msgstr "يجب أن تنتمي طرق دفع نقطة البيع %s إلى شركتها."
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_bank_statement_line__reversed_pos_order_id
 #: model:ir.model.fields,help:point_of_sale.field_account_move__reversed_pos_order_id
 msgid ""
@@ -9759,6 +9784,25 @@ msgstr "نوع بطاقة الدفع (مثل بطاقة الائتمان أو ب
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
 msgid "Theoretical Closing Balance"
 msgstr "رصيد الإقفال المتوقع"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
+msgid ""
+"There are %(count)s products available for this PoS (configured limit: %"
+"(limit)s). Loading all products may slow down the Point of Sale. Do you want "
+"to continue with Full Synchronization?"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
+msgid ""
+"There are %(count)s products available for this PoS (configured limit: %"
+"(limit)s). Loading this many products will severely slow down the system and "
+"may cause it to crash or become unresponsive. It is strongly recommended to "
+"use Limited Synchronization instead. Do you still want to proceed?"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

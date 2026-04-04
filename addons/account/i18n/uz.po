@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:35+0000\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
 "PO-Revision-Date: 2025-10-18 14:56+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -17616,12 +17616,6 @@ msgid "Responsible User"
 msgstr "Mas'ul foydalanuvchi"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_tax__tax_scope
-#, fuzzy
-msgid "Restrict the use of taxes to a type of product."
-msgstr "Soliqlardan foydalanishni mahsulot turiga qarab cheklash"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 #, fuzzy
@@ -23963,6 +23957,17 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, fuzzy
+msgid ""
+"You cannot delete taxes that are currently in use. Consider archiving them "
+"instead."
+msgstr ""
+"Bu xat andozasini o‘chira olmaysiz, u hisob-faktura yuborish jarayonida "
+"ishlatiladi."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 #, fuzzy
 msgid ""
@@ -25251,6 +25256,10 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} o‘z-o‘zini hisoblash hisob-fakturasi (Havola "
 "{{ object.name or 'mavjud emas' }})"
+
+#, fuzzy
+#~ msgid "Restrict the use of taxes to a type of product."
+#~ msgstr "Soliqlardan foydalanishni mahsulot turiga qarab cheklash"
 
 #, fuzzy
 #~ msgid ""

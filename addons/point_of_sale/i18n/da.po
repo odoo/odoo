@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:36+0000\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
 "PO-Revision-Date: 2025-11-15 11:29+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/"
@@ -2942,6 +2942,12 @@ msgid "Daily sessions hold sales from your Point of Sale."
 msgstr "Salget fra dit kassesystem registreres i daglige sessioner."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
+msgid "Dangerous: Too Many Products"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
 msgid "Dashboard"
 msgstr "Dashboard"
@@ -4796,6 +4802,12 @@ msgstr "Bærbar"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Laptop model x"
 msgstr "Bærbar model x"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
+msgid "Large Product Count Detected"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_big_scrollbars
@@ -9155,7 +9167,6 @@ msgstr "Tekniske ting"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_receipt/cash_move_receipt.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
 msgid "Tel:"
 msgstr "Telefon:"
 
@@ -9555,6 +9566,16 @@ msgstr ""
 "Hvis der ikke er angivet nogen kategori, vises alle tilgængelige produkter"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+#, fuzzy
+#| msgid ""
+#| "The payment methods for the point of sale %s must belong to its company."
+msgid ""
+"The points of sale for the payment method %s must belong to its company."
+msgstr "Betalingsformerne i kassesystemet %s skal tilhøre dets virksomhed."
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_bank_statement_line__reversed_pos_order_id
 #: model:ir.model.fields,help:point_of_sale.field_account_move__reversed_pos_order_id
 msgid ""
@@ -9806,6 +9827,25 @@ msgstr "Betalingskortets type (f.eks. kreditkort eller debetkort)"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
 msgid "Theoretical Closing Balance"
 msgstr "Teoretisk slutsaldo"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
+msgid ""
+"There are %(count)s products available for this PoS (configured limit: %"
+"(limit)s). Loading all products may slow down the Point of Sale. Do you want "
+"to continue with Full Synchronization?"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
+msgid ""
+"There are %(count)s products available for this PoS (configured limit: %"
+"(limit)s). Loading this many products will severely slow down the system and "
+"may cause it to crash or become unresponsive. It is strongly recommended to "
+"use Limited Synchronization instead. Do you still want to proceed?"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

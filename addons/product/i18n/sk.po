@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"POT-Creation-Date: 2026-04-03 18:38+0000\n"
 "PO-Revision-Date: 2026-02-27 21:13+0000\n"
 "Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/product/"
@@ -318,8 +318,8 @@ msgid ""
 "<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
 "o_translate_inline\">Contact Us</a>"
 msgstr ""
-"<a href=\"/contactus\" class=\"mb-2 btn btn-primary o_translate_inline\""
-">Kontaktujte nás</a>"
+"<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
+"o_translate_inline\">Kontaktujte nás</a>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -332,8 +332,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
 "icon\" title=\"Arrow\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label="
-"\"Ikona šípky\" title=\"Šípka\"/>"
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Ikona "
+"šípky\" title=\"Šípka\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
@@ -367,8 +367,8 @@ msgstr "<span>%</span>"
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
 msgstr ""
-"<span>Všetky všeobecné nastavenia týkajúce sa tohto produktu sa spravujú "
-"na</span>"
+"<span>Všetky všeobecné nastavenia týkajúce sa tohto produktu sa spravujú na</"
+"span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1562,6 +1562,12 @@ msgid "Drawers"
 msgstr "Zásuvky"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid "Duplicate values in attribute values are not allowed: %s"
+msgstr ""
+
+#. module: product
 #: model:product.attribute,name:product.pa_duration
 msgid "Duration"
 msgstr "Obdobie"
@@ -2157,6 +2163,13 @@ msgstr "Je produktová varianta"
 #: model:ir.model.fields,field_description:product.field_product_document__public
 msgid "Is public document"
 msgstr "Je verejný dokument"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid ""
+"It is not possible to import different values for the same attribute: %s"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__0
@@ -3243,6 +3256,14 @@ msgid "Product Unit of Measure"
 msgstr "Merná jednotka produktu"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__import_attribute_values
+#: model:ir.model.fields,field_description:product.field_product_template__import_attribute_values
+#, fuzzy
+#| msgid "Product Variant Values"
+msgid "Product Values"
+msgstr "Hodnoty varianty produktu"
+
+#. module: product
 #: model:ir.model,name:product.model_product_product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__0_product_variant
@@ -3836,11 +3857,21 @@ msgid "The display type used in the Product Configurator."
 msgstr "Typ zobrazenia, ktorý sa použil v konfigurátore produktu."
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid ""
+"The exitings product has different attribute value. \"%(imported_values)s\" "
+"is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", \"%"
+"(id)s\""
+msgstr ""
+
+#. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
 "The minimum height is 65 cm, and for standing work the maximum height "
 "position is 125 cm."
-msgstr "Minimálna výška je 65 cm a pre prácu v stoji je maximálna výška 125 cm."
+msgstr ""
+"Minimálna výška je 65 cm a pre prácu v stoji je maximálna výška 125 cm."
 
 #. module: product
 #. odoo-python
@@ -4054,6 +4085,22 @@ msgid "Unable to find report template for %s format"
 msgstr "Nemožno nájsť šablónu etikiet pre formát %s"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid ""
+"Unable to import products with attribute value without attribute name "
+"(defined as: attribute:value): %s"
+msgstr ""
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid ""
+"Unable to import products with attribute values but without name of product "
+"set"
+msgstr ""
+
+#. module: product
 #: model:product.attribute.value,name:product.pav_brand_underarmour
 msgid "Under Armour"
 msgstr "Under Armour"
@@ -4227,8 +4274,8 @@ msgid ""
 "        Used to compute margins on sale orders."
 msgstr ""
 "Hodnota produktu (automaticky vypočítaná v priemernej cene).\n"
-"        Používa sa na ocenenie produktu, ak nie je známa nákupná cena "
-"(napr. úprava zásob).\n"
+"        Používa sa na ocenenie produktu, ak nie je známa nákupná cena (napr. "
+"úprava zásob).\n"
 "        Používa sa na výpočet marží pri predajných objednávkach."
 
 #. module: product

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-03-14 09:46+0000\n"
+"PO-Revision-Date: 2026-04-02 11:41+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "account_update_tax_tags/sv/>\n"
@@ -80,7 +80,8 @@ msgstr "Börjar från"
 msgid ""
 "The date you chose is violating the tax lock date, do this at your own risk."
 msgstr ""
-"Det datum du valde bryter mot skattelåsningsdatumet, gör detta på egen risk."
+"Det valda datumet bryter mot skattelåsningsdatumet, genomför åtgärden på "
+"egen risk."
 
 #. module: account_update_tax_tags
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
@@ -89,15 +90,14 @@ msgstr "Uppdatera"
 
 #. module: account_update_tax_tags
 #: model:ir.model,name:account_update_tax_tags.model_account_update_tax_tags_wizard
-#, fuzzy
 msgid "Update Tax Tags Wizard"
-msgstr "Uppdatera guiden för skattetecken"
+msgstr "Guide för att uppdatera skattetaggar"
 
 #. module: account_update_tax_tags
 #: model:ir.actions.act_window,name:account_update_tax_tags.action_open_wizard
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.res_config_settings_view_form
 msgid "Update tax tags on existing Journal Entries"
-msgstr "Uppdatera skattetaggar för befintliga verifikationsserier"
+msgstr "Uppdatera skattetaggar för befintliga bokföringsposter"
 
 #. module: account_update_tax_tags
 #. odoo-python
@@ -106,11 +106,11 @@ msgid ""
 "Update with children taxes that are child of multiple parents is not "
 "supported."
 msgstr ""
-"Uppdatering med barnskatter som är barn till flera föräldrar stöds inte."
+"Uppdateringar av underordnade skatter som har flera överordnade skatter "
+"stöds inte."
 
 #. module: account_update_tax_tags
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
-#, fuzzy
 msgid ""
 "Updating tax tags on existing Journal Entries is an <b>irreversible</b> "
 "action that will impact\n"
@@ -122,12 +122,12 @@ msgid ""
 "                    so that it matches with the current configuration of "
 "your taxes.<br/>"
 msgstr ""
-"Uppdatering av skattetaggar på befintliga Verifikat är en <b>irreversibel</"
-"b> åtgärd som kommer att påverka\n"
+"Att uppdatera skattetaggar för befintliga bokföringsposter är en <b>"
+"oåterkallelig</b> åtgärd som kommer att påverka\n"
 "                    dina rapporter.<br/>\n"
-"                    Vi rekommenderar starkt att du säkerhetskopierar din "
-"databas i förväg.<br/>\n"
-"                    Uppdateringen kommer att ändra skattetaggar på din "
-"bokföringshistorik, från och med och inklusive valt datum,\n"
-"                    så att den stämmer överens med den aktuella "
+"                    Vi rekommenderar starkt att man säkerhetskopierar sin "
+"databas innan man genomför åtgärden.<br/>\n"
+"                    Uppdateringen kommer att ändra skattetaggarna i din "
+"bokföringshistorik, från och med och inklusive det valda datumet,\n"
+"                    så att taggarna stämmer överens med den aktuella "
 "konfigurationen av dina skatter.<br/>"

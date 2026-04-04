@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:36+0000\n"
-"PO-Revision-Date: 2026-03-27 12:00+0000\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
+"PO-Revision-Date: 2026-04-02 11:41+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/de/>\n"
@@ -2985,6 +2985,12 @@ msgid "Daily sessions hold sales from your Point of Sale."
 msgstr "Tägliche Sitzungen enthalten Verkäufe aus dem Kassensystem."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
+msgid "Dangerous: Too Many Products"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
 msgid "Dashboard"
 msgstr "Dashboard"
@@ -4878,6 +4884,12 @@ msgstr "Laptop"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Laptop model x"
 msgstr "Laptop Modell X"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
+msgid "Large Product Count Detected"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_big_scrollbars
@@ -8495,7 +8507,7 @@ msgstr "Sicheres Drucken"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_token
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__access_token
 msgid "Security Token"
-msgstr "Security-Token"
+msgstr "Sicherheitstoken"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9299,7 +9311,6 @@ msgstr "Technische Sachen"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_receipt/cash_move_receipt.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
 msgid "Tel:"
 msgstr "Tel.:"
 
@@ -9361,7 +9372,7 @@ msgid ""
 "You can use this field for quick search."
 msgstr ""
 "ISO-Ländercode in zwei Zeichen. \n"
-"Sie können dieses Feld auch für eine Schnellsuche einsetzen."
+"Sie können dieses Feld auch für eine Schnellsuche verwenden."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9722,6 +9733,18 @@ msgstr ""
 "werden alle verfügbaren Produkte angezeigt."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+#, fuzzy
+#| msgid ""
+#| "The payment methods for the point of sale %s must belong to its company."
+msgid ""
+"The points of sale for the payment method %s must belong to its company."
+msgstr ""
+"Die Zahlungsmethoden für das Kassensystem %s müssen zu seinem Unternehmen "
+"gehören."
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_bank_statement_line__reversed_pos_order_id
 #: model:ir.model.fields,help:point_of_sale.field_account_move__reversed_pos_order_id
 msgid ""
@@ -9978,6 +10001,25 @@ msgstr "Die Art der Zahlkarte (z. B. KREDITKARTE ODER DEBITKARTE)"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
 msgid "Theoretical Closing Balance"
 msgstr "Theoretischer Endsaldo"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
+msgid ""
+"There are %(count)s products available for this PoS (configured limit: %"
+"(limit)s). Loading all products may slow down the Point of Sale. Do you want "
+"to continue with Full Synchronization?"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
+msgid ""
+"There are %(count)s products available for this PoS (configured limit: %"
+"(limit)s). Loading this many products will severely slow down the system and "
+"may cause it to crash or become unresponsive. It is strongly recommended to "
+"use Limited Synchronization instead. Do you still want to proceed?"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

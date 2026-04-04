@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"POT-Creation-Date: 2026-04-03 18:38+0000\n"
 "PO-Revision-Date: 2026-01-30 20:01+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
@@ -18,9 +18,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural="
-"(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 "
-": n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: website_sale_wishlist
@@ -169,26 +169,39 @@ msgid "6 Columns"
 msgstr "6 колонок"
 
 #. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
-msgid ""
-"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/"
-">\n"
-"                                                    <span class=\"o_label "
-"small ms-1\">Add to Cart</span>"
-msgstr ""
-"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/>"
-"\n"
-"                                                    <span class="
-"\"o_label small ms-1\">Добавить в корзину</span>"
-
-#. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid ""
 "<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-label=\"Add to "
 "wishlist\"/>"
 msgstr ""
-"<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-label="
-"\"Добавить в избранное\"/>"
+"<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-label=\"Добавить в "
+"избранное\"/>"
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+msgid ""
+"<span class=\"d-inline-flex align-items-baseline\">\n"
+"                                                        <i class=\"fa fa-fw "
+"fa-envelope o_not-animable\" role=\"presentation\"/>\n"
+"                                                        <span "
+"class=\"o_label small ms-1\">\n"
+"                                                            Contact Us\n"
+"                                                        </span>\n"
+"                                                    </span>"
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+msgid ""
+"<span class=\"d-inline-flex align-items-baseline\">\n"
+"                                                        <i class=\"fa fa-fw "
+"fa-shopping-cart o_not-animable\" role=\"presentation\"/>\n"
+"                                                        <span "
+"class=\"o_label small ms-1\">\n"
+"                                                            Add to Cart\n"
+"                                                        </span>\n"
+"                                                    </span>"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_cart_lines
@@ -221,11 +234,6 @@ msgstr "CSS-класс для дизайна страницы избранног
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
 msgid "Contact"
 msgstr "Контакты"
-
-#. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
-msgid "Contact Us"
-msgstr "Свяжитесь с нами"
 
 #. module: website_sale_wishlist
 #: model:ir.model,website_form_label:website_sale_wishlist.model_res_partner
@@ -492,6 +500,20 @@ msgstr "Класс дизайна страницы избранного"
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Your wishlist is empty!"
 msgstr "Ваш список избранного пуст!"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" "
+#~ "role=\"presentation\"/>\n"
+#~ "                                                    <span class=\"o_label "
+#~ "small ms-1\">Add to Cart</span>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" "
+#~ "role=\"presentation\"/>\n"
+#~ "                                                    <span class=\"o_label "
+#~ "small ms-1\">Добавить в корзину</span>"
+
+#~ msgid "Contact Us"
+#~ msgstr "Свяжитесь с нами"
 
 #~ msgid ""
 #~ "<i class=\"fa fa-fw fa-heart\"/>\n"

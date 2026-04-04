@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2026-03-27 12:00+0000\n"
+"PO-Revision-Date: 2026-04-02 11:40+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/mrp/de/>\n"
 "Language: de\n"
@@ -41,13 +41,13 @@ msgid ""
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
 " * Entwurf: Der Fertigungsauftrag ist noch nicht bestätigt.\n"
-"* Bestätigt: Der Fertigungsauftrag ist bestätigt. Vorhandene Bestandsregeln "
-"und die Nachbestellung von Komponenten wurden ausgelöst.\n"
+"* Bestätigt: Der Fertigungsauftrag ist bestätigt. Bestandsregeln wurden "
+"angewendet, und die Nachbestellung von Komponenten wurde ausgelöst.\n"
 "* In Bearbeitung: Die Produktion wurde gestartet (vom Fertigungs- oder "
 "Arbeitsauftrag)\n"
 "* Abzuschließen: Die Produktion ist fertig. Der Fertigungsauftrag muss "
 "abgeschlossen werden.\n"
-"* Erledigt: Der Fertigungsauftrag ist abgeschlossen und Bestandsbewegungen "
+"* Erledigt: Der Fertigungsauftrag ist abgeschlossen und Lagerbuchungen "
 "wurden gebucht.\n"
 "* Abgebrochen: Der Fertigungsauftrag wurde abgebrochen und kann nicht mehr "
 "bestätigt werden."
@@ -77,33 +77,33 @@ msgstr " Wenn alle Komponenten verfügbar sind"
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_count
 #: model:ir.model.fields,field_description:mrp.field_product_template__bom_count
 msgid "# Bill of Material"
-msgstr "# Stücklisten"
+msgstr "Anzahl Stücklisten"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__used_in_bom_count
 msgid "# BoM Where Used"
-msgstr "# Stücklisten, wo verwendet"
+msgstr "Anzahl Stücklisten, wo verwendet"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__num_splits
 msgid "# Splits"
-msgstr "# Teilungen"
+msgstr "Anzahl Teilungen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_ready_count
 msgid "# To Do Work Orders"
-msgstr "# Zu erledigende Arbeitsaufträge"
+msgstr "Anzahl zu erledigender Arbeitsaufträge"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__workorder_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_count
 msgid "# Work Orders"
-msgstr "# Arbeistaufträge"
+msgstr "Anzahl Arbeistaufträge"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_template__used_in_bom_count
 msgid "# of BoM Where is Used"
-msgstr "# Stücklisten, wo verwendet"
+msgstr "Anzahl Stücklisten, wo verwendet"
 
 #. module: mrp
 #. odoo-python
@@ -1169,7 +1169,7 @@ msgstr "Durchschnittliche Gesamtkosten pro Einheit"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
-msgstr "Stücklistenübersichtsbericht"
+msgstr "Bericht zur Stücklistenübersicht"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
@@ -1383,7 +1383,7 @@ msgstr "Blockierungsgrund"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__needed_by_workorder_ids
 msgid "Blocks"
-msgstr "Blöcke"
+msgstr "Blockierungen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__bom_id
