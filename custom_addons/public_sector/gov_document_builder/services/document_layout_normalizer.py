@@ -23,19 +23,25 @@ class GovDocumentLayoutNormalizer(models.AbstractModel):
         for i, node in enumerate(nodes):
             if not isinstance(node, dict):
                 continue
-            normalized.append(
-                {
-                    "id": node.get("id") or str(uuid.uuid4())[:8],
-                    "type": node.get("type", "rich_text"),
-                    "sequence": node.get("sequence", (i + 1) * 10),
-                    "props": node.get("props", {}),
-                    "binding": node.get("binding", {}),
-                    "children": node.get("children", []),
-                    "locked": node.get("locked", False),
-                }
-            )
+            normalized.append(self._normalize_node(node, i))
         normalized.sort(key=lambda n: n["sequence"])
         return normalized
+
+    def _normalize_node(self, node, index):
+        children = []
+        for child_index, child in enumerate(node.get("children", [])):
+            if isinstance(child, dict):
+                children.append(self._normalize_node(child, child_index))
+        return {
+            "id": node.get("id") or str(uuid.uuid4())[:8],
+            "type": node.get("type", "rich_text"),
+            "sequence": node.get("sequence", (index + 1) * 10),
+            "props": node.get("props", {}),
+            "binding": node.get("binding", {}),
+            "children": children,
+            "locked": node.get("locked", False),
+            "visibility_rule": node.get("visibility_rule", ""),
+        }
 
     def validate(self, nodes):
         """

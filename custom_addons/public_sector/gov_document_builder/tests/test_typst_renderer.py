@@ -21,15 +21,16 @@ class TestGovDocumentTypstRenderer(TransactionCase):
         )
         self.renderer = self.env["gov.document.typst.renderer"]
 
-    def _create_instance(self, layout):
-        return self.env["gov.document.instance"].create(
-            {
-                "name": "Documento Renderer",
-                "document_type_id": self.document_type.id,
-                "template_id": self.template.id,
-                "layout_json": json.dumps(layout),
-            }
-        )
+    def _create_instance(self, layout, process=None):
+        vals = {
+            "name": "Documento Renderer",
+            "document_type_id": self.document_type.id,
+            "template_id": self.template.id,
+            "layout_json": json.dumps(layout),
+        }
+        if process:
+            vals["process_id"] = process.id
+        return self.env["gov.document.instance"].create(vals)
 
     def test_render_instance_includes_typst_preamble(self):
         instance = self._create_instance(
@@ -67,3 +68,71 @@ class TestGovDocumentTypstRenderer(TransactionCase):
         rendered = self.renderer.render_instance(instance)
 
         self.assertIn("#base_legal_box", rendered)
+
+    def test_conditional_node_is_hidden_when_visibility_rule_fails(self):
+        instance = self._create_instance(
+            [
+                {
+                    "id": "cond",
+                    "type": "conditional",
+                    "sequence": 10,
+                    "visibility_rule": "reconciliation.deficit > 0",
+                    "children": [
+                        {
+                            "id": "inner",
+                            "type": "richtext",
+                            "sequence": 10,
+                            "props": {"content": "Bloco condicional visível"},
+                        }
+                    ],
+                },
+            ]
+        )
+
+        rendered = self.renderer.render_instance(instance)
+
+        self.assertNotIn("Bloco condicional visível", rendered)
+
+    def test_conditional_node_renders_children_when_visibility_rule_matches(self):
+        process = self.env["gov.processo"].create(
+            {
+                "subject": "Aquisição de materiais",
+                "state": "execucao",
+                "process_scope": "compras",
+            }
+        )
+        self.env["gov.processo.dotacao"].create(
+            {
+                "processo_id": process.id,
+                "programa": "10",
+                "acao": "2064",
+                "natureza_despesa": "3.3.90.39",
+                "fonte_recurso": "100",
+                "valor_estimado": 150000,
+                "exercicio": 2026,
+                "reservado": True,
+            }
+        )
+        instance = self._create_instance(
+            [
+                {
+                    "id": "cond",
+                    "type": "conditional",
+                    "sequence": 10,
+                    "visibility_rule": "reconciliation.situacao_conciliacao == pendente",
+                    "children": [
+                        {
+                            "id": "inner",
+                            "type": "richtext",
+                            "sequence": 10,
+                            "props": {"content": "Conciliação pendente identificada"},
+                        }
+                    ],
+                },
+            ],
+            process=process,
+        )
+
+        rendered = self.renderer.render_instance(instance)
+
+        self.assertIn("Conciliação pendente identificada", rendered)

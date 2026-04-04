@@ -104,6 +104,46 @@
     "locked": false
   },
   {
+    "id": "richtext_105",
+    "type": "richtext",
+    "sequence": 105,
+    "props": {"content": "Há pendências de conciliação financeira que exigem saneamento."},
+    "binding": {},
+    "children": [],
+    "locked": false,
+    "visibility_rule": "reconciliation.situacao_conciliacao != regular"
+  },
+  {
+    "id": "process_field_106",
+    "type": "process_field",
+    "sequence": 106,
+    "props": {"label": "Superávit apurado"},
+    "binding": {"source": "reconciliation", "path": "superavit", "transform": "currency_br"},
+    "children": [],
+    "locked": false,
+    "visibility_rule": "reconciliation.superavit > 0"
+  },
+  {
+    "id": "process_field_107",
+    "type": "process_field",
+    "sequence": 107,
+    "props": {"label": "Déficit apurado"},
+    "binding": {"source": "reconciliation", "path": "deficit", "transform": "currency_br"},
+    "children": [],
+    "locked": false,
+    "visibility_rule": "reconciliation.deficit > 0"
+  },
+  {
+    "id": "richtext_108",
+    "type": "richtext",
+    "sequence": 108,
+    "props": {"content": "Foram identificadas penalidades registradas durante a execução contratual."},
+    "binding": {},
+    "children": [],
+    "locked": false,
+    "visibility_rule": "execution.penalidades_registradas exists"
+  },
+  {
     "id": "signature_110",
     "type": "signature",
     "sequence": 110,
@@ -204,6 +244,40 @@
         <field name="sequence">100</field>
         <field name="props_json"><![CDATA[{}]]></field>
         <field name="binding_json"><![CDATA[{"source":"process","path":"*"}]]></field>
+    </record>
+
+    <record id="template_dfd_block_conciliacao" model="gov.document.template.block">
+        <field name="template_id" ref="gov_document_builder.template_dfd_semsa_padrao"/>
+        <field name="catalog_block_id" ref="gov_document_builder.block_richtext"/>
+        <field name="sequence">105</field>
+        <field name="props_json"><![CDATA[{"content":"Há pendências de conciliação financeira que exigem saneamento."}]]></field>
+        <field name="visibility_rule">reconciliation.situacao_conciliacao != regular</field>
+    </record>
+
+    <record id="template_dfd_block_superavit" model="gov.document.template.block">
+        <field name="template_id" ref="gov_document_builder.template_dfd_semsa_padrao"/>
+        <field name="catalog_block_id" ref="gov_document_builder.block_process_field"/>
+        <field name="sequence">106</field>
+        <field name="props_json"><![CDATA[{"label":"Superávit apurado"}]]></field>
+        <field name="binding_json"><![CDATA[{"source":"reconciliation","path":"superavit","transform":"currency_br"}]]></field>
+        <field name="visibility_rule">reconciliation.superavit > 0</field>
+    </record>
+
+    <record id="template_dfd_block_deficit" model="gov.document.template.block">
+        <field name="template_id" ref="gov_document_builder.template_dfd_semsa_padrao"/>
+        <field name="catalog_block_id" ref="gov_document_builder.block_process_field"/>
+        <field name="sequence">107</field>
+        <field name="props_json"><![CDATA[{"label":"Déficit apurado"}]]></field>
+        <field name="binding_json"><![CDATA[{"source":"reconciliation","path":"deficit","transform":"currency_br"}]]></field>
+        <field name="visibility_rule">reconciliation.deficit > 0</field>
+    </record>
+
+    <record id="template_dfd_block_penalidades" model="gov.document.template.block">
+        <field name="template_id" ref="gov_document_builder.template_dfd_semsa_padrao"/>
+        <field name="catalog_block_id" ref="gov_document_builder.block_richtext"/>
+        <field name="sequence">108</field>
+        <field name="props_json"><![CDATA[{"content":"Foram identificadas penalidades registradas durante a execução contratual."}]]></field>
+        <field name="visibility_rule">execution.penalidades_registradas exists</field>
     </record>
 
     <record id="template_dfd_block_signature" model="gov.document.template.block">

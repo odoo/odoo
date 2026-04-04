@@ -1,8 +1,11 @@
 import json
+import logging
 from datetime import timedelta
 from numbers import Number
 
 from odoo import fields, models
+
+_logger = logging.getLogger(__name__)
 
 
 class GovDocumentContextResolver(models.AbstractModel):
@@ -60,6 +63,60 @@ class GovDocumentContextResolver(models.AbstractModel):
             return self.apply_transformer(value, transform)
         except Exception:
             return fallback
+
+    def evaluate_visibility_rule(self, rule, context):
+        """Avalia uma regra declarativa de visibilidade contra o contexto resolvido."""
+        if not rule:
+            return True
+        try:
+            parts = (rule or "").strip().split()
+            if len(parts) < 2:
+                raise ValueError("Regra incompleta")
+
+            path = parts[0]
+            operator = parts[1]
+            literal = " ".join(parts[2:]) if len(parts) > 2 else None
+            if "." not in path:
+                raise ValueError("Path de binding inválida")
+
+            source, binding_path = path.split(".", 1)
+            value = self.resolve_binding(
+                {
+                    "source": source,
+                    "path": binding_path,
+                    "fallback": None,
+                },
+                context,
+            )
+
+            if operator == "exists":
+                return self._visibility_value_exists(value)
+            if operator == "not_exists":
+                return not self._visibility_value_exists(value)
+
+            if literal is None:
+                raise ValueError("Literal ausente para comparação")
+
+            literal = self._normalize_visibility_literal(literal)
+            if operator in {">", "<"}:
+                left = self._coerce_float(value)
+                right = self._coerce_float(literal)
+                if left is None or right is None:
+                    raise ValueError("Comparação numérica inválida")
+                return left > right if operator == ">" else left < right
+            if operator == "==":
+                return str(value or "") == literal
+            if operator == "!=":
+                return str(value or "") != literal
+
+            raise ValueError(f"Operador não suportado: {operator}")
+        except Exception as error:
+            _logger.warning(
+                "gov_document_builder: falha ao avaliar visibility_rule=%s: %s",
+                rule,
+                error,
+            )
+            return True
 
     def apply_transformer(self, value, transform):
         """Aplica transformações declarativas do binding."""
@@ -360,6 +417,21 @@ class GovDocumentContextResolver(models.AbstractModel):
     def compute_reconciliation_namespace(self, context):
         """Recalcula o namespace de conciliação a partir de um contexto já montado."""
         return self._resolve_reconciliation_namespace(context)
+
+    def _normalize_visibility_literal(self, literal):
+        cleaned = (literal or "").strip()
+        if len(cleaned) >= 2 and cleaned[0] == cleaned[-1] and cleaned[0] in {"'", '"'}:
+            cleaned = cleaned[1:-1]
+        return cleaned
+
+    def _visibility_value_exists(self, value):
+        if value is None:
+            return False
+        if isinstance(value, str):
+            return bool(value.strip())
+        if isinstance(value, (list, tuple, dict, set)):
+            return bool(value)
+        return True
 
     def _resolve_institution(self, instance):
         company = getattr(instance, "company_id", False) or self.env.company

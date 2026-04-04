@@ -95,10 +95,16 @@ class GovDocumentTypstRenderer(models.AbstractModel):
 
     def _render_node(self, node, context):
         """Dispatcher por tipo de bloco."""
+        resolver = self.env["gov.document.context.resolver"]
+        visibility_rule = node.get("visibility_rule")
+        if visibility_rule and not resolver.evaluate_visibility_rule(visibility_rule, context):
+            return None
+
         renderers = {
             "heading": self._render_heading,
             "heading1": self._render_heading,
             "heading2": self._render_heading2,
+            "conditional": self._render_conditional,
             "legal_basis": self._render_legal_basis,
             "process_field": self._render_process_field,
             "process_header": self._render_process_header,
@@ -132,6 +138,14 @@ class GovDocumentTypstRenderer(models.AbstractModel):
     def _render_heading2(self, node, context):
         text = node["props"].get("text", "Seção")
         return f"== {text}"
+
+    def _render_conditional(self, node, context):
+        rendered_children = []
+        for child in node.get("children", []):
+            rendered = self._render_node(child, context)
+            if rendered:
+                rendered_children.append(rendered)
+        return "\n".join(rendered_children)
 
     def _render_legal_basis(self, node, context):
         return '#base_legal_box[\n  #artigo("Lei 14.133/2021", "art. 18")\n]'
