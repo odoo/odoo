@@ -1,4 +1,5 @@
 import json
+from unittest.mock import patch
 
 from odoo.tests.common import TransactionCase
 
@@ -139,3 +140,42 @@ class TestTypstRenderer(TransactionCase):
         rendered = self.renderer.render_instance(self.instance)
 
         self.assertIn("150.000,00", rendered)
+
+    def test_render_layout_filters_only_none_nodes(self):
+        self._set_layout(
+            [
+                {
+                    "id": "first",
+                    "type": "richtext",
+                    "sequence": 10,
+                    "props": {"content": "Primeiro"},
+                },
+                {
+                    "id": "second",
+                    "type": "richtext",
+                    "sequence": 20,
+                    "props": {"content": "Segundo"},
+                },
+                {
+                    "id": "third",
+                    "type": "richtext",
+                    "sequence": 30,
+                    "props": {"content": "Terceiro"},
+                },
+            ]
+        )
+
+        with patch.object(
+            type(self.renderer),
+            "_render_preamble",
+            autospec=True,
+            return_value=[],
+        ), patch.object(
+            type(self.renderer),
+            "_render_node",
+            autospec=True,
+            side_effect=["", None, "Conteúdo final"],
+        ):
+            rendered = self.renderer._render_layout(self.instance, self.instance.layout_json, {})
+
+        self.assertEqual(rendered, "\n\n\nConteúdo final\n")

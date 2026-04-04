@@ -162,3 +162,19 @@ class TestConditionalVisibility(TransactionCase):
         )
 
         self.assertTrue(result)
+
+    def test_invalid_visibility_rule_fails_open_and_logs_warning(self):
+        with self.assertLogs("odoo.addons.gov_document_builder", level="WARNING") as captured:
+            result = self.resolver.evaluate_visibility_rule(
+                "regra_invalida",
+                {
+                    "reconciliation": {
+                        "situacao_conciliacao": "pendente",
+                    }
+                },
+            )
+
+        self.assertTrue(result)
+        self.assertTrue(
+            any("visibility_rule=regra_invalida" in message for message in captured.output)
+        )

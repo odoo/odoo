@@ -69,7 +69,7 @@ class GovDocumentTypstRenderer(models.AbstractModel):
         lines.append("")
         for node in nodes:
             rendered = self._render_node(node, context)
-            if rendered:
+            if rendered is not None:
                 lines.append(rendered)
                 lines.append("")
         return "\n".join(lines)
@@ -143,7 +143,7 @@ class GovDocumentTypstRenderer(models.AbstractModel):
         rendered_children = []
         for child in node.get("children", []):
             rendered = self._render_node(child, context)
-            if rendered:
+            if rendered is not None:
                 rendered_children.append(rendered)
         return "\n".join(rendered_children)
 
