@@ -299,7 +299,9 @@ class AccountChartTemplate(models.AbstractModel):
                         'noupdate': True,
                     }])
 
-        account_group_count = self.env['account.group'].search_count([])
+        account_group_count = self.env['account.group'].search_count(
+            [] if company.parent_id else [('company_id', '=', company.id)],
+        )
         if account_group_count:
             data.pop('account.group', None)
 

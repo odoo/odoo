@@ -189,8 +189,8 @@ class AccountMove(models.Model):
             if 'K_17' in tag_names:
                 return "8"
             # "5": Supply of goods/services, domestic, 5% (K_15)
-            if 'K_17' in tag_names:
-                return "8"
+            if 'K_15' in tag_names:
+                return "5"
             # No tax? It's exempt
             return "zw"
 

@@ -394,14 +394,16 @@ class ReportSaleDetails(models.AbstractModel):
     def _get_total_and_qty_per_category(self, categories):
         all_qty = 0
         all_total = 0
+        qty_precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        price_precision = self.env['decimal.precision'].precision_get('Product Price')
         for category_dict in categories:
             qty_cat = 0
             total_cat = 0
             for product in category_dict['products']:
                 qty_cat += product['quantity']
                 total_cat += product['base_amount']
-            category_dict['total'] = total_cat
-            category_dict['qty'] = qty_cat
+            category_dict['total'] = round(total_cat, price_precision)
+            category_dict['qty'] = round(qty_cat, qty_precision)
         # IMPROVEMENT: It would be better if the `products` are grouped by pos.order.line.id.
         unique_products = list({tuple(sorted(product.items())): product for category in categories for product in category['products']}.values())
         all_qty = sum([product['quantity'] for product in unique_products])

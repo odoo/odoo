@@ -158,6 +158,7 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
 
     def _add_pos_order_header_nodes(self, document_node, vals):
         pos_order = vals['pos_order']
+        pos_order._compute_l10n_jo_edi_pos_uuid()
         document_node.update({
             'cbc:ProfileID': {'_text': 'reporting:1.0'},
             'cbc:ID': {'_text': (pos_order.name or '').replace('/', '_')},

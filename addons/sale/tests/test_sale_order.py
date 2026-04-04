@@ -1174,7 +1174,8 @@ class TestSaleMailComposerUI(MailCommon, HttpCase):
         cls.env['mail.alias.domain'].create({'name': 'example.com'})
         cls.partner = cls.env['res.partner'].create({
             'name': 'test customer',
-            'email': 'dummy@example.com'
+            'lang': 'en_US',
+            'email': 'en@example.com',
         })
         cls.quotation = cls.env['sale.order'].create({
             'partner_id': cls.partner.id,
@@ -1188,3 +1189,54 @@ class TestSaleMailComposerUI(MailCommon, HttpCase):
                 "mail_attachment_removal_tour",
                 login="admin",
             )
+
+    def test_mail_button_translation(self):
+        """Test the final rendering context to ensure the button is properly translated
+        for each recipient's language, checking both the 'View' and the type_name. """
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.partner_fr = self.env['res.partner'].create({
+            'name': 'French Customer',
+            'lang': 'fr_FR',
+            'email': 'fr@example.com',
+        })
+        # Quotation -> SO
+        self.quotation.action_confirm()
+        self.message = self.env['mail.message'].create({
+            'model': 'sale.order',
+            'res_id': self.quotation.id,
+            'body': 'Testing button translation',
+            'message_type': 'comment',
+        })
+        recipients_data = [
+            {'id': self.partner.id, 'lang': 'en_US', 'type': 'customer', 'notif': 'email',
+             'groups': []},
+            {'id': self.partner_fr.id, 'lang': 'fr_FR', 'type': 'follower', 'notif': 'email',
+             'groups': []},
+        ]
+
+        iterator = self.quotation._notify_get_classified_recipients_iterator(
+            message=self.message,
+            recipients_data=recipients_data,
+            msg_vals={'model': 'sale.order'}
+        )
+        results = {lang: group for lang, render_values, group in iterator}
+
+        button_en = results['en_US'].get('button_access', {}).get('title', '')
+        button_fr = results['fr_FR'].get('button_access', {}).get('title', '')
+
+        self.assertNotEqual(
+            button_en,
+            button_fr,
+            "The button text is identical, the context language was not fetched correctly."
+        )
+
+        self.assertEqual(
+            button_en,
+            "View Sales Order",
+            f"Expected 'View Sales Order', got '{button_en}'"
+        )
+        self.assertEqual(
+            button_fr,
+            "Voir Commande client",
+            f"Expected 'Voir Commande client', got '{button_fr}'"
+        )

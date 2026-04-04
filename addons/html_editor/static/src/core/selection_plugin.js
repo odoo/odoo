@@ -243,6 +243,13 @@ export class SelectionPlugin extends Plugin {
         this.editable.focus = () => this.focusEditable();
     }
 
+    destroy() {
+        if (this.editableOriginalFocus) {
+            this.editable.focus = this.editableOriginalFocus;
+        }
+        super.destroy();
+    }
+
     selectAll() {
         const selection = this.getEditableSelection();
         const containerSelector = "#wrap > *, .oe_structure > *, [contenteditable]";
@@ -1098,11 +1105,19 @@ export class SelectionPlugin extends Plugin {
     }
 
     focusEditable() {
-        const { editableSelection, documentSelectionIsInEditable } = this.getSelectionData();
+        const selection = this.document.getSelection();
+        const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
         if (this.editable.contains(this.document.activeElement) && documentSelectionIsInEditable) {
-            // Editor has focus — nothing to do.
+            // Editor has focus — nothing to do. Unless the current active
+            // element is a textarea, in which case we want to focus the
+            // editable to update the selection to the editable.
+            if (this.document.activeElement.tagName === "TEXTAREA") {
+                this.editableOriginalFocus.call(this.editable);
+            }
             return;
         }
+
+        const { editableSelection } = this.getSelectionData();
 
         // Manualy focusing the editable is necessary to avoid some non-deterministic error in the HOOT unit tests.
         // Use the copy of the original focus but prevent scrolling.

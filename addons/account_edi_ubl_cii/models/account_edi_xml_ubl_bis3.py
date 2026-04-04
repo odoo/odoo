@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
-
 from odoo import _, api, models
-from odoo.tools import html2plaintext
-from odoo.tools.misc import formatLang, str2bool, NON_BREAKING_SPACE
+from odoo.tools import formatLang, html2plaintext
+from odoo.tools.misc import str2bool, NON_BREAKING_SPACE
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
     FloatFmt,
@@ -1630,3 +1628,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     def _add_invoice_monetary_total_vals(self, vals):
         # OVERRIDE
         pass
+
+    def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
+        """
+        :param account.move invoice:
+        """
+        return self._ubl_import_invoice(invoice, file_data, new=new)
