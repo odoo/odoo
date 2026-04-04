@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-09 15:28+0000\n"
-"PO-Revision-Date: 2026-03-20 17:44+0000\n"
+"PO-Revision-Date: 2026-04-03 23:47+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/base/"
 "fr/>\n"
@@ -521,6 +521,10 @@ msgid ""
 "formats.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Ce module fournit des outils pour exporter les commandes du point de vente "
+"dans différents formats UBL 2.1.\n"
 
 #. module: base
 #. odoo-python
@@ -2675,8 +2679,8 @@ msgstr ""
 "\n"
 "Ajoutez aux formulaires de votre site web la capacité de générer des pistes "
 "ou des opportunités dans l'application CRM.\n"
-"Les formulaires doivent être personnalisés dans le *Constructeur de site "
-"web* afin de générer des pistes.\n"
+"Les formulaires doivent être personnalisés dans le *Créateur de site web* "
+"afin de générer des pistes.\n"
 "\n"
 "Ce module inclut la validation des numéros de téléphone et de portable des "
 "contacts."
@@ -7607,6 +7611,20 @@ msgid ""
 "* FBM: Delivery information is fetched from Lazada, track and synchronize "
 "the stock level to Lazada.\n"
 msgstr ""
+"Importez vos commandes Lazada dans Odoo et synchronisez les livraisons\n"
+"\n"
+"===============================\n"
+"\n"
+"Fonctionnalités clés\n"
+"------------\n"
+"* Importez des commandes depuis plusieurs boutiques\n"
+"* Les commandes sont associées aux produits Odoo sur la base de leur "
+"référence interne (SKU dans Lazada)\n"
+"* Prise en charge à la fois de Fulfillment by Lazada (FBL) et Fulfillment by "
+"Merchant (FBM) :\n"
+"* FBL : importation des commandes finalisées\n"
+"* FBM : les informations de livraison sont récupérées depuis Lazada, suivez "
+"et synchronisez le niveau de stock avec Lazada.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_shopee
@@ -8086,6 +8104,11 @@ msgid ""
 "=============================\n"
 "Provides electronic invoicing for Jordan in the POS.\n"
 msgstr ""
+"\n"
+"Comptabilité jordanienne EDI pour le point de vente\n"
+"=============================\n"
+"Fournit la facturation électronique pour la Jordanie dans le point de "
+"vente.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jo_hr_payroll
@@ -11622,7 +11645,7 @@ msgid ""
 msgstr ""
 "\n"
 "Cet addon contient une application générique de création de HTML.\n"
-"Il est conçu pour être utilisé par l’éditeur de site web et l’éditeur de "
+"Il est conçu pour être utilisé par le créateur de site web et l’éditeur de "
 "mailings en masse.\n"
 
 #. module: base
@@ -12478,6 +12501,12 @@ msgid ""
 "categorisation of products sold to be included in the details of the line of "
 "an invoice.\n"
 msgstr ""
+"\n"
+"Il s'agit du module permettant d'ajouter le numéro d'identification CPV "
+"(Common Procurement Vocabulary) sur les produits.\n"
+"Le format roumain CIUS-RO exige, dans certains cas, que la catégorisation "
+"précise des produits vendus soit incluse dans les détails de la ligne de "
+"facture.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
@@ -13652,6 +13681,9 @@ msgid ""
 "This module also provides the possibility to generate the JPK_KR_PD in xml, "
 "for Poland.\n"
 msgstr ""
+"\n"
+"Ce module offre également la possibilité de générer le JPK_KR_PD en xml, "
+"pour la Pologne.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mass_mailing
@@ -14527,6 +14559,9 @@ msgid ""
 "This module integrates the Odoo Point of Sale with various ordering "
 "platforms.\n"
 msgstr ""
+"\n"
+"Ce module intègre le point de vente Odoo avec diverses plateformes de "
+"commande.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_platform_order_gofood
@@ -14534,6 +14569,8 @@ msgid ""
 "\n"
 "This module integrates with GoFood to receive and manage orders.\n"
 msgstr ""
+"\n"
+"Ce module s’intègre avec GoFood pour recevoir et gérer les commandes.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_platform_order_grabfood
@@ -14541,6 +14578,8 @@ msgid ""
 "\n"
 "This module integrates with GrabFood to receive and manage orders.\n"
 msgstr ""
+"\n"
+"Ce module s’intègre avec GrabFood pour recevoir et gérer les commandes.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_pos_urban_piper
@@ -14758,6 +14797,12 @@ msgid ""
 "This prevents rounding errors when employees have half-days (0.5)\n"
 "in their leave allocations or taken leaves.\n"
 msgstr ""
+"\n"
+"Ce module corrige le modèle transient "
+"'hr.payslip.employee.depature.holiday.attests.time.off.line' pour utiliser "
+"des Float au lieu d'Integer.\n"
+"Cela évite les erreurs d’arrondi lorsque les employés ont des demi-journées "
+"(0.5) dans leurs allocations de congés ou leurs congés pris.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid_holidays
@@ -21796,7 +21841,7 @@ msgstr "Mauvais format de fichier : %s"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__barcode
 msgid "Badge ID"
-msgstr ""
+msgstr "ID du badge"
 
 #. module: base
 #: model:res.country,name:base.bs
@@ -22213,7 +22258,7 @@ msgstr "Paie belge - Présences"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_fix
 msgid "Belgian Payroll - Holiday Attest Fix"
-msgstr ""
+msgstr "Paie belge - Correction de l'attestation de congés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
@@ -27659,7 +27704,7 @@ msgstr "Caractéristiques des entreprises sur les contacts"
 #. module: base
 #: model:ir.module.module,summary:base.module_website
 msgid "Enterprise website builder"
-msgstr "Constructeur de sites web d'entreprise"
+msgstr "Créateur de sites web d'entreprise"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_R
@@ -31329,7 +31374,7 @@ msgstr "ID de la vue définie dans le fichier XML"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__barcode
 msgid "ID used for employee identification."
-msgstr ""
+msgstr "ID utilisé pour l'identification de l'employé."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bus
@@ -33189,7 +33234,7 @@ msgstr "Jordanie - Paie avec Comptabilité"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jo_edi_pos
 msgid "Jordan Accounting EDI for POS"
-msgstr ""
+msgstr "Comptabilité jordanienne EDI pour le point de vente"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jo_edi
@@ -34071,7 +34116,7 @@ msgstr "Limite"
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Limit of %s API keys is reached for programmatic creation"
-msgstr ""
+msgstr "La limite de %s clés API pour la création programmatique est atteinte"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__line
@@ -35435,7 +35480,7 @@ msgstr "Club de membres"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mental_therapy
 msgid "Mental Therapy"
-msgstr ""
+msgstr "Psychothérapie"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_menu
@@ -41542,12 +41587,12 @@ msgstr "Plateforme"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_platform_order_gofood
 msgid "Platform Order Provider: GoFood"
-msgstr ""
+msgstr "Fournisseur de plateforme de commande : GoFood"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_platform_order_grabfood
 msgid "Platform Order Provider: GrabFood"
-msgstr ""
+msgstr "Fournisseur de plateforme de commande : GrabFood"
 
 #. module: base
 #. odoo-python
@@ -41555,6 +41600,8 @@ msgstr ""
 msgid ""
 "Please add your own bank account manually: %(account_number)s (%(partner)s)"
 msgstr ""
+"Veuillez ajouter votre propre compte bancaire manuellement : %"
+"(account_number)s (%(partner)s)"
 
 #. module: base
 #. odoo-python
@@ -41656,7 +41703,7 @@ msgstr "Point de Vente - Bons de réduction & Fidélité"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_platform_order
 msgid "Point of Sale - Platform Order Integration"
-msgstr ""
+msgstr "Point de vente - Intégration des commandes des plateformes"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper
@@ -41706,7 +41753,7 @@ msgstr "Abonnement PdV"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_edi_ubl
 msgid "Point of Sale UBL"
-msgstr ""
+msgstr "Point de vente UBL"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_enterprise
@@ -41751,7 +41798,7 @@ msgstr "Pologne - Paie avec Comptabilité"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pl_reports_account_saft
 msgid "Poland - SAFT Income Tax Report (JPK KR PD)"
-msgstr ""
+msgstr "Pologne - Rapport d’impôt sur les revenus SAFT (JPK KR PD)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pl_edi
@@ -42112,7 +42159,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Programmatic API keys are not enabled"
-msgstr ""
+msgstr "Les clés API programmatiques ne sont pas activées"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_cron_progress
@@ -43746,7 +43793,7 @@ msgstr "Roumanie - Rapports comptables"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_cpv_code
 msgid "Romania - CPV Code"
-msgstr ""
+msgstr "Roumanie - Code CPV"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_edi_stock
@@ -48147,12 +48194,13 @@ msgstr ""
 #: code:addons/base/models/res_users.py:0
 msgid "The provided API key is invalid or does not belong to the current user."
 msgstr ""
+"La clé API fournie est invalide ou n’appartient pas à l’utilisateur actuel."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "The provided API key is invalid."
-msgstr ""
+msgstr "La clé API fournie est invalide."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
@@ -49844,7 +49892,7 @@ msgstr "U - ACTIVITÉS DES ORGANISMES ET ORGANISMES EXTRATERRITORIAUX"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_edi_ubl
 msgid "UBL in the Point of Sale "
-msgstr ""
+msgstr "UBL dans le point de vente "
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_uk
@@ -50516,7 +50564,7 @@ msgstr "Utilisation"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_usage_based_maintenance
 msgid "Usage Based Maintenance"
-msgstr ""
+msgstr "Maintenance basée sur l’utilisation"
 
 #. module: base
 #. odoo-python

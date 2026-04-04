@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-06 18:38+0000\n"
+"POT-Creation-Date: 2026-04-03 18:39+0000\n"
 "PO-Revision-Date: 2025-10-08 18:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -749,6 +749,12 @@ msgstr "Mutlaq qiymat"
 #, fuzzy
 msgid "Absolute value of a number."
 msgstr "Sonning mutlaq qiymati"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
+msgid "Access Error"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2205,6 +2211,14 @@ msgstr "Diagramma turi"
 #, fuzzy
 msgid "Checkbox"
 msgstr "Belgilash katakchasi"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Checks whether there is a reference to a cell that contains a formula, and "
+"returns TRUE or FALSE."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5900,22 +5914,22 @@ msgstr "Noto‘g‘ri quyi burilish nuqtasi formulasi"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, fuzzy
 msgid ""
-"Invalid number of arguments for the %(functionName)s function. Expected "
-"%(maxArgPossible)s maximum, but got %(nbrArgSupplied)s instead."
+"Invalid number of arguments for the %(functionName)s function. Expected %"
+"(maxArgPossible)s maximum, but got %(nbrArgSupplied)s instead."
 msgstr ""
-"%(functionName)s funksiyasi uchun argumentlar soni noto‘g‘ri. Maksimal "
-"%(maxArgPossible)s kutilgan edi, lekin %(nbrArgSupplied)s ta kiritildi"
+"%(functionName)s funksiyasi uchun argumentlar soni noto‘g‘ri. Maksimal %"
+"(maxArgPossible)s kutilgan edi, lekin %(nbrArgSupplied)s ta kiritildi"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, fuzzy
 msgid ""
-"Invalid number of arguments for the %(functionName)s function. Expected "
-"%(minArgRequired)s minimum, but got %(nbrArgSupplied)s instead."
+"Invalid number of arguments for the %(functionName)s function. Expected %"
+"(minArgRequired)s minimum, but got %(nbrArgSupplied)s instead."
 msgstr ""
-"%(functionName)s funksiyasi uchun argumentlar soni noto‘g‘ri. Minimal "
-"%(minArgRequired)s kutilgan edi, lekin %(nbrArgSupplied)s ta kiritildi"
+"%(functionName)s funksiyasi uchun argumentlar soni noto‘g‘ri. Minimal %"
+"(minArgRequired)s kutilgan edi, lekin %(nbrArgSupplied)s ta kiritildi"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5923,13 +5937,13 @@ msgstr ""
 #, fuzzy
 msgid ""
 "Invalid number of arguments for the %(functionName)s function. Repeatable "
-"arguments should be supplied in groups of %(nbrArgRepeating)s, with up to "
-"%(nbrArgOptional)s optional. Got %(nbrValueRemaining)s too many."
+"arguments should be supplied in groups of %(nbrArgRepeating)s, with up to %"
+"(nbrArgOptional)s optional. Got %(nbrValueRemaining)s too many."
 msgstr ""
 "%(functionName)s funksiyasi uchun argumentlar soni noto‘g‘ri. "
-"Takrorlanadigan argumentlar %(nbrArgRepeating)s ta guruhda, "
-"%(nbrArgOptional)s tagacha ixtiyoriy bo‘lishi kerak. %(nbrValueRemaining)s "
-"ta ortiqcha kiritildi"
+"Takrorlanadigan argumentlar %(nbrArgRepeating)s ta guruhda, %"
+"(nbrArgOptional)s tagacha ixtiyoriy bo‘lishi kerak. %(nbrValueRemaining)s ta "
+"ortiqcha kiritildi"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7394,6 +7408,12 @@ msgstr "OFFSET chegaradan tashqari oraliqni baholaydi"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/helpers/geo_json_service.js:0
+msgid "Oceania"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, fuzzy
 msgid "October"
@@ -8653,9 +8673,9 @@ msgid ""
 "data."
 msgstr ""
 "Havoladagi katakdagi ma'lumotlar turini qaytaradi. Quyidagi qiymatlar "
-"qaytariladi: bo‘sh katak uchun \"b\", agar katakda oddiy matn bo‘lsa "
-"\"l\" (belgi uchun), agar katakda boshqa turdagi ma'lumotlar bo‘lsa "
-"\"v\" (qiymat uchun)."
+"qaytariladi: bo‘sh katak uchun \"b\", agar katakda oddiy matn bo‘lsa \"l\" "
+"(belgi uchun), agar katakda boshqa turdagi ma'lumotlar bo‘lsa \"v\" (qiymat "
+"uchun)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10316,12 +10336,12 @@ msgstr "Boshlang‘ich qiymat noto‘g‘ri"
 #, fuzzy
 msgid ""
 "The case-sensitive format of the result, enclosed in quotation marks. "
-"Examples: \"0.00\" rounded to 2 decimal places, \"hh:mm:ss\" for hour:"
-"minutes:seconds."
+"Examples: \"0.00\" rounded to 2 decimal places, \"hh:mm:ss\" for "
+"hour:minutes:seconds."
 msgstr ""
 "Natijaning qo‘shtirnoq ichiga olingan harfga sezgir formati. Misollar: "
-"\"0.00\" verguldan keyin 2 xonagacha yaxlitlangan, \"ss:dd:ss\" soat:daqiqa:"
-"soniya uchun."
+"\"0.00\" verguldan keyin 2 xonagacha yaxlitlangan, \"ss:dd:ss\" "
+"soat:daqiqa:soniya uchun."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11104,8 +11124,8 @@ msgstr "Birinchi qiymat."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, fuzzy
 msgid ""
-"The first_period (%(first)s) must be smaller or equal to the last_period "
-"(%(last)s)."
+"The first_period (%(first)s) must be smaller or equal to the last_period (%"
+"(last)s)."
 msgstr ""
 "Birinchi_davr (%(first)s) oxirgi_davrdan (%(last)s) kichik yoki unga teng "
 "bo‘lishi kerak."
@@ -11512,8 +11532,8 @@ msgstr "Matritsa teskarilanmaydigan."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, fuzzy
 msgid ""
-"The maturity (%(maturity)s) must be strictly greater than the settlement "
-"(%(settlement)s)."
+"The maturity (%(maturity)s) must be strictly greater than the settlement (%"
+"(settlement)s)."
 msgstr ""
 "Yetuklik muddati (%(maturity)s) hisob-kitob sanasidan (%(settlement)s) "
 "qat'iy katta bo‘lishi kerak."
@@ -12432,8 +12452,8 @@ msgstr "Kasr ko‘rinishidagi konvensiyalarga asoslangan narx kotirovkasi."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, fuzzy
 msgid ""
-"The purchase_date (%(purchaseDate)s) must be before the first_period_end "
-"(%(firstPeriodEnd)s)."
+"The purchase_date (%(purchaseDate)s) must be before the first_period_end (%"
+"(firstPeriodEnd)s)."
 msgstr ""
 "Xarid sanasi (%(purchaseDate)s) birinchi davr tugashi (%(firstPeriodEnd)s) "
 "dan oldin bo‘lishi kerak."
@@ -13125,8 +13145,8 @@ msgstr "Boshlanish sanasi (%s) musbat yoki nolga teng bo‘lishi kerak."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, fuzzy
 msgid ""
-"The start_period (%(start)s) must be smaller or equal to the end_period "
-"(%(end)s)."
+"The start_period (%(start)s) must be smaller or equal to the end_period (%"
+"(end)s)."
 msgstr ""
 "Boshlanish davri (%(start)s) tugash davridan (%(end)s) kichik yoki teng "
 "bo‘lishi shart."
@@ -15327,8 +15347,8 @@ msgstr "Yilning hafta raqami."
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 #, fuzzy
 msgid ""
-"Week value must be a string in the format %(example)s, but received "
-"%(received_value)s instead."
+"Week value must be a string in the format %(example)s, but received %"
+"(received_value)s instead."
 msgstr ""
 "Hafta qiymati %(example)s formatidagi satr bo‘lishi kerak, lekin uning "
 "o‘rniga %(received_value)s qabul qilindi."
@@ -15731,6 +15751,13 @@ msgstr "Mavjud filtr ichidagi katakchalarni birlashtirish mumkin emas."
 #, fuzzy
 msgid "You cannot create overlapping tables."
 msgstr "Bir-birini qoplaydigan jadvallar yaratib bo‘lmaydi."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
+msgid ""
+"You don't have the rights to export data. Please contact an Administrator."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript

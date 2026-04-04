@@ -46,7 +46,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-09 15:28+0000\n"
-"PO-Revision-Date: 2026-03-20 11:58+0000\n"
+"PO-Revision-Date: 2026-04-03 23:47+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-1/base/"
 "fi/>\n"
@@ -251,6 +251,16 @@ msgid ""
 "Access Point\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Tanskan lokalisaatiomoduuli\n"
+"===============================\n"
+"\n"
+"Tämä moduuli hallinnoi **Tanskan kirjanpitokaaviota**. Kattaa sekä "
+"yksityisyrittäjät että I/S-, IVS-, ApS- ja A/S-yritykset\n"
+"Tarjoaa myös Nemhandel-rekisteröinnin ja laskujen lähettämisen Odoon "
+"yhteyspisteen kautta\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -538,6 +548,11 @@ msgid ""
 "formats.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Tämä moduuli tarjoaa aputoimintoja kassajärjestelmän tilausten viemiseksi "
+"eri UBL 2.1 -muodoissa.\n"
+"\n"
 
 #. module: base
 #. odoo-python
@@ -698,6 +713,10 @@ msgid ""
 "- Send and receive documents via Peppol network in Peppol BIS Billing 3.0 "
 "format\n"
 msgstr ""
+"\n"
+"- Rekisteröidy Peppol-osallistujana\n"
+"- Lähetä ja vastaanota asiakirjoja Peppol-verkon kautta Peppol BIS Billing "
+"3.0 -muodossa\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
@@ -2121,6 +2140,18 @@ msgid ""
 "        - Operations through electronic interfaces (IED)\n"
 "        - Invoices done with KSef\n"
 msgstr ""
+"\n"
+"Puolan kirjanpitoraportit\n"
+"\n"
+"        Tämä moduuli tarjoaa myös mahdollisuuden JPK_VAT luomiseksi xml-"
+"muodossa Puolassa.\n"
+"\n"
+"        Tällä hetkellä ei raportoi erityisiä arvoja seuraaville:\n"
+"        - Maksuperusteiset kirjaukset, joihin sisältyy ostovero (MK)\n"
+"        - Marginaaliperusteiset toiminnot (MR_T/MR_UZ)\n"
+"        - Maataloustuotteita koskevat laskut (VAT_RR)\n"
+"        - Sähköisten käyttöliittymien kautta tapahtuvat toiminnot (IED)\n"
+"        - KSef:llä tehdyt laskut \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pt_reports
@@ -2211,6 +2242,11 @@ msgid ""
 "This module includes accounting reports for Slovakia, including:\n"
 "-Balance Sheet + Profit and Loss (XML export)\n"
 msgstr ""
+"\n"
+"Slovakian kirjanpitoraportit\n"
+"=====================================\n"
+"Tämä moduuli sisältää kirjanpitoraportit Slovakialle, mukaan lukien:\n"
+"-Tase + tuloslaskelma (XML-vienti)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_za_reports
@@ -2240,6 +2276,8 @@ msgid ""
 "\n"
 "Accounting reports for Sri Lanka\n"
 msgstr ""
+"\n"
+"Sri Lankan kirjanpitoraportit\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se_reports
@@ -2438,6 +2476,9 @@ msgid ""
 "Accounting reports:\n"
 "- FTA VAT Audit\n"
 msgstr ""
+"\n"
+"Kirjanpitoraportit:\n"
+"- FTA ALV-tarkastus\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account_enterprise
@@ -2710,6 +2751,9 @@ msgid ""
 "Add support to fill three fields used when using Chorus Pro, especially when "
 "invoicing public services.\n"
 msgstr ""
+"\n"
+"Lisää tuki kolmen kentän täyttämiselle Chorus Pro -palvelua käytettäessä, "
+"erityisesti julkisia palveluja laskutettaessa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project
@@ -3980,6 +4024,136 @@ msgid ""
 "    encode in in the payroll Settings, with the .pem file and the related "
 "password, if any.\n"
 msgstr ""
+"\n"
+"Belgian palkanlaskentasäännöt.\n"
+"======================\n"
+"\n"
+"    * Työntekijätiedot\n"
+"    * Työntekijäsopimukset\n"
+"    * Passiin perustuva sopimus\n"
+"    * Lisät/vähennykset\n"
+"    * Mahdollista perus-/brutto-/nettopalkan määrittäminen\n"
+"    * Työntekijän palkkalaskelma\n"
+"    * Kuukausittainen palkanlaskennan kirjanpito\n"
+"    * Integroitu vapaiden hallinnan kanssa\n"
+"    * Palkka Maj, ONSS, ennakonpidätys, lapsilisä, ...\n"
+"\n"
+"Automaattinen DmfA-allekirjoitus\n"
+"========================\n"
+"\n"
+"Edellytykset:\n"
+"--------------\n"
+"\n"
+"- Tarvitset Belgian hallituksen vaatimusten mukaisen digitaalisen "
+"varmenteen, jonka toimittaa Global\n"
+"  Sign. Katso: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Luo SSL-varmenteestasi (.pfx-tiedosto) varmennetiedostot, joita tarvitaan\n"
+"  teknisen käyttäjän (.cer-tiedosto) luomiseen sekä etätunnistautumiseen "
+"ONSS (.pem) -tiedostoon. UNIX-\n"
+"  järjestelmässä voit käyttää seuraavia komentoja:\n"
+"\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -"
+"clcerts\n"
+"\n"
+"  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out "
+"my_cert.cer\n"
+"\n"
+"  - PFX -> PEM: openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"  - PFX -> KEY: openssl pkcs12 -in my_cert.pfx -out my_cert.key -nocerts\n"
+"\n"
+"- Ennen sosiaaliturvan SFTP-palvelun käyttämistä, sinun on luotava tili\n"
+"  itsellesi tai asiakkaallesi sekä määritettävä suojaukset. (Koko prosessi "
+"on\n"
+"  saatavilla osoitteessa https://www.socialsecurity.be/site_fr/general/"
+"helpcentre/batch/sftp/previewstep.htm)\n"
+"\n"
+"  - Luo tekninen käyttäjä + aktivoi SFTP-kanava: Asiakkaasi on nyt luotava "
+"tekninen käyttäjä pääsyn hallinnan\n"
+"    verkkopalvelussa. Noudata seuraavaa prosessia: https://"
+"www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/"
+"webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Määritä SFTP-asiakkaasi: https://www.socialsecurity.be/site_fr/general/"
+"helpcentre/batch/document/pdf/step6_sftp_F.pdf\n"
+"\n"
+"  - Prosessin lopuksi sinulla pitäisi olla \"ONSS-numero\", jonka voit\n"
+"    syöttää palkanlaskennan asetuksiin yhdessä .pem-tiedoston ja mahdollisen "
+"salasanan kanssa.\n"
+"\n"
+"- Asetushuomautus: .pfx-varmenne tulisi lisätä palkanlaskennan asetuksiin.\n"
+"\n"
+"Synkronoi DmfA ONSS-portaaliin\n"
+"===============================\n"
+"\n"
+"Automatisoi DmfA ONSS -ilmoitusten synkronoinnin\n"
+"Belgian viralliseen SFTP-portaaliin.\n"
+"\n"
+"- Lataa FO-, FS- ja GO-tiedostot oikeaan ONSS-ympäristökansioon\n"
+"  (IN, INTEST, INTEST-S).\n"
+"- Tarkista OUT-kansiot (OUT, OUTTEST, OUTTEST-S) palautettujen tiedostojen "
+"varalta.\n"
+"- Linkitä vastaanotetut tiedostot vastaaviin ilmoituksiin ja työntekijöihin\n"
+"  tarvittaessa.\n"
+"\n"
+"Tekniset ominaisuudet sisältävät:\n"
+"- Turvallinen yhteys yksityisellä avaimella ja teknisillä "
+"käyttäjätunnuksilla.\n"
+"- XML-tiedostojen jäsentäminen ACRF- ja ilmoitustiedostoille.\n"
+"- Virheiden käsittely ja lokitus puuttuvien hakemistojen tai virheellisten "
+"tiedostojen varalta.\n"
+"\n"
+"Tämä ominaisuus varmistaa ONSS:n sähköisten ilmoitusten\n"
+"vaatimusten noudattamisen ja vähentää manuaalista vuorovaikutusta SFTP-"
+"portaalin kanssa.\n"
+"\n"
+"Automaattiset DIMONA-ilmoitukset\n"
+"=============================\n"
+"\n"
+"- Tarvitset Belgian hallituksen vaatimusten mukaisen digitaalisen "
+"varmenteen, jonka toimittaa Global\n"
+"  Sign. Katso: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Luo SSL-varmenteestasi (.pfx-tiedosto) varmennetiedostot, joita tarvitaan\n"
+"  teknisen käyttäjän (.cer-tiedosto) luomiseen ja etätunnistautumiseen ONSS "
+"(.pem) tiedostoon. UNIX-\n"
+"  järjestelmässä voit käyttää seuraavia komentoja:\n"
+"\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -"
+"clcerts\n"
+"\n"
+"  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out "
+"my_cert.cer\n"
+"\n"
+"  - PFX -> PEM: openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"- Ennen sosiaaliturvan REST-verkkopalvelun käyttämistä, sinun on luotava "
+"tili\n"
+"  itsellesi tai asiakkaallesi ja määritettävä suojaukset. (Koko prosessi on\n"
+"  saatavilla osoitteessa https://www.socialsecurity.be/site_fr/employer/"
+"applics/dimona/introduction/webservice.htm)\n"
+"\n"
+"  - Käyttäjätilien hallinta: Noudata ohjeita osoitteessa https://"
+"www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/"
+"procedure_pour_gestion_des_acces_UMan_FR.pdf\n"
+"\n"
+"  - Luo tekninen käyttäjä: Asiakkaasi on nyt luotava tekninen käyttäjä "
+"pääsyn hallinnan\n"
+"    verkkopalvelussa. Noudata tätä prosessia: https://www.socialsecurity.be/"
+"site_fr/general/helpcentre/rest/documents/pdf/"
+"webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Aktivoi verkkopalvelukanava: Kun tekninen käyttäjä on luotu, asiakkaasi "
+"on\n"
+"    aktivoitava verkkopalvelukanava pääsyn hallinnan palvelussa. Seuraavassa "
+"ohjeessa selitetään\n"
+"    kanavan aktivointivaiheet: https://www.socialsecurity.be/site_fr/general/"
+"helpcentre/rest/documents/pdf/webservices_ajouter_le_canal_FR.pdf\n"
+"\n"
+"  - Prosessin lopuksi sinun pitäisi saada \"ONSS-numero\", jonka voit\n"
+"    syöttää palkanlaskennan asetuksiin yhdessä .pem-tiedoston ja mahdollisen "
+"salasanan kanssa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_blackbox_be
@@ -7298,6 +7472,20 @@ msgid ""
 "* FBM: Delivery information is fetched from Lazada, track and synchronize "
 "the stock level to Lazada.\n"
 msgstr ""
+"\n"
+"Tuo Lazada-tilauksesi Odooseen ja synkronoi toimitukset\n"
+"===============================\n"
+"\n"
+"Avainominaisuudet\n"
+"------------\n"
+"* Tuo tilauksia useista kaupoista\n"
+"* Tilaukset yhdistetään Odoo-tuotteisiin niiden sisäisen viitteen "
+"perusteella (SKU Lazadassa)\n"
+"* Tuki Lazadan toimittamille tilauksille (FBL) ja kauppiaan toimittamille "
+"tilauksille (FBM):\n"
+"* FBL: Valmiiden tilausten tuominen\n"
+"* FBM: Toimitustiedot haetaan Lazadasta, seurataan ja synkronoidaan "
+"varastotaso Lazadaan.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_shopee
@@ -7343,6 +7531,13 @@ msgid ""
 "original invoice.\n"
 "The wizard used is similar as the one for the credit note.\n"
 msgstr ""
+"\n"
+"Monissa maissa veloituslaskua käytetään olemassa olevan laskun määrien "
+"korottamiseen,\n"
+"tai joissakin erityistapauksissa hyvityslaskun peruuttamiseen.\n"
+"Se on kuin tavallinen lasku, mutta yhteyttä alkuperäiseen laskuun on "
+"seurattava.\n"
+"Ohjattu toiminto on samankaltainen kuin hyvityslaskussa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn
@@ -14769,6 +14964,22 @@ msgid ""
 "- Additional other input rules for (bonus, commissions, arrears, etc.)\n"
 "- WPS\n"
 msgstr ""
+"\n"
+"Yhdistyneiden arabiemiirikuntien palkanlaskenta- ja palvelussuhteen "
+"päättymissäännöt.\n"
+"=======================================================\n"
+"- Peruspalkkalaskelmat\n"
+"- Palvelussuhteen päättymislaskelmat\n"
+"- Vuosiloma- ja palvelussuhteen päättymisetuudet\n"
+"- Paikallisten sosiaalivakuutussäännöt\n"
+"- Ylityösäännöt muille syötteille\n"
+"- Sairauslomien laskelmat\n"
+"- DEWS-etuuksien laskeminen\n"
+"- Käyttämättömien lomien laskeminen palvelussuhteen päättymislaskelmia "
+"varten\n"
+"- Muita lisäohjeita muille syötteille (bonukset, provisiot, maksurästit, "
+"jne.)\n"
+"- WPS\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_hr_payroll
@@ -20646,7 +20857,7 @@ msgstr "Tilintarkastus ja sertifiointi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_accountant_knowledge
 msgid "Audit Reports"
-msgstr "Tilintarkastuskertomus"
+msgstr "Tilintarkastuskertomukset"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_ai_livechat
@@ -31590,7 +31801,7 @@ msgstr "Asennettu versio"
 #: model_terms:ir.ui.view,arch_db:base.module_form
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Installing"
-msgstr "Asennetaan"
+msgstr "Asennus"
 
 #. module: base
 #: model:ir.module.module,description:base.module_bus
@@ -34665,7 +34876,7 @@ msgstr "Massapostitustekstiviestit myyntitilauksille"
 #: model:ir.module.module,description:base.module_hr_recruitment_sms
 #: model:ir.module.module,summary:base.module_hr_recruitment_sms
 msgid "Mass mailing sms to job applicants"
-msgstr "Joukkoviestien lähettäminen työnhakijoille (SMS)"
+msgstr "Joukkotekstiviestien lähettäminen työnhakijoille"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_master_data
@@ -35908,7 +36119,7 @@ msgstr "Uutiskirjeen tilauspainike"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mass_mailing_sms
 msgid "Newsletter Subscribe SMS Template"
-msgstr "Uutiskirjeen tilaus SMS malli"
+msgstr "Uutiskirjeen tilauksen tekstiviestipohja"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__nextcall
@@ -41290,7 +41501,7 @@ msgstr "Projekti - Osto - Varasto"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_sms
 msgid "Project - SMS"
-msgstr "Projekti - SMS"
+msgstr "Projekti - Tekstiviesti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_sale_expense
@@ -42314,7 +42525,7 @@ msgstr "Rekrytointi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_sms
 msgid "Recruitment - SMS"
-msgstr "Rekrytointi – SMS"
+msgstr "Rekrytointi - Tekstiviesti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_sign
@@ -42570,7 +42781,7 @@ msgstr "Raportti"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_report
 msgid "Report Action"
-msgstr "Raporttin"
+msgstr "Raporttitoiminto"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_file
@@ -43113,7 +43324,7 @@ msgstr "Tekstiviestimarkkinointi markkinoinnin automaatiossa"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mail_sms
 msgid "SMS Tests"
-msgstr "SMS-testit"
+msgstr "Tekstiviestitestit"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_mail_sms
@@ -43123,12 +43334,12 @@ msgstr "Tekstiviestitestit: tekstiviestien esitykset ja testit"
 #. module: base
 #: model:ir.module.module,summary:base.module_sms
 msgid "SMS Text Messaging"
-msgstr "SMS-tekstiviestit"
+msgstr "Tekstiviestintä"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sms
 msgid "SMS gateway"
-msgstr "SMS gateway"
+msgstr "Tekstiviestiyhdyskäytävä"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_sms
@@ -43308,7 +43519,7 @@ msgstr "Myynti- ja ostotilausten EDI-testit: Varmista työnkulun iskunkestävyys
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_sms
 msgid "Sale - SMS"
-msgstr "Myynti - SMS"
+msgstr "Myynti - Tekstiviestit"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_account_accountant
@@ -45549,7 +45760,7 @@ msgstr "Varasto - Huolto"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_sms
 msgid "Stock - SMS"
-msgstr "Varasto - SMS"
+msgstr "Varasto - Tekstiviestit"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_stock
@@ -48625,7 +48836,7 @@ msgstr "Traces Async"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_track_sms
 msgid "Track Speakers SMS Marketing"
-msgstr "Esiintyjien SMS-markkinointi"
+msgstr "Seuraa puhujien tekstiviestimarkkinointia"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance
@@ -49578,7 +49789,7 @@ msgstr "Tee moduulin versionkorotus"
 #: model_terms:ir.ui.view,arch_db:base.module_form
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Upgrading"
-msgstr "Päivitetään"
+msgstr "Päivittäminen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__url
@@ -51793,7 +52004,7 @@ msgstr "ei sisällä käännettävissä olevia termejä.<br/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "documentation"
-msgstr "dokumentointi"
+msgstr "dokumentaatio"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export

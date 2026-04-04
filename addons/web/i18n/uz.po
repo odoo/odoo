@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:37+0000\n"
+"POT-Creation-Date: 2026-04-03 18:39+0000\n"
 "PO-Revision-Date: 2025-10-08 18:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4473,8 +4473,8 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, fuzzy
 msgid ""
-"It will be removed for everyone using the \"%(parentName)s\" "
-"%(parentFieldLabel)s."
+"It will be removed for everyone using the \"%(parentName)s\" %"
+"(parentFieldLabel)s."
 msgstr ""
 "U \"%(parentName)s\" %(parentFieldLabel)s-dan foydalanuvchi barcha "
 "foydalanuvchilar uchun olib tashlanadi."
@@ -6068,22 +6068,22 @@ msgstr "Faqat dastlabki %(count)s ta yozuv o‘chirildi (%(total)s tanlangandan)
 #: code:addons/web/models/models.py:0
 #, fuzzy
 msgid ""
-"Only types %(supported_types)s are supported for category (found type "
-"%(field_type)s)"
+"Only types %(supported_types)s are supported for category (found type %"
+"(field_type)s)"
 msgstr ""
-"Turkum uchun faqat %(supported_types)s turlari qo‘llab-quvvatlanadi "
-"(%(field_type)s turi topildi)"
+"Turkum uchun faqat %(supported_types)s turlari qo‘llab-quvvatlanadi (%"
+"(field_type)s turi topildi)"
 
 #. module: web
 #. odoo-python
 #: code:addons/web/models/models.py:0
 #, fuzzy
 msgid ""
-"Only types %(supported_types)s are supported for filter (found type "
-"%(field_type)s)"
+"Only types %(supported_types)s are supported for filter (found type %"
+"(field_type)s)"
 msgstr ""
-"Filtr uchun faqat %(supported_types)s turlari qo‘llab-quvvatlanadi "
-"(%(field_type)s turi topildi)"
+"Filtr uchun faqat %(supported_types)s turlari qo‘llab-quvvatlanadi (%"
+"(field_type)s turi topildi)"
 
 #. module: web
 #. odoo-javascript
@@ -7212,9 +7212,11 @@ msgstr "Chayon (yulduz turkumi)"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/record_selectors/record_autocomplete.js:0
 #: code:addons/web/static/src/search/search_bar/search_bar.js:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 #: code:addons/web/static/src/search/search_model.js:0
+#: code:addons/web/static/src/views/fields/relational_utils.js:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/settings/settings_app.xml:0
 #, fuzzy
@@ -8116,16 +8118,16 @@ msgstr ""
 #, fuzzy
 msgid "The ids in %(field_name)s must not be duplicated: “%(action_ids)s”"
 msgstr ""
-"%(field_name)s dagi identifikatorlar takrorlanmasligi kerak: "
-"\"%(action_ids)s\""
+"%(field_name)s dagi identifikatorlar takrorlanmasligi kerak: \"%"
+"(action_ids)s\""
 
 #. module: web
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 #, fuzzy
 msgid ""
-"The ids in %(field_name)s must only be integers or \"false\": "
-"“%(action_ids)s”"
+"The ids in %(field_name)s must only be integers or \"false\": “%"
+"(action_ids)s”"
 msgstr ""
 "%(field_name)s dagi identifikatorlar faqat butun sonlar yoki \"noto‘g‘ri\" "
 "bo‘lishi kerak: \"%(action_ids)s\""
@@ -8140,6 +8142,12 @@ msgid ""
 "is taking too much time."
 msgstr ""
 "Amal to‘xtatildi. Bu odatda joriy amal juda ko‘p vaqt olayotganini anglatadi."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/errors/error_dialogs.js:0
+msgid "The request sent to the server was too large"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -8159,11 +8167,11 @@ msgstr "Tanlangan maydon imzoni oldindan to‘ldirish uchun ishlatiladi"
 #: code:addons/web/static/src/core/utils/files.js:0
 #, fuzzy
 msgid ""
-"The selected file (%(size)sB) is larger than the maximum allowed file size "
-"(%(maxSize)sB)."
+"The selected file (%(size)sB) is larger than the maximum allowed file size (%"
+"(maxSize)sB)."
 msgstr ""
-"Tanlangan fayl (%(size)sB) ruxsat etilgan maksimal fayl hajmidan "
-"(%(maxSize)sB) katta."
+"Tanlangan fayl (%(size)sB) ruxsat etilgan maksimal fayl hajmidan (%"
+"(maxSize)sB) katta."
 
 #. module: web
 #. odoo-javascript
@@ -8197,8 +8205,8 @@ msgid ""
 "There are too many rows (%(count)s rows, limit: %(limit)s) to export as "
 "Excel 2007-2013 (.xlsx) format. Consider splitting the export."
 msgstr ""
-"Excel 2007-2013 (.xlsx) formatida eksport qilish uchun juda ko‘p qatorlar "
-"(%(count)s qator, chegara: %(limit)s) mavjud. Eksportni bo‘lib chiqarishni "
+"Excel 2007-2013 (.xlsx) formatida eksport qilish uchun juda ko‘p qatorlar (%"
+"(count)s qator, chegara: %(limit)s) mavjud. Eksportni bo‘lib chiqarishni "
 "ko‘rib chiqing."
 
 #. module: web
@@ -8614,11 +8622,11 @@ msgstr "Kameradan foydalanish imkonsiz"
 #: code:addons/web/static/src/webclient/actions/reports/utils.js:0
 #, fuzzy
 msgid ""
-"Unable to find Wkhtmltopdf on this system. The report will be shown in html."
-"%(link)s"
+"Unable to find Wkhtmltopdf on this system. The report will be shown in html.%"
+"(link)s"
 msgstr ""
-"Bu tizimda Wkhtmltopdf topilmadi. Hisobot html formatida ko‘rsatiladi "
-"%(link)s"
+"Bu tizimda Wkhtmltopdf topilmadi. Hisobot html formatida ko‘rsatiladi %"
+"(link)s"
 
 #. module: web
 #. odoo-javascript
@@ -8818,8 +8826,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.js:0
 msgid ""
-"Use the operators \"+=\", \"-=\" to update the current date by days "
-"(%(days)s), \n"
+"Use the operators \"+=\", \"-=\" to update the current date by days (%"
+"(days)s), \n"
 "            weeks (%(weeks)s), months (%(months)s), years (%(years)s), hours "
 "(%(hours)s), \n"
 "            minutes (%(minutes)s) and seconds (%(seconds)s)."
