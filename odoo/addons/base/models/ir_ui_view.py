@@ -1453,7 +1453,7 @@ actual arch.
         parent_name_manager = node_info['name_manager'] if node_info else None
 
         # combine model access groups with this model's access groups
-        model_groups &= self.env['ir.model.access']._get_access_groups(model_name)
+        model_groups &= self._get_access_groups(group_definitions, model_name)
 
         name_manager = NameManager(model, parent=parent_name_manager, model_groups=model_groups)
 
@@ -1524,6 +1524,14 @@ actual arch.
             self._postprocess_on_change(root, model)
 
         return name_manager
+
+    def _get_access_groups(self, group_definitions, model_name):
+        group_list = self.env['ir.model.access']._get_all_access_groups()['read'].get(model_name, ())
+        if not group_list:
+            return group_definitions.empty
+        if False in group_list:  # there is some global access
+            return group_definitions.universe
+        return group_definitions.from_ids(group_list)
 
     def _add_missing_fields(self, node, name_manager):
         """ Add the fields required for evaluating expressions in the view given by ``node``. """
@@ -1816,7 +1824,7 @@ actual arch.
         parent_name_manager = node_info['name_manager'] if node_info else None
 
         # combine model access groups with this model's access groups
-        model_groups &= self.env['ir.model.access']._get_access_groups(model_name)
+        model_groups &= self._get_access_groups(group_definitions, model_name)
 
         # fields_get() optimization: validation does not require translations
         model = self.env[model_name].with_context(lang=None)
