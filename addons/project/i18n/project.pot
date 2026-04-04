@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
-"PO-Revision-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-04-03 18:37+0000\n"
+"PO-Revision-Date: 2026-04-03 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -317,8 +317,9 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
-"<i class=\"fa o_button_icon fa-check text-success\" invisible=\"next_milestone_status == 'off_track'\" title=\"On Track\"/>\n"
-"                            <i class=\"fa o_button_icon fa-check text-danger\" invisible=\"next_milestone_status == 'on_track'\" title=\"Off Track\"/>"
+"<i class=\"fa o_button_icon fa-check\" invisible=\"next_milestone_status == False or next_milestone_status != 'on_track'\" title=\"On Track\"/>\n"
+"                            <i class=\"fa o_button_icon fa-check text-success\" invisible=\"next_milestone_status != 'next_track'\" title=\"On Track\"/>\n"
+"                            <i class=\"fa o_button_icon fa-check text-danger\" invisible=\"next_milestone_status != 'off_track'\" title=\"Off Track\"/>"
 msgstr ""
 
 #. module: project
@@ -375,12 +376,49 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "<span class=\"o_stat_text\">Average Rating</span>"
+msgid ""
+"<span class=\"o_field_widget ps-1\" invisible=\"closed_task_count == "
+"0\">(</span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "<span class=\"o_field_widget ps-1\">(</span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "<span class=\"o_field_widget ps-2\">)</span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "<span class=\"o_field_widget\" invisible=\"closed_task_count == 0\"> ) </span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "<span class=\"o_field_widget\"> / 5 </span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "<span class=\"o_field_widget\"> / </span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "<span class=\"o_field_widget\">%)</span>"
 msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "<span class=\"o_stat_text\">Blocked Tasks</span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "<span class=\"o_stat_text\">Burndown<br/> Chart</span>"
 msgstr ""
 
 #. module: project
@@ -397,6 +435,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Parent Task</span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "<span class=\"o_stat_text\">Rating</span>"
 msgstr ""
 
 #. module: project
@@ -1045,7 +1088,6 @@ msgstr ""
 #: model:ir.embedded.actions,name:project.project_embedded_action_project_burndown_chart
 #: model:ir.embedded.actions,name:project.project_embedded_action_update_burndown_chart
 #: model:ir.model,name:project.model_project_task_burndown_chart_report
-#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_graph
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
