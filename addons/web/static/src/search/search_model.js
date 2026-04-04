@@ -1213,6 +1213,9 @@ export class SearchModel extends EventBus {
             category.errorMsg = error_msg;
             values = [];
         }
+        else {
+            category.errorMsg = null;
+        }
         if (category.hierarchize) {
             category.parentField = parentField;
         }
@@ -1255,6 +1258,9 @@ export class SearchModel extends EventBus {
         if (error_msg) {
             filter.errorMsg = error_msg;
             values = [];
+        }
+        else {
+            filter.errorMsg = null;
         }
 
         // restore checked property
