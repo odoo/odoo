@@ -70,7 +70,7 @@ _CACHES_BY_KEY = {
     'stable': ('stable', 'default', 'templates.cached_values'),
     'templates': ('templates', 'templates.cached_values'),
     'routing': ('routing', 'routing.rewrites', 'templates.cached_values'),
-    'groups': ('groups', 'templates', 'templates.cached_values'),  # The processing of groups is saved in the view
+    'groups': ('groups', 'default', 'templates', 'templates.cached_values'),  # The processing of groups is saved in the view
 }
 
 _REPLICA_RETRY_TIME = 20 * 60  # 20 minutes
