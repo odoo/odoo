@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        COA Graphical Instructions Manual
+        Rendered as a client action (iframe QWeb page) accessible from the menu.
+    -->
+
+    <record id="action_md_coa_manual" model="ir.actions.act_url">
+        <field name="name">COA Instructions Manual</field>
+        <field name="url">/md_master_coa/manual</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- QWeb template for the graphical manual -->
+    <template id="template_md_coa_manual" name="MD Master COA — Instructions Manual">
+        <t t-call="web.layout">
+            <t t-set="head_coa">
+                <style>
+                    .md-manual { font-family: 'Inter', Arial, sans-serif; max-width: 1100px; margin: 0 auto; padding: 2rem; }
+                    .md-hero { background: linear-gradient(135deg, #1a3a5c 0%, #0d6efd 100%); color: #fff; border-radius: 12px; padding: 2.5rem; margin-bottom: 2rem; }
+                    .md-hero h1 { font-size: 2rem; margin: 0 0 .5rem; }
+                    .md-hero p  { opacity: .85; margin: 0; }
+                    .coa-grid   { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
+                    .coa-card   { border-radius: 10px; padding: 1.25rem; border: 1px solid #dee2e6; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.06); }
+                    .coa-card h3 { margin: 0 0 .25rem; font-size: 1.05rem; }
+                    .coa-card .range { font-size: .75rem; font-weight: 600; letter-spacing: .05em; opacity: .7; }
+                    .coa-card ul   { padding-left: 1.1rem; margin: .5rem 0 0; font-size: .875rem; }
+                    .coa-asset     { border-left: 5px solid #0d6efd; }
+                    .coa-liability { border-left: 5px solid #dc3545; }
+                    .coa-equity    { border-left: 5px solid #198754; }
+                    .coa-revenue   { border-left: 5px solid #0dcaf0; }
+                    .coa-cogs      { border-left: 5px solid #fd7e14; }
+                    .coa-expense   { border-left: 5px solid #ffc107; }
+                    .coa-other     { border-left: 5px solid #6c757d; }
+                    .flow-row      { display: flex; gap: 1rem; align-items: stretch; flex-wrap: wrap; margin-bottom: 2rem; }
+                    .flow-box      { flex: 1; min-width: 200px; border-radius: 10px; padding: 1rem; text-align: center; }
+                    .flow-box h4   { margin: 0 0 .5rem; }
+                    .flow-bs       { background: #e7f1ff; border: 2px solid #0d6efd; }
+                    .flow-is       { background: #fff3cd; border: 2px solid #ffc107; }
+                    .flow-arrow    { display: flex; align-items: center; font-size: 1.5rem; color: #6c757d; }
+                    .phase-list    { counter-reset: phase; }
+                    .phase-item    { display: flex; gap: 1rem; margin-bottom: 1rem; }
+                    .phase-num     { counter-increment: phase; width: 36px; height: 36px; border-radius: 50%; background: #0d6efd; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+                    .phase-body h4 { margin: 0 0 .25rem; }
+                    .phase-body p  { margin: 0; font-size: .875rem; color: #6c757d; }
+                    .badge-normal-debit  { background: #cfe2ff; color: #084298; border-radius: 4px; padding: 2px 6px; font-size: .75rem; }
+                    .badge-normal-credit { background: #fff3cd; color: #664d03; border-radius: 4px; padding: 2px 6px; font-size: .75rem; }
+                    section { margin-bottom: 2.5rem; }
+                    h2 { border-bottom: 2px solid #dee2e6; padding-bottom: .5rem; }
+                </style>
+            </t>
+
+            <div class="md-manual">
+                <!-- Hero -->
+                <div class="md-hero">
+                    <h1>&#x1F4CA; MD Portfolio — Master Chart of Accounts</h1>
+                    <p>Single source of truth for financial account structure across all companies and branches.
+                       GAAP &amp; IFRS aligned · 345 standardised accounts · QBO bridge ready.</p>
+                </div>
+
+                <!-- Section 1: What is the Master COA? -->
+                <section>
+                    <h2>1. What is the Master Chart of Accounts?</h2>
+                    <p>The <strong>Master COA</strong> is the canonical list of accounts used across every
+                    MD Portfolio company (branch). Instead of letting each branch create their own
+                    account codes—leading to inconsistent reports—the Master COA defines a
+                    <em>single shared numbering system</em>.</p>
+                    <ul>
+                        <li>7 top-level <strong>Header accounts</strong> organise the hierarchy (10000–80000 range).</li>
+                        <li>338 <strong>Detail accounts</strong> are where actual transactions are posted.</li>
+                        <li>Each company account is <strong>linked</strong> to one master account, enabling
+                            cross-company P&amp;L and Balance Sheet roll-ups.</li>
+                    </ul>
+                </section>
+
+                <!-- Section 2: Account numbering -->
+                <section>
+                    <h2>2. Account Numbering System</h2>
+                    <div class="coa-grid">
+                        <div class="coa-card coa-asset">
+                            <div class="range">10000–19999</div>
+                            <h3>&#x1F4B0; Assets</h3>
+                            <ul>
+                                <li>Cash &amp; Equivalents</li>
+                                <li>Accounts Receivable</li>
+                                <li>Inventory &amp; Prepaid</li>
+                                <li>Fixed &amp; Intangible Assets</li>
+                            </ul>
+                            <small><span class="badge-normal-debit">Normal: Debit</span></small>
+                        </div>
+                        <div class="coa-card coa-liability">
+                            <div class="range">20000–29999</div>
+                            <h3>&#x1F4B3; Liabilities</h3>
+                            <ul>
+                                <li>Accounts Payable</li>
+                                <li>Credit Cards</li>
+                                <li>Payroll Liabilities</li>
+                                <li>Long-Term Debt</li>
+                            </ul>
+                            <small><span class="badge-normal-credit">Normal: Credit</span></small>
+                        </div>
+                        <div class="coa-card coa-equity">
+                            <div class="range">30000–39999</div>
+                            <h3>&#x1F3E6; Equity</h3>
+                            <ul>
+                                <li>Owner Contributions</li>
+                                <li>Retained Earnings</li>
+                                <li>Distributions</li>
+                            </ul>
+                            <small><span class="badge-normal-credit">Normal: Credit</span></small>
+                        </div>
+                        <div class="coa-card coa-revenue">
+                            <div class="range">40000–49999</div>
+                            <h3>&#x1F4C8; Revenue</h3>
+                            <ul>
+                                <li>Service Income</li>
+                                <li>Product Sales</li>
+                                <li>Other Income</li>
+                            </ul>
+                            <small><span class="badge-normal-credit">Normal: Credit</span></small>
+                        </div>
+                        <div class="coa-card coa-cogs">
+                            <div class="range">50000–59999</div>
+                            <h3>&#x1F3ED; Cost of Goods Sold</h3>
+                            <ul>
+                                <li>Direct Labor</li>
+                                <li>Direct Materials</li>
+                                <li>Subcontractors</li>
+                            </ul>
+                            <small><span class="badge-normal-debit">Normal: Debit</span></small>
+                        </div>
+                        <div class="coa-card coa-expense">
+                            <div class="range">60000–69999</div>
+                            <h3>&#x1F4B8; Expenses</h3>
+                            <ul>
+                                <li>Payroll &amp; Benefits</li>
+                                <li>Marketing &amp; Advertising</li>
+                                <li>Depreciation</li>
+                                <li>Taxes &amp; Licenses</li>
+                            </ul>
+                            <small><span class="badge-normal-debit">Normal: Debit</span></small>
+                        </div>
+                        <div class="coa-card coa-other">
+                            <div class="range">80000–89999</div>
+                            <h3>&#x1F4CB; Other</h3>
+                            <ul>
+                                <li>Other Gains / Losses</li>
+                                <li>Non-operating items</li>
+                            </ul>
+                            <small><span class="badge-normal-credit">Normal: Credit</span></small>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 3: Financial Statement placement -->
+                <section>
+                    <h2>3. Financial Statement Placement</h2>
+                    <div class="flow-row">
+                        <div class="flow-box flow-bs">
+                            <h4>&#x1F4C4; Balance Sheet</h4>
+                            <p>Assets · Liabilities · Equity</p>
+                            <p><small>Snapshot of financial position at a point in time.</small></p>
+                        </div>
+                        <div class="flow-arrow">&#x2195;</div>
+                        <div class="flow-box flow-is">
+                            <h4>&#x1F4CA; Income Statement</h4>
+                            <p>Revenue · COGS · Expenses · Other</p>
+                            <p><small>Performance over a period. Net Income flows to Equity.</small></p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 4: How to link company accounts -->
+                <section>
+                    <h2>4. Linking Company Accounts to the Master</h2>
+                    <div class="phase-list">
+                        <div class="phase-item">
+                            <div class="phase-num">1</div>
+                            <div class="phase-body">
+                                <h4>Open a company account</h4>
+                                <p>Go to Accounting ▸ Configuration ▸ Chart of Accounts and open any account.</p>
+                            </div>
+                        </div>
+                        <div class="phase-item">
+                            <div class="phase-num">2</div>
+                            <div class="phase-body">
+                                <h4>Set the "Master COA Account" field</h4>
+                                <p>Search by code or name in the <em>Master COA Account</em> field added by this module.</p>
+                            </div>
+                        </div>
+                        <div class="phase-item">
+                            <div class="phase-num">3</div>
+                            <div class="phase-body">
+                                <h4>Repeat across all companies</h4>
+                                <p>Every branch should map each of their accounts to the same master account for consolidated reporting.</p>
+                            </div>
+                        </div>
+                        <div class="phase-item">
+                            <div class="phase-num">4</div>
+                            <div class="phase-body">
+                                <h4>Use Company Mappings for bulk management</h4>
+                                <p>The <em>Master COA ▸ Company Mappings</em> screen lets you manage all links in one place, and is the data source for QBO sync.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 5: QBO Sync roadmap -->
+                <section>
+                    <h2>5. QuickBooks Online Integration Roadmap</h2>
+                    <div class="phase-list">
+                        <div class="phase-item">
+                            <div class="phase-num" style="background:#198754">&#x2713;</div>
+                            <div class="phase-body">
+                                <h4>Phase 1 — Master COA (current)</h4>
+                                <p>Standardised account library loaded. Manual linking of company accounts to master. Dashboards, kanban, journal entry drill-down.</p>
+                            </div>
+                        </div>
+                        <div class="phase-item">
+                            <div class="phase-num" style="background:#fd7e14">2</div>
+                            <div class="phase-body">
+                                <h4>Phase 2 — 2-Way QBO Sync (qbo_bridge)</h4>
+                                <p>Install the <code>qbo_bridge</code> module to enable push/pull of the Chart of Accounts between Odoo and QuickBooks Online. Real-time webhooks + scheduled jobs.</p>
+                            </div>
+                        </div>
+                        <div class="phase-item">
+                            <div class="phase-num" style="background:#6c757d">3</div>
+                            <div class="phase-body">
+                                <h4>Phase 3 — QBO Mirror with Insights</h4>
+                                <p>Full transaction mirroring: invoices, bills, payments, reconciliation. MD-exclusive dashboards (cash flow forecasting, KPI tiles, multi-company P&amp;L) layered on top of QBO data.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <footer class="text-muted text-center mt-4" style="border-top:1px solid #dee2e6; padding-top:1rem;">
+                    MD Portfolio · Master Chart of Accounts v19.0.1.0.0
+                </footer>
+            </div>
+        </t>
+    </template>
+
+</odoo>

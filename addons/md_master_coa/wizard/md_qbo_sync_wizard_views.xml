@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_md_qbo_sync_wizard_form" model="ir.ui.view">
+        <field name="name">md.qbo.sync.wizard.form</field>
+        <field name="model">md.qbo.sync.wizard</field>
+        <field name="arch" type="xml">
+            <form string="QBO Sync — Phase 2">
+                <sheet>
+                    <div class="alert alert-warning" role="alert">
+                        <strong>Phase 2 feature.</strong>
+                        Install the <code>qbo_bridge</code> module to enable live
+                        QuickBooks Online synchronisation.
+                    </div>
+                    <group string="Sync Options">
+                        <field name="sync_direction"/>
+                        <field name="company_ids" widget="many2many_tags"/>
+                        <field name="dry_run"/>
+                    </group>
+                    <group string="Result" invisible="not result_log">
+                        <field name="result_log" nolabel="1" readonly="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_sync" type="object"
+                            string="Run Sync" class="btn-primary"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_md_qbo_sync_wizard" model="ir.actions.act_window">
+        <field name="name">QBO Sync Wizard</field>
+        <field name="res_model">md.qbo.sync.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Add sync menu under Company Mappings -->
+    <menuitem id="menu_md_qbo_sync"
+              name="QBO Sync (Phase 2)"
+              parent="md_master_coa.menu_md_mapping"
+              action="action_md_qbo_sync_wizard"
+              sequence="90"
+              groups="account.group_account_manager"/>
+
+</odoo>

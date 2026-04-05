@@ -1,0 +1,64 @@
+// MD Master Chart of Accounts — backend styles
+
+$coa-colors: (
+    "asset":             #0d6efd,
+    "liability":         #dc3545,
+    "equity":            #198754,
+    "revenue":           #0dcaf0,
+    "cost-of-goods-sold": #fd7e14,
+    "expense":           #ffc107,
+    "other":             #6c757d,
+);
+
+// ── Kanban card headers ──────────────────────────────────────────────────
+.md_master_coa_kanban {
+    @each $cat, $color in $coa-colors {
+        .md_coa_card_#{$cat} {
+            border-left: 5px solid #{$color};
+            padding: 6px 10px 4px;
+            margin: -12px -12px 8px;
+            border-radius: 4px 4px 0 0;
+            background: rgba($color, .08);
+        }
+    }
+
+    .o_kanban_record {
+        padding: 12px;
+        border-radius: 8px;
+        transition: box-shadow .15s;
+
+        &:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .12);
+        }
+    }
+}
+
+// ── Dashboard kanban ─────────────────────────────────────────────────────
+.md_master_coa_dashboard {
+    @each $cat, $color in $coa-colors {
+        .md_dash_card_#{$cat} {
+            border-left: 6px solid #{$color};
+            background: rgba($color, .05);
+        }
+    }
+
+    .o_kanban_record {
+        border-radius: 10px;
+        overflow: hidden;
+
+        &:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, .1);
+            transform: translateY(-2px);
+            transition: all .2s;
+        }
+    }
+}
+
+// ── QBO sync state badge colours ─────────────────────────────────────────
+.o_field_badge {
+    &.qbo_sync_state_synced        { background: #d1e7dd; color: #0f5132; }
+    &.qbo_sync_state_pending_push  { background: #fff3cd; color: #664d03; }
+    &.qbo_sync_state_pending_pull  { background: #cfe2ff; color: #084298; }
+    &.qbo_sync_state_error         { background: #f8d7da; color: #842029; }
+    &.qbo_sync_state_not_synced    { background: #e2e3e5; color: #41464b; }
+}

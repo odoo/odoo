@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── Root menu item (top-level app) ─────────────────────────────── -->
+    <menuitem id="menu_md_master_coa_root"
+              name="Master COA"
+              sequence="5"
+              web_icon="md_master_coa,static/description/icon.svg"
+              groups="account.group_account_user"/>
+
+    <!-- ── COA section ───────────────────────────────────────────────── -->
+    <menuitem id="menu_md_master_coa"
+              name="Chart of Accounts"
+              parent="menu_md_master_coa_root"
+              sequence="10"/>
+
+    <menuitem id="menu_md_master_account_list"
+              name="All Accounts"
+              parent="menu_md_master_coa"
+              action="action_md_master_account"
+              sequence="10"/>
+
+    <menuitem id="menu_md_master_account_dashboard"
+              name="Dashboard"
+              parent="menu_md_master_coa"
+              action="action_md_master_account_dashboard"
+              sequence="20"/>
+
+    <!-- ── Mapping section ───────────────────────────────────────────── -->
+    <menuitem id="menu_md_mapping"
+              name="Company Mappings"
+              parent="menu_md_master_coa_root"
+              sequence="20"/>
+
+    <menuitem id="menu_md_account_mapping_list"
+              name="All Mappings"
+              parent="menu_md_mapping"
+              action="action_md_account_mapping"
+              sequence="10"/>
+
+    <!-- ── Manual / Help ─────────────────────────────────────────────── -->
+    <menuitem id="menu_md_coa_manual"
+              name="Instructions Manual"
+              parent="menu_md_master_coa_root"
+              action="action_md_coa_manual"
+              sequence="90"
+              groups="account.group_account_user"/>
+
+</odoo>

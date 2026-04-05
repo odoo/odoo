@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SEARCH VIEW
+    ═══════════════════════════════════════════════════════════════════ -->
+    <record id="view_md_master_account_search" model="ir.ui.view">
+        <field name="name">md.master.account.search</field>
+        <field name="model">md.master.account</field>
+        <field name="arch" type="xml">
+            <search string="Master Chart of Accounts">
+                <field name="code" string="Code / Name"
+                       filter_domain="['|', ('code', 'ilike', self), ('description', 'ilike', self)]"/>
+                <field name="description"/>
+                <field name="subcategory"/>
+                <field name="tags"/>
+                <field name="regulatory_mapping"/>
+
+                <!-- Quick filters -->
+                <filter name="filter_header"    string="Headers Only"
+                        domain="[('account_type','=','Header')]"/>
+                <filter name="filter_detail"    string="Detail Only"
+                        domain="[('account_type','=','Detail')]"/>
+                <separator/>
+                <filter name="filter_asset"     string="Assets"
+                        domain="[('category','=','Asset')]"/>
+                <filter name="filter_liability" string="Liabilities"
+                        domain="[('category','=','Liability')]"/>
+                <filter name="filter_equity"    string="Equity"
+                        domain="[('category','=','Equity')]"/>
+                <filter name="filter_revenue"   string="Revenue"
+                        domain="[('category','=','Revenue')]"/>
+                <filter name="filter_cogs"      string="COGS"
+                        domain="[('category','=','Cost of Goods Sold')]"/>
+                <filter name="filter_expense"   string="Expenses"
+                        domain="[('category','=','Expense')]"/>
+                <separator/>
+                <filter name="filter_bs"        string="Balance Sheet"
+                        domain="[('fs_mapping','=','Balance Sheet')]"/>
+                <filter name="filter_is"        string="Income Statement"
+                        domain="[('fs_mapping','=','Income Statement')]"/>
+                <separator/>
+                <filter name="filter_not_synced" string="Not Synced with QBO"
+                        domain="[('qbo_sync_state','=','not_synced')]"/>
+                <filter name="filter_qbo_error"  string="QBO Sync Errors"
+                        domain="[('qbo_sync_state','=','error')]"/>
+                <filter name="filter_inactive"  string="Archived"
+                        domain="[('active','=',False)]"/>
+
+                <!-- Group By -->
+                <group expand="1" string="Group By">
+                    <filter name="group_category"    string="Category"      context="{'group_by': 'category'}"/>
+                    <filter name="group_fs"          string="Fin. Statement" context="{'group_by': 'fs_mapping'}"/>
+                    <filter name="group_type"        string="Account Type"  context="{'group_by': 'account_type'}"/>
+                    <filter name="group_subcategory" string="Subcategory"   context="{'group_by': 'subcategory'}"/>
+                    <filter name="group_cf"          string="Cash Flow"     context="{'group_by': 'cash_flow_classification'}"/>
+                    <filter name="group_qbo"         string="QBO Sync State" context="{'group_by': 'qbo_sync_state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         LIST VIEW
+    ═══════════════════════════════════════════════════════════════════ -->
+    <record id="view_md_master_account_list" model="ir.ui.view">
+        <field name="name">md.master.account.list</field>
+        <field name="model">md.master.account</field>
+        <field name="arch" type="xml">
+            <list string="Master Chart of Accounts"
+                  default_order="code"
+                  decoration-muted="account_type == 'Header'"
+                  decoration-info="category == 'Asset'"
+                  decoration-danger="category == 'Liability'"
+                  decoration-success="category == 'Revenue'"
+                  decoration-warning="category == 'Expense'">
+                <field name="code" string="Code" optional="show"/>
+                <field name="description" string="Account Name"/>
+                <field name="account_type" string="Type" widget="badge"
+                       decoration-secondary="account_type == 'Header'"
+                       decoration-info="account_type == 'Detail'"/>
+                <field name="category" string="Category"/>
+                <field name="subcategory" string="Subcategory" optional="show"/>
+                <field name="fs_mapping" string="Fin. Statement" optional="show"/>
+                <field name="normal_balance" optional="show"/>
+                <field name="cash_flow_classification" string="Cash Flow" optional="show"/>
+                <field name="odoo_account_type" string="Odoo Type" optional="show"/>
+                <field name="qbo_sync_state" string="QBO" widget="badge"
+                       decoration-success="qbo_sync_state == 'synced'"
+                       decoration-warning="qbo_sync_state == 'pending_push' or qbo_sync_state == 'pending_pull'"
+                       decoration-danger="qbo_sync_state == 'error'"
+                       optional="show"/>
+                <field name="company_account_count" string="Co. Accounts" optional="show"/>
+                <field name="move_line_count" string="Entries" optional="show"/>
+                <field name="active" optional="hide" column_invisible="1"/>
+                <field name="color" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         KANBAN VIEW
+    ═══════════════════════════════════════════════════════════════════ -->
+    <record id="view_md_master_account_kanban" model="ir.ui.view">
+        <field name="name">md.master.account.kanban</field>
+        <field name="model">md.master.account</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="category"
+                    class="o_kanban_small_column md_master_coa_kanban"
+                    quick_create="false"
+                    group_create="false">
+                <field name="code"/>
+                <field name="description"/>
+                <field name="account_type"/>
+                <field name="category"/>
+                <field name="subcategory"/>
+                <field name="normal_balance"/>
+                <field name="fs_mapping"/>
+                <field name="qbo_sync_state"/>
+                <field name="company_account_count"/>
+                <field name="move_line_count"/>
+                <field name="color"/>
+                <field name="notes"/>
+
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="o_kanban_card_header md_coa_card_#{record.category.raw_value | replace(' ','-') | lower}">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="o_field_widget fw-bold fs-5 text-truncate"
+                                      style="max-width:80px" t-esc="record.code.value"/>
+                                <span t-if="record.account_type.value == 'Header'"
+                                      class="badge bg-secondary ms-auto">Header</span>
+                                <span t-if="record.account_type.value == 'Detail'"
+                                      class="badge bg-primary ms-auto">Detail</span>
+                            </div>
+                        </div>
+                        <div class="o_kanban_card_content">
+                            <strong t-esc="record.description.value" class="d-block text-truncate"/>
+                            <small class="text-muted" t-esc="record.subcategory.value"/>
+                            <div class="d-flex mt-2 gap-2 flex-wrap">
+                                <span t-if="record.fs_mapping.value"
+                                      class="badge rounded-pill bg-light text-dark border"
+                                      t-esc="record.fs_mapping.value"/>
+                                <span t-if="record.normal_balance.value"
+                                      t-attf-class="badge rounded-pill #{record.normal_balance.value == 'Debit' ? 'bg-info' : 'bg-warning'} text-dark"
+                                      t-esc="record.normal_balance.value"/>
+                            </div>
+                            <div t-if="record.notes.value" class="mt-1">
+                                <small class="text-muted fst-italic text-truncate d-block"
+                                       t-esc="record.notes.value"/>
+                            </div>
+                        </div>
+                        <div class="o_kanban_card_footer d-flex justify-content-between align-items-center">
+                            <div class="d-flex gap-3">
+                                <span t-if="record.company_account_count.value" class="text-muted small">
+                                    <i class="fa fa-building-o me-1"/>
+                                    <t t-esc="record.company_account_count.value"/>
+                                </span>
+                                <span t-if="record.move_line_count.value" class="text-muted small">
+                                    <i class="fa fa-list me-1"/>
+                                    <t t-esc="record.move_line_count.value"/>
+                                </span>
+                            </div>
+                            <span t-if="record.qbo_sync_state.value != 'not_synced'"
+                                  t-attf-class="badge #{record.qbo_sync_state.value == 'synced' ? 'bg-success' : record.qbo_sync_state.value == 'error' ? 'bg-danger' : 'bg-warning text-dark'}">
+                                QBO
+                            </span>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         FORM VIEW
+    ═══════════════════════════════════════════════════════════════════ -->
+    <record id="view_md_master_account_form" model="ir.ui.view">
+        <field name="name">md.master.account.form</field>
+        <field name="model">md.master.account</field>
+        <field name="arch" type="xml">
+            <form string="Master Account">
+                <header>
+                    <button name="action_push_to_qbo"
+                            string="Push to QBO"
+                            type="object"
+                            class="btn-primary"
+                            invisible="qbo_sync_state == 'synced'"
+                            groups="account.group_account_manager"/>
+                    <field name="qbo_sync_state" widget="statusbar"
+                           statusbar_visible="not_synced,pending_push,synced"/>
+                </header>
+                <sheet>
+                    <!-- Smart buttons -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_company_accounts"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-building-o"
+                                invisible="company_account_count == 0">
+                            <field name="company_account_count" widget="statinfo"
+                                   string="Co. Accounts"/>
+                        </button>
+                        <button name="action_view_move_lines"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-list-alt"
+                                invisible="move_line_count == 0">
+                            <field name="move_line_count" widget="statinfo"
+                                   string="Journal Items"/>
+                        </button>
+                        <button name="action_view_mappings"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-exchange">
+                            <field name="mapping_count" widget="statinfo"
+                                   string="QBO Mappings"/>
+                        </button>
+                        <button name="action_view_child_accounts"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-sitemap"
+                                invisible="child_count == 0">
+                            <field name="child_count" widget="statinfo"
+                                   string="Sub-accounts"/>
+                        </button>
+                    </div>
+
+                    <!-- Title area -->
+                    <div class="oe_title">
+                        <label for="code" string="Account Code"/>
+                        <h1 class="d-flex align-items-center gap-2">
+                            <field name="code" class="o_field_widget fw-bold"
+                                   placeholder="e.g. 10100" style="max-width:160px"/>
+                            <span class="text-muted mx-2">—</span>
+                            <field name="description" placeholder="Account Name"
+                                   class="flex-grow-1"/>
+                        </h1>
+                        <div class="d-flex gap-2 mt-1">
+                            <field name="account_type" widget="badge"
+                                   decoration-secondary="account_type == 'Header'"
+                                   decoration-info="account_type == 'Detail'"/>
+                            <field name="category" widget="badge"/>
+                            <field name="normal_balance" widget="badge"
+                                   decoration-info="normal_balance == 'Debit'"
+                                   decoration-warning="normal_balance == 'Credit'"/>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Classification">
+                            <field name="parent_id" options="{'no_quick_create': True}"/>
+                            <field name="fs_mapping"/>
+                            <field name="subcategory"/>
+                            <field name="cash_flow_classification"/>
+                            <field name="cost_center"/>
+                            <field name="gaap_classification"/>
+                            <field name="odoo_account_type"
+                                   help="Used when auto-creating company accounts from this master."/>
+                        </group>
+                        <group string="QBO Synchronisation">
+                            <field name="qbo_account_id"/>
+                            <field name="qbo_account_type"/>
+                            <field name="qbo_last_sync" widget="datetime"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <!-- Tab 1: Full description & notes -->
+                        <page string="Description" name="description_tab">
+                            <group>
+                                <field name="long_description" nolabel="1"
+                                       placeholder="Full account description…"
+                                       widget="html"/>
+                            </group>
+                            <group>
+                                <field name="detailed_description" nolabel="1"
+                                       placeholder="Detailed posting instructions…"/>
+                            </group>
+                            <group string="Notes">
+                                <field name="notes" nolabel="1"
+                                       placeholder="Internal notes, special handling…"/>
+                            </group>
+                        </page>
+
+                        <!-- Tab 2: Compliance & metadata -->
+                        <page string="Compliance &amp; References" name="compliance_tab">
+                            <group>
+                                <group string="Regulatory">
+                                    <field name="regulatory_mapping" nolabel="1"
+                                           placeholder="IFRS / ASC references…"/>
+                                </group>
+                                <group string="Tagging">
+                                    <field name="tags" placeholder="asset, current, debit…"/>
+                                    <field name="default_vendors"
+                                           placeholder="Vendor A, Vendor B…"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Effectivity">
+                                    <field name="start_date"/>
+                                    <field name="end_date"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Tab 3: Sub-accounts (children) -->
+                        <page string="Sub-accounts" name="children_tab"
+                              invisible="account_type != 'Header'">
+                            <field name="child_ids" nolabel="1">
+                                <list>
+                                    <field name="code"/>
+                                    <field name="description"/>
+                                    <field name="subcategory"/>
+                                    <field name="normal_balance"/>
+                                    <field name="odoo_account_type"/>
+                                    <field name="company_account_count" string="Linked"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <!-- Tab 4: QBO Mappings -->
+                        <page string="Company Mappings" name="mappings_tab">
+                            <field name="mapping_ids" nolabel="1"
+                                   context="{'default_master_account_id': active_id}">
+                                <list editable="bottom">
+                                    <field name="company_id"/>
+                                    <field name="account_id"
+                                           domain="[('company_ids', 'in', [company_id])]"/>
+                                    <field name="qbo_account_id"/>
+                                    <field name="qbo_account_name"/>
+                                    <field name="sync_state" widget="badge"
+                                           decoration-success="sync_state == 'synced'"
+                                           decoration-danger="sync_state == 'error'"
+                                           decoration-warning="sync_state == 'conflict'"/>
+                                    <field name="last_sync" widget="datetime" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         DASHBOARD / OVERVIEW KANBAN  (grouped by header accounts)
+    ═══════════════════════════════════════════════════════════════════ -->
+    <record id="view_md_master_account_dashboard" model="ir.ui.view">
+        <field name="name">md.master.account.dashboard</field>
+        <field name="model">md.master.account</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="category"
+                    class="md_master_coa_dashboard"
+                    group_create="false"
+                    quick_create="false"
+                    sample="1">
+                <field name="code"/>
+                <field name="description"/>
+                <field name="account_type"/>
+                <field name="category"/>
+                <field name="fs_mapping"/>
+                <field name="child_count"/>
+                <field name="company_account_count"/>
+                <field name="move_line_count"/>
+                <field name="color"/>
+
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="o_kanban_card_content md_dash_card_#{record.category.raw_value | replace(' ','-') | lower} p-2">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <span class="fw-bold text-primary" t-esc="record.code.value"/>
+                                    <strong class="d-block" t-esc="record.description.value"/>
+                                </div>
+                                <span t-if="record.account_type.value == 'Header'"
+                                      class="badge bg-secondary">H</span>
+                            </div>
+                            <div class="mt-2 row text-center g-0">
+                                <div class="col border-end">
+                                    <div class="fw-bold fs-5" t-esc="record.child_count.value or 0"/>
+                                    <small class="text-muted">Sub-accounts</small>
+                                </div>
+                                <div class="col border-end">
+                                    <div class="fw-bold fs-5" t-esc="record.company_account_count.value or 0"/>
+                                    <small class="text-muted">Companies</small>
+                                </div>
+                                <div class="col">
+                                    <div class="fw-bold fs-5" t-esc="record.move_line_count.value or 0"/>
+                                    <small class="text-muted">Entries</small>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         ACTIONS
+    ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- Main action: list/kanban/form -->
+    <record id="action_md_master_account" model="ir.actions.act_window">
+        <field name="name">Master Chart of Accounts</field>
+        <field name="res_model">md.master.account</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="view_md_master_account_search"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Master Chart of Accounts is empty!
+            </p>
+            <p>
+                Install the module data to load the 345 standard MD Portfolio accounts,
+                or create accounts manually.
+            </p>
+        </field>
+    </record>
+
+    <!-- Action: dashboard -->
+    <record id="action_md_master_account_dashboard" model="ir.actions.act_window">
+        <field name="name">COA Dashboard</field>
+        <field name="res_model">md.master.account</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="view_id" ref="view_md_master_account_dashboard"/>
+        <field name="search_view_id" ref="view_md_master_account_search"/>
+        <field name="context">{'search_default_filter_header': 1}</field>
+    </record>
+
+    <!-- Action: children (for smart button) -->
+    <record id="action_md_master_account_child" model="ir.actions.act_window">
+        <field name="name">Sub-accounts</field>
+        <field name="res_model">md.master.account</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('parent_id', '=', active_id)]</field>
+        <field name="search_view_id" ref="view_md_master_account_search"/>
+    </record>
+
+</odoo>

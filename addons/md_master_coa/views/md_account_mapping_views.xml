@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_md_account_mapping_list" model="ir.ui.view">
+        <field name="name">md.account.mapping.list</field>
+        <field name="model">md.account.mapping</field>
+        <field name="arch" type="xml">
+            <list string="Company Mappings"
+                  decoration-danger="sync_state == 'error'"
+                  decoration-warning="sync_state == 'conflict'"
+                  decoration-success="sync_state == 'synced'">
+                <field name="master_account_id" options="{'no_quick_create': True}"/>
+                <field name="master_code" string="Master Code"/>
+                <field name="master_category" string="Category"/>
+                <field name="company_id"/>
+                <field name="account_id"/>
+                <field name="qbo_account_id" string="QBO ID" optional="show"/>
+                <field name="qbo_account_name" string="QBO Name" optional="show"/>
+                <field name="qbo_account_type" string="QBO Type" optional="show"/>
+                <field name="sync_state" widget="badge"
+                       decoration-success="sync_state == 'synced'"
+                       decoration-warning="sync_state == 'conflict'"
+                       decoration-danger="sync_state == 'error'"/>
+                <field name="last_sync" widget="datetime" optional="show"/>
+                <button name="action_sync_to_qbo" type="object"
+                        string="Sync" icon="fa-refresh"
+                        invisible="sync_state == 'synced'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_md_account_mapping_form" model="ir.ui.view">
+        <field name="name">md.account.mapping.form</field>
+        <field name="model">md.account.mapping</field>
+        <field name="arch" type="xml">
+            <form string="Company Mapping">
+                <header>
+                    <button name="action_sync_to_qbo" type="object"
+                            string="Sync to QBO" class="btn-primary"
+                            invisible="sync_state == 'synced'"/>
+                    <field name="sync_state" widget="statusbar"
+                           statusbar_visible="not_synced,synced"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Master Account">
+                            <field name="master_account_id" options="{'no_quick_create': True}"/>
+                            <field name="master_code" readonly="1"/>
+                            <field name="master_category" readonly="1"/>
+                        </group>
+                        <group string="Company Account">
+                            <field name="company_id"/>
+                            <field name="account_id"
+                                   domain="[('company_ids', 'in', [company_id])]"/>
+                        </group>
+                    </group>
+                    <group string="QuickBooks Online (Phase 2)">
+                        <group>
+                            <field name="qbo_account_id"/>
+                            <field name="qbo_account_name"/>
+                            <field name="qbo_account_type"/>
+                        </group>
+                        <group>
+                            <field name="qbo_sub_account"/>
+                            <field name="is_active_qbo"/>
+                            <field name="last_sync" widget="datetime" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Sync Log" invisible="not sync_log">
+                        <field name="sync_log" nolabel="1" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_md_account_mapping_search" model="ir.ui.view">
+        <field name="name">md.account.mapping.search</field>
+        <field name="model">md.account.mapping</field>
+        <field name="arch" type="xml">
+            <search string="Company Mappings">
+                <field name="master_account_id"/>
+                <field name="company_id"/>
+                <field name="account_id"/>
+                <filter name="filter_synced"   string="Synced"      domain="[('sync_state','=','synced')]"/>
+                <filter name="filter_error"    string="Errors"      domain="[('sync_state','=','error')]"/>
+                <filter name="filter_conflict" string="Conflicts"   domain="[('sync_state','=','conflict')]"/>
+                <filter name="filter_pending"  string="Not Synced"  domain="[('sync_state','=','not_synced')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_company"  string="Company"   context="{'group_by': 'company_id'}"/>
+                    <filter name="group_category" string="Category"  context="{'group_by': 'master_category'}"/>
+                    <filter name="group_state"    string="Sync State" context="{'group_by': 'sync_state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_md_account_mapping" model="ir.actions.act_window">
+        <field name="name">Company Mappings</field>
+        <field name="res_model">md.account.mapping</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_md_account_mapping_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No mappings yet</p>
+            <p>Map each master account to the corresponding account in each company branch.
+               QBO sync will use these mappings in Phase 2.</p>
+        </field>
+    </record>
+
+</odoo>
