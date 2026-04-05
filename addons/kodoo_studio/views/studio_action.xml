@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="action_backend_theme_modules" model="ir.actions.act_window">
+        <field name="name">Backend Themes</field>
+        <field name="res_model">ir.module.module</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="base.view_module_filter"/>
+        <field name="domain">[('name', 'in', ['dark_mode_backend', 'multicolor_backend_theme', 'odx_community_theme', 'theme_liquid_glass'])]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No backend themes found.
+            </p>
+            <p>
+                Manage Kodoo backend visual layers here without exposing them as standalone apps.
+            </p>
+        </field>
+    </record>
+
     <record id="action_kodoo_studio" model="ir.actions.client">
         <field name="name">Studio</field>
         <field name="tag">kodoo_studio</field>

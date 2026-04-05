@@ -22,7 +22,7 @@
 {
     'name': 'Liquid Glass Backend Theme',
     'version': '19.0.1.0.0',
-    'category': 'Customization/Backend',
+    'category': 'Technical/Backend Theme',
     'summary': 'Modern glassmorphism backend theme for Odoo',
     'description': """
         Liquid Glass Backend Theme
@@ -55,6 +55,6 @@
         'static/description/icon.png'
     ],
     'installable': True,
-    'application': True,
+    'application': False,
     'auto_install': False,
 }

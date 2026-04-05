@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem
-        id="menu_dark_mode_backend_root"
-        name="Dark Mode"
-        action="base.action_res_users_my"
-        sequence="951"
-        groups="base.group_user"
-        web_icon="dark_mode_backend,static/description/icon.png"/>
+    <record id="menu_dark_mode_backend_root" model="ir.ui.menu">
+        <field name="name">Dark Mode</field>
+        <field name="parent_id" ref="base.menu_administration"/>
+        <field name="action" ref="base.action_res_users_my"/>
+        <field name="sequence">95</field>
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+        <field name="web_icon" eval="False"/>
+    </record>
 
-    <menuitem
-        id="menu_dark_mode_backend_preferences"
-        name="Preferences"
-        parent="menu_dark_mode_backend_root"
-        action="base.action_res_users_my"
-        sequence="10"
-        groups="base.group_user"/>
+    <record id="menu_dark_mode_backend_preferences" model="ir.ui.menu">
+        <field name="parent_id" ref="dark_mode_backend.menu_dark_mode_backend_root"/>
+        <field name="action" ref="base.action_res_users_my"/>
+        <field name="sequence">10</field>
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_no_one')])]"/>
+        <field name="web_icon" eval="False"/>
+    </record>
 </odoo>

@@ -9,7 +9,7 @@ A fully customized backend theme for Odoo 19 community edition using Odx UI comp
     'website': 'https://www.odxbuilder.com/',
     'support': 'support@odxbuilder.com',
     'license': 'LGPL-3',
-    'category': 'Themes/Backend',
+    'category': 'Technical/Backend Theme',
     'depends': [
         'base',
         'web',

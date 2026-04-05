@@ -52,27 +52,29 @@
         <field name="search_view_id" ref="view_theme_config_search"/>
     </record>
 
-    <menuitem
-        id="menu_multicolor_backend_theme_root"
-        name="Multicolor"
-        action="base.action_res_users_my"
-        sequence="952"
-        groups="base.group_user"
-        web_icon="multicolor_backend_theme,static/description/icon.png"/>
+    <record id="menu_multicolor_backend_theme_root" model="ir.ui.menu">
+        <field name="name">Multicolor</field>
+        <field name="parent_id" ref="base.menu_administration"/>
+        <field name="action" ref="base.action_res_users_my"/>
+        <field name="sequence">96</field>
+        <field name="groups_id" eval="[(6, 0, [ref('multicolor_backend_theme.multicolor_theme_manager_access')])]"/>
+        <field name="web_icon" eval="False"/>
+    </record>
 
-    <menuitem
-        id="menu_multicolor_backend_theme_preferences"
-        name="Preferences"
-        parent="menu_multicolor_backend_theme_root"
-        action="base.action_res_users_my"
-        sequence="5"
-        groups="base.group_user"/>
+    <record id="menu_multicolor_backend_theme_preferences" model="ir.ui.menu">
+        <field name="parent_id" ref="multicolor_backend_theme.menu_multicolor_backend_theme_root"/>
+        <field name="action" ref="base.action_res_users_my"/>
+        <field name="sequence">5</field>
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_no_one')])]"/>
+        <field name="web_icon" eval="False"/>
+    </record>
 
-    <menuitem
-        id="menu_theme_config"
-        name="Multicolor Themes"
-        parent="menu_multicolor_backend_theme_root"
-        action="action_theme_config"
-        sequence="10"
-        groups="multicolor_backend_theme.multicolor_theme_manager_access"/>
+    <record id="menu_theme_config" model="ir.ui.menu">
+        <field name="name">Multicolor Themes</field>
+        <field name="parent_id" ref="multicolor_backend_theme.menu_multicolor_backend_theme_root"/>
+        <field name="action" ref="multicolor_backend_theme.action_theme_config"/>
+        <field name="sequence">10</field>
+        <field name="groups_id" eval="[(6, 0, [ref('multicolor_backend_theme.multicolor_theme_manager_access')])]"/>
+        <field name="web_icon" eval="False"/>
+    </record>
 </odoo>

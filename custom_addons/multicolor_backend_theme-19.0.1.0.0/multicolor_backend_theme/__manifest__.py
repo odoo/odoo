@@ -22,7 +22,7 @@
 {
     "name": "Chameleon Multi Color Backend Theme",
     "version": "19.0.1.0.0",
-    "category": "Customization/Backend",
+    "category": "Technical/Backend Theme",
     "summary": "Be a chameleon with your Kodoo backend! Customize it with a vibrant palette of colors. ",
     "description": """
         Configurable multi color backend theme for Odoo 19, 
@@ -65,5 +65,5 @@
     'license': 'LGPL-3',
     'installable': True,
     'auto_install': False,
-    'application': True,
+    'application': False,
 }

@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <record id="action_backend_theme_modules" model="ir.actions.act_window">
+            <field name="name">Backend Themes</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="search_view_id" ref="base.view_module_filter"/>
+            <field name="domain">[('name', 'in', ['dark_mode_backend', 'multicolor_backend_theme', 'odx_community_theme', 'theme_liquid_glass'])]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No backend themes found.
+                </p>
+                <p>
+                    This catalog centralizes backend visual layers in Kodoo settings instead of exposing them as standalone apps.
+                </p>
+            </field>
+        </record>
         <record id="view_app_theme_config_settings" model="ir.ui.view">
             <field name="name">res.config.settings.view.form.inherit.app_odoo_customize</field>
             <field name="model">res.config.settings</field>
@@ -103,6 +118,22 @@
                             <div>
                                 <field name="app_enterprise_url" class="oe_inline"/>
                                 <button string="Apply to modules" type="object" name="set_module_url" class="ml8 oe_highlight"/>
+                            </div>
+                        </group>
+                        <group string="Backend Themes">
+                            <div class="mt8">
+                                <button
+                                    type="action"
+                                    name="%(app_odoo_customize.action_backend_theme_modules)d"
+                                    string="Open backend theme catalog"
+                                    class="btn-link"
+                                    icon="oi-arrow-right"
+                                />
+                            </div>
+                            <div>
+                                <span class="text-muted">
+                                    Install, upgrade or remove backend themes from the Kodoo area without turning them into standalone apps.
+                                </span>
                             </div>
                         </group>
                     </div>

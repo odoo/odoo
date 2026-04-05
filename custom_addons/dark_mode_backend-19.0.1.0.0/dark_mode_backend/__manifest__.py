@@ -22,7 +22,7 @@
 {
     "name": "Dark Mode Backend Theme",
     "version": "19.0.1.0.0",
-    "category": "Customization/Backend",
+    "category": "Technical/Backend Theme",
     "summary": "Dark Mode Backend Theme for Odoo 19 community edition",
     "description": "Minimalist and elegant backend theme for Odoo 19,"
                    "Backend Theme, Theme",
@@ -53,5 +53,5 @@
     'license': 'AGPL-3',
     'installable': True,
     'auto_install': False,
-    'application': True,
+    'application': False,
 }
