@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="about_us_main_service" name="Main Service">
+        <section class="w-100 float-left  section-our-main-service">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h3 class="text-dark w-100 float-left text-center pt-5 pb-5">
+                            What Facilities We Provided
+                        </h3>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="about-service-container mt-4 p-4 float-left w-100">
+                            <img style="width: 50px;"
+                                 src="/theme_medicate/static/src/img/cardiology-about-services.png"/>
+                            <h4 class="pt-2">Cardiology</h4>
+                            <p class="pt-1">Lorem ipsum dolor sit amet,
+                                consectetur
+                                adipiscing elit. In in tincidunt diam. Mauris
+                                justo erat, scelerisque non ante nec
+                            </p>
+                            <div class="additional-services"
+                                 t-att-style="'display:' + ('block' if show_additional_services else 'none')">
+                                <p>Cardiology focuses on the diagnosis and
+                                    treatment of heart and vascular diseases.
+                                    Cardiologists manage conditions like heart
+                                    attacks, high blood pressure,
+                                    arrhythmias, and cholesterol issues. Using
+                                    advanced tools like ECGs and
+                                    echocardiograms, they monitor heart health
+                                    and provide treatments ranging from
+                                    medications to surgeries, improving
+                                    patients' overall cardiovascular well-being.
+
+                                </p>
+                            </div>
+                            <a href="#"
+                               class="read-more-toggle service-btn text-decoration-none text-dark pt-2">
+                                <span class="read-more-text">
+                                    <t t-esc="'&#160;&#160;Read more &#160;&#160; +&#160;&#160;' if not show_additional_services else '&#160;&#160;Read less &#160;&#160; -&#160;&#160;'"/>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="about-service-container mt-4 p-4 float-left w-100">
+                            <img style="width: 50px;"
+                                 src="/theme_medicate/static/src/img/Entocronology-about-services.png"/>
+                            <h4 class="pt-2">Endocrinology</h4>
+                            <p class="pt-1">Lorem ipsum dolor sit amet,
+                                consectetur
+                                adipiscing elit. In in tincidunt diam. Mauris
+                                justo erat, scelerisque non ante nec
+                            </p>
+                            <div class="additional-services"
+                                 t-att-style="'display:' + ('block' if show_additional_services else 'none')">
+                                <p>Endocrinology is the study of the endocrine
+                                    system, which controls hormone production
+                                    in glands like the thyroid, pancreas, and
+                                    adrenal glands. Endocrinologists treat
+                                    conditions such as diabetes, thyroid
+                                    disorders, and hormonal imbalances. They use
+                                    tests and treatments to manage these
+                                    conditions, helping patients maintain
+                                    balanced
+                                    hormone levels and improve their quality of
+                                    life.
+                                </p>
+                            </div>
+                            <a href="#"
+                               class="read-more-toggle service-btn text-decoration-none text-dark pt-2">
+                                <span class="read-more-text">
+                                    <t t-esc="'&#160;&#160;Read more &#160;&#160; +&#160;&#160;' if not show_additional_services else '&#160;&#160;Read less &#160;&#160; -&#160;&#160;'"/>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="about-service-container mt-4 p-4 float-left w-100">
+                            <img style="width: 50px;"
+                                 src="/theme_medicate/static/src/img/Angio-plasty-about-services.png"/>
+                            <h4 class="pt-2">Angioplasty</h4>
+                            <p class="pt-1">Lorem ipsum dolor sit amet,
+                                consectetur
+                                adipiscing elit. In in tincidunt diam. Mauris
+                                justo erat, scelerisque non ante nec
+                            </p>
+                            <div class="additional-services"
+                                 t-att-style="'display:' + ('block' if show_additional_services else 'none')">
+                                <p>Angioplasty is a medical procedure used to
+                                    open blocked or narrowed blood vessels,
+                                    typically in the heart. It involves
+                                    inserting a balloon catheter into the
+                                    affected
+                                    artery, which is then inflated to widen the
+                                    vessel and restore normal blood flow. In
+                                    many cases, a stent is also placed to keep
+                                    the artery open. Angioplasty is commonly
+                                    performed to treat coronary artery disease
+                                    and reduce the risk of heart attacks,
+                                    improving overall heart function and
+                                    circulation.
+
+                                </p>
+                            </div>
+                            <a href="#"
+                               class="read-more-toggle service-btn text-decoration-none text-dark pt-2">
+                                <span class="read-more-text">
+                                    <t t-esc="'&#160;&#160;Read more &#160;&#160; +&#160;&#160;' if not show_additional_services else '&#160;&#160;Read less &#160;&#160; -&#160;&#160;'"/>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="about-service-container mt-4 p-4 float-left w-100">
+                            <img style="width: 50px;"
+                                 src="/theme_medicate/static/src/img/eye-care-about-services.png"/>
+                            <h4 class="pt-2">Eye Care</h4>
+                            <p class="pt-1">Lorem ipsum dolor sit amet,
+                                consectetur
+                                adipiscing elit. In in tincidunt diam. Mauris
+                                justo erat, scelerisque non ante nec
+                            </p>
+                            <div class="additional-services"
+                                 t-att-style="'display:' + ('block' if show_additional_services else 'none')">
+                                <p>Eye care involves the prevention, diagnosis,
+                                    and treatment of various eye conditions
+                                    to maintain healthy vision. It includes
+                                    routine eye exams, treatments for common
+                                    issues like cataracts, glaucoma, and
+                                    refractive errors, and management of more
+                                    serious conditions such as retinal diseases.
+                                    Optometrists and ophthalmologists work
+                                    together to ensure comprehensive care,
+                                    offering services like vision correction,
+                                    eye
+                                    surgeries, and preventive measures to
+                                    protect eye health and enhance quality of
+                                    life.
+                                </p>
+                            </div>
+                            <a href="#"
+                               class="read-more-toggle service-btn text-decoration-none text-dark pt-2">
+                                <span class="read-more-text">
+                                    <t t-esc="'&#160;&#160;Read more &#160;&#160; +&#160;&#160;' if not show_additional_services else '&#160;&#160;Read less &#160;&#160; -&#160;&#160;'"/>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="about-service-container mt-4 p-4 float-left w-100">
+                            <img style="width: 50px;"
+                                 src="/theme_medicate/static/src/img/neourology-about-services.png"/>
+                            <h4 class="pt-2">Neurology</h4>
+                            <p class="pt-1">Lorem ipsum dolor sit amet,
+                                consectetur
+                                adipiscing elit. In in tincidunt diam. Mauris
+                                justo erat, scelerisque non ante nec
+                            </p>
+                            <div class="additional-services"
+                                 t-att-style="'display:' + ('block' if show_additional_services else 'none')">
+                                <p>Neurology is the branch of medicine that
+                                    focuses on the diagnosis and treatment of
+                                    disorders related to the brain, spinal cord,
+                                    and nervous system. Neurologists manage
+                                    conditions such as strokes, epilepsy,
+                                    multiple sclerosis, Parkinson’s disease, and
+                                    headaches. Through various tests like MRIs,
+                                    EEGs, and lumbar punctures, they assess
+                                    neurological health and provide treatments
+                                    ranging from medications to surgical
+                                    interventions, helping patients improve
+                                    their neurological function and quality of
+                                    life.
+                                </p>
+                            </div>
+                            <a href="#"
+                               class="read-more-toggle service-btn text-decoration-none text-dark pt-2">
+                                <span class="read-more-text">
+                                    <t t-esc="'&#160;&#160;Read more &#160;&#160; +&#160;&#160;' if not show_additional_services else '&#160;&#160;Read less &#160;&#160; -&#160;&#160;'"/>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 ">
+                        <div class="about-service-container mt-4 p-4 float-left w-100">
+                            <img style="width: 50px;"
+                                 src="/theme_medicate/static/src/img/orthopedics-about-services.png"/>
+                            <h4 class="pt-2">Orthopaedics</h4>
+                            <p class="pt-1">Lorem ipsum dolor sit amet,
+                                consectetur
+                                adipiscing elit. In in tincidunt diam. Mauris
+                                justo erat, scelerisque non ante nec
+                            </p>
+                            <div class="additional-services"
+                                 t-att-style="'display:' + ('block' if show_additional_services else 'none')">
+                                <p>Orthopaedics is a medical specialty focused
+                                    on diagnosing, treating, and preventing
+                                    musculoskeletal disorders, which affect the
+                                    bones, joints, muscles, tendons, and
+                                    ligaments. Orthopaedic surgeons treat
+                                    conditions such as fractures, arthritis,
+                                    scoliosis, and sports injuries. They use a
+                                    combination of non-surgical treatments,
+                                    physical therapy, and surgical procedures
+                                    like joint replacements and spinal
+                                    surgeries to improve mobility, reduce pain,
+                                    and restore function.
+                                </p>
+                            </div>
+                            <a href="#"
+                               class="read-more-toggle service-btn text-decoration-none text-dark pt-2">
+                                <span class="read-more-text">
+                                    <t t-esc="'&#160;&#160;Read more &#160;&#160; +&#160;&#160;' if not show_additional_services else '&#160;&#160;Read less &#160;&#160; -&#160;&#160;'"/>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>
