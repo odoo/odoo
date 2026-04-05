@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Calendar">
+        <div
+            t-att-id="calendarId"
+            t-att-class="classes"
+            t-att-aria-label="props.ariaLabel || 'Calendar'"
+            t-att-data-dir="direction"
+            t-att-dir="direction"
+        >
+            <div class="odx-calendar__months">
+                <t t-foreach="visibleMonths" t-as="month" t-key="getMonthKey(month)">
+                    <section class="odx-calendar__month" t-att-data-dir="direction" t-att-dir="direction">
+                        <div class="odx-calendar__header">
+                            <button
+                                t-if="showPreviousNav(month_index)"
+                                class="odx-calendar__nav-button"
+                                type="button"
+                                t-att-data-dir="direction"
+                                t-att-dir="direction"
+                                aria-label="Previous month"
+                                t-att-disabled="canNavigatePrevious() ? undefined : true"
+                                t-on-click="() => handleNavigateMonth(-1)"
+                            >
+                                <svg viewBox="0 0 16 16">
+                                    <path t-att-d="previousNavPath" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/>
+                                </svg>
+                            </button>
+                            <span t-else="" class="odx-calendar__nav-spacer" aria-hidden="true"/>
+                            <div t-att-id="getCaptionId(month_index)" class="odx-calendar__caption">
+                                <t t-esc="getMonthLabel(month)"/>
+                            </div>
+                            <button
+                                t-if="showNextNav(month_index)"
+                                class="odx-calendar__nav-button"
+                                type="button"
+                                t-att-data-dir="direction"
+                                t-att-dir="direction"
+                                aria-label="Next month"
+                                t-att-disabled="canNavigateNext() ? undefined : true"
+                                t-on-click="() => handleNavigateMonth(1)"
+                            >
+                                <svg viewBox="0 0 16 16">
+                                    <path t-att-d="nextNavPath" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/>
+                                </svg>
+                            </button>
+                            <span t-else="" class="odx-calendar__nav-spacer" aria-hidden="true"/>
+                        </div>
+
+                        <div class="odx-calendar__grid" role="grid" t-att-data-dir="direction" t-att-dir="direction" t-att-aria-labelledby="getCaptionId(month_index)">
+                            <div class="odx-calendar__weekdays" role="row">
+                                <t t-foreach="weekdayLabels" t-as="label" t-key="label_index">
+                                    <div class="odx-calendar__weekday" role="columnheader">
+                                        <t t-esc="label"/>
+                                    </div>
+                                </t>
+                            </div>
+
+                            <div class="odx-calendar__weeks" role="rowgroup">
+                                <t t-foreach="getWeeksForMonth(month)" t-as="week" t-key="getWeekKey(week)">
+                                    <div class="odx-calendar__week" role="row">
+                                        <t t-foreach="week" t-as="day" t-key="getDayKey(day)">
+                                            <div
+                                                class="odx-calendar__cell"
+                                                role="gridcell"
+                                                t-att-aria-selected="isSelected(day.date) ? 'true' : 'false'"
+                                                t-att-data-outside="day.isOutside ? 'true' : undefined"
+                                            >
+                                                <button
+                                                    t-att-id="getDayId(day.date)"
+                                                    t-att-class="getDayClasses(day)"
+                                                    type="button"
+                                                    t-att-tabindex="getDayTabIndex(day)"
+                                                    t-att-disabled="isDisabled(day.date) || isHidden(day) ? true : undefined"
+                                                    t-att-aria-label="getDayLabel(day.date)"
+                                                    t-att-aria-current="isToday(day.date) ? 'date' : undefined"
+                                                    t-att-aria-pressed="isSelected(day.date) ? 'true' : 'false'"
+                                                    t-on-focus="() => handleDayFocus(day.date)"
+                                                    t-on-keydown="(ev) => handleDayKeydown(day.date, ev)"
+                                                    t-on-click="() => handleSelectDate(day.date)"
+                                                >
+                                                    <t t-esc="getDayNumber(day)"/>
+                                                </button>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </section>
+                </t>
+            </div>
+
+            <input
+                t-if="props.name &amp;&amp; mode === 'single' &amp;&amp; selectedDate"
+                type="hidden"
+                t-att-name="getHiddenInputName('value')"
+                t-att-value="selectedIsoValue"
+            />
+            <input
+                t-if="props.name &amp;&amp; mode === 'range' &amp;&amp; selectedRange &amp;&amp; selectedRange.from"
+                type="hidden"
+                t-att-name="getHiddenInputName('from')"
+                t-att-value="selectedIsoRange.from"
+            />
+            <input
+                t-if="props.name &amp;&amp; mode === 'range' &amp;&amp; selectedRange &amp;&amp; selectedRange.to"
+                type="hidden"
+                t-att-name="getHiddenInputName('to')"
+                t-att-value="selectedIsoRange.to"
+            />
+        </div>
+    </t>
+</templates>

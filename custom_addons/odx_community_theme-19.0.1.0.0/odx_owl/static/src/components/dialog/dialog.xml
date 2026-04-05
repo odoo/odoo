@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Dialog">
+        <span
+            t-if="props.slots and props.slots.trigger"
+            class="odx-dialog__trigger"
+            t-on-click="openDialog"
+        >
+            <t t-slot="trigger"/>
+        </span>
+
+        <t t-if="isOpen" t-portal="'body'">
+            <div t-ref="portalRef" class="odx-dialog__portal" data-state="open">
+                <t t-if="props.slots and props.slots.content">
+                    <t t-slot="content"/>
+                </t>
+                <t t-else="">
+                    <DialogOverlay/>
+                    <section
+                        t-att-class="contentClasses"
+                        data-state="open"
+                        t-att-role="props.role"
+                        aria-modal="true"
+                        t-att-aria-labelledby="hasTitle ? state.titleId : undefined"
+                        t-att-aria-describedby="hasDescription ? state.descriptionId : undefined"
+                    >
+                        <t t-if="hasHeader">
+                            <t t-if="props.slots and props.slots.header">
+                                <t t-slot="header"/>
+                            </t>
+                            <DialogHeader t-else="">
+                                <DialogTitle t-if="props.title" text="props.title"/>
+                                <DialogDescription t-if="props.description" text="props.description"/>
+                            </DialogHeader>
+                        </t>
+
+                        <div class="odx-dialog__body">
+                            <t t-slot="default"/>
+                        </div>
+
+                        <t t-if="props.slots and props.slots.footer">
+                            <t t-slot="footer"/>
+                        </t>
+
+                        <DialogClose t-if="props.showClose"/>
+                    </section>
+                </t>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.DialogHeader">
+        <div t-att-class="classes">
+            <t t-slot="default"/>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.DialogFooter">
+        <div t-att-class="classes">
+            <t t-slot="default"/>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.DialogTitle">
+        <t t-tag="props.tag" t-att-id="id" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.DialogDescription">
+        <t t-tag="props.tag" t-att-id="id" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.DialogClose">
+        <button
+            t-att-class="classes"
+            t-att-type="props.type"
+            t-att-aria-label="props.ariaLabel"
+            t-on-click="onClick"
+        >
+            <t t-slot="default">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6 6L18 18M18 6L6 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"/>
+                </svg>
+            </t>
+        </button>
+    </t>
+
+    <t t-name="odx_owl.DialogTrigger">
+        <t t-tag="props.tag" t-att-class="classes" t-on-click="onClick">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.DialogOverlay">
+        <div
+            t-att-class="classes"
+            data-state="open"
+            t-on-click="onClick"
+            t-on-pointerdown="onPointerDown"
+        />
+    </t>
+
+    <t t-name="odx_owl.DialogContent">
+        <t
+            t-tag="props.tag"
+            t-att-class="classes"
+            t-att-dir="props.dir"
+            data-state="open"
+            t-att-role="role"
+            aria-modal="true"
+            t-att-aria-labelledby="titleId"
+            t-att-aria-describedby="descriptionId"
+        >
+            <t t-slot="default"/>
+        </t>
+    </t>
+</templates>

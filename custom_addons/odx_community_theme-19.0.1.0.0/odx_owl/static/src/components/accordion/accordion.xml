@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Accordion">
+        <div t-att-class="classes" t-att-data-dir="direction" t-att-dir="direction" t-att-data-orientation="props.orientation">
+            <t t-slot="default"/>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.AccordionItem">
+        <section
+            t-att-class="classes"
+            t-att-data-disabled="props.disabled ? '' : undefined"
+            t-att-data-dir="env.odxAccordion.dir"
+            t-att-data-orientation="env.odxAccordion.orientation"
+            t-att-data-state="isOpen ? 'open' : 'closed'"
+        >
+            <t t-slot="default"/>
+        </section>
+    </t>
+
+    <t t-name="odx_owl.AccordionHeader">
+        <h3
+            t-att-class="classes"
+            t-att-data-disabled="isDisabled ? '' : undefined"
+            t-att-data-dir="env.odxAccordion.dir"
+            t-att-data-orientation="env.odxAccordion.orientation"
+            t-att-data-state="isOpen ? 'open' : 'closed'"
+        >
+            <t t-slot="default"/>
+        </h3>
+    </t>
+
+    <t t-name="odx_owl.AccordionTrigger">
+        <button
+            t-att-id="triggerId"
+            t-att-class="classes"
+            type="button"
+            t-att-data-disabled="isDisabled ? '' : undefined"
+            t-att-data-dir="env.odxAccordion.dir"
+            t-att-data-orientation="env.odxAccordion.orientation"
+            t-att-data-state="isOpen ? 'open' : 'closed'"
+            t-att-aria-controls="contentId"
+            t-att-aria-disabled="isDisabled ? 'true' : undefined"
+            t-att-aria-expanded="isOpen ? 'true' : 'false'"
+            t-att-disabled="isDisabled ? true : undefined"
+            t-on-click="toggle"
+            t-on-keydown="onKeydown"
+        >
+            <span class="odx-accordion__trigger-label">
+                <t t-slot="default"/>
+            </span>
+            <span class="odx-accordion__chevron" aria-hidden="true">
+                <svg viewBox="0 0 16 16">
+                    <path d="M4.25 6.25L8 10L11.75 6.25" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/>
+                </svg>
+            </span>
+        </button>
+    </t>
+
+    <t t-name="odx_owl.AccordionContent">
+        <div
+            t-att-id="contentId"
+            t-att-class="classes"
+            role="region"
+            t-att-data-dir="env.odxAccordion.dir"
+            t-att-data-orientation="env.odxAccordion.orientation"
+            t-att-data-state="isOpen ? 'open' : 'closed'"
+            t-att-aria-labelledby="triggerId"
+            t-att-hidden="isOpen ? undefined : true"
+        >
+            <div class="odx-accordion__content-inner">
+                <t t-slot="default"/>
+            </div>
+        </div>
+    </t>
+</templates>

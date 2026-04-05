@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.ToggleGroup">
+        <div
+            t-att-class="classes"
+            role="group"
+            t-att-style="style"
+            t-att-aria-orientation="props.orientation"
+            t-att-data-orientation="props.orientation"
+            t-att-data-disabled="props.disabled ? 'true' : undefined"
+            t-att-data-dir="direction"
+            t-att-dir="direction"
+            t-on-keydown="onKeydown"
+        >
+            <t t-slot="default"/>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.ToggleGroupItem">
+        <button
+            t-att-id="itemId"
+            t-att-class="classes"
+            type="button"
+            data-odx-toggle-group-item="true"
+            t-att-data-value="props.value"
+            t-att-tabindex="tabIndex"
+            t-att-disabled="isDisabled ? true : undefined"
+            t-att-aria-label="props.ariaLabel"
+            t-att-aria-pressed="isPressed ? 'true' : 'false'"
+            t-att-data-disabled="isDisabled ? 'true' : undefined"
+            t-att-data-state="isPressed ? 'on' : 'off'"
+            t-on-focus="onFocus"
+            t-on-click="toggle"
+        >
+            <t t-slot="default"/>
+        </button>
+    </t>
+</templates>

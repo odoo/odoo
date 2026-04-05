@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.ScrollArea">
+        <div t-att-class="classes">
+            <div
+                t-ref="viewportRef"
+                t-att-class="viewportClasses"
+                tabindex="0"
+                t-on-scroll="onScroll"
+            >
+                <t t-slot="default"/>
+            </div>
+            <ScrollBar
+                visible="state.showVertical"
+                thumbStyle="state.verticalThumbStyle"
+            />
+            <ScrollBar
+                orientation="'horizontal'"
+                visible="state.showHorizontal"
+                thumbStyle="state.horizontalThumbStyle"
+            />
+        </div>
+    </t>
+
+    <t t-name="odx_owl.ScrollBar">
+        <div t-if="props.visible" t-att-class="classes" aria-hidden="true">
+            <div class="odx-scroll-area__thumb" t-att-style="props.thumbStyle"/>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Form">
+        <t
+            t-tag="props.tag"
+            t-att-id="props.id"
+            t-att-class="classes"
+            t-att-novalidate="props.noValidate ? true : undefined"
+            t-att="props.attrs"
+            t-on-submit="submit"
+        >
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.FormField">
+        <t t-slot="default" t-props="slotProps"/>
+    </t>
+
+    <t t-name="odx_owl.FormItem">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.FormLabel">
+        <label t-att-for="labelForId" t-att-class="classes">
+            <span class="odx-form__label-text">
+                <t t-slot="default">
+                    <t t-esc="props.text"/>
+                </t>
+            </span>
+            <span t-if="showRequiredIndicator" class="odx-form__label-required" aria-hidden="true">*</span>
+        </label>
+    </t>
+
+    <t t-name="odx_owl.FormControl">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default" t-props="slotProps"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.FormDescription">
+        <t t-if="hasContent">
+            <t t-tag="props.tag" t-att-id="descriptionId" t-att-class="classes">
+                <t t-if="contentText">
+                    <t t-esc="contentText"/>
+                </t>
+                <t t-else="">
+                    <t t-slot="default"/>
+                </t>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.FormMessage">
+        <t t-if="hasContent">
+            <t t-tag="props.tag" t-att-id="messageId" t-att-class="classes">
+                <t t-if="messageText">
+                    <t t-esc="messageText"/>
+                </t>
+                <t t-else="">
+                    <t t-slot="default"/>
+                </t>
+            </t>
+        </t>
+    </t>
+</templates>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Avatar">
+        <div t-att-class="rootClasses">
+            <t t-if="props.slots and props.slots.default">
+                <t t-slot="default"/>
+            </t>
+            <t t-else="">
+                <AvatarImage t-if="props.src" src="props.src" alt="props.alt" className="props.imageClassName"/>
+                <AvatarFallback className="props.fallbackClassName" text="props.fallback"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.AvatarImage">
+        <img
+            t-if="isVisible"
+            t-att-class="classes"
+            t-att-src="effectiveSrc"
+            t-att-alt="alt"
+            t-on-error="onError"
+        />
+    </t>
+
+    <t t-name="odx_owl.AvatarFallback">
+        <t t-if="shouldDisplay" t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+</templates>

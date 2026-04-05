@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="odx_owl.ShowcaseEmailClient">
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#1d1d1f;display:flex;height:100vh;background:#fafafa;">
+
+        <!-- Sidebar -->
+        <div style="width:220px;background:white;border-right:1px solid #e8e8ed;padding:16px 12px;display:flex;flex-direction:column;">
+            <button style="width:100%;padding:10px;border-radius:8px;border:none;background:#1d1d1f;color:white;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:20px;">Compose</button>
+
+            <div t-att-style="'display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;margin-bottom:2px;' + (state.folder === 'inbox' ? 'background:#f4f4f5;' : '')" t-on-click="() => this.setFolder('inbox')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0;"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+                <span style="flex:1;">Inbox</span>
+                <span style="font-size:11px;font-weight:600;background:#1d1d1f;color:white;padding:1px 7px;border-radius:999px;">12</span>
+            </div>
+            <div t-att-style="'display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;margin-bottom:2px;color:#86868b;' + (state.folder === 'sent' ? 'background:#f4f4f5;color:#1d1d1f;' : '')" t-on-click="() => this.setFolder('sent')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                <span>Sent</span>
+            </div>
+            <div t-att-style="'display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;margin-bottom:2px;color:#86868b;' + (state.folder === 'drafts' ? 'background:#f4f4f5;color:#1d1d1f;' : '')" t-on-click="() => this.setFolder('drafts')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <span>Drafts</span>
+                <span style="font-size:11px;color:#86868b;">3</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;margin-bottom:2px;color:#86868b;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                <span>Trash</span>
+            </div>
+
+            <div style="height:1px;background:#e8e8ed;margin:12px 0;"></div>
+            <div style="font-size:11px;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:0.04em;padding:4px 12px;margin-bottom:4px;">Labels</div>
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 12px;font-size:13px;color:#86868b;cursor:pointer;">
+                <span style="width:8px;height:8px;border-radius:50%;background:#dc2626;"></span> Important
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 12px;font-size:13px;color:#86868b;cursor:pointer;">
+                <span style="width:8px;height:8px;border-radius:50%;background:#2563eb;"></span> Work
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 12px;font-size:13px;color:#86868b;cursor:pointer;">
+                <span style="width:8px;height:8px;border-radius:50%;background:#16a34a;"></span> Personal
+            </div>
+        </div>
+
+        <!-- Email List -->
+        <div style="width:360px;border-right:1px solid #e8e8ed;background:white;overflow-y:auto;">
+            <div style="padding:12px 16px;border-bottom:1px solid #e8e8ed;">
+                <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;background:#f4f4f5;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#86868b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <span style="font-size:13px;color:#86868b;">Search emails...</span>
+                </div>
+            </div>
+
+            <!-- Email items -->
+            <div style="padding:12px 16px;border-bottom:1px solid #f4f4f5;cursor:pointer;background:#f4f4f5;" t-on-click="() => this.selectEmail(1)">
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                    <span style="font-size:13px;font-weight:600;">Alex Johnson</span>
+                    <span style="font-size:11px;color:#86868b;">10:23 AM</span>
+                </div>
+                <div style="font-size:13px;font-weight:500;margin-bottom:2px;">Q1 Sales Report Ready</div>
+                <div style="font-size:12px;color:#86868b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Hi team, I've just finished compiling the Q1 sales report. Key highlights include...</div>
+            </div>
+
+            <div t-att-style="'padding:12px 16px;border-bottom:1px solid #f4f4f5;cursor:pointer;' + (state.selectedId === 2 ? 'background:#f0f0ff;border-left:3px solid #1d1d1f;' : '')" t-on-click="() => this.selectEmail(2)">
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                    <span style="font-size:13px;font-weight:700;">Maria Santos</span>
+                    <span style="font-size:11px;color:#86868b;">9:45 AM</span>
+                </div>
+                <div style="font-size:13px;font-weight:600;margin-bottom:2px;">Re: Partnership Proposal</div>
+                <div style="font-size:12px;color:#86868b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Thank you for the detailed proposal. We've reviewed it internally and would like to...</div>
+                <div style="display:flex;gap:4px;margin-top:6px;">
+                    <span style="font-size:10px;padding:1px 8px;border-radius:999px;background:#dc2626;color:white;">Important</span>
+                    <span style="font-size:10px;padding:1px 8px;border-radius:999px;background:#dbeafe;color:#1e40af;">Work</span>
+                </div>
+            </div>
+
+            <div style="padding:12px 16px;border-bottom:1px solid #f4f4f5;cursor:pointer;" t-on-click="() => this.selectEmail(3)">
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                    <span style="font-size:13px;font-weight:600;">David Kim</span>
+                    <span style="font-size:11px;color:#86868b;">Yesterday</span>
+                </div>
+                <div style="font-size:13px;font-weight:500;margin-bottom:2px;">Sprint Planning Notes</div>
+                <div style="font-size:12px;color:#86868b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Here are the notes from today's sprint planning session. We've prioritized the following...</div>
+            </div>
+
+            <div style="padding:12px 16px;border-bottom:1px solid #f4f4f5;cursor:pointer;" t-on-click="() => this.selectEmail(4)">
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                    <span style="font-size:13px;font-weight:500;color:#86868b;">Sarah Chen</span>
+                    <span style="font-size:11px;color:#86868b;">Yesterday</span>
+                </div>
+                <div style="font-size:13px;font-weight:500;color:#86868b;margin-bottom:2px;">Vacation Request Approved</div>
+                <div style="font-size:12px;color:#aeaeb2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Your vacation request for April 14-18 has been approved. Enjoy your time off!</div>
+            </div>
+
+            <div style="padding:12px 16px;border-bottom:1px solid #f4f4f5;cursor:pointer;" t-on-click="() => this.selectEmail(5)">
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                    <span style="font-size:13px;font-weight:500;color:#86868b;">System</span>
+                    <span style="font-size:11px;color:#86868b;">Mar 25</span>
+                </div>
+                <div style="font-size:13px;font-weight:500;color:#86868b;margin-bottom:2px;">Invoice #INV-2026-0342 Created</div>
+                <div style="font-size:12px;color:#aeaeb2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">A new invoice has been generated for Azure Interior. Amount: $4,500.00</div>
+            </div>
+
+            <div style="padding:12px 16px;cursor:pointer;" t-on-click="() => this.selectEmail(6)">
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                    <span style="font-size:13px;font-weight:500;color:#86868b;">Lisa Park</span>
+                    <span style="font-size:11px;color:#86868b;">Mar 24</span>
+                </div>
+                <div style="font-size:13px;font-weight:500;color:#86868b;margin-bottom:2px;">Design Review Meeting</div>
+                <div style="font-size:12px;color:#aeaeb2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Can we schedule a quick meeting to go over the new dashboard designs? I think...</div>
+            </div>
+        </div>
+
+        <!-- Email Detail -->
+        <div style="flex:1;background:white;overflow-y:auto;padding:28px 32px;">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;">
+                <div>
+                    <h2 style="font-size:20px;font-weight:700;margin:0 0 8px;">Re: Partnership Proposal</h2>
+                    <div style="display:flex;align-items:center;gap:4px;">
+                        <span style="font-size:10px;padding:1px 8px;border-radius:999px;background:#dc2626;color:white;">Important</span>
+                        <span style="font-size:10px;padding:1px 8px;border-radius:999px;background:#dbeafe;color:#1e40af;">Work</span>
+                    </div>
+                </div>
+                <div style="display:flex;gap:6px;">
+                    <button style="padding:6px 10px;border-radius:6px;border:1px solid #e8e8ed;background:white;cursor:pointer;font-size:12px;">Archive</button>
+                    <button style="padding:6px 10px;border-radius:6px;border:1px solid #e8e8ed;background:white;cursor:pointer;font-size:12px;">Reply</button>
+                    <button style="padding:6px 10px;border-radius:6px;border:1px solid #e8e8ed;background:white;cursor:pointer;font-size:12px;">Forward</button>
+                </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+                <div style="width:40px;height:40px;border-radius:50%;background:#e0e7ff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:#4338ca;">MS</div>
+                <div>
+                    <div style="font-size:14px;font-weight:600;">Maria Santos <span style="font-weight:400;color:#86868b;">maria.santos@acme.com</span></div>
+                    <div style="font-size:12px;color:#86868b;">To: me, alex.johnson@company.com · Mar 27, 2026 9:45 AM</div>
+                </div>
+            </div>
+
+            <div style="font-size:14px;line-height:1.7;color:#3f3f46;">
+                <p>Hi team,</p>
+                <p>Thank you for the detailed proposal. We've reviewed it internally and would like to move forward with the partnership.</p>
+                <p>A few points we'd like to discuss:</p>
+                <ol style="padding-left:20px;margin:12px 0;">
+                    <li style="margin-bottom:8px;">The revenue sharing model looks fair. We're comfortable with the 70/30 split for the first year.</li>
+                    <li style="margin-bottom:8px;">We'd like to extend the exclusivity clause from 6 months to 12 months for our region.</li>
+                    <li style="margin-bottom:8px;">Can we schedule a call next week to discuss the technical integration timeline?</li>
+                </ol>
+                <p>Looking forward to working together.</p>
+                <p>Best regards,<br/>Maria Santos<br/><span style="color:#86868b;">VP of Business Development, Acme Corporation</span></p>
+            </div>
+
+            <!-- Reply box -->
+            <div style="margin-top:32px;border:1px solid #e8e8ed;border-radius:12px;padding:16px;">
+                <div style="font-size:12px;color:#86868b;margin-bottom:8px;">Reply to Maria Santos</div>
+                <div style="min-height:80px;font-size:14px;color:#aeaeb2;outline:none;" contenteditable="true">Write your reply...</div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid #f4f4f5;">
+                    <div style="display:flex;gap:8px;">
+                        <button style="padding:4px 8px;border-radius:4px;border:none;background:transparent;cursor:pointer;color:#86868b;font-size:13px;">Attach</button>
+                        <button style="padding:4px 8px;border-radius:4px;border:none;background:transparent;cursor:pointer;color:#86868b;font-size:13px;">Format</button>
+                    </div>
+                    <button style="padding:8px 20px;border-radius:8px;border:none;background:#1d1d1f;color:white;font-size:13px;font-weight:500;cursor:pointer;">Send</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</t>
+</templates>

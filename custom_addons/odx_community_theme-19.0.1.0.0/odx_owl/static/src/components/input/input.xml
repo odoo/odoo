@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Input">
+        <input
+            t-att-class="classes"
+            t-att-aria-label="props.ariaLabel"
+            t-att-autocomplete="props.autocomplete"
+            t-att-disabled="props.disabled ? true : undefined"
+            t-att-id="props.id"
+            t-att-name="props.name"
+            t-att-placeholder="props.placeholder"
+            t-att-readonly="props.readonly ? true : undefined"
+            t-att-required="props.required ? true : undefined"
+            t-att-type="props.type"
+            t-att-value="props.value"
+            t-att="props.attrs"
+            t-on-input="onInput"
+            t-on-change="onChange"
+        />
+    </t>
+</templates>

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.NavigationMenu">
+        <nav
+            t-ref="rootRef"
+            t-att-class="classes"
+            t-att-data-dir="direction"
+            t-att-dir="direction"
+            aria-label="Primary"
+            t-on-mouseenter="clearCloseTimer"
+            t-on-mouseleave="scheduleClose"
+        >
+            <t t-if="usesLegacyItems">
+                <ul class="odx-navigation-menu__list" t-att-data-dir="direction" t-att-dir="direction">
+                    <t t-foreach="props.items" t-as="item" t-key="getItemValue(item, item_index)">
+                        <li class="odx-navigation-menu__item">
+                            <button
+                                t-if="hasContent(item)"
+                                t-att-id="getTriggerId(item, item_index)"
+                                t-att-class="getTriggerClasses(item, item_index)"
+                                type="button"
+                                data-nav-trigger="true"
+                                t-att-data-nav-value="getItemValue(item, item_index)"
+                                t-att-aria-expanded="getItemValue(item, item_index) === currentValue ? 'true' : 'false'"
+                                aria-haspopup="true"
+                                t-att-aria-controls="getContentId(item, item_index)"
+                                t-att-disabled="item.disabled ? true : undefined"
+                                t-on-click="(ev) => toggleItem(item, item_index, ev)"
+                                t-on-keydown="(ev) => onTriggerKeydown({ value: getItemValue(item, item_index), hasContent: true, disabled: item.disabled }, ev)"
+                                t-on-mouseenter="(ev) => onTriggerMouseenter({ value: getItemValue(item, item_index), hasContent: true, disabled: item.disabled }, ev)"
+                            >
+                                <span><t t-esc="item.label"/></span>
+                                <span class="odx-navigation-menu__trigger-chevron" aria-hidden="true">
+                                    <svg viewBox="0 0 16 16">
+                                        <path d="M4.25 6.25L8 10L11.75 6.25" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/>
+                                    </svg>
+                                </span>
+                            </button>
+                            <a
+                                t-else=""
+                                t-att-id="getTriggerId(item, item_index)"
+                                t-att-class="getTriggerClasses(item, item_index)"
+                                t-att-href="item.href || '#'"
+                                data-nav-trigger="true"
+                                t-att-data-nav-value="getItemValue(item, item_index)"
+                                t-att-aria-current="item.active ? 'page' : undefined"
+                                t-att-aria-disabled="item.disabled ? 'true' : undefined"
+                                t-on-click="(ev) => onDirectLinkSelected(item, ev)"
+                                t-on-keydown="(ev) => onTriggerKeydown({ value: getItemValue(item, item_index), hasContent: false, disabled: item.disabled }, ev)"
+                                t-on-mouseenter="(ev) => onTriggerMouseenter({ value: getItemValue(item, item_index), hasContent: false, disabled: item.disabled }, ev)"
+                            >
+                                <t t-esc="item.label"/>
+                            </a>
+                        </li>
+                    </t>
+                </ul>
+
+                <div
+                    t-if="currentValue"
+                    class="odx-navigation-menu__indicator"
+                    t-att-data-state="hasActiveContent ? 'visible' : 'hidden'"
+                    t-att-style="state.indicatorStyle"
+                    aria-hidden="true"
+                >
+                    <div class="odx-navigation-menu__indicator-diamond"/>
+                </div>
+
+                <div
+                    t-if="hasActiveContent"
+                    t-att-id="getContentId(activeItem, activeIndex)"
+                    t-att-class="contentClasses"
+                    t-att-data-dir="direction"
+                    t-att-dir="direction"
+                    t-on-keydown="onContentKeydown"
+                    t-on-mouseenter="clearCloseTimer"
+                    t-on-mouseleave="scheduleClose"
+                >
+                    <div class="odx-navigation-menu__viewport">
+                        <div t-if="featuredItem" class="odx-navigation-menu__featured">
+                            <a
+                                class="odx-navigation-menu__featured-link"
+                                t-att-href="featuredItem.href || '#'"
+                                t-on-click="(ev) => onContentItemSelected(featuredItem, ev)"
+                            >
+                                <div t-if="featuredItem.eyebrow" class="odx-navigation-menu__featured-eyebrow">
+                                    <t t-esc="featuredItem.eyebrow"/>
+                                </div>
+                                <div class="odx-navigation-menu__featured-title">
+                                    <t t-esc="featuredItem.title"/>
+                                </div>
+                                <p class="odx-navigation-menu__featured-description">
+                                    <t t-esc="featuredItem.description"/>
+                                </p>
+                            </a>
+                        </div>
+                        <div t-att-class="getContentColumns(activeItem)">
+                            <t t-foreach="contentItems" t-as="contentItem" t-key="contentItem.value || contentItem.title || contentItem_index">
+                                <a
+                                    class="odx-navigation-menu__link"
+                                    t-att-href="contentItem.href || '#'"
+                                    data-nav-content-item="true"
+                                    t-att-aria-disabled="contentItem.disabled ? 'true' : undefined"
+                                    t-att-tabindex="contentItem.disabled ? -1 : 0"
+                                    t-on-click="(ev) => onContentItemSelected(contentItem, ev)"
+                                >
+                                    <div class="odx-navigation-menu__link-title">
+                                        <t t-esc="contentItem.title"/>
+                                    </div>
+                                    <p t-if="contentItem.description" class="odx-navigation-menu__link-description">
+                                        <t t-esc="contentItem.description"/>
+                                    </p>
+                                </a>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <t t-slot="default"/>
+            </t>
+        </nav>
+    </t>
+
+    <t t-name="odx_owl.NavigationMenuList">
+        <ul t-att-class="classes" t-att-data-dir="env.odxNavigationMenu.dir" t-att-dir="env.odxNavigationMenu.dir">
+            <t t-slot="default"/>
+        </ul>
+    </t>
+
+    <t t-name="odx_owl.NavigationMenuItem">
+        <li t-att-class="classes">
+            <t t-slot="default"/>
+        </li>
+    </t>
+
+    <t t-name="odx_owl.NavigationMenuTrigger">
+        <button
+            t-if="!isLink"
+            t-att-id="triggerId"
+            t-att-class="classes"
+            t-att-data-dir="env.odxNavigationMenu.dir"
+            t-att-dir="env.odxNavigationMenu.dir"
+            type="button"
+            data-nav-trigger="true"
+            t-att-data-nav-value="resolvedValue"
+            t-att-aria-expanded="props.hasContent ? (isCurrent ? 'true' : 'false') : undefined"
+            t-att-aria-current="!props.hasContent and props.active ? 'page' : undefined"
+            t-att-aria-controls="contentId"
+            t-att-aria-disabled="props.disabled ? 'true' : undefined"
+            t-att-disabled="props.disabled ? true : undefined"
+            t-att-aria-haspopup="props.hasContent ? 'true' : undefined"
+            t-on-click="onClick"
+            t-on-keydown="onKeydown"
+            t-on-mouseenter="onMouseenter"
+        >
+            <span class="odx-navigation-menu__trigger-label">
+                <t t-slot="default">
+                    <t t-esc="props.text"/>
+                </t>
+            </span>
+            <span t-if="props.hasContent" class="odx-navigation-menu__trigger-chevron" aria-hidden="true">
+                <svg viewBox="0 0 16 16">
+                    <path d="M4.25 6.25L8 10L11.75 6.25" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/>
+                </svg>
+            </span>
+        </button>
+        <a
+            t-else=""
+            t-att-id="triggerId"
+            t-att-class="classes"
+            t-att-data-dir="env.odxNavigationMenu.dir"
+            t-att-dir="env.odxNavigationMenu.dir"
+            t-att-href="props.href || '#'"
+            data-nav-trigger="true"
+            t-att-data-nav-value="resolvedValue"
+            t-att-aria-current="props.active ? 'page' : undefined"
+            t-att-aria-disabled="props.disabled ? 'true' : undefined"
+            t-on-click="onClick"
+            t-on-keydown="onKeydown"
+            t-on-mouseenter="onMouseenter"
+        >
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </a>
+    </t>
+
+    <t t-name="odx_owl.NavigationMenuIndicator">
+        <div
+            t-if="env.odxNavigationMenu.currentValue"
+            t-att-class="classes"
+            t-att-data-state="isVisible ? 'visible' : 'hidden'"
+            t-att-style="style"
+            aria-hidden="true"
+        >
+            <div class="odx-navigation-menu__indicator-diamond"/>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.NavigationMenuViewport">
+        <div t-att-class="classes">
+            <t t-slot="default"/>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.NavigationMenuContent">
+        <div
+            t-if="isVisible"
+            t-att-id="contentId"
+            t-att-class="classes"
+            t-att-data-dir="env.odxNavigationMenu.dir"
+            t-att-dir="env.odxNavigationMenu.dir"
+            t-on-keydown="onKeydown"
+            t-on-mouseenter="env.odxNavigationMenu.clearCloseTimer"
+            t-on-mouseleave="env.odxNavigationMenu.scheduleClose"
+        >
+            <NavigationMenuViewport t-if="!props.disableViewport" className="props.viewportClassName">
+                <t t-slot="default"/>
+            </NavigationMenuViewport>
+            <t t-else="">
+                <t t-slot="default"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.NavigationMenuLink">
+        <a
+            t-att-class="classes"
+            t-att-href="props.href || '#'"
+            data-nav-content-item="true"
+            t-att-aria-disabled="props.disabled ? 'true' : undefined"
+            t-att-tabindex="props.disabled ? -1 : 0"
+            t-on-click="onClick"
+        >
+            <t t-if="props.slots and props.slots.default">
+                <t t-slot="default"/>
+            </t>
+            <t t-else="">
+                <div class="odx-navigation-menu__link-title">
+                    <t t-esc="props.title"/>
+                </div>
+                <p t-if="props.description" class="odx-navigation-menu__link-description">
+                    <t t-esc="props.description"/>
+                </p>
+            </t>
+        </a>
+    </t>
+</templates>

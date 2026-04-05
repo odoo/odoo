@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.NativeSelect">
+        <div
+            t-att-class="containerClasses"
+            t-att-data-disabled="props.disabled ? 'true' : undefined"
+        >
+            <select
+                t-att-id="props.id"
+                t-att-class="selectClasses"
+                t-att-name="props.name"
+                t-att-disabled="props.disabled ? true : undefined"
+                t-att-required="props.required ? true : undefined"
+                t-att-aria-label="props.ariaLabel"
+                t-att="props.attrs"
+                t-on-change="onChange"
+            >
+                <t t-if="groupedOptions.length">
+                    <t t-foreach="groupedOptions" t-as="group" t-key="group.key">
+                        <optgroup t-if="group.label" t-att-label="group.label">
+                            <option
+                                t-foreach="group.options"
+                                t-as="option"
+                                t-key="`${group.key}-${option.value}`"
+                                t-att-value="option.value"
+                                t-att-disabled="option.disabled ? true : undefined"
+                                t-att-selected="('' + currentValue) === ('' + option.value) ? true : undefined"
+                            ><t t-esc="option.label"/></option>
+                        </optgroup>
+                        <t t-else="">
+                            <option
+                                t-foreach="group.options"
+                                t-as="option"
+                                t-key="`${group.key}-${option.value}`"
+                                t-att-value="option.value"
+                                t-att-disabled="option.disabled ? true : undefined"
+                                t-att-selected="('' + currentValue) === ('' + option.value) ? true : undefined"
+                            ><t t-esc="option.label"/></option>
+                        </t>
+                    </t>
+                </t>
+                <t t-else="">
+                    <t t-slot="default"/>
+                </t>
+            </select>
+            <span class="odx-native-select__icon" aria-hidden="true">
+                <svg viewBox="0 0 16 16">
+                    <path d="M4.25 6.25L8 10L11.75 6.25" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/>
+                </svg>
+            </span>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.NativeSelectOption">
+        <option
+            t-att-value="props.value"
+            t-att-disabled="props.disabled ? true : undefined"
+            t-att-selected="props.selected ? true : undefined"
+        >
+            <t t-slot="default">
+                <t t-esc="props.label"/>
+            </t>
+        </option>
+    </t>
+
+    <t t-name="odx_owl.NativeSelectOptGroup">
+        <optgroup
+            t-att-label="props.label"
+            t-att-disabled="props.disabled ? true : undefined"
+        >
+            <t t-slot="default"/>
+        </optgroup>
+    </t>
+</templates>

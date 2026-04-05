@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="odx_owl.ShowcaseOnboardingForm">
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#1d1d1f;">
+
+        <!-- Header -->
+        <div style="text-align:center;margin-bottom:40px;">
+            <div style="width:48px;height:48px;border-radius:12px;background:#1d1d1f;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            </div>
+            <h2 style="font-size:24px;font-weight:700;margin:0 0 6px;">Welcome aboard</h2>
+            <p style="font-size:15px;color:#86868b;margin:0;">Tell us about your company so we can set things up for you.</p>
+        </div>
+
+        <!-- Progress Steps -->
+        <div style="display:flex;align-items:center;gap:0;margin-bottom:36px;">
+            <div style="flex:1;text-align:center;">
+                <div style="width:28px;height:28px;border-radius:50%;background:#1d1d1f;color:white;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;">1</div>
+                <div style="font-size:11px;font-weight:500;margin-top:4px;">Company</div>
+            </div>
+            <div style="flex:0 0 40px;height:2px;background:#e8e8ed;"></div>
+            <div style="flex:1;text-align:center;">
+                <div style="width:28px;height:28px;border-radius:50%;border:2px solid #e8e8ed;color:#86868b;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;">2</div>
+                <div style="font-size:11px;color:#86868b;margin-top:4px;">Team</div>
+            </div>
+            <div style="flex:0 0 40px;height:2px;background:#e8e8ed;"></div>
+            <div style="flex:1;text-align:center;">
+                <div style="width:28px;height:28px;border-radius:50%;border:2px solid #e8e8ed;color:#86868b;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;">3</div>
+                <div style="font-size:11px;color:#86868b;margin-top:4px;">Preferences</div>
+            </div>
+        </div>
+
+        <!-- Form -->
+        <div style="border:1px solid #e8e8ed;border-radius:12px;padding:28px;">
+
+            <div style="margin-bottom:20px;">
+                <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">Company Name</label>
+                <input type="text" value="Acme Corporation" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e8e8ed;font-size:14px;outline:none;box-sizing:border-box;"/>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+                <div>
+                    <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">Industry</label>
+                    <select style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e8e8ed;font-size:14px;outline:none;background:white;appearance:auto;">
+                        <option>Technology</option>
+                        <option>Manufacturing</option>
+                        <option>Retail</option>
+                        <option>Services</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">Company Size</label>
+                    <select style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e8e8ed;font-size:14px;outline:none;background:white;appearance:auto;">
+                        <option>1 - 10</option>
+                        <option selected="selected">11 - 50</option>
+                        <option>51 - 200</option>
+                        <option>200+</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+                <div>
+                    <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">Contact Email</label>
+                    <input type="email" value="admin@acme.com" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e8e8ed;font-size:14px;outline:none;box-sizing:border-box;"/>
+                </div>
+                <div>
+                    <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">Phone</label>
+                    <input type="tel" value="+1 555 123 4567" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e8e8ed;font-size:14px;outline:none;box-sizing:border-box;"/>
+                </div>
+            </div>
+
+            <div style="margin-bottom:20px;">
+                <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">Country</label>
+                <select style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e8e8ed;font-size:14px;outline:none;background:white;appearance:auto;">
+                    <option>United States</option>
+                    <option>United Kingdom</option>
+                    <option>Germany</option>
+                    <option>France</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">Fiscal Year Start</label>
+                <input type="date" value="2026-01-01" style="width:200px;padding:10px 12px;border-radius:8px;border:1px solid #e8e8ed;font-size:14px;outline:none;"/>
+            </div>
+
+            <div style="height:1px;background:#e8e8ed;margin:24px 0;"></div>
+
+            <div style="margin-bottom:20px;">
+                <label style="display:block;font-size:13px;font-weight:600;margin-bottom:10px;">Modules to activate</label>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                    <label style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid #e8e8ed;font-size:13px;cursor:pointer;"><input type="checkbox" checked="checked" style="accent-color:#1d1d1f;"/> Sales</label>
+                    <label style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid #e8e8ed;font-size:13px;cursor:pointer;"><input type="checkbox" checked="checked" style="accent-color:#1d1d1f;"/> Invoicing</label>
+                    <label style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid #e8e8ed;font-size:13px;cursor:pointer;"><input type="checkbox" style="accent-color:#1d1d1f;"/> Inventory</label>
+                    <label style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid #e8e8ed;font-size:13px;cursor:pointer;"><input type="checkbox" checked="checked" style="accent-color:#1d1d1f;"/> CRM</label>
+                    <label style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid #e8e8ed;font-size:13px;cursor:pointer;"><input type="checkbox" style="accent-color:#1d1d1f;"/> Project</label>
+                    <label style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid #e8e8ed;font-size:13px;cursor:pointer;"><input type="checkbox" style="accent-color:#1d1d1f;"/> HR</label>
+                </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px;">
+                <input type="checkbox" checked="checked" style="accent-color:#1d1d1f;"/>
+                <span style="font-size:13px;color:#86868b;">I agree to the <a href="#" style="color:#1d1d1f;text-decoration:underline;">Terms of Service</a> and <a href="#" style="color:#1d1d1f;text-decoration:underline;">Privacy Policy</a></span>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <button style="padding:10px 20px;border-radius:8px;border:1px solid #e8e8ed;background:white;font-size:14px;font-weight:500;cursor:pointer;">Back</button>
+                <button style="padding:10px 24px;border-radius:8px;border:none;background:#1d1d1f;color:white;font-size:14px;font-weight:500;cursor:pointer;">Continue</button>
+            </div>
+        </div>
+
+    </div>
+</t>
+</templates>

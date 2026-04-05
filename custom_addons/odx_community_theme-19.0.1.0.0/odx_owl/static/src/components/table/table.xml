@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Table">
+        <div class="odx-table__container" t-att-data-dir="direction">
+            <table t-att-class="classes" t-att-data-dir="direction" t-att-dir="direction">
+                <t t-slot="default"/>
+            </table>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.TableHeader">
+        <thead t-att-class="classes">
+            <t t-slot="default"/>
+        </thead>
+    </t>
+
+    <t t-name="odx_owl.TableBody">
+        <tbody t-att-class="classes">
+            <t t-slot="default"/>
+        </tbody>
+    </t>
+
+    <t t-name="odx_owl.TableFooter">
+        <tfoot t-att-class="classes">
+            <t t-slot="default"/>
+        </tfoot>
+    </t>
+
+    <t t-name="odx_owl.TableRow">
+        <tr t-att-class="classes">
+            <t t-slot="default"/>
+        </tr>
+    </t>
+
+    <t t-name="odx_owl.TableHead">
+        <th t-att-class="classes">
+            <t t-slot="default"/>
+        </th>
+    </t>
+
+    <t t-name="odx_owl.TableCell">
+        <td t-att-class="classes">
+            <t t-slot="default"/>
+        </td>
+    </t>
+
+    <t t-name="odx_owl.TableCaption">
+        <caption t-att-class="classes">
+            <t t-slot="default"/>
+        </caption>
+    </t>
+</templates>

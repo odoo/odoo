@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.SidebarProvider">
+        <t
+            t-tag="props.tag"
+            t-att-class="classes"
+            t-att-data-dir="direction"
+            t-att-dir="direction"
+            t-att-data-state="stateName"
+            t-att-data-side="currentSide"
+            t-att-data-variant="currentVariant"
+            t-att-data-collapsible="currentCollapsible"
+            t-att-data-mobile="state.isMobile ? 'true' : 'false'"
+        >
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.Sidebar">
+        <button
+            t-if="isMobile and isOpen"
+            class="odx-sidebar__overlay"
+            type="button"
+            aria-label="Close sidebar"
+            t-on-click="closeSidebar"
+        />
+        <t
+            t-tag="props.tag"
+            t-att-class="classes"
+            t-att-data-dir="direction"
+            t-att-dir="direction"
+            t-att-data-state="isOpen ? 'expanded' : 'collapsed'"
+            t-att-data-side="resolvedSide"
+            t-att-data-variant="resolvedVariant"
+            t-att-data-collapsible="resolvedCollapsible"
+            t-att-aria-hidden="isMobile and !isOpen ? 'true' : undefined"
+        >
+            <div class="odx-sidebar__panel">
+                <t t-slot="default"/>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SidebarInset">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SidebarHeader">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SidebarFooter">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SidebarContent">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SidebarGroup">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SidebarGroupContent">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SidebarMenu">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SidebarMenuItem">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SidebarMenuSub">
+        <t t-tag="props.tag" t-att-class="classes" t-att-data-dir="env.odxSidebar.dir">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SidebarMenuSubItem">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SidebarSeparator">
+        <div t-att-class="classes" aria-hidden="true"/>
+    </t>
+
+    <t t-name="odx_owl.SidebarTrigger">
+        <button
+            t-att-class="classes"
+            type="button"
+            t-att-aria-label="props.ariaLabel"
+            t-att-aria-expanded="env.odxSidebar.isOpen ? 'true' : 'false'"
+            t-att-disabled="isDisabled ? true : undefined"
+            t-att-title="props.title"
+            t-on-click="onClick"
+        >
+            <t t-if="props.slots and props.slots.default">
+                <t t-slot="default"/>
+            </t>
+            <t t-else="">
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M2.75 4.25H13.25M2.75 8H13.25M2.75 11.75H10.75" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.4"/>
+                </svg>
+                <span t-if="props.label" class="odx-sidebar-trigger__label">
+                    <t t-esc="props.label"/>
+                </span>
+            </t>
+        </button>
+    </t>
+
+    <t t-name="odx_owl.SidebarRail">
+        <button
+            t-att-class="classes"
+            type="button"
+            t-att-aria-label="props.ariaLabel"
+            t-att-aria-expanded="env.odxSidebar.isOpen ? 'true' : 'false'"
+            t-att-disabled="isDisabled ? true : undefined"
+            t-on-click="onClick"
+        >
+            <span class="odx-sidebar-rail__line" aria-hidden="true"/>
+        </button>
+    </t>
+
+    <t t-name="odx_owl.SidebarInput">
+        <Input
+            attrs="props.attrs"
+            ariaLabel="props.ariaLabel"
+            autocomplete="props.autocomplete"
+            className="classes"
+            disabled="props.disabled"
+            id="props.id"
+            name="props.name"
+            onChange="props.onChange"
+            onInput="props.onInput"
+            placeholder="props.placeholder"
+            readonly="props.readonly"
+            required="props.required"
+            type="props.type"
+            value="props.value"
+        />
+    </t>
+
+    <t t-name="odx_owl.SidebarGroupLabel">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.label"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SidebarGroupAction">
+        <button
+            t-att-class="classes"
+            t-att-type="props.type"
+            t-att-aria-label="props.ariaLabel"
+            t-att-disabled="props.disabled ? true : undefined"
+            t-on-click="onClick"
+        >
+            <t t-slot="default">
+                <t t-esc="props.label"/>
+            </t>
+        </button>
+    </t>
+
+    <t t-name="odx_owl.SidebarMenuButton">
+        <t
+            t-tag="computedTag"
+            t-att-class="classes"
+            t-att-type="computedTag === 'button' ? props.type : undefined"
+            t-att-disabled="computedTag === 'button' and props.disabled ? true : undefined"
+            t-att-aria-current="props.isActive ? 'page' : undefined"
+            t-att-aria-disabled="props.disabled ? 'true' : undefined"
+            t-att-aria-label="props.ariaLabel"
+            t-att-href="computedTag !== 'button' ? props.href : undefined"
+            t-att-rel="props.rel"
+            t-att-target="props.target"
+            t-att-title="resolvedTitle"
+            t-att="props.attrs"
+            t-on-click="onClick"
+        >
+            <span t-if="props.slots and props.slots.icon" class="odx-sidebar-menu-button__icon" aria-hidden="true">
+                <t t-slot="icon"/>
+            </span>
+            <span class="odx-sidebar-menu-button__label">
+                <t t-slot="default">
+                    <t t-esc="props.label"/>
+                </t>
+            </span>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SidebarMenuAction">
+        <button
+            t-att-class="classes"
+            t-att-type="props.type"
+            t-att-aria-label="props.ariaLabel"
+            t-att-disabled="props.disabled ? true : undefined"
+            t-on-click="onClick"
+        >
+            <t t-slot="default">
+                <t t-esc="props.label"/>
+            </t>
+        </button>
+    </t>
+
+    <t t-name="odx_owl.SidebarMenuBadge">
+        <span t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.label"/>
+            </t>
+        </span>
+    </t>
+
+    <t t-name="odx_owl.SidebarMenuSubButton">
+        <t
+            t-tag="computedTag"
+            t-att-class="classes"
+            t-att-type="computedTag === 'button' ? props.type : undefined"
+            t-att-disabled="computedTag === 'button' and props.disabled ? true : undefined"
+            t-att-aria-current="props.isActive ? 'page' : undefined"
+            t-att-aria-disabled="props.disabled ? 'true' : undefined"
+            t-att-aria-label="props.ariaLabel"
+            t-att-href="computedTag !== 'button' ? props.href : undefined"
+            t-att-rel="props.rel"
+            t-att-target="props.target"
+            t-att-title="props.title"
+            t-att="props.attrs"
+            t-on-click="onClick"
+        >
+            <t t-slot="default">
+                <t t-esc="props.label"/>
+            </t>
+        </t>
+    </t>
+</templates>

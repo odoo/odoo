@@ -1,0 +1,2102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.DocsApp">
+        <div t-att-class="rootClasses">
+            <div class="odx-docs__shell">
+                <header class="odx-docs__hero">
+                    <div class="odx-docs__hero-copy">
+                        <Badge variant="'secondary'">OWL Native</Badge>
+                        <h1 class="odx-docs__title">ODX OWL</h1>
+                        <p class="odx-docs__lede">
+                            A reusable OWL design system for Odoo 19 built from shadcn/ui patterns,
+                            translated into OWL components, services, tokens, and QWeb-friendly APIs.
+                        </p>
+                        <div class="odx-docs__hero-actions">
+                            <Button onClick="() => showToast()">Launch Toast</Button>
+                            <Button variant="'outline'" onClick="() => theme.toggleTheme()">
+                                Toggle <t t-esc="theme.resolvedTheme === 'dark' ? 'Light' : 'Dark'"/> Mode
+                            </Button>
+                            <DropdownMenu items="docsMenuItems">
+                                <t t-set-slot="trigger">
+                                    <DropdownMenuTrigger variant="'ghost'" size="'sm'">Library menu</DropdownMenuTrigger>
+                                </t>
+                            </DropdownMenu>
+                        </div>
+                    </div>
+                    <Card className="'odx-docs__theme-card'">
+                        <CardHeader>
+                            <CardTitle>Theme control</CardTitle>
+                            <CardDescription>CSS variables + persisted light, dark, and system modes.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="'odx-docs__theme-controls'">
+                            <Button
+                                size="'sm'"
+                                variant="theme.theme === 'light' ? 'default' : 'outline'"
+                                onClick="() => theme.setTheme('light')"
+                            >Light</Button>
+                            <Button
+                                size="'sm'"
+                                variant="theme.theme === 'dark' ? 'default' : 'outline'"
+                                onClick="() => theme.setTheme('dark')"
+                            >Dark</Button>
+                            <Button
+                                size="'sm'"
+                                variant="theme.theme === 'system' ? 'default' : 'outline'"
+                                onClick="() => theme.setTheme('system')"
+                            >System</Button>
+                        </CardContent>
+                        <CardFooter className="'odx-docs__theme-footer'">
+                            Resolved theme: <strong><t t-esc="theme.resolvedTheme"/></strong>
+                        </CardFooter>
+                    </Card>
+                </header>
+
+                <section class="odx-docs__grid">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Buttons</CardTitle>
+                            <CardDescription>Variants and sizes are exported through a reusable cva-like helper.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="'odx-docs__stack'">
+                            <div class="odx-docs__button-row">
+                                <Button>Primary</Button>
+                                <Button variant="'secondary'">Secondary</Button>
+                                <Button variant="'outline'">Outline</Button>
+                                <Button variant="'ghost'">Ghost</Button>
+                                <Button variant="'destructive'">Destructive</Button>
+                                <Button variant="'link'">Link style</Button>
+                            </div>
+                            <div class="odx-docs__button-row">
+                                <Button size="'sm'">Small</Button>
+                                <Button>Default</Button>
+                                <Button size="'lg'">Large</Button>
+                                <Button size="'icon'" ariaLabel="'Add item'">+</Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Toast System</CardTitle>
+                            <CardDescription>Service-driven notifications now map onto exported toast primitives, pause dismissal while users interact, and support swipe dismissal on the toast surface.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="'odx-docs__stack'">
+                            <div class="odx-docs__button-row">
+                                <Button size="'sm'" onClick="() => showToast()">Success toast</Button>
+                                <Button size="'sm'" variant="'destructive'" onClick="() => showDestructiveToast()">Destructive toast</Button>
+                            </div>
+                            <p class="odx-docs__choice-meta">Use <code>useService("odx_toast")</code> from any OWL component. Action buttons, close controls, and swipe interactions keep the timer paused while the toast is being interacted with.</p>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Form composition</CardTitle>
+                            <CardDescription>Field wrappers generate ids, descriptions, errors, and required markers with shadcn-style structure.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="'odx-docs__stack'">
+                            <Form
+                                className="'odx-docs__form-layout'"
+                                descriptions="demoFormDescriptions"
+                                errors="demoFormErrors"
+                                onSubmit="() => submitDemoForm()"
+                            >
+                                <FormField name="'name'" required="true">
+                                    <FormItem>
+                                        <FormLabel>Name</FormLabel>
+                                        <FormControl t-slot-scope="control">
+                                            <Input
+                                                attrs="control.attrs"
+                                                placeholder="'Display name'"
+                                                value="form.name"
+                                                onInput="(value) => updateField('name', value)"
+                                            />
+                                        </FormControl>
+                                        <FormDescription/>
+                                        <FormMessage/>
+                                    </FormItem>
+                                </FormField>
+                                <FormField name="'email'" required="true">
+                                    <FormItem>
+                                        <FormLabel>Email</FormLabel>
+                                        <FormControl t-slot-scope="control">
+                                            <Input
+                                                attrs="control.attrs"
+                                                placeholder="'Email address'"
+                                                type="'email'"
+                                                value="form.email"
+                                                onInput="(value) => updateField('email', value)"
+                                            />
+                                        </FormControl>
+                                        <FormDescription/>
+                                        <FormMessage/>
+                                    </FormItem>
+                                </FormField>
+                                <FormField name="'note'">
+                                    <FormItem>
+                                        <FormLabel>Release Notes</FormLabel>
+                                        <FormControl t-slot-scope="control">
+                                            <Textarea
+                                                attrs="control.attrs"
+                                                rows="4"
+                                                value="form.note"
+                                                onInput="(value) => updateField('note', value)"
+                                            />
+                                        </FormControl>
+                                        <FormDescription/>
+                                        <FormMessage/>
+                                    </FormItem>
+                                </FormField>
+                                <div class="odx-docs__inline-actions">
+                                    <Button type="'submit'">Save Demo Payload</Button>
+                                    <Badge variant="hasDemoFormErrors ? 'destructive' : 'secondary'">
+                                        <t t-esc="hasDemoFormErrors ? 'Needs review' : 'Ready to submit'"/>
+                                    </Badge>
+                                </div>
+                            </Form>
+                        </CardContent>
+                        <CardFooter className="'odx-docs__theme-footer'">
+                            Slot-scoped control attrs keep labels, descriptions, and validation messages synchronized.
+                        </CardFooter>
+                    </Card>
+                </section>
+
+                <Tabs defaultValue="'preview'">
+                    <TabsList>
+                        <TabsTrigger value="'preview'">Preview</TabsTrigger>
+                        <TabsTrigger value="'usage'">Usage</TabsTrigger>
+                        <TabsTrigger value="'accessibility'">Accessibility</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="'preview'">
+                        <div class="odx-docs__grid odx-docs__grid--dense">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Dialog</CardTitle>
+                                    <CardDescription>Focus trap, portal rendering, composed overlay and content primitives, and preventable escape or outside-dismiss hooks.</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <Dialog>
+                                        <t t-set-slot="trigger">
+                                            <DialogTrigger>
+                                                <Button variant="'outline'">Open Dialog</Button>
+                                            </DialogTrigger>
+                                        </t>
+                                        <t t-set-slot="content">
+                                            <DialogOverlay/>
+                                            <DialogContent>
+                                                <DialogHeader>
+                                                    <DialogTitle>Edit profile</DialogTitle>
+                                                    <DialogDescription>
+                                                        Dialog content is rendered through Owl portal APIs and keeps keyboard focus inside the modal.
+                                                    </DialogDescription>
+                                                </DialogHeader>
+                                                <div class="odx-dialog__body">
+                                                    <div class="odx-docs__stack">
+                                                        <Input
+                                                            ariaLabel="'Dialog name'"
+                                                            value="form.name"
+                                                            onInput="(value) => updateField('name', value)"
+                                                        />
+                                                        <Input
+                                                            ariaLabel="'Dialog email'"
+                                                            type="'email'"
+                                                            value="form.email"
+                                                            onInput="(value) => updateField('email', value)"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <DialogFooter>
+                                                    <Button variant="'outline'">Cancel</Button>
+                                                    <Button onClick="() => saveDemoRecord()">Save changes</Button>
+                                                </DialogFooter>
+                                                <DialogClose/>
+                                            </DialogContent>
+                                        </t>
+                                    </Dialog>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Dropdown</CardTitle>
+                                    <CardDescription>Legacy item arrays and composed menu primitives share the same shadcn-like surface and keyboard model, accept side or align placement props, and mirror fallback submenu direction in RTL layouts.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="'odx-docs__stack'">
+                                    <div class="odx-docs__button-row">
+                                        <DropdownMenu items="docsMenuItems" side="'bottom'" align="'end'">
+                                            <t t-set-slot="trigger">
+                                                <DropdownMenuTrigger variant="'outline'">Open actions</DropdownMenuTrigger>
+                                            </t>
+                                        </DropdownMenu>
+                                        <DropdownMenu side="'bottom'" align="'start'">
+                                            <t t-set-slot="trigger">
+                                                <DropdownMenuTrigger variant="'outline'">Composed menu</DropdownMenuTrigger>
+                                            </t>
+                                            <DropdownMenuContent>
+                                                <DropdownMenuLabel text="'Workspace controls'"/>
+                                                <DropdownMenuSeparator/>
+                                                <DropdownMenuGroup>
+                                                    <DropdownMenuCheckboxItem
+                                                        checked="form.compact"
+                                                        onSelect="() => updateField('compact', !form.compact)"
+                                                        text="'Compact density'"
+                                                        shortcut="'Shift D'"
+                                                    />
+                                                    <DropdownMenuCheckboxItem
+                                                        checked="form.releaseAlerts"
+                                                        onSelect="() => updateField('releaseAlerts', !form.releaseAlerts)"
+                                                        text="'Release alerts'"
+                                                        shortcut="'Shift A'"
+                                                    />
+                                                </DropdownMenuGroup>
+                                                <DropdownMenuSeparator/>
+                                                <DropdownMenuLabel text="'Review policy'"/>
+                                                <DropdownMenuRadioGroup
+                                                    value="form.reviewPolicy"
+                                                    onValueChange="(value) => updateField('reviewPolicy', value)"
+                                                >
+                                                    <DropdownMenuRadioItem value="'manual'" text="'Manual review'"/>
+                                                    <DropdownMenuRadioItem value="'staged'" text="'Staged rollout'"/>
+                                                    <DropdownMenuRadioItem value="'automatic'" text="'Automatic merge'"/>
+                                                </DropdownMenuRadioGroup>
+                                                <DropdownMenuSeparator/>
+                                                <DropdownMenuSub side="'right'" align="'start'">
+                                                    <t t-set-slot="trigger">
+                                                        <DropdownMenuSubTrigger text="'Jump to surface'" shortcut="'More'"/>
+                                                    </t>
+                                                    <DropdownMenuSubContent>
+                                                        <DropdownMenuItem onSelect="() => announcePreviewRoute()" text="'Portal preview'" shortcut="'P'"/>
+                                                        <DropdownMenuItem onSelect="() => showToast()" text="'Release workspace'" shortcut="'R'"/>
+                                                    </DropdownMenuSubContent>
+                                                </DropdownMenuSub>
+                                                <DropdownMenuSeparator/>
+                                                <DropdownMenuItem onSelect="() => announcePreviewRoute()">
+                                                    <span class="odx-dropdown-menu__item-label">Open portal preview</span>
+                                                    <DropdownMenuShortcut>Shift P</DropdownMenuShortcut>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem
+                                                    destructive="true"
+                                                    onSelect="() => showDestructiveToast()"
+                                                    text="'Abort rollout'"
+                                                    shortcut="'Del'"
+                                                />
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Selection Controls</CardTitle>
+                                    <CardDescription>Checkbox, switch, separator, and status badges share the same token palette.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="'odx-docs__choice-list'">
+                                    <div class="odx-docs__choice">
+                                        <div class="odx-docs__choice-control">
+                                            <Checkbox
+                                                ariaLabel="'Compact density'"
+                                                checked="form.compact"
+                                                onCheckedChange="(checked) => updateField('compact', checked)"
+                                            />
+                                        </div>
+                                        <div class="odx-docs__choice-copy">
+                                            <p class="odx-docs__choice-label">Compact density</p>
+                                            <p class="odx-docs__choice-meta">A tight spacing mode for dense backend workspaces and builders.</p>
+                                        </div>
+                                        <Badge variant="form.compact ? 'secondary' : 'outline'">
+                                            <t t-esc="form.compact ? 'On' : 'Off'"/>
+                                        </Badge>
+                                    </div>
+                                    <Separator/>
+                                    <div class="odx-docs__choice">
+                                        <div class="odx-docs__choice-control">
+                                            <Switch
+                                                ariaLabel="'Release alerts'"
+                                                checked="form.releaseAlerts"
+                                                onCheckedChange="(checked) => updateField('releaseAlerts', checked)"
+                                            />
+                                        </div>
+                                        <div class="odx-docs__choice-copy">
+                                            <p class="odx-docs__choice-label">Release alerts</p>
+                                            <p class="odx-docs__choice-meta">A switch-style control for reversible workspace preferences.</p>
+                                        </div>
+                                        <Badge variant="form.releaseAlerts ? 'secondary' : 'outline'">
+                                            <t t-esc="form.releaseAlerts ? 'Active' : 'Muted'"/>
+                                        </Badge>
+                                    </div>
+                                    <Separator/>
+                                    <div class="odx-docs__choice">
+                                        <div class="odx-docs__choice-control">
+                                            <Checkbox
+                                                ariaLabel="'Beta access'"
+                                                checked="form.betaAccess"
+                                                onCheckedChange="(checked) => updateField('betaAccess', checked)"
+                                            />
+                                        </div>
+                                        <div class="odx-docs__choice-copy">
+                                            <p class="odx-docs__choice-label">Inherited beta access</p>
+                                            <p class="odx-docs__choice-meta">Indeterminate state is useful for partial selection or inherited permissions before the user resolves the final value.</p>
+                                        </div>
+                                        <Badge variant="form.betaAccess === true ? 'default' : form.betaAccess === 'indeterminate' ? 'secondary' : 'outline'">
+                                            <t t-esc="form.betaAccess === true ? 'Enabled' : form.betaAccess === 'indeterminate' ? 'Partial' : 'Off'"/>
+                                        </Badge>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Utility Primitives</CardTitle>
+                                    <CardDescription>Dense toolbars, OTP entry, grouped inputs, native fallbacks, and keyboard hints share the same visual system, including direction-aware OTP navigation.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="'odx-docs__stack'">
+                                    <ButtonGroup>
+                                        <Button variant="'outline'">Back</Button>
+                                        <Button variant="'outline'">Preview</Button>
+                                        <ButtonGroupSeparator/>
+                                        <Button>Publish</Button>
+                                        <ButtonGroupText>
+                                            <KbdGroup>
+                                                <Kbd>Shift</Kbd>
+                                                <Kbd>P</Kbd>
+                                            </KbdGroup>
+                                        </ButtonGroupText>
+                                    </ButtonGroup>
+                                    <InputGroup>
+                                        <InputGroupAddon align="'inline-start'">
+                                            <InputGroupText>https://</InputGroupText>
+                                        </InputGroupAddon>
+                                        <InputGroupInput
+                                            ariaLabel="'Workspace slug'"
+                                            value="form.workspaceSlug"
+                                            onInput="(value) => updateField('workspaceSlug', value)"
+                                        />
+                                        <InputGroupButton size="'icon-xs'" ariaLabel="'Sync registry'">
+                                            <Spinner size="'sm'"/>
+                                        </InputGroupButton>
+                                    </InputGroup>
+                                    <NativeSelect
+                                        ariaLabel="'Distribution surface'"
+                                        options="surfaceItems"
+                                        value="form.surface"
+                                        onChange="(value) => updateField('surface', value)"
+                                    />
+                                    <div class="odx-docs__stack">
+                                        <div class="odx-docs__choice">
+                                            <div class="odx-docs__choice-copy">
+                                                <p class="odx-docs__choice-label">Invite code</p>
+                                                <p class="odx-docs__choice-meta">OTP slots keep arrow-key movement, backspace behavior, paste distribution, a single hidden form value, and RTL-aware horizontal slot navigation.</p>
+                                            </div>
+                                            <Badge variant="'outline'"><t t-esc="otpValueLabel"/></Badge>
+                                        </div>
+                                        <InputOTP
+                                            length="6"
+                                            value="form.inviteCode"
+                                            onValueChange="(value) => updateField('inviteCode', value)"
+                                            onComplete="(value) => completeInviteCode(value)"
+                                        >
+                                            <InputOTPGroup>
+                                                <InputOTPSlot index="0"/>
+                                                <InputOTPSlot index="1"/>
+                                                <InputOTPSlot index="2"/>
+                                            </InputOTPGroup>
+                                            <InputOTPSeparator/>
+                                            <InputOTPGroup>
+                                                <InputOTPSlot index="3"/>
+                                                <InputOTPSlot index="4"/>
+                                                <InputOTPSlot index="5"/>
+                                            </InputOTPGroup>
+                                        </InputOTP>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Collapsible and Field</CardTitle>
+                                    <CardDescription>Disclosure shells and field wrappers provide the layout layer used by denser settings and onboarding flows.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="'odx-docs__stack'">
+                                    <Collapsible defaultOpen="true" className="'odx-docs__stack'">
+                                        <CollapsibleTrigger className="'odx-docs__collapsible-trigger'">
+                                            <span>Advanced release settings</span>
+                                            <Badge variant="'outline'">3 fields</Badge>
+                                        </CollapsibleTrigger>
+                                        <CollapsibleContent className="'odx-docs__stack'">
+                                            <FieldSet>
+                                                <FieldLegend>Workspace options</FieldLegend>
+                                                <FieldGroup>
+                                                    <Field orientation="'responsive'">
+                                                        <FieldLabel forId="'preview-surface'">Surface</FieldLabel>
+                                                        <FieldContent>
+                                                            <NativeSelect
+                                                                id="'preview-surface'"
+                                                                ariaLabel="'Preview surface'"
+                                                                options="surfaceItems"
+                                                                value="form.surface"
+                                                                onChange="(value) => updateField('surface', value)"
+                                                            />
+                                                            <FieldDescription>Native select fallback keeps browser semantics while matching the shared tokens.</FieldDescription>
+                                                        </FieldContent>
+                                                    </Field>
+                                                    <Field orientation="'horizontal'" invalid="hasDemoFormErrors">
+                                                        <Switch
+                                                            id="'preview-alerts'"
+                                                            ariaLabel="'Preview alerts'"
+                                                            checked="form.releaseAlerts"
+                                                            onCheckedChange="(checked) => updateField('releaseAlerts', checked)"
+                                                        />
+                                                        <FieldContent>
+                                                            <FieldLabel forId="'preview-alerts'">Release alerts</FieldLabel>
+                                                            <FieldDescription>Horizontal field rows mirror the compact settings layouts used across shadcn examples.</FieldDescription>
+                                                        </FieldContent>
+                                                    </Field>
+                                                    <FieldSeparator content="'Validation'"/>
+                                                    <Field invalid="hasDemoFormErrors">
+                                                        <FieldTitle>Submission state</FieldTitle>
+                                                        <FieldContent>
+                                                            <FieldDescription>The field layer can show aggregated validation messages without coupling itself to a specific form library.</FieldDescription>
+                                                            <FieldError errors="demoFormErrorItems"/>
+                                                        </FieldContent>
+                                                    </Field>
+                                                </FieldGroup>
+                                            </FieldSet>
+                                        </CollapsibleContent>
+                                    </Collapsible>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Item Patterns</CardTitle>
+                                    <CardDescription>Reusable item scaffolds standardize media, titles, descriptions, and action rows for list-heavy modules.</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <ItemGroup>
+                                        <t t-foreach="workspaceItems" t-as="workspaceItem" t-key="workspaceItem.title">
+                                            <Item variant="'outline'" tabindex="0">
+                                                <ItemMedia variant="'icon'">
+                                                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                                                        <path d="M3 4.25H13M3 8H11M3 11.75H8.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.4"/>
+                                                    </svg>
+                                                </ItemMedia>
+                                                <ItemContent>
+                                                    <ItemHeader>
+                                                        <ItemTitle><t t-esc="workspaceItem.title"/></ItemTitle>
+                                                        <Badge variant="'outline'"><t t-esc="workspaceItem.status"/></Badge>
+                                                    </ItemHeader>
+                                                    <ItemDescription><t t-esc="workspaceItem.description"/></ItemDescription>
+                                                    <ItemFooter>
+                                                        <span class="odx-docs__choice-meta"><t t-esc="workspaceItem.meta"/></span>
+                                                        <ItemActions>
+                                                            <Button variant="'ghost'" size="'sm'">Open</Button>
+                                                            <Button size="'sm'">Inspect</Button>
+                                                        </ItemActions>
+                                                    </ItemFooter>
+                                                </ItemContent>
+                                            </Item>
+                                            <ItemSeparator t-if="workspaceItem_index !== workspaceItems.length - 1"/>
+                                        </t>
+                                    </ItemGroup>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Popover, Tooltip, Alert Dialog</CardTitle>
+                                    <CardDescription>Overlay families now expose dedicated trigger, overlay, and content primitives where appropriate, plus shadcn-style side and align placement props on the lightweight surfaces.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="'odx-docs__stack'">
+                                    <div class="odx-docs__inline-actions">
+                                        <Popover side="'right'" align="'start'" contentClassName="'odx-docs__popover-panel'">
+                                            <t t-set-slot="anchor">
+                                                <PopoverAnchor>
+                                                    <Badge variant="'outline'">Anchored to release chip</Badge>
+                                                </PopoverAnchor>
+                                            </t>
+                                            <t t-set-slot="trigger">
+                                                <PopoverTrigger>
+                                                    <Button variant="'outline'">Quick settings</Button>
+                                                </PopoverTrigger>
+                                            </t>
+                                            <t t-set-slot="content">
+                                                <PopoverContent>
+                                                    <div class="odx-docs__popover-stack">
+                                                        <div class="odx-docs__avatar-row">
+                                                            <Avatar
+                                                                className="'odx-docs__avatar-lg'"
+                                                                fallback="profileInitials"
+                                                            />
+                                                            <div class="odx-docs__avatar-copy">
+                                                                <p class="odx-docs__choice-label"><t t-esc="form.name"/></p>
+                                                                <p class="odx-docs__choice-meta"><t t-esc="form.email"/></p>
+                                                            </div>
+                                                        </div>
+                                                        <Separator/>
+                                                        <div class="odx-docs__choice">
+                                                            <div class="odx-docs__choice-control">
+                                                                <Switch
+                                                                    ariaLabel="'Automatic deploys'"
+                                                                    checked="form.automaticDeploys"
+                                                                    onCheckedChange="(checked) => updateField('automaticDeploys', checked)"
+                                                                />
+                                                            </div>
+                                                            <div class="odx-docs__choice-copy">
+                                                                <p class="odx-docs__choice-label">Automatic deploys</p>
+                                                                <p class="odx-docs__choice-meta">Popover content can host the same form controls as any full page view.</p>
+                                                            </div>
+                                                        </div>
+                                                        <Separator/>
+                                                        <div class="odx-docs__inline-actions">
+                                                            <PopoverClose className="'odx-button odx-button--outline odx-button--sm'">Dismiss</PopoverClose>
+                                                        </div>
+                                                    </div>
+                                                </PopoverContent>
+                                            </t>
+                                        </Popover>
+                                        <TooltipProvider delayDuration="350" skipDelayDuration="500">
+                                            <div class="odx-docs__inline-actions">
+                                                <Tooltip side="'bottom'" align="'start'">
+                                                    <t t-set-slot="trigger">
+                                                        <TooltipTrigger>
+                                                            <Button variant="'ghost'">Focus for tooltip</Button>
+                                                        </TooltipTrigger>
+                                                    </t>
+                                                    <t t-set-slot="content">
+                                                        <TooltipContent text="'Tooltip surfaces mirror the shadcn compact helper style, open immediately on focus, and can inherit their delay from a shared provider.'"/>
+                                                    </t>
+                                                </Tooltip>
+                                                <Tooltip side="'bottom'" align="'end'">
+                                                    <t t-set-slot="trigger">
+                                                        <TooltipTrigger>
+                                                            <Button variant="'outline'">Neighbor tooltip</Button>
+                                                        </TooltipTrigger>
+                                                    </t>
+                                                    <t t-set-slot="content">
+                                                        <TooltipContent text="'Move across nearby triggers and the shared provider skips the second hover delay for faster scanning.'"/>
+                                                    </t>
+                                                </Tooltip>
+                                            </div>
+                                        </TooltipProvider>
+                                        <AlertDialog
+                                            onConfirm="() => archiveWorkspace()"
+                                        >
+                                            <t t-set-slot="trigger">
+                                                <AlertDialogTrigger>
+                                                    <Button variant="'destructive'">Open Alert</Button>
+                                                </AlertDialogTrigger>
+                                            </t>
+                                            <t t-set-slot="content">
+                                                <AlertDialogOverlay/>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>Archive workspace?</AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            Archived workspaces remain restorable from the activity log.
+                                                        </AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <div class="odx-dialog__body">
+                                                        <p class="odx-docs__muted-copy">
+                                                            Alert dialogs reuse the core dialog primitive but lock the footer into a predictable cancel and confirm pattern.
+                                                        </p>
+                                                    </div>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel/>
+                                                        <AlertDialogAction>Archive</AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </t>
+                                        </AlertDialog>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Empty State</CardTitle>
+                                    <CardDescription>Reusable empty shells give apps and portal builders a consistent fallback composition.</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <Empty className="'odx-docs__empty-demo'">
+                                        <EmptyHeader>
+                                            <EmptyMedia variant="'icon'">
+                                                <svg viewBox="0 0 16 16" aria-hidden="true">
+                                                    <path d="M3 4.25H13M3 8H10.5M3 11.75H8.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.4"/>
+                                                </svg>
+                                            </EmptyMedia>
+                                            <EmptyTitle>No components match this filter</EmptyTitle>
+                                            <EmptyDescription>
+                                                Use <code>InputGroup</code>, <code>Kbd</code>, and <code>ButtonGroup</code> together to build richer search and empty-state flows without one-off styling.
+                                            </EmptyDescription>
+                                        </EmptyHeader>
+                                        <EmptyContent>
+                                            <InputGroup>
+                                                <InputGroupAddon align="'inline-start'">
+                                                    <InputGroupText>Filter</InputGroupText>
+                                                </InputGroupAddon>
+                                                <InputGroupInput
+                                                    ariaLabel="'Component filter'"
+                                                    value="form.workspaceSlug"
+                                                    onInput="(value) => updateField('workspaceSlug', value)"
+                                                />
+                                            </InputGroup>
+                                            <ButtonGroup>
+                                                <Button variant="'outline'">Reset</Button>
+                                                <Button>Browse Library</Button>
+                                            </ButtonGroup>
+                                        </EmptyContent>
+                                    </Empty>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Accordion</CardTitle>
+                                    <CardDescription>Structured disclosure now supports shadcn-style headers, disabled items, and trigger keyboard navigation without changing the OWL-native API, including RTL-aware horizontal movement.</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <Accordion defaultValue="'tokens'">
+                                        <AccordionItem value="'tokens'">
+                                            <AccordionHeader>
+                                                <AccordionTrigger>Design tokens</AccordionTrigger>
+                                            </AccordionHeader>
+                                            <AccordionContent>
+                                                <p class="odx-docs__muted-copy">
+                                                    Light, dark, and semantic surface tokens are defined once and reused across backend and portal bundles.
+                                                </p>
+                                            </AccordionContent>
+                                        </AccordionItem>
+                                        <AccordionItem value="'composition'">
+                                            <AccordionHeader>
+                                                <AccordionTrigger>Composition patterns</AccordionTrigger>
+                                            </AccordionHeader>
+                                            <AccordionContent>
+                                                <p class="odx-docs__muted-copy">
+                                                    Components follow slot-based OWL composition instead of React wrappers, so other modules can extend them naturally.
+                                                </p>
+                                            </AccordionContent>
+                                        </AccordionItem>
+                                        <AccordionItem value="'distribution'" disabled="true">
+                                            <AccordionHeader>
+                                                <AccordionTrigger>Distribution</AccordionTrigger>
+                                            </AccordionHeader>
+                                            <AccordionContent>
+                                                <p class="odx-docs__muted-copy">
+                                                    The same asset bundle can power admin pages, portal previews, builders, and module-level client actions.
+                                                </p>
+                                            </AccordionContent>
+                                        </AccordionItem>
+                                    </Accordion>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Avatar and Skeleton</CardTitle>
+                                    <CardDescription>Identity and loading states are lightweight primitives designed for repeated reuse, with avatars now exposing dedicated image and fallback parts.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="'odx-docs__stack'">
+                                    <div class="odx-docs__avatar-row">
+                                        <Avatar className="'odx-docs__avatar-lg'">
+                                            <AvatarImage src="profileAvatarSrc" alt="form.name"/>
+                                            <AvatarFallback><t t-esc="profileInitials"/></AvatarFallback>
+                                        </Avatar>
+                                        <div class="odx-docs__avatar-copy">
+                                            <p class="odx-docs__choice-label"><t t-esc="form.name"/></p>
+                                            <p class="odx-docs__choice-meta">System designer</p>
+                                        </div>
+                                    </div>
+                                    <Separator/>
+                                    <div class="odx-docs__skeleton-stack">
+                                        <Skeleton className="'odx-docs__skeleton-title'"/>
+                                        <Skeleton className="'odx-docs__skeleton-line'"/>
+                                        <Skeleton className="'odx-docs__skeleton-line odx-docs__skeleton-line--short'"/>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Feedback and Choice</CardTitle>
+                                    <CardDescription>Alert, progress, label, and radio group cover status-heavy workflows.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="'odx-docs__stack'">
+                                    <Alert>
+                                        <t t-set-slot="icon">
+                                            <svg viewBox="0 0 16 16" aria-hidden="true">
+                                                <circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                                                <path d="M8 4.7V8.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"/>
+                                                <circle cx="8" cy="11.2" r="0.75" fill="currentColor"/>
+                                            </svg>
+                                        </t>
+                                        <AlertTitle>Migration surfaces are stable</AlertTitle>
+                                        <AlertDescription>
+                                            The current batch focuses on reusable primitives that other Odoo modules can compose without pulling Tailwind or React wrappers.
+                                        </AlertDescription>
+                                    </Alert>
+                                    <div class="odx-docs__stack">
+                                        <div class="odx-docs__choice-copy">
+                                            <p class="odx-docs__choice-label">Preview rollout</p>
+                                            <p class="odx-docs__choice-meta">A progress primitive for onboarding, sync, or long-running background actions.</p>
+                                        </div>
+                                        <Progress ariaLabel="'Preview rollout'" value="form.syncProgress"/>
+                                    </div>
+                                    <div class="odx-docs__stack">
+                                        <div class="odx-docs__choice-copy">
+                                            <p class="odx-docs__choice-label">Background migration</p>
+                                            <p class="odx-docs__choice-meta">Indeterminate mode works when the task has started but the backend cannot yet expose precise completion.</p>
+                                        </div>
+                                        <Progress
+                                            ariaLabel="'Background migration'"
+                                            ariaValueText="'Loading'"
+                                            indeterminate="true"
+                                        />
+                                    </div>
+                                    <RadioGroup
+                                        ariaLabel="'Review policy'"
+                                        className="'odx-docs__radio-group'"
+                                        loop="false"
+                                        value="form.reviewPolicy"
+                                        onValueChange="(value) => updateField('reviewPolicy', value)"
+                                    >
+                                        <div class="odx-docs__radio-option">
+                                            <RadioGroupItem id="'review-manual'" value="'manual'"/>
+                                            <div class="odx-docs__choice-copy">
+                                                <Label forId="'review-manual'">Manual review</Label>
+                                                <p class="odx-docs__choice-meta">Editors approve every change before rollout.</p>
+                                            </div>
+                                        </div>
+                                        <div class="odx-docs__radio-option">
+                                            <RadioGroupItem id="'review-staged'" value="'staged'"/>
+                                            <div class="odx-docs__choice-copy">
+                                                <Label forId="'review-staged'">Staged deploy</Label>
+                                                <p class="odx-docs__choice-meta">Changes land in a preview environment before they go live.</p>
+                                            </div>
+                                        </div>
+                                        <div class="odx-docs__radio-option">
+                                            <RadioGroupItem id="'review-auto'" value="'auto'"/>
+                                            <div class="odx-docs__choice-copy">
+                                                <Label forId="'review-auto'">Automatic</Label>
+                                                <p class="odx-docs__choice-meta">Trusted builders can push straight through the workflow.</p>
+                                            </div>
+                                        </div>
+                                    </RadioGroup>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Charts</CardTitle>
+                                    <CardDescription>Analytics primitives provide reusable legends, tooltips, and token-driven series colors for backend and portal reporting surfaces.</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <div class="odx-docs__chart-grid">
+                                        <ChartContainer config="chartConfig" className="'odx-docs__chart-card odx-docs__chart-card--wide'">
+                                            <div class="odx-docs__choice-copy">
+                                                <p class="odx-docs__choice-label">Acquisition trend</p>
+                                                <p class="odx-docs__choice-meta">A shared line chart for signups and visitor volume, with tooltip and legend content driven by the same chart config object.</p>
+                                            </div>
+                                            <LineChart
+                                                ariaLabel="'Acquisition trend'"
+                                                data="trafficChartData"
+                                                series="['visitors', 'signups']"
+                                                xKey="'period'"
+                                                height="220"
+                                            />
+                                            <ChartLegend>
+                                                <ChartLegendContent series="['visitors', 'signups']"/>
+                                            </ChartLegend>
+                                            <ChartTooltip>
+                                                <ChartTooltipContent/>
+                                            </ChartTooltip>
+                                        </ChartContainer>
+                                        <ChartContainer config="chartConfig" className="'odx-docs__chart-card'">
+                                            <div class="odx-docs__choice-copy">
+                                                <p class="odx-docs__choice-label">Release throughput</p>
+                                                <p class="odx-docs__choice-meta">Grouped bars compare work shipped across portal, builder, and backend tracks.</p>
+                                            </div>
+                                            <BarChart
+                                                ariaLabel="'Release throughput'"
+                                                data="releaseChartData"
+                                                series="['portal', 'builder', 'backend']"
+                                                xKey="'sprint'"
+                                                height="220"
+                                            />
+                                            <ChartLegend>
+                                                <ChartLegendContent series="['portal', 'builder', 'backend']"/>
+                                            </ChartLegend>
+                                            <ChartTooltip>
+                                                <ChartTooltipContent/>
+                                            </ChartTooltip>
+                                        </ChartContainer>
+                                        <ChartContainer config="chartConfig" className="'odx-docs__chart-card'">
+                                            <div class="odx-docs__choice-copy">
+                                                <p class="odx-docs__choice-label">Surface share</p>
+                                                <p class="odx-docs__choice-meta">A donut view summarizes how design-system work is distributed across product surfaces, with the same composed legend and tooltip parts reused across chart types.</p>
+                                            </div>
+                                            <DonutChart
+                                                ariaLabel="'Surface share'"
+                                                data="surfaceShareData"
+                                                nameKey="'name'"
+                                                valueKey="'value'"
+                                                height="220"
+                                            />
+                                            <ChartLegend orientation="'vertical'">
+                                                <ChartLegendContent series="['portal', 'builder', 'backend']"/>
+                                            </ChartLegend>
+                                            <ChartTooltip>
+                                                <ChartTooltipContent/>
+                                            </ChartTooltip>
+                                        </ChartContainer>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Sheet</CardTitle>
+                                    <CardDescription>Side-docked overlays now expose composed overlay, content, and close primitives while reusing the dialog behavior model, with logical start or end anchoring.</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <Sheet side="'start'">
+                                        <t t-set-slot="trigger">
+                                            <SheetTrigger>
+                                                <Button variant="'outline'">Open Sheet</Button>
+                                            </SheetTrigger>
+                                        </t>
+                                        <t t-set-slot="content">
+                                            <SheetOverlay/>
+                                            <SheetContent side="'start'" showClose="false">
+                                                <SheetHeader>
+                                                    <SheetTitle>Workspace settings</SheetTitle>
+                                                    <SheetDescription>
+                                                        Sheets are useful for secondary editing flows that should stay close to the current page context.
+                                                    </SheetDescription>
+                                                </SheetHeader>
+                                                <div class="odx-dialog__body">
+                                                    <div class="odx-docs__stack">
+                                                        <Input
+                                                            ariaLabel="'Workspace owner'"
+                                                            value="form.name"
+                                                            onInput="(value) => updateField('name', value)"
+                                                        />
+                                                        <Textarea
+                                                            ariaLabel="'Workspace note'"
+                                                            value="form.note"
+                                                            onInput="(value) => updateField('note', value)"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <SheetFooter>
+                                                    <Button variant="'outline'">Cancel</Button>
+                                                    <Button onClick="() => saveDemoRecord()">Save panel</Button>
+                                                </SheetFooter>
+                                                <SheetClose/>
+                                            </SheetContent>
+                                        </t>
+                                    </Sheet>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Drawer</CardTitle>
+                                    <CardDescription>Bottom and edge-aligned drawers now expose composed overlay, content, and close primitives on top of the shared labelled-dialog semantics, with logical start or end support for horizontal docking.</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <Drawer direction="'bottom'" size="'lg'">
+                                        <t t-set-slot="trigger">
+                                            <DrawerTrigger>
+                                                <Button variant="'outline'">Open Drawer</Button>
+                                            </DrawerTrigger>
+                                        </t>
+                                        <t t-set-slot="content">
+                                            <DrawerOverlay/>
+                                            <DrawerContent direction="'bottom'" size="'lg'" showHandle="true" showClose="false">
+                                                <DrawerHeader>
+                                                    <DrawerTitle>Release review</DrawerTitle>
+                                                    <DrawerDescription>
+                                                        Drawers reuse dialog focus trapping while shifting the visual rhythm toward stacked mobile and portal workflows.
+                                                    </DrawerDescription>
+                                                </DrawerHeader>
+                                                <div class="odx-dialog__body">
+                                                    <div class="odx-docs__stack">
+                                                        <div class="odx-docs__choice">
+                                                            <div class="odx-docs__choice-copy">
+                                                                <p class="odx-docs__choice-label">Portal shell</p>
+                                                                <p class="odx-docs__choice-meta">Shared tokens keep portal approval surfaces aligned with the admin client.</p>
+                                                            </div>
+                                                            <Badge variant="'secondary'">Ready</Badge>
+                                                        </div>
+                                                        <Separator/>
+                                                        <div class="odx-docs__choice">
+                                                            <div class="odx-docs__choice-copy">
+                                                                <p class="odx-docs__choice-label">Accessibility pass</p>
+                                                                <p class="odx-docs__choice-meta">Focus stays inside the drawer until it closes, then returns to the original trigger.</p>
+                                                            </div>
+                                                            <Badge variant="'outline'">Keyboard safe</Badge>
+                                                        </div>
+                                                        <Separator/>
+                                                        <div class="odx-docs__choice">
+                                                            <div class="odx-docs__choice-copy">
+                                                                <p class="odx-docs__choice-label">Release summary</p>
+                                                                <p class="odx-docs__choice-meta">Footer actions can dispatch the same shared services as any other OWL component.</p>
+                                                            </div>
+                                                            <Badge>3 actions</Badge>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <DrawerFooter>
+                                                    <Button variant="'outline'">Keep editing</Button>
+                                                    <Button onClick="() => saveDemoRecord()">Ship release</Button>
+                                                </DrawerFooter>
+                                                <DrawerClose/>
+                                            </DrawerContent>
+                                        </t>
+                                    </Drawer>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Resizable Panels</CardTitle>
+                                    <CardDescription>Split layouts cover inspectors, editors, and preview canvases while preserving keyboard-operable panel resizing, including RTL-aware horizontal separator keys.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="'odx-docs__stack'">
+                                    <ResizablePanelGroup
+                                        className="'odx-docs__resizable-demo'"
+                                        defaultLayout="[24, 46, 30]"
+                                    >
+                                        <ResizablePanel className="'odx-docs__resizable-panel odx-docs__resizable-panel--muted'" minSize="18">
+                                            <div class="odx-docs__resizable-copy">
+                                                <Badge variant="'outline'">Rail</Badge>
+                                                <p class="odx-docs__choice-label">Component index</p>
+                                                <p class="odx-docs__choice-meta">Dense navigation for tokens, forms, overlays, and docs sections.</p>
+                                            </div>
+                                        </ResizablePanel>
+                                        <ResizableHandle withHandle="true"/>
+                                        <ResizablePanel className="'odx-docs__resizable-panel'" minSize="28">
+                                            <div class="odx-docs__resizable-copy">
+                                                <Badge variant="'secondary'">Canvas</Badge>
+                                                <p class="odx-docs__choice-label">Preview editor</p>
+                                                <p class="odx-docs__choice-meta">The center workspace can flex wider without forcing a separate one-off layout primitive.</p>
+                                            </div>
+                                        </ResizablePanel>
+                                        <ResizableHandle withHandle="true"/>
+                                        <ResizablePanel className="'odx-docs__resizable-panel odx-docs__resizable-panel--accent'" minSize="20">
+                                            <div class="odx-docs__resizable-copy">
+                                                <Badge>Inspector</Badge>
+                                                <p class="odx-docs__choice-label">Property panel</p>
+                                                <p class="odx-docs__choice-meta">Handles respond to arrow keys as well as pointer dragging for accessible split views.</p>
+                                            </div>
+                                        </ResizablePanel>
+                                    </ResizablePanelGroup>
+                                    <p class="odx-docs__muted-copy">
+                                        Focus a handle and use arrow keys to resize adjacent panels in 5% steps.
+                                    </p>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Select and Combobox</CardTitle>
+                                    <CardDescription>Choice surfaces now cover plain pickers, searchable command-style selection, buffered typeahead, stable listbox linkage, and the same side or align placement API as the other overlay roots.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="'odx-docs__stack'">
+                                    <div class="odx-docs__stack">
+                                        <div class="odx-docs__choice-copy">
+                                            <p class="odx-docs__choice-label">Target surface</p>
+                                            <p class="odx-docs__choice-meta">A non-searchable select for small, known option sets. With focus on the trigger, typing will jump to the next matching option.</p>
+                                        </div>
+                                        <Select
+                                            align="'end'"
+                                            ariaLabel="'Target surface'"
+                                            items="surfaceItems"
+                                            side="'bottom'"
+                                            value="form.surface"
+                                            onValueChange="(value) => updateField('surface', value)"
+                                        />
+                                    </div>
+                                    <div class="odx-docs__stack">
+                                        <div class="odx-docs__choice-copy">
+                                            <p class="odx-docs__choice-label">Review policy</p>
+                                            <p class="odx-docs__choice-meta">The same select root can now be authored with composed OWL primitives instead of only an <code>items</code> array.</p>
+                                        </div>
+                                        <Select
+                                            align="'start'"
+                                            ariaLabel="'Review policy'"
+                                            side="'bottom'"
+                                            value="form.reviewPolicy"
+                                            onValueChange="(value) => updateField('reviewPolicy', value)"
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="'Choose a review policy'"/>
+                                                <SelectIcon/>
+                                            </SelectTrigger>
+                                            <t t-set-slot="content">
+                                                <SelectContent>
+                                                    <SelectScrollUpButton/>
+                                                    <SelectViewport>
+                                                        <SelectGroup>
+                                                            <SelectLabel text="'Release policy'"/>
+                                                            <SelectItem value="'manual'" description="'Require an explicit approval before rollout.'">
+                                                                <span class="odx-select__item-copy">
+                                                                    <SelectItemText text="'Manual review'"/>
+                                                                    <SelectItemDescription text="'Require an explicit approval before rollout.'"/>
+                                                                </span>
+                                                                <SelectItemIndicator/>
+                                                            </SelectItem>
+                                                            <SelectItem value="'staged'" description="'Release in controlled slices before full exposure.'">
+                                                                <span class="odx-select__item-copy">
+                                                                    <SelectItemText text="'Staged rollout'"/>
+                                                                    <SelectItemDescription text="'Release in controlled slices before full exposure.'"/>
+                                                                </span>
+                                                                <SelectItemIndicator/>
+                                                            </SelectItem>
+                                                            <SelectItem value="'canary'" description="'Route a narrow percentage of traffic before the broader rollout.'">
+                                                                <span class="odx-select__item-copy">
+                                                                    <SelectItemText text="'Canary release'"/>
+                                                                    <SelectItemDescription text="'Route a narrow percentage of traffic before the broader rollout.'"/>
+                                                                </span>
+                                                                <SelectItemIndicator/>
+                                                            </SelectItem>
+                                                            <SelectItem value="'scheduled'" description="'Delay activation until the next approved release window.'">
+                                                                <span class="odx-select__item-copy">
+                                                                    <SelectItemText text="'Scheduled window'"/>
+                                                                    <SelectItemDescription text="'Delay activation until the next approved release window.'"/>
+                                                                </span>
+                                                                <SelectItemIndicator/>
+                                                            </SelectItem>
+                                                            <SelectItem value="'after-hours'" description="'Hold the launch for the overnight stability window.'">
+                                                                <span class="odx-select__item-copy">
+                                                                    <SelectItemText text="'After-hours publish'"/>
+                                                                    <SelectItemDescription text="'Hold the launch for the overnight stability window.'"/>
+                                                                </span>
+                                                                <SelectItemIndicator/>
+                                                            </SelectItem>
+                                                            <SelectSeparator/>
+                                                            <SelectItem value="'automatic'" description="'Apply the rollout without a manual checkpoint.'">
+                                                                <span class="odx-select__item-copy">
+                                                                    <SelectItemText text="'Automatic merge'"/>
+                                                                    <SelectItemDescription text="'Apply the rollout without a manual checkpoint.'"/>
+                                                                </span>
+                                                                <SelectItemIndicator/>
+                                                            </SelectItem>
+                                                        </SelectGroup>
+                                                    </SelectViewport>
+                                                    <SelectScrollDownButton/>
+                                                </SelectContent>
+                                            </t>
+                                        </Select>
+                                    </div>
+                                    <div class="odx-docs__stack">
+                                        <div class="odx-docs__choice-copy">
+                                            <p class="odx-docs__choice-label">Preferred stack</p>
+                                            <p class="odx-docs__choice-meta">A searchable combobox for larger collections that now exposes composed trigger, value, icon, and content primitives on top of the command surface.</p>
+                                        </div>
+                                        <Combobox
+                                            align="'end'"
+                                            ariaLabel="'Preferred stack'"
+                                            side="'bottom'"
+                                            value="form.stack"
+                                            onValueChange="(value) => updateField('stack', value)"
+                                            items="stackItems"
+                                            placeholder="'Choose a stack'"
+                                            searchPlaceholder="'Search stacks and modules...'"
+                                        />
+                                    </div>
+                                    <div class="odx-docs__stack">
+                                        <div class="odx-docs__choice-copy">
+                                            <p class="odx-docs__choice-label">Composed combobox</p>
+                                            <p class="odx-docs__choice-meta">The same root can be authored with explicit trigger and content wrappers when a workflow needs custom command composition.</p>
+                                        </div>
+                                        <Combobox
+                                            align="'start'"
+                                            ariaLabel="'Composed stack selector'"
+                                            side="'bottom'"
+                                            value="form.stack"
+                                            onValueChange="(value) => updateField('stack', value)"
+                                            items="stackItems"
+                                            placeholder="'Choose a stack'"
+                                            searchPlaceholder="'Search stacks and modules...'"
+                                        >
+                                            <ComboboxTrigger>
+                                                <ComboboxValue placeholder="'Choose a stack'"/>
+                                                <ComboboxIcon/>
+                                            </ComboboxTrigger>
+                                            <t t-set-slot="content">
+                                                <ComboboxContent>
+                                                    <Command
+                                                        autoFocus="true"
+                                                        className="'odx-combobox__command'"
+                                                        items="stackItems"
+                                                        placeholder="'Search stacks and modules...'"
+                                                        emptyLabel="'No stack match found.'"
+                                                        selectedValue="form.stack"
+                                                        onSelect="(value) => updateField('stack', value)"
+                                                    />
+                                                </ComboboxContent>
+                                            </t>
+                                        </Combobox>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Command Palette</CardTitle>
+                                    <CardDescription>Searchable command surfaces support both config-driven data and composed input, list, group, and item primitives.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="'odx-docs__stack'">
+                                    <div class="odx-docs__stack">
+                                        <div class="odx-docs__choice-copy">
+                                            <p class="odx-docs__choice-label">Config-driven palette</p>
+                                            <p class="odx-docs__choice-meta">Pass a normalized item array when the command surface is backed by registry or route metadata.</p>
+                                        </div>
+                                        <Command
+                                            items="commandItems"
+                                            placeholder="'Jump to an action or route...'"
+                                            onSelect="(value) => runCommand(value)"
+                                        />
+                                    </div>
+                                    <div class="odx-docs__stack">
+                                        <div class="odx-docs__choice-copy">
+                                            <p class="odx-docs__choice-label">Composed palette</p>
+                                            <p class="odx-docs__choice-meta">Build custom palettes with explicit groups, separators, empty states, and shortcut content.</p>
+                                        </div>
+                                        <Command
+                                            placeholder="'Search actions and routes...'"
+                                            onSelect="(value) => runCommand(value)"
+                                        >
+                                            <t t-set-slot="input">
+                                                <CommandInput placeholder="'Search actions and routes...'"/>
+                                            </t>
+                                            <t t-set-slot="default">
+                                                <CommandList>
+                                                    <CommandLoading text="'Syncing remote actions…'"/>
+                                                    <CommandEmpty text="'No command matched that query.'"/>
+                                                    <CommandGroup heading="'Actions'">
+                                                        <CommandItem
+                                                            value="'open-theme'"
+                                                            label="'Toggle theme'"
+                                                            description="'Switch between the current light and dark palettes.'"
+                                                        >
+                                                            <t t-set-slot="default">
+                                                                <span class="odx-command__item-main">
+                                                                    <CommandItemText text="'Toggle theme'"/>
+                                                                    <CommandItemDescription text="'Switch between the current light and dark palettes.'"/>
+                                                                </span>
+                                                                <CommandShortcut text="'Shift T'"/>
+                                                            </t>
+                                                        </CommandItem>
+                                                        <CommandItem
+                                                            value="'toast-success'"
+                                                            label="'Show success toast'"
+                                                            description="'Dispatch a shared toast event from the active service.'"
+                                                            shortcut="'Enter'"
+                                                        />
+                                                    </CommandGroup>
+                                                    <CommandSeparator/>
+                                                    <CommandGroup heading="'Navigation'">
+                                                        <CommandItem
+                                                            value="'open-preview'"
+                                                            label="'Open portal preview'"
+                                                            description="'Jump to the public preview route for the same asset bundle.'"
+                                                            shortcut="'/'"
+                                                        />
+                                                    </CommandGroup>
+                                                </CommandList>
+                                            </t>
+                                        </Command>
+                                    </div>
+                                    <CommandDialog
+                                        title="'Command Palette'"
+                                        description="'Search for a command to run across the current workspace.'"
+                                        items="commandItems"
+                                        loading="true"
+                                        loadingLabel="'Syncing command registry…'"
+                                        placeholder="'Type a command...'"
+                                        onSelect="(value) => runCommand(value)"
+                                    >
+                                        <t t-set-slot="trigger">
+                                            <Button variant="'outline'">Open Palette</Button>
+                                        </t>
+                                    </CommandDialog>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Breadcrumb and Table</CardTitle>
+                                    <CardDescription>Navigation and data-display primitives are ready for admin surfaces, builders, and portals, with direction-aware breadcrumb and pagination affordances plus logical start or end table alignment.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="'odx-docs__stack'">
+                                    <Breadcrumb>
+                                        <BreadcrumbList>
+                                            <BreadcrumbItem>
+                                                <BreadcrumbLink href="'#'">Workspace</BreadcrumbLink>
+                                            </BreadcrumbItem>
+                                            <BreadcrumbSeparator/>
+                                            <BreadcrumbItem>
+                                                <BreadcrumbLink href="'#'">UI Library</BreadcrumbLink>
+                                            </BreadcrumbItem>
+                                            <BreadcrumbSeparator/>
+                                            <BreadcrumbItem>
+                                                <BreadcrumbPage>Release Board</BreadcrumbPage>
+                                            </BreadcrumbItem>
+                                        </BreadcrumbList>
+                                    </Breadcrumb>
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Surface</TableHead>
+                                                <TableHead>Status</TableHead>
+                                                <TableHead>Owner</TableHead>
+                                                <TableHead>Updated</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            <TableRow>
+                                                <TableCell>Backend web client</TableCell>
+                                                <TableCell><Badge variant="'secondary'">Stable</Badge></TableCell>
+                                                <TableCell>Ada Lovelace</TableCell>
+                                                <TableCell>2 min ago</TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Portal preview</TableCell>
+                                                <TableCell><Badge variant="'outline'">Review</Badge></TableCell>
+                                                <TableCell>Grace Hopper</TableCell>
+                                                <TableCell>12 min ago</TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Builder palette</TableCell>
+                                                <TableCell><Badge>Draft</Badge></TableCell>
+                                                <TableCell>Alan Kay</TableCell>
+                                                <TableCell>38 min ago</TableCell>
+                                            </TableRow>
+                                        </TableBody>
+                                    </Table>
+                                    <Pagination>
+                                        <PaginationContent>
+                                            <PaginationItem>
+                                                <PaginationPrevious href="'#'"/>
+                                            </PaginationItem>
+                                            <PaginationItem>
+                                                <PaginationLink href="'#'">1</PaginationLink>
+                                            </PaginationItem>
+                                            <PaginationItem>
+                                                <PaginationLink href="'#'" isActive="true">2</PaginationLink>
+                                            </PaginationItem>
+                                            <PaginationItem>
+                                                <PaginationLink href="'#'">3</PaginationLink>
+                                            </PaginationItem>
+                                            <PaginationItem>
+                                                <PaginationEllipsis/>
+                                            </PaginationItem>
+                                            <PaginationItem>
+                                                <PaginationNext href="'#'"/>
+                                            </PaginationItem>
+                                        </PaginationContent>
+                                    </Pagination>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Data Table</CardTitle>
+                                    <CardDescription>Client-side search, sorting, selection, pagination, row actions, and root direction hooks turn the base table styles into an app-ready admin surface.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="'odx-docs__stack'">
+                                    <DataTable
+                                        columns="releaseBoardColumns"
+                                        data="releaseBoardRows"
+                                        rowKey="'id'"
+                                        pageSize="4"
+                                        selectable="true"
+                                        striped="true"
+                                        searchPlaceholder="'Search release surfaces...'"
+                                        defaultSort="releaseBoardDefaultSort"
+                                    >
+                                        <t t-set-slot="toolbar_actions" t-slot-scope="tableState">
+                                            <Badge variant="'outline'">
+                                                <t t-esc="`${tableState.filteredCount} rows`"/>
+                                            </Badge>
+                                            <Button size="'sm'" variant="'outline'">Export</Button>
+                                        </t>
+                                        <t t-set-slot="row_actions" t-slot-scope="rowAction">
+                                            <div class="odx-docs__table-actions">
+                                                <Button
+                                                    size="'sm'"
+                                                    variant="'ghost'"
+                                                    onClick="() => previewTableRow(rowAction.row)"
+                                                >
+                                                    Preview
+                                                </Button>
+                                                <Button
+                                                    size="'sm'"
+                                                    onClick="() => inspectTableRow(rowAction.row)"
+                                                >
+                                                    Inspect
+                                                </Button>
+                                            </div>
+                                        </t>
+                                    </DataTable>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Toggle and Hover Card</CardTitle>
+                                    <CardDescription>Compact action toggles and hover-driven identity panels cover dense toolbars and rich previews.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="'odx-docs__stack'">
+                                    <div class="odx-docs__stack">
+                                        <div class="odx-docs__choice-copy">
+                                            <p class="odx-docs__choice-label">Toolbar actions</p>
+                                            <p class="odx-docs__choice-meta">Single toggles and grouped toggles use the same pressed-state treatment.</p>
+                                        </div>
+                                        <div class="odx-docs__inline-actions">
+                                            <Toggle
+                                                pressed="form.compactToolbar"
+                                                variant="'outline'"
+                                                onPressedChange="(value) => updateField('compactToolbar', value)"
+                                            >
+                                                Compact toolbar
+                                            </Toggle>
+                                            <ToggleGroup
+                                                type="'multiple'"
+                                                variant="'outline'"
+                                                loop="false"
+                                                value="form.formatting"
+                                                onValueChange="(value) => updateFormatting(value)"
+                                            >
+                                                <ToggleGroupItem value="'bold'">Bold</ToggleGroupItem>
+                                                <ToggleGroupItem value="'italic'">Italic</ToggleGroupItem>
+                                                <ToggleGroupItem value="'underline'">Underline</ToggleGroupItem>
+                                            </ToggleGroup>
+                                        </div>
+                                    </div>
+                                    <HoverCard side="'bottom'" align="'start'">
+                                        <t t-set-slot="trigger">
+                                            <HoverCardTrigger>
+                                                <Button variant="'link'">Hover for maintainer card</Button>
+                                            </HoverCardTrigger>
+                                        </t>
+                                            <t t-set-slot="content">
+                                                <HoverCardContent>
+                                                    <div class="odx-docs__hover-card">
+                                                        <div class="odx-docs__avatar-row">
+                                                            <Avatar className="'odx-docs__avatar-lg'">
+                                                                <AvatarImage src="profileAvatarSrc" alt="form.name"/>
+                                                                <AvatarFallback><t t-esc="profileInitials"/></AvatarFallback>
+                                                            </Avatar>
+                                                            <div class="odx-docs__avatar-copy">
+                                                                <p class="odx-docs__choice-label"><t t-esc="form.name"/></p>
+                                                                <p class="odx-docs__choice-meta">@design-system-owner</p>
+                                                            </div>
+                                                        </div>
+                                                    <p class="odx-docs__muted-copy">
+                                                        Hover cards are useful for author previews, maintainer identity, and lightweight relationship context without fully switching views.
+                                                    </p>
+                                                </div>
+                                            </HoverCardContent>
+                                        </t>
+                                    </HoverCard>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Slider, Aspect Ratio, Scroll Area</CardTitle>
+                                    <CardDescription>Layout wrappers and continuous controls now cover both single-value adjustment and minimum-spaced range selection.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="'odx-docs__stack'">
+                                    <div class="odx-docs__stack">
+                                        <div class="odx-docs__choice-copy">
+                                            <p class="odx-docs__choice-label">Preview zoom</p>
+                                            <p class="odx-docs__choice-meta">
+                                                <t t-esc="`${form.zoom}% scale across preview surfaces.`"/>
+                                            </p>
+                                        </div>
+                                        <Slider
+                                            ariaLabel="'Preview zoom'"
+                                            value="form.zoom"
+                                            min="25"
+                                            max="100"
+                                            step="1"
+                                            onValueChange="(value) => updateField('zoom', value)"
+                                        />
+                                    </div>
+                                    <div class="odx-docs__stack">
+                                        <div class="odx-docs__choice-copy">
+                                            <p class="odx-docs__choice-label">Release guardrail</p>
+                                            <p class="odx-docs__choice-meta">
+                                                <t t-esc="`${form.releaseGuardrail[0]}%-${form.releaseGuardrail[1]}% rollout band with enforced spacing between thumbs.`"/>
+                                            </p>
+                                        </div>
+                                        <Slider
+                                            ariaLabel="'Release guardrail'"
+                                            ariaValueText="(value, index) => `${index === 0 ? 'Minimum' : 'Maximum'} rollout threshold ${value}%`"
+                                            value="form.releaseGuardrail"
+                                            min="0"
+                                            max="100"
+                                            step="5"
+                                            minStepsBetweenThumbs="4"
+                                            onValueChange="(value) => updateField('releaseGuardrail', value)"
+                                        />
+                                    </div>
+                                    <AspectRatio ratio="16 / 9" className="'odx-docs__aspect-preview'">
+                                        <div class="odx-docs__aspect-surface">
+                                            <Badge variant="'secondary'">Portal</Badge>
+                                            <p class="odx-docs__choice-label">Responsive preview stage</p>
+                                            <p class="odx-docs__choice-meta">Aspect ratio wrappers keep media, screenshots, and canvas previews stable across modules.</p>
+                                        </div>
+                                    </AspectRatio>
+                                    <ScrollArea className="'odx-docs__scroll-area'">
+                                        <div class="odx-docs__scroll-stack">
+                                            <div class="odx-docs__scroll-item">
+                                                <strong>Backend shell</strong>
+                                                <span>Shared tokens and interactions for client actions.</span>
+                                            </div>
+                                            <div class="odx-docs__scroll-item">
+                                                <strong>Portal shell</strong>
+                                                <span>Reusable components for authenticated customer journeys.</span>
+                                            </div>
+                                            <div class="odx-docs__scroll-item">
+                                                <strong>Builder shell</strong>
+                                                <span>Composable surfaces for editors, previews, and content tooling.</span>
+                                            </div>
+                                            <div class="odx-docs__scroll-item">
+                                                <strong>Media previews</strong>
+                                                <span>Stable viewports for screenshots, video ratios, and cards.</span>
+                                            </div>
+                                            <div class="odx-docs__scroll-item">
+                                                <strong>Command overlays</strong>
+                                                <span>Searchable navigation and action dispatch from one shared system.</span>
+                                            </div>
+                                            <div class="odx-docs__scroll-item">
+                                                <strong>Identity overlays</strong>
+                                                <span>Hover and popover surfaces for maintainers, owners, and records.</span>
+                                            </div>
+                                        </div>
+                                    </ScrollArea>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Carousel</CardTitle>
+                                    <CardDescription>Scrollable preview rails cover portal galleries, onboarding walkthroughs, and builder stage snapshots with keyboard-friendly controls and RTL-aware horizontal movement.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="'odx-docs__stack'">
+                                    <Carousel className="'odx-docs__carousel'">
+                                        <CarouselContent className="'odx-docs__carousel-content'">
+                                            <t t-foreach="carouselSlides" t-as="carouselSlide" t-key="carouselSlide.title">
+                                                <CarouselItem className="'odx-docs__carousel-item'">
+                                                    <div class="odx-docs__carousel-card">
+                                                        <Badge variant="'secondary'"><t t-esc="carouselSlide.badge"/></Badge>
+                                                        <p class="odx-docs__choice-label"><t t-esc="carouselSlide.title"/></p>
+                                                        <p class="odx-docs__choice-meta"><t t-esc="carouselSlide.description"/></p>
+                                                    </div>
+                                                </CarouselItem>
+                                            </t>
+                                        </CarouselContent>
+                                        <div class="odx-docs__carousel-actions">
+                                            <CarouselPrevious/>
+                                            <CarouselNext/>
+                                        </div>
+                                    </Carousel>
+                                    <p class="odx-docs__muted-copy">
+                                        Focus the carousel viewport to use arrow keys, or use the previous and next controls to move between full-width slides.
+                                    </p>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Menubar and Context Menu</CardTitle>
+                                    <CardDescription>Desktop-style menu surfaces now support both config-driven menus and composed OWL item families, with the same side or align placement API as the lighter overlays and RTL-aware horizontal menubar movement.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="'odx-docs__stack'">
+                                    <Menubar menus="menubarMenus"/>
+                                    <Menubar>
+                                        <MenubarMenu label="'Compose'" side="'bottom'" align="'start'">
+                                            <MenubarContent>
+                                                <MenubarLabel text="'Workspace controls'"/>
+                                                <MenubarSeparator/>
+                                                <MenubarGroup>
+                                                    <MenubarCheckboxItem
+                                                        checked="form.compactToolbar"
+                                                        onSelect="() => updateField('compactToolbar', !form.compactToolbar)"
+                                                        text="'Compact toolbar'"
+                                                        shortcut="'Shift T'"
+                                                    />
+                                                </MenubarGroup>
+                                                <MenubarSeparator/>
+                                                <MenubarLabel text="'Review policy'"/>
+                                                <MenubarRadioGroup
+                                                    value="form.reviewPolicy"
+                                                    onValueChange="(value) => updateField('reviewPolicy', value)"
+                                                >
+                                                    <MenubarRadioItem value="'manual'" text="'Manual review'"/>
+                                                    <MenubarRadioItem value="'staged'" text="'Staged rollout'"/>
+                                                    <MenubarRadioItem value="'automatic'" text="'Automatic merge'"/>
+                                                </MenubarRadioGroup>
+                                                <MenubarSeparator/>
+                                                <MenubarSub side="'right'" align="'start'">
+                                                    <t t-set-slot="trigger">
+                                                        <MenubarSubTrigger text="'Jump to'" shortcut="'More'"/>
+                                                    </t>
+                                                    <MenubarSubContent>
+                                                        <MenubarItem onSelect="() => announcePreviewRoute()" text="'Portal preview'" shortcut="'P'"/>
+                                                        <MenubarItem onSelect="() => showToast()" text="'Success toast'" shortcut="'T'"/>
+                                                    </MenubarSubContent>
+                                                </MenubarSub>
+                                            </MenubarContent>
+                                        </MenubarMenu>
+                                        <MenubarMenu side="'bottom'" align="'end'">
+                                            <t t-set-slot="trigger">
+                                                <MenubarTrigger>Release</MenubarTrigger>
+                                            </t>
+                                            <MenubarContent>
+                                                <MenubarItem onSelect="() => saveDemoRecord()">
+                                                    <span class="odx-menubar__item-label">Save workspace</span>
+                                                    <MenubarShortcut>Cmd S</MenubarShortcut>
+                                                </MenubarItem>
+                                                <MenubarItem destructive="true" onSelect="() => showDestructiveToast()" text="'Abort rollout'" shortcut="'Del'"/>
+                                            </MenubarContent>
+                                        </MenubarMenu>
+                                    </Menubar>
+                                    <div class="odx-docs__button-row">
+                                        <ContextMenu items="contextMenuItems">
+                                            <t t-set-slot="trigger">
+                                                <ContextMenuTrigger className="'odx-docs__context-target'">
+                                                    <p class="odx-docs__choice-label">Right click this surface</p>
+                                                    <p class="odx-docs__choice-meta">
+                                                        Legacy <code>items</code> arrays now support nested submenu entries as well.
+                                                    </p>
+                                                </ContextMenuTrigger>
+                                            </t>
+                                        </ContextMenu>
+                                        <ContextMenu>
+                                            <t t-set-slot="trigger">
+                                                <ContextMenuTrigger className="'odx-docs__context-target'">
+                                                    <p class="odx-docs__choice-label">Composed context menu</p>
+                                                    <p class="odx-docs__choice-meta">
+                                                        Use mouse context-click or keyboard <code>Shift+F10</code> to open the OWL-composed family.
+                                                    </p>
+                                                </ContextMenuTrigger>
+                                            </t>
+                                            <t t-set-slot="content">
+                                                <ContextMenuContent>
+                                                    <ContextMenuLabel text="'Workspace actions'"/>
+                                                    <ContextMenuSeparator/>
+                                                    <ContextMenuGroup>
+                                                        <ContextMenuCheckboxItem
+                                                            checked="form.automaticDeploys"
+                                                            onSelect="() => updateField('automaticDeploys', !form.automaticDeploys)"
+                                                            text="'Automatic deploys'"
+                                                            shortcut="'Shift D'"
+                                                        />
+                                                    </ContextMenuGroup>
+                                                    <ContextMenuSeparator/>
+                                                    <ContextMenuLabel text="'Review policy'"/>
+                                                    <ContextMenuRadioGroup
+                                                        value="form.reviewPolicy"
+                                                        onValueChange="(value) => updateField('reviewPolicy', value)"
+                                                    >
+                                                        <ContextMenuRadioItem value="'manual'" text="'Manual review'"/>
+                                                        <ContextMenuRadioItem value="'staged'" text="'Staged rollout'"/>
+                                                        <ContextMenuRadioItem value="'automatic'" text="'Automatic merge'"/>
+                                                    </ContextMenuRadioGroup>
+                                                    <ContextMenuSeparator/>
+                                                    <ContextMenuSub>
+                                                        <t t-set-slot="trigger">
+                                                            <ContextMenuSubTrigger text="'Jump to'" shortcut="'More'"/>
+                                                        </t>
+                                                        <ContextMenuSubContent>
+                                                            <ContextMenuItem onSelect="() => announcePreviewRoute()" text="'Portal preview'" shortcut="'P'"/>
+                                                            <ContextMenuItem onSelect="() => showToast()" text="'Success toast'" shortcut="'T'"/>
+                                                        </ContextMenuSubContent>
+                                                    </ContextMenuSub>
+                                                    <ContextMenuSeparator/>
+                                                    <ContextMenuItem destructive="true" onSelect="() => archiveWorkspace()" text="'Archive workspace'" shortcut="'Del'"/>
+                                                </ContextMenuContent>
+                                            </t>
+                                        </ContextMenu>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Navigation Menu</CardTitle>
+                                    <CardDescription>Shared viewport navigation now supports both config-driven menus and a composed family of list, item, trigger, link, content, and indicator primitives, with RTL-aware horizontal trigger movement.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="'odx-docs__stack'">
+                                    <div class="odx-docs__stack">
+                                        <div class="odx-docs__choice-copy">
+                                            <p class="odx-docs__choice-label">Config-driven navigation</p>
+                                            <p class="odx-docs__choice-meta">Pass item metadata when the menu is driven by route maps or registry-level configuration.</p>
+                                        </div>
+                                        <NavigationMenu items="navigationMenuItems" className="'odx-docs__navigation-menu'"/>
+                                    </div>
+                                    <div class="odx-docs__stack">
+                                        <div class="odx-docs__choice-copy">
+                                            <p class="odx-docs__choice-label">Composed navigation</p>
+                                            <p class="odx-docs__choice-meta">Use explicit triggers, links, and shared content panels when the menu needs richer custom markup.</p>
+                                        </div>
+                                        <NavigationMenu className="'odx-docs__navigation-menu'">
+                                            <NavigationMenuList>
+                                                <NavigationMenuItem>
+                                                    <NavigationMenuTrigger value="'overview'" hasContent="true">Overview</NavigationMenuTrigger>
+                                                </NavigationMenuItem>
+                                                <NavigationMenuItem>
+                                                    <NavigationMenuTrigger value="'components'" hasContent="true">Components</NavigationMenuTrigger>
+                                                </NavigationMenuItem>
+                                                <NavigationMenuItem>
+                                                    <NavigationMenuTrigger
+                                                        value="'portal'"
+                                                        href="'#'"
+                                                        onSelected="() => announcePreviewRoute()"
+                                                    >Portal</NavigationMenuTrigger>
+                                                </NavigationMenuItem>
+                                            </NavigationMenuList>
+                                            <NavigationMenuIndicator/>
+                                            <NavigationMenuContent value="'overview'">
+                                                <div class="odx-navigation-menu__featured">
+                                                    <a class="odx-navigation-menu__featured-link" href="#">
+                                                        <div class="odx-navigation-menu__featured-eyebrow">Foundation</div>
+                                                        <div class="odx-navigation-menu__featured-title">ODX OWL for Odoo 19</div>
+                                                        <p class="odx-navigation-menu__featured-description">
+                                                            Shared components, tokens, and services for backend actions, portal pages, and builders.
+                                                        </p>
+                                                    </a>
+                                                </div>
+                                                <div class="odx-navigation-menu__grid odx-navigation-menu__grid--2">
+                                                    <NavigationMenuLink
+                                                        href="'#'"
+                                                        title="'Installation'"
+                                                        description="'Mount the bundle once and reuse the same primitives across addons.'"
+                                                    />
+                                                    <NavigationMenuLink
+                                                        href="'#'"
+                                                        title="'Theme tokens'"
+                                                        description="'Light, dark, and semantic variables aligned across backend and portal surfaces.'"
+                                                    />
+                                                </div>
+                                            </NavigationMenuContent>
+                                            <NavigationMenuContent value="'components'" disableViewport="true">
+                                                <NavigationMenuViewport>
+                                                    <div class="odx-navigation-menu__grid odx-navigation-menu__grid--3">
+                                                        <NavigationMenuLink
+                                                            href="'#'"
+                                                            title="'Overlays'"
+                                                            description="'Dialog, sheet, popover, hover card, and alert dialog.'"
+                                                        />
+                                                        <NavigationMenuLink
+                                                            href="'#'"
+                                                            title="'Selection'"
+                                                            description="'Select, combobox, radio group, checkbox, switch, and slider.'"
+                                                        />
+                                                        <NavigationMenuLink
+                                                            href="'#'"
+                                                            title="'Navigation'"
+                                                            description="'Breadcrumb, pagination, menubar, context menu, and navigation menu.'"
+                                                        />
+                                                    </div>
+                                                </NavigationMenuViewport>
+                                            </NavigationMenuContent>
+                                        </NavigationMenu>
+                                    </div>
+                                    <p class="odx-docs__muted-copy">
+                                        This mirrors the shadcn-style pattern of trigger items, a shared viewport panel, and a compact indicator aligned to the active entry.
+                                    </p>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Sidebar Shell</CardTitle>
+                                    <CardDescription>Provider-driven sidebars cover admin navigation, builders, and portal workspaces with collapsed icon mode, inset content, and direction-aware start or end docking.</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <SidebarProvider
+                                        className="'odx-docs__sidebar-shell'"
+                                        collapsible="'icon'"
+                                        variant="'inset'"
+                                        defaultOpen="true"
+                                    >
+                                        <Sidebar>
+                                            <SidebarHeader>
+                                                <div class="odx-docs__sidebar-toolbar">
+                                                    <div class="odx-docs__sidebar-brand">
+                                                        <Badge variant="'secondary'">ODX</Badge>
+                                                        <div class="odx-docs__choice-copy">
+                                                            <p class="odx-docs__choice-label">Builder workspace</p>
+                                                            <p class="odx-docs__choice-meta">Shared navigation for apps, builders, and portals.</p>
+                                                        </div>
+                                                    </div>
+                                                    <SidebarTrigger title="'Toggle sidebar'"/>
+                                                </div>
+                                                <SidebarInput
+                                                    ariaLabel="'Search sidebar navigation'"
+                                                    placeholder="'Search library...'"
+                                                />
+                                            </SidebarHeader>
+                                            <SidebarContent>
+                                                <SidebarGroup>
+                                                    <div class="odx-docs__sidebar-group-row">
+                                                        <SidebarGroupLabel>Platform</SidebarGroupLabel>
+                                                        <SidebarGroupAction ariaLabel="'Add platform section'">+</SidebarGroupAction>
+                                                    </div>
+                                                    <SidebarGroupContent>
+                                                        <SidebarMenu>
+                                                            <SidebarMenuItem>
+                                                                <SidebarMenuButton isActive="true" label="'Overview'" tooltip="'Overview'">
+                                                                    <t t-set-slot="icon">
+                                                                        <svg viewBox="0 0 16 16" aria-hidden="true">
+                                                                            <path d="M3.5 4.25H12.5M3.5 8H12.5M3.5 11.75H9.75" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.4"/>
+                                                                        </svg>
+                                                                    </t>
+                                                                </SidebarMenuButton>
+                                                                <SidebarMenuBadge>12</SidebarMenuBadge>
+                                                            </SidebarMenuItem>
+                                                            <SidebarMenuItem>
+                                                                <SidebarMenuButton label="'Components'" tooltip="'Components'">
+                                                                    <t t-set-slot="icon">
+                                                                        <svg viewBox="0 0 16 16" aria-hidden="true">
+                                                                            <rect x="2.75" y="2.75" width="4.5" height="4.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/>
+                                                                            <rect x="8.75" y="2.75" width="4.5" height="4.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/>
+                                                                            <rect x="2.75" y="8.75" width="4.5" height="4.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/>
+                                                                        </svg>
+                                                                    </t>
+                                                                </SidebarMenuButton>
+                                                                <SidebarMenuAction ariaLabel="'Open component inspector'">
+                                                                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                                                                        <path d="M8 3.25V12.75M3.25 8H12.75" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.4"/>
+                                                                    </svg>
+                                                                </SidebarMenuAction>
+                                                            </SidebarMenuItem>
+                                                            <SidebarMenuItem>
+                                                                <SidebarMenuButton label="'Builder'" tooltip="'Builder'">
+                                                                    <t t-set-slot="icon">
+                                                                        <svg viewBox="0 0 16 16" aria-hidden="true">
+                                                                            <path d="M3.5 12.25L8 3.75L12.5 12.25Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.3"/>
+                                                                        </svg>
+                                                                    </t>
+                                                                </SidebarMenuButton>
+                                                                <SidebarMenuSub>
+                                                                    <SidebarMenuSubItem>
+                                                                        <SidebarMenuSubButton isActive="true">Canvas</SidebarMenuSubButton>
+                                                                    </SidebarMenuSubItem>
+                                                                    <SidebarMenuSubItem>
+                                                                        <SidebarMenuSubButton>Inspector</SidebarMenuSubButton>
+                                                                    </SidebarMenuSubItem>
+                                                                    <SidebarMenuSubItem>
+                                                                        <SidebarMenuSubButton>Preview</SidebarMenuSubButton>
+                                                                    </SidebarMenuSubItem>
+                                                                </SidebarMenuSub>
+                                                            </SidebarMenuItem>
+                                                        </SidebarMenu>
+                                                    </SidebarGroupContent>
+                                                </SidebarGroup>
+                                                <SidebarSeparator/>
+                                                <SidebarGroup>
+                                                    <SidebarGroupLabel>Operations</SidebarGroupLabel>
+                                                    <SidebarGroupContent>
+                                                        <SidebarMenu>
+                                                            <SidebarMenuItem>
+                                                                <SidebarMenuButton label="'Release board'" tooltip="'Release board'">
+                                                                    <t t-set-slot="icon">
+                                                                        <svg viewBox="0 0 16 16" aria-hidden="true">
+                                                                            <path d="M4 4.25H12M4 8H12M4 11.75H8.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.4"/>
+                                                                        </svg>
+                                                                    </t>
+                                                                </SidebarMenuButton>
+                                                                <SidebarMenuBadge>3</SidebarMenuBadge>
+                                                            </SidebarMenuItem>
+                                                            <SidebarMenuItem>
+                                                                <SidebarMenuButton label="'Portal preview'" tooltip="'Portal preview'">
+                                                                    <t t-set-slot="icon">
+                                                                        <svg viewBox="0 0 16 16" aria-hidden="true">
+                                                                            <path d="M2.75 4.5A1.75 1.75 0 0 1 4.5 2.75H11.5A1.75 1.75 0 0 1 13.25 4.5V11.5A1.75 1.75 0 0 1 11.5 13.25H4.5A1.75 1.75 0 0 1 2.75 11.5Z" fill="none" stroke="currentColor" stroke-width="1.3"/>
+                                                                            <path d="M5.25 10.75L10.75 5.25" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.3"/>
+                                                                        </svg>
+                                                                    </t>
+                                                                </SidebarMenuButton>
+                                                            </SidebarMenuItem>
+                                                        </SidebarMenu>
+                                                    </SidebarGroupContent>
+                                                </SidebarGroup>
+                                            </SidebarContent>
+                                            <SidebarFooter>
+                                                <div class="odx-docs__avatar-row">
+                                                    <Avatar className="'odx-docs__avatar-lg'">
+                                                        <AvatarImage src="profileAvatarSrc" alt="form.name"/>
+                                                        <AvatarFallback><t t-esc="profileInitials"/></AvatarFallback>
+                                                    </Avatar>
+                                                    <div class="odx-docs__choice-copy">
+                                                        <p class="odx-docs__choice-label"><t t-esc="form.name"/></p>
+                                                        <p class="odx-docs__choice-meta">Design system owner</p>
+                                                    </div>
+                                                </div>
+                                            </SidebarFooter>
+                                            <SidebarRail/>
+                                        </Sidebar>
+                                        <SidebarInset className="'odx-docs__sidebar-inset'">
+                                            <div class="odx-docs__sidebar-main">
+                                                <div class="odx-docs__sidebar-main-header">
+                                                    <div class="odx-docs__choice-copy">
+                                                        <p class="odx-docs__choice-label">Inset content surface</p>
+                                                        <p class="odx-docs__choice-meta">The sidebar shell leaves the main canvas fully composable for builders, previews, or data entry.</p>
+                                                    </div>
+                                                    <Button variant="'outline'">Preview</Button>
+                                                </div>
+                                                <div class="odx-docs__sidebar-board">
+                                                    <div class="odx-docs__sidebar-panel">
+                                                        <Badge variant="'outline'">Canvas</Badge>
+                                                        <p class="odx-docs__choice-label">Preview stage</p>
+                                                        <p class="odx-docs__choice-meta">Drop in forms, tables, or builders without rewriting the navigation frame.</p>
+                                                    </div>
+                                                    <div class="odx-docs__sidebar-panel odx-docs__sidebar-panel--accent">
+                                                        <Badge>Quality</Badge>
+                                                        <p class="odx-docs__choice-label">Accessibility sweep</p>
+                                                        <p class="odx-docs__choice-meta">Collapsed icon mode keeps the shell compact while preserving tooltip titles and focus targets.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </SidebarInset>
+                                    </SidebarProvider>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Calendar and Date Picker</CardTitle>
+                                    <CardDescription>Single and range date selection cover release planning, scheduling, and portal workflows, with bounded navigation across date constraints, locale-aware week starts, and RTL-aware horizontal navigation.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="'odx-docs__stack'">
+                                    <div class="odx-docs__stack">
+                                        <div class="odx-docs__choice-copy">
+                                            <p class="odx-docs__choice-label">Release date</p>
+                                            <p class="odx-docs__choice-meta">
+                                                <t t-esc="releaseDateLabel"/>
+                                            </p>
+                                        </div>
+                                        <DatePicker
+                                            ariaLabel="'Release date'"
+                                            value="form.releaseDate"
+                                            minDate="releaseWindowStart"
+                                            maxDate="releaseWindowEnd"
+                                            disabledDates="releaseDateDisabledMatcher"
+                                            onValueChange="(value) => updateField('releaseDate', value)"
+                                        />
+                                    </div>
+                                    <div class="odx-docs__stack">
+                                        <div class="odx-docs__choice-copy">
+                                            <p class="odx-docs__choice-label">Release window</p>
+                                            <p class="odx-docs__choice-meta">
+                                                <t t-esc="releaseWindowLabel"/>
+                                            </p>
+                                        </div>
+                                        <DateRangePicker
+                                            ariaLabel="'Release window'"
+                                            value="form.releaseWindow"
+                                            minDate="releaseWindowStart"
+                                            maxDate="releaseWindowEnd"
+                                            disabledDates="releaseDateDisabledMatcher"
+                                            onValueChange="(value) => updateField('releaseWindow', value)"
+                                        />
+                                    </div>
+                                    <Calendar
+                                        className="'odx-docs__calendar'"
+                                        value="form.releaseDate"
+                                        minDate="releaseWindowStart"
+                                        maxDate="releaseWindowEnd"
+                                        disabledDates="releaseDateDisabledMatcher"
+                                        onValueChange="(value) => updateField('releaseDate', value)"
+                                    />
+                                    <Calendar
+                                        className="'odx-docs__calendar odx-docs__calendar--range'"
+                                        mode="'range'"
+                                        numberOfMonths="2"
+                                        pagedNavigation="true"
+                                        value="form.releaseWindow"
+                                        minDate="releaseWindowStart"
+                                        maxDate="releaseWindowEnd"
+                                        disabledDates="releaseDateDisabledMatcher"
+                                        onValueChange="(value) => updateField('releaseWindow', value)"
+                                    />
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </TabsContent>
+                    <TabsContent value="'usage'">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Usage inside another module</CardTitle>
+                                <CardDescription>Stable file paths for imports and a dedicated frontend bundle for portal pages.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <pre class="odx-docs__code"><code>&lt;Form descriptions="fieldDescriptions" errors="fieldErrors" onSubmit="() =&gt; submitRecord()"&gt;
+  &lt;FormField name="'email'" required="true"&gt;
+    &lt;FormItem&gt;
+      &lt;FormLabel&gt;Email&lt;/FormLabel&gt;
+      &lt;FormControl t-slot-scope="control"&gt;
+        &lt;Input attrs="control.attrs" type="'email'" value="state.email" onInput="(value) =&gt; state.email = value"/&gt;
+      &lt;/FormControl&gt;
+      &lt;FormDescription/&gt;
+      &lt;FormMessage/&gt;
+    &lt;/FormItem&gt;
+  &lt;/FormField&gt;
+&lt;/Form&gt;
+
+&lt;InputGroup&gt;
+  &lt;InputGroupAddon align="'inline-start'"&gt;
+    &lt;InputGroupText&gt;https://&lt;/InputGroupText&gt;
+  &lt;/InputGroupAddon&gt;
+  &lt;InputGroupInput value="state.slug" onInput="(value) =&gt; state.slug = value"/&gt;
+&lt;/InputGroup&gt;
+
+&lt;DropdownMenu&gt;
+  &lt;t t-set-slot="trigger"&gt;
+    &lt;DropdownMenuTrigger variant="'outline'"&gt;Release controls&lt;/DropdownMenuTrigger&gt;
+  &lt;/t&gt;
+  &lt;DropdownMenuContent&gt;
+    &lt;DropdownMenuLabel text="'Review policy'"/&gt;
+    &lt;DropdownMenuSeparator/&gt;
+    &lt;DropdownMenuRadioGroup value="state.reviewPolicy" onValueChange="(value) =&gt; state.reviewPolicy = value"&gt;
+      &lt;DropdownMenuRadioItem value="'manual'" text="'Manual review'"/&gt;
+      &lt;DropdownMenuRadioItem value="'automatic'" text="'Automatic merge'"/&gt;
+    &lt;/DropdownMenuRadioGroup&gt;
+    &lt;DropdownMenuSub&gt;
+      &lt;t t-set-slot="trigger"&gt;
+        &lt;DropdownMenuSubTrigger text="'Jump to surface'"/&gt;
+      &lt;/t&gt;
+      &lt;DropdownMenuSubContent&gt;
+        &lt;DropdownMenuItem text="'Portal preview'"/&gt;
+      &lt;/DropdownMenuSubContent&gt;
+    &lt;/DropdownMenuSub&gt;
+  &lt;/DropdownMenuContent&gt;
+&lt;/DropdownMenu&gt;
+
+import {
+    Accordion,
+    AccordionContent,
+    AccordionHeader,
+    AccordionItem,
+    AccordionTrigger,
+} from "@odx_owl/components/accordion/accordion"
+import { Alert, AlertDescription, AlertTitle } from "@odx_owl/components/alert/alert"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AlertDialogTitle, AlertDialogTrigger } from "@odx_owl/components/alert_dialog/alert_dialog"
+import { AspectRatio } from "@odx_owl/components/aspect_ratio/aspect_ratio"
+import { Avatar, AvatarFallback, AvatarImage } from "@odx_owl/components/avatar/avatar"
+import { Checkbox } from "@odx_owl/components/checkbox/checkbox"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@odx_owl/components/collapsible/collapsible"
+import { Button } from "@odx_owl/components/button/button"
+import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText } from "@odx_owl/components/button_group/button_group"
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@odx_owl/components/breadcrumb/breadcrumb"
+import { Calendar } from "@odx_owl/components/calendar/calendar"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@odx_owl/components/carousel/carousel"
+import { BarChart, ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent, DonutChart, LineChart } from "@odx_owl/components/chart/chart"
+import { Combobox, ComboboxContent, ComboboxIcon, ComboboxTrigger, ComboboxValue } from "@odx_owl/components/combobox/combobox"
+import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandItemDescription, CommandItemText, CommandList, CommandLoading, CommandSeparator, CommandShortcut } from "@odx_owl/components/command/command"
+import { ContextMenu, ContextMenuCheckboxItem, ContextMenuContent, ContextMenuGroup, ContextMenuItem, ContextMenuLabel, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuSeparator, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger } from "@odx_owl/components/context_menu/context_menu"
+import { DataTable } from "@odx_owl/components/data_table/data_table"
+import { DatePicker } from "@odx_owl/components/date_picker/date_picker"
+import { DateRangePicker } from "@odx_owl/components/date_range_picker/date_range_picker"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogTitle, DialogTrigger } from "@odx_owl/components/dialog/dialog"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@odx_owl/components/dropdown_menu/dropdown_menu"
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerOverlay, DrawerTitle, DrawerTrigger } from "@odx_owl/components/drawer/drawer"
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@odx_owl/components/empty/empty"
+import { Field, FieldContent, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet, FieldTitle } from "@odx_owl/components/field/field"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@odx_owl/components/form/form"
+import { Input } from "@odx_owl/components/input/input"
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText, InputGroupTextarea } from "@odx_owl/components/input_group/input_group"
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@odx_owl/components/input_otp/input_otp"
+import { Item, ItemActions, ItemContent, ItemDescription, ItemFooter, ItemGroup, ItemHeader, ItemMedia, ItemSeparator, ItemTitle } from "@odx_owl/components/item/item"
+import { Kbd, KbdGroup } from "@odx_owl/components/kbd/kbd"
+import { Label } from "@odx_owl/components/label/label"
+import { Menubar, MenubarCheckboxItem, MenubarContent, MenubarGroup, MenubarItem, MenubarLabel, MenubarMenu, MenubarRadioGroup, MenubarRadioItem, MenubarSeparator, MenubarShortcut, MenubarSub, MenubarSubContent, MenubarSubTrigger, MenubarTrigger } from "@odx_owl/components/menubar/menubar"
+import { NavigationMenu, NavigationMenuContent, NavigationMenuIndicator, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, NavigationMenuViewport } from "@odx_owl/components/navigation_menu/navigation_menu"
+import { NativeSelect } from "@odx_owl/components/native_select/native_select"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@odx_owl/components/breadcrumb/breadcrumb"
+import { Popover, PopoverAnchor, PopoverClose, PopoverContent, PopoverTrigger } from "@odx_owl/components/popover/popover"
+import { Progress } from "@odx_owl/components/progress/progress"
+import { RadioGroup, RadioGroupItem } from "@odx_owl/components/radio_group/radio_group"
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@odx_owl/components/resizable/resizable"
+import { Select, SelectContent, SelectGroup, SelectIcon, SelectItem, SelectItemDescription, SelectItemIndicator, SelectItemText, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue, SelectViewport } from "@odx_owl/components/select/select"
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetOverlay, SheetTitle, SheetTrigger } from "@odx_owl/components/sheet/sheet"
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupAction, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarInput, SidebarInset, SidebarMenu, SidebarMenuAction, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider, SidebarRail, SidebarSeparator, SidebarTrigger } from "@odx_owl/components/sidebar/sidebar"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@odx_owl/components/table/table"
+import { Toast, ToastAction, ToastClose, ToastDescription, Toaster, ToastTitle } from "@odx_owl/components/toast/toast"
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@odx_owl/components/hover_card/hover_card"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@odx_owl/components/tooltip/tooltip"
+import { Toggle } from "@odx_owl/components/toggle/toggle"
+import { ToggleGroup, ToggleGroupItem } from "@odx_owl/components/toggle_group/toggle_group"
+import { ScrollArea } from "@odx_owl/components/scroll_area/scroll_area"
+import { Slider } from "@odx_owl/components/slider/slider"
+import { Spinner } from "@odx_owl/components/spinner/spinner"
+import { useService } from "@web/core/utils/hooks"
+
+const toast = useService("odx_toast")
+toast.add({ title: "Saved", description: "Record updated." })</code></pre>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                    <TabsContent value="'accessibility'">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Accessibility baseline</CardTitle>
+                                <CardDescription>Keyboard focus, semantic roles, aria state, and visible rings are first-class.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="'odx-docs__bullets'">
+                                <p>Dialogs trap focus, restore it to the previous active element on close, expose reusable trigger, overlay, content, title, and description primitives, and now let callers intercept escape or outside interactions before dismissal.</p>
+                                <p>Alert dialogs now expose dedicated overlay and content primitives while preserving <code>alertdialog</code> semantics and predictable cancel or action targets.</p>
+                                <p>Popover, tooltip, and hover-card roots now accept shadcn-style <code>side</code> and <code>align</code> placement props while preserving the same focus, hover, and escape-dismiss interaction model.</p>
+                                <p>Tabs implement roving focus with arrow keys, Home, and End behavior, now respect RTL horizontal direction, keep a dedicated tab stop during manual activation, support <code>Enter</code> or <code>Space</code> activation on the focused trigger, support force-mounted inactive panels when a workflow needs preserved DOM state, and emit a real root <code>dir</code> attribute for local RTL overrides.</p>
+                                <p>Form wrappers compose labels, descriptions, and validation messages with generated ids and shared <code>aria-describedby</code>/<code>aria-invalid</code> wiring.</p>
+                                <p>Collapsible sections preserve disclosure button semantics through <code>aria-expanded</code>, <code>aria-controls</code>, and labelled content regions.</p>
+                                <p>Field sets and legends provide semantic grouping for related controls while field rows keep disabled and invalid states visible.</p>
+                                <p>Checkbox and switch controls keep <code>aria-checked</code> synchronized with the rendered state, including mixed checkbox states via <code>aria-checked="mixed"</code>.</p>
+                                <p>Input OTP slots preserve sequential focus movement, paste distribution, backspace handling, a single hidden aggregated form value, RTL-aware left or right slot navigation, and real local <code>dir</code> propagation through slot groups.</p>
+                                <p>Radio groups now use a single roving tab stop, arrow-key selection with RTL-aware horizontal direction, first-enabled fallback focus when no value is chosen, optional edge wrapping, a form-friendly hidden input value, and a real root <code>dir</code> attribute for local RTL overrides.</p>
+                                <p>Accordion items wire <code>aria-controls</code>, <code>aria-labelledby</code>, disabled-state semantics, and Arrow/Home/End keyboard navigation across enabled triggers, including RTL-aware horizontal arrow behavior.</p>
+                                <p>Progress exposes native <code>progressbar</code> semantics with current and max values, and indeterminate mode omits <code>aria-valuenow</code> while allowing descriptive value text.</p>
+                                <p>Charts provide focusable hotspots or slices, shared legends, and live tooltip content while keeping series colors tied to a single config object.</p>
+                                <p>Data tables preserve searchable headers, checkbox row selection, sortable columns via <code>aria-sort</code>, keyboard-reachable row actions, and logical start or end column alignment through root direction hooks.</p>
+                                <p>Select roots now support both config-driven options and composed trigger, icon, viewport, item text, and item indicator primitives, plus buffered typeahead, highlighted-item auto-scroll for longer option sets, shared side or align placement props, and local direction hooks for logical inline alignment.</p>
+                                <p>Combobox roots now support both the convenience command-backed picker and composed trigger, value, icon, and content primitives while preserving searchable disclosure behavior, stable trigger-to-listbox <code>aria-controls</code> linkage for the built-in command surface, the same overlay placement API, and local direction hooks that flow through the embedded command surface.</p>
+                                <p>Native selects preserve browser-native semantics for fallback flows while matching the same token and invalid-state system.</p>
+                                <p>Command roots support both config-driven items and composed input, loading, list, group, separator, item text, and item description primitives while preserving searchable listbox semantics with active-item keyboard navigation and logical inline spacing under local direction overrides.</p>
+                                <p>Breadcrumb and pagination wrappers preserve semantic navigation landmarks for structured paths and paged data, now with RTL-aware separators and previous or next edge controls, while table primitives use logical start or end alignment instead of physical left or right text alignment.</p>
+                                <p>Toggle buttons expose <code>aria-pressed</code>, and toggle groups now use a roving tab stop, Arrow/Home/End focus movement with RTL-aware horizontal direction, optional edge wrapping, pressed-state-aware fallback focus for dense toolbars, and a real root <code>dir</code> attribute for local RTL overrides.</p>
+                                <p>Slider thumbs expose native slider semantics, support keyboard adjustment across the configured min, max, and step, now allow multi-thumb ranges to enforce minimum spacing between values, reverse horizontal positioning plus arrow behavior in RTL layouts, and emit real <code>dir</code> attributes on the root, track, and thumb surfaces for local RTL overrides.</p>
+                                <p>Scroll areas keep a focusable viewport while custom rails reflect the current native scroll position.</p>
+                                <p>Carousels expose a focusable viewport, keyboard slide movement, and explicit previous and next controls for sequential preview content, now with RTL-aware horizontal arrow mapping and mirrored control icons.</p>
+                                <p>Dropdown, menubar, and submenu surfaces now accept shadcn-style <code>side</code> and <code>align</code> placement props while preserving the existing dropdown-position fallback strings, and their trigger or content shells now emit real <code>dir</code> attributes so logical spacing works under local RTL overrides.</p>
+                                <p>Menubars preserve grouped items, checkbox and radio state, submenu affordances, and desktop menu semantics, now with RTL-aware horizontal trigger movement, mirrored default submenu direction when no explicit submenu side is provided, and logical inline spacing for shortcuts and inset rows.</p>
+                                <p>Context menus open from mouse context-click and keyboard invocation while supporting composed trigger wrappers, grouped items, checkbox and radio state, nested submenus, initial focus movement into the rendered menu, aligned submenu placement, RTL-aware submenu opening keys and fallback direction, and logical inline spacing for labels or shortcuts.</p>
+                                <p>Navigation menus preserve shared viewport disclosure, indicator placement, escape dismissal, and now expose both config-driven and composed APIs with RTL-aware horizontal trigger movement plus real <code>dir</code> propagation through trigger, list, and content shells.</p>
+                                <p>Sidebar providers expose collapsed icon mode, inset content shells, grouped menu semantics, accessible toggle controls, and logical start or end side resolution with RTL-aware nested menu spacing.</p>
+                                <p>Calendars render keyboard-operable date grids with bounded month navigation, roving focus, locale-aware week starts when <code>weekStartsOn</code> is not explicitly set, RTL-aware horizontal arrow movement, hidden ISO form values, disabled-date constraints, and real <code>dir</code> propagation through month, grid, and nav surfaces.</p>
+                                <p>Range calendars keep start, middle, and end states aligned across multi-month views while preserving the same keyboard model.</p>
+                                <p>Date pickers pair the same calendar primitive with popover disclosure and a formatted trigger surface, and now emit real root and trigger <code>dir</code> attributes for local RTL islands.</p>
+                                <p>Date range pickers keep the popover open until the end date is chosen, then emit normalized <code>from</code>/<code>to</code> payloads while preserving the same local-direction hooks.</p>
+                                <p>Sheets share dialog focus trapping, labelled-dialog semantics, and the same preventable escape and outside-interaction hooks, now resolve logical <code>start</code> or <code>end</code> sides against the active direction, and pass a real <code>dir</code> attribute through the sheet content surface.</p>
+                                <p>Drawers reuse the same focus trap and dismissal model, including the new preventable escape and outside hooks, while exposing dedicated overlay, content, handle, and close primitives for stacked mobile or portal review flows, plus logical <code>start</code> or <code>end</code> support for horizontal drawer docking and a real <code>dir</code> attribute on the drawer content surface.</p>
+                                <p>Resizable handles expose focusable <code>separator</code> semantics with orientation, current position, and keyboard resizing between adjacent panels, including RTL-aware horizontal arrow handling.</p>
+                                <p>Popover, tooltip, and hover card families expose dedicated trigger and content primitives while sitting on Odoo's overlay stack; popovers now also support separate anchor and close primitives, and tooltips open immediately on focus while supporting provider-level shared delay tuning.</p>
+                                <p>Dropdown menus support dedicated trigger primitives, grouped labels, checkbox items, radio items, nested submenus, keyboard navigation through Odoo's dropdown stack, and mirrored default submenu direction in RTL layouts.</p>
+                                <p>Toast notifications expose polite live-region semantics by default, switch destructive messages to alert treatment, pause timed dismissal during hover or keyboard focus, and support swipe dismissal.</p>
+                                <p>Theme changes set <code>color-scheme</code> and preserve user choice in local storage.</p>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                </Tabs>
+            </div>
+        </div>
+    </t>
+</templates>

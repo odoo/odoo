@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Popover">
+        <span class="odx-popover">
+            <span t-if="hasAnchor" t-ref="anchorRef" class="odx-popover__anchor">
+                <t t-slot="anchor"/>
+            </span>
+            <span
+                t-ref="triggerRef"
+                t-att-class="triggerClasses"
+                t-att-data-state="isOpen ? 'open' : 'closed'"
+                t-att-aria-expanded="isOpen ? 'true' : 'false'"
+                t-on-click="onTriggerClick"
+            >
+                <t t-if="props.slots and props.slots.trigger">
+                    <t t-slot="trigger"/>
+                </t>
+                <t t-else="">
+                    <t t-slot="default"/>
+                </t>
+            </span>
+        </span>
+    </t>
+
+    <t t-name="odx_owl.PopoverTrigger">
+        <t
+            t-tag="props.tag"
+            t-att-class="classes"
+            t-att-data-state="isOpen ? 'open' : 'closed'"
+            t-att-aria-expanded="isOpen ? 'true' : 'false'"
+        >
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.PopoverAnchor">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.PopoverContent">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.PopoverClose">
+        <t
+            t-tag="props.tag"
+            t-att-class="classes"
+            t-att-type="props.tag === 'button' ? 'button' : undefined"
+            t-on-click="onClick"
+        >
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+</templates>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.RadioGroup">
+        <div
+            t-att-class="classes"
+            role="radiogroup"
+            t-att-aria-label="props.ariaLabel"
+            t-att-aria-orientation="props.orientation"
+            t-att-aria-required="props.required ? 'true' : undefined"
+            t-att-data-disabled="props.disabled ? 'true' : undefined"
+            t-att-data-dir="direction"
+            t-att-dir="direction"
+            t-att-data-orientation="props.orientation"
+            t-att="props.attrs"
+            t-on-keydown="onKeydown"
+        >
+            <t t-slot="default"/>
+        </div>
+        <input
+            t-if="props.name and currentValue !== null and currentValue !== undefined and currentValue !== ''"
+            type="hidden"
+            t-att-name="props.name"
+            t-att-required="props.required ? true : undefined"
+            t-att-value="currentValue"
+        />
+    </t>
+
+    <t t-name="odx_owl.RadioGroupItem">
+        <button
+            t-att-id="itemId"
+            t-att-class="classes"
+            type="button"
+            role="radio"
+            t-att-data-value="props.value"
+            t-att-tabindex="tabIndex"
+            t-att-disabled="isDisabled ? true : undefined"
+            t-att-aria-label="props.ariaLabel"
+            t-att-aria-checked="isChecked ? 'true' : 'false'"
+            t-att-data-disabled="isDisabled ? 'true' : undefined"
+            t-att-data-state="isChecked ? 'checked' : 'unchecked'"
+            t-on-click="select"
+        >
+            <span class="odx-radio-group__indicator" aria-hidden="true">
+                <span class="odx-radio-group__dot"/>
+            </span>
+        </button>
+    </t>
+</templates>

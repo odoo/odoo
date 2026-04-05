@@ -1,0 +1,276 @@
+// ODX Community Theme — Responsive Design
+// 5 breakpoints: xs (0), sm (576), md (768), lg (1024), xl (1440)
+
+@function _hsl($token, $alpha: null) {
+    @if $alpha == null {
+        @return unquote("hsl(var(#{$token}))");
+    }
+    @return unquote("hsl(var(#{$token}) / #{$alpha})");
+}
+
+// ── Mobile (< 576px) ────────────────────────────────────
+
+@media (max-width: 575px) {
+    // Header: compact
+    .odx-header {
+        padding: 0 0.375rem;
+        gap: 0.25rem;
+        height: 2.75rem;
+    }
+
+    // Hide search bar text, show only icon
+    .odx-search-trigger {
+        min-width: auto;
+        padding: 0 0.375rem;
+
+        .odx-search-text,
+        .odx-kbd {
+            display: none;
+        }
+    }
+
+    // Inset content: reduce margin/radius
+    .odx-sidebar-inset {
+        margin: 0.25rem 0.25rem 0.25rem 0;
+        border-radius: 0.5rem;
+    }
+
+    // Form: full width, no padding
+    .o_form_view .o_form_sheet {
+        padding: 0.75rem 1rem !important;
+    }
+
+    .o_form_view .oe_title .o_input,
+    .o_form_view .oe_title input {
+        font-size: 1rem !important;
+    }
+
+    // Form fields: stack vertically
+    .o_inner_group {
+        grid-template-columns: 1fr !important;
+    }
+
+    // Control panel: stack
+    .o_control_panel {
+        padding: 0.375rem 0.5rem;
+
+        .o_cp_top {
+            flex-wrap: wrap;
+            gap: 0.375rem;
+        }
+
+        .o_cp_bottom {
+            flex-wrap: wrap;
+        }
+    }
+
+    // Breadcrumb
+    .o_breadcrumb {
+        font-size: 0.75rem;
+    }
+
+    // List table: horizontal scroll
+    .o_list_view {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+
+        .o_list_table {
+            min-width: 600px;
+        }
+    }
+
+    // Kanban: single column
+    .o_kanban_renderer.o_kanban_grouped {
+        flex-direction: column;
+
+        .o_kanban_group {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+    }
+
+    // Kanban ungrouped: full width cards
+    .o_kanban_renderer:not(.o_kanban_grouped) .o_kanban_record {
+        width: 100% !important;
+    }
+
+    // Modals: full screen
+    .modal-dialog {
+        margin: 0;
+        max-width: 100%;
+        height: 100%;
+
+        .modal-content {
+            border-radius: 0;
+            height: 100%;
+        }
+    }
+
+    // Status bar: scroll horizontally
+    .o_form_statusbar {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding: 0.375rem 0.75rem !important;
+
+        .o_statusbar_buttons {
+            flex-shrink: 0;
+        }
+
+        .o_statusbar_status {
+            flex-shrink: 0;
+        }
+    }
+
+    // Tabs: horizontal scroll
+    .o_notebook > .o_notebook_headers .nav-tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap !important;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    // Chatter: below form, not side
+    .o-mail-Form-chatter.o-aside {
+        width: 100% !important;
+        flex-basis: auto !important;
+        border-left: none;
+        border-top: 1px solid _hsl(--odx-border);
+    }
+
+    // Company selector in sidebar: compact
+    .odx-company-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}
+
+// ── Small devices (576px - 767px) ───────────────────────
+
+@media (min-width: 576px) and (max-width: 767px) {
+    .odx-sidebar-inset {
+        margin: 0.375rem 0.375rem 0.375rem 0;
+    }
+
+    // Kanban: 2 columns
+    .o_kanban_renderer:not(.o_kanban_grouped) {
+        .o_kanban_record {
+            width: calc(50% - 8px) !important;
+        }
+    }
+
+    // Form groups: allow 2-column on landscape
+    .o_inner_group {
+        gap: 4px 12px;
+    }
+}
+
+// ── Tablet (768px - 1023px) ─────────────────────────────
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    // Sidebar: auto-collapse to icons
+    .odx-sidebar-provider[data-state="expanded"] {
+        --odx-sidebar-width: 12rem;
+    }
+
+    // Search bar: smaller
+    .odx-search-trigger {
+        min-width: 8rem;
+
+        .odx-search-text {
+            font-size: 0.75rem;
+        }
+    }
+
+    // Chatter: narrow side panel
+    .o-mail-Form-chatter.o-aside {
+        width: 300px !important;
+        flex-basis: 300px !important;
+    }
+
+    // Form sheet: reasonable max width
+    .o_form_view .o_form_sheet {
+        padding: 1rem 1.25rem !important;
+    }
+}
+
+// ── Desktop (1024px - 1439px) ───────────────────────────
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+    // Standard sidebar width
+    .odx-sidebar-provider {
+        --odx-sidebar-width: 14rem;
+    }
+}
+
+// ── Large desktop (1440px+) ─────────────────────────────
+
+@media (min-width: 1440px) {
+    // Wider sidebar
+    .odx-sidebar-provider {
+        --odx-sidebar-width: 16rem;
+    }
+
+    // Form sheet: comfortable width
+    .o_form_view .o_form_sheet {
+        padding: 1.5rem 2rem !important;
+    }
+
+    // Wider chatter
+    .o-mail-Form-chatter.o-aside {
+        width: 420px;
+        flex-basis: 420px;
+    }
+}
+
+// ── Ultra-wide (1920px+) ────────────────────────────────
+
+@media (min-width: 1920px) {
+    .o_form_view .o_form_sheet_bg {
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+
+    // Wider chatter
+    .o-mail-Form-chatter.o-aside {
+        width: 500px;
+        flex-basis: 500px;
+    }
+}
+
+// ── Fluid typography ────────────────────────────────────
+
+:root {
+    --odx-font-size-xs: clamp(0.625rem, 0.6rem + 0.15vw, 0.6875rem);
+    --odx-font-size-sm: clamp(0.6875rem, 0.65rem + 0.2vw, 0.8125rem);
+    --odx-font-size-base: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem);
+    --odx-font-size-lg: clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
+}
+
+// ── Print ───────────────────────────────────────────────
+
+@media print {
+    .odx-sidebar,
+    .odx-header,
+    .odx-sidebar-provider > .odx-sidebar,
+    .o_menu_systray,
+    .o_form_statusbar .o_statusbar_buttons,
+    .oe_button_box,
+    .o-mail-Chatter {
+        display: none !important;
+    }
+
+    .odx-sidebar-inset {
+        margin: 0 !important;
+        border: none !important;
+        border-radius: 0 !important;
+    }
+
+    .o_form_view .o_form_sheet {
+        padding: 0 !important;
+        max-width: 100% !important;
+    }
+}

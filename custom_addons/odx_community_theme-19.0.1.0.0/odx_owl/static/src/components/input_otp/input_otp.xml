@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.InputOTP">
+        <div
+            t-att-class="classes"
+            t-att-data-disabled="isDisabled ? 'true' : undefined"
+            t-att-data-dir="direction"
+            t-att-data-odx-input-otp-root="state.baseId"
+            t-att-dir="direction"
+        >
+            <div t-att-class="containerClasses">
+                <t t-if="hasCustomSlots">
+                    <t t-slot="default"/>
+                </t>
+                <t t-else="">
+                    <InputOTPGroup>
+                        <t t-foreach="slotIndexes" t-as="slotIndex" t-key="slotIndex">
+                            <InputOTPSlot index="slotIndex"/>
+                        </t>
+                    </InputOTPGroup>
+                </t>
+            </div>
+            <input
+                t-if="hiddenInputName"
+                type="hidden"
+                t-att-name="hiddenInputName"
+                t-att-value="currentValue"
+            />
+        </div>
+    </t>
+
+    <t t-name="odx_owl.InputOTPGroup">
+        <t t-tag="props.tag" t-att-class="classes" t-att-data-dir="env.odxInputOTP.dir" t-att-dir="env.odxInputOTP.dir">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.InputOTPSeparator">
+        <t t-tag="props.tag" t-att-class="classes" role="separator">
+            <t t-slot="default">
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M4 8H12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.6"/>
+                </svg>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.InputOTPSlot">
+        <input
+            t-att-class="classes"
+            t-att-data-active="isActive ? 'true' : 'false'"
+            t-att-data-dir="env.odxInputOTP.dir"
+            t-att-dir="env.odxInputOTP.dir"
+            t-att-data-filled="charValue ? 'true' : undefined"
+            t-att-data-odx-input-otp-slot="props.index"
+            t-att-aria-label="ariaLabel"
+            t-att-disabled="isDisabled ? true : undefined"
+            t-att-placeholder="placeholder"
+            t-att-tabindex="tabIndex"
+            t-att-value="charValue"
+            t-att="inputAttrs"
+            maxlength="1"
+            type="text"
+            t-on-click="onClick"
+            t-on-focus="onFocus"
+            t-on-input="onInput"
+            t-on-keydown="onKeydown"
+            t-on-paste="onPaste"
+        />
+    </t>
+</templates>

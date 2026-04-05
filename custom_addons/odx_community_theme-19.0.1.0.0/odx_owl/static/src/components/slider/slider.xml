@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Slider">
+        <div
+            t-ref="rootRef"
+            t-att-class="classes"
+            t-att-data-disabled="props.disabled ? 'true' : undefined"
+            t-att-data-dir="direction"
+            t-att-dir="direction"
+        >
+            <div
+                t-ref="trackRef"
+                class="odx-slider__track"
+                t-att-data-dir="direction"
+                t-att-dir="direction"
+                t-att-data-orientation="props.orientation"
+                t-on-pointerdown="handleTrackPointerDown"
+            >
+                <div
+                    class="odx-slider__range"
+                    t-att-data-dir="direction"
+                    t-att-dir="direction"
+                    t-att-data-orientation="props.orientation"
+                    t-att-style="rangeStyle"
+                />
+            </div>
+            <t t-foreach="currentValues" t-as="sliderValue" t-key="sliderValue_index">
+                <button
+                    t-att-id="getThumbId(sliderValue_index)"
+                    class="odx-slider__thumb"
+                    type="button"
+                    role="slider"
+                    t-att-tabindex="props.disabled ? -1 : 0"
+                    t-att-disabled="props.disabled ? true : undefined"
+                    t-att-data-dir="direction"
+                    t-att-dir="direction"
+                    t-att-data-orientation="props.orientation"
+                    t-att-style="getThumbStyle(sliderValue)"
+                    t-att-aria-label="getThumbAriaLabel(sliderValue_index)"
+                    t-att-aria-orientation="props.orientation"
+                    t-att-aria-valuemin="props.min"
+                    t-att-aria-valuemax="props.max"
+                    t-att-aria-valuenow="sliderValue"
+                    t-att-aria-valuetext="getThumbAriaValueText(sliderValue_index, sliderValue)"
+                    t-on-pointerdown="(ev) => handleThumbPointerDown(sliderValue_index, ev)"
+                    t-on-keydown="(ev) => handleThumbKeydown(sliderValue_index, ev)"
+                />
+            </t>
+        </div>
+        <t t-if="props.name">
+            <input
+                t-foreach="currentValues"
+                t-as="sliderValue"
+                t-key="`input-${sliderValue_index}`"
+                type="hidden"
+                t-att-name="getHiddenInputName(sliderValue_index)"
+                t-att-value="sliderValue"
+            />
+        </t>
+    </t>
+</templates>

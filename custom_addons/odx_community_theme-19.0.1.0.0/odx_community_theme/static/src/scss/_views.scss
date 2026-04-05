@@ -1,0 +1,879 @@
+// ODX Community Theme — View Redesign
+// Modern form, list, kanban, and chatter styling using Odoo CSS custom properties.
+
+@function _hsl($token, $alpha: null) {
+    @if $alpha == null {
+        @return unquote("hsl(var(#{$token}))");
+    }
+    @return unquote("hsl(var(#{$token}) / #{$alpha})");
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// LIST VIEW — Clean data table
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.o_list_renderer {
+    --ListRenderer-thead-bg-color: _hsl(--odx-muted);
+    --ListRenderer-thead-border-end-color: _hsl(--odx-border);
+    --ListRenderer-table-padding-x: 12px;
+}
+
+.o_list_view {
+    // Remove alternating row colors
+    .o_list_table {
+        border-collapse: separate;
+        border-spacing: 0;
+
+        // Headers: subtle, no border-bottom, sticky
+        thead th {
+            background: _hsl(--odx-muted);
+            color: _hsl(--odx-muted-foreground);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            padding: 0.5rem 0.75rem;
+            border-bottom: 1px solid _hsl(--odx-border);
+            position: sticky;
+            top: 0;
+            z-index: 2;
+
+            // Sort indicator
+            .o_list_sortable_icon {
+                color: _hsl(--odx-muted-foreground);
+            }
+        }
+
+        // Rows: clean, minimal borders
+        tbody tr {
+            border-bottom: 1px solid _hsl(--odx-border, 0.3);
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            // Hover: subtle accent
+            &:hover td {
+                background: _hsl(--odx-accent, 0.5);
+            }
+
+            // Selected row
+            &.o_selected_row > td {
+                background: _hsl(--odx-accent);
+            }
+        }
+
+        // Cells: tighter padding
+        td {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8125rem;
+            border-color: transparent;
+            color: _hsl(--odx-foreground);
+
+            // Number columns right-aligned
+            &.o_list_number {
+                font-variant-numeric: tabular-nums;
+            }
+        }
+
+        // Checkbox column
+        .o_list_record_selector {
+            width: 36px;
+            padding: 0.5rem 0.5rem;
+        }
+
+        // Footer/totals
+        tfoot td {
+            background: _hsl(--odx-muted);
+            font-weight: 600;
+            font-size: 0.8125rem;
+            border-top: 1px solid _hsl(--odx-border);
+        }
+    }
+
+    // Group by headers
+    .o_group_header {
+        background: _hsl(--odx-muted);
+        font-weight: 600;
+        font-size: 0.8125rem;
+        color: _hsl(--odx-foreground);
+
+        .o_group_name {
+            font-weight: 600;
+        }
+    }
+
+    // Optional columns button
+    .o_optional_columns_dropdown_toggle {
+        color: _hsl(--odx-muted-foreground);
+        border-radius: 0.375rem;
+
+        &:hover {
+            background: _hsl(--odx-accent);
+        }
+    }
+}
+
+// Activity badges
+.o_list_view .o_activity_summary {
+    .badge {
+        font-size: 0.5625rem;
+        padding: 0 0.25rem;
+        min-width: 1.125rem;
+        height: 1.125rem;
+        line-height: 1.125rem;
+        border-radius: 0.25rem;
+        opacity: 0.75;
+    }
+}
+
+// Pager
+.o_pager {
+    .o_pager_counter {
+        font-size: 0.8125rem;
+        color: _hsl(--odx-muted-foreground);
+    }
+
+    .o_pager_value {
+        font-weight: 600;
+        color: _hsl(--odx-foreground);
+    }
+
+    .btn {
+        border-radius: 0.25rem;
+        padding: 0.125rem 0.375rem;
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// FORM VIEW
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.o_form_view {
+    --formView-sheet-padding-y: 1.25rem;
+    --formView-sheet-padding-x: 1.5rem;
+    --formView-sheet-border-width: 0;
+    --formView-sheet-border-radius: 0;
+
+    background: _hsl(--odx-background);
+
+    // Sheet
+    .o_form_sheet_bg > .o_form_sheet {
+        background: _hsl(--odx-background);
+        border: none;
+        box-shadow: none;
+        max-width: none;
+    }
+
+    // Transparent inputs until focus
+    &:not(.o_field_highlight) {
+        .o_field_widget:not(.o_field_invalid) .o_input:not(:hover):not(:focus) {
+            border-color: transparent;
+            background: transparent;
+        }
+
+        .o_field_widget .o_input:hover:not(:focus) {
+            border-color: _hsl(--odx-border);
+            background: _hsl(--odx-background);
+        }
+
+        .o_field_widget .o_input:focus {
+            border-color: _hsl(--odx-ring);
+            background: _hsl(--odx-background);
+            box-shadow: 0 0 0 2px _hsl(--odx-ring, 0.1);
+        }
+    }
+
+    // Labels: smaller, muted
+    .o_inner_group .o_form_label,
+    .o_wrap_label .o_form_label,
+    .o_td_label .o_form_label {
+        font-size: 0.75rem;
+        color: _hsl(--odx-muted-foreground);
+        font-weight: 500;
+    }
+
+    // Required field label
+    .o_form_label.o_form_label_required {
+        font-weight: 600;
+    }
+
+    // Record title
+    .oe_title {
+        .o_input, input, span, h1, h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: _hsl(--odx-foreground);
+            border: none;
+            padding-left: 0;
+        }
+    }
+
+    // Tags
+
+    // Status bar buttons
+    .o_statusbar_buttons .btn-primary {
+        font-size: 0.8125rem;
+    }
+
+    // Inner groups: tighter spacing
+    .o_inner_group {
+        gap: 4px 12px;
+        margin-bottom: 0.5rem;
+    }
+
+    // Separator lines
+    .o_horizontal_separator {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: _hsl(--odx-muted-foreground);
+        border-color: _hsl(--odx-border);
+        margin: 0.75rem 0 0.5rem;
+    }
+
+    // Button box
+    .oe_button_box {
+        border-bottom: 1px solid _hsl(--odx-border);
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.25rem;
+
+        .oe_stat_button {
+            border-color: _hsl(--odx-border);
+            border-radius: 0.375rem;
+
+            .o_button_icon {
+                color: _hsl(--odx-muted-foreground);
+                font-size: 1.25rem;
+            }
+
+            .o_stat_info .o_stat_value {
+                font-size: 1.125rem;
+                font-weight: 700;
+                color: _hsl(--odx-foreground);
+            }
+
+            .o_stat_info .o_stat_text {
+                font-size: 0.6875rem;
+                color: _hsl(--odx-muted-foreground);
+            }
+
+            &:hover {
+                background: _hsl(--odx-accent);
+            }
+        }
+    }
+
+    // Notebook/Tabs
+    .o_notebook > .o_notebook_headers {
+        margin-bottom: 0.5rem;
+    }
+
+    .o_notebook > .o_notebook_headers > ul.nav.nav-tabs {
+        border-bottom: none;
+        background: _hsl(--odx-muted);
+        border-radius: 0.5rem;
+        padding: 0.1875rem;
+        gap: 0.125rem;
+        display: inline-flex;
+    }
+
+    .o_notebook > .o_notebook_headers > ul.nav.nav-tabs > li.nav-item > a.nav-link {
+        color: _hsl(--odx-muted-foreground);
+        font-size: 0.8125rem;
+        font-weight: 500;
+        border: none;
+        border-radius: 0.375rem;
+        padding: 0.3125rem 0.75rem;
+        background: transparent;
+
+        &:hover {
+            color: _hsl(--odx-foreground);
+        }
+
+        &.active {
+            color: _hsl(--odx-foreground);
+            font-weight: 600;
+            background: _hsl(--odx-background);
+            box-shadow: 0 1px 2px _hsl(--odx-foreground, 0.06);
+        }
+    }
+
+    // Chatter border
+    .o_FormRenderer_chatterContainer {
+        border-left: 1px solid _hsl(--odx-border);
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// KANBAN VIEW
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// Kanban renderer
+.o_kanban_renderer {
+    --KanbanRecord-padding-v: 10px;
+    --KanbanRecord-padding-h: 12px;
+    --KanbanGroup-background: #{_hsl(--odx-background)};
+    background: _hsl(--odx-background);
+}
+
+.o_kanban_record {
+    &:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 2px _hsl(--odx-ring);
+    }
+
+    // Priority stars
+    .o_priority .o_priority_star {
+        font-size: 0.875rem;
+        color: _hsl(--odx-border) !important;
+
+        &.fa-star {
+            color: _hsl(--odx-muted-foreground) !important;
+        }
+    }
+
+    // Favorite star
+    .o_kanban_favorite {
+        opacity: 0.3;
+        &.o_favorite {
+            opacity: 0.7;
+        }
+    }
+
+    // Stage color border
+    &[style*="border-left"],
+    &[style*="border-color"] {
+        border-left-color: _hsl(--odx-border) !important;
+    }
+
+    // Activity decorator
+    .o_kanban_activity_status {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+    }
+
+    // Progress bar in card
+    .o_kanban_record_progress {
+        border-radius: 999px;
+        height: 3px;
+        overflow: hidden;
+        background: _hsl(--odx-border);
+
+        .progress-bar {
+            border-radius: 999px;
+        }
+    }
+
+    // Card metadata
+    .text-muted, small {
+        font-size: 0.75rem;
+        color: _hsl(--odx-muted-foreground) !important;
+    }
+}
+
+// Column headers
+.o_kanban_header {
+    padding: 0.5rem 0;
+
+    .o_kanban_header_title {
+        .o_column_title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: _hsl(--odx-foreground);
+        }
+
+        .o_kanban_counter {
+            font-size: 0.75rem;
+            color: _hsl(--odx-muted-foreground);
+        }
+    }
+}
+
+// Quick create
+.o_kanban_quick_create {
+    background: _hsl(--odx-background);
+    border: 1px solid _hsl(--odx-border);
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px _hsl(--odx-foreground, 0.08);
+    padding: 0.75rem;
+}
+
+// Column progress bars
+.o_kanban_group .o_kanban_counter {
+    .o_kanban_counter_progress {
+        height: 3px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: _hsl(--odx-border);
+
+        .progress-bar {
+            border-radius: 999px;
+            &.bg-success, &.bg-warning, &.bg-danger, &.bg-200 {
+                opacity: 0.7;
+            }
+        }
+    }
+
+    .o_kanban_counter_side {
+        font-size: 0.75rem;
+        color: _hsl(--odx-muted-foreground);
+        font-weight: 600;
+    }
+}
+
+// Kanban grouped column
+.o_kanban_group {
+    &:not(:last-child) {
+        border-right: 1px solid _hsl(--odx-border, 0.3);
+    }
+}
+
+// Tag badges
+.o_kanban_record .o_tag,
+.o_kanban_record .badge {
+    border-radius: 0.25rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    padding: 0.0625rem 0.375rem;
+}
+
+// Kanban "add column" button
+.o_kanban_add_column {
+    .o_kanban_title {
+        font-size: 0.8125rem;
+        color: _hsl(--odx-muted-foreground);
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CHANNEL CARDS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// Channel card in the "Channels" list view
+.o-mail-ChannelCard {
+    border: 1px solid _hsl(--odx-border);
+    border-radius: 0.5rem;
+    background: _hsl(--odx-background);
+    transition: box-shadow 150ms ease, transform 150ms ease;
+
+    &:hover {
+        box-shadow: 0 4px 12px _hsl(--odx-foreground, 0.08);
+        transform: translateY(-1px);
+    }
+
+    // Channel hash icon
+    .o-mail-ChannelCard-avatar {
+        border-radius: 0.375rem;
+        opacity: 0.8;
+    }
+
+    // Channel name
+    .o-mail-ChannelCard-name {
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: _hsl(--odx-foreground);
+    }
+
+    // Channel type label
+    .o-mail-ChannelCard-description {
+        font-size: 0.75rem;
+        color: _hsl(--odx-muted-foreground);
+    }
+
+    // Join/Leave buttons
+    .btn {
+        border-radius: 0.375rem;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// SETTINGS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.o_base_settings .o_settings_container {
+    // Settings input fields
+    .o_field_widget:not(.o_field_invalid) .o_input:not(:hover):not(:focus) {
+        border-color: _hsl(--odx-border, 0.5);
+        background: transparent;
+    }
+
+    .o_field_widget .o_input:hover:not(:focus) {
+        border-color: _hsl(--odx-border);
+        background: _hsl(--odx-background);
+    }
+
+    .o_field_widget .o_input:focus {
+        border-color: _hsl(--odx-ring);
+        background: _hsl(--odx-background);
+        box-shadow: 0 0 0 2px _hsl(--odx-ring, 0.1);
+    }
+
+    // Setting labels
+    .o_form_label {
+        font-size: 0.8125rem;
+        color: _hsl(--odx-foreground);
+        font-weight: 500;
+    }
+
+    // Setting help text
+    .text-muted, .o_light_label {
+        font-size: 0.75rem;
+        color: _hsl(--odx-muted-foreground) !important;
+    }
+
+    // Setting block titles
+    .o_setting_box .o_setting_left_pane + .o_setting_right_pane .o_form_label {
+        font-weight: 600;
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CHATTER
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// Chatter container
+.o_action .o-mail-Chatter {
+    background: _hsl(--odx-background);
+    padding: 0 0.75rem;
+
+    // Tab buttons
+    .o-mail-Chatter-topbar {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid _hsl(--odx-border);
+        gap: 0.375rem;
+
+        .btn {
+            font-size: 0.8125rem;
+            padding: 0.25rem 0.625rem;
+            border-radius: 0.375rem;
+        }
+
+        .btn-primary {
+            background: _hsl(--odx-primary);
+            border-color: _hsl(--odx-primary);
+            color: _hsl(--odx-primary-foreground);
+        }
+    }
+}
+
+// Messages
+.o-mail-Message {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid _hsl(--odx-border, 0.3);
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    // Avatar
+    .o-mail-Message-avatarContainer {
+        img {
+            border-radius: 0.375rem;
+        }
+    }
+
+    // Author + time
+    .o-mail-Message-author {
+        font-weight: 600;
+        font-size: 0.8125rem;
+        color: _hsl(--odx-foreground);
+    }
+
+    .o-mail-Message-date {
+        font-size: 0.6875rem;
+        color: _hsl(--odx-muted-foreground);
+    }
+
+    // Body
+    .o-mail-Message-body {
+        font-size: 0.8125rem;
+        line-height: 1.5;
+        color: _hsl(--odx-foreground);
+    }
+
+    // Tracking changes
+    .o-mail-Message-tracking {
+        font-size: 0.75rem;
+        color: _hsl(--odx-muted-foreground);
+
+        .o-mail-Message-trackingField {
+            font-weight: 500;
+            color: _hsl(--odx-foreground);
+        }
+
+        .o-mail-Message-trackingOld {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .o-mail-Message-trackingNew {
+            color: _hsl(--odx-primary);
+            font-weight: 500;
+        }
+    }
+
+    // Hover actions
+    .o-mail-Message-actions {
+        opacity: 0;
+        transition: opacity var(--odx-duration-fast) ease;
+    }
+
+    &:hover .o-mail-Message-actions {
+        opacity: 1;
+    }
+}
+
+// Composer
+.o-mail-Composer {
+    padding: 0.75rem 0;
+    border-top: 1px solid _hsl(--odx-border);
+
+    .o-mail-Composer-input {
+        border: 1px solid _hsl(--odx-border);
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8125rem;
+        min-height: 2.5rem;
+        background: _hsl(--odx-background);
+        color: _hsl(--odx-foreground);
+
+        &:focus {
+            border-color: _hsl(--odx-ring);
+            box-shadow: 0 0 0 2px _hsl(--odx-ring, 0.1);
+        }
+    }
+
+    // Send button
+    .o-mail-Composer-send {
+        border-radius: 0.375rem;
+    }
+
+    // Attachment button
+    .o-mail-Composer-attachment {
+        border-radius: 0.25rem;
+    }
+}
+
+// Activity
+.o-mail-Activity {
+    border: 1px solid _hsl(--odx-border);
+    border-radius: 0.5rem;
+    padding: 0.625rem;
+    margin-bottom: 0.375rem;
+    background: _hsl(--odx-background);
+
+    &:hover {
+        background: _hsl(--odx-accent, 0.5);
+    }
+
+    // Overdue indicator
+    &.text-danger {
+        border-left: 3px solid _hsl(--odx-destructive);
+    }
+
+    // Today
+    &.text-warning {
+        border-left: 3px solid #d97706;
+    }
+
+    // Planned
+    &.text-success {
+        border-left: 3px solid #16a34a;
+    }
+}
+
+// Attachment cards
+.o-mail-AttachmentCard {
+    border: 1px solid _hsl(--odx-border);
+    border-radius: 0.375rem;
+    padding: 0.375rem 0.5rem;
+    font-size: 0.75rem;
+    background: _hsl(--odx-muted);
+
+    &:hover {
+        background: _hsl(--odx-accent);
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// GRAPH VIEW
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.o_graph_renderer {
+    background: _hsl(--odx-background);
+
+    canvas {
+        border-radius: 0.5rem;
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// SEARCH PANEL
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.o_search_panel {
+    background: _hsl(--odx-card);
+    border-right: 1px solid _hsl(--odx-border);
+
+    // Section headers
+    .o_search_panel_section_header {
+        font-size: 0.6875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: _hsl(--odx-muted-foreground);
+        padding: 0.75rem 0.75rem 0.25rem;
+    }
+
+    // Filter items
+    .o_search_panel_category_value,
+    .o_search_panel_filter_value {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.8125rem;
+        border-radius: 0.25rem;
+        margin: 0 0.25rem;
+        cursor: pointer;
+
+        &:hover {
+            background: _hsl(--odx-accent);
+        }
+
+        &.active {
+            background: _hsl(--odx-accent);
+            font-weight: 600;
+            color: _hsl(--odx-foreground);
+        }
+    }
+
+    // Counter badges
+    .o_search_panel_counter {
+        font-size: 0.6875rem;
+        color: _hsl(--odx-muted-foreground);
+        background: _hsl(--odx-muted);
+        border-radius: 999px;
+        padding: 0 0.375rem;
+        min-width: 1.25rem;
+        text-align: center;
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// DARK MODE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+html[data-odx-theme="dark"] {
+    // List view
+    .o_action .o_list_view .o_list_table {
+        color: _hsl(--odx-foreground);
+
+        thead th {
+            background: _hsl(--odx-muted);
+            color: _hsl(--odx-muted-foreground);
+        }
+
+        tbody tr:hover td {
+            background: _hsl(--odx-accent);
+        }
+
+        tfoot td {
+            background: _hsl(--odx-muted);
+        }
+    }
+
+    // Form view
+    .o_action .o_form_view {
+        .o_inner_group .o_form_label,
+        .o_wrap_label .o_form_label,
+        .o_td_label .o_form_label {
+            color: _hsl(--odx-muted-foreground);
+        }
+
+        .oe_title .o_input,
+        .oe_title input {
+            color: _hsl(--odx-foreground);
+        }
+
+        // Transparent inputs dark mode
+        &:not(.o_field_highlight) {
+            .o_field_widget .o_input:hover:not(:focus) {
+                background: _hsl(--odx-muted);
+            }
+
+            .o_field_widget .o_input:focus {
+                background: _hsl(--odx-muted);
+            }
+        }
+    }
+
+    // Kanban view
+    .o_action .o_kanban_view .o_kanban_record {
+        background: _hsl(--odx-card);
+        border-color: _hsl(--odx-border);
+        color: _hsl(--odx-foreground);
+    }
+
+    .o_action .o_kanban_view .o_kanban_quick_create {
+        background: _hsl(--odx-card);
+        border-color: _hsl(--odx-border);
+    }
+
+    // Chatter
+    .o_action .o-mail-Chatter {
+        background: _hsl(--odx-background);
+    }
+
+    .o_action .o-mail-Message {
+        border-bottom-color: _hsl(--odx-border, 0.3);
+
+        .o-mail-Message-author {
+            color: _hsl(--odx-foreground);
+        }
+
+        .o-mail-Message-body {
+            color: _hsl(--odx-foreground);
+        }
+    }
+
+    .o_action .o-mail-Composer .o-mail-Composer-input {
+        background: _hsl(--odx-muted);
+        color: _hsl(--odx-foreground);
+        border-color: _hsl(--odx-border);
+    }
+
+    .o_action .o-mail-Activity {
+        background: _hsl(--odx-card);
+        border-color: _hsl(--odx-border);
+    }
+
+    .o_action .o-mail-AttachmentCard {
+        background: _hsl(--odx-muted);
+        border-color: _hsl(--odx-border);
+    }
+
+    // Search panel
+    .o_action .o_search_panel {
+        background: _hsl(--odx-card);
+        border-color: _hsl(--odx-border);
+
+        .o_search_panel_category_value:hover,
+        .o_search_panel_filter_value:hover {
+            background: _hsl(--odx-accent);
+        }
+    }
+
+    // Graph
+    .o_action .o_graph_renderer {
+        background: _hsl(--odx-background);
+    }
+
+    // Group by headers
+    .o_action .o_list_view .o_group_header {
+        background: _hsl(--odx-muted);
+        color: _hsl(--odx-foreground);
+    }
+}

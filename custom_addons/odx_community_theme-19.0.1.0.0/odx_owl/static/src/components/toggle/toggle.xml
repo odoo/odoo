@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Toggle">
+        <button
+            t-att-id="props.id"
+            t-att-class="classes"
+            type="button"
+            t-att-disabled="props.disabled ? true : undefined"
+            t-att-aria-label="props.ariaLabel"
+            t-att-aria-pressed="isPressed ? 'true' : 'false'"
+            t-att-data-state="isPressed ? 'on' : 'off'"
+            t-on-click="toggle"
+        >
+            <t t-slot="default"/>
+        </button>
+        <input
+            t-if="props.name and isPressed"
+            type="hidden"
+            t-att-name="props.name"
+            t-att-value="props.value"
+        />
+    </t>
+</templates>

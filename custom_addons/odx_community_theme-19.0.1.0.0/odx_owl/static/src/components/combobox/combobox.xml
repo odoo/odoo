@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Combobox">
+        <div class="odx-combobox" t-att-data-dir="direction" t-att-dir="direction">
+            <Popover
+                align="props.align"
+                open="isOpen"
+                onOpenChange.bind="setOpen"
+                contentClassName="panelClasses"
+                position="props.position"
+                side="props.side"
+            >
+                <t t-if="hasCustomTrigger">
+                    <t t-slot="default"/>
+                </t>
+                <ComboboxTrigger t-else=""/>
+                <t t-set-slot="content">
+                    <t t-if="hasCustomContent">
+                        <t t-slot="content"/>
+                    </t>
+                    <ComboboxContent t-else="">
+                        <Command
+                            autoFocus="true"
+                            className="'odx-combobox__command'"
+                            dir="direction"
+                            items="normalizedItems"
+                            emptyLabel="props.emptyLabel"
+                            listId="listId"
+                            onSelect="onCommandSelect"
+                            placeholder="props.searchPlaceholder"
+                            selectedValue="currentValue"
+                        />
+                    </ComboboxContent>
+                </t>
+            </Popover>
+            <input
+                t-if="props.name and currentValue !== null and currentValue !== undefined and currentValue !== ''"
+                type="hidden"
+                t-att-name="props.name"
+                t-att-value="currentValue"
+            />
+        </div>
+    </t>
+
+    <t t-name="odx_owl.ComboboxTrigger">
+        <button
+            t-att-class="classes"
+            t-att-data-dir="env.odxCombobox.dir"
+            t-att-dir="env.odxCombobox.dir"
+            type="button"
+            role="combobox"
+            t-att-disabled="env.odxCombobox.disabled ? true : undefined"
+            t-att-aria-label="env.odxCombobox.ariaLabel"
+            t-att-aria-controls="env.odxCombobox.listId"
+            t-att-aria-expanded="env.odxCombobox.isOpen ? 'true' : 'false'"
+            aria-haspopup="listbox"
+            t-att-data-placeholder="selectedItem ? undefined : 'true'"
+            t-att="env.odxCombobox.triggerAttrs"
+            t-on-keydown="onKeydown"
+        >
+            <t t-slot="default">
+                <ComboboxValue/>
+                <ComboboxIcon/>
+            </t>
+        </button>
+    </t>
+
+    <t t-name="odx_owl.ComboboxValue">
+        <span t-att-class="classes">
+            <t t-esc="text"/>
+        </span>
+    </t>
+
+    <t t-name="odx_owl.ComboboxIcon">
+        <t t-tag="props.tag" t-att-class="classes" aria-hidden="true">
+            <t t-slot="default">
+                <svg viewBox="0 0 16 16">
+                    <path d="M4.25 6.25L8 10L11.75 6.25" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/>
+                </svg>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ComboboxContent">
+        <t t-tag="props.tag" t-att-class="classes" t-att-data-dir="env.odxCombobox.dir" t-att-dir="env.odxCombobox.dir">
+            <t t-slot="default"/>
+        </t>
+    </t>
+</templates>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.ItemGroup">
+        <t t-tag="props.tag" role="list" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ItemSeparator">
+        <div t-att-class="classes"/>
+    </t>
+
+    <t t-name="odx_owl.Item">
+        <t
+            t-tag="props.tag"
+            t-att-class="classes"
+            t-att-data-size="props.size"
+            t-att-data-variant="props.variant"
+            t-att-tabindex="props.tabindex"
+        >
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ItemMedia">
+        <t
+            t-tag="props.tag"
+            t-att-class="classes"
+            t-att-data-variant="props.variant"
+        >
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ItemContent">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ItemTitle">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ItemDescription">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ItemActions">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ItemHeader">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ItemFooter">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+</templates>

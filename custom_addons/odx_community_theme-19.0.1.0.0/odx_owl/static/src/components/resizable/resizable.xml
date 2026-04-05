@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.ResizablePanelGroup">
+        <t
+            t-ref="rootRef"
+            t-tag="props.tag"
+            t-att-class="classes"
+            t-att-aria-orientation="props.direction"
+            t-att-data-dir="directionName"
+            t-att-data-direction="props.direction"
+            t-att-dir="directionName"
+        >
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ResizablePanel">
+        <t t-tag="props.tag" t-att-class="classes" t-att-style="panelStyle">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ResizableHandle">
+        <button
+            t-att-class="classes"
+            type="button"
+            role="separator"
+            t-att-aria-label="props.ariaLabel"
+            t-att-disabled="isDisabled ? true : undefined"
+            t-att-aria-disabled="isDisabled ? 'true' : undefined"
+            t-att-aria-orientation="orientation"
+            t-att-data-dir="env.odxResizableGroup.dir"
+            t-att-aria-valuemin="0"
+            t-att-aria-valuemax="100"
+            t-att-aria-valuenow="ariaValueNow"
+            t-on-keydown="onKeydown"
+            t-on-pointerdown="onPointerDown"
+        >
+            <span t-if="props.withHandle" class="odx-resizable__grip" aria-hidden="true">
+                <svg viewBox="0 0 16 16">
+                    <path d="M6 4.5H10M6 8H10M6 11.5H10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.4"/>
+                </svg>
+            </span>
+        </button>
+    </t>
+</templates>

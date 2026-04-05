@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.DataTable">
+        <div t-att-class="classes" t-att-data-dir="direction" t-att-dir="direction">
+            <div class="odx-data-table__toolbar">
+                <div class="odx-data-table__toolbar-search" t-if="props.showSearch">
+                    <Input
+                        ariaLabel="'Search table rows'"
+                        className="'odx-data-table__search-input'"
+                        value="state.query"
+                        placeholder="props.searchPlaceholder"
+                        onInput.bind="setQuery"
+                    />
+                </div>
+                <div class="odx-data-table__toolbar-meta">
+                    <span t-if="props.selectable and selectedCount" class="odx-data-table__selected">
+                        <t t-esc="`${selectedCount} selected`"/>
+                    </span>
+                    <t t-if="hasToolbarActions">
+                        <div class="odx-data-table__toolbar-actions">
+                            <t t-slot="toolbar_actions" t-props="toolbarSlotProps"/>
+                        </div>
+                    </t>
+                </div>
+            </div>
+
+            <div class="odx-data-table__surface">
+                <div class="odx-data-table__table-wrap">
+                    <table class="odx-data-table__table" t-att-data-dir="direction" t-att-dir="direction">
+                        <thead class="odx-data-table__header">
+                            <tr class="odx-data-table__row odx-data-table__row--head">
+                                <th t-if="props.selectable" class="odx-data-table__head odx-data-table__head--checkbox">
+                                    <Checkbox
+                                        ariaLabel="'Select visible rows'"
+                                        checked="allVisibleSelected"
+                                        onCheckedChange.bind="toggleVisibleSelection"
+                                    />
+                                </th>
+                                <th
+                                    t-foreach="normalizedColumns"
+                                    t-as="column"
+                                    t-key="column.key"
+                                    t-att-class="getHeaderClasses(column)"
+                                    t-att-aria-sort="column.sortable ? getSortState(column) : undefined"
+                                >
+                                    <button
+                                        t-if="column.sortable"
+                                        t-att-class="getSortButtonClasses(column)"
+                                        type="button"
+                                        t-att-aria-label="getSortLabel(column)"
+                                        t-on-click="() => toggleColumnSort(column)"
+                                    >
+                                        <span><t t-esc="column.label"/></span>
+                                        <span class="odx-data-table__sort-icon" aria-hidden="true">
+                                            <svg viewBox="0 0 16 16">
+                                                <path d="M8 3.25L10.75 6.25H5.25ZM8 12.75L5.25 9.75H10.75Z" fill="currentColor"/>
+                                            </svg>
+                                        </span>
+                                    </button>
+                                    <span t-else=""><t t-esc="column.label"/></span>
+                                </th>
+                                <th t-if="hasRowActions" class="odx-data-table__head odx-data-table__head--actions">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="odx-data-table__body">
+                            <t t-if="visibleRows.length">
+                                <tr
+                                    t-foreach="visibleRows"
+                                    t-as="row"
+                                    t-key="getRowDomKey(row, row_index)"
+                                    t-att-class="getRowClasses(row, row_index)"
+                                    t-on-click="(ev) => handleRowClick(row, row_index, ev)"
+                                >
+                                    <td t-if="props.selectable" class="odx-data-table__cell odx-data-table__cell--checkbox">
+                                        <Checkbox
+                                            t-att-ariaLabel="`Select ${getRowId(row, row_index)}`"
+                                            checked="isSelected(row, row_index)"
+                                            onCheckedChange="(checked) => toggleRowSelection(row, row_index, checked)"
+                                        />
+                                    </td>
+                                    <td
+                                        t-foreach="normalizedColumns"
+                                        t-as="column"
+                                        t-key="`${getRowDomKey(row, row_index)}-${column.key}`"
+                                        t-att-class="getCellClasses(column, row)"
+                                    >
+                                        <t t-if="column.type === 'badge'">
+                                            <span t-att-class="getStatusClasses(column, row)">
+                                                <t t-esc="getCellText(column, row)"/>
+                                            </span>
+                                        </t>
+                                        <t t-else="">
+                                            <div class="odx-data-table__cell-stack">
+                                                <span class="odx-data-table__cell-text">
+                                                    <t t-esc="getCellText(column, row)"/>
+                                                </span>
+                                                <span t-if="getCellDescription(column, row)" class="odx-data-table__cell-description">
+                                                    <t t-esc="getCellDescription(column, row)"/>
+                                                </span>
+                                            </div>
+                                        </t>
+                                    </td>
+                                    <td t-if="hasRowActions" class="odx-data-table__cell odx-data-table__cell--actions">
+                                        <t t-slot="row_actions" t-props="getRowSlotProps(row, row_index)"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr t-else="" class="odx-data-table__row odx-data-table__row--empty">
+                                <td t-att-colspan="columnCount" class="odx-data-table__empty-cell">
+                                    <t t-if="props.slots and props.slots.empty">
+                                        <t t-slot="empty" t-props="toolbarSlotProps"/>
+                                    </t>
+                                    <div t-else="" class="odx-data-table__empty">
+                                        <p class="odx-data-table__empty-title"><t t-esc="props.emptyTitle"/></p>
+                                        <p class="odx-data-table__empty-description"><t t-esc="props.emptyDescription"/></p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div t-if="props.showPagination" class="odx-data-table__pagination">
+                <p class="odx-data-table__pagination-summary">
+                    <t t-esc="`Showing ${rangeStart}-${rangeEnd} of ${filteredRows.length}`"/>
+                </p>
+                <div class="odx-data-table__pagination-controls">
+                    <Select
+                        ariaLabel="'Rows per page'"
+                        className="'odx-data-table__page-size'"
+                        items="pageSizeOptions"
+                        value="state.pageSize"
+                        size="'sm'"
+                        onValueChange.bind="handlePageSizeChange"
+                    />
+                    <button
+                        class="odx-data-table__page-button"
+                        type="button"
+                        t-att-disabled="state.page &lt;= 1 ? true : undefined"
+                        t-on-click="() => setPage(state.page - 1)"
+                    >
+                        Prev
+                    </button>
+                    <span class="odx-data-table__page-indicator">
+                        <t t-esc="`Page ${state.page} of ${pageCount}`"/>
+                    </span>
+                    <button
+                        class="odx-data-table__page-button"
+                        type="button"
+                        t-att-disabled="state.page &gt;= pageCount ? true : undefined"
+                        t-on-click="() => setPage(state.page + 1)"
+                    >
+                        Next
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

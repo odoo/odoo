@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Empty">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.EmptyHeader">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.EmptyMedia">
+        <t t-tag="props.tag" t-att-class="classes" t-att-data-variant="props.variant">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.EmptyTitle">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.EmptyDescription">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.EmptyContent">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+</templates>

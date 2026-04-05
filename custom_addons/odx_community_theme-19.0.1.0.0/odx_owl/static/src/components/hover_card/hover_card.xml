@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.HoverCard">
+        <span
+            t-ref="triggerRef"
+            t-att-class="triggerClasses"
+            t-att-data-state="env.odxHoverCard and env.odxHoverCard.isOpen ? 'open' : 'closed'"
+            t-on-mouseenter="scheduleOpen"
+            t-on-mouseleave="scheduleClose"
+            t-on-focusin="scheduleOpen"
+            t-on-focusout="scheduleClose"
+        >
+            <t t-if="props.slots and props.slots.trigger">
+                <t t-slot="trigger"/>
+            </t>
+            <t t-else="">
+                <t t-slot="default"/>
+            </t>
+        </span>
+    </t>
+
+    <t t-name="odx_owl.HoverCardTrigger">
+        <t
+            t-tag="props.tag"
+            t-att-class="classes"
+            t-att-data-state="isOpen ? 'open' : 'closed'"
+        >
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.HoverCardContent">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+</templates>

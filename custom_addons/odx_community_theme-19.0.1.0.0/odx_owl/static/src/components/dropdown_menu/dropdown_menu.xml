@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.DropdownMenu">
+        <Dropdown
+            disabled="props.disabled"
+            menuClass="menuClasses"
+            noClasses="true"
+            bottomSheet="false"
+            position="resolvedPosition"
+        >
+            <t t-if="props.slots &amp;&amp; props.slots.trigger">
+                <t t-slot="trigger"/>
+            </t>
+            <button t-else="" t-att-class="triggerClasses" t-att-data-dir="direction" t-att-dir="direction" type="button" t-att-disabled="props.disabled ? true : undefined">
+                <t t-esc="props.label"/>
+            </button>
+
+            <t t-set-slot="content">
+                <t t-if="props.items.length">
+                    <DropdownMenuItems items="props.items"/>
+                </t>
+                <t t-else="">
+                    <t t-slot="default"/>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+
+    <t t-name="odx_owl.DropdownMenuTrigger">
+        <t
+            t-tag="props.tag"
+            t-att-class="classes"
+            t-att-data-dir="env.odxDropdownMenu.dir"
+            t-att-dir="env.odxDropdownMenu.dir"
+            t-att-type="props.tag === 'button' ? 'button' : undefined"
+            aria-haspopup="menu"
+            t-att-disabled="props.disabled ? true : undefined"
+        >
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.DropdownMenuItems">
+        <DropdownMenuContent>
+            <t t-foreach="props.items" t-as="item" t-key="getItemKey(item, item_index)">
+                <DropdownMenuSeparator t-if="item.type === 'separator'"/>
+                <DropdownMenuLabel
+                    t-elif="item.type === 'label'"
+                    inset="Boolean(item.inset)"
+                    text="item.label || ''"
+                />
+                <DropdownMenuSub
+                    align="item.align"
+                    t-elif="item.type === 'submenu'"
+                    contentClassName="item.contentClassName || ''"
+                    destructive="Boolean(item.destructive)"
+                    disabled="Boolean(item.disabled)"
+                    inset="Boolean(item.inset)"
+                    label="item.label || ''"
+                    position="item.position"
+                    side="item.side"
+                    shortcut="item.shortcut || ''"
+                    triggerClassName="item.className || ''"
+                >
+                    <DropdownMenuItems items="getSubmenuItems(item)"/>
+                </DropdownMenuSub>
+                <DropdownMenuCheckboxItem
+                    t-elif="item.type === 'checkbox'"
+                    checked="Boolean(item.checked)"
+                    className="item.className || ''"
+                    destructive="Boolean(item.destructive)"
+                    disabled="Boolean(item.disabled)"
+                    href="item.href"
+                    inset="Boolean(item.inset)"
+                    keepOpen="Boolean(item.keepOpen)"
+                    onSelect="(ev) => onItemSelected(item, ev)"
+                    rel="item.rel"
+                    shortcut="item.shortcut || ''"
+                    target="item.target"
+                    text="item.label || ''"
+                />
+                <DropdownMenuRadioItem
+                    t-elif="item.type === 'radio'"
+                    checked="Boolean(item.checked)"
+                    className="item.className || ''"
+                    destructive="Boolean(item.destructive)"
+                    disabled="Boolean(item.disabled)"
+                    href="item.href"
+                    inset="Boolean(item.inset)"
+                    keepOpen="Boolean(item.keepOpen)"
+                    onSelect="(ev) => onItemSelected(item, ev)"
+                    rel="item.rel"
+                    shortcut="item.shortcut || ''"
+                    target="item.target"
+                    text="item.label || ''"
+                    value="item.value"
+                />
+                <DropdownMenuItem
+                    t-else=""
+                    className="item.className || ''"
+                    destructive="Boolean(item.destructive)"
+                    disabled="Boolean(item.disabled)"
+                    href="item.href"
+                    inset="Boolean(item.inset)"
+                    keepOpen="Boolean(item.keepOpen)"
+                    onSelect="(ev) => onItemSelected(item, ev)"
+                    rel="item.rel"
+                    shortcut="item.shortcut || ''"
+                    target="item.target"
+                    text="item.label || ''"
+                />
+            </t>
+        </DropdownMenuContent>
+    </t>
+
+    <t t-name="odx_owl.DropdownMenuContent">
+        <t t-tag="props.tag" t-att-class="classes" t-att-data-dir="env.odxDropdownMenu.dir" t-att-dir="env.odxDropdownMenu.dir">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.DropdownMenuGroup">
+        <t t-tag="props.tag" t-att-class="classes" role="group">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.DropdownMenuLabel">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.DropdownMenuSeparator">
+        <div t-att-class="classes" role="separator"/>
+    </t>
+
+    <t t-name="odx_owl.DropdownMenuShortcut">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.DropdownMenuSub">
+        <Dropdown
+            disabled="props.disabled"
+            menuClass="menuClasses"
+            noClasses="true"
+            bottomSheet="false"
+            holdOnHover="true"
+            position="resolvedPosition"
+        >
+            <t t-if="props.slots &amp;&amp; props.slots.trigger">
+                <t t-slot="trigger"/>
+            </t>
+            <DropdownMenuSubTrigger
+                t-else=""
+                className="props.triggerClassName"
+                destructive="props.destructive"
+                disabled="props.disabled"
+                inset="props.inset"
+                shortcut="props.shortcut"
+                text="props.label"
+            />
+
+            <t t-set-slot="content">
+                <t t-slot="default"/>
+            </t>
+        </Dropdown>
+    </t>
+
+    <t t-name="odx_owl.DropdownMenuSubTrigger">
+        <button
+            t-att-class="classes"
+            t-att-data-dir="env.odxDropdownMenu.dir"
+            t-att-dir="env.odxDropdownMenu.dir"
+            type="button"
+            role="menuitem"
+            aria-haspopup="menu"
+            t-att-disabled="props.disabled ? true : undefined"
+        >
+            <t t-slot="default">
+                <span class="odx-dropdown-menu__item-label">
+                    <t t-esc="props.text"/>
+                </span>
+            </t>
+            <span class="odx-dropdown-menu__item-meta">
+                <DropdownMenuShortcut t-if="props.shortcut" text="props.shortcut"/>
+                <span class="odx-dropdown-menu__submenu-chevron" aria-hidden="true">
+                    <svg viewBox="0 0 16 16">
+                        <path t-att-d="submenuChevronPath" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                    </svg>
+                </span>
+            </span>
+        </button>
+    </t>
+
+    <t t-name="odx_owl.DropdownMenuSubContent">
+        <t t-tag="props.tag" t-att-class="classes" t-att-data-dir="env.odxDropdownMenu.dir" t-att-dir="env.odxDropdownMenu.dir">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.DropdownMenuItem">
+        <DropdownItem
+            class="classes"
+            attrs="itemAttrs"
+            closingMode="resolvedClosingMode"
+            onSelected="onSelected"
+        >
+            <t t-slot="default">
+                <span class="odx-dropdown-menu__item-label">
+                    <t t-esc="props.text"/>
+                </span>
+            </t>
+            <DropdownMenuShortcut t-if="props.shortcut" text="props.shortcut"/>
+        </DropdownItem>
+    </t>
+
+    <t t-name="odx_owl.DropdownMenuCheckboxItem">
+        <CheckboxItem
+            checked="props.checked"
+            class="classes"
+            attrs="itemAttrs"
+            closingMode="resolvedClosingMode"
+            onSelected="onSelected"
+        >
+            <span class="odx-dropdown-menu__check" aria-hidden="true">
+                <svg t-if="props.checked" viewBox="0 0 16 16">
+                    <path d="M3 8.2L6.2 11.4L13 4.6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/>
+                </svg>
+            </span>
+            <t t-slot="default">
+                <span class="odx-dropdown-menu__item-label">
+                    <t t-esc="props.text"/>
+                </span>
+            </t>
+            <DropdownMenuShortcut t-if="props.shortcut" text="props.shortcut"/>
+        </CheckboxItem>
+    </t>
+
+    <t t-name="odx_owl.DropdownMenuRadioGroup">
+        <t t-tag="props.tag" t-att-class="classes" role="group">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.DropdownMenuRadioItem">
+        <t
+            t-tag="(props.href || (props.attrs &amp;&amp; props.attrs.href)) ? 'a' : 'span'"
+            class="o-dropdown-item dropdown-item o-navigable"
+            t-att-class="classes"
+            t-on-click.stop="onClick"
+            t-on-mouseenter="() => this.dropdownControl.closeChildren()"
+            role="menuitemradio"
+            tabindex="0"
+            t-att-aria-checked="isChecked ? 'true' : 'false'"
+            t-att="itemAttrs"
+        >
+            <span class="odx-dropdown-menu__radio-indicator" aria-hidden="true">
+                <span t-if="isChecked" class="odx-dropdown-menu__radio-dot"/>
+            </span>
+            <t t-slot="default">
+                <span class="odx-dropdown-menu__item-label">
+                    <t t-esc="props.text"/>
+                </span>
+            </t>
+            <DropdownMenuShortcut t-if="props.shortcut" text="props.shortcut"/>
+        </t>
+    </t>
+</templates>

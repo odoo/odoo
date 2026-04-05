@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="templateWebClient" xml:space="preserve">
+
+    <t t-inherit="web.WebClient" t-inherit-mode="extension">
+        <xpath expr="." position="replace">
+            <t>
+            <SidebarProvider
+                defaultOpen="true"
+                collapsible="'icon'"
+                storageKey="'odx-sidebar'"
+                side="'start'"
+            >
+                <!-- Sidebar (hidden in fullscreen) -->
+                <Sidebar t-if="!state.fullscreen">
+                    <SidebarHeader>
+                        <SidebarMenu>
+                            <SidebarMenuItem>
+                                <div class="odx-company-dropdown">
+                                    <button
+                                        class="odx-company-trigger"
+                                        type="button"
+                                        t-on-click="toggleCompanyMenu"
+                                    >
+                                        <div class="odx-company-icon">
+                                            <img src="/web/static/img/logo.png" alt=""/>
+                                        </div>
+                                        <div class="odx-company-info">
+                                            <span class="odx-company-name" t-esc="user.activeCompany ? user.activeCompany.name : ''"/>
+                                        </div>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="odx-company-chevron">
+                                            <path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/>
+                                        </svg>
+                                    </button>
+
+                                    <div class="odx-company-popover" t-if="state.companyMenuOpen">
+                                        <div class="odx-company-popover-label">Companies</div>
+                                        <div class="odx-company-popover-sep"/>
+                                        <t t-foreach="companyList" t-as="company" t-key="company.id">
+                                            <button
+                                                class="odx-company-item"
+                                                type="button"
+                                                t-on-click.stop="() => this.toggleCompany(company.id)"
+                                            >
+                                                <span
+                                                    class="odx-company-check"
+                                                    t-att-class="{'checked': this.isCompanyActive(company.id)}"
+                                                >
+                                                    <svg t-if="this.isCompanyActive(company.id)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                                                </span>
+                                                <span t-esc="company.name"/>
+                                            </button>
+                                        </t>
+                                    </div>
+
+                                    <div
+                                        class="odx-company-backdrop"
+                                        t-if="state.companyMenuOpen"
+                                        t-on-click="closeCompanyMenu"
+                                    />
+                                </div>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
+                    </SidebarHeader>
+
+                    <SidebarContent>
+                        <SidebarMenu>
+                            <t t-foreach="menuService.getApps()" t-as="app" t-key="app.id">
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton
+                                        label="app.name"
+                                        isActive="state.currentAppId === app.id"
+                                        tooltip="app.name"
+                                        onClick="() => this.onAppClick(app)"
+                                    >
+                                        <t t-set-slot="icon">
+                                            <img
+                                                t-att-src="this._getMenuIcon(app)"
+                                                class="odx-app-icon"
+                                                alt=""
+                                            />
+                                        </t>
+                                    </SidebarMenuButton>
+
+                                </SidebarMenuItem>
+                            </t>
+                        </SidebarMenu>
+                    </SidebarContent>
+
+                    <SidebarSeparator/>
+
+                    <SidebarFooter>
+                        <SidebarMenu>
+                            <SidebarMenuItem>
+                                <div class="odx-user-dropdown">
+                                    <button class="odx-user-trigger" type="button" t-on-click="toggleUserMenu">
+                                        <img t-att-src="avatarUrl" class="odx-user-avatar" alt=""/>
+                                        <div class="odx-user-info">
+                                            <span class="odx-user-name" t-esc="user.name"/>
+                                            <span class="odx-user-login" t-esc="user.login"/>
+                                        </div>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="odx-user-chevron">
+                                            <path d="m18 15-6-6-6 6"/>
+                                        </svg>
+                                    </button>
+
+                                    <div class="odx-user-popover" t-if="state.userMenuOpen">
+                                        <div class="odx-user-popover-header">
+                                            <img t-att-src="avatarUrl" class="odx-user-popover-avatar" alt=""/>
+                                            <div class="odx-user-popover-info">
+                                                <span class="odx-user-popover-name" t-esc="user.name"/>
+                                                <span class="odx-user-popover-email" t-esc="user.login"/>
+                                            </div>
+                                        </div>
+                                        <div class="odx-user-popover-sep"/>
+                                        <button class="odx-user-popover-item" type="button" t-on-click="openPreferences">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="odx-user-popover-icon"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                            My Profile
+                                        </button>
+                                        <button class="odx-user-popover-item" type="button" t-on-click="openShortcuts">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="odx-user-popover-icon"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.001"/><path d="M10 8h.001"/><path d="M14 8h.001"/><path d="M18 8h.001"/><path d="M8 12h.001"/><path d="M12 12h.001"/><path d="M16 12h.001"/><path d="M7 16h10"/></svg>
+                                            Shortcuts
+                                        </button>
+                                        <div class="odx-user-popover-sep"/>
+                                        <button class="odx-user-popover-item" type="button" t-on-click="openOdooAccount">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="odx-user-popover-icon"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                                            My Odoo.com Account
+                                        </button>
+                                        <button class="odx-user-popover-item" type="button" t-on-click="openDocumentation">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="odx-user-popover-icon"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                            Documentation
+                                        </button>
+                                        <button class="odx-user-popover-item" type="button" t-on-click="openSupport">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="odx-user-popover-icon"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                            Help
+                                        </button>
+                                        <div class="odx-user-popover-sep"/>
+                                        <button class="odx-user-popover-item odx-user-popover-item--danger" type="button" t-on-click="logout">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="odx-user-popover-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                            Log out
+                                        </button>
+                                    </div>
+
+                                    <div class="odx-company-backdrop" t-if="state.userMenuOpen" t-on-click="closeUserMenu"/>
+                                </div>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
+                    </SidebarFooter>
+                </Sidebar>
+
+                <SidebarInset>
+                    <header class="odx-header" t-if="!state.fullscreen">
+                        <SidebarTrigger>
+                            <t t-set-slot="default">
+                                <div class="odx-trigger-icon-wrap">
+                                    <!-- Panel left open (shown when sidebar is expanded → click to collapse) -->
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="odx-trigger-icon odx-trigger-icon--open">
+                                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                        <path d="M9 3v18"/>
+                                    </svg>
+                                    <!-- Panel left close (shown when sidebar is collapsed → click to expand) -->
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="odx-trigger-icon odx-trigger-icon--closed">
+                                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                        <path d="M9 3v18"/>
+                                        <path d="m14 9 3 3-3 3"/>
+                                    </svg>
+                                </div>
+                            </t>
+                        </SidebarTrigger>
+
+                        <Separator orientation="'vertical'" className="'odx-header-sep'"/>
+
+                        <button class="odx-search-trigger" t-on-click="() => this.env.services.command.openMainPalette()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="odx-search-icon">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="m21 21-4.35-4.35"/>
+                            </svg>
+                            <span class="odx-search-text">Search...</span>
+                            <Kbd text="'⌘K'"/>
+                        </button>
+
+                        <NavBar/>
+                    </header>
+
+                    <div class="odx-content">
+                        <ActionContainer/>
+                        <MainComponentsContainer/>
+                    </div>
+                </SidebarInset>
+            </SidebarProvider>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Checkbox">
+        <button
+            t-att-id="props.id"
+            t-att-class="classes"
+            type="button"
+            role="checkbox"
+            t-att-disabled="props.disabled ? true : undefined"
+            t-att-aria-label="props.ariaLabel"
+            t-att-aria-checked="ariaChecked"
+            t-att-data-state="dataState"
+            t-att-required="props.required ? true : undefined"
+            t-att="props.attrs"
+            t-on-click="toggle"
+        >
+            <span class="odx-checkbox__indicator" aria-hidden="true">
+                <svg viewBox="0 0 16 16">
+                    <path
+                        t-if="isIndeterminate"
+                        d="M3.25 8H12.75"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-width="1.8"
+                    />
+                    <path
+                        t-else=""
+                        d="M3 8.2L6.2 11.4L13 4.6"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.7"
+                    />
+                </svg>
+            </span>
+        </button>
+        <input
+            t-if="props.name and shouldSubmit"
+            type="hidden"
+            t-att-name="props.name"
+            t-att-value="props.value"
+        />
+    </t>
+</templates>

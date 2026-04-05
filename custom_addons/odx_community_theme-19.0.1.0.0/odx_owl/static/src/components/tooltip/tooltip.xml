@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.TooltipProvider">
+        <t t-slot="default"/>
+    </t>
+
+    <t t-name="odx_owl.Tooltip">
+        <span
+            t-ref="triggerRef"
+            t-att-class="triggerClasses"
+            t-att-data-state="env.odxTooltip and env.odxTooltip.isOpen ? 'open' : 'closed'"
+            t-on-mouseenter="scheduleOpen"
+            t-on-mouseleave="onTriggerLeave"
+            t-on-focusin="openImmediate"
+            t-on-focusout="close"
+        >
+            <t t-if="props.slots and props.slots.trigger">
+                <t t-slot="trigger"/>
+            </t>
+            <t t-else="">
+                <t t-slot="default"/>
+            </t>
+        </span>
+    </t>
+
+    <t t-name="odx_owl.TooltipTrigger">
+        <t
+            t-tag="props.tag"
+            t-att-class="classes"
+            t-att-aria-describedby="tooltipId"
+            t-att-data-state="env.odxTooltip and env.odxTooltip.isOpen ? 'open' : 'closed'"
+        >
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.TooltipContent">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+</templates>

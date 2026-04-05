@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="odx_owl.ShowcaseCrmDashboard">
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#1d1d1f;padding:24px;background:#fafafa;min-height:100vh;">
+
+        <!-- Header -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+            <div>
+                <h2 style="font-size:22px;font-weight:700;margin:0;">Sales Pipeline</h2>
+                <p style="font-size:13px;color:#86868b;margin:4px 0 0;">March 2026</p>
+            </div>
+            <div style="display:flex;gap:0;border:1px solid #e8e8ed;border-radius:8px;overflow:hidden;">
+                <button t-att-style="'padding:6px 14px;font-size:12px;font-weight:500;border:none;cursor:pointer;' + (state.period === 'week' ? 'background:#1d1d1f;color:white;' : 'background:white;color:#86868b;')" t-on-click="() => this.setPeriod('week')">Week</button>
+                <button t-att-style="'padding:6px 14px;font-size:12px;font-weight:500;border:none;cursor:pointer;' + (state.period === 'month' ? 'background:#1d1d1f;color:white;' : 'background:white;color:#86868b;')" t-on-click="() => this.setPeriod('month')">Month</button>
+                <button t-att-style="'padding:6px 14px;font-size:12px;font-weight:500;border:none;cursor:pointer;' + (state.period === 'quarter' ? 'background:#1d1d1f;color:white;' : 'background:white;color:#86868b;')" t-on-click="() => this.setPeriod('quarter')">Quarter</button>
+            </div>
+        </div>
+
+        <!-- Stat Cards -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;">
+            <div style="padding:20px;border-radius:12px;background:white;border:1px solid #e8e8ed;">
+                <div style="font-size:12px;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:0.04em;">Pipeline Value</div>
+                <div style="font-size:28px;font-weight:700;margin-top:6px;">$342K</div>
+                <div style="font-size:12px;color:#16a34a;margin-top:4px;">+12% from last month</div>
+            </div>
+            <div style="padding:20px;border-radius:12px;background:white;border:1px solid #e8e8ed;">
+                <div style="font-size:12px;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:0.04em;">Won This Month</div>
+                <div style="font-size:28px;font-weight:700;margin-top:6px;">$89K</div>
+                <div style="font-size:12px;color:#16a34a;margin-top:4px;">14 deals closed</div>
+            </div>
+            <div style="padding:20px;border-radius:12px;background:white;border:1px solid #e8e8ed;">
+                <div style="font-size:12px;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:0.04em;">Win Rate</div>
+                <div style="font-size:28px;font-weight:700;margin-top:6px;">34%</div>
+                <div style="font-size:12px;color:#d97706;margin-top:4px;">Down from 38%</div>
+            </div>
+            <div style="padding:20px;border-radius:12px;background:white;border:1px solid #e8e8ed;">
+                <div style="font-size:12px;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:0.04em;">Avg Deal Size</div>
+                <div style="font-size:28px;font-weight:700;margin-top:6px;">$6.3K</div>
+                <div style="font-size:12px;color:#86868b;margin-top:4px;">42 open deals</div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:28px;">
+            <!-- Revenue Chart (fake SVG) -->
+            <div style="background:white;border:1px solid #e8e8ed;border-radius:12px;padding:20px;">
+                <div style="font-size:14px;font-weight:600;margin-bottom:16px;">Monthly Revenue</div>
+                <svg viewBox="0 0 600 200" style="width:100%;height:auto;">
+                    <defs><linearGradient id="rg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1d1d1f" stop-opacity="0.1"/><stop offset="100%" stop-color="#1d1d1f" stop-opacity="0"/></linearGradient></defs>
+                    <!-- Grid lines -->
+                    <line x1="50" y1="20" x2="580" y2="20" stroke="#f4f4f5" stroke-width="1"/>
+                    <line x1="50" y1="65" x2="580" y2="65" stroke="#f4f4f5" stroke-width="1"/>
+                    <line x1="50" y1="110" x2="580" y2="110" stroke="#f4f4f5" stroke-width="1"/>
+                    <line x1="50" y1="155" x2="580" y2="155" stroke="#f4f4f5" stroke-width="1"/>
+                    <!-- Labels -->
+                    <text x="20" y="24" font-size="10" fill="#86868b">$100K</text>
+                    <text x="20" y="69" font-size="10" fill="#86868b">$75K</text>
+                    <text x="20" y="114" font-size="10" fill="#86868b">$50K</text>
+                    <text x="20" y="159" font-size="10" fill="#86868b">$25K</text>
+                    <!-- Area -->
+                    <path d="M80,130 L140,110 L200,120 L260,90 L320,70 L380,85 L440,55 L500,40 L560,30 L560,175 L80,175 Z" fill="url(#rg)"/>
+                    <!-- Line -->
+                    <polyline points="80,130 140,110 200,120 260,90 320,70 380,85 440,55 500,40 560,30" fill="none" stroke="#1d1d1f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <!-- Dots -->
+                    <circle cx="80" cy="130" r="4" fill="white" stroke="#1d1d1f" stroke-width="2"/>
+                    <circle cx="200" cy="120" r="4" fill="white" stroke="#1d1d1f" stroke-width="2"/>
+                    <circle cx="320" cy="70" r="4" fill="white" stroke="#1d1d1f" stroke-width="2"/>
+                    <circle cx="440" cy="55" r="4" fill="white" stroke="#1d1d1f" stroke-width="2"/>
+                    <circle cx="560" cy="30" r="4" fill="#1d1d1f" stroke="#1d1d1f" stroke-width="2"/>
+                    <!-- Month labels -->
+                    <text x="80" y="192" font-size="10" fill="#86868b" text-anchor="middle">Jul</text>
+                    <text x="140" y="192" font-size="10" fill="#86868b" text-anchor="middle">Aug</text>
+                    <text x="200" y="192" font-size="10" fill="#86868b" text-anchor="middle">Sep</text>
+                    <text x="260" y="192" font-size="10" fill="#86868b" text-anchor="middle">Oct</text>
+                    <text x="320" y="192" font-size="10" fill="#86868b" text-anchor="middle">Nov</text>
+                    <text x="380" y="192" font-size="10" fill="#86868b" text-anchor="middle">Dec</text>
+                    <text x="440" y="192" font-size="10" fill="#86868b" text-anchor="middle">Jan</text>
+                    <text x="500" y="192" font-size="10" fill="#86868b" text-anchor="middle">Feb</text>
+                    <text x="560" y="192" font-size="10" fill="#86868b" text-anchor="middle">Mar</text>
+                </svg>
+            </div>
+
+            <!-- Win/Loss Donut (fake SVG) -->
+            <div style="background:white;border:1px solid #e8e8ed;border-radius:12px;padding:20px;">
+                <div style="font-size:14px;font-weight:600;margin-bottom:16px;">Deal Outcomes</div>
+                <svg viewBox="0 0 200 200" style="width:100%;max-width:180px;margin:0 auto;display:block;">
+                    <circle cx="100" cy="100" r="70" fill="none" stroke="#e8e8ed" stroke-width="24"/>
+                    <circle cx="100" cy="100" r="70" fill="none" stroke="#1d1d1f" stroke-width="24" stroke-dasharray="149 291" stroke-dashoffset="0" transform="rotate(-90 100 100)"/>
+                    <circle cx="100" cy="100" r="70" fill="none" stroke="#d97706" stroke-width="24" stroke-dasharray="88 352" stroke-dashoffset="-149" transform="rotate(-90 100 100)"/>
+                    <circle cx="100" cy="100" r="70" fill="none" stroke="#dc2626" stroke-width="24" stroke-dasharray="44 396" stroke-dashoffset="-237" transform="rotate(-90 100 100)"/>
+                    <text x="100" y="95" text-anchor="middle" font-size="22" font-weight="700" fill="#1d1d1f">34%</text>
+                    <text x="100" y="112" text-anchor="middle" font-size="10" fill="#86868b">Win Rate</text>
+                </svg>
+                <div style="display:flex;justify-content:center;gap:16px;margin-top:16px;font-size:12px;">
+                    <div style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#1d1d1f;"></span> Won (34%)</div>
+                    <div style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#d97706;"></span> Open (20%)</div>
+                    <div style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#dc2626;"></span> Lost (10%)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Deals Table -->
+        <div style="background:white;border:1px solid #e8e8ed;border-radius:12px;overflow:hidden;">
+            <div style="padding:16px 20px;border-bottom:1px solid #e8e8ed;display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:14px;font-weight:600;">Top Deals</span>
+                <span style="font-size:12px;color:#86868b;">42 open opportunities</span>
+            </div>
+            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                <thead>
+                    <tr style="border-bottom:1px solid #e8e8ed;">
+                        <th style="text-align:left;padding:10px 20px;font-weight:600;font-size:11px;color:#86868b;text-transform:uppercase;">Deal</th>
+                        <th style="text-align:left;padding:10px 20px;font-weight:600;font-size:11px;color:#86868b;text-transform:uppercase;">Customer</th>
+                        <th style="text-align:left;padding:10px 20px;font-weight:600;font-size:11px;color:#86868b;text-transform:uppercase;">Stage</th>
+                        <th style="text-align:right;padding:10px 20px;font-weight:600;font-size:11px;color:#86868b;text-transform:uppercase;">Value</th>
+                        <th style="text-align:right;padding:10px 20px;font-weight:600;font-size:11px;color:#86868b;text-transform:uppercase;">Probability</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom:1px solid #f4f4f5;">
+                        <td style="padding:12px 20px;font-weight:500;">Enterprise License</td>
+                        <td style="padding:12px 20px;color:#86868b;">Azure Interior</td>
+                        <td style="padding:12px 20px;"><span style="font-size:11px;font-weight:500;padding:2px 10px;border-radius:999px;background:#dbeafe;color:#1e40af;">Negotiation</span></td>
+                        <td style="padding:12px 20px;text-align:right;font-weight:600;font-variant-numeric:tabular-nums;">$45,000</td>
+                        <td style="padding:12px 20px;text-align:right;"><div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;"><div style="width:60px;height:4px;border-radius:2px;background:#e8e8ed;"><div style="width:75%;height:100%;border-radius:2px;background:#16a34a;"></div></div><span style="font-size:12px;color:#86868b;font-variant-numeric:tabular-nums;">75%</span></div></td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #f4f4f5;">
+                        <td style="padding:12px 20px;font-weight:500;">Consulting Package</td>
+                        <td style="padding:12px 20px;color:#86868b;">Gemini Furniture</td>
+                        <td style="padding:12px 20px;"><span style="font-size:11px;font-weight:500;padding:2px 10px;border-radius:999px;background:#fef3c7;color:#92400e;">Proposal</span></td>
+                        <td style="padding:12px 20px;text-align:right;font-weight:600;font-variant-numeric:tabular-nums;">$28,500</td>
+                        <td style="padding:12px 20px;text-align:right;"><div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;"><div style="width:60px;height:4px;border-radius:2px;background:#e8e8ed;"><div style="width:50%;height:100%;border-radius:2px;background:#d97706;"></div></div><span style="font-size:12px;color:#86868b;font-variant-numeric:tabular-nums;">50%</span></div></td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #f4f4f5;">
+                        <td style="padding:12px 20px;font-weight:500;">Annual Support</td>
+                        <td style="padding:12px 20px;color:#86868b;">Lumber Inc</td>
+                        <td style="padding:12px 20px;"><span style="font-size:11px;font-weight:500;padding:2px 10px;border-radius:999px;background:#dcfce7;color:#166534;">Won</span></td>
+                        <td style="padding:12px 20px;text-align:right;font-weight:600;font-variant-numeric:tabular-nums;">$18,000</td>
+                        <td style="padding:12px 20px;text-align:right;"><div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;"><div style="width:60px;height:4px;border-radius:2px;background:#16a34a;"><div style="width:100%;height:100%;border-radius:2px;background:#16a34a;"></div></div><span style="font-size:12px;color:#86868b;font-variant-numeric:tabular-nums;">100%</span></div></td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #f4f4f5;">
+                        <td style="padding:12px 20px;font-weight:500;">Custom Development</td>
+                        <td style="padding:12px 20px;color:#86868b;">Ready Mat</td>
+                        <td style="padding:12px 20px;"><span style="font-size:11px;font-weight:500;padding:2px 10px;border-radius:999px;background:#dbeafe;color:#1e40af;">Qualification</span></td>
+                        <td style="padding:12px 20px;text-align:right;font-weight:600;font-variant-numeric:tabular-nums;">$15,200</td>
+                        <td style="padding:12px 20px;text-align:right;"><div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;"><div style="width:60px;height:4px;border-radius:2px;background:#e8e8ed;"><div style="width:25%;height:100%;border-radius:2px;background:#86868b;"></div></div><span style="font-size:12px;color:#86868b;font-variant-numeric:tabular-nums;">25%</span></div></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:12px 20px;font-weight:500;">Data Migration</td>
+                        <td style="padding:12px 20px;color:#86868b;">The Jackson Group</td>
+                        <td style="padding:12px 20px;"><span style="font-size:11px;font-weight:500;padding:2px 10px;border-radius:999px;background:#fef3c7;color:#92400e;">Proposal</span></td>
+                        <td style="padding:12px 20px;text-align:right;font-weight:600;font-variant-numeric:tabular-nums;">$12,800</td>
+                        <td style="padding:12px 20px;text-align:right;"><div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;"><div style="width:60px;height:4px;border-radius:2px;background:#e8e8ed;"><div style="width:60%;height:100%;border-radius:2px;background:#d97706;"></div></div><span style="font-size:12px;color:#86868b;font-variant-numeric:tabular-nums;">60%</span></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</t>
+</templates>

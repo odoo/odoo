@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="odx_owl.ShowcaseChatApp">
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#1d1d1f;display:flex;height:100vh;background:white;">
+
+        <!-- Channel Sidebar -->
+        <div style="width:260px;background:#fafafa;border-right:1px solid #e8e8ed;display:flex;flex-direction:column;">
+
+            <!-- Workspace header -->
+            <div style="padding:16px;border-bottom:1px solid #e8e8ed;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <div style="width:32px;height:32px;border-radius:8px;background:#1d1d1f;color:white;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;">A</div>
+                    <div><div style="font-size:14px;font-weight:700;">Acme Corp</div><div style="font-size:11px;color:#86868b;">12 members online</div></div>
+                </div>
+            </div>
+
+            <!-- Search -->
+            <div style="padding:12px 16px;">
+                <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;background:#e8e8ed;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#86868b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <span style="font-size:13px;color:#86868b;">Search messages...</span>
+                </div>
+            </div>
+
+            <!-- Channels -->
+            <div style="padding:0 8px;flex:1;overflow-y:auto;">
+                <div style="font-size:11px;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:0.04em;padding:8px 8px 4px;">Channels</div>
+
+                <div t-att-style="'display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;font-size:13px;cursor:pointer;margin-bottom:1px;' + (state.activeChannel === 'general' ? 'background:#e8e8ed;font-weight:600;' : '')" t-on-click="() => this.setChannel('general')">
+                    <span style="color:#86868b;font-size:15px;">#</span> general
+                </div>
+                <div t-att-style="'display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;font-size:13px;cursor:pointer;margin-bottom:1px;' + (state.activeChannel === 'engineering' ? 'background:#e8e8ed;font-weight:600;' : '')" t-on-click="() => this.setChannel('engineering')">
+                    <span style="color:#86868b;font-size:15px;">#</span> engineering
+                    <span style="margin-left:auto;font-size:10px;font-weight:600;background:#dc2626;color:white;padding:1px 6px;border-radius:999px;">3</span>
+                </div>
+                <div t-att-style="'display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;font-size:13px;cursor:pointer;margin-bottom:1px;' + (state.activeChannel === 'design' ? 'background:#e8e8ed;font-weight:600;' : '')" t-on-click="() => this.setChannel('design')">
+                    <span style="color:#86868b;font-size:15px;">#</span> design
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;font-size:13px;cursor:pointer;margin-bottom:1px;color:#86868b;">
+                    <span style="font-size:15px;">#</span> marketing
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;font-size:13px;cursor:pointer;margin-bottom:1px;color:#86868b;">
+                    <span style="font-size:15px;">#</span> random
+                </div>
+
+                <div style="font-size:11px;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:0.04em;padding:16px 8px 4px;">Direct Messages</div>
+
+                <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;font-size:13px;cursor:pointer;margin-bottom:1px;">
+                    <div style="width:8px;height:8px;border-radius:50%;background:#16a34a;flex-shrink:0;"></div> Alex Johnson
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;font-size:13px;cursor:pointer;margin-bottom:1px;">
+                    <div style="width:8px;height:8px;border-radius:50%;background:#16a34a;flex-shrink:0;"></div> Maria Santos
+                    <span style="margin-left:auto;font-size:10px;font-weight:600;background:#1d1d1f;color:white;padding:1px 6px;border-radius:999px;">2</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;font-size:13px;cursor:pointer;margin-bottom:1px;">
+                    <div style="width:8px;height:8px;border-radius:50%;background:#d97706;flex-shrink:0;"></div> David Kim
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;font-size:13px;cursor:pointer;margin-bottom:1px;color:#86868b;">
+                    <div style="width:8px;height:8px;border-radius:50%;background:#e8e8ed;flex-shrink:0;"></div> Lisa Park
+                </div>
+            </div>
+
+            <!-- User footer -->
+            <div style="padding:12px 16px;border-top:1px solid #e8e8ed;display:flex;align-items:center;gap:10px;">
+                <div style="width:32px;height:32px;border-radius:50%;background:#dbeafe;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#1e40af;">SC</div>
+                <div><div style="font-size:13px;font-weight:600;">Sarah Chen</div><div style="font-size:11px;color:#16a34a;">Online</div></div>
+            </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div style="flex:1;display:flex;flex-direction:column;">
+
+            <!-- Channel Header -->
+            <div style="padding:12px 20px;border-bottom:1px solid #e8e8ed;display:flex;align-items:center;justify-content:space-between;">
+                <div>
+                    <div style="font-size:15px;font-weight:700;"># general</div>
+                    <div style="font-size:12px;color:#86868b;">Company-wide announcements and updates</div>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <div style="display:flex;margin-right:8px;">
+                        <div style="width:24px;height:24px;border-radius:50%;background:#fecaca;border:2px solid white;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#991b1b;">AJ</div>
+                        <div style="width:24px;height:24px;border-radius:50%;background:#dbeafe;border:2px solid white;margin-left:-6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#1e40af;">MS</div>
+                        <div style="width:24px;height:24px;border-radius:50%;background:#dcfce7;border:2px solid white;margin-left:-6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#166534;">DK</div>
+                        <div style="width:24px;height:24px;border-radius:50%;background:#e8e8ed;border:2px solid white;margin-left:-6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#86868b;">+9</div>
+                    </div>
+                    <button style="padding:5px 8px;border-radius:6px;border:1px solid #e8e8ed;background:white;cursor:pointer;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </button>
+                    <button style="padding:5px 8px;border-radius:6px;border:1px solid #e8e8ed;background:white;cursor:pointer;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div style="flex:1;overflow-y:auto;padding:20px;">
+
+                <!-- Date separator -->
+                <div style="display:flex;align-items:center;gap:12px;margin:20px 0;">
+                    <div style="flex:1;height:1px;background:#e8e8ed;"></div>
+                    <span style="font-size:11px;font-weight:600;color:#86868b;">Today</span>
+                    <div style="flex:1;height:1px;background:#e8e8ed;"></div>
+                </div>
+
+                <!-- Message 1 -->
+                <div style="display:flex;gap:12px;margin-bottom:20px;">
+                    <div style="width:36px;height:36px;border-radius:50%;background:#fecaca;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#991b1b;flex-shrink:0;">AJ</div>
+                    <div>
+                        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px;">
+                            <span style="font-size:14px;font-weight:700;">Alex Johnson</span>
+                            <span style="font-size:11px;color:#86868b;">9:15 AM</span>
+                        </div>
+                        <div style="font-size:14px;line-height:1.5;">Good morning team! Just pushed the Q1 report to the shared drive. Key highlights: revenue up 18%, new customers up 23%. Full details in the doc.</div>
+                        <!-- Reactions -->
+                        <div style="display:flex;gap:6px;margin-top:8px;">
+                            <span style="padding:2px 8px;border-radius:999px;border:1px solid #e8e8ed;font-size:12px;cursor:pointer;background:#fafafa;">🎉 4</span>
+                            <span style="padding:2px 8px;border-radius:999px;border:1px solid #e8e8ed;font-size:12px;cursor:pointer;background:#fafafa;">👍 7</span>
+                            <span style="padding:2px 8px;border-radius:999px;border:1px solid #dbeafe;font-size:12px;cursor:pointer;background:#eff6ff;">🚀 2</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message 2 -->
+                <div style="display:flex;gap:12px;margin-bottom:20px;">
+                    <div style="width:36px;height:36px;border-radius:50%;background:#dbeafe;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#1e40af;flex-shrink:0;">MS</div>
+                    <div>
+                        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px;">
+                            <span style="font-size:14px;font-weight:700;">Maria Santos</span>
+                            <span style="font-size:11px;color:#86868b;">9:32 AM</span>
+                        </div>
+                        <div style="font-size:14px;line-height:1.5;">Amazing numbers! The partnership deals really came through this quarter. @David Kim can you share the breakdown by region?</div>
+                    </div>
+                </div>
+
+                <!-- Message 3 with file attachment -->
+                <div style="display:flex;gap:12px;margin-bottom:20px;">
+                    <div style="width:36px;height:36px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#166534;flex-shrink:0;">DK</div>
+                    <div>
+                        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px;">
+                            <span style="font-size:14px;font-weight:700;">David Kim</span>
+                            <span style="font-size:11px;color:#86868b;">9:45 AM</span>
+                        </div>
+                        <div style="font-size:14px;line-height:1.5;margin-bottom:8px;">Sure! Here's the regional breakdown. APAC grew the fastest at 31%.</div>
+                        <!-- File attachment -->
+                        <div style="display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;border:1px solid #e8e8ed;background:#fafafa;cursor:pointer;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#86868b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            <div><div style="font-size:13px;font-weight:500;">Q1-Regional-Report.xlsx</div><div style="font-size:11px;color:#86868b;">245 KB</div></div>
+                        </div>
+                        <div style="display:flex;gap:6px;margin-top:8px;">
+                            <span style="padding:2px 8px;border-radius:999px;border:1px solid #e8e8ed;font-size:12px;cursor:pointer;background:#fafafa;">📊 3</span>
+                            <span style="padding:2px 8px;border-radius:999px;border:1px solid #e8e8ed;font-size:12px;cursor:pointer;background:#fafafa;">👏 5</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message 4 with code block -->
+                <div style="display:flex;gap:12px;margin-bottom:20px;">
+                    <div style="width:36px;height:36px;border-radius:50%;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#92400e;flex-shrink:0;">LP</div>
+                    <div>
+                        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px;">
+                            <span style="font-size:14px;font-weight:700;">Lisa Park</span>
+                            <span style="font-size:11px;color:#86868b;">10:02 AM</span>
+                        </div>
+                        <div style="font-size:14px;line-height:1.5;margin-bottom:8px;">New dashboard design is ready for review. Preview link:</div>
+                        <div style="padding:12px 16px;border-radius:8px;background:#f4f4f5;font-family:'SF Mono',monospace;font-size:12px;color:#3f3f46;overflow-x:auto;">
+                            https://preview.acme.com/dashboard/v3?token=abc123
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message 5 — thread reply indicator -->
+                <div style="display:flex;gap:12px;margin-bottom:20px;">
+                    <div style="width:36px;height:36px;border-radius:50%;background:#e0e7ff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#4338ca;flex-shrink:0;">SC</div>
+                    <div>
+                        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px;">
+                            <span style="font-size:14px;font-weight:700;">Sarah Chen</span>
+                            <span style="font-size:11px;color:#86868b;">10:15 AM</span>
+                        </div>
+                        <div style="font-size:14px;line-height:1.5;">Looks great Lisa! The chart animations are smooth. One small note: can we increase the font size on the axis labels? They're a bit hard to read on smaller screens.</div>
+                        <div style="display:flex;gap:6px;margin-top:8px;">
+                            <span style="padding:2px 8px;border-radius:999px;border:1px solid #e8e8ed;font-size:12px;cursor:pointer;background:#fafafa;">👀 2</span>
+                        </div>
+                        <!-- Thread indicator -->
+                        <div style="margin-top:8px;display:flex;align-items:center;gap:6px;cursor:pointer;">
+                            <div style="display:flex;">
+                                <div style="width:18px;height:18px;border-radius:50%;background:#fef3c7;border:2px solid white;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color:#92400e;">LP</div>
+                                <div style="width:18px;height:18px;border-radius:50%;background:#fecaca;border:2px solid white;margin-left:-4px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color:#991b1b;">AJ</div>
+                            </div>
+                            <span style="font-size:12px;color:#2563eb;font-weight:500;">2 replies</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Typing indicator -->
+                <div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+                    <div style="display:flex;gap:3px;padding:6px 10px;border-radius:12px;background:#f4f4f5;">
+                        <div style="width:6px;height:6px;border-radius:50%;background:#86868b;opacity:0.4;"></div>
+                        <div style="width:6px;height:6px;border-radius:50%;background:#86868b;opacity:0.6;"></div>
+                        <div style="width:6px;height:6px;border-radius:50%;background:#86868b;opacity:0.8;"></div>
+                    </div>
+                    <span style="font-size:12px;color:#86868b;">Maria is typing...</span>
+                </div>
+
+            </div>
+
+            <!-- Composer -->
+            <div style="padding:12px 20px;border-top:1px solid #e8e8ed;">
+                <div style="border:1px solid #e8e8ed;border-radius:12px;padding:12px;">
+                    <div style="min-height:36px;font-size:14px;color:#aeaeb2;outline:none;" contenteditable="true">Message #general...</div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid #f4f4f5;">
+                        <div style="display:flex;gap:4px;">
+                            <button style="padding:4px 8px;border-radius:6px;border:none;background:transparent;cursor:pointer;color:#86868b;font-size:16px;">+</button>
+                            <button style="padding:4px 8px;border-radius:6px;border:none;background:transparent;cursor:pointer;color:#86868b;font-size:14px;">B</button>
+                            <button style="padding:4px 8px;border-radius:6px;border:none;background:transparent;cursor:pointer;color:#86868b;font-size:14px;font-style:italic;">I</button>
+                            <button style="padding:4px 8px;border-radius:6px;border:none;background:transparent;cursor:pointer;color:#86868b;font-size:14px;">🔗</button>
+                            <button style="padding:4px 8px;border-radius:6px;border:none;background:transparent;cursor:pointer;color:#86868b;font-size:14px;">😊</button>
+                            <button style="padding:4px 8px;border-radius:6px;border:none;background:transparent;cursor:pointer;color:#86868b;font-size:14px;">@</button>
+                        </div>
+                        <button style="padding:6px 16px;border-radius:8px;border:none;background:#1d1d1f;color:white;font-size:13px;font-weight:500;cursor:pointer;">Send</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Thread/Details Sidebar -->
+        <div style="width:300px;border-left:1px solid #e8e8ed;background:#fafafa;display:flex;flex-direction:column;">
+            <div style="padding:14px 16px;border-bottom:1px solid #e8e8ed;display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:14px;font-weight:600;">Thread</span>
+                <button style="padding:2px 6px;border-radius:4px;border:none;background:transparent;cursor:pointer;color:#86868b;font-size:16px;">×</button>
+            </div>
+
+            <!-- Original message in thread -->
+            <div style="padding:16px;border-bottom:1px solid #e8e8ed;background:white;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                    <div style="width:28px;height:28px;border-radius:50%;background:#e0e7ff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#4338ca;">SC</div>
+                    <span style="font-size:13px;font-weight:600;">Sarah Chen</span>
+                    <span style="font-size:11px;color:#86868b;">10:15 AM</span>
+                </div>
+                <div style="font-size:13px;line-height:1.5;color:#3f3f46;">Can we increase the font size on the axis labels?</div>
+            </div>
+
+            <!-- Thread replies -->
+            <div style="flex:1;overflow-y:auto;padding:16px;">
+                <div style="display:flex;gap:8px;margin-bottom:16px;">
+                    <div style="width:28px;height:28px;border-radius:50%;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#92400e;flex-shrink:0;">LP</div>
+                    <div>
+                        <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:2px;">
+                            <span style="font-size:13px;font-weight:600;">Lisa Park</span>
+                            <span style="font-size:10px;color:#86868b;">10:22 AM</span>
+                        </div>
+                        <div style="font-size:13px;line-height:1.5;">Good catch! I'll bump them from 10px to 12px. Should be in the next preview.</div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:8px;margin-bottom:16px;">
+                    <div style="width:28px;height:28px;border-radius:50%;background:#fecaca;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#991b1b;flex-shrink:0;">AJ</div>
+                    <div>
+                        <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:2px;">
+                            <span style="font-size:13px;font-weight:600;">Alex Johnson</span>
+                            <span style="font-size:10px;color:#86868b;">10:28 AM</span>
+                        </div>
+                        <div style="font-size:13px;line-height:1.5;">Also can we add tooltips on hover? The numbers truncate on narrow columns.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thread composer -->
+            <div style="padding:12px 16px;border-top:1px solid #e8e8ed;">
+                <div style="border:1px solid #e8e8ed;border-radius:8px;padding:8px 10px;background:white;">
+                    <div style="font-size:13px;color:#aeaeb2;outline:none;min-height:28px;" contenteditable="true">Reply...</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</t>
+</templates>

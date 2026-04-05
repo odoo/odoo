@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Alert">
+        <div t-att-class="classes" role="alert">
+            <div t-if="props.slots and props.slots.icon" class="odx-alert__icon">
+                <t t-slot="icon"/>
+            </div>
+            <div class="odx-alert__body">
+                <t t-slot="default"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.AlertTitle">
+        <div t-att-class="classes">
+            <t t-slot="default"/>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.AlertDescription">
+        <div t-att-class="classes">
+            <t t-slot="default"/>
+        </div>
+    </t>
+</templates>

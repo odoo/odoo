@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="odx_owl.ShowcaseHrDashboard">
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#1d1d1f;">
+
+        <!-- Header -->
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:32px;">
+            <div style="width:56px;height:56px;border-radius:12px;background:#e8e8ed;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#86868b;">SC</div>
+            <div>
+                <div style="font-size:20px;font-weight:700;">Sarah Chen</div>
+                <div style="font-size:14px;color:#86868b;">Senior Developer · Engineering</div>
+            </div>
+            <div style="margin-left:auto;display:flex;gap:8px;">
+                <button style="padding:8px 16px;border-radius:8px;border:1px solid #e8e8ed;background:white;font-size:13px;font-weight:500;cursor:pointer;">Request Leave</button>
+                <button style="padding:8px 16px;border-radius:8px;border:none;background:#1d1d1f;color:white;font-size:13px;font-weight:500;cursor:pointer;">Clock In</button>
+            </div>
+        </div>
+
+        <!-- Stat Cards -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;">
+            <div style="padding:20px;border-radius:12px;border:1px solid #e8e8ed;">
+                <div style="font-size:12px;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">Annual Leave</div>
+                <div style="font-size:28px;font-weight:700;">18</div>
+                <div style="font-size:12px;color:#86868b;margin-top:4px;">7 used · 11 remaining</div>
+                <div style="height:4px;border-radius:2px;background:#e8e8ed;margin-top:10px;"><div style="height:100%;width:39%;border-radius:2px;background:#1d1d1f;"></div></div>
+            </div>
+            <div style="padding:20px;border-radius:12px;border:1px solid #e8e8ed;">
+                <div style="font-size:12px;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">Sick Leave</div>
+                <div style="font-size:28px;font-weight:700;">8</div>
+                <div style="font-size:12px;color:#86868b;margin-top:4px;">1 used · 7 remaining</div>
+                <div style="height:4px;border-radius:2px;background:#e8e8ed;margin-top:10px;"><div style="height:100%;width:12%;border-radius:2px;background:#16a34a;"></div></div>
+            </div>
+            <div style="padding:20px;border-radius:12px;border:1px solid #e8e8ed;">
+                <div style="font-size:12px;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">Today</div>
+                <div style="font-size:28px;font-weight:700;">08:32</div>
+                <div style="font-size:12px;color:#16a34a;margin-top:4px;">Clocked in</div>
+                <div style="font-size:11px;color:#86868b;margin-top:4px;">Avg this week: 8h 15m</div>
+            </div>
+            <div style="padding:20px;border-radius:12px;border:1px solid #e8e8ed;">
+                <div style="font-size:12px;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">Overtime</div>
+                <div style="font-size:28px;font-weight:700;">4.5h</div>
+                <div style="font-size:12px;color:#86868b;margin-top:4px;">This month</div>
+                <div style="font-size:11px;color:#d97706;margin-top:4px;">1 late arrival</div>
+            </div>
+        </div>
+
+        <!-- Two columns -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+
+            <!-- Leave Requests -->
+            <div style="border:1px solid #e8e8ed;border-radius:12px;overflow:hidden;">
+                <div style="padding:16px 20px;border-bottom:1px solid #e8e8ed;font-size:14px;font-weight:600;">Leave Requests</div>
+                <div style="padding:0;">
+                    <div style="display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid #f4f4f5;">
+                        <div style="flex:1;">
+                            <div style="font-size:13px;font-weight:600;">Annual Leave</div>
+                            <div style="font-size:12px;color:#86868b;">Apr 14 → Apr 18</div>
+                        </div>
+                        <span style="font-size:11px;font-weight:500;padding:2px 10px;border-radius:999px;background:#fef3c7;color:#92400e;">Pending</span>
+                    </div>
+                    <div style="display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid #f4f4f5;">
+                        <div style="flex:1;">
+                            <div style="font-size:13px;font-weight:600;">Sick Leave</div>
+                            <div style="font-size:12px;color:#86868b;">Mar 5 → Mar 5</div>
+                        </div>
+                        <span style="font-size:11px;font-weight:500;padding:2px 10px;border-radius:999px;background:#dcfce7;color:#166534;">Approved</span>
+                    </div>
+                    <div style="display:flex;align-items:center;padding:14px 20px;">
+                        <div style="flex:1;">
+                            <div style="font-size:13px;font-weight:600;">Personal Day</div>
+                            <div style="font-size:12px;color:#86868b;">Feb 14 → Feb 14</div>
+                        </div>
+                        <span style="font-size:11px;font-weight:500;padding:2px 10px;border-radius:999px;background:#dcfce7;color:#166534;">Approved</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Payslips -->
+            <div style="border:1px solid #e8e8ed;border-radius:12px;overflow:hidden;">
+                <div style="padding:16px 20px;border-bottom:1px solid #e8e8ed;font-size:14px;font-weight:600;">Recent Payslips</div>
+                <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                    <thead>
+                        <tr style="border-bottom:1px solid #e8e8ed;">
+                            <th style="text-align:left;padding:10px 20px;font-weight:600;font-size:11px;color:#86868b;text-transform:uppercase;">Month</th>
+                            <th style="text-align:right;padding:10px 20px;font-weight:600;font-size:11px;color:#86868b;text-transform:uppercase;">Gross</th>
+                            <th style="text-align:right;padding:10px 20px;font-weight:600;font-size:11px;color:#86868b;text-transform:uppercase;">Net</th>
+                            <th style="text-align:right;padding:10px 20px;font-weight:600;font-size:11px;color:#86868b;text-transform:uppercase;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom:1px solid #f4f4f5;">
+                            <td style="padding:12px 20px;font-weight:500;">Mar 2026</td>
+                            <td style="padding:12px 20px;text-align:right;font-variant-numeric:tabular-nums;">$8,500</td>
+                            <td style="padding:12px 20px;text-align:right;font-weight:600;font-variant-numeric:tabular-nums;">$6,420</td>
+                            <td style="padding:12px 20px;text-align:right;"><span style="font-size:11px;font-weight:500;padding:2px 10px;border-radius:999px;background:#dcfce7;color:#166534;">Paid</span></td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #f4f4f5;">
+                            <td style="padding:12px 20px;font-weight:500;">Feb 2026</td>
+                            <td style="padding:12px 20px;text-align:right;font-variant-numeric:tabular-nums;">$8,500</td>
+                            <td style="padding:12px 20px;text-align:right;font-weight:600;font-variant-numeric:tabular-nums;">$6,380</td>
+                            <td style="padding:12px 20px;text-align:right;"><span style="font-size:11px;font-weight:500;padding:2px 10px;border-radius:999px;background:#dcfce7;color:#166534;">Paid</span></td>
+                        </tr>
+                        <tr>
+                            <td style="padding:12px 20px;font-weight:500;">Jan 2026</td>
+                            <td style="padding:12px 20px;text-align:right;font-variant-numeric:tabular-nums;">$8,500</td>
+                            <td style="padding:12px 20px;text-align:right;font-weight:600;font-variant-numeric:tabular-nums;">$6,410</td>
+                            <td style="padding:12px 20px;text-align:right;"><span style="font-size:11px;font-weight:500;padding:2px 10px;border-radius:999px;background:#dcfce7;color:#166534;">Paid</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Upcoming Holidays -->
+        <div style="margin-top:24px;border:1px solid #e8e8ed;border-radius:12px;overflow:hidden;">
+            <div style="padding:16px 20px;border-bottom:1px solid #e8e8ed;font-size:14px;font-weight:600;">Upcoming Holidays</div>
+            <div style="display:flex;gap:0;">
+                <div style="flex:1;padding:16px 20px;border-right:1px solid #e8e8ed;">
+                    <div style="font-size:12px;color:#86868b;">Apr 10</div>
+                    <div style="font-size:14px;font-weight:600;margin-top:2px;">Eid al-Fitr</div>
+                    <div style="font-size:12px;color:#86868b;margin-top:2px;">3 days off</div>
+                </div>
+                <div style="flex:1;padding:16px 20px;border-right:1px solid #e8e8ed;">
+                    <div style="font-size:12px;color:#86868b;">May 1</div>
+                    <div style="font-size:14px;font-weight:600;margin-top:2px;">Labour Day</div>
+                    <div style="font-size:12px;color:#86868b;margin-top:2px;">1 day off</div>
+                </div>
+                <div style="flex:1;padding:16px 20px;">
+                    <div style="font-size:12px;color:#86868b;">Jun 27</div>
+                    <div style="font-size:14px;font-weight:600;margin-top:2px;">Arafat Day</div>
+                    <div style="font-size:12px;color:#86868b;margin-top:2px;">1 day off</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</t>
+</templates>

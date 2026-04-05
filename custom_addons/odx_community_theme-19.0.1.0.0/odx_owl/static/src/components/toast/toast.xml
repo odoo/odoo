@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Toast">
+        <t
+            t-tag="props.tag"
+            t-ref="rootRef"
+            t-att-class="classes"
+            t-att-data-state="props.open === false ? 'closed' : 'open'"
+            t-att-data-swipe="swipeState"
+            t-att-role="role"
+            t-att-style="style"
+            t-on-mouseenter="onMouseenter"
+            t-on-mouseleave="onMouseleave"
+            t-on-focusin="onFocusin"
+            t-on-focusout="onFocusout"
+            t-on-pointerdown="onPointerDown"
+        >
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ToastTitle">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ToastDescription">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ToastAction">
+        <button
+            t-att-class="classes"
+            t-att-type="props.type"
+            t-att-disabled="props.disabled ? true : undefined"
+            t-att-aria-disabled="props.disabled ? 'true' : undefined"
+            t-att-aria-label="ariaLabel"
+            t-on-click="onClick"
+        >
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </button>
+    </t>
+
+    <t t-name="odx_owl.ToastClose">
+        <button
+            t-att-class="classes"
+            t-att-type="props.type"
+            t-att-aria-label="props.ariaLabel"
+            t-on-click="onClick"
+        >
+            <t t-slot="default">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6 6L18 18M18 6L6 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"/>
+                </svg>
+            </t>
+        </button>
+    </t>
+
+    <t t-name="odx_owl.ToastViewport">
+        <div class="odx-toast-viewport" aria-live="polite" aria-relevant="additions removals">
+            <t t-foreach="props.state.toasts" t-as="toast" t-key="toast.id">
+                <Toast
+                    open="toast.open"
+                    role="toast.role"
+                    variant="toast.variant"
+                    className="toast.className"
+                    onMouseenter="() => pauseToast(toast.id)"
+                    onMouseleave="() => resumeToast(toast.id)"
+                    onFocusin="() => pauseToast(toast.id)"
+                    onFocusout="() => resumeToast(toast.id)"
+                    onSwipePause="() => pauseToast(toast.id)"
+                    onSwipeResume="() => resumeToast(toast.id)"
+                    onSwipeDismiss="() => closeToast(toast.id)"
+                >
+                    <div class="odx-toast__body">
+                        <ToastTitle t-if="toast.title" text="toast.title"/>
+                        <ToastDescription t-if="toast.description" text="toast.description"/>
+                    </div>
+                    <div class="odx-toast__actions">
+                        <ToastAction
+                            t-if="toast.actionLabel and toast.action"
+                            text="toast.actionLabel"
+                            ariaLabel="toast.actionAltText"
+                            onClick="() => runAction(toast)"
+                        />
+                        <ToastClose
+                            ariaLabel="toast.closeLabel"
+                            onClick="() => closeToast(toast.id)"
+                        />
+                    </div>
+                </Toast>
+            </t>
+        </div>
+    </t>
+</templates>

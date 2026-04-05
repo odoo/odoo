@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Spinner">
+        <svg
+            t-att-class="classes"
+            viewBox="0 0 24 24"
+            role="status"
+            t-att-aria-label="props.ariaLabel"
+        >
+            <title t-if="props.title"><t t-esc="props.title"/></title>
+            <circle class="odx-spinner__track" cx="12" cy="12" r="9"/>
+            <path class="odx-spinner__indicator" d="M21 12a9 9 0 0 0-9-9"/>
+        </svg>
+    </t>
+</templates>

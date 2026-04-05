@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.AlertDialog">
+        <Dialog
+            open="isOpen"
+            onOpenChange="handleOpenChange"
+            role="'alertdialog'"
+            closeOnEscape="props.closeOnEscape"
+            closeOnOverlay="false"
+            onEscapeKeyDown="props.onEscapeKeyDown"
+            onInteractOutside="props.onInteractOutside"
+            onPointerDownOutside="props.onPointerDownOutside"
+            showClose="false"
+        >
+            <t t-if="props.slots and props.slots.trigger" t-set-slot="trigger">
+                <t t-slot="trigger"/>
+            </t>
+            <t t-if="props.slots and props.slots.content" t-set-slot="content">
+                <t t-slot="content"/>
+            </t>
+            <t t-else="" t-set-slot="content">
+                <AlertDialogOverlay/>
+                <AlertDialogContent className="panelClassName">
+                    <t t-if="hasHeader">
+                        <t t-if="hasHeaderSlot">
+                            <t t-slot="header"/>
+                        </t>
+                        <AlertDialogHeader t-else="">
+                            <AlertDialogTitle t-if="props.title" text="props.title"/>
+                            <AlertDialogDescription t-if="props.description" text="props.description"/>
+                        </AlertDialogHeader>
+                    </t>
+
+                    <div class="odx-dialog__body">
+                        <t t-slot="default"/>
+                    </div>
+
+                    <t t-if="hasFooterSlot">
+                        <t t-slot="footer"/>
+                    </t>
+                    <AlertDialogFooter t-else="">
+                        <AlertDialogCancel
+                            label="props.cancelLabel"
+                            variant="props.cancelVariant"
+                        />
+                        <AlertDialogAction
+                            label="props.confirmLabel"
+                            variant="props.confirmVariant"
+                        />
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </t>
+        </Dialog>
+    </t>
+
+    <t t-name="odx_owl.AlertDialogTrigger">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.AlertDialogOverlay">
+        <DialogOverlay className="classes"/>
+    </t>
+
+    <t t-name="odx_owl.AlertDialogContent">
+        <DialogContent className="classes" tag="props.tag">
+            <t t-slot="default"/>
+        </DialogContent>
+    </t>
+
+    <t t-name="odx_owl.AlertDialogHeader">
+        <DialogHeader className="classes">
+            <t t-slot="default"/>
+        </DialogHeader>
+    </t>
+
+    <t t-name="odx_owl.AlertDialogFooter">
+        <DialogFooter className="classes">
+            <t t-slot="default"/>
+        </DialogFooter>
+    </t>
+
+    <t t-name="odx_owl.AlertDialogTitle">
+        <DialogTitle className="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </DialogTitle>
+    </t>
+
+    <t t-name="odx_owl.AlertDialogDescription">
+        <DialogDescription className="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </DialogDescription>
+    </t>
+
+    <t t-name="odx_owl.AlertDialogCancel">
+        <Button
+            className="props.className"
+            variant="props.variant"
+            onClick="handleAction"
+        >
+            <t t-slot="default">
+                <t t-esc="props.label"/>
+            </t>
+        </Button>
+    </t>
+
+    <t t-name="odx_owl.AlertDialogAction">
+        <Button
+            className="props.className"
+            variant="props.variant"
+            onClick="handleAction"
+        >
+            <t t-slot="default">
+                <t t-esc="props.label"/>
+            </t>
+        </Button>
+    </t>
+</templates>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Icon">
+        <svg
+            t-att-class="classes"
+            xmlns="http://www.w3.org/2000/svg"
+            t-att-width="props.size"
+            t-att-height="props.size"
+            viewBox="0 0 24 24"
+            fill="none"
+            t-att-stroke="props.color"
+            t-att-stroke-width="props.strokeWidth"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <t t-foreach="paths" t-as="p" t-key="p_index">
+                <t t-if="p.type === 'path'">
+                    <path t-att-d="p.d"/>
+                </t>
+                <t t-elif="p.type === 'circle'">
+                    <circle t-att-cx="p.cx" t-att-cy="p.cy" t-att-r="p.r"/>
+                </t>
+                <t t-elif="p.type === 'rect'">
+                    <rect t-att-x="p.x" t-att-y="p.y" t-att-width="p.width" t-att-height="p.height" t-att-rx="p.rx"/>
+                </t>
+                <t t-elif="p.type === 'line'">
+                    <line t-att-x1="p.x1" t-att-y1="p.y1" t-att-x2="p.x2" t-att-y2="p.y2"/>
+                </t>
+                <t t-elif="p.type === 'polyline'">
+                    <polyline t-att-points="p.points"/>
+                </t>
+                <t t-elif="p.type === 'polygon'">
+                    <polygon t-att-points="p.points"/>
+                </t>
+                <t t-elif="p.type === 'ellipse'">
+                    <ellipse t-att-cx="p.cx" t-att-cy="p.cy" t-att-rx="p.rx" t-att-ry="p.ry"/>
+                </t>
+            </t>
+        </svg>
+    </t>
+</templates>

@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Select">
+        <div class="odx-select" t-att-data-dir="direction" t-att-dir="direction">
+            <Popover
+                align="props.align"
+                open="isOpen"
+                onOpenChange.bind="setOpen"
+                contentClassName="panelClasses"
+                position="props.position"
+                side="props.side"
+            >
+                <t t-if="hasCustomTrigger">
+                    <t t-slot="default"/>
+                </t>
+                <SelectTrigger t-else=""/>
+
+                <t t-set-slot="content">
+                    <t t-if="props.items.length and !hasCustomContent">
+                        <SelectContent>
+                            <SelectScrollUpButton/>
+                            <SelectViewport>
+                                <SelectItems/>
+                            </SelectViewport>
+                            <SelectScrollDownButton/>
+                        </SelectContent>
+                    </t>
+                    <t t-elif="hasCustomContent">
+                        <t t-slot="content"/>
+                    </t>
+                </t>
+            </Popover>
+            <input
+                t-if="props.name and currentValue !== null and currentValue !== undefined and currentValue !== ''"
+                type="hidden"
+                t-att-name="props.name"
+                t-att-value="currentValue"
+            />
+        </div>
+    </t>
+
+    <t t-name="odx_owl.SelectTrigger">
+        <button
+            t-att-class="classes"
+            t-att-data-dir="env.odxSelect.dir"
+            t-att-dir="env.odxSelect.dir"
+            type="button"
+            role="combobox"
+            t-att-disabled="env.odxSelect.disabled ? true : undefined"
+            t-att-aria-label="env.odxSelect.ariaLabel"
+            t-att-aria-expanded="env.odxSelect.isOpen ? 'true' : 'false'"
+            t-att-aria-controls="env.odxSelect.listId"
+            aria-haspopup="listbox"
+            t-att-data-placeholder="selectedItem ? undefined : 'true'"
+            t-att="env.odxSelect.triggerAttrs"
+            t-on-keydown="onKeydown"
+        >
+            <t t-slot="default">
+                <SelectValue/>
+                <SelectIcon/>
+            </t>
+        </button>
+    </t>
+
+    <t t-name="odx_owl.SelectValue">
+        <span t-att-class="classes">
+            <t t-esc="text"/>
+        </span>
+    </t>
+
+    <t t-name="odx_owl.SelectIcon">
+        <t t-tag="props.tag" t-att-class="classes" aria-hidden="true">
+            <t t-slot="default">
+                <svg viewBox="0 0 16 16">
+                    <path d="M4.25 6.25L8 10L11.75 6.25" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/>
+                </svg>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SelectContent">
+        <t t-tag="props.tag" t-att-class="classes" t-att-data-dir="env.odxSelect.dir" t-att-dir="env.odxSelect.dir">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SelectScrollUpButton">
+        <button
+            t-att-class="classes"
+            type="button"
+            tabindex="-1"
+            aria-label="Scroll up"
+            t-att-data-hidden="isVisible ? undefined : 'true'"
+            t-on-click="onClick"
+        >
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M4.25 9.75L8 6L11.75 9.75" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/>
+            </svg>
+        </button>
+    </t>
+
+    <t t-name="odx_owl.SelectScrollDownButton">
+        <button
+            t-att-class="classes"
+            type="button"
+            tabindex="-1"
+            aria-label="Scroll down"
+            t-att-data-hidden="isVisible ? undefined : 'true'"
+            t-on-click="onClick"
+        >
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M4.25 6.25L8 10L11.75 6.25" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/>
+            </svg>
+        </button>
+    </t>
+
+    <t t-name="odx_owl.SelectViewport">
+        <t
+            t-tag="props.tag"
+            t-ref="viewportRef"
+            t-att-id="env.odxSelect.listId"
+            t-att-class="classes"
+            t-att-data-dir="env.odxSelect.dir"
+            t-att-dir="env.odxSelect.dir"
+            role="listbox"
+            tabindex="0"
+            t-att-aria-label="env.odxSelect.ariaLabel or env.odxSelect.placeholder"
+            t-att-aria-activedescendant="env.odxSelect.activeItemId"
+            t-on-scroll="onScroll"
+            t-on-keydown="onKeydown"
+        >
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SelectItems">
+        <t t-if="groupedItems.length">
+            <t t-foreach="groupedItems" t-as="group" t-key="group.key">
+                <SelectGroup>
+                    <SelectLabel t-if="group.label" text="group.label"/>
+                    <t t-foreach="group.items" t-as="item" t-key="item.key">
+                        <button
+                            t-att-id="getItemId(item)"
+                            t-att-class="getItemClasses(item)"
+                            type="button"
+                            role="option"
+                            t-att-disabled="item.disabled ? true : undefined"
+                            t-att-aria-selected="isSelected(item) ? 'true' : 'false'"
+                            t-att-data-highlighted="isHighlighted(item) ? 'true' : 'false'"
+                            t-att-data-state="isSelected(item) ? 'checked' : 'unchecked'"
+                            t-on-mouseenter="() => setHighlighted(item.value)"
+                            t-on-click="() => selectItem(item)"
+                        >
+                            <span class="odx-select__item-copy">
+                                <SelectItemText text="item.label"/>
+                                <SelectItemDescription t-if="item.description" text="item.description"/>
+                            </span>
+                            <SelectItemIndicator/>
+                        </button>
+                    </t>
+                </SelectGroup>
+            </t>
+        </t>
+        <div t-else="" class="odx-select__empty">
+            <t t-esc="env.odxSelect.emptyLabel || 'No options found.'"/>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.SelectGroup">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SelectLabel">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SelectSeparator">
+        <div t-att-class="classes" role="separator"/>
+    </t>
+
+    <t t-name="odx_owl.SelectItem">
+        <button
+            t-att-id="itemId"
+            t-att-class="classes"
+            type="button"
+            role="option"
+            t-att-disabled="props.disabled ? true : undefined"
+            t-att-aria-selected="isSelected ? 'true' : 'false'"
+            t-att-data-highlighted="isHighlighted ? 'true' : 'false'"
+            t-att-data-state="isSelected ? 'checked' : 'unchecked'"
+            t-on-mouseenter="onMouseenter"
+            t-on-click="onClick"
+        >
+            <t t-slot="default">
+                <span class="odx-select__item-copy">
+                    <SelectItemText text="itemMeta.label"/>
+                    <SelectItemDescription t-if="props.description" text="props.description"/>
+                </span>
+                <SelectItemIndicator/>
+            </t>
+        </button>
+    </t>
+
+    <t t-name="odx_owl.SelectItemText">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SelectItemDescription">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SelectItemIndicator">
+        <t t-tag="props.tag" t-att-class="classes" aria-hidden="true">
+            <t t-slot="default">
+                <svg viewBox="0 0 16 16">
+                    <path d="M3 8.2L6.2 11.4L13 4.6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/>
+                </svg>
+            </t>
+        </t>
+    </t>
+</templates>

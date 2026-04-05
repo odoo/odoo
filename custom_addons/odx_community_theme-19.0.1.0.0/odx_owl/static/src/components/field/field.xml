@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.FieldSet">
+        <fieldset
+            t-att-class="classes"
+            t-att-data-disabled="props.disabled ? 'true' : undefined"
+            t-att-data-invalid="props.invalid ? 'true' : undefined"
+        >
+            <t t-slot="default"/>
+        </fieldset>
+    </t>
+
+    <t t-name="odx_owl.FieldLegend">
+        <legend t-att-class="classes" t-att-data-variant="props.variant">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </legend>
+    </t>
+
+    <t t-name="odx_owl.FieldGroup">
+        <t t-tag="props.tag" t-att-class="classes" t-att-data-variant="props.variant">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.Field">
+        <t
+            t-tag="props.tag"
+            role="group"
+            t-att-class="classes"
+            t-att-data-disabled="props.disabled ? 'true' : undefined"
+            t-att-data-invalid="props.invalid ? 'true' : undefined"
+            t-att-data-orientation="props.orientation"
+        >
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.FieldContent">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.FieldLabel">
+        <label t-att-for="props.forId" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </label>
+    </t>
+
+    <t t-name="odx_owl.FieldTitle">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.FieldDescription">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.FieldSeparator">
+        <div t-att-class="classes" t-att-data-content="hasContent ? 'true' : undefined">
+            <span class="odx-field-separator__line"/>
+            <span t-if="hasContent" class="odx-field-separator__content">
+                <t t-if="props.content">
+                    <t t-esc="props.content"/>
+                </t>
+                <t t-else="">
+                    <t t-slot="default"/>
+                </t>
+            </span>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.FieldError">
+        <div t-if="hasContent" role="alert" t-att-class="classes">
+            <ul t-if="errorMessages.length > 1" class="odx-field-error__list">
+                <li t-foreach="errorMessages" t-as="message" t-key="message">
+                    <t t-esc="message"/>
+                </li>
+            </ul>
+            <t t-elif="errorMessages.length === 1">
+                <t t-esc="errorMessages[0]"/>
+            </t>
+            <t t-else="">
+                <t t-slot="default"/>
+            </t>
+        </div>
+    </t>
+</templates>

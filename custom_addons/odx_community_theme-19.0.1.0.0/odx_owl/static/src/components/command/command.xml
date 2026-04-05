@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Command">
+        <div t-att-class="classes" t-att-data-dir="direction" t-att-dir="direction">
+            <t t-if="props.slots and props.slots.input">
+                <t t-slot="input"/>
+            </t>
+            <CommandInput t-else=""/>
+
+            <t t-if="props.items.length and !(props.slots and props.slots.default)">
+                <CommandList>
+                    <CommandLoading/>
+                    <CommandAutoItems/>
+                    <CommandEmpty/>
+                </CommandList>
+            </t>
+            <t t-elif="props.slots and props.slots.default">
+                <t t-slot="default"/>
+            </t>
+            <t t-else="">
+                <CommandList>
+                    <CommandEmpty/>
+                </CommandList>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.CommandInput">
+        <div class="odx-command__input-wrapper">
+            <span class="odx-command__search-icon" aria-hidden="true">
+                <svg viewBox="0 0 16 16">
+                    <circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+                    <path d="M10.5 10.5L14 14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.4"/>
+                </svg>
+            </span>
+            <input
+                t-att-id="env.odxCommand.inputId"
+                t-att-class="inputClasses"
+                type="text"
+                t-att-value="env.odxCommand.currentQuery"
+                t-att-placeholder="placeholder"
+                t-att-aria-label="env.odxCommand.ariaLabel or placeholder"
+                t-att-aria-controls="env.odxCommand.listId"
+                aria-autocomplete="list"
+                t-att-aria-activedescendant="env.odxCommand.activeItemId"
+                t-on-input="onInput"
+                t-on-keydown="onKeydown"
+            />
+        </div>
+    </t>
+
+    <t t-name="odx_owl.CommandList">
+        <t
+            t-tag="props.tag"
+            t-att-id="env.odxCommand.listId"
+            t-att-class="classes"
+            t-att-data-dir="env.odxCommand.dir"
+            t-att-dir="env.odxCommand.dir"
+            role="listbox"
+        >
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.CommandAutoItems">
+        <t t-if="groupedItems.length">
+            <t t-foreach="groupedItems" t-as="group" t-key="group.key">
+                <CommandGroup heading="group.label">
+                    <t t-foreach="group.items" t-as="item" t-key="item.key">
+                        <button
+                            t-att-id="getItemId(item)"
+                            t-att-class="getItemClasses(item)"
+                            type="button"
+                            role="option"
+                            t-att-disabled="item.disabled ? true : undefined"
+                            t-att-aria-selected="isSelected(item) ? 'true' : 'false'"
+                            t-att-data-selected="isSelected(item) ? 'true' : 'false'"
+                            t-att-data-active="isActive(item) ? 'true' : 'false'"
+                            t-on-mouseenter="() => setActive(item.value)"
+                            t-on-click="() => selectItem(item)"
+                        >
+                            <span class="odx-command__item-main">
+                                <CommandItemText text="item.label"/>
+                                <CommandItemDescription t-if="item.description" text="item.description"/>
+                            </span>
+                            <CommandShortcut t-if="item.shortcut" text="item.shortcut"/>
+                        </button>
+                    </t>
+                </CommandGroup>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.CommandLoading">
+        <div t-if="isVisible" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="text"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.CommandEmpty">
+        <div t-if="isVisible" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="text"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.CommandGroup">
+        <t t-if="isVisible">
+            <t t-tag="props.tag" t-att-class="classes">
+                <div t-if="headingText" class="odx-command__group-heading">
+                    <t t-esc="headingText"/>
+                </div>
+                <t t-slot="default"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.CommandSeparator">
+        <div t-if="isVisible" t-att-class="classes" role="separator"/>
+    </t>
+
+    <t t-name="odx_owl.CommandShortcut">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.CommandItem">
+        <button
+            t-if="isVisible"
+            t-att-id="item.id"
+            t-att-class="classes"
+            type="button"
+            role="option"
+            t-att-disabled="props.disabled ? true : undefined"
+            t-att-aria-selected="isSelected ? 'true' : 'false'"
+            t-att-data-selected="isSelected ? 'true' : 'false'"
+            t-att-data-active="isActive ? 'true' : 'false'"
+            t-on-mouseenter="onMouseenter"
+            t-on-click="onClick"
+        >
+            <t t-slot="default">
+                <span class="odx-command__item-main">
+                    <CommandItemText text="item.label"/>
+                    <CommandItemDescription t-if="props.description" text="props.description"/>
+                </span>
+            </t>
+            <CommandShortcut t-if="props.shortcut" text="props.shortcut"/>
+        </button>
+    </t>
+
+    <t t-name="odx_owl.CommandItemText">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.CommandItemDescription">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.CommandDialog">
+        <Dialog
+            open="isOpen"
+            onOpenChange.bind="setOpen"
+            title="props.title"
+            description="props.description"
+            contentClass="contentClasses"
+            size="'lg'"
+        >
+            <t t-if="props.slots and props.slots.trigger" t-set-slot="trigger">
+                <t t-slot="trigger"/>
+            </t>
+            <Command
+                autoFocus="true"
+                items="props.items"
+                loading="props.loading"
+                loadingLabel="props.loadingLabel"
+                placeholder="props.placeholder"
+                emptyLabel="props.emptyLabel"
+                query="props.query"
+                selectedValue="props.selectedValue"
+                onQueryChange="props.onQueryChange"
+                onSelect="onCommandSelect"
+            >
+                <t t-if="props.slots and props.slots.default" t-set-slot="default">
+                    <t t-slot="default"/>
+                </t>
+                <t t-if="props.slots and props.slots.input" t-set-slot="input">
+                    <t t-slot="input"/>
+                </t>
+            </Command>
+        </Dialog>
+    </t>
+</templates>

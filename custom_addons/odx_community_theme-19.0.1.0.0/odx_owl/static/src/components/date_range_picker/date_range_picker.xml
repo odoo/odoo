@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.DateRangePicker">
+        <div class="odx-date-range-picker" t-att-data-dir="direction" t-att-dir="direction">
+            <Popover
+                disabled="props.disabled"
+                open="isOpen"
+                onOpenChange.bind="setOpen"
+                contentClassName="panelClasses"
+            >
+                <button
+                    t-att-class="triggerClasses"
+                    t-att-data-dir="direction"
+                    t-att-dir="direction"
+                    type="button"
+                    role="combobox"
+                    t-att-disabled="props.disabled ? true : undefined"
+                    t-att-aria-label="props.ariaLabel"
+                    t-att-aria-expanded="isOpen ? 'true' : 'false'"
+                    t-att-aria-controls="state.calendarId"
+                    aria-haspopup="dialog"
+                    t-att="props.attrs"
+                    t-on-keydown="onTriggerKeydown"
+                >
+                    <span class="odx-date-picker__icon" aria-hidden="true">
+                        <svg viewBox="0 0 16 16">
+                            <rect x="2.25" y="3.25" width="11.5" height="10.5" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M5 1.75V4.5M11 1.75V4.5M2.25 6H13.75" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"/>
+                        </svg>
+                    </span>
+                    <span class="odx-date-picker__value">
+                        <t t-esc="formattedValue || props.placeholder"/>
+                    </span>
+                </button>
+                <t t-set-slot="content">
+                    <Calendar
+                        id="state.calendarId"
+                        autoFocus="true"
+                        mode="'range'"
+                        numberOfMonths="props.numberOfMonths"
+                        className="'odx-date-picker__calendar odx-date-range-picker__calendar'"
+                        value="currentValue"
+                        dir="props.dir"
+                        locale="props.locale"
+                        minDate="props.minDate"
+                        maxDate="props.maxDate"
+                        disabledDates="props.disabledDates"
+                        showOutsideDays="props.showOutsideDays"
+                        weekStartsOn="props.weekStartsOn"
+                        onValueChange.bind="onCalendarValueChange"
+                    />
+                </t>
+            </Popover>
+
+            <input
+                t-if="props.name &amp;&amp; currentValue &amp;&amp; currentValue.from"
+                type="hidden"
+                t-att-name="props.name + '[from]'"
+                t-att-value="currentIsoRange.from"
+            />
+            <input
+                t-if="props.name &amp;&amp; currentValue &amp;&amp; currentValue.to"
+                type="hidden"
+                t-att-name="props.name + '[to]'"
+                t-att-value="currentIsoRange.to"
+            />
+        </div>
+    </t>
+</templates>

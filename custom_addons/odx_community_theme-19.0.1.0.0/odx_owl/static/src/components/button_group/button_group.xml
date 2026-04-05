@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.ButtonGroup">
+        <t
+            t-tag="props.tag"
+            role="group"
+            t-att-class="classes"
+            t-att-data-orientation="props.orientation"
+        >
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ButtonGroupText">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ButtonGroupSeparator">
+        <Separator
+            decorative="props.decorative"
+            orientation="props.orientation"
+            className="classes"
+        />
+    </t>
+</templates>

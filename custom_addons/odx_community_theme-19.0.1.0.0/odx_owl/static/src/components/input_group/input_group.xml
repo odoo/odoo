@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.InputGroup">
+        <t
+            t-tag="props.tag"
+            role="group"
+            t-att-class="classes"
+            t-att-data-disabled="props.disabled ? 'true' : undefined"
+        >
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.InputGroupAddon">
+        <t
+            t-tag="props.tag"
+            role="group"
+            t-att-class="classes"
+            t-att-data-align="props.align"
+            t-on-click="focusControl"
+        >
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.InputGroupButton">
+        <Button
+            attrs="props.attrs"
+            ariaLabel="props.ariaLabel"
+            className="classes"
+            disabled="isDisabled"
+            href="props.href"
+            label="props.label"
+            loading="props.loading"
+            name="props.name"
+            onClick="props.onClick"
+            rel="props.rel"
+            role="props.role"
+            tabindex="props.tabindex"
+            tag="props.tag"
+            target="props.target"
+            title="props.title"
+            type="props.type"
+            value="props.value"
+            variant="props.variant"
+        >
+            <t t-slot="default"/>
+        </Button>
+    </t>
+
+    <t t-name="odx_owl.InputGroupText">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.InputGroupInput">
+        <Input
+            attrs="mergedAttrs"
+            ariaLabel="props.ariaLabel"
+            autocomplete="props.autocomplete"
+            className="classes"
+            disabled="isDisabled"
+            id="props.id"
+            name="props.name"
+            onChange="props.onChange"
+            onInput="props.onInput"
+            placeholder="props.placeholder"
+            readonly="props.readonly"
+            required="props.required"
+            type="props.type"
+            value="props.value"
+        />
+    </t>
+
+    <t t-name="odx_owl.InputGroupTextarea">
+        <Textarea
+            attrs="mergedAttrs"
+            ariaLabel="props.ariaLabel"
+            className="classes"
+            disabled="isDisabled"
+            id="props.id"
+            name="props.name"
+            onChange="props.onChange"
+            onInput="props.onInput"
+            placeholder="props.placeholder"
+            readonly="props.readonly"
+            required="props.required"
+            rows="props.rows"
+            value="props.value"
+        />
+    </t>
+</templates>

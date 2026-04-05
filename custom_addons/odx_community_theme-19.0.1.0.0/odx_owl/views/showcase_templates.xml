@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- HR Self-Service Dashboard (Portal) -->
+    <template id="showcase_hr_dashboard" name="HR Self-Service Dashboard">
+        <t t-call="web.frontend_layout">
+            <div class="container-fluid py-4" style="max-width:1200px;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#1d1d1f;">
+
+                <!-- Header -->
+                <div style="display:flex;align-items:center;gap:16px;margin-bottom:32px;">
+                    <div style="width:56px;height:56px;border-radius:12px;background:#e8e8ed;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#86868b;">SC</div>
+                    <div>
+                        <div style="font-size:20px;font-weight:700;">Sarah Chen</div>
+                        <div style="font-size:14px;color:#86868b;">Senior Developer · Engineering</div>
+                    </div>
+                    <div style="margin-left:auto;display:flex;gap:8px;">
+                        <button style="padding:8px 16px;border-radius:8px;border:1px solid #e8e8ed;background:white;font-size:13px;font-weight:500;cursor:pointer;">Request Leave</button>
+                        <button style="padding:8px 16px;border-radius:8px;border:none;background:#1d1d1f;color:white;font-size:13px;font-weight:500;cursor:pointer;">Clock In</button>
+                    </div>
+                </div>
+
+                <!-- Stat Cards -->
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;">
+                    <div style="padding:20px;border-radius:12px;border:1px solid #e8e8ed;background:white;">
+                        <div style="font-size:12px;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">Annual Leave</div>
+                        <div style="font-size:28px;font-weight:700;">18</div>
+                        <div style="font-size:12px;color:#86868b;margin-top:4px;">7 used · 11 remaining</div>
+                        <div style="height:4px;border-radius:2px;background:#e8e8ed;margin-top:10px;"><div style="height:100%;width:39%;border-radius:2px;background:#1d1d1f;"></div></div>
+                    </div>
+                    <div style="padding:20px;border-radius:12px;border:1px solid #e8e8ed;background:white;">
+                        <div style="font-size:12px;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">Sick Leave</div>
+                        <div style="font-size:28px;font-weight:700;">8</div>
+                        <div style="font-size:12px;color:#86868b;margin-top:4px;">1 used · 7 remaining</div>
+                        <div style="height:4px;border-radius:2px;background:#e8e8ed;margin-top:10px;"><div style="height:100%;width:12%;border-radius:2px;background:#16a34a;"></div></div>
+                    </div>
+                    <div style="padding:20px;border-radius:12px;border:1px solid #e8e8ed;background:white;">
+                        <div style="font-size:12px;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">Today</div>
+                        <div style="font-size:28px;font-weight:700;">08:32</div>
+                        <div style="font-size:12px;color:#16a34a;margin-top:4px;">Clocked in</div>
+                        <div style="font-size:11px;color:#86868b;margin-top:4px;">Avg this week: 8h 15m</div>
+                    </div>
+                    <div style="padding:20px;border-radius:12px;border:1px solid #e8e8ed;background:white;">
+                        <div style="font-size:12px;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">Overtime</div>
+                        <div style="font-size:28px;font-weight:700;">4.5h</div>
+                        <div style="font-size:12px;color:#86868b;margin-top:4px;">This month</div>
+                        <div style="font-size:11px;color:#d97706;margin-top:4px;">1 late arrival</div>
+                    </div>
+                </div>
+
+                <!-- Two columns -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+                    <!-- Leave Requests -->
+                    <div style="border:1px solid #e8e8ed;border-radius:12px;overflow:hidden;background:white;">
+                        <div style="padding:16px 20px;border-bottom:1px solid #e8e8ed;font-size:14px;font-weight:600;">Leave Requests</div>
+                        <div style="display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid #f4f4f5;">
+                            <div style="flex:1;"><div style="font-size:13px;font-weight:600;">Annual Leave</div><div style="font-size:12px;color:#86868b;">Apr 14 → Apr 18</div></div>
+                            <span style="font-size:11px;font-weight:500;padding:2px 10px;border-radius:999px;background:#fef3c7;color:#92400e;">Pending</span>
+                        </div>
+                        <div style="display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid #f4f4f5;">
+                            <div style="flex:1;"><div style="font-size:13px;font-weight:600;">Sick Leave</div><div style="font-size:12px;color:#86868b;">Mar 5</div></div>
+                            <span style="font-size:11px;font-weight:500;padding:2px 10px;border-radius:999px;background:#dcfce7;color:#166534;">Approved</span>
+                        </div>
+                        <div style="display:flex;align-items:center;padding:14px 20px;">
+                            <div style="flex:1;"><div style="font-size:13px;font-weight:600;">Personal Day</div><div style="font-size:12px;color:#86868b;">Feb 14</div></div>
+                            <span style="font-size:11px;font-weight:500;padding:2px 10px;border-radius:999px;background:#dcfce7;color:#166534;">Approved</span>
+                        </div>
+                    </div>
+
+                    <!-- Payslips -->
+                    <div style="border:1px solid #e8e8ed;border-radius:12px;overflow:hidden;background:white;">
+                        <div style="padding:16px 20px;border-bottom:1px solid #e8e8ed;font-size:14px;font-weight:600;">Recent Payslips</div>
+                        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                            <thead><tr style="border-bottom:1px solid #e8e8ed;">
+                                <th style="text-align:left;padding:10px 20px;font-size:11px;color:#86868b;text-transform:uppercase;font-weight:600;">Month</th>
+                                <th style="text-align:right;padding:10px 20px;font-size:11px;color:#86868b;text-transform:uppercase;font-weight:600;">Gross</th>
+                                <th style="text-align:right;padding:10px 20px;font-size:11px;color:#86868b;text-transform:uppercase;font-weight:600;">Net</th>
+                            </tr></thead>
+                            <tbody>
+                                <tr style="border-bottom:1px solid #f4f4f5;"><td style="padding:12px 20px;font-weight:500;">Mar 2026</td><td style="padding:12px 20px;text-align:right;">$8,500</td><td style="padding:12px 20px;text-align:right;font-weight:600;">$6,420</td></tr>
+                                <tr style="border-bottom:1px solid #f4f4f5;"><td style="padding:12px 20px;font-weight:500;">Feb 2026</td><td style="padding:12px 20px;text-align:right;">$8,500</td><td style="padding:12px 20px;text-align:right;font-weight:600;">$6,380</td></tr>
+                                <tr><td style="padding:12px 20px;font-weight:500;">Jan 2026</td><td style="padding:12px 20px;text-align:right;">$8,500</td><td style="padding:12px 20px;text-align:right;font-weight:600;">$6,410</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Holidays -->
+                <div style="margin-top:24px;border:1px solid #e8e8ed;border-radius:12px;overflow:hidden;background:white;">
+                    <div style="padding:16px 20px;border-bottom:1px solid #e8e8ed;font-size:14px;font-weight:600;">Upcoming Holidays</div>
+                    <div style="display:flex;">
+                        <div style="flex:1;padding:16px 20px;border-right:1px solid #e8e8ed;"><div style="font-size:12px;color:#86868b;">Apr 10</div><div style="font-size:14px;font-weight:600;margin-top:2px;">Eid al-Fitr</div><div style="font-size:12px;color:#86868b;margin-top:2px;">3 days off</div></div>
+                        <div style="flex:1;padding:16px 20px;border-right:1px solid #e8e8ed;"><div style="font-size:12px;color:#86868b;">May 1</div><div style="font-size:14px;font-weight:600;margin-top:2px;">Labour Day</div><div style="font-size:12px;color:#86868b;margin-top:2px;">1 day off</div></div>
+                        <div style="flex:1;padding:16px 20px;"><div style="font-size:12px;color:#86868b;">Jun 27</div><div style="font-size:14px;font-weight:600;margin-top:2px;">Arafat Day</div><div style="font-size:12px;color:#86868b;margin-top:2px;">1 day off</div></div>
+                    </div>
+                </div>
+
+            </div>
+        </t>
+    </template>
+
+    <!-- Customer Onboarding Form (Portal) -->
+    <template id="showcase_onboarding" name="Customer Onboarding">
+        <t t-call="web.frontend_layout">
+            <div class="container py-5" style="max-width:700px;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#1d1d1f;">
+
+                <!-- Header -->
+                <div style="text-align:center;margin-bottom:40px;">
+                    <div style="width:48px;height:48px;border-radius:12px;background:#1d1d1f;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;font-weight:700;">+</div>
+                    <h2 style="font-size:24px;font-weight:700;margin:0 0 6px;">Welcome aboard</h2>
+                    <p style="font-size:15px;color:#86868b;margin:0;">Tell us about your company so we can set things up for you.</p>
+                </div>
+
+                <!-- Steps -->
+                <div style="display:flex;align-items:center;gap:0;margin-bottom:36px;">
+                    <div style="flex:1;text-align:center;"><div style="width:28px;height:28px;border-radius:50%;background:#1d1d1f;color:white;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;">1</div><div style="font-size:11px;font-weight:500;margin-top:4px;">Company</div></div>
+                    <div style="flex:0 0 40px;height:2px;background:#e8e8ed;"></div>
+                    <div style="flex:1;text-align:center;"><div style="width:28px;height:28px;border-radius:50%;border:2px solid #e8e8ed;color:#86868b;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;">2</div><div style="font-size:11px;color:#86868b;margin-top:4px;">Team</div></div>
+                    <div style="flex:0 0 40px;height:2px;background:#e8e8ed;"></div>
+                    <div style="flex:1;text-align:center;"><div style="width:28px;height:28px;border-radius:50%;border:2px solid #e8e8ed;color:#86868b;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;">3</div><div style="font-size:11px;color:#86868b;margin-top:4px;">Preferences</div></div>
+                </div>
+
+                <!-- Form -->
+                <div style="border:1px solid #e8e8ed;border-radius:12px;padding:28px;background:white;">
+                    <div style="margin-bottom:20px;"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">Company Name</label><input type="text" value="Acme Corporation" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e8e8ed;font-size:14px;outline:none;box-sizing:border-box;"/></div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+                        <div><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">Industry</label><select style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e8e8ed;font-size:14px;outline:none;background:white;"><option>Technology</option><option>Manufacturing</option></select></div>
+                        <div><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">Company Size</label><select style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e8e8ed;font-size:14px;outline:none;background:white;"><option>1 - 10</option><option selected="selected">11 - 50</option><option>51 - 200</option></select></div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+                        <div><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">Contact Email</label><input type="email" value="admin@acme.com" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e8e8ed;font-size:14px;outline:none;box-sizing:border-box;"/></div>
+                        <div><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">Phone</label><input type="tel" value="+1 555 123 4567" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e8e8ed;font-size:14px;outline:none;box-sizing:border-box;"/></div>
+                    </div>
+                    <div style="margin-bottom:20px;"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">Country</label><select style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e8e8ed;font-size:14px;outline:none;background:white;"><option>United States</option><option>United Kingdom</option></select></div>
+                    <div style="height:1px;background:#e8e8ed;margin:24px 0;"></div>
+                    <div style="margin-bottom:20px;"><label style="display:block;font-size:13px;font-weight:600;margin-bottom:10px;">Modules to activate</label>
+                        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                            <label style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid #e8e8ed;font-size:13px;cursor:pointer;"><input type="checkbox" checked="checked"/> Sales</label>
+                            <label style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid #e8e8ed;font-size:13px;cursor:pointer;"><input type="checkbox" checked="checked"/> Invoicing</label>
+                            <label style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid #e8e8ed;font-size:13px;cursor:pointer;"><input type="checkbox"/> Inventory</label>
+                            <label style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid #e8e8ed;font-size:13px;cursor:pointer;"><input type="checkbox" checked="checked"/> CRM</label>
+                            <label style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid #e8e8ed;font-size:13px;cursor:pointer;"><input type="checkbox"/> Project</label>
+                            <label style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid #e8e8ed;font-size:13px;cursor:pointer;"><input type="checkbox"/> HR</label>
+                        </div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px;">
+                        <button style="padding:10px 20px;border-radius:8px;border:1px solid #e8e8ed;background:white;font-size:14px;font-weight:500;cursor:pointer;">Back</button>
+                        <button style="padding:10px 24px;border-radius:8px;border:none;background:#1d1d1f;color:white;font-size:14px;font-weight:500;cursor:pointer;">Continue</button>
+                    </div>
+                </div>
+
+            </div>
+        </t>
+    </template>
+
+</odoo>

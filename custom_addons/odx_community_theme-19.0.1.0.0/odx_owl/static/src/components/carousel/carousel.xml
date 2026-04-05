@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Carousel">
+        <t
+            t-tag="props.tag"
+            t-att-class="classes"
+            t-att-data-dir="direction"
+            t-att-data-orientation="props.orientation"
+            t-att-dir="direction"
+            role="region"
+            aria-roledescription="carousel"
+        >
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.CarouselContent">
+        <div
+            t-ref="viewportRef"
+            t-att-class="classes"
+            t-att-aria-label="props.ariaLabel"
+            t-att-data-dir="env.odxCarousel.dir"
+            t-att-dir="env.odxCarousel.dir"
+            tabindex="0"
+            t-on-keydown="onKeydown"
+            t-on-scroll="onScroll"
+        >
+            <div t-att-class="trackClasses" t-att-data-dir="env.odxCarousel.dir">
+                <t t-slot="default"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.CarouselItem">
+        <t
+            t-ref="itemRef"
+            t-tag="props.tag"
+            t-att-class="classes"
+            t-att-data-dir="env.odxCarousel.dir"
+            role="group"
+            aria-roledescription="slide"
+            t-att-aria-label="accessibleLabel"
+        >
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.CarouselPrevious">
+        <button
+            t-att-class="classes"
+            t-att-data-dir="env.odxCarousel.dir"
+            type="button"
+            t-att-aria-label="props.ariaLabel || 'Previous slide'"
+            t-att-title="props.title"
+            t-att-disabled="isDisabled ? true : undefined"
+            t-on-click="onClick"
+        >
+            <t t-if="props.slots and props.slots.default">
+                <t t-slot="default"/>
+            </t>
+            <t t-else="">
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                    <path t-att-d="iconPath" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"/>
+                </svg>
+            </t>
+        </button>
+    </t>
+
+    <t t-name="odx_owl.CarouselNext">
+        <button
+            t-att-class="classes"
+            t-att-data-dir="env.odxCarousel.dir"
+            type="button"
+            t-att-aria-label="props.ariaLabel || 'Next slide'"
+            t-att-title="props.title"
+            t-att-disabled="isDisabled ? true : undefined"
+            t-on-click="onClick"
+        >
+            <t t-if="props.slots and props.slots.default">
+                <t t-slot="default"/>
+            </t>
+            <t t-else="">
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                    <path t-att-d="iconPath" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"/>
+                </svg>
+            </t>
+        </button>
+    </t>
+</templates>

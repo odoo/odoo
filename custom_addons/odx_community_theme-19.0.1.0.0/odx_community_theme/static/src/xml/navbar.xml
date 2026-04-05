@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="templateNavBar" xml:space="preserve">
+
+    <t t-inherit="web.NavBar" t-inherit-mode="extension">
+        <xpath expr="." position="replace">
+            <nav class="o_navbar odx-navbar" t-ref="root">
+                <div
+                    class="o_main_navbar d-print-none"
+                    data-command-category="disabled"
+                >
+                    <!-- App brand hidden: sidebar shows the active app -->
+
+                    <div class="o_navbar_breadcrumbs d-contents"/>
+
+                    <t t-if="!env.isSmall">
+                        <t t-if="currentAppSections.length" t-call="web.NavBar.SectionsMenu">
+                            <t t-set="sections" t-value="currentAppSections"/>
+                        </t>
+                    </t>
+
+                    <!-- Systray -->
+                    <div class="o_menu_systray d-flex flex-shrink-0 ms-auto bg-inherit" role="menu">
+                        <t t-foreach="systrayItems" t-as="item" t-key="item.key">
+                            <div t-att-data-index="item.index"/>
+                            <ErrorHandler onError="error => this.handleItemError(error, item)">
+                                <t t-component="item.Component" t-props="item.props"/>
+                            </ErrorHandler>
+                        </t>
+                    </div>
+                </div>
+            </nav>
+        </xpath>
+    </t>
+
+</templates>

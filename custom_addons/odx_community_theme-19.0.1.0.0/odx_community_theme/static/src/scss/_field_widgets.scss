@@ -1,0 +1,412 @@
+// ODX Community Theme — Field Widget Styling
+
+@function _hsl($token, $alpha: null) {
+    @if $alpha == null {
+        @return unquote("hsl(var(#{$token}))");
+    }
+    @return unquote("hsl(var(#{$token}) / #{$alpha})");
+}
+
+// ── Many2One (autocomplete dropdown) ────────────────────
+
+.o_field_many2one {
+    .o-autocomplete--input {
+        border-radius: 0.375rem;
+    }
+
+    .o-autocomplete--dropdown-menu {
+        border: 1px solid _hsl(--odx-border);
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 16px _hsl(--odx-foreground, 0.08);
+        background: _hsl(--odx-popover);
+        padding: 0.25rem;
+
+        .o-autocomplete--dropdown-item {
+            border-radius: 0.25rem;
+            padding: 0.375rem 0.5rem;
+            font-size: 0.8125rem;
+
+            &:hover, &.focus {
+                background: _hsl(--odx-accent);
+            }
+        }
+    }
+
+    // Open record button
+    .o_external_button {
+        color: _hsl(--odx-muted-foreground);
+        opacity: 0;
+        transition: opacity var(--odx-duration-fast, 120ms) ease;
+    }
+
+    &:hover .o_external_button {
+        opacity: 1;
+    }
+}
+
+// ── Many2Many Tags ──────────────────────────────────────
+
+span.o_tag.o_badge.badge.rounded-pill {
+    padding: 6px;
+    font-size: 13px;
+}
+
+.o_field_many2many_tags {
+    .badge, .o_tag {
+        transition: opacity var(--odx-duration-fast, 120ms) ease;
+
+        .o_delete {
+            opacity: 0.5;
+            transition: opacity var(--odx-duration-fast, 120ms) ease;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+
+    .o-autocomplete--input {
+        border-radius: 0.375rem;
+        font-size: 0.8125rem;
+    }
+}
+
+// ── Selection field ─────────────────────────────────────
+
+.o_field_selection select,
+.o_field_selection .o_input {
+    border-radius: 0.375rem;
+    font-size: 0.8125rem;
+    padding: 0.375rem 0.625rem;
+}
+
+// ── Boolean / Toggle ────────────────────────────────────
+// Color theming only — keep native checkbox/toggle sizing.
+
+.o_field_boolean {
+    .form-check-input {
+        cursor: pointer;
+        border-color: _hsl(--odx-border);
+        transition: all var(--odx-duration-fast, 120ms) ease;
+
+        &:checked {
+            background-color: _hsl(--odx-primary);
+            border-color: _hsl(--odx-primary);
+        }
+
+        &:focus {
+            box-shadow: none;
+            border-color: _hsl(--odx-ring);
+        }
+    }
+}
+
+// ── Monetary ────────────────────────────────────────────
+
+.o_field_monetary {
+    .o_input {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .o_field_monetary_cell {
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+// ── Percentage ──────────────────────────────────────────
+
+.o_field_percentage {
+    .o_input {
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+// ── Date / DateTime picker ──────────────────────────────
+
+.o_field_date,
+.o_field_datetime {
+    .o_datepicker {
+        .o_datepicker_input {
+            border-radius: 0.375rem;
+            font-size: 0.8125rem;
+        }
+
+        .o_datepicker_button {
+            border-radius: 0 0.375rem 0.375rem 0;
+            color: _hsl(--odx-muted-foreground);
+
+            &:hover {
+                background: _hsl(--odx-accent);
+                color: _hsl(--odx-foreground);
+            }
+        }
+    }
+}
+
+// ── Color picker ────────────────────────────────────────
+
+.o_field_color {
+    .o_color_picker {
+        border-radius: 0.375rem;
+        border: 2px solid _hsl(--odx-border);
+        width: 2rem;
+        height: 2rem;
+        cursor: pointer;
+
+        &:hover {
+            border-color: _hsl(--odx-ring);
+        }
+    }
+}
+
+// ── Progress bar ────────────────────────────────────────
+
+.o_field_progressbar {
+    .progress {
+        height: 6px;
+        border-radius: 999px;
+        background: _hsl(--odx-muted);
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        border-radius: 999px;
+        background: _hsl(--odx-primary);
+        transition: width var(--odx-duration-slow, 350ms) var(--odx-ease-out, ease);
+    }
+
+    .o_progressbar_value {
+        font-size: 0.6875rem;
+        font-weight: 600;
+        color: _hsl(--odx-muted-foreground);
+    }
+}
+
+// ── Badge field (status) ────────────────────────────────
+
+.o_field_badge {
+    .badge {
+        border-radius: 999px;
+        font-size: 0.6875rem;
+        font-weight: 500;
+        padding: 0.1875rem 0.5rem;
+    }
+}
+
+// ── Priority stars ──────────────────────────────────────
+
+.o_field_priority {
+    .o_priority_star {
+        font-size: 1.125rem;
+        cursor: pointer;
+        transition: color var(--odx-duration-fast, 120ms) ease,
+                    transform var(--odx-duration-fast, 120ms) ease;
+
+        &:hover {
+            transform: scale(1.2);
+        }
+    }
+}
+
+// ── Image field ─────────────────────────────────────────
+
+.o_field_image {
+    img {
+        border-radius: 0.5rem;
+        border: 1px solid _hsl(--odx-border);
+        transition: box-shadow var(--odx-duration-normal, 200ms) ease;
+
+        &:hover {
+            box-shadow: 0 4px 12px _hsl(--odx-foreground, 0.1);
+        }
+    }
+
+    // Upload hover overlay
+    .o_select_file_button {
+        border-radius: 0.5rem;
+    }
+}
+
+// ── HTML field (rich text) ──────────────────────────────
+
+.o_field_html {
+    .odoo-editor-editable {
+        border: 1px solid _hsl(--odx-border);
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        min-height: 120px;
+        font-size: 0.875rem;
+        line-height: 1.6;
+        background: _hsl(--odx-background);
+
+        &:focus-within {
+            border-color: _hsl(--odx-ring);
+            box-shadow: 0 0 0 2px _hsl(--odx-ring, 0.1);
+        }
+    }
+
+    // Toolbar
+    .odoo-editor-toolbar {
+        border-bottom: 1px solid _hsl(--odx-border);
+        background: _hsl(--odx-muted);
+        border-radius: 0.5rem 0.5rem 0 0;
+        padding: 0.25rem;
+    }
+}
+
+// ── Binary / File upload ────────────────────────────────
+
+.o_field_binary_file {
+    .o_select_file_button {
+        border-radius: 0.375rem;
+        font-size: 0.8125rem;
+    }
+
+    .o_input_file {
+        border-radius: 0.375rem;
+    }
+}
+
+// ── Signature ───────────────────────────────────────────
+
+.o_field_signature {
+    .o_signature {
+        border: 2px dashed _hsl(--odx-border);
+        border-radius: 0.5rem;
+        background: _hsl(--odx-muted, 0.5);
+        cursor: pointer;
+
+        &:hover {
+            border-color: _hsl(--odx-ring);
+            background: _hsl(--odx-accent, 0.5);
+        }
+    }
+}
+
+// ── Stat info (in button box) ───────────────────────────
+
+.o_stat_info {
+    .o_stat_value {
+        font-size: 1.125rem;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        color: _hsl(--odx-foreground);
+    }
+
+    .o_stat_text {
+        font-size: 0.6875rem;
+        color: _hsl(--odx-muted-foreground);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+}
+
+// ── Phone / URL / Email ─────────────────────────────────
+
+.o_field_phone .o_field_phone_value,
+.o_field_url .o_field_url_value,
+.o_field_email .o_field_email_value {
+    color: _hsl(--odx-primary);
+    text-decoration: none;
+    font-size: 0.8125rem;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+// ── Char field with copy button ─────────────────────────
+
+.o_field_CopyClipboardChar,
+.o_field_CopyClipboardText {
+    .o_clipboard_button {
+        color: _hsl(--odx-muted-foreground);
+        opacity: 0;
+        transition: opacity var(--odx-duration-fast, 120ms) ease;
+        border-radius: 0.25rem;
+        padding: 0.125rem 0.375rem;
+
+        &:hover {
+            background: _hsl(--odx-accent);
+            color: _hsl(--odx-foreground);
+        }
+    }
+
+    &:hover .o_clipboard_button {
+        opacity: 1;
+    }
+}
+
+// ── Radio buttons ───────────────────────────────────────
+
+.o_field_radio {
+    .o_radio_item {
+        .form-check-input {
+            border-color: _hsl(--odx-border);
+            width: 1rem;
+            height: 1rem;
+
+            &:checked {
+                background-color: _hsl(--odx-primary);
+                border-color: _hsl(--odx-primary);
+            }
+        }
+
+        .form-check-label {
+            font-size: 0.8125rem;
+        }
+    }
+}
+
+// ── Text field (multiline) ──────────────────────────────
+
+.o_field_text textarea {
+    border-radius: 0.375rem;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    min-height: 80px;
+    resize: vertical;
+}
+
+// ── Domain field ────────────────────────────────────────
+
+.o_field_domain {
+    .o_domain_selector {
+        border: 1px solid _hsl(--odx-border);
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        background: _hsl(--odx-muted, 0.5);
+    }
+}
+
+// ── Dark mode field overrides ───────────────────────────
+
+html[data-odx-theme="dark"] {
+    .o_action .o_field_many2one .o-autocomplete--dropdown-menu {
+        background: _hsl(--odx-popover);
+        border-color: _hsl(--odx-border);
+    }
+
+    .o_action .o_field_html .odoo-editor-editable {
+        background: _hsl(--odx-muted);
+        color: _hsl(--odx-foreground);
+    }
+
+    .o_action .o_field_html .odoo-editor-toolbar {
+        background: _hsl(--odx-card);
+    }
+
+    .o_action .o_field_image img {
+        border-color: _hsl(--odx-border);
+    }
+
+    .o_action .o_field_signature .o_signature {
+        border-color: _hsl(--odx-border);
+        background: _hsl(--odx-muted, 0.3);
+    }
+
+    .o_field_boolean .form-check-input {
+        border-color: _hsl(--odx-border);
+        background-color: _hsl(--odx-muted);
+    }
+}

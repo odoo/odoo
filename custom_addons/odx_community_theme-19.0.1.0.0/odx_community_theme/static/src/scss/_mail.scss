@@ -1,0 +1,468 @@
+// ODX Community Theme — Discuss & Mail Styling
+
+@function _hsl($token, $alpha: null) {
+    @if $alpha == null {
+        @return unquote("hsl(var(#{$token}))");
+    }
+    @return unquote("hsl(var(#{$token}) / #{$alpha})");
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// DISCUSS APP — Main layout
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.o_discuss_main {
+    background: _hsl(--odx-background);
+}
+
+// ── Channel sidebar ─────────────────────────────────────
+
+.o-mail-DiscussSidebar {
+    background: _hsl(--odx-card);
+    border-right: 1px solid _hsl(--odx-border);
+
+    // Category headers
+    .o-mail-DiscussSidebarCategory-header {
+        font-size: 0.6875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: _hsl(--odx-muted-foreground);
+        padding: 0.75rem 0.75rem 0.25rem;
+    }
+
+    // Channel items
+    .o-mail-DiscussSidebarChannel {
+        padding: 0.375rem 0.75rem;
+        margin: 0 0.25rem;
+        border-radius: 0.375rem;
+        font-size: 0.8125rem;
+        cursor: pointer;
+        transition: background-color var(--odx-duration-fast, 120ms) ease;
+
+        &:hover {
+            background: _hsl(--odx-accent);
+        }
+
+        &.o-active {
+            background: _hsl(--odx-accent);
+            font-weight: 600;
+        }
+
+        .badge {
+            border-radius: 999px;
+            font-size: 0.625rem;
+            padding: 0.125rem 0.375rem;
+            min-width: 1.125rem;
+            background: _hsl(--odx-primary) !important;
+            color: _hsl(--odx-primary-foreground) !important;
+        }
+
+        // Channel icon
+        .o-mail-DiscussSidebarChannel-icon {
+            color: _hsl(--odx-muted-foreground);
+            font-size: 0.875rem;
+        }
+    }
+
+    // Add channel button
+    .o-mail-DiscussSidebar-addButton {
+        color: _hsl(--odx-muted-foreground);
+        padding: 0.25rem;
+        border-radius: 0.25rem;
+
+        &:hover {
+            background: _hsl(--odx-accent);
+            color: _hsl(--odx-foreground);
+        }
+    }
+}
+
+// ── Thread (message list) ───────────────────────────────
+
+.o-mail-Thread {
+    background: _hsl(--odx-background);
+
+    // Date separator
+    .o-mail-DateSection {
+        .o-mail-DateSection-date {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: _hsl(--odx-muted-foreground);
+            background: _hsl(--odx-background);
+            padding: 0 0.5rem;
+        }
+
+        &::before {
+            border-color: _hsl(--odx-border);
+        }
+    }
+
+    // "New messages" separator
+    .o-mail-Thread-newMessage {
+        color: _hsl(--odx-primary);
+        font-size: 0.6875rem;
+        font-weight: 600;
+
+        &::before, &::after {
+            border-color: _hsl(--odx-primary, 0.3);
+        }
+    }
+}
+
+// ── Individual message ──────────────────────────────────
+
+.o-mail-Message {
+    padding: 0.5rem 0.75rem;
+    transition: background-color var(--odx-duration-fast, 120ms) ease;
+
+    &:hover {
+        background: _hsl(--odx-accent, 0.3);
+    }
+
+    // Highlighted message
+    &.o-highlighted {
+        background: _hsl(--odx-accent, 0.6);
+        border-left: 3px solid _hsl(--odx-primary);
+    }
+
+    // Avatar
+    .o-mail-Message-avatar {
+        border-radius: 0.375rem;
+        width: 32px;
+        height: 32px;
+    }
+
+    // Author name
+    .o-mail-Message-author-name {
+        font-weight: 600;
+        font-size: 0.8125rem;
+        color: _hsl(--odx-foreground);
+    }
+
+    // Timestamp
+    .o-mail-Message-date {
+        font-size: 0.6875rem;
+        color: _hsl(--odx-muted-foreground);
+    }
+
+    // Message body
+    .o-mail-Message-body {
+        font-size: 0.8125rem;
+        line-height: 1.5;
+        color: _hsl(--odx-foreground);
+
+        // Code blocks in messages
+        pre, code {
+            background: _hsl(--odx-muted);
+            border-radius: 0.25rem;
+            padding: 0.125rem 0.25rem;
+            font-size: 0.75rem;
+        }
+
+        // Links
+        a {
+            color: _hsl(--odx-primary);
+        }
+    }
+
+    // Action buttons
+    .o-mail-Message-actions {
+        opacity: 0;
+        transition: opacity var(--odx-duration-fast, 120ms) ease;
+
+        .btn {
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.25rem;
+            color: _hsl(--odx-muted-foreground);
+
+            &:hover {
+                background: _hsl(--odx-accent);
+                color: _hsl(--odx-foreground);
+            }
+        }
+    }
+
+    &:hover .o-mail-Message-actions {
+        opacity: 1;
+    }
+
+    // Reactions
+    .o-mail-MessageReaction {
+        border: 1px solid _hsl(--odx-border);
+        border-radius: 999px;
+        padding: 0.125rem 0.375rem;
+        font-size: 0.75rem;
+        background: _hsl(--odx-muted);
+        cursor: pointer;
+
+        &:hover {
+            background: _hsl(--odx-accent);
+        }
+
+        &.o-active {
+            background: _hsl(--odx-primary, 0.1);
+            border-color: _hsl(--odx-primary, 0.3);
+        }
+    }
+}
+
+// ── Composer ────────────────────────────────────────────
+
+.o-mail-Composer {
+    border-top: 1px solid _hsl(--odx-border);
+    padding: 0.5rem 0.75rem;
+    background: _hsl(--odx-background);
+
+    // Text input
+    .o-mail-Composer-input {
+        border: 1px solid _hsl(--odx-border);
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8125rem;
+        background: _hsl(--odx-background);
+        color: _hsl(--odx-foreground);
+        min-height: 2.5rem;
+        max-height: 200px;
+        resize: none;
+
+        &:focus {
+            border-color: _hsl(--odx-ring);
+            box-shadow: 0 0 0 2px _hsl(--odx-ring, 0.1);
+            outline: none;
+        }
+
+        &::placeholder {
+            color: _hsl(--odx-muted-foreground, 0.6);
+        }
+    }
+
+    // Send button
+    .o-mail-Composer-send {
+        border-radius: 0.375rem;
+        background: _hsl(--odx-primary);
+        color: _hsl(--odx-primary-foreground);
+        padding: 0.375rem 0.75rem;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        transition: all var(--odx-duration-fast, 120ms) ease;
+
+        &:hover {
+            background: _hsl(--odx-primary, 0.85);
+        }
+
+        &:disabled {
+            opacity: 0.5;
+        }
+    }
+
+    // Toolbar buttons
+    .o-mail-Composer-toolButtons .btn {
+        color: _hsl(--odx-muted-foreground);
+        padding: 0.25rem;
+        border-radius: 0.25rem;
+
+        &:hover {
+            background: _hsl(--odx-accent);
+            color: _hsl(--odx-foreground);
+        }
+    }
+}
+
+// ── Emoji picker ────────────────────────────────────────
+
+.o-EmojiPicker {
+    border: 1px solid _hsl(--odx-border);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 16px _hsl(--odx-foreground, 0.1);
+    background: _hsl(--odx-popover);
+
+    .o-EmojiPicker-search input {
+        border-radius: 0.375rem;
+        border-color: _hsl(--odx-border);
+        font-size: 0.8125rem;
+    }
+
+    .o-Emoji {
+        border-radius: 0.25rem;
+        transition: background var(--odx-duration-fast, 120ms) ease;
+
+        &:hover {
+            background: _hsl(--odx-accent);
+        }
+    }
+}
+
+// ── Notification / Systray messaging ────────────────────
+
+.o-mail-MessagingMenu {
+    .o-mail-NotificationItem {
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.375rem;
+        transition: background var(--odx-duration-fast, 120ms) ease;
+
+        &:hover {
+            background: _hsl(--odx-accent);
+        }
+
+        // Preview text
+        .o-mail-NotificationItem-text {
+            font-size: 0.75rem;
+            color: _hsl(--odx-muted-foreground);
+        }
+
+        // Channel/partner name
+        .o-mail-NotificationItem-name {
+            font-weight: 600;
+            font-size: 0.8125rem;
+        }
+
+        // Time
+        .o-mail-NotificationItem-date {
+            font-size: 0.6875rem;
+            color: _hsl(--odx-muted-foreground);
+        }
+    }
+}
+
+// ── Discuss buttons ─────────────────────────────────────
+
+.o-mail-Discuss {
+    .btn-light {
+        color: _hsl(--odx-foreground) !important;
+        background: transparent !important;
+        border-color: _hsl(--odx-border) !important;
+
+        &:hover, &:focus, &.active, &.show {
+            background: _hsl(--odx-accent) !important;
+            color: _hsl(--odx-foreground) !important;
+        }
+    }
+
+    .btn-outline-light {
+        color: _hsl(--odx-foreground) !important;
+        border-color: _hsl(--odx-border) !important;
+
+        &:hover, &:focus, &.active, &.show {
+            background: _hsl(--odx-accent) !important;
+            color: _hsl(--odx-foreground) !important;
+        }
+    }
+
+    // Action list groups
+    .o-mail-ActionList-group .btn,
+    .btn-group .btn,
+    .o-mail-ActionList-group .btn-secondary,
+    .o-mail-ActionList-group .btn-success,
+    .o-mail-ActionList-group .btn-primary,
+    .o-mail-ActionList-group .btn-info,
+    .o-mail-ActionList-group .btn-warning {
+        color: _hsl(--odx-muted-foreground) !important;
+        background: transparent !important;
+        border-color: _hsl(--odx-border) !important;
+
+        &:hover, &:focus {
+            color: _hsl(--odx-foreground) !important;
+            background: _hsl(--odx-accent) !important;
+        }
+
+        &.active, &.o-active {
+            color: _hsl(--odx-foreground) !important;
+            background: _hsl(--odx-accent) !important;
+        }
+
+        i, .fa, .oi {
+            color: inherit !important;
+        }
+    }
+
+    // Header and action panel buttons
+    .o-mail-ActionPanel .btn,
+    .o-mail-Discuss-header .btn {
+        color: _hsl(--odx-muted-foreground);
+
+        &:hover {
+            color: _hsl(--odx-foreground);
+            background: _hsl(--odx-accent);
+        }
+    }
+
+    // Button icons
+    .btn .oi, .btn .fa, .btn i {
+        color: inherit;
+    }
+}
+
+// ── Livechat floating button ────────────────────────────
+
+.o_livechat_button,
+.o-livechat-LivechatButton {
+    z-index: 100;
+    right: 1.5rem;
+    bottom: 1.5rem;
+
+    img {
+        border-radius: 50%;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+}
+
+// Chat hub bubble
+.o-mail-ChatHub-bubbleBtn.btn,
+.o-mail-ChatBubble .btn {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0;
+
+    img, .o_avatar {
+        border-radius: 50%;
+    }
+}
+
+// ── Dark mode ───────────────────────────────────────────
+
+html[data-odx-theme="dark"] {
+    .o_action .o-mail-DiscussSidebar {
+        background: _hsl(--odx-card);
+        border-color: _hsl(--odx-border);
+    }
+
+    .o_action .o-mail-Thread {
+        background: _hsl(--odx-background);
+    }
+
+    .o_action .o-mail-Message {
+        &:hover {
+            background: _hsl(--odx-accent, 0.3);
+        }
+
+        .o-mail-Message-body {
+            color: _hsl(--odx-foreground);
+
+            pre, code {
+                background: _hsl(--odx-muted);
+            }
+        }
+    }
+
+    .o_action .o-mail-Composer {
+        background: _hsl(--odx-background);
+        border-color: _hsl(--odx-border);
+
+        .o-mail-Composer-input {
+            background: _hsl(--odx-muted);
+            color: _hsl(--odx-foreground);
+            border-color: _hsl(--odx-border);
+        }
+    }
+
+    .o-EmojiPicker {
+        background: _hsl(--odx-popover);
+        border-color: _hsl(--odx-border);
+    }
+
+    .o_action .o-mail-NotificationItem:hover {
+        background: _hsl(--odx-accent);
+    }
+}

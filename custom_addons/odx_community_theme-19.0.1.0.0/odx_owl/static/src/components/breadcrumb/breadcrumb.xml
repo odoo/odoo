@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Breadcrumb">
+        <nav aria-label="breadcrumb" class="odx-breadcrumb" t-att-data-dir="direction" t-att-dir="direction">
+            <t t-slot="default"/>
+        </nav>
+    </t>
+
+    <t t-name="odx_owl.BreadcrumbList">
+        <ol t-att-class="classes" t-att-data-dir="env.odxBreadcrumb.dir">
+            <t t-slot="default"/>
+        </ol>
+    </t>
+
+    <t t-name="odx_owl.BreadcrumbItem">
+        <li t-att-class="classes">
+            <t t-slot="default"/>
+        </li>
+    </t>
+
+    <t t-name="odx_owl.BreadcrumbLink">
+        <a t-att-href="props.href" t-att-class="classes" t-att="props.attrs">
+            <t t-slot="default"/>
+        </a>
+    </t>
+
+    <t t-name="odx_owl.BreadcrumbPage">
+        <span t-att-class="classes" role="link" aria-disabled="true" aria-current="page">
+            <t t-slot="default"/>
+        </span>
+    </t>
+
+    <t t-name="odx_owl.BreadcrumbSeparator">
+        <li t-att-class="classes" t-att-data-dir="env.odxBreadcrumb.dir" role="presentation" aria-hidden="true">
+            <t t-if="props.slots and props.slots.default">
+                <t t-slot="default"/>
+            </t>
+            <t t-else="">
+                <svg viewBox="0 0 16 16">
+                    <path t-att-d="iconPath" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"/>
+                </svg>
+            </t>
+        </li>
+    </t>
+
+    <t t-name="odx_owl.BreadcrumbEllipsis">
+        <span t-att-class="classes" role="presentation" aria-hidden="true">
+            <svg viewBox="0 0 16 16">
+                <circle cx="3.5" cy="8" r="1.15" fill="currentColor"/>
+                <circle cx="8" cy="8" r="1.15" fill="currentColor"/>
+                <circle cx="12.5" cy="8" r="1.15" fill="currentColor"/>
+            </svg>
+            <span class="o_hidden">More</span>
+        </span>
+    </t>
+
+    <t t-name="odx_owl.Pagination">
+        <nav t-att-class="classes" t-att-data-dir="direction" t-att-dir="direction" role="navigation" aria-label="pagination">
+            <t t-slot="default"/>
+        </nav>
+    </t>
+
+    <t t-name="odx_owl.PaginationContent">
+        <ul t-att-class="classes" t-att-data-dir="env.odxPagination.dir">
+            <t t-slot="default"/>
+        </ul>
+    </t>
+
+    <t t-name="odx_owl.PaginationItem">
+        <li t-att-class="classes">
+            <t t-slot="default"/>
+        </li>
+    </t>
+
+    <t t-name="odx_owl.PaginationLink">
+        <a
+            t-att-href="props.href"
+            t-att-class="classes"
+            t-att-aria-current="props.isActive ? 'page' : undefined"
+            t-att="props.attrs"
+        >
+            <t t-slot="default"/>
+        </a>
+    </t>
+
+    <t t-name="odx_owl.PaginationPrevious">
+        <a t-att-href="props.href" t-att-class="classes" t-att-data-dir="env.odxPagination.dir" aria-label="Go to previous page">
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path t-att-d="iconPath" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"/>
+            </svg>
+            <span>Previous</span>
+        </a>
+    </t>
+
+    <t t-name="odx_owl.PaginationNext">
+        <a t-att-href="props.href" t-att-class="classes" t-att-data-dir="env.odxPagination.dir" aria-label="Go to next page">
+            <span>Next</span>
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path t-att-d="iconPath" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"/>
+            </svg>
+        </a>
+    </t>
+
+    <t t-name="odx_owl.PaginationEllipsis">
+        <span t-att-class="classes" aria-hidden="true">
+            <svg viewBox="0 0 16 16">
+                <circle cx="3.5" cy="8" r="1.15" fill="currentColor"/>
+                <circle cx="8" cy="8" r="1.15" fill="currentColor"/>
+                <circle cx="12.5" cy="8" r="1.15" fill="currentColor"/>
+            </svg>
+            <span class="o_hidden">More pages</span>
+        </span>
+    </t>
+</templates>

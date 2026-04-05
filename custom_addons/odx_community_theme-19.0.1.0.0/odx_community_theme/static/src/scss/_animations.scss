@@ -1,0 +1,221 @@
+// ODX Community Theme — Animation System
+// Micro-interactions, transitions, and @keyframes for a living UI.
+
+// ── Keyframes ───────────────────────────────────────────
+
+@keyframes odx-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes odx-fade-in-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes odx-fade-in-down {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes odx-scale-in {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes odx-slide-in-right {
+    from { opacity: 0; transform: translateX(16px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes odx-slide-in-left {
+    from { opacity: 0; transform: translateX(-16px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes odx-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+@keyframes odx-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes odx-spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes odx-bounce-in {
+    0% { transform: scale(0.9); opacity: 0; }
+    60% { transform: scale(1.02); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+// ── Timing functions ────────────────────────────────────
+
+:root {
+    --odx-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --odx-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --odx-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --odx-duration-fast: 120ms;
+    --odx-duration-normal: 200ms;
+    --odx-duration-slow: 350ms;
+}
+
+// ── Content area entrance ───────────────────────────────
+
+.odx-content {
+    .o_action {
+        animation: odx-fade-in var(--odx-duration-normal) var(--odx-ease-out);
+    }
+}
+
+// ── Modal / Dialog ──────────────────────────────────────
+
+.modal.show .modal-dialog {
+    animation: odx-scale-in var(--odx-duration-normal) var(--odx-ease-out);
+}
+
+.modal-backdrop.show {
+    animation: odx-fade-in var(--odx-duration-fast) ease;
+}
+
+// ── Dropdown ────────────────────────────────────────────
+
+.dropdown-menu.show {
+    animation: odx-fade-in-down var(--odx-duration-fast) var(--odx-ease-out);
+}
+
+// ── Kanban card entrance ────────────────────────────────
+
+.o_kanban_record {
+    animation: odx-fade-in-up var(--odx-duration-normal) var(--odx-ease-out);
+    animation-fill-mode: both;
+}
+
+// Stagger effect
+.o_kanban_group .o_kanban_record {
+    @for $i from 1 through 8 {
+        &:nth-child(#{$i}) {
+            animation-delay: #{$i * 30}ms;
+        }
+    }
+}
+
+// ── List row hover ──────────────────────────────────────
+
+.o_list_table tbody tr {
+    transition: background-color var(--odx-duration-fast) ease;
+}
+
+// ── Button micro-interaction ────────────────────────────
+
+.btn {
+    transition: all var(--odx-duration-fast) var(--odx-ease-in-out);
+
+    &:active:not(:disabled) {
+        transform: scale(0.97);
+        transition-duration: 50ms;
+    }
+}
+
+.btn-primary:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+// ── Input focus glow ────────────────────────────────────
+
+.form-control,
+.form-select,
+.o_input {
+    transition: border-color var(--odx-duration-fast) ease,
+                box-shadow var(--odx-duration-fast) ease;
+}
+
+// ── Card hover lift ─────────────────────────────────────
+
+.o_kanban_record {
+    transition: transform var(--odx-duration-normal) var(--odx-ease-out),
+                box-shadow var(--odx-duration-normal) var(--odx-ease-out);
+
+    &:hover {
+        transform: translateY(-2px);
+    }
+}
+
+// ── Sidebar transitions ─────────────────────────────────
+
+.odx-sidebar-provider {
+    .odx-sidebar {
+        transition: width var(--odx-duration-slow) var(--odx-ease-out),
+                    min-width var(--odx-duration-slow) var(--odx-ease-out);
+    }
+}
+
+// ── Checkbox / Switch ───────────────────────────────────
+
+.form-check-input {
+    transition: background-color var(--odx-duration-fast) ease,
+                border-color var(--odx-duration-fast) ease;
+
+    &:checked {
+        animation: odx-bounce-in var(--odx-duration-normal) var(--odx-spring);
+    }
+}
+
+// ── Toast / Notification ────────────────────────────────
+
+.o_notification {
+    animation: odx-slide-in-right var(--odx-duration-normal) var(--odx-spring);
+}
+
+// ── Loading bar ─────────────────────────────────────────
+
+.o_loading_indicator {
+    transition: width var(--odx-duration-slow) var(--odx-ease-out);
+}
+
+// ── Skeleton loader ─────────────────────────────────────
+
+.odx-skeleton {
+    background: unquote("linear-gradient(90deg, hsl(var(--odx-muted)) 25%, hsl(var(--odx-muted-foreground) / 0.08) 50%, hsl(var(--odx-muted)) 75%)");
+    background-size: 200% 100%;
+    animation: odx-shimmer 1.5s ease infinite;
+    border-radius: 4px;
+}
+
+// ── Tab switching ───────────────────────────────────────
+
+.o_notebook_content > .tab-pane {
+    animation: odx-fade-in var(--odx-duration-fast) ease;
+}
+
+// ── Status bar pill ─────────────────────────────────────
+
+.o_statusbar_status .o_arrow_button {
+    transition: all var(--odx-duration-fast) var(--odx-ease-in-out);
+}
+
+// ── Stat buttons ────────────────────────────────────────
+
+.oe_stat_button {
+    transition: background-color var(--odx-duration-fast) ease;
+}
+
+// ── Pager ───────────────────────────────────────────────
+
+.o_pager .btn {
+    transition: all var(--odx-duration-fast) ease;
+}
+
+// ── Respect reduced motion preference ───────────────────
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

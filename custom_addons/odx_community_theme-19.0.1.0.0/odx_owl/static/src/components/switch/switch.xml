@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Switch">
+        <button
+            t-att-id="props.id"
+            t-att-class="classes"
+            type="button"
+            role="switch"
+            t-att-disabled="props.disabled ? true : undefined"
+            t-att-aria-label="props.ariaLabel"
+            t-att-aria-checked="isChecked ? 'true' : 'false'"
+            t-att-data-state="isChecked ? 'checked' : 'unchecked'"
+            t-att-required="props.required ? true : undefined"
+            t-att="props.attrs"
+            t-on-click="toggle"
+        >
+            <span class="odx-switch__thumb" aria-hidden="true"/>
+        </button>
+        <input
+            t-if="props.name and isChecked"
+            type="hidden"
+            t-att-name="props.name"
+            t-att-value="props.value"
+        />
+    </t>
+</templates>

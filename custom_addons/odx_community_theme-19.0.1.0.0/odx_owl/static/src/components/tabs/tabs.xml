@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Tabs">
+        <div
+            t-att-class="classes"
+            t-att-data-orientation="props.orientation"
+            t-att-data-activation-mode="props.activationMode"
+            t-att-data-dir="direction"
+            t-att-dir="direction"
+        >
+            <t t-slot="default"/>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.TabsList">
+        <div
+            t-att-class="classes"
+            role="tablist"
+            t-att-aria-orientation="env.odxTabs.orientation === 'vertical' ? 'vertical' : 'horizontal'"
+            t-att-data-dir="env.odxTabs.dir"
+            t-att-dir="env.odxTabs.dir"
+            t-att-data-orientation="env.odxTabs.orientation"
+            t-on-keydown="onKeydown"
+        >
+            <t t-slot="default"/>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.TabsTrigger">
+        <button
+            t-att-id="triggerId"
+            t-att-class="classes"
+            type="button"
+            role="tab"
+            t-att-disabled="props.disabled ? true : undefined"
+            t-att-data-state="isActive ? 'active' : 'inactive'"
+            t-att-data-disabled="props.disabled ? '' : undefined"
+            t-att-data-orientation="orientation"
+            t-att-data-value="props.value"
+            t-att-tabindex="tabIndex"
+            t-att-aria-selected="isActive ? 'true' : 'false'"
+            t-att-aria-controls="panelId"
+            t-on-focus="onFocus"
+            t-on-keydown="onKeydown"
+            t-on-click="select"
+        >
+            <t t-slot="default"/>
+        </button>
+    </t>
+
+    <t t-name="odx_owl.TabsContent">
+        <div
+            t-if="shouldRender"
+            t-att-id="panelId"
+            t-att-class="classes"
+            role="tabpanel"
+            t-att-data-state="isActive ? 'active' : 'inactive'"
+            t-att-data-orientation="orientation"
+            t-att-aria-labelledby="triggerId"
+            t-att-hidden="isActive ? undefined : true"
+            t-att-tabindex="isActive ? 0 : -1"
+        >
+            <t t-slot="default"/>
+        </div>
+    </t>
+</templates>

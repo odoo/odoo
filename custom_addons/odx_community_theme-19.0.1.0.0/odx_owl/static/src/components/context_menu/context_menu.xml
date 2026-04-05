@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.ContextMenu">
+        <div t-att-class="classes" t-att-data-dir="direction" t-att-dir="direction">
+            <div
+                t-ref="triggerRef"
+                class="odx-context-menu__trigger"
+                tabindex="0"
+                aria-haspopup="menu"
+                t-on-contextmenu="onContextMenu"
+                t-on-keydown="onTriggerKeydown"
+            >
+                <t t-if="props.slots &amp;&amp; props.slots.trigger">
+                    <t t-slot="trigger"/>
+                </t>
+                <t t-else="">
+                    <t t-slot="default"/>
+                </t>
+            </div>
+            <span t-ref="anchorRef" class="odx-context-menu__anchor" aria-hidden="true" t-att-style="anchorStyle"/>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.ContextMenuTrigger">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ContextMenuPanel">
+        <div
+            t-ref="menuRef"
+            t-att-class="menuClasses"
+            t-att-data-dir="direction"
+            t-att-dir="direction"
+            role="menu"
+            t-on-keydown="onKeydown"
+        >
+            <t t-if="props.items.length">
+                <ContextMenuItems items="props.items"/>
+            </t>
+            <t t-else="">
+                <t t-slot="content"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.ContextMenuItems">
+        <ContextMenuContent>
+            <t t-foreach="props.items" t-as="item" t-key="getItemKey(item, item_index)">
+                <ContextMenuSeparator t-if="item.type === 'separator'"/>
+                <ContextMenuLabel
+                    t-elif="item.type === 'label'"
+                    inset="Boolean(item.inset)"
+                    text="item.label || ''"
+                />
+                <ContextMenuSub
+                    align="item.align"
+                    t-elif="item.type === 'submenu'"
+                    contentClassName="item.contentClassName || ''"
+                    destructive="Boolean(item.destructive)"
+                    disabled="Boolean(item.disabled)"
+                    inset="Boolean(item.inset)"
+                    label="item.label || ''"
+                    position="item.position"
+                    side="item.side"
+                    shortcut="item.shortcut || ''"
+                    triggerClassName="item.className || ''"
+                >
+                    <ContextMenuItems items="getSubmenuItems(item)"/>
+                </ContextMenuSub>
+                <ContextMenuCheckboxItem
+                    t-elif="item.type === 'checkbox'"
+                    checked="Boolean(item.checked)"
+                    className="item.className || ''"
+                    destructive="Boolean(item.destructive)"
+                    disabled="Boolean(item.disabled)"
+                    href="item.href"
+                    inset="Boolean(item.inset)"
+                    keepOpen="Boolean(item.keepOpen)"
+                    onSelect="(ev) => onItemSelected(item, ev)"
+                    rel="item.rel"
+                    shortcut="item.shortcut || ''"
+                    target="item.target"
+                    text="item.label || ''"
+                />
+                <ContextMenuRadioItem
+                    t-elif="item.type === 'radio'"
+                    checked="Boolean(item.checked)"
+                    className="item.className || ''"
+                    destructive="Boolean(item.destructive)"
+                    disabled="Boolean(item.disabled)"
+                    href="item.href"
+                    inset="Boolean(item.inset)"
+                    keepOpen="Boolean(item.keepOpen)"
+                    onSelect="(ev) => onItemSelected(item, ev)"
+                    rel="item.rel"
+                    shortcut="item.shortcut || ''"
+                    target="item.target"
+                    text="item.label || ''"
+                    value="item.value"
+                />
+                <ContextMenuItem
+                    t-else=""
+                    className="item.className || ''"
+                    destructive="Boolean(item.destructive)"
+                    disabled="Boolean(item.disabled)"
+                    href="item.href"
+                    inset="Boolean(item.inset)"
+                    keepOpen="Boolean(item.keepOpen)"
+                    onSelect="(ev) => onItemSelected(item, ev)"
+                    rel="item.rel"
+                    shortcut="item.shortcut || ''"
+                    target="item.target"
+                    text="item.label || ''"
+                />
+            </t>
+        </ContextMenuContent>
+    </t>
+
+    <t t-name="odx_owl.ContextMenuContent">
+        <t t-tag="props.tag" t-att-class="classes" t-att-data-dir="env.odxContextMenu.dir" t-att-dir="env.odxContextMenu.dir">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ContextMenuGroup">
+        <t t-tag="props.tag" t-att-class="classes" role="group">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ContextMenuLabel">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ContextMenuSeparator">
+        <div t-att-class="classes" role="separator"/>
+    </t>
+
+    <t t-name="odx_owl.ContextMenuShortcut">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ContextMenuSub">
+        <Dropdown
+            disabled="props.disabled"
+            menuClass="menuClasses"
+            noClasses="true"
+            bottomSheet="false"
+            holdOnHover="true"
+            position="resolvedPosition"
+        >
+            <t t-if="props.slots &amp;&amp; props.slots.trigger">
+                <t t-slot="trigger"/>
+            </t>
+            <ContextMenuSubTrigger
+                t-else=""
+                className="props.triggerClassName"
+                destructive="props.destructive"
+                disabled="props.disabled"
+                inset="props.inset"
+                shortcut="props.shortcut"
+                text="props.label"
+            />
+
+            <t t-set-slot="content">
+                <t t-slot="default"/>
+            </t>
+        </Dropdown>
+    </t>
+
+    <t t-name="odx_owl.ContextMenuSubTrigger">
+        <button
+            t-att-class="classes"
+            t-att-data-dir="env.odxContextMenu.dir"
+            t-att-dir="env.odxContextMenu.dir"
+            type="button"
+            role="menuitem"
+            aria-haspopup="menu"
+            data-context-item="true"
+            data-context-subtrigger="true"
+            t-att-disabled="props.disabled ? true : undefined"
+        >
+            <t t-slot="default">
+                <span class="odx-context-menu__item-label">
+                    <t t-esc="props.text"/>
+                </span>
+            </t>
+            <span class="odx-context-menu__item-meta">
+                <ContextMenuShortcut t-if="props.shortcut" text="props.shortcut"/>
+                <span class="odx-context-menu__submenu-chevron" aria-hidden="true">
+                    <svg viewBox="0 0 16 16">
+                        <path t-att-d="submenuChevronPath" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                    </svg>
+                </span>
+            </span>
+        </button>
+    </t>
+
+    <t t-name="odx_owl.ContextMenuSubContent">
+        <t t-tag="props.tag" t-att-class="classes" t-att-data-dir="env.odxContextMenu.dir" t-att-dir="env.odxContextMenu.dir">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ContextMenuItem">
+        <t
+            t-tag="tag"
+            t-att-class="classes"
+            t-att-type="tag === 'button' ? 'button' : undefined"
+            role="menuitem"
+            t-att="itemAttrs"
+            t-on-click="onClick"
+        >
+            <t t-slot="default">
+                <span class="odx-context-menu__item-label">
+                    <t t-esc="props.text"/>
+                </span>
+            </t>
+            <ContextMenuShortcut t-if="props.shortcut" text="props.shortcut"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ContextMenuCheckboxItem">
+        <t
+            t-tag="tag"
+            t-att-class="classes"
+            t-att-type="tag === 'button' ? 'button' : undefined"
+            role="menuitemcheckbox"
+            t-att-aria-checked="props.checked ? 'true' : 'false'"
+            t-att="itemAttrs"
+            t-on-click="onClick"
+        >
+            <span class="odx-context-menu__check" aria-hidden="true">
+                <svg t-if="props.checked" viewBox="0 0 16 16">
+                    <path d="M3 8.2L6.2 11.4L13 4.6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/>
+                </svg>
+            </span>
+            <t t-slot="default">
+                <span class="odx-context-menu__item-label">
+                    <t t-esc="props.text"/>
+                </span>
+            </t>
+            <ContextMenuShortcut t-if="props.shortcut" text="props.shortcut"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ContextMenuRadioGroup">
+        <t t-tag="props.tag" t-att-class="classes" role="group">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ContextMenuRadioItem">
+        <t
+            t-tag="tag"
+            t-att-class="classes"
+            t-att-type="tag === 'button' ? 'button' : undefined"
+            role="menuitemradio"
+            t-att-aria-checked="isChecked ? 'true' : 'false'"
+            t-att="itemAttrs"
+            t-on-click="onClick"
+        >
+            <span class="odx-context-menu__radio-indicator" aria-hidden="true">
+                <span t-if="isChecked" class="odx-context-menu__radio-dot"/>
+            </span>
+            <t t-slot="default">
+                <span class="odx-context-menu__item-label">
+                    <t t-esc="props.text"/>
+                </span>
+            </t>
+            <ContextMenuShortcut t-if="props.shortcut" text="props.shortcut"/>
+        </t>
+    </t>
+</templates>

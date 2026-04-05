@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Collapsible">
+        <t
+            t-tag="props.tag"
+            t-att-class="classes"
+            t-att-data-state="isOpen ? 'open' : 'closed'"
+            t-att-data-disabled="props.disabled ? 'true' : undefined"
+        >
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.CollapsibleTrigger">
+        <t
+            t-tag="props.tag"
+            t-att-id="env.odxCollapsible.triggerId"
+            t-att-class="classes"
+            t-att-type="props.tag === 'button' ? props.type : undefined"
+            t-att-disabled="props.tag === 'button' and isDisabled ? true : undefined"
+            t-att-aria-label="props.ariaLabel"
+            t-att-aria-controls="env.odxCollapsible.contentId"
+            t-att-aria-disabled="isDisabled ? 'true' : undefined"
+            t-att-aria-expanded="isOpen ? 'true' : 'false'"
+            t-att-data-state="isOpen ? 'open' : 'closed'"
+            t-att="props.attrs"
+            t-on-click="toggle"
+        >
+            <t t-slot="default">
+                <t t-esc="props.label"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.CollapsibleContent">
+        <t t-if="shouldRender">
+            <t
+                t-tag="props.tag"
+                t-att-id="env.odxCollapsible.contentId"
+                t-att-class="classes"
+                t-att-data-state="isOpen ? 'open' : 'closed'"
+                t-att-aria-labelledby="env.odxCollapsible.triggerId"
+                t-att-hidden="isOpen ? undefined : true"
+            >
+                <t t-slot="default"/>
+            </t>
+        </t>
+    </t>
+</templates>

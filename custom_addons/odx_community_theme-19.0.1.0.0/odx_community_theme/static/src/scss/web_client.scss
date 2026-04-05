@@ -1,0 +1,2257 @@
+// ODX Community Theme — Web Client
+// All colors use odx_owl CSS tokens for automatic light/dark mode.
+
+@function _hsl($token, $alpha: null) {
+    @if $alpha == null {
+        @return unquote("hsl(var(#{$token}))");
+    }
+    @return unquote("hsl(var(#{$token}) / #{$alpha})");
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 0. THEME TOKENS — Light & Dark mode
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// Light: sidebar #f4f4f6, body #ffffff
+:root {
+    --odx-card: 240 4% 96%;
+    --odx-background: 0 0% 100%;
+    --odx-muted: 240 5% 96%;
+    --odx-font-sans: "Geist", "Noto Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+// Dark: sidebar #18181b, body #09090a
+html[data-odx-theme="dark"] {
+    --odx-card: 240 6% 10%;
+    --odx-card-foreground: 0 0% 96%;
+    --odx-background: 240 10% 3.5%;
+    --odx-foreground: 0 0% 96%;
+    --odx-muted: 240 4% 13%;
+    --odx-muted-foreground: 240 5% 55%;
+    --odx-accent: 240 4% 16%;
+    --odx-accent-foreground: 0 0% 96%;
+    --odx-border: 240 4% 16%;
+    --odx-font-sans: "Geist", "Noto Sans Arabic", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --odx-input: 240 4% 16%;
+    --odx-primary: 0 0% 96%;
+    --odx-primary-foreground: 240 6% 10%;
+    --odx-secondary: 240 4% 16%;
+    --odx-secondary-foreground: 0 0% 96%;
+    --odx-destructive: 0 63% 31%;
+    --odx-destructive-foreground: 0 0% 96%;
+    --odx-ring: 240 5% 65%;
+    --odx-popover: 240 6% 10%;
+    --odx-popover-foreground: 0 0% 96%;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 1. LAYOUT — inset style with rounded content area
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.odx-sidebar-provider {
+    height: 100vh;
+    min-height: 100vh;
+    background: _hsl(--odx-card);  // sidebar bg bleeds into the gap
+}
+
+// Sidebar on right (LTR only)
+.odx-sidebar-provider[data-side="right"][data-dir="ltr"] {
+    flex-direction: row-reverse;
+}
+
+// Remove sidebar panel border
+.odx-sidebar-provider .odx-sidebar__panel,
+.odx-sidebar-provider .odx-sidebar .odx-sidebar__panel {
+    border: none !important;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+// Content area gets rounded corners and inset spacing
+.odx-sidebar-inset {
+    margin: 0.5rem 0.5rem 0.5rem 0;
+    border-radius: 0.75rem;
+    border: 1px solid _hsl(--odx-border);
+    overflow: hidden;
+    background: _hsl(--odx-background);
+    box-shadow: var(--odx-shadow-sm);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 2. HEADER
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+:root {
+    --NavBar-entry-color: #3f3f46;
+    --NavBar-entry-color--hover: #09090b;
+    --NavBar-entry-color--active: #09090b;
+    --NavBar-entry-backgroundColor: transparent;
+    --NavBar-entry-backgroundColor--hover: #f4f4f5;
+    --NavBar-entry-backgroundColor--focus: #f4f4f5;
+    --NavBar-entry-backgroundColor--active: #f4f4f5;
+    --NavBar-brand-color: #09090b;
+}
+
+html[data-odx-theme="dark"] {
+    --NavBar-entry-color: #a1a1aa;
+    --NavBar-entry-color--hover: #fafafa;
+    --NavBar-entry-color--active: #fafafa;
+    --NavBar-entry-backgroundColor--hover: #27272a;
+    --NavBar-entry-backgroundColor--focus: #27272a;
+    --NavBar-entry-backgroundColor--active: #27272a;
+    --NavBar-brand-color: #fafafa;
+}
+
+.odx-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 3rem;
+    padding: 0 0.75rem 0 0.5rem;
+    border-bottom: 1px solid _hsl(--odx-border, 0.5);
+    background: transparent;
+    flex-shrink: 0;
+}
+
+.odx-header .odx-separator--vertical {
+    height: 1rem;
+    align-self: center;
+}
+
+// Sidebar trigger icon
+// Sidebar trigger icon
+.odx-trigger-icon-wrap {
+    position: relative;
+    width: 1rem;
+    height: 1rem;
+}
+
+.odx-trigger-icon {
+    width: 1rem;
+    height: 1rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: opacity 200ms ease, transform 200ms ease;
+}
+
+// Open/closed icon swap
+.odx-trigger-icon--open {
+    opacity: 1;
+    transform: scale(1);
+}
+.odx-trigger-icon--closed {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+// When sidebar is collapsed: swap icons
+[data-state="collapsed"] {
+    .odx-trigger-icon--open {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    .odx-trigger-icon--closed {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+// Sidebar content area
+.odx-sidebar-inset {
+    transition: margin 220ms ease;
+}
+
+// ── Search trigger (⌘K) ────────────────────────────────
+
+.odx-search-trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2rem;
+    padding: 0 0.5rem 0 0.625rem;
+    border: 1px solid _hsl(--odx-border);
+    border-radius: 0.375rem;
+    background: _hsl(--odx-background);
+    color: _hsl(--odx-muted-foreground);
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+    min-width: 12rem;
+
+    &:hover {
+        border-color: _hsl(--odx-ring);
+        box-shadow: 0 0 0 1px _hsl(--odx-ring, 0.1);
+    }
+}
+
+.odx-search-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+    flex-shrink: 0;
+    opacity: 0.5;
+}
+
+.odx-search-text {
+    flex: 1;
+    text-align: left;
+}
+
+// Kbd component styling handled by odx_owl
+
+.odx-navbar {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    height: auto;
+}
+
+.odx-sidebar-inset .odx-header .o_main_navbar {
+    background: transparent;
+    border: none;
+    height: auto;
+    padding: 0;
+    box-shadow: none;
+}
+
+.odx-header .o_menu_brand {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: _hsl(--odx-foreground);
+    padding: 0.25rem 0.5rem;
+}
+
+.odx-sidebar-inset .odx-header .o_menu_sections {
+    .nav-link,
+    .dropdown-toggle {
+        color: _hsl(--odx-muted-foreground);
+        font-size: 0.8125rem;
+        font-weight: 500;
+        background: transparent;
+        border-radius: 0.375rem;
+        padding: 0.25rem 0.625rem;
+        margin: 0 1px;
+
+        &:hover {
+            color: _hsl(--odx-foreground);
+            background: _hsl(--odx-accent);
+        }
+
+        &.active,
+        &:active,
+        &.show {
+            color: _hsl(--odx-foreground);
+            background: _hsl(--odx-accent);
+        }
+    }
+}
+
+// Hide company selector + user avatar from systray
+.odx-sidebar-inset .odx-header .o_menu_systray .o_switch_company_menu {
+    display: none !important;
+}
+
+.odx-sidebar-inset .odx-header .o_menu_systray .o_user_menu {
+    display: none !important;
+}
+
+.odx-sidebar-inset .odx-header .o_menu_systray {
+    color: _hsl(--odx-muted-foreground);
+    gap: 0.25rem;
+    align-items: center;
+
+    .o_nav_entry {
+        color: _hsl(--odx-muted-foreground);
+        background: transparent;
+        border-radius: 0.375rem;
+        padding: 0.375rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        // Normalize all systray icons to consistent size
+        .fa, .oi, i {
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        img {
+            width: 1.125rem;
+            height: 1.125rem;
+        }
+
+        &:hover {
+            color: _hsl(--odx-foreground);
+            background: _hsl(--odx-accent);
+        }
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 3. CONTENT AREA
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.odx-content {
+    flex: 1;
+    overflow: auto;
+
+    .o_action_manager {
+        height: 100%;
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 4. SIDEBAR ELEMENTS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// Sidebar menu items
+.odx-sidebar-provider .odx-sidebar-menu-button {
+    display: flex;
+    justify-content: flex-start;
+    text-align: left;
+    width: 100%;
+}
+
+.odx-sidebar-menu-button__icon {
+    flex-shrink: 0;
+}
+
+.odx-sidebar-provider .odx-sidebar-menu-button__label {
+    text-align: left;
+}
+
+.odx-sidebar-provider .odx-sidebar-menu-sub-button {
+    display: flex;
+    justify-content: flex-start;
+    text-align: left;
+    width: 100%;
+}
+
+.odx-app-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    object-fit: contain;
+    border-radius: 3px;
+    filter: grayscale(40%) contrast(0.9);
+    opacity: 0.85;
+    transition: filter 200ms ease, opacity 200ms ease;
+}
+
+.odx-sidebar-menu-button:hover .odx-app-icon,
+.odx-sidebar-menu-button--active .odx-app-icon {
+    filter: grayscale(0%) contrast(1);
+    opacity: 1;
+}
+
+// User popover menu
+.odx-user-popover {
+    position: absolute;
+    bottom: calc(100% + 0.25rem);
+    left: 0;
+    right: 0;
+    z-index: 2050;
+    min-width: 13rem;
+    padding: 0.25rem;
+    background: _hsl(--odx-popover);
+    border: 1px solid _hsl(--odx-border);
+    border-radius: 0.5rem;
+
+    // When sidebar is collapsed, show popover to the right
+    [data-state="collapsed"] & {
+        bottom: 0;
+        left: calc(100% + 0.5rem);
+        right: auto;
+        min-width: 14rem;
+    }
+    box-shadow: var(--odx-shadow-md);
+    color: _hsl(--odx-popover-foreground);
+}
+
+.odx-user-popover-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+}
+
+.odx-user-popover-avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.5rem;
+    object-fit: cover;
+}
+
+.odx-user-popover-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.3;
+}
+
+.odx-user-popover-name {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.odx-user-popover-email {
+    font-size: 0.6875rem;
+    color: _hsl(--odx-muted-foreground);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.odx-user-popover-sep {
+    height: 1px;
+    margin: 0.25rem 0;
+    background: _hsl(--odx-border);
+}
+
+.odx-user-popover-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.375rem 0.5rem;
+    border: none;
+    border-radius: 0.25rem;
+    background: transparent;
+    color: _hsl(--odx-foreground);
+    font-size: 0.8125rem;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 120ms ease;
+
+    &:hover {
+        background: _hsl(--odx-accent);
+    }
+
+    &--danger {
+        color: _hsl(--odx-destructive);
+
+        &:hover {
+            background: _hsl(--odx-destructive, 0.1);
+        }
+    }
+}
+
+.odx-user-popover-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+    flex-shrink: 0;
+    opacity: 0.7;
+}
+
+// Hide user text when sidebar collapsed
+.odx-sidebar-provider[data-collapsible="icon"][data-state="collapsed"][data-mobile="false"] {
+    .odx-user-info,
+    .odx-user-chevron {
+        display: none;
+    }
+
+    .odx-user-trigger {
+        justify-content: center;
+        padding: 0.25rem;
+    }
+}
+
+// ── Company selector ────────────────────────────────────
+
+.odx-company-trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.375rem;
+    border-radius: calc(var(--odx-radius) - 2px);
+    color: _hsl(--odx-foreground);
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 150ms ease;
+
+    &:hover {
+        background: _hsl(--odx-accent);
+    }
+}
+
+.odx-company-icon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.5rem;
+    background: _hsl(--odx-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+
+    img {
+        width: 1.25rem;
+        height: 1.25rem;
+        object-fit: contain;
+        filter: brightness(0) invert(1); // make logo white on dark bg
+    }
+}
+
+.odx-company-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.odx-company-name {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.odx-company-plan {
+    font-size: 0.6875rem;
+    color: _hsl(--odx-muted-foreground);
+    white-space: nowrap;
+}
+
+.odx-company-chevron {
+    width: 0.75rem;
+    height: 0.75rem;
+    flex-shrink: 0;
+    opacity: 0.5;
+}
+
+// When sidebar is collapsed, show only the logo icon
+.odx-sidebar-provider[data-collapsible="icon"][data-state="collapsed"][data-mobile="false"] {
+    .odx-company-info,
+    .odx-company-chevron {
+        display: none;
+    }
+
+    .odx-company-trigger {
+        justify-content: center;
+        padding: 0.25rem;
+    }
+}
+
+// Company dropdown popover
+.odx-company-dropdown {
+    position: relative;
+}
+
+.odx-company-popover {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    z-index: 2050;
+    min-width: 14rem;
+    padding: 0.25rem;
+    background: _hsl(--odx-popover);
+    border: 1px solid _hsl(--odx-border);
+    border-radius: 0.5rem;
+    box-shadow: var(--odx-shadow-md);
+    color: _hsl(--odx-popover-foreground);
+
+    // When sidebar is collapsed, show popover to the right
+    [data-state="collapsed"] & {
+        top: 0;
+        left: calc(100% + 0.5rem);
+        min-width: 12rem;
+    }
+}
+
+.odx-company-popover-label {
+    padding: 0.375rem 0.5rem 0.25rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: _hsl(--odx-muted-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.odx-company-popover-sep {
+    height: 1px;
+    margin: 0.25rem 0;
+    background: _hsl(--odx-border);
+}
+
+.odx-company-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.375rem 0.5rem;
+    border: none;
+    border-radius: 0.25rem;
+    background: transparent;
+    color: _hsl(--odx-foreground);
+    font-size: 0.8125rem;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 120ms ease;
+
+    &:hover {
+        background: _hsl(--odx-accent);
+    }
+}
+
+.odx-company-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+
+    svg {
+        width: 0.75rem;
+        height: 0.75rem;
+        display: none;
+    }
+
+    &.checked svg {
+        display: block;
+    }
+}
+
+.odx-company-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 2040;
+}
+
+// ── User menu ───────────────────────────────────────────
+
+.odx-user-dropdown {
+    position: relative;
+}
+
+.odx-user-trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.375rem 0.5rem;
+    border: none;
+    border-radius: calc(var(--odx-radius) - 2px);
+    background: transparent;
+    color: _hsl(--odx-foreground);
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 150ms ease;
+
+    &:hover {
+        background: _hsl(--odx-accent);
+    }
+}
+
+.odx-user-chevron {
+    width: 0.75rem;
+    height: 0.75rem;
+    flex-shrink: 0;
+    opacity: 0.4;
+    margin-left: auto;
+}
+
+.odx-user-avatar {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.5rem;
+    object-fit: cover;
+}
+
+.odx-user-info {
+    display: grid;
+    grid-template-rows: auto auto;
+    min-width: 0;
+    gap: 0;
+    line-height: 1.3;
+}
+
+.odx-user-name {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: _hsl(--odx-foreground);
+}
+
+.odx-user-login {
+    font-size: 0.6875rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: _hsl(--odx-muted-foreground);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 5. CONTROL PANEL
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.o_control_panel {
+    background: _hsl(--odx-background);
+    border-bottom: 1px solid _hsl(--odx-border);
+    box-shadow: none;
+    padding: 0.375rem 1rem;
+
+    // Tighter breadcrumb area
+    .o_cp_top_left {
+        .breadcrumb {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.o_control_panel .breadcrumb-item {
+    color: _hsl(--odx-muted-foreground);
+    font-size: 0.875rem;
+
+    &.active {
+        color: _hsl(--odx-foreground);
+        font-weight: 600;
+    }
+
+    a {
+        color: _hsl(--odx-muted-foreground);
+        text-decoration: none;
+
+        &:hover {
+            color: _hsl(--odx-foreground);
+        }
+    }
+}
+
+.o_searchview {
+    background: _hsl(--odx-background);
+    border: 1px solid _hsl(--odx-border);
+    border-radius: 0.375rem;
+    box-shadow: none;
+    color: _hsl(--odx-foreground);
+
+    &:focus-within {
+        border-color: _hsl(--odx-ring);
+        box-shadow: 0 0 0 2px _hsl(--odx-ring, 0.15);
+    }
+}
+
+// Search facets
+.o_searchview .o_searchview_facet .o_searchview_facet_label {
+    background: _hsl(--odx-foreground) !important;
+    color: _hsl(--odx-background) !important;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    overflow: hidden;
+}
+
+// Focus ring reset
+.o_searchview .o_searchview_facet {
+    border-radius: 999px;
+
+    &:focus, &:focus-within, &:focus-visible {
+        outline: none !important;
+        box-shadow: 0 0 0 2px _hsl(--odx-ring, 0.2) !important;
+    }
+}
+
+.o_searchview_facet .o_facet_values {
+    font-size: 0.8125rem;
+
+    &:focus, &:focus-visible {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 6. BUTTONS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// All buttons
+.btn {
+    border-radius: 0.375rem;
+    font-weight: 500;
+    font-size: 0.8125rem;
+    padding: 0.375rem 0.875rem;
+    transition: all 150ms ease;
+    letter-spacing: 0;
+    line-height: 1.5;
+    box-shadow: none;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    border-radius: 0.3125rem;
+}
+
+.btn-lg {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+}
+
+.btn-primary {
+    background: _hsl(--odx-primary);
+    border-color: _hsl(--odx-primary);
+    color: _hsl(--odx-primary-foreground);
+
+    &:hover, &:focus {
+        background: _hsl(--odx-primary, 0.85);
+        border-color: _hsl(--odx-primary, 0.85);
+        color: _hsl(--odx-primary-foreground);
+    }
+
+    &:disabled {
+        background: _hsl(--odx-muted-foreground);
+        border-color: _hsl(--odx-muted-foreground);
+    }
+}
+
+.btn-secondary {
+    background: _hsl(--odx-background);
+    border: 1px solid _hsl(--odx-border);
+    color: _hsl(--odx-foreground);
+
+    &:hover, &:focus {
+        background: _hsl(--odx-accent);
+        border-color: _hsl(--odx-border);
+        color: _hsl(--odx-accent-foreground);
+    }
+}
+
+.btn-outline-primary {
+    background: transparent;
+    border: 1px solid _hsl(--odx-border);
+    color: _hsl(--odx-foreground);
+
+    &:hover, &:focus {
+        background: _hsl(--odx-accent);
+        color: _hsl(--odx-accent-foreground);
+    }
+}
+
+.btn-link {
+    color: _hsl(--odx-muted-foreground);
+    text-decoration: none;
+    padding: 0.375rem 0.5rem;
+
+    &:hover {
+        color: _hsl(--odx-foreground);
+        text-decoration: none;
+        background: _hsl(--odx-accent);
+        border-radius: 0.375rem;
+    }
+}
+
+// Status bar
+.o_form_statusbar {
+    border-bottom: 1px solid _hsl(--odx-border);
+    padding: 0.375rem 1rem;
+}
+
+// Status bar
+.o_statusbar_status {
+    .o_arrow_button,
+    > button.btn {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: _hsl(--odx-muted-foreground);
+
+        &.o_arrow_button_current {
+            color: _hsl(--odx-foreground);
+            font-weight: 600;
+        }
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 7. FORM VIEWS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.o_form_view {
+    background: _hsl(--odx-background);
+}
+
+.o_action .o_form_view .o_form_sheet_bg {
+    background: _hsl(--odx-background);
+    padding: 0;
+}
+
+// Form sheet
+.o_action .o_form_view .o_form_sheet_bg > .o_form_sheet,
+.o_action .o_xxl_form_view .o_form_sheet_bg > .o_form_sheet {
+    background: _hsl(--odx-background);
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 1rem 1.5rem;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+// Record title
+.o_action .o_form_view .oe_title {
+    .o_input, input, span {
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+}
+
+// Form field density
+.o_form_view .o_group {
+    margin-bottom: 0.5rem;
+}
+
+.o_form_view .o_inner_group .o_td_label {
+    min-width: auto;
+    padding-right: 0.5rem;
+}
+
+.o_action .o_form_view .o_wrap_label .o_form_label,
+.o_action .o_form_view .o_td_label .o_form_label,
+.o_action .o_form_view label.o_form_label,
+.o_action .o_form_view .o_inner_group .o_form_label {
+    font-size: 0.75rem;
+    color: _hsl(--odx-muted-foreground);
+    font-weight: 500;
+}
+
+// Status bar layout
+.o_action .o_form_view .o_form_statusbar {
+    border-bottom: 1px solid _hsl(--odx-border);
+    padding: 0.375rem 1.5rem;
+    align-items: center;
+    min-height: 2.75rem;
+
+    // Action buttons
+    .o_statusbar_buttons {
+        padding-left: 0;
+        margin-left: 0;
+
+        .btn {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8125rem;
+            height: 1.75rem;
+            line-height: 1.2;
+        }
+    }
+}
+
+// Breadcrumb area
+.o_action .o_control_panel .o_breadcrumb .btn,
+.o_action .o_cp_top_left .o_breadcrumb .btn {
+    font-size: 0.75rem;
+    padding: 0 0.375rem;
+    height: 1.375rem;
+    line-height: 1.3;
+    border-radius: 0.25rem;
+    border-color: _hsl(--odx-border);
+    background: transparent;
+    color: _hsl(--odx-muted-foreground);
+    font-weight: 500;
+
+    &:hover {
+        background: _hsl(--odx-accent);
+        color: _hsl(--odx-foreground);
+    }
+}
+
+// Breadcrumb text sizing
+.o_control_panel .breadcrumb {
+    font-size: 0.8125rem;
+    gap: 0.25rem;
+}
+
+.o_action .o_control_panel .o_last_breadcrumb_item .o_input,
+.o_action .o_control_panel .o_last_breadcrumb_item span {
+    font-size: 0.8125rem;
+}
+
+// Breadcrumb action icons
+.o_action .o_control_panel .o_form_status_indicator,
+.o_action .o_control_panel .o_form_status_indicator_buttons {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    // Each icon button
+    button, .btn, a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.5rem;
+        height: 1.5rem;
+        padding: 0;
+        border: none;
+        border-radius: 0.25rem;
+        background: transparent;
+        color: _hsl(--odx-muted-foreground);
+        cursor: pointer;
+        transition: background-color 150ms ease, color 150ms ease;
+
+        &:hover {
+            background: _hsl(--odx-accent);
+            color: _hsl(--odx-foreground);
+        }
+
+        .fa, .oi, i {
+            font-size: 0.875rem;
+            line-height: 1;
+            color: inherit;
+
+            &::before {
+                width: 0.875rem;
+                height: 0.875rem;
+            }
+        }
+    }
+}
+
+// Breadcrumb flex row
+.o_action .o_control_panel .o_breadcrumb {
+    .d-flex, .d-inline-flex {
+        gap: 0.25rem;
+        align-items: center;
+    }
+}
+
+// Stat buttons
+.o_form_view .oe_button_box .oe_stat_button {
+    border-color: _hsl(--odx-border);
+
+    .o_button_icon {
+        color: _hsl(--odx-muted-foreground);
+    }
+
+    &:hover {
+        background: _hsl(--odx-accent);
+    }
+}
+
+// ── Tabs ───────────────────────────────────────────────
+
+.o_notebook {
+    --Notebook__link-border-color: transparent !important;
+    --Notebook__link-border-color--active: transparent !important;
+    --Notebook__link-border-color--hover: transparent !important;
+    --Notebook__link-border-top-color--active: transparent !important;
+}
+
+.o_notebook > .o_notebook_headers {
+    margin-bottom: 0.5rem;
+}
+
+// Tab bar
+.o_action .o_notebook .o_notebook_headers > ul.nav.nav-tabs {
+    border-bottom: none;
+    background: _hsl(--odx-muted);
+    border-radius: 0.5rem;
+    padding: 0.1875rem;
+    gap: 0.125rem;
+    display: inline-flex;
+    flex-wrap: nowrap;
+}
+
+// Individual tab items
+.o_action .o_notebook .o_notebook_headers > ul.nav.nav-tabs > li.nav-item {
+    margin-bottom: 0;
+}
+
+// Tab links
+.o_action .o_notebook .o_notebook_headers > ul.nav.nav-tabs > li.nav-item > a.nav-link {
+    color: _hsl(--odx-muted-foreground);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 0.375rem;
+    padding: 0.3125rem 0.75rem;
+    transition: all 150ms ease;
+    line-height: 1.4;
+    background: transparent;
+    margin: 0;
+
+    &:hover {
+        color: _hsl(--odx-foreground);
+        background: transparent;
+    }
+
+    &.active {
+        color: _hsl(--odx-foreground);
+        font-weight: 600;
+        background: _hsl(--odx-background);
+        box-shadow: 0 1px 2px _hsl(--odx-foreground, 0.06);
+    }
+}
+
+// ── Chatter ─────────────────────────────────────────────
+
+.o_action .o-mail-Form-chatter,
+.o_action .o-mail-ChatterContainer,
+.o_action .o-mail-Chatter,
+.o_action .o_FormRenderer_chatterContainer {
+    background: _hsl(--odx-background);
+}
+
+.o-mail-Form-chatter.o-aside {
+    border-left: none;
+    min-width: 300px;
+    transition: none;
+}
+
+// Chatter tabs
+.o-mail-Chatter-sendMessage,
+.o-mail-Chatter .nav-tabs {
+    border-bottom: 1px solid _hsl(--odx-border);
+}
+
+.odx-chatter-resize-handle {
+    width: 8px;
+    flex-shrink: 0;
+    cursor: col-resize;
+    position: relative;
+    background: _hsl(--odx-border, 0.3);
+    transition: background-color 150ms ease;
+
+    // Always-visible grip dots
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 4px;
+        height: 2.5rem;
+        border-radius: 999px;
+        background: _hsl(--odx-border);
+        transition: background-color 150ms ease;
+    }
+
+    &:hover {
+        background: _hsl(--odx-accent);
+
+        &::after {
+            background: _hsl(--odx-muted-foreground);
+        }
+    }
+
+    &:active,
+    &.odx-resizing {
+        background: _hsl(--odx-primary, 0.1);
+
+        &::after {
+            background: _hsl(--odx-primary);
+        }
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 8. LIST VIEWS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.o_list_view {
+    .o_list_table {
+        thead th {
+            background: _hsl(--odx-muted);
+            color: _hsl(--odx-muted-foreground);
+            font-size: 0.8125rem;
+            font-weight: 600;
+            border-bottom: 1px solid _hsl(--odx-border);
+        }
+
+        tbody tr:hover td {
+            background: _hsl(--odx-accent);
+        }
+
+        td, th {
+            border-color: _hsl(--odx-border, 0.5);
+        }
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 9. KANBAN VIEWS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.o_kanban_view {
+    background: _hsl(--odx-background);
+}
+
+.o_kanban_record {
+    background: _hsl(--odx-background);
+    border: 1px solid _hsl(--odx-border);
+    border-radius: 0.5rem;
+    box-shadow: var(--odx-shadow-sm);
+    transition: box-shadow 150ms ease, transform 150ms ease;
+    margin-bottom: 0.5rem;
+
+    &:hover {
+        box-shadow: var(--odx-shadow-md);
+    }
+}
+
+.o_kanban_group {
+    --KanbanGroup-background: #{_hsl(--odx-background)};
+    --KanbanColumn__highlight-background: #{_hsl(--odx-accent)};
+}
+
+.o_kanban_header .o_kanban_header_title .o_column_title {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: _hsl(--odx-foreground);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 10. INPUTS & FORM FIELDS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.form-control,
+.form-select {
+    border-color: _hsl(--odx-input);
+    border-radius: 0.375rem;
+    font-size: 0.8125rem;
+    color: _hsl(--odx-foreground);
+    background: _hsl(--odx-background);
+    padding: 0.375rem 0.625rem;
+    height: auto;
+    min-height: 2.25rem;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+
+    &:focus {
+        border-color: _hsl(--odx-ring);
+        box-shadow: 0 0 0 2px _hsl(--odx-ring, 0.1);
+        color: _hsl(--odx-foreground);
+        background: _hsl(--odx-background);
+    }
+
+    &::placeholder {
+        color: _hsl(--odx-muted-foreground, 0.7);
+    }
+
+    &:disabled, &[readonly] {
+        background: _hsl(--odx-muted);
+        opacity: 0.7;
+    }
+}
+
+.form-select {
+    padding-right: 2rem;
+}
+
+// Labels
+.o_form_label,
+label.o_form_label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: _hsl(--odx-foreground);
+}
+
+// Required field indicator
+.o_form_label.o_form_label_required {
+    font-weight: 600;
+}
+
+// Textarea
+textarea.form-control {
+    min-height: 5rem;
+    resize: vertical;
+}
+
+// Many2one / autocomplete fields
+.o_field_many2one .o-autocomplete--input,
+.o_field_many2many_tags .o-autocomplete--input {
+    border-radius: 0.375rem;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 11. DROPDOWNS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.dropdown-menu {
+    border: 1px solid _hsl(--odx-border);
+    border-radius: 0.5rem;
+    box-shadow: var(--odx-shadow-md);
+    padding: 0.25rem;
+    background: _hsl(--odx-popover);
+    color: _hsl(--odx-popover-foreground);
+}
+
+.dropdown-item {
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    color: _hsl(--odx-foreground);
+    padding: 0.375rem 0.5rem;
+
+    &:hover,
+    &:focus {
+        background: _hsl(--odx-accent);
+        color: _hsl(--odx-accent-foreground);
+    }
+
+    &.active,
+    &:active {
+        background: _hsl(--odx-accent);
+        color: _hsl(--odx-accent-foreground);
+    }
+}
+
+.dropdown-divider {
+    border-color: _hsl(--odx-border);
+}
+
+// Dropdown headers
+.dropdown-header {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: _hsl(--odx-muted-foreground);
+    padding: 0.5rem 0.5rem 0.25rem;
+}
+
+// Dropdown item font size
+.dropdown-item {
+    font-size: 0.8125rem;
+}
+
+.o-autocomplete--dropdown-menu {
+    border: 1px solid _hsl(--odx-border);
+    border-radius: 0.5rem;
+    box-shadow: var(--odx-shadow-md);
+    background: _hsl(--odx-popover);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 12. MODALS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.modal-content {
+    border: 1px solid _hsl(--odx-border);
+    border-radius: 0.625rem;
+    box-shadow: var(--odx-shadow-lg);
+    background: _hsl(--odx-background);
+    color: _hsl(--odx-foreground);
+}
+
+.modal-header {
+    border-bottom-color: _hsl(--odx-border);
+    padding: 1rem 1.25rem;
+}
+
+.modal-footer {
+    border-top-color: _hsl(--odx-border);
+    padding: 0.75rem 1.25rem;
+}
+
+.modal-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: _hsl(--odx-foreground);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 13. BADGES
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.badge {
+    font-weight: 500;
+    font-size: 0.75rem;
+    border-radius: 999px;
+    padding: 0.2rem 0.5rem;
+}
+
+// Badge colors
+:root {
+    --odx-badge-success-bg: #dcfce7;
+    --odx-badge-success-fg: #166534;
+    --odx-badge-danger-bg: #fee2e2;
+    --odx-badge-danger-fg: #991b1b;
+    --odx-badge-warning-bg: #fef3c7;
+    --odx-badge-warning-fg: #92400e;
+    --odx-badge-info-bg: #dbeafe;
+    --odx-badge-info-fg: #1e40af;
+}
+html[data-odx-theme="dark"] {
+    --odx-badge-success-bg: #14532d;
+    --odx-badge-success-fg: #bbf7d0;
+    --odx-badge-danger-bg: #7f1d1d;
+    --odx-badge-danger-fg: #fecaca;
+    --odx-badge-warning-bg: #78350f;
+    --odx-badge-warning-fg: #fde68a;
+    --odx-badge-info-bg: #1e3a5f;
+    --odx-badge-info-fg: #bfdbfe;
+}
+
+.badge.text-bg-primary,
+.badge.badge-primary {
+    background: _hsl(--odx-primary) !important;
+    color: _hsl(--odx-primary-foreground) !important;
+}
+
+.badge.text-bg-success,
+.badge.badge-success {
+    background: var(--odx-badge-success-bg) !important;
+    color: var(--odx-badge-success-fg) !important;
+}
+
+.badge.text-bg-danger,
+.badge.badge-danger {
+    background: var(--odx-badge-danger-bg) !important;
+    color: var(--odx-badge-danger-fg) !important;
+}
+
+.badge.text-bg-warning,
+.badge.badge-warning {
+    background: var(--odx-badge-warning-bg) !important;
+    color: var(--odx-badge-warning-fg) !important;
+}
+
+.badge.text-bg-info,
+.badge.badge-info {
+    background: var(--odx-badge-info-bg) !important;
+    color: var(--odx-badge-info-fg) !important;
+}
+
+.badge.text-bg-secondary {
+    background: _hsl(--odx-secondary) !important;
+    color: _hsl(--odx-secondary-foreground) !important;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 14. SETTINGS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.o_base_settings {
+    --settings__title-bg: #{_hsl(--odx-muted)};
+
+    // ── Sidebar navigation tabs ──────────────────────────
+    .o_setting_container .settings_tab {
+        background: _hsl(--odx-card);
+        border-right: 1px solid _hsl(--odx-border);
+
+        .tab {
+            border-radius: 0;
+            font-size: 0.8125rem;
+            color: _hsl(--odx-muted-foreground);
+            padding-left: 0.75rem;
+            transition: background-color 120ms ease, color 120ms ease;
+
+            &:hover {
+                background: _hsl(--odx-accent);
+                color: _hsl(--odx-foreground);
+            }
+
+            // App icon
+            .icon {
+                opacity: 0.7;
+                filter: grayscale(30%);
+            }
+
+            &:hover .icon,
+            &.selected .icon {
+                opacity: 1;
+                filter: grayscale(0%);
+            }
+        }
+
+        .selected {
+            background: _hsl(--odx-accent) !important;
+            color: _hsl(--odx-foreground);
+            box-shadow: inset 2px 0 0 _hsl(--odx-foreground) !important;
+            font-weight: 600;
+        }
+    }
+
+    // ── Section headers (Users, Languages, Permissions, etc.) ──
+    .app_settings_block h2 {
+        background: _hsl(--odx-muted) !important;
+        color: _hsl(--odx-foreground);
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+        border-bottom: 1px solid _hsl(--odx-border);
+        border-top: 1px solid _hsl(--odx-border);
+        margin-top: 0.5rem !important;
+    }
+
+    // Sub-section headers
+    .app_settings_block h3 {
+        color: _hsl(--odx-foreground);
+        font-size: 0.8125rem;
+        font-weight: 600;
+        padding-top: 0.375rem !important;
+        padding-bottom: 0.375rem !important;
+    }
+
+    // Settings app header bar
+    .app_settings_header {
+        background: _hsl(--odx-background);
+        border-bottom: 1px solid _hsl(--odx-border);
+    }
+
+    // Search header bar
+    .settingSearchHeader {
+        background: _hsl(--odx-muted) !important;
+        color: _hsl(--odx-foreground);
+    }
+
+    // ── Setting boxes ────────────────────────────────────
+    .o_setting_box {
+        // Setting title
+        .o_form_label {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: _hsl(--odx-foreground);
+        }
+
+        // Setting description
+        .text-muted {
+            font-size: 0.75rem;
+            color: _hsl(--odx-muted-foreground) !important;
+        }
+
+        // Arrow links
+        a {
+            font-size: 0.8125rem;
+        }
+
+        // Left pane border
+        .o_setting_left_pane {
+            border-color: _hsl(--odx-border) !important;
+        }
+    }
+
+    // ── Enterprise badge ─────────────────────────────────
+    .badge.text-bg-info {
+        background: _hsl(--odx-muted) !important;
+        color: _hsl(--odx-muted-foreground) !important;
+        border: 1px solid _hsl(--odx-border);
+        font-size: 0.625rem;
+        font-weight: 600;
+        border-radius: 0.25rem;
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 15. CALENDAR
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.o_calendar_view {
+    .fc-event {
+        border-radius: 0.25rem;
+        border: none;
+    }
+
+    .fc-col-header-cell {
+        font-weight: 500;
+        font-size: 0.8125rem;
+        color: _hsl(--odx-muted-foreground);
+    }
+
+    .fc-daygrid-day.fc-day-today {
+        background: _hsl(--odx-accent);
+    }
+
+    .fc-button-primary {
+        background: _hsl(--odx-primary);
+        border-color: _hsl(--odx-primary);
+        color: _hsl(--odx-primary-foreground);
+
+        &:hover {
+            background: _hsl(--odx-primary, 0.85);
+        }
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 16. SCROLLBARS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: _hsl(--odx-border) transparent;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: _hsl(--odx-border);
+    border-radius: 999px;
+
+    &:hover {
+        background: _hsl(--odx-muted-foreground);
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 16b. THEME TOGGLE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.odx-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: none;
+    border-radius: 0.375rem;
+    background: transparent;
+    color: _hsl(--odx-muted-foreground);
+    cursor: pointer;
+    transition: background-color 150ms ease, color 150ms ease;
+
+    &:hover {
+        background: _hsl(--odx-accent);
+        color: _hsl(--odx-foreground);
+    }
+}
+
+.odx-theme-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 17. NOTIFICATIONS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// Systray notification badges
+.odx-sidebar-inset .o_MessagingMenu_counter,
+.odx-sidebar-inset .o_mail_systray_item .o_notification_counter,
+.odx-sidebar-inset .o_menu_systray .badge {
+    background: _hsl(--odx-foreground) !important;
+    color: _hsl(--odx-background) !important;
+    font-size: 0.5625rem;
+    font-weight: 600;
+    border-radius: 999px;
+    min-width: 1rem;
+    height: 1rem;
+    padding: 0 0.25rem;
+    line-height: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 18. PIVOT & GRAPH
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.o_pivot {
+    .o_pivot_header_cell_opened,
+    .o_pivot_header_cell_closed {
+        background: _hsl(--odx-accent);
+        color: _hsl(--odx-foreground);
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 18b. PRIORITY STARS — Global (all views)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// Neutralize yellow stars across all views
+.o_priority .o_priority_star {
+    color: _hsl(--odx-border) !important;
+
+    &.fa-star {
+        color: _hsl(--odx-muted-foreground) !important;
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 18c. KANBAN STAGE COLORS — Neutralize colored left borders
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.o_kanban_record[style*="border-left-color"],
+.o_kanban_record[style*="border-left: 3px"],
+.o_kanban_record[style*="border-left: 2px"] {
+    border-left-color: _hsl(--odx-border) !important;
+}
+
+// Activity status dots
+.o_kanban_record .o_activity_color_done,
+.o_kanban_record .o_activity_color_planned {
+    opacity: 0.5;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 19. CHECKBOX & SWITCH
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.form-check-input {
+    border-color: _hsl(--odx-border);
+    border-radius: 0.25rem;
+
+    &:checked {
+        background-color: _hsl(--odx-primary);
+        border-color: _hsl(--odx-primary);
+        border-radius: 0.25rem;
+    }
+}
+
+.form-switch .form-check-input {
+    border-radius: 999px;
+
+    &:checked {
+        background-color: _hsl(--odx-primary);
+        border-color: _hsl(--odx-primary);
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 20. MISC OVERRIDES
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+::selection {
+    background: _hsl(--odx-primary);
+    color: _hsl(--odx-primary-foreground);
+}
+
+.o_web_client .o_loading_indicator {
+    background: _hsl(--odx-primary);
+}
+
+.tooltip-inner {
+    background: _hsl(--odx-foreground);
+    color: _hsl(--odx-background);
+    border-radius: 0.375rem;
+    font-size: 0.8125rem;
+}
+
+.progress-bar {
+    background: _hsl(--odx-primary);
+}
+
+.o_action .o_spreadsheet_dashboard_action .o_renderer {
+    height: 80vh;
+    width: 100%;
+}
+
+.o_apps .o_app {
+    border-radius: 0.625rem;
+    transition: background 150ms ease;
+
+    &:hover {
+        background: _hsl(--odx-accent);
+    }
+}
+
+// Apps/modules page
+.o_module_kanban .o_kanban_record {
+    border-radius: 0.5rem;
+}
+
+// Module technical name
+.o_action .o_module_kanban .text-primary,
+.o_action .oe_module_desc .text-primary {
+    color: _hsl(--odx-muted-foreground);
+    font-size: 0.75rem;
+}
+
+// Focus ring
+// Textarea and input focus rings handled below.
+*:focus {
+    outline: none !important;
+}
+
+// :focus-visible
+*:focus-visible {
+    outline: 2px solid _hsl(--odx-ring);
+    outline-offset: 2px;
+}
+
+// Form control focus
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+    box-shadow: none !important;
+    outline: none !important;
+    border-color: _hsl(--odx-ring);
+}
+
+// Buttons and nav links
+.btn:focus,
+.nav-link:focus,
+.btn:focus-visible,
+.nav-link:focus-visible {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+// Textarea focus
+textarea:focus,
+textarea.o_input:focus,
+.o_field_widget textarea:focus,
+.note-editable:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: _hsl(--odx-ring);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 21. DARK MODE — Odoo-specific overrides
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+html[data-odx-theme="dark"] {
+    // ── Global defaults ─────────────────────────────────
+    body,
+    .o_web_client {
+        background-color: _hsl(--odx-background);
+        color: _hsl(--odx-foreground);
+    }
+
+    // ── Content area ────────────────────────────────────
+    .odx-content,
+    .o_action_manager,
+    .o_action {
+        background: _hsl(--odx-background);
+        color: _hsl(--odx-foreground);
+    }
+
+    // ── Control panel ───────────────────────────────────
+    .o_action .o_control_panel {
+        background: _hsl(--odx-background);
+        border-bottom-color: _hsl(--odx-border);
+        color: _hsl(--odx-foreground);
+    }
+
+    .o_action .o_cp_searchview,
+    .o_action .o_searchview {
+        background: _hsl(--odx-muted);
+        border-color: _hsl(--odx-border);
+        color: _hsl(--odx-foreground);
+    }
+
+    // ── Form view ───────────────────────────────────────
+    .o_action .o_form_view,
+    .o_action .o_form_view .o_form_sheet_bg,
+    .o_action .o_form_view .o_form_sheet_bg > .o_form_sheet {
+        background: _hsl(--odx-background);
+        color: _hsl(--odx-foreground);
+    }
+
+    .o_action .o_form_view .o_form_statusbar {
+        background: _hsl(--odx-background);
+        border-bottom-color: _hsl(--odx-border);
+    }
+
+    .o_action .o_form_view .o_form_label,
+    .o_action .o_form_view label {
+        color: _hsl(--odx-muted-foreground);
+    }
+
+    // ── List view ───────────────────────────────────────
+    .o_action .o_list_view {
+        background: _hsl(--odx-background);
+        color: _hsl(--odx-foreground);
+    }
+
+    .o_action .o_list_view .o_list_table {
+        color: _hsl(--odx-foreground);
+
+        thead th {
+            background: _hsl(--odx-muted);
+            color: _hsl(--odx-muted-foreground);
+            border-color: _hsl(--odx-border);
+        }
+
+        tbody tr {
+            background: _hsl(--odx-background);
+
+            &:hover td {
+                background: _hsl(--odx-accent);
+            }
+        }
+
+        td, th {
+            border-color: _hsl(--odx-border);
+            color: _hsl(--odx-foreground);
+        }
+
+        // Footer / total row
+        tfoot td {
+            background: _hsl(--odx-muted);
+            color: _hsl(--odx-foreground);
+        }
+    }
+
+    // Record selector checkboxes
+    .o_action .o_list_view .o_list_record_selector {
+        background: transparent;
+    }
+
+    // ── Kanban view ─────────────────────────────────────
+    .o_action .o_kanban_view {
+        background: _hsl(--odx-background);
+    }
+
+    .o_action .o_kanban_view .o_kanban_record {
+        background: _hsl(--odx-card);
+        border-color: _hsl(--odx-border);
+        color: _hsl(--odx-foreground);
+    }
+
+    .o_action .o_kanban_view .o_kanban_group {
+        --KanbanGroup-background: #{_hsl(--odx-background)};
+    }
+
+    .o_action .o_kanban_header {
+        color: _hsl(--odx-foreground);
+    }
+
+    // ── Calendar view ───────────────────────────────────
+    .o_action .o_calendar_view,
+    .o_action .o_calendar_widget {
+        background: _hsl(--odx-background);
+        color: _hsl(--odx-foreground);
+    }
+
+    .o_action .fc-theme-standard td,
+    .o_action .fc-theme-standard th,
+    .o_action .fc-theme-standard .fc-scrollgrid {
+        border-color: _hsl(--odx-border);
+    }
+
+    .o_action .fc-daygrid-day,
+    .o_action .fc-timegrid-slot {
+        background: _hsl(--odx-background);
+    }
+
+    .o_action .fc-day-today {
+        background: _hsl(--odx-accent);
+    }
+
+    .o_action .fc-col-header-cell {
+        background: _hsl(--odx-muted);
+        color: _hsl(--odx-muted-foreground);
+    }
+
+    // Calendar sidebar
+    .o_action .o_calendar_sidebar_container {
+        background: _hsl(--odx-card);
+        color: _hsl(--odx-foreground);
+    }
+
+    // ── Settings page ───────────────────────────────────
+    .o_action .o_base_settings {
+        --settings__title-bg: #{_hsl(--odx-muted)};
+        background: _hsl(--odx-background);
+        color: _hsl(--odx-foreground);
+
+        .o_setting_container {
+            background: _hsl(--odx-background);
+        }
+
+        .o_setting_container .settings_tab {
+            background: _hsl(--odx-card);
+        }
+
+        .settings_tab .tab {
+            color: _hsl(--odx-muted-foreground);
+
+            &:hover {
+                background: _hsl(--odx-accent);
+                color: _hsl(--odx-foreground);
+            }
+        }
+
+        .settings_tab .selected {
+            background: _hsl(--odx-accent) !important;
+            color: _hsl(--odx-foreground);
+        }
+
+        .app_settings_header {
+            background: _hsl(--odx-background);
+            border-color: _hsl(--odx-border);
+            color: _hsl(--odx-foreground);
+        }
+
+        .app_settings_block h2 {
+            background: _hsl(--odx-muted) !important;
+            color: _hsl(--odx-foreground);
+            border-color: _hsl(--odx-border);
+        }
+
+        .settingSearchHeader {
+            background: _hsl(--odx-muted) !important;
+            color: _hsl(--odx-foreground);
+        }
+
+        .o_settings_container .o_form_view {
+            background: _hsl(--odx-background);
+        }
+
+        .o_setting_box .o_setting_left_pane,
+        .o_setting_box .o_setting_right_pane {
+            color: _hsl(--odx-foreground);
+        }
+
+        .badge.text-bg-info {
+            background: _hsl(--odx-muted) !important;
+            color: _hsl(--odx-muted-foreground) !important;
+            border-color: _hsl(--odx-border);
+        }
+    }
+
+    // ── Chatter ─────────────────────────────────────────
+    .o_action .o_FormRenderer_chatterContainer,
+    .o_action .o-mail-Form-chatter,
+    .o_action .o-mail-ChatterContainer,
+    .o_action .o-mail-Chatter,
+    .o_action .o-mail-Thread {
+        background: _hsl(--odx-background);
+        color: _hsl(--odx-foreground);
+    }
+
+    .o_action .o-mail-Message {
+        color: _hsl(--odx-foreground);
+    }
+
+    // ── Inputs ──────────────────────────────────────────
+    .o_action .form-control,
+    .o_action .form-select,
+    .o_action .o_input,
+    .o_action input.o_input,
+    .modal .form-control,
+    .modal .form-select {
+        background: _hsl(--odx-muted);
+        color: _hsl(--odx-foreground);
+        border-color: _hsl(--odx-input);
+
+        &::placeholder {
+            color: _hsl(--odx-muted-foreground, 0.6);
+        }
+    }
+
+    // ── Tabs ────────────────────────────────────────────
+    .o_action .tab-content,
+    .o_action .o_notebook_content {
+        color: _hsl(--odx-foreground);
+        background: _hsl(--odx-background);
+    }
+
+    // ── Buttons ─────────────────────────────────────────
+    .o_action .btn-secondary {
+        background: _hsl(--odx-muted);
+        border-color: _hsl(--odx-border);
+        color: _hsl(--odx-foreground);
+
+        &:hover {
+            background: _hsl(--odx-accent);
+        }
+    }
+
+    .o_action .btn-light {
+        background: _hsl(--odx-muted);
+        border-color: _hsl(--odx-border);
+        color: _hsl(--odx-foreground);
+    }
+
+    // ── Dropdowns ───────────────────────────────────────
+    .dropdown-menu {
+        background: _hsl(--odx-popover);
+        border-color: _hsl(--odx-border);
+        color: _hsl(--odx-popover-foreground);
+    }
+
+    .dropdown-item {
+        color: _hsl(--odx-foreground);
+
+        &:hover, &:focus {
+            background: _hsl(--odx-accent);
+        }
+    }
+
+    // ── Modals ──────────────────────────────────────────
+    .modal .modal-content {
+        background: _hsl(--odx-background);
+        border-color: _hsl(--odx-border);
+        color: _hsl(--odx-foreground);
+    }
+
+    .modal .modal-header, .modal .modal-footer {
+        border-color: _hsl(--odx-border);
+    }
+
+    // ── Links ───────────────────────────────────────────
+    a:not(.btn) {
+        color: _hsl(--odx-primary);
+    }
+
+    // ── Misc elements ───────────────────────────────────
+    .o_action .o_field_widget {
+        color: _hsl(--odx-foreground);
+    }
+
+    .o_action .o_horizontal_separator {
+        color: _hsl(--odx-foreground);
+    }
+
+    // Stat buttons
+    .o_action .oe_button_box .oe_stat_button {
+        border-color: _hsl(--odx-border);
+        color: _hsl(--odx-foreground);
+    }
+
+    // Pivot view
+    .o_action .o_pivot {
+        background: _hsl(--odx-background);
+        color: _hsl(--odx-foreground);
+
+        table {
+            color: _hsl(--odx-foreground);
+
+            th, td {
+                border-color: _hsl(--odx-border);
+            }
+        }
+    }
+
+    // Breadcrumb
+    .o_action .breadcrumb-item,
+    .o_action .breadcrumb-item a {
+        color: _hsl(--odx-muted-foreground);
+    }
+
+    .o_action .breadcrumb-item.active {
+        color: _hsl(--odx-foreground);
+    }
+
+    // Selection
+    ::selection {
+        background: _hsl(--odx-primary);
+        color: _hsl(--odx-primary-foreground);
+    }
+
+    // Search panel
+    .o_action .o_search_panel {
+        background: _hsl(--odx-card);
+        border-color: _hsl(--odx-border);
+        color: _hsl(--odx-foreground);
+    }
+
+    // Tooltips
+    .tooltip .tooltip-inner {
+        background: _hsl(--odx-foreground);
+        color: _hsl(--odx-background);
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 22. MOBILE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+@media (max-width: 767px) {
+    .odx-header {
+        padding: 0 0.5rem;
+        gap: 0.25rem;
+    }
+
+    .o_form_view .o_form_sheet_bg > .o_form_sheet {
+        min-width: 100%;
+        max-width: 100%;
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+    }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// RTL SUPPORT
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// RTL layout
+.odx-sidebar-provider[data-dir="rtl"] {
+    .odx-sidebar-inset {
+        margin: 0.5rem 0 0.5rem 0.5rem;
+    }
+
+    .odx-sidebar .odx-sidebar__panel {
+        border-right: none !important;
+        border-left: none !important;
+    }
+}
+
+html[dir="rtl"] {
+    // Fallback for when html[dir] IS set
+
+    // ── Sidebar panel: remove border on both sides (inset handles separation) ──
+    .odx-sidebar-provider .odx-sidebar .odx-sidebar__panel {
+        border-right: none !important;
+        border-left: none !important;
+    }
+
+    // ── Form chatter: border flips ──────────────────────
+    .o_form_view .o_FormRenderer_chatterContainer {
+        border-left: none;
+        border-right: 1px solid _hsl(--odx-border);
+    }
+
+    // ── Settings sidebar: border + active indicator ─────
+    .o_base_settings .o_setting_container .settings_tab {
+        border-right: none;
+        border-left: 1px solid _hsl(--odx-border);
+
+        .selected {
+            box-shadow: inset -2px 0 0 _hsl(--odx-foreground) !important;
+        }
+    }
+
+    // ── Kanban stage left border → right ────────────────
+    .o_kanban_record[style*="border-left"] {
+        border-left: none !important;
+        border-right: 3px solid _hsl(--odx-border) !important;
+    }
+
+    // ── Sidebar menu items: text alignment ──────────────
+    .odx-sidebar-provider .odx-sidebar-menu-button,
+    .odx-sidebar-provider .odx-sidebar-menu-sub-button {
+        text-align: right;
+    }
+
+    // ── Breadcrumb separator: flip ──────────────────────
+    .o_breadcrumb .o_back_button + .active {
+        direction: rtl;
+    }
+
+    // ── Search facets: maintain order ───────────────────
+    .o_searchview {
+        direction: rtl;
+    }
+
+    // ── List view: number columns stay LTR ──────────────
+    .o_list_view .o_list_number {
+        direction: ltr;
+        text-align: right;
+    }
+
+    // ── User popover: flip position ─────────────────────
+    .odx-user-popover {
+        text-align: right;
+    }
+
+    .odx-user-popover-item {
+        flex-direction: row-reverse;
+    }
+
+    // ── Company selector: flip chevron ──────────────────
+    .odx-company-trigger {
+        flex-direction: row-reverse;
+    }
+}

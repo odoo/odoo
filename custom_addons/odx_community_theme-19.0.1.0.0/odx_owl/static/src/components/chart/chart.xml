@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.ChartContainer">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default"/>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ChartLegend">
+        <div t-att-class="classes">
+            <t t-if="props.slots and props.slots.default">
+                <t t-slot="default"/>
+            </t>
+            <t t-else="">
+                <ChartLegendContent series="props.series"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.ChartLegendContent">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-foreach="entries" t-as="entry" t-key="entry.key">
+                <div class="odx-chart-legend__item">
+                    <span class="odx-chart-legend__swatch" t-att-style="`background: ${entry.color};`" aria-hidden="true"/>
+                    <span class="odx-chart-legend__label"><t t-esc="entry.label"/></span>
+                </div>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.ChartTooltip">
+        <div t-if="visible" t-att-class="classes" t-att-style="style" role="status" aria-live="polite">
+            <t t-if="props.slots and props.slots.default">
+                <t t-slot="default"/>
+            </t>
+            <t t-else="">
+                <ChartTooltipContent formatter="props.formatter" hideLabel="props.hideLabel"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="odx_owl.ChartTooltipContent">
+        <t t-if="tooltip">
+            <t t-tag="props.tag" t-att-class="classes">
+                <p t-if="!props.hideLabel" class="odx-chart-tooltip__label">
+                    <t t-esc="tooltip.label"/>
+                </p>
+                <div class="odx-chart-tooltip__items">
+                    <t t-foreach="tooltip.items" t-as="item" t-key="item.key">
+                        <div class="odx-chart-tooltip__item">
+                            <span class="odx-chart-tooltip__swatch" t-att-style="`background: ${item.color};`" aria-hidden="true"/>
+                            <span class="odx-chart-tooltip__name"><t t-esc="item.label"/></span>
+                            <span class="odx-chart-tooltip__value"><t t-esc="formatItem(item)"/></span>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.LineChart">
+        <svg
+            t-att-class="classes"
+            t-att-style="chartStyle"
+            t-att-viewBox="viewBox"
+            role="img"
+            t-att-aria-label="props.ariaLabel"
+            preserveAspectRatio="none"
+        >
+            <g t-if="props.showGrid" class="odx-chart__grid" aria-hidden="true">
+                <t t-foreach="axisTicks" t-as="tick" t-key="tick.key">
+                    <line
+                        class="odx-chart__grid-line"
+                        t-att-x1="padding.left"
+                        t-att-x2="padding.left + innerWidth"
+                        t-att-y1="tick.y"
+                        t-att-y2="tick.y"
+                    />
+                    <text class="odx-chart__axis-label odx-chart__axis-label--y" t-att-x="4" t-att-y="tick.y + 4">
+                        <t t-esc="tick.label"/>
+                    </text>
+                </t>
+            </g>
+            <g class="odx-chart__series">
+                <t t-foreach="lineSeries" t-as="series" t-key="series.key">
+                    <path class="odx-chart__line" fill="none" t-att-d="series.path" t-att-style="`stroke: ${series.color};`"/>
+                    <t t-if="props.showDots">
+                        <t t-foreach="series.points" t-as="point" t-key="point.key">
+                            <circle
+                                class="odx-chart__dot"
+                                t-att-cx="point.x"
+                                t-att-cy="point.y"
+                                r="4"
+                                t-att-style="`fill: ${series.color};`"
+                                aria-hidden="true"
+                            />
+                        </t>
+                    </t>
+                </t>
+            </g>
+            <g class="odx-chart__hotspots">
+                <t t-foreach="hotspots" t-as="hotspot" t-key="hotspot.key">
+                    <rect
+                        class="odx-chart__hotspot"
+                        t-att-x="hotspot.x"
+                        t-att-y="padding.top"
+                        t-att-width="hotspot.width"
+                        t-att-height="innerHeight"
+                        tabindex="0"
+                        t-att-aria-label="`${hotspot.label}`"
+                        t-on-pointerenter="(ev) => showTooltip(hotspot.index, ev)"
+                        t-on-focus="(ev) => showTooltip(hotspot.index, ev)"
+                        t-on-pointerleave="hideTooltip"
+                        t-on-blur="hideTooltip"
+                    />
+                </t>
+            </g>
+            <g class="odx-chart__axis odx-chart__axis--x" aria-hidden="true">
+                <t t-foreach="categories" t-as="category" t-key="category.index">
+                    <text class="odx-chart__axis-label odx-chart__axis-label--x" t-att-x="category.x" t-att-y="chartHeight - 8">
+                        <t t-esc="category.label"/>
+                    </text>
+                </t>
+            </g>
+        </svg>
+    </t>
+
+    <t t-name="odx_owl.BarChart">
+        <svg
+            t-att-class="classes"
+            t-att-style="chartStyle"
+            t-att-viewBox="viewBox"
+            role="img"
+            t-att-aria-label="props.ariaLabel"
+            preserveAspectRatio="none"
+        >
+            <g t-if="props.showGrid" class="odx-chart__grid" aria-hidden="true">
+                <t t-foreach="axisTicks" t-as="tick" t-key="tick.key">
+                    <line
+                        class="odx-chart__grid-line"
+                        t-att-x1="padding.left"
+                        t-att-x2="padding.left + innerWidth"
+                        t-att-y1="tick.y"
+                        t-att-y2="tick.y"
+                    />
+                    <text class="odx-chart__axis-label odx-chart__axis-label--y" t-att-x="4" t-att-y="tick.y + 4">
+                        <t t-esc="tick.label"/>
+                    </text>
+                </t>
+            </g>
+            <g class="odx-chart__series">
+                <t t-foreach="barGroups" t-as="group" t-key="group.key">
+                    <t t-foreach="group.bars" t-as="bar" t-key="bar.key">
+                        <rect
+                            class="odx-chart__bar"
+                            t-att-x="bar.x"
+                            t-att-y="bar.y"
+                            t-att-width="bar.width"
+                            t-att-height="bar.height"
+                            rx="6"
+                            t-att-style="`fill: ${bar.color};`"
+                        />
+                    </t>
+                </t>
+            </g>
+            <g class="odx-chart__hotspots">
+                <t t-foreach="barGroups" t-as="group" t-key="`${group.key}-hotspot`">
+                    <rect
+                        class="odx-chart__hotspot"
+                        t-att-x="group.x"
+                        t-att-y="padding.top"
+                        t-att-width="group.hotspotWidth"
+                        t-att-height="innerHeight"
+                        tabindex="0"
+                        t-att-aria-label="`${group.label}`"
+                        t-on-pointerenter="(ev) => showTooltip(group.index, ev)"
+                        t-on-focus="(ev) => showTooltip(group.index, ev)"
+                        t-on-pointerleave="hideTooltip"
+                        t-on-blur="hideTooltip"
+                    />
+                    <text class="odx-chart__axis-label odx-chart__axis-label--x" t-att-x="group.xLabel" t-att-y="chartHeight - 8" aria-hidden="true">
+                        <t t-esc="group.label"/>
+                    </text>
+                </t>
+            </g>
+        </svg>
+    </t>
+
+    <t t-name="odx_owl.DonutChart">
+        <svg
+            t-att-class="classes"
+            t-att-style="chartStyle"
+            t-att-viewBox="viewBox"
+            role="img"
+            t-att-aria-label="props.ariaLabel"
+        >
+            <g class="odx-chart__series">
+                <t t-foreach="slices" t-as="slice" t-key="slice.key">
+                    <path
+                        class="odx-chart__slice"
+                        t-att-d="slice.path"
+                        t-att-style="`fill: ${slice.color};`"
+                        tabindex="0"
+                        t-att-aria-label="`${slice.label}: ${slice.value}`"
+                        t-on-pointerenter="(ev) => showSliceTooltip(slice, ev)"
+                        t-on-focus="(ev) => showSliceTooltip(slice, ev)"
+                        t-on-pointerleave="hideTooltip"
+                        t-on-blur="hideTooltip"
+                    />
+                </t>
+            </g>
+            <g class="odx-chart__center" aria-hidden="true">
+                <text class="odx-chart__center-total" x="120" y="112">
+                    <t t-esc="total"/>
+                </text>
+                <text class="odx-chart__center-label" x="120" y="132">Total</text>
+            </g>
+        </svg>
+    </t>
+
+    <t t-name="odx_owl.AreaChart">
+        <svg
+            t-att-class="classes"
+            t-att-style="chartStyle"
+            t-att-viewBox="viewBox"
+            role="img"
+            t-att-aria-label="props.ariaLabel"
+            preserveAspectRatio="none"
+        >
+            <defs t-if="props.gradient">
+                <t t-foreach="areaSeries" t-as="series" t-key="series.key">
+                    <linearGradient t-if="series.gradientId" t-att-id="series.gradientId" x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0%" t-att-stop-color="series.color" stop-opacity="0.3"/>
+                        <stop offset="100%" t-att-stop-color="series.color" stop-opacity="0"/>
+                    </linearGradient>
+                </t>
+            </defs>
+            <g t-if="props.showGrid" class="odx-chart__grid" aria-hidden="true">
+                <t t-foreach="axisTicks" t-as="tick" t-key="tick.key">
+                    <line
+                        class="odx-chart__grid-line"
+                        t-att-x1="padding.left"
+                        t-att-x2="padding.left + innerWidth"
+                        t-att-y1="tick.y"
+                        t-att-y2="tick.y"
+                    />
+                    <text class="odx-chart__axis-label odx-chart__axis-label--y" t-att-x="4" t-att-y="tick.y + 4">
+                        <t t-esc="tick.label"/>
+                    </text>
+                </t>
+            </g>
+            <g class="odx-chart__series">
+                <t t-foreach="areaSeries" t-as="series" t-key="series.key">
+                    <path
+                        class="odx-chart__area"
+                        t-att-d="series.areaPath"
+                        t-att-style="series.gradientId ? `fill: url(#${series.gradientId});` : `fill: ${series.color}; opacity: 0.2;`"
+                    />
+                    <path class="odx-chart__line" fill="none" t-att-d="series.linePath" t-att-style="`stroke: ${series.color};`"/>
+                    <t t-if="props.showDots">
+                        <t t-foreach="series.points" t-as="point" t-key="point.key">
+                            <circle
+                                class="odx-chart__dot"
+                                t-att-cx="point.x"
+                                t-att-cy="point.y"
+                                r="4"
+                                t-att-style="`fill: ${series.color};`"
+                                aria-hidden="true"
+                            />
+                        </t>
+                    </t>
+                </t>
+            </g>
+            <g class="odx-chart__hotspots">
+                <t t-foreach="hotspots" t-as="hotspot" t-key="hotspot.key">
+                    <rect
+                        class="odx-chart__hotspot"
+                        t-att-x="hotspot.x"
+                        t-att-y="padding.top"
+                        t-att-width="hotspot.width"
+                        t-att-height="innerHeight"
+                        tabindex="0"
+                        t-att-aria-label="`${hotspot.label}`"
+                        t-on-pointerenter="(ev) => showTooltip(hotspot.index, ev)"
+                        t-on-focus="(ev) => showTooltip(hotspot.index, ev)"
+                        t-on-pointerleave="hideTooltip"
+                        t-on-blur="hideTooltip"
+                    />
+                </t>
+            </g>
+            <g class="odx-chart__axis odx-chart__axis--x" aria-hidden="true">
+                <t t-foreach="categories" t-as="category" t-key="category.index">
+                    <text class="odx-chart__axis-label odx-chart__axis-label--x" t-att-x="category.x" t-att-y="chartHeight - 8">
+                        <t t-esc="category.label"/>
+                    </text>
+                </t>
+            </g>
+        </svg>
+    </t>
+
+    <t t-name="odx_owl.RadarChart">
+        <svg
+            t-att-class="classes"
+            t-att-style="chartStyle"
+            t-att-viewBox="viewBox"
+            role="img"
+            t-att-aria-label="props.ariaLabel"
+        >
+            <g t-if="props.showGrid" class="odx-chart__grid" aria-hidden="true">
+                <t t-foreach="gridLevels" t-as="level" t-key="level.key">
+                    <circle
+                        t-if="level.type === 'circle'"
+                        class="odx-chart__grid-line"
+                        t-att-cx="level.cx"
+                        t-att-cy="level.cy"
+                        t-att-r="level.r"
+                        fill="none"
+                    />
+                    <polygon
+                        t-if="level.type === 'polygon'"
+                        class="odx-chart__grid-line"
+                        t-att-points="level.points"
+                        fill="none"
+                    />
+                </t>
+                <t t-foreach="axes" t-as="axis" t-key="axis.key">
+                    <line
+                        class="odx-chart__grid-line"
+                        t-att-x1="axis.x1"
+                        t-att-y1="axis.y1"
+                        t-att-x2="axis.x2"
+                        t-att-y2="axis.y2"
+                    />
+                    <text
+                        class="odx-chart__axis-label odx-chart__axis-label--radar"
+                        t-att-x="axis.labelX"
+                        t-att-y="axis.labelY"
+                        text-anchor="middle"
+                    >
+                        <t t-esc="axis.label"/>
+                    </text>
+                </t>
+            </g>
+            <g class="odx-chart__series">
+                <t t-foreach="radarSeries" t-as="series" t-key="series.key">
+                    <polygon
+                        class="odx-chart__radar-polygon"
+                        t-att-points="series.polygonPoints"
+                        t-att-style="`fill: ${series.color}; opacity: 0.2; stroke: ${series.color};`"
+                    />
+                    <t t-if="props.showDots">
+                        <t t-foreach="series.points" t-as="point" t-key="point.key">
+                            <circle
+                                class="odx-chart__dot"
+                                t-att-cx="point.x"
+                                t-att-cy="point.y"
+                                r="4"
+                                t-att-style="`fill: ${series.color};`"
+                                tabindex="0"
+                                t-att-aria-label="`${series.label}: ${point.value}`"
+                                t-on-pointerenter="(ev) => showTooltip(series.points.indexOf(point), radarSeries.indexOf(series), ev)"
+                                t-on-focus="(ev) => showTooltip(series.points.indexOf(point), radarSeries.indexOf(series), ev)"
+                                t-on-pointerleave="hideTooltip"
+                                t-on-blur="hideTooltip"
+                            />
+                        </t>
+                    </t>
+                </t>
+            </g>
+        </svg>
+    </t>
+
+    <t t-name="odx_owl.RadialChart">
+        <svg
+            t-att-class="classes"
+            t-att-style="chartStyle"
+            t-att-viewBox="viewBox"
+            role="img"
+            t-att-aria-label="props.ariaLabel"
+        >
+            <g class="odx-chart__series">
+                <t t-foreach="rings" t-as="ring" t-key="ring.key">
+                    <path
+                        class="odx-chart__radial-background"
+                        t-att-d="ring.backgroundPath"
+                        style="fill: hsl(var(--odx-muted)); opacity: 0.3;"
+                        aria-hidden="true"
+                    />
+                    <path
+                        class="odx-chart__radial-value"
+                        t-att-d="ring.valuePath"
+                        t-att-style="`fill: ${ring.color};`"
+                        tabindex="0"
+                        t-att-aria-label="`${ring.label}: ${ring.value}`"
+                        t-on-pointerenter="(ev) => showRingTooltip(ring, ev)"
+                        t-on-focus="(ev) => showRingTooltip(ring, ev)"
+                        t-on-pointerleave="hideTooltip"
+                        t-on-blur="hideTooltip"
+                    />
+                </t>
+            </g>
+            <g t-if="centerValue" class="odx-chart__center" aria-hidden="true">
+                <text class="odx-chart__center-total" t-att-x="center" t-att-y="center + 6" text-anchor="middle">
+                    <t t-esc="centerValue"/>
+                </text>
+            </g>
+        </svg>
+    </t>
+</templates>

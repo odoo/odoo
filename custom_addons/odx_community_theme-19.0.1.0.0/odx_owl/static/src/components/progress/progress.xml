@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Progress">
+        <div
+            t-att-class="classes"
+            role="progressbar"
+            t-att-aria-label="props.ariaLabel"
+            aria-valuemin="0"
+            t-att-aria-valuemax="maximumValue"
+            t-att-aria-valuenow="isIndeterminate ? undefined : currentValue"
+            t-att-aria-valuetext="props.ariaValueText || undefined"
+            t-att-data-state="dataState"
+        >
+            <div
+                t-att-class="indicatorClasses"
+                t-att-style="indicatorStyle"
+                t-att-data-state="dataState"
+            />
+        </div>
+    </t>
+</templates>

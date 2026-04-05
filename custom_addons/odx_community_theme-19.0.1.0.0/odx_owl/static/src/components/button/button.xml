@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Button">
+        <t
+            t-tag="computedTag"
+            t-att-class="classes"
+            t-att-type="computedTag === 'button' ? props.type : undefined"
+            t-att-disabled="computedTag === 'button' and (props.disabled or props.loading) ? true : undefined"
+            t-att-aria-disabled="props.disabled or props.loading ? 'true' : undefined"
+            t-att-aria-label="props.ariaLabel"
+            t-att-href="computedTag !== 'button' ? props.href : undefined"
+            t-att-name="props.name"
+            t-att-rel="props.rel"
+            t-att-role="props.role"
+            t-att-tabindex="props.tabindex"
+            t-att-target="props.target"
+            t-att-title="props.title"
+            t-att-value="props.value"
+            t-att="props.attrs"
+            t-on-click="onClick"
+        >
+            <span t-if="props.loading" class="odx-button__spinner" aria-hidden="true"/>
+            <t t-slot="default">
+                <t t-esc="props.label"/>
+            </t>
+        </t>
+    </t>
+</templates>

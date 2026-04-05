@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="odx_owl.Sheet">
+        <Dialog
+            open="isOpen"
+            onOpenChange="handleOpenChange"
+            closeOnEscape="props.closeOnEscape"
+            closeOnOverlay="props.closeOnOverlay"
+            onEscapeKeyDown="props.onEscapeKeyDown"
+            onInteractOutside="props.onInteractOutside"
+            onPointerDownOutside="props.onPointerDownOutside"
+        >
+            <t t-if="props.slots and props.slots.trigger" t-set-slot="trigger">
+                <t t-slot="trigger"/>
+            </t>
+            <t t-if="props.slots and props.slots.content" t-set-slot="content">
+                <t t-slot="content"/>
+            </t>
+            <t t-else="" t-set-slot="content">
+                <SheetOverlay/>
+                <SheetContent
+                    dir="direction"
+                    side="resolvedSide"
+                    className="panelClassName"
+                    showClose="props.showClose"
+                >
+                    <t t-if="hasHeader">
+                        <t t-if="props.slots and props.slots.header">
+                            <t t-slot="header"/>
+                        </t>
+                        <SheetHeader t-else="">
+                            <SheetTitle t-if="props.title" text="props.title"/>
+                            <SheetDescription t-if="props.description" text="props.description"/>
+                        </SheetHeader>
+                    </t>
+
+                    <div class="odx-dialog__body">
+                        <t t-slot="default"/>
+                    </div>
+
+                    <t t-if="props.slots and props.slots.footer">
+                        <t t-slot="footer"/>
+                    </t>
+                </SheetContent>
+            </t>
+        </Dialog>
+    </t>
+
+    <t t-name="odx_owl.SheetOverlay">
+        <DialogOverlay className="classes"/>
+    </t>
+
+    <t t-name="odx_owl.SheetContent">
+        <DialogContent className="classes" dir="direction" tag="props.tag">
+            <t t-slot="default"/>
+            <DialogClose t-if="props.showClose" className="'odx-sheet__close'"/>
+        </DialogContent>
+    </t>
+
+    <t t-name="odx_owl.SheetClose">
+        <DialogClose
+            className="classes"
+            ariaLabel="props.ariaLabel"
+            onClick="props.onClick"
+            type="props.type"
+        >
+            <t t-slot="default"/>
+        </DialogClose>
+    </t>
+
+    <t t-name="odx_owl.SheetTrigger">
+        <t t-tag="props.tag" t-att-class="classes">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="odx_owl.SheetHeader">
+        <DialogHeader className="classes">
+            <t t-slot="default"/>
+        </DialogHeader>
+    </t>
+
+    <t t-name="odx_owl.SheetFooter">
+        <DialogFooter className="classes">
+            <t t-slot="default"/>
+        </DialogFooter>
+    </t>
+
+    <t t-name="odx_owl.SheetTitle">
+        <DialogTitle className="classes" tag="props.tag" text="props.text">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </DialogTitle>
+    </t>
+
+    <t t-name="odx_owl.SheetDescription">
+        <DialogDescription className="classes" tag="props.tag" text="props.text">
+            <t t-slot="default">
+                <t t-esc="props.text"/>
+            </t>
+        </DialogDescription>
+    </t>
+</templates>
