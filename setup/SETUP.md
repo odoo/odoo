@@ -1,0 +1,5 @@
+# PosBat setup
+
+## Packages
+
+nginx
