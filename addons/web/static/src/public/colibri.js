@@ -171,6 +171,7 @@ export class Colibri {
     }
 
     applyTOut(el, value, initialValue) {
+        if (!el) return;
         if (value === INITIAL_VALUE) {
             value = initialValue;
         }
@@ -339,6 +340,7 @@ export class Colibri {
                 dynamicAttr.initialValues = initialValues;
             }
             for (const node of nodes) {
+                if (!node) continue;
                 try {
                     const value = definition.call(interaction, node);
                     if (!initialValues || !initialValues.has(node)) {
@@ -379,6 +381,7 @@ export class Colibri {
                 tOut.initialValue = initialValue;
             }
             for (const node of nodes) {
+                if (!node) continue;
                 if (!initialValue || !initialValue.has(node)) {
                     if (!owl) {
                         owl = odoo.loader.modules.get("@odoo/owl");
