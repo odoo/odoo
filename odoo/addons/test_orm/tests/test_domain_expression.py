@@ -1907,11 +1907,7 @@ class TestQueries(TransactionCase):
                         SELECT FROM (
                             SELECT "res_partner_category"."parent_id" AS __inverse
                             FROM "res_partner_category"
-                            WHERE
-                                (
-                                    "res_partner_category"."name" ->> %s ILIKE %s
-                                    AND "res_partner_category"."parent_id" IS NOT NULL
-                                )
+                            WHERE "res_partner_category"."name" ->> %s ILIKE %s
                         ) AS __sub
                         WHERE __inverse = "res_partner_category"."id"
                     )
@@ -2398,7 +2394,6 @@ class TestOne2many(TransactionCase):
                         FROM "res_partner_bank"
                         WHERE "res_partner_bank"."sanitized_account_number" LIKE %s
                     ) AS __sub WHERE __inverse = "res_partner"."id")
-                    AND "res_partner"."parent_id" IS NOT NULL
                 )
             ) AS __sub WHERE __inverse = "res_partner"."id")
             ORDER BY ...
@@ -2469,7 +2464,6 @@ class TestOne2many(TransactionCase):
                         FROM "res_partner_bank"
                         WHERE "res_partner_bank"."sanitized_account_number" LIKE %s
                     ) AS __sub WHERE __inverse = "res_partner"."id")
-                    AND "res_partner"."parent_id" IS NOT NULL
                 )
             ) AS __sub WHERE __inverse = "res_partner"."id")
             ORDER BY ...
@@ -2498,7 +2492,6 @@ class TestOne2many(TransactionCase):
                         )
                     ) AS __sub WHERE __inverse = "res_partner"."id")
                     AND ("res_partner"."name" NOT IN %s OR "res_partner"."name" IS NULL)
-                    AND "res_partner"."parent_id" IS NOT NULL
                 )
             ) AS __sub WHERE __inverse = "res_partner"."id")
             ORDER BY ...
@@ -2523,7 +2516,6 @@ class TestOne2many(TransactionCase):
                     ON ("res_partner__state_id"."country_id" = "res_partner__state_id__country_id"."id")
                 WHERE (
                     "res_partner"."active" IS TRUE
-                    AND "res_partner"."parent_id" IS NOT NULL
                     AND ("res_partner"."state_id" IS NOT NULL
                         AND "res_partner__state_id"."id" IS NOT NULL
                         AND "res_partner__state_id__country_id"."code" LIKE %s)
