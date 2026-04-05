@@ -26,5 +26,8 @@ class ResCompany(models.Model):
     """Inherits the Res Company Model"""
     _inherit = 'res.company'
 
-    background_image = fields.Binary(string="Background Image", attachment=True,
-                                     help="Add Background image")
+    background_image = fields.Binary(
+        string="App Menu Background Image",
+        attachment=True,
+        help="Add background image",
+    )
