@@ -36,6 +36,7 @@ Extends om_hr_payroll with:
 
         # Data
         'data/salary_rule_deduction.xml',
+        'data/vacation_salary_rules.xml',
 
         # Wizard
         'wizard/bank_file_export_wizard_views.xml',
@@ -43,6 +44,7 @@ Extends om_hr_payroll with:
         # Views
         'views/hr_employee_view.xml',
         'views/hr_attendance_views.xml',
+        'views/hr_leave_views.xml',
         'views/hr_payslip_views.xml',
         'views/hr_version_views.xml',
         'views/res_config_settings_views.xml',

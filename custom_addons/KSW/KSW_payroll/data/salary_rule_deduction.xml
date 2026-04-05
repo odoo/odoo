@@ -11,6 +11,12 @@
         <record id="om_hr_payroll.hr_rule_hra" model="hr.salary.rule">
             <field name="condition_select">python</field>
             <field name="condition_python">result = bool(contract.hra)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+prior = inputs.PRIOR_HRA.amount if inputs.PRIOR_HRA else 0.0
+result = (contract.hra or 0.0) - prior
+result = max(result, 0.0)
+            </field>
         </record>
 
         <record id="om_hr_payroll.hr_rule_da" model="hr.salary.rule">
@@ -136,11 +142,17 @@ hr.attendance records during the payslip period.</field>
 rate_pct = float(payslip.env['ir.config_parameter'].sudo().get_param('ksw_payroll.gosi_rate', '9.75'))
 basic = contract.wage or 0.0
 hra = contract.hra or 0.0
-result = -round((basic + hra) * rate_pct / 100.0)
+gosi = -round((basic + hra) * rate_pct / 100.0)
+# If GOSI was already paid in a prior payslip this month, subtract it
+# so GOSI is not double-charged.
+prior_gosi = inputs.PRIOR_GOSI.amount if inputs.PRIOR_GOSI else 0.0
+result = min(gosi + prior_gosi, 0.0)
             </field>
             <field name="appears_on_payslip" eval="True"/>
             <field name="note">Social insurance (GOSI) deduction for Saudi employees.
 Amount = round((Basic Wage + HRA) × configurable rate%).
+When a prior payslip already paid GOSI in the same month, a PRIOR_GOSI
+input is injected so the remaining GOSI is 0 (GOSI is paid only once).
 The rate is maintained in Settings → Payroll → Social Insurance (GOSI).</field>
         </record>
 

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- 3-Layer Security Hierarchy: Category → Privilege → Group     -->
+    <!-- ============================================================ -->
+
+    <!-- Layer 1: Module Category -->
+    <record id="module_category_annual_leave_approval" model="ir.module.category">
+        <field name="name">Annual Leave Approval</field>
+        <field name="sequence">200</field>
+    </record>
+
+    <!-- Layer 2: Privileges (one per role → separate dropdowns) -->
+    <record id="privilege_annual_leave_gm" model="res.groups.privilege">
+        <field name="name">General Manager Approval</field>
+        <field name="sequence">10</field>
+        <field name="category_id" ref="module_category_annual_leave_approval"/>
+    </record>
+
+    <record id="privilege_annual_leave_acc" model="res.groups.privilege">
+        <field name="name">Accounting Approval</field>
+        <field name="sequence">20</field>
+        <field name="category_id" ref="module_category_annual_leave_approval"/>
+    </record>
+
+    <!-- Layer 3: Groups (linked to privileges) -->
+    <record id="group_annual_leave_gm" model="res.groups">
+        <field name="name">General Manager</field>
+        <field name="privilege_id" ref="privilege_annual_leave_gm"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Can perform Initial and Final approval of annual leave requests.</field>
+    </record>
+
+    <record id="group_annual_leave_acc" model="res.groups">
+        <field name="name">Accounting Approver</field>
+        <field name="privilege_id" ref="privilege_annual_leave_acc"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Can approve annual leave requests at the accounting step (fills flight ticket).</field>
+    </record>
+
+</odoo>
+

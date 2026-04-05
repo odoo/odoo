@@ -10,3 +10,9 @@ class HrLeaveType(models.Model):
         help='Check this box if this leave type represents annual leave.',
     )
 
+    leave_validation_type = fields.Selection(
+        selection_add=[
+            ('annual_multi', 'Annual Leave – Multi-Step Approval'),
+        ],
+        ondelete={'annual_multi': 'set default'},
+    )

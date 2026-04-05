@@ -20,6 +20,7 @@
         'KSW_attendance_leave',
     ],
     'data': [
+        'security/security.xml',
         'security/ir.model.access.csv',
         'views/hr_leave_type_views.xml',
         'views/hr_leave_views.xml',

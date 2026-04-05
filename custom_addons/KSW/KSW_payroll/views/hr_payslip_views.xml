@@ -21,13 +21,12 @@
                       decoration-bf="code in ('WORK100', 'ATT_DED')">
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="number_of_days"  string="Days"
-                           sum="Total Days"/>
-                    <field name="number_of_hours" string="Hours"
-                           sum="Total Hours"/>
+                    <field name="x_count_display" string="Count"/>
+                    <field name="x_value_display" string="Value"/>
                     <field name="amount"          string="Deduction"
-                           sum="Total Deduction"
                            decoration-danger="amount &gt; 0"/>
+                    <field name="number_of_days"  column_invisible="True"/>
+                    <field name="number_of_hours" column_invisible="True"/>
                     <field name="version_id" column_invisible="True"/>
                     <field name="sequence" invisible="True"/>
                 </list>
@@ -41,8 +40,8 @@
                         <field name="name"/>
                         <field name="code"/>
                         <field name="sequence"/>
-                        <field name="number_of_days"  string="Days"/>
-                        <field name="number_of_hours" string="Hours"/>
+                        <field name="number_of_days"  string="Count"/>
+                        <field name="number_of_hours" string="Value"/>
                         <field name="amount"          string="Deduction"/>
                         <field name="version_id" invisible="1"/>
                     </group>
@@ -59,6 +58,12 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
 
+            <!-- ── Daily / Hourly wage info before notebook ── -->
+            <xpath expr="//field[@name='credit_note']" position="after">
+                <field name="x_daily_wage" string="Daily Wage"/>
+                <field name="x_hourly_wage" string="Hourly Wage"/>
+            </xpath>
+
             <!-- ── Replace the salary computation list with a styled one ── -->
             <xpath expr="//field[@name='line_ids']/list"
                    position="replace">
@@ -70,11 +75,11 @@
                     <field name="name"/>
                     <field name="code"/>
                     <field name="category_id"/>
-                    <field name="sequence" invisible="1"/>
+                    <field name="sequence" column_invisible="True"/>
                     <field name="quantity"  string="Qty"/>
                     <field name="rate"      string="Rate (%)"/>
-                    <field name="amount"    sum="Total Amount"/>
-                    <field name="total"     sum="Total"
+                    <field name="amount"/>
+                    <field name="total"
                            decoration-danger="total &lt; 0"/>
                     <field name="salary_rule_id" optional="hide"/>
                 </list>
@@ -90,7 +95,7 @@
                     <field name="category_id"/>
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="total" sum="Total"/>
+                    <field name="total"/>
                 </list>
             </xpath>
 

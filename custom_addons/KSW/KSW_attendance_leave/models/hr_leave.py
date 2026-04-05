@@ -2,9 +2,8 @@
 import pytz
 from markupsafe import Markup
 
-from odoo import api, fields, models
-from odoo.exceptions import ValidationError
-from odoo.tools.translate import _
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date
 
 
@@ -938,6 +937,17 @@ class HrLeave(models.Model):
         return True
 
     def action_draft(self):
-        """Reset leave to draft state."""
-        # x_is_covered recomputes automatically when leave state changes
-        return super().action_draft()
+        """Reset leave to initial state ('confirm').
+        Base Odoo 19 hr.leave does not have action_draft or 'draft' state.
+        The initial state is 'confirm' (To Approve).
+        """
+        if any(hol.state not in ('confirm', 'refuse') for hol in self):
+            raise UserError(_('Time off request state must be "Confirmed" or '
+                              '"Refused" in order to reset to Draft.'))
+        self.write({
+            'state': 'confirm',
+            'first_approver_id': False,
+            'second_approver_id': False,
+        })
+        self.activity_update()
+        return True

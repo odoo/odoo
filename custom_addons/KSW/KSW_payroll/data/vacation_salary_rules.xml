@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="0">
+
+        <!-- ========================================================= -->
+        <!-- Vacation Balance Settlement (ALW)                          -->
+        <!-- Reads from payslip input line 'VACATION_BAL'               -->
+        <!-- ========================================================= -->
+        <record id="hr_rule_vacation_balance" model="hr.salary.rule">
+            <field name="name">Vacation Balance Settlement</field>
+            <field name="sequence" eval="16"/>
+            <field name="code">VACATION_BAL</field>
+            <field name="category_id" ref="om_hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.VACATION_BAL and inputs.VACATION_BAL.amount</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.VACATION_BAL.amount if inputs.VACATION_BAL else 0.0</field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="note">Monetary value of the employee's remaining annual leave balance
+(remaining_days × daily basic wage). Only appears on vacation payslips.</field>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Flight Ticket Allowance (ALW)                              -->
+        <!-- Reads from payslip input line 'FLIGHT_TICKET'              -->
+        <!-- ========================================================= -->
+        <record id="hr_rule_flight_ticket" model="hr.salary.rule">
+            <field name="name">Flight Ticket Allowance</field>
+            <field name="sequence" eval="17"/>
+            <field name="code">FLIGHT_TICKET</field>
+            <field name="category_id" ref="om_hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.FLIGHT_TICKET and inputs.FLIGHT_TICKET.amount</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.FLIGHT_TICKET.amount if inputs.FLIGHT_TICKET else 0.0</field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="note">Flight ticket allowance for annual leave. Filled by the
+Accounting department during the leave approval process.</field>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Penalty Deduction (DED)                                    -->
+        <!-- Reads from payslip input line 'PENALTY'                    -->
+        <!-- ========================================================= -->
+        <record id="hr_rule_penalty" model="hr.salary.rule">
+            <field name="name">Penalty Deduction</field>
+            <field name="sequence" eval="170"/>
+            <field name="code">PENALTY</field>
+            <field name="category_id" ref="om_hr_payroll.DED"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.PENALTY and inputs.PENALTY.amount</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -inputs.PENALTY.amount if inputs.PENALTY else 0.0</field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="note">Penalty deduction applied during annual leave approval.
+Filled by HR during the leave approval process.</field>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Attach all vacation rules to the BASE salary structure     -->
+        <!-- ========================================================= -->
+        <record id="om_hr_payroll.structure_base" model="hr.payroll.structure">
+            <field name="rule_ids" eval="[
+                (4, ref('hr_rule_vacation_balance')),
+                (4, ref('hr_rule_flight_ticket')),
+                (4, ref('hr_rule_penalty')),
+            ]"/>
+        </record>
+
+    </data>
+
+</odoo>
+
+
