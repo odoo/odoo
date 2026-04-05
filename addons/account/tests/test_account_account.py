@@ -1019,6 +1019,45 @@ class TestAccountAccount(TestAccountMergeCommon):
             "group_id computation should work if company_id is not in self.env.companies"
         )
 
+    def test_account_code_multicompany_move_line(self):
+        """account_code on move lines must reflect the line's own company, not the session company.
+
+        Regression test for: when viewing journal items across companies, lines from a
+        non-active company showed no account code because account.account.code is
+        depends_context('company') and evaluated against env.company (the session company).
+        """
+        company_1 = self.company_data['company']
+        company_2 = self.company_data_2['company']
+
+        # Create one shared account with distinct codes per company.
+        account = self.env['account.account'].with_company(company_1).create({
+            'name': 'Cross-company Account',
+            'code': 'TEST001',
+            'account_type': 'expense',
+        })
+        account.with_company(company_2).code = 'TEST002'
+
+        # Create a move line for company_2 while the session company is company_1.
+        move = self.env['account.move'].with_company(company_2).create({
+            'move_type': 'entry',
+            'line_ids': [
+                Command.create({
+                    'account_id': account.id,
+                    'debit': 100.0,
+                    'credit': 0.0,
+                }),
+                Command.create({
+                    'account_id': self.company_data_2['default_account_expense'].id,
+                    'debit': 0.0,
+                    'credit': 100.0,
+                }),
+            ],
+        })
+
+        line = move.line_ids.filtered(lambda l: l.account_id == account)
+        # account_code must use the line's company (company_2) → 'TEST002', not company_1's 'TEST001'
+        self.assertEqual(line.account_code, 'TEST002', "account_code should use the move line's company")
+
     def test_compute_account(self):
         account_sale = self.company_data['default_account_revenue'].copy()
 

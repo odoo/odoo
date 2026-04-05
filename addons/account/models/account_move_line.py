@@ -104,7 +104,10 @@ class AccountMoveLine(models.Model):
         tracking=True,
     )
     account_name = fields.Char(related='account_id.name') # Used for easy configuration of consolidation in the reports
-    account_code = fields.Char(related='account_id.code') # Used for easy configuration of consolidation in the reports
+    account_code = fields.Char(  # Used for easy configuration of consolidation in the reports
+        compute='_compute_account_code',
+        search='_search_account_code',
+    )
     name = fields.Char(
         string='Label',
         compute='_compute_name', store=True, readonly=False, precompute=True,
@@ -497,6 +500,15 @@ class AccountMoveLine(models.Model):
                 line.currency_id = line.move_id.currency_id
             else:
                 line.currency_id = line.currency_id or line.company_id.currency_id
+
+    @api.depends('account_id', 'company_id')
+    def _compute_account_code(self):
+        for line in self:
+            line.account_code = line.account_id.with_company(line.company_id).code
+
+    @api.model
+    def _search_account_code(self, operator, value):
+        return [('account_id.code', operator, value)]
 
     @api.depends('product_id', 'move_id.ref', 'move_id.payment_reference')
     def _compute_name(self):
