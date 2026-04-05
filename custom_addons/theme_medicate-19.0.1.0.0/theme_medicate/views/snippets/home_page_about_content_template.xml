@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="home_page_about_content" name="About Content">
+        <section class="section-about-content w-100 float-left">
+            <div class="container">
+                <div class="row mb-5">
+                    <div class="col-lg-6">
+                        <div class="about-content pt-5">
+                            <h3>
+                                <b>Joining Hands with
+                                    Techno Easement
+                                </b>
+                            </h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur
+                                adipiscing elit.
+                                Ut eu lorem nulla. Mauris sed auctor nunc. Nulla
+                                id
+                                ultricies risus. Ut vel facilisis diam. Proin
+                                maximus a
+                                nunc nec iaculis. Maecenas porta condimentum
+                                magna,
+                                et imperdiet augue ornare malesuada. Fusce sed
+                                pharetra lacus, vel consequat magna. Sed et
+                                magna
+                                ut leo volutpat porta. Donec pulvinar posuere
+                                urna,
+                                viverra cursus metus aliquam vitae. Quisque ac
+                                venenatis turpis, vitae volutpat mauris. Sed
+                                ultricies
+                                tincidunt ex a commodo.
+                            </p>
+
+                            <div class="additional-services"
+                                 t-att-style="'display:' + ('block' if show_additional_services else 'none')">
+                                <p>opens new doors to innovative healthcare
+                                    solutions by integrating advanced technology
+                                    into medical services.
+                                    Together, we can enhance patient care
+                                    through digital tools,
+                                    streamline appointment scheduling, improve
+                                    diagnostic accuracy,
+                                    and offer telemedicine options for greater
+                                    convenience.
+                                    This collaboration will ensure a seamless
+                                    healthcare experience,
+                                    where cutting-edge technology meets
+                                    compassionate care to deliver
+                                    exceptional outcomes for every patient.
+                                </p>
+                            </div>
+                            <a href="#"
+                               class="read-more-toggle a-time-table  float-left mt-5 btn-timetable text-white pt-2 pb-2 pl-3 pr-3 text-decoration-none">
+                                <span class="read-more-text">
+                                    <t t-esc="'&#160;&#160;Read more &#160;&#160; +&#160;&#160;' if not show_additional_services else '&#160;&#160;Read less &#160;&#160; -&#160;&#160;'"/>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="about-content-right-side w-100 float-left">
+                            <div class="about-count h-100 pt-5 float-right">
+                                <div class="happy-patients mt-5 text-white">
+                                    <h4>
+                                        <b>450+</b>
+                                    </h4>
+                                    <p class="text-uppercase">Happy Patients</p>
+                                </div>
+                                <div class="happy-patients mt-5 text-white">
+                                    <h4>
+                                        <b>100+</b>
+                                    </h4>
+                                    <p class="text-uppercase">Saved Hearts</p>
+                                </div>
+                                <div class="happy-patients mt-5 text-white">
+                                    <h4>
+                                        <b>59+</b>
+                                    </h4>
+                                    <p class="text-uppercase">Expert Doctors</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>

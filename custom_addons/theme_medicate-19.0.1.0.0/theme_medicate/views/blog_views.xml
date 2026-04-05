@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Blog Posts Template -->
+    <template id="theme_blog_posts" name="Blog Posts Template" inherit_id="website_blog.blog_post_short">
+        <xpath expr="//section[@id='o_wblog_index_content']" position="replace">
+            <t t-call="theme_medicate.blog_banner"/>
+            <section id="o_wblog_index_content" class="container py-4">
+                <div class="row">
+                    <!-- Main Blog Posts Column -->
+                    <div class="col-lg-9 col-md-8">
+                        <t t-if="not posts">
+                            <dmeiv class="alert alert-info text-center">
+                                <p>No blog posts available at the moment.</p>
+                            </dmeiv>
+                        </t>
+                        <t t-if="posts">
+                            <t t-foreach="posts" t-as="post">
+                                <div class="card mb-4">
+                                    <!-- Blog Post Image -->
+                                    <t t-set="cover_props"
+                                       t-value="json.loads(post.cover_properties or '{}')"/>
+                                    <t t-set="cover_image"
+                                       t-value="cover_props.get('background-image')"/>
+                                    <t t-set="clean_image"
+                                       t-value="cover_image[5:-2] if cover_image else ''"/> <!-- remove url('...') -->
+                                <div class="card-body">
+                                    <!-- Fixed image container -->
+                                    <div class="blog-image-container position-relative">
+                                        <img t-att-src="clean_image"
+                                             t-att-alt="post.name"/>
+                                        <!-- Date overlay -->
+                                        <div class="blog-month-date">
+                                            <t t-esc="post.post_date.strftime('%B %d, %Y') if post.post_date else 'No Date'"/>
+                                        </div>
+                                    </div>
+                                        <!-- Author and Comments -->
+                                        <div class="w-100 float-left pt-2 pb-2 icons-container text-uppercase">
+                                            <div class="author-info">
+                                                <i class="fa fa-user mr-2"/>
+                                                <img class="mr-2"
+                                                     src="/theme_medicate/static/src/img/icon-bloger-name.jpg"/>
+                                                <t t-esc="post.author_id.name or 'Anonymous'"/>
+                                            </div>
+                                            <div class="comments-info">
+                                                <img class="mr-2 ml-4"
+                                                     src="/theme_medicate/static/src/img/icon-comments.jpg"/>
+                                                <i class="fa fa-comment mr-2"/>
+                                                <t t-esc="len(post.message_ids)"/>
+                                                Comments
+                                            </div>
+                                        </div>
+
+                                        <!-- Post Title -->
+                                        <h4 class="pt-2 float-left w-100 font-weight-bold">
+                                            <t t-esc="post.name"/>
+                                        </h4>
+
+                                        <!-- Post Excerpt -->
+                                        <p class="card-text">
+                                            <t t-esc="post.teaser or post.subtitle or post.name"/>
+                                        </p>
+
+                                        <!-- Read More Button -->
+                                        <a href="/read_more"
+                                           class="a-time-table text-uppercase float-left mt-2 mb-2 btn-timetable text-white pt-2 pb-2 pl-3 pr-3 text-decoration-none">
+                                            &#160;&#160; Read more &#160;&#160; +&#160;&#160;
+                                        </a>
+                                </div>
+                                </div>
+                            </t>
+                        </t>
+
+                        <!-- Pagination -->
+                        <div class="d-flex justify-content-center">
+                            <t t-call="website.pager"/>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="col-lg-3 col-md-4">
+                        <!-- Search -->
+                        <div class="blog-search-container p-4 mt-5 w-100 float-left">
+                            <form id="blog_search_form" method="GET"
+                                  t-att-action="'/blog/%s' % blog.id if blog else '/blog'">
+
+                                <div class="input-group">
+                                    <input type="text" name="search"
+                                           class="form-control"
+                                           placeholder="Search"/>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary"
+                                                type="submit">
+                                            <i class="fa fa-search"/>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Recent Posts -->
+                        <div class="right-side-menus w-100 float-left mt-5 p-4">
+                            <h3>Recent Posts</h3>
+                            <ul class="pl-0 mt-4">
+                                <t t-set="recent_posts"
+                                   t-value="env['blog.post'].search([], limit=5, order='post_date desc')"/>
+                                <t t-foreach="recent_posts" t-as="recent_post">
+                                    <li class="list-group-item">
+                                        <a t-att-href="recent_post.website_url">
+                                            > &#160;&#160;<t t-esc="recent_post.name"/>
+                                        </a>
+                                    </li>
+                                </t>
+                            </ul>
+                        </div>
+
+                        <!-- Recent Comments -->
+                        <div class="right-side-menus w-100 float-left mt-5 p-4">
+                            <h3>Recent Comments</h3>
+                            <ul class="pl-0 mt-4">
+                                <li class="list-group-item">
+                                    <a t-att-href="recent_post.website_url">
+                                        > &#160;&#160;<t t-esc="recent_post.name"/>
+                                    </a>
+                                    <ul>
+                                        <t t-foreach="recent_post.message_ids" t-as="comment">
+                                            <li>
+                                                <strong><t t-esc="comment.author_id.name or 'Anonymous'"/>:</strong>
+                                                <t t-esc="comment.body[:100]"/>...
+                                            </li>
+                                        </t>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </xpath>
+
+        <!-- Remove the old navigation -->
+        <xpath expr="//t[@t-call='website_blog.blogs_nav']" position="replace"/>
+    </template>
+</odoo>

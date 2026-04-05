@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="contactus_template" name="Contact us" inherit_id="website.contactus">
+        <xpath expr="//section[hasclass('pb24')]" position="replace">
+            <div class="oe_structure"/>
+            <t t-call="theme_medicate.contactus_banner"/>
+        </xpath>
+        <xpath expr="//section[hasclass('o_colored_level')]" position="replace">
+            <div class="oe_structure"/>
+            <t t-call="theme_medicate.contactus_snippet"/>
+            <div class="col-lg-12">
+                <div class="container-get-in-touch w-100 mt-5 pt-5 float-left">
+                    <h3 class="text-dark text-center font-weight-bold pb-3 pt-3">Get in Touch With Us</h3>
+                    <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
+                        <div class="contact-us-form-container p-5 w-100 float-left">
+
+                            <form id="contactus_form"
+                                  action="/website/form/"
+                                  method="post"
+                                  enctype="multipart/form-data"
+                                  class="o_mark_required"
+                                  data-mark="*"
+                                  data-model_name="mail.mail"
+                                  data-success-mode="redirect"
+                                  data-success-page="/contactus-thank-you"
+                                  data-pre-fill="true">
+
+                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_custom s_website_form_required"
+                                     data-type="char" data-name="Field">
+                                    <div class="w-50 float-left " style="float:left">
+                                        <input type="text" placeholder="Enter your name" name="name" required="True"
+                                               style="background-color:#f5f6fa; border: none; outline: none;"
+                                               class="w-100 p-4 form-control s_website_form_input" id="contact1"
+                                               data-fill-with="name"/>
+                                    </div>
+                                </div>
+
+                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_custom s_website_form_required"
+                                     data-type="email"
+                                     data-name="Field" style="margin-bottom:20px;">
+                                    <div class="w-50 float-left" style="float:left;">
+                                        <input type="email" placeholder="Enter your email"
+                                               style="background-color:#f5f6fa; border: none; outline: none; margin-left:24px;"
+                                               class="w-100 ml-4  p-4 form-control s_website_form_input"
+                                               name="email_from" required="True" data-fill-with="email"/>
+                                    </div>
+                                </div>
+
+                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_custom"
+                                     data-type="char"
+                                     data-name="Field">
+                                    <div class="w-50 float-left mt-4" style="float:left">
+                                        <input type="tel" placeholder="Enter your Phone Number"
+                                               style="background-color:#f5f6fa; border: none; outline: none;"
+                                               class="w-100 p-4 form-control s_website_form_input" required="True"
+                                               data-fill-with="phone" name="phone"/>
+                                    </div>
+                                </div>
+
+                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_dnone">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <div class="col-sm">
+                                            <input id="contact7"
+                                                   type="hidden"
+                                                   class="form-control s_website_form_input"
+                                                   name="email_to"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_custom"
+                                     data-type="char"
+                                     data-name="Field">
+                                    <div class="w-50 float-left mt-4" style="float:left">
+                                        <input type="text" placeholder="Subject"
+                                               style="background-color:#f5f6fa; border: none; outline: none; margin-left:24px;"
+                                               class="w-100 p-4 form-control s_website_form_input" required="True"
+                                               name="subject"/>
+                                    </div>
+                                </div>
+                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_custom"
+                                     data-type="text"
+                                     data-name="Field">
+                                    <div class="float-left mt-4 contact-textarea" style="width: 102.5%;">
+                                        <textarea type="textarea" name="description"
+                                                  placeholder="Write your message"
+                                                  style="background-color:#f5f6fa; border: none; outline: none; margin-top: 30px;"
+                                                  class="w-100   p-4 orm-control s_website_form_input "/>
+                                    </div>
+                                </div>
+
+                                <div class="w-100 float-left container-send-message-btn">
+                                    <a href="/contactus-thank-you"
+   class="btn-send-message text-decoration-none pt-3 pb-3 pl-4 pr-4 text-center text-white text-uppercase">
+    &#160;&#160;&#160;Send message&#160;&#160;&#160;
+</a>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <t t-call="theme_medicate.contactus_map"/>
+        </xpath>
+    </template>
+</odoo>

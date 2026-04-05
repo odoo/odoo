@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="theme_medicate.about_us_page" model="website.page">
+        <field name="name">About Us</field>
+        <field name="type">qweb</field>
+        <field name="url">/about</field>
+        <field name="website_indexed" eval="False"/>
+        <field name="is_published">True</field>
+        <field name="key">theme_medicate.about_us</field>
+        <field name="arch" type="xml">
+            <t name="About Us" t-name="theme_medicate.about_us">
+                <t t-call="website.layout">
+                    <div id="wrap" class="oe_structure oe_empty">
+                        <main>
+                        </main>
+                    </div>
+                </t>
+            </t>
+        </field>
+    </record>
+
+    <template id="load_about_us_snippet" inherit_id="theme_medicate.about_us_page_ir_ui_view">
+        <xpath expr="//main" position="inside">
+            <div class="oe_structure"/>
+            <t t-call="theme_medicate.about_us_banner"/>
+            <t t-call="theme_medicate.about_us_content"/>
+            <t t-call="theme_medicate.about_us_main_service"/>
+            <t t-call="theme_medicate.about_us_count"/>
+            <t t-call="theme_medicate.about_us_work_best_process"/>
+        </xpath>
+    </template>
+</odoo>

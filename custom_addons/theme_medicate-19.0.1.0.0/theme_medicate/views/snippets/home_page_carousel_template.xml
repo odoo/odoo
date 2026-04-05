@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="home_page_carousel" name="Home Page Slide">
+        <section class="section-banner float-left w-100">
+            <div id="leftContentCarousel" class="carousel slide"
+                 data-bs-ride="carousel">
+                <!-- Carousel indicators -->
+                <ol class="carousel-indicators d-none">
+                    <li data-bs-target="#leftContentCarousel"
+                        data-bs-slide-to="0" class="active">
+                    </li>
+                    <li data-bs-target="#leftContentCarousel"
+                        data-bs-slide-to="1">
+                    </li>
+                    <li data-bs-target="#leftContentCarousel"
+                        data-bs-slide-to="2">
+                    </li>
+                </ol>
+                <!-- Carousel items -->
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="carousel-content d-sm-none d-lg-block p-4">
+                                    <h3>Slide 1</h3>
+                                    <p>This is some sample content for the first
+                                        slide.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <img src="/theme_medicate/static/src/img/pharma-banner.jpg"
+                                     class="d-block w-100"
+                                     alt="First slide image"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="carousel-content d-sm-none d-lg-block p-4">
+                                    <h3>Slide 2</h3>
+                                    <p>This is some sample content for the
+                                        second slide.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <img src="/theme_medicate/static/src/img/pharma-banner.jpg"
+                                     class="d-block w-100"
+                                     alt="Second slide image"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="carousel-content d-sm-none d-lg-block p-4">
+                                    <h3>Slide 3</h3>
+                                    <p>This is some sample content for the third
+                                        slide.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <img src="/theme_medicate/static/src/img/pharma-banner.jpg"
+                                     class="d-block w-100"
+                                     alt="Third slide image"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Carousel controls -->
+                <a class="carousel-control-prev" href="#leftContentCarousel"
+                   role="button" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true">
+                    </span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#leftContentCarousel"
+                   role="button" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true">
+                    </span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <div class="section-service float-left w-100">
+  <div class="container">
+    <div class="row">
+      <!-- 24 Hours -->
+      <div class="col-lg-4">
+        <div class="container-24-hours text-center">
+          <img src="/theme_medicate/static/src/img/img-24hours.png" alt="24 Hours" />
+          <span class="text-white pt-4 d-block">
+            <img src="/theme_medicate/static/src/img/phone-icon.png" alt="Phone Icon" width="50" />
+            <b>+91 8545 4040 40</b>
+          </span>
+        </div>
+      </div>
+
+      <!-- Doctor timetable -->
+      <div class="col-lg-4">
+        <div class="container-doctors-time-table">
+          <img src="/theme_medicate/static/src/img/img-doctors-time-table.png" alt="Doctors Time Table" />
+          <span class="text-white pt-2 d-block">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In in tincidunt diam. Mauris justo erat, scelerisque.
+          </span>
+          <a href="#" class="a-time-table mt-3">Timetable +</a>
+        </div>
+      </div>
+
+      <!-- Opening time -->
+      <div class="col-lg-4">
+        <div class="opening-time">
+          <img src="/theme_medicate/static/src/img/image-time-table.png" alt="Opening Time" />
+          <p><b class="text-white">Opening Time</b></p>
+          <table class="table text-white">
+            <tbody>
+              <tr><td>Monday - Friday</td><td>8:30 - 5:30 PM</td></tr>
+              <tr><td>Saturday</td><td>8:30 - 5:00 PM</td></tr>
+              <tr><td>Sunday</td><td>9:00 - 4:00 PM</td></tr>
+              <tr><td>Emergency</td><td>24HRS - 7 DAYS</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </section>
+    </template>
+</odoo>

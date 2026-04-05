@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="footer_theme_shopping" inherit_id="website.footer_custom"
+              name="Footer Shopping" active="True">
+        <xpath expr="//div[@id='footer']" position="replace">
+            <footer class="st-footer w-100">
+                <section class="section-footer w-100 float-left pb-3 pt-5">
+                    <div class="oe_structure"/>
+                    <section class="container-newsletter pt-5 pb-5 pl-5 pr-5">
+                        <div class="oe_structure"/>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <img src="/theme_medicate/static/src/img/newsletter-icon.png"/>
+                                    <span class="text-white">Latest Updates Subscribe
+                                        To Our Newsletter
+                                    </span>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="container-email-form">
+                                        <form action="#" method="post" class="signin-form ">
+                                            <div class="forms-gds ">
+                                                <input type="email" name=""
+                                                       class="float-left input-email-submit text-white pl-4"
+                                                       placeholder=" Your email here" required=""/>
+                                                <input type="hidden" name="csrf_token"
+                                                       t-att-value="request.csrf_token()"/>
+                                                <button class="btn-sub text-decoration-none text-center float-left ml-3 text-dark"
+                                                        style="width:200px;height:60px;">
+                                                    Submit
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="about-footer w-100 float-left">
+                                    <img src="/theme_medicate/static/src/img/footer-logo.png" class="w-100"/>
+                                    <p class="text-white text-justify mt-4">Lorem ipsum dolor sit amet, consectetur
+                                        adipiscing elit. In pharetra, velit id posuere
+                                    </p>
+                                    <ul class="p-0">
+                                        <li class="mr-1">
+                                            <a class="mr-2" href="#">
+                                                <img src="/theme_medicate/static/src/img/fb-social-media.png"/>
+                                            </a>
+                                        </li>
+                                        <li class="mr-1">
+                                            <a class="mr-2" href="#">
+                                                <img src="/theme_medicate/static/src/img/gplus-social-media.png"/>
+                                            </a>
+                                        </li>
+                                        <li class="mr-1">
+                                            <a class="mr-2" href="#">
+                                                <img src="/theme_medicate/static/src/img/insta-social-media.png"/>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="container-our-courses w-100 float-left text-center">
+                                    <h3 class="text-white font-weight-bold">Our Courses</h3>
+                                    <ul class="pl-0 text-left" style="margin-left: 36px;">
+                                        <li>
+                                            <a class="text-white text-decoration-none" href="/about">> About Us</a>
+                                        </li>
+                                        <li class="mt-2">
+                                            <a class="text-white text-decoration-none" href="/contact-us"
+                                               style="margin-left: 11px;">> Contact Us
+                                            </a>
+                                        </li>
+                                        <li class="mt-2">
+                                            <a class="text-white text-decoration-none" href="/service"
+                                               style="margin-left: 21px;">> Our Services
+                                            </a>
+                                        </li>
+                                        <li class="mt-2">
+                                            <a class="text-white text-decoration-none" href="/blog"
+                                               style="margin-left: 17px;">> Our Process
+                                            </a>
+                                        </li>
+                                        <li class="mt-2">
+                                            <a class="text-white text-decoration-none" href="/home"
+                                               style="margin-right: 15px;">> Doctor 1
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="container-recent-post container-our-courses pl-0">
+                                    <h3 class="text-white font-weight-bold">Recent Posts</h3>
+                                    <div class="recent-post w-100 float-left pb-2">
+                                        <div class="recent-post-img">
+                                            <img src="/theme_medicate/static/src/img/footer-recent-post.jpg"/>
+                                        </div>
+                                        <div class="recent-post-content text-white">
+                                            <b>DECEMBER 12, 2021</b>
+                                            <p>Get the Exercise
+                                                Limited Mobility
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="recent-post mt-3 w-100 float-left pb-2">
+                                        <div class="recent-post-img">
+                                            <img src="/theme_medicate/static/src/img/footer-recent-post-2.jpg"/>
+                                        </div>
+                                        <div class="recent-post-content text-white">
+                                            <b>DECEMBER 12, 2021</b>
+                                            <p>Get the Exercise
+                                                Limited Mobility
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="footer-contact-us  container-our-courses pl-4 float-left w-100">
+                                    <h3 class="text-white font-weight-bold">Contact Us</h3>
+                                    <div class="phone-icon">
+                                        <img src="/theme_medicate/static/src/img/call-footer-icon.png"/>
+                                        <span class="text-white">+1800-001-658</span>
+                                    </div>
+                                    <div class="phone-icon mt-4 mb-4">
+                                        <img src="/theme_medicate/static/src/img/email-footer-icon.png"/>
+                                        <span class="text-white">info@peacefulthemes.com</span>
+                                    </div>
+                                    <div class="phone-icon">
+                                        <img src="/theme_medicate/static/src/img/location-footer-icon.png"/>
+                                        <span class="text-white">
+                                            st.,Los Angeles, USA
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </footer>
+        </xpath>
+        <xpath expr="//div[hasclass('o_footer_copyright')]" position="replace">
+            <div class="o_footer_copyright" style="background-color: #13457a;">
+                <div class="w-100 float-left text-white text-center pt-3 pb-3 copyright-container">
+                    Copyright 2025 medicate All Rights Reserved
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

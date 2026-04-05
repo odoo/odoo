@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="home_page_load_snippet" inherit_id="website.homepage">
+        <xpath expr="//div[@id='wrap']" position="after">
+            <div class="oe_structure"/>
+            <t t-call="theme_medicate.home_page_carousel"/>
+            <t t-call="theme_medicate.home_page_about"/>
+            <t t-call="theme_medicate.home_page_facility_provided"/>
+            <t t-call="theme_medicate.home_page_about_content"/>
+            <t t-call="theme_medicate.home_page_great_work"/>
+            <t t-call="theme_medicate.home_page_working_progress"/>
+            <t t-call="theme_medicate.home_page_heart_specialists"/>
+            <t t-call="theme_medicate.home_page_clients"/>
+        </xpath>
+    </template>
+</odoo>

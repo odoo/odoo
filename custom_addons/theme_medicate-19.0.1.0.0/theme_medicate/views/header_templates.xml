@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="menu_section" name="Menu Section" inherit_id="website.layout">
+        <xpath expr="//header" position="replace">
+            <header>
+                <section class="header-section w-100 float-left pt-3 pb-3 text-white">
+                    <div class="oe_structure"/>
+                    <div class="container">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <!-- Contact Section -->
+                            <div class="d-flex align-items-center">
+                                <div class="call-section d-flex align-items-center">
+                                    <img src="/theme_medicate/static/src/img/header-call-icon.png" alt="Call Icon"/>
+                                    <span>+1800-001-658</span>
+                                </div>
+                                <div class="email-section d-flex align-items-center">
+                                    <img src="/theme_medicate/static/src/img/header-email-icon.png" alt="Email Icon"/>
+                                    <span>info@peacefulthemes.com</span>
+                                </div>
+                            </div>
+                            <!-- Social Media Section -->
+                            <div class="social-media-icons d-flex align-items-center">
+                                <img src="/theme_medicate/static/src/img/header-insta-icon.png" alt="Instagram Icon"/>
+                                <img src="/theme_medicate/static/src/img/header-fb-icon.png" alt="Facebook Icon"/>
+                                <img src="/theme_medicate/static/src/img/header-tweet-icon.png" alt="Twitter Icon"/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="menu-section w-100 float-left w-100">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <nav class="navbar navbar-expand-lg mt-2 mb-2 pr-0">
+                                    <a class="navbar-brand" href="/">
+                                        <img src="/theme_medicate/static/src/img/pharma-logo.png" alt="Pharma Logo"
+                                             style="width: 160px;"/>
+                                    </a>
+                                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                            data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02"
+                                            aria-expanded="false" aria-label="Toggle navigation">
+                                        <span class="navbar-toggler-icon text-dark"/>
+                                    </button>
+                                    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                                        <ul class="navbar-nav mt-lg-0">
+                                            <li class="nav-item active">
+                                                <a class="nav-link text-dark text-uppercase" href="/">Home
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link text-dark text-uppercase" href="/about">About Us
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link text-dark text-uppercase" href="/services">Services
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link text-dark text-uppercase" href="/blog">Blog</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link text-dark text-uppercase" href="/contactus">Contact
+                                                    Us
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </nav>
+                                <!-- jQuery -->
+                                <script src="https://code.jquery.com/jquery-3.6.0.min.js"/>
+                                <!-- Bootstrap JS -->
+                                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </header>
+        </xpath>
+    </template>
+</odoo>

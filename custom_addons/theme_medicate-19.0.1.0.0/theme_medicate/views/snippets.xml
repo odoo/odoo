@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Inherit the website.snippets template to add a new snippet for home page slide -->
+    <template id="theme_medicate_snippets" inherit_id="website.snippets" priority="8">
+        <xpath expr="//snippets[@id='snippet_groups']" position="inside">
+            <t t-snippet="theme_medicate.home_page_carousel"/>
+            <t t-snippet="theme_medicate.home_page_about"/>
+            <t t-snippet="theme_medicate.home_page_facility_provided"/>
+            <t t-snippet="theme_medicate.home_page_about_content"/>
+            <t t-snippet="theme_medicate.home_page_great_work"/>
+            <t t-snippet="theme_medicate.home_page_working_progress"/>
+            <t t-snippet="theme_medicate.home_page_heart_specialists"/>
+            <t t-snippet="theme_medicate.home_page_clients"/>
+            <t t-snippet="theme_medicate.about_us_banner"/>
+            <t t-snippet="theme_medicate.about_us_content"/>
+            <t t-snippet="theme_medicate.about_us_main_service"/>
+            <t t-snippet="theme_medicate.about_us_count"/>
+            <t t-snippet="theme_medicate.about_us_work_best_process"/>
+            <t t-snippet="theme_medicate.services_banner"/>
+            <t t-snippet="theme_medicate.services_container"/>
+            <t t-snippet="theme_medicate.blog_container"/>
+            <t t-snippet="theme_medicate.blog_banner"/>
+            <t t-snippet="theme_medicate.contactus_banner"/>
+            <t t-snippet="theme_medicate.contactus_snippet"/>
+            <t t-snippet="theme_medicate.contactus_map"/>
+        </xpath>
+    </template>
+</odoo>
