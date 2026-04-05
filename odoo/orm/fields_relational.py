@@ -836,28 +836,7 @@ class _RelationalMulti(_Relational):
             f"Relational field {self} expects 'any' operator"
         exists = operator in ('any', 'any!')
 
-        # check the value and execute the query
-        if isinstance(value, COLLECTION_TYPES):
-            value = OrderedSet(value)
-            comodel = comodel.sudo().with_context(active_test=False)
-            if False in value:
-                #  [not]in (False, 1) => split conditions
-                #  We want records that have a record such as condition or
-                #  that don't have any records.
-                if len(value) > 1:
-                    in_operator = 'in' if exists else 'not in'
-                    return SQL(
-                        "(%s OR %s)" if exists else "(%s AND %s)",
-                        self.condition_to_sql(table, field_expr, in_operator, (False,)),
-                        self.condition_to_sql(table, field_expr, in_operator, value - {False}),
-                    )
-                #  in (False) => not any (Domain.TRUE)
-                #  not in (False) => any (Domain.TRUE)
-                value = comodel._search(Domain.TRUE)
-                exists = not exists
-            else:
-                value = comodel.browse(value)._as_query(ordered=False)
-        elif isinstance(value, SQL):
+        if isinstance(value, SQL):
             # wrap SQL into a simple query
             comodel = comodel.sudo()
             value = Domain('id', 'any', value)
