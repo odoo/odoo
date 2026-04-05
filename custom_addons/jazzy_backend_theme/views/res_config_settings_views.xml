@@ -1,0 +1,47 @@
+<odoo>
+    <!--  Inherited the res.config.settings model view to add the fields to configure the theme -->
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.jazzy.backend.theme</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="90"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='companies']" position='after'>
+                <block title="Jazzy Backend Theme">
+                    <setting>
+                        <div class="w-50 row">
+                            <span class="d-block w-75 py-2">Background Image</span>
+                            <field name="theme_background" class="d-block w-25 p-0 m-0" widget="image"/>
+                        </div>
+                        <div class="w-50 row mt-1">
+                            <span class="d-block w-75 py-2">App Bar Background Color</span>
+                            <field name="app_bar_color" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                        <div class="w-50 row mt-1">
+                            <span class="d-block w-75 py-2">App Menu Text Color</span>
+                            <field name="appbar_text" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                        <div class="w-50 row mt-1">
+                            <span class="d-block w-75 py-2">AppBar Hover Color</span>
+                            <field name="secondary_hover" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                    </setting>
+                    <setting>
+                        <div class="w-50 row">
+                            <span class="d-block w-75 py-2">Navbar Background Color</span>
+                            <field name="primary_accent" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                        <div class="w-50 row mt-1">
+                            <span class="d-block w-75 py-2">Primary Button Hover</span>
+                            <field name="primary_hover" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                        <div class="w-50 row mt-1">
+                            <span class="d-block w-75 py-2">Kanban Background Color</span>
+                            <field name="kanban_bg_color" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

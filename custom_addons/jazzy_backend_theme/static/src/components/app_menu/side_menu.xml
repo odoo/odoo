@@ -1,0 +1,120 @@
+<templates id="template" xml:space="preserve">
+    <!-- Inherit the dropdown to select the apps, to add the function OnClickMainMenu-->
+    <t t-inherit="web.NavBar.AppsMenu" t-inherit-mode="extension" owl="1">
+        <xpath expr="//Dropdown"
+               position="replace">
+            <div class="d-flex justify-content-center align-items-center o_main-menu-button p-2"
+                 t-on-click="OnClickMainMenu">
+                <i class="oi oi-apps"
+                   style="font-size: 18px !important; color: white; margin-top: 3px;"/>
+            </div>
+        </xpath>
+    </t>
+    <!--  Added the installed apps to show the Enterprise like app drawer  -->
+    <t t-inherit-mode="extension" t-inherit="web.NavBar" owl="1">
+        <xpath expr="//header" position="after">
+            <div class="app_components" t-ref="app_components">
+                <div class="search-container  form-row align-items-center m-auto col-12"
+                     t-ref="search-container"
+                     style="padding-left: calc((100vw - 850px) / 2);padding-right: calc((100vw - 850px) / 2);padding-top:20px;padding-bottom:20px; display: table;">
+                    <div class="search-input col-md-10"
+                         style="padding:0.8rem 1.2rem;width: max-content;margin-left: -30px;"
+                         t-ref="search-input"
+                         t-on-input="_searchMenusSchedule">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"
+                                         style="background:none;border:none;color:white;font-size:1.5rem;">
+                                        <i class="fa fa-search"/>
+                                    </div>
+                                </div>
+                                <input type="search"
+                                       autocomplete="off"
+                                       placeholder="Search menus..."
+                                       class="form-control"
+                                       t-model="state.searchQuery"
+                                       style="background:none;border:none;color:white;"/>
+                            </div>
+                    </div>
+                    <div class="search-results col-md-10 ml-auto mr-auto"
+                         t-ref="search-results"
+                         style="margin-top:20px;">
+                        <ul>
+                            <t t-foreach="menus" t-as="menu"
+                               t-key="menu_index">
+                                <li t-on-click="() => this.handleClick(menu)">
+                                    <span t-esc="menu.name"/>
+                                </li>
+                            </t>
+
+                        </ul>
+
+                    </div>
+                </div>
+                <div class="app-menu" t-ref="app-menu">
+                    <t t-foreach="menuService.getApps()" t-as="app"
+                       t-key="app_index">
+                          <a role="menuitem"
+                             t-on-click="() => this.onNavBarDropdownItemSelection(app)"
+                             t-att-class="{ o_dropdown_active: menuService.getCurrentApp() === app }">
+                            <img t-if="app.webIcon.includes('.png')"
+                                 t-att-title="app.name"
+                                 style="width: 70px !important;height: 70px !important;margin: 5px 5px 5px 5px;"
+                                 t-attf-src="{{app.webIconData}}"/>
+                              <img t-if="app.webIcon.includes('.svg')"
+                                   t-att-title="app.name"
+                                   style="width: 70px !important;height: 70px !important;margin: 5px 5px 5px 5px;"
+                                   t-attf-src="{{app.webIconData}}"/>
+                              <b class="a_app_menu_title"
+                                 style="color:white;text-shadow: 1px 1px 1px rgb(0 0 0 / 40%);"><t t-esc="app.name"/></b>
+                         </a>
+                    </t>
+                 </div>
+            </div>
+        </xpath>
+    </t>
+    <!--  To show the search results when the user search app from the app drawer  -->
+    <t t-name="jazzy_backend_theme.SearchResults">
+        <t t-foreach="results" t-as="result">
+            <a t-attf-class="o-menu-search-result dropdown-item col-12 ml-auto mr-auto #{result_first ? 'active' : ''}"
+               t-attf-style="background-image:url('data:image/png;base64,#{result.webIconData}')"
+               t-att-data-menu-id="result.id"
+               t-att-data-action-id="result.actionID"
+               t-raw="result.name"
+               style="color:white;"
+               t-on-click="handleClickMenu"
+            />
+        </t>
+    </t>
+    <!--  To show the sidebar to select the apps from the sidebar  -->
+    <t t-inherit="web.NavBar" t-inherit-mode="extension" owl="1">
+        <xpath expr="//nav[hasclass('o_main_navbar')]" position="after">
+            <div class="sidebar_panel" id="sidebar_panel" t-ref="sidebar_panel">
+                <div class="sidebar">
+                    <ul class="sidebar_menu">
+                        <t t-foreach="menuService.getApps()" t-as="app"
+                           t-key="app_index">
+                            <li>
+                                <a role="menuitem"
+                                   t-attf-href="#menu_id={{app.id}}"
+                                   class="dropdown-item o_app mt0"
+                                   t-on-click="() => this.onNavBarDropdownItemSelection(app)"
+                                   t-att-data-menu-xmlid="app.xmlid"
+                                   t-att-data-action-id="app.actionID">
+                                    <img t-if="app.webIcon.includes('.png')"
+                                         t-att-title="app.name"
+                                         style="width: 25px !important;height: 25px !important;border-radius: 5px !important;padding:0 !important;"
+                                         t-attf-src="{{app.webIconData}}"/>
+                                    <img t-if="app.webIcon.includes('.svg')"
+                                         t-att-title="app.name"
+                                         style="width: 25px !important;height: 25px !important;border-radius: 5px !important;padding:0 !important;"
+                                         t-attf-src="{{app.webIconData}}"/>
+                                </a>
+                            </li>
+                        </t>
+                    </ul>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

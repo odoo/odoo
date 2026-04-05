@@ -1,0 +1,254 @@
+@keyframes fadeIn{
+	0%{
+		opacity: 0;
+	}
+	100%{
+		opacity: 1;
+	}
+}
+o_setting_search {
+	 position: relative;
+}
+.o_setting_search .searchInput {
+     height: 28px;
+     padding: 0px;
+     border: 0px;
+     box-shadow: none;
+     font-weight: 500;
+}
+.o_setting_search .searchIcon {
+	 color: gray('700');
+}
+.o_kanban_renderer{
+    background-color: var(--kanban-bg-color);
+}
+.oe_kanban_global_click{
+    border-radius: 15px;
+}
+ .search-container.has-results .search-input {
+	 height: 3em;
+}
+ .search-container.has-results .search-results {
+	 height: calc(100% - 3em);
+	 overflow: auto;
+	 margin-top: 10px;
+}
+
+.o_setting_search.col-md-10{
+    padding: 20px;
+}
+.app-menu {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: calc((100vw - 850px) / 2);
+    padding-right: calc((100vw - 850px) / 2);
+
+}
+.o-menu-search-result.dropdown-item.col-12.ml-auto.mr-auto {
+    background-repeat: no-repeat;
+    background-size: contain;
+    padding-left: 5.5rem;
+}
+.form-control {
+    padding: 0 !important;
+}
+@media (max-width: 1371px){
+
+}
+@media (max-width:992px) {
+
+}
+@media (max-width:400px) {
+
+}
+.o_main_navbar .o_menu_brand {
+  text-decoration: none !important;
+  margin-left: 10px;
+}
+.o_navbar .o_main_navbar .dropdown-toggle .dropdown-menu .search-container {
+    padding-left: calc((100vw - 850px) / 2);
+    padding-right: calc((100vw - 850px) / 2);
+    padding-top:20px;
+    padding-bottom:20px;
+    display: table;
+}
+.o_apps_menu_opened .o_main_navbar .o_menu_brand{
+    display:none;
+}
+.app_components {
+    position: absolute;
+    height: 100vh;
+    width: 100%;
+    background: #f5f5f5f0;
+    z-index: 99;
+    top: 40px;
+    display:none;
+    background: url("../../src/img/background.jpg"), linear-gradient(to bottom, #71639e, #b0adba);
+}
+.app-menu a{
+    flex-basis: 19%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 23px;
+}
+o_setting_search {
+	 position: relative;
+}
+.o_setting_search .searchInput {
+	 height: 28px;
+	 padding: 0px;
+	 border: 0px;
+	 box-shadow: none;
+	 font-weight: 500;
+}
+.o_setting_search .searchIcon {
+	 color: gray('700');
+}
+ .search-container.has-results .search-input {
+	 height: 3em;
+	 display: table;
+}
+ .search-container.has-results .search-results {
+	 height: calc(100% - 3em);
+	 overflow: auto;
+	 margin-top: 10px;
+}
+
+.o_setting_search.col-md-10{
+    padding: 20px;
+}
+.app-menu {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: calc((100vw - 850px) / 2);
+    padding-right: calc((100vw - 850px) / 2);
+
+}
+
+.o-menu-search-result.dropdown-item.col-12.ml-auto.mr-auto {
+    background-repeat: no-repeat;
+    background-size: contain;
+    padding-left: 3rem;
+}
+.form-control {
+    padding: 0 !important;
+}
+@media (max-width: 1371px){
+
+}
+@media (max-width:992px) {
+
+}
+@media (max-width:400px) {
+
+}
+.o_main_navbar .o_menu_brand {
+  text-decoration: none !important;
+  margin-left: 10px;
+}
+.o_navbar .o_main_navbar .dropdown-toggle .dropdown-menu .search-container {
+    padding-left: calc((100vw - 850px) / 2);
+    padding-right: calc((100vw - 850px) / 2);
+    padding-top:20px;
+    padding-bottom:20px;
+}
+.o_apps_menu_opened .o_main_navbar .o_menu_brand{
+    display:none;
+}
+.app_components {
+    position: absolute;
+    height: 100vh;
+    width: 100%;
+    background: #f5f5f5f0;
+    z-index: 99;
+    top: 40px;
+    display:none;
+    background: url("../../img/background.jpg"), linear-gradient(to bottom, #71639e, #b0adba);
+}
+.app-menu a{
+    flex-basis: 19%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 23px;
+    cursor:pointer;
+}
+.app_components .search-input{
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    width:100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin-bottom:1rem;
+    text-shadow: 0 1px 0 rgb(0 0 0 / 50%);
+}
+.o_navbar .o_main_navbar .o_main-menu-button:hover{
+    background:rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+}
+@media (max-width: 850px) {
+    .app_components .search-input {
+        width:90%;
+        margin:0 auto;
+    }
+    .app-menu {
+        width:90%;
+        margin:0 auto;
+    }
+}
+@media (max-width: 444px) {
+    .app-menu{
+        width:80%;
+    }
+    .app-menu a{
+        flex-basis: 25%;
+    }
+}
+ /* Container styling */
+  .search-results {
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  /* Unordered list styling */
+  .search-results ul {
+    list-style-type: none; /* Remove default bullets */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+  }
+
+  /* List item styling */
+  .search-results li {
+    margin-bottom: 10px; /* Space between items */
+    border-radius: 5px; /* Rounded corners */
+    padding: 15px; /* Inner padding */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background 0.3s ease; /* Smooth background transition */
+  }
+
+  /* Text styling for menu name */
+  .search-results li span {
+    font-size: 16px;
+    color: var(--app-menu-font-color) !important;
+  }
+.o_main_navbar .o_menu_brand, .o_main_navbar .o_navbar_apps_menu .dropdown-toggle, .o_main_navbar .o_nav_entry, .o_main_navbar .dropdown-toggle:not(.o-dropdown-toggle-custo), .o_main_navbar .o_menu_toggle  {
+    color: var(--app-menu-font-color) !important;
+}
+.o_main_navbar .o_menu_brand, .o_main_navbar .o_navbar_breadcrumbs, .o_main_navbar .o_navbar_breadcrumbs .btn {
+color: var(--app-menu-font-color) !important;
+}
+  /* Hover effect for each list item */
+  .search-results li:hover {
+    background-color: #007bff; /* Change background color on hover */
+    color: #fff; /* Change text color on hover */
+    border-color: #007bff; /* Change border color on hover */
+  }
+
+  /* Hover effect for the text inside the list item */
+  .search-results li:hover span {
+    color: #fff; /* Change text color on hover */
+  }

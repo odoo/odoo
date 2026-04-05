@@ -1,0 +1,61 @@
+#sidebar_panel {
+    height: calc(100% - 0%);
+   position: fixed;
+    background-color: var(--app-bar-accent);
+    width: 50px;
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
+    scrollbar-width: none;  /* Hide scrollbar for Firefox */
+    z-index: 999;
+}
+#sidebar_panel::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari and Opera */
+}
+.sidebar_panel .sidebar {
+    padding: 0;
+    white-space: nowrap;
+    padding-bottom: 20px;
+    padding-top: 5px;
+}
+.sidebar_panel .sidebar .sidebar_menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.sidebar_panel .sidebar .sidebar_menu li {
+    margin: 0;
+    padding: 0;
+    border: 0px;
+    display: block;
+}
+.dropdown-item{
+    padding: 10px 10px 10px 10px;
+}
+.o_main_navbar .o_menu_brand {
+  text-decoration: none !important;
+  margin-left: 10px;
+}
+.sidebar_panel .sidebar .sidebar_menu li a {
+    margin: 0;
+    border: 0px;
+    display: block;
+    cursor: pointer;
+    overflow: hidden;
+    color: #ffffff;
+    font-size: 13px;
+    transition:.3s all;
+}
+.sidebar_panel .sidebar .sidebar_menu li:hover  a {
+    background: var(--secondary-hover) !important;
+    color: #fff;
+}
+.sidebar_panel .sidebar .sidebar_menu li a .sidebar_img {
+    width: 30px;
+    border-radius:5px;
+}
+html .o_web_client > .o_action_manager{
+    margin-left:50px;
+}
+.sidebar_panel .sidebar .sidebar_menu li .nav-link {
+    padding:10px 10px 10px 10px;
+}
