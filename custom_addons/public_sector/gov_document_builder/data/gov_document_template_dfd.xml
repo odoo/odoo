@@ -9,6 +9,15 @@
         <field name="layout_schema_json"><![CDATA[
 [
   {
+    "id": "page_header_5",
+    "type": "page_header",
+    "sequence": 5,
+    "props": {"usar_imagem": true, "altura_cm": 3.0, "alinhamento": "center", "fallback_texto": ""},
+    "binding": {},
+    "children": [],
+    "locked": false
+  },
+  {
     "id": "heading1_10",
     "type": "heading1",
     "sequence": 10,
@@ -171,9 +180,25 @@
     "binding": {},
     "children": [],
     "locked": false
+  },
+  {
+    "id": "page_footer_999",
+    "type": "page_footer",
+    "sequence": 999,
+    "props": {"usar_imagem": true, "altura_cm": 1.5, "mostrar_numero_pagina": true},
+    "binding": {},
+    "children": [],
+    "locked": false
   }
 ]
         ]]></field>
+    </record>
+
+    <record id="template_dfd_block_page_header" model="gov.document.template.block">
+        <field name="template_id" ref="gov_document_builder.template_dfd_semsa_padrao"/>
+        <field name="catalog_block_id" ref="gov_document_builder.block_page_header"/>
+        <field name="sequence">5</field>
+        <field name="props_json"><![CDATA[{"usar_imagem":true,"altura_cm":3.0,"alinhamento":"center","fallback_texto":""}]]></field>
     </record>
 
     <record id="template_dfd_block_heading1" model="gov.document.template.block">
@@ -311,5 +336,12 @@
         <field name="catalog_block_id" ref="gov_document_builder.block_metadata"/>
         <field name="sequence">120</field>
         <field name="props_json"><![CDATA[{}]]></field>
+    </record>
+
+    <record id="template_dfd_block_page_footer" model="gov.document.template.block">
+        <field name="template_id" ref="gov_document_builder.template_dfd_semsa_padrao"/>
+        <field name="catalog_block_id" ref="gov_document_builder.block_page_footer"/>
+        <field name="sequence">999</field>
+        <field name="props_json"><![CDATA[{"usar_imagem":true,"altura_cm":1.5,"mostrar_numero_pagina":true}]]></field>
     </record>
 </odoo>

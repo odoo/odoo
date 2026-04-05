@@ -2,6 +2,11 @@ from unittest.mock import patch
 
 from odoo.tests.common import TransactionCase
 
+VALID_TIMBRE_PNG = (
+    "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVR4nGOUi9ryn4GBgYGJAQoA"
+    "IFICL3nrsQ4AAAAASUVORK5CYII="
+)
+
 
 class TestGovDocumentContextResolver(TransactionCase):
     def setUp(self):
@@ -62,6 +67,74 @@ class TestGovDocumentContextResolver(TransactionCase):
         value = self.resolver.resolve_binding(binding, context)
 
         self.assertEqual(value, "não informado")
+
+    def test_resolve_timbre_namespace_returns_null_shape_when_missing(self):
+        timbre_model = self.env["gov.timbre"]
+
+        with patch.object(
+            type(timbre_model),
+            "search",
+            autospec=True,
+            return_value=timbre_model.browse(),
+        ):
+            context = self.resolver.resolve_instance_context(
+                self.env["gov.document.instance"].create(
+                    {
+                        "name": "Documento sem timbre",
+                        "document_type_id": self.document_type.id,
+                        "template_id": self.template.id,
+                    }
+                )
+            )
+
+        self.assertEqual(
+            context["timbre"],
+            {
+                "cabecalho_img": None,
+                "rodape_img": None,
+                "cabecalho_altura": None,
+                "rodape_altura": None,
+                "orgao_nome": None,
+                "secretaria_nome": None,
+            },
+        )
+
+    def test_resolve_timbre_namespace_uses_global_timbre(self):
+        instance = self.env["gov.document.instance"].create(
+            {
+                "name": "Documento com timbre",
+                "document_type_id": self.document_type.id,
+                "template_id": self.template.id,
+            }
+        )
+        timbre = self.env["gov.timbre"].create(
+            {
+                "name": "Timbre Institucional de Teste",
+                "ug_id": self.env.company.id,
+                "cabecalho_img": VALID_TIMBRE_PNG,
+                "rodape_img": VALID_TIMBRE_PNG,
+                "cabecalho_altura": 3.4,
+                "rodape_altura": 1.8,
+                "orgao_nome": "Secretaria Municipal de Saúde",
+                "secretaria_nome": "Diretoria Administrativa",
+            }
+        )
+        timbre_model = self.env["gov.timbre"]
+
+        with patch.object(
+            type(timbre_model),
+            "search",
+            autospec=True,
+            return_value=timbre,
+        ):
+            context = self.resolver.resolve_instance_context(instance)
+
+        self.assertEqual(context["timbre"]["cabecalho_img"], VALID_TIMBRE_PNG)
+        self.assertEqual(context["timbre"]["rodape_img"], VALID_TIMBRE_PNG)
+        self.assertEqual(context["timbre"]["cabecalho_altura"], 3.4)
+        self.assertEqual(context["timbre"]["rodape_altura"], 1.8)
+        self.assertEqual(context["timbre"]["orgao_nome"], "Secretaria Municipal de Saúde")
+        self.assertEqual(context["timbre"]["secretaria_nome"], "Diretoria Administrativa")
 
 
 class TestContextResolverFinancialCycle(TransactionCase):

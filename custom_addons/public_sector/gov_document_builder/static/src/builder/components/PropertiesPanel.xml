@@ -80,6 +80,97 @@
                     </div>
                 </div>
 
+                <div t-if="this.selectedNode.type === 'page_header'" class="prop-section">
+                    <label class="prop-label">Cabeçalho Institucional</label>
+                    <div class="toggle-row">
+                        <span class="toggle-label">Usar imagem do timbre</span>
+                        <div t-attf-class="toggle-switch {{ this.pageUsesImage ? '' : 'off' }}">
+                            <input
+                                class="gdb-toggle-input"
+                                type="checkbox"
+                                id="gdbPageHeaderImageToggle"
+                                t-att-checked="this.pageUsesImage ? true : undefined"
+                                t-on-change="togglePageUseImage"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div t-if="this.selectedNode.type === 'page_header'" class="prop-section">
+                    <label class="prop-label">Altura (cm)</label>
+                    <input
+                        type="number"
+                        min="0.1"
+                        step="0.1"
+                        class="prop-input"
+                        t-att-value="this.pageHeightCm"
+                        t-on-input="updatePageHeight"
+                    />
+                </div>
+
+                <div t-if="this.selectedNode.type === 'page_header'" class="prop-section">
+                    <label class="prop-label">Alinhamento</label>
+                    <select class="prop-input" t-att-value="this.pageAlignment" t-on-change="updatePageAlignment">
+                        <option value="left">Esquerda</option>
+                        <option value="center">Centro</option>
+                        <option value="right">Direita</option>
+                    </select>
+                </div>
+
+                <div t-if="this.selectedNode.type === 'page_header'" class="prop-section">
+                    <label class="prop-label">Texto alternativo</label>
+                    <input
+                        type="text"
+                        class="prop-input"
+                        t-att-value="this.pageFallbackText"
+                        t-on-input="updatePageFallbackText"
+                    />
+                </div>
+
+                <div t-if="this.selectedNode.type === 'page_footer'" class="prop-section">
+                    <label class="prop-label">Rodapé Institucional</label>
+                    <div class="toggle-row">
+                        <span class="toggle-label">Usar imagem do timbre</span>
+                        <div t-attf-class="toggle-switch {{ this.pageUsesImage ? '' : 'off' }}">
+                            <input
+                                class="gdb-toggle-input"
+                                type="checkbox"
+                                id="gdbPageFooterImageToggle"
+                                t-att-checked="this.pageUsesImage ? true : undefined"
+                                t-on-change="togglePageUseImage"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div t-if="this.selectedNode.type === 'page_footer'" class="prop-section">
+                    <label class="prop-label">Exibição</label>
+                    <div class="toggle-row">
+                        <span class="toggle-label">Mostrar número de página</span>
+                        <div t-attf-class="toggle-switch {{ this.showPageNumber ? '' : 'off' }}">
+                            <input
+                                class="gdb-toggle-input"
+                                type="checkbox"
+                                id="gdbPageFooterNumberToggle"
+                                t-att-checked="this.showPageNumber ? true : undefined"
+                                t-on-change="togglePageNumber"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div t-if="this.selectedNode.type === 'page_footer'" class="prop-section">
+                    <label class="prop-label">Altura (cm)</label>
+                    <input
+                        type="number"
+                        min="0.1"
+                        step="0.1"
+                        class="prop-input"
+                        t-att-value="this.pageHeightCm"
+                        t-on-input="updatePageHeight"
+                    />
+                </div>
+
                 <div t-if="this.selectedNode.type === 'process_field'" class="prop-section">
                     <label class="prop-label">Rótulo</label>
                     <input

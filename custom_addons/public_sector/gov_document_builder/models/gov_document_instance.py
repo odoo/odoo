@@ -1,3 +1,4 @@
+import base64
 import json
 
 from odoo import fields, models
@@ -76,6 +77,26 @@ class GovDocumentInstance(models.Model):
     def set_layout(self, nodes_list):
         self.ensure_one()
         self.layout_json = json.dumps(nodes_list, ensure_ascii=False)
+
+    def get_timbre_images_for_typst(self):
+        """
+        Retorna as imagens do timbre prontas para escrita em disco.
+
+        Use este payload em `GovTypstService.compile(..., extra_images=...)`
+        quando o documento referenciar `timbre_cabecalho.png` ou
+        `timbre_rodape.png` no source Typst.
+        """
+        self.ensure_one()
+        timbre = self.env["gov.timbre"].search([], limit=1)
+        if not timbre:
+            return {
+                "cabecalho": None,
+                "rodape": None,
+            }
+        return {
+            "cabecalho": base64.b64decode(timbre.cabecalho_img) if timbre.cabecalho_img else None,
+            "rodape": base64.b64decode(timbre.rodape_img) if timbre.rodape_img else None,
+        }
 
     def action_approve(self):
         for rec in self:

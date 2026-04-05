@@ -98,6 +98,46 @@ export class PropertiesPanel extends Component {
         this.store.updateNodeProps(this.selectedNode.id, { mostrar_numeros: ev.target.checked });
     }
 
+    togglePageUseImage(ev) {
+        if (!this.selectedNode) {
+            return;
+        }
+        this.store.updateNodeProps(this.selectedNode.id, { usar_imagem: ev.target.checked });
+    }
+
+    updatePageHeight(ev) {
+        if (!this.selectedNode) {
+            return;
+        }
+        const height = Number.parseFloat(ev.target.value);
+        this.store.updateNodeProps(this.selectedNode.id, {
+            altura_cm: Number.isFinite(height) && height > 0 ? height : 0,
+        });
+    }
+
+    updatePageAlignment(ev) {
+        if (!this.selectedNode) {
+            return;
+        }
+        this.store.updateNodeProps(this.selectedNode.id, { alinhamento: ev.target.value });
+    }
+
+    updatePageFallbackText(ev) {
+        if (!this.selectedNode) {
+            return;
+        }
+        this.store.updateNodeProps(this.selectedNode.id, { fallback_texto: ev.target.value });
+    }
+
+    togglePageNumber(ev) {
+        if (!this.selectedNode) {
+            return;
+        }
+        this.store.updateNodeProps(this.selectedNode.id, {
+            mostrar_numero_pagina: ev.target.checked,
+        });
+    }
+
     toggleBinding(ev) {
         if (!this.selectedNode) {
             return;
@@ -172,6 +212,31 @@ export class PropertiesPanel extends Component {
     get showTocNumbers() {
         const props = (this.selectedNode && this.selectedNode.props) || {};
         return props.mostrar_numeros !== false;
+    }
+
+    get pageUsesImage() {
+        const props = (this.selectedNode && this.selectedNode.props) || {};
+        return props.usar_imagem !== false;
+    }
+
+    get pageHeightCm() {
+        const props = (this.selectedNode && this.selectedNode.props) || {};
+        return `${props.altura_cm || (this.selectedNode?.type === "page_header" ? 3.0 : 1.5)}`;
+    }
+
+    get pageAlignment() {
+        const props = (this.selectedNode && this.selectedNode.props) || {};
+        return props.alinhamento || "center";
+    }
+
+    get pageFallbackText() {
+        const props = (this.selectedNode && this.selectedNode.props) || {};
+        return props.fallback_texto || "";
+    }
+
+    get showPageNumber() {
+        const props = (this.selectedNode && this.selectedNode.props) || {};
+        return props.mostrar_numero_pagina !== false;
     }
 
     get bindingSource() {

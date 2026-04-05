@@ -27,6 +27,7 @@ class GovDocumentContextResolver(models.AbstractModel):
             "execution": self._resolve_execution_namespace(process),
             "document": self._resolve_document(instance),
             "institution": self._resolve_institution(instance),
+            "timbre": self._resolve_timbre_namespace(),
         }
         if context["process"]:
             context["process"].setdefault("modalidade", context["legal"].get("modalidade", ""))
@@ -466,6 +467,27 @@ class GovDocumentContextResolver(models.AbstractModel):
             "name": company.name,
             "city": company.city or "",
             "state": company.state_id.name if company.state_id else "",
+        }
+
+    def _resolve_timbre_namespace(self):
+        timbre = self.env["gov.timbre"].search([], limit=1)
+        if not timbre:
+            return {
+                "cabecalho_img": None,
+                "rodape_img": None,
+                "cabecalho_altura": None,
+                "rodape_altura": None,
+                "orgao_nome": None,
+                "secretaria_nome": None,
+            }
+
+        return {
+            "cabecalho_img": timbre.cabecalho_img or None,
+            "rodape_img": timbre.rodape_img or None,
+            "cabecalho_altura": timbre.cabecalho_altura or None,
+            "rodape_altura": timbre.rodape_altura or None,
+            "orgao_nome": timbre.orgao_nome or None,
+            "secretaria_nome": timbre.secretaria_nome or None,
         }
 
     def _get_process_parameters(self, process, phase_names=(), section=None):

@@ -35,6 +35,31 @@
             <div t-elif="props.node.type === 'heading'" class="n-heading-2">
                 <h2><t t-esc="this.headingText || 'Título'" /></h2>
             </div>
+            <div t-elif="this.isPageHeader" class="n-page-config">
+                <div class="gdb-page-config-topline">
+                    <span class="gdb-page-global-badge">Todas as páginas</span>
+                </div>
+                <div class="gdb-page-slot is-header">
+                    <div class="gdb-page-slot-main">
+                        <i class="fa fa-image" aria-hidden="true"/>
+                        <span><t t-esc="this.pageHeaderPreviewText" /></span>
+                    </div>
+                </div>
+            </div>
+            <div t-elif="this.isPageFooter" class="n-page-config">
+                <div class="gdb-page-config-topline">
+                    <span class="gdb-page-global-badge">Todas as páginas</span>
+                </div>
+                <div class="gdb-page-slot is-footer">
+                    <div class="gdb-page-slot-main">
+                        <i class="fa fa-image" aria-hidden="true"/>
+                        <span><t t-esc="this.pageFooterPreviewText" /></span>
+                    </div>
+                    <div class="gdb-page-slot-sub">
+                        <t t-esc="this.pageFooterNumberLabel" />
+                    </div>
+                </div>
+            </div>
             <div t-elif="this.isToc" class="n-toc">
                 <div class="gdb-toc-title"><t t-esc="this.tocTitle" /></div>
                 <div t-if="this.tocEntries.length" class="gdb-toc-list">

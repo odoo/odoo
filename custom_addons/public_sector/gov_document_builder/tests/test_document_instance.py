@@ -5,6 +5,11 @@ from unittest.mock import patch
 from odoo.addons.gov_document_builder.controllers import document_builder_controller as controller_module
 from odoo.tests.common import TransactionCase
 
+VALID_TIMBRE_PNG = (
+    "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVR4nGOUi9ryn4GBgYGJAQoA"
+    "IFICL3nrsQ4AAAAASUVORK5CYII="
+)
+
 
 class TestGovDocumentInstance(TransactionCase):
     def setUp(self):
@@ -98,3 +103,35 @@ class TestGovDocumentInstance(TransactionCase):
         instance = self.env["gov.document.instance"].browse(result["document_id"])
 
         self.assertEqual(instance.process_id, process)
+
+    def test_get_timbre_images_for_typst_decodes_global_images(self):
+        instance = self.env["gov.document.instance"].create(
+            {
+                "name": "Documento com imagens de timbre",
+                "document_type_id": self.document_type.id,
+                "template_id": self.template.id,
+                "layout_json": self.template_layout,
+            }
+        )
+        timbre = self.env["gov.timbre"].create(
+            {
+                "name": "Timbre Builder",
+                "ug_id": self.env.company.id,
+                "cabecalho_img": VALID_TIMBRE_PNG,
+                "rodape_img": VALID_TIMBRE_PNG,
+            }
+        )
+        timbre_model = self.env["gov.timbre"]
+
+        with patch.object(
+            type(timbre_model),
+            "search",
+            autospec=True,
+            return_value=timbre,
+        ):
+            images = instance.get_timbre_images_for_typst()
+
+        self.assertIsInstance(images["cabecalho"], bytes)
+        self.assertIsInstance(images["rodape"], bytes)
+        self.assertTrue(images["cabecalho"].startswith(b"\x89PNG"))
+        self.assertTrue(images["rodape"].startswith(b"\x89PNG"))

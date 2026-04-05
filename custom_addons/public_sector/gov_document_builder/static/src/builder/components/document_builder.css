@@ -697,6 +697,61 @@
     text-transform: uppercase;
 }
 
+.n-page-config {
+    padding: 8px 0;
+}
+
+.gdb-page-config-topline {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 6px;
+}
+
+.gdb-page-global-badge {
+    background: rgba(61, 82, 150, 0.1);
+    border-radius: 999px;
+    color: var(--gdb-indigo);
+    display: inline-flex;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 2px 8px;
+    text-transform: uppercase;
+}
+
+.gdb-page-slot {
+    background: #f1f2f4;
+    border: 1px solid #d7dbe1;
+    border-radius: 8px;
+    color: var(--gdb-text-mid);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 52px;
+    padding: 10px 12px;
+}
+
+.gdb-page-slot.is-header {
+    border-top: 3px solid #bcc7d8;
+}
+
+.gdb-page-slot.is-footer {
+    border-bottom: 3px solid #bcc7d8;
+}
+
+.gdb-page-slot-main {
+    align-items: center;
+    display: flex;
+    font-size: 11.5px;
+    gap: 8px;
+    line-height: 1.4;
+}
+
+.gdb-page-slot-sub {
+    color: var(--gdb-text-muted);
+    font-size: 10.5px;
+}
+
 .n-toc {
     border: 1px solid #e6e2d8;
     border-radius: 8px;

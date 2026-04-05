@@ -46,6 +46,14 @@ export class DocumentNode extends Component {
         return this.props.node.type === "sumario";
     }
 
+    get isPageHeader() {
+        return this.props.node.type === "page_header";
+    }
+
+    get isPageFooter() {
+        return this.props.node.type === "page_footer";
+    }
+
     get bindingLabel() {
         const binding = this.props.node.binding || {};
         if (!binding.source || !binding.path) {
@@ -120,6 +128,49 @@ export class DocumentNode extends Component {
             }
             return this.tocDepth >= 2 && candidate.type === "heading2";
         });
+    }
+
+    get timbreContext() {
+        return (this.store.state.resolvedContext || {}).timbre || {};
+    }
+
+    get pageHeaderUsesImage() {
+        return (this.props.node.props || {}).usar_imagem !== false;
+    }
+
+    get pageFooterUsesImage() {
+        return (this.props.node.props || {}).usar_imagem !== false;
+    }
+
+    get pageFooterShowsNumber() {
+        return (this.props.node.props || {}).mostrar_numero_pagina !== false;
+    }
+
+    get pageHeaderPreviewText() {
+        if (this.pageHeaderUsesImage) {
+            return "Cabeçalho — usa timbre institucional";
+        }
+        return (
+            (this.props.node.props || {}).fallback_texto ||
+            this.timbreContext.orgao_nome ||
+            this.timbreContext.secretaria_nome ||
+            "Cabeçalho textual configurado manualmente"
+        );
+    }
+
+    get pageFooterPreviewText() {
+        if (this.pageFooterUsesImage) {
+            return "Rodapé — usa timbre institucional";
+        }
+        return (
+            this.timbreContext.orgao_nome ||
+            this.timbreContext.secretaria_nome ||
+            "Rodapé textual do documento"
+        );
+    }
+
+    get pageFooterNumberLabel() {
+        return this.pageFooterShowsNumber ? "Número de página ativo" : "Número de página inativo";
     }
 
     get signatureBlocks() {

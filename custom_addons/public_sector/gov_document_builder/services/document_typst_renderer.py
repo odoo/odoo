@@ -47,6 +47,8 @@ class GovDocumentTypstRenderer(models.AbstractModel):
             merged_context["document"] = current_context.get("document", {})
         if "institution" not in merged_context:
             merged_context["institution"] = current_context.get("institution", {})
+        if "timbre" not in merged_context:
+            merged_context["timbre"] = current_context.get("timbre", {})
         if "reconciliation" in dynamic_namespaces or "reconciliation" not in merged_context:
             merged_context["reconciliation"] = resolver.compute_reconciliation_namespace(
                 merged_context
@@ -65,7 +67,7 @@ class GovDocumentTypstRenderer(models.AbstractModel):
                 errors,
             )
         lines = []
-        lines += self._render_preamble(instance, context)
+        lines += self._render_preamble(instance, nodes, context)
         lines.append("")
         for node in nodes:
             rendered = self._render_node(node, context)
@@ -74,30 +76,41 @@ class GovDocumentTypstRenderer(models.AbstractModel):
                 lines.append("")
         return "\n".join(lines)
 
-    def _render_preamble(self, instance, context):
+    def _render_preamble(self, instance, nodes, context):
         template = instance.template_id
         preamble = template.typst_preamble if template else ""
         doc_name = instance.name or "Documento"
         process_no = context.get("process", {}).get("number", "")
-        return [
+        lines = [
             "// Gerado por gov_document_builder — Kodoo/GRP",
             f"// Instância: {instance.id} · {doc_name}",
             "",
             '#import "base.typ": semsa_doc',
             '#import "law_14133.typ": artigo, base_legal_box',
             "",
-            "#show: semsa_doc(",
-            f'  title: "{doc_name}",',
-            f'  process_no: "{process_no}"',
-            ")",
-            preamble or "",
         ]
+        page_settings = self._render_page_settings(nodes, context)
+        if page_settings:
+            lines.extend(page_settings)
+            lines.append("")
+        lines.extend(
+            [
+                "#show: semsa_doc(",
+                f'  title: "{doc_name}",',
+                f'  process_no: "{process_no}"',
+                ")",
+                preamble or "",
+            ]
+        )
+        return lines
 
     def _render_node(self, node, context):
         """Dispatcher por tipo de bloco."""
         resolver = self.env["gov.document.context.resolver"]
         visibility_rule = node.get("visibility_rule")
         if visibility_rule and not resolver.evaluate_visibility_rule(visibility_rule, context):
+            return None
+        if node["type"] in {"page_header", "page_footer"}:
             return None
 
         renderers = {
@@ -117,6 +130,8 @@ class GovDocumentTypstRenderer(models.AbstractModel):
             "bullet_list": self._render_bullet_list,
             "metadata": self._render_metadata,
             "sumario": self._render_sumario,
+            "page_header": lambda _node, _context: None,
+            "page_footer": lambda _node, _context: None,
         }
         renderer = renderers.get(node["type"])
         if not renderer:
@@ -217,3 +232,137 @@ class GovDocumentTypstRenderer(models.AbstractModel):
                 outline_line,
             ]
         )
+
+    def _render_page_settings(self, nodes, context):
+        resolver = self.env["gov.document.context.resolver"]
+        header_node = next(
+            (
+                node
+                for node in nodes
+                if node["type"] == "page_header"
+                and (
+                    not node.get("visibility_rule")
+                    or resolver.evaluate_visibility_rule(node.get("visibility_rule"), context)
+                )
+            ),
+            None,
+        )
+        footer_node = next(
+            (
+                node
+                for node in nodes
+                if node["type"] == "page_footer"
+                and (
+                    not node.get("visibility_rule")
+                    or resolver.evaluate_visibility_rule(node.get("visibility_rule"), context)
+                )
+            ),
+            None,
+        )
+
+        header_content = self._render_page_header_setting(header_node, context.get("timbre", {}))
+        footer_content = self._render_page_footer_setting(footer_node, context.get("timbre", {}))
+        if not header_content and not footer_content:
+            return []
+
+        lines = ["#set page("]
+        if header_content:
+            lines.append(f"  header: {header_content},")
+        if footer_content:
+            lines.append(f"  footer: {footer_content},")
+        lines.append(")")
+        return lines
+
+    def _render_page_header_setting(self, node, timbre):
+        if not node:
+            return None
+
+        props = node.get("props", {})
+        use_image = props.get("usar_imagem", True)
+        height = self._coerce_page_height(
+            props.get("altura_cm"),
+            timbre.get("cabecalho_altura"),
+            default=3.0,
+        )
+        alignment = self._map_alignment(props.get("alinhamento"))
+        fallback_text = (props.get("fallback_texto") or "").strip()
+
+        if use_image and timbre.get("cabecalho_img"):
+            return (
+                f'align({alignment})['
+                f'#image("timbre_cabecalho.png", width: 100%, height: {height}cm, fit: "contain")'
+                "]"
+            )
+
+        fallback = fallback_text or self._build_timbre_header_text(timbre)
+        if not fallback:
+            return None
+        return f"align({alignment})[{fallback}]"
+
+    def _render_page_footer_setting(self, node, timbre):
+        if not node:
+            return None
+
+        props = node.get("props", {})
+        use_image = props.get("usar_imagem", True)
+        show_page_number = props.get("mostrar_numero_pagina", True)
+        height = self._coerce_page_height(
+            props.get("altura_cm"),
+            timbre.get("rodape_altura"),
+            default=1.5,
+        )
+
+        if use_image and timbre.get("rodape_img"):
+            main_content = (
+                'align(center)['
+                f'#image("timbre_rodape.png", width: 100%, height: {height}cm, fit: "contain")'
+                "]"
+            )
+        else:
+            footer_text = self._build_timbre_footer_text(timbre)
+            main_content = f"align(center)[{footer_text}]" if footer_text else None
+
+        if show_page_number and main_content:
+            return (
+                "context ["
+                f"#{main_content}\n"
+                '#align(right)[#counter(page).display("1")]'
+                "]"
+            )
+        if show_page_number:
+            return 'context [#align(right)[#counter(page).display("1")]]'
+        return main_content
+
+    def _build_timbre_header_text(self, timbre):
+        orgao = (timbre.get("orgao_nome") or "").strip()
+        secretaria = (timbre.get("secretaria_nome") or "").strip()
+        if not orgao and not secretaria:
+            return ""
+        if orgao and secretaria:
+            return f"#strong[{orgao}] #linebreak() {secretaria}"
+        return f"#strong[{orgao or secretaria}]"
+
+    def _build_timbre_footer_text(self, timbre):
+        orgao = (timbre.get("orgao_nome") or "").strip()
+        secretaria = (timbre.get("secretaria_nome") or "").strip()
+        if orgao and secretaria:
+            return f"{orgao} · {secretaria}"
+        return orgao or secretaria or ""
+
+    def _coerce_page_height(self, value, fallback, default):
+        for candidate in (value, fallback, default):
+            try:
+                number = float(candidate)
+            except (TypeError, ValueError):
+                continue
+            if number > 0:
+                return f"{number:.1f}"
+        return f"{default:.1f}"
+
+    def _map_alignment(self, value):
+        mapping = {
+            "left": "left",
+            "center": "center",
+            "right": "right",
+        }
+        return mapping.get((value or "center").strip().lower(), "center")

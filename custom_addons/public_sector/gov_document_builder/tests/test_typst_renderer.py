@@ -180,6 +180,94 @@ class TestTypstRenderer(TransactionCase):
 
         self.assertEqual(rendered, "\n\n\nConteúdo final\n")
 
+    def test_page_blocks_are_injected_in_preamble_only(self):
+        nodes = [
+            {
+                "id": "header",
+                "type": "page_header",
+                "sequence": 5,
+                "props": {
+                    "usar_imagem": True,
+                    "altura_cm": 3.0,
+                    "alinhamento": "center",
+                    "fallback_texto": "",
+                },
+            },
+            {
+                "id": "footer",
+                "type": "page_footer",
+                "sequence": 999,
+                "props": {
+                    "usar_imagem": True,
+                    "altura_cm": 1.5,
+                    "mostrar_numero_pagina": True,
+                },
+            },
+        ]
+        context = {
+            "process": {"number": "SEMSA-2026-001"},
+            "timbre": {
+                "cabecalho_img": "base64-header",
+                "rodape_img": "base64-footer",
+                "cabecalho_altura": 3.0,
+                "rodape_altura": 1.5,
+                "orgao_nome": "SEMSA",
+                "secretaria_nome": "Diretoria",
+            },
+        }
+
+        preamble = "\n".join(self.renderer._render_preamble(self.instance, nodes, context))
+
+        self.assertIn("#set page(", preamble)
+        self.assertIn('header: align(center)[#image("timbre_cabecalho.png"', preamble)
+        self.assertIn('footer: context [#align(center)[#image("timbre_rodape.png"', preamble)
+        self.assertIn('#counter(page).display("1")', preamble)
+        self.assertIn("#show: semsa_doc(", preamble)
+
+    def test_page_header_uses_text_fallback_when_image_is_disabled(self):
+        nodes = [
+            {
+                "id": "header",
+                "type": "page_header",
+                "sequence": 5,
+                "props": {
+                    "usar_imagem": False,
+                    "altura_cm": 3.0,
+                    "alinhamento": "right",
+                    "fallback_texto": "Prefeitura Municipal de Manaus",
+                },
+            }
+        ]
+        context = {
+            "process": {"number": "SEMSA-2026-001"},
+            "timbre": {
+                "cabecalho_img": None,
+                "rodape_img": None,
+                "cabecalho_altura": None,
+                "rodape_altura": None,
+                "orgao_nome": "SEMSA",
+                "secretaria_nome": "Diretoria",
+            },
+        }
+
+        preamble = "\n".join(self.renderer._render_preamble(self.instance, nodes, context))
+
+        self.assertIn("header: align(right)[Prefeitura Municipal de Manaus]", preamble)
+
+    def test_page_blocks_do_not_render_inline_content(self):
+        self.assertIsNone(
+            self.renderer._render_node(
+                {"id": "header", "type": "page_header", "props": {}, "binding": {}},
+                {},
+            )
+        )
+        self.assertIsNone(
+            self.renderer._render_node(
+                {"id": "footer", "type": "page_footer", "props": {}, "binding": {}},
+                {},
+            )
+        )
+
     def test_sumario_renderer_outputs_outline_with_title_and_depth(self):
         rendered = self.renderer._render_sumario(
             {

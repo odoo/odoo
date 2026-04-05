@@ -5,6 +5,7 @@ from . import test_gov_planilha_lote_sync
 from . import test_gov_xlsx_profiles
 from . import test_gov_xlsx_worker
 from . import test_gov_typst_structured_render
+from . import test_gov_typst_service
 from . import test_gov_processos_security
 from . import test_gov_processo_doc_typst_wizard
 from . import test_gov_document_builder

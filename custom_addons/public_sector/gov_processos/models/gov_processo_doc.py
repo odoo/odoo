@@ -1119,9 +1119,24 @@ class GovProcessoDoc(models.Model):
                 )
         return diagnostics
 
+    def _get_typst_extra_images(self):
+        self.ensure_one()
+        Timbre = self.env.get("gov.timbre")
+        if not Timbre or not self.processo_id or not self.processo_id.ug_id:
+            return {}
+
+        timbre = self.timbre_id or Timbre.get_default_for_company(self.processo_id.ug_id.id)
+        if not timbre or not hasattr(timbre, "get_imagens_para_latex"):
+            return {}
+        return timbre.get_imagens_para_latex() or {}
+
     def _build_typst_compile_diagnostics(self, source):
         try:
-            GovTypstService.compile(source, timeout=45)
+            GovTypstService.compile(
+                source,
+                extra_images=self._get_typst_extra_images(),
+                timeout=45,
+            )
             return {
                 "compile_ok": True,
                 "compile_message": "Typst validado com sucesso.",
@@ -1820,7 +1835,11 @@ class GovProcessoDoc(models.Model):
             base64.b64decode(self.processo_id.ug_id.logo) if self.processo_id.ug_id.logo else None
         )
         if self.typst_source:
-            pdf_bytes = GovTypstService.compile(self.typst_source, timeout=120)
+            pdf_bytes = GovTypstService.compile(
+                self.typst_source,
+                extra_images=self._get_typst_extra_images(),
+                timeout=120,
+            )
             change_reason = "PDF compilado via typst"
         else:
             pdf_bytes = GovLatexService.compile_with_timbre(
@@ -1895,7 +1914,11 @@ class GovProcessoDoc(models.Model):
         )
 
         if self.typst_source:
-            pdf_bytes = GovTypstService.compile(self.typst_source, timeout=120)
+            pdf_bytes = GovTypstService.compile(
+                self.typst_source,
+                extra_images=self._get_typst_extra_images(),
+                timeout=120,
+            )
             b64_pdf = base64.b64encode(pdf_bytes).decode("ascii")
             sha256 = hashlib.sha256(pdf_bytes).hexdigest()
             motor = "typst"

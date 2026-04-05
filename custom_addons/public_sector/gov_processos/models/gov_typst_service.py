@@ -11,7 +11,16 @@ class GovTypstService:
     """Compilador simples de Typst para PDF."""
 
     @classmethod
-    def compile(cls, typst_source, timeout=30):
+    def compile(cls, typst_source, extra_images=None, timeout=30):
+        """
+        Compila um source Typst em PDF.
+
+        Quando o documento usa os blocos `page_header`/`page_footer` do
+        `gov_document_builder`, passe `extra_images` com o resultado de
+        `instance.get_timbre_images_for_typst()` para que
+        `timbre_cabecalho.png` e `timbre_rodape.png` sejam escritos no diretório
+        temporário antes da compilação.
+        """
         typst_path = shutil.which("typst")
         if not typst_path:
             raise UserError(
@@ -29,6 +38,7 @@ class GovTypstService:
         try:
             with open(source_path, "w", encoding="utf-8") as handle:
                 handle.write(source)
+            cls._write_extra_images(tmp_dir, extra_images)
 
             result = subprocess.run(
                 [typst_path, "compile", source_path, pdf_path],
@@ -51,3 +61,19 @@ class GovTypstService:
             raise UserError("Tempo limite excedido na compilacao Typst.") from exc
         finally:
             shutil.rmtree(tmp_dir, ignore_errors=True)
+
+    @classmethod
+    def _write_extra_images(cls, tmp_dir, extra_images):
+        if not extra_images:
+            return
+
+        filename_map = {
+            "cabecalho": "timbre_cabecalho.png",
+            "rodape": "timbre_rodape.png",
+        }
+        for key, payload in extra_images.items():
+            if not payload:
+                continue
+            filename = filename_map.get(key, os.path.basename(str(key)))
+            with open(os.path.join(tmp_dir, filename), "wb") as handle:
+                handle.write(payload)

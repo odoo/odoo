@@ -1,5 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="block_page_header" model="gov.document.block.catalog">
+        <field name="code">page_header</field>
+        <field name="name">Cabeçalho da Página</field>
+        <field name="block_kind">metadata</field>
+        <field name="category">Estrutura</field>
+        <field name="icon">fa-window-maximize</field>
+        <field name="sequence">5</field>
+        <field name="supports_children" eval="False"/>
+        <field name="supports_binding" eval="False"/>
+        <field name="is_locked_by_default" eval="False"/>
+        <field name="is_system" eval="False"/>
+        <field name="typst_renderer_key">page_header</field>
+        <field name="default_props_json"><![CDATA[{"usar_imagem":true,"altura_cm":3.0,"alinhamento":"center","fallback_texto":""}]]></field>
+    </record>
+
+    <record id="block_page_footer" model="gov.document.block.catalog">
+        <field name="code">page_footer</field>
+        <field name="name">Rodapé da Página</field>
+        <field name="block_kind">metadata</field>
+        <field name="category">Estrutura</field>
+        <field name="icon">fa-window-minimize</field>
+        <field name="sequence">6</field>
+        <field name="supports_children" eval="False"/>
+        <field name="supports_binding" eval="False"/>
+        <field name="is_locked_by_default" eval="False"/>
+        <field name="is_system" eval="False"/>
+        <field name="typst_renderer_key">page_footer</field>
+        <field name="default_props_json"><![CDATA[{"usar_imagem":true,"altura_cm":1.5,"mostrar_numero_pagina":true}]]></field>
+    </record>
+
     <record id="block_heading1" model="gov.document.block.catalog">
         <field name="code">heading1</field>
         <field name="name">Título Principal</field>
