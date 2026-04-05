@@ -803,7 +803,7 @@ class DomainCustom(Domain):
         query = records._filtered_access('read')._as_query(ordered=False)
         if query.is_empty():
             return Domain.FALSE._as_predicate(records)
-        query.add_where(self.optimize_full(records)._to_sql(query.table))
+        query.add_where(self._to_sql(query.table))
         return DomainCondition('id', 'any!', query)._as_predicate(records)
 
     def __eq__(self, other):
