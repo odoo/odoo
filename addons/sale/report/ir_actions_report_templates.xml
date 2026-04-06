@@ -324,7 +324,7 @@
                     <strong>Signature</strong>
                 </div>
                 <div class="offset-8">
-                    <img t-att-src="image_data_uri(doc.signature)" style="max-height: 4cm; max-width: 8cm;"/>
+                    <img t-if="doc.signature" t-att-src="image_data_uri(doc.signature)" style="max-height: 4cm; max-width: 8cm;"/>
                 </div>
                 <div class="offset-8 text-center">
                     <span t-field="doc.signed_by">Oscar Morgan</span>
