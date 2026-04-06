@@ -13,12 +13,15 @@ export class NewsletterLayoutOptionPlugin extends Plugin {
 }
 export class SelectNewsletterTemplateAction extends BuilderAction {
     static id = "selectNewsletterTemplate";
-    static dependencies = ["builderActions"];
+    static dependencies = ["builderActions", "mailingListSubscribeOption"];
     setup() {
         this.getAction = this.dependencies.builderActions.getAction;
     }
     async prepare({ actionParam }) {
         await this.getAction("selectTemplate").prepare({ actionParam: actionParam });
+    }
+    load() {
+        return this.dependencies.mailingListSubscribeOption.fetchMailingLists();
     }
     isApplied({ editingElement, params: { attribute } }) {
         const parentEl = editingElement.parentElement;
@@ -31,6 +34,13 @@ export class SelectNewsletterTemplateAction extends BuilderAction {
         this.getAction("selectTemplate").apply(action);
         const parentEl = action.editingElement.parentElement;
         parentEl.dataset.newsletterTemplate = action.params.attribute;
+        // The template's form comes with `data-list-id="0"`: select the first
+        // mailing list, as it is done when the snippet is dropped.
+        const formEl = action.editingElement.querySelector(".s_newsletter_subscribe_form");
+        const mailingLists = action.loadResult;
+        if (formEl && mailingLists.length) {
+            formEl.dataset.listId = mailingLists[0].id;
+        }
     }
     clean(action) {
         return this.getAction("selectTemplate").clean(action)
