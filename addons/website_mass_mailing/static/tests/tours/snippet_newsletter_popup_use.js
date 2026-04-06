@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add('snippet_newsletter_popup_use', {
         run: "click",
     },
     {
-        content: "Check the modal is now closed",
-        trigger: 'body:has(.o_newsletter_popup:not(:visible) .modal)',
-    }
+        content: "Check the thanks message is shown in the modal",
+        trigger: ".o_newsletter_popup .modal.show .js_subscribed_wrap:not(.d-none)",
+    },
 ]});
