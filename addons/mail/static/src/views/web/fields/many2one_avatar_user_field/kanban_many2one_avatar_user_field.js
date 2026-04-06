@@ -9,10 +9,11 @@ import {
     Many2OneField,
 } from "@web/views/fields/many2one/many2one_field";
 import { Avatar } from "../avatar/avatar";
+import { ImStatus } from "@mail/core/common/im_status";
 
 export class KanbanMany2OneAvatarUserField extends Component {
     static template = "mail.KanbanMany2OneAvatarUserField";
-    static components = { Avatar, KanbanMany2One };
+    static components = { Avatar, KanbanMany2One, ImStatus };
     static props = {
         ...Many2OneField.props,
         displayAvatarName: { type: Boolean, optional: true },
@@ -23,11 +24,20 @@ export class KanbanMany2OneAvatarUserField extends Component {
     }
 
     get m2oProps() {
-        return computeM2OProps(this.props);
+        const props = computeM2OProps(this.props);
+        props.specification = {
+            im_status: {},
+            ...(props.specification || {}),
+        };
+        return props;
     }
 
     get value() {
         return this.props.record.data[this.props.name];
+    }
+
+    getTooltipText(formattedDisplayName) {
+        return formattedDisplayName ? formattedDisplayName.replace(/--/g, "") : undefined;
     }
 }
 

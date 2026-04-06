@@ -12,7 +12,9 @@ import {
     KanbanMany2ManyTagsAvatarField,
     kanbanMany2ManyTagsAvatarField,
     KanbanMany2ManyTagsAvatarFieldTagsList,
+    Many2ManyTagsAvatarFieldPopover,
 } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
+import { ImStatus } from "@mail/core/common/im_status";
 
 export class Many2ManyAvatarUserTagsList extends TagsList {
     static template = "mail.Many2ManyAvatarUserTagsList";
@@ -74,8 +76,37 @@ export const many2ManyTagsAvatarUserField = {
 
 registry.category("fields").add("many2many_avatar_user", many2ManyTagsAvatarUserField);
 
+export class KanbanMany2ManyTagsAvatarUserFieldPopover extends Many2ManyTagsAvatarFieldPopover {
+    static template = "mail.KanbanMany2ManyTagsAvatarUserFieldPopover";
+    static optionTemplate = "mail.KanbanMany2ManyTagsAvatarUserFieldPopover.option";
+    static components = {
+        ...Many2ManyTagsAvatarFieldPopover.components,
+        ImStatus,
+    };
+
+    get autocompleteSpecification() {
+        return {
+            display_name: {},
+            im_status: {},
+            ...(this.props.specification || {}),
+        };
+    }
+
+    getTooltipText(formattedDisplayName) {
+        return formattedDisplayName ? formattedDisplayName.replace(/--/g, "") : undefined;
+    }
+}
+
 export class KanbanMany2ManyAvatarUserTagsList extends KanbanMany2ManyTagsAvatarFieldTagsList {
     static template = "mail.KanbanMany2ManyAvatarUserTagsList";
+
+    setup() {
+        super.setup();
+        this.popover = usePopover(KanbanMany2ManyTagsAvatarUserFieldPopover, {
+            popoverClass: "o_m2m_tags_avatar_field_popover",
+            closeOnClickAway: (target) => !target.closest(".modal"),
+        });
+    }
 }
 
 export class KanbanMany2ManyTagsAvatarUserField extends WithUserChatter(
