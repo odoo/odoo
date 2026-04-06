@@ -751,6 +751,12 @@ class ResPartner(models.Model):
         vat = vat.strip()
         return bool(self.__check_vat_vn_re.match(vat))
 
+    def format_vat_al(self, vat):
+        vat_prefix, vat_number = self._split_vat(vat)
+        stdnum_vat_format = stdnum.util.get_cc_module('al', 'nipt').compact
+        vat_number = stdnum_vat_format(vat_number)
+        return f'{vat_prefix}{vat_number}'
+
     def format_vat_eu(self, vat):
         # Foreign companies that trade with non-enterprises in the EU
         # may have a VATIN starting with "EU" instead of a country code.
@@ -790,6 +796,12 @@ class ResPartner(models.Model):
         if self._check_tin_hu_companies_re.match(vat):
             vat = vat[:8] + '-' + vat[8] + '-' + vat[9] + vat[10]
         return vat
+
+    def format_vat_is(self, vat):
+        vat_prefix, vat_number = self._split_vat(vat)
+        stdnum_vat_format = stdnum.util.get_cc_module('is_', 'vsk').compact
+        vat_number = stdnum_vat_format(vat_number)
+        return f'{vat_prefix}{vat_number}'
 
     def check_vat_id(self, vat):
         """ Temporary Indonesian VAT validation to support the new format
