@@ -8,6 +8,10 @@ export class ToggleThanksMessageTranslationOption extends BaseOptionComponent {
     static template = "website_mass_mailing.ToggleThanksMessageTranslationOption";
 
     static hideOverlay = false;
+
+    shouldShowOption() {
+        return this.env.getEditingElement().dataset.successMode !== "closePopup";
+    }
 }
 
 registry.category("website-options").add(ToggleThanksMessageTranslationOption.id, ToggleThanksMessageTranslationOption);
