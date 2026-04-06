@@ -95,12 +95,12 @@ class SaleOrderLine(models.Model):
     @api.depends('order_id.partner_id', 'product_id', 'order_id.project_id')
     def _compute_analytic_distribution(self):
         ctx_project = self.env['project.project'].browse(self.env.context.get('project_id'))
-        project_lines = self.filtered(lambda l: not l.display_type and (ctx_project or l.product_id.project_id or l.order_id.project_id))
+        project_lines = self.filtered(lambda l: not l.display_type and (ctx_project or l.product_id.with_company(l.company_id).project_id or l.order_id.project_id))
         empty_project_lines = project_lines.filtered(lambda l: not l.analytic_distribution)
         super(SaleOrderLine, (self - project_lines) + empty_project_lines)._compute_analytic_distribution()
 
         for line in project_lines:
-            project = ctx_project or line.product_id.project_id or line.order_id.project_id
+            project = ctx_project or line.product_id.with_company(line.company_id).project_id or line.order_id.project_id
             if line.analytic_distribution:
                 applied_root_plans = self.env['account.analytic.account'].browse(
                     list({int(account_id) for ids in line.analytic_distribution for account_id in ids.split(",")})
