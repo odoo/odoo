@@ -6190,7 +6190,7 @@ class BaseModel(metaclass=MetaModel):
             for invf in self.pool.field_inverses[field]:
                 self.env[invf.model_name].flush_model([invf.name])
                 invf._invalidate_cache(env)
-        self.env.transaction.clear_access_cache(self._name)
+        self.env.transaction.invalidate_access_cache(self._name)
 
     @api.private
     def modified(self, fnames: Collection[str], create: bool = False, before: bool = False) -> None:

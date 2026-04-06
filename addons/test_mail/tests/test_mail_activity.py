@@ -55,7 +55,7 @@ class TestActivityRights(TestActivityCommon):
 
         # If user has no access to the record, should return activity view instead
         with patch.object(MailTestActivity, '_access_domain', autospec=True, side_effect=_employee_no_access):
-            self.env.transaction.clear_access_cache()
+            self.env.transaction.invalidate_access_cache()
             self.assertFalse(self.test_record.with_user(self.user_employee).has_access('read'))
 
             action = test_activity.with_user(self.user_employee).action_open_document()
@@ -139,13 +139,13 @@ class TestActivityRights(TestActivityCommon):
             )
 
         self.env.invalidate_all()
-        self.env.transaction.clear_access_cache()
+        self.env.transaction.invalidate_access_cache()
         # check read access correctly uses '_mail_get_operation_for_mail_message_operation'
         admin_activities[0].with_user(self.user_employee).read(['summary'])
         admin_activities[1].with_user(self.user_employee).read(['summary'])
 
         self.env.invalidate_all()
-        self.env.transaction.clear_access_cache()
+        self.env.transaction.invalidate_access_cache()
         # check search correctly uses '_mail_get_operation_for_mail_message_operation'
         found = self.env['mail.activity'].with_user(self.user_employee).search([('res_model', '=', 'mail.test.access.custo')])
         self.assertEqual(found, admin_activities[:2] + emp_new_1 + emp_new_2, 'Should respect _ge_mail_get_operation_for_mail_message_operationt_mail_message_access, reading non locked records')
@@ -565,7 +565,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
 
         # if not assigned -> should filter out
         self.env.invalidate_all()
-        self.env.transaction.clear_access_cache()
+        self.env.transaction.invalidate_access_cache()
         self.test_activities_removed.write({'user_id': self.user_admin.id})
         test_with_removed = self.env['mail.activity'].search([
             ('id', 'in', self.test_activities.ids),

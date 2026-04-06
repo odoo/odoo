@@ -705,7 +705,11 @@ class Transaction:
                 Environment(env.cr, public_user.id, {}).flush_all()
                 break
 
+    @deprecated("Since 20.0, renamed to invalidate_access_cache")
     def clear_access_cache(self, model_name: str = '') -> None:
+        self.invalidate_access_cache(model_name)
+
+    def invalidate_access_cache(self, model_name: str = '') -> None:
         """ Clear the access cache for record rule checks. """
         # clear each context separately because it is cached in Environment
         for context_dict in self.access_read.values():
@@ -728,7 +732,7 @@ class Transaction:
 
     def clear(self):
         """ Clear the caches and pending computations and updates in the transactions. """
-        self.clear_access_cache()
+        self.invalidate_access_cache()
         self.invalidate_field_data()
         self.field_data_patches.clear()
         self.field_dirty.clear()

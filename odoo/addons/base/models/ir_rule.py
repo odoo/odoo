@@ -182,14 +182,14 @@ class IrRule(models.Model):
 
     def unlink(self):
         res = super().unlink()
-        self.env.transaction.clear_access_cache()
+        self.env.transaction.invalidate_access_cache()
         return res
 
     @api.model_create_multi
     def create(self, vals_list):
         self.env.flush_all()
         res = super().create(vals_list)
-        self.env.transaction.clear_access_cache()
+        self.env.transaction.invalidate_access_cache()
         return res
 
     def write(self, vals):
@@ -199,7 +199,7 @@ class IrRule(models.Model):
         # - odoo/addons/base/tests/test_orm.py (/home/dle/src/odoo/master-nochange-fp/odoo/addons/base/tests/test_orm.py)
         self.env.flush_all()
         res = super().write(vals)
-        self.env.transaction.clear_access_cache()
+        self.env.transaction.invalidate_access_cache()
         return res
 
     def _make_access_error(self, operation, records):

@@ -2082,7 +2082,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         existing.categories
 
         # invalidate 'categories' for the assertQueryCount
-        self.env.transaction.clear_access_cache()
+        self.env.transaction.invalidate_access_cache()
         records.invalidate_model(['categories'])
         with self.assertQueryCount(5):
             # <categories>.__get__(existing)

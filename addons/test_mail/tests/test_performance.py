@@ -1377,7 +1377,7 @@ class TestMailAccessPerformance(BaseMailPerformance):
         # filter records: 3 (1 / model)
         # '_fetch_query': 1
         self.env.invalidate_all()
-        self.env.transaction.clear_access_cache()
+        self.env.transaction.invalidate_access_cache()
         profile = self.profile() if self.warm else nullcontext()
         with self.assertQueryCount(employee=5), profile:
             content = (self.activities - self.activities_emp_nope).with_env(self.env).read(['summary'])
@@ -1390,7 +1390,7 @@ class TestMailAccessPerformance(BaseMailPerformance):
         # select mail.activity: 1
         # filter records: 4 (1 / model)
         self.env.invalidate_all()
-        self.env.transaction.clear_access_cache()
+        self.env.transaction.invalidate_access_cache()
         profile = self.profile() if self.warm else nullcontext()
         with self.assertQueryCount(employee=5), profile:
             found = self.activities.with_env(self.env).search([('summary', 'ilike', 'TestActivity')])
@@ -1405,7 +1405,7 @@ class TestMailAccessPerformance(BaseMailPerformance):
         # _get_mail_message_access: 2 on custom implementation, no prefetching (one unreachable)
         # 'read': 1
         self.env.invalidate_all()
-        self.env.transaction.clear_access_cache()
+        self.env.transaction.invalidate_access_cache()
         profile = self.profile() if self.warm else nullcontext()
         with self.assertQueryCount(employee=5), profile:
             content = (self.messages - self.messages_emp_nope).with_env(self.env).read(['body'])
@@ -1415,7 +1415,7 @@ class TestMailAccessPerformance(BaseMailPerformance):
     @warmup
     def test_message_search(self):
         self.env.invalidate_all()
-        self.env.transaction.clear_access_cache()
+        self.env.transaction.invalidate_access_cache()
         # queries
         # select mail.message: 1
         # filter records: 1 / model (access rules done in batch)

@@ -603,7 +603,7 @@ class ResUsers(models.Model):
 
         if 'company_id' in vals or 'company_ids' in vals:
             # Access cache depends on the company, clear it
-            self.env.transaction.clear_access_cache()
+            self.env.transaction.invalidate_access_cache()
             # Reset lazy properties `company` & `companies` on all envs,
             # This is unlikely in a business code to change the company of a user and then do business stuff
             # but in case it happens this is handled.

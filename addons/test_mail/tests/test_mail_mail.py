@@ -88,7 +88,7 @@ class TestMailMail(MailCommon):
 
         with patch.object(self.env.registry['ir.attachment'], '_access_domain', _patched_check_access):
             # Sanity check
-            self.env.transaction.clear_access_cache()
+            self.env.transaction.invalidate_access_cache()
             self.assertEqual(mail.restricted_attachment_count, 2)
             self.assertEqual(len(mail.unrestricted_attachment_ids), 2)
             self.assertEqual(mail.unrestricted_attachment_ids.mapped('name'), ['file 1', 'file 3'])
