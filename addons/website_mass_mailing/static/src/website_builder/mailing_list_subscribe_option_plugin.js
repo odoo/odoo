@@ -6,6 +6,8 @@ import { _t } from "@web/core/l10n/translation";
 import { NewsletterSubscribeCommonOption } from "./newsletter_subscribe_common_option";
 import { getElementsWithOption, filterExtends } from "@html_builder/utils/utils";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { renderToElement } from "@web/core/utils/render";
+import { DataAttributeAction } from "@html_builder/core/core_builder_action_plugin";
 
 export class MailingListSubscribeOptionPlugin extends Plugin {
     static id = "mailingListSubscribeOption";
@@ -14,6 +16,7 @@ export class MailingListSubscribeOptionPlugin extends Plugin {
     resources = {
         builder_actions: {
             ToggleThanksMessageAction,
+            NewsletterSubscribeSuccessAction,
         },
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         clean_for_save_processors: this.cleanForSave.bind(this),
@@ -121,6 +124,32 @@ export class ToggleThanksMessageAction extends BuilderAction {
         thanksMessageEl.classList.toggle("o_disable_preview", !isVisible);
         toSubscribeEl.classList.toggle("o_enable_preview", !isVisible);
         toSubscribeEl.classList.toggle("o_disable_preview", isVisible);
+    }
+}
+
+export class NewsletterSubscribeSuccessAction extends DataAttributeAction {
+    static id = "newsletterSubscribeSuccess";
+    setup() {
+        this.preview = false;
+    }
+    apply({ editingElement: el, value }) {
+        super.apply(...arguments);
+        let messageEl = el.querySelector(".js_subscribed_wrap");
+        if (value === "closePopup") {
+            messageEl?.remove();
+            const toSubscribeEl = el.querySelector(".js_subscribe_wrap");
+            toSubscribeEl.classList.remove("o_disable_preview");
+        } else if (!messageEl) {
+            messageEl = renderToElement(
+                "website_mass_mailing.newsletter_subscribe_success_message"
+            );
+            el.prepend(messageEl);
+        }
+        if (value === "redirect") {
+            el.dataset.successPage ||= "/contactus-thank-you";
+        } else {
+            delete el.dataset.successPage;
+        }
     }
 }
 
