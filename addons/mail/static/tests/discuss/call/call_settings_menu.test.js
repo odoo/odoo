@@ -12,7 +12,7 @@ import {
 import { parseRawValue, toRawValue } from "@mail/utils/common/local_storage";
 import { Settings } from "@mail/core/common/settings_model";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
-import { describe, test, expect } from "@odoo/hoot";
+import { describe, keyDown, test, expect } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
@@ -93,6 +93,13 @@ test("activate push to talk", async () => {
     await contains("i[aria-label='Register new key']");
     await contains("label:has(:text('Delay after releasing push-to-talk'))");
     await contains("span:text('Voice detection sensitivity')", { count: 0 });
+    // ensure push to talk settings updates reflect in UI
+    await click("label[title='Push-to-talk key']");
+    await keyDown("Ctrl+m");
+    await contains(".o-discuss-CallSettings-pushToTalkKeyText:text('Ctrl+m')");
+    await contains(".o-discuss-CallSettings-voiceActiveDuration:text('200ms')");
+    await editInput(document.body, ".o-discuss-CallSettings-delayInput", 560);
+    await contains(".o-discuss-CallSettings-voiceActiveDuration:text('560ms')");
 });
 
 test("activate blur", async () => {
