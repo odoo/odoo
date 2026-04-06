@@ -78,6 +78,65 @@ class TestAnalyticDistribution(HttpCase, TestSaleProjectCommon):
             "The analytic distribution of the SOL should be set to the account of the project set on the product.",
         )
 
+    def test_sol_analytic_distribution_multicompany_task(self):
+        """Test that the analytic distribution on SOL uses the correct company's
+        project when the product's project_id is company-dependent.
+
+        Scenario:
+        - Company A has project_a linked to the product
+        - Company B has project_b linked to the product
+        - Create a SO in Company B
+        - The SOL's analytic distribution should come from project_b, not project_a
+        """
+        company_a = self.env.company
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        analytic_account_a, analytic_account_b = self.env['account.analytic.account'].create([
+            {
+                'name': 'Analytic Account Company A',
+                'plan_id': self.analytic_plan.id,
+                'company_id': company_a.id,
+            },
+            {
+                'name': 'Analytic Account Company B',
+                'plan_id': self.analytic_plan.id,
+                'company_id': company_b.id,
+            }
+        ])
+        project_a, project_b = self.env['project.project'].create([
+            {
+                'name': 'Field Service (A)',
+                'company_id': company_a.id,
+                'account_id': analytic_account_a.id,
+                'allow_billable': True,
+            },
+            {
+                'name': 'Field Service (B)',
+                'company_id': company_b.id,
+                'account_id': analytic_account_b.id,
+                'allow_billable': True,
+            }
+        ])
+        product = self.env['product.product'].create({
+            'name': 'Service Task Global Project MC',
+            'type': 'service',
+            'service_tracking': 'task_global_project',
+            'company_id': False,
+            'taxes_id': False,
+        })
+
+        # Set the company-dependent project_id for each company
+        product.with_company(company_a).project_id = project_a
+        product.with_company(company_b).project_id = project_b
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'company_id': company_b.id,
+            'order_line': [Command.create({'product_id': product.id})],
+        })
+        sale_order_line = sale_order.order_line
+
+        # The analytic distribution should come from project_b (Company B), not project_a
+        self.assertEqual(sale_order_line.analytic_distribution, {str(analytic_account_b.id): 100})
+
     def test_project_analytic_distribution_on_invoice_lines(self):
         """
         Test that Analytic Distribution applies from Project to Invoice Lines (excluding payable/receivable lines).
