@@ -417,3 +417,34 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         computer_case_copy = self.computer_case.copy()
         computer_case_copy.website_published = True
         self.start_tour("/shop", "shop_attribute_filters_remain_when_changing_page")
+
+    def test_product_public_category_model_access(self):
+        """Ensure that access to models not linked to a dynamic snippet filter is denied."""
+
+        product_public_category_filter = self.env.ref('website_sale.dynamic_filter_category_list')
+        result = self.url_open("/website/snippet/filters", json={"params": {
+            "template_key": "website_sale.dynamic_filter_template_product_public_category_default",
+            "filter_id": product_public_category_filter.id,
+            "res_model": "product.template",
+            "search_domain": [],
+            "res_id": self.computer.id,
+            "limit": 1,
+        }}).json().get('result', [])
+        self.assertEqual(len(result), 0)
+
+    def test_newest_products_filter_unpublished_access(self):
+        """Ensure unpublished products cannot be fetched using a mono-record snippet configuration"""
+
+        product_filter = self.env.ref('website_sale.dynamic_filter_newest_products')
+        # Unpublish products. The product dynamic snippet should be empty.
+        products = self.env['product.product'].search([])
+        products.write({'website_published': False})
+        result = self.url_open("/website/snippet/filters", json={"params": {
+            "template_key": "website_sale.dynamic_filter_template_product_product_products_item",
+            "filter_id": product_filter.id,
+            "res_model": "product.product",
+            "search_domain": [],
+            "res_id": self.computer.product_variant_id.id,
+            "limit": 1,
+        }}).json().get('result', [])
+        self.assertEqual(len(result), 0)
