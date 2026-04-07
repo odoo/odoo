@@ -41,6 +41,7 @@ import {
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { insertListInSpreadsheet } from "../helpers/list";
 
+import { createSheet, deleteSheet } from "../helpers/commands";
 const { DEFAULT_LOCALE, PIVOT_STATIC_TABLE_CONFIG } = spreadsheet.constants;
 const { toZone } = spreadsheet.helpers;
 const { cellMenuRegistry } = spreadsheet.registries;
@@ -900,7 +901,7 @@ test("Can see record with link to list cell", async function () {
         },
     });
     const { model, env } = await createSpreadsheetWithList();
-    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    createSheet(model, { sheetId: "42" });
     model.dispatch("ACTIVATE_SHEET", {
         sheetIdFrom: model.getters.getActiveSheetId(),
         sheetIdTo: "42",
@@ -941,7 +942,7 @@ test("Can see record on vectorized list index", async function () {
         },
     });
     const { model, env } = await createSpreadsheetWithList();
-    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    createSheet(model, { sheetId: "42" });
     model.dispatch("ACTIVATE_SHEET", {
         sheetIdFrom: model.getters.getActiveSheetId(),
         sheetIdTo: "42",
@@ -1370,8 +1371,8 @@ test("isListUnused getter", async () => {
     const sheetId = model.getters.getActiveSheetId();
     expect(model.getters.isListUnused("1")).toBe(false);
 
-    model.dispatch("CREATE_SHEET", { sheetId: "2" });
-    model.dispatch("DELETE_SHEET", { sheetId: sheetId });
+    createSheet(model, { sheetId: "2" });
+    deleteSheet(model, sheetId);
     expect(model.getters.isListUnused("1")).toBe(true);
 
     setCellContent(model, "A1", '=ODOO.LIST.HEADER(1, "foo")');

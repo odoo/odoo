@@ -16,6 +16,7 @@ import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { getCell, getCellFormula, getCellValue } from "@spreadsheet/../tests/helpers/getters";
 import { mockService, onRpc } from "@web/../tests/web_test_helpers";
+import { createSheet } from "../helpers/commands";
 
 const { cellMenuRegistry } = spreadsheet.registries;
 
@@ -185,7 +186,7 @@ test("Domain with granularity day_of_month are correctly computer", async functi
 
 test("Cannot open see records on the main PIVOT cell", async function () {
     const { env, model } = await createSpreadsheetWithPivot();
-    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    createSheet(model, { sheetId: "42" });
     setCellContent(model, "A1", `=PIVOT("1")`, "42");
     selectCell(model, "A1", "42");
     const action = await getActionMenu(cellMenuRegistry, ["pivot_see_records"], env);
@@ -194,7 +195,7 @@ test("Cannot open see records on the main PIVOT cell", async function () {
 
 test("Cannot open see records on the empty PIVOT cell below the main cell", async function () {
     const { env, model } = await createSpreadsheetWithPivot();
-    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    createSheet(model, { sheetId: "42" });
     setCellContent(model, "A1", `=PIVOT("1")`, "42");
     selectCell(model, "A2", "42"); // A2 is always empty. It's the cell next to measure headers.
     const action = await getActionMenu(cellMenuRegistry, ["pivot_see_records"], env);
@@ -246,7 +247,7 @@ test("Can see records on PIVOT cells", async function () {
             actions.length = 0;
         }
     }
-    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    createSheet(model, { sheetId: "42" });
     setCellContent(model, "A1", `=PIVOT("1")`, "42");
 
     // here is what the cells look like

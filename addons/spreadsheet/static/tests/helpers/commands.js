@@ -149,6 +149,7 @@ export function addColumns(
         position,
         base: lettersToNumber(column),
         quantity,
+        sheetName: model.getters.getSheetName(sheetId),
     });
 }
 
@@ -165,6 +166,7 @@ export function addRows(
         position,
         base: row,
         quantity,
+        sheetName: model.getters.getSheetName(sheetId),
     });
 }
 
@@ -179,6 +181,7 @@ export function deleteColumns(model, columns, sheetId = model.getters.getActiveS
         sheetId,
         dimension: "COL",
         elements: columns.map(lettersToNumber),
+        sheetName: model.getters.getSheetName(sheetId),
     });
 }
 
@@ -346,7 +349,7 @@ export function createSheet(model, data = {}) {
         sheetId,
         cols: data.cols,
         rows: data.rows,
-        name: data.name,
+        name: data.name || sheetId.toString(),
     });
 }
 

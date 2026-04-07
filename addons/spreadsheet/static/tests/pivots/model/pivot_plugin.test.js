@@ -41,6 +41,7 @@ import { Model } from "@odoo/o-spreadsheet";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { Partner, Product } from "../../helpers/data";
+import { createSheet, deleteSheet } from "../../helpers/commands";
 const { toZone } = spreadsheet.helpers;
 
 describe.current.tags("headless");
@@ -127,7 +128,7 @@ test("can get a pivotId from cell formula where the id is a reference", async fu
 test("can get a Pivot from cell formula where the id is a reference in an inactive sheet", async function () {
     const { model } = await createSpreadsheetWithPivot();
     const firstSheetId = model.getters.getActiveSheetId();
-    model.dispatch("CREATE_SHEET", { sheetId: "2" });
+    createSheet(model, { sheetId: "2" });
     model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: firstSheetId, sheetIdTo: "2" });
     setCellContent(model, "A1", "1");
     setCellContent(model, "A2", '=PIVOT.VALUE(A1,"probability")');
@@ -2006,8 +2007,8 @@ test("isPivotUnused getter", async () => {
     const sheetId = model.getters.getActiveSheetId();
     expect(model.getters.isPivotUnused(pivotId)).toBe(false);
 
-    model.dispatch("CREATE_SHEET", { sheetId: "2" });
-    model.dispatch("DELETE_SHEET", { sheetId: sheetId });
+    createSheet(model, { sheetId: "2" });
+    deleteSheet(model, sheetId);
     expect(model.getters.isPivotUnused(pivotId)).toBe(true);
 
     setCellContent(model, "A1", "=PIVOT.HEADER(1)");

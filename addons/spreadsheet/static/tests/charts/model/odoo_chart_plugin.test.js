@@ -28,7 +28,7 @@ import {
     Partner,
 } from "@spreadsheet/../tests/helpers/data";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
-import { setGlobalFilterValue } from "../../helpers/commands";
+import { createSheet, deleteSheet, setGlobalFilterValue } from "../../helpers/commands";
 
 const { chartDataSourceRegistry } = spreadsheet.registries;
 const { toZone } = spreadsheet.helpers;
@@ -877,12 +877,9 @@ test("Odoo chart legend color changes with background color update", async () =>
 test("Remove odoo chart when sheet is deleted", async () => {
     const { model } = await createSpreadsheetWithChart({ type: "line" });
     const sheetId = model.getters.getActiveSheetId();
-    model.dispatch("CREATE_SHEET", {
-        sheetId: model.uuidGenerator.smallUuid(),
-        position: model.getters.getSheetIds().length,
-    });
+    createSheet(model, { position: model.getters.getSheetIds().length });
     expect(model.getters.getOdooChartIds().length).toBe(1);
-    model.dispatch("DELETE_SHEET", { sheetId });
+    deleteSheet(model, sheetId);
     expect(model.getters.getOdooChartIds().length).toBe(0);
 });
 
