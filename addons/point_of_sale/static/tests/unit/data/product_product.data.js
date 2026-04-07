@@ -249,5 +249,17 @@ export class ProductProduct extends models.ServerModel {
             product_template_attribute_value_ids: [],
             product_template_variant_value_ids: [],
         },
+        {
+            id: 25,
+            product_tmpl_id: 25,
+            lst_price: 100,
+            standard_price: 0,
+            display_name: "Special Product",
+            product_tag_ids: [],
+            barcode: false,
+            default_code: false,
+            product_template_attribute_value_ids: [],
+            product_template_variant_value_ids: [],
+        },
     ];
 }
