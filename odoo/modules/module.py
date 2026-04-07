@@ -80,6 +80,7 @@ _DEFAULT_MANIFEST = {
     'installable': True,
     'images': [],  # website
     'images_preview_theme': {},  # website themes
+    'kpi_providers': [],
     'live_test_url': '',  # website themes
     'new_page_templates': {},  # website themes
     'post_init_hook': '',
