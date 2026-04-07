@@ -13,12 +13,16 @@ export class FieldSelectorField extends Component {
         ...standardFieldProps,
         resModel: { type: String, optional: true },
         onlySearchable: { type: Boolean, optional: true },
+        allowProperties: { type: Boolean, optional: true },
         followRelations: { type: Boolean, optional: true },
     };
 
     filter(fieldDef) {
         if (fieldDef.type === "separator") {
             // Don't show properties separator
+            return false;
+        }
+        if (!this.props.allowProperties && fieldDef.type === "properties") {
             return false;
         }
         return !this.props.onlySearchable || fieldDef.searchable;
@@ -75,6 +79,7 @@ export const fieldSelectorField = {
     ],
     extractProps({ options }, dynamicInfo) {
         return {
+            allowProperties: options.allow_properties ?? true,
             followRelations: options.follow_relations ?? true,
             onlySearchable: exprToBoolean(options.only_searchable),
             resModel: options.model,
