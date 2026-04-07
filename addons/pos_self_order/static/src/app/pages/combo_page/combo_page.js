@@ -116,12 +116,13 @@ export class ComboPage extends Component {
     }
 
     hasAttribute(product) {
-        return (
-            product.attribute_line_ids.length > 0 &&
-            product.attribute_line_ids.some(
-                (line) => line.attribute_id?.create_variant === "no_variant"
-            )
-        );
+        const isKiosk = this.selfOrder.kioskMode;
+        return product.attribute_line_ids.some((line) => {
+            if (line.attribute_id?.create_variant !== "no_variant") {
+                return false;
+            }
+            return line.product_template_value_ids.some((a) => !(isKiosk && a.is_custom));
+        });
     }
 
     getSelectedItems(choiceState = undefined) {

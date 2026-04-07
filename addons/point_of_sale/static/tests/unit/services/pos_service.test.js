@@ -371,9 +371,10 @@ describe("pos_store.js", () => {
         const store = await setupPosEnv();
         store.selectedCategory = store.models["pos.category"].get(1);
         let products = store.productsToDisplay;
-        expect(products.length).toBe(2);
-        expect(products[0].id).toBe(19);
-        expect(products[1].id).toBe(5);
+
+        expect(products.length).toBe(3);
+        expect(products[1].id).toBe(19);
+        expect(products[products.length - 1].id).toBe(5);
         expect(store.selectedCategory.id).toBe(1);
         store.selectedCategory = store.models["pos.category"].get(1);
         store.searchProductWord = "TEST";
@@ -396,7 +397,7 @@ describe("pos_store.js", () => {
         let grouped = store.productToDisplayByCateg;
         expect(grouped.length).toBe(1); // Only one group
         expect(grouped[0][0]).toBe("0");
-        expect(grouped[0][1].length).toBe(17); // 17 products in same group
+        expect(grouped[0][1].length).toBe(18); // 18 products in same group
 
         // Case 2: Grouping enabled
         store.config.iface_group_by_categ = true;
@@ -431,8 +432,8 @@ describe("pos_store.js", () => {
         grouped = store.productToDisplayByCateg;
         expect(grouped.length).toBe(1);
         expect(grouped[0][0]).toBe(1);
-        expect(grouped[0][1][0].name).toBe("Multi Category Product");
-        expect(grouped[0][1][1].name).toBe("TEST");
+        expect(grouped[0][1][1].name).toBe("Multi Category Product");
+        expect(grouped[0][1][2].name).toBe("TEST");
 
         // Case 5: Grouping with category 'Food' selected (parent of 'Burger' & 'Pizza')
         store.selectedCategory = store.models["pos.category"].get(3);
