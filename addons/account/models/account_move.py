@@ -638,6 +638,7 @@ class AccountMove(models.Model):
         check_company=True,
     )
     reversal_move_ids = fields.One2many('account.move', 'reversed_entry_id')
+    reversal_move_count = fields.Integer(compute='_compute_reversal_move_count')
 
     # === Vendor bill fields === #
     invoice_vendor_bill_id = fields.Many2one(
@@ -1445,6 +1446,11 @@ class AccountMove(models.Model):
                 len(move.suitable_journal_ids) > 1
                 or move.journal_id and move.journal_id not in move.suitable_journal_ids
             )
+
+    @api.depends('reversal_move_ids')
+    def _compute_reversal_move_count(self):
+        for move in self:
+            move.reversal_move_count = len(move.reversal_move_ids)
 
     def _compute_payments_widget_to_reconcile_info(self):
 
@@ -3837,7 +3843,7 @@ class AccountMove(models.Model):
         :param default: The default values dict passed to copy method
         :return: The message content string
         """
-        return _('This entry has been reversed from %s', self._get_html_link()) if default.get('reversed_entry_id') else _('This entry has been duplicated from %s', self._get_html_link())
+        return _('This entry has been duplicated from %s', self._get_html_link())
 
     def _get_review_state_access_groups(self):
         """Return a tuple (is_user_able_to_review, is_user_able_to_supervise) for the current user."""
@@ -6252,6 +6258,16 @@ class AccountMove(models.Model):
             'views': [(False, 'list')],
             'domain': [('move_id', '=', self.id), ('display_type', 'not in', ('line_section', 'line_subsection', 'line_note'))],
         }
+
+    def action_open_reversal_moves(self):
+        return self.reversal_move_ids._get_records_action(
+            name=self.env._("Credit Notes") if self.is_sale_document(include_receipts=True) else self.env._("Refunds"),
+        )
+
+    def action_open_reversed_entry(self):
+        return self.reversed_entry_id._get_records_action(
+            name=self.env._("Invoices") if self.is_purchase_document(include_receipts=True) else self.env._("Vendor Bills"),
+        )
 
     def action_switch_move_type(self):
         if any(move.move_type == "entry" for move in self):
