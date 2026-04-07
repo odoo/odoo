@@ -315,6 +315,7 @@ export class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
                     body: _t(
                         "Changing the color palette will reset all your color customizations, are you sure you want to proceed?"
                     ),
+                    confirmLabel: _t("Apply New Palette"),
                     confirm: () => resolve(true),
                     cancel: () => resolve(false),
                 });
