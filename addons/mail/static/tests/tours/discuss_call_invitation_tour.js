@@ -58,10 +58,6 @@ registry.category("web_tour.tours").add("discuss_call_invitation.js", {
                 run: "click",
             },
             {
-                trigger: ".o-discuss-CallPermissionDeniedDialog",
-                run: "press Escape",
-            },
-            {
                 trigger: ".o-discuss-CallInvitation-cameraPreview:not(:visible)",
             },
         ];
