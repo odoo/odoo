@@ -55,25 +55,27 @@
                             <i t-if="this.state.isInEditMode"
                                 class="oi oi-draggable ms-1 d-none d-sm-block mt-1"/>
                         </label>
-                        <div class="o_property_field_value">
-                            <PropertyValue
-                                id="domId"
-                                canChangeDefinition="this.state.canChangeDefinition"
-                                comodel="propertyConfiguration.comodel || ''"
-                                currencyField="propertyConfiguration.currency_field || ''"
-                                context="this.props.context"
-                                domain="propertyConfiguration.domain || '[]'"
-                                readonly="this.props.readonly"
-                                selection="propertyConfiguration.selection"
-                                string="propertyConfiguration.string"
-                                tags="propertyConfiguration.tags"
-                                type="propertyConfiguration.type"
-                                value="propertyConfiguration.value"
-                                onChange.bind="(value) => this.onPropertyValueChange(propertyConfiguration.name, value)"
-                                onTagsChange.bind="(newTags, newValue) => this.onTagsChange(propertyConfiguration.name, newTags, newValue)"
-                                record="this.props.record"
-                            />
-                            <span class="o_input_box_overlay_end o_input_box_overlay_inline" t-if="propertyConfiguration.suffix" t-out="propertyConfiguration.suffix"/>
+                        <div class="o_property_field_value d-flex w-100">
+                            <div class="w-100">
+                                <PropertyValue
+                                    id="domId"
+                                    canChangeDefinition="this.state.canChangeDefinition"
+                                    comodel="propertyConfiguration.comodel || ''"
+                                    currencyField="propertyConfiguration.currency_field || ''"
+                                    context="this.props.context"
+                                    domain="propertyConfiguration.domain || '[]'"
+                                    readonly="this.props.readonly"
+                                    selection="propertyConfiguration.selection"
+                                    string="propertyConfiguration.string"
+                                    tags="propertyConfiguration.tags"
+                                    type="propertyConfiguration.type"
+                                    value="propertyConfiguration.value"
+                                    onChange.bind="(value) => this.onPropertyValueChange(propertyConfiguration.name, value)"
+                                    onTagsChange.bind="(newTags, newValue) => this.onTagsChange(propertyConfiguration.name, newTags, newValue)"
+                                    record="this.props.record"
+                                />
+                            </div>
+                            <span class="o_property_field_value_suffix w-50" t-if="propertyConfiguration.suffix" t-out="propertyConfiguration.suffix"/>
                         </div>
                     </div>
                     <div

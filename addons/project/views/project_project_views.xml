@@ -148,13 +148,10 @@
                                     <label for="alias_name" string="Project's Email" invisible="is_template"/>
                                     <field name="alias_email" widget="email" readonly="1" nolabel="1" groups="!project.group_project_manager" invisible="is_template"/>
                                     <div class="row" groups="project.group_project_manager" invisible="is_template">
-                                        <div class="d-flex col-10 w-100">
-                                            <field name="alias_name" placeholder="alias" class="o_field_highlight"/>
-                                            <div class="o_input_box">
-                                                <span class="o_input_box_overlay_start">@</span>
-                                                <field name="alias_domain_id" class="o_field_highlight" placeholder="e.g. mycompany.com"
-                                                       options="{'no_create': True, 'no_open': True}"/>
-                                            </div>
+                                        <div class="d-flex col-10 gap-1">
+                                            <field name="alias_name" placeholder="alias" class="o_field_highlight"/>@
+                                            <field name="alias_domain_id" class="o_field_highlight" placeholder="e.g. mycompany.com"
+                                                options="{'no_create': True, 'no_open': True}"/>
                                         </div>
                                         <div class="col-2 p-0" invisible="not alias_email">
                                            <field name="alias_email" widget="CopyClipboardButton"
@@ -167,12 +164,12 @@
                                            invisible="not alias_email"/>
                                     <field name="privacy_visibility" widget="radio"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
-                                    <div colspan="2" class="text-muted o_input_box" invisible="access_instruction_message == ''">
-                                        <i class="o_input_box_overlay_start fa fa-lightbulb-o" title="Info"/><field name="access_instruction_message" nolabel="1"/>
-                                    </div>
-                                    <div colspan="2" class="text-muted o_input_box" invisible="privacy_visibility_warning == ''">
-                                        <i class="o_input_box_overlay_start fa fa-warning" title="Warning"/><field name="privacy_visibility_warning" nolabel="1"/>
-                                    </div>
+                                    <span colspan="2" class="text-muted o_row ps-1" invisible="access_instruction_message == ''">
+                                        <i class="fa fa-lightbulb-o pe-2" title="Info"/><field class="d-inline" name="access_instruction_message" nolabel="1"/>
+                                    </span>
+                                    <span colspan="2" class="text-muted o_row ps-1" invisible="privacy_visibility_warning == ''">
+                                        <i class="fa fa-warning pe-2" title="Warning"/><field class="d-inline" name="privacy_visibility_warning" nolabel="1"/>
+                                    </span>
                                 </group>
                                 <div class="o_col">
                                     <group>

@@ -118,9 +118,9 @@
                         </div>
                     </group>
                     <group name="member_partner_info">
-                        <div class="d-flex flex-column flex-grow-1" invisible="not user_id">
-                            <div class="o_input_box" groups="base.group_multi_company">
-                                <i class="o_input_box_overlay_start fa fa-fw fa-building" title="Company"/>
+                        <div class="d-flex flex-column flex-grow-1">
+                            <div colspan="2" class="d-flex align-items-baseline" invisible="not user_id" groups="base.group_multi_company">
+                                <i class="fa fa-fw me-1 fa-building text-primary" title="Company"/>
                                 <field name="company_id"/>
                             </div>
                             <div colspan="2" class="d-flex align-items-baseline" invisible="not user_id">

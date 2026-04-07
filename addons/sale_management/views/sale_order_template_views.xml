@@ -32,9 +32,9 @@
                         <group name="sale_info">
                             <field name="active" invisible="1"/>
                             <label for="number_of_days" string="Quotation Validity"/>
-                            <div class="o_input_box" id="number_of_days">
-                                <field name="number_of_days"/>
-                                <div class="o_input_box_overlay_end">days</div>
+                            <div id="number_of_days">
+                                <field name="number_of_days" style="width: 3rem;"/>
+                                <div class="d-inline-block">days</div>
                             </div>
                             <field name="mail_template_id" context="{'default_model': 'sale.order'}"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" placeholder="Visible to all"/>

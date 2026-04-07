@@ -221,12 +221,12 @@
                         <field name="list_price" widget="monetary"
                                 options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                         <label for="taxes_id"/>
-                        <div name="tax_info" class="o_input_box">
+                        <div name="tax_info" class="o_row">
                             <field name="taxes_id" widget="many2many_tags"
                                 readonly="context.get('taxes_readonly', False)"
                                 context="{'search_default_sale': 1}"
                                 create="False"/>
-                            <field name="tax_string" class="o_input_box_overlay_end"/>
+                            <field name="tax_string"/>
                         </div>
                         <field name="pos_categ_ids" string="POS Category" widget="many2many_tags"/>
                         <field name="color" widget="color_picker" string="Color" />

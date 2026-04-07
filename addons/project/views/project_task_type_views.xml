@@ -35,9 +35,9 @@
                                 <field name="mail_template_id" placeholder="No email"
                                     context="{'default_model': 'project.task'}" invisible="user_id"/>
                                 <label for="rotting_threshold_days" string="Rotting in"/>
-                                <div class="o_input_box">
-                                    <field name="rotting_threshold_days"/>
-                                    <span class="o_input_box_overlay_end o_input_box_overlay_inline">days</span>
+                                <div>
+                                    <field name="rotting_threshold_days" class="oe_inline o_input_3ch px-1"/>
+                                    <span>days</span>
                                 </div>
                                 <field name="rating_active" widget="boolean_toggle"/>
                                 <field name="rating_status" invisible="not rating_active"/>

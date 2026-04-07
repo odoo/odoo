@@ -138,15 +138,15 @@
                             <field name="route_id" invisible="1"/>
                             <field name="product_id"/>
                             <label for="product_min_qty"/>
-                            <div class="o_input_box">
+                            <div class="o_row">
                                 <field name="product_min_qty"/>
-                                <field name="product_uom_name" class="o_input_box_overlay_end o_input_box_overlay_inline"/>
-                                <button name="stock.action_stock_replenishment_info" class="o_input_box_overlay_end o_input_box_overlay_inline" string="Forecast Description" type="action" icon="fa-area-chart" invisible="not id"/>
+                                <field name="product_uom_name"/>
+                                <button name="stock.action_stock_replenishment_info" string="Forecast Description" type="action" icon="fa-area-chart" invisible="not id"/>
                             </div>
                             <label for="product_max_qty"/>
-                            <div class="o_input_box">
+                            <div class="o_row">
                                 <field name="product_max_qty"/>
-                                <field name="product_uom_name" class="o_input_box_overlay_end o_input_box_overlay_inline"/>
+                                <field name="product_uom_name"/>
                             </div>
                             <field name="replenishment_uom_id" options="{'no_create': True}"/>
                         </group>

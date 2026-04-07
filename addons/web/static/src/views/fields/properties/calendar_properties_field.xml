@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <div t-name="web.CalendarPropertiesField" t-ref="properties" class="d-flex flex-column gap-3">
-        <div class="o_calendar_property_field o_input_box"
+    <div t-name="web.CalendarPropertiesField" t-custom-ref="properties" class="d-flex flex-column gap-3">
+        <div class="o_calendar_property_field d-flex"
             t-foreach="this.propertiesList"
             t-as="propertyConfiguration"
             t-key="propertyConfiguration.name"
             t-if="propertyConfiguration.value and propertyConfiguration.view_in_cards">
-            <span class="fw-bold o_input_box_overlay_start" t-out="propertyConfiguration.string"/>
+            <span class="fw-bold me-2" t-out="propertyConfiguration.string"/>
             <div class="text-truncate">
                 <PropertyValue
                     id="this.generateUniqueDomID()"
@@ -25,7 +25,7 @@
                     record="this.props.record"
                 />
             </div>
-            <span class="o_input_box_overlay_end" t-if="propertyConfiguration.suffix" t-out="propertyConfiguration.suffix"/>
+            <span class="o_property_field_value_suffix" t-if="propertyConfiguration.suffix" t-out="propertyConfiguration.suffix"/>
         </div>
     </div>
 </templates>

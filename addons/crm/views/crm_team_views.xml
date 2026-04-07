@@ -187,8 +187,8 @@
                     <field name="lead_all_assigned_month_exceeded" invisible="1"/>
                     <field name="assignment_optout" widget="boolean_toggle" invisible="not assignment_auto_enabled"/>
                     <label for="lead_all_assigned_month_count" invisible="assignment_optout"/>
-                    <div class="o_input_box" invisible="assignment_optout">
-                        <i class="o_input_box_overlay_start fa fa-warning" title="Exceeded" invisible="not lead_all_assigned_month_exceeded"/>
+                    <div class="d-flex align-items-baseline gap-1" invisible="assignment_optout">
+                        <i class="fa fa-warning" title="Exceeded" invisible="not lead_all_assigned_month_exceeded"/>
                         <field name="lead_all_assigned_month_count" invisible="not assignment_enabled"/>
                     </div>
                     <field name="assignment_max" invisible="not assignment_enabled"/>

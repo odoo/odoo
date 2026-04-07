@@ -5,7 +5,7 @@
     <xpath expr="//input" position="before">
         <t t-set="slicingLength" t-value="this.env.isSmall ? 30 : 45"/>
         <div
-            class="o_input_box_overlay_start inline"
+            class="input-group-text rounded-start text-lowercase border-0"
             t-esc="this.serverUrl.length > slicingLength ? this.serverUrl.slice(0, (slicingLength / 2) - 1) + '..' + this.serverUrl.slice((-slicingLength / 2) + 1) : this.serverUrl"
         />
     </xpath>

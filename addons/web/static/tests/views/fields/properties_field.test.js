@@ -1841,7 +1841,9 @@ test("properties: suffix", async () => {
     await animationFrame();
     await closePopover();
 
-    expect(".o_field_properties .o_property_field:last .o_input_box_overlay_end").toHaveText("kg");
+    expect(".o_field_properties .o_property_field:last .o_property_field_value_suffix").toHaveText(
+        "kg"
+    );
 });
 
 /**
@@ -2848,7 +2850,7 @@ test("properties: signature", async () => {
     await closePopover();
     expect(".o_field_property_definition").toHaveCount(0);
     expect(".o_signature").toHaveCount(1);
-    expect(".o_property_field:eq(0) .o_input_box_overlay_end").toHaveCount(0, {
+    expect(".o_property_field:eq(0) .o_property_field_value_suffix").toHaveCount(0, {
         message: "suffix should be removed",
     });
 });

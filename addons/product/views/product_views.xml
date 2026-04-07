@@ -101,18 +101,18 @@
                                     <field name="show_qty_update_button" invisible="1"/>
                                     <field name="is_storable" invisible="type != 'consu' or is_storable"/>
                                     <label for="is_storable" invisible="type != 'consu'  or not is_storable"/>
-                                    <div name="tracking_and_qty_no_stock" class="o_input_box" invisible="type != 'consu' or not is_storable">
-                                        <field name="is_storable" class="o_input_box_overlay_start"/>
-                                        <div name="product_template_qty_field" invisible="is_product_variant">
+                                    <div name="tracking_and_qty_no_stock" class="o_row w-100" invisible="type != 'consu' or not is_storable">
+                                        <field name="is_storable" class="d-flex"/>
+                                        <div name="product_template_qty_field" class="d-flex" invisible="is_product_variant">
                                             <a type="action" name="%(product_variant_edit_qty_action)d" invisible="not show_qty_update_button">
                                                 <field name="qty_available" readonly="True"/>
                                             </a>
-                                            <field name="qty_available" invisible="show_qty_update_button"/>
-                                            <field name="uom_name" class="o_input_box_overlay_end" groups="uom.group_uom"/>
+                                            <field name="qty_available" invisible="show_qty_update_button" style="max-width: fit-content;"/>
+                                            <field name="uom_name" class="ms-2 oe_inline" groups="uom.group_uom"/>
                                         </div>
-                                        <div name="product_product_qty_field" invisible="not is_product_variant">
-                                            <field name="qty_available"/>
-                                            <field name="uom_name" class="o_input_box_overlay_end" groups="uom.group_uom"/>
+                                        <div name="product_product_qty_field" class="d-flex" invisible="not is_product_variant or not is_storable">
+                                            <field name="qty_available" style="max-width: fit-content;"/>
+                                            <field name="uom_name" class="ms-2 oe_inline" groups="uom.group_uom"/>
                                         </div>
                                     </div>
                                 </group>
@@ -419,19 +419,21 @@
                         <group>
                             <group name="weight" string="Logistics" invisible="type != 'consu'">
                                 <label for="qty_available"  invisible="not is_storable"/>
-                                <div class="o_input_box" name="no_stock_variant_qty_edit" invisible="not is_storable">
-                                    <field name="qty_available"/>
-                                    <field name="uom_name" groups="uom.group_uom" class="o_input_box_overlay_end"/>
+                                <div class="d-flex" name="no_stock_variant_qty_edit" invisible="not is_storable">
+                                    <div class="d-flex">
+                                        <field name="qty_available" class="oe_inline"/>
+                                        <field name="uom_name" groups="uom.group_uom"/>
+                                    </div>
                                 </div>
                                 <label for="volume"/>
-                                <div class="o_input_box">
-                                    <field name="volume"/>
-                                    <field name="volume_uom_name" class="o_input_box_overlay_end"/>
+                                <div class="d-flex">
+                                    <field name="volume" class="oe_inline"/>
+                                    <field name="volume_uom_name"/>
                                 </div>
                                 <label for="weight"/>
-                                <div class="o_input_box">
-                                    <field name="weight"/>
-                                    <field name="weight_uom_name" class="o_input_box_overlay_end"/>
+                                <div class="d-flex">
+                                    <field name="weight" class="oe_inline"/>
+                                    <field name="weight_uom_name"/>
                                 </div>
                             </group>
                             <group name="sales" string="Sales">
