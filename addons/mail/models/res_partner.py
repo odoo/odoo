@@ -45,6 +45,15 @@ class ResPartner(models.Model):
     # MESSAGING
     # ------------------------------------------------------------
 
+    def _update_address(self, vals):
+        if (
+            not self.env.context.get('tracking_disable')
+            and not self.env.context.get('mail_notrack')
+            and any(fname in vals for fname in self._address_fields())
+        ):
+            self._track_prepare({'contact_address_inline'})
+        return super()._update_address(vals)
+
     def _mail_get_partners(self, introspect_fields=False):
         return dict((partner.id, partner) for partner in self)
 
