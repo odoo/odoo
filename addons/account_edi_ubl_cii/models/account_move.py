@@ -92,13 +92,17 @@ class AccountMove(models.Model):
     def get_extra_print_items(self):
         print_items = super().get_extra_print_items()
         posted_moves = self.filtered(lambda move: move.state == 'posted')
-        edi_formats = {
-            edi_format
+        can_export_xml = any(
+            (
+                move.ubl_cii_xml_id
+                or (
+                    (edi_format := move.commercial_partner_id.with_company(move.company_id)._get_ubl_cii_edi_format())
+                    and move._need_ubl_cii_xml(edi_format)
+                )
+            )
             for move in posted_moves
-            if (edi_format := move.commercial_partner_id.with_company(move.company_id)
-                    ._get_ubl_cii_edi_format())
-        }
-        if posted_moves.ubl_cii_xml_id or edi_formats:
+        )
+        if can_export_xml:
             print_items.append({
                 'key': 'download_ubl',
                 'description': _('Export XML'),
