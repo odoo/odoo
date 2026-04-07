@@ -85,7 +85,7 @@ class _Cleaner(clean.Cleaner):
     _style_whitelist = [
         'font-size', 'font-family', 'font-weight', 'font-style', 'background-color', 'color', 'text-align',
         'line-height', 'letter-spacing', 'text-transform', 'text-decoration', 'text-decoration', 'opacity',
-        'float', 'vertical-align', 'display', 'object-fit',
+        'float', 'vertical-align', 'display', 'object-fit', 'direction',
         'padding', 'padding-top', 'padding-left', 'padding-bottom', 'padding-right',
         'margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right',
         'white-space',
