@@ -2330,7 +2330,9 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
         model,
         '=PIVOT.HEADER(1,"#product_id",1)'
     );
-    expect(relationalFiltersWithNoneValue).toEqual([{ filterId: "42", value: undefined }]);
+    expect(relationalFiltersWithNoneValue).toEqual([
+        { filterId: "42", value: { operator: "not set" } },
+    ]);
     const dateFilters1 = getFiltersMatchingPivot(model, '=PIVOT.HEADER(1,"date:month","08/2016")');
     expect(dateFilters1).toEqual([
         { filterId: "43", value: { type: "month", year: 2016, month: 8 } },
