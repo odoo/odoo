@@ -87,7 +87,7 @@ patch(TicketScreen.prototype, {
         const refundTotal = Math.abs(refundOrder.get_total_with_tax());
         const ratio = originalTotal > 0 ? Math.min(refundTotal / originalTotal, 1) : 1;
 
-        for (const [key, pointChange] of Object.entries(originalChanges)) {
+        for (const pointChange of Object.values(originalChanges)) {
             const program = this.pos.models["loyalty.program"].get(pointChange.program_id);
             if (!program) {
                 continue;

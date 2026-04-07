@@ -318,7 +318,7 @@ patch(PosStore.prototype, {
 
         const newCouponPointChanges = {};
 
-        for (const [key, pointChange] of Object.entries(originalChanges)) {
+        for (const pointChange of Object.values(originalChanges)) {
             const program = this.models["loyalty.program"].get(pointChange.program_id);
             if (!program) {
                 continue;
