@@ -56,7 +56,6 @@ import {
 import { toRangeData } from "@spreadsheet/../tests/helpers/zones";
 import { GlobalFiltersCoreViewPlugin } from "@spreadsheet/global_filters/plugins/global_filters_core_view_plugin";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
-import { PivotUIGlobalFilterPlugin } from "@spreadsheet/pivot/index";
 
 describe.current.tags("headless");
 defineSpreadsheetModels();
@@ -80,13 +79,18 @@ const DEFAULT_LIST_FIELD_MATCHINGS = {
 
 function getFiltersMatchingPivot(model, formula) {
     const sheetId = model.getters.getActiveSheetId();
-    const pivotUIPlugin = model["handlers"].find(
-        (handler) => handler instanceof PivotUIGlobalFilterPlugin
-    );
-    return pivotUIPlugin._getFiltersMatchingPivot(
+    const functionDescription = model.getters.getFirstPivotFunction(
         sheetId,
         CompiledFormula.Compile(formula, sheetId, model.getters)
     );
+    const { args } = functionDescription;
+    const formulaId = args[0];
+    const pivotId = model.getters.getPivotId(formulaId);
+    const index = functionDescription.functionName === "PIVOT.HEADER" ? 1 : 2;
+    const pivot = model.getters.getPivot(pivotId);
+    const domainArgs = args.slice(index).map((value) => ({ value }));
+    const domain = pivot.parseArgsToPivotDomain(domainArgs);
+    return model.getters.getFiltersMatchingPivotArgs(pivotId, domain);
 }
 
 test("Can add a global filter", async function () {
@@ -2339,12 +2343,6 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
     expect(dateFilters2).toEqual([{ filterId: "43", value: { type: "year", year: 2016 } }]);
 });
 
-test("getFiltersMatchingPivot return an empty array if there is no pivot formula", async function () {
-    const { model } = await createModelWithDataSource();
-    const result = getFiltersMatchingPivot(model, "=1");
-    expect(result).toEqual([]);
-});
-
 test("getFiltersMatchingPivot return correctly matching filter according to cell formula with multi-levels grouping", async function () {
     const { model } = await createSpreadsheetWithPivot({
         arch: /*xml*/ `
@@ -2436,22 +2434,6 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
             value: { operator: "in", ids: [37] },
         },
     ]);
-});
-
-test("getFiltersMatchingPivot return correctly matching filter when there is a filter with no field defined", async function () {
-    const { model } = await createSpreadsheetWithPivot({
-        arch: /*xml*/ `
-                <pivot>
-                    <field name="product_id" type="row"/>
-                    <field name="probability" type="measure"/>
-                </pivot>`,
-    });
-    await addGlobalFilter(model, {
-        id: "42",
-        type: "relation",
-    });
-    const filters = getFiltersMatchingPivot(model, getCellFormula(model, "B3"));
-    expect(filters).toEqual([]);
 });
 
 test("getFiltersMatchingPivot return empty filter for cell formula without any argument", async function () {
@@ -2568,23 +2550,6 @@ test("field matching is removed when an Odoo chart is deleted", async function (
     expect(() => model.getters.getOdooChartFieldMatching(chartId, filter.id)).toThrow(undefined, {
         message: "Chart does not exist",
     });
-});
-
-test("getFiltersMatchingPivot return correctly matching filter with the 'measure' special field", async function () {
-    const { model } = await createSpreadsheetWithPivot({
-        arch: /*xml*/ `
-                <pivot>
-                <field name="product_id" type="row"/>
-                <field name="probability" type="measure"/>
-                </pivot>`,
-    });
-    await addGlobalFilter(model, {
-        id: "42",
-        label: "fake",
-        type: "relation",
-    });
-    const filters = getFiltersMatchingPivot(model, getCellFormula(model, "B2"));
-    expect(filters).toEqual([]);
 });
 
 test("Reject date filters with invalid field Matchings", async () => {

@@ -25,12 +25,8 @@ import {
     GlobalFiltersUIPlugin,
     GlobalFiltersCoreViewPlugin,
 } from "@spreadsheet/global_filters/index";
-import {
-    PivotOdooCorePlugin,
-    PivotCoreViewGlobalFilterPlugin,
-    PivotUIGlobalFilterPlugin,
-} from "@spreadsheet/pivot/index"; // list depends on filter for its getters
-import { ListCorePlugin, ListCoreViewPlugin, ListUIPlugin } from "@spreadsheet/list/index"; // pivot depends on filter for its getters
+import { PivotOdooCorePlugin, PivotCoreViewGlobalFilterPlugin } from "@spreadsheet/pivot/index"; // pivot depends on filter for its getters
+import { ListCorePlugin, ListCoreViewPlugin, ListUIPlugin } from "@spreadsheet/list/index"; // list depends on filter for its getters
 import {
     ChartOdooLinkPlugin,
     OdooChartCorePlugin,
@@ -131,7 +127,6 @@ coreViewsPluginRegistry.add(
 coreViewsPluginRegistry.add("OdooListCoreViewPlugin", ListCoreViewPlugin);
 coreViewsPluginRegistry.add("OdooChartCoreViewPlugin", OdooChartCoreViewPlugin);
 
-featurePluginRegistry.add("OdooPivotGlobalFilterUIPlugin", PivotUIGlobalFilterPlugin);
 featurePluginRegistry.add("OdooGlobalFiltersUIPlugin", GlobalFiltersUIPlugin);
 featurePluginRegistry.add("odooPivotUIPlugin", PivotOdooUIPlugin);
 featurePluginRegistry.add("odooListUIPlugin", ListUIPlugin);
