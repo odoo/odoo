@@ -117,3 +117,20 @@ test("isAddToCartEnabled", async () => {
     product.self_order_available = false;
     expect(comp.isAddToCartEnabled()).toBe(false);
 });
+
+test("hide attribute with single 'is_custom' value", async () => {
+    const store = await setupSelfPosEnv();
+    const product = store.models["product.template"].get(51);
+    const attributeLines = product.attribute_line_ids;
+    const comp = await mountWithCleanup(ProductPage, {
+        props: { productTemplate: product },
+    });
+    const attributeHelper = comp.state.selectedValues[product.id];
+    expect(attributeLines.length).toBeGreaterThan(attributeHelper.availableAttributes.size);
+    expect(comp.isAddToCartEnabled()).toBe(false);
+    attributeHelper.selectAttribute(
+        attributeLines[0],
+        attributeLines[0].product_template_value_ids[1]
+    );
+    expect(comp.isAddToCartEnabled()).toBe(true);
+});
