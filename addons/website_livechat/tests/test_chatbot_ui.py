@@ -372,6 +372,29 @@ class TestLivechatChatbotUI(TestLivechatChatbotUICommon):
         self.assertIn("test@example.com", user_answer_message.user_raw_answer, "Email was saved on last step")
         self.assertTrue(user_answer_message.discuss_channel_id.livechat_end_dt, "Livechat ended after last step")
 
+    def test_chatbot_restart_on_feedback(self):
+        chatbot_script = self.env["chatbot.script"].create({"title": "Restart on feedback Bot"})
+        _, restart_step = self.env["chatbot.script.step"].create([
+            {
+                "step_type": "question_email",
+                "chatbot_script_id": chatbot_script.id,
+                "message": "Enter your email address",
+            },
+            {
+                "step_type": "question_selection",
+                "chatbot_script_id": chatbot_script.id,
+                "message": "Do you want to restart the conversation?",
+            },
+        ])
+        self.env["chatbot.script.answer"].create({
+            "name": "Yes, restart please.",
+            "script_step_id": restart_step.id,
+        })
+        self.livechat_channel.rule_ids = self.env["im_livechat.channel.rule"].create(
+            {"chatbot_script_id": chatbot_script.id}
+        )
+        self.start_tour("/", "website_livechat.chatbot_restart_on_feedback_tour")
+
 
 @tests.tagged("post_install", "-at_install")
 class TestLivechatChatbotUIMoblie(TestLivechatChatbotUICommon):
