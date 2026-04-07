@@ -107,7 +107,11 @@ export class ProductTemplate extends Base {
     async _onScaleNotAvailable() {}
 
     isConfigurable() {
-        return this.attribute_line_ids.find((l) => l.product_template_value_ids.length > 1);
+        return this.attribute_line_ids.find(
+            (l) =>
+                l.product_template_value_ids.length > 1 ||
+                l.product_template_value_ids.some((v) => v.is_custom)
+        );
     }
 
     needToConfigure() {

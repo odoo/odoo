@@ -1,8 +1,9 @@
 export class AttributeSelectionHelper {
-    constructor(selfOrder) {
+    constructor(selfOrder, availableAttributes) {
         this.selectedValues = {};
         this.customValues = {};
         this.selfOrder = selfOrder;
+        this.availableAttributes = new Set(availableAttributes.map((a) => a.id));
     }
 
     getCustomValue(attribute, value) {
@@ -54,7 +55,10 @@ export class AttributeSelectionHelper {
 
     hasMissingAttributeValues(attributes) {
         return attributes.some(
-            (attr) => attr.attribute_id.display_type !== "multi" && !this.hasValueSelected(attr)
+            (attr) =>
+                this.availableAttributes.has(attr.id) &&
+                attr.attribute_id.display_type !== "multi" &&
+                !this.hasValueSelected(attr)
         );
     }
 

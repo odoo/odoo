@@ -16,4 +16,23 @@ export class ProductTemplateAttributeValue extends models.ServerModel {
             "exclude_for",
         ];
     }
+    _records = [
+        {
+            id: 1,
+            name: "Chocolate",
+            attribute_id: 9,
+        },
+        {
+            id: 2,
+            name: "Vanilla",
+            attribute_id: 9,
+            price_extra: 5,
+        },
+        {
+            id: 3,
+            name: "Yes",
+            is_custom: true,
+            attribute_id: 10,
+        },
+    ];
 }
