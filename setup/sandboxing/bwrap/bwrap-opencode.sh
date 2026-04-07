@@ -76,6 +76,12 @@
 #   of lines of test output in stdout won't render well in Opencode's TUI.
 
 set -e
+
+if [[ "$(id -u)" -eq 0 ]]; then
+  echo "Do not run this script as root" >&2
+  exit 1
+fi
+
 HOME="${HOME:-/home/$(whoami)}"
 OPENCODE_BIN="${OPENCODE_BIN:-$HOME/.opencode/bin/opencode}"
 
@@ -136,6 +142,7 @@ BWRAP=(
   --share-net
   --die-with-parent
   --new-session
+  --hostname dev-sandbox
   # Odoo: filestore and PostgreSQL socket, passwd necessary for PostgreSQL auth
   --bind-try "$HOME/.local/share/Odoo" "$HOME/.local/share/Odoo"
   --bind-try /var/run/postgresql /var/run/postgresql
@@ -169,4 +176,18 @@ for path in "${ALLOW_DIRS[@]}"; do
 done
 
 echo "Running: bwrap ${BWRAP[@]} -- $OPENCODE_BIN ${OPENCODE_ARGS[@]}" >&2
+
+# Last check before execution: make sure some common $HOME directories are not accessible.
+# This could happen if one sets ODOO_BASE as $HOME or $PWD for example.
+FORBIDDEN_DIRS=(
+  "$HOME/.ssh"
+  "$HOME/.gnupg"
+)
+for dir in "${FORBIDDEN_DIRS[@]}"; do
+  if bwrap "${BWRAP[@]}" -- ls "$dir" >/dev/null 2>&1; then
+    echo "FAIL: $dir is readable inside the sandbox. Check allowed directories!" >&2
+    exit 1
+  fi
+done
+
 exec bwrap "${BWRAP[@]}" -- "$OPENCODE_BIN" "${OPENCODE_ARGS[@]}"

@@ -1,0 +1,59 @@
+# Copy this file to ~/.config/firejail
+# IMPORTANT: Change this to point to where you keep your coding projects!
+# You can add multiple folders here if needed.
+whitelist ${HOME}/src
+
+# Allow read-write access ONLY to VS Code's own configuration directories
+# Also supports knows forks (VSCodium, Cursor)
+whitelist ${HOME}/.config/Code
+whitelist ${HOME}/.config/Code - OSS
+whitelist ${HOME}/.config/Cursor
+whitelist ${HOME}/.vscode
+whitelist ${HOME}/.vscode-oss
+whitelist ${HOME}/.cursor
+
+# Allow access to shell configuration for the integrated terminal to work properly.
+# Needs to be defined as whitelist and read-only.
+whitelist ${HOME}/.zshrc
+whitelist ${HOME}/.bashrc
+whitelist ${HOME}/.oh-my-zsh
+whitelist ${HOME}/.config/fish
+whitelist ${HOME}/.profile
+read-only ${HOME}/.zshrc
+read-only ${HOME}/.bashrc
+read-only ${HOME}/.oh-my-zsh
+read-only ${HOME}/.config/fish
+read-only ${HOME}/.profile
+
+# IBus input method: the daemon's Unix socket lives at ~/.cache/ibus/dbus-*
+# (see IBUS_ADDRESS in firejail --debug output). Whitelist mode hides it,
+# causing Electron to fail silently on input. Also need to override
+# private-cache from blink-common.profile, which would mount a fresh tmpfs
+# over ~/.cache and hide the socket again.
+ignore private-cache
+whitelist ${HOME}/.cache/ibus
+
+# Support for AI agents -- they can be run in the integrated terminal
+# Claude
+mkdir ${HOME}/.cache/claude
+mkdir ${HOME}/.cache/claude-cli-nodejs
+mkdir ${HOME}/.claude
+mkdir ${HOME}/.local/state/claude
+whitelist ${HOME}/.cache/claude
+whitelist ${HOME}/.cache/claude-cli-nodejs
+whitelist ${HOME}/.claude
+whitelist ${HOME}/.claude.json
+whitelist ${HOME}/.local/bin/claude
+whitelist ${HOME}/.local/share/claude
+whitelist ${HOME}/.local/state/claude
+
+# Opencode
+# For some unknown reason: Opencode does not start
+#mkdir ${HOME}/.cache/opencode
+#mkdir ${HOME}/.config/opencode
+#mkdir ${HOME}/.local/share/opencode
+#mkdir ${HOME}/.opencode
+#whitelist ${HOME}/.cache/opencode
+#whitelist ${HOME}/.config/opencode
+#whitelist ${HOME}/.local/share/opencode
+#whitelist ${HOME}/.opencode

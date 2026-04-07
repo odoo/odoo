@@ -103,12 +103,22 @@
 #   bind-mounted into the sandbox so `claude /ide` can connect to the editor.
 
 set -e
+
+if [[ "$(id -u)" -eq 0 ]]; then
+  echo "Do not run this script as root" >&2
+  exit 1
+fi
+
 HOME="${HOME:-/home/$(whoami)}"
 CLAUDE_BIN="${CLAUDE_BIN:-$HOME/.local/bin/claude}"
 
 # Pre-check: ensure Claude binary exists
 if [[ ! -x "$CLAUDE_BIN" ]]; then
   echo "Claude Code not found at $CLAUDE_BIN" >&2
+  echo "In all likelihood, the Claude executable has been garbage-collected but the" >&2
+  echo "symlink was not updated because of sandboxing restrictions." >&2
+  echo "You can fix the issue by re-installing Claude (no data will be lost):" >&2
+  echo "rm -f $HOME/.local/bin/claude && curl -fsSL https://claude.ai/install.sh | bash" >&2
   exit 1
 fi
 
@@ -152,9 +162,14 @@ while [[ $# -gt 0 ]]; do
   fi
 done
 
-BRAP=(
+BWRAP=(
   # Read-write bin (needed for Claude auto-updates). These 2 must already exists since they
   # contain the binaries.
+  # NOTE: ~/.local/bin/claude is a symlink to ~/.local/share/claude/versions/<version>.
+  # Claude auto-updates download a new binary under versions/ but cannot update the symlink
+  # because only the symlink itself is bind-mounted, not the parent ~/.local/bin/ directory.
+  # After an update, fix the symlink manually:
+  #   ln -sf ~/.local/share/claude/versions/<new-version> ~/.local/bin/claude
   --bind "$HOME/.local/bin/claude" "$HOME/.local/bin/claude"
   --bind "$HOME/.local/share/claude" "$HOME/.local/share/claude"
   --ro-bind-try "$HOME/.vscode" "$HOME/.vscode"
@@ -182,6 +197,7 @@ BRAP=(
   --unshare-cgroup
   --die-with-parent
   --new-session
+  --hostname dev-sandbox
   # Odoo: filestore and PostgreSQL socket, passwd necessary for PostgreSQL auth
   --bind-try "$HOME/.local/share/Odoo" "$HOME/.local/share/Odoo"
   --bind-try /var/run/postgresql /var/run/postgresql
@@ -206,17 +222,17 @@ BRAP=(
 
 # Bind Claude config and cache files
 for path in "${CLAUDE_DIRS[@]}" "${CLAUDE_FILES[@]}"; do
-  BRAP+=(--bind "$path" "$path")
+  BWRAP+=(--bind "$path" "$path")
 done
 
 # Bind allowed directories
 for path in "${ALLOW_DIRS[@]}"; do
-  BRAP+=(--bind "$path" "$path")
+  BWRAP+=(--bind "$path" "$path")
 done
 
 # Bind VSCode sockets from XDG_RUNTIME_DIR for IDE integration
 for sock in "${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"/vscode-*.sock; do
-  [[ -S "$sock" ]] && BRAP+=(--bind "$sock" "$sock")
+  [[ -S "$sock" ]] && BWRAP+=(--bind "$sock" "$sock")
 done
 
 # Pass --add-dir for each allowed dir so Claude's tool access matches the sandbox
@@ -246,5 +262,19 @@ if [[ "$USE_OPENROUTER" == true ]]; then
   )
 fi
 
-echo "Running: bwrap ${BRAP[@]} ${BWRAP_ENV[@]} -- $CLAUDE_BIN ${CLAUDE_CMD[@]}" >&2
-exec bwrap "${BRAP[@]}" "${BWRAP_ENV[@]}" -- "$CLAUDE_BIN" "${CLAUDE_CMD[@]}"
+echo "Running: bwrap ${BWRAP[@]} ${BWRAP_ENV[@]} -- $CLAUDE_BIN ${CLAUDE_CMD[@]}" >&2
+
+# Last check before execution: make sure some common $HOME directories are not accessible.
+# This could happen if one sets ODOO_BASE as $HOME or $PWD for example.
+FORBIDDEN_DIRS=(
+  "$HOME/.ssh"
+  "$HOME/.gnupg"
+)
+for dir in "${FORBIDDEN_DIRS[@]}"; do
+  if bwrap "${BWRAP[@]}" -- ls "$dir" >/dev/null 2>&1; then
+    echo "FAIL: $dir is readable inside the sandbox. Check allowed directories!" >&2
+    exit 1
+  fi
+done
+
+exec bwrap "${BWRAP[@]}" "${BWRAP_ENV[@]}" -- "$CLAUDE_BIN" "${CLAUDE_CMD[@]}"
