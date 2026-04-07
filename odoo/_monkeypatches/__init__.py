@@ -39,3 +39,5 @@ def patch_all():
     patch_zeep()
     from .win32 import patch_win32
     patch_win32()
+    from .markupsafe import patch_markup
+    patch_markup()
