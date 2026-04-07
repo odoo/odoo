@@ -748,7 +748,7 @@ class TestStockLot(TestStockCommon):
         self.assertEqual(apple_lot2.with_context(formatted_display_name=True).display_name, "LOT-00002\t--Expired--")
         self.assertEqual(apple_lot3.with_context(formatted_display_name=True).display_name, "LOT-00003\t--Expire on " + fields.Date.to_string(apple_lot3.expiration_date) + "--")
 
-    def test_proceed_except_expired_delivery_without_move_removal_date(self):
+    def test_validate_delivery_without_move_removal_date(self):
         # Making sure that the lot will be assigned at confirm
         self.picking_type_out.reservation_method = 'at_confirm'
 
@@ -773,14 +773,7 @@ class TestStockLot(TestStockCommon):
             })],
         })
         picking.button_validate()
-        context = {
-            'button_validate_picking_ids': [picking.id],
-            'default_picking_ids': [picking.id],
-            'default_lot_ids': [lot.id],
-        }
-        wizard = self.env['expiry.picking.confirmation'].with_context(context).create({})
-        self.assertFalse(wizard.picking_ids.move_line_ids._get_removal_date())
-        wizard.process_no_expired()
+        self.assertEqual(picking.state, 'done')
 
     def test_no_expiration_wizard_when_tracking_removed(self):
         product = self.ProductObj.create({
