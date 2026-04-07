@@ -360,6 +360,7 @@ export function convertToNormalColumn(columnEl, mobileBreakpoint) {
     columnEl.style.removeProperty("--grid-item-padding-x");
     columnEl.style.removeProperty("--grid-item-padding-y");
     columnEl.style.removeProperty("grid-area");
+    columnEl.removeAttribute("contenteditable");
 }
 /**
  * Checks whether the column only contains an image or not. An image is
