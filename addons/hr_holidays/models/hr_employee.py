@@ -131,11 +131,13 @@ class HrEmployee(models.Model):
             for employee_id, interval in work_intervals.items():
                 if employee_id not in min_dts or not interval._items:
                     continue
-                # start time of the earliest interval
-                d1 = interval._items[0][0].astimezone(UTC).replace(tzinfo=None)
-                d2 = result.get(employee_id)
-                if (not d2 or d1 < d2) and min_dts[employee_id] < d1:
-                    result[employee_id] = d1
+                for start, _stop, _meta in interval._items:
+                    d1 = start.astimezone(UTC).replace(tzinfo=None)
+                    if min_dts[employee_id] < d1:
+                        d2 = result.get(employee_id)
+                        if not d2 or d1 < d2:
+                            result[employee_id] = d1
+                        break
 
         remaining = self.browse(min_dts)
         remaining.version_ids.fetch()  # prefetch data
