@@ -1,16 +1,17 @@
-import dis
 import ast
+import dis
 import inspect
-
+import sys
 from textwrap import dedent
 from unittest.mock import patch
 
-from odoo import Command
-from odoo.tests.common import tagged, BaseCase, TransactionCase
+from odoo.tests.common import BaseCase, TransactionCase, tagged
 from odoo.tools import mute_logger
 from odoo.tools.misc import OrderedSet
 from odoo.tools.safe_eval import (
     _BUILTINS,
+    _get_opcodes_fallback,
+    _get_opcodes_fast,
     const_eval,
     expr_eval,
     safe_checker,
@@ -25,6 +26,18 @@ from odoo.tools.safe_eval import (
 
 @tagged('at_install', '-post_install')
 class TestSafeEval(BaseCase):
+    def setUp(self):
+        def get_opcodes(code_obj):
+            # Test regression in `_get_opcodes_fast`
+            opcodes = _get_opcodes_fast(code_obj)
+            self.assertEqual(opcodes, _get_opcodes_fallback(code_obj))
+            return opcodes
+
+        super().setUp()
+        patcher = patch('odoo.tools.safe_eval.get_opcodes', get_opcodes)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
     def test_const(self):
         # NB: True and False are names in Python 2 not consts
         expected = (1, {"a": {2.5}}, [None, u"foo"])
@@ -205,23 +218,42 @@ class TestSafeEval(BaseCase):
                 return c
         """), mode="exec")
 
-    def test_07_assert_valid_codeobj(self):
-        """Test for regression in `safe_eval.assert_valid_codeobj` opcode parsing"""
+    def test_07_get_opcodes(self):
+        """Test for regression in `safe_eval.get_opcodes` opcode parsing"""
         # Sanity/future-proof check: if Python has more than 256 opcodes, the opcode parsing optimization
         # simply cannot work. We might have to switch back to `dis.get_instructions` if it happens.
         self.assertLess(len(dis.opmap), 256, "Python has more than 256 opcodes")
-        # Should yield the same opcodes as `dis`
-        for expr in [
-            '[x for x in (1,2)]',
-            'list(x for x in (1,2))',
-            'v if v is None else w',
-            'v if v is not None else w',
-            '{a for a in (1, 2)}',
-        ]:
-            code_obj = compile(expr, mode="eval", filename="")
-            expected_opcodes = [i.opcode for i in dis.get_instructions(code_obj, show_caches=True)]
-            opcodes = list(code_obj.co_code[::2])  # includes CACHE opcodes
-            self.assertEqual(opcodes, expected_opcodes)
+        # CACHE opcode is 0, if this changes, review it is still correct
+        self.assertEqual(dis.opmap["CACHE"], 0)
+
+        # We test for regressions in the setup patch
+        # Check for CACHE opcodes
+        code_obj = compile(dedent("""
+            def foo(x):
+                for i in range(x):
+                    if i:
+                        do_x()
+                    else:
+                        break
+                y = i
+        """), mode="exec", filename="")
+
+        # same as `_get_opcodes_fallback`, but as a list
+        expected_opcodes = [i.opcode for i in dis.get_instructions(code_obj)]
+        # same as `_get_opcodes_fast` but as a list`
+        opcodes = [opcode for opcode in code_obj.co_code[::2] if opcode != dis.opmap["CACHE"]]
+        self.assertEqual(opcodes, expected_opcodes)
+
+        # count the number of cache instructions
+        def count_caches(instruction: dis.Instruction):
+            # `show_caches=True` is deprecated in 3.13
+            if sys.version_info >= (3, 13):
+                return sum(n for _, n, _ in instruction.cache_info or [])
+            return 1 if instruction.opname == "CACHE" else 0
+
+        expected_caches = sum(count_caches(i) for i in dis.get_instructions(code_obj, show_caches=True))
+        cache_opcodes = sum(1 for opcode in code_obj.co_code[::2] if opcode == dis.opmap["CACHE"])
+        self.assertEqual(cache_opcodes, expected_caches)
 
 
 @tagged('at_install', '-post_install')
