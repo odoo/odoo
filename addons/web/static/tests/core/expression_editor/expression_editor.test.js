@@ -490,7 +490,7 @@ test(`date: "in range" operator`, async () => {
         "Month to date",
         "Last month",
         "Year to date",
-        "Last 12 months",
+        "Last 365 days",
         "Custom range",
     ]);
 
@@ -521,9 +521,9 @@ test(`date: "in range" operator`, async () => {
             expr: `date >= ${pyDate("day = 1, month = 1")} and date < ${pyDate("days = 1")}`,
         },
         {
-            val: "last 12 months",
-            label: "Last 12 months",
-            expr: `date >= ${pyDate("day = 1, months = -12")} and date < ${pyDate("day = 1")}`,
+            val: "last 365 days",
+            label: "Last 365 days",
+            expr: `date >= ${pyDate("days = -365")} and date < ${pyDate()}`,
         },
     ];
 
@@ -574,7 +574,7 @@ test(`datetime: "in range" operator`, async () => {
         "Month to date",
         "Last month",
         "Year to date",
-        "Last 12 months",
+        "Last 365 days",
         "Custom range",
     ]);
 
@@ -609,11 +609,9 @@ test(`datetime: "in range" operator`, async () => {
             )}`,
         },
         {
-            val: "last 12 months",
-            label: "Last 12 months",
-            expr: `datetime >= ${pyDatetime("day = 1, months = -12")} and datetime < ${pyDatetime(
-                "day = 1"
-            )}`,
+            val: "last 365 days",
+            label: "Last 365 days",
+            expr: `datetime >= ${pyDatetime("days = -365")} and datetime < ${pyDatetime()}`,
         },
     ];
 

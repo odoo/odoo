@@ -2553,7 +2553,7 @@ test(`datetime: "in range" operator`, async () => {
         "Month to date",
         "Last month",
         "Year to date",
-        "Last 12 months",
+        "Last 365 days",
         "Custom range",
     ]);
 
@@ -2581,11 +2581,9 @@ test(`datetime: "in range" operator`, async () => {
         `["&", ("datetime", ">=", "today =1m =1d"), ("datetime", "<", "today +1d")]`,
     ]);
 
-    await selectValue("last 12 months");
-    expect(getCurrentValue()).toBe("Last 12 months");
-    expect.verifySteps([
-        `["&", ("datetime", ">=", "today =1d -12m"), ("datetime", "<", "today =1d")]`,
-    ]);
+    await selectValue("last 365 days");
+    expect(getCurrentValue()).toBe("Last 365 days");
+    expect.verifySteps([`["&", ("datetime", ">=", "today -365d"), ("datetime", "<", "today")]`]);
 
     await selectValue("custom range");
     expect(queryOne(`${SELECTORS.valueEditor} select`).value).toBe('"custom range"');
@@ -2630,7 +2628,7 @@ test(`date: "in range" operator`, async () => {
         "Month to date",
         "Last month",
         "Year to date",
-        "Last 12 months",
+        "Last 365 days",
         "Custom range",
     ]);
 
@@ -2654,9 +2652,9 @@ test(`date: "in range" operator`, async () => {
     expect(getCurrentValue()).toBe("Year to date");
     expect.verifySteps([`["&", ("date", ">=", "today =1m =1d"), ("date", "<", "today +1d")]`]);
 
-    await selectValue("last 12 months");
-    expect(getCurrentValue()).toBe("Last 12 months");
-    expect.verifySteps([`["&", ("date", ">=", "today =1d -12m"), ("date", "<", "today =1d")]`]);
+    await selectValue("last 365 days");
+    expect(getCurrentValue()).toBe("Last 365 days");
+    expect.verifySteps([`["&", ("date", ">=", "today -365d"), ("date", "<", "today")]`]);
 
     await selectValue("custom range");
     expect(queryOne(`${SELECTORS.valueEditor} select`).value).toBe('"custom range"');
@@ -2845,9 +2843,9 @@ test("properties field: date & datetime", async () => {
         {
             fields: ["product", "product_properties", "datetime_properties"],
             operator: "in range",
-            treeValue: "last 12 months",
+            treeValue: "last 365 days",
             expectedDomain:
-                '[("product_id", "any", ["&", ("properties.datetime_properties", ">=", "today =1d -12m"), ("properties.datetime_properties", "<", "today =1d")])]',
+                '[("product_id", "any", ["&", ("properties.datetime_properties", ">=", "today -365d"), ("properties.datetime_properties", "<", "today")])]',
         },
         {
             fields: ["product", "product_properties", "date_properties"],

@@ -229,14 +229,14 @@ test(`"in range" operator: introduction/elimination for datetime fields (generat
         },
         {
             tree_py: and([
-                condition("dt_1", ">=", pyDatetime("day = 1, months = -12")),
-                condition("dt_1", "<", pyDatetime("day = 1")),
+                condition("dt_1", ">=", pyDatetime("days = -365")),
+                condition("dt_1", "<", pyDatetime()),
             ]),
-            tree: inRange("dt_1", ["datetime", "last 12 months", false, false]),
+            tree: inRange("dt_1", ["datetime", "last 365 days", false, false]),
             domain: [
                 "&",
-                ["dt_1", ">=", "2024-06-30 23:00:00"],
-                ["dt_1", "<", "2025-06-30 23:00:00"],
+                ["dt_1", ">=", "2024-07-02 23:00:00"],
+                ["dt_1", "<", "2025-07-02 23:00:00"],
             ],
         },
         {
@@ -337,11 +337,11 @@ test(`"in range" operator: introduction/elimination for date fields (generateSma
         },
         {
             tree_py: and([
-                condition("date_1", ">=", pyDate("day = 1, months = -12")),
-                condition("date_1", "<", pyDate("day=1")),
+                condition("date_1", ">=", pyDate("days = - 365")),
+                condition("date_1", "<", pyDate()),
             ]),
-            tree: inRange("date_1", ["date", "last 12 months", false, false]),
-            domain: ["&", ["date_1", ">=", "2024-07-01"], ["date_1", "<", "2025-07-01"]],
+            tree: inRange("date_1", ["date", "last 365 days", false, false]),
+            domain: ["&", ["date_1", ">=", "2024-07-03"], ["date_1", "<", "2025-07-03"]],
         },
         {
             tree_py: and(
@@ -539,12 +539,9 @@ test(`"in range" operator: introduction/elimination for datetime fields`, async 
             domain: ["&", ["dt_1", ">=", "today =1m =1d"], ["dt_1", "<", "today +1d"]],
         },
         {
-            tree_py: and([
-                condition("dt_1", ">=", "today =1d -12m"),
-                condition("dt_1", "<", "today =1d"),
-            ]),
-            tree: inRange("dt_1", ["datetime", "last 12 months", false, false]),
-            domain: ["&", ["dt_1", ">=", "today =1d -12m"], ["dt_1", "<", "today =1d"]],
+            tree_py: and([condition("dt_1", ">=", "today -365d"), condition("dt_1", "<", "today")]),
+            tree: inRange("dt_1", ["datetime", "last 365 days", false, false]),
+            domain: ["&", ["dt_1", ">=", "today -365d"], ["dt_1", "<", "today"]],
         },
         {
             tree_py: and(
@@ -635,11 +632,11 @@ test(`"in range" operator: introduction/elimination for date fields`, async () =
         },
         {
             tree_py: and([
-                condition("date_1", ">=", "today =1d -12m"),
-                condition("date_1", "<", "today =1d"),
+                condition("date_1", ">=", "today -365d"),
+                condition("date_1", "<", "today"),
             ]),
-            tree: inRange("date_1", ["date", "last 12 months", false, false]),
-            domain: ["&", ["date_1", ">=", "today =1d -12m"], ["date_1", "<", "today =1d"]],
+            tree: inRange("date_1", ["date", "last 365 days", false, false]),
+            domain: ["&", ["date_1", ">=", "today -365d"], ["date_1", "<", "today"]],
         },
         {
             tree_py: and([

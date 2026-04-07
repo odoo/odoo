@@ -41,7 +41,7 @@ export class InRange extends Component {
         ["month to date", _t("Month to date")],
         ["last month", _t("Last month")],
         ["year to date", _t("Year to date")],
-        ["last 12 months", _t("Last 12 months")],
+        ["last 365 days", _t("Last 365 days")],
         ["custom range", _t("Custom range")],
     ];
     updateValueType(newValueType) {

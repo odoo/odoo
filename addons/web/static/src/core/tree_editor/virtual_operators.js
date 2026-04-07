@@ -182,7 +182,7 @@ const BOUNDS_SMART_DATES = [
     ["month to date", "today =1d", "today +1d"],
     ["last month", "today =1d -1m", "today =1d"],
     ["year to date", "today =1m =1d", "today +1d"],
-    ["last 12 months", "today =1d -12m", "today =1d"],
+    ["last 365 days", "today -365d", "today"],
 ];
 const DELTAS = [
     ["today", "", "days = 1"],
@@ -191,7 +191,7 @@ const DELTAS = [
     ["month to date", "day = 1", "days = 1"],
     ["last month", "day = 1, months = -1", "day = 1"],
     ["year to date", "day = 1, month = 1", "days = 1"],
-    ["last 12 months", "day = 1, months = -12", "day = 1"],
+    ["last 365 days", "days = -365", ""],
 ];
 const BOUNDS_DATE = DELTAS.map(([k, l, r]) => [k, boundDate(l), boundDate(r)]);
 const BOUNDS_DATETIME = DELTAS.map(([k, l, r]) => [k, boundDatetime(l), boundDatetime(r)]);
