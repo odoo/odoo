@@ -1,4 +1,3 @@
-import { reactive } from "@web/owl2/utils";
 /** @typedef {import("./record").Record} Record */
 /** @typedef {import("./record_list").RecordList} RecordList */
 
@@ -72,8 +71,13 @@ export class RecordInternal {
      * @type {Map<string, Function>}
      */
     fieldsOnUpdateStop = new Map();
-    /** @type {Map<string, Record>} */
-    fieldsSortProxy2 = new Map();
+    /**
+     * Fields that have an `sort` defined. Key is fieldName, Value is function of ongoing `immediateEffect` that let it stop.
+     * Useful to prevent any ongoing `immediateEffect` and restart if need be.
+     *
+     * @type {Map<string, Function>}
+     */
+    fieldsSortStop = new Map();
     /** @type {Map<string, any>} */
     fieldsDefault = new Map();
     uses = new RecordUses();
@@ -100,7 +104,6 @@ export class RecordInternal {
      * @param {Record} recordProxy
      */
     prepareField(record, fieldName, recordProxy) {
-        const self = this;
         const Model = toRaw(record).Model;
         if (isRelation(Model, fieldName)) {
             // Relational fields contain symbols for detection in original class.
@@ -169,10 +172,6 @@ export class RecordInternal {
                 this.fieldsComputeInNeed.delete(fieldName);
                 this.fieldsSortInNeed.delete(fieldName);
             }
-            const sortProxy2 = reactive(recordProxy, function sortObserver() {
-                self.requestSort(record, fieldName);
-            });
-            this.fieldsSortProxy2.set(fieldName, sortProxy2);
         }
         if (Model._.fieldsOnUpdate.get(fieldName)) {
             this.prepareFieldOnUpdate(record, fieldName, recordProxy);
@@ -278,27 +277,35 @@ export class RecordInternal {
         if (!Model._.fieldsSort.get(fieldName)) {
             return;
         }
-        const store = record._rawStore;
-        this.fieldsSortOnNeed.delete(fieldName);
-        this.fieldsSorting.set(fieldName, true);
-        const proxy2Sort = this.fieldsSortProxy2.get(fieldName);
-        const func = Model._.fieldsSort.get(fieldName).bind(proxy2Sort);
-        if (isRelation(Model, fieldName)) {
-            try {
-                store._.sortRecordList(proxy2Sort[fieldName]._proxy, func);
-            } catch (err) {
-                store.handleError(err);
+        this.fieldsSortStop.get(fieldName)?.();
+        let triggered = false;
+        const stopFn = immediateEffect(() => {
+            if (triggered) {
+                return untrack(() => this.requestSort(record, fieldName));
             }
-        } else {
-            // sort on copy of list so that reactive observers not triggered while sorting
-            const copy = [...proxy2Sort[fieldName]];
-            copy.sort(func);
-            const hasChanged = copy.some((item, index) => item !== record[fieldName][index]);
-            if (hasChanged) {
-                proxy2Sort[fieldName] = copy;
+            const store = record._rawStore;
+            this.fieldsSortOnNeed.delete(fieldName);
+            this.fieldsSorting.set(fieldName, true);
+            const func = Model._.fieldsSort.get(fieldName).bind(record._proxy);
+            if (isRelation(Model, fieldName)) {
+                try {
+                    store._.sortRecordList(record._proxy[fieldName]._proxy, func);
+                } catch (err) {
+                    store.handleError(err);
+                }
+            } else {
+                // sort on copy of list so that reactive observers not triggered while sorting
+                const copy = [...record._proxy[fieldName]];
+                copy.sort(func);
+                const hasChanged = copy.some((item, index) => item !== record[fieldName][index]);
+                if (hasChanged) {
+                    record._proxy[fieldName] = copy;
+                }
             }
-        }
-        this.fieldsSorting.delete(fieldName);
+            this.fieldsSorting.delete(fieldName);
+        });
+        this.fieldsSortStop.set(fieldName, stopFn);
+        triggered = true;
     }
     onUpdate(record, fieldName) {
         const store = record._rawStore;
