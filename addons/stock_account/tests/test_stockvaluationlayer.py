@@ -331,18 +331,18 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         Return the delivery and set the original quantity to 0.
         The total value should be 15.
         """
-        move1 = self._make_in_move(self.product, 1, unit_cost=10, create_picking=True)
-        self._make_in_move(self.product, 1, unit_cost=20)
-        move2 = self._make_out_move(self.product, 1)
-        self._make_return(move1, 1)
+        move1 = self._make_in_move(self.product, 1, unit_cost=10, create_picking=True)  # 1 @ 10
+        self._make_in_move(self.product, 1, unit_cost=20)  # 2 @ 30
+        move2 = self._make_out_move(self.product, 1)  # 1 @ 15
+        self._make_return(move1, 1)  # 0 @ 0
 
         self.assertEqual(self.product.total_value, 0)
         self.assertEqual(self.product.qty_available, 0)
         self.assertEqual(self.product.standard_price, 15)
 
-        self._make_return(move2, 1)
-        move2.quantity = 0
-        self.assertEqual(self.product.with_context(to_date=fields.Datetime.now() + timedelta(days=1)).total_value, 15.0)
+        self._make_return(move2, 1)  # 1 @ 15
+        move2.quantity = 0  # 2 @ 30
+        self.assertEqual(self.product.with_context(to_date=fields.Datetime.now() + timedelta(days=1)).total_value, 30.0)
 
     def test_return_delivery_1(self):
         self._make_in_move(self.product, 1, unit_cost=10)

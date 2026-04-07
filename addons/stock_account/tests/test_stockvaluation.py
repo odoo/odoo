@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, timedelta
+from unittest.mock import patch
 from freezegun import freeze_time
 
+from odoo.addons.stock_account.models.stock_move import StockMove
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.fields import Datetime, Date
@@ -2063,15 +2065,15 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(product.total_value, 1425)
 
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date1)).qty_available, 20)
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date1)).total_value, 100)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date1)).total_value, 200)  # +$200 (20*10)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).qty_available, 30)
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).total_value, 220)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).total_value, 320)  #  +$120 (10*12)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date3)).qty_available, 15)
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date3)).total_value, 145)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date3)).total_value, 170)  # -$150 (15*10)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date4)).qty_available, -5)
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date4)).total_value, -60)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date4)).total_value, -60)  # -$230 (5*10 + 10*12 + 5*12)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date5)).qty_available, 95)
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date5)).total_value, 1425)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date5)).total_value, 1425)  # +$1485 (5*12 + 95*15)
 
     def test_inventory_fifo_1(self):
         """ Make an inventory from a location with a company set, and ensure the product has a stock
@@ -3293,3 +3295,62 @@ class TestStockValuation(TestStockValuationCommon):
         consigned_quant = quants.filtered(lambda q: q.location_id == self.stock_location and q.owner_id)
         self.assertEqual(regular_quant.value, 10)
         self.assertEqual(consigned_quant.value, 0)
+
+    def test_fifo_adjusted_value_at_date(self):
+        """Ensure that adjusted move value are taken into account when computing the total_value at date
+        """
+        now = Datetime.now()
+        date1 = now - timedelta(days=8)
+        date2 = now - timedelta(days=7)
+        date3 = now - timedelta(days=6)
+        date4 = now - timedelta(days=5)
+
+        product = self.product_fifo_auto
+        product.standard_price = 0
+
+        # receive 10@10
+        with freeze_time(date1):
+            in_move = self._make_in_move(product, 10, 0)
+            self.assertEqual(in_move.value, 0)
+
+        with freeze_time(date2):
+            self.assertEqual(product.qty_available, 10)
+            self.assertEqual(product.total_value, 0)
+
+        with freeze_time(date3):
+            in_move = self._make_out_move(product, 10)
+
+            self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).qty_available, 10)
+            self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).total_value, 0)
+
+        with freeze_time(date4):
+            in_move = self._make_in_move(product, 5, 10)
+            self.assertEqual(product.qty_available, 5)
+            self.assertEqual(product.total_value, 50)
+            self.assertEqual(product.standard_price, 10)
+
+            self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).qty_available, 10)
+            self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).total_value, 0)
+
+    def test_avco_adjusted_value_at_date(self):
+        """Ensure that adjusted move value are taken into account when computing the total_value at date
+        """
+        today = Datetime.now()
+        in_move = self._make_in_move(self.product_avco_auto, 10, 10)
+        in_move.date = today - timedelta(days=2)  # Move is made 2 days ago
+
+        #  Simulate the behavior of a purchase order with the price set to $10/unit
+        with patch.object(StockMove, '_get_value_from_quotation', return_value={'value': 100, 'quantity': 10, 'description': 'From Purchase'}):
+            today_value = self.product_avco_auto.total_value
+            yesterday_value = self.product_avco_auto.with_context(to_date=today - timedelta(days=1)).total_value
+            self.assertEqual(today_value, 100)
+            self.assertEqual(yesterday_value, 100)
+
+            # "Adjust Valuation" in Move Analysis
+            self.env['product.value'].create({'move_id': in_move.id, 'value': 200})
+            self.assertEqual(in_move.value, 200)
+
+            today_value = self.product_avco_auto.total_value
+            yesterday_value = self.product_avco_auto.with_context(to_date=today - timedelta(days=1)).total_value
+            self.assertEqual(today_value, 200)
+            self.assertEqual(yesterday_value, 200)
