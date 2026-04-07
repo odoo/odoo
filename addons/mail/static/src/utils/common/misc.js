@@ -2,7 +2,7 @@ import { reactive, useLayoutEffect } from "@web/owl2/utils";
 import { AssetsLoadingError, getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
 import { effect } from "@web/core/utils/reactive";
-import { immediateEffect } from "@odoo/owl";
+import { immediateEffect, untrack } from "@odoo/owl";
 
 export function assignDefined(obj, data, keys = Object.keys(data)) {
     for (const key of keys) {
@@ -106,7 +106,7 @@ export function onChange(target, key, callback) {
     immediateEffect(() => {
         _observe();
         if (running) {
-            callback();
+            untrack(() => callback());
         }
     });
     running = true;

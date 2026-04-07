@@ -11,7 +11,7 @@ import {
     makeRecordFieldLocalId,
 } from "./misc";
 import { RecordList } from "./record_list";
-import { immediateEffect, toRaw } from "@odoo/owl";
+import { immediateEffect, toRaw, untrack } from "@odoo/owl";
 import { RecordUses } from "./record_uses";
 import { LocalStorageEntry } from "@mail/utils/common/local_storage";
 
@@ -58,8 +58,13 @@ export class RecordInternal {
      * @type {Map<string, boolean>}
      */
     fieldsComputeOnNeed = new Map();
-    /** @type {Map<string, () => void>} */
-    fieldsOnUpdateObserves = new Map();
+    /**
+     * Fields that have an `onUpdate` defined. Key is fieldName, Value is function of ongoing `onChange` that allow to stop it.
+     * Useful to prevent any ongoing onChange and restart if need be.
+     *
+     * @type {Map<string, Function>}
+     */
+    fieldsOnUpdateStop = new Map();
     /** @type {Map<string, Record>} */
     fieldsSortProxy2 = new Map();
     /** @type {Map<string, Record>} */
@@ -170,16 +175,26 @@ export class RecordInternal {
             this.fieldsSortProxy2.set(fieldName, sortProxy2);
         }
         if (Model._.fieldsOnUpdate.get(fieldName)) {
-            const store = Model.store;
-            store._onChange(recordProxy, fieldName, (obs) => {
-                this.fieldsOnUpdateObserves.set(fieldName, obs);
-                if (store._.UPDATE !== 0) {
-                    store._.ADD_QUEUE("onUpdate", record, fieldName);
-                } else {
-                    this.onUpdate(record, fieldName);
-                }
-            });
+            this.prepareFieldOnUpdate(record, fieldName, recordProxy);
         }
+    }
+
+    /**
+     * @param {Record} record
+     * @param {string} fieldName
+     * @param {Record} recordProxy
+     */
+    prepareFieldOnUpdate(record, fieldName, recordProxy) {
+        const Model = toRaw(record).Model;
+        const store = Model.store;
+        const fn = store._onChange(recordProxy, fieldName, (obs) => {
+            if (store._.UPDATE !== 0) {
+                untrack(() => store._.ADD_QUEUE("onUpdate", record, fieldName));
+            } else {
+                this.onUpdate(record, fieldName);
+            }
+        });
+        this.fieldsOnUpdateStop.set(fieldName, fn);
     }
 
     requestCompute(record, fieldName, { force = false } = {}) {
@@ -284,20 +299,22 @@ export class RecordInternal {
         if (!Model._.fieldsOnUpdate.get(fieldName)) {
             return;
         }
-        immediateEffect(() => {
-            /**
-             * Forward internal proxy for performance as onUpdate does not
-             * need reactive (observe is called separately).
-             */
+        this.fieldsOnUpdateStop.get(fieldName)?.();
+        const recordProxy = record._proxy;
+        untrack(() => {
             try {
+                /**
+                 * Forward internal proxy for performance as onUpdate does not
+                 * need reactive (observe is called separately).
+                 */
                 Model._.fieldsOnUpdate
                     .get(fieldName)
-                    .forEach((fn) => fn.call(record._proxy, record._proxy[fieldName]));
+                    .forEach((fn) => fn.call(recordProxy, recordProxy[fieldName]));
             } catch (err) {
                 store.handleError(err);
             }
-            this.fieldsOnUpdateObserves.get(fieldName)?.();
         });
+        this.prepareFieldOnUpdate(record, fieldName, recordProxy);
     }
     /**
      * The internal reactive is only necessary to trigger outer reactives when
