@@ -749,9 +749,17 @@ class ResPartner(models.Model):
             fields_to_sync = self._commercial_fields()
         sync_vals = commercial_partner._convert_fields_to_values(fields_to_sync)
         sync_children = self.child_ids.filtered(lambda c: not c.is_company)
+        children_ids_to_sync = tools.OrderedSet()
         for child in sync_children:
+            if any(
+                self.env['res.partner']._fields[fname].convert_to_write(child[fname], self) != sync_vals[fname]
+                for fname in fields_to_sync
+            ):
+                children_ids_to_sync.add(child.id)
             child._commercial_sync_to_descendants(fields_to_sync)
-        sync_children._write_commercial_sync(sync_vals)
+        if children_ids_to_sync:
+            children_to_sync = self.env['res.partner'].browse(children_ids_to_sync)
+            children_to_sync._write_commercial_sync(sync_vals)
 
     def _fields_sync(self, values):
         """ Sync commercial fields and address fields from company and to children.
@@ -761,6 +769,7 @@ class ResPartner(models.Model):
 
         :param dict values: updated values, triggering sync
         """
+        self.fetch(['parent_id', 'type', 'commercial_partner_id'])
         # 1. From UPSTREAM: sync from parent
         if values.get('parent_id') or values.get('type') == 'contact':
             # 1a. Commercial fields: sync if parent changed
@@ -1154,6 +1163,7 @@ class ResPartner(models.Model):
                         result[record.type] = record.id
                     if len(result) == len(adr_pref):
                         return result
+                    record.child_ids.fetch(['type', 'child_ids', 'is_company', 'parent_id'])
                     to_scan = [c for c in record.child_ids
                                  if c not in visited
                                  if not c.is_company] + to_scan
