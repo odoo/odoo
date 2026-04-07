@@ -59,6 +59,13 @@ export class RecordInternal {
      */
     fieldsComputeOnNeed = new Map();
     /**
+     * Fields that have an `compute` defined. Key is fieldName, Value is function of ongoing `immediateEffect` that let it stop.
+     * Useful to prevent any ongoing `immediateEffect` and restart if need be.
+     *
+     * @type {Map<string, Function>}
+     */
+    fieldsComputeStop = new Map();
+    /**
      * Fields that have an `onUpdate` defined. Key is fieldName, Value is function of ongoing `onChange` that allow to stop it.
      * Useful to prevent any ongoing onChange and restart if need be.
      *
@@ -67,8 +74,6 @@ export class RecordInternal {
     fieldsOnUpdateStop = new Map();
     /** @type {Map<string, Record>} */
     fieldsSortProxy2 = new Map();
-    /** @type {Map<string, Record>} */
-    fieldsComputeProxy2 = new Map();
     /** @type {Map<string, any>} */
     fieldsDefault = new Map();
     uses = new RecordUses();
@@ -146,11 +151,6 @@ export class RecordInternal {
                 this.fieldsComputeInNeed.delete(fieldName);
                 this.fieldsSortInNeed.delete(fieldName);
             }
-            const cb = function computeObserver() {
-                self.requestCompute(record, fieldName);
-            };
-            const computeProxy2 = reactive(recordProxy, cb);
-            this.fieldsComputeProxy2.set(fieldName, computeProxy2);
         }
         if (Model._.fieldsSort.get(fieldName)) {
             if (!Model._.fieldsEager.get(fieldName)) {
@@ -244,23 +244,30 @@ export class RecordInternal {
         if (!Model._.fieldsCompute.get(fieldName)) {
             return;
         }
-        immediateEffect(() => {
+        this.fieldsComputeStop.get(fieldName)?.();
+        let triggered = false;
+        const stopFn = immediateEffect(() => {
+            if (triggered) {
+                return untrack(() => this.requestCompute(record, fieldName));
+            }
             const store = record._rawStore;
             this.fieldsComputing.set(fieldName, true);
             this.fieldsComputeOnNeed.delete(fieldName);
             let computedValue;
             try {
-                computedValue = Model._.fieldsCompute
-                    .get(fieldName)
-                    .call(this.fieldsComputeProxy2.get(fieldName));
+                computedValue = Model._.fieldsCompute.get(fieldName).call(record._proxy);
             } catch (err) {
                 store.handleError(err);
             }
-            store._.updateFields(record, {
-                [fieldName]: computedValue,
-            });
+            untrack(() =>
+                store._.updateFields(record, {
+                    [fieldName]: computedValue,
+                })
+            );
             this.fieldsComputing.delete(fieldName);
         });
+        this.fieldsComputeStop.set(fieldName, stopFn);
+        triggered = true;
     }
     /**
      * @param {Record} record
