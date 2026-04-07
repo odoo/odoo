@@ -48,9 +48,4 @@ class StockMove(models.Model):
         return self.location_dest_id.usage == 'production' and self.location_id._should_be_valued()
 
     def _get_all_related_sm(self, product):
-        moves = super()._get_all_related_sm(product)
-        return moves | self.filtered(
-            lambda m:
-            m.bom_line_id.bom_id.type == 'phantom' and
-            m.bom_line_id.bom_id == moves.bom_line_id.bom_id
-        )
+        return super()._get_all_related_sm(product).filtered(lambda m: m.bom_line_id.bom_id.type != 'phantom')
