@@ -93,6 +93,18 @@ class HrEmployee(models.Model):
             elif not employee.attendance_manager_id:
                 employee.attendance_manager_id = False
 
+    def action_archive(self):
+        res = super().action_archive()
+        open_attendances = self.env['hr.attendance'].search([
+            ('employee_id', 'in', self.ids),
+            ('check_out', '=', False),
+        ])
+        if open_attendances:
+            open_attendances.write({
+                'check_out': fields.Datetime.now(),
+            })
+        return res
+
     @api.depends('overtime_ids.manual_duration', 'overtime_ids', 'overtime_ids.status')
     def _compute_total_overtime(self):
         mapped_validated_overtimes = dict(

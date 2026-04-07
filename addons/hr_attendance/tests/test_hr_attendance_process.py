@@ -109,6 +109,18 @@ class TestHrAttendance(TransactionCase):
         with self.assertRaises(AssertionError):
             attendance_form.save()
 
+    def test_attendance_checkout_while_employee_archived(self):
+        """An employee should be checked out by the system, if employee is getting archive."""
+        test_attendance = self.env['hr.attendance'].create({
+            'check_in': datetime(2024, 1, 1, 8, 0),
+            'employee_id': self.test_employee.id,
+        })
+
+        with freeze_time("2024-01-01 16:00:00"):
+            self.test_employee.action_archive()
+            self.assertEqual(test_attendance.check_out, fields.Datetime.now())
+            self.assertEqual(test_attendance.worked_hours, 8.0)
+
     # @freeze_time("2024-02-1")
     # def test_change_in_out_mode_when_manual_modification(self):
     #     TODO naja: cron should work eventually when the adjustment feature is back
