@@ -14,9 +14,9 @@ condition/math builtins.
 #  - http://code.activestate.com/recipes/286134/
 #  - safe_eval in lp:~xrg/openobject-server/optimize-5.0
 #  - safe_eval in tryton http://hg.tryton.org/hgwebdir.cgi/trytond/rev/bbb5f73319ad
-import dis
 import ast
 import contextvars
+import dis
 import functools
 import inspect
 import logging
