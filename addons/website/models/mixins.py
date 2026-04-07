@@ -455,10 +455,6 @@ class WebsitePublishedMixin(models.AbstractModel):
         if not records:
             return
 
-        # Invalidate the ORM cache for website_published so hooks that read it
-        # during this method see the fresh "True" value instead of an old cache.
-        records.invalidate_recordset(['website_published'])
-
         # Prepare containers for all chatter messages and pending notifications.
         messages = self.env['mail.message']
         pending_notifications = []
