@@ -17,6 +17,41 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
         cls.env.user.company_id.anglo_saxon_accounting = True
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
 
+    def _make_in_move(self, product, quantity, unit_cost=None):
+        unit_cost = unit_cost or product.standard_price
+        in_move = self.env['stock.move'].create({
+            'name': 'in %s units @ %s per unit' % (str(quantity), str(unit_cost)),
+            'product_id': product.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'product_uom': self.env.ref('uom.product_uom_unit').id,
+            'product_uom_qty': quantity,
+            'price_unit': unit_cost,
+        })
+        in_move._action_confirm()
+        in_move._action_assign()
+        in_move.move_line_ids.quantity = quantity
+        in_move.picked = True
+        in_move._action_done()
+
+        return in_move.with_context(svl=True)
+
+    def _make_out_move(self, product, quantity):
+        out_move = self.env['stock.move'].create({
+            'name': 'out %s units' % str(quantity),
+            'product_id': product.id,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'product_uom': self.env.ref('uom.product_uom_unit').id,
+            'product_uom_qty': quantity,
+        })
+        out_move._action_confirm()
+        out_move._action_assign()
+        out_move.move_line_ids.quantity = quantity
+        out_move.picked = True
+        out_move._action_done()
+        return out_move.with_context(svl=True)
+
     @classmethod
     def _create_product(cls, **kwargs):
         return super()._create_product(
@@ -731,3 +766,67 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
                 {'product_id': component.id, 'reconciled': True,    'debit': 0.0,     'credit':  10.0},
             ]
         )
+
+    def test_kit_component_avco_rounding_4_digits(self):
+        """
+        Check that rounding with high precision doesn't block deliveries containing both a kit and
+        its' component when the invoice has been confirmed.
+        """
+        self.stock_account_product_categ.property_cost_method = 'average'
+        self.env['decimal.precision'].search([
+            ('name', '=', 'Product Price'),
+        ]).digits = 4
+
+        kit = self._create_product(name='Simple Kit', is_storable=False, standard_price=0)
+        component = self._create_product(name='Compo A', is_storable=True, standard_price=0)
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({
+                'product_id': component.id,
+                'product_qty': 1.0,
+            })],
+        })
+
+        # Receive 3 units of component at 3.3333 a piece, rounded to 10 for valuation
+        component.write({'standard_price': 3.3333})
+        self._make_in_move(component, 3)
+        self.assertAlmostEqual(component.standard_price, 3.3333)
+        self.assertEqual(component.stock_valuation_layer_ids.value, 10.0)
+
+        # Remove one unit of component twice, at 3.33 a piece
+        self._make_out_move(component, 1)
+        self.assertEqual(len(component.stock_valuation_layer_ids), 2)
+        self.assertEqual(component.stock_valuation_layer_ids[-1].value, -3.33)
+        self._make_out_move(component, 1)
+        self.assertEqual(len(component.stock_valuation_layer_ids), 3)
+        self.assertEqual(component.stock_valuation_layer_ids[-1].value, -3.33)
+        self.assertEqual(sum(svl.value for svl in component.stock_valuation_layer_ids), 3.34)
+
+        # Sell 1 unit of both the kit and the component
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': kit.id,
+                    'product_uom_qty': 1,
+                }),
+                Command.create({
+                    'product_id': component.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
+            'company_id': self.company_data['company'].id,
+        })
+        so.action_confirm()
+        invoice = so.with_context(default_journal_id=self.company_data['default_journal_sale'].id)._create_invoices()
+        invoice.action_post()
+
+        # Force quantity on moves
+        out_moves = so.picking_ids.move_ids
+        out_moves.quantity = 1
+        out_moves.picked = True
+        out_moves._action_done()
+        self.assertEqual(len(component.stock_valuation_layer_ids), 5)
+        self.assertEqual(sum(component.stock_valuation_layer_ids.mapped('value')), -3.34)
