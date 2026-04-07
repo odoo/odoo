@@ -28,6 +28,7 @@ patch(Composer.prototype, {
                 signature,
                 signatureClass: SIGNATURE_CLASS,
             });
+            fragment.append(document.createElement("BR"));
             fragment.append(signatureEl);
         }
         const container = document.createElement("DIV");
