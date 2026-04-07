@@ -74,7 +74,7 @@ class PrinterDriver(PrinterDriverBase):
                     self.send_status(status='error', message='ERROR_FAILED')
                     raise
 
-    def print_report(self, data):
+    def print_report(self, data, duplex=True):
         with win32print_lock:
             file_name = system.path_file('document.pdf')
             file_name.write_bytes(data)
@@ -87,8 +87,9 @@ class PrinterDriver(PrinterDriverBase):
                 str(file_name),
                 "-silent",
                 "-print-settings",
-                "duplex"
             ]
+            if duplex:
+                args.append("duplex")
 
             _logger.debug("Printing report with SumatraPDF using %s", args)
 
@@ -106,7 +107,7 @@ class PrinterDriver(PrinterDriverBase):
         mimetype = guess_mimetype(document)
         action_unique_id = data.get('action_unique_id')
         if mimetype == 'application/pdf':
-            self.print_report(document)
+            self.print_report(document, data.get("duplex", True))
         else:
             self.print_raw(document, action_unique_id=action_unique_id)
         _logger.debug("_action_default finished with mimetype %s for printer %s", mimetype, self.device_name)

@@ -44,15 +44,19 @@ class PrinterDriver(PrinterDriverBase):
         self.send_status('disconnected', 'Printer was disconnected')
         super().disconnect()
 
-    def print_raw(self, data, action_unique_id=None):
+    def print_raw(self, data, action_unique_id=None, duplex=True):
         """Print raw data to the printer
 
         :param data: The data to print
         :param action_unique_id: The unique identifier of the action triggering the print
+        :param duplex: Whether to print on both sides of the paper (if supported by the printer)
         """
         try:
             with self.cups_lock:
-                job_id = self.conn.createJob(self.device_identifier, 'Odoo print job', {'document-format': CUPS_FORMAT_AUTO})
+                options = {'document-format': CUPS_FORMAT_AUTO}
+                if not duplex:
+                    options["sides"] = "one-sided"
+                job_id = self.conn.createJob(self.device_identifier, 'Odoo print job', options)
                 self.conn.startDocument(self.device_identifier, job_id, 'Odoo print job', CUPS_FORMAT_AUTO, 1)
                 self.conn.writeRequestData(data, len(data))
                 self.conn.finishDocument(self.device_identifier)
@@ -203,7 +207,11 @@ class PrinterDriver(PrinterDriverBase):
 
     def _action_default(self, data):
         _logger.debug("_action_default called for printer %s", self.device_name)
-        self.print_raw(b64decode(data['document']), action_unique_id=data.get('action_unique_id'))
+        self.print_raw(
+            b64decode(data['document']),
+            action_unique_id=data.get('action_unique_id'),
+            duplex=data.get("duplex", True),
+        )
         return {'print_id': data['print_id']} if 'print_id' in data else {}
 
     def _cancel_job_with_error(self, job_id, error_message):
