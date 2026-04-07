@@ -273,3 +273,23 @@ test("cancelBackendOrder", async () => {
     expect(order.state).toBe("cancel");
     expect(store.router.activeSlot).toBe("default");
 });
+
+test("product with single 'is_custom' attr is configurable in 'mobile' mode", async () => {
+    const store = await setupSelfPosEnv("mobile");
+    const product = store.models["product.template"].get(51);
+    product.attribute_line_ids = [product.attribute_line_ids[1]];
+    const ptv = product.attribute_line_ids[0].product_template_value_ids;
+    expect(ptv.length).toBe(1);
+    expect(ptv[0].is_custom).toBe(true);
+    expect(!!store.isProductConfigurable(product)).toBe(true);
+});
+
+test("product with single 'is_custom' attr is not configurable in 'kiosk' mode", async () => {
+    const store = await setupSelfPosEnv();
+    const product = store.models["product.template"].get(51);
+    product.attribute_line_ids = [product.attribute_line_ids[1]];
+    const ptv = product.attribute_line_ids[0].product_template_value_ids;
+    expect(ptv.length).toBe(1);
+    expect(ptv[0].is_custom).toBe(true);
+    expect(!!store.isProductConfigurable(product)).toBe(false);
+});
