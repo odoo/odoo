@@ -61,10 +61,13 @@ export class ChatWindow extends Record {
     }
 
     /**
-     * Optional tasks to run right before the chat window is closed.
+     * Optional tasks to run right before the chat window is closed,
+     * and confirm the windw can be closed after those tasks.
      * This method is only called as a part of {@link requestClose}.
      */
-    async _onBeforeClose() {}
+    async _onBeforeClose() {
+        return true;
+    }
 
     /**
      * Attempt to close this chat window:
@@ -77,7 +80,7 @@ export class ChatWindow extends Record {
     async requestClose(options) {
         await this.store.chatHub.initPromise;
         this.actionsDisabled = true;
-        const canClose = await this._canClose();
+        let canClose = await this._canClose();
         if (!this.exists()) {
             return;
         }
@@ -86,8 +89,8 @@ export class ChatWindow extends Record {
             this.actionsDisabled = false;
             return;
         }
-        await this._onBeforeClose();
-        if (this.exists()) {
+        canClose = await this._onBeforeClose();
+        if (this.exists() && canClose) {
             this.close(options);
         }
     }
