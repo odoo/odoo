@@ -406,8 +406,12 @@ class MailRenderMixin(models.AbstractModel):
                         _('Only members of %(group_name)s group are allowed to edit templates containing sensible placeholders',
                            group_name=group.name)
                     ) from e
-
-                error_details = str(e)
+                elif isinstance(e, QWebError):
+                    # We extract the message before the template dump to clean out the full template
+                    # source, since it will be added later again
+                    error_details = str(e).split('\nTemplate:')[0].strip()
+                else:
+                    error_details = str(e)
                 error_traceback = traceback.format_exc()
 
                 # Identify the template safely
@@ -435,8 +439,12 @@ class MailRenderMixin(models.AbstractModel):
                     truncated_src = f"{template_src[:500]}\n[...] (content truncated) [...]\n{template_src[-500:]}"
 
                 lang_context = self.env.context.get('lang', _("No language detected in context"))
-                # Log the full technical traceback for the sysadmin/developer
                 _logger.error(
+                    "Failed to render QWeb template for %s - Context language:%s\nTarget Model: %s\nError: %s\n%s",
+                    template_label, lang_context, model, error_details, truncated_src
+                )
+                # Log the full technical traceback for the sysadmin/developer
+                _logger.debug(
                     "Failed to render QWeb template for %s - Context language:%s\nTarget Model: %s\nError: %s\n%s",
                     template_label, lang_context, model, error_details, error_traceback
                 )

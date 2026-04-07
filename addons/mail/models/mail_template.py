@@ -225,7 +225,7 @@ class MailTemplate(models.Model):
                 try:
                     template._render_field(fname, record.ids, options=render_options)
                 except Exception as e:
-                    _logger.info("Error while checking if template can be rendered for field %s", fname)
+                    _logger.exception("Error while checking if template can be rendered for field %s", fname)
 
                     error_details = str(e)
 
