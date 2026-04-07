@@ -411,3 +411,32 @@ class TestConsumptionWarning(common.TransactionCase):
                 self.assertEqual(move.quantity, 1.2, "Wrong quantity of the component was consumed.")
             else:
                 self.assertEqual(move.product_id, self.salt, "Foreign component in the MO.")
+
+    def test_consumption_warning_for_variants(self):
+        """Ensure that the consumption warning wizard does not trigger when a
+        BOM component is not intended for the current variant and has not been
+        consumed."""
+        soup_template = self.soup.product_tmpl_id
+        flavour_attribute = self.env['product.attribute'].create({
+            'name': 'Flavor',
+            'value_ids': [
+                Command.create({'name': 'Spicy'}),
+                Command.create({'name': 'Salted'}),
+            ],
+            'create_variant': 'always',
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': soup_template.id,
+            'attribute_id': flavour_attribute.id,
+            'value_ids': [Command.set(flavour_attribute.value_ids.ids)],
+        })
+        self.soup_recipe.bom_line_ids = [Command.create({
+            'product_id': self.env['product.product'].create({'name': 'Ghost Pepper', 'type': 'consu'}).id,
+            'product_qty': 1,
+            'bom_product_template_attribute_value_ids': [
+                Command.link(soup_template.product_variant_ids[0].product_template_attribute_value_ids[0].id),
+            ],
+        })]
+        mo = self._make_mo(self.soup_recipe, 5, self.uom_m3)
+        mo.product_id = soup_template.product_variant_ids[1].id
+        self.assertIs(mo.button_mark_done(), True, 'Avoid unused component warnings meant for other variants')
