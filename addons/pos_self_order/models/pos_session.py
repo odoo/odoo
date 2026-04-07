@@ -14,6 +14,10 @@ class PosSession(models.Model):
         return data
 
     @api.model
+    def _load_pos_self_data_fields(self, config):
+        return ['id', 'user_id', 'config_id', 'payment_method_ids', 'state']
+
+    @api.model
     def _load_pos_self_data_domain(self, data, config):
         return [('config_id', '=', config.id), ('state', '=', 'opened')]
 
