@@ -34,8 +34,8 @@
             <span>Subject: <t t-out="this.message.subject || this.message.default_subject"/></span>
         </div>
         <t t-out="this.body"/>
+        <br/>
         <div t-if="this.signature" data-o-mail-quote="1">
-            <br/>
             <t t-call="html_editor.Signature">
                 <t t-set="signatureClass" t-value="'o-signature-container'"/>
             </t>
@@ -52,8 +52,8 @@
                 <blockquote t-out="this.body"/>
             </div>
         </div>
+        <br/>
         <div t-if="this.signature" data-o-mail-quote="1">
-            <br/>
             <t t-call="html_editor.Signature">
                 <t t-set="signatureClass" t-value="'o-signature-container'"/>
             </t>

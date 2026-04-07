@@ -44,7 +44,6 @@ export class ResUsers extends ImStatusMixin {
         const divElement = document.createElement("div");
         divElement.setAttribute("data-o-mail-quote", "1");
         divElement.append(
-            document.createElement("br"),
             document.createTextNode("-- "),
             document.createElement("br"),
             ...createElementWithContent("div", this.signature).childNodes
