@@ -607,3 +607,38 @@ class TestDropshipPostInstall(common.TransactionCase):
         purchase_order.button_confirm()
         sale_order._action_cancel()
         self.assertEqual(len(purchase_order.activity_ids), 1)
+
+    def test_merged_dropship_po_links_all_sale_orders(self):
+        """When dropship POs from different SOs are merged and confirmed,
+        each SO must get its own picking so delivery status is updated on validation."""
+        product_b = self.env['product.product'].create({
+            'name': 'Dropshipped Product B',
+            'standard_price': 20,
+            'seller_ids': [Command.create({'partner_id': self.supplier.id})],
+            'route_ids': [Command.link(self.env.ref('stock_dropshipping.route_drop_shipping').id)],
+        })
+        so1, so2 = self.env['sale.order'].create([{
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({'product_id': self.dropship_product.id, 'product_uom_qty': 1})],
+        }, {
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({'product_id': product_b.id, 'product_uom_qty': 1})],
+        }])
+        all_sos = so1 | so2
+        all_sos.action_confirm()
+
+        pos = self.env['purchase.order'].search([('group_id', 'in', all_sos.procurement_group_id.ids)])
+        pos.action_merge()
+        merged_pos = pos.filtered(lambda p: p.state != 'cancel')
+        merged_pos.button_confirm()
+
+        pickings = merged_pos.picking_ids.filtered('is_dropship')
+        self.assertEqual(len(pickings), 2)
+        self.assertEqual(pickings.mapped('group_id'), (so1 | so2).procurement_group_id)
+        self.assertEqual(pickings.mapped('sale_id'), so1 | so2)
+        for picking in pickings:
+            picking.move_ids.write({'quantity': 1, 'picked': True})
+            picking.button_validate()
+
+        for so in [so1, so2]:
+            self.assertEqual(so.delivery_status, 'full')
