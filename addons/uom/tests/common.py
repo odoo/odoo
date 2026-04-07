@@ -17,6 +17,7 @@ class UomCommon(BaseCommon):
         cls.uom_dozen = cls.quick_ref('uom.product_uom_dozen')
         cls.uom_dozen.active = True
         cls.uom_hour = cls.quick_ref('uom.product_uom_hour')
+        cls.uom_pack_6 = cls.quick_ref('uom.product_uom_pack_6')
 
         cls.group_uom = cls.quick_ref('uom.group_uom')
 
