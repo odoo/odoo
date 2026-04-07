@@ -2,6 +2,8 @@ import { reactive } from "@web/owl2/utils";
 import { markRaw, toRaw } from "@odoo/owl";
 import { isRecord } from "./misc";
 
+/** @typedef {import("./record").Record} Record */
+
 /** @param {RecordList} reclist */
 function getInverse(reclist) {
     return reclist._.owner.Model._.fieldsInverse.get(reclist._.name);
@@ -49,12 +51,12 @@ function isSortOnNeed(reclist) {
 
 /** @param {RecordList} reclist */
 function computeField(reclist) {
-    reclist._.owner._.compute(reclist._.owner, reclist._.name);
+    reclist._.owner._.compute(reclist._.owner, reclist._.name, { fromInNeed: true });
 }
 
 /** @param {RecordList} reclist */
 function sortField(reclist) {
-    reclist._.owner._.sort(reclist._.owner, reclist._.name);
+    reclist._.owner._.sort(reclist._.owner, reclist._.name, { fromInNeed: true });
 }
 
 /** @param {RecordList} reclist */

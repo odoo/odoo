@@ -88,13 +88,13 @@ export function makeStore(env, { localRegistry } = {}) {
                             if (Model._.fieldsCompute.get(name) && !Model._.fieldsEager.get(name)) {
                                 record._.fieldsComputeInNeed.set(name, true);
                                 if (record._.fieldsComputeOnNeed.get(name)) {
-                                    record._.compute(record, name);
+                                    record._.compute(record, name, { fromInNeed: true });
                                 }
                             }
                             if (Model._.fieldsSort.get(name) && !Model._.fieldsEager.get(name)) {
                                 record._.fieldsSortInNeed.set(name, true);
                                 if (record._.fieldsSortOnNeed.get(name)) {
-                                    record._.sort(record, name);
+                                    record._.sort(record, name, { fromInNeed: true });
                                 }
                             }
                             record._.gettingField = true;
