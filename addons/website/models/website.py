@@ -115,7 +115,7 @@ class Website(models.CachedModel):
     _clear_cache_name = 'default'
     _cached_data_fields = (
         'user_id', 'company_id', 'default_lang_id', 'homepage_url',
-        'domain', 'cookies_bar',
+        'domain', 'cookies_bar', 'sequence',
     )
 
     @tools.ormcache(cache='default')
