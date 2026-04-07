@@ -2271,8 +2271,12 @@ QUnit.module("Search", (hooks) => {
     QUnit.test("scroll kanban view with searchpanel and kept scroll position", async (assert) => {
         for (let i = 10; i < 20; i++) {
             serverData.models.category.records.push({ id: i, name: "Cat " + i });
-            for (let j = 0; j <9; j++)
-            serverData.models.partner.records.push({ id: 100 + i*10 +j, foo: `Record ${i*10 +j}` });
+            for (let j = 0; j < 9; j++) {
+                serverData.models.partner.records.push({
+                    id: 100 + i * 10 + j,
+                    foo: `Record ${i * 10 + j}`,
+                });
+            }
         }
 
         const container = document.createElement("div");
@@ -3315,6 +3319,74 @@ QUnit.module("Search", (hooks) => {
         assert.containsNone(target, ".o_search_panel_filter_value");
     });
 
+    QUnit.test("error message is correctly cleared (category case)", async (assert) => {
+        assert.expect(4);
+        serverData.models.company.records.push({ id: 8, name: "third company", category_id: 6 });
+        serverData.models.partner.records[0].company_id = 8;
+        serverData.views["partner,false,search"] = /* xml */ `
+            <search>
+                <filter name="filter_bar_false" string="Not Bar" domain="[('bar', '=', false)]"/>
+                <searchpanel>
+                    <field name="company_id" limit="2"/>
+                </searchpanel>
+            </search>`;
+
+        const { TestComponent } = makeTestComponent();
+        await makeWithSearch({
+            serverData,
+            Component: TestComponent,
+            resModel: "partner",
+            searchViewId: false,
+        });
+
+        assert.containsOnce(target, "section div.alert.alert-warning");
+        assert.strictEqual(
+            target.querySelector("section div.alert.alert-warning").innerText,
+            "Too many items to display."
+        );
+
+        // Apply a filter that reduces the number of matching companies below the limit
+        await toggleSearchBarMenu(target);
+        await toggleMenuItem(target, "Not Bar");
+
+        assert.containsNone(target, "section div.alert.alert-warning");
+        assert.containsN(target, ".o_search_panel_category_value", 2); // "All" + agrolait
+    });
+
+    QUnit.test("error message is correctly cleared (filter case)", async (assert) => {
+        assert.expect(4);
+        serverData.models.company.records.push({ id: 8, name: "third company", category_id: 6 });
+        serverData.models.partner.records[0].company_id = 8;
+        serverData.views["partner,false,search"] = /* xml */ `
+            <search>
+                <filter name="filter_bar_false" string="Not Bar" domain="[('bar', '=', false)]"/>
+                <searchpanel>
+                    <field name="company_id" select="multi" limit="2"/>
+                </searchpanel>
+            </search>`;
+
+        const { TestComponent } = makeTestComponent();
+        await makeWithSearch({
+            serverData,
+            Component: TestComponent,
+            resModel: "partner",
+            searchViewId: false,
+        });
+
+        assert.containsOnce(target, "section div.alert.alert-warning");
+        assert.strictEqual(
+            target.querySelector("section div.alert.alert-warning").innerText,
+            "Too many items to display."
+        );
+
+        // Apply a filter that reduces the number of matching companies below the limit
+        await toggleSearchBarMenu(target);
+        await toggleMenuItem(target, "Not Bar");
+
+        assert.containsNone(target, "section div.alert.alert-warning");
+        assert.containsOnce(target, ".o_search_panel_filter_value"); // only agrolait
+    });
+
     QUnit.test(
         "a selected value becomming invalid should no more impact the view",
         async (assert) => {
@@ -3525,9 +3597,9 @@ QUnit.module("Search", (hooks) => {
         const webclient = await createWebClient({ serverData });
         await doAction(webclient, 1);
 
-        assert.deepEqual(getComputedStyle(getFilter(target, 0, "input")).pointerEvents, 'auto');
+        assert.deepEqual(getComputedStyle(getFilter(target, 0, "input")).pointerEvents, "auto");
 
         await switchView(target, "list");
-        assert.deepEqual(getComputedStyle(getFilter(target, 0, "input")).pointerEvents, 'auto');
+        assert.deepEqual(getComputedStyle(getFilter(target, 0, "input")).pointerEvents, "auto");
     });
 });

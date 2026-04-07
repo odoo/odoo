@@ -1621,7 +1621,7 @@ export class MockServer {
             domainImage = this.mockSearchPanelFieldImage(model, fieldName, newKwargs);
         }
         if (!expand && !hierarchize && !comodelDomain.length) {
-            if (limit && domainImage.size === limit) {
+            if (limit && domainImage.size >= limit) {
                 return { error_msg: "Too many items to display." };
             }
             return {
@@ -1845,7 +1845,7 @@ export class MockServer {
                 domainImage = this.mockSearchPanelFieldImage(model, fieldName, newKwargs);
             }
             if (!expand && !groupBy && !comodelDomain.length) {
-                if (limit && domainImage.size === limit) {
+                if (limit && domainImage.size >= limit) {
                     return { error_msg: "Too many items to display." };
                 }
                 return { values: [...domainImage.values()] };
