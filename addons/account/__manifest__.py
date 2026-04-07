@@ -140,4 +140,7 @@ You could use this simplified accounting in case you work with an (external) acc
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'kpi_providers': [
+        'models.kpi_provider:get_kpi_summary',
+    ],
 }
