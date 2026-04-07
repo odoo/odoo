@@ -49,7 +49,7 @@ export class PosConfig extends models.ServerModel {
         data[0]["_data_server_date"] = "2025-07-03 12:40:15";
         data[0]["_has_cash_move_perm"] = true;
         data[0]["_has_available_products"] = true;
-        data[0]["_pos_special_products_ids"] = [];
+        data[0]["_pos_special_products_ids"] = [25];
         return data;
     }
 
