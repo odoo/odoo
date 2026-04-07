@@ -855,13 +855,13 @@ export class HootSearch extends Component {
             this.runner.reporting.passed += this.runner.reporting.todo;
             this.runner.reporting.failed = 0;
             this.runner.reporting.todo = 0;
-            for (const [, suite] of this.runner.suites) {
+            for (const suite of this.runner.suites.values()) {
                 suite.reporting.passed += suite.reporting.failed;
                 suite.reporting.passed += suite.reporting.todo;
                 suite.reporting.failed = 0;
                 suite.reporting.todo = 0;
             }
-            for (const [, test] of this.runner.tests) {
+            for (const test of this.runner.tests.values()) {
                 test.config.todo = false;
                 test.status = Test.PASSED;
                 for (const result of test.results()) {
@@ -872,7 +872,6 @@ export class HootSearch extends Component {
                     }
                 }
             }
-            this.__owl__.app.root.render(true);
             console.warn("Secret sequence activated: all tests pass!");
         }
     }

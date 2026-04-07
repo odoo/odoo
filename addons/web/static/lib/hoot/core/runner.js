@@ -1014,7 +1014,20 @@ export class Runner {
             await this._canStartDef.promise;
         }
 
+        // Setup fixture
+        defineRootNode(this.fixture.getFixture);
+
+        if (!this.debug) {
+            // Warn user events
+            this.afterAll(
+                on(window, "pointermove", warnUserEvent),
+                on(window, "pointerdown", warnUserEvent),
+                on(window, "keydown", warnUserEvent)
+            );
+        }
+
         this.status.set("running");
+        this._startTime = $now();
 
         /** @type {Runner["_handleError"]} */
         const handleError = this._handleError.bind(this);
@@ -1155,9 +1168,11 @@ export class Runner {
                 this._failed++;
 
                 const failReasons = [];
-                const failedAssertions = lastResults.events.filter(
-                    (event) => event.type & CASE_EVENT_TYPES.assertion.value && !event.pass
-                );
+                const failedAssertions = lastResults
+                    .events()
+                    .filter(
+                        (event) => event.type & CASE_EVENT_TYPES.assertion.value && !event.pass
+                    );
                 if (failedAssertions.length) {
                     const s = failedAssertions.length === 1 ? "" : "s";
                     failReasons.push(
@@ -1983,7 +1998,6 @@ export class Runner {
     }
 
     async _setupStart() {
-        this._startTime = $now();
         if (this.config.manual()) {
             this._canStartDef ||= Promise.withResolvers();
         }
@@ -2036,13 +2050,6 @@ export class Runner {
         }
 
         // Register default hooks
-        this.beforeAll(defineRootNode.bind(null, this.fixture.getFixture));
-        this.afterAll(
-            // Warn user events
-            !this.debug && on(window, "pointermove", warnUserEvent),
-            !this.debug && on(window, "pointerdown", warnUserEvent),
-            !this.debug && on(window, "keydown", warnUserEvent)
-        );
         this.beforeEach(this.fixture.setup, setupWindow, setupTime);
         this.afterEach(
             this.fixture.cleanup,
