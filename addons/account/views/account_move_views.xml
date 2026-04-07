@@ -1195,8 +1195,9 @@
                                                     'search_default_account_type': 'out_' in parent.move_type and 'income',
                                                     'preferred_account_type': 'out_' in parent.move_type and 'income' or 'in_' in parent.move_type and 'expense',
                                                }"
+                                               widget="many2one_account_account"
                                                groups="account.group_account_readonly"
-                                               options="{'no_quick_create': True}"
+                                               options="{'no_quick_create': True, 'no_open': True}"
                                                domain="[('company_ids', 'parent_of', company_id), ('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]"
                                                required="display_type not in ('line_section', 'line_subsection', 'line_note')"/>
                                         <field name="analytic_distribution" widget="analytic_distribution"
