@@ -43,7 +43,8 @@ export const computeComboItems = (
         comboItems.push({
             combo_item_id: comboItem,
             price_unit: totalPriceExtra,
-            attribute_value_ids,
+            attribute_value_ids:
+                attribute_value_ids || comboItem.product_id?.product_template_attribute_value_ids,
             attribute_custom_values: conf.configuration?.attribute_custom_values || {},
             qty: conf.qty,
         });
@@ -81,7 +82,8 @@ export const computeComboItems = (
         comboItems.push({
             combo_item_id: comboItem,
             price_unit: totalPriceExtra,
-            attribute_value_ids,
+            attribute_value_ids:
+                attribute_value_ids || comboItem.product_id?.product_template_attribute_value_ids,
             attribute_custom_values: extra.configuration?.attribute_custom_values || {},
             qty: extra.qty,
         });
