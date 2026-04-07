@@ -89,6 +89,7 @@ import { ResRole } from "./mock_server/mock_models/res_role";
 import { ResUsers } from "./mock_server/mock_models/res_users";
 import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
 import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_settings_volumes";
+import { IndexedDB } from "@web/core/utils/indexed_db";
 
 export * from "./mail_test_helpers_contains";
 
@@ -1056,4 +1057,14 @@ export function sendPresenceUpdate(modelName, id, newPresence) {
         im_status: newPresence,
     });
     env["bus.bus"]._sendone(serverState.userId, "mail.record/insert", store.get_result());
+}
+
+export async function setIndexedDB(table, key, value) {
+    const db = new IndexedDB("mail");
+    await db.write(table, key, value);
+}
+
+export async function getIndexedDB(table, key) {
+    const db = new IndexedDB("mail");
+    return await db.read(table, key);
 }

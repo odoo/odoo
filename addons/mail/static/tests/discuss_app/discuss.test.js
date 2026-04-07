@@ -24,6 +24,7 @@ import {
     triggerHotkey,
     waitStoreFetch,
     getChannelCommandsForThread,
+    getIndexedDB,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
@@ -672,9 +673,7 @@ test("sidebar: change active", async () => {
     await click("button:text('Bookmarks')");
     await contains("button:not(.o-active):text('Inbox')");
     await contains("button.o-active:text('Bookmarks')");
-    expect(browser.localStorage.getItem(LAST_DISCUSS_ACTIVE_ID_LS)).toBe(
-        toRawValue("mail.box_bookmark")
-    );
+    expect(await getIndexedDB("DiscussApp", LAST_DISCUSS_ACTIVE_ID_LS)).toBe("mail.box_bookmark");
 });
 
 test("sidebar: basic channel rendering", async () => {

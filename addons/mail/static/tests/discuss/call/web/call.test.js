@@ -6,13 +6,13 @@ import {
     mockGetMedia,
     openDiscuss,
     patchUiSize,
+    setIndexedDB,
     SIZES,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { Settings } from "@mail/core/common/settings_model";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
-import { toRawValue } from "@mail/utils/common/local_storage";
 import { pttExtensionServiceInternal } from "@mail/discuss/call/common/ptt_extension_service";
 import { PTT_RELEASE_DURATION } from "@mail/discuss/call/common/rtc_service";
 import { advanceTime, freezeTime, keyDown, mockTouch, mockUserAgent, test } from "@odoo/hoot";
@@ -92,13 +92,15 @@ test("Can push-to-talk", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    localStorage.setItem(
+    await setIndexedDB(
+        "Settings",
         makeRecordFieldLocalId(Settings.localId(), "usePushToTalk"),
-        toRawValue(true)
+        true
     );
-    localStorage.setItem(
+    await setIndexedDB(
+        "Settings",
         makeRecordFieldLocalId(Settings.localId(), "pushToTalkKey"),
-        toRawValue("...f")
+        "...f"
     );
     patchWithCleanup(pttExtensionServiceInternal, {
         onAnswerIsEnabled(pttService) {

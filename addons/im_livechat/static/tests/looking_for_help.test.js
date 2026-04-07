@@ -3,7 +3,14 @@ import { waitForChannels } from "@bus/../tests/bus_test_helpers";
 import { defineLivechatModels } from "@im_livechat/../tests/livechat_test_helpers";
 import { LFH_UNSUBSCRIBE_DELAY } from "@im_livechat/core/public_web/discuss_app/discuss_app_model_patch";
 
-import { click, contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
+import {
+    click,
+    contains,
+    setIndexedDB,
+    openDiscuss,
+    start,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
 
 import { advanceTime, describe, expect, test } from "@odoo/hoot";
 import { tick, waitFor } from "@odoo/hoot-dom";
@@ -78,11 +85,10 @@ test("Enable/disable looking for help when category is opened/folded", async () 
             .search_read([["id", "=", serverState.groupLivechatId]])
             .map(({ id }) => id),
     });
-    localStorage.setItem(
+    setIndexedDB(
+        "DiscussAppCategory",
         "DiscussAppCategory,im_livechat.category_need_help:is_open",
-        JSON.stringify({
-            value: false,
-        })
+        false
     );
     await start();
     patchWithCleanup(getService("bus_service"), {

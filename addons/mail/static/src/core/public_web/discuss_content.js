@@ -40,7 +40,7 @@ export class DiscussContent extends Component {
         this.attClassObjectToString = attClassObjectToString;
         useLayoutEffect(
             () => this.actionPanelAutoOpenFn(),
-            () => [this.thread]
+            () => [this.thread, this.store.discuss.isMemberPanelOpenByDefault]
         );
         useDynamicInterval(
             (partnerTz, currentUserTz) => {

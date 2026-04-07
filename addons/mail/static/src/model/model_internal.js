@@ -75,14 +75,16 @@ export class ModelInternal {
                 function fieldLocalStorageCompute() {
                     const record = toRaw(this)._raw;
                     const lse = record._.fieldsLocalStorage.get(fieldName);
-                    const value = lse.get();
-                    if (value === undefined) {
-                        if (!this._rawStore._.isUpdatingFromStorageEvent) {
-                            lse.remove();
+                    lse.get().then(async (value) => {
+                        if (value === undefined) {
+                            if (!this._rawStore._.isUpdatingFromStorageEvent) {
+                                await lse.remove();
+                            }
+                        } else {
+                            record._proxy[fieldName] = value;
                         }
-                        return this[fieldName];
-                    }
-                    return value;
+                    });
+                    return record._proxy[fieldName];
                 }
             );
 

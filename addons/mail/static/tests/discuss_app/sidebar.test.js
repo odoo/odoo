@@ -2,26 +2,26 @@ import {
     click,
     contains,
     defineMailModels,
+    getIndexedDB,
     insertText,
     isDiscussSidebarCategoryFolded,
     listenStoreFetch,
     openDiscuss,
     openFormView,
     setDiscussSidebarCategoryFoldState,
+    setIndexedDB,
     setupChatHub,
     start,
     startServer,
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { toRawValue } from "@mail/utils/common/local_storage";
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { describe, expect, test, waitFor } from "@odoo/hoot";
 import { animationFrame, drag, press, queryFirst } from "@odoo/hoot-dom";
 import { Deferred, mockDate } from "@odoo/hoot-mock";
 import { Command, getService, onRpc, serverState } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
@@ -1107,7 +1107,7 @@ test("Sidebar compact is locally persistent (saved in local storage)", async () 
         DiscussApp.localId(),
         "isSidebarCompact"
     );
-    browser.localStorage.setItem(DISCUSS_SIDEBAR_COMPACT_LS, toRawValue(true));
+    await setIndexedDB("DiscussApp", DISCUSS_SIDEBAR_COMPACT_LS, true);
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebar.o-compact");
@@ -1117,14 +1117,15 @@ test("Sidebar compact is locally persistent (saved in local storage)", async () 
         position: { x: 1000 },
     });
     await contains(".o-mail-DiscussSidebar:not(.o-compact)");
-    expect(browser.localStorage.getItem(DISCUSS_SIDEBAR_COMPACT_LS)).toBe(null);
+    console.log(await getIndexedDB("DiscussApp", DISCUSS_SIDEBAR_COMPACT_LS));
+    expect(await getIndexedDB("DiscussApp", DISCUSS_SIDEBAR_COMPACT_LS)).toBe(undefined);
     await (
         await drag(".o-mail-DiscussSidebar-resizablePanelContainer .o_resizable_panel_handle")
     ).drop(".o-mail-DiscussSidebar-resizablePanelContainer .o_resizable_panel_handle", {
         position: { x: 0 },
     });
     await contains(".o-mail-DiscussSidebar.o-compact");
-    expect(browser.localStorage.getItem(DISCUSS_SIDEBAR_COMPACT_LS)).toBe(toRawValue(true));
+    expect(await getIndexedDB("DiscussApp", DISCUSS_SIDEBAR_COMPACT_LS)).toBe(true);
 });
 
 test("Sidebar compact is crosstab synced", async () => {

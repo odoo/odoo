@@ -13,7 +13,7 @@ import {
 import { RecordList } from "./record_list";
 import { toRaw } from "@odoo/owl";
 import { RecordUses } from "./record_uses";
-import { LocalStorageEntry } from "@mail/utils/common/local_storage";
+import { IndexDBEntry } from "@mail/utils/common/indexed_db_entry";
 
 export class RecordInternal {
     [IS_RECORD_SYM] = true;
@@ -80,7 +80,7 @@ export class RecordInternal {
      * local storage entry. For instance, instead of having to write `browser.localStorage.setItem(EXACT_LOCAL_STORAGE_ENTRY_OF_FIELD, value)`,
      * this "ls" object allow to just write the equivalent expression with `ls.set(value)`
      *
-     * @type {Map<string, LocalStorageEntry>}
+     * @type {Map<string, IndexDBEntry>}
      */
     fieldsLocalStorage = new Map();
 
@@ -116,13 +116,13 @@ export class RecordInternal {
         this.fieldsDefault.set(fieldName, record[fieldName]);
         // register local storage fields
         for (const lsFieldName of Model._.fieldsLocalStorage) {
-            const { localStorageKeyToRecordFields } = record.store._;
-            const localStorageKey = makeRecordFieldLocalId(record.localId, lsFieldName);
-            if (!localStorageKeyToRecordFields.has(localStorageKey)) {
-                localStorageKeyToRecordFields.set(localStorageKey, new Map());
-            }
-            localStorageKeyToRecordFields.get(localStorageKey).set(record, lsFieldName);
-            this.fieldsLocalStorage.set(lsFieldName, new LocalStorageEntry(localStorageKey));
+            this.fieldsLocalStorage.set(
+                lsFieldName,
+                new IndexDBEntry(
+                    record.Model.name,
+                    makeRecordFieldLocalId(record.localId, lsFieldName)
+                )
+            );
         }
         if (Model._.fieldsCompute.get(fieldName)) {
             if (!Model._.fieldsEager.get(fieldName)) {
