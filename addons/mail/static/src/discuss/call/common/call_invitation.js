@@ -95,13 +95,13 @@ export class CallInvitation extends Component {
                         this.state.showCameraPreview ? "fa fa-chevron-up" : "fa fa-chevron-down",
                     onSelected: () => {
                         this.state.showCameraPreview = !this.state.showCameraPreview;
-                        if (this.rtc.cameraPermission !== "denied") {
-                            this.state.activateCamera++;
-                        }
-                        if (this.state.hasMicrophone) {
-                            this.state.activateMicrophone++;
-                        }
                         if (this.state.showCameraPreview) {
+                            if (this.rtc.cameraPermission !== "denied") {
+                                this.state.activateCamera++;
+                            }
+                            if (this.state.hasMicrophone) {
+                                this.state.activateMicrophone++;
+                            }
                             this.props.channel.self_member_id?.cancelInvitationTimeout();
                         } else {
                             this.props.channel.self_member_id?.startInvitationTimeout();
