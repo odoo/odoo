@@ -51,8 +51,8 @@ class HrLeaveEmployeeTypeReport(models.Model):
                     WHERE l.state IN ('validate', 'validate1')
                 ),
 
-                /* FIFO-ordered validated allocations */
-                ordered_allocations as (
+                /* Base allocations with overlap group detection */
+                base_allocations as (
                     SELECT
 						allocation.id as allocation_id,
 						allocation.employee_id as employee_id,
@@ -65,24 +65,62 @@ class HrLeaveEmployeeTypeReport(models.Model):
 						allocation.date_from as date_from,
 						allocation.date_to as date_to,
 						allocation.employee_company_id as company_id,
-						ROW_NUMBER() OVER (
-							PARTITION BY allocation.employee_id, allocation.work_entry_type_id
-							ORDER BY allocation.date_from, allocation.id
-						) as fifo_rank,
-						SUM(allocation.number_of_days) OVER (
-							PARTITION BY allocation.employee_id, allocation.work_entry_type_id
-							ORDER BY allocation.date_from, allocation.id
-							ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-						) as cumulative_allocated_days,
-						SUM(allocation.number_of_hours_display) OVER (
-							PARTITION BY allocation.employee_id, allocation.work_entry_type_id
-							ORDER BY allocation.date_from, allocation.id
-							ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-						) as cumulative_allocated_hours
+						CASE
+							WHEN allocation.date_from > MAX(COALESCE(allocation.date_to, 'infinity'::date)) OVER (
+								PARTITION BY allocation.employee_id, allocation.work_entry_type_id
+								ORDER BY allocation.date_from, allocation.id
+								ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING
+							)
+							THEN 1
+							ELSE 0
+						END as is_new_group
                     FROM hr_leave_allocation allocation
                     JOIN hr_employee employee ON (allocation.employee_id = employee.id)
                     LEFT JOIN hr_version v ON v.id = employee.current_version_id
                     WHERE allocation.state = 'validate'
+                ),
+
+                /* Assign overlap group ids */
+                grouped_allocations as (
+                    SELECT
+						ba.*,
+						SUM(ba.is_new_group) OVER (
+							PARTITION BY ba.employee_id, ba.work_entry_type_id
+							ORDER BY ba.date_from, ba.allocation_id
+							ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+						) as overlap_group
+                    FROM base_allocations ba
+                ),
+
+                /* FIFO-ordered allocations with cumulative sums within each overlap group */
+                ordered_allocations as (
+                    SELECT
+						ga.allocation_id as allocation_id,
+						ga.employee_id as employee_id,
+						ga.active_employee as active_employee,
+						ga.number_of_days as number_of_days,
+						ga.number_of_hours as number_of_hours,
+						ga.department_id as department_id,
+						ga.work_entry_type_id as work_entry_type_id,
+						ga.state as state,
+						ga.date_from as date_from,
+						ga.date_to as date_to,
+						ga.company_id as company_id,
+						ROW_NUMBER() OVER (
+							PARTITION BY ga.employee_id, ga.work_entry_type_id, ga.overlap_group
+							ORDER BY ga.date_from, ga.allocation_id
+						) as fifo_rank,
+						SUM(ga.number_of_days) OVER (
+							PARTITION BY ga.employee_id, ga.work_entry_type_id, ga.overlap_group
+							ORDER BY ga.date_from, ga.allocation_id
+							ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+						) as cumulative_allocated_days,
+						SUM(ga.number_of_hours) OVER (
+							PARTITION BY ga.employee_id, ga.work_entry_type_id, ga.overlap_group
+							ORDER BY ga.date_from, ga.allocation_id
+							ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+						) as cumulative_allocated_hours
+                    FROM grouped_allocations ga
                 ),
 
                 /* Leaves applicable to each allocation */
@@ -150,8 +188,8 @@ class HrLeaveEmployeeTypeReport(models.Model):
 						fb.department_id as department_id,
 						fb.work_entry_type_id as work_entry_type_id,
 						fb.state as state,
-						fb.date_from as date_from,
-						fb.date_to as date_to,
+						fb.date_from::timestamp + interval '12 hours' as date_from,
+						fb.date_to::timestamp + interval '12 hours' as date_to,
 						'left' as holiday_status,
 						fb.company_id as company_id
                     FROM fifo_balances fb
