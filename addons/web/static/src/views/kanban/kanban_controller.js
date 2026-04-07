@@ -25,9 +25,8 @@ import { KanbanRenderer } from "./kanban_renderer";
 import { useProgressBar } from "./progress_bar_hook";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 
-import { Component, onMounted, onWillStart } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useEffect } from "@odoo/owl";
 import { QuickCreateState } from "./kanban_record_quick_create";
-import { effect } from "@web/core/utils/reactive";
 
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
 
@@ -116,15 +115,12 @@ export class KanbanController extends Component {
         this.headerButtons = archInfo.headerButtons;
 
         this.quickCreateState = new QuickCreateState(archInfo.quickCreateView);
-        effect(
-            ({ isOpen }) => {
-                if (isOpen && this.model.useSampleModel) {
-                    this.model.removeSampleDataInGroups();
-                    this.model.useSampleModel = false;
-                }
-            },
-            [this.quickCreateState]
-        );
+        useEffect(() => {
+            if (this.quickCreateState.isOpen && this.model.useSampleModel) {
+                this.model.removeSampleDataInGroups();
+                this.model.useSampleModel = false;
+            }
+        });
 
         this.rootRef = useRef("root");
         useViewButtons(this.rootRef, {
