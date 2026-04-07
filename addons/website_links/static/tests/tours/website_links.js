@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import { redirect } from "@web/core/utils/urls";
 import { stepUtils } from "@web_tour/tour_utils";
 
 function fillSelectMenu(inputID, search) {
@@ -59,9 +60,7 @@ registry.category("web_tour.tours").add('website_links_tour', {
         {
             content: "check that link was created and visit it",
             trigger: '.o_website_links_create_tracked_url #generated_tracked_link .o_website_links_short_url:contains("/r/")',
-            run: function () {
-                window.location.href = $('#generated_tracked_link .o_website_links_short_url').text();
-            },
+            run: ({ anchor }) => redirect(anchor.textContent),
             expectUnloadPage: true,
         },
         {

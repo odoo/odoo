@@ -23,6 +23,9 @@ export class WebsiteEventTrack extends Interaction {
             }),
         },
         ".o_we_agenda_horizontal_scroller": { "t-att-style": () => ({ "width": this.computeScrollerWidth() }) },
+        ".o_we_agenda_card_filter_badges .o_badge_clickable": {
+            "t-on-click.withTarget": this.onBadgeFilterClick,
+        },
     };
 
     setup() {
@@ -130,6 +133,16 @@ export class WebsiteEventTrack extends Interaction {
             // need to account for vertical scrollbar width
             const verticalScrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
             return (this.visibleAgenda.scrollWidth + verticalScrollbarWidth) + "px";
+        }
+    }
+
+    onBadgeFilterClick(ev, el) {
+        const target = document.getElementById("event_track_search");
+        if (target.value === el.title) {
+            target.value = "";
+        } else {
+            target.value = el.title;
+            target.dispatchEvent(new Event("input"));
         }
     }
 }

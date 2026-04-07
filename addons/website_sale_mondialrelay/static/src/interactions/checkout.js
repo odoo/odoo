@@ -5,9 +5,15 @@ import { Checkout } from '@website_sale/interactions/checkout';
 
 // temporary for OnNoResultReturned bug
 import { registry } from '@web/core/registry';
+import { loadJS } from "@web/core/assets";
 import { ThirdPartyScriptError } from '@web/core/errors/error_service';
 
 const errorHandlerRegistry = registry.category('error_handlers');
+
+// Mondial Relay provides a widget only in jQuery
+const JQUERY_URL = "https://code.jquery.com/jquery-3.7.1.min.js";
+const MONDIALRELAY_SCRIPT_URL =
+    "https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js";
 
 function corsIgnoredErrorHandler(env, error) {
     if (error instanceof ThirdPartyScriptError) {
@@ -105,7 +111,7 @@ patch(Checkout.prototype, {
      * @private
      * @param {Object} result data about the selected delivery method.
      */
-    _loadMondialRelayModal(result) {
+    async _loadMondialRelayModal(result) {
         // add modal to body and bind 'save' button
         this.renderAt('website_sale_mondialrelay', {}, document.querySelector('body'));
         this.mondialRelayModal = document.querySelector('#modal_mondialrelay');
@@ -116,46 +122,46 @@ patch(Checkout.prototype, {
             () => confirmRelayButton.removeEventListener('click', boundConfirmRelay)
         );
 
-        // load mondial relay script
-        const script = document.createElement('script');
-        script.src = "https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js";
-        script.onload = () => {
-            // instanciate MondialRelay widget
-            const params = {
-                Target: "", // required but handled by OnParcelShopSelected
-                Brand: result.mondial_relay.brand,
-                ColLivMod: result.mondial_relay.col_liv_mod,
-                AllowedCountries: result.mondial_relay.allowed_countries,
-                Country: result.mondial_relay.partner_country_code,
-                PostCode: result.mondial_relay.partner_zip,
-                Responsive: true,
-                ShowResultsOnMap: true,
-                AutoSelect: result.mondial_relay.current,
-                OnParcelShopSelected: (RelaySelected) => {
-                    this.lastRelaySelected = RelaySelected;
-                    this.mondialRelayModal.querySelector('#btn_confirm_relay').classList.remove(
-                        'disabled'
-                    );
-                },
-                OnNoResultReturned: () => {
-                    // HACK while Mondial Relay fix his bug
-                    // disable corsErrorHandler for 10 seconds
-                    // If code postal not valid, it will crash with Cors Error:
-                    // Cannot read property 'on' of undefined at u.MR_FitBounds
-                    const randInt = Math.floor(Math.random() * 100);
-                    errorHandlerRegistry.add("corsIgnoredErrorHandler" + randInt, corsIgnoredErrorHandler, {sequence: 10});
-                    this.waitForTimeout(
-                        () => errorHandlerRegistry.remove("corsIgnoredErrorHandler" + randInt),
-                        10000,
-                    );
-                },
-            };
-            const zoneWidget = this.mondialRelayModal.querySelector('#o_zone_widget');
-            $(zoneWidget).MR_ParcelShopPicker(params);
-            window.Modal.getOrCreateInstance(this.mondialRelayModal).show();
-            zoneWidget.dispatchEvent(new Event('MR_RebindMap'));
+        await loadJS(JQUERY_URL);
+        await loadJS(MONDIALRELAY_SCRIPT_URL);
+        // instanciate MondialRelay widget
+        const params = {
+            Target: "", // required but handled by OnParcelShopSelected
+            Brand: result.mondial_relay.brand,
+            ColLivMod: result.mondial_relay.col_liv_mod,
+            AllowedCountries: result.mondial_relay.allowed_countries,
+            Country: result.mondial_relay.partner_country_code,
+            PostCode: result.mondial_relay.partner_zip,
+            Responsive: true,
+            ShowResultsOnMap: true,
+            AutoSelect: result.mondial_relay.current,
+            OnParcelShopSelected: (RelaySelected) => {
+                this.lastRelaySelected = RelaySelected;
+                this.mondialRelayModal
+                    .querySelector("#btn_confirm_relay")
+                    .classList.remove("disabled");
+            },
+            OnNoResultReturned: () => {
+                // HACK while Mondial Relay fix his bug
+                // disable corsErrorHandler for 10 seconds
+                // If code postal not valid, it will crash with Cors Error:
+                // Cannot read property 'on' of undefined at u.MR_FitBounds
+                const randInt = Math.floor(Math.random() * 100);
+                errorHandlerRegistry.add(
+                    "corsIgnoredErrorHandler" + randInt,
+                    corsIgnoredErrorHandler,
+                    { sequence: 10 }
+                );
+                this.waitForTimeout(
+                    () => errorHandlerRegistry.remove("corsIgnoredErrorHandler" + randInt),
+                    10000
+                );
+            },
         };
-        document.body.appendChild(script);
+        const zoneWidget = this.mondialRelayModal.querySelector("#o_zone_widget");
+        $(zoneWidget).MR_ParcelShopPicker(params);
+        window.Modal.getOrCreateInstance(this.mondialRelayModal).show();
+        zoneWidget.dispatchEvent(new Event("MR_RebindMap"));
     },
 
     /**
