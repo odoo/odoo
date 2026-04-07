@@ -2,6 +2,7 @@ import { registry } from "@web/core/registry";
 import * as Utils from "@pos_self_order/../tests/tours/utils/common";
 import * as CartPage from "@pos_self_order/../tests/tours/utils/cart_page_util";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
+import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 
 registry.category("web_tour.tours").add("self_attribute_selector", {
     steps: () => [
@@ -75,6 +76,21 @@ registry.category("web_tour.tours").add("selfAlwaysAttributeVariants", {
         Utils.clickBtn("Pay"),
         Utils.clickBtn("Ok"),
         Utils.checkIsNoBtn("Order Now"),
+    ],
+});
+
+registry.category("web_tour.tours").add("selfAlwaysAttributeVariantsKiosk", {
+    steps: () => [
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Chair"),
+        ...ProductPage.setupAttribute([{ name: "Color", value: "Red" }]),
+        Utils.clickBtn("Order"),
+        CartPage.checkProduct("Chair", "15", "1"),
+        Utils.clickBtn("Pay"),
+        Numpad.click("3"),
+        Utils.clickBtn("Pay"),
+        Utils.checkBtn("Close"),
     ],
 });
 
