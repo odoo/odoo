@@ -44,6 +44,8 @@ class IrAttachment(models.Model):
                 raise UserError(_('Cloud Storage is not enabled'))
             for record in self:
                 record.write({
+                    # Preserve the existing mimetype to avoid it being guessed
+                    'mimetype': record.mimetype,
                     'raw': False,
                     'type': 'cloud_storage',
                     'url': record._generate_cloud_storage_url(),
