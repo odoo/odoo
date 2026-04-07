@@ -367,7 +367,7 @@ class HrJob(models.Model):
                 )
                 if application_ids:
                     application_ids.message_unsubscribe(to_unsubscribe)
-                    application_ids.with_context(mail_auto_subscribe_no_notify=True).recruiter_id.user_id = job.recruiter_id.user_id
+                    application_ids.with_context(mail_auto_subscribe_no_notify=True).recruiter_id = job.recruiter_id
 
         # Since the alias is created upon record creation, the default values do not reflect the current values unless
         # specifically rewritten
