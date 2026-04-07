@@ -359,9 +359,9 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
     """
     assert_no_dunder_name(code_obj, expr)
 
-    code_codes = get_opcodes(code_obj)
     # set operations are almost twice as fast as a manual iteration + condition
     # when loading /web according to line_profiler
+    code_codes = get_opcodes(code_obj)
     if not allowed_codes >= code_codes:
         raise ValueError("forbidden opcode(s) in %r: %s" % (expr, ', '.join(opname[x] for x in (code_codes - allowed_codes))))
 
