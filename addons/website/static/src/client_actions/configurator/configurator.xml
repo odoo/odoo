@@ -337,18 +337,18 @@
                             <div class="mb-5">
                                 <h3><b>Font</b></h3>
                                 <div class="row g-3">
-                                    <t t-foreach="this.previewState.initialLoaded ? (this.state.fontNames || []) : this.fontPlaceholders" t-as="font" t-key="this.previewState.initialLoaded ? font : font.name">
+                                    <t t-foreach="this.previewState.initialLoaded ? (this.state.fontIds || []) : this.fontPlaceholders" t-as="fontId" t-key="this.previewState.initialLoaded ? fontId : fontId.name">
                                         <div class="col-6" t-att-class="{'o_configurator_screen_option_loading': !this.previewState.initialLoaded}">
                                             <button
                                                 type="button"
                                                 class="btn btn-outline-secondary w-100 h-100 text-start p-3"
-                                                t-att-class="{'active': this.previewState.initialLoaded and this.state.selectedFont === font}"
-                                                t-on-click="() => this.previewState.initialLoaded and this.setFont(font)"
+                                                t-att-class="{'active': this.previewState.initialLoaded and this.state.selectedFont === fontId}"
+                                                t-on-click="() => this.previewState.initialLoaded and this.setFont(fontId)"
                                             >
-                                                <h4 class="mb-1" t-att-style="this.previewState.initialLoaded ? 'font-family: ' + (this.state.fonts[font] and this.state.fonts[font]['headings']) : ''">
+                                                <h4 class="mb-1" t-att-style="this.previewState.initialLoaded ? 'font-family: ' + (this.state.fonts[fontId] and this.state.fonts[fontId]['headingsFamily']) : ''">
                                                     Heading
                                                 </h4>
-                                                <p class="m-0 text-muted small" t-att-style="this.previewState.initialLoaded ? 'font-family: ' + (this.state.fonts[font] and this.state.fonts[font]['family']) : ''">
+                                                <p class="m-0 text-muted small" t-att-style="this.previewState.initialLoaded ? 'font-family: ' + (this.state.fonts[fontId] and this.state.fonts[fontId]['bodyFamily']) : ''">
                                                     This is a paragraph
                                                 </p>
                                             </button>
