@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:37+0000\n"
-"PO-Revision-Date: 2026-03-21 09:24+0000\n"
+"POT-Creation-Date: 2026-04-03 18:39+0000\n"
+"PO-Revision-Date: 2026-04-04 18:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "18/point_of_sale/pt_BR/>\n"
@@ -1482,19 +1482,6 @@ msgid "Cannot return change without a cash payment method"
 msgstr "Não é possível dar troco se a forma de pagamento não for dinheiro"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
-msgid "Cannot weigh product - IoT Box is disconnected"
-msgstr "Não foi possível pesar o produto - a IoT Box está desconectada"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
-msgid "Cannot weigh product - Scale is not connected to IoT Box"
-msgstr ""
-"Não foi possível pesar o produto - a balança não está conectada à IoT Box"
-
-#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Card"
@@ -1659,7 +1646,7 @@ msgstr "Diferença de caixa observada durante a contagem (lucro) - fechamento"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Cash drawer opened (%(ACTION)s)"
-msgstr ""
+msgstr "Gaveta de caixa aberta (%(ACTION)s)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1863,7 +1850,7 @@ msgstr "Escolha como o URL do portal será impresso no recibo."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Choose the tax you want to apply"
-msgstr ""
+msgstr "Escolha o imposto que quer aplicar"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1997,7 +1984,7 @@ msgstr "Sessão de encerramento"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing counted: %s \n"
-msgstr ""
+msgstr "Contagem de fechamento: %s \n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2009,13 +1996,13 @@ msgstr "Diferença de fechamento em %(payment_method)s (%(session)s)"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing difference: %s \n"
-msgstr ""
+msgstr "Diferença de fechamento: %s\n"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing expected: %s \n"
-msgstr ""
+msgstr "Fechamento esperado: %s \n"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2575,6 +2562,14 @@ msgstr "As sessões diárias mantêm as vendas de seu ponto de venda."
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
 msgid "Dashboard"
 msgstr "Painel"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+#, fuzzy
+#| msgid "Connection Lost"
+msgid "Database Connection Lost"
+msgstr "Conexão perdida"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3291,7 +3286,7 @@ msgstr "Forçar concluído"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Force cancel"
-msgstr ""
+msgstr "Forçar cancelamento"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4144,6 +4139,9 @@ msgid ""
 "Local Network Access is enabled for this POS, but your browser version does "
 "not support it. Please update your browser to the latest version."
 msgstr ""
+"O acesso à rede local está habilitado para este PDV, mas a versão do seu "
+"navegador não oferece suporte a isso. Atualize seu navegador para a versão "
+"mais recente."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4635,7 +4633,7 @@ msgstr "Nomenclatura"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "None required"
-msgstr ""
+msgstr "Nenhuma exigida"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -6611,6 +6609,12 @@ msgid "Related Session: %(link)s"
 msgstr "Sessão relacionada: %(link)s"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid "Reload"
+msgstr "Recarregar"
+
+#. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
 msgid "Reload POS Menu"
 msgstr "Recarregar o menu do PDV"
@@ -7821,6 +7825,14 @@ msgid ""
 msgstr ""
 "A estratégia de arredondamento de dinheiro do ponto de venda %(pos)s deve "
 "ser: '%(value)s'"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid ""
+"The connection to the local database was lost. Reloading the page will "
+"restore it and prevent any loss of unsaved orders."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -9646,6 +9658,13 @@ msgstr "para ativar os botões."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "usando"
+
+#~ msgid "Cannot weigh product - IoT Box is disconnected"
+#~ msgstr "Não foi possível pesar o produto - a IoT Box está desconectada"
+
+#~ msgid "Cannot weigh product - Scale is not connected to IoT Box"
+#~ msgstr ""
+#~ "Não foi possível pesar o produto - a balança não está conectada à IoT Box"
 
 #~ msgid "Please register the voucher number"
 #~ msgstr "Registre o número do voucher"

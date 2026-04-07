@@ -45,9 +45,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:37+0000\n"
-"PO-Revision-Date: 2026-03-21 09:23+0000\n"
-"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"POT-Creation-Date: 2026-04-03 18:39+0000\n"
+"PO-Revision-Date: 2026-04-04 18:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/"
 "point_of_sale/fi/>\n"
 "Language: fi\n"
@@ -1515,20 +1515,6 @@ msgid "Cannot return change without a cash payment method"
 msgstr "Et voi palauttaa vaihtorahoja muuta kuin käteismaksutavassa"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
-msgid "Cannot weigh product - IoT Box is disconnected"
-msgstr "Tuotteen punnitseminen ei onnistu - IoT-box on kytketty pois päältä"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
-msgid "Cannot weigh product - Scale is not connected to IoT Box"
-msgstr ""
-"Tuotteen punnitseminen ei onnistu - vaakaa ei ole yhdistetty IoT Box "
-"-laitteeseen"
-
-#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Card"
@@ -2606,6 +2592,14 @@ msgstr "Päivittäiset istunnot sisältävät kassasi myynnin."
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
 msgid "Dashboard"
 msgstr "Työpöytä"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+#, fuzzy
+#| msgid "Connection Lost"
+msgid "Database Connection Lost"
+msgstr "Yhteys katkesi"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3940,7 +3934,7 @@ msgstr "Päiväkirjan kirjaus"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_move_line
 msgid "Journal Item"
-msgstr "Päiväkirjamerkintä"
+msgstr "Kirjausrivi"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6631,6 +6625,12 @@ msgid "Related Session: %(link)s"
 msgstr "Aiheeseen liittyvä istunto: %(link)s"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid "Reload"
+msgstr "Lataa uudelleen"
+
+#. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
 msgid "Reload POS Menu"
 msgstr "Lataa kassavalikko uudelleen"
@@ -7435,7 +7435,7 @@ msgstr "Urheilukengät"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__start_date
 msgid "Start Date"
-msgstr "Alkupäivä"
+msgstr "Aloituspäivä"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7834,6 +7834,14 @@ msgstr "Maksukortin merkki (esim. Visa, AMEX, ...)"
 msgid ""
 "The cash rounding strategy of the point of sale %(pos)s must be: '%(value)s'"
 msgstr "Kassan %(pos)s käteisvarojen pyöristyskäytännön on oltava: '%(value)s'"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid ""
+"The connection to the local database was lost. Reloading the page will "
+"restore it and prevent any loss of unsaved orders."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -9631,6 +9639,14 @@ msgstr "painikkeiden aktivoimiseksi."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "käyttäen"
+
+#~ msgid "Cannot weigh product - IoT Box is disconnected"
+#~ msgstr "Tuotteen punnitseminen ei onnistu - IoT-box on kytketty pois päältä"
+
+#~ msgid "Cannot weigh product - Scale is not connected to IoT Box"
+#~ msgstr ""
+#~ "Tuotteen punnitseminen ei onnistu - vaakaa ei ole yhdistetty IoT Box "
+#~ "-laitteeseen"
 
 #~ msgid "Please register the voucher number"
 #~ msgstr "Rekisteröi tositteen numero"

@@ -418,6 +418,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         customer = invoice.partner_id
         is_refund = invoice.move_type == 'out_refund'
 
+        invoice._compute_l10n_jo_edi_uuid()
         vals['vals'].update({
             'ubl_version_id': '',
             'order_reference': '',

@@ -14,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:37+0000\n"
-"PO-Revision-Date: 2026-03-21 09:25+0000\n"
-"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
+"POT-Creation-Date: 2026-04-03 18:39+0000\n"
+"PO-Revision-Date: 2026-04-04 18:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-18/"
 "point_of_sale/vi/>\n"
 "Language: vi\n"
@@ -1486,18 +1486,6 @@ msgstr ""
 "Không thể trả lại tiền thừa nếu không có một phương thức thanh toán tiền mặt"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
-msgid "Cannot weigh product - IoT Box is disconnected"
-msgstr "Không thể cân sản phẩm - Hộp IoT đã bị ngắt kết nối"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
-msgid "Cannot weigh product - Scale is not connected to IoT Box"
-msgstr "Không thể cân sản phẩm - Cân không được kết nối với Hộp IoT"
-
-#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Card"
@@ -2575,6 +2563,14 @@ msgstr "Phiên hàng ngày giữ doanh số từ POS của bạn."
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
 msgid "Dashboard"
 msgstr "Báo cáo tổng quan"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+#, fuzzy
+#| msgid "Connection Lost"
+msgid "Database Connection Lost"
+msgstr "Mất kết nối"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6611,6 +6607,12 @@ msgid "Related Session: %(link)s"
 msgstr "Phiên liên quan: %(link)s"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid "Reload"
+msgstr "Tải lại"
+
+#. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
 msgid "Reload POS Menu"
 msgstr "Tải lại menu POS"
@@ -7812,6 +7814,14 @@ msgid ""
 msgstr "Chiến lược làm tròn tiền mặt của POS %(pos)s phải là: '%(value)s' "
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid ""
+"The connection to the local database was lost. Reloading the page will "
+"restore it and prevent any loss of unsaved orders."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "The default pricelist must be included in the available pricelists."
@@ -8396,6 +8406,8 @@ msgstr ""
 msgid ""
 "This order has already been paid. You cannot set it back to draft or edit it."
 msgstr ""
+"Đơn hàng này đã được thanh toán. Bạn không thể chuyển nó về trạng thái bản "
+"nháp hoặc chỉnh sửa nó."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9259,6 +9271,8 @@ msgid ""
 "You cannot delete a customer that has point of sales orders. You can archive "
 "it instead."
 msgstr ""
+"Bạn không thể xóa một khách hàng có đơn bán hàng POS. Thay vào đó, bạn có "
+"thể lưu trữ nó."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9614,6 +9628,12 @@ msgstr "để kích hoạt nút."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "sử dụng"
+
+#~ msgid "Cannot weigh product - IoT Box is disconnected"
+#~ msgstr "Không thể cân sản phẩm - Hộp IoT đã bị ngắt kết nối"
+
+#~ msgid "Cannot weigh product - Scale is not connected to IoT Box"
+#~ msgstr "Không thể cân sản phẩm - Cân không được kết nối với Hộp IoT"
 
 #~ msgid "Please register the voucher number"
 #~ msgstr "Vui lòng nhập mã phiếu giảm giá"
