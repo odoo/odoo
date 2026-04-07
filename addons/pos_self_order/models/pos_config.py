@@ -314,7 +314,7 @@ class PosConfig(models.Model):
 
     @api.model
     def _load_pos_self_data_read(self, records, config):
-        read_records = super()._load_pos_data_read(records, config)
+        read_records = super()._load_pos_self_data_read(records, config)
         if not read_records:
             return read_records
         record = read_records[0]
