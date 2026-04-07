@@ -41,7 +41,6 @@ from functools import lru_cache, partial, wraps
 from itertools import islice, zip_longest
 from textwrap import shorten
 from typing import Optional, Iterable, cast
-from unittest import TestResult
 from unittest.mock import patch, _patch, Mock
 from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
 from xmlrpc import client as xmlrpclib
@@ -67,12 +66,11 @@ from odoo.service import security
 from odoo.sql_db import Cursor, Savepoint
 from odoo.tools import config, float_compare, mute_logger, profiler, SQL, DotDict
 from odoo.tools.mail import single_email_re
-from odoo.tools.misc import find_in_path, lower_logging
+from odoo.tools.misc import find_in_path
 from odoo.tools.xml_utils import _validate_xml
 from odoo.addons.base.models import ir_actions_report
 
 from . import case, test_cursor
-from .result import OdooTestResult
 
 try:
     import websocket
@@ -323,8 +321,6 @@ class BaseCase(case.TestCase):
     warm = True             # False during warm-up phase (see :func:`warmup`)
     _python_version = sys.version_info
 
-    _tests_run_count = int(os.environ.get('ODOO_TEST_FAILURE_RETRIES', 0)) + 1
-
     _registry_patched = False
     _registry_readonly_enabled = True
     test_cursor_lock_timeout: int = 20
@@ -354,32 +350,6 @@ class BaseCase(case.TestCase):
         _logger.getChild('requests').info(
             "Blocking un-mocked external HTTP request %s %s", r.method, r.url)
         raise BlockedRequest(f"External requests verboten (was {r.method} {r.url})")
-
-    def run(self, result: OdooTestResult) -> None:
-        testMethod = getattr(self, self._testMethodName)
-
-        if getattr(testMethod, '_retry', True) and getattr(self, '_retry', True):
-            tests_run_count = self._tests_run_count
-        else:
-            tests_run_count = 1
-            _logger.info('Auto retry disabled for %s', self)
-
-        for retry in range(tests_run_count):
-            result.had_failure = False  # reset in case of retry without soft_fail
-            if retry:
-                _logger.runbot(f'Retrying a failed test: {self}')
-            if retry < tests_run_count-1:
-                with warnings.catch_warnings(), \
-                        result.soft_fail(), \
-                        lower_logging(25, logging.INFO) as quiet_log:
-                    super().run(cast(TestResult, result))
-                if not (result.had_failure or quiet_log.had_error_log):
-                    break
-            else:  # last try
-                super().run(cast(TestResult, result))
-                if not result.wasSuccessful() and BaseCase._tests_run_count != 1:
-                    _logger.runbot('Disabling auto-retry after a failed test')
-                    BaseCase._tests_run_count = 1
 
     @classmethod
     def setUpClass(cls):
