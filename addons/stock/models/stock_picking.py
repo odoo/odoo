@@ -2065,7 +2065,9 @@ class StockPicking(models.Model):
         pickings_by_print_formats = pickings_print_product_label.grouped(lambda p: p.picking_type_id.product_label_format)
         for print_format in pickings_print_product_label.picking_type_id.mapped("product_label_format"):
             pickings = pickings_by_print_formats.get(print_format)
-            wizard = self.env['product.label.layout'].create({
+            wizard = self.env['product.label.layout'].with_context(
+                active_ids=pickings.ids
+            ).create({
                 'product_ids': pickings.move_ids.product_id.ids,
                 'move_ids': pickings.move_ids.ids,
                 'move_quantity': 'move',
