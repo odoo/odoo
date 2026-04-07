@@ -415,3 +415,96 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         orders = self.env['pos.order'].search([], order='id desc', limit=2)
         self.assertEqual(orders[1].amount_total, 24)
         self.assertEqual(orders[0].amount_total, 36)
+
+    def test_combo_price_unit_mulitple_qty(self):
+        """
+        Tests that the unit price of combos ordered multiple times through the self
+        order is correct. The unit prices should match for different free items, like
+        it is done in the regular PoS.
+        """
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+
+        combo = self.env['product.combo'].create({
+            'name': 'Combo',
+            'qty_free': 2,
+            'qty_max': 4,
+            'combo_item_ids': [
+                Command.create({'product_id': self.cola.id, 'extra_price': 0}),
+                Command.create({'product_id': self.fanta.id, 'extra_price': 0}),
+            ],
+        })
+        combo_product = self.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'name': 'Combo Product',
+            'type': 'combo',
+            'combo_ids': [Command.set([combo.id])],
+            'taxes_id': False,
+        })
+        cola_item = combo.combo_item_ids.filtered(
+            lambda i: i.product_id == self.cola
+        )
+        fanta_item = combo.combo_item_ids.filtered(
+            lambda i: i.product_id == self.fanta
+        )
+
+        order = self.env['pos.order'].create({
+            'amount_total': 0,
+            'amount_paid': 0,
+            'amount_tax': 0,
+            'amount_return': 0,
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'lines': [
+                Command.create({
+                    'product_id': combo_product.id,
+                    'qty': 3,
+                    'price_unit': 0,
+                    'price_subtotal': 0,
+                    'price_subtotal_incl': 0,
+                    'tax_ids': False,
+                }),
+            ],
+        })
+
+        parent_line = order.lines
+        child_lines = self.env['pos.order.line'].create([
+            {
+                'order_id': order.id,
+                'product_id': self.cola.id,
+                'qty': 3,
+                'price_unit': 0,
+                'price_subtotal': 0,
+                'price_subtotal_incl': 0,
+                'tax_ids': False,
+                'combo_parent_id': parent_line.id,
+                'combo_item_id': cola_item.id,
+            },
+            {
+                'order_id': order.id,
+                'product_id': self.fanta.id,
+                'qty': 3,
+                'price_unit': 0,
+                'price_subtotal': 0,
+                'price_subtotal_incl': 0,
+                'tax_ids': False,
+                'combo_parent_id': parent_line.id,
+                'combo_item_id': fanta_item.id,
+            },
+            {
+                'order_id': order.id,
+                'product_id': self.fanta.id,
+                'qty': 3,
+                'price_unit': 0,
+                'price_subtotal': 0,
+                'price_subtotal_incl': 0,
+                'tax_ids': False,
+                'combo_parent_id': parent_line.id,
+                'combo_item_id': fanta_item.id,
+            }
+        ])
+
+        order.recompute_prices()
+        self.assertAlmostEqual(order.amount_total, (combo.base_price + combo_product.lst_price) * order.lines[0].qty)
+        self.assertEqual(child_lines[0].price_unit, child_lines[1].price_unit)
