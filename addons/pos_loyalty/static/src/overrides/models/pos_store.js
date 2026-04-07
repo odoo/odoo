@@ -871,14 +871,12 @@ patch(PosStore.prototype, {
                 }
             }
             if (!["draft", "cancel"].includes(order.state)) {
-                // Skip confirm_coupon_programs for refund orders — loyalty point
-                // reversal is handled server-side in _reverse_loyalty_points_for_refund()
-                // which is called from action_pos_order_paid().
+                await this._postProcessLoyalty(order);
+                // After processing, refresh loyalty card balances that were
+                // updated server-side by _reverse_loyalty_points_for_refund().
                 const isRefundOrder = order.lines.some((l) => l.refunded_orderline_id);
                 if (isRefundOrder) {
                     await this._refreshLoyaltyCardsAfterRefund(order);
-                } else {
-                    await this._postProcessLoyalty(order);
                 }
             }
         }
@@ -955,6 +953,13 @@ patch(PosStore.prototype, {
             Object.entries(couponData)
                 .filter(([key, value]) => {
                     const program = ProgramModel.get(value.program_id);
+                    // For refund orders, loyalty/coupon programs are handled server-side
+                    // by _reverse_loyalty_points_for_refund(). Exclude them here to avoid
+                    // double-deduction via confirm_coupon_programs.
+                    const isRefundOrder = order.lines.some((l) => l.refunded_orderline_id);
+                    if (isRefundOrder && !["gift_card", "ewallet"].includes(program.program_type)) {
+                        return false;
+                    }
                     if (program.applies_on === "current") {
                         return value.line_codes && value.line_codes.length;
                     }
