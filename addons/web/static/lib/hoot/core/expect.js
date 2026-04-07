@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { markRaw } from "@odoo/owl";
+import { markRaw, signal } from "@odoo/owl";
 import {
     formatXml,
     getActiveElement,
@@ -949,8 +949,8 @@ export class CaseResult {
     test = null;
     ts = $floor($now());
 
-    /** @type {CaseEvent[]} */
-    events = [];
+    /** @type {import("@odoo/owl").Signal<CaseEvent[]>} */
+    events = signal.Array([]);
     /** @type {Partial<Record<CaseEventType, number>>} */
     counts = $create(null);
 
@@ -1001,7 +1001,7 @@ export class CaseResult {
      */
     getEvents(type) {
         const nType = typeof type === "number" ? type : CASE_EVENT_TYPES[type].value;
-        return this.events.filter((event) => event.type & nType);
+        return this.events().filter((event) => event.type & nType);
     }
 
     done() {
@@ -1063,7 +1063,7 @@ export class CaseResult {
                 }
                 logger.logTestEvent(...logArgs);
             }
-            this.events.push(caseEvent);
+            this.events().push(caseEvent);
         }
     }
 }

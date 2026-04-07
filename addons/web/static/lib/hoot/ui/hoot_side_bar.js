@@ -175,7 +175,7 @@ export class HootSideBar extends Component {
                                     hasSuites="this.hasSuites(suite)"
                                     reporting="suite.reporting"
                                     selected="this.ui.selectedSuiteId() === suite.id"
-                                    unfolded="this.unfoldedSuites().includes(suite)"
+                                    unfolded="this.unfoldedIds().has(suite.id)"
                                 />
                                 <span class="text-gray">
                                     (<t t-out="suite.totalTestCount" />)
@@ -206,7 +206,7 @@ export class HootSideBar extends Component {
     filter = signal("");
     hideEmpty = signal(false);
     suites = signal.Array([]);
-    unfoldedIds = signal.Set(new Set());
+    unfoldedIds = signal.Set(new Set(["fake_ID"])); // fake ID used to render on start
     unfoldedSuites = computed(() => this.getFilteredVisibleSuites());
 
     setup() {
@@ -214,16 +214,17 @@ export class HootSideBar extends Component {
             const singleRootSuite = this.runner.rootSuites.filter(
                 (suite) => suite.currentJobs.length
             );
+
+            // As the runner might have registered suites after the initial render,
+            // with those suites not being read by this component yet, it will
+            // not have subscribed and re-rendered automatically.
+            // This here allows the opportunity to read all suites one last time
+            // before starting the run.
+            this.unfoldedIds().clear();
+
             if (singleRootSuite.length === 1) {
                 // Unfolds only root suite containing jobs
                 this.unfoldAndSelect(singleRootSuite[0]);
-            } else {
-                // As the runner might have registered suites after the initial render,
-                // with those suites not being read by this component yet, it will
-                // not have subscribed and re-rendered automatically.
-                // This here allows the opportunity to read all suites one last time
-                // before starting the run.
-                this.render();
             }
         });
     }
@@ -364,7 +365,7 @@ export class HootSideBar extends Component {
         const suiteElements = this.getSuiteElements();
         const nextIndex = suiteElements.indexOf(target) + delta;
         if (nextIndex < 0) {
-            this.searchInputRef.el?.focus();
+            this.searchInputRef()?.focus();
         } else if (nextIndex >= suiteElements.length) {
             suiteElements[0].focus();
         } else {
