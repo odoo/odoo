@@ -80,6 +80,26 @@ class TestOutOfOffice(TestHrHolidaysCommon):
             'formatted display name should show the "Back on" formatted date'
         )
 
+    @freeze_time('2024-06-04')
+    def test_leave_ooo_batched(self):
+        self.assertFalse(self.employee_emp.leave_date_to, 'first employee should not be on leave')
+        self.assertFalse(self.employee_hruser.leave_date_to, 'second employee should not be on leave')
+        employees = self.employee_emp | self.employee_hruser
+        leaves = self.env['hr.leave'].create([{
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'request_date_from': "2024-06-03",
+            'request_date_to': "2024-06-06",
+        }, {
+            'employee_id': self.employee_hruser.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'request_date_from': "2024-06-02",
+            'request_date_to': "2024-06-05",
+        }])
+        leaves.write({'state': 'validate'})
+        employees.invalidate_recordset(["leave_date_to"])
+        self.assertEqual(employees.mapped("leave_date_to"), [date(2024, 6, 7), date(2024, 6, 6)])
+
 
 @tagged('out_of_office')
 @tagged('at_install', '-post_install')  # LEGACY at_install, fails post install
