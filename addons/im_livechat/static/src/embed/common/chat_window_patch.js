@@ -13,7 +13,7 @@ patch(ChatWindow.prototype, {
         this.livechatService = useService("im_livechat.livechat");
     },
     async onClickNewSession() {
-        this.props.chatWindow.feedbackDoneResolver.resolve();
+        this.props.chatWindow.feedbackDoneResolver.resolve(true);
         await this.livechatService.open();
     },
     get showGiveFeedbackBtn() {
