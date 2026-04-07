@@ -639,10 +639,11 @@ class HrAttendance(models.Model):
         ])
 
         for emp in absent_employees:
-            local_day_start = pytz.utc.localize(yesterday).astimezone(pytz.timezone(emp._get_tz()))
+            local_day_start = pytz.timezone(emp._get_tz()).localize(yesterday)
+            check_in_utc = local_day_start.astimezone(pytz.utc)
             technical_attendances_vals.append({
-                'check_in': local_day_start.strftime('%Y-%m-%d %H:%M:%S'),
-                'check_out': (local_day_start + relativedelta(seconds=1)).strftime('%Y-%m-%d %H:%M:%S'),
+                'check_in': check_in_utc.strftime('%Y-%m-%d %H:%M:%S'),
+                'check_out': (check_in_utc + relativedelta(seconds=1)).strftime('%Y-%m-%d %H:%M:%S'),
                 'in_mode': 'technical',
                 'out_mode': 'technical',
                 'employee_id': emp.id
