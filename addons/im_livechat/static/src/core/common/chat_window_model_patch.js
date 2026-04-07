@@ -30,7 +30,7 @@ const chatWindowPatch = {
         return this.confirmCloseResolver.promise.finally(() => (this.confirmCloseResolver = null));
     },
     async _onBeforeClose() {
-        await super._onBeforeClose(...arguments);
+        const canClose = await super._onBeforeClose(...arguments);
         if (
             this.exists() &&
             this.channel?.channel_type === "livechat" &&
@@ -38,6 +38,7 @@ const chatWindowPatch = {
         ) {
             await this.channel.leaveChannelRpc();
         }
+        return canClose;
     },
 };
 patch(ChatWindow.prototype, chatWindowPatch);
