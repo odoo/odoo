@@ -17,9 +17,6 @@ Then it can be made specific at the product level.
         "views/res_config_settings_views.xml",
         "views/sale_order_views.xml",
         "views/stock_picking_views.xml",
-        "views/website_sale_stock_templates.xml",
-        "data/template_email.xml",
-        "data/ir_cron_data.xml",
         # Wizards
         "wizard/choose_delivery_carrier_views.xml",
     ],
@@ -33,8 +30,6 @@ Then it can be made specific at the product level.
             "website_sale_stock/static/src/js/product/*",
             "website_sale_stock/static/src/js/product_card/*",
             "website_sale_stock/static/src/js/product_configurator_dialog/*",
-            "website_sale_stock/static/src/xml/**/*",
-            "website_sale_stock/static/src/scss/**/*",
             "website_sale_stock/static/src/js/location_selector/**/*",
         ],
         "web.assets_backend": [

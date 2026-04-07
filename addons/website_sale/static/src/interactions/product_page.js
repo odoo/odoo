@@ -8,8 +8,9 @@ import { url } from '@web/core/utils/urls';
 import { memoize, uniqueId } from '@web/core/utils/functions';
 import { KeepLast } from '@web/core/utils/concurrency';
 import { setElementContent } from '@web/core/utils/html';
-import { insertThousandsSep } from '@web/core/utils/numbers';
-import { renderToFragment } from '@web/core/utils/render';
+import { insertThousandsSep, formatFloat } from '@web/core/utils/numbers';
+import { renderToElement, renderToFragment } from '@web/core/utils/render';
+import { isEmail } from '@web/core/utils/strings';
 import { throttleForAnimation } from '@web/core/utils/timing';
 import { htmlEscape, markup } from '@odoo/owl';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
@@ -36,6 +37,21 @@ export class ProductPage extends Interaction {
             "t-on-mouseenter": this.onHoverPackagingButton,
             "t-on-mouseleave": this.onMouseLeavePackagingButton,
             "t-on-click": this.onMouseLeavePackagingButton,
+        },
+        "#product_stock_notification_message": {
+            "t-on-click": this.onClickProductStockNotificationMessage.bind(this),
+        },
+        "#product_stock_notification_form_submit_button": {
+            "t-on-click": this.onClickSubmitProductStockNotificationForm.bind(this),
+        },
+        "button[name='add_to_cart']": {
+            "t-on-product_added_to_cart": this._getCombinationInfo.bind(this),
+        },
+        "#wishlist_stock_notification_message": {
+            "t-on-click": this.onClickWishlistStockNotificationMessage.bind(this),
+        },
+        "#wishlist_stock_notification_form_submit_button": {
+            "t-on-click": this.onClickSubmitWishlistStockNotificationForm.bind(this),
         },
     };
 
@@ -369,6 +385,9 @@ export class ProductPage extends Interaction {
         }));
         if (combinationInfo.product_tags) {
             combinationInfo.product_tags = markup(combinationInfo.product_tags);
+        }
+        if (combinationInfo.out_of_stock_message) {
+            combinationInfo.out_of_stock_message = markup(combinationInfo.out_of_stock_message);
         }
         combinationInfo.packaging_selector = markup(combinationInfo.packaging_selector);
 
@@ -710,9 +729,16 @@ export class ProductPage extends Interaction {
 
         this.handleCustomValues(ev.target);
 
+        const has_max_combo_quantity = 'max_combo_quantity' in combination
+        if (!combination.is_storable && !has_max_combo_quantity) return;
+        if (!combination.product_id) return; // If the product is dynamic.
+
         const addQtyInput = parent.querySelector('input[name="add_qty"]');
         const qty = parseFloat(addQtyInput?.value) || 1;
         const ctaWrapper = parent.querySelector('#o_wsale_cta_wrapper');
+        ctaWrapper.classList.replace('d-none', 'd-flex');
+        ctaWrapper.classList.remove('out_of_stock');
+
         if (!combination.allow_out_of_stock_order) {
             const unavailableQty = await this.waitFor(this._getUnavailableQty(combination));
             combination.free_qty -= unavailableQty;
@@ -729,9 +755,33 @@ export class ProductPage extends Interaction {
                 ctaWrapper.classList.replace('d-flex', 'd-none');
                 ctaWrapper.classList.add('out_of_stock');
             }
+        } else if (has_max_combo_quantity) {
+            if (addQtyInput) {
+                addQtyInput.dataset.max = combination.max_combo_quantity || 1;
+                if (qty > combination.max_combo_quantity) {
+                    addQtyInput.value = addQtyInput.dataset.max;
+                }
+            }
+            if (combination.max_combo_quantity < 1 && !combination.prevent_sale) {
+                ctaWrapper.classList.replace('d-flex', 'd-none');
+                ctaWrapper.classList.add('out_of_stock');
+            }
         }
+
+        // needed xml-side for formatting of remaining qty
+        combination.formatQuantity = qty => {
+            if (Number.isInteger(qty)) {
+                return qty;
+            } else {
+                const decimals = Math.max(0, Math.ceil(-Math.log10(combination.uom_rounding)));
+                return formatFloat(qty, { digits: [false, decimals] });
+            }
+        }
+
+        document.querySelector('.oe_website_sale')
+            .querySelectorAll('.availability_message_' + combination.product_template)
+            .forEach(el => el.remove());
         if (combination.out_of_stock_message) {
-            combination.out_of_stock_message = markup(combination.out_of_stock_message);
             const outOfStockMessage = document.createElement('div');
             setElementContent(outOfStockMessage, combination.out_of_stock_message);
             combination.has_out_of_stock_message = !!outOfStockMessage.textContent.trim();
@@ -739,6 +789,17 @@ export class ProductPage extends Interaction {
         this.el.querySelector('div.availability_messages').append(renderToFragment(
             'website_sale.product_availability', combination
         ));
+        if (this.el.querySelector('.o_add_wishlist_dyn')) {
+            const messageEl = this.el.querySelector('div.availability_messages');
+            if (messageEl && !this.el.querySelector('#stock_wishlist_message')) {
+                this.services['public.interactions'].stopInteractions(messageEl);
+                messageEl.append(
+                    renderToElement('website_sale.product_availability_wishlist', combination)
+                    || ''
+                );
+                this.services['public.interactions'].startInteractions(messageEl);
+            }
+        }
     }
 
     async _getUnavailableQty(combination) {
@@ -804,6 +865,60 @@ export class ProductPage extends Interaction {
         const getCombinationInfo = throttleForAnimation(this._getCombinationInfo.bind(this));
         return (ev, params) => keepLast.add(getCombinationInfo(ev, params));
     });
+
+    onClickProductStockNotificationMessage(ev) {
+        const partnerEmail = document.querySelector('#wsale_user_email').value;
+        const emailInputEl = document.querySelector('#stock_notification_input');
+
+        emailInputEl.value = partnerEmail;
+        this._handleClickStockNotificationMessage(ev);
+    }
+
+    onClickSubmitProductStockNotificationForm(ev) {
+        const productId = parseInt(ev.currentTarget.dataset.productId);
+        this._handleClickSubmitStockNotificationForm(ev, productId);
+    }
+
+    _handleClickStockNotificationMessage(ev) {
+        ev.currentTarget.classList.add('d-none');
+        ev.currentTarget.parentElement.querySelector('#stock_notification_form').classList.remove('d-none');
+    }
+
+    async _handleClickSubmitStockNotificationForm(ev, productId) {
+        const stockNotificationEl = ev.currentTarget.closest('#stock_notification_div');
+        const formEl = stockNotificationEl.querySelector('#stock_notification_form');
+        const email = stockNotificationEl.querySelector('#stock_notification_input').value.trim();
+
+        if (!isEmail(email)) {
+            return this._displayEmailIncorrectMessage(stockNotificationEl);
+        }
+
+        try {
+            await this.waitFor(rpc(
+                '/shop/add/stock_notification', { product_id: productId, email }
+            ));
+        } catch {
+            this._displayEmailIncorrectMessage(stockNotificationEl);
+            return;
+        }
+        const message = stockNotificationEl.querySelector('#stock_notification_success_message');
+        message.classList.remove('d-none');
+        formEl.classList.add('d-none');
+    }
+
+    _displayEmailIncorrectMessage(stockNotificationEl) {
+        const incorrectIconEl = stockNotificationEl.querySelector('#stock_notification_input_incorrect');
+        incorrectIconEl.classList.remove('d-none');
+    }
+
+    onClickWishlistStockNotificationMessage(ev) {
+        this._handleClickStockNotificationMessage(ev);
+    }
+
+    onClickSubmitWishlistStockNotificationForm(ev) {
+        const productId = ev.currentTarget.closest('article').dataset.productId;
+        this._handleClickSubmitStockNotificationForm(ev, productId);
+    }
 }
 
 registry.category('public.interactions').add('website_sale.product_page', ProductPage);

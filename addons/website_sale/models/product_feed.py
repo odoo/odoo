@@ -362,9 +362,9 @@ class ProductFeed(models.Model):
 
         return {}
 
-    def _prepare_gmc_stock_info(self, _product):  # noqa: PLR6301
-        """Intended to be overridden in stock."""
-        return {"availability": "in_stock"}
+    def _prepare_gmc_stock_info(self, product):  # noqa: PLR6301
+        """ Prepare availability info for Google Merchant Center. """
+        return {"availability": "out_of_stock" if product._is_sold_out() else "in_stock"}
 
     def _prepare_gmc_additional_info(self, product):  # noqa: PLR6301
         additional_info = {

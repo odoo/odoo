@@ -44,6 +44,12 @@ export class AddToWishlist extends Interaction {
                 iconEl.classList.add('fa-heart');
             }
         }
+        const saveForLaterButton = document.querySelector('#wsale_save_for_later_button');
+        const addedToWishListAlert = document.querySelector('#wsale_added_to_your_wishlist_alert');
+        if (saveForLaterButton) {
+            saveForLaterButton.classList.add('d-none');
+            addedToWishListAlert.classList.remove('d-none');
+        }
     }
 
     /**

@@ -193,6 +193,7 @@
                     t-att-data-product-id="line.product_id.id"
                     t-att-value="line._get_displayed_quantity()"
                     t-attf-name="cart-quantity-{{line.id}}{{'-mobile' if is_mobile else ''}}"
+                    t-att-data-max="line._get_max_line_qty()"
                     aria-label="Quantity"
                 />
                 <t t-if="line._get_shop_warning(clear=False)">

@@ -26,6 +26,7 @@ class ProductWishlist(models.Model):
     )
     website_id = fields.Many2one("website", ondelete="cascade", required=True)
     active = fields.Boolean(default=True, required=True)
+    stock_notification = fields.Boolean(compute="_compute_stock_notification", default=False, required=True)
 
     @api.model
     def current(self):
@@ -96,3 +97,13 @@ class ProductWishlist(models.Model):
             ),
             ("partner_id", "=", False),
         ]).unlink()
+
+    @api.depends("product_id", "partner_id")
+    def _compute_stock_notification(self):
+        for record in self:
+            record.stock_notification = record.product_id._has_stock_notification(record.partner_id)
+
+    def _inverse_stock_notification(self):
+        for record in self:
+            if record.stock_notification:
+                record.product_id.stock_notification_partner_ids += record.partner_id
