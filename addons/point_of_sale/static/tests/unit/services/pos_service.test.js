@@ -421,6 +421,17 @@ describe("pos_store.js", () => {
         expect(grouped[0][1][0].name).toBe("Club sandwich");
         expect(grouped[1][1][0].name).toBe("Bacon burger");
         expect(grouped[2][1][0].name).toBe("Pizza margarita");
+
+        // Case 6: Grouping with special products excluded
+        const specialProduct = store.models["product.template"].get(25);
+        store.searchProductWord = "";
+        store.selectedCategory = store.models["pos.category"].get(
+            specialProduct.pos_categ_ids[0].id
+        );
+
+        grouped = store.productToDisplayByCateg;
+        expect(grouped).toHaveLength(1);
+        expect(grouped[0][1].map((p) => p.id)).not.toInclude(specialProduct.id);
     });
 
     test("productToDisplayByCateg count", async () => {
@@ -434,6 +445,8 @@ describe("pos_store.js", () => {
                 store.models["product.template"].create({
                     name: `${prefix}_${i}`,
                     pos_categ_ids: [categ.id],
+                    active: true,
+                    available_in_pos: true,
                 });
             }
 
