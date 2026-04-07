@@ -415,7 +415,7 @@ test("Computed fields: lazy (default) vs. eager", async () => {
     expect(thread.typeLazy).toBe("empty chat");
     expect.verifySteps(["LAZY"]);
     members.add("John");
-    expect.verifySteps(["EAGER"]);
+    expect.verifySteps(["EAGER", "LAZY"]); // extra-lazy because "in-need" release observed only on lazy observers no longer observing.
     expect(thread.typeEager).toBe("self-chat");
     expect.verifySteps([]);
     members.add("Antony");
@@ -670,25 +670,27 @@ test("lazy compute should re-compute while they are observed", async () => {
     const store = await start();
     const channel = store.Channel.insert(1);
     let observe = true;
+    const reactiveChannel = reactive(channel);
     function render() {
-        if (observe) {
-            expect.step(`render ${reactiveChannel.multiplicity}`);
-        }
+        expect.step(`render ${reactiveChannel.multiplicity}`);
     }
-    const reactiveChannel = reactive(channel, render);
-    render();
-    expect.verifySteps(["computing", "render few", "render few"]);
+    immediateEffect(() => {
+        if (observe) {
+            render();
+        }
+    });
+    expect.verifySteps(["computing", "render few"]);
     channel.count = 2;
     expect.verifySteps(["computing"]);
     channel.count = 5;
     expect.verifySteps(["computing", "render many"]);
     observe = false;
     channel.count = 6;
-    expect.verifySteps(["computing"]);
+    expect.verifySteps([]);
     channel.count = 7;
-    expect.verifySteps(["computing"]);
+    expect.verifySteps([]);
     channel.count = 1;
-    expect.verifySteps(["computing"]);
+    expect.verifySteps([]);
     channel.count = 0;
     expect.verifySteps([]);
     channel.count = 7;
@@ -697,8 +699,9 @@ test("lazy compute should re-compute while they are observed", async () => {
     expect.verifySteps([]);
     expect(channel.multiplicity).toBe("few");
     expect.verifySteps(["computing"]);
-    observe = true;
-    render();
+    immediateEffect(() => {
+        render();
+    });
     expect.verifySteps(["render few"]);
     channel.count = 7;
     expect.verifySteps(["computing", "render many"]);

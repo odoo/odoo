@@ -1,7 +1,6 @@
 /** @typedef {import("./record").Record} Record */
 /** @typedef {import("./record_list").RecordList} RecordList */
 
-import { onChange } from "@mail/utils/common/misc";
 import {
     IS_DELETED_SYM,
     IS_RECORD_SYM,
@@ -13,6 +12,7 @@ import { RecordList } from "./record_list";
 import { immediateEffect, toRaw, untrack } from "@odoo/owl";
 import { RecordUses } from "./record_uses";
 import { LocalStorageEntry } from "@mail/utils/common/local_storage";
+import { onChange } from "@mail/utils/common/misc";
 
 export class RecordInternal {
     [IS_RECORD_SYM] = true;
@@ -237,8 +237,13 @@ export class RecordInternal {
     /**
      * @param {Record} record
      * @param {string} fieldName
+     * @param {Object} [param2={}]
+     * @param {boolean} [param2.fromInNeed] whether the compute is triggered from an "in-need" observer.
+     *  Useful to force keeping the "in-need" flag, as the "in-need" is automatically reset whenever a computing value has changed.
+     *  The "in-need" flag is expected to be set again by observed on the next read, but if the compute is immediately triggered
+     *  by the "in-need" then that's the case the `fromInNeed: true` and it should preserve for this ongoing compute.
      */
-    compute(record, fieldName) {
+    compute(record, fieldName, { fromInNeed } = {}) {
         const Model = record.Model;
         if (!Model._.fieldsCompute.get(fieldName)) {
             return;
@@ -266,13 +271,21 @@ export class RecordInternal {
             this.fieldsComputing.delete(fieldName);
         });
         this.fieldsComputeStop.set(fieldName, stopFn);
+        if (fromInNeed) {
+            this.fieldsComputeInNeed.set(fieldName, true);
+        }
         triggered = true;
     }
     /**
      * @param {Record} record
      * @param {string} fieldName
+     * @param {Object} [param2={}]
+     * @param {boolean} [param2.fromInNeed] whether the sort is triggered from an "in-need" observer.
+     *  Useful to force keeping the "in-need" flag, as the "in-need" is automatically reset whenever a sorting value has changed.
+     *  The "in-need" flag is expected to be set again by observed on the next read, but if the sort is immediately triggered
+     *  by the "in-need" then that's the case the `fromInNeed: true` and it should preserve for this ongoing sort.
      */
-    sort(record, fieldName) {
+    sort(record, fieldName, { fromInNeed } = {}) {
         const Model = record.Model;
         if (!Model._.fieldsSort.get(fieldName)) {
             return;
@@ -305,6 +318,9 @@ export class RecordInternal {
             this.fieldsSorting.delete(fieldName);
         });
         this.fieldsSortStop.set(fieldName, stopFn);
+        if (fromInNeed) {
+            this.fieldsSortInNeed.set(fieldName, true);
+        }
         triggered = true;
     }
     onUpdate(record, fieldName) {
