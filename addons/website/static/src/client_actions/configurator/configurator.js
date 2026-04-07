@@ -679,6 +679,8 @@ export class ApplyConfiguratorScreen extends Component {
     }
 
     getConfigurationData(selectedFeatures, selectedPalette, themeName) {
+        const selectedFontConfig = this.state.fonts?.[this.state.selectedFont];
+        const toScssString = (value) => (value ? `'${value}'` : undefined);
         return {
             selected_features: selectedFeatures,
             industry_id: this.state.selectedIndustry.id,
@@ -693,6 +695,8 @@ export class ApplyConfiguratorScreen extends Component {
                     .name,
             website_type: WEBSITE_TYPES[this.state.selectedType].name,
             logo_attachment_id: this.state.logoAttachmentId,
+            selected_font: toScssString(selectedFontConfig?.name),
+            selected_headings_font: toScssString(selectedFontConfig?.headingsFamily),
         };
     }
 
@@ -915,7 +919,7 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
             this.state.featuredPaletteNames = [];
             this.state.selectedPalette = undefined;
             this.state.fonts = {};
-            this.state.fontNames = [];
+            this.state.fontIds = [];
             this.state.selectedFont = undefined;
         }
         this.state.selectedTheme = themeName;
@@ -1414,7 +1418,7 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
     cleanValue(value) {
         return value.trim().replace(/^['"]|['"]$/g, "");
     }
-    getFonts() {
+    async getFonts() {
         const iframeDoc = this.previewIframeRef.el?.contentDocument;
         const iframeRoot = iframeDoc?.documentElement;
         if (!iframeRoot) {
@@ -1422,53 +1426,63 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         }
         const style = getComputedStyle(iframeRoot);
         const numberOfFonts = Number.parseInt(style.getPropertyValue("--number-of-fonts"), 10) || 0;
+        const getFontList = (cssVarName) =>
+            style
+                .getPropertyValue(cssVarName)
+                .replace(/[()]/g, "")
+                .split(",")
+                .map((value) => this.cleanValue(value))
+                .filter(Boolean);
+
         const fonts = {};
-        const fontUrls = [];
+        const fontNameToId = {};
+        const fontUrls = new Set();
+        let nextFontId = 0;
 
         for (let i = 1; i <= numberOfFonts; i++) {
             const fontName = this.cleanValue(style.getPropertyValue(`--font-number-${i}`));
-            if (!fontName) {
+            const fontFamily = style.getPropertyValue(`--font-family-number-${i}`).trim();
+            if (!fontName || !fontFamily) {
                 continue;
             }
-            const fontFamily = style.getPropertyValue(`--font-family-number-${i}`).trim();
+            const fontId = nextFontId++;
+            fonts[fontId] = {
+                name: fontName,
+                bodyFamily: fontFamily,
+                headingsFamily: "",
+            };
+            if (fontNameToId[fontName] === undefined) {
+                fontNameToId[fontName] = fontId;
+            }
             const fontUrl = this.cleanValue(style.getPropertyValue(`--font-url-number-${i}`));
-            if (fontFamily) {
-                fonts[fontName] = {
-                    family: fontFamily || `"${fontName}", "Odoo Unicode Support Noto", sans-serif`,
-                    headings: "",
-                };
-                if (fontUrl) {
-                    fontUrls.push(fontUrl);
-                }
+            if (fontUrl) {
+                fontUrls.add(fontUrl);
             }
         }
 
-        const bodyFont = this.cleanValue(style.getPropertyValue("--font"));
-        const bodyAltRaw = style.getPropertyValue("--alternative-fonts");
-        const bodyAlts = [];
-        if (bodyAltRaw) {
-            for (const value of bodyAltRaw.replace(/[()]/g, "").split(",")) {
-                const fontName = this.cleanValue(value);
-                if (fontName) {
-                    bodyAlts.push(fontName);
-                }
+        const recommendedBodyFonts = [
+            this.cleanValue(style.getPropertyValue("--font")),
+            ...getFontList("--alternative-fonts"),
+        ].filter(Boolean);
+        const recommendedHeadingsFonts = [
+            this.cleanValue(style.getPropertyValue("--headings-font")),
+            ...getFontList("--alternative-headings-fonts"),
+        ].filter(Boolean);
+        const recommendedFontIds = [];
+        const seenBaseFontIds = {};
+        for (const [index, bodyFontName] of recommendedBodyFonts.entries()) {
+            const baseFontId = fontNameToId[bodyFontName];
+            if (baseFontId === undefined) {
+                continue;
             }
-        }
-        const headingFont = this.cleanValue(style.getPropertyValue("--headings-font"));
-        const headingAltRaw = style.getPropertyValue("--alternative-headings-fonts");
-        const headingAlts = [];
-        if (headingAltRaw) {
-            for (const value of headingAltRaw.replace(/[()]/g, "").split(",")) {
-                const fontName = this.cleanValue(value);
-                if (fontName) {
-                    headingAlts.push(fontName);
-                }
+            let fontId = baseFontId;
+            if (seenBaseFontIds[baseFontId]) {
+                fontId = nextFontId++;
+                fonts[fontId] = { ...fonts[baseFontId] };
             }
-        }
-        const recommendedFontNames = [bodyFont, ...bodyAlts].filter(Boolean);
-        const recommendedHeadingsFontNames = [headingFont, ...headingAlts].filter(Boolean);
-        for (const i in recommendedFontNames) {
-            fonts[recommendedFontNames[i]]["headings"] = recommendedHeadingsFontNames[i];
+            seenBaseFontIds[baseFontId] = true;
+            fonts[fontId].headingsFamily = recommendedHeadingsFonts[index] || "";
+            recommendedFontIds.push(fontId);
         }
 
         const addFontLink = (targetDoc, href) => {
@@ -1484,19 +1498,25 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
             targetDoc.head.appendChild(link);
         };
 
-        for (const fontUrl of new Set(fontUrls)) {
-            const href = `https://fonts.googleapis.com/css?family=${encodeURIComponent(
-                fontUrl
-            )}&display=swap`;
+        for (const fontUrl of fontUrls) {
+            const href = `https://fonts.googleapis.com/css?family=${fontUrl}&display=swap`;
             addFontLink(iframeDoc, href);
             addFontLink(document, href);
         }
 
         this.state.fonts = fonts;
-        this.state.fontNames = recommendedFontNames;
-        if (!this.state.selectedFont || !fonts[this.state.selectedFont]) {
-            this.state.selectedFont = recommendedFontNames[0];
+        this.state.fontIds = recommendedFontIds;
+        if (this.state.selectedFont === undefined || !fonts[this.state.selectedFont]) {
+            this.state.selectedFont = recommendedFontIds[0];
         }
+        const previewFontNames = [...recommendedBodyFonts, ...recommendedHeadingsFonts].filter(
+            Boolean
+        );
+        await Promise.all(
+            previewFontNames.map((fontName) =>
+                document.fonts.load(`1em "${fontName}"`).catch(() => null)
+            )
+        );
     }
 
     setFont(font) {
@@ -1522,7 +1542,7 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         if (iframeDoc) {
             this.deactivatePreviewInteractions(iframeDoc);
             this.setPreviewLogo(iframeDoc);
-            this.getFonts();
+            await this.getFonts();
             this.applyPreviewFont();
             if (!this.state.recommendedPalettes?.length) {
                 this.initializePalettesFromPreview();
@@ -1572,11 +1592,11 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
             if (!fontConfig) {
                 return;
             }
-            iframeDoc.body.style.fontFamily = fontConfig.family || "";
+            iframeDoc.body.style.fontFamily = fontConfig.bodyFamily || "";
             for (const el of iframeDoc.querySelectorAll(
                 "h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4"
             )) {
-                el.style.fontFamily = fontConfig.headings;
+                el.style.fontFamily = fontConfig.headingsFamily;
             }
         }
     }
@@ -1979,6 +1999,7 @@ export class Configurator extends Component {
             selectedPurpose: state.selectedPurpose,
             formerSelectedPurpose: state.formerSelectedPurpose,
             selectedType: state.selectedType,
+            selectedFont: state.selectedFont,
             featuredPaletteNames: state.featuredPaletteNames,
             logoPalette: state.logoPalette,
         });

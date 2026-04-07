@@ -964,19 +964,30 @@ class Website(models.CachedModel):
             website.logo = company.logo.decode('utf-8')
 
         # Configure the color palette
+        Assets = self.env['website.assets']
         selected_palette = kwargs.get('selected_palette')
+        user_values_to_customize = {}
         if selected_palette:
-            Assets = self.env['website.assets']
             selected_palette_name = selected_palette if isinstance(selected_palette, str) else 'base-1'
-            Assets.make_scss_customization(
-                '/website/static/src/scss/options/user_values.scss',
-                {'color-palettes-name': "'%s'" % selected_palette_name}
-            )
+            user_values_to_customize['color-palettes-name'] = "'%s'" % selected_palette_name
             if isinstance(selected_palette, list):
                 Assets.make_scss_customization(
                     '/website/static/src/scss/options/colors/user_color_palette.scss',
                     {f'o-color-{i}': color for i, color in enumerate(selected_palette, 1)}
                 )
+
+        # Configure selected fonts
+        selected_font = kwargs.get('selected_font')
+        selected_headings_font = kwargs.get('selected_headings_font')
+        if selected_font:
+            user_values_to_customize['font'] = selected_font
+        if selected_headings_font:
+            user_values_to_customize['headings-font'] = selected_headings_font
+        if user_values_to_customize:
+            Assets.make_scss_customization(
+                '/website/static/src/scss/options/user_values.scss',
+                user_values_to_customize,
+            )
 
         # Update CTA
         cta_data = website.get_cta_data(kwargs.get('website_purpose'), kwargs.get('website_type'))
