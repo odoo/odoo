@@ -291,7 +291,6 @@ class PosOrder(models.Model):
         parent_lst_price = self.pricelist_id._get_product_price(parent_line.product_id, parent_line.qty)
         child_line_free = []
         child_line_extra = []
-        parent_coef = parent_line.qty or 1
 
         child_lines_by_combo = {}
         for line in child_lines:
@@ -300,7 +299,7 @@ class PosOrder(models.Model):
 
         for combo, child_lines in child_lines_by_combo.items():
             free_count = 0
-            max_free = combo.qty_free * parent_coef
+            max_free = combo.qty_free
 
             for line in child_lines:
                 qty_per_line = line.qty / line.combo_parent_id.qty if line.combo_parent_id.qty else line.qty
@@ -315,15 +314,21 @@ class PosOrder(models.Model):
                 if extra_qty > 0:
                     child_line_extra.append(line)
 
-        original_total = sum(line.combo_item_id.combo_id.base_price * line.qty for line in child_line_free if line.combo_item_id.combo_id.qty_free > 0)
+        original_total = sum(
+            line.combo_item_id.combo_id.base_price * (
+                line.qty / line.combo_parent_id.qty
+                if line.combo_parent_id.qty
+                else line.qty
+            ) for line in child_line_free if line.combo_item_id.combo_id.qty_free > 0
+        )
         remaining_total = parent_lst_price
 
         for index, child in enumerate(child_line_free):
             combo_item = child.combo_item_id
             combo = combo_item.combo_id
             unit_devision_factor = original_total or 1
-            price_unit = currency.round(combo.base_price * parent_lst_price * parent_coef / unit_devision_factor)
-            remaining_total -= price_unit * child.qty / parent_coef
+            price_unit = currency.round(combo.base_price * parent_lst_price / unit_devision_factor)
+            remaining_total -= price_unit * (child.qty / child.combo_parent_id.qty if child.combo_parent_id.qty else child.qty)
 
             if index == len(child_line_free) - 1:
                 price_unit += remaining_total
