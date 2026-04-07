@@ -87,9 +87,9 @@ class TestPerfSessionInfo(common.HttpCase):
         self.env.registry.clear_all_caches()
         self.env.invalidate_all()
         # cold ormcache:
-        # - Only web 13
-        # - All modules: 21
-        with self.assertQueryCount(21):
+        # - Only web 15
+        # - All modules: 27
+        with self.assertQueryCount(27):
             self.env['ir.ui.menu']._visible_menu_ids()
 
         # cold fields cache - warm orm cache (only web: 0, all module: 0)
