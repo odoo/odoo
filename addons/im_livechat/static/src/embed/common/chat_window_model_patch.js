@@ -6,19 +6,22 @@ import { patch } from "@web/core/utils/patch";
 /** @type {import("models").ChatWindow} */
 const chatWindowModelPatch = {
     async _onBeforeClose() {
-        await super._onBeforeClose(...arguments);
+        const canClose = await super._onBeforeClose(...arguments);
         if (
             !this.exists() ||
             this.isTransient ||
             this.channel.self_member_id?.livechat_member_type !== "visitor" ||
-            this.feedbackDoneResolver
+            this.feedbackDoneResolver ||
+            !canClose
         ) {
-            return;
+            return canClose;
         }
         rpc("/im_livechat/visitor_leave_session", { channel_id: this.channel.id });
         this.channel.chatbot?.stop();
         this.feedbackDoneResolver = Promise.withResolvers();
-        await this.feedbackDoneResolver.promise.finally(() => (this.feedbackDoneResolver = null));
+        return await this.feedbackDoneResolver.promise.finally(
+            () => (this.feedbackDoneResolver = null)
+        );
     },
 };
 patch(ChatWindow.prototype, chatWindowModelPatch);

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
         <xpath expr="//*[@name='thread content']" position="replace">
-           <FeedbackPanel t-if="this.props.chatWindow.feedbackDoneResolver" onClickClose="() => this.props.chatWindow.feedbackDoneResolver.resolve()" onClickNewSession="() => this.onClickNewSession()" thread="this.channel.thread"/>
+           <FeedbackPanel t-if="this.props.chatWindow.feedbackDoneResolver" onClickClose="() => this.props.chatWindow.feedbackDoneResolver.resolve(true)" onClickNewSession="() => this.onClickNewSession()" thread="this.channel.thread"/>
            <t t-else="">
             <t>$0</t>
            </t>
