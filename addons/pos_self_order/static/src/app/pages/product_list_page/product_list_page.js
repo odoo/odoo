@@ -214,7 +214,7 @@ export class ProductListPage extends Component {
                     }))
                 );
             }
-        } else if (product.isConfigurable()) {
+        } else if (this.selfOrder.isProductConfigurable(product)) {
             this.router.navigate("product", { id: product.id });
         } else {
             if (!this.selfOrder.ordering) {

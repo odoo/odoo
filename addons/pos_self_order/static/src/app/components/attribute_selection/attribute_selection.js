@@ -9,11 +9,14 @@ export class AttributeSelection extends Component {
     setup() {
         this.selfOrder = useSelfOrder();
         this.envSelectedValues = useState(this.env.selectedValues);
+        this.attributesToDisplay = this.props.productTemplate.attribute_line_ids.filter(
+            (a) => this.availableAttributeValue(a).length > 0
+        );
     }
 
     get selectedValues() {
         return (this.envSelectedValues[this.props.productTemplate.id] ??=
-            new AttributeSelectionHelper(this.selfOrder));
+            new AttributeSelectionHelper(this.selfOrder, this.attributesToDisplay));
     }
 
     isValueSelected(attribute, value) {
