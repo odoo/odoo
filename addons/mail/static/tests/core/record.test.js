@@ -562,14 +562,16 @@ test("record list sort should be manually observable", async () => {
         observedMessages.sort((m1, m2) => (m1.body < m2.body ? -1 : 1));
         expect.step(`sortMessages`);
     }
-    const observedMessages = reactive(thread.messages, sortMessages);
+    const observedMessages = reactive(thread.messages);
     expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
-    sortMessages();
+    immediateEffect(() => {
+        sortMessages();
+    });
     expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
     expect.verifySteps(["sortMessages"]);
     messages[0].body = "c";
     expect(`${thread.messages.map((m) => m.id)}`).toBe("2,1");
-    expect.verifySteps(["sortMessages", "sortMessages"]);
+    expect.verifySteps(["sortMessages"]);
     messages[0].body = "d";
     expect(`${thread.messages.map((m) => m.id)}`).toBe("2,1");
     expect.verifySteps(["sortMessages"]);
@@ -726,12 +728,15 @@ test("lazy sort should re-sort while they are observed", async () => {
     expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
     let observe = true;
     function render() {
-        if (observe) {
-            expect.step(`render ${reactiveChannel.messages.map((m) => m.id)}`);
-        }
+        expect.step(`render ${reactiveChannel.messages.map((m) => m.id)}`);
     }
-    const reactiveChannel = reactive(thread, render);
-    render();
+    const reactiveChannel = reactive(thread);
+    immediateEffect(() => {
+        if (!observe) {
+            return;
+        }
+        render();
+    });
     const message = thread.messages[0];
     expect.verifySteps(["render 1,2"]);
     message.sequence = 3;
@@ -757,8 +762,9 @@ test("lazy sort should re-sort while they are observed", async () => {
         )}`
     ).toBe("2,1", { message: "no longer observed" });
     expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
-    observe = true;
-    render();
+    immediateEffect(() => {
+        render();
+    });
     expect.verifySteps(["render 1,2"]);
     message.sequence = 10;
     expect.verifySteps(["render 2,1"]);
@@ -778,12 +784,15 @@ test("sort works on fields.Attr()", async () => {
     expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
     let observe = true;
     function render() {
-        if (observe) {
-            expect.step(`render ${reactiveChannel.messages.map((m) => m.id)}`);
-        }
+        expect.step(`render ${reactiveChannel.messages.map((m) => m.id)}`);
     }
     const reactiveChannel = reactive(thread, render);
-    render();
+    immediateEffect(() => {
+        if (!observe) {
+            return;
+        }
+        render();
+    });
     const message = thread.messages[0];
     expect.verifySteps(["render 1,2"]);
     message.sequence = 3;
@@ -805,8 +814,9 @@ test("sort works on fields.Attr()", async () => {
         message: "no longer observed",
     });
     expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
-    observe = true;
-    render();
+    immediateEffect(() => {
+        render();
+    });
     expect.verifySteps(["render 1,2"]);
     message.sequence = 10;
     expect.verifySteps(["render 2,1"]);
