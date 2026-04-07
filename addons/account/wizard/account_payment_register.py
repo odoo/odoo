@@ -1247,9 +1247,9 @@ class AccountPaymentRegister(models.TransientModel):
 
             to_process.append(to_process_values)
         else:
+            lines_to_pay = self._get_total_amounts_to_pay(batches)['lines'] if self.installments_mode in ('next', 'overdue', 'before_date') else self.line_ids
             if not self.group_payment:
                 # Don't group payments: Create one batch per move.
-                lines_to_pay = self._get_total_amounts_to_pay(batches)['lines'] if self.installments_mode in ('next', 'overdue', 'before_date') else self.line_ids
                 new_batches = []
                 for batch_result in batches:
                     for line in batch_result['lines']:
@@ -1266,6 +1266,7 @@ class AccountPaymentRegister(models.TransientModel):
                 batches = new_batches
 
             for batch_result in batches:
+                batch_result['lines'] = batch_result['lines'] & lines_to_pay
                 to_process.append({
                     'create_vals': self._create_payment_vals_from_batch(batch_result),
                     'to_reconcile': batch_result['lines'],

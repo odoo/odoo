@@ -2142,3 +2142,40 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
             {'amount_currency': 300, 'date_maturity': fields.Date.from_string('2017-01-06')},
             {'amount_currency': 600, 'date_maturity': fields.Date.from_string('2017-01-11')},
         ])
+
+    def test_group_payment_multi_partner_with_installments(self):
+        """
+        When "Group Payments" is selected and vendor bills from different partners are selected,
+        and at least one bill has multiple installments, only the next installment should be
+        included, not all installments of that bill.
+        """
+        in_invoice_with_installments = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'invoice_date': '2026-01-01',
+            'invoice_payment_term_id': self.term_0_5_10_days.id,
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 1000.0,
+                'tax_ids': [],
+            })],
+        })
+        in_invoice_with_installments.action_post()
+
+        wizard = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=(self.in_invoice_1 + in_invoice_with_installments + self.in_invoice_3).ids,
+        ).create({
+            'group_payment': True,
+            'payment_date': '2026-01-01',
+        })
+
+        payments = wizard._create_payments()
+
+        self.assertEqual(len(payments), 2)
+
+        payment_a = payments.filtered(lambda p: p.partner_id == self.partner_a)
+        payment_b = payments.filtered(lambda p: p.partner_id == self.partner_b)
+
+        self.assertRecordValues(payment_a, [{'amount': 1100.0, 'partner_id': self.partner_a.id}])
+        self.assertRecordValues(payment_b, [{'amount': 3000.0, 'partner_id': self.partner_b.id}])
