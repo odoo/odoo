@@ -1134,8 +1134,8 @@ test("Ignore specified elements", async () => {
             <div t-custom-ref="root" class="root">
                 <ul class="list">
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" class="item">
-                        <span class="ignored" t-esc="i" />
-                        <span class="not-ignored" t-esc="i" />
+                        <span class="ignored" t-out="i" />
+                        <span class="not-ignored" t-out="i" />
                     </li>
                 </ul>
             </div>

@@ -16,11 +16,8 @@ test("sanitize should remove nasty elements", async () => {
     ).toBe("<p>abc</p>");
 });
 
-test("sanitize should leave t-field, t-out, t-esc as is", async () => {
+test("sanitize should leave t-field and t-out as is", async () => {
     const { editor } = await setupEditor("");
-    expect(editor.shared.sanitize.sanitize(`<span t-out="expr"></span>`)).toBe(
-        '<span t-out="expr"></span>'
-    );
     expect(editor.shared.sanitize.sanitize(`<span t-out="expr"></span>`)).toBe(
         '<span t-out="expr"></span>'
     );
