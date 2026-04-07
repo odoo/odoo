@@ -84,8 +84,9 @@ test("Input parent is not contenteditable, while all other children beside the i
 
     expect(":iframe .input-group:has(:scope > input)").toHaveAttribute("contenteditable", "false");
 
-    expect(":iframe .input-group:has(:scope > input) > *:not(input)").toHaveAttribute(
-        "contenteditable",
-        "true"
-    );
+    // The editable <button> does not receive the contenteditable=true attribute
+    // but receives a span inside which has the contenteditable=true attribute
+    expect(
+        ":iframe .input-group:has(:scope > input) > button > span.o_inner_button_editable_span"
+    ).toHaveAttribute("contenteditable", "true");
 });
