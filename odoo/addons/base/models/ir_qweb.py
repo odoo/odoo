@@ -2939,12 +2939,22 @@ class IrQweb(models.AbstractModel):
         modules = self.env['ir.module.module'].search([('state', '=', 'installed')]).mapped('name')
         lazy_bundle_regex = re.compile(r'\bloadBundle\((["\'`])([\w\.-]+)\1\)', flags=re.ASCII)
         bundles = set()
+<<<<<<< aa001e52494f9ce55a253ae947859e73f621bf0e
         for module in modules:
             manifest = Manifest.for_addon(module, display_warning=False)
             if not (manifest and manifest.static_path):
                 continue
             for fname in glob.iglob('**/src/**/*.js', root_dir=manifest.static_path, recursive=True):
                 with file_open(opj(manifest.static_path, fname)) as f:
+||||||| 05d0944a7640e196db989039140ae5ddb12152ac
+        for modroot in map(get_module_path, modules):
+            for fname in glob.iglob('**/static/src/**/*.js', root_dir=modroot, recursive=True):
+                with file_open(opj(modroot, fname)) as f:
+=======
+        for modroot in filter(None, map(get_module_path, modules)):
+            for fname in glob.iglob('**/static/src/**/*.js', root_dir=modroot, recursive=True):
+                with file_open(opj(modroot, fname)) as f:
+>>>>>>> 6dbcb7ef1707aab0a9a3c01a71cddd6a88fadbca
                     fcontent = f.read()
                     if match := lazy_bundle_regex.search(fcontent):
                         bundles.add(match[2])
