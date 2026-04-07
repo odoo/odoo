@@ -4111,7 +4111,7 @@ test("custom many2one field with write_date as related field", async () => {
         static template = xml`
             <div>
                 <Many2OneField t-props="this.props"/>
-                <span class="date" t-esc="this.writeDate"/>
+                <span class="date" t-out="this.writeDate"/>
             </div>`;
         get writeDate() {
             return this.props.record.data[this.props.name].write_date.toFormat("dd/MM/y");
