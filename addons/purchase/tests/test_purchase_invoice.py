@@ -1251,6 +1251,15 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertTrue(bill.id in po_2.invoice_ids.ids)
         self.assertEqual(bill.amount_total, po.amount_total + po_2.amount_total)
 
+    def test_link_bill_origin_to_purchase_orders_trailing_comma(self):
+        """Trailing comma in bill reference does not match a PO with an empty reference"""
+        po = self.init_purchase(confirm=True, products=[self.product_order])
+        po.partner_ref = False
+        bill = self.init_invoice('in_invoice', partner=self.partner_b, products=[self.product_order])
+        bill.invoice_origin = "OTHER PO, "
+        bill._link_bill_origin_to_purchase_orders()
+        self.assertNotIn(bill, po.invoice_ids)
+
     def test_po_matching_credit_note(self):
         po = self.init_purchase(partner=self.partner_a, products=[self.product_deliver])
         pol = po.order_line
