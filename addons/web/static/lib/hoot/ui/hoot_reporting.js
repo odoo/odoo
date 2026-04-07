@@ -18,7 +18,7 @@ import { UiPlugin } from "./ui_plugin";
 // Global
 //-----------------------------------------------------------------------------
 
-const { Boolean } = globalThis;
+const { Boolean, Set } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -99,7 +99,7 @@ export class HootReporting extends Component {
             <t t-set="resultStart" t-value="this.ui.resultsPage() * this.ui.resultsPerPage()" />
             <t t-foreach="this.filteredResults().slice(resultStart, resultStart + this.ui.resultsPerPage())" t-as="result" t-key="result.id">
                 <HootTestResult
-                    open="this.openTests().includes(result.test.id)"
+                    open="this.openTests().has(result.test.id)"
                     test="result.test"
                 >
                     <div class="flex items-center gap-2 overflow-hidden">
@@ -248,10 +248,8 @@ export class HootReporting extends Component {
     ui = plugin(UiPlugin);
 
     // Reactive values
-    /** @type {import("@odoo/owl").Signal<string[]>} */
-    openGroups = signal.Array([]);
-    /** @type {import("@odoo/owl").Signal<string[]>} */
-    openTests = signal.Array([]);
+    /** @type {import("@odoo/owl").Signal<Set<string>>} */
+    openTests = signal.Set(new Set());
     filteredResults = computed(() => this.computeFilteredResults());
 
     // Other members
@@ -269,7 +267,7 @@ export class HootReporting extends Component {
                 [Test.FAILED, Test.ABORTED].includes(test.status)
             ) {
                 didShowDetail = true;
-                this.openTests().push(test.id);
+                this.openTests().add(test.id);
             }
         });
 
@@ -339,6 +337,9 @@ export class HootReporting extends Component {
     }
 
     getEmptyMessage() {
+        if (this.runner.filteredTests().length && this.runner.status() === "ready") {
+            return null;
+        }
         const selectedSuiteId = this.ui.selectedSuiteId();
         const statusFilter = this.ui.statusFilter();
         if (!statusFilter && !selectedSuiteId) {
@@ -366,30 +367,5 @@ export class HootReporting extends Component {
 
     onRunClick() {
         this.runner.manualStart();
-    }
-
-    /**
-     * @param {PointerEvent} ev
-     * @param {string} id
-     */
-    toggleGroup(ev, id) {
-        const index = this.openGroups().indexOf(id);
-        if (ev.altKey) {
-            if (index in this.openGroups()) {
-                this.openGroups.set([]);
-            } else {
-                this.openGroups.set(
-                    this.filteredResults()
-                        .filter((r) => r.suite)
-                        .map((r) => r.suite.id)
-                );
-            }
-        } else {
-            if (index in this.openGroups()) {
-                this.openGroups().splice(index, 1);
-            } else {
-                this.openGroups().push(id);
-            }
-        }
     }
 }
