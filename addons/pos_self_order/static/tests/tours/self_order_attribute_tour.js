@@ -75,6 +75,19 @@ registry.category("web_tour.tours").add("selfAlwaysAttributeVariants", {
     ],
 });
 
+registry.category("web_tour.tours").add("selfAlwaysAttributeVariantsKiosk", {
+    steps: () => [
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Chair"),
+        ...ProductPage.setupAttribute([{ name: "Color", value: "Red" }]),
+        Utils.clickBtn("Order"),
+        CartPage.checkProduct("Chair (Red)", "15", "1"),
+        Utils.clickBtn("Pay"),
+        Utils.checkBtn("Close"),
+    ],
+});
+
 registry.category("web_tour.tours").add("self_order_product_info", {
     steps: () => [
         Utils.clickBtn("Order Now"),
