@@ -47,10 +47,14 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='create_date']" position="after">
                 <field name="product_qty" column_invisible="True"/>
-                <field name="alert_date" optional="hide" widget='relative_date' invisible="product_qty &lt;= 0"/>
-                <field name="use_date" optional="hide"/>
-                <field name="removal_date" optional="hide"/>
-                <field name="expiration_date" optional="hide"/>
+                <field name="alert_date" optional="hide" widget='relative_date' invisible="product_qty &lt;= 0" readonly="not use_expiration_date"/>
+                <field name="use_date" optional="hide" readonly="not use_expiration_date"/>
+                <field name="removal_date" optional="hide" readonly="not use_expiration_date"
+                    decoration-danger="removal_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')"
+                    decoration-bf="removal_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')"/>
+                <field name="expiration_date" optional="hide" readonly="not use_expiration_date"
+                    decoration-danger="expiration_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')"
+                    decoration-bf="expiration_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')"/>
             </xpath>
         </field>
     </record>
