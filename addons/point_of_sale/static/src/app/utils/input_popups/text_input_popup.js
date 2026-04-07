@@ -21,7 +21,7 @@ export class TextInputPopup extends Component {
     };
 
     setup() {
-        this.state = useState({ inputValue: this.props.startingValue });
+        this.state = useState({ inputValue: this.props.startingValue || "" });
         this.inputRef = useRef("input");
         onMounted(this.onMounted);
     }
