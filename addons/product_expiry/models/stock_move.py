@@ -25,6 +25,7 @@ class StockMove(models.Model):
             expiration_date = from_date + datetime.timedelta(days=product.expiration_time)
             for vals in vals_list:
                 vals['expiration_date'] = vals.get('expiration_date') or expiration_date
+                vals['removal_date'] = vals['expiration_date'] - datetime.timedelta(days=product.removal_time)
         return vals_list
 
     def action_show_details(self):
