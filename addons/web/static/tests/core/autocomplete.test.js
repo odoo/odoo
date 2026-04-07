@@ -871,7 +871,7 @@ test("source with option slot", async () => {
             <AutoComplete value="''" sources="this.sources">
                 <t t-set-slot="use_this_slot" t-slot-scope="scope">
                     <div class="slot_item">
-                        <t t-esc="scope.data.id"/>: <t t-esc="scope.label"/>
+                        <t t-out="scope.data.id"/>: <t t-out="scope.label"/>
                     </div>
                 </t>
             </AutoComplete>

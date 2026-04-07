@@ -11178,7 +11178,7 @@ test(`fieldDependencies support for fields`, async () => {
     fieldsRegistry.add("custom_field", {
         component: class CustomField extends Component {
             static props = ["*"];
-            static template = xml`<span t-esc="this.props.record.data.int_field"/>`;
+            static template = xml`<span t-out="this.props.record.data.int_field"/>`;
         },
         fieldDependencies: [{ name: "int_field", type: "integer" }],
     });
@@ -11198,7 +11198,7 @@ test(`fieldDependencies support for fields: dependence on a relational field`, a
     registry.category("fields").add("custom_field", {
         component: class CustomField extends Component {
             static props = ["*"];
-            static template = xml`<span t-esc="this.props.record.data.product_id.display_name"/>`;
+            static template = xml`<span t-out="this.props.record.data.product_id.display_name"/>`;
         },
         fieldDependencies: [{ name: "product_id", type: "many2one", relation: "product" }],
     });
@@ -11746,7 +11746,7 @@ test(`don't exec a valid save with onWillSaveRecord in a form view`, async () =>
 });
 
 test(`Can't use FormRenderer implementation details in arch`, async () => {
-    // using t-esc in form view archs isn't accepted, so it displays a warning
+    // using t-out in form view archs isn't accepted, so it displays a warning
     // in the console
     patchWithCleanup(console, {
         warn: () => expect.step("warn"),
