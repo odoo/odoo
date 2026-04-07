@@ -9,7 +9,7 @@ from odoo.addons.base.models.res_partner import ResPartner
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 from odoo.tests import Form
-from odoo.tests.common import new_test_user, tagged, TransactionCase, users
+from odoo.tests.common import new_test_user, tagged, TransactionCase, users, warmup
 
 # samples use effective TLDs from the Mozilla public suffix
 # list at http://publicsuffix.org
@@ -786,6 +786,28 @@ class TestPartnerAddressCompany(TransactionCase):
         self.assertEqual(leaf111.address_get([]),
                         {'contact': branch11.id}, 'Invalid address resolution, branch11 should now be contact')
 
+    @warmup
+    def test_address_get_fetch_optimization(self):
+        """Check that address_get prefetches required fields to reduce memory.
+
+        The fetch() call ensures type/child_ids/is_company/parent_id are loaded
+        in batch. If a new field is accessed without adding it to fetch(), this
+        test will fail due to extra queries.
+
+        Fix: update fetch() in res_partner.py address_get() around L1139.
+        """
+        res_partner = self.env['res.partner']
+        company = res_partner.create({'name': 'Company', 'is_company': True})
+        res_partner.create([
+            {'name': 'Invoice', 'parent_id': company.id, 'type': 'invoice'},
+            {'name': 'Delivery', 'parent_id': company.id, 'type': 'delivery'},
+            {'name': 'Contact 1', 'parent_id': company.id, 'type': 'contact'},
+            {'name': 'Contact 2', 'parent_id': company.id, 'type': 'contact'},
+        ])
+        self.env.invalidate_all()
+        with self.assertQueryCount(4):
+            company.address_get(['delivery', 'invoice', 'contact'])
+
     @users('employee')
     def test_address_parent_company_creation(self):
         """ When creating parent company, it should be populated with information
@@ -981,6 +1003,30 @@ class TestPartnerAddressCompany(TransactionCase):
         self.assertEqual(company.vat, 'BECOMPANY', 'No upstream support of reset')
         self.assertFalse(individual.industry_id)
         self.assertFalse(individual.vat)
+
+    @warmup
+    def test_fields_sync_fetch_optimization(self):
+        """Check that _fields_sync prefetches required fields to reduce memory.
+
+        The fetch() call ensures parent_id/type/commercial_partner_id are loaded
+        in batch. If a new field is accessed without adding it to fetch(), this
+        test will fail due to extra queries.
+
+        Fix: update fetch() in res_partner.py _fields_sync() around L773.
+        """
+        company = self.env['res.partner'].create({
+            'is_company': True,
+            'name': 'Test Company',
+            'vat': 'BE0123456789',
+            **self.test_address_values,
+        })
+        contacts = self.env['res.partner'].create([
+            {'name': f'Contact {i}', 'parent_id': company.id}
+            for i in range(5)
+        ])
+        self.env.invalidate_all()
+        with self.assertQueryCount(7):
+            contacts.write({'street': 'New Street'})
 
     def test_company_dependent_commercial_sync(self):
         ResPartner = self.env['res.partner']
