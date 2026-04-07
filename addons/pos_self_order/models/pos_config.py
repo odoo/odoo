@@ -106,9 +106,8 @@ class PosConfig(models.Model):
             'self_ordering_service_mode', 'self_ordering_default_language_id', 'self_ordering_available_language_ids',
             'self_ordering_image_home_ids', 'self_ordering_default_user_id', 'self_ordering_pay_after',
             'self_ordering_image_brand', 'self_ordering_image_brand_name', 'currency_id', 'has_paper',
-            'floor_ids', 'fiscal_position_ids', 'is_order_printer', 'iface_print_via_proxy', 'receipt_header',
-            'receipt_footer', 'proxy_ip', 'current_session_id', 'pricelist_id', 'available_pricelist_ids',
-            'default_fiscal_position_id', 'use_pricelist', 'module_pos_restaurant', 'is_header_or_footer',
+            'floor_ids', 'fiscal_position_ids', 'receipt_header', 'receipt_footer', 'current_session_id',
+            'pricelist_id', 'available_pricelist_ids', 'default_fiscal_position_id', 'use_pricelist', 'module_pos_restaurant',
             'rounding_method', 'cash_rounding', 'only_round_cash_method', 'has_active_session',
             'available_preset_ids', 'default_preset_id', 'use_presets', 'iface_tax_included',
             'status', 'self_ordering_image_background_ids', 'preparation_printer_ids', 'default_receipt_printer_id',
@@ -306,7 +305,7 @@ class PosConfig(models.Model):
 
     @api.model
     def _load_pos_self_data_read(self, records, config):
-        read_records = super()._load_pos_data_read(records, config)
+        read_records = super()._load_pos_self_data_read(records, config)
         if not read_records:
             return read_records
         record = read_records[0]
