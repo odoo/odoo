@@ -69,7 +69,10 @@ class PurchaseBillLineMatch(models.Model):
 
     def _compute_product_uom_qty(self):
         for line in self:
-            line.product_uom_qty = line.line_uom_id._compute_quantity(line.line_qty, line.product_uom_id)
+            if line.product_id:
+                line.product_uom_qty = line.line_uom_id._compute_quantity(line.line_qty, line.product_uom_id)
+            else:
+                line.product_uom_qty = line.line_qty
 
     @api.depends('aml_id.price_unit', 'pol_id.price_unit')
     def _compute_product_uom_price(self):
