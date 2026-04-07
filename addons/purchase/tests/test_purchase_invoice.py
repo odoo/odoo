@@ -1328,3 +1328,48 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
             'quantity': 1,
             'product_id': pol.product_id.id,
         }])
+
+    def test_bill_description_only_line_purchase_matching(self):
+        """Test the purchase matching with description-only account line (without a set product)."""
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner.id,
+            'invoice_date': '2020-06-15',
+            'invoice_line_ids': [Command.create({
+                'product_uom_id': self.uom_unit.id,
+                'quantity': 2,
+                'price_unit': 100,
+            })],
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_qty': 2.0,
+                'product_uom': self.uom_unit.id,
+                'price_unit': 100,
+            })],
+        })
+        po.button_confirm()
+        self.env['purchase.order.line'].flush_model()
+
+        bill_matches = self.env['purchase.bill.line.match'].search(bill.action_purchase_matching()['domain'])
+        self.assertRecordValues(bill_matches, [
+            {
+                'product_uom_qty': 2.0,
+                'product_uom_price': 100,
+                'billed_amount_untaxed': 0.0,
+                'aml_id': False,
+            },
+            {
+                'product_uom_qty': 2.0,
+                'product_uom_price': 100,
+                'billed_amount_untaxed': 200.0,
+                'aml_id': bill.invoice_line_ids.id,
+            },
+        ])
+        po_matches = self.env['purchase.bill.line.match'].search(po.action_bill_matching()['domain'])
+        self.assertEqual(po_matches, bill_matches)
+        po_matches.action_match_lines()
+        self.assertEqual(po.invoice_ids, bill)
+        self.assertEqual(po.order_line.product_id, bill.invoice_line_ids.product_id)
