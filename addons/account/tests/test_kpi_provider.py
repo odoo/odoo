@@ -71,11 +71,13 @@ class TestKpiProvider(TransactionCase):
         })
         move.action_post()
         move.checked = False
+        move.flush_recordset()
         self.assertCountEqual(self.env['kpi.provider'].get_account_kpi_summary(), [
             {'id': 'account_journal_type.sale', 'name': 'Sales', 'type': 'integer', 'value': 1},
         ])
 
         move.button_set_checked()
+        move.flush_recordset()
         self.assertCountEqual(self.env['kpi.provider'].get_account_kpi_summary(), [])
 
     def test_kpi_summary_reports_unreconciled_bank_statements(self):
@@ -113,5 +115,6 @@ class TestKpiProvider(TransactionCase):
         _st_liquidity_lines, st_suspense_lines, _st_other_lines = bank_statement.line_ids._seek_for_lines()
         st_suspense_lines.account_id = move_line.account_id
         (move_line + st_suspense_lines).reconcile()
+        bank_statement.line_ids.flush_recordset()
         self.assertTrue(bank_statement.line_ids.is_reconciled)
         self.assertCountEqual(self.env['kpi.provider'].get_account_kpi_summary(), [])
