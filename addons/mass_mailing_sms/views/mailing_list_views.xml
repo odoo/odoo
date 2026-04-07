@@ -6,14 +6,16 @@
         <field name="inherit_id" ref="mass_mailing.mailing_list_view_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('o_mailing_list_kanban_stats')]//a" position="after">
-                <a class="me-sm-0 me-3 fs-4 fw-light lh-1" tabindex="-1"
-                    name="action_view_contacts_sms" type="object">
-                    <field name="contact_count_sms" class="fw-normal"/>
-                    <br/>
-                    <span class="text-muted">
-                        <i class="fa fa-mobile fa-lg"/> Contacts
-                    </span>
-                </a>
+                <div class="me-sm-0 me-3 fs-4 fw-light lh-1" tabindex="-1">
+                    <a invisible="is_dynamic"
+                        name="action_view_contacts_sms" type="object">
+                        <field name="contact_count_sms" class="fw-normal"/>
+                        <br/>
+                        <span class="text-muted">
+                            <i class="fa fa-mobile fa-lg"/> Contacts
+                        </span>
+                    </a>
+                </div>
             </xpath>
             <xpath expr="//a[@name='action_send_mailing']" position="after">
                 <a role="menuitem" type="object" name="action_send_mailing_sms" class="dropdown-item oe_kanban_action">New SMS</a>

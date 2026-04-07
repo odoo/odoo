@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="mass_mailing.MailingListTemplatePickerSheet">
+        <div class="o_mm_mailing_list_template_picker_page row g-2 g-lg-3 mt-1 mx-auto mb-4 px-2">
+            <div class="fs-2 fw-bolder">Templates</div>
+            <hr/>
+            <div t-foreach="Object.entries(this.props.templates)" t-as="entry" t-key="entry[0]" class="col-12 col-lg-4">
+                <button
+                    class="o_mm_mailing_list_picker_card card flex-row flex-lg-column align-items-center w-100 h-100 gap-4 gap-lg-3 p-3 rounded"
+                    t-on-click="(ev) => this.props.onClick(entry[0])"  
+                    t-attf-aria-label="Select {{entry[1].title}}"
+                    >
+                    <img t-att-src="entry[1].icon" t-att-alt="entry[1].title" aria-hidden="true" class="o_image_64_contain mx-auto"/>
+                    <div class="card-body text-start text-lg-center p-0">
+                        <h3 class="card-title" t-out="entry[1].title"/>
+                        <p class="card-text" t-out="entry[1].description"/>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>

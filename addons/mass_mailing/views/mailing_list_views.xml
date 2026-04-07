@@ -8,6 +8,7 @@
             <search string="Mailing Lists">
                 <field name="name"/>
                 <field name="create_date"/>
+                <field name="is_dynamic"/>
                 <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
                 <group>
                     <filter string="Creation Period" name="group_create_date"
@@ -22,11 +23,12 @@
         <field name="model">mailing.list</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <list string="Mailing Lists" sample="1">
+            <list string="Mailing Lists" sample="1" js_class="mailing_list_list_view">
                 <header>
                     <button name="mass_mailing.mailing_list_merge_action" type="action" string="Merge"/>
                 </header>
                 <field name="name" string="Name"/>
+                <field name="is_dynamic" string="Dynamic"/>
                 <field name="is_public" width="150"/>
                 <field name="contact_count" string="Recipients" sum="Total"/>
                 <field name="mailing_count" string="Mailings" sum="Total"/>
@@ -41,10 +43,10 @@
         <field name="name">mailing.list.form</field>
         <field name="model">mailing.list</field>
         <field name="arch" type="xml">
-            <form string="Contact List">
+            <form string="Contact List" js_class="mailing_list_form_view">
                 <header>
                     <button name="action_open_import" string="Import Contacts"
-                        type="object" class="btn btn-primary"/>
+                        type="object" class="btn btn-primary" invisible="is_dynamic"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -78,11 +80,21 @@
                     </div>
                     <group>
                         <field name="active" invisible="1"/>
-                        <group>
-                            <field name="is_public" widget="boolean_toggle"/>
+                       <group>
+                            <field name="mailing_list_type" readonly="mailing_model_real != 'mailing.contact'" widget="radio" options="{'horizontal': true}" force_save="1" class="oe_inline mb-0"/>
                         </group>
                         <group>
                             <field name="color" widget="color_picker"/>
+                        </group>
+                        <group invisible="is_dynamic">
+                            <field name="is_public" widget="boolean_toggle"/>
+                        </group>
+                        <group invisible="not is_dynamic">
+                            <div class="col-md-auto flex-grow-1 pt-1" invisible="mailing_list_type == 'manual' or not mailing_model_id">
+                                <field name="mailing_domain" widget="mass_mailing_domain"
+                                    options="{'model': 'mailing_model_real', 'foldable': True}"/>
+                                <field name="use_exclusion_list" invisible="1"/> <!-- Used by `mass_mailing_domain` -->
+                            </div>
                         </group>
                     </group>
                 </sheet>
@@ -104,12 +116,27 @@
                 </div>
                 <group>
                     <group>
-                        <field name="is_public" widget="boolean_toggle" options="{'autosave': False}"/>
+                        <field name="mailing_model_id" options="{'no_open': True, 'no_create': True}" placeholder="Select Target Model"/>
+                    </group>
+                    <group>
+                        <field name="mailing_list_type" readonly="mailing_model_name != 'mailing.contact'" widget="radio" options="{'horizontal': true}" force_save="1" class="oe_inline mb-0"/>
                     </group>
                     <group>
                         <field name="color" widget="color_picker"/>
                     </group>
                 </group>
+                <group invisible="is_dynamic">
+                    <field name="is_public" widget="boolean_toggle" options="{'autosave': False}"/>
+                </group>
+                <group invisible="not is_dynamic">
+                    <div class="col-md-auto flex-grow-1 pt-1" invisible="mailing_list_type == 'manual' or not mailing_model_id">
+                        <field name="mailing_domain" widget="mass_mailing_domain"
+                            options="{'model': 'mailing_model_real', 'foldable': True}"/>
+                        <field name="use_exclusion_list" invisible="1"/> <!-- Used by `mass_mailing_domain` -->
+                    </div>
+                </group>
+                <field name="mailing_model_name" invisible="1"/>
+                <field name="mailing_model_real" invisible="1"/>
                 <footer>
                     <button string="Create Mailing List" name="action_view_contacts" type="object" class="btn-primary" data-hotkey="q"/>
                     <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
@@ -127,13 +154,66 @@
         <field name="context">{'dialog_size' : 'large'}</field>
     </record>
 
+    <record id="mailing_list_dymanic_view_form_minimal" model="ir.ui.view">
+        <field name="name">mailing.list.dynamic.form.minimal</field>
+        <field name="model">mailing.list</field>
+        <field name="priority" eval="40"/>
+        <field name="arch" type="xml">
+            <form string="Contact List">
+                <div class="oe_title">
+                    <label for="name" string="List Name"/>
+                    <h1>
+                        <field name="name" placeholder="e.g. Monthly Newsletter"/>
+                    </h1>
+                </div>
+                <group>
+                    <group>
+                        <field name="mailing_model_id" readonly="1" options="{'no_open': True, 'no_create': True}"/>
+                    </group>
+                    <group>
+                        <field name="mailing_list_type" readonly="1" widget="radio" options="{'horizontal': true}" force_save="1" class="oe_inline mb-0"/>
+                    </group>
+                    <group>
+                        <field name="color" widget="color_picker"/>
+                    </group>
+                </group>
+                <group invisible="is_dynamic">
+                    <field name="is_public" widget="boolean_toggle" options="{'autosave': False}"/>
+                </group>
+                <group>
+                    <div class="col-md-auto flex-grow-1 pt-1">
+                        <field name="mailing_domain" widget="mass_mailing_domain"
+                            options="{'model': 'mailing_model_real', 'foldable': True}"
+                            readonly="1"/>
+                        <field name="use_exclusion_list" invisible="1"/> <!-- Used by `mass_mailing_domain` -->
+                    </div>
+                </group>
+                <field name="mailing_model_name" invisible="1"/>
+                <field name="mailing_model_real" invisible="1"/>
+                <footer>
+                    <button string="Save Dynamic List" name="action_view_contacts" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_save_dynamic_mailing_list" model="ir.actions.act_window">
+        <field name="name">Save Dynamic List</field>
+        <field name="res_model">mailing.list</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="mailing_list_dymanic_view_form_minimal"/>
+        <field name="target">new</field>
+        <field name="context">{'dialog_size' : 'large'}</field>
+    </record>
+
     <record id="mailing_list_view_kanban" model="ir.ui.view">
         <field name="name">mailing.list.view.kanban</field>
         <field name="model">mailing.list</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile o_kanban_mailing_list" sample="1"
                     on_create="mass_mailing.action_mailing_list_quick_create" highlight_color="color"
-                    action="action_view_contacts" type="object">
+                    action="action_view_contacts" type="object" js_class="mailing_list_kanban_view">
                 <field name="active"/>
                 <templates>
                     <t t-name="card">
@@ -143,25 +223,19 @@
                                     <field name="name"/>
                                 </span>
                             </div>
-                            <div class="col-lg-1 col-6 my-auto d-flex">
-                                <div class="d-flex flex-row justify-content-start justify-content-md-end">
-                                    <button name="action_view_contacts" type="object"
-                                        class="o_mailing_list_kanban_button o_mailing_list_kanban_big_nb text-primary fw-bold">
-                                        <field name="contact_count"/>
-                                    </button>
-                                    <button name="action_view_contacts" type="object"
-                                        class="o_mailing_list_kanban_button fs-4 lh-1 text-start ms-2">
-                                        Total <br/>Contacts
-                                    </button>
-                                </div>
-                            </div>
                             <div class="o_mailing_list_kanban_stats order-4 order-lg-3 col-lg-5 col-sm-12 col-12 py-0 my-3 my-sm-auto d-flex justify-content-sm-between justify-content-start flex-wrap">
                                 <a class="me-sm-0 me-3 fs-4 fw-light lh-1 text-truncate" tabindex="-1"
                                     name="action_view_contacts_email" type="object">
-                                    <field name="contact_count_email" class="fw-normal"/>
-                                    <br/>
+                                    <field name="contact_count_email" class="fw-normal" invisible="is_dynamic"/>
                                     <span class="text-muted">
-                                        <i class="fa fa-envelope-o"/> Contacts
+                                        <div invisible="is_dynamic">
+                                            <i class="fa fa-envelope-o"/> 
+                                            <span>Mailing Contacts</span>
+                                        </div>
+                                        <div invisible="not is_dynamic">
+                                            <i class="fa fa-refresh"/> 
+                                            <span>Dynamic List</span>
+                                        </div>
                                     </span>
                                 </a>
                                 <a class="me-sm-0 me-3 fs-4 fw-light lh-1 text-truncate" tabindex="-1"
@@ -171,34 +245,10 @@
                                     <span class="text-muted">Mailings</span>
                                 </a>
                                 <hr class="w-100 d-block d-sm-none opacity-0 m-0 p-0"/>
-                                <a class="me-sm-0 me-3 fs-4 fw-light lh-1 text-truncate" tabindex="-1"
-                                    name="action_view_contacts_bouncing" type="object">
-                                    <span class="fw-normal">
-                                        <field name="contact_pct_bounce"/> %
-                                    </span>
-                                    <br/>
-                                    <span class="text-muted">Bounce</span>
-                                </a>
-                                <a class="me-sm-0 me-3 fs-4 fw-light lh-1 text-truncate" tabindex="-1"
-                                    name="action_view_contacts_opt_out" type="object">
-                                    <span class="fw-normal">
-                                        <field name="contact_pct_opt_out"/> %
-                                    </span>
-                                    <br/>
-                                    <span class="text-muted">Opt-Out</span>
-                                </a>
-                                <a class="me-sm-0 me-3 fs-4 fw-light lh-1 text-truncate" tabindex="-1"
-                                    name="action_view_contacts_blacklisted" type="object">
-                                    <span class="fw-normal">
-                                        <field name="contact_pct_blacklisted"/> %
-                                    </span>
-                                    <br/>
-                                    <span class="text-muted">Blacklist</span>
-                                </a>
                             </div>
                             <div class="order-3 order-lg-4 col-5 col-lg-2 py-0 pe-3 my-auto d-none d-md-flex flex-wrap justify-content-end gap-1">
                                 <button name="action_open_import" string="Import Contacts"
-                                    type="object" class="btn btn-primary text-nowrap">
+                                    type="object" class="btn btn-primary text-nowrap" invisible="is_dynamic">
                                     Import Contacts
                                 </button>
                             </div>

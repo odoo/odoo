@@ -44,6 +44,7 @@ export class MassMailingBuilder extends Component {
             "BannerPlugin",
             "CTABadgeOptionPlugin",
             "OperationPlugin",
+            "LinkPlugin",
         ];
         const massMailingPlugins = removePlugins(
             [

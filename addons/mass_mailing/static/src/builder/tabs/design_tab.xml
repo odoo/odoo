@@ -46,6 +46,11 @@
             actionParam="{ variable: '--wrapper-background-color' }"
         />
     </BuilderRow>
+    <BuilderRow label.translate='Show "View in Browser"' extraLabelClass="'pe-2'">
+        <div class="o_snippet_view_in_browser">
+            <BuilderCheckbox action="'mass_mailing.ToggleViewInBrowserAction'"/>
+        </div>
+    </BuilderRow>
 </t>
 
 <t t-name="mass_mailing.DesignHeadingsOption">

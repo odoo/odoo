@@ -1,0 +1,20 @@
+.o_mm_mailing_list_picker_dialog {
+    .nav {
+        --Notebook-padding-x: #{map-get($spacers, 3)};
+    }
+
+    .o_mm_mailing_list_picker_card {
+        min-height: 12vh;
+        border: $border-width solid $border-color;
+
+        &:hover {
+            background: #{mix($o-action, $o-gray-100, 15%)};
+            border: $border-width solid #{$o-action};
+        }
+
+        &:focus-visible {
+            box-shadow: 0 0 0 #{$btn-focus-width} RGBA(#{$btn-link-focus-shadow-rgb}, .5);
+            outline: none;
+        }
+    }
+}

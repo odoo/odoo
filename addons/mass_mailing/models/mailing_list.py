@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
 from markupsafe import Markup
 
 from odoo import _, api, Command, fields, models, tools
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, AccessError, ValidationError
+from odoo.fields import Domain
 from odoo.tools.sql import SQL
 
 
@@ -43,6 +45,27 @@ class MailingList(models.Model):
         string='Show In Preferences', default=False,
         help='The mailing list can be accessible by recipients in the subscription '
              'management page to allow them to update their preferences.')
+    mailing_model_id = fields.Many2one(
+        'ir.model', string='Recipients Model',
+        ondelete='cascade', required=True,
+        domain=[('is_mailing_enabled', '=', True)],
+        default=lambda self: self.env.ref('mass_mailing.model_mailing_list').id)
+    mailing_model_name = fields.Char(
+        string='Recipients Model Name',
+        related='mailing_model_id.model', readonly=True, related_sudo=True)
+    mailing_model_real = fields.Char(
+        string='Recipients Real Model', compute='_compute_mailing_model_real')
+    mailing_list_type = fields.Selection([('manual', 'Manual'), ('dynamic', 'Dynamic')], string="List Type",
+    required=True, help='The mailing list is either manual, or dymamic (based on a domain)', default='manual')
+    is_dynamic = fields.Boolean(
+        string='Dynamic', compute='_compute_is_dynamic', store=True)
+    mailing_domain = fields.Char(
+        string='Domain',
+        compute='_compute_mailing_domain', readonly=False, store=True, compute_sudo=False)
+    use_exclusion_list = fields.Boolean(
+        'Use Exclusion List', default=True, copy=False, store=True,
+        readonly=False, compute='_compute_use_exclusion_list',
+        help='Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.')
 
     # ------------------------------------------------------
     # COMPUTE / ONCHANGE
@@ -106,6 +129,53 @@ class MailingList(models.Model):
                 mailing_list.contact_pct_opt_out = 0
                 mailing_list.contact_pct_blacklisted = 0
                 mailing_list.contact_pct_bounce = 0
+
+    @api.depends('mailing_model_id')
+    def _compute_mailing_model_real(self):
+        for mailing in self:
+            mailing.mailing_model_real = 'mailing.contact' if mailing.mailing_model_id.model in ('mailing.list', 'mailing.contact') \
+                else mailing.mailing_model_id.model
+
+    @api.depends('mailing_list_type')
+    def _compute_is_dynamic(self):
+        for mailing in self:
+            mailing.is_dynamic = mailing.mailing_list_type == 'dynamic'
+
+    @api.onchange('mailing_model_name')
+    def _onchange_mailing_model_name(self):
+        if self.mailing_model_name not in ('mailing.list', 'mailing.contact'):
+            self.mailing_list_type = 'dynamic'
+        elif self.mailing_model_name == 'mailing.list':
+            self.mailing_list_type = 'manual'
+
+    @api.depends('mailing_model_id')
+    def _compute_mailing_domain(self):
+        for mailing_list in self:
+            if not mailing_list.mailing_model_id:
+                mailing_list.mailing_domain = ''
+            else:
+                mailing_list.mailing_domain = repr(Domain.TRUE)
+
+    @api.depends('mailing_model_id')
+    def _compute_use_exclusion_list(self):
+        """Always reset to using exclusion list for mailing lists and contacts."""
+        mailing_list_model_id = self.env['ir.model']._get('mailing.list')
+        mailing_contact_model_id = self.env['ir.model']._get('mailing.contact')
+        self.filtered(
+            lambda m: m.mailing_model_id in (mailing_list_model_id, mailing_contact_model_id)
+        ).use_exclusion_list = True
+
+    # ------------------------------------------------------
+    # TOOLS
+    # ------------------------------------------------------
+
+    def _parse_mailing_domain(self):
+        self.ensure_one()
+        try:
+            mailing_domain = literal_eval(self.mailing_domain)
+        except Exception:
+            mailing_domain = [('id', 'in', [])]
+        return mailing_domain
 
     # ------------------------------------------------------
     # ORM overrides
@@ -172,6 +242,20 @@ class MailingList(models.Model):
         return action
 
     def action_view_contacts(self):
+        self.ensure_one()
+        if self.is_dynamic:
+            target_model = self.mailing_model_id
+            action = {
+                'type': 'ir.actions.act_window',
+                'name': target_model.name,
+                'res_model': target_model.model,
+                'views': [(False, 'list')],
+                'target': 'current',
+                'domain': literal_eval(self.mailing_domain),
+                'context': dict(self.env.context),
+            }
+            return action
+
         action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.action_view_mass_mailing_contacts")
         action['domain'] = [('list_ids', 'in', self.ids)]
         action['context'] = {'default_list_ids': self.ids}
@@ -509,3 +593,115 @@ class MailingList(models.Model):
         return """
             LEFT JOIN mailing_contact c ON (r.contact_id=c.id)
             LEFT JOIN mail_blacklist bl on c.email_normalized = bl.email and bl.active"""
+
+    # --------------------------------------
+    # List Templates Creation
+    # --------------------------------------
+
+    @api.model
+    def get_mailing_list_types_info(self):
+        return {
+            'manual_list': {
+                'title': _('Manual List'),
+                'description': _('A static list of contacts, manually subscribed.'),
+                'icon': '/mass_mailing/static/img/blog.svg',
+                'function': 'get_action_manual_mailing_list_form_view',  # Is it view or action ?
+            },
+            'dynamic_list': {
+                'title': _('Dynamic List'),
+                'description': _('A rule-based list that always include all matching records.'),
+                'icon': '/mass_mailing/static/img/strike.svg',
+                'function': 'get_action_dynamic_mailing_list_form_view',  # Is it view or action ?
+            },
+        }
+
+    @api.model
+    def get_mailing_list_templates_info(self):
+        return {
+            'recent_sign_ups': {
+                'title': _('Recent Sign-ups'),
+                'description': _('Mailing Contacts added during the last 30 days.'),
+                'icon': '/mass_mailing/static/img/wifi.svg',
+                'function': 'get_mailing_list_template_values',
+                'domain': repr([("create_date", ">=", "today -30d"), ("create_date", "<", "today")])
+            },
+            'local_contacts': {
+                'title': _('Local Contacts'),
+                'description': _('Contacts that are located in your city.'),
+                'icon': '/mass_mailing/static/img/location.svg',
+                'function': 'get_mailing_list_template_values',
+                'domain': f'[("country_id", "=", {self.env.company.country_id.id})]'
+            },
+        }
+
+    def get_action_manual_mailing_list_form_view(self):
+        """
+        Return the modal to create a new mailing list, the type of which is set to 'manual' by default.
+
+        The mailing contact model is set to 'mailing.contact' by default.
+        """
+        if not self.env.su and not self.env.user.has_group('mass_mailing.group_mass_mailing_user'):
+            raise AccessError(_('To use this feature you should be an administrator or belong to the mass mailing group.'))
+
+        mailing_contact_model_id = self.env['ir.model']._get('mailing.contact').id
+        ctx = dict(**self.env.context, default_mailing_list_type='manual', default_mailing_model_id=mailing_contact_model_id)
+        action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.action_mailing_list_quick_create")
+        action['context'] = ctx
+
+        return action
+
+    def get_action_dynamic_mailing_list_form_view(self, domain: str | None = None):
+        """
+        Return the modal to create a new mailing list, the type of which is set to 'dynamic' by default.
+
+        The mailing contact model is set to 'mailing.contact' by default.
+        """
+        if not self.env.su and not self.env.user.has_group('mass_mailing.group_mass_mailing_user'):
+            raise AccessError(_('To use this feature you should be an administrator or belong to the mass mailing group.'))
+
+        mailing_contact_model_id = self.env['ir.model']._get('mailing.contact').id
+        ctx = dict(**self.env.context, default_mailing_list_type='dynamic', default_mailing_model_id=mailing_contact_model_id)
+        if domain:
+            ctx['default_mailing_domain'] = literal_eval(domain)
+        action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.action_mailing_list_quick_create")
+        action['context'] = ctx
+
+        return action
+
+    def get_mailing_list_template_values(self, template_name: str):
+        if not self.env.su and not self.env.user.has_group('mass_mailing.group_mass_mailing_user'):
+            raise AccessError(_('To use this feature you should be an administrator or belong to the mass mailing group.'))
+
+        templates = self.get_mailing_list_templates_info()
+        if template_name not in templates:
+            raise ValidationError(_('Template %s does not exist.', template_name))
+
+        mailing_contact_model_id = self.env['ir.model']._get('mailing.contact').id
+        domain = self.get_mailing_list_templates_info().get(template_name).get('domain')
+        title = self.get_mailing_list_templates_info().get(template_name).get('title')
+        ctx = dict(
+            **self.env.context,
+            default_name=title,
+            default_is_dynamic=True,
+            default_mailing_list_type='dynamic',
+            default_mailing_model_id=mailing_contact_model_id)
+        if domain:
+            ctx['default_mailing_domain'] = literal_eval(domain)
+        action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.action_mailing_list_quick_create")
+        action['context'] = ctx
+
+        return action
+
+    def get_dynamic_mailing_list_form_view_minimal(self, model: str, domain: str | None = None):
+        """Used to save a domain created by the user when creating a mailing"""
+        if not self.env.su and not self.env.user.has_group('mass_mailing.group_mass_mailing_user'):
+            raise AccessError(_('To use this feature you should be an administrator or belong to the mass mailing group.'))
+
+        model_id = self.env['ir.model']._get(model).id
+        ctx = dict(**self.env.context, default_mailing_list_type='dynamic', default_mailing_model_id=model_id)
+        if domain:
+            ctx['default_mailing_domain'] = literal_eval(domain)
+        action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.action_save_dynamic_mailing_list")
+        action['context'] = ctx
+
+        return action

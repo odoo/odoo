@@ -41,7 +41,7 @@ class MailingMailing(models.Model):
                 'mail.activity.mixin',
                 'mail.render.mixin',
     ]
-    _order = 'calendar_date DESC'
+    _order = 'calendar_date DESC NULLS LAST, write_date DESC'
     _rec_name = "subject"
     _systray_view = 'list'
 
@@ -172,6 +172,8 @@ class MailingMailing(models.Model):
         default=_get_default_mail_server_id,
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.")
     contact_list_ids = fields.Many2many('mailing.list', 'mail_mass_mailing_list_rel', string='Mailing Lists', context={'active_test': False})
+    mailing_contact_ids = fields.Many2many('mailing.contact', 'mail_mass_mailing_contact_rel', string='Mailing Contacts', context={'active_test': False})
+    is_dynamic_recipients = fields.Boolean(string='Dynamic Recipients', compute='_compute_is_dynamic_recipients', default=False)
     use_exclusion_list = fields.Boolean(
         'Use Exclusion List', default=True, copy=False, store=True,
         readonly=False, compute='_compute_use_exclusion_list',
@@ -229,6 +231,7 @@ class MailingMailing(models.Model):
     clicks_ratio = fields.Float(compute="_compute_clicks_ratio", string="Number of Clicks")
     link_trackers_count = fields.Integer(compute="_compute_link_trackers_count", string="Link Trackers Count")
     next_departure = fields.Datetime(compute="_compute_next_departure", string='Scheduled date')
+    is_template = fields.Boolean(default=False, copy=True)
     # UX
     next_departure_is_past = fields.Boolean(compute="_compute_next_departure")
     warning_message = fields.Char(
@@ -252,6 +255,11 @@ class MailingMailing(models.Model):
                 raise ValidationError(
                     _("The saved filter targets different recipients and is incompatible with this mailing.")
                 )
+
+    @api.onchange('mailing_model_id')
+    def _onchange_mailing_model_id(self):
+        self.mailing_domain = []
+        self.contact_list_ids = [(5, 0, 0)]
 
     @api.depends('campaign_id.ab_testing_winner_mailing_id')
     def _compute_ab_testing_is_winner_mailing(self):
@@ -451,6 +459,8 @@ class MailingMailing(models.Model):
         for mailing in self:
             if not mailing.mailing_model_id:
                 mailing.mailing_domain = ''
+            elif mailing.is_dynamic_recipients and mailing.contact_list_ids:
+                mailing.mailing_domain = Domain.OR([mailing_list._parse_mailing_domain() for mailing_list in self.contact_list_ids])
             elif mailing.mailing_filter_id:
                 mailing.mailing_domain = mailing.mailing_filter_id.mailing_domain
             else:
@@ -527,6 +537,11 @@ class MailingMailing(models.Model):
     def _get_ab_testing_description_modifying_fields(self):
         return ['ab_testing_enabled', 'ab_testing_pc', 'ab_testing_schedule_datetime', 'ab_testing_winner_selection', 'campaign_id']
 
+    @api.depends('mailing_model_name')
+    def _compute_is_dynamic_recipients(self):
+        for record in self:
+            record.is_dynamic_recipients = record.mailing_model_name != 'mailing.list'
+
     # ------------------------------------------------------
     # ORM
     # ------------------------------------------------------
@@ -598,6 +613,24 @@ class MailingMailing(models.Model):
     # ACTIONS
     # ------------------------------------------------------
 
+    def action_use_template(self):
+        if mass_mailing_copy := self._create_mailing_from_template(self):
+            res_context = {**self.env.context, 'default_is_template': 0, 'default_favorite': 0}
+            return {
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'mailing.mailing',
+                'res_id': mass_mailing_copy.id,
+                'context': res_context,
+            }
+        return False
+
+    def _create_mailing_from_template(self, mass_mailing_template):
+        mass_mailing_template.ensure_one()
+        if mass_mailing := mass_mailing_template.copy(default={"favorite": False, "is_template": False}):
+            return mass_mailing
+        return False
+
     def action_duplicate(self):
         self.ensure_one()
         if mass_mailing_copy := self.copy():
@@ -609,6 +642,23 @@ class MailingMailing(models.Model):
                 'context': dict(self.env.context),
             }
         return False
+
+    def action_duplicate_template(self):
+        self.ensure_one()
+        if mass_mailing_copy := self._create_mailing_copy():
+            form_view_ref = self.env.ref('mass_mailing.mailing_templates_view_form', False).id
+            return {
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'mailing.mailing',
+                'views': [(form_view_ref, 'form')],
+                'res_id': mass_mailing_copy.id,
+                'context': dict(self.env.context),
+            }
+        return False
+
+    def _create_mailing_copy(self):
+        return self.copy(default={"subject": f"{self.subject} - Copy", "favorite": self.is_template})
 
     def action_preview(self):
         self.ensure_one()
@@ -713,63 +763,94 @@ class MailingMailing(models.Model):
         return action
 
     def action_view_clicked(self):
-        return self._action_view_documents_filtered('clicked')
+        return self._action_view_mailing_statistics_filtered('clicked')
 
     def action_view_opened(self):
-        return self._action_view_documents_filtered('open')
+        return self._action_view_mailing_statistics_filtered('open')
 
     def action_view_replied(self):
-        return self._action_view_documents_filtered('reply')
+        return self._action_view_mailing_statistics_filtered('reply')
 
     def action_view_bounced(self):
-        return self._action_view_documents_filtered('bounce')
+        return self._action_view_mailing_statistics_filtered('bounce')
 
     def action_view_delivered(self):
-        return self._action_view_documents_filtered('delivered')
+        return self._action_view_mailing_statistics_filtered('delivered')
 
-    def _action_view_documents_filtered(self, view_filter):
-        def _fetch_trace_res_ids(trace_domain):
+    def _action_view_mailing_statistics_filtered(self, view_filter):
+        def _fetch_trace_ids(trace_domain):
             trace_domain &= Domain('mass_mailing_id', '=', self.id)
-            return self.env['mailing.trace'].search_fetch(domain=trace_domain, field_names=['res_id']).mapped('res_id')
+            return self.env['mailing.trace'].search_fetch(domain=trace_domain, field_names=['id']).mapped('id')
 
-        model_name = self.env['ir.model']._get(self.mailing_model_real).display_name
+        def _fetch_link_tracker_ids(trace_domain):
+            trace_domain &= Domain('mass_mailing_id', '=', self.id)
+            return self.env['link.tracker.click'].search_fetch(domain=trace_domain, field_names=['id']).mapped('id')
+
+        def _get_context_for_filter():
+            if view_filter == 'reply':
+                return dict(search_default_filter_replied=False, search_default_group_reply_date=True)
+            elif view_filter == 'bounce':
+                return dict(search_default_filter_bounced=False)
+            elif view_filter == 'clicked':
+                return dict(search_default_groupby_email=True, stacked=False, graph_mode='pie')
+            elif view_filter == 'open':
+                return dict(search_default_filter_opened=False, search_default_group_open_date=True)
+            elif view_filter == 'delivered':
+                return dict(search_default_filter_delivered=False)
+            elif view_filter == 'sent':
+                return dict(search_default_filter_sent=False)
+
+            return {}
+
+        model_name = self.env['ir.model']._get('mailing.trace' if view_filter != 'clicked' else 'link.tracker.click').display_name
+        res_model = 'mailing.trace' if view_filter != 'clicked' else 'link.tracker.click'
+        view_mode = f'{"" if view_filter != "clicked" else "list,"}graph'
         helper_header = None
         helper_message = None
+        ctx = {
+            **self.env.context,
+            'create': False,
+            'graph_mode': 'line',
+            'stacked': True,
+            **_get_context_for_filter()
+        }
         if view_filter == 'reply':
-            res_ids = _fetch_trace_res_ids(Domain('trace_status', '=', 'reply'))
-            helper_header = _("No %s replied to your mailing yet!", model_name)
+            trace_ids = _fetch_trace_ids(Domain('trace_status', '=', 'reply'))
+            helper_header = _("No Recipient replied to your mailing yet!")
             helper_message = _("To track how many replies this mailing gets, make sure "
                                "its reply-to address belongs to this database.")
         elif view_filter == 'bounce':
-            res_ids = _fetch_trace_res_ids(Domain('trace_status', '=', 'bounce'))
-            helper_header = _("No %s address bounced yet!", model_name)
+            trace_ids = _fetch_trace_ids(Domain('trace_status', '=', 'bounce'))
+            helper_header = _("No Recipient address bounced yet!")
             helper_message = _("Bounce happens when a mailing cannot be delivered (fake address, "
                                "server issues, ...). Check each record to see what went wrong.")
         elif view_filter == 'clicked':
-            res_ids = _fetch_trace_res_ids(Domain('links_click_ids', '!=', False))
-            helper_header = _("No %s clicked your mailing yet!", model_name)
+            trace_ids = _fetch_trace_ids(Domain('links_click_ids', '!=', False))
+            trace_ids = _fetch_link_tracker_ids(Domain('mailing_trace_id', 'in', trace_ids))
+            helper_header = _("No Recipient clicked your mailing yet!")
             helper_message = _(
                 "Come back once your mailing has been sent to track who clicked on the embedded links.")
         elif view_filter == 'open':
-            res_ids = _fetch_trace_res_ids(Domain('trace_status', 'in', ('open', 'reply')))
-            helper_header = _("No %s opened your mailing yet!", model_name)
+            trace_ids = _fetch_trace_ids(Domain('trace_status', 'in', ('open', 'reply')))
+            helper_header = _("No Recipient opened your mailing yet!")
             helper_message = _("Come back once your mailing has been sent to track who opened your mailing.")
         elif view_filter == 'delivered':
-            res_ids = _fetch_trace_res_ids(Domain('trace_status', 'in', ('sent', 'open', 'reply')))
-            helper_header = _("No %s received your mailing yet!", model_name)
+            trace_ids = _fetch_trace_ids(Domain('trace_status', 'in', ('sent', 'open', 'reply')))
+            helper_header = _("No Recipient received your mailing yet!")
             helper_message = _("Wait until your mailing has been sent to check how many recipients you managed to reach.")
         elif view_filter == 'sent':
-            res_ids = _fetch_trace_res_ids(Domain('sent_datetime', '!=', False))
+            trace_ids = _fetch_trace_ids(Domain('sent_datetime', '!=', False))
         else:
-            res_ids = []
+            trace_ids = []
 
+        domain = [('id', 'in', trace_ids)]
         action = {
             'name': model_name,
             'type': 'ir.actions.act_window',
-            'view_mode': 'list,form',
-            'res_model': self.mailing_model_real,
-            'domain': [('id', 'in', res_ids)],
-            'context': dict(self.env.context, create=False),
+            'view_mode': view_mode,
+            'res_model': res_model,
+            'domain': domain,
+            'context': ctx,
         }
         if helper_header and helper_message:
             action['help'] = Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (

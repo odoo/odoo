@@ -8,7 +8,6 @@ import { closest } from "@web/core/utils/ui";
 import { useDragAndDrop } from "@html_editor/utils/drag_and_drop";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { useSnippets } from "@html_builder/snippets/snippet_service";
-import { scrollTo } from "@html_builder/utils/scrolling";
 import { Snippet } from "./snippet";
 import { CustomInnerSnippet } from "./custom_inner_snippet";
 
@@ -67,74 +66,8 @@ export class BlockTab extends Component {
      * @param {Object} snippet the clicked snippet group
      */
     onSnippetGroupClick(snippet) {
-        this.shared.operation.next(
-            async () => {
-                this.cancelDragAndDrop = this.shared.history.makeSavePoint();
-                this.dragState = {};
-                let snippetEl;
-                this.state.ongoingInsertion = true;
-                await new Promise((resolve) => {
-                    this.snippetModel.openSnippetDialog(
-                        snippet,
-                        {
-                            onSelect: (snippet) => {
-                                snippetEl = snippet.content.cloneNode(true);
-
-                                // Add the dropzones corresponding to the snippet
-                                // and make them invisible.
-                                const selectors = this.shared.dropzone.getSelectors(snippetEl);
-                                let dropzoneEls = this.shared.dropzone.activateDropzones(selectors);
-                                dropzoneEls = dropzoneEls.filter(
-                                    (dropzoneEl) =>
-                                        !dropzoneEl.closest("[data-snippet]:not(:has(> .modal))")
-                                );
-
-                                this.editable
-                                    .querySelectorAll(".oe_drop_zone")
-                                    .forEach((dropzoneEl) => dropzoneEl.classList.add("invisible"));
-
-                                // Find the dropzone closest to the center of the
-                                // viewport and not located in the top quarter of
-                                // the viewport.
-                                const iframeWindow = this.document.defaultView;
-                                const viewPortCenterPoint = {
-                                    x: iframeWindow.innerWidth / 2,
-                                    y: iframeWindow.innerHeight / 2,
-                                };
-                                const validDropzoneEls = dropzoneEls.filter(
-                                    (el) =>
-                                        el.getBoundingClientRect().top >= viewPortCenterPoint.y / 2
-                                );
-                                const closestDropzoneEl =
-                                    closest(validDropzoneEls, viewPortCenterPoint) ||
-                                    dropzoneEls.at(-1);
-
-                                // Insert the selected snippet.
-                                closestDropzoneEl.after(snippetEl);
-                                this.shared.dropzone.removeDropzones();
-                                return snippetEl;
-                            },
-                            onClose: () => {
-                                resolve();
-                            },
-                        },
-                        this.env.editor
-                    );
-                });
-
-                if (snippetEl) {
-                    await this.scrollToDroppedSnippet(snippetEl);
-                    await this.processDroppedSnippet(snippetEl);
-                }
-                this.state.ongoingInsertion = false;
-                delete this.cancelDragAndDrop;
-            },
-            {
-                withLoadingEffect: false,
-                shouldInterceptClick: true,
-                canTimeout: false,
-            }
-        );
+        this.state.cancelDragAndDrop = this.cancelDragAndDrop;
+        this.shared.blockTab.onSnippetGroupClick(snippet, this.state);
     }
 
     /**
@@ -181,8 +114,12 @@ export class BlockTab extends Component {
         });
 
         if (selectedSnippetEl) {
-            await this.scrollToDroppedSnippet(selectedSnippetEl);
-            await this.processDroppedSnippet(selectedSnippetEl);
+            await this.shared.blockTab.scrollToDroppedSnippet(selectedSnippetEl);
+            await this.shared.blockTab.processDroppedSnippet(
+                selectedSnippetEl,
+                this.dragState,
+                this.cancelDragAndDrop
+            );
         } else {
             this.cancelDragAndDrop();
         }
@@ -464,7 +401,11 @@ export class BlockTab extends Component {
 
                     // Process the dropped element.
                     if (!isSnippetGroup) {
-                        await this.processDroppedSnippet(snippetEl);
+                        await this.shared.blockTab.processDroppedSnippet(
+                            snippetEl,
+                            this.dragState,
+                            this.cancelDragAndDrop
+                        );
                         delete this.cancelDragAndDrop;
                     } else {
                         this.shared.operation.next(
@@ -489,65 +430,5 @@ export class BlockTab extends Component {
         };
 
         this.draggableComponent = useDragAndDrop(dragAndDropOptions);
-    }
-
-    /**
-     * Scroll to the dropped snippet and leave a space of 50px above to show
-     * what is above. If the snippet takes 100% of the screen height, we show it
-     * by not having an extra offset above it.
-     *
-     * @param {HTMLElement} snippetEl
-     */
-    async scrollToDroppedSnippet(snippetEl) {
-        const isFullScreenHeight = snippetEl.matches(".o_full_screen_height");
-        await scrollTo(snippetEl, { extraOffset: isFullScreenHeight ? 0 : 50 });
-    }
-
-    /**
-     *
-     * @param {HTMLElement} snippetEl
-     */
-    async processDroppedSnippet(snippetEl) {
-        this.updateDroppedSnippet(snippetEl);
-        // Build the snippet.
-        for (const onSnippetDropped of this.env.editor.getResource("on_snippet_dropped_handlers")) {
-            const cancel = await onSnippetDropped({ snippetEl, dragState: this.dragState });
-            // Cancel everything if the resource asked to.
-            if (cancel) {
-                this.cancelDragAndDrop();
-                return;
-            }
-            // Update `snippetEl` (and `draggedEl` of `dragState`) if it was
-            // replaced in the handler.
-            if (this.dragState.replacedSnippetEl) {
-                if (this.dragState.draggedEl === snippetEl) {
-                    this.dragState.draggedEl = this.dragState.replacedSnippetEl;
-                }
-                snippetEl = this.dragState.replacedSnippetEl;
-                delete this.dragState.replacedSnippetEl;
-            }
-        }
-        this.env.editor.config.updateInvisibleElementsPanel();
-        this.shared.disableSnippets.disableUndroppableSnippets();
-        this.shared.history.addStep();
-    }
-
-    /**
-     * Update the dropped snippet to build & adapt dynamic content right
-     * after adding it to the DOM.
-     *
-     * @param {HTMLElement} snippetEl
-     */
-    updateDroppedSnippet(snippetEl) {
-        // If the snippet is "drop in only", remove the attributes that make it
-        // a draggable snippet, so it becomes a simple HTML code.
-        if (snippetEl.classList.contains("o_snippet_drop_in_only")) {
-            snippetEl.classList.remove("o_snippet_drop_in_only");
-            if (snippetEl.classList.length === 0) {
-                snippetEl.removeAttribute("class");
-            }
-            delete snippetEl.dataset.snippet;
-            delete snippetEl.dataset.name;
-        }
     }
 }

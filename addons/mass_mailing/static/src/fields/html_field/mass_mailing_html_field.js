@@ -246,7 +246,9 @@ export class MassMailingHtmlField extends HtmlField {
                 ...DYNAMIC_FIELD_PLUGINS,
                 ...registry.category("basic-editor-plugins").getAll(),
                 PowerButtonsPlugin,
-            ].filter((P) => !["banner", "prompt"].includes(P.id)),
+            ].filter(
+                (P) => !["banner", "prompt"].includes(P.id) && !["LinkPlugin"].includes(P.name)
+            ),
         };
     }
 
