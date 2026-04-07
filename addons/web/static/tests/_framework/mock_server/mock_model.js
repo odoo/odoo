@@ -2305,7 +2305,7 @@ export class Model extends Array {
                 model_domain: modelDomain,
                 extra_domain: extraDomain,
                 only_counters: expand,
-                set_limit: limit && !(expand || hierarchize || comodelDomain),
+                set_limit: limit && !(expand || hierarchize || comodelDomain.length),
             });
         }
         if (!expand && !hierarchize && !comodelDomain.length) {
@@ -2511,7 +2511,7 @@ export class Model extends Array {
                     model_domain: modelDomain,
                     extra_domain: extraDomain,
                     only_counters: expand,
-                    set_limit: limit && !(expand || groupBy || comodelDomain),
+                    set_limit: limit && !(expand || groupBy || comodelDomain.length),
                 });
             }
             if (!expand && !groupBy && !comodelDomain.length) {

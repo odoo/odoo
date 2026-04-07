@@ -2724,6 +2724,64 @@ test("reached limit for a filter", async () => {
     expect(`.o_search_panel_filter_value`).toHaveCount(0);
 });
 
+test("error message is correctly cleared (category case)", async () => {
+    Company._records.push({ id: 8, name: "third company", category_id: 6 });
+    Partner._records[0].company_id = 8;
+    Partner._views = {
+        search: /* xml */ `
+            <search>
+                <filter name="filter_bar_false" string="Not Bar" domain="[('bar', '=', false)]"/>
+                <searchpanel>
+                    <field name="company_id" limit="2"/>
+                </searchpanel>
+            </search>
+        `,
+    };
+
+    await mountWithSearch(TestComponent, {
+        resModel: "partner",
+        searchViewId: false,
+    });
+
+    expect(`section div.alert.alert-warning`).toHaveCount(1);
+    expect(`section div.alert.alert-warning`).toHaveText("Too many items to display.");
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Not Bar");
+
+    expect(`section div.alert.alert-warning`).toHaveCount(0);
+    expect(`.o_search_panel_category_value`).toHaveCount(2);
+});
+
+test("error message is correctly cleared (filter case)", async () => {
+    Company._records.push({ id: 8, name: "third company", category_id: 6 });
+    Partner._records[0].company_id = 8;
+    Partner._views = {
+        search: /* xml */ `
+            <search>
+                <filter name="filter_bar_false" string="Not Bar" domain="[('bar', '=', false)]"/>
+                <searchpanel>
+                    <field name="company_id" select="multi" limit="2"/>
+                </searchpanel>
+            </search>
+        `,
+    };
+
+    await mountWithSearch(TestComponent, {
+        resModel: "partner",
+        searchViewId: false,
+    });
+
+    expect(`section div.alert.alert-warning`).toHaveCount(1);
+    expect(`section div.alert.alert-warning`).toHaveText("Too many items to display.");
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Not Bar");
+
+    expect(`section div.alert.alert-warning`).toHaveCount(0);
+    expect(`.o_search_panel_filter_value`).toHaveCount(1);
+});
+
 test("a selected value becomming invalid should no more impact the view", async () => {
     Partner._views = {
         search: /* xml */ `
