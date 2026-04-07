@@ -85,6 +85,20 @@ class TestGetCurrentWebsite(HttpCaseWithUserDemo):
         self.assertEqual(Website._get_current_website_id('xn--dsseldorf-q9a.com'), website2.id)
         self.assertEqual(Website._get_current_website_id('düsseldorf.com'), website2.id)
 
+    def test_04_get_current_website_id_sequence(self):
+        """Verify the default website updates after changing website sequence."""
+        Website = self.env['website']
+        website1 = self.website
+        website1.domain = False
+        website2 = Website.create({'name': 'My Website 2', 'domain': False})
+        website1.sequence = 10
+        website2.sequence = 20
+
+        self.assertEqual(Website._get_current_website_id(''), website1.id)
+
+        website2.sequence = 5
+        self.assertEqual(Website._get_current_website_id(''), website2.id)
+
     def test_02_signup_user_website_id(self):
         website = self.website
         website.specific_user_account = True
