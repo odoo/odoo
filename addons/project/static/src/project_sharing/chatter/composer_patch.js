@@ -7,7 +7,7 @@ patch(Composer.prototype, {
     setup() {
         super.setup();
         onWillStart(() => {
-            if (!this.thread.id) {
+            if (this.thread && !this.thread.id) {
                 this.state.active = false;
             }
         });
