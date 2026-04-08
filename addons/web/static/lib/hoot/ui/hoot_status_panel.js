@@ -202,7 +202,7 @@ export class HootStatusPanel extends Component {
                 </t>
             </div>
         </div>
-        <canvas t-custom-ref="this.canvasRef" class="flex h-1 w-full" />
+        <canvas t-ref="this.canvasRef" class="flex h-1 w-full" />
     `;
 
     // Props & plugins
