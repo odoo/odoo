@@ -168,3 +168,6 @@ class MailMessage(models.Model):
             if partner and self.author_id == partner:
                 return True
         return False
+
+    def _get_allowed_message_subtypes(self):
+        return [self.env.ref("mail.mt_comment").id]

@@ -82,18 +82,18 @@ class PortalChatter(http.Controller):
         # extract domain from the 'website_message_ids' field
         model = request.env[thread_model]
         field = model._fields['website_message_ids']
+        Message = request.env['mail.message']
         domain = expression.AND([
             self._setup_portal_message_fetch_extra_domain(kw),
             field.get_domain_list(model),
             self._get_non_empty_message_domain(),
             [
                 ("res_id", "=", thread_id),
-                ("subtype_id", "=", request.env.ref("mail.mt_comment").id),
+                ("subtype_id", "in", Message._get_allowed_message_subtypes()),
             ],
         ])
 
         # Check access
-        Message = request.env['mail.message']
         if kw.get('token'):
             access_as_sudo = request.env[thread_model]._get_thread_with_access(
                 thread_id, token=kw.get("token")
