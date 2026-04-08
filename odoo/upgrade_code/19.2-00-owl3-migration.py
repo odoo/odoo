@@ -4,6 +4,7 @@ from odoo.upgrade_code.tools_etree import get_indentation, update_etree
 from odoo.upgrade_code.tools_js_expressions import update_template, VariableAggregator
 
 EXCLUDED_PATH = (
+    'web/static/lib/hoot',
     'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
     'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml',
     'iot_drivers/static/src/',
