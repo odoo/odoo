@@ -1521,12 +1521,20 @@ class ChromeBrowser:
             yield proc, devtools_port
         finally:
             self._logger.info("Terminating chrome headless with pid %s", proc.pid)
+            main = psutil.Process(proc.pid)
+            procs = [main] + main.children(recursive=True)
             proc.terminate()
-            try:
-                proc.wait(5)
-            except subprocess.TimeoutExpired:
-                self._logger.warning("Killing chrome headless with pid %s: still alive", proc.pid)
-                proc.kill()
+            _, alive = psutil.wait_procs(procs, 5)
+            if alive:  # can't early exit, it suppresses the finally'd exception if any
+                self._logger.warning(
+                    "Killing chrome descendants-or-self of %s: %d remaining%s",
+                    proc.pid,
+                    len(alive),
+                    "".join(f"\n- {p.name()} ({p.status()})" for p in alive),
+                )
+                for p in alive:
+                    p.kill()
+                psutil.wait_procs(alive, 1)
                 self.chrome_log_level = logging.RUNBOT
 
     def read_log(self) -> bytes:
