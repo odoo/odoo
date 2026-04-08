@@ -45,8 +45,10 @@ export class Sidebar extends Interaction {
         if (!this.printContent) {
             const iframeEl = document.createElement("iframe");
             iframeEl.setAttribute("id", "print_iframe_content");
-            iframeEl.setAttribute("href", href);
-            iframeEl.style.display = "none";
+            iframeEl.setAttribute("src", href);
+            iframeEl.style.position = "fixed";
+            iframeEl.style.right = "100%";
+            iframeEl.style.bottom = "100%";
             this.printContent = iframeEl;
             this.insert(this.printContent, this.el);
             this.addListener(this.printContent, "load", () => this.printContent.contentWindow.print());
