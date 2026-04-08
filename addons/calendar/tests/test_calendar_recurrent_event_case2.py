@@ -68,7 +68,7 @@ class TestRecurrentEvent(common.TransactionCase):
             'recurrency': True,
         }
         for rrule_type, name, expected_count in (
-            ('daily', 'Daily Meeting', 720),
+            ('daily', 'Daily Meeting', 730),
             ('monthly', 'Monthly Meeting', 180),
             ('yearly', 'Yearly Meeting', 15),
         ):
@@ -84,7 +84,7 @@ class TestRecurrentEvent(common.TransactionCase):
         # Edit the max recurrence years
         self.env['ir.config_parameter'].sudo().set_int('calendar.max_recurrence_years', 5)
         for rrule_type, name, expected_count in (
-            ('daily', 'Custom Daily Meeting', 720),
+            ('daily', 'Custom Daily Meeting', 730),
             ('monthly', 'Custom Monthly Meeting', 60),
             ('yearly', 'Custom Yearly Meeting', 5),
         ):
