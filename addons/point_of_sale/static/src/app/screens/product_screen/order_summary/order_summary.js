@@ -46,7 +46,10 @@ export class OrderSummary extends Component {
     }
 
     updatePotentialCombos() {
-        this.state.potentialCombos = this.pos.getApplicableProductCombo("limited");
+        this.state.potentialCombos = this.pos.comboSuggestion.getApplicableProductCombo(
+            this.currentOrder,
+            "limited"
+        );
     }
 
     get currentOrder() {
@@ -393,69 +396,29 @@ export class OrderSummary extends Component {
     get isComboApplicable() {
         return this.state.potentialCombos.length > 0;
     }
-    getSortedBestPotentialCombos() {
-        const bestCombos = {
-            applicable: [],
-            upsell: [],
-        };
-        this.pos.getApplicableProductCombo("combinations").forEach((applicable) => {
-            applicable.comboPrice = applicable.productTmpl.getPrice(
-                this.currentOrder.pricelist_id,
-                applicable.combinationsQty
-            );
-            applicable.numberOfUpsell = Object.values(applicable.combinations[0]).reduce(
-                (acc, combo) => {
-                    if (combo.upsell) {
-                        return acc + 1;
-                    }
-                    return acc;
-                },
-                0
-            );
-            if (applicable.numberOfUpsell > 0) {
-                bestCombos.upsell.push(applicable);
-            } else {
-                bestCombos.applicable.push(applicable);
-            }
-        });
-        bestCombos.applicable.sort((a, b) => b.comboPrice - a.comboPrice);
-        bestCombos.upsell.sort((a, b) => {
-            if (a.numberOfUpsell === b.numberOfUpsell) {
-                return b.comboPrice - a.comboPrice;
-            }
-            return a.numberOfUpsell - b.numberOfUpsell;
-        });
-        return bestCombos;
-    }
     get bestComboName() {
         let name = `
-            ${this.state.potentialCombos[0].quantity} ${this.state.potentialCombos[0].productTmpl.display_name}`;
+            ${this.state.potentialCombos[0].quantity} ${this.state.potentialCombos[0].product.display_name}`;
         if (this.state.potentialCombos.length > 1) {
-            name += " + Others";
+            name = _t("%s + Others", name);
         }
         return name;
     }
     async applyBestCombo(keepOpen = false) {
         let comboToApply = false;
-        const bestPotentialCombos = this.getSortedBestPotentialCombos();
-        if (
-            bestPotentialCombos.upsell.length + bestPotentialCombos.applicable.length >
-            (keepOpen ? 0 : 1)
-        ) {
+        const bestPotentialCombos = this.pos.comboSuggestion.getPotentialCombos(this.currentOrder);
+        if (bestPotentialCombos.length > (keepOpen ? 0 : 1)) {
             comboToApply = await makeAwaitable(this.dialog, ChoseComboPopup, {
                 potentialCombos: bestPotentialCombos,
             });
-        } else if (bestPotentialCombos.applicable.length == 1) {
-            comboToApply = bestPotentialCombos.applicable[0];
-        } else if (bestPotentialCombos.upsell.length == 1) {
-            comboToApply = bestPotentialCombos.upsell[0];
+        } else if (bestPotentialCombos.length === 1) {
+            comboToApply = bestPotentialCombos[0];
         }
         if (comboToApply) {
-            // Apply combo
-            comboToApply = this.pos.getApplicableProductCombo("full", comboToApply.productTmpl);
+            // Apply the exact suggestion selected by the user.
             await this.pos.createComboFromLines(
-                comboToApply[0].productTmpl,
-                comboToApply[0].combinations
+                comboToApply.product.product_tmpl_id,
+                comboToApply.combinations
             );
             // If more combo applicable left, keep popup opened
             await this.applyBestCombo(true);

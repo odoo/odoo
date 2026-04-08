@@ -2,6 +2,7 @@ import { useRef, useSubEnv } from "@web/owl2/utils";
 import { Component, proxy } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
+import { AttributeSelectionHelper } from "@pos_self_order/app/components/attribute_selection/attribute_selection_helper";
 import { AttributeSelection } from "@pos_self_order/app/components/attribute_selection/attribute_selection";
 import { ProductNameWidget } from "@pos_self_order/app/components/product_name_widget/product_name_widget";
 import { Stepper } from "@pos_self_order/app/components/combo_stepper/combo_stepper";
@@ -46,6 +47,10 @@ export class ComboPage extends Component {
             "productName",
             (isSticky) => (this.state.showStickyTitle = isSticky)
         );
+
+        if (history.state?.selectedCombos?.length) {
+            this.applyPreselectedCombos(history.state.selectedCombos);
+        }
     }
 
     get currentCombo() {
@@ -75,6 +80,98 @@ export class ComboPage extends Component {
 
     get currentChoiceState() {
         return (this.state.choices[this.state.selectedChoiceIndex] ??= {});
+    }
+
+    getSelectionHelper(product) {
+        return (this.state.selectedValues[product.id] ??= new AttributeSelectionHelper(
+            this.selfOrder,
+            product.attribute_line_ids.filter(
+                (attribute) =>
+                    attribute.attribute_id.create_variant === "no_variant" &&
+                    attribute.product_template_value_ids.some(
+                        (value) => !this.selfOrder.kioskMode || !value.is_custom
+                    )
+            )
+        ));
+    }
+
+    getAttributeByValue(product, attributeValue) {
+        return product.attribute_line_ids.find((line) =>
+            line.product_template_value_ids.some((value) => value.id === attributeValue.id)
+        );
+    }
+
+    applyPreselectedAttributeValue(product, selectionHelper, attributeValueId) {
+        const attributeValue =
+            this.selfOrder.models["product.template.attribute.value"].get(attributeValueId);
+        if (!attributeValue) {
+            return;
+        }
+        const attribute = this.getAttributeByValue(product, attributeValue);
+        if (attribute) {
+            selectionHelper.selectAttribute(attribute, attributeValue);
+        }
+    }
+
+    applyPreselectedCustomValue(product, selectionHelper, customValue) {
+        const attributeValueId = customValue.custom_product_template_attribute_value_id;
+        const attributeValue =
+            this.selfOrder.models["product.template.attribute.value"].get(attributeValueId);
+        if (!attributeValue) {
+            return;
+        }
+        const attribute = this.getAttributeByValue(product, attributeValue);
+        if (!attribute) {
+            return;
+        }
+        const customSelection = selectionHelper.getCustomValue(attribute, attributeValue);
+        if (customSelection) {
+            customSelection.custom_value = customValue.custom_value || "";
+        }
+    }
+
+    // Apply the combo choices preselected in the combo suggestion popup during an upsell flow.
+    applyPreselectedCombos(selectedCombos) {
+        for (const comboValue of selectedCombos) {
+            const comboItem = this.selfOrder.models["product.combo.item"].get(
+                comboValue.combo_item_id
+            );
+            if (!comboItem) {
+                continue;
+            }
+            const choiceIndex = this.comboChoices.findIndex(
+                (choice) => choice.id === comboItem.combo_id.id
+            );
+
+            if (choiceIndex === -1) {
+                continue;
+            }
+
+            const choiceState = (this.state.choices[choiceIndex] ??= {});
+            const selectedItems = (choiceState.selectedItems ??= {});
+            const selectedItemsOrder = (choiceState.selectedItemsOrder ??= []);
+            const itemSelection = (selectedItems[comboItem.id] ??= {
+                item: comboItem,
+                qty: 0,
+            });
+            itemSelection.item = comboItem;
+            itemSelection.qty += comboValue.qty || 1;
+            for (let i = 0; i < (comboValue.qty || 1); i++) {
+                selectedItemsOrder.push(comboItem.id);
+            }
+
+            const product = comboItem.product_id;
+            const selectionHelper = this.getSelectionHelper(product);
+            for (const attributeValueId of comboValue.configuration?.attribute_value_ids || []) {
+                this.applyPreselectedAttributeValue(product, selectionHelper, attributeValueId);
+            }
+
+            for (const customValue of Object.values(
+                comboValue.configuration?.attribute_custom_values || {}
+            )) {
+                this.applyPreselectedCustomValue(product, selectionHelper, customValue);
+            }
+        }
     }
 
     shouldShowMissingDetails() {
@@ -504,7 +601,7 @@ export class ComboPage extends Component {
             {},
             this.getComboSelection()
         );
-
+        this.selfOrder.applyPendingComboConversion();
         this.goBack();
     }
 
@@ -518,7 +615,10 @@ export class ComboPage extends Component {
     }
 
     goBack() {
-        this.router.navigate("product_list");
+        if (this.selfOrder.pendingComboConversion) {
+            this.selfOrder.pendingComboConversion = null;
+        }
+        this.router.navigate(history.state?.redirectPage || "product_list");
     }
 
     scrollUpToRequired() {

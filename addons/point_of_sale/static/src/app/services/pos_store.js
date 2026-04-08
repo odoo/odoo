@@ -40,12 +40,12 @@ import { DebugWidget } from "../utils/debug/debug_widget";
 import OrderPaymentValidation from "../utils/order_payment_validation";
 import { logPosMessage } from "../utils/pretty_console_log";
 import { initLNA } from "../utils/init_lna";
-import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { SnoozedProductTracker } from "@point_of_sale/app/models/utils/snooze_tracker";
 import { ScaleScreen } from "@point_of_sale/app/screens/scale_screen/scale_screen";
 import { Domain } from "@web/core/domain";
 import { PosOrderAccounting } from "@point_of_sale/app/models/accounting/pos_order_accounting";
 import { PosOrderlineAccounting } from "@point_of_sale/app/models/accounting/pos_order_line_accounting";
+import { ComboSuggestion } from "../models/utils/combo_suggestion";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -574,6 +574,12 @@ export class PosStore extends WithLazyGetterTrap {
         });
 
         await this.processProductAttributes();
+        this.comboSuggestion = new ComboSuggestion(
+            this.models,
+            this.currency,
+            this.company,
+            this.config
+        );
         await this.initSnoozedProducts();
     }
     cashMove() {
@@ -605,7 +611,6 @@ export class PosStore extends WithLazyGetterTrap {
     async processProductAttributes() {
         const productIds = new Set();
         const productTmplIds = new Set();
-        const productCombos = [];
         const productModel = this.models["product.product"].toRaw();
 
         productModel.forEach((product) => {
@@ -614,12 +619,7 @@ export class PosStore extends WithLazyGetterTrap {
                 productTmplIds.add(product_tmpl_id);
                 productIds.add(product.id);
             }
-
-            if (product.product_tmpl_id?.type === "combo") {
-                productCombos.push(product);
-            }
         });
-        this.productCombos = productCombos;
 
         if (productIds.size > 0) {
             try {
@@ -2721,265 +2721,6 @@ export class PosStore extends WithLazyGetterTrap {
         return Boolean(this.selectedOrder?.getSelectedOrderline()?.isPartOfCombo());
     }
 
-    /**
-     * This method is called in three different contexts.
-     *
-     * 1. Each time `order_summary` is rendered, this method is called in “limited” mode to
-     *    determine whether it is possible to create combos with the order lines.
-     *
-     * 2. When you click on “apply combos,” a popup opens if there are several possibilities, this
-     *    time in “combinations” mode.
-     *
-     * 3. When choosing a combo in the popup, this method is called in “full” mode to get all
-     *    possible combinations.
-     *
-     * Limited mode: this mode returns when more than one combo possibility is
-     * found.
-     *
-     * Combination mode: this mode returns 1 combination for each possible combo. It limits the computation time
-     * while giving all information needed for the popup.
-     *
-     * Full mode: returns all possibilities; this mode is more complex, hence the limited mode for
-     * rendering.
-     *
-     * @param {string} mode: limited | full | combinaison
-     * @param {ProductTemplate} productTmpl: ProductTmpl
-     */
-    getApplicableProductCombo(mode = "limited", productTmpl = null) {
-        const matchingCombos = [];
-        const productInOrder = this.selectedOrder.lines.reduce((acc, line) => {
-            if (line.isPartOfCombo()) {
-                return acc;
-            }
-            const pid = line.product_id.id;
-
-            if (!acc[pid]) {
-                acc[pid] = {
-                    lines: {},
-                    totalQty: 0,
-                };
-            }
-
-            acc[pid].lines[line.uuid] = line.qty;
-            acc[pid].totalQty += line.qty;
-            return acc;
-        }, {});
-        const combos = this.models["product.combo"].getAll();
-        const comboItems = combos.flatMap((combo) => combo.combo_item_ids);
-        const totalQtyAvailable = comboItems.reduce((acc, item) => {
-            const productId = item.product_id?.id;
-            if (productId && productInOrder[productId]) {
-                acc[item.combo_id.id] =
-                    (acc[item.combo_id.id] || 0) + productInOrder[productId].totalQty;
-            }
-            return acc;
-        }, {});
-
-        const productTmplsToCheck =
-            mode === "full" && productTmpl
-                ? [productTmpl]
-                : this.productCombos.sort(
-                      (a, b) => a.product_tmpl_id.list_price - b.product_tmpl_id.list_price
-                  );
-
-        for (const comboProduct of productTmplsToCheck) {
-            const combos = comboProduct.combo_ids;
-            const quantityTaken = {};
-            let comboQty = Infinity;
-            let hasUpsell = false;
-
-            for (const combo of combos) {
-                if (combo.is_upsell) {
-                    hasUpsell = true;
-                    continue;
-                }
-                const comboId = combo.id;
-                const minQty = combo.qty_free;
-                quantityTaken[comboId] = {};
-
-                if ((totalQtyAvailable[comboId] || 0) < minQty) {
-                    // Not enough to satisfy qty_free for this combo group
-                    comboQty = 0;
-                    break;
-                }
-                comboQty = Math.min(totalQtyAvailable[comboId] / minQty, comboQty);
-            }
-
-            if (comboQty === 0 || comboQty == Infinity) {
-                // The combo product is either composed of only upsell combo choices (Infinity)
-                // or cannot be completed with current order lines (0).
-                // We do not propose it as applicable or upsell
-                continue;
-            }
-
-            if (mode === "limited") {
-                // In limited mode, we only want the useful information for the UI
-                // We thus want to know if there is a applicable combo or not,
-                // If yes, we want to know if there could be several combos
-                // and the quantity of the first applicable combo
-                matchingCombos.push({
-                    productTmpl: comboProduct,
-                    quantity: comboQty,
-                    hasUpsell,
-                });
-                if (matchingCombos.length > 1) {
-                    break;
-                }
-                continue;
-            }
-
-            const availableQty = JSON.parse(JSON.stringify(productInOrder));
-            const combinations = [];
-
-            let qtyToCheck = Math.min(comboQty, 20); // For performance reasons, we only do 20 combos at a time
-            if (mode === "combinations") {
-                // In combinations mode, we only want to get the first combinations to display to the user
-                qtyToCheck = Math.min(qtyToCheck, 1);
-            }
-
-            for (let i = 0; i < qtyToCheck; i++) {
-                const quantityTaken = {};
-                for (const combo of combos) {
-                    const comboId = combo.id;
-                    let qtyNeeded = Math.min(
-                        Math.ceil(totalQtyAvailable[comboId] / comboQty),
-                        combo.qty_max
-                    );
-                    quantityTaken[comboId] = {};
-
-                    for (const item of combo.combo_item_ids) {
-                        const productId = item.product_id.id;
-                        if (!availableQty[productId]) {
-                            continue;
-                        }
-                        for (const [lUuid, qty] of Object.entries(availableQty[productId].lines)) {
-                            if (qtyNeeded === 0) {
-                                break;
-                            }
-                            const line = this.selectedOrder.lines.filter(
-                                (l) => l.uuid === lUuid
-                            )[0];
-                            const takeQty = Math.min(qty, qtyNeeded);
-                            quantityTaken[comboId][lUuid] = {
-                                qty: takeQty,
-                                combo_item: item,
-                                line_price:
-                                    this.config.iface_tax_included == "total"
-                                        ? line.priceIncl
-                                        : line.priceExcl,
-                                attribute_value_ids: line.attribute_value_ids.map(
-                                    (value) => value.id
-                                ),
-                                attribute_value_extra_price: line.attribute_value_ids.reduce(
-                                    (sum, value) => sum + value.price_extra,
-                                    0
-                                ),
-                            };
-                            availableQty[productId].lines[lUuid] -= takeQty;
-                            qtyNeeded -= takeQty;
-                        }
-                    }
-                    if (combo.is_upsell) {
-                        quantityTaken[comboId].upsell = true;
-                    }
-                }
-                combinations.push(quantityTaken);
-            }
-            let totalSplitedComboLinePrice = 0;
-
-            const itemLines = combinations
-                .flatMap((items) => Object.values(items))
-                .flatMap((item) => Object.values(item))
-                .filter((val) => val && typeof val === "object");
-
-            const remainingFreeByComboItem = new Map();
-            const childLineConf = [];
-            const comboExtraLines = [];
-            for (const item of itemLines) {
-                const combo = item.combo_item;
-                const comboItemId = combo.combo_id.id;
-                if (!remainingFreeByComboItem.has(comboItemId)) {
-                    remainingFreeByComboItem.set(comboItemId, combo.combo_id.qty_free);
-                }
-                const remainingFree = remainingFreeByComboItem.get(comboItemId);
-                const base = {
-                    combo_item_id: combo,
-                    configuration: {
-                        attribute_value_ids: item.attribute_value_ids,
-                        price_extra: item.attribute_value_extra_price,
-                    },
-                };
-                if (remainingFree > 0) {
-                    const freeQty = Math.min(item.qty, remainingFree);
-                    const extraQty = item.qty - freeQty;
-                    if (freeQty > 0) {
-                        childLineConf.push({
-                            ...base,
-                            qty: freeQty,
-                        });
-                    }
-                    if (extraQty > 0) {
-                        comboExtraLines.push({
-                            ...base,
-                            qty: extraQty,
-                        });
-                    }
-                    remainingFreeByComboItem.set(comboItemId, remainingFree - freeQty);
-                } else {
-                    comboExtraLines.push({
-                        ...base,
-                        qty: item.qty,
-                    });
-                }
-            }
-            const comboPrices = computeComboItems(
-                comboProduct,
-                childLineConf,
-                this.selectedOrder.pricelist_id,
-                this.data.models["decimal.precision"].getAll(),
-                this.data.models["product.template.attribute.value"].getAllBy("id"),
-                comboExtraLines,
-                this.currency
-            );
-            const baseLines = comboPrices.map((comboPrice) =>
-                accountTaxHelpers.prepare_base_line_for_taxes_computation(
-                    {},
-                    {
-                        currency_id: this.currency,
-                        quantity: comboPrice.qty,
-                        price_unit: comboPrice.price_unit,
-                        tax_ids: comboPrice.combo_item_id.product_id.taxes_id,
-                        product_id: comboPrice.combo_item_id.product_id,
-                    }
-                )
-            );
-            accountTaxHelpers.add_tax_details_in_base_lines(baseLines, this.company);
-            accountTaxHelpers.round_base_lines_tax_details(baseLines, this.company);
-            const cashRounding = this.config.cash_rounding ? this.config.rounding_method : null;
-            const taxDetails = accountTaxHelpers.get_tax_totals_summary(
-                baseLines,
-                this.currency,
-                this.company,
-                {
-                    cash_rounding: cashRounding,
-                }
-            );
-            totalSplitedComboLinePrice = this.currency.round(
-                itemLines.reduce((sum, line) => sum + line.line_price, 0)
-            );
-            matchingCombos.push({
-                productTmpl: comboProduct,
-                combinations,
-                combinationsQty: comboQty,
-                totalComboPrice:
-                    this.config.iface_tax_included == "total"
-                        ? taxDetails.total_amount
-                        : taxDetails.base_amount,
-                totalSplitedComboLinePrice,
-            });
-        }
-        return matchingCombos;
-    }
     async onPrepLinesSynced(prepLinePairs) {}
 
     async createComboFromLines(productTmpl, combinations) {

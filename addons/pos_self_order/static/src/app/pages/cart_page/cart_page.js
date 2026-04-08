@@ -11,7 +11,7 @@ import { _t } from "@web/core/l10n/translation";
 import { formatProductName } from "../../utils";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { PillsSelectionPopup } from "@pos_self_order/app/components/pills_selection_popup/pills_selection_popup";
-
+import { ChooseComboPopup } from "@pos_self_order/app/components/choose_combo_popup/choose_combo_popup";
 const { DateTime } = luxon;
 
 export class CartPage extends Component {
@@ -25,6 +25,7 @@ export class CartPage extends Component {
         this.router = useService("router");
         this.state = proxy({
             orderNoteValue: "",
+            skipComboSuggestion: false,
         });
 
         this.scrollShadow = useScrollShadow(useRef("scrollContainer"));
@@ -91,6 +92,123 @@ export class CartPage extends Component {
         };
     }
 
+    /**
+     * Opens the combo suggestion popup before checkout when profitable combos are available.
+     *
+     * Suggestions are applied inside the popup so the popup can keep its current position and
+     * refresh its remaining rows instead of closing and reopening after each conversion.
+     * If the customer declines remaining suggestions after applying at least one combo, the next
+     * Pay click skips suggestions once so checkout can continue. That skip is consumed by the
+     * checkout attempt, so returning to the cart allows suggestions to appear again.
+     * Returns true when the current checkout action must stop because the cart changed or the
+     * customer was redirected away from the cart.
+     */
+    getBestPotentialCombos() {
+        return this.selfOrder.comboSuggestion
+            .getPotentialCombos(this.selfOrder.currentOrder)
+            .filter((combo) => combo.totalComboPrice < combo.totalSplitedComboLinePrice);
+    }
+
+    async applyBestComboSuggestion(hasAppliedCombo = false) {
+        const bestPotentialCombos = this.getBestPotentialCombos();
+
+        if (!bestPotentialCombos.length) {
+            return hasAppliedCombo;
+        }
+        const comboToApply = await makeAwaitable(this.dialog, ChooseComboPopup, {
+            potentialCombos: bestPotentialCombos,
+            applyCombo: (combo) => this.convertComboSuggestion(combo),
+        });
+        if (!comboToApply) {
+            if (this.selfOrder.pendingComboConversion) {
+                this.selfOrder.pendingComboConversion = null;
+            }
+            this.state.skipComboSuggestion = hasAppliedCombo;
+            return hasAppliedCombo;
+        }
+        if (comboToApply.applied) {
+            // The popup already converted at least one suggestion. Keep the customer on the cart,
+            // then let the next Pay click continue without showing the declined suggestions again.
+            this.state.skipComboSuggestion = true;
+            return true;
+        }
+        const result = await this.convertComboSuggestion(comboToApply);
+        return result.potentialCombos?.length ? this.applyBestComboSuggestion(true) : true;
+    }
+
+    async convertComboSuggestion(comboToApply) {
+        const getConcernedLinesQty = (combinations) => {
+            const concernedLinesQty = {};
+            combinations.forEach((items) => {
+                for (const combo of Object.values(items)) {
+                    for (const [uuid, comboLine] of Object.entries(combo)) {
+                        if (!comboLine || typeof comboLine !== "object") {
+                            continue;
+                        }
+                        concernedLinesQty[uuid] = (concernedLinesQty[uuid] || 0) + comboLine.qty;
+                    }
+                }
+            });
+            return concernedLinesQty;
+        };
+
+        // Persist the source-line consumption so both the direct add flow and the combo selection
+        // page can finalize the conversion after the combo parent line is created.
+        this.selfOrder.pendingComboConversion = {
+            concernedLinesQty: getConcernedLinesQty(comboToApply.combinations),
+        };
+
+        const addComboToCart = async (comboValuesByCombination) => {
+            for (const comboValues of comboValuesByCombination) {
+                await this.selfOrder.addToCart(
+                    comboToApply.product.product_tmpl_id,
+                    1,
+                    "",
+                    {},
+                    {},
+                    comboValues
+                );
+            }
+            this.selfOrder.applyPendingComboConversion();
+        };
+
+        if (!comboToApply.upsell) {
+            await addComboToCart(
+                comboToApply.combinations.map((combination) =>
+                    this.selfOrder.comboSuggestion.getComboValuesFromCombination(combination)
+                )
+            );
+            return { applied: true, potentialCombos: this.getBestPotentialCombos() };
+        }
+
+        const preselectedCombos = comboToApply.combinations[0]
+            ? this.selfOrder.comboSuggestion.getComboValuesFromCombination(
+                  comboToApply.combinations[0]
+              )
+            : [];
+        const { show, selectedCombos } = this.selfOrder.showComboSelectionPage(
+            comboToApply.product,
+            preselectedCombos
+        );
+        if (show) {
+            this.router.navigate(
+                "combo_selection",
+                {
+                    id: comboToApply.product.product_tmpl_id.id,
+                },
+                {
+                    redirectPage: "cart",
+                    selectedCombos: preselectedCombos.map((combo) => ({
+                        ...combo,
+                        combo_item_id: combo.combo_item_id.id,
+                    })),
+                }
+            );
+            return { applied: true, potentialCombos: [] };
+        }
+        await addComboToCart(comboToApply.combinations.map(() => selectedCombos));
+        return { applied: true, potentialCombos: this.getBestPotentialCombos() };
+    }
     get optionalProducts() {
         const optionalProducts =
             this.selfOrder.currentOrder.lines.flatMap(
@@ -146,6 +264,13 @@ export class CartPage extends Component {
             this.selfOrder.currentOrder.preset_id?.use_timing;
 
         if (this.selfOrder.rpcLoading || !this.selfOrder.verifyCart()) {
+            return;
+        }
+
+        const skipSuggestion = this.state.skipComboSuggestion;
+        this.state.skipComboSuggestion = false;
+
+        if (!skipSuggestion && (await this.applyBestComboSuggestion())) {
             return;
         }
 

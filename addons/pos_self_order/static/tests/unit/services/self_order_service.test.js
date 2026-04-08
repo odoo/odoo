@@ -115,6 +115,28 @@ test("showComboSelectionPage", async () => {
     expect(store.showComboSelectionPage(product)).toMatchObject(defaultReturnValue);
 });
 
+test("applyPendingComboConversion", async () => {
+    const store = await setupSelfPosEnv();
+
+    await store.addToCart(store.models["product.template"].get(8), 2);
+    await store.addToCart(store.models["product.template"].get(10), 1);
+
+    const [chairLine, deskLine] = store.currentOrder.lines;
+    store.pendingComboConversion = {
+        concernedLinesQty: {
+            [chairLine.uuid]: 1,
+            [deskLine.uuid]: 1,
+        },
+    };
+
+    store.applyPendingComboConversion();
+
+    expect(store.currentOrder.lines).toHaveLength(1);
+    expect(store.currentOrder.lines[0].uuid).toBe(chairLine.uuid);
+    expect(store.currentOrder.lines[0].qty).toBe(1);
+    expect(store.pendingComboConversion).toBe(null);
+});
+
 test("createNewOrder", async () => {
     const store = await setupSelfPosEnv();
     const models = store.models;
