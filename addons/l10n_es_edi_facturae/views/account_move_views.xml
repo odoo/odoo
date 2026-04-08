@@ -6,14 +6,17 @@
             <field name="model">account.move</field>
             <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//page[@name='other_info']" position="inside">
-                        <group string="Factura-e"
-                               name="l10n_es_facturae_invoicing_period"
-                               invisible="country_code != 'ES'">
-                            <field name="l10n_es_invoicing_period_start_date"/>
-                            <field name="l10n_es_invoicing_period_end_date"/>
-                            <field name="l10n_es_payment_means"/>
-                        </group>
+                <xpath expr="//page[@name='other_info']//group[@name='l10n_es_electronic_invoicing']"
+                       position="attributes">
+                    <attribute name="invisible">country_code != 'ES'</attribute>
+                </xpath>
+                <xpath expr="//page[@name='other_info']//group[@name='l10n_es_electronic_invoicing']"
+                       position="inside">
+                    <field name="l10n_es_invoicing_period_start_date" invisible="move_type in ['out_refund', 'in_refund'] and not l10n_es_original_invoice_credited"/>
+                    <field name="l10n_es_invoicing_period_end_date" invisible="move_type in ['out_refund', 'in_refund'] and not l10n_es_original_invoice_credited"/>
+                    <field name="l10n_es_payment_means"/>
+                    <field name="l10n_es_edi_facturae_reason_code" string="Reason"
+                           invisible="move_type not in ['out_refund', 'in_refund']"/>
                 </xpath>
             </field>
         </record>

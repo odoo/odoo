@@ -53,6 +53,14 @@
                         </group>
                     </page>
                 </xpath>
+                <xpath expr="//page[@name='other_info']//group[@name='l10n_es_electronic_invoicing']"
+                       position="attributes">
+                    <attribute name="invisible">country_code != 'ES'</attribute>
+                </xpath>
+                <xpath expr="//page[@name='other_info']//group[@name='l10n_es_electronic_invoicing']"
+                       position="inside">
+                    <field name="l10n_es_tbai_original_invoice_date" invisible="reversed_entry_id or move_type not in ['out_refund', 'in_refund']"/>
+                </xpath>
             </field>
         </record>
     </data>
