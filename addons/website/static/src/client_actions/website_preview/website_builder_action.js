@@ -8,6 +8,7 @@ import {
     onWillStart,
     onWillUnmount,
     status,
+    immediateEffect,
 } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { LazyComponent } from "@web/core/lazy_component";
@@ -94,15 +95,19 @@ export class WebsiteBuilderClientAction extends Component {
             () => (this.state.is404 = this.websiteService.is404)
         );
 
-        // You can't wait for rendering because the Builder depends on the
-        // page style synchronously.
-        useEffect(() => {
-            this.websiteContext.isMobile; // consume signal
-            if (status(this.component) !== "mounted") {
-                return;
-            }
-            this.toggleIsMobile(this.websiteContext.isMobile);
+        let disposeToggleMobileEffect = () => {};
+        onMounted(() => {
+            // You can't wait for rendering because the Builder depends on the
+            // page style synchronously.
+            disposeToggleMobileEffect = immediateEffect(() => {
+                this.websiteContext.isMobile; // consume signal
+                if (status(this.component) !== "mounted") {
+                    return;
+                }
+                this.toggleIsMobile(this.websiteContext.isMobile);
+            });
         });
+        onWillDestroy(disposeToggleMobileEffect);
 
         this.overlayRef = useChildRef();
         useSubEnv({
