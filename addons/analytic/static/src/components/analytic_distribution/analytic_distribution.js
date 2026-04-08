@@ -149,6 +149,7 @@ export class AnalyticDistribution extends Component {
      * @returns {Object}
      */
     accountTotalsByPlan() {
+        this.state.formattedData; // consume signal
         const accountTotals = {};
         const formattedData = this.props.multi_edit ? this.initialFormattedData : this.state.formattedData;
         formattedData.map((line) => {
