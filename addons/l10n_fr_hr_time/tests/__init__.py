@@ -1,0 +1,4 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from . import test_french_leaves
+from . import test_french_work_entries

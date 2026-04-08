@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <function model="hr.time" name="_remove_resource_leave">
+            <value eval="[ref('hr_time.hr_time_sl'), ref('hr_time.hr_time_cl_qdp'), ref('hr_time.hr_time_sl_qdp')]"/>
+        </function>
+        <function model="hr.time" name="_validate_leave_request">
+            <value eval="[ref('hr_time.hr_time_sl'), ref('hr_time.hr_time_cl_qdp'), ref('hr_time.hr_time_sl_qdp')]"/>
+        </function>
+        <function model="hr.time" name="_create_resource_leave">
+            <value eval="[ref('hr_time.hr_time_sl'), ref('hr_time.hr_time_cl_qdp'), ref('hr_time.hr_time_sl_qdp')]"/>
+        </function>
+    </data>
+</odoo>

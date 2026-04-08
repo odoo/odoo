@@ -93,10 +93,10 @@ class HrEmployee(models.Model):
 
     def action_open_leave_request(self):
         if len(self) == 1:
-            model = 'hr.leave'
+            model = 'hr.time'
             context = {'default_employee_id': self.id}
         else:
-            model = 'hr.leave.generate.multi.wizard'
+            model = 'hr.time.generate.multi.wizard'
             context = {
                 'default_employee_ids': self.ids,
                 'default_date_from': fields.Date.today(),

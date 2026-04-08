@@ -12,7 +12,7 @@
         "crm_livechat",
         "hr_attendance",
         "hr_fleet",
-        "hr_holidays",
+        "hr_time",
         "im_livechat",
         "mail",
         "mail_bot",

@@ -1043,7 +1043,7 @@ class HrEmployee(models.Model):
     def _compute_presence_state(self):
         """
         This method is overritten in several other modules which add additional
-        presence criterions. e.g. hr_attendance, hr_holidays
+        presence criterions. e.g. hr_attendance, hr_time
         """
         # sudo: res.users - can access presence of accessible user
         employee_to_check_working = self.filtered(
