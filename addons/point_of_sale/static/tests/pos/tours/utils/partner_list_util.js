@@ -113,7 +113,7 @@ export function checkContactValues(name, address = "", phone = "", email = "") {
 export function checkCustomerShown(val) {
     return {
         content: `Check "${val}" is shown`,
-        trigger: `.partner-list .partner-info:nth-child(1):contains("${val}")`,
+        trigger: `.partner-list .partner-info:first:contains("${val}")`,
     };
 }
 export function searchCustomer(val) {

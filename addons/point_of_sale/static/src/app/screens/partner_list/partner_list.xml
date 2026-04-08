@@ -22,9 +22,35 @@
             <t t-set="initialPartners" t-value="this.getPartners(this.state.initialPartners)"/>
             <t t-set="loadedPartners" t-value="this.getPartners(this.state.loadedPartners)"/>
             <t t-set="nbrPartners" t-value="initialPartners.length + loadedPartners.length"/>
-            <div class="h-100" t-att-class="{'d-flex justify-content-center align-items-center text-center': !nbrPartners}">
-                <table t-if="nbrPartners" class="table table-hover">
-                    <tbody class="h-100">
+            <div class="h-100" t-att-class="{'d-flex justify-content-center align-items-center text-center': !nbrPartners, 'overflow-y-auto': this.ui.isSmall}">
+                <t t-if="nbrPartners">
+                    <table t-if="!this.ui.isSmall" class="table table-hover">
+                        <tbody class="h-100">
+                            <t t-foreach="initialPartners" t-as="partner" t-key="partner.id">
+                                <PartnerLine
+                                    close="this.props.close"
+                                    partner="partner"
+                                    isSelected="this.props.partner?.id === partner.id"
+                                    isBalanceDisplayed="this.isBalanceDisplayed"
+                                    onClickEdit.bind="(p) => this.editPartner(p)"
+                                    onClickUnselect.bind="() => this.clickPartner()"
+                                    onClickOrders.bind="(p) => this.goToOrders(p)"
+                                    onClickPartner.bind="this.clickPartner"/>
+                            </t>
+                            <t t-foreach="loadedPartners" t-as="partner" t-key="partner.id">
+                                <PartnerLine
+                                    close="this.props.close"
+                                    partner="partner"
+                                    isSelected="this.props.partner?.id === partner.id"
+                                    isBalanceDisplayed="this.isBalanceDisplayed"
+                                    onClickEdit.bind="(p) => this.editPartner(p)"
+                                    onClickUnselect.bind="() => this.clickPartner()"
+                                    onClickOrders.bind="(p) => this.goToOrders(p)"
+                                    onClickPartner.bind="this.clickPartner"/>
+                            </t>
+                        </tbody>
+                    </table>
+                    <t t-else="">
                         <t t-foreach="initialPartners" t-as="partner" t-key="partner.id">
                             <PartnerLine
                                 close="this.props.close"
@@ -47,8 +73,8 @@
                                 onClickOrders.bind="(p) => this.goToOrders(p)"
                                 onClickPartner.bind="this.clickPartner"/>
                         </t>
-                    </tbody>
-                </table>
+                    </t>
+                </t>
                 <div t-else="" t-att-class="{'p-4': this.ui.isSmall}">
                     <div class="text-muted">
                         <i class="fa fa-users fa-3x"></i>
