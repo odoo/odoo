@@ -34,6 +34,7 @@ import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { setGlobalFilterValue } from "../../helpers/commands";
 
 const { toZone } = spreadsheet.helpers;
+const { chartRegistry } = spreadsheet.registries;
 
 const cumulativeDateServerData = getBasicServerData();
 cumulativeDateServerData.models.partner.records = [
@@ -880,6 +881,36 @@ test("Odoo chart datasource display name has a default when the chart title is e
         sheetId,
     });
     expect(model.getters.getOdooChartDisplayName(chartId)).toBe("(#1) Odoo Line Chart");
+});
+
+test("Every Odoo chart type has a default title", async () => {
+    const { model } = await createSpreadsheetWithChart({ type: "odoo_line" });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    const figureId = model.getters.getFigureIdFromChartId(chartId);
+    const chartTypes = chartRegistry.getKeys().filter((type) => type.startsWith("odoo_"));
+    model.dispatch("UPDATE_CHART", {
+        definition: { ...model.getters.getChartDefinition(chartId), title: { text: undefined } },
+        chartId,
+        figureId,
+        sheetId,
+    });
+
+    for (const chartType of chartTypes) {
+        const definition = {
+            ...model.getters.getChartDefinition(chartId),
+            type: chartType,
+        };
+        model.dispatch("UPDATE_CHART", {
+            definition,
+            chartId,
+            figureId,
+            sheetId,
+        });
+        await waitForDataLoaded(model);
+        const chartName = chartRegistry.get(chartType).name;
+        expect(model.getters.getOdooChartDisplayName(chartId)).toBe(`(#1) Odoo ${chartName} Chart`);
+    }
 });
 
 test("See records when clicking on a bar chart bar", async () => {

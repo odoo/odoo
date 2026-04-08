@@ -13,7 +13,7 @@ def sanitize_structured_reference(reference):
              `***020/3430/57642***` -> `020343057642`
     """
     ref = re.sub(r'\s', '', reference)
-    if re.match(r'(\+{3}|\*{3})\d{3}/\d{4}/\d{5}(\+{3}|\*{3})', ref):
+    if re.fullmatch(r'(\+{3}|\*{3}|)\d{3}/\d{4}/\d{5}\1', ref):
         return re.sub(r'[+*/]', '', ref)
     return ref
 
@@ -45,6 +45,21 @@ def is_valid_structured_reference_be(reference):
     ref = sanitize_structured_reference(reference)
     be_ref = re.fullmatch(r'(\d{10})(\d{2})', ref)
     return be_ref and int(be_ref.group(1)) % 97 == int(be_ref.group(2)) % 97
+
+
+def is_valid_structured_reference_dk(reference):
+    """Check whether the provided reference is a valid structured reference for Denmark.
+    Example: +71<022646321691221+88655702<
+
+    :param reference: the reference to check
+    """
+    ref = sanitize_structured_reference(reference)
+    match = re.fullmatch(r'\+?(?:71<(\d{15})|75<(\d{16}))\+\d{8}<', ref)
+    if not match:
+        return False
+
+    payment_ref = match.group(1) or match.group(2)
+    return luhn.is_valid(payment_ref)
 
 def is_valid_structured_reference_fi(reference):
     """Check whether the provided reference is a valid structured reference for Finland.
@@ -162,9 +177,32 @@ def is_valid_structured_reference(reference):
 
     return (
         is_valid_structured_reference_be(reference) or
+        is_valid_structured_reference_dk(reference) or
         is_valid_structured_reference_fi(reference) or
         is_valid_structured_reference_no_se(reference) or
         is_valid_structured_reference_si(reference) or
         is_valid_structured_reference_nl(reference) or
         is_valid_structured_reference_iso(reference)
     ) if reference else False
+
+
+def is_valid_structured_reference_for_country(reference, country_code=''):
+    """Check the validity of the reference's structure for a specific country or ISO 11649 as a fallback.
+
+    :param reference: the reference to check
+    :param country_code: the country code to check against
+    :return: True if reference is a structured reference for the given country or ISO 11649, False otherwise
+    """
+    check_per_country = {
+        'BE': is_valid_structured_reference_be,
+        'FI': is_valid_structured_reference_fi,
+        'NO': is_valid_structured_reference_no_se,
+        'SE': is_valid_structured_reference_no_se,
+        'NL': is_valid_structured_reference_nl,
+        'SI': is_valid_structured_reference_si,
+    }
+
+    reference = sanitize_structured_reference(reference or '')
+    if check := check_per_country.get(country_code.upper()):
+        return check(reference)
+    return is_valid_structured_reference_iso(reference)

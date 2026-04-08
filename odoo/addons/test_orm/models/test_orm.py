@@ -1624,6 +1624,26 @@ class TestOrmModel_Selection_Required_For_Write_Override(models.Model):  # noqa:
         return super().write(vals)
 
 
+class SelectionCompanyDependent(models.Model):
+    _name = 'test_orm.model_selection_company_dependent'
+    _description = "Model with a company dependent selection field"
+
+    my_selection = fields.Selection([
+        ('manual', "Manual"),
+        ('auto', "Automatic"),
+    ], company_dependent=True)
+
+
+# pylint: disable=E0102
+class SelectionCompanyDependent(models.Model):  # noqa: F811
+    _inherit = 'test_orm.model_selection_company_dependent'
+    _description = "Model with a company dependent selection field extension without ondelete"
+
+    my_selection = fields.Selection(selection_add=[
+        ('semi_auto', "Semi-Automatic"),
+    ])
+
+
 # Special classes to ensure the correct usage of a shared cache amongst users.
 
 
@@ -2206,6 +2226,7 @@ class TestOrmRelated_Translation_2(models.Model):
     name = fields.Char('Name Related', related='related_id.name', readonly=False)
     html = fields.Html('HTML Related', related='related_id.html', readonly=False)
     computed_name = fields.Char('Name Computed', compute='_compute_name')
+    name_en = fields.Char('Name EN', compute='_compute_name_en')
     computed_html = fields.Char('HTML Computed', compute='_compute_html')
 
     @api.depends_context('lang')
@@ -2213,6 +2234,11 @@ class TestOrmRelated_Translation_2(models.Model):
     def _compute_name(self):
         for record in self:
             record.computed_name = record.related_id.name
+
+    @api.depends('name')
+    def _compute_name_en(self):
+        for record in self.with_context(lang='en_US'):
+            record.name_en = record.name
 
     @api.depends_context('lang')
     @api.depends('related_id.html')

@@ -89,6 +89,7 @@ class AccountMoveSend(models.AbstractModel):
                 'mail_body': get_setting('mail_body', default_value=self._get_default_mail_body(move, mail_template, mail_lang)),
                 'mail_subject': get_setting('mail_subject', default_value=self._get_default_mail_subject(move, mail_template, mail_lang)),
                 'mail_partner_ids': get_setting('mail_partner_ids', default_value=self._get_default_mail_partner_ids(move, mail_template, mail_lang).ids),
+                'reply_to': get_setting('reply_to') or self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'reply_to'),
             })
         # Add mail attachments if sending methods support them
         if self._display_attachments_widget(vals['invoice_edi_format'], vals['sending_methods']):
@@ -117,7 +118,17 @@ class AccountMoveSend(models.AbstractModel):
         - action the action to run when the link is clicked
         """
         alerts = {}
-
+        send_cron = self.env.ref('account.ir_cron_account_move_send', raise_if_not_found=False)
+        if len(moves) > 1 and send_cron and not send_cron.sudo().active:
+            has_cron_access = send_cron.has_access('write')
+            has_access_message = _("The scheduled action 'Send Invoices automatically' is archived. You won't be able to send invoices in batch.")
+            no_access_addendum = _("\nPlease contact your administrator.")
+            alerts['account_send_cron_archived'] = {
+                'level': 'warning',
+                'message': has_access_message if has_cron_access else has_access_message + no_access_addendum,
+                'action_text': _("Check") if has_cron_access else None,
+                'action': send_cron._get_records_action() if has_cron_access else None,
+            }
         # Filter moves that are trying to send via email
         email_moves = moves.filtered(lambda m: 'email' in moves_data[m]['sending_methods'])
         if email_moves:
@@ -591,13 +602,16 @@ class AccountMoveSend(models.AbstractModel):
             for attachment in self.env['ir.attachment'].browse(list(seen_attachment_ids)).exists()
         ]
 
-        return {
+        params = {
             'author_id': move_data['author_partner_id'],
             'body': move_data['mail_body'],
             'subject': move_data['mail_subject'],
             'partner_ids': move_data['mail_partner_ids'],
             'attachments': mail_attachments,
         }
+        if move_data.get('reply_to'):
+            params['reply_to'] = move_data['reply_to']
+        return params
 
     @api.model
     def _generate_dynamic_reports(self, moves_data):

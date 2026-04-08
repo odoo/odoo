@@ -362,7 +362,7 @@ describe("save translation", () => {
     beforeEach(async () => {
         onRpc("/website/field/translation/update", async (data) => {
             const { params } = await data.json();
-            expect.step(params.translations.fr_BE);
+            expect.step({ [params.record_id[0]]: params.translations.fr_BE });
             return true;
         });
     });
@@ -391,7 +391,7 @@ describe("save translation", () => {
             })} ${getTranslateEditable({ inWrap: "def", sourceSha: srcSha2 })}`,
         });
         await modifyBothTextsAndSave(getEditor());
-        expect.verifySteps([{ srcSha1: "a1bc", srcSha2: "d1ef" }]);
+        expect.verifySteps([{ 526: { srcSha1: "a1bc", srcSha2: "d1ef" } }]);
     });
 
     test("save translation of contents of different views", async () => {
@@ -403,7 +403,22 @@ describe("save translation", () => {
             })} ${getTranslateEditable({ inWrap: "def", oeId: 2, sourceSha: srcSha2 })}`,
         });
         await modifyBothTextsAndSave(getEditor());
-        expect.verifySteps([{ srcSha1: "a1bc" }, { srcSha2: "d1ef" }]);
+        expect.verifySteps([{ 1: { srcSha1: "a1bc" } }, { 2: { srcSha2: "d1ef" } }]);
+    });
+
+    test("save delayed translation even if not dirty", async () => {
+        const websiteContent = `
+            ${getTranslateEditable({ inWrap: "abc", oeId: 1, sourceSha: srcSha1 })}
+            ${getTranslateEditable({ inWrap: "def", oeId: 2, sourceSha: srcSha2 })}
+            ${getTranslateEditable({ inWrap: "ghi", oeId: 2, sourceSha: "srcSha3" })}
+            ${getTranslateEditable({ inWrap: "jkl", oeId: 3, sourceSha: "srcSha4" })}
+            ${getTranslateEditable({ inWrap: "mno", oeId: 4, sourceSha: "srcSha5" })}
+        `.replace(/ translate_branding">(?!jkl<)/g, ' o_delay_translation translate_branding">');
+        const { getEditor } = await setupSidebarBuilderForTranslation({
+            websiteContent: websiteContent,
+        });
+        await modifyBothTextsAndSave(getEditor());
+        expect.verifySteps([{ 4: {} }, { 1: { srcSha1: "a1bc" } }, { 2: { srcSha2: "d1ef" } }]);
     });
 });
 
@@ -441,6 +456,54 @@ test("'Translate to' button should be visible in translate mode", async () => {
     await contains("button[data-action-id='translateWebpageAI']").click();
     await animationFrame();
     expect(":iframe .o_editable").toHaveText("Bonjour");
+});
+
+test("'Translate to' works with partial request failure", async () => {
+    const originalText = "a".repeat(2000);
+    await setupSidebarBuilderForTranslation({
+        websiteContent:
+            getTranslateEditable({ inWrap: `${originalText}1`, sourceSha: "1" }) +
+            getTranslateEditable({ inWrap: `${originalText}2`, sourceSha: "2" }) +
+            getTranslateEditable({ inWrap: `${originalText}3`, sourceSha: "3" }) +
+            getTranslateEditable({ inWrap: `${originalText}4`, sourceSha: "4" }) +
+            getTranslateEditable({ inWrap: `${originalText}5`, sourceSha: "5" }) +
+            getTranslateEditable({ inWrap: `${originalText}6`, sourceSha: "6" }),
+    });
+    onRpc("/html_editor/generate_text", async (data) => {
+        const { params } = await data.json();
+        const prompt = JSON.parse(params.prompt)[0];
+        const number = prompt.text.slice(-1);
+        if (["2", "4", "5"].includes(number)) {
+            throw new Error("ConnectionLostError");
+        }
+        return JSON.stringify([
+            {
+                id: prompt.id,
+                text: `${prompt.text}french`,
+            },
+        ]);
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expectElementCount("button[data-action-id='translateWebpageAI']", 1);
+    patchWithCleanup(console, {
+        warn: (msg, error) => expect.step(msg),
+    });
+    await contains("button[data-action-id='translateWebpageAI']").click();
+    await animationFrame();
+    expect(":iframe .container:nth-child(1) .o_editable").toHaveText(`${originalText}1french`);
+    expect(":iframe .container:nth-child(2) .o_editable").toHaveText(`${originalText}2`);
+    expect(":iframe .container:nth-child(3) .o_editable").toHaveText(`${originalText}3french`);
+    expect(":iframe .container:nth-child(4) .o_editable").toHaveText(`${originalText}4`);
+    expect(":iframe .container:nth-child(5) .o_editable").toHaveText(`${originalText}5`);
+    expect(":iframe .container:nth-child(6) .o_editable").toHaveText(`${originalText}6french`);
+    expect(".o_notification_content").toHaveText(
+        "Translation Error. 3 text blocks were skipped during translation. Please try again."
+    );
+    expect.verifySteps([
+        "Translation chunck failed:",
+        "Translation chunck failed:",
+        "Translation chunck failed:",
+    ]);
 });
 
 test("trying to translate an element inside a .o_not_editable should add a notification", async () => {

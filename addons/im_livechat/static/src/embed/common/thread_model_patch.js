@@ -57,14 +57,14 @@ patch(Thread.prototype, {
          * @type {Deferred}
          */
         this.readyToSwapDeferred = new Deferred();
-        this.chatbot = fields.One("Chatbot");
         this._toggleChatbot = fields.Attr(false, {
             compute() {
-                return this.chatbot && !this.livechat_end_dt;
+                return Boolean(this.chatbot && !this.chatbot.completed && !this.livechat_end_dt);
             },
             onUpdate() {
+                const shouldToggle = this._toggleChatbot;
                 this.isLoadedDeferred.then(() => {
-                    if (this._toggleChatbot) {
+                    if (shouldToggle) {
                         this.chatbot.start();
                     } else {
                         this.chatbot?.stop();
@@ -168,7 +168,7 @@ patch(Thread.prototype, {
             return text;
         }
         if (this.chatbot.completed) {
-            return _t("This livechat conversation has ended");
+            return _t("This livechat conversation has ended.");
         }
         if (
             this.chatbot.currentStep?.step_type === "question_selection" &&

@@ -18,7 +18,7 @@
                                 </t>
                             </t>
                         </header>
-                        <main class="modal-body" t-attf-class="{{ props.bodyClass }} {{ !props.withBodyPadding ? 'p-0': '' }}">
+                        <main class="modal-body" t-attf-class="{{ props.bodyClass }} {{ !props.withBodyPadding ? 'p-0': '' }}" t-att-tabindex="this.bodyTabIndex">
                             <t t-slot="default" close="() => this.data.close()" />
                         </main>
                         <footer t-if="props.footer" class="modal-footer d-empty-none justify-content-around justify-content-md-start flex-wrap gap-1 w-100">

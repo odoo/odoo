@@ -201,6 +201,7 @@ def generate_comparison(new_content, old_content):
                     comparison.insert(start_index, addition_flagged_line)
                 elif (
                     line.split(">")[0] != comparison[start_index].split(">")[0]
+                    or line.startswith("/")
                 ):
                     comparison.insert(start_index, line)
 

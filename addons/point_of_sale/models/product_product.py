@@ -30,6 +30,10 @@ class ProductProduct(models.Model):
                     "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!",
                 ))
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_special_product(self):
+        self.product_tmpl_id._check_is_special_product()
+
     @api.model
     def _load_pos_data_read(self, records, config):
         read_records = super()._load_pos_data_read(records, config)
@@ -51,4 +55,5 @@ class ProductProduct(models.Model):
 
     def action_archive(self):
         self.product_tmpl_id._ensure_unused_in_pos()
+        self.product_tmpl_id._check_is_special_product()
         return super().action_archive()

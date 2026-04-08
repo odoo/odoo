@@ -12,16 +12,11 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
 
         cls.env.user.group_ids += cls.env.ref('hr.group_hr_user')
 
-        cls.main_pos_config.write({"module_pos_hr": True})
-
         # Admin employee
-        cls.admin = cls.env.ref("hr.employee_admin").sudo().copy({
-            "date_version": '2000-01-01',
-            "company_id": cls.env.company.id,
-            "user_id": cls.pos_admin.id,
-            "name": "Mitchell Admin",
-            "pin": False,
-        })
+        cls.pos_admin.employee_id.name = "Mitchell Admin"
+        cls.admin = cls.pos_admin.employee_id
+
+        cls.main_pos_config.write({"module_pos_hr": True})
 
         # Managers
         cls.manager_user = new_test_user(

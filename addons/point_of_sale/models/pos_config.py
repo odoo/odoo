@@ -26,7 +26,7 @@ class PosConfig(models.Model):
         return self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).id
 
     def _default_picking_type_id(self):
-        return self.env['stock.warehouse'].with_context(active_test=False).search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).pos_type_id.id
+        return self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).pos_type_id.id
 
     def _default_sale_journal(self):
         journal = self.env['account.journal']._ensure_company_account_journal()
@@ -254,7 +254,7 @@ class PosConfig(models.Model):
             delete_record_ids[model] = browsed.filtered(lambda r: not r.exists()).ids
             # Cancelled orders must be forced deleted from the user interface.
             if model == "pos.order":
-                delete_record_ids[model] += browsed.filtered(lambda r: r.state == "cancel").ids
+                delete_record_ids[model] += browsed.exists().filtered(lambda r: r.state == "cancel").ids
 
         pos_order_data = dynamic_records.get('pos.order') or self.env['pos.order']
         data = pos_order_data.read_pos_data([], self)
@@ -285,7 +285,7 @@ class PosConfig(models.Model):
 
         record = read_records[0]
         record['_server_version'] = exp_version()
-        record['_base_url'] = self.get_base_url()
+        record['_base_url'] = config.get_base_url()
         record['_data_server_date'] = self.env.context.get('pos_last_server_date') or self.env.cr.now()
         record['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
         record['_has_cash_delete_perm'] = self.env.user.has_group('account.group_account_basic')
@@ -637,6 +637,9 @@ class PosConfig(models.Model):
                 if key in vals.keys():
                     if bypass_payment_method_ids_forbidden_change and key == 'payment_method_ids':
                         continue
+                    # Allow activating a pos config even if it has an open session, but don't allow deactivating it.
+                    if key == 'active' and vals['active']:
+                        continue
                     field_name = self._fields[key].get_description(self.env)["string"]
                     forbidden_fields.append(field_name)
 
@@ -896,6 +899,19 @@ class PosConfig(models.Model):
         except (TypeError, ValueError, OverflowError):
             return DEFAULT_LIMIT_LOAD_PRODUCT
 
+    def get_product_loading_info(self):
+        """Return total product.template count matching the PoS domain and the configured loading limit.
+
+        Used by the frontend to warn the user before triggering a full sync when the product
+        count exceeds the configured limit or crosses the dangerous threshold (20 000+).
+        """
+        self.ensure_one()
+        ProductTemplate = self.env['product.template']
+        domain = ProductTemplate._load_pos_data_domain({}, self)
+        total_count = ProductTemplate.search_count(domain)
+        limit = self.get_limited_product_count()
+        return {'total_count': total_count, 'limit': limit}
+
     def _get_limited_partner_count(self):
         config_param = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.limited_customer_count', DEFAULT_LIMIT_LOAD_PARTNER)
         try:
@@ -1025,9 +1041,12 @@ class PosConfig(models.Model):
             bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', 'in', self.env.company.parent_ids.ids)], limit=1)
             if not bank_journal:
                 raise UserError(_('Ensure that there is an existing bank journal. Check if chart of accounts is installed in your company.'))
+            chart_template = self.with_context(allowed_company_ids=self.env.company.root_id.ids).env['account.chart.template']
+            outstanding_account = chart_template.ref('account_journal_payment_debit_account_id', raise_if_not_found=False) or self.env.company.transfer_account_id
             bank_pm = self.env['pos.payment.method'].create({
                 'name': _('Card'),
                 'journal_id': bank_journal.id,
+                'outstanding_account_id': outstanding_account.id if outstanding_account else False,
                 'company_id': self.env.company.id,
                 'sequence': 1,
             })

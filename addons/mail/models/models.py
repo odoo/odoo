@@ -86,12 +86,9 @@ class Base(models.AbstractModel):
         """ Globally reverse result of '_mail_get_operation_for_mail_message_operation'
         aka return documents for a given access to check on them. """
         document_operations = self._mail_get_operation_for_mail_message_operation(message_operation)
-        operation_documents = defaultdict(lambda: self.env[self._name])
-        for record, record_operation in document_operations.items():
-            operation_documents[record_operation] += record
-        # force prefetch in a post-loop as recordset concatenation may lose it
-        for operation, records in operation_documents.items():
-            records = records.with_prefetch(self.ids)
+        documents = self.browse(record.id for record in document_operations).with_prefetch(self._prefetch_ids)
+        operation_documents = documents.grouped(document_operations.__getitem__)
+        operation_documents.pop(None, None)  # discard documents without a permission
         return operation_documents
 
     # ------------------------------------------------------------

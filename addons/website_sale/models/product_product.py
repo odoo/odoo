@@ -195,6 +195,8 @@ class ProductProduct(models.Model):
                 'ratingValue': self.sudo().rating_avg,
                 'reviewCount': self.rating_count,
             }
+        if self.barcode:
+            markup_data['gtin'] = self.barcode
         return markup_data
 
     def _get_image_1920_url(self):

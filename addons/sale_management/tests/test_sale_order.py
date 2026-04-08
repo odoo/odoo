@@ -522,3 +522,30 @@ class TestSaleOrder(SaleManagementCommon):
             self.assertTrue(sale_order_form.order_line)
             self.assertFalse(sale_order_form.show_update_pricelist)
             sale_order_form.partner_id = self.partner
+
+    def test_optional_section_discount_line_not_editable_on_portal(self):
+        so = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [
+                Command.create({
+                    "name": "Optional Section",
+                    "display_type": "line_section",
+                    "is_optional": True,
+                }),
+                Command.create({"product_id": self.product.id, "price_unit": 200}),
+            ],
+        })
+        wizard = self.env["sale.order.discount"].create({
+            "sale_order_id": so.id,
+            "discount_type": "so_discount",
+            "discount_percentage": 0.1,
+        })
+        wizard.action_apply_discount()
+        self.assertTrue(
+            so.order_line[1]._can_be_edited_on_portal(),
+            "Optional section line should be editable on portal",
+        )
+        self.assertFalse(
+            so.order_line[2]._can_be_edited_on_portal(),
+            "Discount line on optional section should not be editable on portal",
+        )

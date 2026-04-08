@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-02-04 16:40+0000\n"
+"POT-Creation-Date: 2026-03-13 18:39+0000\n"
+"PO-Revision-Date: 2026-03-19 14:14+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "payment_authorize/pl/>\n"
@@ -24,9 +24,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
-"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -40,13 +40,13 @@ msgid ""
 "Checking</option>\n"
 "                    </select>"
 msgstr ""
-"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">"
-"\n"
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-"
+"select\">\n"
 "                        <option value=\"checking\">Konto osobiste</option>\n"
-"                        <option value=\"savings\">Konto "
-"oszczędnościowe</option>\n"
-"                        <option value=\"businessChecking\">Konto "
-"firmowe</option>\n"
+"                        <option value=\"savings\">Konto oszczędnościowe</"
+"option>\n"
+"                        <option value=\"businessChecking\">Konto firmowe</"
+"option>\n"
 "                    </select>"
 
 #. module: payment_authorize
@@ -271,6 +271,12 @@ msgstr ""
 #: code:addons/payment_authorize/models/payment_provider.py:0
 msgid "This action cannot be performed while the provider is disabled."
 msgstr "Czynność ta nie może być wykonana, gdy dostawca jest wyłączony."
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/controllers/main.py:0
+msgid "Transaction not found."
+msgstr "Nie znaleziono transakcji."
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form

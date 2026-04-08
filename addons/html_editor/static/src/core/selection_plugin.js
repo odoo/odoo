@@ -1,9 +1,11 @@
 import { closestBlock } from "@html_editor/utils/blocks";
 import {
+    getDeepestEditablePosition,
     getDeepestPosition,
     isMediaElement,
     isProtected,
     isProtecting,
+    isSelfClosingElement,
     isUnprotecting,
 } from "@html_editor/utils/dom_info";
 import {
@@ -281,14 +283,29 @@ export class SelectionPlugin extends Plugin {
             this.addDomListener(document, "pointerdown", unFocusEditable, { capture: true });
         }
         this.preservedCursors = [];
+        // Calling the native `focus` method of the editable element, even with
+        // `preventScroll: true`, would reset the selection at the start of the
+        // editable. This would, in turn, trigger a selectionchange event and,
+        // down the line, a scroll to the position of the selection, so to the
+        // top of the document. Calling focusEditable instead will restore the
+        // correct editable selection and prevent scrolling when not needed.
+        this.editableOriginalFocus = this.editable.focus;
+        this.editable.focus = () => this.focusEditable();
+    }
+
+    destroy() {
+        if (this.editableOriginalFocus) {
+            this.editable.focus = this.editableOriginalFocus;
+        }
+        super.destroy();
     }
 
     selectAll() {
         const selection = this.getEditableSelection();
         const containerSelector = "#wrap > *, .oe_structure > *, [contenteditable]";
         const container = selection && closestElement(selection.anchorNode, containerSelector);
-        const [anchorNode, anchorOffset] = getDeepestPosition(container, 0);
-        const [focusNode, focusOffset] = getDeepestPosition(container, nodeSize(container));
+        const [anchorNode, anchorOffset] = getDeepestEditablePosition(container, 0);
+        const [focusNode, focusOffset] = getDeepestEditablePosition(container, nodeSize(container));
         if (
             this.delegateTo("select_all_overrides", {
                 anchorNode,
@@ -380,15 +397,29 @@ export class SelectionPlugin extends Plugin {
             if (anchorNode === focusNode && focusOffset < anchorOffset) {
                 direction = !direction;
             }
+
+            // Last resort: if the document selection doesn't even have the right
+            // anchorNode comparing to the range, we don't set the active selection.
+            const isSelectionUncorrectable = direction
+                ? anchorNode !== range.startContainer
+                : anchorNode !== range.endContainer;
+
             if (
                 this.activeSelection &&
-                (isProtecting(anchorNode) ||
+                (isSelectionUncorrectable ||
+                    isProtecting(anchorNode) ||
                     (isProtected(anchorNode) && !isUnprotecting(anchorNode)))
             ) {
                 // Keep the previous activeSelection in case of user interactions
                 // inside a protected zone.
                 return this.activeSelection;
             }
+            // For Safari, in edge cases in collaboration, the selection can be
+            // wrong (e.g. offsets are out of range) while the range is correct.
+            // We use range's offsets instead of selection's.
+            anchorOffset = direction ? range.startOffset : range.endOffset;
+            focusOffset = direction ? range.endOffset : range.startOffset;
+
             [anchorNode, anchorOffset] = normalizeSelfClosingElement(anchorNode, anchorOffset);
             [focusNode, focusOffset] = normalizeSelfClosingElement(focusNode, focusOffset);
             const [startContainer, startOffset, endContainer, endOffset] =
@@ -483,14 +514,15 @@ export class SelectionPlugin extends Plugin {
     getSelectionData() {
         const selection = this.document.getSelection();
         const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
+        let collapsed;
         const documentSelection =
             selection?.anchorNode && selection?.focusNode
                 ? Object.freeze({
                       get isCollapsed() {
-                          if (this.collapsed === undefined) {
-                              this.collapsed = selection.isCollapsed;
+                          if (collapsed === undefined) {
+                              collapsed = selection.isCollapsed;
                           }
-                          return this.collapsed;
+                          return collapsed;
                       },
                       anchorNode: selection.anchorNode,
                       anchorOffset: selection.anchorOffset,
@@ -968,7 +1000,7 @@ export class SelectionPlugin extends Plugin {
             isProtecting(node) || (isProtected(node) && !isUnprotecting(node));
         if (
             focusTarget !== anchorTarget &&
-            focusTarget.previousSibling === anchorTarget &&
+            focusTarget?.previousSibling === anchorTarget &&
             protectionCheck(anchorTarget)
         ) {
             return;
@@ -1060,8 +1092,9 @@ export class SelectionPlugin extends Plugin {
             const selectingBackward = ["ArrowLeft", "ArrowUp"].includes(ev.key);
             const currentBlock = closestBlock(focusNode);
             const isAtBoundary = selectingBackward
-                ? firstLeaf(currentBlock) === focusNode && focusOffset === 0
-                : lastLeaf(currentBlock) === focusNode && focusOffset === nodeSize(focusNode);
+                ? [firstLeaf(currentBlock), currentBlock].includes(focusNode) && focusOffset === 0
+                : [lastLeaf(currentBlock), currentBlock].includes(focusNode) &&
+                  focusOffset === nodeSize(focusNode);
             const adjacentBlock = selectingBackward
                 ? currentBlock.previousElementSibling
                 : currentBlock.nextElementSibling;
@@ -1069,8 +1102,11 @@ export class SelectionPlugin extends Plugin {
                 ? adjacentBlock?.previousElementSibling
                 : adjacentBlock?.nextElementSibling;
             if (!adjacentBlock?.isContentEditable && targetBlock && isAtBoundary) {
-                const leafNode = selectingBackward ? lastLeaf(targetBlock) : firstLeaf(targetBlock);
-                const offset = selectingBackward ? nodeSize(leafNode) : 0;
+                let leafNode = selectingBackward ? lastLeaf(targetBlock) : firstLeaf(targetBlock);
+                let offset = selectingBackward ? nodeSize(leafNode) : 0;
+                if (isSelfClosingElement(leafNode)) {
+                    [leafNode, offset] = selectingBackward ? leftPos(leafNode) : rightPos(leafNode);
+                }
                 selection.extend(leafNode, offset);
                 ev.preventDefault();
             }
@@ -1097,11 +1133,19 @@ export class SelectionPlugin extends Plugin {
     }
 
     focusEditable() {
-        const { editableSelection, currentSelectionIsInEditable } = this.getSelectionData();
-        if (this.editable.contains(this.document.activeElement) && currentSelectionIsInEditable) {
-            // Editor has focus — nothing to do.
+        const selection = this.document.getSelection();
+        const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
+        if (this.editable.contains(this.document.activeElement) && documentSelectionIsInEditable) {
+            // Editor has focus — nothing to do. Unless the current active
+            // element is a textarea, in which case we want to focus the
+            // editable to update the selection to the editable.
+            if (this.document.activeElement.tagName === "TEXTAREA") {
+                this.editableOriginalFocus.call(this.editable);
+            }
             return;
         }
+
+        const { editableSelection, currentSelectionIsInEditable } = this.getSelectionData();
 
         // Focusing the closest editable element is required since, in the website
         // 'this.editable' itself is contenteditable="false`.
@@ -1109,7 +1153,11 @@ export class SelectionPlugin extends Plugin {
             editableSelection.commonAncestorContainer,
             (el) => el.getAttribute("contenteditable") === "true"
         );
-        closestEditable?.focus({ preventScroll: true });
+        if (closestEditable === this.editable) {
+            this.editableOriginalFocus.call(this.editable, { preventScroll: true });
+        } else {
+            closestEditable?.focus({ preventScroll: true });
+        }
 
         // If selection is inside a non-editable element, focusing editor might
         // move cursor to different position. so reapply the last selection.

@@ -156,6 +156,13 @@ describe("deleteRange method", () => {
                 contentAfter: "<div><p>abc[]def</p></div>",
             });
         });
+        test("should remove contenteditable=false element if fully selected", async () => {
+            await testEditor({
+                contentBefore: `<p>a[bc</p><div contenteditable="false">def</div><p>gh]i</p>`,
+                stepFunction: deleteSelection,
+                contentAfter: `<p>a[]i</p>`,
+            });
+        });
     });
     describe("Block + inline", () => {
         test("should merge paragraph with inline content after it", async () => {
@@ -334,6 +341,13 @@ describe("deleteSelection", () => {
                 contentBefore: `<p>a[bc</p><div class="oe_unremovable">def</div><p>gh]i</p>`,
                 stepFunction: deleteSelection,
                 contentAfter: `<p>a[]</p><div class="oe_unremovable"><br></div><p>i</p>`,
+            });
+        });
+        test("should not remove nor clear content of unremovable contenteditable=false node", async () => {
+            await testEditor({
+                contentBefore: `<p>a[bc</p><div class="oe_unremovable" contenteditable="false">def</div><p>gh]i</p>`,
+                stepFunction: deleteSelection,
+                contentAfter: `<p>a[]</p><div class="oe_unremovable" contenteditable="false">def</div><p>i</p>`,
             });
         });
         test("should move the unremovable up the tree", async () => {

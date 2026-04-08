@@ -639,8 +639,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(len(ewallet_1_bbb), 1)
         self.assertAlmostEqual(ewallet_1_bbb.points, 50, places=2)
         ewallet_2_bbb = self.env['loyalty.card'].search([('partner_id', '=', partner_bbb.id), ('program_id', '=', programs['ewallet_2'].id)])
-        self.assertEqual(len(ewallet_2_bbb), 1)
-        self.assertAlmostEqual(ewallet_2_bbb.points, 0, places=2)
+        # Before the tour there's no card for partner B and ewallet 2
+        # During the tour the ewallet 2 is not used for partner 2 and no "points" are granted
+        # We don't create cards when there's no point and there's no history on it
+        self.assertEqual(len(ewallet_2_bbb), 0)
 
     def test_coupon_change_pricelist(self):
         """Test coupon program with different pricelists."""
@@ -3601,6 +3603,20 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Discount should be the same even if tax mode is changed
         self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_order_reward_product_tax_included_excluded', login="pos_user")
 
+    def test_loyalty_is_not_processed_for_draft_order(self):
+        """Test that loyalty is not processed for draft orders"""
+        self.env['loyalty.program'].search([]).write({'active': False})
+        trusted_pos_config = self.main_pos_config.copy()
+        loyalty_program = self.create_programs([('Loyalty P', 'loyalty')])['Loyalty P']
+        partner = self.env['res.partner'].create({'name': 'AAAA'})
+        self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': partner.id,
+            'points': 50,
+        })
+        self.main_pos_config.trusted_config_ids += trusted_pos_config
+        self.start_pos_tour("test_loyalty_is_not_processed_for_draft_order", login="pos_user")
+
     def test_race_conditions_update_program(self):
         """This test ensures that the loyalty program update are correctly applied, even if a lot of programs applies on one order."""
         product_test = self.env['product.product'].create({
@@ -3628,3 +3644,22 @@ class TestUi(TestPointOfSaleHttpCommon):
             })
 
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_race_conditions_update_program', login="pos_user")
+
+    def test_multiple_physical_gift_card_sale(self):
+        """
+        Test that the manual gift card sold has been correctly generated.
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        # Deactivate all other programs to avoid interference and activate the gift_card_product_50
+        LoyaltyProgram.search([]).write({'pos_ok': False})
+        self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
+        # Create gift card program
+        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+
+        # Run the tour
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_multiple_physical_gift_card_sale",
+            login="pos_user",
+        )
+        self.assertEqual(len(gift_card_program.coupon_ids), 2)

@@ -89,6 +89,49 @@ test("can be rendered", async () => {
     expect(".o-autocomplete--input").toHaveAttribute("aria-activedescendant", dropdownItemIds[0]);
 });
 
+// TODO: Hoot dispatches "change"/"blur" in the wrong order vs browser.
+test.todo("select option with onChange", async () => {
+    class Parent extends Component {
+        static components = { AutoComplete };
+        static template = xml`<AutoComplete value="state.value" sources="sources" onChange.bind="onChange" />`;
+        static props = [];
+
+        state = useState({ value: "" });
+        sources = buildSources(() => [
+            item("/contactus", this.onSelect.bind(this)),
+            item("/contactus-thank-you", this.onSelect.bind(this)),
+        ]);
+
+        onChange({ inputValue, isOptionSelected }) {
+            expect.step(`isOptionSelected:${isOptionSelected}`);
+            if (isOptionSelected) {
+                return;
+            }
+            this.state.value = inputValue;
+        }
+
+        onSelect(option) {
+            this.state.value = option.label;
+            expect.step(option.label);
+        }
+    }
+
+    await mountWithCleanup(Parent);
+
+    await contains(".o-autocomplete input").edit("/", { confirm: false });
+    await runAllTimers();
+    expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
+
+    await contains(queryFirst(".o-autocomplete--dropdown-item")).click();
+    await runAllTimers();
+    expect.verifySteps(["isOptionSelected:true", "/contactus"]);
+
+    await contains(".o-autocomplete input").edit("hello", { confirm: "false" });
+    expect.verifySteps(["isOptionSelected:false"]);
+    await contains(document.body).click();
+    expect(".o-autocomplete input").toHaveValue("hello");
+});
+
 test("select option", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
@@ -573,7 +616,7 @@ test("correct sequence of blur, focus and select", async () => {
     await contains(".o-autocomplete input").edit("", { confirm: false });
     await runAllTimers();
     await contains(document.body).click();
-    expect.verifySteps(["blur", "change"]);
+    expect.verifySteps(["change", "blur"]);
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
 });
 
@@ -889,4 +932,33 @@ test("items are selected only when the mouse moves, not just on enter", async ()
     expect(".o-autocomplete--dropdown-item:nth-child(3) .dropdown-item").toHaveClass(
         "ui-state-active"
     );
+});
+
+test("do not attempt to scroll if element is null", async () => {
+    const def = new Deferred();
+    class Parent extends Component {
+        static template = xml`<AutoComplete value="''" sources="sources" />`;
+        static components = { AutoComplete };
+        static props = [];
+
+        sources = [
+            buildSources(async () => {
+                await def;
+                return [item("delayed one"), item("delayed two"), item("delayed three")];
+            }),
+            buildSources(Array.from(Array(20)).map((_, index) => item(`item ${index}`))),
+        ].flat();
+    }
+
+    await mountWithCleanup(Parent);
+    queryOne(`.o-autocomplete input`).focus();
+    queryOne(`.o-autocomplete input`).click();
+    await animationFrame();
+    expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
+    expect(".o-autocomplete .dropdown-item").toHaveCount(21);
+    expect(".o-autocomplete .dropdown-item:eq(0)").toHaveClass("o_loading");
+
+    def.resolve();
+    await animationFrame();
+    expect(".o-autocomplete .dropdown-item").toHaveCount(23); // + 3 items - loading
 });

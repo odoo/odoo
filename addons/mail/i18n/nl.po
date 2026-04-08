@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:35+0000\n"
-"PO-Revision-Date: 2026-02-03 09:41+0000\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
+"PO-Revision-Date: 2026-03-31 14:18+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/mail/nl/>\n"
 "Language: nl\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -313,6 +313,8 @@ msgstr "%(user)s heeft de Thread \"%(thread_name)s\" verwijderd"
 #: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
 msgid "%(user)s just connected for the first time. Wish them luck!"
 msgstr ""
+"%(user)s heeft juist voor de eerste keer verbinding gemaakt. Wens ze veel "
+"succes!"
 
 #. module: mail
 #. odoo-python
@@ -424,6 +426,18 @@ msgstr "&amp;nbsp;&amp;nbsp;"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "(Keep formatting)"
+msgstr "(Opmaak bewaren)"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "(Remove formatting)"
+msgstr "(Opmaak verwijderen)"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "(Translated from: %(language)s)"
 msgstr "(Vertaald van: %(language)s)"
@@ -460,7 +474,7 @@ msgstr ") heeft je als volger toegevoegd van"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_invite
 msgid ") added you as a follower of this"
-msgstr ") heeft je toegevoegd als volger van"
+msgstr ") heeft je toegevoegd als volger van een"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
@@ -1968,7 +1982,7 @@ msgstr "Intensiteit van achtergrondvervaging"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/badge_selection_icons/badge_selection_icons_field.js:0
 msgid "Badges with Icons"
-msgstr "Badges met pictogrammen"
+msgstr "Badges met iconen"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base
@@ -3065,6 +3079,12 @@ msgstr "Inhoud"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "Continue with Full Composer?"
+msgstr "Doorgaan met volledige editor?"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.js:0
 msgid "Conversations"
 msgstr "Gesprekken"
@@ -3669,7 +3689,7 @@ msgstr "Afleverfout"
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Deprecated usage of 'default_res_id', should use 'default_res_ids'."
 msgstr ""
-"VErouderd gebruik van 'default_res_id', gebruik liever 'default_res_ids'."
+"Verouderd gebruik van 'default_res_id', gebruik liever 'default_res_ids'."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -3728,7 +3748,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_app_model_patch.js:0
 msgid "Direct messages"
-msgstr "Directe berichten"
+msgstr "Privéberichten"
 
 #. module: mail
 #. odoo-javascript
@@ -4231,7 +4251,7 @@ msgstr "E-mail CC beheer"
 #: model:ir.model,name:mail.model_mail_alias_domain
 #: model:ir.model.fields,field_description:mail.field_res_company__alias_domain_id
 msgid "Email Domain"
-msgstr "Email-domein"
+msgstr "E-maildomein"
 
 #. module: mail
 #. odoo-javascript
@@ -4622,18 +4642,23 @@ msgstr "Kon het bericht niet posten. Klik om het opnieuw te proberen"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
-"Failed to render QWeb template: %(template_src)s\n"
+"Failed to render QWeb template for %(template_label)s\n"
+"Target Model: %(model_name)s\n"
+"Language context: %(lang_context)s\n"
+"Error: %(error_details)s\n"
 "\n"
-"%(template_traceback)s)"
+"Template Source Snippet:\n"
+"%(template_src)s"
 msgstr ""
-"Kan QWeb-sjabloon niet weergeven: %(template_src)s\n"
-"\n"
-"%(template_traceback)s)"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-msgid "Failed to render inline_template template: %(template_txt)s"
+#, fuzzy
+#| msgid "Failed to render inline_template template: %(template_txt)s"
+msgid ""
+"Failed to render inline_template template: %(template_txt)s\n"
+"Error details: %(error)s"
 msgstr ""
 "Het is niet gelukt om de inline_template-sjabloon te renderen: %"
 "(template_txt)s"
@@ -4993,6 +5018,12 @@ msgstr "Taal verplichten"
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
 msgid "Formatted Email"
 msgstr "Geformatteerde e-mail"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "Formatting can only be restored in Full Composer."
+msgstr "Opmaak kan alleen worden hersteld in volledige editor."
 
 #. module: mail
 #. odoo-javascript
@@ -6734,7 +6765,7 @@ msgstr "Een interne notitie vastleggen…"
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Log note"
-msgstr "Log notitie"
+msgstr "Notitie loggen"
 
 #. module: mail
 #. odoo-javascript
@@ -6873,6 +6904,14 @@ msgstr "E-mailsjablooneditor"
 #: model:ir.model,name:mail.model_mail_template_reset
 msgid "Mail Template Reset"
 msgstr "E-mailsjabloon resetten"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "Unnamed %(record_model_name)s (%(record_id)s)"
+msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
+msgstr "Naamloos %(record_model_name)s%(record_id)s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
@@ -7038,6 +7077,12 @@ msgstr "Markeren als niet gelezen"
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.xml:0
 msgid "Mark as done"
 msgstr "Markeren als gereed"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -7711,6 +7756,7 @@ msgstr "Volgende activiteiten beschikbaar"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
 #: code:addons/mail/static/src/core/web/message_patch.js:0
 msgid "No"
 msgstr "Nee"
@@ -7788,6 +7834,14 @@ msgstr "Er zijn geen documenten gevonden voor de geselecteerde records."
 #: code:addons/mail/static/src/core/web/thread_patch.xml:0
 msgid "No history messages"
 msgstr "Geen berichtengeschiedenis"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "Result of the language detection based on its content."
+msgid "No language detected in context"
+msgstr "Resultaat van de taaldetectie op basis van de inhoud."
 
 #. module: mail
 #. odoo-javascript
@@ -8381,9 +8435,16 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
+#, fuzzy
+#| msgid ""
+#| "Oops! We couldn't save your template due to an issue with this value: %"
+#| "(template_txt)s. Correct it and try again."
 msgid ""
-"Oops! We couldn't save your template due to an issue with this value: %"
-"(template_txt)s. Correct it and try again."
+"Oops! We couldn't save your template due to an issue.\n"
+"\n"
+"Error: %(error_details)s\n"
+"\n"
+"Correct it and try again."
 msgstr ""
 "Oeps! We konden je sjabloon niet opslaan vanwege een probleem met deze "
 "waarde: %(template_txt)s. Corrigeer dit en probeer opnieuw."
@@ -8428,7 +8489,7 @@ msgstr "Document openen"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer_actions.js:0
 msgid "Open Full Composer"
-msgstr "Open volledige editor"
+msgstr "Volledige editor openen"
 
 #. module: mail
 #. odoo-javascript
@@ -10010,13 +10071,13 @@ msgstr "Activiteit plannen"
 #. odoo-python
 #: code:addons/mail/models/mail_activity.py:0
 msgid "Schedule an Activity"
-msgstr "Plan een activiteit"
+msgstr "Activiteit plannen"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 msgid "Schedule an activity"
-msgstr "Plan een activiteit"
+msgstr "Activiteit plannen"
 
 #. module: mail
 #. odoo-javascript
@@ -10563,7 +10624,7 @@ msgstr "Servertype POP."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
 msgid "Set Email"
-msgstr "Stel e-mail in"
+msgstr "E-mail instellen"
 
 #. module: mail
 #. odoo-javascript
@@ -11201,6 +11262,14 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "Message unique identifier"
+msgid "Template name not identified"
+msgstr "Bericht unieke identificatie"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
 "Template rendering should only be called with a list of IDs. Received “%"
 "(res_ids)s” instead."
@@ -11485,8 +11554,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"De naam van de e-mailalias, bijvoorbeeld: 'vacature' als je alle e-mails van "
-"vacature@uwbedrijf.nl wilt afvangen"
+"De naam van de e-mailalias, bv. 'vacature' als je alle mails van "
+"<vacature@jouwbedrijf.com> wilt opvangen"
 
 #. module: mail
 #. odoo-python
@@ -12395,6 +12464,22 @@ msgid "Unnamed %(record_model_name)s (%(record_id)s)"
 msgstr "Naamloos %(record_model_name)s%(record_id)s"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "Related Mail Template"
+msgid "Unnamed Mail Template"
+msgstr "Gerelateerd e-mailsjabloon"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+#| msgid "Unnamed"
+msgid "Unnamed Mailing"
+msgstr "Naamloos"
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_card_list.xml:0
 #: code:addons/mail/static/src/discuss/message_pin/common/message_actions.js:0
@@ -13231,6 +13316,7 @@ msgstr "Ja, zet het vast!"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
 #: code:addons/mail/static/src/core/web/message_patch.js:0
 msgid "Yes"
 msgstr "Ja"
@@ -14216,6 +14302,15 @@ msgstr "je alias"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” in “%(channel_name)s”"
+
+#~ msgid ""
+#~ "Failed to render QWeb template: %(template_src)s\n"
+#~ "\n"
+#~ "%(template_traceback)s)"
+#~ msgstr ""
+#~ "Kan QWeb-sjabloon niet weergeven: %(template_src)s\n"
+#~ "\n"
+#~ "%(template_traceback)s)"
 
 #~ msgid "%(user)s connected. This is their first connection. Wish them luck."
 #~ msgstr "%(user)s verbonden. Dit is hun eerste verbinding. Wens ze succes."

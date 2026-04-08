@@ -1,8 +1,10 @@
 import { closestBlock, isBlock } from "./blocks";
 import {
+    isElement,
     isEmptyTextNode,
     isParagraphRelatedElement,
     isShrunkBlock,
+    isTextNode,
     isVisible,
     nextLeaf,
     previousLeaf,
@@ -166,7 +168,7 @@ export function removeStyle(element, ...styleProperties) {
  */
 export function fillEmpty(el) {
     const document = el.ownerDocument;
-    if (!isBlock(el) && !isVisible(el) && !el.hasAttribute("data-oe-zws-empty-inline")) {
+    if (!isVisible(el) && !el.hasAttribute("data-oe-zws-empty-inline") && !isBlock(el)) {
         const zws = document.createTextNode("\u200B");
         el.appendChild(zws);
         el.setAttribute("data-oe-zws-empty-inline", "");
@@ -373,5 +375,38 @@ export function removeInvisibleWhitespace(el, cursors) {
             child.remove();
         }
         index += 1;
+    }
+}
+
+/**
+ * This is used as a replacement for `node.normalize()` which in Safari
+ * incorrectly moves the selection to the parent element instead of
+ * restoring it to the correct offset in the merged text node.
+ *
+ * @param {HTMLElement} node
+ * @param {Cursors} cursor
+ */
+export function mergeAdjacentTextNodes(node, cursor) {
+    let child = node.firstChild;
+    while (child) {
+        if (isElement(child)) {
+            mergeAdjacentTextNodes(child, cursor);
+        }
+
+        const next = child.nextSibling;
+        if (isTextNode(child) && next && isTextNode(next)) {
+            if (cursor.anchor.node === next) {
+                cursor.anchor.node = child;
+                cursor.anchor.offset = child.textContent.length + cursor.anchor.offset;
+            }
+            if (cursor.focus.node === next) {
+                cursor.focus.node = child;
+                cursor.focus.offset = child.textContent.length + cursor.focus.offset;
+            }
+            child.textContent += next.textContent;
+            next.remove();
+        } else {
+            child = next;
+        }
     }
 }

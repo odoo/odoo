@@ -22,9 +22,7 @@ class TestReportSession(TestPoSCommon):
         product_to_archive = self.create_product('Product to archive', self.categ_basic, 100, self.tax1.id)
 
         self.config.open_ui()
-        # check that an unsed product can be archived by any user with archive rights
         self.res_users_stock_user.group_ids |= self.env.ref('product.group_product_manager')
-        product_to_archive.with_user(self.res_users_stock_user).action_archive()
 
         session_id = self.config.current_session_id.id
         order = self.env['pos.order'].create({

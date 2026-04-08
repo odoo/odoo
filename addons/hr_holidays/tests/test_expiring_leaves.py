@@ -557,6 +557,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             'name': 'Flexible 40h/week',
             'tz': 'UTC',
             'hours_per_day': 8.0,
+            'hours_per_week': 80.0,
             'full_time_required_hours': 80.0,
             'flexible_hours': True,
         })

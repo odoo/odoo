@@ -24,7 +24,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
 
     def _product_domain(self, product_template_ids, product_ids):
         if product_template_ids:
-            return [('product_tmpl_id', 'in', product_template_ids)]
+            return [('product_tmpl_id', 'in', product_template_ids), ('product_id.active', '=', True)]
         return [('product_id', 'in', product_ids)]
 
     def _move_domain(self, product_template_ids, product_ids, wh_location_ids):

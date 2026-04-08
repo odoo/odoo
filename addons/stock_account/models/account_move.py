@@ -39,7 +39,7 @@ class AccountMove(models.Model):
         # Post entries.
         res = super()._post(soft)
 
-        self.line_ids._get_stock_moves().filtered(lambda m: m.is_in)._set_value()
+        self.line_ids._get_stock_moves().filtered(lambda m: m.is_in or m.is_dropship)._set_value()
 
         return res
 
@@ -165,7 +165,10 @@ class AccountMove(models.Model):
         """
         return self.env.context
 
-    def _get_related_stock_moves(self):
+    def _stock_account_get_last_step_stock_moves(self):
+        """ To be overridden for customer invoices and vendor bills in order to
+        return the stock moves related to the invoices in self.
+        """
         return self.env['stock.move']
 
     def _get_invoiced_lot_values(self):

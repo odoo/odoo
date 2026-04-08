@@ -1892,6 +1892,7 @@ class TestTemplating(ViewCase):
         """)
         self.assertEqual(arch, expected)
 
+
 @tagged('post_install', '-at_install')
 class TestViews(ViewCase):
 
@@ -2713,6 +2714,28 @@ class TestViews(ViewCase):
         """
         self.assertValid(arch % 'base.group_no_one')
         self.assertWarning(arch % 'base.dummy')
+
+    def test_groups_field_removed(self):
+        view = self.View.create({
+            'name': 'valid view',
+            'model': 'ir.ui.view',
+            'arch': """
+                <form string="View">
+                    <span class="oe_inline" invisible="0 == 0">
+                        (<field name="name" groups="base.group_portal"/>)
+                    </span>
+                </form>
+            """,
+        })
+        arch = self.View.get_views([(view.id, view.type)])['views']['form']['arch']
+
+        self.assertEqual(arch, """
+                <form string="View">
+                    <span class="oe_inline" invisible="0 == 0">
+                        ()
+                    </span>
+                </form>
+            """.strip())
 
     def test_attrs_groups_behavior(self):
         view = self.View.create({
@@ -4854,7 +4877,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'appointment',
             'approvals',
             'approvals_purchase_stock',
-            'auth_signup',
             'auth_totp',
             'barcodes_gs1_nomenclature',
             'base_address_extended',
@@ -4890,8 +4912,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'documents_approvals',
             'documents_fleet',
             'documents_l10n_be_hr_payroll',
-            'documents_project',
-            'documents_project_sale',
             'documents_spreadsheet',
             'event',
             'event_booth',
@@ -4944,7 +4964,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'hr_timesheet',
             'hr_work_entry',
             'hr_work_entry_holidays_enterprise',
-            'iap',
             'im_livechat',
             'industry_fsm',
             'industry_fsm_report',
@@ -5026,12 +5045,12 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'l10n_lu_reports',
             'l10n_ma_hr_payroll',
             'l10n_mx',
-            'l10n_mx_edi',
-            'l10n_mx_edi_extended',
-            'l10n_mx_edi_landing',
-            'l10n_mx_edi_pos',
-            'l10n_mx_edi_stock',
             'l10n_mx_hr_payroll',
+            'l10n_mx_edi',
+            'l10n_mx_edi_pos',
+            'l10n_mx_edi_extended',
+            'l10n_mx_edi_stock',
+            'l10n_mx_edi_landing',
             'l10n_mx_reports',
             'l10n_mx_xml_polizas',
             'l10n_my_edi',
@@ -5086,8 +5105,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'mrp_subcontracting',
             'mrp_subcontracting_dropshipping',
             'mrp_workorder',
-            'mrp_workorder_expiry',
-            'mrp_workorder_iot',
             'onboarding',
             'partner_autocomplete',
             'partner_commission',
@@ -5144,7 +5161,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'sale_planning',
             'sale_product_matrix',
             'sale_project',
-            'sale_purchase',
             'sale_renting',
             'sale_renting_crm',
             'sale_stock',
@@ -5156,7 +5172,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'sign',
             'sms',
             'snailmail',
-            'snailmail_account',
             'social',
             'social_crm',
             'social_facebook',
@@ -5181,7 +5196,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'survey',
             'test_testing_utilities',
             'timesheet_grid',
-            'uom',
             'utm',
             'voip',
             'web',

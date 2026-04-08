@@ -549,3 +549,61 @@ class TestEdiZatca(TestSaEdiCommon):
 
         for field_name in expected_error_fields:
             self.assertIn(field_name, error_message, f"Error message should contain '{field_name}'")
+
+    def test_otp_validation_without_company_street(self):
+        """Test that validating OTP fails when the company street is missing."""
+        self.company.street = False
+
+        journal = self.env['account.journal'].search([
+            *self.env['account.journal']._check_company_domain(self.company),
+            ('type', '=', 'sale'),
+        ], limit=1)
+
+        wizard = self.env['l10n_sa_edi.otp.wizard'].create({
+            'journal_id': journal.id,
+            'l10n_sa_otp': '123456',
+        })
+
+        self.assertFalse(journal.l10n_sa_csr_errors)
+
+        wizard.validate()
+
+        self.assertTrue(journal.l10n_sa_csr_errors)
+        self.assertEqual(
+            str(journal.l10n_sa_csr_errors),
+            f'<p>Please set the following on {self.company.name}: Street</p>'
+        )
+
+    def test_invoice_cash_rounding_payable_amount(self):
+        """Test that payable_amount is correctly computed when using cash rounding"""
+        cash_rounding = self.env['account.cash.rounding'].create({
+            'name': 'add_invoice_line',
+            'rounding': 1.00,
+            'strategy': 'add_invoice_line',
+            'profit_account_id': self.company_data['default_account_revenue'].copy().id,
+            'loss_account_id': self.company_data['default_account_expense'].copy().id,
+            'rounding_method': 'UP',
+        })
+
+        move_data = {
+            'name': 'INV/2022/00014',
+            'invoice_date': '2022-09-05',
+            'invoice_date_due': '2022-09-22',
+            'partner_id': self.partner_sa,
+            'invoice_cash_rounding_id': cash_rounding.id,
+            'invoice_line_ids': [{
+                'product_id': self.product_a.id,
+                'price_unit': 99.55,
+                'tax_ids': self.tax_15.ids,
+            }],
+        }
+
+        invoice = self._create_test_invoice(**move_data)
+        invoice.action_post()
+        xml_content = self.env['account.edi.format']._l10n_sa_generate_zatca_template(invoice)
+        xml_root = etree.fromstring(xml_content)
+        payable_amount = xml_root.xpath(
+            "//cbc:PayableAmount",
+            namespaces=self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_get_namespaces()
+        )[0].text.strip()
+        self.assertEqual(payable_amount, '115.00')

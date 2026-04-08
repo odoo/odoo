@@ -28,6 +28,7 @@ export class EditorOverlay extends Component {
         shared: Object,
         close: Function,
         isOverlayOpen: Function,
+        getCustomRect: { type: Function, optional: true },
 
         // Props from createOverlay
         positionOptions: { type: Object, optional: true },
@@ -135,7 +136,10 @@ export class EditorOverlay extends Component {
             }
             range = this.lastSelection.range;
         }
-        let rect = range.getBoundingClientRect();
+        let rect =
+            this.props.getCustomRect?.() ||
+            this.lastSelection.rect ||
+            range.getBoundingClientRect();
         if (rect.x === 0 && rect.width === 0 && rect.height === 0) {
             // Attention, ignoring DOM mutations is always dangerous (when we add or remove nodes)
             // because if another mutation uses the target that is not observed, that mutation can never be applied
@@ -182,7 +186,14 @@ export class EditorOverlay extends Component {
             return true;
         }
         const scrollContainerRect = scrollContainer.getBoundingClientRect();
-        const top = Math.max(scrollContainerRect.top, 0);
+        let scrollContainerTop = scrollContainerRect.top;
+        if (scrollContainer.ownerDocument !== overlayElement.ownerDocument) {
+            const frameElement = scrollContainer.ownerDocument.defaultView?.frameElement;
+            if (frameElement) {
+                scrollContainerTop += frameElement.getBoundingClientRect().top;
+            }
+        }
+        const top = Math.max(scrollContainerTop, 0);
         const bottom = top + scrollContainerRect.height;
         const overflowsTop = solution.top < top;
         const overflowsBottom = solution.top + overlayElement.offsetHeight > bottom;

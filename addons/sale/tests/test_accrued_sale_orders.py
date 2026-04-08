@@ -169,3 +169,34 @@ class TestAccruedSaleOrders(TestSaleCommon):
             {'account_id': self.alt_inc_account.id, 'debit': 0, 'credit': 1000},
             {'account_id': self.wizard.account_id.id, 'debit': 6000, 'credit': 0},
         ])
+
+    def test_accrued_entries_with_discount(self):
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 10.0,
+                    'price_unit': 10.0,
+                    'tax_ids': False,
+                    'discount': 10,
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+        sale_order.order_line.qty_delivered = 10
+        accrued_wizard = self.env['account.accrued.orders.wizard'].with_context(
+            active_model='sale.order',
+            active_ids=sale_order.ids,
+        ).create({
+            'account_id': self.account_expense.id,
+            'date': fields.Date.today(),
+        })
+        res = self.env['account.move'].search(accrued_wizard.create_entries()['domain']).line_ids
+        self.assertRecordValues(res, [
+            {'debit': 90.0, 'credit': 0.0},
+            {'debit': 0.0, 'credit': 90.0},
+            {'debit': 0.0, 'credit': 90.0},
+            {'debit': 90.0, 'credit': 0.0},
+        ])

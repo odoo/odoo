@@ -50,6 +50,9 @@ class MrpBom(models.Model):
     sequence = fields.Integer('Sequence')
     operation_ids = fields.One2many('mrp.routing.workcenter', 'bom_id', 'Operations', copy=True)
     operation_count = fields.Integer('Operations Count', compute='_compute_operation_count')
+    show_copy_operations_button = fields.Boolean(
+        compute="_compute_show_copy_operations_button",
+        help="Technical field used to control the visibility of the 'Copy Existing Operations' button.")
     ready_to_produce = fields.Selection([
         ('all_available', ' When all components are available'),
         ('asap', 'When components for 1st operation are available')], string='Manufacturing Readiness',
@@ -326,6 +329,10 @@ class MrpBom(models.Model):
         for bom in self:
             bom.operation_count = len(bom.operation_ids)
 
+    def _compute_show_copy_operations_button(self):
+        exist_operation = bool(self.env['mrp.routing.workcenter'].search_count([], limit=1))
+        self.show_copy_operations_button = exist_operation
+
     def action_compute_bom_days(self):
         company_id = self.env.context.get('default_company_id', self.env.company.id)
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1)
@@ -412,6 +419,7 @@ class MrpBom(models.Model):
             Quantity describes the number of times you need the BoM: so the quantity divided by the number created by the BoM
             and converted into its UoM
         """
+        self = self.with_context(bom_cost_share_cache=self.env.context.get('bom_cost_share_cache') or {})  # noqa: PLW0642
         product_ids = set()
         product_boms = {}
         def update_product_boms():
@@ -651,6 +659,10 @@ class MrpBom(models.Model):
                 'bom_id_invisible': True,
             },
         }
+
+    def action_copy_existing_operations(self):
+        self.ensure_one()
+        return self.env['mrp.routing.workcenter'].with_context(bom_id=self.id).copy_existing_operations()
 
 
 class MrpBomLine(models.Model):

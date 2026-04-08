@@ -101,24 +101,11 @@ export class PowerboxPlugin extends Plugin {
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
-        user_commands: {
-            id: "openPowerbox",
-            run: () =>
-                this.openPowerbox({
-                    commands: this.getAvailablePowerboxCommands(),
-                    categories: this.getResource("powerbox_categories"),
-                }),
-        },
         powerbox_categories: [
             withSequence(10, { id: "structure", name: _t("Structure") }),
             withSequence(60, { id: "widget", name: _t("Widget") }),
             withSequence(100, { id: "modules", name: _t("Modules") }),
         ],
-        power_buttons: withSequence(100, {
-            commandId: "openPowerbox",
-            description: _t("More options"),
-            icon: "oi-ellipsis-v",
-        }),
         hints: withSequence(30, {
             selector: baseContainerGlobalSelector,
             text: _t('Type "/" for commands'),
@@ -140,7 +127,9 @@ export class PowerboxPlugin extends Plugin {
             applyCommand: this.applyCommand.bind(this),
         };
         this.powerboxCommands = this.makePowerboxCommands();
-        this.addDomListener(this.editable.ownerDocument, "keydown", this.onKeyDown);
+        this.addDomListener(this.editable.ownerDocument, "keydown", this.onKeyDown, {
+            capture: true,
+        });
     }
 
     /**
@@ -246,11 +235,13 @@ export class PowerboxPlugin extends Plugin {
                 break;
             case "ArrowUp": {
                 ev.preventDefault();
+                ev.stopImmediatePropagation();
                 this.state.currentIndex = rotate(this.state.currentIndex, this.state.commands, -1);
                 break;
             }
             case "ArrowDown": {
                 ev.preventDefault();
+                ev.stopImmediatePropagation();
                 this.state.currentIndex = rotate(this.state.currentIndex, this.state.commands, 1);
                 break;
             }

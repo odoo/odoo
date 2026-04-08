@@ -47,6 +47,13 @@
                 <h6 class="pt-3 mb-1">Expertise</h6>
                 <ExpertiseTagsAutocomplete channel="props.thread" disabled="!store.has_access_livechat"/>
             </div>
+            <div t-if="props.thread.correspondentCountry or props.thread.livechat_lang_id">
+                <h6 class="pt-3">Country &amp; Language</h6>
+                <div class="d-flex bg-inherit align-items-center gap-1">
+                    <img t-if="props.thread.showCorrespondentCountry" class="o_country_flag" t-att-src="props.thread.correspondentCountry.flagUrl" t-att-title="props.thread.correspondentCountry.code or props.thread.correspondentCountry.name" aria-label="Country"/>
+                    <span t-if="props.thread.livechat_lang_id" title="Language" t-esc="props.thread.livechat_lang_id.name"/>
+                </div>
+            </div>
             <t t-name="extra_infos"/>
             <div t-if="props.thread.livechat_end_dt" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-0">Send conversation</h6>

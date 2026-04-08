@@ -450,6 +450,40 @@ class TestViewSaving(TestViewSavingCommon):
             )
         )
 
+    def test_save_view_delay_translations(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        view = self.env['ir.ui.view'].create({
+            'name': 'test_view',
+            'type': 'qweb',
+            'key': 'website.test_view',
+            'arch_db': '<span>Hello World</span>'
+        })
+        view.with_context(lang='fr_FR').arch = "<div>Bonjour Monde</div>"
+
+        # delayed translations are enabled by default (SavePlugin.saveView uses it by default)
+        view.with_context(delay_translations=True).save(value='<div>New World</div>', xpath='/div')
+        self.assertEqual(
+            view.with_context(lang='fr_FR').arch,
+            '<div>Bonjour Monde</div>',
+        )
+        delayed_translation = view.with_context(lang='fr_FR', edit_translations=True).arch
+        self.assertIn(
+            '<div><span class="o_delay_translation"',
+            delayed_translation,
+        )
+        self.assertIn(
+            '>New World</span></div>',
+            delayed_translation,
+        )
+
+        # delayed translations can be disabled thanks to ir.config_parameter
+        self.env['ir.config_parameter'].sudo().set_param('website.disable_delay_translations', '1')
+        view.with_context(delay_translations=True).save(value='<div>All New World</div>', xpath='/div')
+        self.assertEqual(
+            view.with_context(lang='fr_FR').arch,
+            '<div>All New World</div>',
+        )
+
 
 @tagged('-at_install', 'post_install')
 class TestCowViewSaving(TestViewSavingCommon, HttpCase):
@@ -1206,6 +1240,20 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
 
         self.assertEqual(specific_view.with_context(lang='es_ES').arch, '<div>hola</div>',
                          "loading module translation for a specific language should not remove existing translations for other languages")
+
+    def test_view_translation_without_website(self):
+        # When get_related_views is called with no website in the
+        # context, the returned views should not be translated.
+        # All get_related_views calls in website should have a website
+        # in the context, however this is tested to simulate the
+        # behavior when called by other modules.
+        fr_BE = self.env['res.lang']._activate_lang('fr_BE')
+        self.env['website'].browse(1).default_lang_id = fr_BE
+        self.base_view.with_context(lang='en_US').arch_db = '<div>hello</div>'
+        self.base_view.update_field_translations('arch_db', {'fr_BE': {'hello': 'bonjour'}})
+
+        views = self.env['ir.ui.view'].with_context(is_customization_code=False).get_related_views(self.base_view.key)
+        self.assertEqual(views.browse(self.base_view.id).arch, '<div>hello</div>')
 
     def test_view_to_translate_tag(self):
         fr_BE = self.env['res.lang']._activate_lang('fr_BE')

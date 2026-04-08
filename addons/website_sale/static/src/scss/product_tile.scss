@@ -46,6 +46,8 @@
     margin-right: var(--o-wsale-card-margin-x);
     width: 100%;
     container: oe_product_cart / inline-size;
+    contain: layout style;
+    content-visibility: auto;
 
     &:before {
         $_y: var(--o-wsale-card-pseudobg-y, MIN(#{map-get($spacers, 3) * -0.5}, calc(var(--o-wsale-products-grid-gap-y) / 2)));

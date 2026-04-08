@@ -19,6 +19,7 @@ from odoo.exceptions import (
 from odoo.models import BaseModel
 from odoo.modules.registry import Registry
 from odoo.tools import lazy
+from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES
 
 from .server import thread_local
 
@@ -50,13 +51,16 @@ def get_public_method(model: BaseModel, name: str):
     """
     assert isinstance(model, BaseModel)
     e = f"Private methods (such as '{model._name}.{name}') cannot be called remotely."
-    if name.startswith('_'):
+    if name.startswith('_') or name in _UNSAFE_ATTRIBUTES:
         raise AccessError(e)
 
     cls = type(model)
     method = getattr(cls, name, None)
     if not callable(method):
         raise AttributeError(f"The method '{model._name}.{name}' does not exist")  # noqa: TRY004
+    if method == getattr(model, name, None):  # classmethod, staticmethod
+        e = f"The method '{model._name}.{name}' cannot be called remotely."
+        raise AccessError(e)
 
     for mro_cls in cls.mro():
         if not (cla_method := getattr(mro_cls, name, None)):

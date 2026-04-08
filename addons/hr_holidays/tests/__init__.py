@@ -13,6 +13,7 @@ from . import test_leave_requests
 from . import test_out_of_office
 from . import test_company_leave
 from . import test_res_partner
+from . import test_resource_calendar
 from . import test_mandatory_days
 from . import test_global_leaves
 from . import test_uninstall
@@ -34,3 +35,4 @@ from . import test_leave_type_data
 from . import test_multi_contract
 from . import test_time_off_allocation_tour
 from . import test_flexible_resource_calendar
+from . import test_hr_leave_report

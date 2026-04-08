@@ -174,7 +174,12 @@ class TestSaleMrpProcurement(TransactionCase):
         # Verify buttons are working as expected
         self.assertEqual(sale_order_so0.mrp_production_count, 2, "2 Mos for the 2 sale order line")
         self.assertEqual(sale_order_so0.mrp_production_ids[0].product_qty, 1)
-        self.assertEqual(sale_order_so0.mrp_production_ids[1].product_qty, 2)
+        self.assertEqual(sale_order_so0.mrp_production_ids[0].mrp_production_child_count, 1)
+        self.assertRecordValues(sale_order_so0.mrp_production_ids[0]._get_children(), [{
+            'product_id': self.finished_product.id,
+            'product_qty': 1,
+        }])
+        self.assertEqual(sale_order_so0.mrp_production_ids[1].product_qty, 1)
 
         pickings = sale_order_so0.picking_ids
 

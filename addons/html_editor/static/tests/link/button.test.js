@@ -15,7 +15,7 @@ import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts, unformat } from "../_helpers/format";
 import { getContent, setSelection } from "../_helpers/selection";
-import { insertText } from "../_helpers/user_actions";
+import { deleteBackward, insertText } from "../_helpers/user_actions";
 
 describe("button style", () => {
     test("editable button should have cursor text", async () => {
@@ -318,6 +318,22 @@ describe("Custom button style", () => {
             '<p><a href="https://test.com/" class="rounded-circle btn btn-fill-custom" style="color: rgb(0, 0, 0); background-color: rgb(166, 227, 226); border-width: 1px; border-color: rgb(0, 143, 140); border-style: dashed; ">link[]Label</a></p>'
         );
     });
+
+    test("button with size classes should be detected as custom type", async () => {
+        // Setup: Editor with a button link containing size class (btn-lg) + primary class
+        await setupEditor(
+            '<p><a href="https://test.com/" class="btn btn-lg btn-primary">link[]Label</a></p>',
+            allowCustomOpt
+        );
+
+        // Wait for popover and click edit
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await animationFrame();
+
+        // The button type should be detected as "custom" because it has btn-lg
+        expect(queryOne('select[name="link_type"]').selectedOptions[0].value).toBe("custom");
+    });
 });
 
 describe("button edit", () => {
@@ -423,5 +439,16 @@ test("button should never contain selection placeholder", async () => {
             '<button style="display: block" contenteditable="true"><div style="display: block" contenteditable="false">a</div></button>',
         contentBeforeEdit:
             '<button style="display: block" contenteditable="true"><div style="display: block" contenteditable="false">a</div></button>',
+    });
+});
+
+test.tags("firefox");
+describe("firefox", () => {
+    test("text should be inserted inside link after backspace", async () => {
+        const { el, editor } = await setupEditor('<p><a href="#">link</a>t[]est</p>');
+        deleteBackward(editor);
+        deleteBackward(editor);
+        await insertText(editor, "X");
+        expect(cleanLinkArtifacts(getContent(el))).toBe('<p><a href="#">linX[]</a>est</p>');
     });
 });

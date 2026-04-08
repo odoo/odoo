@@ -32,6 +32,49 @@ beforeEach(() => {
 
 describe.current.tags("interaction_dev");
 
+const singleScrollTemplate = /* xml */ `
+    <div id="wrapwrap">
+        <section data-snippet="s_dynamic_snippet_carousel" class="s_dynamic_snippet_carousel s_dynamic o_carousel_multi_items pt32 pb32 o_colored_level" data-custom-template-data="{}" data-name="Dynamic Carousel"
+                data-filter-id="1"
+                data-template-key="website.dynamic_filter_template_test_item"
+                data-number-of-records="4"
+                data-carousel-interval="1000">
+            <div class="container">
+                <div class="row s_nb_column_fixed">
+                    <section class="s_dynamic_snippet_content oe_unremovable oe_unmovable o_not_editable col o_colored_level">
+                        <div class="css_non_editable_mode_hidden">
+                            <div class="missing_option_warning alert alert-info fade show d-none d-print-none rounded-0">
+                            Your Dynamic Snippet will be displayed here... This message is displayed because you did not provide both a filter and a template to use.
+                                <br/>
+                            </div>
+                        </div>
+                        <div class="dynamic_snippet_template"></div>
+                    </section>
+                </div>
+            </div>
+        </section>
+    </div>;
+`;
+
+test.tags("desktop");
+test("dynamic carousel snippet doesn't slide when number of records is less than chunksize", async () => {
+    onRpc("/website/snippet/filters", async () => [
+        `<div class="s_test_dynamic_carousel_single_item">Test Record 1</div>`,
+        `<div class="s_test_dynamic_carousel_single_item">Test Record 2</div>`,
+        `<div class="s_test_dynamic_carousel_single_item">Test Record 3</div>`,
+        `<div class="s_test_dynamic_carousel_single_item">Test Record 4</div>`,
+    ]);
+    await startInteractions(singleScrollTemplate);
+    expect(".carousel").not.toHaveClass("o_carousel_multi_items");
+    const carouselItemEls = queryAll(".carousel-item");
+    expect(carouselItemEls).toHaveLength(1);
+    expect(carouselItemEls[0]).toHaveClass("active");
+    const itemEls = queryAll(".carousel .s_test_dynamic_carousel_single_item");
+    expect(itemEls).toHaveLength(4);
+    expect(queryAll(".carousel-control-prev")).toHaveLength(0);
+    expect(queryAll(".carousel-control-next")).toHaveLength(0);
+});
+
 const testTemplate = /* xml */ `
     <div id="wrapwrap">
         <section data-snippet="s_dynamic_snippet_carousel" class="s_dynamic_snippet_carousel s_dynamic pt32 pb32 o_colored_level" data-custom-template-data="{}" data-name="Dynamic Carousel"

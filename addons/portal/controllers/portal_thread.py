@@ -50,7 +50,7 @@ class PortalChatter(ThreadController):
                                 fields=[
                                     "active",
                                     "avatar_128",
-                                    Store.One("main_user_id", "share"),
+                                    Store.One("main_user_id", ["partner_id", "share"]),
                                     "name",
                                 ],
                             )

@@ -19,6 +19,15 @@ registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
         content: 'Wait for the list id to be set.',
         trigger: ':iframe .s_newsletter_block[data-list-id]:not([data-list-id="0"]) .s_newsletter_subscribe_form',
     },
+    {
+        content: "Click on the Subscribe button to open its options.",
+        trigger: ":iframe .s_newsletter_block .js_subscribe_btn",
+        run: "click",
+    },
+    {
+        content: "Verify that the button options do not have clone/remove/save buttons.",
+        trigger: "div[data-container-title='Button'] .options-container-header:not(:has(.oe_snippet_remove, .oe_snippet_clone, .oe_snippet_save))",
+    },
     ...clickOnSave(),
     // Subscribe to the newsletter.
     {

@@ -1,10 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo.tools import html2plaintext
 
+
 from odoo.addons.sale.tests.common import TestSaleCommon
+from odoo.addons.stock.tests.test_report import TestReportsCommon
 
 
 @tagged('post_install', '-at_install')
@@ -132,3 +134,33 @@ class TestSaleMrpInvoices(TestSaleCommon):
             [replenisment_line['document_in'], replenisment_line['document_out'], replenisment_line['quantity'], replenisment_line['move_out'], replenisment_line['replenishment_filled']],
             [False, False, 10.0, None, True]
         )
+
+
+class TestSaleMrpReports(TestReportsCommon):
+
+    def test_forecast_report_shows_mo_for_mto_manufacture(self):
+        """Ensure forecast report shows Manufacturing Order as source
+        for MTO manufactured products."""
+        # Enable MTO route
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        mto_route = warehouse.mto_pull_id.route_id
+        mto_route.active = True
+        self.product.route_ids = [Command.link(mto_route.id)]
+        # Create component and BOM
+        component = self.env['product.product'].create({'name': 'Component'})
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_template.id,
+            'bom_line_ids': [Command.create({'product_id': component.id})],
+        })
+        # Create and confirm SO
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.partner
+        with so_form.order_line.new() as line:
+            line.product_id = self.product
+        so = so_form.save()
+        so.action_confirm()
+        # Get forecast report
+        _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+        self.assertEqual(len(lines), 1)
+        self.assertEqual(lines[0]['document_in']['id'], so.mrp_production_ids.id)
+        self.assertEqual(lines[0]['document_out']['id'], so.id)

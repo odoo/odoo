@@ -4,6 +4,7 @@ import { closestBlock } from "@html_editor/utils/blocks";
 import { isEditorTab, isEmptyBlock } from "@html_editor/utils/dom_info";
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { omit, pick } from "@web/core/utils/objects";
+import { debounce } from "@web/core/utils/timing";
 
 /** @typedef {import("./powerbox/powerbox_plugin").PowerboxCommand} PowerboxCommand */
 /** @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection */
@@ -63,7 +64,7 @@ export class PowerButtonsPlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         layout_geometry_change_handlers: this.updatePowerButtons.bind(this),
-        selectionchange_handlers: this.updatePowerButtons.bind(this),
+        selectionchange_handlers: this.triggerDebouncedUpdatePowerButtons.bind(this),
         post_mount_component_handlers: this.updatePowerButtons.bind(this),
     };
 
@@ -72,6 +73,12 @@ export class PowerButtonsPlugin extends Plugin {
             "oe-power-buttons-overlay"
         );
         this.createPowerButtons();
+        const shouldDebounce = this.config.debouncePowerbuttons !== false;
+        if (shouldDebounce) {
+            this.debouncedUpdatePowerButtons = debounce(this.updatePowerButtons.bind(this), 30);
+        } else {
+            this.debouncedUpdatePowerButtons = this.updatePowerButtons.bind(this);
+        }
     }
 
     createPowerButtons() {
@@ -102,6 +109,7 @@ export class PowerButtonsPlugin extends Plugin {
             }
             btn.className = className;
             btn.title = description;
+            this.addDomListener(btn, "pointerdown", (ev) => ev.preventDefault());
             this.addDomListener(btn, "click", () => this.applyCommand(run));
             return btn;
         };
@@ -114,58 +122,58 @@ export class PowerButtonsPlugin extends Plugin {
         this.descriptionToElementMap = new Map(powerButtons.map((pb) => [pb, renderButton(pb)]));
 
         this.powerButtonsContainer = this.document.createElement("div");
-        this.powerButtonsContainer.className = `o_we_power_buttons d-flex justify-content-center d-none`;
+        this.powerButtonsContainer.className = `o_we_power_buttons d-flex justify-content-center invisible position-absolute`;
         this.powerButtonsContainer.append(...this.descriptionToElementMap.values());
         this.powerButtonsOverlay.append(this.powerButtonsContainer);
     }
 
+    triggerDebouncedUpdatePowerButtons() {
+        this.powerButtonsContainer.classList.add("invisible");
+        this.debouncedUpdatePowerButtons();
+    }
+
     updatePowerButtons() {
-        this.powerButtonsContainer.classList.add("d-none");
-        const { editableSelection, currentSelectionIsInEditable } =
+        this.powerButtonsContainer.classList.add("invisible");
+        const { documentSelection, editableSelection, currentSelectionIsInEditable } =
             this.dependencies.selection.getSelectionData();
         if (!currentSelectionIsInEditable) {
             return;
         }
-        const block = closestBlock(editableSelection.anchorNode);
-        const element = closestElement(editableSelection.anchorNode);
+        const block = closestBlock(documentSelection.anchorNode);
         const blockRect = block.getBoundingClientRect();
         const editableRect = this.editable.getBoundingClientRect();
         if (
-            editableSelection.isCollapsed &&
+            documentSelection.isCollapsed &&
             block?.matches(baseContainerGlobalSelector) &&
             editableRect.bottom > blockRect.top &&
             isEmptyBlock(block) &&
             !descendants(block).some(isEditorTab) &&
             !this.services.ui.isSmall &&
-            !closestElement(editableSelection.anchorNode, "td, th, li") &&
+            !closestElement(documentSelection.anchorNode, "td, th, li") &&
             !block.style.textAlign &&
             this.getResource("power_buttons_visibility_predicates").every((predicate) =>
-                predicate(editableSelection)
+                predicate(documentSelection)
             )
         ) {
-            this.powerButtonsContainer.classList.remove("d-none");
-            const direction = closestElement(element, "[dir]")?.getAttribute("dir");
-            this.powerButtonsContainer.setAttribute("dir", direction);
+            const direction = closestElement(block, "[dir]")?.getAttribute("dir");
             // Hide/show buttons based on their availability.
             for (const [{ isAvailable }, buttonElement] of this.descriptionToElementMap.entries()) {
                 const shouldHide = Boolean(!isAvailable(editableSelection));
                 buttonElement.classList.toggle("d-none", shouldHide); // 2nd arg must be a boolean
             }
             this.setPowerButtonsPosition(block, blockRect, direction);
+            this.powerButtonsContainer.classList.remove("invisible");
+            this.powerButtonsContainer.setAttribute("dir", direction);
         }
     }
 
     getPlaceholderWidth(block) {
-        let width;
-        this.dependencies.history.ignoreDOMMutations(() => {
-            const clone = block.cloneNode(true);
-            clone.innerText = clone.getAttribute("o-we-hint-text");
-            clone.style.width = "fit-content";
-            clone.style.visibility = "hidden";
-            this.editable.appendChild(clone);
-            width = clone.getBoundingClientRect().width;
-            this.editable.removeChild(clone);
-        });
+        const hintText = block.getAttribute("o-we-hint-text");
+        const cs = getComputedStyle(block);
+        const canvas = this.canvas || (this.canvas = document.createElement("canvas"));
+        const ctx = canvas.getContext("2d");
+        ctx.font = cs.font;
+        const width = ctx.measureText(hintText).width;
         return width;
     }
 
@@ -175,20 +183,52 @@ export class PowerButtonsPlugin extends Plugin {
      * @param {string} direction
      */
     setPowerButtonsPosition(block, blockRect, direction) {
-        const overlayStyles = this.powerButtonsOverlay.style;
         // Resetting the position of the power buttons.
-        overlayStyles.top = "0px";
-        overlayStyles.left = "0px";
-        const buttonsRect = this.powerButtonsContainer.getBoundingClientRect();
-        const placeholderWidth = this.getPlaceholderWidth(block) + 20;
-        if (direction === "rtl") {
-            overlayStyles.left =
-                blockRect.right - buttonsRect.width - buttonsRect.x - placeholderWidth + "px";
-        } else {
-            overlayStyles.left = blockRect.left - buttonsRect.x + placeholderWidth + "px";
+        const overlayRect = this.powerButtonsOverlay.getBoundingClientRect();
+        let referenceRect = { top: 0, left: 0 };
+        let frameElement;
+        try {
+            frameElement = this.document.defaultView.frameElement;
+        } catch {
+            // We don't access the frameElement if we don't have access to it.
+            // (i.e. iframe origin or sandbox restriction)
         }
-        overlayStyles.top = blockRect.top - buttonsRect.top + "px";
-        overlayStyles.height = blockRect.height + "px";
+        if (frameElement) {
+            referenceRect = frameElement.getBoundingClientRect();
+        }
+        const placeholderWidth = this.getPlaceholderWidth(block);
+        let newButtonContainerLeft;
+        const editableRect = this.editable.getBoundingClientRect();
+        if (direction === "rtl") {
+            newButtonContainerLeft =
+                blockRect.right - (overlayRect.left - referenceRect.left) - placeholderWidth - 30;
+            if (newButtonContainerLeft <= 0) {
+                this.powerButtonsContainer
+                    .querySelectorAll(".power_button:not(:last-child)")
+                    .forEach((el) => el.classList.add("d-none"));
+                newButtonContainerLeft =
+                    blockRect.right -
+                    (overlayRect.left - referenceRect.left) -
+                    placeholderWidth -
+                    30;
+            }
+            this.powerButtonsContainer.style.transform = "translateX(-100%)";
+        } else {
+            this.powerButtonsContainer.style.transform = "unset";
+            newButtonContainerLeft =
+                blockRect.left - (overlayRect.left - referenceRect.left) + placeholderWidth + 30;
+            if (
+                newButtonContainerLeft + this.powerButtonsContainer.offsetWidth >
+                editableRect.width
+            ) {
+                this.powerButtonsContainer
+                    .querySelectorAll(".power_button:not(:last-child)")
+                    .forEach((el) => el.classList.add("d-none"));
+            }
+        }
+        this.powerButtonsContainer.style.left = newButtonContainerLeft + "px";
+        this.powerButtonsContainer.style.top =
+            blockRect.top - (overlayRect.top - referenceRect.top) + "px";
     }
 
     /**

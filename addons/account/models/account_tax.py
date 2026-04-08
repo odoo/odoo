@@ -80,7 +80,7 @@ class AccountTax(models.Model):
     name = fields.Char(string='Tax Name', required=True, translate=True, tracking=True)
     type_tax_use = fields.Selection(TYPE_TAX_USE, string='Tax Type', required=True, default="sale", tracking=True,
         help="Determines where the tax is selectable. Note: 'None' means a tax can't be used by itself, however it can still be used in a group. 'adjustment' is used to perform tax adjustment.")
-    tax_scope = fields.Selection([('service', 'Services'), ('consu', 'Goods')], string="Tax Scope", help="Restrict the use of taxes to a type of product.")
+    tax_scope = fields.Selection([('service', 'Services'), ('consu', 'Goods')], string="Tax Scope")
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True, tracking=True,
         selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage'), ('division', 'Percentage Tax Included')],
         help="""
@@ -345,10 +345,9 @@ class AccountTax(models.Model):
                     WHERE EXISTS(
                         SELECT 1
                         FROM account_move_line_account_tax_rel AS line
-                        WHERE account_tax_id IN %s
-                        AND account_tax.id = line.account_tax_id
-                    ) """,
-                tuple(self.ids),
+                        WHERE account_tax.id = line.account_tax_id
+                    ) AND id IN %s
+                    """, tuple(self.ids),
             )))
             taxes_to_compute = set(self.ids) - used_taxes
 
@@ -361,10 +360,9 @@ class AccountTax(models.Model):
                         WHERE EXISTS(
                             SELECT 1
                             FROM account_reconcile_model_line_account_tax_rel AS reco
-                            WHERE account_tax_id IN %s
-                            AND account_tax.id = reco.account_tax_id
-                        ) """,
-                    tuple(taxes_to_compute)
+                            WHERE account_tax.id = reco.account_tax_id
+                        ) AND id IN %s
+                        """, tuple(taxes_to_compute)
                 )))
                 taxes_to_compute -= used_taxes
 
@@ -581,7 +579,7 @@ class AccountTax(models.Model):
 
             tax_reps = invoice_repartition_line_ids.filtered(lambda tax_rep: tax_rep.repartition_type == 'tax')
             total_pos_factor = sum(tax_reps.filtered(lambda tax_rep: tax_rep.factor > 0.0).mapped('factor'))
-            if total_pos_factor and float_compare(total_pos_factor, 1.0, precision_digits=2):
+            if float_compare(total_pos_factor, 1.0, precision_digits=2):
                 raise ValidationError(_("Invoice and credit note distribution should have a total factor (+) equals to 100."))
             total_neg_factor = sum(tax_reps.filtered(lambda tax_rep: tax_rep.factor < 0.0).mapped('factor'))
             if total_neg_factor and float_compare(total_neg_factor, -1.0, precision_digits=2):
@@ -2022,7 +2020,14 @@ class AccountTax(models.Model):
             if mode == 'mixed':
                 current_mode = 'included'
                 for base_line, taxes_data in values['base_line_x_taxes_data']:
-                    if any(not tax_data['price_include'] for tax_data in taxes_data):
+                    if any(
+                        not tax_data['price_include']
+                        for tax_data in taxes_data
+                        if (
+                            not base_line['currency_id'].is_zero(tax_data['tax_amount_currency'])
+                            or not company.currency_id.is_zero(tax_data['tax_amount'])
+                        )
+                    ):
                         current_mode = 'excluded'
                         break
 
@@ -3977,8 +3982,7 @@ class AccountTax(models.Model):
         def dispatch_exclude_function(base_line, tax_data):
             return not tax_data['tax']._can_be_discounted() or (exclude_function and exclude_function(base_line, tax_data))
 
-        new_base_lines = self._dispatch_taxes_into_new_base_lines(base_lines, company, dispatch_exclude_function)
-        return new_base_lines + self._turn_removed_taxes_into_new_base_lines(new_base_lines, company)
+        return self._dispatch_taxes_into_new_base_lines(base_lines, company, dispatch_exclude_function)
 
     @api.model
     def _prepare_down_payment_lines(
@@ -4999,6 +5003,11 @@ class AccountTax(models.Model):
         if is_html_empty(self.description):
             return ''
         return html2plaintext(self.description)
+
+    @api.ondelete(at_uninstall=False)
+    def unlink_except_tax_used(self):
+        if any(self.mapped('is_used')):
+            raise ValidationError(self.env._("You cannot delete taxes that are currently in use. Consider archiving them instead."))
 
 
 class AccountTaxRepartitionLine(models.Model):

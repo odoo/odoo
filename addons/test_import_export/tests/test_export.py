@@ -731,3 +731,36 @@ class TestGroupedExport(XlsxCreatorCase):
             ['10', "{'date': '2025-11-09'}"],
             ['10', "{'date': '2025-11-12'}"],
         ])
+
+    def test_groupby_avg_empty_group(self):
+        """
+        Test that exporting a grouped view does not crash
+        when encountering an empty group.
+        """
+        self.make({'date_max': '2026-01-01', 'float_avg': 100.0})
+
+        # Sepcify min_groups which sets the number of groups in the view
+        export = self.export(
+            fields=['float_avg'],
+            params={
+                'groupby': ['date_max:month'],
+                'context': {
+                    'fill_temporal': {
+                        'min_groups': 4,
+                        'fill_from': '2026-01-01',
+                    }
+                }
+            }
+        )
+
+        self.assertExportEqual(
+            export,
+            [
+                ['Float Avg'],
+                ['January 2026 (1)'],
+                ['100.00'],
+                ['February 2026 (0)'],
+                ['March 2026 (0)'],
+                ['April 2026 (0)'],
+            ],
+        )

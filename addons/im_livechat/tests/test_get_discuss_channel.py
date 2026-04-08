@@ -93,7 +93,11 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.assertEqual(
             data["res.users"],
             self._filter_users_fields(
-                {"id": self.user_root.id, "share": False},
+                {
+                    "id": self.user_root.id,
+                    "partner_id": self.partner_root.id,
+                    "share": False,
+                },
             ),
         )
         # ensure visitor info are correct with real user
@@ -164,12 +168,18 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.assertEqual(
             data["res.users"],
             self._filter_users_fields(
-                {"id": self.user_root.id, "employee_ids": [], "share": False},
+                {
+                    "id": self.user_root.id,
+                    "employee_ids": [],
+                    "partner_id": self.partner_root.id,
+                    "share": False,
+                },
                 {
                     "id": test_user.id,
                     "is_admin": False,
                     "is_livechat_manager": False,
                     "notification_type": "email",
+                    "partner_id": test_user.partner_id.id,
                     "signature": ["markup", str(test_user.signature)],
                     "share": False,
                 },
@@ -224,7 +234,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         ]
         operator_member = self.env['discuss.channel.member'].search(operator_member_domain)
         self.assertEqual(channel_info['livechat_operator_id'], operator.partner_id.id)
-        self.assertEqual(channel_info["name"], "Michel Michel Operator")
+        self.assertEqual(channel_info["name"], "Michel Operator")
         self.assertEqual(channel_info['country_id'], False)
         self.assertEqual(
             data["res.partner"],
@@ -285,12 +295,18 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.assertEqual(
             data["res.users"],
             self._filter_users_fields(
-                {"id": self.user_root.id, "employee_ids": [], "share": False},
+                {
+                    "id": self.user_root.id,
+                    "employee_ids": [],
+                    "partner_id": self.partner_root.id,
+                    "share": False,
+                },
                 {
                     "id": operator.id,
                     "is_admin": False,
                     "is_livechat_manager": False,
                     "notification_type": "email",
+                    "partner_id": operator.partner_id.id,
                     "share": False,
                     "signature": ["markup", str(operator.signature)],
                 },
@@ -417,3 +433,19 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.assertEqual(len(agent), 1)
         self.assertEqual(len(visitor), 1)
         self.assertEqual(visitor.partner_id, test_user.partner_id)
+
+    def test_invited_user_can_search_users_for_invite(self):
+        john = new_test_user(self.env, "john")
+        bob = new_test_user(self.env, "bob")
+        channel = self.env["discuss.channel"].create(
+            {
+                "channel_type": "livechat",
+                "livechat_operator_id": self.operators[0].partner_id.id,
+                "name": "Support Channel",
+                "livechat_channel_id": self.livechat_channel.id,
+            }
+        )
+        channel.with_user(self.operators[0])._add_members(users=john)
+        data = john.partner_id.with_user(john).search_for_channel_invite("bob", channel.id)["store_data"]
+        self.assertIn(bob.partner_id.id, [p["id"] for p in data["res.partner"]])
+        self.assertFalse(john.has_group("im_livechat.im_livechat_group_user"))

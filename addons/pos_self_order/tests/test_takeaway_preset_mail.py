@@ -14,7 +14,10 @@ class TestTakeawayMail(MailCase, TestSelfOrderPreset):
 
         with self.mock_mail_gateway():
             self.start_tour(self_route, "test_preset_takeaway_email_tour")
-        self.assertEqual("Public user", self.env["pos.order"].search([], limit=1, order="id desc").floating_order_name)
+        order = self.pos_config.current_session_id.order_ids
+        self.assertEqual(len(order), 1)
+        self.assertTrue(bool("Public user" in self.pos_config.current_session_id.order_ids.floating_order_name))
+        self.assertEqual(order.mobile, "+32000111222")
 
         # Message is posted and mail is sent on time
         self.assertEqual(len(self._new_mails), 1)

@@ -167,19 +167,23 @@ export class TourPointer extends Component {
             }
         });
         this.state = useState({ triggerBelow: false });
-        const uiService = useService("ui");
+        this.ui = useService("ui");
         const onActiveElementChanged = () => {
-            const activeEl = uiService.activeElement;
+            const activeEl = this.ui.activeElement;
             const pointerAnchor = this.props.pointerState.anchor;
             if (pointerAnchor) {
                 this.state.triggerBelow = !activeEl.contains(pointerAnchor);
             }
         };
-        useBus(uiService.bus, "active-element-changed", onActiveElementChanged);
+        useBus(this.ui.bus, "active-element-changed", onActiveElementChanged);
     }
 
     get isVisible() {
-        return this.props.pointerState.isVisible && !this.state.triggerBelow;
+        return (
+            this.props.pointerState.isVisible &&
+            (this.ui.activeElement.contains(this.props.pointerState.anchor) ||
+                !this.state.triggerBelow)
+        );
     }
 
     get content() {

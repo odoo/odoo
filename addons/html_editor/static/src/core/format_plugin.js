@@ -249,8 +249,15 @@ export class FormatPlugin extends Plugin {
      * @returns {boolean}
      */
     isSelectionFormat(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
-        const targetedTextNodes = targetedNodes.filter(isTextNode);
         const isFormatted = formatsSpecs[format].isFormatted;
+        const isNonFormattedWhiteSpaces = (node) =>
+            /^(\s|\n)+$/.test(node.nodeValue) && !isFormatted(node, { editable: this.editable });
+        const targetedTextNodes = targetedNodes.filter(
+            (node) =>
+                isTextNode(node) &&
+                !isNonFormattedWhiteSpaces(node) &&
+                this.dependencies.selection.isNodeEditable(node)
+        );
         return (
             targetedTextNodes.length &&
             targetedTextNodes.every(
@@ -307,11 +314,13 @@ export class FormatPlugin extends Plugin {
             }
         }
 
+        const systemNodesSelector = this.getResource("system_node_selectors").join(", ");
         const selectedTextNodes = /** @type { Text[] } **/ (
             this.dependencies.selection
                 .getTargetedNodes()
                 .filter(
                     (n) =>
+                        (!systemNodesSelector || !closestElement(n, systemNodesSelector)) &&
                         this.dependencies.selection.areNodeContentsFullySelected(n) &&
                         ((isTextNode(n) && (isVisibleTextNode(n) || isZWS(n))) ||
                             (n.nodeName === "BR" &&
@@ -351,6 +360,17 @@ export class FormatPlugin extends Plugin {
                 [...classList].every((className) =>
                     this.getResource("format_class_predicates").some((cb) => cb(className))
                 );
+
+            // Special case: if the parent node is unsplittable and fully selected,
+            // we should make sure the span is applied outside of it.
+            if (
+                parentNode &&
+                !isBlock(parentNode) &&
+                this.dependencies.split.isUnsplittable(parentNode) &&
+                this.dependencies.selection.areNodeContentsFullySelected(parentNode)
+            ) {
+                inlineAncestors.push(parentNode);
+            }
 
             while (
                 parentNode &&
@@ -448,7 +468,7 @@ export class FormatPlugin extends Plugin {
             unformattedTextNodes[0] &&
             unformattedTextNodes[0].textContent === "\u200B"
         ) {
-            this.dependencies.selection.setCursorStart(unformattedTextNodes[0]);
+            this.dependencies.selection.setCursorEnd(unformattedTextNodes[0]);
         } else if (selectedTextNodes.length) {
             const firstNode = selectedTextNodes[0];
             const lastNode = selectedTextNodes[selectedTextNodes.length - 1];
@@ -688,8 +708,8 @@ export class FormatPlugin extends Plugin {
         }
         return (
             !isSelfClosingElement(node) &&
-            areSimilarElements(node, previousSibling) &&
-            isMergeable(node)
+            isMergeable(node) &&
+            areSimilarElements(node, previousSibling)
         );
     }
 }

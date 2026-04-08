@@ -56,7 +56,10 @@ class Driver(Thread):
                 return
             self._recent_action_ids[action_unique_id] = action_unique_id
 
-        self.data["owner"] = data.get('session_id')
+        session_id = data.get('session_id')
+        if session_id:
+            self.data["owner"] = session_id
+            self.data["session_id"] = session_id
 
         base_response = {'action_args': {**data}, 'session_id': data.get('session_id')}
         try:

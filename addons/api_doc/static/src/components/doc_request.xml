@@ -39,8 +39,8 @@
 
         <div class="mt-2 d-flex flex-nowrap align-items-center mb-1">
             <h4>Response</h4>
-            <span t-if="hasResponse and !state.response.error" class="badge success ms-1">Success</span>
-            <span t-if="hasResponse and state.response.error" class="badge error ms-1">Failed</span>
+            <span t-if="hasResponse and !state.response.error" class="badge success ms-1 mb-1">Success</span>
+            <span t-if="hasResponse and state.response.error" class="badge error ms-1 mb-1">Failed</span>
         </div>
 
         <t t-if="hasResponse">
@@ -58,9 +58,22 @@
                     <i class="pe-1 fa fa-exclamation-triangle" aria-hidden="true"></i>
                     <span>Error <t t-out="state.response.status"/> while executing request</span>
                 </h5>
-                <div>
-                    <div t-out="responseText"></div>
+                <div t-if="state.showTraceback">
+                    <button
+                        class="btn bg-100 position-absolute top-0 end-0 p-1"
+                        t-ref="copyButton"
+                        t-on-click="onClickClipboard"
+                    >
+                        <span class="fa fa-clipboard"/>
+                    </button>
+                    <span t-out="responseText.title"/>
+                    <pre class="p-2 mt-2" style="max-height: 500px" t-out="responseText.traceback"/>
                 </div>
+                <button
+                    class="btn btn-sm mt-2 align-self-center"
+                    t-on-click="toggleTraceback"
+                    t-out="state.showTraceback ? 'Hide Details' : 'Show Technical Details'"
+                />
             </div>
         </t>
         <p t-else="" class="text-muted">Run to get a response</p>

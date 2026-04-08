@@ -67,27 +67,83 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
         return [...super.getDayCellClassNames(info), ...this.mandatoryDays(info)];
     }
 
+    _halfDayStyleCache = new Set();
+    ensureHalfDayClass(start, end) {
+        const className = `o_event_half_${start}_${end}`;
+        if (this._halfDayStyleCache.has(className)) return className;
+
+        const css = `
+            .fc-event-start.${className} {
+                clip-path: polygon(${start}% 0%, 100% 0%, 100% 100%, ${start}% 100%);
+            }
+            .fc-event-end.${className} {
+                clip-path: polygon(0% 0%, ${end}% 0%, ${end}% 100%, 0% 100%);
+            }
+            .fc-event-start.fc-event-end.${className} {
+                clip-path: polygon(${start}% 0%, ${end}% 0%, ${end}% 100%, ${start}% 100%);
+            }
+        `;
+        let styleSheet = document.getElementById('half-day-dynamic-styles');
+        if (!styleSheet) {
+            styleSheet = document.createElement('style');
+            styleSheet.id = 'half-day-dynamic-styles';
+            document.head.appendChild(styleSheet);
+        }
+
+        styleSheet.textContent += css;
+        this._halfDayStyleCache.add(className);
+
+        return className;
+    }
+
     /**
      * @override
      */
     eventClassNames({ event }) {
-        const classesToAdd = super.eventClassNames(...arguments);
-        const record = this.props.model.records[event.id];
-        if (record && record.requestDateFromPeriod && record.sameDay) {
-            if (record.requestDateFromPeriod === "am" && record.requestDateToPeriod === "am") {
-                classesToAdd.push("o_event_half_left")
-            } else if (record.requestDateFromPeriod === "pm" && record.requestDateToPeriod === "pm") {
-                classesToAdd.push("o_event_half_right")
+    const classesToAdd = super.eventClassNames(...arguments);
+    const record = this.props.model.records[event.id];
+    if (record) {
+        const isHalfStart = record.requestDateFromPeriod === "pm" ||
+            (record?.rawRecord?.request_unit_hours && record.start.c.hour >= 12);
+        const isHalfEnd = record.requestDateToPeriod === "am" ||
+            (record?.rawRecord?.request_unit_hours && record.end.c.hour <= 12);
+
+        if (!isHalfStart && !isHalfEnd) return classesToAdd;
+
+        const isMultiWeek = record.start.localWeekNumber != record.end.localWeekNumber
+        let start = 0;
+        let end = 100;
+
+        if (!isMultiWeek) {
+            const lastRowStart = record.start > record.end.startOf('month') ? record.start : record.end.startOf('month');
+            const firstRowEnd = record.end < record.start.endOf('month') ? record.end : record.start.endOf('month');
+            const daysInFirstRow = firstRowEnd.startOf('day').diff(record.start.startOf('day'), 'days').days + 1;
+            const daysInLastRow = record.end.startOf('day').diff(lastRowStart.startOf('day'), 'days').days + 1;
+
+            start = isHalfStart ? Math.round(50 / daysInFirstRow) : 0;
+            end = isHalfEnd ? Math.round(100 - (50 / daysInLastRow)) : 100;
+        }
+        else {
+            // Multi-week: first slice — only care about start
+            if (isHalfStart) {
+                const rowEnd = record.start.endOf('week') < record.start.endOf('month')
+                    ? record.start.endOf('week').minus({ days: 1 })
+                    : record.start.endOf('month');
+                const daysInFirstRow = rowEnd.startOf('day').diff(record.start.startOf('day'), 'days').days + 1;
+                start = Math.round(50 / daysInFirstRow);
+            }
+            // Multi-week: last slice — only care about end
+            if (isHalfEnd) {
+                const rowStart = record.end.startOf('week') > record.end.startOf('month')
+                    ? record.end.startOf('week').minus({ days: 1 })
+                    : record.end.startOf('month');
+                const daysInLastRow = record.end.startOf('day').diff(rowStart.startOf('day'), 'days').days + 1;
+                end = Math.round(100 - (50 / daysInLastRow));
             }
         }
-        // handling half pill UX for custom_hours
-        if (record?.rawRecord?.request_unit_hours && record.sameDay) {
-            if (record.end.c.hour < 12) {
-                classesToAdd.push("o_event_half_left");
-            } else if (record.end.c.hour >= 12 && record.start.c.hour >= 12) {
-                classesToAdd.push("o_event_half_right");
-            }
-        }
-        return classesToAdd;
+
+        classesToAdd.push(this.ensureHalfDayClass(start, end));
     }
+    return classesToAdd;
+}
 }

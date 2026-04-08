@@ -13,8 +13,8 @@ class XadesSigner:
     """
     Handles the creation of XAdES-BES signatures for KSeF authentication challenges.
     """
-    def __init__(self, key_pem, cert_pem):
-        self.private_key = serialization.load_pem_private_key(key_pem, password=None)
+    def __init__(self, key_pem, cert_pem, private_key_password=None):
+        self.private_key = serialization.load_pem_private_key(key_pem, password=private_key_password)
         self.cert = x509.load_pem_x509_certificate(cert_pem)
 
     @staticmethod

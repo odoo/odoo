@@ -1,4 +1,5 @@
 import datetime
+from contextlib import suppress
 
 from odoo import fields, Command
 from odoo.tests import tagged, Form
@@ -368,6 +369,14 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             self.assertEqual(self.enasarco_purchase_tax, enasarco_imported_tax)
             self.assertEqual(-8.5, enasarco_imported_tax.amount)
             self.assertEqual(self.withholding_purchase_tax_23_base50 | enasarco_imported_tax, line.tax_ids.filtered(lambda x: x.l10n_it_withholding_reason == 'ZO'))
+
+    def test_enasarco_wrong_reason_tax_import(self):
+        with suppress(ValidationError):
+            self.enasarco_purchase_tax.l10n_it_withholding_reason = 'Q'
+        invoice = self._assert_import_invoice('IT00470550013_enasa.xml', [{}])
+        for line in invoice.line_ids.filtered(lambda x: x.balance > 0 and not x.tax_line_id):
+            enasarco_imported_tax = line.tax_ids.filtered(lambda x: x.l10n_it_pension_fund_type == 'TC07')
+            self.assertEqual(enasarco_imported_tax.l10n_it_withholding_reason, 'Q')
 
     def test_enasarco_tax_import_global(self):
         """Test that if we have a unique ENASARCO line with a price of 0.0,

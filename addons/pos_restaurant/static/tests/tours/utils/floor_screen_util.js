@@ -218,3 +218,11 @@ export function addFloor(floorName) {
         ...selectedFloorIs(floorName),
     ];
 }
+
+export function clickAddFloor() {
+    return {
+        content: "click add floor",
+        trigger: `.floor-selector button i[aria-label="Add Floor"]`,
+        run: "click",
+    };
+}

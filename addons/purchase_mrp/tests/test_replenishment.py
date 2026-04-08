@@ -104,11 +104,16 @@ class TestReplenishment(TestStockCommon):
         })
         manufacture_route = self.warehouse_1.route_ids.filtered(lambda r: any(rule.action == 'manufacture' for rule in r.rule_ids))
         buy_route = self.warehouse_1.route_ids.filtered(lambda r: any(rule.action == 'buy' for rule in r.rule_ids))
+        self.productA.route_ids = False
 
         # No resupply methods should be set for Product A
         self.assertRecordValues(self.productA, [{'route_ids': self.env['stock.route'], 'seller_ids': self.env['product.supplierinfo'], 'bom_ids': self.env['mrp.bom']}])
         replenish_empty = create_replenish_wizard(self.warehouse_1, self.productA)
         self.assertFalse(replenish_empty.allowed_route_ids)
+
+        # Add the MTO route to the product, it should never show in allowed_route_ids
+        self.warehouse_1.mto_pull_id.route_id.active = True
+        self.productA.route_ids = self.warehouse_1.mto_pull_id.route_id
 
         # Add a BoM for Product A. This should make it eligible for Manufacture routes
         self.env['mrp.bom'].create({

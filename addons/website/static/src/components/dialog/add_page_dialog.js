@@ -112,8 +112,9 @@ class AddPageTemplatePreview extends Component {
             const iframeEl = this.iframeRef.el;
             // Firefox replaces the built content with about:blank.
             const isFirefox = isBrowserFirefox();
-            if (isFirefox) {
-                // Make sure empty preview iframe is loaded.
+            if (isFirefox && !(iframeEl?.contentDocument.readyState === "complete")) {
+                // Make sure empty preview iframe is loaded. This was necessary
+                // in Firefox < 148 as it created and parsed a new document.
                 // This event is never triggered on Chrome.
                 await new Promise((resolve) => {
                     iframeEl.contentDocument.body.onload = resolve;
@@ -130,8 +131,6 @@ class AddPageTemplatePreview extends Component {
             }
             // Adjust styles.
             const styleEl = document.createElement("style");
-            // Does not work with fit-content in Firefox.
-            const carouselHeight = isFirefox ? "450px" : "fit-content";
             // Prevent successive resizes.
             const fullHeight = getComputedStyle(document.querySelector(".o_action_manager")).height;
             const halfHeight = `${Math.round(parseInt(fullHeight) / 2)}px`;
@@ -155,7 +154,9 @@ class AddPageTemplatePreview extends Component {
                 section[data-snippet="s_quotes_carousel_minimal"],
                 section[data-snippet="s_quotes_carousel_compact"],
                 section[data-snippet="s_quotes_carousel"] {
-                    height: ${carouselHeight} !important;
+                    .carousel-inner, .carousel-inner > .carousel-item {
+                        height: fit-content !important;
+                    }
                 }
                 section.o_half_screen_height {
                     min-height: ${halfHeight} !important;
@@ -529,7 +530,7 @@ export class AddPageDialog extends Component {
                 websiteId: this.props.websiteId,
             });
         }
-        this.props.onAddPage();
+        this.props.onAddPage({ createdUrl: data.url });
         this.props.close();
     }
 

@@ -320,6 +320,8 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
             {
                 "attachment_ids": [Command.create({"name": "test attachment"})],
                 "author_id": self.user_employee.partner_id.id,
+                "model": self.user_employee.partner_id._name,
+                "res_id": self.user_employee.partner_id.id,
             }
         )
         res = message.portal_message_format()

@@ -1199,11 +1199,30 @@ class SaleOrderLine(models.Model):
             else:
                 line.amount_to_invoice = 0.0
 
-    @api.depends('price_unit', 'qty_invoiced_at_date', 'qty_delivered_at_date')
+    def _get_gross_price_unit(self):
+        """ Mirroring method in purchase """
+        self.ensure_one()
+        price_unit = self.price_unit
+        if self.discount:
+            price_unit = price_unit * (1 - self.discount / 100)
+        if self.tax_ids:
+            qty = self.product_uom_qty or 1
+            price_unit = self.tax_ids.compute_all(
+                price_unit,
+                currency=self.order_id.currency_id,
+                quantity=qty,
+                rounding_method='round_globally',
+            )['total_void']
+            price_unit = price_unit / qty
+        if self.product_uom_id.id != self.product_id.uom_id.id:
+            price_unit *= self.product_id.uom_id.factor / self.product_uom_id.factor
+        return price_unit
+
+    @api.depends('price_unit', 'discount', 'qty_invoiced_at_date', 'qty_delivered_at_date')
     @api.depends_context('accrual_entry_date')
     def _compute_amount_to_invoice_at_date(self):
         for line in self:
-            line.amount_to_invoice_at_date = (line.qty_delivered_at_date - line.qty_invoiced_at_date) * line.price_unit
+            line.amount_to_invoice_at_date = (line.qty_delivered_at_date - line.qty_invoiced_at_date) * line._get_gross_price_unit()
 
     @api.depends('order_id.partner_id', 'product_id')
     def _compute_analytic_distribution(self):
@@ -1549,7 +1568,11 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
 
-        section_lines = self.order_id.order_line.filtered(self._is_line_in_section)
+        billable_lines = self.order_id.order_line.filtered(
+            lambda line:
+                line.product_type != 'combo'
+                and self._is_line_in_section(line)
+        )
 
         if display_taxes:
             res = [
@@ -1558,13 +1581,13 @@ class SaleOrderLine(models.Model):
                     'price_subtotal': sum(lines.mapped('price_subtotal')),
                     'price_total': sum(lines.mapped('price_total')),
                 }
-                for taxes, lines in section_lines.grouped('tax_ids').items()
+                for taxes, lines in billable_lines.grouped('tax_ids').items()
             ]
         else:
             res = [{
                 'tax_labels': [],
-                'price_subtotal': sum(section_lines.mapped('price_subtotal')),
-                'price_total': sum(section_lines.mapped('price_total')),
+                'price_subtotal': sum(billable_lines.mapped('price_subtotal')),
+                'price_total': sum(billable_lines.mapped('price_total')),
             }]
         return res or [{
             'tax_labels': [],
@@ -1789,4 +1812,8 @@ class SaleOrderLine(models.Model):
     # For `sale_management`, to control optional products on portal
     def _can_be_edited_on_portal(self):
         self.ensure_one()
-        return self.order_id._can_be_edited_on_portal() and not self.combo_item_id
+        return (
+            self.order_id._can_be_edited_on_portal()
+            and not self.combo_item_id
+            and self.product_id != self.company_id.sale_discount_product_id
+        )

@@ -31,6 +31,9 @@ export class ImageShapeOption extends BaseOptionComponent {
                 showImageShapeTransform: this.imageShapeOption.isTransformableShape(shape),
                 showImageShapeAnimation: this.imageShapeOption.isAnimableShape(shape),
                 togglableRatio: this.imageShapeOption.isTogglableRatioShape(shape),
+                hasShapeTransformation:
+                    !!editingElement.dataset.shapeFlip ||
+                    !!parseInt(editingElement.dataset.shapeRotate),
             };
         });
     }

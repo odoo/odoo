@@ -378,7 +378,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         Check that the file is correct with a foreign customer.
         """
         invoice = self.init_invoice(
-            'out_invoice', partner=self.partner_b, products=self.product_a, post=True,
+            'out_invoice', taxes=self.company_data['default_tax_sale'], partner=self.partner_b, products=self.product_a, post=True,
         )
         myinvois_document = invoice._create_myinvois_document()
 
@@ -492,7 +492,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         """ A refund note is issued when an invoice has received a credit note, and that credit note was paid to the customer. """
         # Create the original invoice, and receive the payment.
         invoice = self.init_invoice(
-            'out_invoice', partner=self.partner_b, products=self.product_a, post=True,
+            'out_invoice', partner=self.partner_b, products=self.product_a, taxes=self.company_data['default_tax_sale'], post=True,
         )
         invoice_document = invoice._create_myinvois_document()
         # Simulate that the document was sent
@@ -538,7 +538,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         """ A credit note is issued when an invoice has received a credit note, and that credit note was not paid to the customer. """
         # Create the original invoice, don't receive a payment.
         invoice = self.init_invoice(
-            'out_invoice', partner=self.partner_b, products=self.product_a, post=True,
+            'out_invoice', partner=self.partner_b, products=self.product_a, post=True, taxes=self.company_data['default_tax_sale'],
         )
         invoice_document = invoice._create_myinvois_document()
         # Simulate that the document was sent
@@ -699,7 +699,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         """
         Ensure the original document id is present in the reversed document.
         """
-        bill = self.init_invoice('in_invoice', products=self.product_a, post=True)
+        bill = self.init_invoice('in_invoice', products=self.product_a, taxes=self.company_data['default_tax_purchase'], post=True)
         bill.ref = 'BILL-123'
         myinvois_document = bill._create_myinvois_document()
         bill_file, errors = myinvois_document._myinvois_generate_xml_file()
@@ -737,7 +737,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         Ensure the original document id is present in the reversed document even if bill reference has changed after
         sending.
         """
-        bill = self.init_invoice('in_invoice', products=self.product_a, post=True)
+        bill = self.init_invoice('in_invoice', products=self.product_a, taxes=self.company_data['default_tax_purchase'], post=True)
 
         # Set reference before generating e-invoice
         bill.ref = 'Initial Reference'
@@ -816,6 +816,42 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             "cac:InvoiceLine/cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode",
             "022",
             attributes={"listID": "CLASS"},
+        )
+
+    def test_14_prepaid_amount_on_debit_credit_refund_notes(self):
+        """
+        Ensure that the prepaid amount is 0 and payable_amount is invoice.amount_total
+        """
+        basic_invoice = self.init_invoice('out_invoice', currency=self.other_currency,
+            taxes=self.company_data['default_tax_sale'], products=self.product_a, post=True)
+
+        action = basic_invoice.action_reverse()
+        reversal_wizard = self.env[action['res_model']].with_context(
+            active_ids=basic_invoice.ids,
+            active_model='account.move',
+            default_journal_id=basic_invoice.journal_id.id,
+        ).create({})
+        action = reversal_wizard.reverse_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+        credit_note.action_post()
+        myinvois_document = credit_note._create_myinvois_document()
+
+        file, errors = myinvois_document._myinvois_generate_xml_file()
+        self.assertFalse(errors)
+        root = etree.fromstring(file)
+
+        # Check that the prepaid amount is 0
+        self._assert_node_values(
+            root,
+            'cac:PrepaidPayment/cbc:PaidAmount',
+            '0.00',
+        )
+
+        # Check that the payable amount is the total amount of the invoice
+        self._assert_node_values(
+            root,
+            'cac:LegalMonetaryTotal/cbc:PayableAmount',
+            '2200.00',
         )
 
     def _assert_node_values(self, root, node_path, text, attributes=None):

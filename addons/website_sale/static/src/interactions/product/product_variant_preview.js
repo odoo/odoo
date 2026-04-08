@@ -90,7 +90,8 @@ export class ProductVariantPreview extends Interaction {
 
     /**
      * Triggered on the parent element of the '.o_wsale_attribute_previewer' elements to run the
-     * interaction once instead of multiple times depending on how many elements exist on the page.
+     * interaction once instead of multiple times depending on how many elements or products exist
+     * on the page.
      *
      * Schedules and batches updates for all active '.o_wsale_attribute_previewer' elements
      * to refresh their variant previews efficiently.
@@ -103,7 +104,10 @@ export class ProductVariantPreview extends Interaction {
         const updateAllVariantPreview = this.protectSyncAfterAsync(() => {
             const attributePreviewerValues = new Map();
 
-            // Initiate the values needed for each attribute previewer.
+            // ---- Phase 1: Initiate the values needed for each attribute previewer ---------------
+            // Split into two sub-loops to avoid a forced reflow per product:
+            
+            // ---- Phase 1a: all DOM writes (resetDisplay, textContent, classList) ----------------
             for (const attributePreviewer of attributePreviewers) {
                 this._resetDisplay(attributePreviewer);
                 const ptavs = attributePreviewer.querySelectorAll(".o_product_variant_preview");
@@ -118,7 +122,6 @@ export class ProductVariantPreview extends Interaction {
                 attributePreviewerValues.set(
                     attributePreviewer,
                     {
-                        containerWidth: attributePreviewer.offsetWidth,
                         ptavs,
                         hiddenCountSpan,
                         ptavCount,
@@ -128,7 +131,15 @@ export class ProductVariantPreview extends Interaction {
                 );
             }
 
-            // Display all hidden elements to get the correct width.
+            // ---- Phase 1b: all reads (single reflow for all products) ----------------
+            // All writes above are now complete so offsetWidth flushes layout only once,
+            // regardless of how many products are on the page.
+            for (const attributePreviewer of attributePreviewers) {
+                const currentValues = attributePreviewerValues.get(attributePreviewer)
+                currentValues.containerWidth = attributePreviewer.offsetWidth;
+            }
+
+            // ---- Phase 2: Display all PTAVs to get the correct width (pure writes) --------------
             for (const attributePreviewer of attributePreviewers) {
                 const currentValues = attributePreviewerValues.get(attributePreviewer);
                 for (const ptav of currentValues.ptavs) {
@@ -136,6 +147,7 @@ export class ProductVariantPreview extends Interaction {
                 }
             }
 
+            // ---- Phase 3: bulk offsetWidth reads ------------------------------------------------
             // A recalculation of the styles is triggered every time offsetWidth is called.
             // Get all offsetWidths in one step to avoid recalculation for each element separately.
             for (const attributePreviewer of attributePreviewers) {
@@ -148,6 +160,7 @@ export class ProductVariantPreview extends Interaction {
                 );
             }
 
+            // ---- Phase 4: apply display logic (pure writes) -------------------------------------
             for (const attributePreviewer of attributePreviewers) {
                 this._updateVariantPreview(
                     attributePreviewer, attributePreviewerValues.get(attributePreviewer)

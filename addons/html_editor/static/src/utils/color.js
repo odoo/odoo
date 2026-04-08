@@ -121,8 +121,10 @@ export function hasTextColorClass(element, mode) {
 export function hasColor(element, mode) {
     const style = element.style;
     const parent = element.parentNode;
-    if (element.classList.contains("btn")) {
-        // Ignore style applied on buttons from color detection
+    // Ignore class applied on links as those are hard coded in the templates
+    // and should not be considered as user defined colors.
+    if (element.classList.contains("btn") || element.tagName === "A") {
+        // Ignore style applied on buttons from color detection.
         return false;
     }
     if (isColorGradient(style["background-image"])) {

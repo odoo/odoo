@@ -45,6 +45,10 @@ class NavTabsStyleOptionPlugin extends Plugin {
         }),
         is_unremovable_selector: ".nav-item",
         unsplittable_node_predicates: this.isUnsplittable,
+        dropzone_selector: {
+            selector: ".s_tabs, .s_tabs_images",
+            excludeAncestor: ".s_table_of_content, .s_tabs, .s_tabs_images",
+        },
     };
 
     setup() {

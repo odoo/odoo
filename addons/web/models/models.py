@@ -518,10 +518,15 @@ class Base(models.AbstractModel):
                     groupby.remove(group)
                     order_spec.append(f"{group} {direction}")
                     break
-            for agg_spec in aggregates:
-                if agg_spec.startswith(f"{fname}:"):
-                    order_spec.append(f"{agg_spec} {direction}")
-                    break
+            else:
+                for agg_spec in aggregates:
+                    if agg_spec.startswith(f"{fname}:"):
+                        order_spec.append(f"{agg_spec} {direction}")
+                        break
+                else:
+                    field = self._fields.get(fname)
+                    if field and field.aggregator:
+                        order_spec.append(f"{fname}:{field.aggregator} {direction}")
 
         return ", ".join(order_spec + groupby)
 
@@ -841,7 +846,7 @@ class Base(models.AbstractModel):
         ):
             # It doesn't respect the order with aggregates inside
             expand_groups = self._web_read_group_expand(domain, groups, groupby[0], aggregates, order)
-            if not limit or len(expand_groups) < limit:
+            if not limit or len(expand_groups) <= limit:
                 # Ditch the result of expand_groups because the limit is reached and to avoid
                 # returning inconsistent result inside length of web_read_group
                 groups = expand_groups

@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
 "PO-Revision-Date: 2025-11-21 14:46+0000\n"
 "Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
@@ -93,15 +93,6 @@ msgstr "Mutlak Yeni Başlayanlar İçin 10 Kendin Yap Mobilya Fikirleri"
 #: model:event.track,name:website_event_track.event_7_track_18
 msgid "6 Woodworking tips and tricks for beginners"
 msgstr "Yeni başlayanlar için 6 ahşap işleme ipuçları ve püf noktaları"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
-msgid ""
-"<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
-"o_translate_inline\">Home page</a>"
-msgstr ""
-"<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
-"o_translate_inline\">Ana Sayfa</a>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -1881,15 +1872,8 @@ msgstr "Sonraki Aktiviteler"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
-msgid ""
-"Get prepared and\n"
-"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
-"track' % (slug(event))\">register to your favorites talks now.</a>"
-msgstr ""
-"Hazırlanın ve\n"
-"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
-"track' % (slug(event))\">% (slug(event))\">favori konuşmalarınıza şimdi "
-"kaydolun.</a>"
+msgid "Get prepared and"
+msgstr "Hazırlanın ve"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1940,6 +1924,11 @@ msgstr "Yüksek"
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__3
 msgid "Highest"
 msgstr "En yüksek"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Home page"
+msgstr "Ana Sayfa"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
@@ -3659,6 +3648,12 @@ msgid "minutes after Track start"
 msgstr "Oturum başlangıcından dakikalar sonra"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "register to your favorites talks now."
+msgstr "favori konuşmalarınıza şimdi kaydolun."
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts in"
 msgstr "içinde başlar"
@@ -3667,6 +3662,23 @@ msgstr "içinde başlar"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts on"
 msgstr "başlangıç tarihi"
+
+#~ msgid ""
+#~ "<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
+#~ "o_translate_inline\">Home page</a>"
+#~ msgstr ""
+#~ "<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
+#~ "o_translate_inline\">Ana Sayfa</a>"
+
+#~ msgid ""
+#~ "Get prepared and\n"
+#~ "                    <a class=\"o_translate_inline\" t-att-href=\"'/event/"
+#~ "%s/track' % (slug(event))\">register to your favorites talks now.</a>"
+#~ msgstr ""
+#~ "Hazırlanın ve\n"
+#~ "                    <a class=\"o_translate_inline\" t-att-href=\"'/event/"
+#~ "%s/track' % (slug(event))\">% (slug(event))\">favori konuşmalarınıza "
+#~ "şimdi kaydolun.</a>"
 
 #~ msgid "&amp;bull;"
 #~ msgstr "&amp;bull;"
@@ -3761,14 +3773,8 @@ msgstr "başlangıç tarihi"
 #~ msgid "Filter Tracks..."
 #~ msgstr "Bölümleri Filtrele..."
 
-#~ msgid "Get prepared and"
-#~ msgstr "Hazırlanın ve"
-
 #~ msgid "Group By"
 #~ msgstr "Grupla"
-
-#~ msgid "Home page"
-#~ msgstr "Ana Sayfa"
 
 #~ msgid "No results found"
 #~ msgstr "Sonuç bulunamadı"
@@ -3832,9 +3838,6 @@ msgstr "başlangıç tarihi"
 #~ "                            ilginç ve potansiyel olarak yararlı\n"
 #~ "                            izleyici, bunun için dikkate alınacak\n"
 #~ "                            programa dahil edilme."
-
-#~ msgid "register to your favorites talks now."
-#~ msgstr "favori konuşmalarınıza şimdi kaydolun."
 
 #~ msgid "search."
 #~ msgstr "arama."

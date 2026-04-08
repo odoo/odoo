@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 from odoo.tests import Form
 
@@ -92,3 +93,20 @@ class TestProjectTaskQuickCreate(TestProjectCommon):
         field_specs = {'project_id': {}, 'company_id': {'fields': {}}}
         task_values = self.env['project.task'].onchange({}, [], field_specs)['value']
         self.assertEqual(task_values['project_id'], self.project_pigs.id, "The task project_id should be set")
+
+    def test_project_user_task_creation_without_access_error_updates_partner_mobile(self):
+        """
+        Verify that creating a task with a customer as project user
+        raises AccessError due to restricted res.partner rights.
+        """
+        self.user_projectuser.group_ids = [Command.set([self.env.ref('project.group_project_user').id])]
+        self.assertFalse(self.user_projectuser.partner_id.phone)
+        test_task = self.env['project.task'].with_user(self.user_projectuser).create({
+            'name': 'Test task',
+            'project_id': self.project_pigs.id,
+            'partner_id': self.user_projectuser.partner_id.id,
+            'partner_phone': '1234'
+        })
+
+        self.assertTrue(test_task.partner_id, "Customer should be set when creating a task with a partner.")
+        self.assertEqual(self.user_projectuser.partner_id.phone, '1234', "Partner phone number should be updated according to the partner_phone field.")

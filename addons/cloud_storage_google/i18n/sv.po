@@ -4,13 +4,14 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2025.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-07 12:55+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>\n"
+"PO-Revision-Date: 2026-03-14 09:45+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "cloud_storage_google/sv/>\n"
 "Language: sv\n"
@@ -18,13 +19,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: cloud_storage_google
 #. odoo-python
 #: code:addons/cloud_storage_google/models/ir_attachment.py:0
 msgid "%s is not a valid Google Cloud Storage URL."
-msgstr "%s är inte en giltig URL för Google Cloud Storage."
+msgstr "%s utgör inte en giltig URL för Google Cloud Storage."
 
 #. module: cloud_storage_google
 #: model:ir.model,name:cloud_storage_google.model_ir_attachment
@@ -34,7 +35,7 @@ msgstr "Bilaga"
 #. module: cloud_storage_google
 #: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_provider
 msgid "Cloud Storage Provider for new attachments"
-msgstr "Cloud Storage Provider för nya bilagor"
+msgstr "Leverantör av molnlagring för nya bilagor"
 
 #. module: cloud_storage_google
 #: model:ir.model,name:cloud_storage_google.model_res_config_settings
@@ -50,7 +51,7 @@ msgstr "Visningsnamn"
 #. module: cloud_storage_google
 #: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_bucket_name
 msgid "Google Bucket Name"
-msgstr "Namn på Google Bucket"
+msgstr "Hinkens namn hos Google"
 
 #. module: cloud_storage_google
 #: model:ir.model.fields.selection,name:cloud_storage_google.selection__res_config_settings__cloud_storage_provider__google
@@ -60,12 +61,12 @@ msgstr "Google Cloud Storage"
 #. module: cloud_storage_google
 #: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_account_info
 msgid "Google Service Account Info"
-msgstr "Information om Google Service-konto"
+msgstr "Information om Google tjänstekonto"
 
 #. module: cloud_storage_google
 #: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_service_account_key
 msgid "Google Service Account Key"
-msgstr "Nyckel till Google Service-konto"
+msgstr "Nyckel för Google tjänstekonto"
 
 #. module: cloud_storage_google
 #: model:ir.model.fields,field_description:cloud_storage_google.field_ir_attachment__id
@@ -80,8 +81,8 @@ msgid ""
 "Some Google attachments are in use, please migrate cloud storages before "
 "disable the provider"
 msgstr ""
-"Vissa Google-bilagor används, vänligen migrera molnlagring innan du "
-"inaktiverar leverantören"
+"Vissa Google-bilagor används för närvarande, vänligen migrera relaterad "
+"molnlagring innan du avaktiverar leverantören"
 
 #. module: cloud_storage_google
 #. odoo-python
@@ -90,7 +91,8 @@ msgid ""
 "The account info is not allowed to download blobs from the bucket.\n"
 "%s"
 msgstr ""
-"Kontouppgifterna får inte hämta blobbar från bucketen.\n"
+"Kontouppgifterna kan inte användas för att ladda ner s.k. 'blobs' från "
+"hinken.\n"
 "%s"
 
 #. module: cloud_storage_google
@@ -100,7 +102,7 @@ msgid ""
 "The account info is not allowed to set the bucket's CORS.\n"
 "%s"
 msgstr ""
-"Kontouppgifterna får inte ange CORS för skopan.\n"
+"Kontouppgifterna kan inte användas för att ange hinkens CORS.\n"
 "%s"
 
 #. module: cloud_storage_google
@@ -110,5 +112,6 @@ msgid ""
 "The account info is not allowed to upload blobs to the bucket.\n"
 "%s"
 msgstr ""
-"Kontouppgifterna får inte ladda upp blobbar till bucketen.\n"
+"Kontouppgifterna kan inte användas för att ladda upp s.k. 'blobs' till "
+"hinken.\n"
 "%s"

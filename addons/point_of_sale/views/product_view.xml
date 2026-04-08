@@ -193,7 +193,7 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <field name="image_1920" widget="image" class="oe_avatar" nolabel="1" options="{'convert_to_webp': True,'preview_image': 'image_128'}"/>
+                    <field name="image_1920" widget="image" class="oe_avatar" nolabel="1" options="{'zoom': True, 'convert_to_webp': True, 'preview_image': 'image_128'}"/>
                     <group name="name">
                             <field name="name" class="oe_inline" placeholder="e.g. Cheese Burger" string="Product Name"/>
                             <field name="barcode" class="oe_inline" placeholder="e.g. 1234567890"/>

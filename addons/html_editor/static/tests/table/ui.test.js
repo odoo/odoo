@@ -126,6 +126,26 @@ test("should not display the resizeCursor if the table element isContentEditable
     expect(".o_col_resize").toHaveCount(0);
 });
 
+test("should show the table UI menus when hovering a list inside a table cell", async () => {
+    const { el } = await setupEditor(`
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <ul><li>1</li><li>2</li><li>3</li></ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    `);
+
+    await expectElementCount(".o-we-table-menu", 0);
+
+    await hover(el.querySelector("ul"));
+    // Should display both the row and column menus
+    await expectElementCount(".o-we-table-menu", 2);
+});
+
 test("list of table commands in first column", async () => {
     const { el } = await setupEditor(`
         <p><br></p>
@@ -385,7 +405,7 @@ test("basic delete column operation", async () => {
         <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
-                <tr><td class="a">[]1</td></tr>
+                <tr><td class="a">1[]</td></tr>
                 <tr><td class="c">3</td></tr>
             </tbody>
         </table>
@@ -483,7 +503,7 @@ test("basic delete row operation", async () => {
         <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
-                <tr><td class="a">[]1</td><td class="b">2</td></tr>
+                <tr><td class="a">1[]</td><td class="b">2</td></tr>
             </tbody>
         </table>
         <p data-selection-placeholder=""><br></p>`)
@@ -606,6 +626,42 @@ test("insert column left operation", async () => {
         </table>
         <p data-selection-placeholder=""><br></p>`)
     );
+});
+
+test("editable should be focused after delete operation", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+        <p><br></p>
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr><td><p>[]<br></p></td><td class="a"><p><br></p></td></tr>
+                <tr><td><p><br></p></td><td><p><br></p></td></tr>
+            </tbody>
+        </table>`)
+    );
+
+    // hover on td to show col ui
+    await hover(el.querySelector("td.a"));
+    await waitFor(".o-we-table-menu");
+
+    // click on it to open dropdown
+    await click(".o-we-table-menu");
+    await waitFor("div[name='delete']");
+
+    // delete column
+    await click("div[name='delete']");
+    expect(getContent(el)).toBe(
+        unformat(`
+        <p><br></p>
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td></tr>
+                <tr><td><p><br></p></td></tr>
+            </tbody>
+        </table>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+    );
+    expect(document.activeElement).toBe(el);
 });
 
 test("insert column right operation", async () => {

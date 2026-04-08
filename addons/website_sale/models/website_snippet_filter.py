@@ -177,7 +177,7 @@ class WebsiteSnippetFilter(models.Model):
     @api.model
     def _get_products(self, mode, **kwargs):
         dynamic_filter = self.env.context.get('dynamic_filter')
-        handler = getattr(self, '_get_products_%s' % mode, self._get_products_latest_sold)
+        handler = getattr(self.sudo(False), '_get_products_%s' % mode, self.sudo(False)._get_products_latest_sold)
         website = self.env['website'].get_current_website()
         search_domain = self.env.context.get('search_domain')
         limit = self.env.context.get('limit')

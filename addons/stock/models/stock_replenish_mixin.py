@@ -36,4 +36,5 @@ class StockReplenishMixin(models.AbstractModel):
             base_domain,
             Domain('rule_ids.location_src_id', '!=', stock_location_inter_company_id),
             Domain('rule_ids.location_dest_id', '!=', stock_location_inter_company_id),
+            Domain('rule_ids.location_dest_id.warehouse_id', '!=', False),
         ])

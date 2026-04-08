@@ -77,6 +77,7 @@ export class CaptionPlugin extends Plugin {
             const caption = figure.querySelector("figcaption")?.textContent;
             figure.remove();
             this.addImageCaption(image, caption, false);
+            this.dependencies.history.addStep();
         }
     }
 
@@ -99,7 +100,7 @@ export class CaptionPlugin extends Plugin {
         if (!image) {
             return;
         }
-        const block = closestBlock(image);
+        const block = closestBlock(image.parentElement);
         return (
             block.nodeName === "FIGURE" && !!block.querySelector("[data-embedded='caption'] input")
         );
@@ -113,6 +114,7 @@ export class CaptionPlugin extends Plugin {
             this.removeImageCaption(image);
         } else {
             this.addImageCaption(image, image.getAttribute("data-caption") || "");
+            this.dependencies.history.addStep();
         }
     }
 
@@ -121,20 +123,15 @@ export class CaptionPlugin extends Plugin {
     }
 
     addImageCaption(image, captionText = "", focusInput = true) {
-        this.captionsBeingAdded ||= new Set();
         // Move the image within a figure element.
         const figure = this.document.createElement("figure");
         const link = image.parentElement.nodeName === "A" && image.parentElement;
-        if (link && (link.previousSibling || link.nextSibling)) {
+        const target = link || image;
+        const blockEl = closestBlock(target.parentElement);
+        if ((target.nextSibling || target.previousSibling) && isParagraphRelatedElement(blockEl)) {
             // <p>wx<a><img/></a>yz</p> => <p>wx</p><p><a><img/></a></p><p>yz</p>
-            this.dependencies.split.splitAroundUntil(link, closestBlock(link));
-        } else if (
-            !link &&
-            (image.previousSibling || image.nextSibling) &&
-            isParagraphRelatedElement(closestBlock(image))
-        ) {
             // <p>wx<img/>yz</p> => <p>wx</p><p><img/></p><p>yz</p>
-            const block = this.dependencies.split.splitAroundUntil(image, closestBlock(image));
+            const block = this.dependencies.split.splitAroundUntil(target, blockEl);
             if (isBlock(block.previousSibling) && !isVisible(block.previousSibling)) {
                 block.previousSibling.remove();
             }
@@ -157,7 +154,6 @@ export class CaptionPlugin extends Plugin {
         }
         // Set the caption and its ID.
         const captionId = this.getCaptionId();
-        this.captionsBeingAdded.add(captionId);
         image.setAttribute("data-caption-id", captionId);
         image.setAttribute("data-caption", captionText || "");
         // Ensure it's not possible to write inside the figure.
@@ -173,8 +169,6 @@ export class CaptionPlugin extends Plugin {
             }),
         });
         figure.append(caption);
-        this.dependencies.history.addStep();
-        this.captionsBeingAdded.delete(captionId);
     }
 
     removeImageCaption(image) {
@@ -212,19 +206,23 @@ export class CaptionPlugin extends Plugin {
             const id = props.id;
             delete props.id;
             const image = this.editable.querySelector(`img[data-caption-id="${id}"]`);
+            const previousCaption = image.getAttribute("data-caption");
             Object.assign(props, {
                 image,
                 onUpdateCaption: (caption = "") => {
                     const figcaption = image.parentElement.querySelector("figcaption");
-                    if (figcaption && figcaption.getAttribute("placeholder") !== caption) {
+                    const didCaptionChanged = previousCaption !== caption;
+                    if (
+                        caption &&
+                        figcaption &&
+                        figcaption.getAttribute("placeholder") !== caption
+                    ) {
                         // Adapt the figcaption element's placeholder to the new
                         // caption for screen reader users.
                         figcaption.setAttribute("placeholder", caption);
                     }
-                    if (caption !== image.getAttribute("data-caption")) {
+                    if (didCaptionChanged) {
                         image.setAttribute("data-caption", caption);
-                    }
-                    if (!this.captionsBeingAdded?.has(id)) {
                         // If the caption is being added, we update without
                         // adding a history step because it will be added at the
                         // end of adding the caption, by `addImageCaption`.
@@ -265,12 +263,18 @@ export class CaptionPlugin extends Plugin {
 
     onImageReplaced(media) {
         const figure = closestElement(media, "figure");
-        if (media.nodeName === "IMG" && figure) {
-            const [anchorNode, anchorOffset] = rightPos(figure);
-            const caption = figure.querySelector("[data-embedded='caption'] input")?.value;
-            figure.before(media);
-            figure.remove();
-            this.addImageCaption(media, caption, false);
+        let anchorNode, anchorOffset;
+        if (figure) {
+            if (media.nodeName === "IMG") {
+                [anchorNode, anchorOffset] = rightPos(figure);
+                const caption = figure.querySelector("[data-embedded='caption'] input")?.value;
+                figure.before(media);
+                figure.remove();
+                this.addImageCaption(media, caption, false);
+            } else {
+                this.removeImageCaption(media);
+                [anchorNode, anchorOffset] = rightPos(media);
+            }
             this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
         }
     }

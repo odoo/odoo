@@ -272,9 +272,9 @@ registry
                 Dialog.confirm("Open Register"),
 
                 ...addDownPayment("2", 1, "percent"),
-                ProductScreen.checkTotalAmount("0.86"),
-                ProductScreen.checkTaxAmount("0.15"),
-                ...payAndInvoice("0.86"),
+                ProductScreen.checkTotalAmount("0.81"),
+                ProductScreen.checkTaxAmount("0.14"),
+                ...payAndInvoice("0.81"),
             ].flat(),
     });
 
@@ -287,9 +287,9 @@ registry
                 Dialog.confirm("Open Register"),
 
                 ...addDownPayment("2", 1, "percent"),
-                ProductScreen.checkTotalAmount("0.86"),
-                ProductScreen.checkTaxAmount("0.15"),
-                ...payAndInvoice("0.86"),
+                ProductScreen.checkTotalAmount("0.81"),
+                ProductScreen.checkTaxAmount("0.14"),
+                ...payAndInvoice("0.81"),
             ].flat(),
     });
 
@@ -302,9 +302,9 @@ registry
                 Dialog.confirm("Open Register"),
 
                 ...addDownPayment("2", 1, "percent"),
-                ProductScreen.checkTotalAmount("0.86"),
-                ProductScreen.checkTaxAmount("0.15"),
-                ...payAndInvoice("0.86"),
+                ProductScreen.checkTotalAmount("0.81"),
+                ProductScreen.checkTaxAmount("0.14"),
+                ...payAndInvoice("0.81"),
             ].flat(),
     });
 
@@ -317,8 +317,8 @@ registry
                 Dialog.confirm("Open Register"),
 
                 ...addDownPayment("2", 1, "percent"),
-                ProductScreen.checkTotalAmount("0.86"),
-                ProductScreen.checkTaxAmount("0.15"),
-                ...payAndInvoice("0.86"),
+                ProductScreen.checkTotalAmount("0.81"),
+                ProductScreen.checkTaxAmount("0.14"),
+                ...payAndInvoice("0.81"),
             ].flat(),
     });

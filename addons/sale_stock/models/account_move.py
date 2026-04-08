@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 
-from odoo import models, api
+from odoo import models, api, fields
 from odoo.tools import float_is_zero, float_compare
 from odoo.tools.misc import formatLang
 
@@ -119,7 +119,7 @@ class AccountMove(models.Model):
             effective_date_res = max(sale_order_effective_date) if sale_order_effective_date else False
             # if multiple sale order we take the bigger effective_date
             if effective_date_res:
-                move.delivery_date = effective_date_res
+                move.delivery_date = fields.Datetime.context_timestamp(self, effective_date_res)
 
     @api.depends('line_ids.sale_line_ids.order_id')
     def _compute_incoterm_location(self):
@@ -165,7 +165,8 @@ class AccountMoveLine(models.Model):
         posted_cogs_qty = sum(self.sale_line_ids.order_id.invoice_ids.filtered(lambda m: m.move_type == 'out_invoice').line_ids.filtered(
             lambda line: line.product_id == self.product_id and line.display_type == 'cogs' and line.account_id == valuation_account
         ).mapped('quantity'))
-        return posted_cogs_qty + super()._get_cogs_qty()
+        posted_cogs_qty_prod_uom = self.product_uom_id._compute_quantity(posted_cogs_qty, self.product_id.uom_id)
+        return posted_cogs_qty_prod_uom + super()._get_cogs_qty()
 
     def _get_posted_cogs_value(self):
         self.ensure_one()

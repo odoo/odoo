@@ -258,8 +258,8 @@ class AccountChartTemplate(models.AbstractModel):
         if not isinstance(companies, models.BaseModel):
             companies = self.env['res.company'].browse(companies)
         for company in companies:
-            self.sudo().with_context(skip_pdf_attachment_generation=True)._load_data(self._get_demo_data(company))
-            self._post_load_demo_data(company)
+            self.with_context(install_mode=True).sudo().with_context(skip_pdf_attachment_generation=True)._load_data(self._get_demo_data(company))
+            self.with_context(install_mode=True)._post_load_demo_data(company)
 
     def _pre_reload_data(self, company, template_data, data, force_create=True):
         """Pre-process the data in case of reloading the chart of accounts.
@@ -304,7 +304,9 @@ class AccountChartTemplate(models.AbstractModel):
                         'noupdate': True,
                     }])
 
-        account_group_count = self.env['account.group'].search_count([])
+        account_group_count = self.env['account.group'].search_count(
+            [] if company.parent_id else [('company_id', '=', company.id)],
+        )
         if account_group_count:
             data.pop('account.group', None)
 
@@ -781,6 +783,8 @@ class AccountChartTemplate(models.AbstractModel):
         bank_fees = self.ref('bank_fees_reco', raise_if_not_found=False)
         if bank_fees:
             bank_fees.line_ids.sudo().write({'account_id': self._get_bank_fees_reco_account(company).id})
+
+        company._initiate_account_onboardings()
 
     def _get_bank_fees_reco_account(self, company):
         # We want a bank fees account if possible and the first expense account as a fallback.
@@ -1469,6 +1473,7 @@ class AccountChartTemplate(models.AbstractModel):
             chart_template_data = template_data or self.env['account.chart.template'] \
                 .with_context(ignore_missing_tags=True) \
                 .with_company(company) \
+                .sudo() \
                 ._get_chart_template_data(company.chart_template)
             chart_template_data.pop('template_data', None)
             for mname, data in chart_template_data.items():

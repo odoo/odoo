@@ -48,6 +48,7 @@ declare module "models" {
         fetchMoreAttachments: (limit: number) => Promise<void>;
         firstUnreadMessage: Message;
         group_ids: ResGroups[];
+        has_mail_thread: boolean | undefined;
         hasMemberList: Readonly<boolean>;
         hasOtherMembersTyping: boolean;
         hasSeenFeature: boolean;

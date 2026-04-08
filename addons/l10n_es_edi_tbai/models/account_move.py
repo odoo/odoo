@@ -203,6 +203,8 @@ class AccountMove(models.Model):
 
     def l10n_es_tbai_cancel(self):
         for invoice in self:
+            if invoice.inalterable_hash:
+                raise UserError(_('You cannot reset to draft a locked journal entry.'))
             invoice._l10n_es_tbai_lock_move()
 
             if invoice.l10n_es_tbai_cancel_document_id and invoice.l10n_es_tbai_cancel_document_id.state == 'rejected':

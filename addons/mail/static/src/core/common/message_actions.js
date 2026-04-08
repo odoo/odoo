@@ -99,6 +99,7 @@ registerMessageAction("reply-to", {
             }
         }
         owner.env.inChatter?.toggleComposer("note", { force: true });
+        composer.restoredFromFullComposer = false;
         if (!composer.isFocused) {
             composer.autofocus++;
         }
@@ -142,7 +143,7 @@ registerMessageAction("edit", {
         message.enterEditMode(thread);
         owner.optionsDropdown?.close();
     },
-    sequence: ({ message }) => (message.isSelfAuthored ? 20 : 55),
+    sequence: ({ message }) => (message.isSelfAuthored ? 20 : 115),
 });
 registerMessageAction("delete", {
     condition: ({ message }) => message.editable,

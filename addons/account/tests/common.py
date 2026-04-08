@@ -280,9 +280,13 @@ class AccountTestInvoicingCommon(ProductCommon):
     @classmethod
     def _create_product(cls, **create_values):
         # OVERRIDE
-        create_values.setdefault('property_account_income_id', cls.company_data['default_account_revenue'].id)
-        create_values.setdefault('property_account_expense_id', cls.company_data['default_account_expense'].id)
-        create_values.setdefault('taxes_id', [Command.set(cls.tax_sale_a.ids)])
+        create_values.setdefault('property_account_income_id', cls.company_data['default_account_revenue'])
+        create_values.setdefault('property_account_expense_id', cls.company_data['default_account_expense'])
+        create_values.setdefault('taxes_id', cls.tax_sale_a)
+
+        # QoL: allow passing record immediately instead of getting the id / creating [Command.set(...)] everytime
+        # QoL: delete all keys with None value from create_values
+        cls._prepare_record_kwargs('product.product', create_values)
         return super()._create_product(**create_values)
 
     @classmethod
@@ -295,6 +299,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             | (cls.env.ref('stock.group_stock_manager', False) or no_group)
             | cls.quick_ref('account.group_account_manager')
             | cls.quick_ref('account.group_account_user')
+            | cls.quick_ref('account.group_validate_bank_account')
             | cls.quick_ref('base.group_system')  # company creation during setups
         )
 

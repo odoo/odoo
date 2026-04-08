@@ -403,8 +403,8 @@ class AccountMove(models.Model):
             for tax in line.tax_ids:
                 if tax.l10n_in_tax_type == 'tcs':
                     max_tax = max(
-                        tax.l10n_in_section_id.l10n_in_section_tax_ids,
-                        key=lambda t: t.amount
+                        tax.l10n_in_section_id.with_context(active_test=False).l10n_in_section_tax_ids,
+                        key=lambda t: abs(t.amount),
                     )
                     updated_tax_ids.append(max_tax.id)
                 else:
@@ -420,7 +420,10 @@ class AccountMove(models.Model):
                 for tax in line.tax_ids:
                     if (
                         tax.l10n_in_tax_type == 'tcs'
-                        and tax.amount != max(tax.l10n_in_section_id.l10n_in_section_tax_ids, key=lambda t: abs(t.amount)).amount
+                        and tax.amount != max(
+                            tax.l10n_in_section_id.with_context(active_test=False).l10n_in_section_tax_ids,
+                            key=lambda t: abs(t.amount),
+                        ).amount
                     ):
                         lines |= line._origin
             return lines
@@ -721,6 +724,8 @@ class AccountMove(models.Model):
 
     def _get_sync_stack(self, container):
         stack, update_containers = super()._get_sync_stack(container)
+        if all(move.country_code != 'IN' for move in self):
+            return stack, update_containers
         _tax_container, invoice_container, misc_container = update_containers()
         moves = invoice_container['records'] + misc_container['records']
         stack.append((9, self._sync_l10n_in_gstr_section(moves)))

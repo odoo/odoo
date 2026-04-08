@@ -205,6 +205,7 @@ class HrJob(models.Model):
             for job, count in self.env['hr.employee'].sudo()._read_group(
                 domain=[
                     ('job_id', 'in', self.ids),
+                    ('company_id', 'in', self.env.companies.ids),
                 ],
                 groupby=['job_id'],
                 aggregates=['__count'],
@@ -409,6 +410,7 @@ class HrJob(models.Model):
             'res_model': res_model,
             'view_mode': 'list,kanban,form',
             'views': [(False, 'list'), (False, 'kanban'), (False, 'form')],
+            'domain': [('company_id', 'in', self.env.companies.ids)],
             'context': {
                 'default_job_id': self.id,
                 'search_default_group_job': 1,

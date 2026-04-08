@@ -56,7 +56,7 @@ describe("replicate changes", () => {
         queryOne(":iframe .test-4 a").append("!"); // the feff should not be forwarded
         editor.shared.history.addStep();
         expect(":iframe .test-1 b").toHaveText("Travel Abroad!");
-        expect(":iframe .test-2 a").toHaveText("Travel Abroad!");
+        expect(":iframe .test-2 a").toHaveText("Travel Abroad!", { raw: true });
         expect(":iframe .test-3 span").toHaveText("Travel Abroad!");
         expect(":iframe .test-4 a").toHaveInnerHTML("\u{FEFF}Travel Abroad!\u{FEFF}");
     });

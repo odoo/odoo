@@ -25,11 +25,18 @@
             <div class="pos-receipt-title">
                 NEW
             </div>
-            <br />
             <t t-foreach="changes.new" t-as="change" t-key="change_index">
-                <div class="product-details d-flex" t-att-class="{'ms-5': change.combo_parent_id}">
-                    <span class="product-quantity me-3 mb-1" t-esc="change.qty"/>
-                    <span class="product-name" t-esc="change.full_product_name"/>
+                <div class="product-details d-flex mx-1" t-att-class="{'ms-5': change.combo_parent_id}" style="font-size: 150%;">
+                    <span class="product-quantity me-3" t-esc="change.qty"/>
+                    <span class="product-name" t-esc="change.product_id.name"/>
+                </div>
+                <div class="mx-1" t-att-class="{'ms-5': change.combo_parent_id}" style="font-size: 150%;">
+                   <t t-set="attribute_names" t-value="changes.getLineAttributeNames(change)" />
+                   <div t-if="attribute_names.length" class="ms-5" style="font-size: 91%;">
+                        <div t-foreach="attribute_names" t-as="attr" t-key="attr_index">
+                            - <t t-esc="attr" />
+                        </div>
+                   </div>
                 </div>
                 <t t-if="change.customer_note">
                     <div>
@@ -42,7 +49,7 @@
             </t>
             <br />
             <br />
-    </div>
+        </div>
     </t>
 
 </templates>

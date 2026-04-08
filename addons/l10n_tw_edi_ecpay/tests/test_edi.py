@@ -48,7 +48,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         })
         # We can reuse this invoice for the flow tests.
         cls.basic_invoice = cls.init_invoice(
-            'out_invoice', partner=cls.partner_a, products=cls.product_a,
+            'out_invoice', partner=cls.partner_a, products=cls.product_a, taxes=cls.tax_sale_a,
         )
         cls.basic_invoice.action_post()
         cls.basic_invoice_b2b = cls.init_invoice(
@@ -222,7 +222,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
             'company_type': 'company',
         })
         invoice_a = self.init_invoice(
-            'out_invoice', partner=test_partner, products=self.product_a,
+            'out_invoice', partner=test_partner, products=self.product_a, taxes=self.tax_sale_a,
         )
         invoice_a.action_post()
         send_and_print = self.create_send_and_print(invoice_a)
@@ -232,7 +232,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         # the partner is b2b and has an invalid tax id
         test_partner.vat = '1234567A'
         invoice_b = self.init_invoice(
-            'out_invoice', partner=test_partner, products=self.product_a,
+            'out_invoice', partner=test_partner, products=self.product_a, taxes=self.tax_sale_a,
         )
         invoice_b.action_post()
         send_and_print = self.create_send_and_print(invoice_b)
@@ -243,7 +243,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         test_partner.vat = '12345678'
         test_partner.phone = '123+456+789'
         invoice_c = self.init_invoice(
-            'out_invoice', partner=test_partner, products=self.product_a,
+            'out_invoice', partner=test_partner, products=self.product_a, taxes=self.tax_sale_a,
         )
         invoice_c.action_post()
         send_and_print = self.create_send_and_print(invoice_c)
@@ -252,7 +252,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         # the invoice type is invalid
         test_partner.phone = '+886 123 456 789'
         invoice_d = self.init_invoice(
-            'out_invoice', partner=test_partner, products=self.product_a,
+            'out_invoice', partner=test_partner, products=self.product_a, taxes=self.tax_sale_a,
         )
         invoice_d.l10n_tw_edi_invoice_type = '08'
         invoice_d.action_post()
@@ -263,7 +263,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
     def test_08_invoice_with_downpayment(self):
         """Ensure downpayment with -ve quantity is normalized for ECPay JSON."""
         invoice = self.init_invoice(
-            'out_invoice', partner=self.partner_a, products=self.product_a,
+            'out_invoice', partner=self.partner_a, products=self.product_a, taxes=self.tax_sale_a,
         )
         invoice.write({
             "invoice_line_ids": [
@@ -416,7 +416,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         passes validation regardless of the gap. (not covered here)
         """
         seven_days_ago = datetime.now() - timedelta(days=7)
-        invoice = self.init_invoice("out_invoice", partner=self.partner_b, products=self.product_a)
+        invoice = self.init_invoice("out_invoice", partner=self.partner_b, products=self.product_a, taxes=self.tax_sale_a)
         invoice.write({
             "invoice_date": seven_days_ago.date(),
             "l10n_tw_edi_invoice_create_date": seven_days_ago,
@@ -452,7 +452,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
 
         Ensure the convert_utc_time_to_tw_time function works to convert the 'InvoiceDate' in the allowance JSON to TW date
         """
-        invoice = self.init_invoice("out_invoice", partner=self.partner_a, products=self.product_a)
+        invoice = self.init_invoice("out_invoice", partner=self.partner_a, products=self.product_a, taxes=self.tax_sale_a)
         invoice.write({
             "l10n_tw_edi_invoice_create_date": datetime(2026, 1, 5, 18, 0, 0),
             "l10n_tw_edi_ecpay_invoice_id": "AB11100099"  # simulate it was already sent

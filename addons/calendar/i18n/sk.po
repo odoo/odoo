@@ -15,13 +15,14 @@
 # Damian Brencic <brencicdamian12313@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Tomáš Píšek <Tomas.Pisek@seznam.cz>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:35+0000\n"
-"PO-Revision-Date: 2025-11-16 15:33+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
+"PO-Revision-Date: 2026-03-30 06:19+0000\n"
+"Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/calendar/"
 "sk/>\n"
 "Language: sk\n"
@@ -30,7 +31,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
 ">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_count
@@ -127,20 +128,6 @@ msgid ""
 "        </t>\n"
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/calendar/meeting/accept?"
-"token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" t-attf-"
-"style=\"display: inline-block; padding: 7px 14px; color: "
-"{{organizer.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: "
-"none; background-color: {{organizer.company_id.email_secondary_color or "
-"'#875A7B'}}; border-radius: 3px;\">\n"
-"            Accept</a>\n"
-"        <a t-attf-href=\"/calendar/meeting/decline?"
-"token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" t-attf-"
-"style=\"display: inline-block; margin-left: 6px; padding: 7px 14px; color: "
-"{{organizer.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: "
-"none; background-color: {{organizer.company_id.email_secondary_color or "
-"'#875A7B'}}; border-radius: 3px;\">\n"
-"            Decline</a>\n"
 "        <a t-attf-href=\"/calendar/meeting/view?"
 "token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" t-attf-"
 "style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; color: "
@@ -306,22 +293,6 @@ msgid ""
 "\n"
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/calendar/meeting/accept?"
-"token={{object.access_token}}&amp;id={{object.event_id.id}}\" t-attf-"
-"style=\"display: inline-block; padding: 7px 14px; color: "
-"{{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; "
-"text-decoration: none; background-color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
-"border-radius: 3px;\">\n"
-"            Accept</a>\n"
-"        <a t-attf-href=\"/calendar/meeting/decline?"
-"token={{object.access_token}}&amp;id={{object.event_id.id}}\" t-attf-"
-"style=\"display: inline-block; margin-left: 6px; padding: 7px 14px; color: "
-"{{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; "
-"text-decoration: none; background-color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
-"border-radius: 3px;\">\n"
-"            Decline</a>\n"
 "        <a t-attf-href=\"/calendar/meeting/view?token={{object.access_token}}"
 "&amp;id={{object.event_id.id}}\" t-attf-style=\"display: inline-block; "
 "margin-left: 12px; padding: 7px 14px; color: #111827; text-decoration: none; "
@@ -600,24 +571,6 @@ msgid ""
 "for the event below.</span>\n"
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/calendar/{{ 'recurrence' if recurrent else "
-"'meeting' }}/accept?token={{ object.access_token }}"
-"&amp;id={{ object.event_id.id }}\" t-attf-style=\"display: inline-block; "
-"padding: 7px 14px; color: "
-"{{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; "
-"text-decoration: none; background-color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
-"border-radius: 3px;\">\n"
-"            Accept</a>\n"
-"        <a t-attf-href=\"/calendar/{{ 'recurrence' if recurrent else "
-"'meeting' }}/decline?token={{ object.access_token }}"
-"&amp;id={{ object.event_id.id }}\" t-attf-style=\"display: inline-block; "
-"margin-left: 6px; padding: 7px 14px; color: "
-"{{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; "
-"text-decoration: none; background-color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
-"border-radius: 3px;\">\n"
-"            Decline</a>\n"
 "        <a t-attf-href=\"/calendar/meeting/view?"
 "token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" t-attf-"
 "style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; color: "
@@ -954,6 +907,7 @@ msgid "A user cannot have the same contact twice."
 msgstr "Používateľ nemôže mať rovnaký kontakt dvakrát."
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Accept"
 msgstr "Akceptovať"
@@ -1253,7 +1207,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Cancel"
-msgstr "Zrušené"
+msgstr "Zrušiť"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__is_organizer_alone
@@ -1439,6 +1393,7 @@ msgid "Days"
 msgstr "Dni"
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Decline"
 msgstr "Zamietnuť"
@@ -2145,7 +2100,7 @@ msgstr "Stretnutia"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
 msgid "Message Delivery error"
-msgstr "Chyba zobrazovania správ"
+msgstr "Chyba doručenia správy"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_ids
@@ -2798,12 +2753,12 @@ msgstr "Synchronizujte svoj kalendár s programom Outlook"
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
 msgid "Tag name already exists!"
-msgstr "Názov značky už existuje!"
+msgstr "Názov štítku už existuje!"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
 msgid "Tags"
-msgstr "Tagy"
+msgstr "Štítky"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__mail_template_id

@@ -10,12 +10,16 @@ import { uniqueId } from "@web/core/utils/functions";
  * @property { SavePlugin['save'] } save
  * @property { SavePlugin['saveView'] } saveView
  * @property { SavePlugin['ignoreDirty'] } ignoreDirty
+ * @property { SavePlugin['groupElements'] } groupElements
  */
 
 /**
  * @typedef {(() => void)[]} after_save_handlers
  * @typedef {((el?: HTMLElement) => Promise<void>)[]} before_save_handlers
  * Called at the very beginning of the save process.
+ *
+ * @typedef {((groupedEls: Object.<string, HTMLElement[]>) => Promise<void>)[]} pre_save_handlers
+ * Called before the save process with the grouped dirty elements.
  *
  * @typedef {((el: HTMLElement) => Promise<void>)[]} save_element_handlers
  * Called when saving an element (in parallel to saving the view).
@@ -32,7 +36,7 @@ import { uniqueId } from "@web/core/utils/functions";
 
 export class SavePlugin extends Plugin {
     static id = "savePlugin";
-    static shared = ["save", "saveView", "ignoreDirty"];
+    static shared = ["save", "saveView", "ignoreDirty", "groupElements"];
     static dependencies = ["history"];
 
     /** @type {import("plugins").BuilderResources} */
@@ -63,6 +67,24 @@ export class SavePlugin extends Plugin {
         this.savableSelector = this.getResource("savable_selectors").join(", ");
     }
 
+    groupElements(toGroupEls) {
+        return groupBy(toGroupEls, (toGroupEl) => {
+            const model = toGroupEl.dataset.oeModel;
+            const recordId = toGroupEl.dataset.oeId;
+            const field = toGroupEl.dataset.oeField;
+
+            // There are elements which have no linked model as something
+            // special is to be done "to save them". In that case, do not group
+            // those elements.
+            if (!model) {
+                return uniqueId("special-element-to-save-");
+            }
+
+            // Group elements which are from the same field of the same record.
+            return `${model}::${recordId}::${field}`;
+        });
+    }
+
     async save({ shouldSkipAfterSaveHandlers = async () => true } = {}) {
         let skipAfterSaveHandlers;
         try {
@@ -81,21 +103,12 @@ export class SavePlugin extends Plugin {
             dirtyEls.push(...getDirtyEls());
         }
         // Group elements to save if possible
-        const groupedElements = groupBy(dirtyEls, (dirtyEl) => {
-            const model = dirtyEl.dataset.oeModel;
-            const recordId = dirtyEl.dataset.oeId;
-            const field = dirtyEl.dataset.oeField;
-
-            // There are elements which have no linked model as something
-            // special is to be done "to save them". In that case, do not group
-            // those elements.
-            if (!model) {
-                return uniqueId("special-element-to-save-");
-            }
-
-            // Group elements which are from the same field of the same record.
-            return `${model}::${recordId}::${field}`;
-        });
+        const groupedElements = this.groupElements(dirtyEls);
+        const preSaveHandlers = [];
+        for (const preSaveHandler of this.getResource("pre_save_handlers")) {
+            preSaveHandlers.push(preSaveHandler(groupedElements));
+        }
+        await Promise.all(preSaveHandlers);
         const saveProms = Object.values(groupedElements).map(async (dirtyEls) => {
             const cleanedEls = dirtyEls.map((dirtyEl) => {
                 dirtyEl.classList.remove("o_dirty");

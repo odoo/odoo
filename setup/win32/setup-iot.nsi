@@ -89,6 +89,7 @@ RequestExecutionLevel admin
 !insertmacro GetOptions
 
 Var /GLOBAL cmdLineParams
+Var /GLOBAL ProxyTokenPwd
 
 !define STATIC_PATH "static"
 !define PIXMAPS_PATH "${STATIC_PATH}\pixmaps"
@@ -208,6 +209,11 @@ Section $(TITLE_Odoo_IoT) SectionOdoo_IoT
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppParameters "\"$INSTDIR\odoo\odoo-bin\" -c "\"$INSTDIR\odoo.conf\"'
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} ObjectName "LOCALSERVICE"'
     AccessControl::GrantOnFile  "$INSTDIR" "LOCALSERVICE" "FullAccess"
+
+    nsExec::ExecToStack '"$INSTDIR\python\python.exe" "$INSTDIR\odoo\odoo-bin" genproxytoken'
+    pop $0
+    pop $ProxyTokenPwd
+    WriteIniStr "$INSTDIR\odoo.conf" "options" "proxy_access_token" "$ProxyTokenPwd"
 
     Call RestartOdooService
 SectionEnd

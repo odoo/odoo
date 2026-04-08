@@ -1141,7 +1141,7 @@
                 <input
                     type="text"
                     class="o_wsale_attribute_search_bar form-control"
-                    t-att-placeholder="'Search %s (%s)' % (a.name, len(a.value_ids))"
+                    t-attf-placeholder="Search {{a.name}} ({{len(a.value_ids)}})"
                     t-att-data-container-id="'searchable-values-%s' % a.id"
                 />
             </div>
@@ -1379,19 +1379,23 @@
                         </div>
                     </div>
                 </div>
+                <t
+                    t-set="show_attribute_filters"
+                    t-value="opt_wsale_attributes or opt_wsale_attributes_top"
+                />
                 <div t-if="opt_wsale_categories" class="accordion-item d-lg-none">
                     <h2 id="o_wsale_offcanvas_categories_header" class="accordion-header mb-0">
-                        <button class="o_wsale_offcanvas_title accordion-button rounded-0 collapsed"
+                        <button t-attf-class="o_wsale_offcanvas_title accordion-button rounded-0 {{'collapsed' if show_attribute_filters else ''}}"
                                 type="button"
                                 data-bs-toggle="collapse"
                                 data-bs-target="#o_wsale_offcanvas_categories"
-                                aria-expanded="false"
+                                t-att-aria-expanded="'false' if show_attribute_filters else 'true'"
                                 aria-controls="o_wsale_offcanvas_categories">
                                 <b>Categories</b>
                         </button>
                     </h2>
                     <div id="o_wsale_offcanvas_categories"
-                         class="accordion-collapse collapse"
+                         t-attf-class="accordion-collapse collapse {{'show' if not show_attribute_filters else ''}}"
                          aria-labelledby="o_wsale_offcanvas_categories_header">
                         <div class="accordion-body pt-0">
                             <t t-call="website_sale.products_categories_list">
@@ -1402,10 +1406,13 @@
                         </div>
                     </div>
                 </div>
-                <t t-call="website_sale.product_attribute_filters_form">
+                <t
+                    t-if="show_attribute_filters"
+                    t-call="website_sale.product_attribute_filters_form"
+                >
                     <t t-set="isMobile" t-value="True"/>
                 </t>
-                <t t-if="opt_wsale_filter_price and (opt_wsale_attributes or opt_wsale_attributes_top)"
+                <t t-if="opt_wsale_filter_price and show_attribute_filters"
                    t-call="website_sale.filter_products_price">
                     <t
                         t-set="_classes"
@@ -2145,12 +2152,11 @@
                                     </div>
 
                                     <div
-                                        t-if="combination_info['prevent_zero_price_sale']"
                                         class="o_wsale_product_details_content_section o_wsale_product_details_content_section_contact mb-4"
                                     >
                                         <div
                                             id="contact_us_wrapper"
-                                            t-attf-class="d-flex oe_structure oe_structure_solo #{_div_classes}"
+                                            t-attf-class="d-flex oe_structure oe_structure_solo #{_div_classes} {{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}}"
                                         >
                                             <section
                                                 class="s_text_block"
@@ -2252,7 +2258,8 @@
                                 <t t-set="_classes" t-valuef="input-group rounded o_cc o_cc1 mb-1"/>
                                 <t t-set="_input_classes" t-valuef="border-0 p-3"/>
                                 <t t-set="_submit_classes" t-valuef="px-4"/>
-                                <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
+                                <t t-set="action" t-value="keep(search=0)"/>
+                                <t t-if="original_category" t-set="placeholder">Search in <t t-out="original_category.name"/></t>
                             </t>
                         </div>
                     </div>
@@ -2366,7 +2373,18 @@
         <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="inside">
             <div class="d-flex gap-5 flex-grow-1 justify-content-between align-items-center order-first w-100 mb-3 pb-3 border-bottom">
                 <span name="o_wsale_cta_wrapper_boxed_price_label" class="text-muted">Price</span>
-                <t t-call="website_sale.product_price"/>
+                <div>
+                    <t t-call="website_sale.product_price"/>
+                    <small 
+                        t-if="combination_info.get('base_unit_price')"
+                        class="ms-1 text-muted o_base_unit_price_wrapper d-none"
+                    >
+                        <t
+                            t-call="website_sale.base_unit_price"
+                            base_unit_price="combination_info['base_unit_price']"
+                        />
+                    </small>
+                </div>
             </div>
         </xpath>
     </template>
@@ -2414,7 +2432,8 @@
         name="Searchbar On Product Page"
     >
         <xpath expr="//div[hasclass('o_wsale_product_top_bar_desktop')]" position="inside">
-            <t t-call="website_sale.search">
+            <t t-if="original_category" t-set="placeholder">Search in <t t-out="original_category.name"/></t>
+            <t t-call="website_sale.search" placeholder="placeholder">
                 <t t-set="search" t-value="False"/>
                 <t t-set="_classes" t-value="'me-sm-2'"/>
             </t>
@@ -3038,7 +3057,7 @@
                 <t t-set="product" t-value="line.product_id"/>
                 <t
                     t-set="base_unit_price"
-                    t-value="product._get_base_unit_price(product_price/line.product_uom_qty)"
+                    t-value="product._get_base_unit_price(product_price/line.product_qty)"
                 />
             </t>
         </small>
@@ -3351,7 +3370,7 @@
         >
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <div class="input-group w-100">
-                <input name="promo" class="form-control" type="text" placeholder="Discount code..." t-att-value="website_sale_order.pricelist_id.code or None"/>
+                <input name="promo" class="form-control" type="text" placeholder="Discount code..."/>
                 <button type="submit" class="btn btn-light border">Apply</button>
             </div>
         </form>
@@ -3372,7 +3391,9 @@
             <t t-if="website_sale_order and website_sale_order.website_order_line">
                 <t
                     t-if="(website.account_on_checkout != 'mandatory' or
-                            not website.is_public_user()) and show_shorter_cart_summary"
+                            not website.is_public_user()) and
+                            show_shorter_cart_summary and
+                            website_sale_order._allow_express_checkout()"
                     t-call="payment.express_checkout"
                 />
                 <t t-if="current_website_checkout_step_href == '/shop/payment'">
@@ -4125,8 +4146,9 @@
             <tr t-if="not hide_promotions">
                 <td colspan="3" class="text-end text-xl-end border-0 p-0">
                 <span>
+                    <!-- force_coupon to be removed in master -->
                     <t t-set="force_coupon" t-value="website_sale_order.pricelist_id.code"/>
-                    <div t-if="not force_coupon" class="coupon_form">
+                    <div class="coupon_form">
                         <t t-call="website_sale.coupon_form"/>
                     </div>
                 </span>

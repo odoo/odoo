@@ -19,7 +19,6 @@ import { getContent, setContent, setSelection } from "../_helpers/selection";
 import { expectElementCount } from "../_helpers/ui_expectations";
 import { insertLineBreak, insertText, splitBlock, undo } from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
-import { MAIN_PLUGINS, NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS } from "@html_editor/plugin_sets";
 
 const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -1157,6 +1156,9 @@ describe("shortcut", () => {
         // Tab through all focusable elements
         await press("Tab");
         await animationFrame();
+        expect("button:has(i.fa-upload)").toBeFocused();
+        await press("Tab");
+        await animationFrame();
         expect("select[name='link_type']").toBeFocused();
         await press("Tab");
         await animationFrame();
@@ -1590,10 +1592,8 @@ describe("link in contenteditable=false", () => {
 });
 
 describe("upload file via link popover", () => {
-    test("should display upload button when url input is empty", async () => {
-        const { editor } = await setupEditor("<p>[]<br></p>", {
-            config: { Plugins: [...MAIN_PLUGINS, ...NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS] },
-        });
+    test("should display upload button whether url input is empty or filled.", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
         execCommand(editor, "openLinkTools");
         await waitFor(".o-we-linkpopover");
         // Upload button should be visible
@@ -1601,11 +1601,7 @@ describe("upload file via link popover", () => {
         await click(".o_we_href_input_link");
         await press("a");
         await animationFrame();
-        // Upload button should NOT be visible
-        expect("button i[class='fa fa-upload']").toHaveCount(0);
-        await press("Backspace");
-        await animationFrame();
-        // Upload button should be visible again
+        // Still upload button should be visible
         expect("button i[class='fa fa-upload']").toHaveCount(1);
     });
     const patchUpload = (editor) => {
@@ -1620,9 +1616,7 @@ describe("upload file via link popover", () => {
         return mockedUploadPromise;
     };
     test("can create a link to an uploaded file", async () => {
-        const { editor, el } = await setupEditor("<p>[]<br></p>", {
-            config: { Plugins: [...MAIN_PLUGINS, ...NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS] },
-        });
+        const { editor, el } = await setupEditor("<p>[]<br></p>");
         const mockedUpload = patchUpload(editor);
         execCommand(editor, "openLinkTools");
         await waitFor(".o-we-linkpopover");
@@ -1666,9 +1660,7 @@ describe("upload file via link popover", () => {
     });
 
     test("label input does not get filled on file upload if it is already filled", async () => {
-        const { editor } = await setupEditor("<p>[]<br></p>", {
-            config: { Plugins: [...MAIN_PLUGINS, ...NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS] },
-        });
+        const { editor } = await setupEditor("<p>[]<br></p>");
         const mockedUpload = patchUpload(editor);
         execCommand(editor, "openLinkTools");
         await waitFor(".o-we-linkpopover");

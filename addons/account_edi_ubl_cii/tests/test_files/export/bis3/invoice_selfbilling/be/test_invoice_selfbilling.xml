@@ -19,7 +19,7 @@
 		<cac:Party>
 			<cbc:EndpointID schemeID="0208">0477472701</cbc:EndpointID>
 			<cac:PartyIdentification>
-				<cbc:ID>0477472701</cbc:ID>
+				<cbc:ID schemeID="0208">0477472701</cbc:ID>
 			</cac:PartyIdentification>
 			<cac:PartyName>
 				<cbc:Name>partner_be</cbc:Name>
@@ -40,7 +40,7 @@
 			</cac:PartyTaxScheme>
 			<cac:PartyLegalEntity>
 				<cbc:RegistrationName>partner_be</cbc:RegistrationName>
-				<cbc:CompanyID>0477472701</cbc:CompanyID>
+				<cbc:CompanyID schemeID="0208">0477472701</cbc:CompanyID>
 			</cac:PartyLegalEntity>
 			<cac:Contact>
 				<cbc:Name>partner_be</cbc:Name>
@@ -51,7 +51,7 @@
 		<cac:Party>
 			<cbc:EndpointID schemeID="0208">0202239951</cbc:EndpointID>
 			<cac:PartyIdentification>
-				<cbc:ID>0202239951</cbc:ID>
+				<cbc:ID schemeID="0208">0202239951</cbc:ID>
 			</cac:PartyIdentification>
 			<cac:PartyName>
 				<cbc:Name>company_1_data</cbc:Name>
@@ -72,7 +72,7 @@
 			</cac:PartyTaxScheme>
 			<cac:PartyLegalEntity>
 				<cbc:RegistrationName>company_1_data</cbc:RegistrationName>
-				<cbc:CompanyID>0202239951</cbc:CompanyID>
+				<cbc:CompanyID schemeID="0208">0202239951</cbc:CompanyID>
 			</cac:PartyLegalEntity>
 			<cac:Contact>
 				<cbc:Name>company_1_data</cbc:Name>
@@ -81,6 +81,7 @@
 	</cac:AccountingCustomerParty>
 	<cac:Delivery>
 		<cac:DeliveryLocation>
+			<cbc:ID schemeID="0088">0123456789</cbc:ID>
 			<cac:Address>
 				<cbc:StreetName>Chaussée de Namur 40</cbc:StreetName>
 				<cbc:CityName>Ramillies</cbc:CityName>
@@ -92,7 +93,7 @@
 		</cac:DeliveryLocation>
 		<cac:DeliveryParty>
 			<cac:PartyName>
-				<cbc:Name>company_1_data</cbc:Name>
+				<cbc:Name>company_1_data, custom delivery address</cbc:Name>
 			</cac:PartyName>
 		</cac:DeliveryParty>
 	</cac:Delivery>

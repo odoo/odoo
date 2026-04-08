@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, Command, models
+from odoo import Command, api, models
 
 
 class AccountJournal(models.Model):
@@ -17,8 +16,8 @@ class AccountJournal(models.Model):
             # of the Danish financial reports.
             account_vals.setdefault('tag_ids', [])
             if vals.get('type') == 'bank':
-                account_vals['tag_ids'].append(Command.link(self.env.ref('l10n_dk.account_tag_6481').id))
+                account_vals['tag_ids'].append(Command.link(self.env.ref('l10n_dk.account_tag_6480').id))
             elif vals.get('type') == 'cash':
-                account_vals['tag_ids'].append(Command.link(self.env.ref('l10n_dk.account_tag_6471').id))
+                account_vals['tag_ids'].append(Command.link(self.env.ref('l10n_dk.account_tag_6470').id))
 
         return account_vals

@@ -40,6 +40,7 @@ import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
 import { formatDate } from "@web/core/l10n/dates";
+import { localization } from "@web/core/l10n/localization";
 import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
 import { RetryPrintPopup } from "@point_of_sale/app/components/popups/retry_print_popup/retry_print_popup";
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
@@ -48,6 +49,7 @@ import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 import OrderPaymentValidation from "../utils/order_payment_validation";
 import { logPosMessage } from "../utils/pretty_console_log";
 import { initLNA } from "../utils/init_lna";
+import { Domain } from "@web/core/domain";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -55,6 +57,18 @@ export const CONSOLE_COLOR = "#F5B427";
 export class PosStore extends WithLazyGetterTrap {
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
+    static excludedLazyGetters = [
+        "defaultPage",
+        "firstPage",
+        "idleTimeout",
+        "session",
+        "company",
+        "showCashMoveButton",
+        "selectedOrder",
+        "linesToRefund",
+        "printOptions",
+        "showSaveOrderButton",
+    ];
 
     static serviceDependencies = [
         "bus_service",
@@ -73,11 +87,10 @@ export class PosStore extends WithLazyGetterTrap {
         "mail.sound_effects",
         "iot_longpolling",
     ];
-    constructor({ traps, env, deps }) {
-        super({ traps });
-        const reactiveSelf = reactive(this);
-        reactiveSelf.ready = reactiveSelf.setup(env, deps).then(() => reactiveSelf);
-        return reactiveSelf;
+
+    constructor() {
+        super({});
+        return reactive(this);
     }
     // use setup instead of constructor because setup can be patched.
     async setup(
@@ -147,9 +160,6 @@ export class PosStore extends WithLazyGetterTrap {
         this.selectedPartner = null;
         this.selectedCategory = null;
         this.searchProductWord = "";
-        this.ready = new Promise((resolve) => {
-            this.markReady = resolve;
-        });
         this.scale = pos_scale;
 
         this.orderCounter = new Counter(0);
@@ -190,6 +200,10 @@ export class PosStore extends WithLazyGetterTrap {
     navigate(routeName, routeParams = {}) {
         const pageParams = registry.category("pos_pages").get(routeName);
         const component = pageParams.component;
+
+        if (routeParams.orderUuid) {
+            this.selectedOrderUuid = routeParams.orderUuid;
+        }
 
         if (component.storeOnOrder ?? true) {
             this.getOrder()?.setScreenData({ name: routeName, props: routeParams });
@@ -457,20 +471,15 @@ export class PosStore extends WithLazyGetterTrap {
     async processProductAttributes() {
         const productIds = new Set();
         const productTmplIds = new Set();
-        const productByTmplId = {};
+        const productModel = this.models["product.product"].toRaw();
 
-        for (const product of this.models["product.product"].getAll()) {
+        productModel.forEach((product) => {
             if (product.product_template_variant_value_ids.length > 0) {
-                productTmplIds.add(product.raw.product_tmpl_id);
+                const product_tmpl_id = product.raw.product_tmpl_id;
+                productTmplIds.add(product_tmpl_id);
                 productIds.add(product.id);
-
-                if (!productByTmplId[product.raw.product_tmpl_id]) {
-                    productByTmplId[product.raw.product_tmpl_id] = [];
-                }
-
-                productByTmplId[product.raw.product_tmpl_id].push(product);
             }
-        }
+        });
 
         if (productIds.size > 0) {
             try {
@@ -490,19 +499,17 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
 
-        for (const product of this.models["product.product"].filter(
-            (p) => !productIds.has(p.id) && p.product_template_variant_value_ids.length > 0
-        )) {
-            productByTmplId[product.raw.product_tmpl_id].push(product);
-        }
-
-        for (const products of Object.values(productByTmplId)) {
-            const nbrProduct = products.length;
-
-            for (let i = 0; i < nbrProduct - 1; i++) {
-                products[i].available_in_pos = false;
+        productModel.forEach((product) => {
+            if (
+                !productIds.has(product.id) &&
+                product.product_template_variant_value_ids.length > 0
+            ) {
+                const tmpl = product.product_tmpl_id;
+                if (tmpl) {
+                    tmpl.available_in_pos = false;
+                }
             }
-        }
+        });
 
         this.productAttributesExclusion = this.computeProductAttributesExclusion();
     }
@@ -542,19 +549,25 @@ export class PosStore extends WithLazyGetterTrap {
         return false;
     }
 
-    async onDeleteOrder(order) {
+    async beforeDeleteOrder(order, { title, body } = {}) {
         if (order.getOrderlines().length > 0) {
-            const confirmed = await ask(this.dialog, {
-                title: _t("Existing orderlines"),
-                body: _t(
-                    "%s has a total amount of %s, are you sure you want to delete this order?",
-                    order.pos_reference,
-                    this.env.utils.formatCurrency(order.priceIncl)
-                ),
+            return await ask(this.dialog, {
+                title: title || _t("Existing orderlines"),
+                body:
+                    body ||
+                    _t(
+                        "%s has a total amount of %s, are you sure you want to delete this order?",
+                        order.pos_reference,
+                        this.env.utils.formatCurrency(order.priceIncl)
+                    ),
             });
-            if (!confirmed) {
-                return false;
-            }
+        }
+        return true;
+    }
+    async onDeleteOrder(order) {
+        const canDelete = await this.beforeDeleteOrder(order);
+        if (!canDelete) {
+            return false;
         }
         const refundedOrderLines = order.lines
             .filter((line) => line.refunded_orderline_id?.order_id)
@@ -705,7 +718,6 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
 
-        this.markReady();
         await this.deviceSync.readDataFromServer();
 
         if (this.config.other_devices && this.config.epson_printer_ip) {
@@ -735,6 +747,16 @@ export class PosStore extends WithLazyGetterTrap {
             let product;
             if (opts.code) {
                 product = this.models["product.product"].getBy("barcode", opts.code.base_code);
+                if (!product) {
+                    const productPackaging = this.models["product.uom"].getBy(
+                        "barcode",
+                        opts.code.base_code
+                    );
+                    product = productPackaging && productPackaging.product_id;
+                }
+                if (!product && opts.product) {
+                    product = opts.product;
+                }
             } else {
                 product = opts.presetVariant;
             }
@@ -980,7 +1002,9 @@ export class PosStore extends WithLazyGetterTrap {
                 selectedOrderline,
                 related_lines
             );
-            related_lines.forEach((line) => line.setUnitPrice(price));
+            related_lines
+                .filter((line) => line.price_type !== "manual")
+                .forEach((line) => line.setUnitPrice(price));
         }
 
         if (configure) {
@@ -1115,8 +1139,10 @@ export class PosStore extends WithLazyGetterTrap {
             const payload =
                 values?.payload && Object.keys(values?.payload).length
                     ? values.payload
-                    : await this.openConfigurator(productTemplate, opts);
-
+                    : await this.openConfigurator(productTemplate, {
+                          ...opts,
+                          product: values?.product_id,
+                      });
             if (payload) {
                 // Find candidate based on instantly created variants.
                 const attributeValues = this.models["product.template.attribute.value"]
@@ -1181,7 +1207,7 @@ export class PosStore extends WithLazyGetterTrap {
                 values.attribute_value_ids = [];
             }
             values.attribute_value_ids = values.attribute_value_ids.concat(
-                values.product_id.product_template_variant_value_ids.map((attr) => ["link", attr])
+                values.product_id.product_template_attribute_value_ids.map((attr) => ["link", attr])
             );
         }
     };
@@ -1245,9 +1271,6 @@ export class PosStore extends WithLazyGetterTrap {
      * @returns {name: string, id: int, role: string}
      */
     getCashier() {
-        if (!this.user.role) {
-            this.user._role = this.user.raw.role;
-        }
         return this.user;
     }
     getCashierUserId() {
@@ -1412,6 +1435,7 @@ export class PosStore extends WithLazyGetterTrap {
         return {
             config_id: this.config.id,
             device_identifier: this.device.identifier,
+            current_order_uuid: this.getOrder()?.uuid,
             ...(options.context || {}),
         };
     }
@@ -1578,10 +1602,15 @@ export class PosStore extends WithLazyGetterTrap {
     }
     async getServerOrders() {
         await this.syncAllOrders();
-        return await this.data.loadServerOrders([
+        const config_domain = new Domain([
             ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
-            ["state", "=", "draft"],
         ]);
+        return await this.data.loadServerOrders(
+            Domain.and([config_domain, this.getServerOrdersDomain()]).toList()
+        );
+    }
+    getServerOrdersDomain() {
+        return new Domain([["state", "=", "draft"]]);
     }
     async getProductInfo(productTemplate, quantity, priceExtra = 0, productProduct = false) {
         const order = this.getOrder();
@@ -2221,7 +2250,7 @@ export class PosStore extends WithLazyGetterTrap {
         await this.reloadData(true);
     }
     async allowProductCreation() {
-        return await user.hasGroup("base.group_system");
+        return await user.checkAccessRight("product.product", "create");
     }
     orderDetailsProps(order) {
         return {
@@ -2678,32 +2707,45 @@ export class PosStore extends WithLazyGetterTrap {
         );
     }
 
+    orderProductBySequenceAndFav(products) {
+        const searchWord = this.searchProductWord.trim();
+        const isSearchByWord = searchWord !== "";
+        return isSearchByWord
+            ? products.sort((a, b) => b.is_favorite - a.is_favorite)
+            : products.sort((a, b) => {
+                  if (b.is_favorite !== a.is_favorite) {
+                      return b.is_favorite - a.is_favorite;
+                  } else if (a.pos_sequence !== b.pos_sequence) {
+                      return a.pos_sequence - b.pos_sequence;
+                  }
+                  return a.name.localeCompare(b.name);
+              });
+    }
+
     get productsToDisplay() {
         const searchWord = this.searchProductWord.trim();
-        const allProducts = this.models["product.template"].getAll();
-        let list = [];
+        let recordIterator;
         const isSearchByWord = searchWord !== "";
 
+        const productTemplateModel = this.models["product.template"].toRaw();
         if (isSearchByWord) {
             if (!this._searchTriggered) {
                 this.setSelectedCategory(0);
                 this._searchTriggered = true;
             }
-            list = this.getProductsBySearchWord(
+            recordIterator = this.getProductsBySearchWord(
                 searchWord,
-                this.selectedCategory?.id ? this.selectedCategory.associatedProducts : allProducts
+                this.selectedCategory?.id
+                    ? this.selectedCategory.associatedProducts.values()
+                    : productTemplateModel.getIterator()
             );
         } else {
             this._searchTriggered = false;
             if (this.selectedCategory?.id) {
-                list = this.selectedCategory.associatedProducts;
+                recordIterator = this.selectedCategory.associatedProducts;
             } else {
-                list = allProducts;
+                recordIterator = productTemplateModel.getIterator();
             }
-        }
-
-        if (!list || list.length === 0) {
-            return [];
         }
 
         const filteredList = [];
@@ -2712,7 +2754,7 @@ export class PosStore extends WithLazyGetterTrap {
             (this.config.iface_available_categ_ids || []).map((c) => c.id)
         );
 
-        for (const p of list) {
+        for (const p of recordIterator) {
             if (filteredList.length >= 100) {
                 break;
             }
@@ -2740,74 +2782,66 @@ export class PosStore extends WithLazyGetterTrap {
             return [];
         }
 
-        return isSearchByWord
-            ? filteredList.sort((a, b) => b.is_favorite - a.is_favorite)
-            : filteredList.sort((a, b) => {
-                  if (b.is_favorite !== a.is_favorite) {
-                      return b.is_favorite - a.is_favorite;
-                  } else if (a.pos_sequence !== b.pos_sequence) {
-                      return a.pos_sequence - b.pos_sequence;
-                  }
-                  return a.name.localeCompare(b.name);
-              });
+        return this.orderProductBySequenceAndFav(filteredList);
     }
 
     get productToDisplayByCateg() {
         const sortedProducts = this.productsToDisplay;
         if (!this.config.iface_group_by_categ) {
             return sortedProducts.length ? [["0", sortedProducts]] : [];
-        } else {
-            const groupedByCategory = {};
-            const selectedCategories = this.selectedCategory
-                ? this.selectedCategory.getAllChildren().map((c) => c.id)
-                : false;
-            for (const product of sortedProducts) {
-                if (product.pos_categ_ids.length === 0) {
-                    // Only display product without category if we don't have a category selected
-                    if (selectedCategories) {
-                        continue;
-                    }
-                    if (!groupedByCategory[0]) {
-                        groupedByCategory[0] = [];
-                    }
-                    groupedByCategory[0].push(product);
-                    continue;
-                }
-                const productCategories = product.pos_categ_ids.map((c) => c.id);
-                for (const categId of productCategories) {
-                    if (selectedCategories && !selectedCategories.includes(categId)) {
-                        continue;
-                    }
-                    if (!groupedByCategory[categId]) {
-                        groupedByCategory[categId] = [];
-                    }
-                    groupedByCategory[categId].push(product);
-                }
-            }
-            const res = Object.entries(groupedByCategory).sort(([a], [b]) => {
-                // None category goes last
-                const aNoneCategory = a === "0";
-                const bNoneCategory = b === "0";
-                if (aNoneCategory && bNoneCategory) {
-                    return 0;
-                }
-                if (aNoneCategory) {
-                    return 1;
-                }
-                if (bNoneCategory) {
-                    return -1;
-                }
-
-                const catA = this.models["pos.category"].get(a);
-                const catB = this.models["pos.category"].get(b);
-
-                const isRootA = !catA.parent_id;
-                const isRootB = !catB.parent_id;
-
-                return isRootA !== isRootB ? (isRootA ? -1 : 1) : catA.sequence - catB.sequence;
-            });
-            return res;
         }
+
+        const results = [];
+        const searchWord = this.searchProductWord.trim();
+        const byCateg = this.models["product.template"].toRaw().getAllBy("pos_categ_ids");
+        const selectedCategoryIds = !this.selectedCategory
+            ? this.models["pos.category"].map((c) => c.id)
+            : this.selectedCategory.getAllChildren().map((c) => c.id);
+
+        // Sorting in place the categories according to their sequence in the database
+        selectedCategoryIds.sort((a, b) => {
+            const categA = this.models["pos.category"].get(a);
+            const categB = this.models["pos.category"].get(b);
+
+            // All category with a parent will be at the end
+            if (categA.parent_id && !categB.parent_id) {
+                return 1;
+            } else if (!categA.parent_id && categB.parent_id) {
+                return -1;
+            }
+
+            return categA.sequence - categB.sequence;
+        });
+
+        if (!this.selectedCategory) {
+            // In case of no category selected, we want to display products without category in
+            // a "Without category" category at the end of the list.
+            // We use the default sortedProducts order to keep the same order as in the non
+            // group by category mode.
+            const productWithoutCategory = sortedProducts.filter((p) => !p.pos_categ_ids.length);
+            byCateg["0"] = productWithoutCategory;
+            selectedCategoryIds.push("0");
+        }
+
+        for (const catId of selectedCategoryIds) {
+            const products = byCateg[catId] || [];
+            const filtered = searchWord
+                ? this.getProductsBySearchWord(searchWord, products)
+                : products;
+
+            if (filtered.length) {
+                // Its advised to not use group by categ with too much products in differents
+                // categories, but in case of we end up with too much products, we slice them in
+                // group of 100 to avoid freezing the browser tab.
+                // We cannot just slice the products to display and keep the same category, because
+                // we want to avoid having categories with only few products displayed and others
+                // with a lot of products not displayed.
+                const sorted = this.orderProductBySequenceAndFav(filtered);
+                results.push([catId, sorted.splice(0, 100)]);
+            }
+        }
+
+        return results;
     }
 
     getProductsBySearchWord(searchWord, products) {
@@ -2856,17 +2890,17 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
     getTime(date) {
-        return date.toFormat("hh:mm");
+        return date.toFormat(localization.timeFormat);
     }
 
     orderDone(order) {
         order.setScreenData({ name: "" });
-        if (!this.config.module_pos_restaurant) {
-            this.selectedOrderUuid = this.getEmptyOrder().uuid;
-        }
         this.searchProductWord = "";
-        const nextPage = this.defaultPage;
-        this.navigate(nextPage.page, nextPage.params);
+        const { page, params } = this.defaultPage;
+        this.navigate(
+            page,
+            page === "ProductScreen" ? { orderUuid: this.getEmptyOrder().uuid } : params
+        );
     }
 
     displayPrinterWarning(printResult, printerName) {
@@ -2938,7 +2972,9 @@ export function register_payment_method(use_payment_terminal, ImplementedPayment
 export const posService = {
     dependencies: PosStore.serviceDependencies,
     async start(env, deps) {
-        return new PosStore({ traps: {}, env, deps }).ready;
+        const store = new PosStore();
+        await store.setup(env, deps);
+        return reactive(store);
     },
 };
 

@@ -12,7 +12,7 @@ class AccountTax(models.Model):
     def write(self, vals):
         forbidden_fields = {
             'amount_type', 'amount', 'type_tax_use', 'tax_group_id', 'price_include',
-            'include_base_amount', 'is_base_affected',
+            'price_include_override', 'include_base_amount', 'is_base_affected',
         }
         if forbidden_fields & set(vals.keys()):
             lines = self.env['pos.order.line'].sudo().search([
@@ -42,9 +42,8 @@ class AccountTax(models.Model):
                 WHERE EXISTS(
                     SELECT 1
                     FROM account_tax_pos_order_line_rel AS pos
-                    WHERE account_tax_id IN %s
-                    AND account_tax.id = pos.account_tax_id
-                )
+                    WHERE account_tax.id = pos.account_tax_id
+                ) AND id IN %s
             """, [tuple(taxes_to_compute)])
 
             used_taxes.update([tax[0] for tax in self.env.cr.fetchall()])

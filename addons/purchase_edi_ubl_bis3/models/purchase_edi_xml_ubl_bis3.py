@@ -22,6 +22,23 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         xml_content = dict_to_xml(document_node, template=Order, nsmap=self._get_document_nsmap(vals))
         return etree.tostring(xml_content, xml_declaration=True, encoding='UTF-8')
 
+    def _setup_base_lines(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._setup_base_lines(vals)
+
+        for base_line in vals['base_lines']:
+            product = base_line['product_id']
+            partner = base_line['partner_id']
+            supplier_info = product.variant_seller_ids.filtered(lambda s:
+                s.partner_id == partner
+                and (
+                    s.product_id == product
+                    or (not s.product_id and s.product_tmpl_id == product.product_tmpl_id)
+                )
+                and (s.product_code or s.product_name),
+            )[:1]
+            base_line['supplier_info'] = supplier_info
+
     def _get_purchase_order_node(self, vals):
         self._add_purchase_order_config_vals(vals)
         self._add_purchase_order_base_lines_vals(vals)
@@ -104,19 +121,40 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         })
 
     def _add_purchase_order_buyer_customer_party_nodes(self, document_node, vals):
-        document_node['cac:BuyerCustomerParty'] = {
-            'cac:Party': self._get_party_node({**vals, 'partner': vals['customer'], 'role': 'customer'})
+        # OVERRIDE
+        sub_vals = {
+            **vals,
+            'document_node': document_node,
         }
+        self._ubl_add_buyer_customer_party_node(sub_vals)
 
     def _add_purchase_order_seller_supplier_party_nodes(self, document_node, vals):
-        document_node['cac:SellerSupplierParty'] = {
-            'cac:Party': self._get_party_node({**vals, 'partner': vals['supplier'], 'role': 'supplier'})
+        # OVERRIDE
+        sub_vals = {
+            **vals,
+            'document_node': document_node,
         }
+        self._ubl_add_seller_supplier_party_node(sub_vals)
+
+    def _ubl_get_delivery_node_from_delivery_address(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        node = super()._ubl_get_delivery_node_from_delivery_address(vals)
+        node['cbc:ActualDeliveryDate'] = None
+        node['cac:DeliveryLocation'] = None
+        return node
 
     def _add_purchase_order_delivery_nodes(self, document_node, vals):
-        document_node['cac:Delivery'] = {
-            'cac:DeliveryParty': self._get_party_node({**vals, 'partner': vals['partner_shipping'], 'role': 'delivery'})
+        # OVERRIDE
+        sub_vals = {
+            **vals,
+            'document_node': document_node,
+            'delivery': vals['partner_shipping'],
         }
+        self._ubl_add_delivery_nodes(sub_vals)
+
+        # Retro-compatibility with the "old" code.
+        if document_node['cac:Delivery']:
+            document_node['cac:Delivery'] = document_node['cac:Delivery'][0]
 
     def _add_purchase_order_payment_terms_nodes(self, document_node, vals):
         purchase_order = vals['purchase_order']
@@ -127,11 +165,15 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
 
     def _add_purchase_order_allowance_charge_nodes(self, document_node, vals):
         # OVERRIDE
-        ubl_values = vals['_ubl_values']
-        document_node['cac:AllowanceCharge'] = [
-            self._ubl_get_allowance_charge_early_payment(vals, early_payment_values)
-            for early_payment_values in ubl_values['allowance_charges_early_payment_currency']
-        ]
+        sub_vals = {
+            **vals,
+            'document_node': document_node,
+            'currency': vals['currency_id'],
+        }
+        self._ubl_add_allowance_charge_nodes(sub_vals)
+
+        # Early payment discount lines are treated as allowances/charges.
+        self._ubl_add_allowance_charge_nodes_early_payment_discount(sub_vals)
 
     def _add_purchase_order_tax_total_nodes(self, document_node, vals):
         # OVERRIDE
@@ -143,64 +185,35 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         self._ubl_add_tax_totals_nodes(sub_vals)
 
     def _add_purchase_order_monetary_total_nodes(self, document_node, vals):
-        ubl_values = vals['_ubl_values']
-        line_tag = self._get_tags_for_document_type(vals)['document_line']
+        sub_vals = {
+            **vals,
+            'document_node': document_node,
+            'currency': vals['currency_id'],
+        }
+        self._ubl_add_anticipated_monetary_total_node(sub_vals)
+
+    def _ubl_add_legal_monetary_total_line_extension_amount_node(self, vals, in_foreign_currency=True):
+        # OVERRIDE
+        currency = vals['currency_id'] if in_foreign_currency else vals['company_currency']
 
         line_extension_amount = sum(
             line_node['cac:LineItem']['cbc:LineExtensionAmount']['_text']
-            for line_node in document_node[line_tag]
+            for line_node in vals['document_node'].get('cac:OrderLine', [])
         )
-        tax_amount = sum(
-            tax_total['cbc:TaxAmount']['_text']
-            for tax_total in document_node['cac:TaxTotal']
-            if tax_total['cbc:TaxAmount']['currencyID'] == vals['currency_id'].name
-        )
-        total_allowance = sum(
-            allowance_charge['cbc:Amount']['_text']
-            for allowance_charge in document_node['cac:AllowanceCharge']
-            if allowance_charge['cbc:ChargeIndicator']['_text'] == 'false'
-        )
-        total_charge = sum(
-            allowance_charge['cbc:Amount']['_text']
-            for allowance_charge in document_node['cac:AllowanceCharge']
-            if allowance_charge['cbc:ChargeIndicator']['_text'] == 'true'
-        )
-        payable_rounding_amount = ubl_values['payable_rounding_amount_currency']
-
-        document_node['cac:AnticipatedMonetaryTotal'] = {
-            'cbc:LineExtensionAmount': {
-                '_text': FloatFmt(line_extension_amount, min_dp=vals['currency_dp']),
-                'currencyID': vals['currency_name'],
-            },
-            'cbc:TaxExclusiveAmount': {
-                '_text': FloatFmt(line_extension_amount, min_dp=vals['currency_dp']),
-                'currencyID': vals['currency_name'],
-            },
-            'cbc:TaxInclusiveAmount': {
-                '_text': FloatFmt(line_extension_amount + tax_amount, min_dp=vals['currency_dp']),
-                'currencyID': vals['currency_name'],
-            },
-            'cbc:AllowanceTotalAmount': {
-                '_text': FloatFmt(total_allowance, min_dp=vals['currency_dp']),
-                'currencyID': vals['currency_name'],
-            } if total_allowance else None,
-            'cbc:ChargeTotalAmount': {
-                '_text': FloatFmt(total_charge, min_dp=vals['currency_dp']),
-                'currencyID': vals['currency_name'],
-            } if total_charge else None,
-            'cbc:PrepaidAmount': {
-                '_text': FloatFmt(0.0, min_dp=vals['currency_dp']),
-                'currencyID': vals['currency_name'],
-            },
-            'cbc:PayableRoundingAmount': {
-                '_text': FloatFmt(payable_rounding_amount, min_dp=vals['currency_dp']),
-                'currencyID': vals['currency_name'],
-            } if payable_rounding_amount else None,
-            'cbc:PayableAmount': {
-                '_text': FloatFmt(line_extension_amount + tax_amount, min_dp=vals['currency_dp']),
-                'currencyID': vals['currency_name'],
-            },
+        vals['legal_monetary_total_node']['cbc:LineExtensionAmount'] = {
+            '_text': FloatFmt(line_extension_amount, min_dp=currency.decimal_places),
+            'currencyID': currency.name,
         }
+
+    def _ubl_add_anticipated_monetary_total_node(self, vals):
+        node = vals['document_node']['cac:AnticipatedMonetaryTotal'] = {}
+        sub_vals = {**vals, 'legal_monetary_total_node': node}
+        self._ubl_add_legal_monetary_total_line_extension_amount_node(sub_vals)
+        self._ubl_add_legal_monetary_total_tax_exclusive_amount_node(sub_vals)
+        self._ubl_add_legal_monetary_total_tax_inclusive_amount_node(sub_vals)
+        self._ubl_add_legal_monetary_total_allowance_charge_total_amount_node(sub_vals)
+        self._ubl_add_legal_monetary_total_payable_rounding_amount_node(sub_vals)
+        self._ubl_add_legal_monetary_total_prepaid_payable_amount_node(sub_vals)
 
     def _add_purchase_order_line_nodes(self, document_node, vals):
         document_node['cac:OrderLine'] = order_line_nodes = []
@@ -260,46 +273,49 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         # Excise taxes.
         self._ubl_add_line_allowance_charge_nodes_for_excise_taxes(sub_vals)
 
+    def _ubl_add_line_item_name_description_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_line_item_name_description_nodes(vals)
+
+        item_node = vals['item_node']
+        base_line = vals['line_vals']['base_line']
+        supplier_info = base_line['supplier_info']
+        if supplier_info.product_name:
+            item_node['cbc:Name']['_text'] = supplier_info.product_name
+
+    def _ubl_add_line_item_identification_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_line_item_identification_nodes(vals)
+
+        item_node = vals['item_node']
+        base_line = vals['line_vals']['base_line']
+        supplier_info = base_line['supplier_info']
+        if supplier_info.product_code:
+            item_node['cac:SellersItemIdentification'] = {
+                'cbc:ID': {'_text': supplier_info.product_code},
+            }
+
     def _add_purchase_order_line_item_nodes(self, line_node, vals):
         # OVERRIDE
-        item_values = vals['base_line']['_ubl_values']['item_currency']
-        line_item_node = self._ubl_get_line_item_node(vals, item_values)
-
-        base_line = item_values['base_line']
-        product = base_line['product_id']
-        partner = base_line['partner_id']
-        supplier_info = product.variant_seller_ids.filtered(lambda s:
-            s.partner_id == partner
-            and (
-                s.product_id == product
-                or (not s.product_id and s.product_tmpl_id == product.product_tmpl_id)
-            )
-            and (s.product_code or s.product_name),
-        )[:1]
-
-        # Prefer the seller's product name over our (buyer) product name
-        if supplier_info.product_name:
-            line_item_node['cbc:Name']['_text'] = supplier_info.product_name
-
-        # When generating purchase order (PO) we are not considered as the seller of the sale but
-        # buyer. The `SellersItemIdentification` is therefore the PO's partner product ID.
-        line_item_node['cac:SellersItemIdentification'] = {
-            'cbc:ID': {'_text': supplier_info.product_code or None},
+        sub_vals = {
+            **vals,
+            'line_node': line_node,
+            'line_vals': {
+                'base_line': vals['base_line'],
+            },
         }
-
-        line_node['cac:Item'] = line_item_node
+        self._ubl_add_line_item_node(sub_vals)
 
     def _add_purchase_order_line_price_nodes(self, line_node, vals):
         # OVERRIDE
-        base_line = vals['base_line']
-        ubl_values = base_line['_ubl_values']
-
-        line_node['cac:Price'] = {
-            'cbc:PriceAmount': {
-                '_text': FloatFmt(ubl_values['price_amount_currency'], min_dp=1, max_dp=6),
-                'currencyID': vals['currency_name'],
+        sub_vals = {
+            **vals,
+            'line_node': line_node,
+            'line_vals': {
+                'base_line': vals['base_line'],
             },
         }
+        self._ubl_add_line_price_node(sub_vals)
 
     def _ubl_get_line_allowance_charge_discount_node(self, vals, discount_values):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -340,7 +356,6 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         lines_vals, line_logs = self._import_lines(order, tree, './{*}OrderLine/{*}LineItem', document_type='order', tax_type='purchase')
         # adapt each line to purchase.order.line
         for line in lines_vals:
-            line['product_qty'] = line.pop('quantity')
             # remove invoice line fields
             line.pop('deferred_start_date', False)
             line.pop('deferred_end_date', False)
@@ -353,3 +368,10 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         logs += partner_logs + delivery_logs + line_logs + allowance_charges_logs
 
         return order_vals, logs
+
+    def _retrieve_line_vals(self, tree, document_type=False, qty_factor=1):
+        """Override of `account.edi.common` to adapt dictionary keys from the base method to be
+        compatible with the `purchase.order.line` model."""
+        line_vals = super()._retrieve_line_vals(tree, document_type, qty_factor)
+        line_vals['product_qty'] = line_vals.pop('quantity')
+        return line_vals

@@ -40,6 +40,12 @@
                 action="'rotateImageShape'" actionParam="{side: 'left'}" />
             <BuilderButton title.translate="Rotate right" icon="'fa-rotate-right'"
                 action="'rotateImageShape'" actionParam="{side: 'right'}" />
+            <BuilderButton
+                title.translate="Reset shape transformation"
+                icon="'oi-close'"
+                action="'resetImageShapeTransformation'"
+                className="'btn-danger-color-hover'"
+                t-if="this.state.hasShapeTransformation"/>
         </BuilderRow>
 
         <BuilderRow label.translate="Speed" level="1" t-if="this.state.showImageShapeAnimation" preview="false">

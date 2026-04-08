@@ -1,4 +1,4 @@
-import { beforeEach, expect, test } from "@odoo/hoot";
+import { beforeEach, expect, test, waitFor } from "@odoo/hoot";
 import { click, edit, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
@@ -118,12 +118,11 @@ test("RemainingDaysField on a date field in multi edit list view", async () => {
 
     await contains(".o_field_remaining_days button").click();
     await edit("10/10/2017", { confirm: "enter" });
-    await animationFrame();
-    expect(".modal").toHaveCount(1);
+    await waitFor(".modal");
     expect(".modal .o_field_widget").toHaveText("In 2 days", {
         message: "should have 'In 2 days' value to change",
     });
-    await click(".modal .modal-footer .btn-primary");
+    await click(".modal:only .modal-footer .btn-primary");
     await animationFrame();
 
     expect(".o_data_row:eq(0) .o_data_cell:first").toHaveText("In 2 days", {

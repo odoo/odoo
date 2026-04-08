@@ -121,7 +121,7 @@ class ResourceCalendarLeaves(models.Model):
         resource_calendars = self._get_resource_calendars()
         work_hours_data = self._work_time_per_day(resource_calendars)
         employees_groups = self.env['hr.employee']._read_group(
-            [('resource_calendar_id', 'in', resource_calendars.ids), ('company_id', 'in', self.env.companies.ids)],
+            [('resource_calendar_id', 'in', resource_calendars.ids), ('company_id', 'in', self.company_id.ids if self.company_id else self.env.companies.ids)],
             ['resource_calendar_id'],
             ['id:recordset'])
         mapped_employee = {
@@ -243,6 +243,7 @@ class ResourceCalendarLeaves(models.Model):
             ('company_id', '=', self.company_id.id),
             ('date_from', '<=', self.date_to),
             ('date_to', '>=', self.date_from),
+            ('state', '=', 'validate'),
         ]
         if self.calendar_id:
             leave_domain += [('resource_calendar_id', 'in', [False, self.calendar_id.id])]

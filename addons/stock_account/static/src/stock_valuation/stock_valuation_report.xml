@@ -43,9 +43,10 @@
         <StockValuationReportLine
             label.translate="Initial Balance"
             level="0"
-            onClickMethod.bind="openAccountMoves"
+            onClickMethod="data.initial_balance.lines.length ? openAccountMoves.bind(this) : undefined"
             sublines="data.initial_balance.lines"
-            value="data.initial_balance.value"/>
+            value="data.initial_balance.value"
+        />
         <t t-call="stock_account.StockValuationReport.EmptyLine"/>
     </t>
 
@@ -63,7 +64,7 @@
         <StockValuationReportLine
             label.translate="Ending Stock"
             level="0"
-            onClickMethod.bind="openStockReport"
+            onClickMethod="data.ending_stock.lines.length ? openStockReport.bind(this) : undefined"
             sublines="data.ending_stock.lines"
             value="data.ending_stock.value"/>
         <t t-call="stock_account.StockValuationReport.EmptyLine"/>

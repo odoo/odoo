@@ -175,8 +175,7 @@ class ResCompany(models.Model):
 
         error_message = _(
             "Please enter the mobile number in the correct international format.\n"
-            "For example: +32123456789, where +32 is the country code.\n"
-            "Currently, only European countries are supported.")
+            "For example: +32123456789, where +32 is the country code.")
 
         self._check_phonenumbers_import()
 
@@ -192,8 +191,7 @@ class ResCompany(models.Model):
         except phonenumbers.phonenumberutil.NumberParseException:
             raise ValidationError(error_message)
 
-        country_code = phonenumbers.phonenumberutil.region_code_for_number(phone_nbr)
-        if country_code not in PEPPOL_LIST or not phonenumbers.is_valid_number(phone_nbr):
+        if not phonenumbers.is_valid_number(phone_nbr):
             raise ValidationError(error_message)
 
     def _check_peppol_endpoint_number(self, warning=False):
@@ -376,10 +374,6 @@ class ResCompany(models.Model):
                     "SI-UBL 2.0 Invoice",
                 "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0::2.1":
                     "SI-UBL 2.0 CreditNote",
-                "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0::2.1":
-                    "XRechnung UBL Invoice V2.0",
-                "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0::2.1":
-                    "XRechnung UBL CreditNote V2.0",
             }
         }
 

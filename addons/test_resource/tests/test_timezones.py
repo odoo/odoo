@@ -231,6 +231,7 @@ class TestTimezones(TestResourceCommon):
             'flexible_hours': True,
             'full_time_required_hours': 40,
             'hours_per_day': 8,
+            'hours_per_week': 40,
         })
         flex_resource = self.env['resource.resource'].create({
             'name': 'Test FlexResource',

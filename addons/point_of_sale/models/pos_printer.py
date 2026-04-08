@@ -61,6 +61,13 @@ class PosPrinter(models.Model):
     def _load_pos_data_fields(self, config):
         return ['id', 'name', 'proxy_ip', 'product_categories_ids', 'printer_type', 'epson_printer_ip']
 
+    @api.model
+    def use_local_network_access(self):
+        use_lna = bool(self.env['ir.config_parameter'].sudo().get_param('point_of_sale.use_lna'))
+        return {
+            'use_lna': use_lna
+        }
+
     @api.constrains('epson_printer_ip')
     def _constrains_epson_printer_ip(self):
         for record in self:

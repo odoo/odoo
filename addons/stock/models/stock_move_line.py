@@ -278,7 +278,7 @@ class StockMoveLine(models.Model):
                         grouped_smls.location_dest_id = move.location_dest_id
             else:
                 for sml in smls:
-                    putaway_loc_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls, locations=locations)._get_putaway_strategy(
+                    putaway_loc_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls)._get_putaway_strategy(
                         sml.product_id, quantity=sml.quantity, packaging=sml.move_id.packaging_uom_id,
                     )
                     if putaway_loc_id != sml.location_dest_id:
@@ -900,7 +900,7 @@ class StockMoveLine(models.Model):
             aggregated_properties = self._get_aggregated_properties(move_line=move_line)
             line_key, uom = aggregated_properties['line_key'], aggregated_properties['product_uom']
             quantity = move_line.product_uom_id._compute_quantity(move_line.quantity, uom)
-            packaging_quantity = move_line.product_uom_id._compute_quantity(quantity, move_line.move_id.packaging_uom_id)
+            packaging_quantity = uom._compute_quantity(quantity, move_line.move_id.packaging_uom_id)
             if line_key not in aggregated_move_lines:
                 qty_ordered = None
                 packaging_qty_ordered = None

@@ -35,50 +35,18 @@ class HrLeave(models.Model):
 
     @api.model
     def _get_deductible_employee_overtime(self, employees):
-        # return dict {employee: number of hours}
-        diff_by_employee = defaultdict(lambda: 0)
-        for employee, hours in self.env['hr.attendance.overtime.line'].sudo()._read_group(
-            domain=[
-                ('compensable_as_leave', '=', True),
-                ('employee_id', 'in', employees.ids),
-                ('status', '=', 'approved'),
-            ],
-            groupby=['employee_id'],
-            aggregates=['manual_duration:sum'],
-        ):
-            diff_by_employee[employee] += hours
-        for employee, hours in self._read_group(
-            domain=[
-                ('holiday_status_id.overtime_deductible', '=', True),
-                ('holiday_status_id.requires_allocation', '=', False),
-                ('employee_id', 'in', employees.ids),
-                ('state', 'not in', ['refuse', 'cancel']),
-            ],
-            groupby=['employee_id'],
-            aggregates=['number_of_hours:sum'],
-        ):
-            diff_by_employee[employee] -= hours
-        for employee, hours in self.env['hr.leave.allocation']._read_group(
-            domain=[
-                ('holiday_status_id.overtime_deductible', '=', True),
-                ('employee_id', 'in', employees.ids),
-                ('state', 'in', ['confirm', 'validate', 'validate1']),
-            ],
-            groupby=['employee_id'],
-            aggregates=['number_of_hours_display:sum'],
-        ):
-            diff_by_employee[employee] -= hours
-        return diff_by_employee
+        # Uses the calculation logic now located in the hr.employee model.
+        return employees._get_deductible_employee_overtime()
 
     @api.depends('number_of_hours', 'employee_id', 'holiday_status_id')
     def _compute_employee_overtime(self):
-        diff_by_employee = self._get_deductible_employee_overtime(self.employee_id)
+        diff_by_employee = self.employee_id._get_deductible_employee_overtime()
         for leave in self:
             leave.employee_overtime = diff_by_employee[leave.employee_id]
 
     def _check_overtime_deductible(self, leaves):
         # If the type of leave is overtime deductible, we have to check that the employee has enough extra hours
-        hours = self._get_deductible_employee_overtime(leaves.employee_id)
+        hours = leaves.employee_id._get_deductible_employee_overtime()
         for leave in leaves.filtered('overtime_deductible'):
             if hours[leave.employee_id] < 0:
                 if leave.employee_id.user_id == self.env.user:
@@ -95,31 +63,14 @@ class HrLeave(models.Model):
         self._check_overtime_deductible(self)
         return res
 
-    def action_refuse(self):
-        res = super().action_refuse()
-        return res
-
-    def _validate_leave_request(self):
-        super()._validate_leave_request()
-        self._update_leaves_overtime()
-
-    def _remove_resource_leave(self):
-        res = super()._remove_resource_leave()
-        self._update_leaves_overtime()
-        return res
-
-    def _update_leaves_overtime(self):
-        Attendance = self.env['hr.attendance']
-        dates = [
-            Attendance._attendance_date(leave.date_from, leave.employee_id)
-            for leave in self.filtered(lambda leave: leave.state == 'confirmed')
-        ]
-        if dates:
-            Attendance.search([
-                ('date', '>=', min(dates)),
-                ('date', '<=', max(dates)),
+    def _update_leaves_overtime(self):  # TODO: Remove in master, since its no longer used.
+        date_from, date_to = self.mapped('date_from'), self.mapped('date_to')
+        if date_from and date_to:
+            self.env['hr.attendance'].sudo().search([
+                ('check_in', '<=', max(date_to)),
+                ('check_out', '>=', min(date_from)),
                 ('employee_id', 'in', self.employee_id.ids),
-            ])._update_overtimes()
+            ])._update_overtime()
 
     def _force_cancel(self, *args, **kwargs):
         super()._force_cancel(*args, **kwargs)

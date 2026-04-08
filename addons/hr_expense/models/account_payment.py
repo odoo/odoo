@@ -33,14 +33,7 @@ class AccountPayment(models.Model):
 
     def action_open_expense(self):
         self.ensure_one()
-        return {
-            'name': self.expense_ids.name,
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'views': [(False, 'form')],
-            'res_model': 'hr.expense',
-            'res_id': self.expense_ids.id,
-        }
+        return self.expense_ids._get_records_action(name=_("Expenses"))
 
     def _creation_message(self):
         # EXTENDS mail

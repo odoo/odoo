@@ -1,5 +1,6 @@
-from odoo import http
+from odoo import http, _
 from odoo.http import request
+from odoo.exceptions import UserError
 
 class DashboardShareRoute(http.Controller):
     @http.route(['/dashboard/share/<int:share_id>/<token>'], type='http', auth='public')
@@ -8,6 +9,9 @@ class DashboardShareRoute(http.Controller):
         if not share:
             raise request.not_found()
         share._check_dashboard_access(token)
+        download_url = ""
+        if request.env.user.has_group('base.group_allow_export'):
+            download_url = f"/dashboard/download/{share.id}/{token}"
         return request.render(
             "spreadsheet.public_spreadsheet_layout",
             {
@@ -17,17 +21,19 @@ class DashboardShareRoute(http.Controller):
                 "session_info": request.env["ir.http"].session_info(),
                 "props": {
                     "dataUrl": f"/dashboard/data/{share.id}/{token}",
-                    "downloadExcelUrl": f"/dashboard/download/{share.id}/{token}",
+                    "downloadExcelUrl": download_url,
                     "mode": "dashboard",
                 },
             },
         )
 
     @http.route(["/dashboard/download/<int:share_id>/<token>"],
-                type='http', auth='public', readonly=True)
+                type='http', auth='user', readonly=True)
     def download(self, token=None, share_id=None):
         share = request.env["spreadsheet.dashboard.share"].sudo().browse(share_id)
         share._check_dashboard_access(token)
+        if not request.env.user.has_group('base.group_allow_export'):
+            raise UserError(_("You don't have the rights to export data. Please contact an Administrator."))
         stream = request.env["ir.binary"]._get_stream_from(
             share, "excel_export", filename=share.name
         )

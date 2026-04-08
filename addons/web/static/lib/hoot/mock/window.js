@@ -203,6 +203,11 @@ function getWatchedEventTargets(view) {
         // Other event targets
         EventBus.prototype,
         MockEventTarget.prototype,
+        view.MediaDevices.prototype,
+        view.MediaStreamTrack.prototype,
+        view.RTCPeerConnection.prototype,
+        view.RTCDataChannel.prototype,
+        view.BaseAudioContext.prototype,
     ];
 }
 
@@ -428,6 +433,18 @@ class MockMediaQueryList extends MockEventTarget {
     }
 }
 
+class MockMutationObserver extends MutationObserver {
+    disconnect() {
+        activeMutationObservers.delete(this);
+        return super.disconnect(...arguments);
+    }
+
+    observe() {
+        activeMutationObservers.add(this);
+        return super.observe(...arguments);
+    }
+}
+
 const DEFAULT_MEDIA_VALUES = {
     "display-mode": "browser",
     pointer: "fine",
@@ -446,6 +463,8 @@ const R_OWL_SYNTHETIC_LISTENER = /\bnativeToSyntheticEvent\b/;
 const originalDescriptors = new WeakMap();
 const originalTouchFunctions = getTouchTargets(globalThis).map(getTouchDescriptors);
 
+/** @type {Set<MockMutationObserver>} */
+const activeMutationObservers = new Set();
 /** @type {Set<MockMediaQueryList>} */
 const mediaQueryLists = new Set();
 const mockConsole = new MockConsole();
@@ -503,6 +522,7 @@ const WINDOW_MOCK_DESCRIPTORS = {
     matchMedia: { value: mockedMatchMedia },
     MessageChannel: { value: MockMessageChannel },
     MessagePort: { value: MockMessagePort },
+    MutationObserver: { value: MockMutationObserver },
     navigator: { value: mockNavigator },
     Notification: { value: MockNotification },
     outerHeight: { get: () => getCurrentDimensions().height },
@@ -557,6 +577,11 @@ export function cleanupWindow() {
 
     // Touch
     restoreTouch(view);
+
+    // Mutation observers
+    for (const observer of activeMutationObservers) {
+        observer.disconnect();
+    }
 }
 
 export function getTitle() {
@@ -723,13 +748,13 @@ export function watchListeners(view = getWindow()) {
  *  afterEach(watchKeys(window, ["odoo"]));
  */
 export function watchKeys(target, whiteList) {
-    const acceptedKeys = new Set([...$ownKeys(target), ...(whiteList || [])]);
+    const acceptedKeys = new Set($ownKeys(target).concat(whiteList || []));
 
     return function checkKeys() {
-        const keysDiff = $ownKeys(target).filter(
-            (key) => $isNaN($parseFloat(key)) && !acceptedKeys.has(key)
-        );
-        for (const key of keysDiff) {
+        for (const key of $ownKeys(target)) {
+            if (!$isNaN($parseFloat(key)) || acceptedKeys.has(key)) {
+                continue;
+            }
             const descriptor = $getOwnPropertyDescriptor(target, key);
             if (descriptor.configurable) {
                 delete target[key];

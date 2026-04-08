@@ -22,3 +22,7 @@ registry.category("public.interactions").add("website_blog.blog_posts", BlogPost
 registry.category("public.interactions.edit").add("website_blog.blog_posts", {
     Interaction: BlogPosts,
 });
+
+registry.category("public.interactions.preview").add("website_blog.blog_posts", {
+    Interaction: BlogPosts,
+});

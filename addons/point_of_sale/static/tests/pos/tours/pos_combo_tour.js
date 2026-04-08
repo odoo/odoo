@@ -1,5 +1,6 @@
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
+import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
 import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
@@ -157,6 +158,39 @@ registry.category("web_tour.tours").add("ProductComboChangeFP", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_combo_refund_different_qty", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            // Desk accessories combo
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 3"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 4"),
+            combo.checkProductQty("Combo Product 4", "2"),
+            combo.select("Combo Product 6"),
+
+            Dialog.confirm(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.clickNextOrder(),
+            // First refund order
+            ProductScreen.clickRefund(),
+            TicketScreen.selectOrder("001"),
+            ProductScreen.clickNumpad("1"),
+            TicketScreen.toRefundLineContains("Office Combo", "To Refund: 1.00"),
+            TicketScreen.toRefundLineContains("Combo Product 4", "To Refund: 2.00"),
+            TicketScreen.toRefundLineContains("Combo Product 3", "To Refund: 1.00"),
+            TicketScreen.toRefundLineContains("Combo Product 6", "To Refund: 1.00"),
+            TicketScreen.confirmRefund(),
+            PaymentScreen.isShown(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("ProductComboMaxFreeQtyTour", {
     steps: () =>
         [
@@ -200,7 +234,7 @@ registry.category("web_tour.tours").add("ProductComboMaxFreeQtyTour", {
 
             Dialog.confirm(),
             inLeftSide([
-                ...ProductScreen.selectedOrderlineHasDirect("Office Combo", "1", "151.98"),
+                ...ProductScreen.selectedOrderlineHasDirect("Office Combo", "1", "151.97"),
             ]),
             ProductScreen.totalAmountIs("151.98"),
             ProductScreen.clickPayButton(),
@@ -276,5 +310,59 @@ registry.category("web_tour.tours").add("test_combo_item_image_not_display", {
             combo.checkImgAndSelect("Combo Product 4", false),
             combo.checkImgAndSelect("Combo Product 6", false),
             Dialog.confirm(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_combo_no_free_item", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            // Desk accessories combo
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 1"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 3"),
+            combo.checkTotal(`${10 * 3 + 2 + 40}.00`),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 5"),
+            combo.checkTotal(`${72 + 20 * 2 + 2}.00`),
+            combo.select("Combo Product 6"),
+            combo.select("Combo Product 7"),
+            combo.select("Combo Product 8"),
+            combo.checkTotal(`${114 + 30 * 3 + 5}.00`),
+            Dialog.confirm(),
+            inLeftSide([
+                ...ProductScreen.selectedOrderlineHasDirect("Office Combo", "1", "232.10"),
+            ]),
+            ProductScreen.totalAmountIs("232.10"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_combo_price_unchanged_with_lot_tracked_product", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Combo"),
+            inLeftSide([
+                ...ProductScreen.selectedOrderlineHasDirect("Test Combo"),
+                ...ProductScreen.orderLineHas("Product A", "1.0"),
+            ]),
+            ProductScreen.totalAmountIs("8.05"),
+            inLeftSide([
+                ...ProductScreen.clickLotIcon(),
+                ...ProductScreen.enterLotNumber("1", "lot"),
+                ...ProductScreen.orderLineHas("Product A", "1.0"),
+                {
+                    trigger: ".info-list:contains('Lot Number 1')",
+                },
+            ]),
+            ProductScreen.totalAmountIs("8.05"),
         ].flat(),
 });

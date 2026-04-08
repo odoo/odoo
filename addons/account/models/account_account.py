@@ -339,7 +339,7 @@ class AccountAccount(models.Model):
             record.code = record_root.code_store
 
     def _search_code(self, operator, value):
-        return [('id', 'in', self.with_company(self.env.company.root_id).sudo()._search([('code_store', operator, value)]))]
+        return [('id', 'in', self.with_company(self.env.company.root_id).with_context(active_test=False).sudo()._search([('code_store', operator, value)]))]
 
     def _inverse_code(self):
         for record, record_root in zip(self, self.with_company(self.env.company.root_id).sudo()):
@@ -518,7 +518,7 @@ class AccountAccount(models.Model):
             """
             return (
                 new_code not in cache
-                and not self.sudo().search_count([
+                and not self.with_context(active_test=False).sudo().search_count([
                     ('code', '=', new_code),
                     '|',
                     ('company_ids', 'parent_of', self.env.company.id),
@@ -1099,7 +1099,7 @@ class AccountAccount(models.Model):
                 duplicate_codes = [code for code, accounts in accounts_by_code.items() if len(accounts) > 1]
 
             # Check 2.2: Check that there are no duplicates in database
-            elif duplicates := self.with_company(company).sudo().search_fetch(
+            elif duplicates := self.with_company(company).sudo().with_context(active_test=False).search_fetch(
                 [
                     ('code', 'in', list(accounts_by_code)),
                     ('id', 'not in', self.ids),

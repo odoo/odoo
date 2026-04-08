@@ -38,16 +38,11 @@ export default class OrderPaymentValidation {
     }
 
     get nextPage() {
-        if (
-            this.pos.config.iface_print_auto &&
-            this.pos.config.iface_print_skip_screen &&
-            this.order.payment_ids[0]?.payment_method_id
-        ) {
+        if (this.pos.config.iface_print_auto && this.pos.config.iface_print_skip_screen) {
             return {
                 page: "FeedbackScreen",
                 params: {
                     orderUuid: this.order.uuid,
-                    paymentMethodId: this.order.payment_ids[0]?.payment_method_id.id,
                 },
             };
         }

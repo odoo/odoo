@@ -519,7 +519,7 @@ class TestMailMessageAccess(MessageAccessCommon):
                     'res_partner_id': self.user_portal.partner_id.id,
                 })],
             }, False, 'Notified > no access on record'),
-            # forbidden
+            # forbidden: internal (subtype / message)
             (self.record_portal.message_ids[0], {
                 'subtype_id': self.env.ref('mail.mt_note').id,
             }, True, 'Note (comment) cannot be read by portal users'),
@@ -531,12 +531,16 @@ class TestMailMessageAccess(MessageAccessCommon):
                 'subtype_id': self.env.ref('mail.mt_note').id,
             }, False, 'Note (email_outgoing) can be read by portal users'),
             (self.record_portal.message_ids[0], {
+                'subtype_id': False,
+            }, True, 'Pure log (no subtype, even comment) cannot be read by portal users'),
+            (self.record_portal.message_ids[0], {
                 'is_internal': True,
             }, True, 'Internal message (comment) cannot be read by portal users'),
             (self.record_portal.message_ids[0], {
                 'is_internal': True,
                 'message_type': 'notification',
             }, False, 'Internal message (notification) can be read by portal users'),
+            # forbidden: other
             (self.record_portal.message_ids[0], {
                 'message_type': 'user_notification',
             }, True, 'User notifications for other people can never be read by portal users'),

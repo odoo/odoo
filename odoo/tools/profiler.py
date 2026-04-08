@@ -129,9 +129,10 @@ class Collector:
     def progress(self, entry=None, frame=None):
         """ Checks if the limits were met and add to the entries"""
         if self.profiler.entry_count_limit \
-            and self.profiler.entry_count() >= self.profiler.entry_count_limit:
+            and self.profiler.counter >= self.profiler.entry_count_limit:
             self.profiler.end()
-
+            return
+        self.profiler.counter += 1
         self.add(entry=entry,frame=frame)
 
     def _get_stack_trace(self, frame=None):
@@ -149,8 +150,10 @@ class Collector:
         """ Return the entries of the collector after postprocessing. """
         if not self._processed:
             self.post_process()
+            self.processed_entries = self._entries
+            self._entries = None  # avoid modification after processing
             self._processed = True
-        return self._entries
+        return self.processed_entries
 
     def summary(self):
         return f"{'='*10} {self.name} {'='*10} \n Entries: {len(self._entries)}"
@@ -203,6 +206,7 @@ class _BasePeriodicCollector(Collector):
         self.frame_interval = interval or self._default_interval
         self.__thread = threading.Thread(target=self.run)
         self.last_frame = None
+        self._stop_event = threading.Event()
 
     def start(self):
         interval = self.profiler.params.get(f'{self.name}_interval')
@@ -219,13 +223,14 @@ class _BasePeriodicCollector(Collector):
         self.last_time = real_time()
         while self.active:  # maybe add a check on parent_thread state?
             self.progress()
-            time.sleep(self.frame_interval)
-
-        self._entries.append({'stack': [], 'start': real_time()})  # add final end frame
+            self._stop_event.wait(self.frame_interval)
 
     def stop(self):
         self.active = False
-        self.__thread.join()
+        self._stop_event.set()
+        self._entries.append({'stack': [], 'start': real_time()})  # add final end frame
+        if self.__thread.is_alive() and self.__thread is not threading.current_thread():
+            self.__thread.join()
         self.profiler.init_thread.profile_hooks.remove(self.progress)
 
 
@@ -279,9 +284,9 @@ class MemoryCollector(_BasePeriodicCollector):
         })
 
     def stop(self):
+        super().stop()
         _lock.release()
         tracemalloc.stop()
-        super().stop()
 
     def post_process(self):
         for i, entry in enumerate(self._entries):
@@ -552,6 +557,7 @@ class Profiler:
         self.entry_count_limit = int(self.params.get("entry_count_limit",0)) # the limit could be set using a smarter way
         self.done = False
         self.exit_stack = ExitStack()
+        self.counter = 0
 
         if db is ...:
             # determine database from current thread

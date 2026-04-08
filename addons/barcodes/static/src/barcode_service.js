@@ -92,6 +92,7 @@ export const barcodeService = {
             if (currentTarget !== barcodeInput && isEditable(currentTarget) &&
                 !currentTarget.dataset.enableBarcode &&
                 currentTarget.getAttribute("barcode_events") !== "true") {
+                currentTarget = null;
                 return;
             }
 

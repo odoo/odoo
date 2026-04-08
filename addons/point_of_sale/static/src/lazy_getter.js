@@ -121,6 +121,9 @@ function lazyComputed(obj, propName, compute) {
 export class WithLazyGetterTrap {
     constructor({ traps = {} }) {
         const Class = this.constructor;
+        if (Class.enableLazyGetters === false) {
+            return;
+        }
         const instance = new Proxy(this, { get: defineLazyGetterTrap(Class), ...traps });
         for (const [lazyName, func] of getLazyGetters(Class).values()) {
             lazyComputed(instance, lazyName, func);

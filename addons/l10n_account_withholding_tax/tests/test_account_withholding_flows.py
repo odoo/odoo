@@ -821,10 +821,10 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             # Receivable line:
             {'name': 'Manual Payment: INV/2024/00001',          'balance': -1150.0},
             # withholding line:
-            {'name': 'WH Tax: 0001',                 'balance': 10.0},
+            {'name': 'WH Tax: 0001',                            'balance': 10.0},
             # base lines:
-            {'name': 'WH Base: 0001',                'balance': 1000.0},
-            {'name': 'WH Base Counterpart: 0001',    'balance': -1000.0},
+            {'name': 'WH Base: 0001',                           'balance': 1000.0},
+            {'name': 'WH Base Counterpart: 0001',               'balance': -1000.0},
         ])
 
         payment.action_draft()

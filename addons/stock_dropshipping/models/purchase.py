@@ -35,6 +35,9 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         return self.picking_type_id and self.picking_type_id.code == 'dropship'
 
+    def _should_set_dest_address(self):
+        return super()._should_set_dest_address() or self._is_dropshipped()
+
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'

@@ -85,7 +85,9 @@ class TestChannelInternals(MailCommon, HttpCase):
                                             "markup",
                                             f'<div class="o_mail_notification" data-oe-type="channel-joined">invited <a href="#" data-oe-model="res.partner" data-oe-id="{self.test_partner.id}">@Test Partner</a> to the channel</div>',
                                         ],
-                                        "create_date": fields.Datetime.to_string(message.create_date),
+                                        "create_date": fields.Datetime.to_string(
+                                            message.create_date,
+                                        ),
                                         "date": "2020-03-22 10:42:06",
                                         "default_subject": "Group",
                                         "id": message.id,
@@ -108,10 +110,13 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "write_date": fields.Datetime.to_string(message.write_date),
                                     },
                                 ),
-                                "mail.message.subtype": [{"description": False, "id": self.env.ref("mail.mt_comment").id}],
+                                "mail.message.subtype": [
+                                    {"description": False, "id": self.env.ref("mail.mt_comment").id},
+                                ],
                                 "mail.thread": self._filter_threads_fields(
                                     {
                                         "display_name": "Group",
+                                        "has_mail_thread": True,
                                         "id": test_group.id,
                                         "model": "discuss.channel",
                                         "module_icon": "/mail/static/description/icon.png",
@@ -130,7 +135,11 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     },
                                 ),
                                 "res.users": self._filter_users_fields(
-                                    {"id": self.env.user.id, "share": False},
+                                    {
+                                        "id": self.env.user.id,
+                                        "partner_id": self.env.user.partner_id.id,
+                                        "share": False,
+                                    },
                                 ),
                             },
                             "id": test_group.id,
@@ -166,7 +175,11 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 },
                             ),
                             "res.users": self._filter_users_fields(
-                                {"id": self.test_user.id, "share": False},
+                                {
+                                    "id": self.test_user.id,
+                                    "partner_id": self.test_partner.id,
+                                    "share": False,
+                                },
                             ),
                         },
                     },
@@ -214,7 +227,12 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 },
                             ),
                             "res.users": self._filter_users_fields(
-                                {"id": self.test_user.id, "employee_ids": [], "share": False},
+                                {
+                                    "id": self.test_user.id,
+                                    "employee_ids": [],
+                                    "partner_id": self.test_partner.id,
+                                    "share": False,
+                                },
                             ),
                         },
                     },

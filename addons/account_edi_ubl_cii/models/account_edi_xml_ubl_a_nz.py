@@ -27,15 +27,6 @@ class AccountEdiXmlUbl_A_Nz(models.AbstractModel):
         if process_type == 'billing':
             return 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:aunz:3.0'
 
-    def _ubl_default_tax_category_grouping_key(self, base_line, tax_data, vals, currency):
-        # EXTENDS account.edi.xml.ubl_bis3
-        grouping_key = super()._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, currency)
-        if not grouping_key:
-            return
-
-        grouping_key['scheme_id'] = 'GST'
-        return grouping_key
-
     def _ubl_get_line_allowance_charge_discount_node(self, vals, discount_values):
         # EXTENDS account.edi.xml.ubl_bis3
         discount_node = super()._ubl_get_line_allowance_charge_discount_node(vals, discount_values)
@@ -44,9 +35,9 @@ class AccountEdiXmlUbl_A_Nz(models.AbstractModel):
         discount_node['cbc:BaseAmount'] = None
         return discount_node
 
-    def _ubl_add_values_tax_currency_code(self, vals):
-        # OVERRIDE account.edi.xml.ubl_bis3
-        self._ubl_add_values_tax_currency_code_empty(vals)
+    def _ubl_add_tax_currency_code_node(self, vals):
+        # OVERRIDE
+        self._ubl_add_tax_currency_code_node_empty(vals)
 
     def _ubl_tax_totals_node_grouping_key(self, base_line, tax_data, vals, currency):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -62,29 +53,62 @@ class AccountEdiXmlUbl_A_Nz(models.AbstractModel):
 
         return tax_total_keys
 
-    def _get_party_node(self, vals):
+    def _ubl_add_customization_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
-        party_node = super()._get_party_node(vals)
-        partner = vals['partner']
+        super()._ubl_add_customization_id_node(vals)
+        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:aunz:3.0'
+
+    def _ubl_add_party_endpoint_id_node(self, vals):
+        # EXTENDS
+        super()._ubl_add_party_endpoint_id_node(vals)
+        partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
 
         if commercial_partner.country_code == 'AU' and commercial_partner.vat:
             vat = commercial_partner.vat.replace(" ", "")
-            party_node['cbc:EndpointID']['_text'] = vat
-            party_node['cac:PartyTaxScheme'][0]['cbc:CompanyID']['_text'] = vat
-            party_node['cac:PartyLegalEntity']['cbc:CompanyID'] = {
-                '_text': vat,
-                'schemeID': '0151',
-            }
+            vals['party_node']['cbc:EndpointID']['_text'] = vat
+        elif commercial_partner.country_code == 'NZ' and commercial_partner.company_registry:
+            vals['party_node']['cbc:EndpointID']['_text'] = commercial_partner.company_registry
 
-        elif commercial_partner.country_code == 'NZ':
-            party_node['cbc:EndpointID']['_text'] = commercial_partner.company_registry
-            party_node['cac:PartyTaxScheme'][0]['cbc:CompanyID']['_text'] = commercial_partner.company_registry
-            party_node['cac:PartyLegalEntity']['cbc:CompanyID'] = {
-                '_text': commercial_partner.company_registry,
-                'schemeID': '0088',
-            }
+    def _ubl_add_party_tax_scheme_nodes(self, vals):
+        # EXTENDS
+        super()._ubl_add_party_tax_scheme_nodes(vals)
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
 
-        party_node['cac:PartyTaxScheme'][0]['cac:TaxScheme']['cbc:ID']['_text'] = 'GST'
+        if (
+            (commercial_partner.country_code == 'AU' and commercial_partner.vat)
+            or (commercial_partner.country_code == 'NZ' and commercial_partner.company_registry)
+        ):
+            vals['party_node']['cac:PartyTaxScheme'] = [{
+                'cbc:CompanyID': {
+                    '_text': vals['party_node']['cbc:EndpointID']['_text'],
+                    'schemeID': None,
+                },
+                'cac:TaxScheme': {
+                    'cbc:ID': {'_text': 'GST'},
+                },
+            }]
 
-        return party_node
+    def _ubl_add_party_legal_entity_nodes(self, vals):
+        # EXTENDS
+        super()._ubl_add_party_legal_entity_nodes(vals)
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+
+        if commercial_partner.country_code == 'AU' and commercial_partner.vat:
+            vals['party_node']['cac:PartyLegalEntity'] = [{
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': vals['party_node']['cbc:EndpointID']['_text'],
+                    'schemeID': '0151',
+                },
+            }]
+        elif commercial_partner.country_code == 'NZ' and commercial_partner.company_registry:
+            vals['party_node']['cac:PartyLegalEntity'] = [{
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': vals['party_node']['cbc:EndpointID']['_text'],
+                    'schemeID': '0088',
+                },
+            }]

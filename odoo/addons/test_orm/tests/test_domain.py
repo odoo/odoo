@@ -1005,3 +1005,58 @@ class TestDomainOptimize(TransactionCase):
             list(base_domain.optimize_full(model.sudo())),
             [('currency_id', 'not in', [2, False])],
         )
+
+    def subset_condition_optimize_properties_date(self, date_type='date'):
+        message_model = self.env['test_orm.message'].with_context(tz='UTC')
+        discussion_model = self.env['test_orm.discussion'].with_context(tz='UTC')
+
+        is_dt = date_type == 'datetime'
+        hour_str = ' 13:05:34' if is_dt else ''
+        discussion = self.env['test_orm.discussion'].create({
+            'name': 'Test Discussion',
+            'participants': [Command.link(self.env.user.id)],
+            'attributes_definition': [{
+                'name': 'mydate',
+                'string': 'Prop',
+                'type': date_type,
+            }],
+        })
+
+        message_model.create({
+            'discussion': discussion.id,
+            'name': 'Test Message',
+            'attributes': {
+                'mydate': f'2077-05-02{hour_str}',
+            },
+        })
+
+        with freeze_time(f'2027-05-02{hour_str}'):
+            self.assertEqual(
+                Domain('attributes.mydate', '=', '+50y').optimize_full(message_model),
+                Domain('attributes.mydate', 'in', OrderedSet([f'2077-05-02{hour_str}'])),
+            )
+
+            self.assertEqual(
+                Domain(
+                    'messages',
+                    'any',
+                    Domain.AND([
+                        Domain('attributes.mydate', '>=', 'today'),
+                        Domain('attributes.mydate', '<', '+60y'),
+                    ]),
+                ).optimize_full(discussion_model),
+                Domain(
+                    'messages',
+                    'any!',
+                    Domain.AND([
+                        Domain('attributes.mydate', '<', f'2087-05-02{hour_str}'),
+                        Domain('attributes.mydate', '>=', f"2027-05-02{' 00:00:00' if is_dt else ''}"),
+                    ]),
+                ),
+            )
+
+    def test_condition_optimize_properties_date(self):
+        self.subset_condition_optimize_properties_date("date")
+
+    def test_condition_optimize_properties_datetime(self):
+        self.subset_condition_optimize_properties_date("datetime")

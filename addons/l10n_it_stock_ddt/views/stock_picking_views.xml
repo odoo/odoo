@@ -15,7 +15,7 @@
                 <attribute name="invisible">l10n_it_show_print_ddt_button or picking_type_code == 'outgoing' and country_code == 'IT'</attribute>
             </xpath>
             <group name='carrier_data' position="after">
-                <group string="DDT Information" invisible="country_code != 'IT' or picking_type_code != 'outgoing'">
+                <group string="DDT Information" invisible="country_code != 'IT' or picking_type_code not in ('outgoing', 'dropship')">
                     <field name="country_code" invisible="1"/>
                     <field name="l10n_it_ddt_number"/>
                     <field name="l10n_it_transport_reason"/>

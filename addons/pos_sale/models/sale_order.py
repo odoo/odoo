@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import math
 
 from odoo import api, fields, models, _, Command
 from odoo.tools import format_date
@@ -68,11 +69,11 @@ class SaleOrder(models.Model):
     @api.depends('transaction_ids.state', 'transaction_ids.amount', 'order_line', 'amount_total', 'order_line.invoice_lines.parent_state', 'order_line.invoice_lines.price_total', 'order_line.pos_order_line_ids')
     def _compute_amount_unpaid(self):
         for sale_order in self:
-            invoices = sale_order.order_line.invoice_lines.move_id.filtered(lambda invoice: invoice.state in ('draft', 'posted'))
-            total_invoices_paid = sum(invoices.mapped('amount_total'))
-            pos_orders = sale_order.order_line.pos_order_line_ids.order_id
-            total_pos_orders_paid = sum(pos_orders.mapped('amount_total'))
-            sale_order.amount_unpaid = max(sale_order.amount_total - total_invoices_paid - total_pos_orders_paid - sale_order.amount_paid, 0.0)
+            online_payments_invoices = sale_order.transaction_ids.filtered(lambda tx_move: tx_move.state in ('authorized', 'done')).mapped('invoice_ids')
+            invoice_lines = sale_order.order_line.invoice_lines.filtered(lambda l: l.parent_state in ('draft', 'posted') and l.move_id not in online_payments_invoices)
+            total_invoices_paid = sum(invoice_lines.mapped(lambda l: math.copysign(l.price_total, -l.balance)))
+            total_pos_paid = sum(sale_order.order_line.filtered(lambda l: not l.display_type).mapped('pos_order_line_ids.price_subtotal_incl'))
+            sale_order.amount_unpaid = max(sale_order.amount_total - total_invoices_paid - total_pos_paid - sale_order.amount_paid, 0.0)
 
     @api.depends('order_line.pos_order_line_ids')
     def _compute_amount_to_invoice(self):
@@ -102,6 +103,7 @@ class SaleOrder(models.Model):
             and base_line['record']._name == 'pos.order.line'
         ):
             pos_order_line = base_line['record']
+            so_line_values['product_id'] = base_line['product_id'].id
             so_line_values['name'] = _(
                 "Down payment (ref: %(order_reference)s on \n %(date)s)",
                 order_reference=pos_order_line.name,
@@ -128,22 +130,31 @@ class SaleOrderLine(models.Model):
             'write_date', 'product_custom_attribute_value_ids'
         ]
 
-    @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.picking_ids', 'pos_order_line_ids.order_id.picking_ids.state')
+    @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.picking_ids', 'pos_order_line_ids.order_id.picking_ids.state', 'pos_order_line_ids.refund_orderline_ids.order_id.picking_ids.state')
     def _compute_qty_delivered(self):
         super()._compute_qty_delivered()
 
     def _prepare_qty_delivered(self):
         delivered_qties = super()._prepare_qty_delivered()
-        for sale_line in self:
-            if sale_line.product_id.type == 'service':
-                continue
-            pos_lines = sale_line.sudo().pos_order_line_ids.filtered(
-                lambda order_line: order_line.order_id.state not in ['cancel', 'draft']
-            )
-            if all(picking.state == 'done' for picking in pos_lines.order_id.picking_ids):
-                pos_qty = sum((self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in pos_lines), 0)
-                if pos_qty != 0:
-                    delivered_qties[sale_line] += pos_qty
+
+        def _get_pos_delivered_qty(sale_line, pos_lines):
+            if all(picking.state == "done" for picking in pos_lines.order_id.picking_ids):
+                # Sum converted quantities from POS to sale order UoM
+                return sum(self._convert_qty(sale_line, pos_line.qty, "p2s") for pos_line in pos_lines)
+            return 0
+
+        def line_filter(line):
+            return line.order_id.state not in ["cancel", "draft"]
+
+        for sale_line in self.filtered(lambda line: line.product_id.type != "service"):
+            pos_line_ids = sale_line.sudo().pos_order_line_ids
+            pos_qty = _get_pos_delivered_qty(sale_line, pos_line_ids.filtered(line_filter))
+            if pos_qty != 0:
+                delivered_qties[sale_line] += pos_qty
+
+            refund_qty = _get_pos_delivered_qty(sale_line, pos_line_ids.refund_orderline_ids.filtered(line_filter))
+            if refund_qty != 0:
+                delivered_qties[sale_line] += refund_qty
         return delivered_qties
 
     @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.state')
@@ -173,7 +184,10 @@ class SaleOrderLine(models.Model):
                 if sale_line.product_id.tracking != 'none':
                     move_lines = sale_line.move_ids.move_line_ids.filtered(lambda ml: ml.product_id.id == sale_line.product_id.id)
                     item['lot_names'] = move_lines.lot_id.mapped('name')
-                    item['lot_qty_by_name'] = {line.lot_id.name: line.quantity for line in move_lines}
+                    lot_qty_by_name = {}
+                    for line in move_lines:
+                        lot_qty_by_name[line.lot_id.name] = lot_qty_by_name.get(line.lot_id.name, 0.0) + line.quantity
+                    item['lot_qty_by_name'] = lot_qty_by_name
                 if product_uom == sale_line_uom:
                     results.append(item)
                     continue
@@ -233,3 +247,12 @@ class SaleOrderLine(models.Model):
                     downpayment_sol.name = _("%(line_description)s (Cancelled)", line_description=downpayment_sol.name)
             else:
                 super()._compute_name()
+
+    def _prepare_invoice_line(self, **optional_values):
+        res = super()._prepare_invoice_line(**optional_values)
+        if not self.is_downpayment:
+            return res
+        downpayment_lines = self.sudo().pos_order_line_ids.order_id.account_move.invoice_line_ids.filtered('is_downpayment')
+        if downpayment_lines:
+            res['account_id'] = downpayment_lines.account_id[:1].id
+        return res

@@ -78,20 +78,6 @@ class DummyMethods:
         "return": {"annotation": "int"},
     }
 
-    # the cls param should be stripped away
-    @classmethod
-    def class_method(cls, a):
-        """
-        :param a: an A
-        """
-        pass
-
-    class_method.__func__.expected = {
-        'signature': '(a)',
-        'parameters': {'a': {'doc': '<p>an A</p>'}},
-        'doc': '<div class="document"></div>'
-    }
-
     # the self param should be stripped away
     def self_method(self, a):
         """
@@ -191,3 +177,19 @@ class DummyMethods:
         <p>a bit more text</p>
         </div>""",
     }
+
+    # Those methods cannot be called over RPC and should not appear in /doc
+    @classmethod
+    def class_method(cls):
+        pass
+
+    @staticmethod
+    def static_method():
+        pass
+
+    @api.private
+    def private_method(self):
+        pass
+
+    def _underscope_method(self):
+        pass

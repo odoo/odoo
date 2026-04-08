@@ -1599,7 +1599,7 @@ export class MockServer {
                 model_domain: modelDomain,
                 extra_domain: extraDomain,
                 only_counters: expand,
-                set_limit: limit && !(expand || hierarchize || comodelDomain),
+                set_limit: limit && !(expand || hierarchize || comodelDomain.length),
             });
             domainImage = this.mockSearchPanelFieldImage(model, fieldName, newKwargs);
         }
@@ -1823,7 +1823,7 @@ export class MockServer {
                     model_domain: modelDomain,
                     extra_domain: extraDomain,
                     only_counters: expand,
-                    set_limit: limit && !(expand || groupBy || comodelDomain),
+                    set_limit: limit && !(expand || groupBy || comodelDomain.length),
                 });
                 domainImage = this.mockSearchPanelFieldImage(model, fieldName, newKwargs);
             }

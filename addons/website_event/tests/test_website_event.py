@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields, http
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
+from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon, OnlineEventCase
 from odoo.exceptions import AccessError
@@ -198,6 +199,27 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         ])
 
         self.start_tour('/event', 'test_website_event_search', login='admin')
+
+    def test_website_event_social_image(self):
+        website = self.env['website'].get_current_website()
+        event = self.env['event.event'].create({
+            'name': 'Event With Menu',
+            'website_menu': True,
+            'website_id': website.id,
+        })
+        with MockRequest(self.env, website=website, url_root='http://example.com'):
+            event.cover_properties = """{"background-image": "url('/1.jpg')"}"""
+            meta = event.get_website_meta()
+            self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/1.jpg')
+            self.assertEqual(meta['twitter_meta']['twitter:image'], 'http://example.com/1.jpg')
+            event.cover_properties = """{"background-image": "url(\\"/2.jpg\\")"}"""
+            meta = event.get_website_meta()
+            self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/2.jpg')
+            self.assertEqual(meta['twitter_meta']['twitter:image'], 'http://example.com/2.jpg')
+            event.cover_properties = """{"background-image": "url(/3.jpg)"}"""
+            meta = event.get_website_meta()
+            self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/3.jpg')
+            self.assertEqual(meta['twitter_meta']['twitter:image'], 'http://example.com/3.jpg')
 
 
 @tagged('post_install', '-at_install')

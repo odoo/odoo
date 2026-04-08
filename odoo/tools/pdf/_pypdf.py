@@ -3,6 +3,7 @@ from typing import Dict, Any
 import pypdf
 from pypdf import errors, filters, generic, PdfReader as _Reader, PdfWriter as _Writer
 from pypdf.generic import create_string_object
+from pypdf import __version__  # noqa: F401
 
 __all__ = [
     "PdfReader",

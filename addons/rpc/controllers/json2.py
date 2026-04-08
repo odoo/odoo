@@ -81,7 +81,7 @@ class WebJson2Controller(http.Controller):
         try:
             signature.bind(records, **kwargs)
         except TypeError as exc:
-            raise UnprocessableEntity(exc.args[0])
+            raise UnprocessableEntity(exc.args[0]) from exc
 
         result = func(records, **kwargs)
         if isinstance(result, BaseModel):

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 18:36+0000\n"
 "PO-Revision-Date: 2025-12-27 08:37+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
@@ -77,15 +77,6 @@ msgstr "<span class=\"o_stat_value\">%</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
-msgid ""
-"<span class=\"text-info fw-bold fs-5 me-1\" groups=\"!uom.group_uom\">Units</"
-"span>"
-msgstr ""
-"<span class=\"text-info fw-bold fs-5 me-1\" groups=\"!"
-"uom.group_uom\">Unidades</span>"
-
-#. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<span class=\"text-info fw-bold fs-5 me-1\">Suggest</span>"
 msgstr "<span class=\"text-info fw-bold fs-5 me-1\">Sugerir</span>"
 
@@ -93,14 +84,6 @@ msgstr "<span class=\"text-info fw-bold fs-5 me-1\">Sugerir</span>"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<span class=\"text-muted small me-1\">Monthly Demand:</span>"
 msgstr "<span class=\"text-muted small me-1\">Demanda mensal:</span>"
-
-#. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
-msgid ""
-"<span class=\"text-muted small ms-1\" groups=\"!uom.group_uom\">Units</span>"
-msgstr ""
-"<span class=\"text-muted small ms-1\" groups=\"!uom.group_uom\">Unidades</"
-"span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
@@ -349,7 +332,6 @@ msgstr "Tipo de local de destino"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_company__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__display_name
@@ -509,7 +491,6 @@ msgstr "SDC em grupo"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_company__id
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__id
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__id
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__id
@@ -981,11 +962,6 @@ msgid "Stock Rule"
 msgstr "Regra de estoque"
 
 #. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_stock_account_stock_valuation_report
-msgid "Stock Valuation"
-msgstr "Valoração de estoque"
-
-#. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Relatório de regra de estoque"
@@ -1209,6 +1185,11 @@ msgid "Tuesday"
 msgstr "Terça"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
+msgid "Units"
+msgstr ""
+
+#. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 msgid "Validate the receipt of all ordered products."
@@ -1324,6 +1305,23 @@ msgstr "pedido(s) em vez de"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "this product should be manually replenished."
 msgstr "esse produto deve ser reposto manualmente."
+
+#~ msgid ""
+#~ "<span class=\"text-info fw-bold fs-5 me-1\" groups=\"!"
+#~ "uom.group_uom\">Units</span>"
+#~ msgstr ""
+#~ "<span class=\"text-info fw-bold fs-5 me-1\" groups=\"!"
+#~ "uom.group_uom\">Unidades</span>"
+
+#~ msgid ""
+#~ "<span class=\"text-muted small ms-1\" groups=\"!uom.group_uom\">Units</"
+#~ "span>"
+#~ msgstr ""
+#~ "<span class=\"text-muted small ms-1\" groups=\"!uom.group_uom\">Unidades</"
+#~ "span>"
+
+#~ msgid "Stock Valuation"
+#~ msgstr "Valoração de estoque"
 
 #~ msgid ""
 #~ "Define if RFQ should be grouped         together based on expected "

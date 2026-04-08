@@ -133,7 +133,7 @@ test("properly compile notebook", () => {
     const expected = /*xml*/ `
         <t t-translation="off">
             <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
-                <Notebook defaultPage="__comp__.props.record.isNew ? undefined : __comp__.props.activeNotebookPages[0]" onPageUpdate="(page) =&gt; __comp__.props.onNotebookPageChange(0, page)">
+                <Notebook defaultPage="__comp__.props.record.isNew ? undefined : __comp__.props.activeNotebookPages[0]" onPageUpdate="(page) =&gt; __comp__.props.onNotebookPageChange(0, page)" onWillActivatePage="(page) =&gt; __comp__.onWillChangeNotebookPage?.(0, page)">
                     <t t-set-slot="page_1" title="\`Page1\`" name="\`p1\`" isVisible="true" fieldnames="[&quot;charfield&quot;]">
                         <Field id="'charfield'" name="'charfield'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['charfield']" readonly="__comp__.props.readonly"/>
                     </t>

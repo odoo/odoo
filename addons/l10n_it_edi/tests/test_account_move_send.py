@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 from unittest.mock import patch
 
 from odoo.tests import tagged
@@ -183,6 +184,56 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
             self.assertEqual(invoice.l10n_it_edi_state, "processing")
             self.assertEqual(invoice.l10n_it_edi_transaction, success['id_transaction'])
 
+    def test_l10n_it_edi_send_success_with_signed_data_update_attachment(self):
+        invoice = self.init_invoice(self.italian_partner_a)
+        self.generate_l10n_it_edi_send_attachments(invoice)
+        signed_data_result = 'some signed data'
+        success = {'id_transaction': "SDI ID 1", 'signed': True, 'signed_data': signed_data_result}
+        with patch('odoo.addons.l10n_it_edi.models.account_move.AccountMove._l10n_it_edi_upload_single', return_value=success, autospec=True):
+            self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['email'])
+            self.assertEqual(base64.b64decode(invoice.l10n_it_edi_attachment_file).decode(), signed_data_result)
+
+    def test_pa_state_keeps_updating_after_sdi_validation(self):
+        """
+        Ensure that the PA state is fetched from the server even when the SDI validation is passed
+        """
+        invoice = self.init_invoice(self.italian_partner_b)
+        self.assertTrue(invoice.l10n_it_partner_is_public_administration)
+        invoice.l10n_it_origin_document_type = 'purchase_order'
+        self.generate_l10n_it_edi_send_attachments(invoice)
+        success = {
+            'id_transaction': "SDI ID 1",
+            'signed': False,
+            'signed_data': False,
+        }
+        l10n_it_move = 'odoo.addons.l10n_it_edi.models.account_move.AccountMove'
+        with patch(f'{l10n_it_move}._l10n_it_edi_upload_single', return_value=success) as mock_check:
+            attachments_vals = {invoice: {'name': invoice.l10n_it_edi_attachment_name, 'raw': invoice.l10n_it_edi_attachment_file}}
+            results = invoice._l10n_it_edi_send(attachments_vals)
+
+            self.assertEqual(mock_check.call_count, 1)
+            self.assertEqual(results, {invoice.l10n_it_edi_attachment_name: success})
+            self.assertEqual(invoice.l10n_it_edi_state, "processing")
+            self.assertEqual(invoice.l10n_it_edi_transaction, success['id_transaction'])
+
+            invoice.l10n_it_edi_state = 'forwarded'
+            self.assertRecordValues(invoice, [
+                {
+                    'l10n_it_edi_state': 'forwarded',
+                    'l10n_it_partner_is_public_administration': True,
+                },
+            ])
+
+            with (
+                patch(f'{l10n_it_move}._l10n_it_edi_update_send_state', autospec=True) as update_send_state,
+                patch(f'{l10n_it_move}._l10n_it_edi_download_invoices')
+            ):
+                invoice.action_check_l10n_it_edi()
+                update_send_state.assert_called_once()
+
+                invoice.cron_l10n_it_edi_download_and_update()
+                self.assertEqual(update_send_state.call_count, 2)
+
     def test_l10n_it_edi_send_proxy_error(self):
         invoice = self.init_invoice(self.italian_partner_a)
         self.generate_l10n_it_edi_send_attachments(invoice)
@@ -254,3 +305,21 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
         wizard = self.create_send_and_print(invoice, sending_methods=['l10n_it_edi'])
         non_info_alerts = {k: v for k, v in wizard.alerts.items() if v.get('level') != 'info'}
         self.assertFalse(non_info_alerts)
+
+    def test_l10n_it_edi_foreign_currency(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.italian_partner_a.id,
+            'company_id': self.company.id,
+            'currency_id': self.env.ref('base.USD').id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'Zero total line',
+                'quantity': 1.0,
+                'price_unit': 100.0,
+                'discount': 100.0,
+                'tax_ids': [(6, 0, self.default_tax.ids)],
+            })],
+        })
+        invoice.action_post()
+        self.generate_l10n_it_edi_send_attachments(invoice)
+        self.assertTrue(invoice.l10n_it_edi_attachment_file)

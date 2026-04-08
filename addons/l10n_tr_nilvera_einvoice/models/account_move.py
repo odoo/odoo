@@ -82,7 +82,7 @@ class AccountMove(models.Model):
 
     def button_draft(self):
         # EXTENDS account
-        for move in self.filtered('l10n_tr_nilvera_uuid'):
+        for move in self.filtered(lambda move: move.l10n_tr_nilvera_uuid and move.move_type == 'out_invoice'):
             if move.l10n_tr_nilvera_send_status == 'error':
                 move.message_post(body=_("To preserve accounting integrity and comply with legal requirements, invoices cannot be reused once an error occurs. Please create a new invoice to continue."))
             elif move.l10n_tr_nilvera_send_status != 'not_sent':

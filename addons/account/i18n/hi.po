@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"POT-Creation-Date: 2026-04-03 18:36+0000\n"
 "PO-Revision-Date: 2025-11-10 14:29+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-19/account/hi/"
@@ -63,6 +63,14 @@ msgstr ""
 "        जैसे 180 / (1 - 10%) = 200 (कीमत शामिल नहीं है)\n"
 "        जैसे 200 * (1 - 10%) = 180 (कीमत शामिल है)\n"
 "        "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"\n"
+"Please contact your administrator."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -183,6 +191,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid ""
+"%(order)s - %(order_line)s; %(qty_invoiced)s invoiced, %(qty_delivered)s "
+"delivered at %(unit_price)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
 "(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
@@ -198,6 +214,12 @@ msgid ""
 msgstr ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s इनवॉइस बनाई गई, हर यूनिट के "
 "लिए %(unit_price)s के दर से %(quantity_delivered)s यूनिट डिलीवर की गई"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "%(order)s - %(order_line)s; price difference for %(product)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -284,18 +306,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (type=%(type)s)"
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/accrued_orders.py:0
-msgid "(*) Goods Delivered not Invoiced (perpetual valuation)"
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/accrued_orders.py:0
-msgid "(*) Goods Invoiced not Delivered (perpetual valuation)"
 msgstr ""
 
 #. module: account
@@ -774,16 +784,6 @@ msgid ""
 msgstr ""
 "<b>%(count)s#</b> <b>%(amount)s</b> की किश्त <b style='color: #704A66;'>%"
 "(date)s</b> तक देना है"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-msgid ""
-"<br/>\n"
-"                        <span>Please make sure that this is a wanted "
-"behavior.</span>"
-msgstr ""
-"<br/>\n"
-"                        <span>कृपया पक्का कर लें कि आप यही चाहते हैं.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1566,10 +1566,7 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<span>1.00</span>\n"
-"                                                        <span "
-"groups=\"uom.group_uom\">Units</span>"
+msgid "<span>1.00</span>"
 msgstr ""
 
 #. module: account
@@ -4513,6 +4510,12 @@ msgid "Bank of odoo"
 msgstr "odoo के बैंक"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Bank settings"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
 msgid "Bank setup manual config"
 msgstr "बैंक सेटअप मैन्युअल कॉन्फ़िगरेश"
@@ -5300,6 +5303,8 @@ msgid "Chart of accounts set!"
 msgstr "खातों की सूची सेट है!"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Check"
 msgstr "जांच करें"
@@ -9175,6 +9180,18 @@ msgid "Goods"
 msgstr "गुड्स"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "Goods Delivered not Invoiced (perpetual valuation)"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "Goods Invoiced not Delivered (perpetual valuation)"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.2_account_account_us_ground_transportation
 msgid "Ground Transportation"
 msgstr ""
@@ -11132,6 +11149,7 @@ msgstr "जर्नल:"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_journal_ids
 #: model:ir.model.fields,field_description:account.field_account_report__filter_journals
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journals"
 msgstr "जर्नल"
 
@@ -12909,14 +12927,6 @@ msgstr "ऑनबोर्डिंग डॉक्यूमेंट लेआ�
 #: model:ir.model,name:account.model_onboarding_onboarding_step
 msgid "Onboarding Step"
 msgstr "ऑनबोर्डिंग स्टेप"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"Once a document has been posted once, its type is set in stone and you can't "
-"change it anymore."
-msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -15044,11 +15054,6 @@ msgstr "बाकी (करेंसी में)"
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_user_id
 msgid "Responsible User"
 msgstr "जिम्मेदार उपयोगकर्ता"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_tax__tax_scope
-msgid "Restrict the use of taxes to a type of product."
-msgstr "टैक्स को केवल किसी खास तरह के सामान पर ही लागू करना।"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -17507,6 +17512,14 @@ msgstr ""
 "लिए यह जर्नल बनाया गया है।"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The bank account of your company is not trusted. Please ask an admin or "
+"someone with approval rights to check it."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
 msgstr "वह बैंक स्टेटमेंट जिससे बैंक का हिसाब मिलाया गया है"
@@ -17581,6 +17594,15 @@ msgstr "आपने जर्नल में जो रेफ़रंस म�
 msgid ""
 "The commercial partner has been updated for all related accounting entries."
 msgstr "ग्राहक/सप्लायर की जानकारी से जुड़ी हुई सभी अकाउंटिंग एंट्रीज़ में बदल दी गई है।"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The company bank account (%(account_number)s) linked to this invoice is not "
+"trusted. Go to the Bank Settings, double-check that it is yours or correct "
+"the number, and click on Send Money to trust it."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -18097,6 +18119,14 @@ msgstr "आपका अभी का बैलेंस (%s), बताए ग�
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"The scheduled action 'Send Invoices automatically' is archived. You won't be "
+"able to send invoices in batch."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "The sections defined on a report cannot have sections themselves."
 msgstr ""
@@ -18420,6 +18450,14 @@ msgid ""
 msgstr ""
 "असली पीडीएफ़ में बैनर जोड़ने की कोशिश करते समय कोई गलती हो गई है.\n"
 "कृपया जांचें कि जो सोर्स फ़ाइल आप इस्तेमाल कर रहे हैं, वह सही है।"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_document_import_mixin.py:0
+msgid ""
+"There was an error while importing the bill, you can find attached the "
+"incoming XML"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19121,6 +19159,11 @@ msgid "Transfer to %s"
 msgstr "%s में भेजें"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__translated_product_name
+msgid "Translated Product Name"
+msgstr ""
+
+#. module: account
 #: model:account.group,name:account.2_us_group_661
 msgid "Travel Expenses"
 msgstr ""
@@ -19273,6 +19316,11 @@ msgstr "यूनिट प्राइस"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Unit Price:"
 msgstr "यूनिट प्राइस:"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Units"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -19716,15 +19764,17 @@ msgid ""
 "needed. For instance if you want to extract the amount from\n"
 "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
 "You could enter\n"
-"BRT: ([\\d,]+)"
+"BRT: ([\\d,]+)\n"
+"    If the label is \"01870912 0009065 00115\" and you need the amount in "
+"decimal\n"
+"    format (e.g. 90.65), you can use a regex with capturing groups, for "
+"example:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    In this case:\n"
+"    • the first group captures the integer part\n"
+"    • the second group captures the decimal part (last two digits)\n"
+"    "
 msgstr ""
-"यह राइटऑफ रकम तय करने के तरीके बताता है\n"
-"* प्रतिशत: शेष राशि का प्रतिशत, 0 से 100 के बीच.\n"
-"* तय रकम: एक निश्चित रकम (कम है तो डेबिट, ज़्यादा है तो क्रेडिट).\n"
-"* लेबल से: रेगुलर एक्सप्रेशन डेलीमीटर की कोई ज़रूरत नहीं है, सिर्फ़ रेगुलर एक्सप्रेशन की ज़रूरत "
-"है. उदाहरण के लिए, \n"
-"अगर आप R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C: से राशि निकालना "
-"चाहते हैं, तो आप BRT: ([\\d,]+) दर्ज कर सकते हैं."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
@@ -20360,6 +20410,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -20435,6 +20492,18 @@ msgstr "आप टैक्स लाइन को नहीं मिटा स
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
 msgstr "आप लॉक की हुई जर्नल एंट्री के किसी भी आइटम को नहीं मिटा सकते।"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, fuzzy
+#| msgid ""
+#| "You cannot delete this mail template, it is used in the invoice sending "
+#| "flow."
+msgid ""
+"You cannot delete taxes that are currently in use. Consider archiving them "
+"instead."
+msgstr "आप यह ईमेल टेम्पलेट नहीं मिटा सकते, क्योंकि इसका इस्तेमाल इनवॉइस भेजने में हो रहा है।"
 
 #. module: account
 #. odoo-python
@@ -20623,6 +20692,12 @@ msgstr "आप बंद किए हुए जर्नल (%(journal)s) म�
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_currency.py:0
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
@@ -20724,6 +20799,13 @@ msgid ""
 msgstr ""
 "आप किसी खाते को ऐसा नहीं बना सकते जिससे उसका हिसाब-किताब मिलना बंद हो जाए, यदि उस "
 "खाते में पहले से ही कुछ 'आंशिक रूप से मिले हुए' लेन-देन बकाया हैं।"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -21525,6 +21607,36 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid "Restrict the use of taxes to a type of product."
+#~ msgstr "टैक्स को केवल किसी खास तरह के सामान पर ही लागू करना।"
+
+#~ msgid ""
+#~ "Value for the amount of the writeoff line\n"
+#~ "    * Percentage: Percentage of the balance, between 0 and 100.\n"
+#~ "    * Fixed: The fixed value of the writeoff. The amount will count as a "
+#~ "debit if it is negative, as a credit if it is positive.\n"
+#~ "    * From Label: There is no need for regex delimiter, only the regex is "
+#~ "needed. For instance if you want to extract the amount from\n"
+#~ "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+#~ "You could enter\n"
+#~ "BRT: ([\\d,]+)"
+#~ msgstr ""
+#~ "यह राइटऑफ रकम तय करने के तरीके बताता है\n"
+#~ "* प्रतिशत: शेष राशि का प्रतिशत, 0 से 100 के बीच.\n"
+#~ "* तय रकम: एक निश्चित रकम (कम है तो डेबिट, ज़्यादा है तो क्रेडिट).\n"
+#~ "* लेबल से: रेगुलर एक्सप्रेशन डेलीमीटर की कोई ज़रूरत नहीं है, सिर्फ़ रेगुलर एक्सप्रेशन की "
+#~ "ज़रूरत है. उदाहरण के लिए, \n"
+#~ "अगर आप R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C: से राशि "
+#~ "निकालना चाहते हैं, तो आप BRT: ([\\d,]+) दर्ज कर सकते हैं."
+
+#~ msgid ""
+#~ "<br/>\n"
+#~ "                        <span>Please make sure that this is a wanted "
+#~ "behavior.</span>"
+#~ msgstr ""
+#~ "<br/>\n"
+#~ "                        <span>कृपया पक्का कर लें कि आप यही चाहते हैं.</span>"
 
 #~ msgid ""
 #~ "This account is configured in %(journal_names)s journal(s) (ids %"

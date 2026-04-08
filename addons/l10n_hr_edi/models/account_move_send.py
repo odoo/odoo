@@ -77,8 +77,9 @@ class AccountMoveSend(models.AbstractModel):
     def _generate_and_send_invoices(self, moves, from_cron=False, allow_raising=True, allow_fallback_pdf=False, **custom_settings):
         for move in moves:
             if move.country_code == 'HR' and move.is_sale_document():
-                move.l10n_hr_edi_addendum_id = self.env['l10n_hr_edi.addendum'].create({
-                    'move_id': move.id,
+                if not move.l10n_hr_edi_addendum_id:
+                    move.l10n_hr_edi_addendum_id = self.env['l10n_hr_edi.addendum'].create({'move_id': move.id})
+                move.l10n_hr_edi_addendum_id.write({
                     'fiscalization_number': move._get_l10n_hr_fiscalization_number(move.name),
                     'invoice_sending_time': fields.Datetime.now(pytz.timezone('Europe/Zagreb')),
                 })

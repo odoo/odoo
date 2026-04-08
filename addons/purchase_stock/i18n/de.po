@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 18:36+0000\n"
-"PO-Revision-Date: 2026-02-02 13:43+0000\n"
+"POT-Creation-Date: 2026-02-20 18:36+0000\n"
+"PO-Revision-Date: 2026-03-31 07:12+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "purchase_stock/de/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -78,15 +78,6 @@ msgstr "<span class=\"o_stat_value\">%</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
-msgid ""
-"<span class=\"text-info fw-bold fs-5 me-1\" groups=\"!uom.group_uom\">Units</"
-"span>"
-msgstr ""
-"<span class=\"text-info fw-bold fs-5 me-1\" groups=\"!"
-"uom.group_uom\">Einheiten</span>"
-
-#. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<span class=\"text-info fw-bold fs-5 me-1\">Suggest</span>"
 msgstr "<span class=\"text-info fw-bold fs-5 me-1\">Vorschlagen</span>"
 
@@ -94,14 +85,6 @@ msgstr "<span class=\"text-info fw-bold fs-5 me-1\">Vorschlagen</span>"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<span class=\"text-muted small me-1\">Monthly Demand:</span>"
 msgstr "<span class=\"text-muted small me-1\">Monatsbedarf:</span>"
-
-#. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
-msgid ""
-"<span class=\"text-muted small ms-1\" groups=\"!uom.group_uom\">Units</span>"
-msgstr ""
-"<span class=\"text-muted small ms-1\" groups=\"!uom.group_uom\">Einheiten</"
-"span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
@@ -362,7 +345,6 @@ msgstr "Art des Lieferzielorts"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_company__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__display_name
@@ -523,7 +505,6 @@ msgstr "Angebotsanfragen gruppieren"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_company__id
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__id
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__id
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__id
@@ -997,11 +978,6 @@ msgid "Stock Rule"
 msgstr "Bestandsregel"
 
 #. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_stock_account_stock_valuation_report
-msgid "Stock Valuation"
-msgstr "Bestandsbewertung"
-
-#. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Bestandsregelbericht"
@@ -1228,6 +1204,11 @@ msgid "Tuesday"
 msgstr "Dienstag"
 
 #. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
+msgid "Units"
+msgstr "Einheit(en)"
+
+#. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 msgid "Validate the receipt of all ordered products."
@@ -1344,6 +1325,23 @@ msgstr "bestellt statt"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "this product should be manually replenished."
 msgstr "Dieses Produkt sollte manuell aufgefüllt werden."
+
+#~ msgid ""
+#~ "<span class=\"text-info fw-bold fs-5 me-1\" groups=\"!"
+#~ "uom.group_uom\">Units</span>"
+#~ msgstr ""
+#~ "<span class=\"text-info fw-bold fs-5 me-1\" groups=\"!"
+#~ "uom.group_uom\">Einheiten</span>"
+
+#~ msgid ""
+#~ "<span class=\"text-muted small ms-1\" groups=\"!uom.group_uom\">Units</"
+#~ "span>"
+#~ msgstr ""
+#~ "<span class=\"text-muted small ms-1\" groups=\"!"
+#~ "uom.group_uom\">Einheiten</span>"
+
+#~ msgid "Stock Valuation"
+#~ msgstr "Bestandsbewertung"
 
 #~ msgid ""
 #~ "Define if RFQ should be grouped         together based on expected "
