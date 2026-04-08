@@ -1259,7 +1259,7 @@ def upgrade(file_manager) -> str:
     """Main upgrade_code entry point."""
     collector = MigrationCollector(file_manager)
 
-    collector.run_sub("Migrating useEffect", upgrade_useeffect)
+    # collector.run_sub("Migrating useEffect", upgrade_useeffect)
     collector.run_sub("Migrating onWillRender", upgrade_onwillrender)
     collector.run_sub("Migrating onRendered", upgrade_onrendered)
     collector.run_sub("Migrating useComponent", upgrade_usecomponent)
@@ -1274,7 +1274,7 @@ def upgrade(file_manager) -> str:
     collector.run_sub("Migrating t-esc", upgrade_t_esc)
     collector.run_sub("Migrating t-ref", upgrade_t_ref)
     collector.run_sub("Migrating t-model", upgrade_t_model)
-    # collector.run_sub("Migrating this. in xml templates", upgrade_this, targets=[])
+    collector.run_sub("Migrating this. in xml templates", upgrade_this, targets=[])
     collector.run_sub("Migrating this. in test.js xml fragments", upgrade_this_in_js, targets=[])
     collector.run_sub("Migrating t-slot", upgrade_t_slot)
     # collector.run_sub("Migrating parametric t-call", upgrade_t_call_param)
