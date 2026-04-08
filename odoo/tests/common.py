@@ -1357,12 +1357,21 @@ class ChromeBrowser:
             self.ws.close()
         if self.chrome:
             self._logger.info("Terminating chrome headless with pid %s", self.chrome.pid)
+            main = psutil.Process(self.chrome.pid)
+            children = main.children(recursive=True)
+            children.insert(0, main)
             self.chrome.terminate()
-            try:
-                self.chrome.wait(15)
-            except subprocess.TimeoutExpired:
-                self._logger.warning("Killing chrome headless with pid %s: still alive", self.chrome.pid)
-                self.chrome.kill()
+            _, alive = psutil.wait_procs(children, 15)
+            if alive:
+                self._logger.warning(
+                    "Killing chrome descendants-or-self of %s: %d remaining%s",
+                    self.chrome.pid,
+                    len(alive),
+                    "".join(f"\n- {p.name()} ({p.status()})" for p in alive),
+                )
+                for p in alive:
+                    p.kill()
+                psutil.wait_procs(alive, 1)
                 self.chrome_log_level = logging.RUNBOT
 
         if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
