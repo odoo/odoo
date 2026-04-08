@@ -1,9 +1,10 @@
 import { test, expect } from "@odoo/hoot";
 import { queryFirst, animationFrame } from "@odoo/hoot-dom";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { CartPage } from "@pos_self_order/app/pages/cart_page/cart_page";
 import { setupSelfPosEnv, getFilledSelfOrder, addComboProduct } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
+import { ChooseComboPopup } from "@pos_self_order/app/components/choose_combo_popup/choose_combo_popup";
 
 definePosSelfModels();
 
@@ -88,4 +89,107 @@ test("add note button is not shown in kiosk mode", async () => {
 
     const orderNoteContainer = queryFirst(".order-note");
     expect(orderNoteContainer).toBe(null);
+});
+
+test("pay opens combo suggestion popup and applies a direct combo", async () => {
+    const store = await setupSelfPosEnv();
+    const combo1 = store.models["product.combo"].get(1);
+
+    combo1.is_upsell = false;
+    combo1.qty_free = combo1.qty_max = 1;
+
+    await store.addToCart(store.models["product.template"].get(8), 1);
+    await store.addToCart(store.models["product.template"].get(10), 1);
+    const comboProduct = store.models["product.template"].get(7);
+
+    const normalLines = store.currentOrder.lines.filter((line) => !line.combo_parent_id);
+    expect(normalLines).toHaveLength(2);
+
+    const comp = await mountWithCleanup(CartPage, {});
+    patchWithCleanup(store, {
+        async confirmOrder() {},
+    });
+
+    patchWithCleanup(comp.dialog, {
+        add(component, props) {
+            expect(component).toBe(ChooseComboPopup);
+            props.getPayload(props.potentialCombos[0]);
+        },
+    });
+
+    await comp.pay();
+
+    const ComboProductLines = store.currentOrder.lines.filter((line) => !line.combo_parent_id);
+    expect(ComboProductLines).toHaveLength(1);
+    expect(ComboProductLines[0].product_id.product_tmpl_id.id).toBe(comboProduct.id);
+    expect(ComboProductLines[0].combo_line_ids).toHaveLength(2);
+    expect(store.pendingComboConversion).toBe(null);
+});
+
+test("pay opens combo suggestion popup and applies repeated single-free combos", async () => {
+    const store = await setupSelfPosEnv();
+    const combo1 = store.models["product.combo"].get(1);
+
+    combo1.is_upsell = false;
+    combo1.qty_free = combo1.qty_max = 1;
+
+    await store.addToCart(store.models["product.template"].get(8), 2);
+    await store.addToCart(store.models["product.template"].get(10), 2);
+    const comboProduct = store.models["product.template"].get(7);
+
+    const comp = await mountWithCleanup(CartPage, {});
+    patchWithCleanup(store, {
+        async confirmOrder() {},
+    });
+
+    patchWithCleanup(comp.dialog, {
+        add(component, props) {
+            expect(component).toBe(ChooseComboPopup);
+            props.getPayload(props.potentialCombos[1]);
+        },
+    });
+
+    await comp.pay();
+    await animationFrame();
+
+    const comboProductLines = store.currentOrder.lines.filter((line) => !line.combo_parent_id);
+    expect(comboProductLines).toHaveLength(2);
+    expect(
+        comboProductLines.every((line) => line.product_id.product_tmpl_id.id === comboProduct.id)
+    ).toBe(true);
+    expect(comboProductLines.map((line) => line.qty)).toEqual([1, 1]);
+    expect(comboProductLines.map((line) => line.combo_line_ids.length)).toEqual([2, 2]);
+    expect(store.pendingComboConversion).toBe(null);
+});
+
+test("pay opens combo suggestion popup and redirects upsell combos to combo selection", async () => {
+    const store = await setupSelfPosEnv();
+    await store.addToCart(store.models["product.template"].get(8), 1);
+    await store.addToCart(store.models["product.template"].get(10), 1);
+    const comboProduct = store.models["product.product"].get(7);
+
+    const comp = await mountWithCleanup(CartPage, {});
+
+    patchWithCleanup(comp.dialog, {
+        add(component, props) {
+            expect(component).toBe(ChooseComboPopup);
+            props.getPayload(props.potentialCombos[0]);
+        },
+    });
+    patchWithCleanup(comp.router, {
+        navigate(route, params, options) {
+            expect.step(`${route}:${params.id}:${options.redirectPage}`);
+        },
+    });
+
+    expect(
+        store.comboSuggestion
+            .getPotentialCombos(store.currentOrder)
+            .filter((combo) => combo.totalComboPrice <= combo.totalSplitedComboLinePrice)[0].product
+            .id
+    ).toBe(comboProduct.id);
+
+    await comp.pay();
+    await animationFrame();
+    expect.verifySteps(["combo_selection:7:cart"]);
 });

@@ -277,9 +277,9 @@ describe("pos.order restaurant patches", () => {
         expect(sodaLine.prep_line_ids[0].quantity).toBe(1);
         expect(friesLine.prep_line_ids[0].quantity).toBe(1);
 
-        patchWithCleanup(store, {
-            async createComboFromLines(productTmpl, combinations) {
-                return super.createComboFromLines(productTmpl, combinations.slice(0, 1));
+        patchWithCleanup(store.comboSuggestion, {
+            getPotentialCombos(order) {
+                return super.getPotentialCombos(order).slice(0, 1);
             },
         });
 

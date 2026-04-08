@@ -34,10 +34,10 @@ describe("chose_combo_popup.js", () => {
             return qtyTaken;
         };
 
-        const checkAllCombos = async (comboProduct, potentialCombos) => {
+        const checkAllCombos = async (comboProduct, potentialCombos, isUpsell) => {
             const choseComboPopup = await mountWithCleanup(ChoseComboPopup, {
                 props: {
-                    potentialCombos: potentialCombos,
+                    potentialCombos,
                     close: () => {},
                     getPayload: () => {},
                 },
@@ -70,18 +70,11 @@ describe("chose_combo_popup.js", () => {
                 }
                 return a.id - b.id;
             });
-            const combinationsExpected = potentialCombos.applicable.concat(potentialCombos.upsell);
-            const expectedAllCombos = [
-                {
-                    combinations: combinationsExpected[0].combinations,
-                    productTmpl: combinationsExpected[0].productTmpl,
-                    lines: expectedLines,
-                },
-            ];
-            if (potentialCombos.upsell.length > 0) {
-                expectedAllCombos[0].upsell = true;
-            }
-            expect(choseComboPopup.allCombos).toEqual(expectedAllCombos);
+
+            expect(choseComboPopup.allCombos).toHaveLength(1);
+            expect(choseComboPopup.allCombos[0].product).toBe(comboProduct);
+            expect(choseComboPopup.allCombos[0].lines).toEqual(expectedLines);
+            expect(Boolean(choseComboPopup.allCombos[0].upsell)).toBe(isUpsell);
         };
 
         // Two combo choice, one is upsell, the other is not
@@ -89,47 +82,41 @@ describe("chose_combo_popup.js", () => {
         const comboProduct_1 = store.models["product.template"].get(7);
         const qtyTaken_1 = await addOrderlinesOfComboToCart(comboProduct_1);
         const potentialCombos_1 = {
-            applicable: [],
-            upsell: [
-                {
-                    productTmpl: comboProduct_1,
-                    combinations: [qtyTaken_1],
-                },
-            ],
+            product: comboProduct_1,
+            combinations: [qtyTaken_1],
+            totalComboPrice: 0,
+            totalSplitedComboLinePrice: 0,
+            upsell: true,
         };
 
-        await checkAllCombos(comboProduct_1, potentialCombos_1);
+        await checkAllCombos(comboProduct_1, [potentialCombos_1], true);
 
         // Two combo choices, none are upsell
         store.addNewOrder();
         const comboProduct_2 = store.models["product.template"].get(15);
         const qtyTaken_2 = await addOrderlinesOfComboToCart(comboProduct_2);
         const potentialCombos_2 = {
-            applicable: [
-                {
-                    productTmpl: comboProduct_2,
-                    combinations: [qtyTaken_2],
-                },
-            ],
-            upsell: [],
+            product: comboProduct_2,
+            combinations: [qtyTaken_2],
+            totalComboPrice: 0,
+            totalSplitedComboLinePrice: 0,
+            upsell: false,
         };
 
-        await checkAllCombos(comboProduct_2, potentialCombos_2);
+        await checkAllCombos(comboProduct_2, [potentialCombos_2], false);
 
         // Two combo choices, both are upsell
         store.addNewOrder();
         const comboProduct_3 = store.models["product.template"].get(16);
         const qtyTaken_3 = await addOrderlinesOfComboToCart(comboProduct_3);
         const potentialCombos_3 = {
-            applicable: [],
-            upsell: [
-                {
-                    productTmpl: comboProduct_3,
-                    combinations: [qtyTaken_3],
-                },
-            ],
+            product: comboProduct_3,
+            combinations: [qtyTaken_3],
+            totalComboPrice: 0,
+            totalSplitedComboLinePrice: 0,
+            upsell: true,
         };
 
-        await checkAllCombos(comboProduct_3, potentialCombos_3);
+        await checkAllCombos(comboProduct_3, [potentialCombos_3], true);
     });
 });

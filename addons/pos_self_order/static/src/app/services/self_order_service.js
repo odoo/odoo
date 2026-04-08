@@ -23,6 +23,7 @@ import { initLNA } from "@point_of_sale/app/utils/init_lna";
 import { GeneratePrinterData } from "@point_of_sale/app/utils/printer/generate_printer_data";
 import { SnoozedProductTracker } from "@point_of_sale/app/models/utils/snooze_tracker";
 import { InfoPopup } from "@pos_self_order/app/components/info_popup/info_popup";
+import { ComboSuggestion } from "@point_of_sale/app/models/utils/combo_suggestion";
 import { session } from "@web/session";
 
 const { DateTime } = luxon;
@@ -80,6 +81,7 @@ export class SelfOrder extends Reactive {
         this.productByCategIds = {};
         this.availableCategories = [];
         this.snoozedProductTracker = new SnoozedProductTracker();
+        this.pendingComboConversion = null;
 
         this.env.utils = {
             roundCurrency: (amount) => this.currency.round(amount),
@@ -403,6 +405,7 @@ export class SelfOrder extends Reactive {
             }
             selectedCombos.push({
                 combo_item_id: this.models["product.combo.item"].get(combo_item_ids[0].id),
+                qty: 1,
                 configuration: {
                     attribute_custom_values: [],
                     attribute_value_ids: [],
@@ -632,6 +635,13 @@ export class SelfOrder extends Reactive {
             });
             this.productByCategIds["0"] = productWoCat;
         }
+
+        this.comboSuggestion = new ComboSuggestion(
+            this.models,
+            this.currency,
+            this.company,
+            this.config
+        );
     }
 
     initHardware() {
@@ -1053,6 +1063,31 @@ export class SelfOrder extends Reactive {
 
     isTaxesIncludedInPrice() {
         return this.config.iface_tax_included === "total";
+    }
+
+    /**
+     * Removes or decrements the standalone lines that were converted into a combo line.
+     */
+    applyPendingComboConversion() {
+        const conversion = this.pendingComboConversion;
+        if (!conversion) {
+            return;
+        }
+        for (const [lineUuid, qty] of Object.entries(conversion.concernedLinesQty)) {
+            const line = this.models["pos.order.line"].getBy("uuid", lineUuid);
+            if (!line) {
+                continue;
+            }
+            const newQty = line.qty - qty;
+            if (newQty > 0) {
+                line.setQuantity(newQty);
+            } else {
+                // Remove fully consumed source lines so the cart only keeps the new combo parent.
+                line.order_id.removeOrderline(line);
+            }
+        }
+
+        this.pendingComboConversion = null;
     }
     showDownloadButton(order) {
         return this.config.self_ordering_mode === "mobile" && order.state === "paid";
