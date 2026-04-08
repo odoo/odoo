@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="calendar_popover_delete_view" model="ir.ui.view">
-        <field name="name">calendar.popover.delete.wizard.view.form</field>
-        <field name="model">calendar.popover.delete.wizard</field>
+    <record id="recurring_calendar_event_delete_wizard_view_form" model="ir.ui.view">
+        <field name="name">calendar.event.delete.wizard.view.form</field>
+        <field name="model">calendar.event.delete.wizard</field>
         <field name="arch" type="xml">
-            <form string="Delete Event">
+            <form string="Delete Recurring Events">
                 <field name="delete" widget="radio"/>
                 <footer>
-                    <button name="close" string="Submit" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button name="action_proceed_delete_choice" string="Submit" type="object" class="btn-primary" data-hotkey="q"/>
                     <button class="btn-secondary" special="cancel" data-hotkey="x"/>
                 </footer>
             </form>
         </field>
     </record>
 
-    <record id="view_event_delete_wizard_form" model="ir.ui.view">
-        <field name="name">calendar.popover.delete.wizard.form</field>
-        <field name="model">calendar.popover.delete.wizard</field>
+    <record id="calendar_event_delete_wizard_view_form" model="ir.ui.view">
+        <field name="name">calendar.event.delete.wizard.form</field>
+        <field name="model">calendar.event.delete.wizard</field>
         <field name="arch" type="xml">
             <form string="Delete Event">
                 <field name="calendar_event_id" invisible="1"/>
@@ -49,14 +49,5 @@
                 </footer>
             </form>
         </field>
-    </record>
-
-    <record id="action_event_delete_wizard" model="ir.actions.act_window">
-        <field name="name">Event Delete Wizard</field>
-        <field name="res_model">calendar.popover.delete.wizard</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="view_event_delete_wizard_form"/>
-        <field name="target">new</field>
-        <field name="context">{}</field>
     </record>
 </odoo>

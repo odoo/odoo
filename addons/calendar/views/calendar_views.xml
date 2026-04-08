@@ -81,6 +81,7 @@
                 <field name="name" string="Subject" decoration-bf="1" readonly="recurrency"/>
                 <field name="start" string="Start Date" readonly="1"/>
                 <field name="stop" string="End Date" readonly="1"/>
+                <field name="current_status" readonly="1"/>
                 <field name="duration" widget="float_time" readonly="1"/>
                 <field name="user_id" widget="many2one_avatar_user" readonly="recurrency"/>
                 <field name="partner_ids" widget="many2many_tags" readonly="recurrency" optional="show" width="250px"/>
@@ -92,6 +93,7 @@
                 <field name="location" optional="show" readonly="recurrency" width="250px"/>
                 <field name="description" optional="hide" readonly="recurrency"/>
                 <field name="allday" column_invisible="True"/>
+                <field name="current_attendee" column_invisible="1"/> <!--Required to check if cancellation emails must be sent.-->
                 <field name="message_needaction" column_invisible="True"/>
             </list>
         </field>
@@ -117,6 +119,7 @@
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="active" invisible="1"/>
+                    <field name="current_attendee" invisible="1"/> <!--Required to check if cancellation emails must be sent.-->
                     <field name="user_can_edit" invisible="1"/>
                     <field name="invalid_email_partner_ids" invisible="1"/> <!-- this field will be used in
                         many2many_attendees widget -->
@@ -410,6 +413,7 @@
                 <field name="accepted_count" invisible="1"/>
                 <field name="declined_count" invisible="1"/>
                 <field name="user_can_edit" invisible="1"/>
+                <field name="user_id" invisible="1"/>
                 <field name="is_highlighted" invisible="1"/>
                 <field name="privacy" invisible="1"/>
                 <field name="effective_privacy" invisible="1"/>

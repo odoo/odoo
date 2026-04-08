@@ -1,6 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { AttendeeCalendarSidePanel } from "@calendar/views/attendee_calendar/side_panel/attendee_calendar_side_panel";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
+import { useDeleteCalendarEvent } from "@calendar/views/hooks";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { onWillStart } from "@odoo/owl";
@@ -16,6 +17,7 @@ export class AttendeeCalendarController extends CalendarController {
     setup() {
         super.setup();
         this.actionService = useService("action");
+        this.deleteCalendarEvent = useDeleteCalendarEvent({ model: this.model });
         this.orm = useService("orm");
         onWillStart(async () => {
             this.isSystemUser = await user.hasGroup("base.group_system");
@@ -85,61 +87,18 @@ export class AttendeeCalendarController extends CalendarController {
 
     /**
      * @override
-     *
-     * If the event is deleted by the organizer, the event is deleted, otherwise it is declined.
      */
-    deleteRecord(record) {
-        if (
-            user.partnerId === record.attendeeId &&
-            user.partnerId === record.rawRecord.partner_id[0]
-        ) {
-            if (record.rawRecord.recurrency) {
-                this.openRecurringDeletionWizard(record);
-            } else if (user.partnerId === record.attendeeId &&
-                record.rawRecord.attendees_count == 1) {
-                super.deleteRecord(...arguments);
-            } else {
-                this.orm.call("calendar.event", "action_unlink_event", [
-                    record.id,
-                    record.attendeeId,
-                ])
-                .then((action) => {
-                    if (action && action.context) {
-                        this.actionService.doAction(action);
-                    } else {
-                        location.reload();
-                    }
-                });
-            }
-        } else {
-            // Decline event
-            this.orm
-                .call("calendar.attendee", "do_decline", [record.calendarAttendeeId])
-                .then(this.model.load.bind(this.model));
-        }
-    }
-
-    openRecurringDeletionWizard(record) {
-        this.actionService.doAction(
-            {
-                type: "ir.actions.act_window",
-                res_model: "calendar.popover.delete.wizard",
-                views: [[false, "form"]],
-                view_mode: "form",
-                name: "Delete Recurring Event",
-                context: {
-                    default_calendar_event_id: record.id,
-                    default_attendee_id: record.attendeeId,
-                    form_view_ref: 'calendar.calendar_popover_delete_view',
-                },
-                target: "new",
-            },
-            {
-                onClose: () => {
-                    this.model.load();
-                },
-            }
-        );
+    async deleteRecord(record) {
+        await this.deleteCalendarEvent({
+            resId: record.id,
+            currentAttendeeId: record.calendarAttendeeId,
+            currentStatus: record.attendeeStatus,
+            organizerId: record.rawRecord.user_id[0],
+            partnerIds: record.rawRecord.partner_ids,
+            recurrency: record.rawRecord.recurrency,
+            start: record.start,
+            deleteConfirmationDialogProps: this.deleteConfirmationDialogProps(record),
+        });
     }
 
     configureCalendarProviderSync(providerName) {
