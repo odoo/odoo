@@ -348,3 +348,59 @@ class TestUiFeedback(HttpCaseWithUserDemo):
 
         access_token = survey_with_mandatory_questions.access_token
         self.start_tour("/survey/start/%s" % access_token, 'test_survey_roaming_mandatory_questions')
+
+    def test_08_survey_roaming_mandatory_questions_with_triggers(self):
+        survey_with_mandatory_questions_with_triggers = self.env['survey.survey'].create({
+            'title': 'Survey With Mandatory questions',
+            'access_token': 'af192191-7966-49c8-8ae5-d86bd7b6773d',
+            'access_mode': 'public',
+            'users_can_go_back': True,
+            'questions_layout': 'page_per_question',
+            'description': "<p>Test survey with roaming freely option and mandatory questions</p>",
+            'question_and_page_ids': [
+                Command.create({
+                    'title': 'Q1',
+                    'sequence': 1,
+                    'question_type': 'simple_choice',
+                    'constr_mandatory': True,
+                    'suggested_answer_ids': [
+                        Command.create({'value': 'Answer 1'}),
+                        Command.create({'value': 'Answer 2'}),
+                        Command.create({'value': 'Answer 3'}),
+                    ],
+                }), Command.create({
+                    'title': 'Q2',
+                    'sequence': 2,
+                    'question_type': 'simple_choice',
+                    'constr_mandatory': True,
+                    'suggested_answer_ids': [
+                        Command.create({'value': 'Answer 1'}),
+                        Command.create({'value': 'Answer 2'}),
+                        Command.create({'value': 'Answer 3'}),
+                    ],
+                }), Command.create({
+                    'title': 'Q3',
+                    'sequence': 3,
+                    'question_type': 'simple_choice',
+                    'suggested_answer_ids': [
+                        Command.create({'value': 'Answer 1'}),
+                        Command.create({'value': 'Answer 2'}),
+                    ],
+                }), Command.create({
+                    'title': 'Q4',
+                    'sequence': 4,
+                    'question_type': 'simple_choice',
+                    'constr_mandatory': True,
+                    'suggested_answer_ids': [
+                        Command.create({'value': 'Answer 1'}),
+                        Command.create({'value': 'Answer 2'}),
+                    ],
+                }),
+            ]
+        })
+
+        q1, _, q3, _ = survey_with_mandatory_questions_with_triggers.question_and_page_ids
+        q3.triggering_answer_ids = q1.suggested_answer_ids.filtered(lambda a: a.value == 'Answer 2')
+
+        access_token = survey_with_mandatory_questions_with_triggers.access_token
+        self.start_tour("/survey/start/%s" % access_token, 'test_survey_roaming_mandatory_questions_with_triggers')
