@@ -67,6 +67,7 @@ export class ColorPicker extends Component {
         close: { type: Function, optional: true },
         className: { type: String, optional: true },
         useDefaultThemeColors: { type: Boolean, optional: true },
+        onEscape: { type: Function, optional: true },
     };
     static defaultProps = {
         close: () => {},
@@ -75,6 +76,7 @@ export class ColorPicker extends Component {
         cssVarColorPrefix: "",
         setOnCloseCallback: () => {},
         useDefaultThemeColors: true,
+        onEscape: () => {},
     };
 
     setup() {
@@ -348,7 +350,10 @@ export class ColorPicker extends Component {
     onKeyDown(ev) {
         const hotkey = getActiveHotkey(ev);
         if (hotkey === "escape") {
-            this.props.setOnCloseCallback?.(() => {});
+            this.props.setOnCloseCallback?.(() => {
+                this.props.onEscape();
+                return hotkey;
+            });
         }
     }
 }
@@ -363,8 +368,9 @@ export function useColorPicker(refName, props, options = {}) {
     if (options.onClose) {
         const onClose = options.onClose;
         options.onClose = () => {
-            onCloseCallback();
-            onClose();
+            const res = onCloseCallback();
+            onCloseCallback = () => {};
+            onClose(res);
         };
     }
 
