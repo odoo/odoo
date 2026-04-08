@@ -57,10 +57,13 @@ class HrAttendanceOvertimeRuleset(models.Model):
         elligible_version = self.env['hr.version'].search([('ruleset_id', '=', self.id)])
         if not elligible_version:
             return self.env['hr.attendance']
-        elligible_attendances = self.env['hr.attendance'].search([
-            ('employee_id', 'in', elligible_version.employee_id.ids),
-            ('date', '>=', min(elligible_version.mapped('date_version'))),
-        ])
+        big_domain = Domain.FALSE
+        for version in elligible_version:
+            version_domain = [('employee_id', '=', version.employee_id.id), ('date', '>=', version.date_start)]
+            if version.date_end:
+                version_domain = Domain.AND([version_domain, [('date', '<=', version.date_end)]])
+            big_domain = big_domain.OR([big_domain, version_domain])
+        elligible_attendances = self.env['hr.attendance'].search(big_domain)
         return elligible_attendances
 
     def action_regenerate_overtimes(self):
