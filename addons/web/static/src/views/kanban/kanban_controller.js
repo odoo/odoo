@@ -195,9 +195,8 @@ export class KanbanController extends Component {
                     total: count,
                     onUpdate: async ({ offset, limit }, hasNavigated) => {
                         await this.model.root.load({ offset, limit });
-                        await this.onUpdatedPager();
                         if (hasNavigated) {
-                            this.onPageChangeScroll();
+                            this.onPageChange();
                         }
                     },
                     updateTotal: hasLimitedCount ? () => root.fetchCount() : undefined,
@@ -510,7 +509,7 @@ export class KanbanController extends Component {
         }
     }
 
-    onPageChangeScroll() {
+    onPageChange() {
         if (this.rootRef && this.rootRef.el) {
             if (this.env.isSmall) {
                 this.rootRef.el.scrollTop = 0;
@@ -523,8 +522,6 @@ export class KanbanController extends Component {
     async beforeExecuteActionButton(clickParams) {}
 
     async afterExecuteActionButton(clickParams) {}
-
-    async onUpdatedPager() {}
 
     scrollTop() {
         this.rootRef.el.querySelector(".o_content").scrollTo({ top: 0 });

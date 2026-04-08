@@ -1389,49 +1389,6 @@ test("pager, ungrouped, deleting all records from last page", async () => {
     expect(getPagerLimit()).toBe(3);
 });
 
-test.tags("desktop");
-test("pager, update calls onUpdatedPager", async () => {
-    class TestKanbanController extends KanbanController {
-        setup() {
-            super.setup();
-            onWillRender(() => {
-                expect.step("render");
-            });
-        }
-
-        async onUpdatedPager() {
-            expect.step("onUpdatedPager");
-        }
-    }
-
-    viewRegistry.add("test_kanban_view", {
-        ...kanbanView,
-        Controller: TestKanbanController,
-    });
-    after(() => viewRegistry.remove("test_kanban_view"));
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban js_class="test_kanban_view">
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        limit: 3,
-    });
-
-    expect(getPagerValue()).toEqual([1, 3]);
-    expect(getPagerLimit()).toBe(4);
-    expect.step("next page");
-    await contains(".o_pager_next").click();
-    expect(getPagerValue()).toEqual([4, 4]);
-    expect.verifySteps(["render", "render", "next page", "render", "onUpdatedPager"]);
-});
-
 test("click on a button type='delete' to delete a record in a column", async () => {
     await mountView({
         type: "kanban",
@@ -6019,8 +5976,8 @@ test(`kanban should ask to scroll to top on page changes`, async () => {
         Partner._records.push({ id: i, foo: "foo" });
     }
     patchWithCleanup(KanbanController.prototype, {
-        onPageChangeScroll() {
-            super.onPageChangeScroll(...arguments);
+        onPageChange() {
+            super.onPageChange(...arguments);
             expect.step("scroll");
         },
     });
@@ -6069,8 +6026,8 @@ test(`kanban should ask to scroll to top on page changes (mobile)`, async () => 
         Partner._records.push({ id: i, foo: "foo" });
     }
     patchWithCleanup(KanbanController.prototype, {
-        onPageChangeScroll() {
-            super.onPageChangeScroll(...arguments);
+        onPageChange() {
+            super.onPageChange(...arguments);
             expect.step("scroll");
         },
     });

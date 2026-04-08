@@ -171,7 +171,7 @@ export class ListController extends Component {
                     }
                     await this.model.root.load({ limit, offset });
                     if (hasNavigated) {
-                        this.onPageChangeScroll();
+                        this.onPageChange();
                     }
                 },
                 updateTotal:
@@ -419,7 +419,7 @@ export class ListController extends Component {
         );
     }
 
-    onPageChangeScroll() {
+    onPageChange() {
         if (this.rootRef && this.rootRef.el) {
             if (this.env.isSmall) {
                 this.rootRef.el.scrollTop = 0;

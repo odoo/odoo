@@ -13472,8 +13472,8 @@ test(`list should ask to scroll to top on page changes`, async () => {
         Foo._records.push({ id: i, foo: "foo" });
     }
     patchWithCleanup(ListController.prototype, {
-        onPageChangeScroll() {
-            super.onPageChangeScroll(...arguments);
+        onPageChange() {
+            super.onPageChange(...arguments);
             expect.step("scroll");
         },
     });
