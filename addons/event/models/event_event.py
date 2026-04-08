@@ -642,6 +642,7 @@ class EventEvent(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         events = super(EventEvent, self).create(vals_list)
+        events._copy_event_type_ticket_translations()
         for res in events:
             if res.organizer_id:
                 res.message_subscribe([res.organizer_id.id])
@@ -649,13 +650,36 @@ class EventEvent(models.Model):
         return events
 
     def write(self, vals):
+        existing_ticket_ids = {
+            event.id: set(event.event_ticket_ids.ids)
+            for event in self
+        } if 'event_type_id' in vals else {}
         if 'stage_id' in vals and 'kanban_state' not in vals:
             # reset kanban state when changing stage
             vals['kanban_state'] = 'normal'
         res = super(EventEvent, self).write(vals)
+        if 'event_type_id' in vals:
+            self._copy_event_type_ticket_translations(existing_ticket_ids)
         if vals.get('organizer_id'):
             self.message_subscribe([vals['organizer_id']])
         return res
+
+    def _copy_event_type_ticket_translations(self, existing_ticket_ids=None):
+        """Copy all template ticket translations onto the newly generated event tickets."""
+        existing_ticket_ids = existing_ticket_ids or {}
+        for event in self.filtered('event_type_id'):
+            template_tickets = event.event_type_id.event_type_ticket_ids
+            if not template_tickets:
+                continue
+
+            new_tickets = event.event_ticket_ids.filtered(
+                lambda ticket: ticket.id not in existing_ticket_ids.get(event.id, set())
+            )
+            if len(new_tickets) != len(template_tickets):
+                continue
+
+            for template_ticket, event_ticket in zip(template_tickets, new_tickets):
+                template_ticket.copy_translations(event_ticket)
 
     @api.depends('event_registrations_sold_out', 'seats_limited', 'seats_max', 'seats_available')
     @api.depends_context('name_with_seats_availability')
