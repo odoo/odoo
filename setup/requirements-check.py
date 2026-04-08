@@ -422,7 +422,7 @@ def main(args):
     output_format = 'ansi'
     if args.format:
         output_format = args.format
-        assert format in SUPPORTED_FORMATS
+        assert output_format in SUPPORTED_FORMATS
     elif args.output:
         output_format = 'txt'
         ext = args.output.split('.')[-1]
