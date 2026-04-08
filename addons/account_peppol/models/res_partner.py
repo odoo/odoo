@@ -260,18 +260,6 @@ class ResPartner(models.Model):
                 'account_peppol_is_endpoint_valid': bool(self._check_peppol_participant_exists(edi_identification, ubl_cii_format=self.ubl_cii_format)),
             })
 
-            if (
-                not self.account_peppol_is_endpoint_valid
-                and self.peppol_eas in ('0208', '9925')
-            ):
-                inverse_eas = '9925' if self.peppol_eas == '0208' else '0208'
-                inverse_endpoint = f'BE{self.peppol_endpoint}' if self.peppol_eas == '0208' else self.peppol_endpoint[2:]
-                if self._check_peppol_participant_exists(f'{inverse_eas}:{inverse_endpoint}', ubl_cii_format=self.ubl_cii_format):
-                    self.write({
-                        'peppol_eas': inverse_eas,
-                        'peppol_endpoint': inverse_endpoint,
-                        'account_peppol_is_endpoint_valid': True,
-                    })
         return False
 
     def _get_partners_to_skip_peppol_computation(self):
