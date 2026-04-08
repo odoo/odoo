@@ -102,6 +102,49 @@ test("hotkeys work on dialogs", async () => {
     expect.verifySteps(["clickOk"]);
 });
 
+test("hotkey control+enter on input triggers blur event before clicking dialog button", async () => {
+    class Parent extends Component {
+        static components = { Dialog };
+        static template = xml`
+            <Dialog title="'Test Dialog'">
+                <input type="text" t-on-blur="onInputBlur" class="test_input"/>
+                
+                <t t-set-slot="footer">
+                    <button t-on-click="onConfirm">Confirm</button>
+                </t>
+            </Dialog>
+        `;
+        static props = ["*"];
+
+        setup() {
+            this.state = useState({ value: "" });
+        }
+
+        onInputBlur(ev) {
+            this.state.value = ev.target.value;
+            expect.step("inputBlur: " + ev.target.value);
+        }
+
+        onConfirm() {
+            expect.step("confirmed with value: " + this.state.value);
+        }
+    }
+
+    await makeDialogMockEnv();
+    await mountWithCleanup(Parent);
+
+    await contains(".test_input").edit("new value", { confirm: false });
+
+    expect.verifySteps([]);
+
+    await press("control+enter");
+
+    expect.verifySteps([
+        "inputBlur: new value",
+        "confirmed with value: new value"
+    ]);
+});
+
 test("simple rendering with two dialogs", async () => {
     expect.assertions(3);
     class Parent extends Component {

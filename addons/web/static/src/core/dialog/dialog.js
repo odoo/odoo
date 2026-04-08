@@ -86,6 +86,8 @@ export class Dialog extends Component {
                     return styles.display !== "none";
                 });
                 if (firstVisibleBtn) {
+                    // Allows the active element to be blurred before triggering the click on the button
+                    firstVisibleBtn.focus();
                     firstVisibleBtn.click();
                 }
             },
