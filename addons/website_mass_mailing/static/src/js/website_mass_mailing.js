@@ -147,11 +147,11 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         }).then(function (result) {
             let toastType = result.toast_type;
             if (toastType === 'success') {
-                self._updateSubscribeControlsStatus(true);
-
                 const $popup = self.$el.closest('.o_newsletter_modal');
-                if ($popup.length) {
+                if ($popup.length && self.el.dataset.showThanksMessage !== 'true') {
                     $popup.modal('hide');
+                } else {
+                    self._updateSubscribeControlsStatus(true);
                 }
             }
             self.notification.add(result.toast_content, {

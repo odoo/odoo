@@ -9,6 +9,9 @@ options.registry.mailing_list_subscribe = options.Class.extend({
     init() {
         this._super(...arguments);
         this.orm = this.bindService("orm");
+        if (this.$target[0].dataset.showThanksMessage === 'true') {
+            this.toggleThanksMessage(false, 'true', {});
+        }
     },
 
     /**
@@ -62,6 +65,7 @@ options.registry.mailing_list_subscribe = options.Class.extend({
         const thanksMessageEl =
             this.$target[0].querySelector(".js_subscribed_wrap");
 
+        this.$target[0].dataset.showThanksMessage = widgetValue ? "true" : "";
         thanksMessageEl.classList.toggle("o_disable_preview", !widgetValue);
         thanksMessageEl.classList.toggle("o_enable_preview", widgetValue);
         toSubscribeEl.classList.toggle("o_enable_preview", !widgetValue);
@@ -79,8 +83,7 @@ options.registry.mailing_list_subscribe = options.Class.extend({
         if (methodName !== 'toggleThanksMessage') {
             return this._super(...arguments);
         }
-        const toSubscribeElSelector = ".js_subscribe_wrap.o_disable_preview";
-        return this.$target[0].querySelector(toSubscribeElSelector) ? "true" : "";
+        return this.$target[0].dataset.showThanksMessage || "";
     },
     /**
      * @override
