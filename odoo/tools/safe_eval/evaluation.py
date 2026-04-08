@@ -12,10 +12,8 @@ condition/math builtins.
 #  - safe_eval in lp:~xrg/openobject-server/optimize-5.0
 #  - safe_eval in tryton http://hg.tryton.org/hgwebdir.cgi/trytond/rev/bbb5f73319ad
 import ast
-import contextvars
 import dis
 import functools
-import inspect
 import logging
 import os
 import re
@@ -24,6 +22,7 @@ import types
 import typing
 import zoneinfo
 from collections import OrderedDict, defaultdict
+from contextvars import ContextVar
 from enum import IntEnum, auto
 from json.encoder import c_make_encoder  # noqa: OLS02001
 from opcode import opmap, opname
@@ -32,6 +31,7 @@ from types import (
     ClassMethodDescriptorType,
     CodeType,
     FunctionType,
+    GeneratorType,
     GetSetDescriptorType,
     MemberDescriptorType,
     MethodDescriptorType,
@@ -68,6 +68,7 @@ __all__ = [
     'UnsafeModuleError',
     'UnsafeObjectError',
     'UnsafePolicy',
+    '_SafeGenerator',
     '_import',
     'assert_valid_codeobj',
     'check_values',
@@ -627,6 +628,9 @@ dateutil.tz.gettz = zoneinfo.ZoneInfo
 # - safe_whitelist: used during verifications
 
 
+is_gen_ctx: ContextVar[bool] = ContextVar('is_gen_ctx', default=False)
+
+
 class _SafeTransformer(ast.NodeTransformer):
     """
     Code transformer that wraps calls with :func:`_safe_eval_call` in
@@ -640,6 +644,8 @@ class _SafeTransformer(ast.NodeTransformer):
 
     CALL_ID = '_safe_eval_call'
     DECO_ID = '_safe_eval_deco'
+    GEN_FUNC_ID = '_safe_eval_gen_func'
+    GEN_ITER_ID = '_safe_eval_gen_iter'
 
     def visit_Call(self, node):
         """
@@ -671,9 +677,19 @@ class _SafeTransformer(ast.NodeTransformer):
             @_safe_eval_deco(decorator_B)
             def func():
                 pass
+
+        Note:
+            If the function produces a generator, a decorator is added to wrap
+            the result with `_safe_eval_gen_func`.
         """
-        self.generic_visit(node)
-        if not node.decorator_list:
+        token = is_gen_ctx.set(False)
+        try:
+            self.generic_visit(node)
+            is_gen = is_gen_ctx.get()
+        finally:
+            is_gen_ctx.reset(token)
+
+        if not node.decorator_list and not is_gen:
             return node
 
         new_decorators = []
@@ -688,11 +704,39 @@ class _SafeTransformer(ast.NodeTransformer):
             ast.copy_location(wrapped_decorator.func, decorator)
             new_decorators.append(wrapped_decorator)
 
+        if is_gen:
+            gen_func_wrapper = ast.Name(id=self.GEN_FUNC_ID, ctx=ast.Load())
+            ast.copy_location(gen_func_wrapper, node)
+            new_decorators.append(gen_func_wrapper)
+
         node.decorator_list = new_decorators
 
         return node
 
-    visit_AsyncFunctionDef = visit_FunctionDef
+    def visit_Yield(self, node):
+        """ Set parent function definition as a generator function """
+        is_gen_ctx.set(True)
+        return self.generic_visit(node)
+
+    visit_YieldFrom = visit_Yield
+
+    def visit_GeneratorExp(self, node):
+        """
+        Transforms:
+            (_ for _ in [])
+
+        Into:
+            _safe_eval_gen_iter((_ for _ in []))
+        """
+        self.generic_visit(node)
+        call = ast.Call(
+            func=ast.Name(id=self.GEN_ITER_ID, ctx=ast.Load()),
+            args=[node],
+            keywords=[],
+        )
+        ast.copy_location(call, node)
+        ast.copy_location(call.func, node)
+        return call
 
     def visit_Try(self, node):
         """ Ensure no bare except is used """
@@ -708,8 +752,31 @@ class _SafeTransformer(ast.NodeTransformer):
 
         return node
 
+    def visit_AsyncFunctionDef(self, node):
+        # Prevent the use of `AsyncFor` node
+        _logger_runtime.warning(
+            'Asynchronous function should not be used'
+        )
+        if unsafe_policy() >= UnsafePolicy.RAISE:
+            raise SyntaxError('You cannot use asynchronous function')
 
-encoder_ctx = contextvars.ContextVar('encoder_ctx')
+        return self.visit_FunctionDef(node)
+
+    def visit_comprehension(self, node):
+        """ Ensure async is not used """
+        self.generic_visit(node)
+
+        if node.is_async:
+            _logger_runtime.warning(
+                'Asynchronous comprehension should not be used'
+            )
+            if unsafe_policy() >= UnsafePolicy.RAISE:
+                raise SyntaxError('You cannot use asynchronous comprehension')
+
+        return node
+
+
+encoder_ctx = ContextVar('encoder_ctx')
 
 
 class _SafeChecker:
@@ -755,7 +822,7 @@ class _SafeChecker:
         for t in self.SEQUENCES: self.add_hook(t, list)  # noqa: E701
         for t in self.MAPPINGS: self.add_hook(t, dict)  # noqa: E701
         for t in self.ITERATORS: self.add_hook(t, self._hook_iterator)  # noqa: E701
-        self.add_hook(types.GeneratorType, None)
+        self.add_hook(GeneratorType, None)
         self.add_hook(functools.partial, self._hook_partial)
         self.add_hook(lazy, self._hook_lazy)
         d = {}
@@ -1064,9 +1131,60 @@ def safe_call_deco(func):
 safe_whitelist.TRUSTED_FUNCTIONS |= {safe_call, safe_call_deco}
 
 
+class _SafeGenerator(types._GeneratorWrapper):  # noqa: OLS01001
+
+    def send(self, *args):
+        assert_safe_context(self)
+        try:
+            return super().send(*args)
+        finally:
+            assert_safe_context(self)
+
+    def throw(self, *args):
+        assert_safe_context(self)
+        try:
+            return super().throw(*args)
+        finally:
+            assert_safe_context(self)
+
+    def close(self, *args):
+        assert_safe_context(self)
+        try:
+            return super().close(*args)
+        finally:
+            assert_safe_context(self)
+
+    def __next__(self, *args):
+        assert_safe_context(self)
+        try:
+            return super().__next__(*args)
+        finally:
+            assert_safe_context(self)
+
+    def __iter__(self, *args):
+        assert_safe_context(self)
+        return self  # Not use `super`, as it leaks the wrapped generator
+
+    __await__ = __iter__
+
+
+def safe_gen_wrapper(func):
+
+    def _wrapper(*args, **kwargs):
+        gen = safe_call(func, *args, **kwargs)
+        return _SafeGenerator(gen)
+
+    return _wrapper
+
+
+safe_checker.add_hook(_SafeGenerator, None)
+safe_whitelist.TRUSTED_CLASSES |= {_SafeGenerator}
+safe_whitelist.TRUSTED_FUNCTIONS |= {safe_gen_wrapper}
+
+
 def monitoring_call(code, instruction_offset, callee, arg0):
     """ Ensure `_MONITORING_BUILTINS` are not overridden """
-    if callee in (safe_call, safe_call_deco):
+    if callee in (safe_call, safe_call_deco, _SafeGenerator, safe_gen_wrapper):
         return
 
     frame = sys._getframe(1)
@@ -1079,15 +1197,17 @@ def monitoring_call(code, instruction_offset, callee, arg0):
             raise UnsafeContextError(f'{identifier} is overridden')
 
 
-def monitoring_yield(code, instruction_offset, retval):
+def assert_safe_context(gen: GeneratorType) -> None:
     """ Ensure mutating context of generator is safe """
-    frame = sys._getframe(1)
+    if not (frame := gen.gi_frame):
+        return  # If there is no frame, the generator is finished
     objs = list(frame.f_locals.values())
-    for name in code.co_names:
+    for name in gen.gi_code.co_names:
         if name in frame.f_globals:
             objs.append(frame.f_globals[name])
         if name in frame.f_builtins:
             objs.append(frame.f_builtins[name])
+    # The use of freevars (closures) is not allowed
     try:
         safe_checker.check(objs)
     except UnsafeObjectError as e:
@@ -1097,6 +1217,8 @@ def monitoring_yield(code, instruction_offset, retval):
 _MONITORING_BUILTINS = {
     safe_transformer.CALL_ID: safe_call,
     safe_transformer.DECO_ID: safe_call_deco,
+    safe_transformer.GEN_FUNC_ID: safe_gen_wrapper,
+    safe_transformer.GEN_ITER_ID: _SafeGenerator,
 }
 _BUILTINS.update(_MONITORING_BUILTINS)
 
@@ -1104,7 +1226,6 @@ EVENTS = sys.monitoring.events
 TOOL_ID = 4  # Not prevent other tools from using "official IDs"
 sys.monitoring.use_tool_id(TOOL_ID, 'ODOO_UNSAFE_POLICY_TOOL')
 sys.monitoring.register_callback(TOOL_ID, EVENTS.CALL, monitoring_call)
-sys.monitoring.register_callback(TOOL_ID, EVENTS.PY_YIELD, monitoring_yield)
 
 
 def add_monitoring(code):
@@ -1112,8 +1233,6 @@ def add_monitoring(code):
     while codes:
         code = codes.pop()
         sys.monitoring.set_local_events(TOOL_ID, code, EVENTS.CALL)
-        if code.co_flags & inspect.CO_GENERATOR:
-            sys.monitoring.set_local_events(TOOL_ID, code, EVENTS.PY_YIELD)
         codes.extend(const for const in code.co_consts if isinstance(const, types.CodeType))
 
 
@@ -1121,6 +1240,8 @@ def add_monitoring(code):
 def _initialize_safe_whitelist():
     # Custom functions
     safe_whitelist.add_function('odoo.tools.safe_eval.evaluation.<evaluated_code>.*')
+    # Generators wrapper
+    safe_whitelist.add_function('odoo.tools.safe_eval.evaluation.safe_gen_wrapper.<locals>._wrapper')
     # Wrapped modules
     safe_whitelist.add_class('datetime.date')
     safe_whitelist.add_class('datetime.datetime')
