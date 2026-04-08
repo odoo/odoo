@@ -21,6 +21,8 @@ class AccountMoveLine(models.Model):
                     # In the case where the product has no direct component in its bom, it won't be present in the stock moves boms.
                     # We then take the first bom of the product.
                     bom = self.env['mrp.bom']._bom_find(products=so_line.product_id, company_id=so_line.company_id.id, bom_type='phantom')[so_line.product_id]
+                    if not bom:
+                        return price_unit
                 is_line_reversing = self.move_id.move_type == 'out_refund'
                 account_moves = so_line.invoice_lines.move_id.filtered(lambda m: m.state == 'posted' and bool(m.reversed_entry_id) == is_line_reversing)
                 posted_invoice_lines = account_moves.line_ids.filtered(lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and l.balance > 0)
