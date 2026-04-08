@@ -48,7 +48,7 @@
                     t-if="this.env.showPrice"
                     class="d-flex flex-sm-column flex-md-row flex-wrap gap-1 align-items-baseline align-items-sm-end align-items-md-baseline justify-content-start justify-content-sm-end"
                 >
-                    <t t-call="sale.product_price" name="this.sale_product_configurator_price"/>
+                    <t t-call="sale.product_price" name="sale_product_configurator_price"/>
                 </div>
                 <t t-set="isComboProduct" t-value="this.isMainProduct &amp;&amp; this.props.selectedComboItems.length"/>
                 <t t-if="this.env.showQuantity &amp;&amp; !isComboProduct">
@@ -82,7 +82,7 @@
                     t-if="this.env.showPrice"
                     class="d-flex flex-sm-column flex-md-row flex-wrap gap-1 align-items-baseline align-items-sm-end align-items-md-baseline justify-content-start justify-content-sm-end"
                 >
-                    <t t-call="sale.product_price" name="this.sale_product_configurator_optional_price"/>
+                    <t t-call="sale.product_price" name="sale_product_configurator_optional_price"/>
                 </div>
                 <button
                     name="sale_product_configurator_add_button"

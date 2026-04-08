@@ -54,7 +54,7 @@
                     </t>
                 </t>
                 <!-- Pricelist Button -->
-                <t t-if="this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton" name="this.o_pricelist_button">
+                <t t-if="this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton" name="o_pricelist_button">
                     <t t-set="iconClasses" t-value="'fa fa-th-list'"/>
                     <t t-set="btnText">Pricelist</t>
                     <t t-set="btnClasses" t-value="'o_pricelist_button btn-secondary '"/>
