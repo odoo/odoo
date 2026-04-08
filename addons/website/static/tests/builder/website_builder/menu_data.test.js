@@ -423,12 +423,10 @@ describe("EditMenuDialog", () => {
                     super.setup();
                     this.website.pageDocument = builder.getEditableContent().ownerDocument;
                 },
-                onClickOk() {
+                getUrl() {
                     // little lie to avoid calling `toRelativeIfSameDomain`,
                     // so that we still have the absolute url (see NOTE above)
-                    this.props.isMegaMenu = true;
-                    super.onClickOk();
-                    this.props.isMegaMenu = false;
+                    return this.state.url;
                 },
             });
 

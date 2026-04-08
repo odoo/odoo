@@ -118,12 +118,7 @@ export class MenuDialog extends Component {
         );
     }
 
-    onClickOk() {
-        this.state.invalidName = !this.state.name;
-        if (this.state.invalidName) {
-            return;
-        }
-
+    getUrl() {
         let url = this.state.url;
         if (!this.props.isMegaMenu) {
             try {
@@ -132,7 +127,16 @@ export class MenuDialog extends Component {
                 // Do nothing if URL is invalid.
             }
         }
-        this.props.save(this.state.name, url);
+        return url;
+    }
+
+    onClickOk() {
+        this.state.invalidName = !this.state.name;
+        if (this.state.invalidName) {
+            return;
+        }
+
+        this.props.save(this.state.name, this.getUrl());
         this.props.close();
     }
 
