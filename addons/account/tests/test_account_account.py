@@ -1085,3 +1085,15 @@ class TestAccountAccount(TestAccountMergeCommon):
         not_found = self.env["account.account"].search([("code", "=ilike", example_account.code)])
         self.assertEqual(found, example_account)
         self.assertFalse(not_found)
+
+    def test_retrieve_formatted_vat_with_normalized(self):
+        """ Ensure that partners with formatted VAT is correctly found when searching with normalized VAT """
+        self.partner_a.with_context(no_vat_validation=True).write({
+            'vat': 'CHE-123.456.789 TVA',
+            'country_id': self.env.ref('base.ch').id,
+        })
+        self.env['res.partner'].flush_model()
+        normalized_input = 'CHE123456789'
+        found = self.env['res.partner']._retrieve_partner(vat=normalized_input)
+
+        self.assertEqual(found, self.partner_a, "Should find the partner even if input is clean and DB is formatted")

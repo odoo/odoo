@@ -887,60 +887,53 @@ class ResPartner(models.Model):
     def _import_retrieve_customer_from_vat(self, customer_values):
         vat = customer_values.get('vat')
         if not vat:
-            return
-
-        # Sometimes, the vat is specified with some whitespaces or dots.
-        normalized_vat = vat.replace(' ', '').replace('.', '')
-        country_prefix = re.match('^[a-zA-Z]{2}|^', vat).group()
-
-        criteria = [{'domain': [('vat', 'in', (normalized_vat, vat))]}]
-        if country_prefix:
-            criteria.append({
-                'domain': [
-                    ('vat', 'in', (normalized_vat[2:], vat[2:])),
-                    ('country_id.code', '=', country_prefix.upper()),
-                ],
-            })
-            criteria.append({
-                'domain': [
-                    ('vat', 'in', (normalized_vat[2:], vat[2:])),
-                    ('country_id.code', '=', False),
-                ],
-            })
-
-        try:
-            vat_only_numeric = str(int(re.sub(r'^\D{2}', '', normalized_vat) or 0))
-        except ValueError:
-            vat_only_numeric = None
-        if vat_only_numeric:
-
-            def search_vat_regex(values):
-                static_domain = values['static_domain']
-                vat_prefix_regex = values['vat_prefix_regex']
-
-                query = self._search(static_domain + [('active', '=', True)], limit=2)
-                query.add_where(SQL(
-                    "%s ~ %s",
-                    self._field_to_sql(self._table, 'vat'),
-                    f'^{vat_prefix_regex}0*{vat_only_numeric}$',
-                ))
-                partner_row = list(query)
-                if partner_row and len(partner_row) == 1:
-                    return self.browse(partner_row[0])
-
+            return self.env['res.partner']
+        def strip(v):
+            return re.sub(r'\W+', '', v) if v else v
+        normalized_vat = strip(vat)
+        prefix_match = re.match(r'^([a-zA-Z]{2,3})', normalized_vat)
+        country_prefix = prefix_match.group(1).upper() if prefix_match else ''
+        prefix_len = len(country_prefix)
+        vat_numbers = normalized_vat[prefix_len:] if country_prefix else normalized_vat
+        vat_numbers_stripped = vat_numbers.lstrip('0')
+        partner = self.env['res.partner'].search(extra_domain + [('vat', 'in', (normalized_vat, vat))], limit=2)
+        if not partner and vat_numbers_stripped:
             if country_prefix:
-                vat_prefix_regex = f'({country_prefix})?'
+                partner = self.env['res.partner'].search(extra_domain + [
+                    '|',
+                    ('vat', '=ilike', f'{country_prefix}%{vat_numbers_stripped}'),
+                    '&', 
+                    ('vat', '=ilike', f'%{vat_numbers_stripped}'), 
+                    ('country_id.code', '=', country_prefix[:2])
+                ], limit=2)
             else:
-                vat_prefix_regex = '([A-z]{2})?'
-
-            criteria.append({
-                'vat_prefix_regex': vat_prefix_regex,
-                'search_method': search_vat_regex,
-            })
-
-        return {
-            'criteria': criteria,
-        }
+                partner = self.env['res.partner'].search(extra_domain + [
+                    ('vat', '=ilike', f'%{vat_numbers_stripped}'),
+                ], limit=2)
+        if len(partner) > 1:
+            if country_prefix:
+                filtered = partner.filtered(lambda p: (p.country_id.code or '') == country_prefix[:2])
+                if filtered:
+                    partner = filtered
+            if len(partner) > 1:
+                partner = partner[0]
+        if not partner:
+            vat_only_digits = re.sub(r'\D', '', normalized_vat).lstrip('0')
+            if vat_only_digits:
+                Partner = self.env['res.partner']
+                Partner.flush_model(['vat', 'active', 'company_id'])
+                query = Partner._search(extra_domain + [('active', '=', True)], limit=2)
+                regex_prefix = country_prefix if country_prefix else '[A-Z]{2,3}'
+                regex_pattern = f'^({regex_prefix})?0*{vat_only_digits}.*$'
+                query.add_where(SQL(
+                    "regexp_replace(upper(%s), '[^A-Z0-9]', '', 'g') ~ %s",
+                    Partner._field_to_sql(Partner._table, 'vat'),
+                    regex_pattern
+                ))
+                partner_ids = list(query)
+                if partner_ids:
+                    partner = Partner.browse(partner_ids[0])
+        return partner
 
     @api.model
     def _import_retrieve_customer_from_phone(self, customer_values):
