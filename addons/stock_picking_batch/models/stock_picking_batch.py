@@ -15,7 +15,7 @@ class StockPickingBatch(models.Model):
     _order = "priority desc, name desc"
 
     name = fields.Char(
-        string='Batch Transfer', default='New',
+        string='Batch Transfer', default=lambda self: _('New'),
         copy=False, required=True, readonly=True)
     description = fields.Char('Description')
     user_id = fields.Many2one(
