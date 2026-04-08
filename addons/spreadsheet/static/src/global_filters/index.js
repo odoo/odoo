@@ -13,7 +13,6 @@ const {
     coreTypes,
     evaluationCommandTypes,
     invalidateEvaluationCommands,
-    readonlyAllowedCommands,
     lockedSheetAllowedCommands,
 } = spreadsheet;
 
@@ -37,13 +36,6 @@ invalidateEvaluationCommands.add("ADD_GLOBAL_FILTER");
 invalidateEvaluationCommands.add("EDIT_GLOBAL_FILTER");
 invalidateEvaluationCommands.add("REMOVE_GLOBAL_FILTER");
 invalidateEvaluationCommands.add("SET_GLOBAL_FILTER_VALUE");
-
-readonlyAllowedCommands.add("SET_GLOBAL_FILTER_VALUE");
-readonlyAllowedCommands.add("SET_MANY_GLOBAL_FILTER_VALUE");
-readonlyAllowedCommands.add("UPDATE_OBJECT_DOMAINS");
-readonlyAllowedCommands.add("LOG_DATASOURCE_EXPORT");
-
-readonlyAllowedCommands.add("UPDATE_CHART_GRANULARITY");
 
 lockedSheetAllowedCommands.add("LOG_DATASOURCE_EXPORT");
 
