@@ -1,5 +1,6 @@
 import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { SubChannelList } from "@mail/discuss/core/public_web/sub_channel_list";
+import { attClassObjectToString } from "@mail/utils/common/format";
 import { useChildSubEnv } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -14,7 +15,10 @@ registerThreadAction("show-threads", {
         });
     },
     actionPanelOuterClass: ({ owner, store }) =>
-        owner.env.inMeetingView ? "" : store.discussDropdownMenuClass(owner),
+        attClassObjectToString({
+            "o-mail-SubChannelList-panel": true,
+            [store.discussDropdownMenuClass(owner)]: !owner.env.inMeetingView,
+        }),
     condition: ({ channel, owner }) =>
         (channel?.hasSubChannelFeature || channel?.parent_channel_id?.hasSubChannelFeature) &&
         !owner.isDiscussSidebarChannelActions,
