@@ -753,3 +753,29 @@ test("DateTimeField: placeholder", async () => {
         "mm yyyy dd hh:mm"
     );
 });
+
+test("DateField: incoherent state and record value", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <group>
+                    <field name="date"/>
+                </group>
+            </form>`,
+    });
+
+    await contains(".o_field_widget[name=date] input").click();
+    await edit("11/10", { confirm: "Enter" });
+    await animationFrame();
+    expect(".o_field_widget[name=date] button").toHaveValue("11/10/2019");
+
+    await contains(".o_form_button_save").click();
+    await animationFrame();
+
+    await contains(".o_field_widget[name=date] button").click();
+    await edit("10/10", { confirm: "Enter" });
+    await animationFrame();
+    expect(".o_field_widget[name=date] button").toHaveValue("10/10/2019");
+});

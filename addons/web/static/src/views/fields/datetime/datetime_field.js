@@ -392,6 +392,9 @@ export class DateTimeField extends Component {
     }
 
     onInputBlured() {
+        if (!areDatesEqual(this.getRecordValue(), this.state.value)) {
+            this.state.value = this.getRecordValue();
+        }
         if (!this.isPickerOpen()) {
             this.picker.activeInput = "";
         }
