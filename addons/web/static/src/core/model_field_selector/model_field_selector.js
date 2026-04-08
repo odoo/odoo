@@ -22,7 +22,7 @@ export class ModelFieldSelector extends Component {
         update: { type: Function, optional: true },
         filter: { type: Function, optional: true },
         sort: { type: Function, optional: true },
-        followRelations: { type: Boolean, optional: true },
+        followRelation: { type: [Boolean, Function], optional: true },
         showDebugInput: { type: Boolean, optional: true },
     };
     static defaultProps = {
@@ -31,7 +31,7 @@ export class ModelFieldSelector extends Component {
         isDebugMode: false,
         showSearchInput: true,
         update: () => {},
-        followRelations: true,
+        followRelation: true,
     };
 
     setup() {
@@ -74,7 +74,7 @@ export class ModelFieldSelector extends Component {
             isDebugMode: this.props.isDebugMode,
             filter: this.props.filter,
             sort: this.props.sort,
-            followRelations: this.props.followRelations,
+            followRelation: this.props.followRelation,
             showDebugInput: this.props.showDebugInput,
         };
     }

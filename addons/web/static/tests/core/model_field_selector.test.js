@@ -401,7 +401,7 @@ test("can follow relations", async () => {
             readonly: false,
             path: "",
             resModel: "partner",
-            followRelations: true, // default
+            followRelation: true, // default
             update(path) {
                 expect(path).toBe("product_id");
             },
@@ -436,7 +436,7 @@ test("cannot follow relations", async () => {
             readonly: false,
             path: "",
             resModel: "partner",
-            followRelations: false,
+            followRelation: false,
             update(path) {
                 expect(path).toBe("product_id");
             },
@@ -982,4 +982,43 @@ test("models with a m2o of the same name should show the correct page data", asy
         "Last Modified on",
         "Link",
     ]);
+});
+
+test("Fields can be selected but not followable", async () => {
+    class Cat extends models.Model {
+        cat_name = fields.Char();
+        link = fields.Many2one({ relation: "dog" });
+        cats = fields.One2many({ relation: "cat" });
+    }
+
+    class Dog extends models.Model {}
+
+    defineModels([Cat, Dog]);
+
+    await mountWithCleanup(ModelFieldSelector, {
+        props: {
+            followRelation: ({ fieldDef }) => (fieldDef.type === "one2many" ? false : null),
+            readonly: false,
+            path: "",
+            resModel: "cat",
+        },
+    });
+
+    await openModelFieldSelectorPopover();
+    expect(getDisplayedFieldNames()).toEqual([
+        "Cat name",
+        "Cats",
+        "Created on",
+        "Display name",
+        "Id",
+        "Last Modified on",
+        "Link",
+    ]);
+
+    expect(
+        ".o_model_field_selector_popover_item:contains(Cats):not(:has(.o_model_field_selector_popover_item_relation))"
+    ).toHaveCount(1);
+    expect(
+        ".o_model_field_selector_popover_item:contains(Link):has(.o_model_field_selector_popover_item_relation)"
+    ).toHaveCount(1);
 });

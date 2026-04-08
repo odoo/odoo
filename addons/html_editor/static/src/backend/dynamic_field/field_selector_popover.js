@@ -14,13 +14,13 @@ export class FieldSelectorPopover extends Component {
         path: { optional: true },
         label: { optional: true },
         disableLabel: { optional: true },
-        followRelations: { optional: true },
+        followRelation: { optional: true },
         filter: { type: Function, optional: true },
     };
     static defaultProps = {
         path: false,
         label: false,
-        followRelations: true,
+        followRelation: true,
         disableLabel: false,
     };
 

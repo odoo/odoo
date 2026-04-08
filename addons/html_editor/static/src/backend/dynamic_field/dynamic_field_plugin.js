@@ -148,6 +148,7 @@ export class DynamicFieldPlugin extends Plugin {
                 path: initialPath,
                 label: initialLabel,
                 filter: this.filter.bind(this),
+                followRelation: this.followRelation.bind(this),
                 close: () => this.fieldPopover.close(),
                 validate: async ({ path, label, fieldInfo }) => {
                     if (path !== initialPath) {
@@ -198,6 +199,7 @@ export class DynamicFieldPlugin extends Plugin {
             props: {
                 resModel,
                 filter: this.filter.bind(this),
+                followRelation: this.followRelation.bind(this),
                 close: () => this.fieldPopover.close(),
                 validate: async ({ path, label, fieldInfo }) => {
                     const doc = this.document;
@@ -226,6 +228,8 @@ export class DynamicFieldPlugin extends Plugin {
             },
         });
     }
+
+    followRelation({ fieldDef }) {}
 
     filter(fieldDef, path) {
         if (fieldDef.is_property && fieldDef.type === "separator") {
