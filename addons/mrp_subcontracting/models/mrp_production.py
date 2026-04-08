@@ -202,3 +202,20 @@ class MrpProduction(models.Model):
                 if sml.tracking != 'none' and not sml.lot_id:
                     raise UserError(_('You must enter a serial number for each line of %s') % sml.product_id.display_name)
         return True
+
+    def action_generate_serial(self):
+        res = super().action_generate_serial()
+        if (
+            not self._get_subcontract_move()
+            or self.product_id.tracking != 'serial'
+            or self.subcontracting_has_been_recorded
+            or self.state in ('done', 'cancel')
+            or not self.lot_producing_id
+        ):
+            return res
+        subcontract_move = self._get_subcontract_move().filtered(
+            lambda m: m.state not in ('done', 'cancel')
+        )[:1]
+        if subcontract_move:
+            subcontract_move._auto_record_components(self.product_qty)
+        return res
