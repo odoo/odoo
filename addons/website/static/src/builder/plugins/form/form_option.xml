@@ -359,7 +359,7 @@
         </BuilderSelect>
         <BuilderButton id="'error_message_opt'"
             t-if="!this.isActiveItem('no_requirement_opt')"
-            title.translate="Add predefined error message"
+            title.translate="Add custom error message"
             className="'fa ' + (this.isActiveItem('error_message_opt') ? 'fa-eye' : 'fa-eye-slash')"
             preview="false"
             action="'setCustomErrorMessage'"/>
@@ -367,35 +367,30 @@
     <BuilderRow label.translate="Conditions" level="1" t-if="this.isTextConditionForRequirementOptionVisible">
         <BuilderTextInput id="'require_condition_additional_text'"
             placeholder.translate="Enter requirement conditions"
-            dataAttributeAction="'requirementCondition'"
-            action="'setDefaultErrorMessage'"/>
+            dataAttributeAction="'requirementCondition'"/>
     </BuilderRow>
     <BuilderRow label.translate="Conditions" level="1" t-elif="this.domStateCurrentFieldInput.isFormDateTime and this.domState.elDataset.requirementComparator">
         <BuilderDateTimePicker id="'require_condition_additional_datetime_1'"
             placeholder.translate="Enter requirement conditions"
             dataAttributeAction="'requirementCondition'"
-            action="'setDefaultErrorMessage'"
             type="'datetime'"/>
     </BuilderRow>
     <BuilderRow label.translate="Conditions" level="1" t-elif="this.domStateCurrentFieldInput.isFormDate and this.domState.elDataset.requirementComparator">
         <BuilderDateTimePicker id="'require_condition_additional_date'"
             placeholder.translate="Enter requirement conditions"
             dataAttributeAction="'requirementCondition'"
-            action="'setDefaultErrorMessage'"
             type="'date'"/>
     </BuilderRow>
     <BuilderRow label.translate="Conditions" level="1" t-if="this.domStateCurrentFieldInput.isFormDateTime and ['between', '!between'].includes(this.domState.elDataset.requirementComparator)">
         <BuilderDateTimePicker id="'require_condition_additional_datetime_2'"
             placeholder.translate="Enter requirement conditions"
             dataAttributeAction="'requirementBetween'"
-            action="'setDefaultErrorMessage'"
             type="'datetime'"/>
     </BuilderRow>
     <BuilderRow label.translate="Conditions" level="1" t-elif="this.domStateCurrentFieldInput.isFormDate and ['between', '!between'].includes(this.domState.elDataset.requirementComparator)">
         <BuilderDateTimePicker id="'require_condition_additional_date_end'"
             placeholder.translate="Enter requirement conditions"
             dataAttributeAction="'requirementBetween'"
-            action="'setDefaultErrorMessage'"
             type="'date'"/>
     </BuilderRow>
     <BuilderRow t-if="this.isMultipleTextConditionForRequirementOptionVisible">
@@ -405,7 +400,6 @@
             </p>
             <BuilderList
                 dataAttributeAction="'requirementCondition'"
-                action="'setDefaultErrorMessage'"
                 addItemTitle.translate="Add"
                 itemShape="{ requirement_text: 'text'}"
                 defaultNewValue="{ requirement_text: this.multiTextRequirementConfig.defaultValue }"
