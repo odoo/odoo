@@ -77,7 +77,6 @@ export function makeStore(env, { localRegistry } = {}) {
                                 }
                                 return Reflect.get(parentRecordFullProxy, name);
                             }
-                            recordFullProxy = record._.downgradeProxy(record, recordFullProxy);
                             if (record._.gettingField || !Model._.fields.get(name)) {
                                 let res = Reflect.get(...arguments);
                                 if (typeof res === "function") {
