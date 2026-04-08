@@ -1387,7 +1387,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         pos_categ = self.env['pos.category'].create({'name': 'GS1 Test'})
         product_tmpl.pos_categ_ids = [Command.set([pos_categ.id])]
         variant = product_tmpl.product_variant_ids[0]
-        variant.write({'barcode': '5123648695416'})
+        variant.write({'barcode': '05123648695416'})
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'GS1BarcodeScanningTour', login="pos_user")
 
