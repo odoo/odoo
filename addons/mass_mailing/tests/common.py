@@ -476,6 +476,7 @@ class MassMailCase(MailCase, MockLinkTracker):
             }
         ])
         cls.mailing_list_3.subscription_ids[0].opt_out = True
+        return cls.mailing_list_1 + cls.mailing_list_2 + cls.mailing_list_3 + cls.mailing_list_4
 
     @classmethod
     def _create_mailing_list_of_x_contacts(cls, contacts_nbr):
