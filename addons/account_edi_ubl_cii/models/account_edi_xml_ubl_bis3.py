@@ -292,8 +292,10 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             amount_total = invoice.amount_total_signed * -invoice.direction_sign
             amount_residual = invoice.amount_residual_signed * -invoice.direction_sign
 
+        payable_rounding_amount = (node['cbc:PayableRoundingAmount'] or {}).get('_text') or 0.0
         node['cbc:PayableAmount']['_text'] = FloatFmt(
-            amount_residual,
+            amount_residual +
+            payable_rounding_amount,
             min_dp=currency.decimal_places,
         )
         node['cbc:PrepaidAmount']['_text'] = FloatFmt(
