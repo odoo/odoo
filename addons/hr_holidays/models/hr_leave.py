@@ -76,7 +76,14 @@ class HrLeave(models.Model):
         defaults = super().default_get(fields)
         defaults = self._default_get_request_dates(defaults)
         if self.env.context.get('work_entry_type_display_name', True) and 'work_entry_type_id' in fields and not defaults.get('work_entry_type_id'):
-            domain = ['|', ('requires_allocation', '=', False), ('has_valid_allocation', '=', True)]
+            employee = defaults.get('employee_id')
+            country = self.env['hr.employee'].browse(employee).company_id.country_id or self.env.company.country_id
+            domain = [
+                ('country_id', '=', country.id),
+                '|',
+                    ('requires_allocation', '=', False),
+                    ('has_valid_allocation', '=', True)
+            ]
             defaults['work_entry_type_id'] = False
             work_entry_types = self.env['hr.work.entry.type'].search(domain, order='sequence')
             selected_work_entry_type = next(
@@ -138,11 +145,14 @@ class HrLeave(models.Model):
         store=True, string="Time Off Type",
         required=True, readonly=False,
         domain="""[
+            [('id', 'in', allowed_work_entry_type_ids)],
             '|',
                 ('requires_allocation', '=', False),
                 ('has_valid_allocation', '=', True),
         ]""",
         tracking=True)
+    allowed_work_entry_type_ids = fields.Many2many(
+        'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
     work_entry_type_requires_allocation = fields.Boolean(related="work_entry_type_id.requires_allocation")
     color = fields.Integer("Color", related='work_entry_type_id.color')
     validation_type = fields.Selection(string='Validation Type', related='work_entry_type_id.leave_validation_type', readonly=False)
@@ -240,6 +250,16 @@ class HrLeave(models.Model):
         "If you want to change the number of days you should use the 'period' mode",
     )
     _date_to_date_from_index = models.Index("(date_to, date_from)")
+
+    @api.depends('company_id')
+    def _compute_allowed_work_entry_type_ids(self):
+        for leave in self:
+            country = leave.company_id.country_id
+            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
+                domain = [('country_id', '=', False)]
+            else:
+                domain = [('country_id', '=', country.id)]
+            leave.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
 
     @api.onchange('request_hour_from', 'request_hour_to')
     def _onchange_hours(self):
@@ -763,7 +783,7 @@ class HrLeave(models.Model):
                 zero_duration_employees |= leave.employee_id
             sorted_leaves[leave.work_entry_type_id, leave.date_from.date()] |= leave
         for (work_entry_type, date_from), leaves in sorted_leaves.items():
-            if not work_entry_type.requires_allocation:
+            if not work_entry_type.requires_allocation or self.env.context.get('skip_allocation_check'):
                 continue
             employees = leaves.employee_id
             leave_data = work_entry_type.get_allocation_data(employees, date_from)

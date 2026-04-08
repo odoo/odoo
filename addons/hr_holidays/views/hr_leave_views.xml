@@ -400,6 +400,7 @@
                             </div>
                             <field name="work_entry_type_id" force_save="1"
                                 domain="[
+                                    ('id', 'in', allowed_work_entry_type_ids),
                                     '|',
                                         ('requires_allocation', '=', False),
                                         '&amp;',
