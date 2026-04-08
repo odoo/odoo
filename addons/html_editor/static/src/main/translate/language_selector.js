@@ -7,7 +7,7 @@ import { loadLanguages } from "@web/core/l10n/translation";
 import { jsToPyLocale } from "@web/core/l10n/utils";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { user } from "@web/core/user";
-import { useDropdownAutoVisibility } from "@html_editor/dropdown_autovisibility_hook";
+import { useDropdownAutoVisibility } from "@html_editor/toolbar_dropdown_hook";
 
 export class LanguageSelector extends Component {
     static template = "html_editor.LanguageSelector";

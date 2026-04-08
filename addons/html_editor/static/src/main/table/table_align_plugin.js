@@ -52,6 +52,7 @@ export class TableAlignPlugin extends Plugin {
                 props: {
                     getItems: () => verticalAlignmentItems,
                     getDisplay: () => this.verticalAlignMode,
+                    focusEditable: () => this.dependencies.selection.focusEditable(),
                     onSelected: (item) => {
                         this.setVerticalAlignment(item.mode);
                     },

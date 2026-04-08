@@ -1,4 +1,3 @@
-import { reactive } from "@web/owl2/utils";
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import {
@@ -84,7 +83,6 @@ export class ListPlugin extends Plugin {
     static defaultConfig = {
         allowChecklist: true,
     };
-    toolbarListSelectorKey = reactive({ value: 0 });
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -152,7 +150,6 @@ export class ListPlugin extends Plugin {
                 props: {
                     getButtons: () => this.listSelectorButtons,
                     getListMode: this.getListMode.bind(this),
-                    key: this.toolbarListSelectorKey,
                 },
                 isAvailable: this.canToggleList.bind(this),
             }),
@@ -180,7 +177,6 @@ export class ListPlugin extends Plugin {
         hints: [{ selector: `LI, LI > ${baseContainerGlobalSelector}`, text: _t("List") }],
 
         /** Handlers */
-        on_step_added_handlers: this.updateToolbarButtons.bind(this),
         on_deleted_handlers: this.adjustListPaddingOnDelete.bind(this),
         on_will_insert_separator_handlers: this.exitList.bind(this),
 
@@ -1346,10 +1342,6 @@ export class ListPlugin extends Plugin {
     // --------------------------------------------------------------------------
     // Toolbar buttons
     // --------------------------------------------------------------------------
-
-    updateToolbarButtons() {
-        this.toolbarListSelectorKey.value++;
-    }
 
     getListSelectorButtons() {
         return listSelectorItems

@@ -52,6 +52,7 @@ export class AlignPlugin extends Plugin {
                 props: {
                     getItems: () => alignmentItems,
                     getDisplay: () => this.alignment,
+                    focusEditable: () => this.dependencies.selection.focusEditable(),
                     onSelected: (item) => {
                         this.setAlignment(item.mode);
                     },
