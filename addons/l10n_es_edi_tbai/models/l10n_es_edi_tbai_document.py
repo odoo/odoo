@@ -138,15 +138,22 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                 refunded_doc = values['refunded_doc']
                 refund_reason = values['refund_reason']
                 refunded_doc_invoice_date = values['refunded_doc_invoice_date']
+                refunded_name = values['refunded_name']
                 is_simplified = values['is_simplified']
 
-                if not refunded_doc or refunded_doc.state == 'to_send':
+                if refunded_doc and refunded_doc.state == 'to_send':
+                    return _("TicketBAI: Cannot post a reversal document while the source document has not been posted")
+
+                if not refunded_doc:
+                    if not refunded_name or not refunded_doc_invoice_date:
+                        return _("TicketBAI: For reversal documents without a source invoice in Odoo, you must provide the original invoice number and date")
                     invoice_sent_before_original = True
-                    if not refunded_doc and refunded_doc_invoice_date:
-                        domain = [('date', '<', refunded_doc_invoice_date),
-                                  ('company_id', '=', self.company_id.id),
-                                  ('chain_index', '!=', 0)]
-                        invoice_sent_before_original = self.search(domain, order="date", limit=1)
+                    domain = [
+                        ('date', '<', refunded_doc_invoice_date),
+                        ('company_id', '=', self.company_id.id),
+                        ('chain_index', '!=', 0),
+                    ]
+                    invoice_sent_before_original = self.search(domain, order="date", limit=1)
                     if invoice_sent_before_original:  # No error if the original invoice was imported from a previous system
                         return _("TicketBAI: Cannot post a reversal document while the source document has not been posted")
                 if not refund_reason:

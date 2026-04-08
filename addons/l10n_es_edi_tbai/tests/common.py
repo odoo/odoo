@@ -116,6 +116,8 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
                     'tax_ids': [(6, 0, cls._get_tax_by_xml_id('s_iva21b').ids)],
             })],
         })
+        if out_invoice.move_type in ('out_refund', 'in_refund'):
+            out_invoice.l10n_es_original_invoice_credited = "ORIGIN/INV/001"
         out_invoice.action_post()
         return out_invoice
 

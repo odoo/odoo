@@ -35,7 +35,6 @@ for more informations, see https://www.facturae.gob.es/face/Paginas/FACE.aspx
     'demo': [
         'demo/l10n_es_edi_facturae_demo.xml',
     ],
-    'auto_install': ['l10n_es'],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'uninstall_hook': 'uninstall_hook',

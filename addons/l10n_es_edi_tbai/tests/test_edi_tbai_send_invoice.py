@@ -216,6 +216,7 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
                 'l10n_es_tbai_refund_reason': 'R4',
             })
             credit_note = self.env['account.move'].browse(reversal.refund_moves()['res_id'])
+            credit_note.l10n_es_original_invoice_credited = invoice.name or "INV/2026/00001"
             credit_note.action_post()
 
             self._get_invoice_send_wizard(credit_note).action_send_and_print()
