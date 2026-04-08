@@ -217,25 +217,23 @@ describe("toolbar dropdowns", () => {
         manuallyDispatchProgrammaticEvent(target, "click");
     };
 
-    test("list dropdown should not close on click", async () => {
+    test("list dropdown should close on click", async () => {
         const { editor } = await setup();
         click(".o-we-toolbar .btn[name='list_selector']");
         const bulletedListButtonSelector = ".dropdown-menu button[name='bulleted_list']";
         await focusAndClick(bulletedListButtonSelector);
         await animationFrame();
-        expect(bulletedListButtonSelector).toBeVisible();
-        expect(bulletedListButtonSelector).toHaveClass("active");
+        expectElementCount(bulletedListButtonSelector, 0);
         expect(!!editor.editable.querySelector("ul li")).toBe(true);
     });
 
-    test("text alignment dropdown should not close on click", async () => {
+    test("text alignment dropdown should close on click", async () => {
         const { p } = await setup();
         click(".o-we-toolbar .btn[name='text_align']");
         const alignCenterButtonSelector = ".dropdown-menu button.fa-align-center";
         await focusAndClick(alignCenterButtonSelector);
         await animationFrame();
-        expect(alignCenterButtonSelector).toBeVisible();
-        expect(alignCenterButtonSelector).toHaveClass("active");
+        expectElementCount(alignCenterButtonSelector, 0);
         expect(p).toHaveStyle("text-align: center");
     });
 

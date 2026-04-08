@@ -113,7 +113,7 @@ export class FontTypePlugin extends Plugin {
                 id: "font-type",
                 groupId: "font",
                 namespaces: ["compact", "expanded"],
-                description: _t("Select font style"),
+                description: _t("Select text style"),
                 Component: FontTypeSelector,
                 props: {
                     getItems: () => this.availableFontTypeItems,

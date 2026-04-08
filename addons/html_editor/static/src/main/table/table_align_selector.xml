@@ -1,21 +1,22 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.TableAlignSelector">
-        <Dropdown menuClass="'o-we-toolbar-dropdown'" bottomSheet="false" menuRef="this.menuRef">
-            <button class="btn btn-light" t-att-title="this.props.title" name="vertical_align">
+        <Dropdown state="dropdown" menuClass="'o-we-toolbar-dropdown'" menuRef="this.menuRef" focusToggleOnClosed="false">
+            <button t-ref="tableAlignSelector" class="btn btn-light" t-att-title="this.props.title" name="vertical_align">
                 <t t-set="selectedItem" t-value="this.items.find(item => item.mode === this.state.displayName)" />
                 <t t-call="{{ selectedItem ? selectedItem.template : 'html_editor.VerticalAlignTop' }}" />
             </button>
             <t t-set-slot="content">
                 <div data-prevent-closing-overlay="true">
                     <t t-foreach="this.items" t-as="item" t-key="item.mode">
-                        <button
-                            t-attf-class="btn btn-light"
-                            t-att-class="{ active: item.mode === this.state.displayName }"
+                        <DropdownItem
+                            tag="'button'"
+                            attrs="{ name: 'vertical_align_' + item.mode }"
+                            class="{'dropdown-item_active_noarrow btn btn-light': true, active: item.mode === this.state.displayName }"
                             t-on-pointerdown.prevent="() => {}"
-                            t-on-click="() => this.onSelected(item)"
+                            onSelected="() => this.onSelected(item)"
                         >
                             <t t-call="{{item.template}}" />
-                        </button>
+                        </DropdownItem>
                     </t>
                 </div>
             </t>

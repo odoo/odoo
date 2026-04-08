@@ -254,7 +254,7 @@
         }
 
         // Dropdown
-        .dropdown-item {
+        .dropdown-item:not(.dropdown-item_active_noarrow) {
             &.active, &.selected {
                 @extend %BottomSheet-Entry-active;
             }

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect, useState } from "@web/owl2/utils";
 
 export function useDropdownAutoVisibility(overlayState, popoverRef) {
     if (!overlayState) {
@@ -16,5 +16,18 @@ export function useDropdownAutoVisibility(overlayState, popoverRef) {
             }
         },
         () => [state.isOverlayVisible]
+    );
+}
+
+export function useToolbarDropdownFocus(dropdown, buttonRef) {
+    useExternalListener(
+        document,
+        "keydown",
+        (ev) => {
+            if (ev.key === "Escape" && dropdown.isOpen) {
+                buttonRef.el.focus();
+            }
+        },
+        { capture: true }
     );
 }

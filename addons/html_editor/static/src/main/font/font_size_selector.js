@@ -7,7 +7,10 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useDebounced } from "@web/core/utils/timing";
 import { cookie } from "@web/core/browser/cookie";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
-import { useDropdownAutoVisibility } from "@html_editor/dropdown_autovisibility_hook";
+import {
+    useDropdownAutoVisibility,
+    useToolbarDropdownFocus,
+} from "@html_editor/toolbar_dropdown_hook";
 import { useChildRef } from "@web/core/utils/hooks";
 
 export const MAX_FONT_SIZE = 400;
@@ -28,11 +31,13 @@ export class FontSizeSelector extends Component {
     setup() {
         this.items = this.props.getItems();
         this.state = useState(this.props.getDisplay());
+        this.fontSizeSelector = useRef("fontSizeSelector");
         this.dropdown = useDropdownState();
         this.menuRef = useChildRef();
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
         this.iframeContentRef = useRef("iframeContent");
         this.debouncedCustomFontSizeInput = useDebounced(this.onCustomFontSizeInput, 200);
+        useToolbarDropdownFocus(this.dropdown, this.fontSizeSelector);
 
         onMounted(() => {
             const iframeEl = this.iframeContentRef.el;
@@ -135,9 +140,10 @@ export class FontSizeSelector extends Component {
     }
 
     onKeyDownFontSizeInput(ev) {
-        if (["Enter", "Tab"].includes(ev.key) && this.dropdown.isOpen) {
+        if (["Enter", "Escape"].includes(ev.key) && this.dropdown.isOpen) {
             this.dropdown.close();
-        } else if (["ArrowUp", "ArrowDown"].includes(ev.key)) {
+        } else if (["ArrowUp", "ArrowDown", "Tab"].includes(ev.key)) {
+            ev.preventDefault();
             const fontSizeSelectorMenu = document.querySelector(".o_font_size_selector_menu div");
             if (!fontSizeSelectorMenu) {
                 return;

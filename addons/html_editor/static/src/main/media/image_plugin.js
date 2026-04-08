@@ -171,6 +171,7 @@ export class ImagePlugin extends Plugin {
                     name: "image_padding",
                     icon: "html_editor.ImagePaddingIcon",
                     items: IMAGE_PADDING,
+                    focusEditable: () => this.dependencies.selection.focusEditable(),
                     onSelected: (item) => {
                         this.setImagePadding({ size: item.value });
                     },
@@ -186,6 +187,7 @@ export class ImagePlugin extends Plugin {
                     name: "image_size",
                     getDisplay: () => this.imageSize,
                     items: IMAGE_SIZE,
+                    focusEditable: () => this.dependencies.selection.focusEditable(),
                     onSelected: (item) => {
                         this.resizeImage({ size: item.value });
                         this.updateImageParams();
@@ -412,6 +414,7 @@ export class ImagePlugin extends Plugin {
             getTargetedImage: this.getTargetedImage.bind(this),
             resetImageTransformation: this.resetImageTransformation.bind(this),
             addStep: this.dependencies.history.addStep.bind(this),
+            focusEditable: () => this.dependencies.selection.focusEditable(),
             document: this.document,
             editable: this.editable,
             activeTitle: _t("Click again to reset transformation"),

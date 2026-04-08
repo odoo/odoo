@@ -10,7 +10,7 @@ import { effect } from "@web/core/utils/reactive";
 import { toolbarButtonProps } from "../toolbar/toolbar";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { useChildRef } from "@web/core/utils/hooks";
-import { useDropdownAutoVisibility } from "@html_editor/dropdown_autovisibility_hook";
+import { useDropdownAutoVisibility } from "@html_editor/toolbar_dropdown_hook";
 
 export class ColorSelector extends Component {
     static template = "html_editor.ColorSelector";

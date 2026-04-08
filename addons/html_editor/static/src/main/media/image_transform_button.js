@@ -1,4 +1,4 @@
-import { useExternalListener, useState } from "@web/owl2/utils";
+import { useExternalListener, useRef, useState } from "@web/owl2/utils";
 import { Component } from "@odoo/owl";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { registry } from "@web/core/registry";
@@ -70,6 +70,7 @@ export class ImageTransformButton extends Component {
         getTargetedImage: Function,
         resetImageTransformation: Function,
         addStep: Function,
+        focusEditable: Function,
         document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
         editable: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
         ...toolbarButtonProps,
@@ -78,15 +79,29 @@ export class ImageTransformButton extends Component {
 
     setup() {
         this.state = useState({ active: false });
+        this.imageTransformBtn = useRef("imageTransformBtn");
         this.transform = useImageTransform({
             document: this.props.document,
             closeImageTransformation: this.closeImageTransformation.bind(this),
             buttonSelector: '[name="image_transform"], [name="image_transform"] *',
         });
+        useExternalListener(
+            document,
+            "keydown",
+            (ev) => {
+                if (ev.key === "Escape" && this.transform.isImageTransformationOpen()) {
+                    ev.stopPropagation();
+                    this.closeImageTransformation();
+                    this.imageTransformBtn.el.focus();
+                }
+            },
+            true
+        );
     }
 
     onButtonClick() {
         this.handleImageTransformation(this.props.getTargetedImage());
+        this.props.focusEditable();
     }
 
     handleImageTransformation(image) {
