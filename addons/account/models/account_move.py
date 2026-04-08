@@ -6136,10 +6136,10 @@ class AccountMove(models.Model):
         return self.adjusting_entry_origin_move_ids._get_records_action(name=label)
 
     def action_switch_move_type(self):
-        if any((move.posted_before and move.name) for move in self):
-            raise ValidationError(_("You cannot switch the type of a document with an existing sequence number."))
         if any(move.move_type == "entry" for move in self):
             raise ValidationError(_("This action isn't available for this document."))
+        if any(move.state != 'draft' for move in self):
+            raise ValidationError(self.env._("You can only switch the type of a draft document."))
 
         for move in self:
             in_out, old_move_type = move.move_type.split('_')
