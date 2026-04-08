@@ -766,7 +766,7 @@ export class Runner {
     checkPresetForViewPort() {
         const presetId = this.config.preset();
         const preset = this.presets().get(presetId);
-        if (!preset.size) {
+        if (!preset?.size) {
             return true;
         }
         const innerWidth = getViewPortWidth();
