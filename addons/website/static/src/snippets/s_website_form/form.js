@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
+import { formatList } from "@web/core/l10n/utils";
 import { post } from "@web/core/network/http_service";
 import { user } from "@web/core/user";
 import { delay } from "@web/core/utils/concurrency";
@@ -606,7 +607,10 @@ export class Form extends Interaction {
                 } else if (inputEl.type === "file" && !this.isFileInputValid(inputEl)) {
                     return true;
                 } else if (this.requirementFunction(fieldEl) === false) {
-                    this.updateStatusInline(fieldEl.dataset.errorMessage, inputEl);
+                    this.updateStatusInline(
+                        fieldEl.dataset.errorMessage || this.defaultMessage(fieldEl),
+                        inputEl
+                    );
                     return true;
                 } else if (inputEl.hasAttribute("maxlength") && inputEl.hasAttribute("minlength")) {
                     const maxChars = inputEl.maxLength;
@@ -800,7 +804,9 @@ export class Form extends Interaction {
                     "The following file(s) have invalid type: %(fileNames)s. Allowed type(s): %(allowedMimeTypesLabels)s.",
                     {
                         fileNames: invalidFiles,
-                        allowedMimeTypesLabels: allowedMimetypes.map((mimetype) => allowedMimeTypesLabels[mimetype]),
+                        allowedMimeTypesLabels: allowedMimetypes.map(
+                            (mimetype) => allowedMimeTypesLabels[mimetype]
+                        ),
                     }
                 );
                 this.updateStatusInline(errorMessage, inputEl);
@@ -1197,6 +1203,92 @@ export class Form extends Interaction {
         this.el.querySelectorAll(".s_website_form_custom_error").forEach((error) => {
             error.remove();
         });
+    }
+    /**
+     * Generates an error message for requirement set on field if validation fails.
+     * @param {HTMLElement} fieldEl The field for which the error message needs
+     * to be generated.
+     *
+     * @returns {string} The default error message.
+     */
+    defaultMessage(fieldEl) {
+        let {
+            requirementComparator: comparator,
+            requirementCondition: condition,
+            requirementBetween: between,
+            type,
+        } = fieldEl.dataset;
+        if (["substring", "!substring", "domain"].includes(comparator)) {
+            condition = JSON.parse(condition).map(({ requirement_text }) => {
+                if (comparator == "domain") {
+                    return "@" + requirement_text.trim().toLowerCase();
+                }
+                return requirement_text.trim().toLowerCase();
+            });
+            condition = formatList(condition, { style: "or" });
+        }
+        const textMessages = {
+            contains: _t("This field must include keyword %s.", condition),
+            "!contains": _t("This field must not include keyword %s.", condition),
+            substring: _t("This field must contain one of the keyword(s): '%s'", condition),
+            "!substring": _t("This field must not include the keyword(s): '%s'", condition),
+            greater: _t("Invalid: field is not greater than %s.", condition),
+            less: _t("Invalid: field is not less than %s.", condition),
+            "greater or equal": _t("Invalid: field is not greater than or equal to %s.", condition),
+            "less or equal": _t("Invalid: field is not less than or equal to %s.", condition),
+            domain: _t("This field must have one of these email domain(s): %s.", condition),
+        };
+
+        if (condition && textMessages[comparator]) {
+            return textMessages[comparator];
+        }
+
+        if (["date", "datetime"].includes(type)) {
+            const format = type === "date" ? localization.dateFormat : localization.dateTimeFormat;
+            const start = formatDate(DateTime.fromSeconds(parseInt(condition)), { format });
+            const end = formatDate(DateTime.fromSeconds(parseInt(between)), { format });
+
+            const dateMessages = {
+                dateEqual: _t(
+                    "Entered date or time is not correct! It must be %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                "date!equal": _t(
+                    "Entered date or time is not correct! It must not be %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                before: _t(
+                    "Entered date or time is not correct! It must be before %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                after: _t(
+                    "Entered date or time is not correct! It must be after %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                "equal or before": _t(
+                    "Entered date or time is not correct! It must be before or equal to %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                "equal or after": _t(
+                    "Entered date or time is not correct! It must be after or equal to %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                between: _t(
+                    "Entered date or time is not correct! It must be within %(start)s and %(end)s (%(format)s).",
+                    { start, end, format }
+                ),
+                "!between": _t(
+                    "Entered date or time is not correct! It must not be within %(start)s and %(end)s (%(format)s).",
+                    { start, end, format }
+                ),
+            };
+
+            if (condition && dateMessages[comparator]) {
+                return dateMessages[comparator];
+            }
+        }
+
+        return _t("An error has occurred, the form has not been sent.");
     }
 }
 
