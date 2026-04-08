@@ -1,3 +1,4 @@
+import { onRendered, onWillRender } from "@web/owl2/utils";
 import { after, beforeEach, expect, getFixture, resize, test } from "@odoo/hoot";
 import {
     click,
@@ -27,7 +28,7 @@ import {
     runAllTimers,
     tick,
 } from "@odoo/hoot-mock";
-import { Component, onRendered, onWillRender, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     MockServer,
     clickKanbanLoadMore,

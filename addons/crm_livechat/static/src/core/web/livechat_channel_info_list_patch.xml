@@ -5,7 +5,7 @@
             <t t-if="this.props.thread.channel.livechatVisitorMember?.partner_id?.opportunity_ids?.length" t-call="im_livechat.LivechatChannelInfoList.info_links"
                 title.translate="Open leads"
                 templateParams="{
-                        title,
+                        title: this.title,
                         'info_records': this.props.thread.livechatVisitorMember?.partner_id?.opportunity_ids,
                         'model': 'crm.lead'
                     }"/>
