@@ -3213,7 +3213,7 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
 
 <template id="website.search_result_items">
     <t t-foreach="results" t-as="result">
-        <li class="o_search_result_item rounded">
+        <li t-attf-class="o_search_result_item #{'rounded mx-n2' if is_search_page else ''}">
             <a t-att-href="result['website_url']" class="o_search_result_link d-flex gap-2 p-2 text-decoration-none text-muted">
                 <t t-call="website.search_image_item_view"/>
                 <div class="o_search_result_content d-flex flex-grow-1">
@@ -3277,7 +3277,7 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
                                     </h2>
                                     <!-- Items -->
                                     <ul class="list-unstyled mb-0">
-                                        <t t-call="website.search_result_items" results="bucket['data']"/>
+                                        <t t-call="website.search_result_items" results="bucket['data']" is_search_page="True"/>
                                     </ul>
                                     <t t-set="has_more" t-value="(bucket.get('searchCount') &gt; limit)"/>
                                     <div t-if="has_more" class="d-flex justify-content-center py-2">
