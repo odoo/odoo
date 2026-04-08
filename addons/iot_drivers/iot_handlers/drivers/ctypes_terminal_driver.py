@@ -152,8 +152,7 @@ class CtypesTerminalDriver(Driver, ABC):
 
         self._actions[''] = self._action_default
 
-        self.device_manufacturer = manufacturer
-        self.device_name = f"{self.device_manufacturer} terminal {self.device_identifier}"
+        self.device_name = f"{manufacturer} terminal {self.device_identifier}"
         self.terminal = device["terminal"]
         self.manager = device["manager"]
 

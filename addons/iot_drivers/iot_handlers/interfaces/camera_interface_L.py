@@ -5,8 +5,6 @@ from odoo.addons.iot_drivers.interface import Interface
 
 
 class CameraInterface(Interface):
-    connection_type = 'video'
-
     @staticmethod
     def get_devices():
         camera_devices = {}

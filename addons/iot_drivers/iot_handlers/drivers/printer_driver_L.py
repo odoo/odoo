@@ -9,6 +9,7 @@ import time
 
 from odoo.addons.iot_drivers.connection_manager import connection_manager
 from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
+from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_L import PrinterInterface
 from odoo.addons.iot_drivers.tools import helpers, system, wifi
 from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
 
@@ -16,13 +17,15 @@ _logger = logging.getLogger(__name__)
 
 
 class PrinterDriver(PrinterDriverBase):
+    interface = PrinterInterface
 
     def __init__(self, identifier, device):
         super().__init__(identifier, device)
         self.conn = Connection()
         self.cups_lock = Lock()
         self.connected_by_usb = device.get("is_usb", False)
-        self.device_connection = "direct" if self.connected_by_usb else "network"
+        if not self.connected_by_usb:
+            self.device_connection = "network"
         self.device_name = device.get('device-make-and-model', identifier)
         self.ip = device.get('ip')
 

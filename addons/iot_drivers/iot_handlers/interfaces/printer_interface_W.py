@@ -13,7 +13,6 @@ win32print_lock = Lock()  # Calling win32print in parallel can cause failed prin
 
 class PrinterInterface(Interface):
     _loop_delay = 30
-    connection_type = 'printer'
 
     def get_devices(self):
         printer_devices = {}

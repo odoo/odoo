@@ -13,7 +13,6 @@ _logger = logging.getLogger(__name__)
 
 
 class PrinterDriverBase(Driver, ABC):
-    connection_type = 'printer'
     job_timeout_seconds = 90
 
     RECEIPT_PRINTER_COMMANDS = {

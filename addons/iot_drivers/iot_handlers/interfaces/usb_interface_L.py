@@ -6,7 +6,6 @@ from odoo.addons.iot_drivers.interface import Interface
 
 
 class USBInterface(Interface):
-    connection_type = 'usb'
     allow_unsupported = True
 
     @staticmethod

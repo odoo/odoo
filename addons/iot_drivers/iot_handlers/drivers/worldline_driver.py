@@ -3,6 +3,7 @@
 import ctypes
 import logging
 
+from odoo.addons.iot_drivers.iot_handlers.interfaces.ctep_interface import CTEPInterface
 from odoo.addons.iot_drivers.tools.system import IS_RPI
 from odoo.addons.iot_drivers.iot_handlers.drivers.ctypes_terminal_driver import (
     CtypesTerminalDriver,
@@ -15,7 +16,7 @@ _logger = logging.getLogger(__name__)
 
 
 class WorldlineDriver(CtypesTerminalDriver):
-    connection_type = "ctep"
+    interface = CTEPInterface
 
     def __init__(self, identifier, device):
         super().__init__(identifier, device, manufacturer="Worldline")

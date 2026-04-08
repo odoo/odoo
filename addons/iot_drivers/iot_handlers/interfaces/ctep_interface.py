@@ -55,7 +55,6 @@ def _configure_ctep_lib(lib_name: str) -> bool:
 
 class CTEPInterface(Interface):
     _loop_delay = 10
-    connection_type = 'ctep'
 
     def __init__(self):
         super().__init__()
@@ -64,7 +63,7 @@ class CTEPInterface(Interface):
             _logger.error("Failed to configure Worldline CTEP library")
             return
 
-        self.easy_ctep = import_ctypes_library(self.connection_type, lib_name)
+        self.easy_ctep = import_ctypes_library("ctep", lib_name)
         self.easy_ctep.createCTEPManager.restype = ctypes.c_void_p
         extra_args = [ctypes.c_void_p] if IS_RPI else []
         self.easy_ctep.connectedTerminal.argtypes = [ctypes.c_void_p, ctypes.c_char_p, *extra_args]
