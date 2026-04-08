@@ -63,4 +63,10 @@
         <field name="export_id" ref="project_task_export_template"/>
         <field name="name">tag_ids</field>
     </record>
+
+    <!-- Portal pager  -->
+    <record id="portal_task_page_limit_param" model="ir.config_parameter">
+        <field name="key">project.portal_task_page_limit</field>
+        <field name="value">100</field>
+    </record>
 </odoo>
