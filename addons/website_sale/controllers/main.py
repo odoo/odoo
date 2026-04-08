@@ -1213,7 +1213,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 ):
                     order_sudo._set_delivery_method(delivery_method, rate=rate)
 
-        checkout_page_values.update(self.env.website._get_checkout_step_values("/shop/checkout"))
+        checkout_page_values.update(
+            self.env.website._get_checkout_step_values("/shop/checkout", order=order_sudo)
+        )
         if try_skip_step and can_skip_delivery:
             return request.redirect(checkout_page_values["next_website_checkout_step_href"])
 
@@ -1286,7 +1288,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             use_delivery_as_billing=use_delivery_as_billing,
             **query_params,
         )
-        address_form_values.update(self.env.website._get_checkout_step_values("/shop/address"))
+        address_form_values.update(
+            self.env.website._get_checkout_step_values("/shop/address", order=order_sudo)
+        )
         return request.render("website_sale.address", address_form_values)
 
     def _prepare_address_form_values(self, *args, callback="", order_sudo=False, **kwargs):
@@ -1682,14 +1686,21 @@ class WebsiteSale(payment_portal.PaymentPortal):
         list_as_website_content=system_page_extra_info,
     )
     def extra_info(self, **post):
+        order_sudo = request.cart
         # Check that this option is activated
         extra_step = self.env.website.viewref("website_sale.extra_info")
         if not extra_step.active:
             return request.redirect(
-                self.env.website._get_next_breadcrumb_step_href("/shop/extra_info")
+                self.env.website._get_next_breadcrumb_step_href(
+                    "/shop/extra_info", order=order_sudo
+                )
             )
 
-        order_sudo = request.cart
+        # Check category restriction
+        if self.env.website._is_extra_step_hidden(order_sudo):
+            return request.redirect("/shop/payment")
+
+        # check that cart is valid
         if redirect := self.env["website.checkout.step"].validate_checkout_progress(
             "/shop/extra_info", order_sudo
         ):
@@ -1703,7 +1714,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "order": order_sudo,
         }
 
-        values.update(self.env.website._get_checkout_step_values("/shop/extra_info"))
+        values.update(
+            self.env.website._get_checkout_step_values("/shop/extra_info", order=order_sudo)
+        )
 
         return request.render("website_sale.extra_info", values)
 
@@ -1717,7 +1730,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "partner": order.partner_invoice_id,
             "order": order,
             "only_services": order.only_services,
-            **self.env.website._get_checkout_step_values("/shop/payment"),
+            **self.env.website._get_checkout_step_values("/shop/payment", order=order),
         }
         payment_form_values = {
             **sale_portal.CustomerPortal._get_payment_values(
@@ -1976,6 +1989,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
             extra_step_view = self.env.website.viewref("website_sale.extra_info")
             extra_step = self.env.website._get_checkout_step("/shop/extra_info")
             extra_step_view.active = extra_step.is_published = options.get("extra_step") == "true"
+
+        if "extra_step_category_ids" in options:
+            category_ids = options["extra_step_category_ids"]
+            self.env.website.extra_step_category_ids = (
+                request.env["product.public.category"].browse(category_ids).exists()
+            )
 
         write_vals = {k: v for k, v in options.items() if k in writable_fields}
         if write_vals:

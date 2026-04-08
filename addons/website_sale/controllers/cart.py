@@ -71,7 +71,7 @@ class Cart(PaymentPortal):
             values["suggested_products"] = order_sudo._cart_accessories()
             values.update(self._get_express_shop_payment_values(order_sudo))
 
-        values.update(self.env.website._get_checkout_step_values("/shop/cart"))
+        values.update(self.env.website._get_checkout_step_values("/shop/cart", order=order_sudo))
         values.update(self._cart_values(**post))
         values.update(self._prepare_order_history())
         return request.render("website_sale.cart", values)
@@ -259,7 +259,7 @@ class Cart(PaymentPortal):
                 "website_sale_order": order_sudo,
                 "show_shorter_cart_summary": True,
                 **self._get_express_shop_payment_values(order_sudo),
-                **self.env.website._get_checkout_step_values("/shop/cart"),
+                **self.env.website._get_checkout_step_values("/shop/cart", order=order_sudo),
             },
         )
         # Products already in the cart should not appear in quick reorder suggestions.

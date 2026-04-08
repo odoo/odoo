@@ -285,6 +285,17 @@
     <!-- Deactivatable through the website editor. -->
     <template id="website_sale.address_b2b" inherit_id="website_sale.address" name="Show b2b fields" />
 
+    <template
+        id="website_sale.required_attributes"
+        inherit_id="website_sale.address_form_fields"
+        name="Required b2b fields"
+        active="False"
+    >
+        <xpath expr="//input[@name='required_fields']" position="attributes">
+            <attribute name="t-att-value" add="',parent_name,vat'" separator=" + "/>
+        </xpath>
+    </template>
+
     <template id="website_sale.address_edit_button" name="Address edit button">
         <t t-if="xmlid != 'website_sale.confirmation'">
             <a t-if="order.partner_invoice_id.country_id" class="float-end no-decoration" href="/shop/checkout">

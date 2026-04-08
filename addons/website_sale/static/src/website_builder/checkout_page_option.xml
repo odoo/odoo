@@ -1,27 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="website_sale.checkoutPageOption">
-    <BuilderRow label.translate="Extra Step">
-        <BuilderCheckbox action="'setExtraStep'" actionParam="{views: ['website_sale.extra_info']}"/>
-    </BuilderRow>
-    <BuilderContext action="'websiteConfig'">
-        <BuilderRow label.translate="Suggested Accessories">
-            <BuilderCheckbox actionParam="{views: ['website_sale.suggested_products_list']}"/>
-        </BuilderRow>
-        <BuilderRow label.translate="Promo Code">
-            <BuilderCheckbox actionParam="{views: ['website_sale.reduction_code']}"/>
-        </BuilderRow>
-        <BuilderRow label.translate="Accept Terms">
-            <BuilderCheckbox actionParam="{views: ['website_sale.accept_terms_and_conditions']}"/>
-        </BuilderRow>
-        <BuilderRow label.translate="Show B2B Fields">
-            <BuilderCheckbox actionParam="{views: ['website_sale.address_b2b']}"/>
-        </BuilderRow>
-        <BuilderRow label.translate="Add to Wishlist">
-            <BuilderCheckbox actionParam="{views: ['website_sale.product_cart_lines']}"/>
-        </BuilderRow>
-    </BuilderContext>
-</t>
+    <t t-name="website_sale.CheckoutPageOption">
+
+        <BuilderContext action="'websiteConfig'">
+            <BuilderRow label.translate="Save for Later">
+                <BuilderCheckbox actionParam="{views: ['website_sale.product_cart_lines']}"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Promo Code">
+                <BuilderCheckbox actionParam="{views: ['website_sale.reduction_code']}"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Company Details">
+                <BuilderCheckbox
+                    id="'address_b2b'"
+                    action="'setCompanyDetails'"
+                    actionParam="{views: ['website_sale.address_b2b']}"
+                />
+            </BuilderRow>
+            <BuilderRow
+                t-if="this.isActiveItem('address_b2b')"
+                label.translate="Required"
+                level="1"
+            >
+                <BuilderCheckbox actionParam="{views: ['website_sale.required_attributes']}"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Extra Step">
+                <BuilderCheckbox
+                    id="'extra_step'"
+                    action="'setExtraStep'"
+                    actionParam="{views: ['website_sale.extra_info']}"
+                />
+            </BuilderRow>
+            <BuilderRow
+                t-if="this.isActiveItem('extra_step')"
+                label.translate="Restrict to"
+                level="1"
+            >
+                <BuilderMany2Many
+                    model="'product.public.category'"
+                    domain="this.domain"
+                    fields="['id', 'name']"
+                    action="'setExtraStepCategories'"
+                    displayField="'name'"
+                    limit="100"
+                />
+            </BuilderRow>
+            <BuilderRow label.translate="Accept Terms">
+                <BuilderCheckbox actionParam="{views: ['website_sale.accept_terms_and_conditions']}"/>
+            </BuilderRow>
+        </BuilderContext>
+    </t>
 
 </templates>
