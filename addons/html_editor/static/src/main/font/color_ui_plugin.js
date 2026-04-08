@@ -70,7 +70,11 @@ export class ColorUIPlugin extends Plugin {
             applyColorPreview: (color) => this.applyColorPreview({ color, mode }),
             applyColorResetPreview: this.applyColorResetPreview.bind(this),
             colorPrefix: mode === "color" ? "text-" : "bg-",
-            onClose: () => this.dependencies.selection.focusEditable(),
+            onClose: (res) => {
+                // onClose receives "escape" when closed via Escape,
+                // otherwise undefined. Focus editable only for non-escape closes.
+                !res && this.dependencies.selection.focusEditable();
+            },
             getTargetedElements: () => {
                 const nodes = this.dependencies.selection.getTargetedNodes().filter(isTextNode);
                 return nodes.map((node) => closestElement(node));

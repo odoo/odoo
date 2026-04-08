@@ -47,6 +47,11 @@ $o-we-color-success: #00ff9e !default;
         min-width: 57px;
         padding: 3px;
         font-size: 12px;
+
+        &:focus-visible {
+            z-index: 1;
+            box-shadow: var(--btn-focus-box-shadow) !important;
+        }
     }
 
     .o_color_picker_button.selected {

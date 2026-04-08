@@ -1461,3 +1461,62 @@ test("Should not close the color picker on icon color change", async () => {
     // Color picker should stay open
     expectElementCount('[data-color="o-color-2"]', 1);
 });
+
+test.tags("desktop");
+test("should move focus to next element when pressing Tab after selecting custom gradient", async () => {
+    await setupEditor(`<p>This is a [test].</p>`);
+    await expectElementCount(".o-we-toolbar", 1);
+
+    // Open the color picker and select the graident tab
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await expectElementCount(".o_font_color_selector", 1);
+    await click(".btn:contains('Gradient')");
+    await expectElementCount(".o_custom_gradient_button", 1);
+
+    // Click on the custom gradient button and it should be focused
+    await click(".btn.o_custom_gradient_button");
+    await animationFrame();
+    expect(".btn.o_custom_gradient_button").toBeFocused();
+
+    // On Tab, the focus should move to the next focusable element
+    await press("Tab");
+    expect(queryAll(".o_type_row button")[0]).toBeFocused();
+});
+
+test.tags("desktop");
+test("should close the color picker and return focus to the toolbar color button on escape", async () => {
+    const { el } = await setupEditor(`<p>[test]</p>`);
+    await expectElementCount(".o-we-toolbar", 1);
+
+    // Open the color picker and select the graident tab
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await expectElementCount(".o_font_color_selector", 1);
+    expect("button.solid-tab").toBeFocused();
+
+    // On Escape, the color picker should close and
+    // focus should return to the toolbar color button
+    await press("Escape");
+    expectElementCount(".o_font_color_selector", 0); // selector closed
+    expect(".o-select-color-foreground").toBeFocused();
+    expect(getContent(el)).toBe(`<p>[test]</p>`);
+});
+
+test.tags("desktop");
+test("should close the color picker and return focus to the editable on selecting a color", async () => {
+    const { el } = await setupEditor(`<p>[test]</p>`);
+    await expectElementCount(".o-we-toolbar", 1);
+
+    // Open the color picker and select the graident tab
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await expectElementCount(".o_font_color_selector", 1);
+    expect("button.solid-tab").toBeFocused();
+
+    // Select the color by enter and the color picker should
+    // close and focus should return to the editable
+    await contains(".o_color_button[data-color='#6BADDE']").focus();
+    expect(".o_color_button[data-color='#6BADDE']").toBeFocused();
+    await press("Enter");
+    expectElementCount(".o_font_color_selector", 0); // selector closed
+    expect(el).toBeFocused();
+    expect(getContent(el)).toBe(`<p><font style="color: rgb(107, 173, 222);">[test]</font></p>`);
+});
