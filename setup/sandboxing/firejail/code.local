@@ -14,16 +14,14 @@ whitelist ${HOME}/.cursor
 
 # Allow access to shell configuration for the integrated terminal to work properly.
 # Needs to be defined as whitelist and read-only.
-whitelist ${HOME}/.zshrc
-whitelist ${HOME}/.bashrc
-whitelist ${HOME}/.oh-my-zsh
-whitelist ${HOME}/.config/fish
-whitelist ${HOME}/.profile
-read-only ${HOME}/.zshrc
-read-only ${HOME}/.bashrc
-read-only ${HOME}/.oh-my-zsh
-read-only ${HOME}/.config/fish
-read-only ${HOME}/.profile
+whitelist-ro ${HOME}/.profile
+whitelist-ro ${HOME}/.bashrc
+whitelist-ro ${HOME}/.zshrc
+whitelist-ro ${HOME}/.oh-my-zsh
+whitelist-ro ${HOME}/.config/fish
+
+# Do not copy shell configuration from /etc/skel but keep the one found in $HOME.
+keep-shell-rc
 
 # IBus input method: the daemon's Unix socket lives at ~/.cache/ibus/dbus-*
 # (see IBUS_ADDRESS in firejail --debug output). Whitelist mode hides it,
