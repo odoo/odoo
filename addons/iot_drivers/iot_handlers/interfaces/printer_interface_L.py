@@ -22,7 +22,6 @@ _logger = logging.getLogger(__name__)
 
 
 class PrinterInterface(Interface):
-    connection_type = 'printer'
     _loop_delay = 20  # Default delay between calls to get_devices
 
     def __init__(self):

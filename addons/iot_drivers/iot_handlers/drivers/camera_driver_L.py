@@ -4,18 +4,18 @@ import base64
 import logging
 import subprocess
 
+from odoo.addons.iot_drivers.iot_handlers.interfaces.camera_interface_L import CameraInterface
 from odoo.addons.iot_drivers.driver import Driver
 
 _logger = logging.getLogger(__name__)
 
 
 class CameraDriver(Driver):
-    connection_type = 'video'
+    interface = CameraInterface
 
     def __init__(self, identifier, device):
         super().__init__(identifier, device)
         self.device_type = 'camera'
-        self.device_connection = 'direct'
         self.device_name = device['name']
         self.interface = device['interface']
 

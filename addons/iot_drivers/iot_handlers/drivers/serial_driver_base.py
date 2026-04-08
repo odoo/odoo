@@ -8,6 +8,7 @@ from threading import Lock
 import time
 
 from odoo.addons.iot_drivers.driver import Driver
+from odoo.addons.iot_drivers.iot_handlers.interfaces.serial_interface import SerialInterface
 
 _logger = logging.getLogger(__name__)
 
@@ -60,7 +61,7 @@ class SerialDriver(Driver):
     """Abstract base class for serial drivers."""
 
     _protocol = None
-    connection_type = 'serial'
+    interface = SerialInterface
 
     def __init__(self, identifier: str, device: dict):
         """ Attributes initialization method for `SerialDriver`.

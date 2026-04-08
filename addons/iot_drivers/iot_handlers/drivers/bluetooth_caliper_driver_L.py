@@ -5,7 +5,7 @@ from gi.repository import GLib
 from gatt import Device
 import logging
 
-from odoo.addons.iot_drivers.iot_handlers.interfaces.bluetooth_interface_L import bluetooth_devices
+from odoo.addons.iot_drivers.iot_handlers.interfaces.bluetooth_interface_L import BTInterface, bluetooth_devices
 from odoo.addons.iot_drivers.driver import Driver
 from odoo.addons.iot_drivers.event_manager import event_manager
 
@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 
 
 class SylvacBtDriver(Driver):
-    connection_type = 'bluetooth'
+    interface = BTInterface
 
     def __init__(self, identifier, device):
         super().__init__(identifier, device)

@@ -99,9 +99,7 @@ class Manager(Thread):
             devices_list[identifier] = {
                 'name': device.device_name,
                 'type': device.device_type,
-                'manufacturer': device.device_manufacturer,
                 'connection': device.device_connection,
-                'subtype': device.device_subtype if device.device_type == 'printer' else '',
             }
         devices_list.update(self.previous_unsupported_devices)
 

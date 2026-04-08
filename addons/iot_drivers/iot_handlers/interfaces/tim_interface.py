@@ -45,7 +45,6 @@ def _configure_tim_lib(lib_name: str) -> bool:
 
 class TIMInterface(Interface):
     _loop_delay = 30
-    connection_type = 'tim'
     tid = None
 
     def __init__(self):
@@ -55,7 +54,7 @@ class TIMInterface(Interface):
             _logger.error("Failed to configure Six TIM library")
             return
 
-        self.tim_api = import_ctypes_library(self.connection_type, lib_name)
+        self.tim_api = import_ctypes_library("tim", lib_name)
 
         # void *six_initialize_manager(int buffer_size) {
         self.tim_api.six_initialize_manager.argtypes = [ctypes.c_int]

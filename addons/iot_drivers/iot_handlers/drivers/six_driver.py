@@ -8,12 +8,13 @@ from odoo.addons.iot_drivers.iot_handlers.drivers.ctypes_terminal_driver import 
     CtypesTerminalDriver,
     create_ctypes_string_buffer
 )
+from odoo.addons.iot_drivers.iot_handlers.interfaces.tim_interface import TIMInterface
 
 _logger = getLogger(__name__)
 
 
 class SixDriver(CtypesTerminalDriver):
-    connection_type = 'tim'
+    interface = TIMInterface
     cancelled_by_pos = 2  # Error code returned when you press "cancel" in PoS
 
     def __init__(self, identifier, device):

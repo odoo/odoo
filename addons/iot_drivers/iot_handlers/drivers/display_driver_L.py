@@ -9,6 +9,7 @@ import time
 import werkzeug
 
 from odoo import http
+from odoo.addons.iot_drivers.iot_handlers.interfaces.display_interface_L import DisplayInterface
 from odoo.addons.iot_drivers.browser import Browser, BrowserState
 from odoo.addons.iot_drivers.driver import Driver
 from odoo.addons.iot_drivers.main import iot_devices
@@ -20,7 +21,7 @@ _logger = logging.getLogger(__name__)
 
 
 class DisplayDriver(Driver):
-    connection_type = 'display'
+    interface = DisplayInterface
 
     def __init__(self, identifier, device):
         super().__init__(identifier, device)

@@ -129,8 +129,6 @@ class BtManager(Thread):
 
 
 class BTInterface(Interface):
-    connection_type = 'bluetooth'
-
     def get_devices(self):
         return bluetooth_devices.copy()
 
