@@ -513,6 +513,9 @@ class AccountEdiCommon(models.AbstractModel):
                             'zip': zip_code, 'city': city, 'is_company': True}
             if peppol_eas and peppol_endpoint:
                 partner_vals.update({'peppol_eas': peppol_eas, 'peppol_endpoint': peppol_endpoint})
+            if country_code == 'GB':
+                # While the code is gb, the xml_id is uk
+                country_code = 'UK'
             country = self.env.ref(f'base.{country_code.lower()}', raise_if_not_found=False) if country_code else False
             if country:
                 partner_vals['country_id'] = country.id

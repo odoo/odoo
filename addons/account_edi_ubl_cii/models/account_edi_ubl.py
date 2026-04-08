@@ -2111,6 +2111,9 @@ class AccountEdiUBL(models.AbstractModel):
             partner_create_values['peppol_endpoint'] = peppol_endpoint
 
         if country_code := customer_values.get('country_code'):
+            if country_code == 'GB':
+                # While the code is gb, the xml_id is uk
+                country_code = 'UK'
             country = self.env.ref(f'base.{country_code.lower()}', raise_if_not_found=False)
             if country:
                 partner_create_values['country_id'] = country.id
