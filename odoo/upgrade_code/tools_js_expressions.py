@@ -224,7 +224,7 @@ class ExpressionCompiler:
         self.template_name = template_name
         self.node_vars = node_vars
         self.warning_vars = warning_vars
-        self.outer_vars = outer_vars
+        self.outer_vars = outer_vars.get(template_name, set())
 
     def compile_expr(self, expr: str) -> str:
         leading_ws = re.search(LEADING_WHITESPACE_RE, expr)[0]
@@ -503,6 +503,11 @@ class VariableAggregator:
                 if var_name:
                     self.t_call_vars[template_name].add(var_name)
 
+            # Collect inline parameters on t-call (OWL 3 syntax: <t t-call="x" param="val"/>)
+            for attr in call_node.attrib:
+                if not attr.startswith("t-"):
+                    self.t_call_vars[template_name].add(attr)
+
             scope_nodes = call_node.xpath("ancestor::* | ancestor-or-self::*/preceding-sibling::*")
             self.t_call_outer_vars[template_name].update(self._extract_vars_from_nodes(scope_nodes))
 
@@ -720,6 +725,11 @@ class TemplateCompiler:
                     self._process_dynamic_attribute(node, attr)
                 if attr in ('t-call', 't-ref', 't-custom-ref', 't-slot', 't-call-slot'):
                     self._process_dynamic_attribute(node, attr)
+
+            if 't-call' in node.attrib:
+                for attr, value in node.attrib.items():
+                    if not attr.startswith('t-') and not attr.endswith('.translate') and value:
+                        node.set(attr, self.expr_compiler.compile_expr(value))
 
             if 't-slot' in node.attrib or 't-call-slot' in node.attrib:
                 for attr, value in node.attrib.items():
@@ -1402,6 +1412,32 @@ tests = [
             <t>
                 <t t-set="b" t-value="'b'"/>
                 <t t-call-slot="default" a="this.a" b="b"/>
+            </t>
+        """,
+    },
+    {
+        "name": "t-call inline params",
+        "content": """
+            <t>
+                <t t-call="web.SectionMenu" section="subSection" isNested="true"/>
+            </t>
+        """,
+        "expected": """
+            <t>
+                <t t-call="web.SectionMenu" section="this.subSection" isNested="true"/>
+            </t>
+        """,
+    },
+    {
+        "name": "t-call inline params with .translate",
+        "content": """
+            <t>
+                <t t-call="web.SectionMenu" section="subSection" title.translate="Open leads"/>
+            </t>
+        """,
+        "expected": """
+            <t>
+                <t t-call="web.SectionMenu" section="this.subSection" title.translate="Open leads"/>
             </t>
         """,
     },
@@ -2258,7 +2294,8 @@ def run_test_vars(test):
     aggregator = VariableAggregator(is_testing=True)
     aggregator.all_vars = test["all_vars"]
     aggregator.t_call_vars = test["outside_vars"]
-    aggregator.t_call_outer_vars_vars = {"web.ListView": "notitem"}
+    if "t_call_outer_vars" in test:
+        aggregator.t_call_outer_vars = test["t_call_outer_vars"]
 
     res, _ = update_template("", test["content"], False, aggregator, {})
     return res
@@ -2369,6 +2406,14 @@ test_vars = [
         """,
     },
     {
+        "name": "t-call outer vars (t-set before t-call)",
+        "all_vars": defaultdict(set),
+        "outside_vars": defaultdict(set),
+        "t_call_outer_vars": {"web.Department": {"dept", "hideTree"}},
+        "content": '<t t-name="web.Department"><t t-out="dept"/><t t-out="other"/></t>',
+        "expected": '<t t-name="web.Department"><t t-out="dept"/><t t-out="this.other"/></t>',
+    },
+    {
         "name": "t-custom-ref xpath",
         "all_vars": defaultdict(set),
         "outside_vars": defaultdict(set),
@@ -2474,6 +2519,20 @@ test_vars_collection = [
             "t_call_inner": {'mail.zzz': {'inside'}},
             "t_call_outer": {'mail.zzz': {'outside'}},
             'full_inherit_and_call_map': {'web.xyz': [], 'mail.zzz': ['web.xyz']}
+        },
+    },
+    {
+        "name": "t-call with inline params",
+        "content": """
+<t t-name="web.xyz" >
+    <t t-call="web.SectionMenu" section="subSection" isNested="true"/>
+</t>
+        """,
+        "expected": {
+            "all_vars": {'web.xyz': set()},
+            "t_call_inner": {'web.SectionMenu': {'section', 'isNested'}},
+            "t_call_outer": {'web.SectionMenu': set()},
+            'full_inherit_and_call_map': {'web.xyz': [], 'web.SectionMenu': ['web.xyz']}
         },
     },
     {
