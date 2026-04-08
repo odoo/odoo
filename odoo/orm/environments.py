@@ -596,7 +596,7 @@ class Transaction:
         # x2many fields if they are not in cache yet
         self.field_data_patches = defaultdict["Field", defaultdict["IdType", list["IdType"]]](lambda: defaultdict(list))
         # fields to protect {field: ids}
-        self.protected = StackMap["Field", OrderedSet["IdType"]]()
+        self.protected = StackMap["Field", frozenset["IdType"]]()
         # pending computations {field: ids}
         self.tocompute = defaultdict["Field", OrderedSet["IdType"]](OrderedSet)
         # backward-compatible view of the cache
