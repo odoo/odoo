@@ -346,12 +346,4 @@ export class RecordInternal {
         });
         this.prepareFieldOnUpdate(record, fieldName, recordProxy);
     }
-    /**
-     * The internal reactive is only necessary to trigger outer reactives when
-     * writing on it. As it has no callback, reading through it has no effect,
-     * except slowing down performance and complexifying the stack.
-     */
-    downgradeProxy(record, fullProxy) {
-        return record._proxy === fullProxy ? record._proxyInternal : fullProxy;
-    }
 }
