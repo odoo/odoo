@@ -285,3 +285,43 @@ class TestL10nHrEdiXml(TestL10nHrEdiCommon, AccountTestInvoicingCommon):
             self.get_xml_tree_from_string(actual_content),
             self.get_xml_tree_from_string(expected_content),
         )
+
+    def test_export_credit_note_without_bank_account(self):
+        """
+        Test that a credit note referencing an original invoice can be exported without a
+        recipient bank account. Covers two bugs:
+        1. AttributeError: 'NoneType' has no attribute 'get' when PayeeFinancialAccount is None
+        2. ValueError: cbc:IssueDate placed as a sibling of cac:InvoiceDocumentReference
+           instead of a child, causing dict_to_xml template validation to fail
+        """
+        self.setup_partner_as_hr(self.env.company.partner_id)
+        self.setup_partner_as_hr_alt(self.partner_a)
+        self.partner_a.bank_ids.sudo().unlink()
+        tax = self.env['account.chart.template'].ref('VAT_S_IN_ROC_25')
+
+        original_invoice = self._create_invoice(
+            move_type='out_invoice',
+            partner_id=self.partner_a,
+            invoice_date='2025-01-01',
+            post=True,
+            invoice_line_ids=[self._prepare_invoice_line(product_id=self.product_a, price_unit=100.0, tax_ids=tax)],
+        )
+        credit_note = self._reverse_invoice(original_invoice, post=True, date='2025-01-02')
+        credit_note.l10n_hr_edi_addendum_id = self.env['l10n_hr_edi.addendum'].create({
+            'move_id': credit_note.id,
+            'invoice_sending_time': '2025-01-03',
+            'fiscalization_number': self.env['account.move']._get_l10n_hr_fiscalization_number(credit_note.name),
+        })
+
+        actual_content, errors = self.env['account.edi.xml.ubl_hr'].with_context(lang='en_US')._export_invoice(credit_note)
+        self.assertFalse(errors)
+
+        tree = self.get_xml_tree_from_string(actual_content)
+
+        billing_ref = tree.find('.//{*}BillingReference')
+        self.assertIsNotNone(billing_ref)
+        invoice_doc_ref = billing_ref.find('{*}InvoiceDocumentReference')
+        self.assertIsNotNone(invoice_doc_ref)
+        self.assertIsNotNone(invoice_doc_ref.find('{*}IssueDate'))
+        self.assertIsNone(billing_ref.find('{*}IssueDate'))
+        self.assertIsNone(tree.find('.//{*}PayeeFinancialAccount'))
