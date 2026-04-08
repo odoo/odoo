@@ -76,7 +76,7 @@ export class HootConfigMenu extends Component {
                         type="text"
                         autofocus=""
                         class="w-full outline-none border-b border-primary px-1"
-                        t-custom-model.number="this.config.random"
+                        t-model.number="this.config.random"
                     />
                     <button
                         type="button"
@@ -96,7 +96,7 @@ export class HootConfigMenu extends Component {
                 <input
                     type="text"
                     class="outline-none border-b border-primary px-1 w-full"
-                    t-custom-model.number="this.config.timeout"
+                    t-model.number="this.config.timeout"
                 />
             </label>
             <label
@@ -107,7 +107,7 @@ export class HootConfigMenu extends Component {
                 <input
                     type="text"
                     class="outline-none border-b border-primary px-1 w-full"
-                    t-custom-model="this.config.networkDelay"
+                    t-model="this.config.networkDelay"
                 />
             </label>
             <label
@@ -117,7 +117,7 @@ export class HootConfigMenu extends Component {
                 <input
                     type="checkbox"
                     class="appearance-none border border-primary rounded-xs w-4 h-4"
-                    t-custom-model="this.config.manual"
+                    t-model="this.config.manual"
                 />
                 <span>Run tests manually</span>
             </label>
@@ -140,7 +140,7 @@ export class HootConfigMenu extends Component {
                         type="text"
                         autofocus=""
                         class="outline-none w-full border-b border-primary px-1"
-                        t-custom-model.number="this.config.bail"
+                        t-model.number="this.config.bail"
                     />
                 </small>
             </t>
@@ -162,7 +162,7 @@ export class HootConfigMenu extends Component {
                     <select
                         autofocus=""
                         class="outline-none w-full bg-base text-base border-b border-primary px-1"
-                        t-custom-model.number="this.config.loglevel"
+                        t-model.number="this.config.loglevel"
                     >
                         <t t-foreach="this.LOG_LEVELS" t-as="level" t-key="level.value">
                             <option
@@ -180,7 +180,7 @@ export class HootConfigMenu extends Component {
                 <input
                     type="checkbox"
                     class="appearance-none border border-primary rounded-xs w-4 h-4"
-                    t-custom-model="this.config.notrycatch"
+                    t-model="this.config.notrycatch"
                 />
                 <span>No try/catch</span>
             </label>
@@ -231,7 +231,7 @@ export class HootConfigMenu extends Component {
                 <input
                     type="checkbox"
                     class="appearance-none border border-primary rounded-xs w-4 h-4"
-                    t-custom-model="this.config.headless"
+                    t-model="this.config.headless"
                 />
                 <span>Headless</span>
             </label>
@@ -242,7 +242,7 @@ export class HootConfigMenu extends Component {
                 <input
                     type="checkbox"
                     class="appearance-none border border-primary rounded-xs w-4 h-4"
-                    t-custom-model="this.config.fun"
+                    t-model="this.config.fun"
                 />
                 <span>Enable incentives</span>
             </label>

@@ -133,7 +133,7 @@ export class HootSideBar extends Component {
                         type="search"
                         placeholder="Search suites"
                         t-ref="this.searchInputRef"
-                        t-custom-model="this.filter"
+                        t-model="this.filter"
                         t-on-keydown="this.onSearchInputKeydown"
                     />
                 </div>

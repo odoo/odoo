@@ -310,7 +310,7 @@ export class HootSearch extends Component {
     static template = xml`
         <t t-set="hasIncludeValue" t-value="this.getHasIncludeValue()" />
         <t t-set="isRunning" t-value="this.runner.status() === 'running'" />
-        <search class="${HootSearch.name} flex-1" t-custom-ref="this.rootRef" t-on-keydown="this.onKeyDown">
+        <search class="${HootSearch.name} flex-1" t-ref="this.rootRef" t-on-keydown="this.onKeyDown">
             <form class="relative" t-on-submit.prevent="this.refresh">
                 <div class="hoot-search-bar flex border rounded items-center bg-base px-1 gap-1 w-full transition-colors">
                     <t t-foreach="this.getCategoryCounts()" t-as="count" t-key="count.category">
@@ -335,7 +335,7 @@ export class HootSearch extends Component {
                         class="w-full rounded p-1 outline-none"
                         t-att-autofocus="!this.config.manual()"
                         placeholder="Filter suites, tests or tags"
-                        t-custom-ref="this.searchInputRef"
+                        t-ref="this.searchInputRef"
                         t-att-class="{ 'text-gray': !this.config.filter() }"
                         t-att-disabled="isRunning"
                         t-att-value="this.query()"
