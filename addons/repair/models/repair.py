@@ -32,7 +32,7 @@ class Repair(models.Model):
     # Common Fields
     name = fields.Char(
         'Repair Reference',
-        default='New', index='trigram',
+        default=lambda self: _('New'), index='trigram',
         copy=False, required=True,
         readonly=True)
     company_id = fields.Many2one(
@@ -383,7 +383,7 @@ class Repair(models.Model):
             )
             if 'picking_type_id' not in vals:
                 vals['picking_type_id'] = picking_type.id
-            if not vals.get('name', False) or vals['name'] == 'New':
+            if not vals.get('name', False) or vals['name'] == _('New'):
                 vals['name'] = picking_type.sequence_id.next_by_id()
             if not vals.get('procurement_group_id'):
                 vals['procurement_group_id'] = self.env["procurement.group"].create({'name': vals['name']}).id
