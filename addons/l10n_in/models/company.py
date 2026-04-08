@@ -62,6 +62,24 @@ class ResCompany(models.Model):
         check_company=True,
     )
 
+    # BOE settings
+    l10n_in_boe_feature = fields.Boolean(string="Bill of Entry")
+    l10n_in_boe_journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        string="BOE Journal",
+        check_company=True,
+    )
+    l10n_in_boe_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string="Custom Duty Account",
+        check_company=True,
+    )
+    l10n_in_boe_payable_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string="Custom Duty Tax Payable Account",
+        check_company=True,
+    )
+
     # GST settings
     l10n_in_is_gst_registered = fields.Boolean(
         string="Registered Under GST",

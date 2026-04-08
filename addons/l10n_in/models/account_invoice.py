@@ -115,6 +115,25 @@ class AccountMove(models.Model):
     l10n_in_show_gstin_status = fields.Boolean(compute="_compute_l10n_in_show_gstin_status")
     l10n_in_gstin_verified_date = fields.Date(compute="_compute_l10n_in_partner_gstin_status_and_date")
 
+    # BOE related field
+    l10n_in_boe_feature_enabled = fields.Boolean(related='company_id.l10n_in_boe_feature')
+    l10n_in_source_bill_id = fields.Many2one(
+        comodel_name='account.move',
+        string="Indian Source Bill",
+        copy=False,
+    )
+
+    l10n_in_boe_move_ids = fields.One2many(
+        comodel_name='account.move',
+        inverse_name='l10n_in_source_bill_id',
+        string="Indian BOE Import Records",
+    )
+    l10n_in_boe_line_ids = fields.One2many(
+        comodel_name='l10n_in.boe.line',
+        inverse_name='move_id',
+        string="Indian BOE Lines",
+    )
+
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
@@ -366,6 +385,109 @@ class AccountMove(models.Model):
             'view_mode': 'list,form',
             'domain': [('id', 'in', self.l10n_in_withhold_move_ids.ids)],
         }
+
+    def action_l10n_in_boe_entries(self):
+        self.ensure_one()
+        return self.l10n_in_boe_move_ids._get_records_action(
+            name=_("BOE Import Entries"),
+        )
+
+    def action_l10n_in_open_boe_wizard(self):
+        self.ensure_one()
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Create Bill Of Entry"),
+            'res_model': 'l10n_in.boe.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_move_id': self.id,
+                'default_l10n_in_shipping_bill_number': self.l10n_in_shipping_bill_number,
+                'default_l10n_in_shipping_bill_date': self.l10n_in_shipping_bill_date,
+                'default_l10n_in_shipping_port_code_id': self.l10n_in_shipping_port_code_id.id,
+                'default_l10n_in_boe_journal_id': self.company_id.l10n_in_boe_journal_id.id,
+            },
+        }
+
+    def _sync_l10n_in_boe_move(self):
+        """ Synchronize the draft Move's accounting items with BOE line changes. """
+        for move in self.filtered(lambda move: move.state == 'draft' and move.l10n_in_boe_line_ids):
+
+            move.with_context(dynamic_unlink=True).line_ids = [Command.clear()] + [
+                Command.create(line) for line in move._prepare_l10n_in_boe_move_lines_vals()
+            ]
+
+    def _prepare_l10n_in_boe_move_lines_vals(self):
+        self.ensure_one()
+
+        company = self.company_id
+        partner = self.partner_id
+
+        lines = []
+        total_payable = 0.0
+        tax_grouped = {}
+
+        for line in self.l10n_in_boe_line_ids:
+            taxes_res = {}
+            if line.tax_id and line.taxable_amount:
+                taxes_res = line.tax_id.compute_all(
+                    price_unit=line.taxable_amount,
+                    product=line.product_id,
+                    partner=partner,
+                )
+
+            # 1. Custom Duty Line
+            if line.custom_duty:
+                lines.append({
+                    'name': f"Custom Duty - {line.product_id.display_name or 'Product'}",
+                    'partner_id': partner.id,
+                    'account_id': company.l10n_in_boe_account_id.id,
+                    'debit': line.custom_duty,
+                    'tax_tag_ids': taxes_res.get('base_tags', []),
+                    'tax_ids': line.tax_id.ids,
+                })
+                total_payable += line.custom_duty
+
+            # 2. Tax Lines
+            for tax_dict in taxes_res.get('taxes', []):
+                amount = tax_dict.get('amount')
+                if not amount:
+                    continue
+
+                repartition_id = tax_dict.get('tax_repartition_line_id')  # grouping of tax based on repartition lines.
+
+                repartition_details = tax_grouped.setdefault(repartition_id, {
+                    'name': tax_dict.get('name', ''),
+                    'partner_id': partner.id,
+                    'account_id': tax_dict.get('account_id'),
+                    'display_type': 'tax',
+                    'debit': 0.0,
+                    'credit': 0.0,
+                    'tax_repartition_line_id': repartition_id,
+                    'tax_base_amount': 0.0,
+                    'tax_tag_ids': tax_dict.get('tag_ids', []),
+                })
+
+                repartition_details['debit'] += amount
+                repartition_details['tax_base_amount'] += line.taxable_amount
+
+                total_payable += amount
+
+        lines.extend(tax_grouped.values())
+
+        # 3. Payable Line
+        if total_payable:
+            lines.append({
+                'name': self.env._("BOE Payable"),
+                'display_type': 'payment_term',
+                'partner_id': partner.id,
+                'account_id': company.l10n_in_boe_payable_account_id.id,
+                'debit': 0.0,
+                'credit': total_payable,
+            })
+
+        return lines
 
     def _get_l10n_in_invalid_tax_lines(self):
         self.ensure_one()
