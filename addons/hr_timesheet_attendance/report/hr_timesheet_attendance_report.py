@@ -36,7 +36,7 @@ class HrTimesheetAttendanceReport(models.Model):
             FROM (
                 SELECT
                     -hr_attendance.id AS id,
-                    hr_employee.hourly_cost AS emp_cost,
+                    v.hourly_cost AS emp_cost,
                     hr_attendance.employee_id AS employee_id,
                     hr_attendance.worked_hours AS attendance,
                     NULL AS timesheet,
@@ -51,11 +51,12 @@ class HrTimesheetAttendanceReport(models.Model):
                     hr_employee.company_id as company_id
                 FROM hr_attendance
                 LEFT JOIN hr_employee ON hr_employee.id = hr_attendance.employee_id
+                LEFT JOIN hr_version v ON v.id = hr_employee.current_version_id
                 WHERE check_in::date <= CURRENT_DATE
             UNION ALL
                 SELECT
                     ts.id AS id,
-                    hr_employee.hourly_cost AS emp_cost,
+                    v.hourly_cost AS emp_cost,
                     ts.employee_id AS employee_id,
                     NULL AS attendance,
                     ts.unit_amount AS timesheet,
@@ -63,6 +64,7 @@ class HrTimesheetAttendanceReport(models.Model):
                     ts.company_id AS company_id
                 FROM account_analytic_line AS ts
                 LEFT JOIN hr_employee ON hr_employee.id = ts.employee_id
+                LEFT JOIN hr_version v ON v.id = hr_employee.current_version_id
                 WHERE ts.project_id IS NOT NULL
                   AND date <= CURRENT_DATE
             ) AS t

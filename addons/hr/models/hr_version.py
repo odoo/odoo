@@ -158,6 +158,7 @@ class HrVersion(models.Model):
                                         groups="hr.group_hr_manager", default=_default_salary_structure)
     active_employee = fields.Boolean(related="employee_id.active", string="Active Employee", groups="hr.group_hr_user")
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
+    hourly_cost = fields.Monetary('Hourly Cost', groups="hr.group_hr_user", default=0.0, tracking=True)
     wage = fields.Monetary('Wage', tracking=True, help="Employee's monthly gross wage.", aggregator="avg",
                            groups="hr.group_hr_manager")
     contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage', groups="hr.group_hr_manager")
