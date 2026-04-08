@@ -3,34 +3,30 @@
 from odoo import api, fields, models
 
 
-class CalendarPopoverDeleteWizard(models.TransientModel):
-    _name = 'calendar.popover.delete.wizard'
+class CalendarEventUnlinkWizard(models.TransientModel):
+    _name = 'calendar.event.unlink.wizard'
     _inherit = ['mail.composer.mixin']
-    _description = 'Calendar Popover Delete Wizard'
+    _description = 'Calendar Event Unlink Wizard'
 
     calendar_event_id = fields.Many2one('calendar.event', 'Calendar Event')
-    delete = fields.Selection([('one', 'Delete this event'), ('next', 'Delete this and following events'), ('all', 'Delete all the events')], default='one')
+    recurrence_choice = fields.Selection([('self_only', 'Delete this event'), ('future_events', 'Delete this and following events'), ('all_events', 'Delete all the events')], default='self_only')
+    multi_unlink_wizard_id = fields.Many2one('calendar.event.multi.unlink.wizard', ondelete='cascade')
     recipient_ids = fields.Many2many(
         'res.partner',
         string="Recipients",
         compute='_compute_recipient_ids',
         readonly=False,
     )
+    template_id = fields.Many2one('mail.template', compute='_compute_template_id')
 
-    def close(self):
+    def action_proceed_recurrence_choice(self):
         # Return if there are multiple attendees or if the organizer's partner_id differs
         if self.calendar_event_id.attendees_count != 1 or self.calendar_event_id.user_id.partner_id != self.calendar_event_id.partner_ids:
-            return self.calendar_event_id.action_unlink_event(self.delete)
-        if not self.calendar_event_id or not self.delete:
-            pass
-        elif self.delete == 'one':
-            self.calendar_event_id.unlink()
-        else:
-            switch = {
-                'next': 'future_events',
-                'all': 'all_events'
-            }
-            self.calendar_event_id.action_mass_deletion(switch.get(self.delete, ''))
+            return self.calendar_event_id.action_open_unlink_wizard(self.env.context.get('next_action'), self.recurrence_choice)
+        return self.action_unlink()
+
+    def _compute_template_id(self):
+        self.template_id = self.env.ref('calendar.calendar_template_delete_event', raise_if_not_found=False)
 
     @api.depends('calendar_event_id')
     def _compute_recipient_ids(self):
@@ -38,7 +34,7 @@ class CalendarPopoverDeleteWizard(models.TransientModel):
         for wizard in self:
             wizard.recipient_ids = wizard.calendar_event_id.partner_id | wizard.calendar_event_id.attendee_ids.partner_id
 
-    @api.depends('calendar_event_id')
+    @api.depends('calendar_event_id', 'template_id')
     def _compute_subject(self):
         """ Compute the subject by rendering the template's subject field based on the event. """
         for wizard in self.filtered('template_id'):
@@ -49,7 +45,7 @@ class CalendarPopoverDeleteWizard(models.TransientModel):
                 options={'post_process': True},
             )[wizard.calendar_event_id.id]
 
-    @api.depends('calendar_event_id')
+    @api.depends('calendar_event_id', 'template_id')
     def _compute_body(self):
         """ Compute the body by rendering the template's body HTML field based on the event. """
         for wizard in self.filtered('template_id'):
@@ -60,39 +56,28 @@ class CalendarPopoverDeleteWizard(models.TransientModel):
                 options={'post_process': True},
             )[wizard.calendar_event_id.id]
 
-    def action_delete(self):
+    def action_unlink(self):
         """
-        Delete the event based on the specified deletion type.
+        Delete the events specified with recurrence_choice field.
 
-        :return: Action URL to redirect to the calendar view
+        :return: Client action to reload the page.
         """
         self.ensure_one()
-        event = self.calendar_event_id
-        deletion_type = self.env.context.get('default_recurrence')
+        self.calendar_event_id._action_unlink(self.recurrence_choice)
+        return self.env.context.get('next_action')
 
-        # Unlink recurrent events.
-        if event.recurrency:
-            if deletion_type in ['one', 'self_only']:
-                event.unlink()
-            elif deletion_type in ['next', 'all']:
-                event.action_mass_deletion('future_events' if deletion_type == 'next' else 'all_events')
-        else:
-            event.unlink()
-
+    def _prepare_mail_values(self):
+        self.ensure_one()
         return {
-            'type': 'ir.actions.act_url',
-            'target': 'self',
-            'url': '/odoo/calendar'
-        }
-
-    def action_send_mail_and_delete(self):
-        """Send the composed email and delete the event based on the specified deletion type."""
-        self.ensure_one()
-        self.env['mail.mail'].sudo().create([{
             'auto_delete': True,
             'body_html': self.body,
             'email_from': self.env.user.email_formatted,
             'recipient_ids': self.recipient_ids.ids,
             'subject': self.subject,
-        }])
-        return self.action_delete()
+        }
+
+    def action_send_mail_and_unlink(self):
+        """Send the composed email and delete the event based on the specified deletion type."""
+        self.ensure_one()
+        self.env['mail.mail'].sudo().create([self._prepare_mail_values()]).send_after_commit()
+        return self.action_unlink()
