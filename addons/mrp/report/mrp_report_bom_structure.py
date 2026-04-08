@@ -19,7 +19,10 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
 
     @api.model
     def get_warehouses(self):
-        return self.env['stock.warehouse'].search_read([('company_id', 'in', self.env.companies.ids)], fields=['id', 'name', 'manu_type_id'])
+        warehouses = self.env['stock.warehouse'].search_read([('company_id', 'in', self.env.companies.ids)], fields=['id', 'name', 'manu_type_id'])
+        if not warehouses:
+            self.env['stock.warehouse']._warehouse_redirect_warning()
+        return warehouses
 
     @api.model
     def _compute_current_production_capacity(self, bom_data):
