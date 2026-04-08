@@ -90,7 +90,7 @@
 
 <t t-name="mass_mailing.DesignTextOption">
     <BuilderContext action="'mass_mailing.CustomizeMailingVariable'">
-        <BuilderRow label="label" extraLabelClass="'fw-bolder'">
+        <BuilderRow label="this.label" extraLabelClass="'fw-bolder'">
             <BuilderNumberInput actionParam="{ variable: `${prefix}font-size` }" unit="'px'" saveUnit="'px'" default="0"/>
             <BuilderColorPicker noTransparency="true" title.translate="Text Color" enabledTabs="['solid', 'custom']"
                 actionParam="{ variable: `${prefix}color` }"/>
@@ -109,7 +109,7 @@
 
 <t t-name="mass_mailing.DesignGenericButtonOption">
     <BuilderContext action="'mass_mailing.CustomizeMailingVariable'">
-        <BuilderRow label="label" extraLabelClass="'fw-bolder'">
+        <BuilderRow label="this.label" extraLabelClass="'fw-bolder'">
             <BuilderNumberInput actionParam="{ variable: `${prefix}font-size` }" unit="'px'" saveUnit="'px'" default="0"/>
             <BuilderColorPicker noTransparency="true" title.translate="Text Color" enabledTabs="['solid', 'custom']"
                 actionParam="{ variable: `${prefix}color` }"/>

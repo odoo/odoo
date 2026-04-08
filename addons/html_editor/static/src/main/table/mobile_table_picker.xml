@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.MobileTablePicker">
-        <div class="o-we-tablesizepopover d-flex bg-light overflow-auto shadow" t-on-keydown="onKeydown" role="dialog" aria-modal="true" aria-label="Table Size Popover">
+        <div class="o-we-tablesizepopover d-flex bg-light overflow-auto shadow" t-on-keydown="this.onKeydown" role="dialog" aria-modal="true" aria-label="Table Size Popover">
             <div class="container-fluid d-flex vertical-center p-2" t-ref="editing-wrapper">
                 <div class="d-flex">
                     <div class="col p-2">
@@ -9,7 +9,7 @@
                             <input id="rowCount" t-ref="rowCount"
                                 type="number" min="1" max="100"
                                 class="border-dark-subtle form-control form-control-sm"
-                                t-model="state.rowCount"
+                                t-custom-model="this.state.rowCount"
                                 title="Row count"
                                 placeholder="Number of rows"
                                 t-on-input="this.updateSize"/>
@@ -17,7 +17,7 @@
                             <input id="columnCount" t-ref="columnCount"
                                 type="number" min="1" max="12"
                                 class="border-dark-subtle form-control form-control-sm"
-                                t-model="state.columnCount"
+                                t-custom-model="this.state.columnCount"
                                 title="Column count"
                                 placeholder="Number of columns"
                                 t-on-input="this.updateSize"/>

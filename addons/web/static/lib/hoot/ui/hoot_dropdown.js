@@ -9,9 +9,9 @@ import { elSignal, useAutofocus, useHootKey, useWindowListener } from "../hoot_u
 
 export class HootDropdown extends Component {
     static template = xml`
-        <div class="${HootDropdown.name} relative" t-att-class="this.props.className" t-ref="this.rootRef">
+        <div class="${HootDropdown.name} relative" t-att-class="this.props.className" t-custom-ref="this.rootRef">
             <button
-                t-ref="this.togglerRef"
+                t-custom-ref="this.togglerRef"
                 class="flex rounded p-2 transition-colors"
                 t-att-class="this.props.buttonClassName"
             >

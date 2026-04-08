@@ -147,12 +147,12 @@
     </t>
     <t t-name="discuss.CallSettings.textToggler">
         <div class="d-flex flex-wrap align-items-center">
-            <label class="d-flex align-items-center flex-wrap mw-100" t-att-title="text" t-att-aria-label="text">
-                <span class="text-truncate text-wrap" t-out="text"></span>
+            <label class="d-flex align-items-center flex-wrap mw-100" t-att-title="this.text" t-att-aria-label="this.text">
+                <span class="text-truncate text-wrap" t-out="this.text"></span>
             </label>
             <div class="flex-grow-1"/>
             <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" t-on-change="onchange" t-att-checked="value ? 'checked' : ''" t-att-title="text" t-att-aria-label="text"/>
+                <input class="form-check-input" type="checkbox" role="switch" t-on-change="onchange" t-att-checked="value ? 'checked' : ''" t-att-title="this.text" t-att-aria-label="this.text"/>
             </div>
         </div>
     </t>

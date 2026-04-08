@@ -135,8 +135,8 @@
     </t>
 
     <t t-name="web.ListRenderer.Rows">
-        <t t-if="!list.isGrouped">
-            <t t-foreach="list.records" t-as="record" t-key="record.id">
+        <t t-if="!this.list.isGrouped">
+            <t t-foreach="this.list.records" t-as="record" t-key="record.id">
                 <t t-call="{{ this.constructor.recordRowTemplate }}"/>
             </t>
             <tr t-if="this.displayRowCreates" class="d-print-none">
@@ -176,7 +176,7 @@
             </t>
         </t>
         <t t-else="">
-            <t t-foreach="list.groups" t-as="group" t-key="group.id">
+            <t t-foreach="this.list.groups" t-as="group" t-key="group.id">
                 <t t-call="{{ this.constructor.groupRowTemplate }}"/>
                 <t t-if="!group.isFolded">
                     <t t-call="{{ this.constructor.rowsTemplate }}" list="group.list" groupId="group.id"/>

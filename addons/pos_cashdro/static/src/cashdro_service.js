@@ -1,5 +1,5 @@
+import { reactive } from "@web/owl2/utils";
 import { Logger } from "@bus/workers/bus_worker_utils";
-import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 const CASHDRO_URL = "/Cashdro3WS/index3.php";
