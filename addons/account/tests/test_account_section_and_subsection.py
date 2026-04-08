@@ -45,6 +45,73 @@ class TestAccountSectionAndSubsection(AccountTestInvoicingCommon):
             for key, value in expected_value.items():
                 self.assertEqual(line_value[key], value)
 
+    def test_grouping_sections_and_subsections_by_taxes(self):
+        move = self.init_invoice('out_invoice')
+
+        move.invoice_line_ids = [
+            Command.create({
+                'move_id': move.id,
+                'name': "Section 1",
+                'display_type': 'line_section',
+                'collapse_composition': True,
+            }),
+            Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 100,
+                'tax_ids': self.tax_sale_a.ids,
+            }),
+            Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 50,
+                'tax_ids': self.tax_sale_b.ids,
+            }),
+            Command.create({
+                'product_id': self.product_b.id,
+                'price_unit': 50,
+                'tax_ids': self.tax_sale_b.ids,
+            }),
+            Command.create({
+                'move_id': move.id,
+                'name': "Section 2",
+                'display_type': 'line_section',
+            }),
+            Command.create({
+                'move_id': move.id,
+                'name': "Subsection 2.1",
+                'display_type': 'line_subsection',
+                'collapse_composition': True,
+            }),
+            Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 50,
+                'tax_ids': self.tax_sale_a.ids,
+            }),
+            Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 50,
+                'tax_ids': self.tax_sale_a.ids,
+            }),
+            Command.create({
+                'product_id': self.product_b.id,
+                'price_unit': 50,
+                'tax_ids': self.tax_sale_b.ids,
+            }),
+        ]
+        lines_to_report = move._get_move_lines_to_report()
+        section_lines = []
+        for line in lines_to_report.filtered(lambda l: l.collapse_composition and l.display_type in ('line_section', 'line_subsection')):
+            section_lines += line._get_child_lines()
+
+        expected_values = [
+            {'display_type': 'product', 'name': 'Section 1', 'price_subtotal': 100.0, 'taxes': ['15%']},
+            {'display_type': 'product', 'name': 'Section 1', 'price_subtotal': 100.0, 'taxes': ['15% (copy)']},
+            {'display_type': 'product', 'name': 'Subsection 2.1', 'price_subtotal': 100.0, 'taxes': ['15%']},
+            {'display_type': 'product', 'name': 'Subsection 2.1', 'price_subtotal': 50.0, 'taxes': ['15% (copy)']},
+        ]
+        for expected_value, line_value in zip(expected_values, section_lines):
+            for key, value in expected_value.items():
+                self.assertEqual(line_value[key], value)
+
     def test_get_child_lines_with_multiple_taxes(self):
         move = self.init_invoice('out_invoice')
         move.invoice_line_ids = [
