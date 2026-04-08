@@ -681,3 +681,45 @@ test("list datetime: column widths (numeric format)", async () => {
     ]);
     expect(queryAllProperties(".o_list_table thead th", "offsetWidth")).toEqual([40, 144, 616]);
 });
+
+test("DateField: incoherent state and record value", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <group>
+                    <field name="date"/>
+                    <field name="datetime"/>
+                </group>
+            </form>`,
+    });
+
+    // Date field
+    await contains(".o_field_widget[name=date] input").click();
+    await edit("11/10", { confirm: "Enter" });
+    await animationFrame();
+    expect(".o_field_widget[name=date] button").toHaveValue("11/10/2019");
+
+    await contains(".o_form_button_save").click();
+    await animationFrame();
+
+    await contains(".o_field_widget[name=date] button").click();
+    await edit("10/10", { confirm: "Enter" });
+    await animationFrame();
+    expect(".o_field_widget[name=date] button").toHaveValue("10/10/2019");
+
+    // Datetime field
+    await contains(".o_field_widget[name=datetime] input").click();
+    await edit("11/10", { confirm: "Enter" });
+    await animationFrame();
+    expect(".o_field_widget[name=datetime] button").toHaveValue("11/10/2019 00:00:00");
+
+    await contains(".o_form_button_save").click();
+    await animationFrame();
+
+    await contains(".o_field_widget[name=datetime] button").click();
+    await edit("10/10", { confirm: "Enter" });
+    await animationFrame();
+    expect(".o_field_widget[name=datetime] button").toHaveValue("10/10/2019 00:00:00");
+});
