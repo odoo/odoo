@@ -21,15 +21,17 @@ class PrinterDriver(PrinterDriverBase):
         super().__init__(identifier, device)
         self.conn = Connection()
         self.cups_lock = Lock()
-        self.receipt_protocol = 'star' if 'STR_T' in device['device-id'] else 'escpos'
         self.connected_by_usb = device.get("is_usb", False)
         self.device_connection = "direct" if self.connected_by_usb else "network"
-        self.device_name = device['device-make-and-model']
+        self.device_name = device.get('device-make-and-model', identifier)
         self.ip = device.get('ip')
 
-        if any(cmd in device['device-id'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']) or "tm-m30" in self.device_name.lower():
+        device_id = device.get('device-id', '')
+        self.receipt_protocol = 'star' if 'STR_T' in device_id else 'escpos'
+
+        if any(cmd in device_id for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']) or "tm-m30" in self.device_name.lower():
             self.device_subtype = "receipt_printer"
-        elif any(cmd in device['device-id'] for cmd in ['COMMAND SET:ZPL;', 'CMD:ESCLABEL;']) or "zpl" in self.device_name.lower():
+        elif any(cmd in device_id for cmd in ['COMMAND SET:ZPL;', 'CMD:ESCLABEL;']) or "zpl" in self.device_name.lower():
             self.device_subtype = "label_printer"
         else:
             self.device_subtype = "office_printer"
