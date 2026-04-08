@@ -5,7 +5,7 @@ import re
 from stdnum.be import vat as be_vat
 
 from odoo import _, api, fields, models, Command
-from odoo.tools import formatLang, frozendict, html2plaintext, html_escape, pdf, str2bool, unique
+from odoo.tools import formatLang, frozendict, groupby, html2plaintext, html_escape, pdf, str2bool, unique
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
     EAS_MAPPING,
     FloatFmt,
@@ -2586,6 +2586,80 @@ class AccountEdiUBL(models.AbstractModel):
 
         self._define_document_type(vals, document_type)
 
+    def _preprocess_base_lines(self, invoice, base_lines):
+        """Collapse the base_lines of sections/subsections flagged with 'collapse_composition'.
+
+        For each section or subsection with `collapse_composition` enabled, all of its
+        product base_lines are hidden and replaced by a single base_line per
+        tax group, whose amounts are the sum of the hidden lines it represents.
+
+        base_lines belonging to sections without `collapse_composition` are left untouched.
+        """
+        def _build_collapsed_base_line(group, section):
+            """Build a single base_line representing all lines of a tax group under a collapsed section"""
+            AccountTax = self.env['account.tax']
+            first_line = group[0]
+            total_excluded_currency = sum(bl['tax_details']['total_excluded_currency'] for bl in group)
+
+            collapsed_line = AccountTax._prepare_base_line_for_taxes_computation(
+                first_line['record'],
+                quantity=1.0,
+                price_unit=total_excluded_currency,
+                discount=0.0,
+                tax_ids=first_line['tax_ids'],
+                currency_id=first_line['currency_id'],
+            )
+            collapsed_line.update({
+                'name': section.name,
+                '_line_name': section.name,
+                'product_id': self.env['product.product'],
+            })
+            AccountTax._add_tax_details_in_base_lines([collapsed_line], invoice.company_id)
+            AccountTax._round_base_lines_tax_details([collapsed_line], invoice.company_id)
+            return collapsed_line
+
+        def _get_collapsed_section_line_ids(invoice, base_lines):
+            """Return collapse roots (sections/subsections), their subsections, and the hidden product lines."""
+
+            collapsed_roots = invoice.invoice_line_ids.filtered(
+                lambda line: line.display_type in ('line_section', 'line_subsection')
+                and all([line.collapse_composition, not line.parent_id.collapse_composition]),  # a collapsed subsection of a collapsed section shouldn't be considered as a root
+            )
+            hidden_lines = [
+                bl for bl in base_lines
+                if bl['record'].parent_id in collapsed_roots  # children of a collapsed section
+                or bl['record'].parent_id.parent_id in collapsed_roots  # children of a standalone collapsed subsection
+            ]
+            return collapsed_roots, hidden_lines
+
+        def _get_collapsed_section_base_lines(invoice, hidden_base_lines, collapsed_roots):
+            """For each collapsed (section/subsection), return one base_line per tax group."""
+
+            result = []
+            for section in collapsed_roots:
+                section_bls = [
+                    bl for bl in hidden_base_lines
+                    if section in (bl['record'].parent_id, bl['record'].parent_id.parent_id)
+                ]
+                if not section_bls:
+                    continue
+
+                for _taxes, lines in groupby(
+                    sorted(section_bls, key=lambda bl: bl['tax_ids'].ids),
+                    key=lambda bl: bl['tax_ids'],
+                ):
+                    result.append(_build_collapsed_base_line(list(lines), section))
+            return result
+
+        collapsed_roots, hidden_lines = _get_collapsed_section_line_ids(invoice, base_lines)
+        if not hidden_lines:
+            return base_lines
+
+        normal_lines = [bl for bl in base_lines if bl not in hidden_lines]
+        collapsed_lines = _get_collapsed_section_base_lines(invoice, hidden_lines, collapsed_roots)
+
+        return collapsed_lines + normal_lines
+
     def _init_invoice_export_values(self, invoice):
         vals = {'invoice': invoice.with_context(lang=invoice.partner_id.lang)}
 
@@ -2605,7 +2679,8 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_values_customer(vals, customer)
         self._ubl_add_values_delivery(vals, delivery)
 
-        vals['base_lines'], vals['tax_lines'] = invoice._get_rounded_base_and_tax_lines()
+        base_lines, vals['tax_lines'] = invoice._get_rounded_base_and_tax_lines()
+        vals['base_lines'] = self._preprocess_base_lines(invoice, base_lines)
         return vals
 
     def _export_invoice(self, invoice):
