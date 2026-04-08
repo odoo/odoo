@@ -84,4 +84,5 @@ RUN wine ${ODOO_BUILD_DIR}/WinPy64/python-3.12.3.amd64/python.exe -m pip install
     && wine ${ODOO_BUILD_DIR}/WinPy64/python-3.12.3.amd64/python.exe -m pip install "c:\netifaces-0.11.0-cp312-cp312-win_amd64.whl" \
     && cat ${DRIVE_C_DIR}/requirements*.txt | while read PACKAGE ; do \
     echo "${PACKAGE%%#*}" ; wine ${ODOO_BUILD_DIR}/WinPy64/python-3.12.3.amd64/python.exe -m pip install "${PACKAGE%%#*}" ; \
-    done
+    done \
+    && wine ${ODOO_BUILD_DIR}/WinPy64/python-3.12.3.amd64/python.exe -m pip install phonenumbers dbfread google-auth paramiko pdfminer.six pyjwt
