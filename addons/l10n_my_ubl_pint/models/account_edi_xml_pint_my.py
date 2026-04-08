@@ -127,3 +127,18 @@ class AccountEdiXmlPint_My(models.AbstractModel):
         constraints.pop('cen_en16931_tax_line', '')
 
         return constraints
+
+    # -------------------------------------------------------------------------
+    # IMPORT
+    # -------------------------------------------------------------------------
+
+    def _import_ubl_invoice_add_customer_values(self, collected_values):
+        # EXTENDS account.edi.xml.ubl_bis3; Prioritize PartyLegalEntity when inferring the supplier tax identifier.
+        super()._import_ubl_invoice_add_customer_values(collected_values)
+        odoo_document_type = collected_values['odoo_document_type']
+        party_tag = "AccountingCustomerParty" if odoo_document_type == 'sale' else "AccountingSupplierParty"
+        tree = collected_values['tree']
+        party_legal_entity_node = tree.find(f"./{{*}}{party_tag}/{{*}}Party/{{*}}PartyLegalEntity")
+        if party_legal_entity_node is None:
+            return
+        collected_values['customer_values']['vat'] = party_legal_entity_node.findtext("./{*}CompanyID")

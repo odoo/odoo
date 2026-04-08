@@ -57,6 +57,34 @@ class TestMyUBLPint(AccountTestInvoicingCommon):
             self.get_xml_tree_from_string(expected_xml),
         )
 
+    def test_invoice_import(self):
+        with file_open('l10n_my_ubl_pint/tests/expected_xmls/invoice_no_taxes.xml', 'rb') as f:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': f.read(),
+            })
+
+        imported_invoice = self.env['account.move'] \
+            .with_context(default_move_type='out_invoice') \
+            ._create_records_from_attachments(xml_attachment)
+
+        self.assertEqual(imported_invoice.move_type, 'out_invoice')
+        self.assertEqual(imported_invoice.partner_id, self.partner_a)
+        self.assertEqual(imported_invoice.currency_id, self.company_data['currency'])
+        self.assertEqual(
+            imported_invoice.invoice_date.strftime("%Y-%m-%d"),
+            "2019-01-01",
+        )
+        self.assertRecordValues(
+            imported_invoice,
+            [{
+                'amount_untaxed': 1000.0,
+                'amount_tax': 0.0,
+                'amount_total': 1000.0,
+            }],
+        )
+
     def test_invoice_with_sst(self):
         invoice = self.init_invoice('out_invoice', taxes=self.company_data['default_tax_sale'], currency=self.other_currency, products=self.product_a)
 
