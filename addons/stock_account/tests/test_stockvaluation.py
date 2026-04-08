@@ -3504,3 +3504,32 @@ class TestStockValuation(TestStockValuationCommon):
                 self.assertIn(monthly_periodic.id, called_ids)
                 self.assertNotIn(daily_realtime.id, called_ids)
                 self.assertNotIn(manual_periodic.id, called_ids)
+
+    def test_multi_company_valuation(self):
+        self.category_fifo.with_company(self.branch).write({
+            'property_cost_method': 'fifo',
+        })
+        self.product_fifo.write({
+            'tracking': 'lot',
+            'lot_valuated': True,
+            'standard_price': 10,
+        })
+        branch_warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.branch.id)], limit=1)
+        branch_stock_location = branch_warehouse.lot_stock_id
+        lot = self.env['stock.lot'].create({
+            'name': 'Lot 1',
+            'product_id': self.product_fifo.id,
+            'lot_valuated': True,
+        })
+        self._make_in_move(
+            product=self.product_fifo,
+            quantity=1.0,
+            unit_cost=100,
+            location_dest_id=branch_stock_location.id,
+            company=self.branch,
+            lot_ids=lot,
+            create_picking=True,
+        )
+        self.assertEqual(lot.with_company(self.branch).standard_price, 100.00)
+        lot_multi_company = lot.with_context(allowed_company_ids=[self.env.company.id, self.branch.id])
+        self.assertEqual(lot_multi_company.with_company(self.env.company).total_value, 100.00)

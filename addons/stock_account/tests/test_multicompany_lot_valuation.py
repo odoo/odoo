@@ -65,7 +65,7 @@ class TestMultiCompanyLotValuation(TransactionCase):
         move_in_b._action_done()
 
         self.assertEqual(
-            lot_b.with_company(self.env.company).avg_cost, 0.0,
+            lot_b.with_context(allowed_company_ids=self.env.company.ids).avg_cost, 0.0,
             "avg_cost should be 0 in Company A context"
         )
         self.assertEqual(
