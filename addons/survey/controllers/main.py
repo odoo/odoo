@@ -558,7 +558,11 @@ class Survey(http.Controller):
             return correct_answers, self._prepare_question_html(survey_sudo, answer_sudo, **post)
         elif 'next_skipped_page_or_question' in post:
             answer_sudo.last_displayed_page_id = page_or_question_id
-            return correct_answers, self._prepare_question_html(survey_sudo, answer_sudo, next_skipped_page=True)
+            next_skipped_page = answer_sudo._get_next_skipped_page_or_question()
+            if not next_skipped_page:
+                answer_sudo._mark_done()
+            else:
+                return correct_answers, self._prepare_question_html(survey_sudo, answer_sudo, next_skipped_page=True)
         else:
             if not answer_sudo.is_session_answer:
                 page_or_question = request.env['survey.question'].sudo().browse(page_or_question_id)

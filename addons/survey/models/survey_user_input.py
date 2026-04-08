@@ -615,6 +615,14 @@ class SurveyUserInput(models.Model):
         It loops to the first skipped question or page if 'last_displayed_page_id' is the last
         skipped question or page."""
         self.ensure_one()
+
+        # Conditional questions management
+        # Questions that are triggered by a selected answer in the last answered skipped question
+        _, triggered_questions_by_answers, selected_answers = self._get_conditional_values()
+        for answer in self.last_displayed_page_id.suggested_answer_ids:
+            if answer in selected_answers and answer in triggered_questions_by_answers:
+                return self.survey_id._get_next_page_or_question(self, self.last_displayed_page_id.id)
+        
         skipped_mandatory_answer_ids = self.user_input_line_ids.filtered(
             lambda answer: answer.skipped and answer.question_id.constr_mandatory)
 
@@ -655,8 +663,15 @@ class SurveyUserInput(models.Model):
         skipped = self._get_skipped_questions()
         if not skipped:
             return True
-        if self.survey_id.questions_layout == 'page_per_section':
+        __, triggered_questions_by_answer, __ = self._get_conditional_values()
+        if self.survey_id.questions_layout == 'page_per_question':
+            if any(answer in triggered_questions_by_answer for answer in page_or_question.suggested_answer_ids):
+                return False
+        elif self.survey_id.questions_layout == 'page_per_section':
             skipped = skipped.page_id
+            for question in page_or_question.question_ids:
+                if any(answer in triggered_questions_by_answer for answer in question.suggested_answer_ids):
+                    return False
         return skipped == page_or_question
 
     # ------------------------------------------------------------
