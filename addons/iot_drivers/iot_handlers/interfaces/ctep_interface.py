@@ -64,6 +64,9 @@ class CTEPInterface(Interface):
             return
 
         self.easy_ctep = import_ctypes_library(self.connection_type, lib_name)
+        if self.easy_ctep is None:
+            return
+
         self.easy_ctep.createCTEPManager.restype = ctypes.c_void_p
         extra_args = [ctypes.c_void_p] if IS_RPI else []
         self.easy_ctep.connectedTerminal.argtypes = [ctypes.c_void_p, ctypes.c_char_p, *extra_args]

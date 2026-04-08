@@ -56,6 +56,8 @@ class TIMInterface(Interface):
             return
 
         self.tim_api = import_ctypes_library(self.connection_type, lib_name)
+        if not self.tim_api:
+            return
 
         # void *six_initialize_manager(int buffer_size) {
         self.tim_api.six_initialize_manager.argtypes = [ctypes.c_int]
