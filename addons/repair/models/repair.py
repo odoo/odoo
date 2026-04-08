@@ -657,7 +657,9 @@ class RepairOrder(models.Model):
         if not self:
             # default case
             default_warehouse = self.env.user.with_company(companies.id)._get_default_warehouse_id()
-            if default_warehouse and default_warehouse.repair_type_id:
+            if not default_warehouse:
+                self.env['stock.warehouse']._warehouse_redirect_warning()
+            if default_warehouse.repair_type_id:
                 return {(companies, self.env.user): default_warehouse.repair_type_id}
 
         picking_type_by_company_user = {}
