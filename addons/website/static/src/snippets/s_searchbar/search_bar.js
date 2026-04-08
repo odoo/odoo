@@ -257,7 +257,7 @@ export class SearchBar extends Interaction {
 
     openSearchModal() {
         const values = {
-            action: this.el.getAttribute("action"),
+            action: this.el.getAttribute("action") || undefined,
             placeholder: this.inputEl.getAttribute("placeholder"),
             limit: this.inputEl.dataset.limit,
             order: this.inputEl.dataset.orderBy,
