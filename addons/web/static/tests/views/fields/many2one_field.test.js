@@ -3157,6 +3157,7 @@ test("leaving an empty many2one by pressing tab (after backspace or delete)", as
     await press("backspace");
     await press("tab");
     await animationFrame();
+    await runAllTimers();
     expect(".o_field_many2one input").toHaveValue("");
 
     // reset a value

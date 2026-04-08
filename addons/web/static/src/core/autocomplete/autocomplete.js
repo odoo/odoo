@@ -120,7 +120,6 @@ export class AutoComplete extends Component {
                     this.state.value = nextProps.value;
                     this.inputRef.el.value = nextProps.value;
                 }
-                this.close();
             }
         });
 
