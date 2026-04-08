@@ -1,42 +1,37 @@
 import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted, onWillStart, status } from "@odoo/owl";
+import { Component, onMounted, onWillStart, props, status, types as t } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 
 export class CodeEditor extends Component {
     static template = "web.CodeEditor";
     static components = {};
-    static props = {
-        mode: {
-            type: String,
-            optional: true,
-            validate: (mode) => CodeEditor.MODES.includes(mode),
+
+    props = props(
+        {
+            "mode?": t.or(CodeEditor.MODES.map(t.literal)),
+            "modeOptions?": t.object(),
+            "value?": t.string,
+            "readonly?": t.boolean,
+            "onChange?": t.function(),
+            "onBlur?": t.function(),
+            "class?": t.string,
+            "theme?": t.or(CodeEditor.THEMES.map(t.literal)),
+            "maxLines?": t.number,
+            "sessionId?": t.or([t.number, t.string]),
+            "initialCursorPosition?": t.object(),
+            "showLineNumbers?": t.boolean,
+            "lineWrapping?": t.boolean,
         },
-        modeOptions: { type: Object, optional: true },
-        value: { validate: (v) => typeof v === "string", optional: true },
-        readonly: { type: Boolean, optional: true },
-        onChange: { type: Function, optional: true },
-        onBlur: { type: Function, optional: true },
-        class: { type: String, optional: true },
-        theme: {
-            type: String,
-            optional: true,
-            validate: (theme) => CodeEditor.THEMES.includes(theme),
-        },
-        maxLines: { type: Number, optional: true },
-        sessionId: { type: [Number, String], optional: true },
-        initialCursorPosition: { type: Object, optional: true },
-        showLineNumbers: { type: Boolean, optional: true },
-        lineWrapping: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        readonly: false,
-        value: "",
-        onChange: () => {},
-        class: "",
-        theme: "",
-        sessionId: 1,
-        showLineNumbers: true,
-    };
+        {
+            readonly: false,
+            value: "",
+            onChange: () => {},
+            class: "",
+            theme: "",
+            sessionId: 1,
+            showLineNumbers: true,
+        }
+    );
 
     static MODES = ["javascript", "xml", "qweb", "scss", "python"];
     static THEMES = ["", "monokai"];
