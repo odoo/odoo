@@ -13,4 +13,8 @@ class IrActionsReport(models.Model):
                 'doc_ids': docids,
                 'docs': docs,
             })
+        if report.paperformat_id:
+            data.update({
+                'report': report
+            })
         return data
