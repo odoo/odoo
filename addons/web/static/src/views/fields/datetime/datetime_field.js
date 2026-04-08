@@ -171,7 +171,6 @@ export class DateTimeField extends Component {
             },
             onClose: () => {
                 this.picker.activeInput = "";
-                this.state.value = this.getRecordValue();
             },
             onApply: async () => {
                 const toUpdate = {};
