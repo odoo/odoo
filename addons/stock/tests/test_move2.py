@@ -3874,6 +3874,59 @@ class TestAutoAssign(TestStockCommon):
         self.assertEqual(customer_picking4.move_ids.quantity, 10, "Reservation Method: 'by_date' should auto-assign when within reservation date range at confirmation")
         self.assertEqual(customer_picking5.move_ids.quantity, 10, "Reservation Method: 'at_confirm' should auto-assign at confirmation")
 
+    def test_auto_assign_receipt_to_child_location(self):
+        """When a receipt puts stock into a child location of an outbound move's
+        source location, the outbound move should be automatically reserved.
+
+        A delivery sourced from WH/Stock should be triggered for assignment when
+        stock arrives at WH/Stock/Shelf 1, because WH/Stock/Shelf 1 is a child
+        of WH/Stock and the quant gather logic already uses child_of when
+        searching for available stock.
+        """
+        self.env['ir.config_parameter'].sudo().set_param('stock.picking_no_auto_reserve', False)
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        child_location = stock_location.child_ids[0]
+        picking_type_out = self.env['stock.picking.type'].browse(self.picking_type_out)
+        picking_type_out.reservation_method = 'at_confirm'
+
+        customer_picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out,
+        })
+        self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': customer_picking.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        customer_picking.action_confirm()
+        self.assertEqual(customer_picking.move_ids.quantity, 0)
+
+        supplier_picking = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': child_location.id,
+            'picking_type_id': self.picking_type_in,
+        })
+        self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': supplier_picking.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': child_location.id,
+        })
+        supplier_picking.action_confirm()
+        supplier_picking.move_ids.quantity = 10
+        supplier_picking.move_ids.picked = True
+        supplier_picking.button_validate()
+
+        self.assertEqual(customer_picking.move_ids.quantity, 10)
+
     def test_serial_lot_ids(self):
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.customer_location = self.env.ref('stock.stock_location_customers')

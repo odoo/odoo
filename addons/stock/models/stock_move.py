@@ -2257,7 +2257,7 @@ Please change the quantity done or the rounding precision of your unit of measur
 
         domains = []
         for move in self:
-            domains.append([('product_id', '=', move.product_id.id), ('location_id', '=', move.location_dest_id.id)])
+            domains.append([('product_id', '=', move.product_id.id), ('location_id', 'parent_of', move.location_dest_id.id)])
         static_domain = [('state', 'in', ['confirmed', 'partially_available']),
                          ('procure_method', '=', 'make_to_stock'),
                          '|',
