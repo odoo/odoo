@@ -36,7 +36,7 @@ class HrWorkEntryType(models.Model):
     amount_rate = fields.Float(
         string="Rate",
         default=1.0,
-        help="If you want the hours should be paid double, the rate should be 200%.")
+        help="If you want the hours to be paid double, the rate should be set to 200%.")
     is_extra_hours = fields.Boolean(
         string="Added to Monthly Pay",
         help="Check this setting if you want the hours to be considered as extra time and added as a bonus to the basic salary.")
