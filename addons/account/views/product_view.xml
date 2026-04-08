@@ -68,15 +68,14 @@
                 </xpath>
                 <page name="inventory" position="after">
                     <page string="Accounting" name="invoicing" groups="account.group_account_readonly">
-                        <group name="properties" groups="account.group_account_readonly">
-                            <group string="Cost and Revenue">
+                        <group name="accounting" groups="account.group_account_readonly,account.group_account_invoice">
+                            <group string="Cost and Revenue" groups="account.group_account_readonly">
                                 <field name="property_account_income_id" placeholder="From Category"
                                     groups="account.group_account_readonly" decoration-muted="not property_account_income_active"/>
                                 <field name="property_account_expense_id" placeholder="From Category"
                                     groups="account.group_account_readonly" decoration-muted="not property_account_expense_active"/>
                             </group>
                         </group>
-                        <group name="accounting" groups="account.group_account_readonly,account.group_account_invoice"/>
                     </page>
                 </page>
                 <div name="list_price_per_uom_id" position="after">
