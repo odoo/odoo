@@ -540,10 +540,10 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
         self.assertTrue(self.recurrence.wed)
 
     def test_rrule_x_params_no_rrule_prefix(self):
-        self.recurrence.rrule = 'X-EVOLUTION-ENDDATE=20371102T114500Z:FREQ=WEEKLY;COUNT=720;BYDAY=MO'
+        self.recurrence.rrule = 'X-EVOLUTION-ENDDATE=20371102T114500Z:FREQ=WEEKLY;COUNT=730;BYDAY=MO'
         self.assertFalse(self.recurrence.tue)
         self.assertTrue(self.recurrence.mon)
-        self.assertEqual(self.recurrence.count, 720)
+        self.assertEqual(self.recurrence.count, 730)
         self.assertEqual(self.recurrence.rrule_type, 'weekly')
 
     def test_shift_all_base_inactive(self):

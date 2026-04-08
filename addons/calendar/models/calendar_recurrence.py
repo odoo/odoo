@@ -14,7 +14,7 @@ from odoo.tools.misc import clean_context
 from odoo.addons.base.models.res_partner import _tz_get
 
 
-MAX_RECURRENT_EVENT = 720
+MAX_RECURRENT_EVENT = 730
 
 SELECT_FREQ_TO_RRULE = {
     'daily': rrule.DAILY,
