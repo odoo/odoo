@@ -2,7 +2,6 @@
 
 from odoo import api, fields, models
 from odoo.fields import Domain
-from odoo.tools.sql import SQL
 from odoo.tools.translate import html_translate
 
 from odoo.addons.website_sale.const import SHOP_PATH
@@ -60,8 +59,8 @@ class ProductPublicCategory(models.Model):
     )
     has_published_products = fields.Boolean(
         compute="_compute_has_published_products",
-        search="_search_has_published_products",
-        compute_sudo=True,
+        store=True,
+        recursive=True,
     )
 
     website_description = fields.Html(
@@ -138,37 +137,13 @@ class ProductPublicCategory(models.Model):
                     category
                 )
 
-    @api.depends_context("company", "website_id")
+    @api.depends("product_tmpl_ids.is_published", "child_id.has_published_products")
     def _compute_has_published_products(self):
-        has_published_products = self.search(
-            # See also :meth:`_search_has_published_products`
-            Domain([("has_published_products", "=", True), ("id", "in", self.ids)]),
-            order="id",
-        )
-        has_published_products.has_published_products = True
-        (self - has_published_products).has_published_products = False
-
-    # === SEARCH METHODS === #
-
-    @api.model
-    def _search_has_published_products(self, operator, value):
-        if not (operator == "in" and True in value):
-            return NotImplemented
-
-        published_products_domain = (
-            Domain([("active", "=", True), ("is_published", "=", True)])
-            & self.env["website"].sale_product_domain()
-        )
-        # Bypass access rules in the subquery to avoid adding `has_published_products = True` twice.
-        subquery = self._search(
-            Domain("product_tmpl_ids", "any", published_products_domain), bypass_access=True
-        )
-        parents_and_self_have_published_products = SQL(
-            "SELECT unnest(string_to_array(left(c.parent_path, -1), '/'))::integer FROM %s c",
-            subquery.subselect(subquery.table.parent_path),
-        )
-
-        return Domain("id", "any", parents_and_self_have_published_products)
+        for category in self:
+            category.has_published_products = (
+                any(p.is_published for p in category.product_tmpl_ids.with_context(prefetch_fields=False))
+                or any(c.has_published_products for c in category.child_id)
+            )
 
     # === BUSINESS METHODS === #
 
