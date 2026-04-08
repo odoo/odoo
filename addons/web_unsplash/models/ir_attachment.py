@@ -1,8 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import requests
+
 from odoo import api, models
 from odoo.exceptions import ValidationError
+
+from odoo.addons.web_unsplash.controllers.main import (
+    UNSPLASH_ACCESS_KEY_ICP,
+    UNSPLASH_APP_ID_ICP,
+)
 
 
 class IrAttachment(models.Model):
@@ -21,3 +28,32 @@ class IrAttachment(models.Model):
         if forbidden and attachment_data['url'].startswith('/unsplash/'):
             return True
         return super()._can_bypass_rights_on_media_dialog(**attachment_data)
+
+    @api.model
+    def _fetch_unsplash_images(self, **post):
+        IrConfigParameter = self.env["ir.config_parameter"].sudo()
+        access_key = IrConfigParameter.get_str(UNSPLASH_ACCESS_KEY_ICP)
+        app_id = IrConfigParameter.get_str(UNSPLASH_APP_ID_ICP)
+
+        if not access_key or not app_id:
+            if not self.env.user._can_manage_unsplash_settings():
+                return {'error': 'no_access'}
+            return {'error': 'key_not_found'}
+
+        allowed_keys = {'query', 'page', 'per_page', 'orientation'}
+        payload = {key: value for key, value in post.items() if key in allowed_keys}
+        headers = {'Authorization': f'Client-ID {access_key}'}
+
+        response = requests.get(
+            'https://api.unsplash.com/search/photos/',
+            params=payload,
+            headers=headers,
+            timeout=10,
+        )
+
+        if response.status_code == requests.codes.ok:
+            return response.json()
+
+        if not self.env.user._can_manage_unsplash_settings():
+            return {'error': 'no_access'}
+        return {'error': response.status_code}
