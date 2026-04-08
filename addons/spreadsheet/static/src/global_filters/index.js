@@ -46,12 +46,10 @@ registerCommand("SET_GLOBAL_FILTER_VALUE", {
     category: "local",
     isEvaluationCommand: true,
     invalidatesEvaluation: true,
-    allowedInReadonly: true,
     allowedOnLockedSheet: true,
 });
 registerCommand("SET_MANY_GLOBAL_FILTER_VALUE", {
     category: "local",
-    allowedInReadonly: true,
     allowedOnLockedSheet: true,
 });
 registerCommand("SET_DATASOURCE_FIELD_MATCHING", { category: "local" });
@@ -59,12 +57,10 @@ registerCommand("SET_DATASOURCE_FIELD_MATCHING", { category: "local" });
 // belong to the logging and Odoo chart plugins.
 registerCommand("LOG_DATASOURCE_EXPORT", {
     category: "local",
-    allowedInReadonly: true,
     allowedOnLockedSheet: true,
 });
 registerCommand("UPDATE_CHART_GRANULARITY", {
     category: "local",
-    allowedInReadonly: true,
 });
 
 export { GlobalFiltersCorePlugin, GlobalFiltersCoreViewPlugin, GlobalFiltersUIPlugin };
