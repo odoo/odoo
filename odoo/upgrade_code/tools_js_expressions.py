@@ -504,9 +504,12 @@ class VariableAggregator:
                     self.t_call_vars[template_name].add(var_name)
 
             # Collect inline parameters on t-call (OWL 3 syntax: <t t-call="x" param="val"/>)
-            for attr in call_node.attrib:
-                if not attr.startswith("t-"):
-                    self.t_call_vars[template_name].add(attr)
+            # Skip when t-call is a direct child of t-inherit (attrs are xpath directives)
+            parent = call_node.getparent()
+            if parent is None or 't-inherit' not in parent.attrib:
+                for attr in call_node.attrib:
+                    if not attr.startswith("t-") and attr not in SKIP_XPATH_ATTRS:
+                        self.t_call_vars[template_name].add(attr)
 
             scope_nodes = call_node.xpath("ancestor::* | ancestor-or-self::*/preceding-sibling::*")
             self.t_call_outer_vars[template_name].update(self._extract_vars_from_nodes(scope_nodes))
@@ -727,9 +730,11 @@ class TemplateCompiler:
                     self._process_dynamic_attribute(node, attr)
 
             if 't-call' in node.attrib:
-                for attr, value in node.attrib.items():
-                    if not attr.startswith('t-') and not attr.endswith('.translate') and value:
-                        node.set(attr, self.expr_compiler.compile_expr(value))
+                parent = node.getparent()
+                if parent is None or 't-inherit' not in parent.attrib:
+                    for attr, value in node.attrib.items():
+                        if not attr.startswith('t-') and attr not in SKIP_XPATH_ATTRS and not attr.endswith('.translate') and value:
+                            node.set(attr, self.expr_compiler.compile_expr(value))
 
             if 't-slot' in node.attrib or 't-call-slot' in node.attrib:
                 for attr, value in node.attrib.items():
@@ -1438,6 +1443,23 @@ tests = [
         "expected": """
             <t>
                 <t t-call="web.SectionMenu" section="this.subSection" title.translate="Open leads"/>
+            </t>
+        """,
+    },
+    {
+        "name": "t-call inside t-inherit (xpath directives)",
+        "content": """
+            <t t-name="account.ProductCatalogSearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary">
+                <t t-call="web.SearchPanel.Regular" position="attributes">
+                    <attribute name="t-call">account.ProductCatalogSearchPanelContent</attribute>
+                </t>
+            </t>
+        """,
+        "expected": """
+            <t t-name="account.ProductCatalogSearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary">
+                <t t-call="web.SearchPanel.Regular" position="attributes">
+                    <attribute name="t-call">account.ProductCatalogSearchPanelContent</attribute>
+                </t>
             </t>
         """,
     },
