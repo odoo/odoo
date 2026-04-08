@@ -27,6 +27,7 @@
                                            options="{'placeholder_field': 'placeholder_value'}"
                                            width="92px"/>
                                     <field name="account_id"
+                                           domain="[('account_type', 'not in', ['asset_receivable', 'liability_payable'])]"
                                            column_invisible="parent.withholding_hide_tax_base_account"
                                            width="184px"
                                            optional="show"/>
