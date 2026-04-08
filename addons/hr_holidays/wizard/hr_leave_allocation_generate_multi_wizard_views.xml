@@ -22,7 +22,10 @@
                         <field name="accrual_plan_id"
                             invisible="allocation_type == 'regular'"
                             required="allocation_type == 'accrual'"/>
-                        <field name="work_entry_type_id"/>
+                        <field name="work_entry_type_id"
+                            domain="[
+                                ('id','in', allowed_work_entry_type_ids),
+                            ]"/>
                         <div class="o_td_label">
                             <label for="duration"/>
                         </div>

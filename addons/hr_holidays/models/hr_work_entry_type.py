@@ -345,13 +345,14 @@ class HrWorkEntryType(models.Model):
     def requested_display_name(self):
         return self.env.context.get('work_entry_type_display_name', True) and self.env.context.get('employee_id')
 
-    @api.depends('requires_allocation', 'virtual_remaining_leaves', 'max_leaves', 'unit_of_measure')
-    @api.depends_context('work_entry_type_display_name', 'employee_id')
+    @api.depends('requires_allocation', 'virtual_remaining_leaves', 'max_leaves', 'unit_of_measure', 'country_id')
+    @api.depends_context('work_entry_type_display_name', 'employee_id', 'company')
     def _compute_display_name(self):
-        if not self.requested_display_name():
-            # leave counts is based on employee_id, would be inaccurate if not based on correct employee
-            return super()._compute_display_name()
         for record in self:
+            if not record.requested_display_name():
+                # leave counts is based on employee_id, would be inaccurate if not based on correct employee
+                record.display_name = f"{record.name} ({record.country_id.name or self.env._("Generic")})"
+                continue
             name = record.name
             if record.requires_allocation and self.env.context.get('default_date_from'):
                 remaining_time = float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0
@@ -361,7 +362,7 @@ class HrWorkEntryType(models.Model):
                     name = self.env._("%(name)s (%(time)g remaining out of %(maximum)g hours)", name=record.name, time=remaining_time, maximum=maximum)
                 else:
                     name = self.env._("%(name)s (%(time)g remaining out of %(maximum)g days)", name=record.name, time=remaining_time, maximum=maximum)
-            record.display_name = name
+            record.display_name = f"{name} ({record.country_id.name or self.env._("Generic")})"
         return None
 
     @api.depends('count_as')

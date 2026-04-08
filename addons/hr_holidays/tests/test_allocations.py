@@ -317,7 +317,7 @@ class TestAllocations(TestHrHolidaysCommon):
             default_date_from='2024-08-18 06:00:00',
             default_date_to='2024-08-18 15:00:00'
         ).name_search(domain=[['id', '=', work_entry_type.id]])
-        self.assertEqual(result[0][1], 'Compensatory Time Off (9 remaining out of 9 days)')
+        self.assertEqual(result[0][1], 'Compensatory Time Off (9 remaining out of 9 days) (Generic)')
 
     def test_allocation_hourly_work_entry_type(self):
         """

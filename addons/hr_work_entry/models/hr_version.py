@@ -8,7 +8,7 @@ from zoneinfo import ZoneInfo
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import ormcache, float_is_zero
+from odoo.tools import float_is_zero
 from odoo.tools.intervals import Intervals
 
 
@@ -24,10 +24,13 @@ class HrVersion(models.Model):
             Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)
         ''', groups="base.group_system,hr.group_hr_manager")
 
-    # YTI Break ormcache + select country attendance entry type
-    @ormcache()
     def _get_default_work_entry_type_id(self):
-        attendance = self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
+        country_code = self.country_code
+        country_attendance = self.env['hr.work.entry.type'].search([
+            ('code', '=', 'WORK100'),
+            ('country_code', '=', country_code),
+        ], limit=1)
+        attendance = country_attendance or self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
         return attendance.id if attendance else False
 
     def _get_leave_work_entry_type_dates(self, leave, date_from, date_to, employee):

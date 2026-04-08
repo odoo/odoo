@@ -157,6 +157,9 @@
                                 readonly="not is_officer or state in ['refuse', 'validate']"/>
                             <field name="work_entry_type_id"
                                 context="{'employee_id':employee_id, 'default_date_from':current_date, 'request_type':'allocation'}"
+                                domain="[
+                                    ('id','in', allowed_work_entry_type_ids),
+                                ]"
                                 readonly="state in ['refuse', 'validate']"/>
                             <field name="number_of_days" invisible="1"/>
                             <div class="o_td_label">

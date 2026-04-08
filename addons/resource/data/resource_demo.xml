@@ -14,22 +14,5 @@
                 ]"
             />
         </record>
-
-        <record id="resource_calendar_std_40h" model="resource.calendar">
-            <field name="name">40 hours/week</field>
-            <field name="company_id" eval="False"/>
-            <field name="hours_per_day">8</field>
-            <field name="attendance_ids"
-                eval="[(5, 0, 0),
-                    (0, 0, {'dayofweek': '0', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
-                    (0, 0, {'dayofweek': '1', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
-                    (0, 0, {'dayofweek': '2', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
-                    (0, 0, {'dayofweek': '3', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
-                    (0, 0, {'dayofweek': '4', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
-                ]"
-            />
-            <field name="full_time_required_hours">40</field>
-        </record>
-
     </data>
 </odoo>

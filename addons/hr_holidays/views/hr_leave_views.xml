@@ -347,7 +347,6 @@
         <field name="arch" type="xml">
             <form string="Time Off Request" class="o_hr_leave_form" duplicate="false">
             <field name="employee_id" invisible="1"/> <!-- for the employee's default value-->
-            <field name="work_entry_type_filter_domain" invisible="1"/>
             <field name="user_id" invisible="1"/> <!-- for conditional rendering of buttons on card -->
             <header>
                 <button string="Approve" name="action_approve" type="object" class="oe_highlight" invisible="not can_approve or not id"/>
@@ -406,8 +405,8 @@
                             </div>
                             <field name="work_entry_type_id" force_save="1"
                                 domain="[
+                                    ('id', 'in', allowed_work_entry_type_ids),
                                     ('time_off_selectable', '=', True),
-                                    ('id', 'in', work_entry_type_filter_domain or []),
                                     '|',
                                         ('requires_allocation', '=', False),
                                         '&amp;',

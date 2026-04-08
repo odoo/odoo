@@ -1,30 +1,26 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields
+from odoo import models, fields, api
 
 
 class ResourceCalendarAttendance(models.Model):
     _inherit = 'resource.calendar.attendance'
 
-    work_entry_type_id = fields.Many2one('hr.work.entry.type', 'Time Type', store=True,
-        compute='_compute_work_entry_type_id', groups="hr.group_hr_user", readonly=False)
+    work_entry_type_id = fields.Many2one(
+        'hr.work.entry.type', 'Time Type', groups="hr.group_hr_user",
+        domain="[('id', 'in', allowed_work_entry_type_ids)]")
+    allowed_work_entry_type_ids = fields.Many2many(
+        'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
 
-    @api.depends('calendar_id.country_id')
-    def _compute_work_entry_type_id(self):
-        types_per_calendar = {}
-        for resource_calendar_attendence in self:
-            if not resource_calendar_attendence.work_entry_type_id and resource_calendar_attendence.calendar_id:
-                calendar = resource_calendar_attendence.calendar_id
-                if calendar in types_per_calendar:
-                    resource_calendar_attendence.work_entry_type_id = types_per_calendar[calendar]
-                else:
-                    all_types = self.env['hr.work.entry.type'].sudo().search([('code', '=', 'WORK100')])
-                    default_work_entry_type = all_types.filtered(
-                        lambda t: t.country_id == calendar.country_id
-                    ) or all_types.filtered(lambda t: not t.country_id)
-                    if default_work_entry_type:
-                        resource_calendar_attendence.work_entry_type_id = default_work_entry_type[0]
-                        types_per_calendar[calendar] = default_work_entry_type[0]
+    @api.depends('calendar_id.company_id')
+    def _compute_allowed_work_entry_type_ids(self):
+        for attendance in self:
+            country = attendance.calendar_id.company_id.country_id or self.env.company.country_id
+            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
+                domain = [('country_id', '=', False)]
+            else:
+                domain = [('country_id', '=', country.id)]
+            attendance.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
 
     def _copy_attendance_vals(self):
         res = super()._copy_attendance_vals()
