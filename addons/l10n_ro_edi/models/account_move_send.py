@@ -9,7 +9,7 @@ class AccountMoveSend(models.AbstractModel):
         return all([
             move._need_ubl_cii_xml('ciusro') or move.ubl_cii_xml_id,
             move.country_code == 'RO',
-            not move.l10n_ro_edi_state,
+            not move.l10n_ro_edi_state or move.l10n_ro_edi_state == 'invoice_refused',
         ])
 
     def _get_all_extra_edis(self) -> dict:
@@ -52,11 +52,6 @@ class AccountMoveSend(models.AbstractModel):
 
         for invoice, invoice_data in invoices_data.items():
             if 'ro_edi' in invoice_data['extra_edis']:
-
-                if invoice.l10n_ro_edi_document_ids:
-                    # If a document is on the invoice, we shouldn't send it again
-                    invoice_data['error'] = _("The CIUS-RO E-Factura has already been sent")
-                    continue
 
                 if invoice_data.get('ubl_cii_xml_attachment_values'):
                     xml_data = invoice_data['ubl_cii_xml_attachment_values']['raw']
