@@ -79,7 +79,7 @@ export class ExpressionEditor extends Component {
                 readonly: false,
                 filter: (fieldDef) => fieldDef.name in this.filteredFields,
                 showDebugInput: false,
-                followRelations: false,
+                followRelation: false,
                 isDebugMode: this.isDebugMode,
             }),
             isSupported: (value) => [0, 1].includes(value) || value in this.filteredFields,

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { onWillRender, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { Component, onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { sortBy } from "@web/core/utils/arrays";
@@ -111,7 +111,7 @@ export class ModelFieldSelectorPopover extends Component {
         close: Function,
         filter: { type: Function, optional: true },
         sort: { type: Function, optional: true },
-        followRelations: { type: Boolean, optional: true },
+        followRelation: { type: [Boolean, Function], optional: true },
         showDebugInput: { type: Boolean, optional: true },
         isDebugMode: { type: Boolean, optional: true },
         path: { optional: true },
@@ -123,7 +123,7 @@ export class ModelFieldSelectorPopover extends Component {
     static defaultProps = {
         filter: (value) => value.searchable && value.type != "json" && value.type !== "separator",
         isDebugMode: false,
-        followRelations: true,
+        followRelation: true,
     };
 
     setup() {
@@ -134,6 +134,17 @@ export class ModelFieldSelectorPopover extends Component {
 
         onWillStart(async () => {
             this.state.page = await this.loadPages(this.props.resModel, this.props.path);
+        });
+
+        onWillRender(() => {
+            const followRelation = this.props.followRelation;
+            if (followRelation instanceof Function) {
+                this._followRelation = followRelation;
+            } else if (followRelation) {
+                this._followRelation = () => {};
+            } else {
+                this._followRelation = () => false;
+            }
         });
 
         const rootRef = useRef("root");
@@ -171,10 +182,7 @@ export class ModelFieldSelectorPopover extends Component {
         if (fieldDef.type === "properties") {
             return true;
         }
-        if (!this.props.followRelations) {
-            return false;
-        }
-        return fieldDef.relation;
+        return this._followRelation?.({ fieldDef }) ?? fieldDef.relation;
     }
 
     filter(fieldDefs, path, resModel) {
