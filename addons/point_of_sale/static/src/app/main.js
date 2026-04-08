@@ -4,6 +4,7 @@ import { getTemplate } from "@web/core/templates";
 import { mount, whenReady } from "@odoo/owl";
 import { _t, appTranslateFn } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
+import { cookie } from "@web/core/browser/cookie";
 import { localization } from "@web/core/l10n/localization";
 import { user } from "@web/core/user";
 import { session } from "@web/session";
@@ -56,6 +57,9 @@ whenReady(() => {
             classList.add("o_touch_device");
             classList.add("o_mobile_overscroll");
             document.documentElement.classList.add("o_mobile_overscroll");
+        }
+        if (cookie.get("pos_high_contrast") !== undefined) {
+            classList.add("pos_high_contrast");
         }
 
         registerServiceWorker();
