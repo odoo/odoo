@@ -3045,15 +3045,21 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'sequence': 3,
             })],
         })
-        cherry.attribute_line_ids = [(0, 0, {
-            'attribute_id': color_attribute.id,
-            'value_ids': [(6, 0, color_attribute.value_ids.ids)]
-        })]
+        cherry.write({
+            'attribute_line_ids': [Command.create({
+                'attribute_id': color_attribute.id,
+                'value_ids': [Command.set(color_attribute.value_ids.ids)]
+            })]
+        })
         color_attribute = cherry.attribute_line_ids.filtered(lambda l: l.attribute_id.name == 'Color')
         first_color_value = color_attribute.product_template_value_ids.filtered(lambda v: v.attribute_id.name == 'Color' and v.name == 'RED')
         first_size_value = cherry.product_variant_ids.product_template_attribute_value_ids.filtered(lambda v: v.attribute_id.name == 'Size' and v.name == 'BIG')
         first_color_value.excluded_value_ids = [Command.link(value) for value in first_size_value.ids]
-        for index, variant in enumerate(cherry.product_variant_ids):
+        sorted_variants = cherry.product_variant_ids.sorted(lambda v: [
+            (ptav.attribute_id.sequence, ptav.product_attribute_value_id.sequence)
+            for ptav in v.product_template_attribute_value_ids.sorted(lambda p: p.attribute_id.sequence)
+        ])
+        for index, variant in enumerate(sorted_variants):
             variant.write({'barcode': f'cherry_{index}'})
 
         @api.model
