@@ -712,29 +712,18 @@ class TestEventNotifications(CalendarMailCommon):
             'show_as': 'busy',
         })
 
-        # Deleting the next occurrence of the event using the delete wizard.
-        wizard = self.env['calendar.popover.delete.wizard'].with_context(
-            form_view_ref='calendar.calendar_popover_delete_view').create({'calendar_event_id': event.id})
-        form = Form(wizard)
-        form.delete = 'next'
-        form.save()
-        wizard.close()
-
-        # Unlink the event and send a cancellation notification.
-        event.action_unlink_event()
-
         # Edit the default cancellation email template and select future_events to delete the next events of the recurrence.
-        wizard = self.env['calendar.popover.delete.wizard'].with_context(
-            form_view_ref='calendar.view_event_delete_wizard_form').create({'calendar_event_id': event.id})
+        wizard = self.env['calendar.event.archive.or.unlink.wizard'].create({'calendar_event_id': event.id})
         form = Form(wizard)
         form.body = f'{form.body} (edited)'
         form.recipient_ids.add(self.user_admin.partner_id)
+        form.recurrence_choice = 'future_events'
         form.subject = f'{form.subject} (edited)'
         form.save()
 
         # Simulate sending the email and ensure one email was sent.
         with self.mock_mail_gateway():
-            wizard.action_send_mail_and_delete()
+            wizard.action_send_mail_and_unlink()
         self.assertEqual(len(self._new_mails), 1)
         # Check that the mail has been generated from the edition of the default cancellation email template.
         self.assertIn('Event canceled', self._new_mails.body)
