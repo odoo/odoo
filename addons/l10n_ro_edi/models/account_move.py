@@ -94,7 +94,7 @@ class AccountMove(models.Model):
             errors.append(_('Romanian access token not found. Please generate or fill it in the settings.'))
         if not xml_data:
             errors.append(_('CIUS-RO XML attachment not found.'))
-        if self.l10n_ro_edi_document_ids:
+        if self.l10n_ro_edi_state in ('invoice_sent', 'invoice_validated'):
             errors.append(_('The invoice has already been sent to the SPV.'))
         return errors
 
@@ -105,7 +105,14 @@ class AccountMove(models.Model):
         The state of the document deletion/creation are as follows:
 
          - Pre-check any errors from the invoice's pre_send check before sending
-         - Send to E-Factura
+
+            - if error -> create a new error document (previous documents are preserved for traceability)
+            - else -> continue to the next step
+
+         - Send to E-Factura, and based on the result:
+
+            - if error -> create a new error document (previous documents are preserved for traceability)
+            - if success -> delete any existing sent document, create a new sent document
 
         :param xml_data: string of the xml data to be sent
         :return: the `list` of errors that occured during the sending and processing of data, if any
@@ -115,6 +122,7 @@ class AccountMove(models.Model):
             self.message_post(body=_("The invoice is not ready to be sent: %s", ", ".join(errors)))
             return errors
 
+        self.l10n_ro_edi_index = False
         self.env['res.company']._with_locked_records(self)
         result = _request_ciusro_send_invoice(
             company=self.company_id,
@@ -199,8 +207,6 @@ class AccountMove(models.Model):
                 ))
                 continue
 
-            document_ids_to_delete += invoice.l10n_ro_edi_document_ids.ids
-
             document_data = {
                 'invoice_id': invoice.id,
                 'key_download': result['key_download'],
@@ -214,12 +220,18 @@ class AccountMove(models.Model):
                     "This invoice was refused by the SPV for the following reason: %s",
                     error_message
                 ))
+
+                # On SPV refusal the user can resend directly without resetting to draft,
+                # so we have to detach it manually here to force a fresh XML build on the next send.
+                invoice._detach_attachments()
+                document_ids_to_delete += invoice.l10n_ro_edi_document_ids.filtered(lambda doc: doc.state == 'invoice_sent').ids
                 document_data.update({
                     'state': 'invoice_refused',
                     'message': error_message,
                 })
             else:  # Invoice accepted
                 invoice.message_post(body=_("This invoice has been accepted by the SPV."))
+                document_ids_to_delete += invoice.l10n_ro_edi_document_ids.ids
                 document_data['state'] = 'invoice_validated'
 
             documents_to_create.append(document_data)
@@ -260,11 +272,10 @@ class AccountMove(models.Model):
 
         document_ids_to_delete = []
         for invoice in non_indexed_invoices:
-            # At that point, only one sent document should exists on an invoice
-            sent_document = invoice.l10n_ro_edi_document_ids
+            sent_document = invoice.l10n_ro_edi_document_ids.filtered(lambda d: d.state == 'invoice_sent')
 
             if (fields.Datetime.today() - sent_document.create_date).days > HOLDING_DAYS:
-                document_ids_to_delete += invoice.l10n_ro_edi_document_ids.ids
+                document_ids_to_delete += sent_document.ids
 
                 error_message = _(
                     "The invoice has probably been refused by the SPV. We were unable to recover the reason of the refusal because "
@@ -346,12 +357,12 @@ class AccountMove(models.Model):
                 ))
                 continue
 
-            # Only delete invoice_sent documents and not all because one invoice can contain several signature due to
-            # the edge case where 2 messages have the same invoice name but different indexes in their data; this could
-            # be due to a resequencing of the invoice and/or re-sending of an invoice. In that case coupled with name
-            # matching where none of the two invoices received an index, all signatures are added to the invoice; the
-            # user will have to manually update/select the correct one.
-            document_ids_to_delete += invoice.l10n_ro_edi_document_ids.filtered(lambda document: document.state == 'invoice_sent').ids
+            # Only delete invoice_sent/invoice_refused documents and not all because one invoice can contain several
+            # signatures due to the edge case where 2 messages have the same invoice name but different indexes in
+            # their data; this could be due to a resequencing of the invoice and/or re-sending of an invoice. In that
+            # case coupled with name matching where none of the two invoices received an index, all signatures are
+            # added to the invoice; the user will have to manually update/select the correct one.
+            document_ids_to_delete += invoice.l10n_ro_edi_document_ids.filtered(lambda document: document.state in ('invoice_sent', 'invoice_refused')).ids
 
             invoice.message_post(body=_("This invoice has been accepted by the SPV."))
             self.env['l10n_ro_edi.document'].sudo().create({
@@ -396,13 +407,17 @@ class AccountMove(models.Model):
                 ))
                 continue
 
-            document_ids_to_delete += invoice.l10n_ro_edi_document_ids.ids
+            document_ids_to_delete += invoice.l10n_ro_edi_document_ids.filtered(lambda document: document.state == 'invoice_sent').ids
 
             error_message = message['answer']['invoice']['error'].replace('\t', '')
             invoice.message_post(body=_(
                 "This invoice was refused by the SPV for the following reason: %s",
                 error_message
             ))
+
+            # On SPV refusal the user can resend directly without resetting to draft,
+            # so we have to detach it manually here to force a fresh XML build on the next send.
+            invoice._detach_attachments()
             self.env['l10n_ro_edi.document'].sudo().create({
                 'invoice_id': invoice.id,
                 'state': 'invoice_refused',
