@@ -1,5 +1,6 @@
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { isToday } from "@mail/utils/common/dates";
+import { htmlToTextContentInline } from "@mail/utils/common/format";
 
 import { Component } from "@odoo/owl";
 
@@ -17,6 +18,10 @@ export class SubChannelPreview extends Component {
             return message.datetime?.toLocaleString(DateTime.TIME_SIMPLE);
         }
         return message.datetime?.toLocaleString(DateTime.DATE_MED);
+    }
+
+    bodyText(message) {
+        return htmlToTextContentInline(message.body);
     }
 
     onClick() {
