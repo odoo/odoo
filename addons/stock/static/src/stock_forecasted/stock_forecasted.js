@@ -123,10 +123,14 @@ export class StockForecasted extends Component {
     }
 
     async openView(resModel, view, resId=false, domain = false) {
+        const views = [[false, view]];
+        if (view !== "form") {
+            views.push([false, "form"]);
+        }
         const action = {
             type: "ir.actions.act_window",
             res_model: resModel,
-            views: [[false, view]],
+            views,
             view_mode: view,
             res_id:  resId,
             domain: domain,
