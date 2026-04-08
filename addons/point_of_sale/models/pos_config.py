@@ -570,30 +570,31 @@ class PosConfig(models.Model):
                 'implementation': 'no_gap',
             }
 
-            # Create sequences for all orders
-            pos_config.order_seq_id = self.env['ir.sequence'].sudo().create({
-                **sequence_vals,
-                'name': _('POS order from config #%s', pos_config.id),
-            })
+            vals_to_write = {}
+            if not pos_config.order_seq_id:
+                vals_to_write['order_seq_id'] = self.env['ir.sequence'].sudo().create({
+                    **sequence_vals,
+                    'name': _('POS order from config #%s', pos_config.id),
+                }).id
+            if not pos_config.order_backend_seq_id:
+                vals_to_write['order_backend_seq_id'] = self.env['ir.sequence'].sudo().create({
+                    **sequence_vals,
+                    'name': _('POS order backend from config #%s', pos_config.id),
+                }).id
+            if not pos_config.order_line_seq_id:
+                vals_to_write['order_line_seq_id'] = self.env['ir.sequence'].sudo().create({
+                    **sequence_vals,
+                    'name': _('POS order line from config #%s', pos_config.id),
+                }).id
+            if not pos_config.device_seq_id:
+                vals_to_write['device_seq_id'] = self.env['ir.sequence'].sudo().create({
+                    **sequence_vals,
+                    'name': _('POS device from config #%s', pos_config.id),
+                    'padding': 0,
+                }).id
 
-            # Create sequences for order that are created from self ore backend
-            pos_config.order_backend_seq_id = self.env['ir.sequence'].sudo().create({
-                **sequence_vals,
-                'name': _('POS order backend from config #%s', pos_config.id),
-            })
-
-            # Create sequences for all order lines
-            pos_config.order_line_seq_id = self.env['ir.sequence'].sudo().create({
-                **sequence_vals,
-                'name': _('POS order line from config #%s', pos_config.id),
-            })
-
-            # Create sequences for devices
-            pos_config.device_seq_id = self.env['ir.sequence'].sudo().create({
-                **sequence_vals,
-                'name': _('POS device from config #%s', pos_config.id),
-                'padding': 0,
-            })
+            if vals_to_write:
+                pos_config.sudo().write(vals_to_write)
 
     def register_new_device_identifier(self):
         self.ensure_one()
@@ -794,6 +795,7 @@ class PosConfig(models.Model):
         self._check_currencies()
         self._check_profit_loss_cash_journal()
         self._check_payment_method_ids()
+        self._create_sequences()
 
     def open_ui(self):
         """Open the pos interface with config_id as an extra argument.
