@@ -20,7 +20,7 @@ class PosOrder(models.Model):
 
         for order in orders_needing_invoice:
             if order.account_move:
-                order.account_move.edi_document_ids.filtered(
+                order.account_move.sudo().edi_document_ids.filtered(
                     lambda d: d.state == 'to_send' and d.edi_format_id._needs_web_services()
                 )._process_documents_web_services(with_commit=False)
 
