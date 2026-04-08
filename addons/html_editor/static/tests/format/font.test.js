@@ -28,3 +28,21 @@ test("should have font tool only if the block is content editable", async () => 
         expect(".btn[name='font_type']").toHaveCount(count);
     }
 });
+
+test("Should show the default font display name", async () => {
+    const { el } = await setupEditor(`
+        <ul>
+            <li class="display-2-fs">
+                <div class="o-paragraph">abc</div>
+                <ul class="o_default_font_size">
+                    <li>[def]</li>
+                </ul>
+            </li>
+        </ul>    
+    `);
+    await waitFor(".btn[name='font_size']");
+    const fontSelectorInput = el.ownerDocument
+        .querySelector("iframe")
+        .contentDocument.querySelector("input");
+    expect(fontSelectorInput.value).toBe("14");
+});
