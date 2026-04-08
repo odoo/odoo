@@ -9,7 +9,6 @@ import { Record, Store, makeStore } from "@mail/model/export";
 import { AND, fields, makeRecordFieldLocalId, normalizeManyCommands } from "@mail/model/misc";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
-import { effect } from "@web/core/utils/reactive";
 import { browser } from "@web/core/browser/browser";
 
 const Markup = markup().constructor;
@@ -1591,19 +1590,16 @@ test("Record exists is reactive", async () => {
     }).register(localRegistry);
     const store = await start();
     const thread = store.Thread.insert("General");
-    effect(
-        (rec) => {
-            if (rec.exists()) {
-                expect.step("thread exists");
-            } else {
-                expect.step("thread does not exist");
-            }
-        },
-        [thread]
-    );
-    await expect.waitForSteps(["thread exists"]);
+    immediateEffect(() => {
+        if (thread.exists()) {
+            expect.step("thread exists");
+        } else {
+            expect.step("thread does not exist");
+        }
+    });
+    expect.verifySteps(["thread exists"]);
     thread.delete();
-    await expect.waitForSteps(["thread does not exist"]);
+    expect.verifySteps(["thread does not exist"]);
 });
 
 test("Normalize many commands", () => {
