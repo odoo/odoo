@@ -703,16 +703,16 @@ class TestEventNotifications(CalendarMailCommon):
         })
 
         # Deleting the next occurrence of the event using the delete wizard.
-        wizard = self.env['calendar.popover.delete.wizard'].with_context(
-            form_view_ref='calendar.calendar_popover_delete_view').create({'calendar_event_id': event.id})
+        wizard = self.env['calendar.event.unlink.wizard'].with_context(
+            form_view_ref='calendar.calendar_event_unlink_wizard_view_form_recurrence_choice').create({'calendar_event_id': event.id})
         form = Form(wizard)
-        form.delete = 'next'
+        form.recurrence_choice = 'future_events'
         form.save()
-        wizard.close()
+        wizard.action_proceed_recurrence_choice()
 
         # Unlink the event and send a cancellation notification.
-        event.action_unlink_event()
-        wizard = self.env['calendar.popover.delete.wizard'].create({
+        event.action_open_unlink_wizard()
+        wizard = self.env['calendar.event.unlink.wizard'].create({
             'calendar_event_id': event.id,
             'subject': 'Event Cancellation',
             'body': 'The event has been cancelled.',
@@ -721,7 +721,7 @@ class TestEventNotifications(CalendarMailCommon):
 
         # Simulate sending the email and ensure one email was sent.
         with self.mock_mail_gateway():
-            wizard.action_send_mail_and_delete()
+            wizard.action_send_mail_and_unlink()
         self.assertEqual(len(self._new_mails), 1)
 
     def test_get_next_potential_limit_alarm(self):

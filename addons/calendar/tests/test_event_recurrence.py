@@ -757,56 +757,56 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
         self.assertEqual(self.events.exists(), self.events[0])
 
     def test_unlink_recurrence_wizard_next(self):
-        """ Test unlinking the next recurrent event using the delete wizard. """
-        # Retrieve the recurring event to delete the next event occurrence.
+        """ Test unlinking the next recurrent event using the unlink wizard. """
+        # Retrieve the recurring event to unlink the next event occurrence.
         event = self.events[1]
 
-        # Step 1: Use the popover delete wizard to delete the next occurrence of the event.
-        wizard = self.env['calendar.popover.delete.wizard'].with_context(
-            form_view_ref='calendar.calendar_popover_delete_view').create({'calendar_event_id': event.id})
+        # Step 1: Use the unlink wizard to unlink the next occurrence of the event.
+        wizard = self.env['calendar.event.unlink.wizard'].with_context(
+            form_view_ref='calendar.calendar_event_unlink_wizard_view_form_recurrence_choice').create({'calendar_event_id': event.id})
         form = Form(wizard)
-        form.delete = 'next'
+        form.recurrence_choice = 'future_events'
         form.save()
-        wizard.close()
+        wizard.action_proceed_recurrence_choice()
 
-        # Step 2: Use another delete wizard to handle the deletion of the next occurrence.
-        wizard_delete = self.env['calendar.popover.delete.wizard'].with_context(
-            form_view_ref='calendar.view_event_delete_wizard_form',
-            default_recurrence='next'
+        # Step 2: Use another unlink wizard to handle the unlinking of the next occurrence.
+        wizard_unlink = self.env['calendar.event.unlink.wizard'].with_context(
+            form_view_ref='calendar.calendar_event_unlink_wizard_view_form',
+            default_recurrence='future_events'
         ).create({'calendar_event_id': event.id})
-        form_delete = Form(wizard_delete)
-        form_delete.save()
+        form_unlink = Form(wizard_unlink)
+        form_unlink.save()
 
-        # Step 3: Send cancellation notifications and delete the next occurrence.
-        # Ensure that the recurrence still exists but the next event occurrence is deleted.
-        wizard_delete.action_send_mail_and_delete()
+        # Step 3: Send cancellation notifications and unlink the next occurrence.
+        # Ensure that the recurrence still exists but the next event occurrence is unlinked.
+        wizard_unlink.action_send_mail_and_unlink()
         self.assertTrue(self.recurrence)
         self.assertEqual(self.events.exists(), self.events[0])
 
     def test_unlink_recurrence_wizard_all(self):
-        """ Test unlinking all recurrences using the delete wizard. """
-        # Step 0: Retrieve the recurring event to be deleted.
+        """ Test unlinking all recurrences using the unlink wizard. """
+        # Step 0: Retrieve the recurring event to be unlinked.
         event = self.events[1]
 
-        # Step 1: Use the popover delete wizard to delete all occurrences of the event.
-        wizard = self.env['calendar.popover.delete.wizard'].with_context(
-            form_view_ref='calendar.calendar_popover_delete_view').create({'calendar_event_id': event.id})
+        # Step 1: Use the unlink wizard to unlink all occurrences of the event.
+        wizard = self.env['calendar.event.unlink.wizard'].with_context(
+            form_view_ref='calendar.calendar_event_unlink_wizard_view_form_recurrence_choice').create({'calendar_event_id': event.id})
         form = Form(wizard)
-        form.delete = 'all'
+        form.recurrence_choice = 'all_events'
         form.save()
-        wizard.close()
+        wizard.action_proceed_recurrence_choice()
 
-        # Step 2: Use another delete wizard to handle the deletion of the event recurrence.
-        wizard_delete = self.env['calendar.popover.delete.wizard'].with_context(
-            form_view_ref='calendar.view_event_delete_wizard_form',
-            default_recurrence='all'
+        # Step 2: Use another unlink wizard to handle the unlinking of the event recurrence.
+        wizard_unlink = self.env['calendar.event.unlink.wizard'].with_context(
+            form_view_ref='calendar.calendar_event_unlink_wizard_view_form',
+            default_recurrence='all_events'
         ).create({'calendar_event_id': event.id})
-        form_delete = Form(wizard_delete)
-        form_delete.save()
+        form_unlink = Form(wizard_unlink)
+        form_unlink.save()
 
-        # Step 3: Send cancellation notifications and delete all recurrences.
-        # Ensure that the recurrence and all related events have been deleted.
-        wizard_delete.action_send_mail_and_delete()
+        # Step 3: Send cancellation notifications and unlink all recurrences.
+        # Ensure that the recurrence and all related events have been unlinked.
+        wizard_unlink.action_send_mail_and_unlink()
         self.assertFalse(self.recurrence.exists())
         self.assertFalse(self.events.exists())
 
