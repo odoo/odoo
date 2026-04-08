@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from abc import ABC, abstractmethod
 from typing import NamedTuple
 from contextlib import contextmanager
 import logging
@@ -57,7 +56,7 @@ def serial_connection(path, protocol, is_probing=False):
     connection.close()
 
 
-class SerialDriver(Driver, ABC):
+class SerialDriver(Driver):
     """Abstract base class for serial drivers."""
 
     _protocol = None
@@ -85,7 +84,6 @@ class SerialDriver(Driver, ABC):
             name = 'Unknown Serial Device'
         self.device_name = name
 
-    @abstractmethod
     def _take_measure(self):
         """Reads the device's value, and pushes that value to the frontend."""
         pass
