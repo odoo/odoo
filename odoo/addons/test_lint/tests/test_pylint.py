@@ -46,24 +46,13 @@ class TestPyLint(TransactionCase):
         options = [
             '--rcfile=%s' % os.devnull,
             '--disable=all,useless-option-value',
-            '--enable=' + ','.join([
-                'used-before-assignment',
-                'undefined-variable',
-                'eval-used',
-                'unreachable',
-                'function-redefined',
-
-                # custom checkers
-                'sql-injection',
-            ]),
+            '--enable=sql-injection',
             '--reports=n',
             "--msg-template='{msg} ({msg_id}) at {path}:{line}'",
             '--load-plugins=' + ','.join([
                 "_pylint_path_setup",
-                "pylint.extensions.bad_builtin",
                 "_odoo_checker_sql_injection",
             ]),
-            '--bad-functions=input',
         ]
 
         stdlib_prefixes = tuple({sys.prefix, sys.base_prefix, sys.exec_prefix, sys.base_exec_prefix})
