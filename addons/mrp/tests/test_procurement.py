@@ -267,6 +267,31 @@ class TestProcurement(TestMrpCommon):
         self.assertAlmostEqual(mo.move_raw_ids.date, mo.date_start, delta=timedelta(seconds=1))
         self.assertAlmostEqual(mo.move_finished_ids.date, mo.date_finished, delta=timedelta(seconds=1))
 
+    def test_add_component_multi_level_bom(self):
+        mto_route = self.warehouse_1.mto_pull_id.route_id
+        mto_route.action_unarchive()
+        self.product_5.bom_ids.type = 'normal'
+        (self.product_5 | self.product_4).write({'route_ids': [Command.link(mto_route.id)]})
+        component = self.product_5
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_8.id,
+            'product_qty': 1,
+        })
+        mo.action_confirm()
+        mo_form = Form(mo)
+        with mo_form.move_raw_ids.new() as raw_move:
+            raw_move.product_id = component
+            raw_move.product_uom_qty = 1.0
+        mo = mo_form.save()
+        child_mo = mo._get_children()
+        grand_child_mo = child_mo._get_children()
+
+        self.assertRecordValues(mo.move_raw_ids, [{'product_id': component.id, 'product_qty': 1}])
+        self.assertEqual(child_mo.product_id, component)
+        self.assertRecordValues(child_mo.move_raw_ids, [{'product_id': self.product_4.id, 'product_qty': 2}, {'product_id': self.product_3.id, 'product_qty': 3}])
+        self.assertEqual(grand_child_mo.product_id, self.product_4)
+        self.assertRecordValues(grand_child_mo.move_raw_ids, [{'product_id': self.product_2.id, 'product_qty': 12}, {'product_id': self.product_1.id, 'product_qty': 24}])
+
     def test_finished_move_cancellation(self):
         """Check state of finished move on cancellation of raw moves. """
         product_bottle = self.env['product.product'].create({
