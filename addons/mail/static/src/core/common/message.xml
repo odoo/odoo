@@ -69,7 +69,7 @@
                             <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': this.isEditing, 'opacity-50': this.message.isPending, 'pt-1': !this.showSubject and !this.message.bubbleColor, 'o-mail-Message-pollContent flex-grow-1': this.message.poll }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': this.isEditing }">
                                     <t t-set="showTextVisually" t-value="!this.message.linkPreviewSquash and (this.message.hasTextContent or this.message.subtype_id?.description or this.message.isEmpty)"/>
-                                    <t t-if="this.message.message_type === 'notification' and this.message.richBody" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
+                                    <t t-if="this.message.message_type === 'notification' and this.message.richBody" t-call="mail.Message.bodyAsNotification" name="this.bodyAsNotification"/>
                                     <t t-if="this.message.isEmpty or (this.message.message_type !== 'notification' and !this.message.is_transient and (this.message.hasTextContent or this.message.subtype_id?.description or this.isEditing or this.message.parent_id))">
                                         <MessageLinkPreviewList t-if="!this.isEditing and this.message.linkPreviewSquash and !this.message.parent_id" messageLinkPreviews="this.message.message_link_preview_ids"/>
                                         <t t-else="">

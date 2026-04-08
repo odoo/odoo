@@ -8,7 +8,7 @@
             </t>
             <button t-if="msg_value.isError" t-att-data-message-id="msg"
                 class="o-translator-translated o-message-error border-danger bg-danger rounded-2 ms-3 mb-1 border-0 p-2"  disabled="true">
-                <t t-out="formatContent(msg_value.translatedText)" />
+                <t t-out="this.formatContent(msg_value.translatedText)" />
             </button>
             <button t-else="" t-att-data-message-id="msg"
                 t-attf-class="{{msg_value.isError ? 'o-message-error border-danger bg-danger' : ''}} {{this.state.selectedMessageId === msg ? 'o-translate-selected' : 'o-translate'}}
@@ -37,7 +37,7 @@
                     <button class="btn btn-light ms-2 d-flex align-items-center shadow-none">
 
                         <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-                        <svg class="oe-language-icon d-flex me-1" width="18px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="oe-language-icon d-flex me-1" width="18px" version="1.1" id="Layer_1"
                             viewBox="796 796 200 200" enable-background="new 796 796 200 200" xml:space="preserve">
                             <g>
                                 <path d="M973.166,818.5H818.833c-12.591,0-22.833,10.243-22.833,22.833v109.333c0,12.59,10.243,22.833,22.833,22.833h154.333
@@ -61,7 +61,7 @@
                         <div data-prevent-closing-overlay="true">
                             <t t-foreach="this.translators" t-as="translator" t-key="translator.id">
                                 <DropdownItem class="'user-select-none'" onSelected="() => this.onSelectedTranslator(translator)">
-                                    <div class="translator" t-esc="translator.name"/>
+                                    <div class="translator" t-out="translator.name"/>
                                 </DropdownItem>
                             </t>
                         </div>
