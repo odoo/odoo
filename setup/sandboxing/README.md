@@ -130,8 +130,8 @@ sudo ln -s /usr/share/apparmor/extra-profiles/bwrap-userns-restrict /etc/apparmo
 sudo apparmor_parser /etc/apparmor.d/bwrap-userns-restrict
 ```
 
-It is advised to copy the scripts `bwrap-claude.sh` and `bwrap-opencode.sh` to a
-directory in your PATH (e.g. `~/.local/bin`).
+It is advised to copy the scripts `bwrap-claude.sh`, `bwrap-opencode.sh`, and
+`bwrap-pi.sh` to a directory in your PATH (e.g. `~/.local/bin`).
 
 Both scripts pre-mount the Odoo workspace directory. By default, it is defined to `~/src/odoo`,
 meaning that the workspace should contain the directories `~/src/odoo/odoo`,
@@ -142,6 +142,44 @@ Override the default path with the environment variable `ODOO_BASE` (e.g.
 
 Chrome, PostgreSQL, and the Odoo filestore are mounted opportunistically with
 `bind-try` and silently skipped when absent.
+
+### bwrap-pi.sh
+
+Sandbox wrapper for the [pi coding agent](https://pi.dev/).
+
+Install pi as recommended by the documentation:
+```sh
+npm install -g @mariozechner/pi-coding-agent
+```
+
+pi uses [OpenRouter](https://openrouter.ai/) as its default provider. Add your API key
+to your shell configuration (e.g. `~/.bashrc`, `~/.zshrc`, or `~/.config/fish/config.fish`):
+
+```sh
+export OPENROUTER_API_KEY="sk-or-xxx"
+```
+
+The script warns at startup if `OPENROUTER_API_KEY` is not set. You can also configure
+the key in `~/.pi/agent/settings.json`.
+
+Then, launch the sandboxed pi:
+
+```sh
+# Odoo dirs are pre-mounted, so no args needed for basic usage
+bwrap-pi.sh [pi args...]
+
+# Mount extra directories beyond Odoo
+bwrap-pi.sh --add-dir ~/src/my-project [pi args...]
+```
+
+`--add-dir` paths are bind-mounted read-write into the sandbox. pi does not
+support `--add-dir` natively, so these flags are consumed by the wrapper and **not**
+forwarded to the pi binary.
+
+All pi configuration lives under `~/.pi/` (settings, sessions, prompts, themes, etc.)
+and is mounted read-write into the sandbox.
+
+No IDE integration. See the script header for the full sandbox layout.
 
 ### bwrap-opencode.sh
 
