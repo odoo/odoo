@@ -2084,3 +2084,22 @@ class TestReportsPostInstall(TestReportsCommon):
         self.assertEqual(picking_out.move_ids.mapped('quantity'), [0.0, 2.0])
         self.env['report.stock.report_reception'].action_assign(out_move.ids, [1.0], picking_in.move_ids.ids)
         self.assertEqual(picking_out.move_ids.mapped('quantity'), [1.0, 2.0])
+
+    def test_product_label_barcode_custom_paper_format_reports(self):
+        """ Test that the barcodes are correctly rendered with a custom paper format"""
+        report = self.env['ir.actions.report'].search([('report_name', '=', 'stock.report_lot_label')])
+        paper_format = self.env.ref('base.paperformat_euro')
+        paper_format.print_page_width = 57
+        paper_format.print_page_height = 32
+        paper_format.page_width = 32
+        paper_format.page_height = 57
+        report.paperformat_id = paper_format.id
+        doc = self.env['stock.lot'].create({
+            'name': 'lot2',
+            'product_id': self.serial_product.id,
+        })
+        collected_stream = self.env['ir.actions.report']._render_qweb_pdf('stock.report_lot_label', doc.id)[0]
+        # Only one product should give only one appearance of simple prod
+        self.assertEqual(collected_stream.decode('utf-8').count("simple prod"), 1)
+        # Padding should be smaller with smaller page dimensions
+        self.assertEqual(collected_stream.decode('utf-8').count("padding: 2mm 2mm"), 1)
