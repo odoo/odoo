@@ -1,12 +1,11 @@
 import { SubChannelList } from "@mail/discuss/core/public_web/sub_channel_list";
 
-import { status } from "@odoo/owl";
+import { status, useEffect } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
 import { range } from "@web/core/utils/numbers";
 import { patch } from "@web/core/utils/patch";
-import { effect } from "@web/core/utils/reactive";
 
 let waitForLoadMoreToDisappearDef;
 registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
@@ -18,17 +17,14 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
                 patch(SubChannelList.prototype, {
                     setup() {
                         super.setup(...arguments);
-                        effect(
-                            (state) => {
-                                if (status(this) === "destroyed") {
-                                    return;
-                                }
-                                if (!state.isVisible) {
-                                    waitForLoadMoreToDisappearDef?.resolve();
-                                }
-                            },
-                            [this.loadMoreState]
-                        );
+                        useEffect(() => {
+                            if (status(this) === "destroyed") {
+                                return;
+                            }
+                            if (!this.loadMoreState.isVisible) {
+                                waitForLoadMoreToDisappearDef?.resolve();
+                            }
+                        });
                     },
                 });
             },
