@@ -9,38 +9,38 @@
                 <t t-set="_eWalletPrograms" t-value="this._getEWalletPrograms()" />
                 <t t-set="_eWalletRewards" t-value="this._getEWalletRewards(this.pos.getOrder())" />
                 
-                <t t-call="point_of_sale.controlButton">
-                    <t t-set="iconClasses" t-value="'fa fa-credit-card '"/>
-                    <t t-set="btnText">
-                        <t t-if="_orderTotal lt 0 and _eWalletPrograms.length">eWallet Refund</t>
-                        <t t-elif="_eWalletRewards.length">eWallet Pay</t>
-                        <t t-else="">eWallet</t>
-                    </t>
-                    <t t-set="btnClasses" t-value="'btn-secondary ' + ((_orderTotal lt 0 and _eWalletPrograms.length gte 1) or _eWalletRewards.length gte 1 ? ' highlight text-action': ' disabled')"/>
-                    <t t-set="onClick" t-value="this.onClickWallet"/>
+                <t t-set="btnText">
+                    <t t-if="_orderTotal lt 0 and _eWalletPrograms.length">eWallet Refund</t>
+                    <t t-elif="_eWalletRewards.length">eWallet Pay</t>
+                    <t t-else="">eWallet</t>
                 </t>
+                <t t-call="point_of_sale.controlButton"
+                    iconClasses="'fa fa-credit-card '"
+                    btnText="btnText"
+                    btnClasses="'btn-secondary ' + ((_orderTotal lt 0 and _eWalletPrograms.length gte 1) or _eWalletRewards.length gte 1 ? ' highlight text-action': ' disabled')"
+                    onClick="this.onClickWallet"/>
             </t>
-            <t t-if="this.pos.models['loyalty.program'].some((p) => ['coupons', 'promotion', 'gift_card', 'promo_code', 'next_order_coupons'].includes(p.program_type))" t-call="point_of_sale.controlButton">
-                <t t-set="iconClasses" t-value="'fa fa-percent'"/>
-                <t t-set="btnText">Enter Code</t>
-                <t t-set="btnClasses" t-value="'btn-secondary '"/>
-                <t t-set="onClick" t-value="() => this.clickPromoCode()"/>
+            <t t-if="this.pos.models['loyalty.program'].some((p) => ['coupons', 'promotion', 'gift_card', 'promo_code', 'next_order_coupons'].includes(p.program_type))" t-call="point_of_sale.controlButton"
+                iconClasses="'fa fa-percent'"
+                btnText.translate="Enter Code"
+                btnClasses="'btn-secondary '"
+                onClick="() => this.clickPromoCode()">
             </t>
-            <t t-if="this.pos.models['loyalty.program'].length and this.pos.cashier._role !== 'minimal'" t-call="point_of_sale.controlButton">
-                <t t-set="iconClasses" t-value="'fa fa-star'"/>
-                <t t-set="btnText">Reward</t>
-                <t t-set="btnClasses" t-value="'btn-secondary ' + (this.state.nbrRewards ? ' highlight' : 'disabled')"/>
-                <t t-set="disabled" t-value="!this.state.nbrRewards"/>
-                <t t-set="onClick" t-value="() => this.clickRewards()"/>
+            <t t-if="this.pos.models['loyalty.program'].length and this.pos.cashier._role !== 'minimal'" t-call="point_of_sale.controlButton"
+                iconClasses="'fa fa-star'"
+                btnText.translate="Reward"
+                btnClasses="'btn-secondary ' + (this.state.nbrRewards ? ' highlight' : 'disabled')"
+                disabled="!this.state.nbrRewards"
+                onClick="() => this.clickRewards()">
             </t>
         </xpath>
         <xpath expr="//t[@t-if='this.props.showRemainingButtons']/div/t[@name='o_pricelist_button']" position="before">
-             <t t-if="this.pos.models['loyalty.program'].some((p) => ['coupons', 'promotion'].includes(p.program_type)) and this.pos.cashier._role !== 'minimal'" t-call="point_of_sale.controlButton">
-                <t t-set="iconClasses" t-value="'fa fa-star'"/>
-                <t t-set="btnText">Reset Programs</t>
-                <t t-set="btnClasses" t-value="'btn-secondary '"/>
-                <t t-set="disabled" t-value="!this.pos.getOrder().isProgramsResettable()"/>
-                <t t-set="onClick" t-value="() => this.pos.resetPrograms()"/>
+             <t t-if="this.pos.models['loyalty.program'].some((p) => ['coupons', 'promotion'].includes(p.program_type)) and this.pos.cashier._role !== 'minimal'" t-call="point_of_sale.controlButton"
+                 iconClasses="'fa fa-star'"
+                 btnText.translate="Reset Programs"
+                 btnClasses="'btn-secondary '"
+                 disabled="!this.pos.getOrder().isProgramsResettable()"
+                 onClick="() => this.pos.resetPrograms()">
             </t>
         </xpath>
         <xpath expr="//button[hasclass('more-btn')]" position="attributes">
