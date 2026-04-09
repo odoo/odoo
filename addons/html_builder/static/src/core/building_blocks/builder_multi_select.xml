@@ -1,0 +1,29 @@
+<template xml:space="preserve">
+
+<t t-name="html_builder.BuilderMultiSelect">
+    <BuilderComponent>
+        <div class="flex-column">
+            <table class="mb-2" t-if="domState.selections.length">
+                <tr t-foreach="domState.selections" t-as="selection" t-key="selection.id">
+                    <td>
+                        <input type="text" class="o-hb-input-base" disabled="" t-att-data-name="selection.name" t-att-value="selection.name"/>
+                    </td>
+                    <td>
+                        <button class="mt-0 border-0 p-0 bg-transparent text-danger fa fa-fw fa-minus" t-on-click="() => this.unselect(selection.id)"/>
+                    </td>
+                </tr>
+            </table>
+            <SelectMenu
+                choices="this.filteredChoices.map((choice) => ({ label: choice.name, value: choice }))"
+                onSelect.bind="this.onSelect"
+                class="'o-hb-selectMany2X-wrapper'"
+                menuClass="'o-hb-select-dropdown o-hb-selectMany2X-dropdown'"
+                onInput.bind="this.onInput"
+            >
+                <t t-out="props.message"/>
+            </SelectMenu>
+        </div>
+    </BuilderComponent>
+</t>
+
+</template>
