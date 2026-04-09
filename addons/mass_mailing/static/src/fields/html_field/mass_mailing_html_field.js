@@ -6,13 +6,11 @@ import { MAIN_PLUGINS as MAIN_EDITOR_PLUGINS } from "@html_editor/plugin_sets";
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { MassMailingIframe } from "@mass_mailing/iframe/mass_mailing_iframe";
 import { ThemeSelectorIframe } from "@mass_mailing/themes/theme_selector/theme_selector_iframe";
-import { onWillUpdateProps, status, toRaw } from "@odoo/owl";
+import { onWillUpdateProps, status, toRaw, useEffect } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
-import { effect } from "@web/core/utils/reactive";
 import { useChildRef, useService } from "@web/core/utils/hooks";
-import { batched } from "@web/core/utils/timing";
 import { PowerButtonsPlugin } from "@html_editor/main/power_buttons_plugin";
 import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
@@ -78,24 +76,21 @@ export class MassMailingHtmlField extends HtmlField {
         });
 
         let currentKey = this.state.key;
-        effect(
-            batched((state) => {
-                if (status(this) === "destroyed") {
-                    return;
-                }
-                if (state.key !== currentKey) {
-                    // html value may have been reset from the server:
-                    // - ensure that the activeTheme is up to date with the next
-                    //   record.
-                    this.updateActiveTheme(props.record);
-                    // - ensure that the themeSelector is displayed if necessary
-                    //   for the next props.
-                    this.updateThemeSelector(props);
-                    currentKey = state.key;
-                }
-            }),
-            [this.state]
-        );
+        useEffect(() => {
+            if (status(this) === "destroyed") {
+                return;
+            }
+            if (this.state.key !== currentKey) {
+                // html value may have been reset from the server:
+                // - ensure that the activeTheme is up to date with the next
+                //   record.
+                this.updateActiveTheme(props.record);
+                // - ensure that the themeSelector is displayed if necessary
+                //   for the next props.
+                this.updateThemeSelector(props);
+                currentKey = this.state.key;
+            }
+        });
 
         useLayoutEffect(
             () => {

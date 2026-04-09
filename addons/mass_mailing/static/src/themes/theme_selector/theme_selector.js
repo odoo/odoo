@@ -1,9 +1,8 @@
 import { useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted, onWillStart, onWillUnmount, status } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, status, useEffect } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { FavoritePreview } from "./favorite_preview";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { effect } from "@web/core/utils/reactive";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { _t } from "@web/core/l10n/translation";
 import { closestScrollableY } from "@web/core/utils/scrolling";
@@ -41,23 +40,18 @@ export class ThemeSelector extends Component {
         });
         let favoriteThemesPromise = this.props.favoriteThemes.promise;
         const keepLastFavoriteThemes = new KeepLast();
-        effect(
-            async (favoriteThemes) => {
-                if (status(this) === "destroyed") {
-                    return;
-                }
-                if (favoriteThemesPromise !== favoriteThemes.promise) {
-                    favoriteThemesPromise = favoriteThemes.promise;
-                    this.state.loading = true;
-                    const favoriteTemplates = await keepLastFavoriteThemes.add(
-                        favoriteThemesPromise
-                    );
-                    Object.assign(this.state, { favoriteTemplates });
-                    this.state.loading = false;
-                }
-            },
-            [this.props.favoriteThemes]
-        );
+        useEffect(async () => {
+            if (status(this) === "destroyed") {
+                return;
+            }
+            if (favoriteThemesPromise !== this.props.favoriteThemes.promise) {
+                favoriteThemesPromise = this.props.favoriteThemes.promise;
+                this.state.loading = true;
+                const favoriteTemplates = await keepLastFavoriteThemes.add(favoriteThemesPromise);
+                Object.assign(this.state, { favoriteTemplates });
+                this.state.loading = false;
+            }
+        });
         this.throttledResize = useThrottleForAnimation(() => {
             if (status(this) === "destroyed") {
                 return;
