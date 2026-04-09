@@ -1027,7 +1027,7 @@ export class Runner {
         }
 
         this.status.set("running");
-        this._startTime = $now();
+        this._startTime ||= $now();
 
         /** @type {Runner["_handleError"]} */
         const handleError = this._handleError.bind(this);
