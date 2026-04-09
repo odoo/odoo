@@ -6,7 +6,7 @@ from odoo.addons.mrp_account.tests.common import TestBomPriceCommon, TestBomPric
 from odoo.tests import Form, tagged
 from odoo.tests.common import new_test_user
 from odoo.tools import float_compare, float_round
-from odoo import fields
+from odoo import Command, fields
 
 
 class TestMrpAccount(TestBomPriceCommon):
@@ -162,6 +162,45 @@ class TestMrpAccount(TestBomPriceCommon):
         mrp_user = new_test_user(self.env, 'temp_mrp_user', 'mrp.group_mrp_user')
         mo_1 = self._create_mo(self.bom_1, 1)
         mo_1.with_user(mrp_user).button_mark_done()
+
+    def test_delivery_validate_after_product_converted_to_kit(self):
+        """
+        Create a delivery for a product, make the product a kit then
+        validate it.
+        """
+        self.env['stock.quant']._update_available_quantity(self.dining_table, self.stock_location, 1)
+        self.screw.categ_id = self.category_avco_auto
+        self.stock_location.valuation_account_id = self.account_production
+        delivery = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'move_ids': [Command.create({
+                'product_id': self.dining_table.id,
+                'product_uom_qty': 1,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+            })],
+        })
+        delivery.action_confirm()
+        self.bom_1.bom_line_ids = self.bom_1.bom_line_ids[1]
+        self.bom_1.type = 'phantom'
+        self.dining_table.invalidate_recordset()
+        delivery.button_validate()
+        self.assertEqual(delivery.move_ids.product_id, self.bom_1.bom_line_ids.product_id)
+        self.assertEqual(delivery.state, 'assigned')
+        # Needs to validate the delivery twice
+        delivery.move_ids.quantity = 5
+        delivery.button_validate()
+        self.assertEqual(delivery.move_ids.product_id, self.bom_1.bom_line_ids.product_id)
+        self.assertEqual(delivery.state, 'done')
+        product_aml = self.env['account.move.line'].search([('product_id', '=', self.dining_table.id)])
+        comp_aml = self.env['account.move.line'].search([('product_id', '=', self.screw.id)], order='debit')
+        self.assertEqual(len(product_aml), 0)
+        self.assertRecordValues(comp_aml, [
+            {'debit':  0.0, 'credit':  50.0},
+            {'debit':  50.0, 'credit':  0.0},
+        ])
 
     def test_mo_overview_comp_different_uom(self):
         """ Test that the overview takes into account the uom of the component in the price computation
