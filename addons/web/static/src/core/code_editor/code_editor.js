@@ -8,14 +8,14 @@ export class CodeEditor extends Component {
 
     props = props(
         {
-            "mode?": t.or(CodeEditor.MODES.map(t.literal)),
+            "mode?": t.selection(CodeEditor.MODES),
             "modeOptions?": t.object(),
             "value?": t.string,
             "readonly?": t.boolean,
             "onChange?": t.function(),
             "onBlur?": t.function(),
             "class?": t.string,
-            "theme?": t.or(CodeEditor.THEMES.map(t.literal)),
+            "theme?": t.selection(CodeEditor.THEMES),
             "maxLines?": t.number,
             "sessionId?": t.or([t.number, t.string]),
             "initialCursorPosition?": t.object(),
