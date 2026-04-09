@@ -147,7 +147,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
         })
 
         # create project in both companies
-        cls.Project = cls.env['project.project'].with_context({'mail_create_nolog': True, 'tracking_disable': True})
+        cls.Project = cls.env['project.project']
         cls.project_company_a = cls.Project.create({
             'name': 'Project Company A',
             'alias_name': 'project+companya',
@@ -181,7 +181,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
             ]
         })
         # already-existing tasks in company A and B
-        Task = cls.env['project.task'].with_context({'mail_create_nolog': True, 'tracking_disable': True})
+        Task = cls.env['project.task']
         cls.task_1 = Task.create({
             'name': 'Task 1 in Project A',
             'user_ids': cls.user_employee_company_a,
@@ -196,7 +196,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
     def test_create_project(self):
         """ Check project creation in multiple companies """
         with self.sudo('manager-a'):
-            project = self.env['project.project'].with_context({'tracking_disable': True}).create({
+            project = self.env['project.project'].create({
                 'name': 'Project Company A',
                 'partner_id': self.partner_1.id,
             })
@@ -204,7 +204,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
 
             with self.switch_company(self.company_b):
                 with self.assertRaises(AccessError, msg="Manager can not create project in a company in which he is not allowed"):
-                    project = self.env['project.project'].with_context({'tracking_disable': True}).create({
+                    project = self.env['project.project'].create({
                         'name': 'Project Company B',
                         'partner_id': self.partner_1.id,
                         'company_id': self.company_b.id
@@ -212,7 +212,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
 
                 # when allowed in other company, can create a project in another company (different from the one in which you are logged)
                 with self.allow_companies([self.company_a.id, self.company_b.id]):
-                    project = self.env['project.project'].with_context({'tracking_disable': True}).create({
+                    project = self.env['project.project'].create({
                         'name': 'Project Company B',
                         'partner_id': self.partner_1.id,
                         'company_id': self.company_b.id
@@ -334,7 +334,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
     def test_create_task(self):
         with self.sudo('employee-a'):
             # create task, set project; the onchange will set the correct company
-            with Form(self.env['project.task'].with_context({'tracking_disable': True})) as task_form:
+            with Form(self.env['project.task']) as task_form:
                 task_form.name = 'Test Task in company A'
                 task_form.project_id = self.project_company_a
             task = task_form.save()
@@ -472,7 +472,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
         with self.sudo('employee-a'):
             with self.allow_companies([self.company_a.id, self.company_b.id]):
                 with self.debug_mode():
-                    with Form(self.env['project.task'].with_context({'tracking_disable': True})) as task_form:
+                    with Form(self.env['project.task']) as task_form:
                         task_form.name = 'Test Subtask in company B'
                         task_form.project_id = self.task_1.project_id
                         task_form.parent_id = self.task_1

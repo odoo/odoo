@@ -199,23 +199,18 @@ class TestSaleToInvoice(TestSaleCommon):
         """Test downpayment's SO line is created and remains unchanged even if everything is
         invoiced."""
         # Create the SO with one line
-        sale_order = (
-            self
-            .env["sale.order"]
-            .with_context(tracking_disable=True)
-            .create({
-                "partner_id": self.partner_a.id,
-                "partner_invoice_id": self.partner_a.id,
-                "partner_shipping_id": self.partner_a.id,
-                "order_line": [
-                    Command.create({
-                        "product_id": self.company_data["product_order_no"].id,
-                        "product_uom_qty": 5,
-                        "tax_ids": False,
-                    })
-                ],
-            })
-        )
+        sale_order = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "partner_invoice_id": self.partner_a.id,
+            "partner_shipping_id": self.partner_a.id,
+            "order_line": [
+                Command.create({
+                    "product_id": self.company_data["product_order_no"].id,
+                    "product_uom_qty": 5,
+                    "tax_ids": False,
+                })
+            ],
+        })
         # Confirm the SO
         sale_order.action_confirm()
         # Update delivered quantity of SO line
@@ -257,23 +252,18 @@ class TestSaleToInvoice(TestSaleCommon):
     def test_downpayment_line_name(self):
         """Test downpayment's SO line name is updated when invoice is posted."""
         # Create the SO with one line
-        sale_order = (
-            self
-            .env["sale.order"]
-            .with_context(tracking_disable=True)
-            .create({
-                "partner_id": self.partner_a.id,
-                "partner_invoice_id": self.partner_a.id,
-                "partner_shipping_id": self.partner_a.id,
-                "order_line": [
-                    Command.create({
-                        "product_id": self.company_data["product_order_no"].id,
-                        "product_uom_qty": 5,
-                        "tax_ids": False,
-                    })
-                ],
-            })
-        )
+        sale_order = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "partner_invoice_id": self.partner_a.id,
+            "partner_shipping_id": self.partner_a.id,
+            "order_line": [
+                Command.create({
+                    "product_id": self.company_data["product_order_no"].id,
+                    "product_uom_qty": 5,
+                    "tax_ids": False,
+                })
+            ],
+        })
         # Confirm the SO
         sale_order.action_confirm()
         # Update delivered quantity of SO line
@@ -303,24 +293,19 @@ class TestSaleToInvoice(TestSaleCommon):
 
     def test_downpayment_fixed_amount_with_zero_total_amount(self):
         # Create the SO with one line and amount total is zero
-        sale_order = (
-            self
-            .env["sale.order"]
-            .with_context(tracking_disable=True)
-            .create({
-                "partner_id": self.partner_a.id,
-                "partner_invoice_id": self.partner_a.id,
-                "partner_shipping_id": self.partner_a.id,
-                "order_line": [
-                    Command.create({
-                        "product_id": self.company_data["product_order_no"].id,
-                        "product_uom_qty": 5,
-                        "price_unit": 0,
-                        "tax_ids": False,
-                    })
-                ],
-            })
-        )
+        sale_order = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "partner_invoice_id": self.partner_a.id,
+            "partner_shipping_id": self.partner_a.id,
+            "order_line": [
+                Command.create({
+                    "product_id": self.company_data["product_order_no"].id,
+                    "product_uom_qty": 5,
+                    "price_unit": 0,
+                    "tax_ids": False,
+                })
+            ],
+        })
         sale_order.action_confirm()
         sale_order.order_line.write({"qty_delivered": 5.0})
         context = {
@@ -783,18 +768,13 @@ class TestSaleToInvoice(TestSaleCommon):
     def test_invoice_with_sections(self):
         """Test create and invoice with sections from the SO, and check qty invoice/to invoice, and
         the related amounts."""
-        sale_order = (
-            self
-            .env["sale.order"]
-            .with_context(tracking_disable=True)
-            .create({
-                "partner_id": self.partner_a.id,
-                "partner_invoice_id": self.partner_a.id,
-                "partner_shipping_id": self.partner_a.id,
-            })
-        )
+        sale_order = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "partner_invoice_id": self.partner_a.id,
+            "partner_shipping_id": self.partner_a.id,
+        })
 
-        SaleOrderLine = self.env["sale.order.line"].with_context(tracking_disable=True)
+        SaleOrderLine = self.env["sale.order.line"]
         SaleOrderLine.create({
             "name": "Section",
             "display_type": "line_section",
@@ -852,25 +832,20 @@ class TestSaleToInvoice(TestSaleCommon):
             combo_ids=[Command.link(combo_a.id), Command.link(combo_b.id)],
         )
 
-        sale_order = (
-            self
-            .env["sale.order"]
-            .with_context(tracking_disable=True)
-            .create({
-                "partner_id": self.partner_a.id,
-                "partner_invoice_id": self.partner_a.id,
-                "partner_shipping_id": self.partner_a.id,
-                "order_line": [
-                    Command.create({
-                        "name": "Meal Menu",
-                        "product_id": product_combo.id,
-                        "product_uom_qty": 3,
-                        "price_unit": 0,
-                        "tax_ids": [],
-                    })
-                ],
-            })
-        )
+        sale_order = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "partner_invoice_id": self.partner_a.id,
+            "partner_shipping_id": self.partner_a.id,
+            "order_line": [
+                Command.create({
+                    "name": "Meal Menu",
+                    "product_id": product_combo.id,
+                    "product_uom_qty": 3,
+                    "price_unit": 0,
+                    "tax_ids": [],
+                })
+            ],
+        })
         sale_order.order_line = [
             Command.create({
                 "product_id": product.id,
@@ -962,18 +937,13 @@ class TestSaleToInvoice(TestSaleCommon):
 
     def test_qty_invoiced(self):
         """Verify uom rounding is correctly considered during qty_invoiced compute."""
-        sale_order = (
-            self
-            .env["sale.order"]
-            .with_context(tracking_disable=True)
-            .create({
-                "partner_id": self.partner_a.id,
-                "partner_invoice_id": self.partner_a.id,
-                "partner_shipping_id": self.partner_a.id,
-            })
-        )
+        sale_order = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "partner_invoice_id": self.partner_a.id,
+            "partner_shipping_id": self.partner_a.id,
+        })
 
-        SaleOrderLine = self.env["sale.order.line"].with_context(tracking_disable=True)
+        SaleOrderLine = self.env["sale.order.line"]
         sol_prod_deliver = SaleOrderLine.create({
             "product_id": self.company_data["product_order_no"].id,
             "product_uom_qty": 5,
@@ -1213,7 +1183,7 @@ class TestSaleToInvoice(TestSaleCommon):
             "name": "EUR",
             "currency_id": self.env.ref("base.EUR").id,
         })
-        so1 = self.sale_order.with_context(mail_notrack=True).copy()
+        so1 = self.sale_order.copy()
         so1.pricelist_id = eur_pricelist
         so2 = so1.copy()
         usd_pricelist = self.env["product.pricelist"].create({

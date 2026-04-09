@@ -469,19 +469,14 @@ class TestSalePrices(SaleCommon):
         # company currency = so currency
         # product_1.currency != so currency
         # product_2.cost_currency_id = so currency
-        sales_order = (
-            product_1_ctxt
-            .with_context(mail_notrack=True, mail_create_nolog=True)
-            .env["sale.order"]
-            .create({
-                "partner_id": user_in_other_company.partner_id.id,
-                "pricelist_id": pricelist.id,
-                "order_line": [
-                    Command.create({"product_id": product_1.id, "product_uom_qty": 1.0}),
-                    Command.create({"product_id": product_2.id, "product_uom_qty": 1.0}),
-                ],
-            })
-        )
+        sales_order = product_1_ctxt.env["sale.order"].create({
+            "partner_id": user_in_other_company.partner_id.id,
+            "pricelist_id": pricelist.id,
+            "order_line": [
+                Command.create({"product_id": product_1.id, "product_uom_qty": 1.0}),
+                Command.create({"product_id": product_2.id, "product_uom_qty": 1.0}),
+            ],
+        })
 
         so_line_1 = sales_order.order_line[0]
         so_line_2 = sales_order.order_line[1]
@@ -495,20 +490,15 @@ class TestSalePrices(SaleCommon):
         # product_1.currency == so currency
         # product_2.cost_currency_id != so currency
         pricelist.currency_id = main_curr
-        sales_order = (
-            product_1_ctxt
-            .with_context(mail_notrack=True, mail_create_nolog=True)
-            .env["sale.order"]
-            .create({
-                "partner_id": user_in_other_company.partner_id.id,
-                "pricelist_id": pricelist.id,
-                "order_line": [
-                    # Verify discount is considered in create hack
-                    Command.create({"product_id": product_1.id, "product_uom_qty": 1.0}),
-                    Command.create({"product_id": product_2.id, "product_uom_qty": 1.0}),
-                ],
-            })
-        )
+        sales_order = product_1_ctxt.env["sale.order"].create({
+            "partner_id": user_in_other_company.partner_id.id,
+            "pricelist_id": pricelist.id,
+            "order_line": [
+                # Verify discount is considered in create hack
+                Command.create({"product_id": product_1.id, "product_uom_qty": 1.0}),
+                Command.create({"product_id": product_2.id, "product_uom_qty": 1.0}),
+            ],
+        })
 
         so_line_1 = sales_order.order_line[0]
         so_line_2 = sales_order.order_line[1]

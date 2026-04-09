@@ -95,7 +95,7 @@ class TestPhoneFormat(TransactionCase):
         countries.invalidate_recordset()
 
         # 1 query per country + 4 - TDE: to update since it works better than previously
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(5):
             for record in test_records:
                 record._phone_format(
                     number='078 9216 4126',

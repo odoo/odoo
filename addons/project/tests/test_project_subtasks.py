@@ -17,14 +17,14 @@ class TestProjectSubtasks(TestProjectCommon):
         """
             Create a task in the default task form should take the project set in the form or the default project in the context
         """
-        with Form(self.env['project.task'].with_context({'tracking_disable': True})) as task_form:
+        with Form(self.env['project.task']) as task_form:
             task_form.name = 'Test Task 1'
             task_form.project_id = self.project_pigs
         task = task_form.save()
 
         self.assertEqual(task.project_id, self.project_pigs, "The project should be assigned.")
 
-        with Form(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_pigs.id})) as task_form:
+        with Form(self.env['project.task'].with_context({'default_project_id': self.project_pigs.id})) as task_form:
             task_form.name = 'Test Task 2'
         task = task_form.save()
 
@@ -34,14 +34,14 @@ class TestProjectSubtasks(TestProjectCommon):
         """
             Create a task in the task form 2 should take the project set in the form or the default project in the context
         """
-        with Form(self.env['project.task'].with_context({'tracking_disable': True}), view="project.view_task_form2") as task_form:
+        with Form(self.env['project.task'], view="project.view_task_form2") as task_form:
             task_form.name = 'Test Task 1'
             task_form.project_id = self.project_pigs
         task = task_form.save()
 
         self.assertEqual(task.project_id, self.project_pigs, "The project should be assigned.")
 
-        with Form(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_pigs.id}), view="project.view_task_form2") as task_form:
+        with Form(self.env['project.task'].with_context({'default_project_id': self.project_pigs.id}), view="project.view_task_form2") as task_form:
             task_form.name = 'Test Task 2'
         task = task_form.save()
 
@@ -51,7 +51,7 @@ class TestProjectSubtasks(TestProjectCommon):
         """
             Create a task in the quick create form should take the default project in the context
         """
-        task_form = Form(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_pigs.id}), view="project.quick_create_task_form")
+        task_form = Form(self.env['project.task'].with_context({'default_project_id': self.project_pigs.id}), view="project.quick_create_task_form")
         task_form.display_name = 'Test Task 2'
         task = task_form.save()
 
@@ -63,7 +63,7 @@ class TestProjectSubtasks(TestProjectCommon):
         """
         form_views = self.env['ir.ui.view'].search([('model', '=', 'project.task'), ('type', '=', 'form')])
         for form_view in form_views:
-            task_form = Form(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_pigs.id, 'default_name': 'Test Task 1', 'default_display_name': 'Test Task 1'}), view=form_view)
+            task_form = Form(self.env['project.task'].with_context({'default_project_id': self.project_pigs.id, 'default_name': 'Test Task 1', 'default_display_name': 'Test Task 1'}), view=form_view)
             # Some views have the `name` field invisible
             # As the goal is simply to test the default project field and not the name, we can skip setting the name
             # in the view and set it using `default_name` instead
@@ -97,14 +97,14 @@ class TestProjectSubtasks(TestProjectCommon):
                 - Project should be removed
                 - Parent should be removed
         """
-        parent_task = self.task_1.with_context({'tracking_disable': True})
+        parent_task = self.task_1
 
         # 1)
         child_task = parent_task.create({
             'name': 'Test Subtask 1',
             'parent_id': parent_task.id,
             'project_id': parent_task.project_id.id,
-        }).with_context({'tracking_disable': True})
+        })
         self.assertEqual(child_task.project_id, self.task_1.project_id, "The project should be inheritted from parent.")
         self.assertFalse(child_task.display_in_project, "By default, subtasks shouldn't be displayed in project.")
 
@@ -161,7 +161,7 @@ class TestProjectSubtasks(TestProjectCommon):
         """
             The stage of the new child must be the default one of the project
         """
-        parent_task = self.task_1.with_context({'tracking_disable': True})
+        parent_task = self.task_1
 
         stage_a = self.env['project.task.type'].create({'name': 'a', 'sequence': 1})
         stage_b = self.env['project.task.type'].create({'name': 'b', 'sequence': 10})
@@ -172,7 +172,7 @@ class TestProjectSubtasks(TestProjectCommon):
             'name': 'Test Subtask 1',
             'parent_id': parent_task.id,
             'project_id': parent_task.project_id.id,
-        }).with_context({'tracking_disable': True})
+        })
         self.assertEqual(child_task.stage_id, stage_a, "Stage should be set on the subtask since it inheritted the project of its parent.")
 
         child_task.project_id = parent_task.project_id
@@ -186,7 +186,7 @@ class TestProjectSubtasks(TestProjectCommon):
             'name': 'Test Subtask 2',
             'parent_id': parent_task.id,
             'project_id': parent_task.project_id.id,
-        }).with_context({'tracking_disable': True})
+        })
         self.assertEqual(other_child_task.stage_id, stage_a, "The stage of the child task should be the default one of the project even if parent stage id is different.")
 
         other_child_task.project_id = self.project_goats
@@ -249,7 +249,7 @@ class TestProjectSubtasks(TestProjectCommon):
             6) verify if there is a copy in the subtask name.
         """
 
-        task_form = Form(self.task_1.with_context({'tracking_disable': True}))
+        task_form = Form(self.task_1)
         with task_form.child_ids.new() as child_task_form:
             child_task_form.name = 'Test Subtask 1'
             child_task_form.project_id = task_form.project_id
@@ -258,7 +258,7 @@ class TestProjectSubtasks(TestProjectCommon):
         child_subtask = self.task_1.child_ids[0]
 
         with (
-            Form(child_subtask.with_context(tracking_disable=True)) as subtask_form,
+            Form(child_subtask) as subtask_form,
             subtask_form.child_ids.new() as child_subtask_form,
         ):
             child_subtask_form.name = 'Test Subtask 2'
@@ -353,7 +353,7 @@ class TestProjectSubtasks(TestProjectCommon):
         self.assertEqual(copied_task.child_ids[0].child_ids.name, 'Sub Subtask A 1 (copy)', 'The task is copied from task.copy(). Its name should contain the extra (copy).')
 
     def test_subtask_unlinking(self):
-        task_form = Form(self.task_1.with_context({'tracking_disable': True}))
+        task_form = Form(self.task_1)
         with task_form.child_ids.new() as child_task_form:
             child_task_form.name = 'Test Subtask 1'
             child_task_form.project_id = task_form.project_id
@@ -402,7 +402,7 @@ class TestProjectSubtasks(TestProjectCommon):
 
     def test_subtask_copy_followers(self):
         """ This test will check that a task will propagate its followers to its subtasks """
-        task_form = Form(self.task_1.with_context({'tracking_disable': True}))
+        task_form = Form(self.task_1)
         with task_form.child_ids.new() as child_task_form:
             child_task_form.name = 'Child Task'
             child_task_form.project_id = task_form.project_id

@@ -27,7 +27,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
 
     def test_frequency_hourly_attendance(self):
         with freeze_time("2017-12-05"):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'is_based_on_worked_time': True,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -42,7 +42,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'all',
                 })],
             })
-            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,

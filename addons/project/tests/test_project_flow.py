@@ -27,7 +27,7 @@ class TestProjectFlow(TestProjectCommon, MailCase):
             - 'another_parent_task' linked to the partner_3
         """
 
-        Task = self.env['project.task'].with_context({'tracking_disable': True})
+        Task = self.env['project.task']
 
         parent_task = Task.create({
             'name': 'Mother Task',
@@ -125,7 +125,7 @@ class TestProjectFlow(TestProjectCommon, MailCase):
 
     def test_rating(self):
         """Check if rating works correctly even when task is changed from project A to project B"""
-        Task = self.env['project.task'].with_context({'tracking_disable': True})
+        Task = self.env['project.task']
         first_task = Task.create({
             'name': 'first task',
             'user_ids': self.user_projectuser,

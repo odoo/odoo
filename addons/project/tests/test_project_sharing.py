@@ -274,7 +274,7 @@ class TestProjectSharing(TestProjectSharingCommon):
             3) Give the 'edit' access mode to a portal user in a project and try to create task with this user.
             3.1) Try to change the project of the new task with this user.
         """
-        Task = self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_portal.id, 'default_user_ids': [(4, self.user_portal.id)]})
+        Task = self.env['project.task'].with_context({'default_project_id': self.project_portal.id, 'default_user_ids': [(4, self.user_portal.id)]})
         # 1) Give the 'read' access mode to a portal user in a project and try to create task with this user.
         with self.assertRaises(AccessError, msg="Should not accept the portal user create a task in the project when he has not the edit access right."):
             with self.get_project_sharing_form_view(Task, self.user_portal) as form:
@@ -397,7 +397,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         """
         # 1) Give the 'read' access mode to a portal user in a project and try to create task with this user.
         with self.assertRaises(AccessError, msg="Should not accept the portal user create a task in the project when he has not the edit access right."):
-            with self.get_project_sharing_form_view(self.task_cow.with_context({'tracking_disable': True, 'default_project_id': self.project_cows.id}), self.user_portal) as form:
+            with self.get_project_sharing_form_view(self.task_cow.with_context({'default_project_id': self.project_cows.id}), self.user_portal) as form:
                 form.name = 'Test'
                 task = form.save()
 
@@ -411,7 +411,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         project_share_wizard.action_send_mail()
         # the portal user is set as follower for the task_cow. Without it he does not have read access to the task, and thus can not access its view form
         self.task_cow.message_subscribe(partner_ids=self.user_portal.partner_id.ids)
-        with self.get_project_sharing_form_view(self.task_cow.with_context({'tracking_disable': True, 'default_project_id': self.project_cows.id, 'uid': self.user_portal.id}), self.user_portal) as form:
+        with self.get_project_sharing_form_view(self.task_cow.with_context({'default_project_id': self.project_cows.id, 'uid': self.user_portal.id}), self.user_portal) as form:
             form.name = 'Test'
             task = form.save()
             self.assertEqual(task.name, 'Test')
@@ -435,7 +435,6 @@ class TestProjectSharing(TestProjectSharingCommon):
 
         task2 = self.env['project.task'] \
             .with_context({
-                'tracking_disable': True,
                 'default_project_id': self.project_cows.id,
                 'default_user_ids': [Command.set(self.user_portal.ids)],
             }) \
