@@ -964,7 +964,7 @@ class DomainCondition(Domain):
     def _field(self, model: BaseModel) -> Field:
         """Cached Field instance for the expression."""
         field = self._field_instance  # type: ignore[arg-type]
-        if field is None or field.model_name != model._name:
+        if field is None or field is not model._fields[field.name]:
             field, _ = self.__get_field(model)
         return field
 
