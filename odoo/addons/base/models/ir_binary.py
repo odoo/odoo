@@ -159,8 +159,9 @@ class IrBinary(models.AbstractModel):
                 stream.download_name = f'{record._table}-{record.id}-{field_name}'
 
             stream.download_name = stream.download_name.replace('\n', '_').replace('\r', '_')
-            if not get_extension(stream.download_name):
-                stream.download_name += guess_extension(stream.mimetype) or ''
+            ext = get_extension(stream.download_name)
+            stream.download_name = stream.download_name.removesuffix(ext)[:100] + (
+                ext or guess_extension(stream.mimetype) or '')
 
         return stream
 
