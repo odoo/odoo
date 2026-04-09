@@ -22,6 +22,7 @@ associated to every resource. It also manages the leaves of every resource.
         'views/resource_calendar_attendance_views.xml',
         'views/resource_calendar_views.xml',
         'views/menuitems.xml',
+        'wizard/resource_calendar_update_wizard_views.xml',
     ],
     'demo': [
         'data/resource_demo.xml',
