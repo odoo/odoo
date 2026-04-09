@@ -116,24 +116,14 @@
                 <t t-set="delivery_title_classes" t-value="'badge text-bg-info mb-2'"/>
                 <t
                     t-set="use_delivery_as_billing"
-                    t-value="order.partner_invoice_id == order.partner_shipping_id and not order.pickup_location_data"
+                    t-value="order.partner_invoice_id == order.partner_shipping_id"
                 />
                 <div class="d-flex flex-column flex-md-row gap-4">
                     <div
                         t-if="not use_delivery_as_billing and order._has_deliverable_products()"
                         t-attf-class="{{not use_delivery_as_billing and not only_services and 'col'}}"
                     >
-                        <t t-if="order.pickup_location_data">
-                            <p t-att-class="delivery_title_classes">Deliver to pickup point</p>
-                            <div
-                                class="fw-bold" t-out="order.pickup_location_data.get('name', '')"
-                            />
-                            <div t-out="order.pickup_location_data.get('street', '')"/>
-                            <div t-out="order.pickup_location_data.get('city', '')
-                                        + ' ' + order.pickup_location_data.get('zip_code','')"
-                            />
-                        </t>
-                        <t t-else="">
+                        <div name="address_summary_container">
                             <p t-att-class="delivery_title_classes">Delivery</p>
                             <t
                                 t-out="order.partner_shipping_id"
@@ -143,7 +133,7 @@
                                     no_marker=True,
                                 )"
                             />
-                        </t>
+                        </div>
                     </div>
                     <div t-attf-class="{{not use_delivery_as_billing and not only_services and 'col'}}">
                         <p t-if="use_delivery_as_billing and not only_services" t-att-class="delivery_title_classes">Delivery &amp; Billing</p>

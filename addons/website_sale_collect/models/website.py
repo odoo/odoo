@@ -42,7 +42,7 @@ class Website(models.Model):
             if not order or not order.carrier_id:
                 # Check free quantities in the in-store warehouses.
                 free_qty = max(free_qty, self._get_max_in_store_product_available_qty(product))
-            elif order.carrier_id.delivery_type == "in_store" and order.pickup_location_data:
+            elif order.carrier_id.delivery_type == "in_store" and order.partner_shipping_id.pickup_location_data:
                 # Get free_qty from the selected location's wh.
                 free_qty = product.with_context(warehouse_id=order.warehouse_id.id).free_qty
 
