@@ -230,6 +230,13 @@ class TestHttpStatic(TestHttpStaticCommon):
                 assert_filename='pyramid.of.gizeh.png',
             )
 
+        with self.subTest("long name"):
+            res = self.assertDownloadGizeh(
+                f'/web/content/test_http.gizeh_png?filename={"a" * 4000}.png',
+                assert_filename=f'{"a" * 100}.png',
+            )
+            self.assertEqual(res.headers['Content-Disposition'], f'inline; filename={"a" * 100}.png')
+
     def test_static12_not_found_to_placeholder(self):
         with self.subTest(x_sendfile=False):
             self.assertDownloadPlaceholder('/web/image/idontexist')
