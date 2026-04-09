@@ -8,8 +8,26 @@ import { session } from "@web/session";
 import { hashCode } from "../utils/strings";
 import { Crypto, CRYPTO_ALGO } from "../crypto";
 import { normalize } from "../l10n/utils";
+import { NonSecureContextError } from "../errors/non_secure_context_error";
+import { _t } from "../l10n/translation";
 
 const IS_READY = Symbol("ready");
+
+class FakeIndexedDB {
+    // used in non secure context to disable the offline features as data can't be encrypted
+    invalidate() {}
+    read() {
+        return Promise.resolve({});
+    }
+    write() {}
+    delete() {}
+    getAllKeys() {
+        return Promise.resolve([]);
+    }
+    getAllEntries() {
+        return Promise.resolve([]);
+    }
+}
 
 class OfflineManager extends Reactive {
     static VISITED_UI_TABLE_NAME = "visited-ui-items";
@@ -24,8 +42,13 @@ class OfflineManager extends Reactive {
 
         this.env = env;
         this.orm = orm;
-        this._idb = markRaw(new IndexedDB("offline", session.registry_hash + CRYPTO_ALGO));
-        this._crypto = session.browser_cache_secret && new Crypto(session.browser_cache_secret);
+        this._idb = window.isSecureContext
+            ? markRaw(new IndexedDB("offline", session.registry_hash + CRYPTO_ALGO))
+            : new FakeIndexedDB();
+        this._crypto =
+            window.isSecureContext &&
+            session.browser_cache_secret &&
+            new Crypto(session.browser_cache_secret);
         this._visitedUITable = this.env.debug
             ? OfflineManager.VISITED_UI_TABLE_NAME_DEBUG
             : OfflineManager.VISITED_UI_TABLE_NAME;
@@ -228,6 +251,11 @@ class OfflineManager extends Reactive {
     // -------------------------------------------------------------------------
 
     scheduleORM(model, method, args, kwargs, options) {
+        if (!window.isSecureContext) {
+            throw new NonSecureContextError(
+                _t("Offline features not available in a non-secure context")
+            );
+        }
         const value = { model, method, args, kwargs, extras: options.extras };
         const key = options.id ?? hashCode(JSON.stringify(value));
         this._ormToSync[key] = { key, value };
@@ -387,7 +415,12 @@ class OfflineManager extends Reactive {
     // -------------------------------------------------------------------------
 
     async _syncORM() {
+        if (!window.isSecureContext) {
+            return;
+        }
+
         // Only one tab can execute this block at a time
+        // This can only be done in a secure context
         await navigator.locks.request("db-sync", async () => {
             this._syncingORM = true;
             await this._updateScheduledORMList();
