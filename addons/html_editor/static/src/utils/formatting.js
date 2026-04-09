@@ -1,6 +1,6 @@
 import { normalizeCSSColor } from "@web/core/utils/colors";
 import { removeClass } from "./dom";
-import { isBold, isDirectionSwitched, isItalic, isStrikeThrough, isUnderline } from "./dom_info";
+import { isBold, isItalic, isStrikeThrough, isUnderline } from "./dom_info";
 import { closestElement, closestPath, findNode, findUpTo } from "./dom_traversal";
 import { closestBlock, isBlock } from "./blocks";
 
@@ -170,9 +170,6 @@ export const formatsSpecs = {
                 node.classList.add("o_default_font_size");
             }
         },
-    },
-    switchDirection: {
-        isFormatted: (node, props) => isDirectionSwitched(node, props.editable),
     },
 };
 
