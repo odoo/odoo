@@ -89,7 +89,6 @@ class AccountPaymentRegister(models.TransientModel):
         readonly=True,
         store=False
     )
-    exchange_rate_currency_code = fields.Char(compute="_compute_exchange_rate")
 
     # == Fields given through the context ==
     line_ids = fields.Many2many('account.move.line', 'account_payment_register_move_line_rel', 'wizard_id', 'line_id',
@@ -970,10 +969,8 @@ class AccountPaymentRegister(models.TransientModel):
                     company=wizard.company_id,
                     date=wizard.payment_date,
                 )
-                wizard.exchange_rate_currency_code = target_currency.name
             else:
                 wizard.exchange_rate = 1.0
-                wizard.exchange_rate_currency_code = wizard.company_currency_id.name
 
     def _fetch_duplicate_reference(self, matching_states=('draft', 'posted')):
         """ Retrieve move ids for possible duplicates of payments. Duplicates moves:

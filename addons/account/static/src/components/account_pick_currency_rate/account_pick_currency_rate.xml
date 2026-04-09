@@ -12,4 +12,20 @@
         </button>
     </t>
 
+    <t t-name="account.AccountCurrencyExchangeRate">
+        <div class="d-flex gap-1 align-items-center flex-nowrap text-muted">
+            <span>1</span>
+            <span class="w-auto" t-out="this.fromCurrency and this.fromCurrency.display_name or ''"/>
+            <button type="button" t-on-click.prevent="this.onSwap"
+                    class="btn btn-link text-dark p-0 mx-1"
+                    title="Click to swap currencies">
+                <i class="fa fa-exchange"/>
+            </button>
+            <input t-if="this.isEditable" type="text" class="o_input"
+                   style="max-width: 21ch;"
+                   t-att-value="this.displayRate" t-on-change="this.onRateInput"/>
+            <span t-else="" t-out="this.displayRate"/>
+            <span class="w-auto" t-out="this.toCurrency and this.toCurrency.display_name or ''"/>
+        </div>
+    </t>
 </template>
