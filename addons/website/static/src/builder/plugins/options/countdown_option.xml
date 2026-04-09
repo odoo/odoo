@@ -2,6 +2,13 @@
 <templates xml:space="preserve">
 
 <t t-name="website.CountdownOption">
+    <BuilderRow label.translate="Title Position">
+        <BuilderButtonGroup action="'setCountdownTitlePosition'">
+            <BuilderButton actionParam="'s_countdown_title_top'" iconImg="'/website/static/src/img/snippets_options/pos_top.svg'"/>
+            <BuilderButton actionParam="'s_countdown_title_left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+            <BuilderButton actionParam="''" icon="'fa-eye-slash'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
     <BuilderRow label.translate="Due Date">
         <BuilderDateTimePicker dataAttributeAction="'endTime'" acceptEmptyDate="false"/>
     </BuilderRow>
@@ -211,6 +218,16 @@
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
         <countdown_option selector=".s_countdown"/>
     </xpath>
+</t>
+
+<t t-name="website.s_countdown.title">
+    <div class="s_countdown_title oe_unremovable">
+        <h2 style="text-align: center">
+            <span class="h3-fs">
+                <font class="text-o-color-1">Sales begins in:</font>
+            </span>
+        </h2>
+    </div>
 </t>
 
 </templates>
