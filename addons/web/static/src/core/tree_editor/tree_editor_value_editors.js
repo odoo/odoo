@@ -243,10 +243,22 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "float":
         case "monetary": {
             const formatType = type === "integer" ? "integer" : "float";
+            const typeFormatter = formatters.get(formatType, null);
+            const formatter = (value) => {
+                let v = value;
+                if (typeFormatter) {
+                    try {
+                        v = typeFormatter(value);
+                    } catch {
+                        /* do nothing */
+                    }
+                }
+                return String(v);
+            };
             return {
                 component: Input,
                 extractProps: ({ value, update, displayPlaceholder }) => ({
-                    value: String(value),
+                    value: formatter(value),
                     update: (value) => update(parseValue(formatType, value)),
                     startEmpty: params.startEmpty,
                     placeholder: placeholderForInput(displayPlaceholder),
