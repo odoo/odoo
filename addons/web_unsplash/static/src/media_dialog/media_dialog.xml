@@ -2,17 +2,17 @@
 <templates id="template" xml:space="preserve">
     <t t-inherit="html_editor.ExternalImage" t-inherit-mode="extension">
         <xpath expr="//t[@t-if]" position="after">
-            <t t-elif="this.record.mediaType === 'unsplashRecord'">
-                <AutoResizeImage src="this.record.url"
-                    author="this.record.user.name"
-                    authorLink="this.record.user.links.html"
-                    name="this.record.user.name"
-                    title="this.record.user.name"
-                    altDescription="this.record.alt_description"
-                    selected="this.selectedRecordIds.includes(this.record.id)"
-                    onImageClick="() => this.onClickRecord(this.record)"
+            <t t-elif="record.mediaType === 'unsplashRecord'">
+                <AutoResizeImage src="record.url"
+                    author="record.user.name"
+                    authorLink="record.user.links.html"
+                    name="record.user.name"
+                    title="record.user.name"
+                    altDescription="record.alt_description"
+                    selected="this.selectedRecordIds.includes(record.id)"
+                    onImageClick="() => this.onClickRecord(record)"
                     minRowHeight="this.MIN_ROW_HEIGHT"
-                    onLoaded="(imgEl) => this.onImageLoaded(imgEl, this.record)"/>
+                    onLoaded="(imgEl) => this.onImageLoaded(imgEl, record)"/>
             </t>
         </xpath>
     </t>

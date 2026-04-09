@@ -17,7 +17,7 @@
 </t>
 
 <t t-name="website.snippet_options_conditional_visibility">
-    <BuilderRow label="this.option_name" level="1" t-if="this.isActiveItem('visibility_conditional')" preview="false">
+    <BuilderRow label="option_name" level="1" t-if="this.isActiveItem('visibility_conditional')" preview="false">
         <!-- isVisibilityCondition="true" ??? -->
         <BuilderSelect dataAttributeAction="attribute_rule">
             <BuilderSelectItem dataAttributeActionValue="null">Visible for</BuilderSelectItem>
