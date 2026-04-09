@@ -41,6 +41,7 @@ class DeliveryCarrier(models.Model):
         default="fixed",
         required=True,
     )
+    supports_cash_on_delivery = fields.Boolean(compute="_compute_supports_cash_on_delivery")
     allow_cash_on_delivery = fields.Boolean(
         string="Cash on Delivery",
         help="Allow customers to choose Cash on Delivery as their payment method.",
@@ -215,6 +216,11 @@ class DeliveryCarrier(models.Model):
             carrier.can_generate_return = False
 
     @api.depends("delivery_type")
+    def _compute_supports_cash_on_delivery(self):
+        for carrier in self:
+            carrier.supports_cash_on_delivery = carrier.delivery_type in {"base_on_rule", "fixed"}
+
+    @api.depends("delivery_type")
     def _compute_supports_shipping_insurance(self):
         for carrier in self:
             carrier.supports_shipping_insurance = False
@@ -354,6 +360,11 @@ class DeliveryCarrier(models.Model):
         )
         if not self.country_ids:
             self.zip_prefix_ids = [Command.clear()]
+
+    def write(self, vals):
+        if "delivery_type" in vals:
+            vals["allow_cash_on_delivery"] = False
+        return super().write(vals)
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
