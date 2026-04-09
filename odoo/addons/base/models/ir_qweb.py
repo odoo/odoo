@@ -1198,7 +1198,8 @@ class IrQweb(models.AbstractModel):
                 """, 0)]
 
         code_lines = []
-        code_lines.append(f'template_options = {pprint.pformat(options, indent=4)}')
+        json_options = json.scriptsafe.loads(json.scriptsafe.dumps(options, default=str))
+        code_lines.append(f'template_options = {pprint.pformat(json_options, indent=4)}')
         code_lines.append('code = None')
         code_lines.append('template_functions = {}')
 
