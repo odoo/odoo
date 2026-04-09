@@ -3123,13 +3123,13 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         wo_01 = mo_01.workorder_ids
         wo_02 = mo_02.workorder_ids
 
-        self.assertTrue(wo_01.show_json_popover)
-        self.assertTrue(wo_02.show_json_popover)
+        self.assertTrue(wo_01.has_conflicts)
+        self.assertTrue(wo_02.has_conflicts)
 
         wo_02.action_replan()
 
-        self.assertFalse(wo_01.show_json_popover)
-        self.assertFalse(wo_02.show_json_popover)
+        self.assertFalse(wo_01.has_conflicts)
+        self.assertFalse(wo_02.has_conflicts)
         self.assertEqual(wo_01.date_finished, wo_02.date_start)
 
     @freeze_time('2022-06-28 08:00')
@@ -3157,13 +3157,13 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
         wo_01 = mo_01.workorder_ids
         wo_02 = mo_02.workorder_ids
-        self.assertTrue(wo_01.show_json_popover)
-        self.assertTrue(wo_02.show_json_popover)
+        self.assertTrue(wo_01.has_conflicts)
+        self.assertTrue(wo_02.has_conflicts)
 
         wo_02.action_replan()
 
-        self.assertFalse(wo_01.show_json_popover)
-        self.assertFalse(wo_02.show_json_popover)
+        self.assertFalse(wo_01.has_conflicts)
+        self.assertFalse(wo_02.has_conflicts)
         self.assertEqual(wo_01.date_finished, wo_02.date_start)
 
     @freeze_time('2022-10-05 12:00')
@@ -3232,7 +3232,8 @@ class TestMrpOrder(TestMrpCommon, MailCase):
                 workorder.date_start = datetime(2022, 10, 20, 12)
             mo_02 = mo_02_form.save()
         mo_02.action_confirm()
-        self.assertFalse(op_1.show_json_popover)
+        self.assertFalse(op_1.has_planning_issues)
+        self.assertFalse(op_1.has_conflicts)
 
         with Form(mo_02) as mo_02_form:
             with mo_02_form.workorder_ids.new() as workorder:
@@ -3243,7 +3244,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
         op_1, op_2 = mo_02.workorder_ids.sorted('id')
         self.assertEqual(op_1.date_start, datetime(2022, 10, 20, 12))
-        self.assertTrue(op_2.show_json_popover)
+        self.assertTrue(op_2.has_planning_issues)
 
     @freeze_time('2025-10-01 08:00')
     def test_replan_mo_after_updating_bom(self):
@@ -5042,7 +5043,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         date_finished = fields.Date.today() + timedelta(days=5)
         wos_to_set = mo.workorder_ids - mo.workorder_ids[1]
         wos_to_set.write({ 'date_start': date_start, 'date_finished': date_finished })
-        self.assertTrue(mo.workorder_ids[-1].show_json_popover)
+        self.assertTrue(mo.workorder_ids[-1].has_conflicts)
 
     def test_final_product_as_component(self):
         """ Test the production of a product with itself as a component """

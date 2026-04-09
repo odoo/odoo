@@ -100,12 +100,19 @@
                 <list string="Manufacturing Orders">
                     <header>
                         <button name="button_plan" type="object" string="Plan"/>
+                        <button name="button_unplan" type="object" string="Unplan"/>
                     </header>
                     <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
                     <field name="name" decoration-bf="1"/>
                     <field name="date_start" optional="show" widget="remaining_days"/>
                     <field name="date_finished" optional="hide" widget="remaining_days"/>
+                    <field name="date_deadline" widget="mrp_remaining_days_unformatted" invisible="state in ['done', 'cancel']" optional="hide" decoration-danger="is_delayed" decoration-bf="is_delayed"/>
                     <field name="product_id" readonly="1" optional="show"/>
+                    <field name="lot_producing_ids" optional="hide" widget="many2many_tags"/>
+                    <field name="bom_id" readonly="1" optional="hide"/>
+                    <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
+                    <field name="origin" optional="show" readonly="state in ['cancel', 'done']"/>
+                    <field name="user_id" optional="hide" widget="many2one_avatar_user" readonly="state in ['cancel', 'done']"/>
                     <field name="components_availability_state" column_invisible="True" options='{"lazy": true}'/>
                     <field name="components_availability" options='{"lazy": true}'
                         invisible="state not in ['confirmed', 'progress']"
@@ -116,6 +123,9 @@
                     <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity" readonly="1" optional="show"/>
                     <field name="uom_id" readonly="1" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" widget="many2one_uom" optional="show"/>
+                    <field name="duration_expected" invisible="duration_expected == 0" groups="mrp.group_mrp_routings" widget="float_time" options="{'unit': 'minutes'}" sum="Total expected duration" optional="hide"/>
+                    <field name="duration" invisible="duration == 0" groups="mrp.group_mrp_routings" widget="float_time" options="{'unit': 'minutes'}" sum="Total real duration" optional="hide"/>
+                    <field name="company_id" readonly="1" groups="base.group_multi_company" optional="show"/>
                     <field name="state"
                         decoration-success="state in ('done', 'to_close')"
                         decoration-warning="state == 'progress'"
@@ -123,6 +133,8 @@
                         decoration-danger="state == 'cancel'"
                         decoration-muted="state == 'draft'"
                         optional="show" widget="badge" class="text-dark"/>
+                    <field name="activity_exception_decoration" widget="activity_exception"/>
+                    <field name="json_popover" widget="stock_rescheduling_popover" invisible="not json_popover" nolabel="1"/>
                 </list>
             </field>
         </record>

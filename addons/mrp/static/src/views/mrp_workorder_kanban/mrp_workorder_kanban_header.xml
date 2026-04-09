@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="mrp.KanbanHeader" t-inherit="web.KanbanHeader" t-inherit-mode="primary">
+        <xpath expr="//GroupConfigMenu" position="after">
+            <button t-if="!this.group.list.model.useSampleModel &amp;&amp; this.group.count" class="btn pe-2 me-n2"
+                t-on-click="() => this.updateGroupPlanning()">
+                <i class="fa fa-refresh" role="img" title="Update work center planning"/>
+            </button>
+        </xpath>
+    </t>
+
+</templates>
