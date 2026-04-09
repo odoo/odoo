@@ -68,7 +68,7 @@
   <t t-name="web.NavBar.AppsMenu">
     <t t-if="this.env.isSmall">
       <a href="/odoo" class="o_menu_toggle border-0" t-att-class="{'hasImage': this.currentApp?.webIconData}" accesskey="h" t-custom-ref="menuApps" t-on-click.prevent="this._openAppMenuSidebar">
-        <t t-call="web.NavBar.AppsMenu.Sidebar"/>
+        <t t-call="web.NavBar.AppsMenu.Sidebar" apps="apps"/>
       </a>
     </t>
     <t t-else="">
