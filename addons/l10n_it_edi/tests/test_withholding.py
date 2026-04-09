@@ -330,6 +330,24 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
                 | self.company.account_purchase_tax_id
             ))
 
+    def test_pension_fund_taxes_import_zero_vat_rate(self):
+        invoice = self._assert_import_invoice('IT00470550013_pfun3.xml', [{
+            'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
+            'invoice_line_ids': [{
+                'name': name,
+                'price_unit': price,
+            } for name, price in self.invoice_lines]
+        }])
+
+        for line in invoice.line_ids.filtered(lambda line: line.display_type == 'product'):
+            self.assertTrue(line.tax_ids, f'No taxes imported on line: {line.name}')
+            self.assertIn(
+                self.inps_purchase_tax,
+                line.tax_ids,
+                f'Pension fund tax was not imported on line: {line.name}'
+            )
+
     ####################################################
     # ENASARCO TAX
     ####################################################
