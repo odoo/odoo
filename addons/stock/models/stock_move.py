@@ -1089,7 +1089,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             vals_list.append({**default_vals,
                              **lot,
                              'location_dest_id': putaway_loc_dest.id,
-                             'uom_id': product.uom_id.id,
+                             'uom_id': default_vals.get('uom_id', product.uom_id.id),
                             })
         if default_vals.get('picking_type_id'):
             picking_type = self.env['stock.picking.type'].browse(default_vals['picking_type_id'])

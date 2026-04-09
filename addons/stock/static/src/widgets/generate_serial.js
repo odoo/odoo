@@ -87,6 +87,7 @@ export class GenerateDialog extends Component {
                 default_location_id: this.props.move.data.location_id.id,
                 default_tracking: this.props.move.data.has_tracking,
                 default_quantity: qtyToProcess,
+                default_uom_id: this.props.move.data.has_tracking === 'lot' ? this.props.move.data.product_uom?.id : undefined,
             },
             this.props.mode,
             this.nextSerial.el?.value,
