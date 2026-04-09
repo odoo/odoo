@@ -588,7 +588,8 @@
                                             <span t-out="', '.join(map(lambda x: (x.name), line.tax_id))"/>
                                         </td>
                                         <td t-if="not line.is_downpayment" class="text-end" id="subtotal">
-                                        <span class="oe_order_line_price_subtotal" t-field="line.price_subtotal"/>
+                                            <span t-if="sale_order.company_price_include == 'tax_included'" class="oe_order_line_price_subtotal" t-field="line.price_total"/>
+                                            <span t-else="" class="oe_order_line_price_subtotal" t-field="line.price_subtotal"/>
                                         </td>
                                     </t>
                                     <t t-if="line.display_type == 'line_section' or line.product_type == 'combo'">
