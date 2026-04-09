@@ -350,18 +350,19 @@ function getWidthSpecs(columns) {
             maxWidth = max;
         } else {
             let width;
-            if (column.type === "field") {
-                if (column.field.listViewWidth) {
-                    width = column.field.listViewWidth;
+            if (column.type === "field" || column.type === "column_group") {
+                const fieldCol = column.type === "column_group" ? column.fields[0] : column;
+                if (fieldCol.field.listViewWidth) {
+                    width = fieldCol.field.listViewWidth;
                     if (typeof width === "function") {
                         width = width({
-                            type: column.fieldType,
-                            hasLabel: column.hasLabel,
-                            options: column.options,
+                            type: fieldCol.fieldType,
+                            hasLabel: fieldCol.hasLabel,
+                            options: fieldCol.options,
                         });
                     }
                 } else {
-                    width = FIELD_WIDTHS[column.widget || column.fieldType];
+                    width = FIELD_WIDTHS[fieldCol.widget || fieldCol.fieldType];
                 }
             } else if (column.type === "widget") {
                 width = column.widget.listViewWidth;
@@ -373,7 +374,11 @@ function getWidthSpecs(columns) {
                 minWidth = DEFAULT_MIN_WIDTH;
             }
         }
-        return { minWidth, maxWidth, canShrink: column.type === "field" };
+        return {
+            minWidth,
+            maxWidth,
+            canShrink: column.type === "field" || column.type === "column_group",
+        };
     });
 }
 

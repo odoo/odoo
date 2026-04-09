@@ -3331,7 +3331,7 @@ class TestViews(ViewCase):
             </list>
         """
         self.assertValid(arch % '')
-        self.assertInvalid(arch % '<group/>', "List child can only have one of field, button, control, groupby, widget, header tag (not group)")
+        self.assertInvalid(arch % '<group/>', "List child can only have one of field, button, control, groupby, widget, header, column tag (not group)")
 
     def test_tree_groupby(self):
         arch = """
