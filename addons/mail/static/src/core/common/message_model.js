@@ -765,7 +765,7 @@ export class Message extends Record {
         await this.store.env.services.orm.silent.call("mail.message", "mark_as_unread", [
             [this.id],
         ]);
-        if (thread.model != "mail.box") {
+        if (!thread?.eq(this.store.history)) {
             this.store.env.services.notification.add(_t("Marked as unread"), { type: "info" });
         }
     }

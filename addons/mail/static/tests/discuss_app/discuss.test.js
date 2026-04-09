@@ -510,6 +510,31 @@ test("Can reply to history message", async () => {
     await contains(".o-mail-Message-content:has(:text('abc'))");
 });
 
+test("show toast notification when message unread from bookmarks", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], { notification_type: "inbox" });
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "lorem ipsum",
+        model: "res.partner",
+        res_id: partnerId,
+        bookmarked_partner_ids: [serverState.partnerId],
+    });
+    pyEnv["mail.notification"].create({
+        is_read: true,
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    await start();
+    await openDiscuss("mail.box_bookmark");
+    await click(".o-mail-Message:has(:text(lorem ipsum)) [title='Expand']");
+    await click(".o-dropdown-item:text('Mark as Unread')");
+    await contains(".o_notification:text(Marked as unread)");
+});
+
 test("receive new needaction messages", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
