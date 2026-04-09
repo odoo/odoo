@@ -282,10 +282,16 @@ export function checkButtonDisabled(text) {
 }
 
 export function isSynced() {
-    return {
-        content: "Check if the request is proceeded",
-        trigger: negate(".fa-spin", ".status-buttons"),
-    };
+    return [
+        {
+            content: "Check fa-spin is here before check it's not here",
+            trigger: ".status-buttons:has(.fa-spin)",
+        },
+        {
+            content: "Check if the request is proceeded",
+            trigger: negate(".fa-spin", ".status-buttons"),
+        },
+    ];
 }
 
 export function clickOnScanButton() {
