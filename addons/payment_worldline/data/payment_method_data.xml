@@ -92,6 +92,21 @@
         <field name="support_tokenization">True</field>
     </record>
 
+    <record id="payment_method_cetelem" model="payment.method">
+        <field name="name">Cetelem 3x/4x</field>
+        <field name="code">cetelem</field>
+        <field name="provider_id" ref="payment.payment_provider_worldline"/>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="bytes" file="payment/static/img/cetelem.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.fr')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
+    </record>
+
     <record id="payment_method_cofidis" model="payment.method">
         <field name="name">cofidis</field>
         <field name="code">cofidis</field>
@@ -137,6 +152,36 @@
         <field name="provider_id" ref="payment.payment_provider_worldline"/>
         <field name="image" type="bytes" file="payment/static/img/ideal_wero.png"/>
         <field name="support_tokenization">False</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.nl')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
+    </record>
+
+    <record id="payment_method_illicado" model="payment.method">
+        <field name="name">Illicado</field>
+        <field name="code">illicado</field>
+        <field name="provider_id" ref="payment.payment_provider_worldline"/>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="bytes" file="payment/static/img/illicado.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.fr')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
+    </record>
+
+    <record id="payment_method_in3" model="payment.method">
+        <field name="name">in3</field>
+        <field name="code">in3</field>
+        <field name="provider_id" ref="payment.payment_provider_worldline"/>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="bytes" file="payment/static/img/in3.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
         <field name="supported_country_ids" eval="[Command.set([ref('base.nl')])]"/>
         <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
     </record>
@@ -199,6 +244,56 @@
         <field name="image" type="bytes" file="payment/static/img/multibanco.png"/>
         <field name="support_tokenization">False</field>
         <field name="supported_country_ids" eval="[Command.set([ref('base.pt')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
+    </record>
+
+    <record id="payment_method_oney" model="payment.method">
+        <field name="name">Oney</field>
+        <field name="code">oney</field>
+        <field name="provider_id" ref="payment.payment_provider_worldline"/>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="bytes" file="payment/static/img/oney_3x-4x.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([
+                ref('base.be'),
+                ref('base.de'),
+                ref('base.es'),
+                ref('base.fr'),
+                ref('base.hu'),
+                ref('base.it'),
+                ref('base.pl'),
+                ref('base.pt'),
+                ref('base.ro'),
+            ])]"
+        />
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([
+                ref('base.EUR'),
+                ref('base.HUF'),
+                ref('base.RON'),
+            ])]"
+        />
+    </record>
+
+    <record id="payment_method_oney_financement_long" model="payment.method">
+        <field name="name">Oney Financement Long</field>
+        <field name="code">oney_financement_long</field>
+        <field name="provider_id" ref="payment.payment_provider_worldline"/>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="bytes" file="payment/static/img/oney_financement_long.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.fr')])]"/>
         <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
     </record>
 
