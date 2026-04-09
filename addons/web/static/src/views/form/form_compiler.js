@@ -598,6 +598,8 @@ export class FormCompiler extends ViewCompiler {
      * @returns {Element}
      */
     compileSetting(el, params) {
+        const settingFieldId = el.getAttribute("setting_field_id");
+
         const setting = createElement(params.componentName || "Setting", {
             info: toStringExpression(el.getAttribute("info") || ""),
             title: toStringExpression(el.getAttribute("title") || ""),
@@ -605,39 +607,28 @@ export class FormCompiler extends ViewCompiler {
             companyDependent: el.getAttribute("company_dependent") === "1" || "false",
             documentation: toStringExpression(el.getAttribute("documentation") || ""),
             record: `__comp__.props.record`,
+            string: toStringExpression(el.getAttribute("string") || ""),
         });
         if (el.getAttribute("id")) {
             setting.setAttribute("id", toStringExpression(el.getAttribute("id")));
         }
-        let string = toStringExpression(el.getAttribute("string") || "");
-        let addLabel = true;
+        if (settingFieldId) {
+            setting.setAttribute("fieldId", toStringExpression(settingFieldId));
+            setting.setAttribute(
+                "fieldInfo",
+                `__comp__.props.archInfo.fieldNodes['${settingFieldId}']`
+            );
+        }
+
         Array.from(el.children).forEach((child, index) => {
-            if (getTag(child, true) === "field" && index === 0) {
+            if (getTag(child, true) === "field" && index === 0 && settingFieldId) {
                 const fieldSlot = createElement("t", { "t-set-slot": "fieldSlot" });
-                const field = this.compileNode(child, params);
-                if (field) {
-                    append(fieldSlot, field);
-                    setting.setAttribute("fieldInfo", field.getAttribute("fieldInfo"));
-                    addLabel = child.hasAttribute("nolabel")
-                        ? !exprToBoolean(child.getAttribute("nolabel"))
-                        : true;
-                    const fieldName = child.getAttribute("name");
-                    string = child.hasAttribute("string")
-                        ? toStringExpression(child.getAttribute("string"))
-                        : string;
-                    setting.setAttribute("fieldName", toStringExpression(fieldName));
-                    setting.setAttribute(
-                        "fieldId",
-                        toStringExpression(child.getAttribute("field_id"))
-                    );
-                }
+                append(fieldSlot, this.compileNode(child, params));
                 append(setting, fieldSlot);
             } else {
                 append(setting, this.compileNode(child, params));
             }
         });
-        setting.setAttribute("string", string);
-        setting.setAttribute("addLabel", addLabel);
         return setting;
     }
 
