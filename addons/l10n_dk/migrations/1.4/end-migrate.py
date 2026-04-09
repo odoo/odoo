@@ -99,7 +99,7 @@ def migrate(cr, version):
 
     for account in env['account.account'].with_context(active_test=False).search([('company_id', 'in', dk_companies.ids)]):
         # Adapt existing codes to use 6 digits.
-        if len(account.code) < 6:
+        if account.code and len(account.code) < 6:
             account.code = account.code.ljust(6, '0')
         # Deprecate removed accounts.
         if account.id in deprecated_account_ids:
