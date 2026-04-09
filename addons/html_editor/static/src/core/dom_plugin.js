@@ -743,7 +743,7 @@ export class DomPlugin extends Plugin {
         let newCandidate = createNewCandidate();
         this.dependencies.split.splitBlockSegments();
         const cursors = this.dependencies.selection.preserveSelection();
-        const newEls = [];
+        let newEl;
         for (const block of this.getBlocksToSet()) {
             if (
                 isParagraphRelatedElement(block) ||
@@ -755,7 +755,10 @@ export class DomPlugin extends Plugin {
                     continue;
                 }
                 this.trigger("on_will_set_tag_handlers", block, tagName, cursors);
-                const newEl = this.setTagName(block, tagName);
+                if (this.delegateTo("set_block_overrides", newEl, block)) {
+                    continue;
+                }
+                newEl = this.setTagName(block, tagName);
                 cursors.remapNode(block, newEl);
                 // We want to be able to edit the case `<h2 class="h3">`
                 // but in that case, we want to display "Header 2" and
@@ -768,7 +771,6 @@ export class DomPlugin extends Plugin {
                 if (extraClass) {
                     newEl.classList.add(extraClass);
                 }
-                newEls.push(newEl);
             } else {
                 // eg do not change a <div> into a h1: insert the h1
                 // into it instead.
