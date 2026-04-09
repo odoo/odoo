@@ -1,7 +1,7 @@
 import { reactive } from "@web/owl2/utils";
 import { describe, expect, test } from "@odoo/hoot";
 import { EventBus } from "@odoo/owl";
-import { Reactive, effect, withComputedProperties } from "@web/core/utils/reactive";
+import { Reactive, effect } from "@web/core/utils/reactive";
 
 describe.current.tags("headless");
 
@@ -133,64 +133,5 @@ describe("effect", () => {
         expect.verifySteps(["counter: 1"]);
         state.unobserved = 1;
         expect.verifySteps([]);
-    });
-});
-
-describe("withComputedProperties", () => {
-    test("computed properties are set immediately", async () => {
-        const source = reactive({ counter: 1 });
-        const derived = withComputedProperties(reactive({}), [source], {
-            doubleCounter(source) {
-                return source.counter * 2;
-            },
-        });
-        expect(derived.doubleCounter).toBe(2);
-    });
-
-    test("computed properties are recomputed when dependencies change", async () => {
-        const source = reactive({ counter: 1 });
-        const derived = withComputedProperties(reactive({}), [source], {
-            doubleCounter(source) {
-                return source.counter * 2;
-            },
-        });
-        expect(derived.doubleCounter).toBe(2);
-        source.counter++;
-        expect(derived.doubleCounter).toBe(4);
-    });
-
-    test("can observe computed properties", async () => {
-        const source = reactive({ counter: 1 });
-        const derived = withComputedProperties(reactive({}), [source], {
-            doubleCounter(source) {
-                return source.counter * 2;
-            },
-        });
-        const observed = reactive(derived, () => {
-            expect.step(`doubleCounter: ${observed.doubleCounter}`);
-        });
-        observed.doubleCounter; // subscribe to doubleCounter
-        expect.verifySteps([]);
-        source.counter++;
-        expect.verifySteps(["doubleCounter: 4"]);
-    });
-
-    test("computed properties can use nested objects", async () => {
-        const source = reactive({ subObj: { counter: 1 } });
-        const derived = withComputedProperties(reactive({}), [source], {
-            doubleCounter(source) {
-                return source.subObj.counter * 2;
-            },
-        });
-        const observed = reactive(derived, () => {
-            expect.step(`doubleCounter: ${observed.doubleCounter}`);
-        });
-        observed.doubleCounter; // subscribe to doubleCounter
-        expect(derived.doubleCounter).toBe(2);
-        expect.verifySteps([]);
-        source.subObj.counter++;
-        expect(derived.doubleCounter).toBe(4);
-        // reactive gets notified even for computed properties dervied from nested objects
-        expect.verifySteps(["doubleCounter: 4"]);
     });
 });
