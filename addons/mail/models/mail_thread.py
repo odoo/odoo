@@ -1547,85 +1547,89 @@ class MailThread(models.AbstractModel):
     def _message_parse_extract_payload(self, message: EmailMessage, message_dict: dict, save_original: bool = False):
         """Extract body as HTML and attachments from the mail message
         """
-        attachments = []
-        body = ''
-        if save_original:
-            attachments.append(self._Attachment('original_email.eml', message.as_string(), {}))
+        body = message_dict.get('body', '')
+        attachments = message_dict.get('attachments', [])
 
-        # Be careful, content-type may contain tricky content like in the
-        # following example so test the MIME type with startswith()
-        #
-        # Content-Type: multipart/related;
-        #   boundary="_004_3f1e4da175f349248b8d43cdeb9866f1AMSPR06MB343eurprd06pro_";
-        #   type="text/html"
-        if message.get_content_maintype() == 'text':
-            body = message.get_content()
-            if message.get_content_type() == 'text/plain':
-                # text/plain -> <pre/>
-                body = append_content_to_html('', body, preserve=True)
-            elif message.get_content_type() == 'text/html':
-                # we only strip_classes here everything else will be done in by html field of mail.message
-                body = html_sanitize(body, sanitize_tags=False, strip_classes=True)
-        else:
-            alternative = False
-            mixed = False
-            html = False
-            for part in message.walk():
-                if message_dict.get('is_bounce') and body:
-                    # bounce email, keep only the first body and ignore
-                    # the parent email that might be added at the end
-                    # (e.g. for outlook / yahoo bounce email)
-                    break
-                if (bad_content_type := part.get_content_type()) in BAD_CONTENT_TYPES:
-                    _logger.warning("Message containing an unexpected Content-Type %r, assuming 'application/octet-stream'", bad_content_type)
-                    part.replace_header('Content-Type', 'application/octet-stream')
-                if part.get_content_type() == 'multipart/alternative':
-                    alternative = True
-                if part.get_content_type() == 'multipart/mixed':
-                    mixed = True
-                if part.get_content_maintype() == 'multipart':
-                    continue  # skip container
+        content_type = message.get_content_type()
+        disposition = message.get('Content-Disposition', '') or ''
+        filename = message.get_filename()
 
-                filename = part.get_filename()  # I may not properly handle all charsets
-                if part.get_content_type().startswith('text/') and not part.get_param('charset'):
-                    # for text/* with omitted charset, the charset is assumed to be ASCII by the `email` module
-                    # although the payload might be in UTF8
-                    part.set_charset('utf-8')
-                encoding = part.get_content_charset()  # None if attachment
+        is_attachment = 'attachment' in disposition or bool(filename) or content_type == 'message/rfc822'
 
-                # Correcting MIME type for PDF files
-                if part.get('Content-Type', '').startswith('pdf;'):
-                    part.replace_header('Content-Type', 'application/pdf' + part.get('Content-Type', '')[3:])
+        if is_attachment:
+            payload = message.get_payload(decode=True)
+            if payload is None and content_type == 'message/rfc822':
+                payload = message.as_bytes()
+            if payload:
+                attachments.append((filename or 'attachment', payload))
+            message_dict.update({'body': body, 'attachments': attachments})
+            return self._message_parse_extract_payload_postprocess(message, message_dict)
 
-                content = part.get_content()
-                info = {'encoding': encoding}
-                # 0) Inline Attachments -> attachments, with a third part in the tuple to match cid / attachment
-                if filename and part.get('content-id'):
-                    info['cid'] = part.get('content-id').strip('><')
-                    attachments.append(self._Attachment(filename, content, info))
-                    continue
-                # 1) Explicit Attachments -> attachments
-                if filename or part.get('content-disposition', '').strip().startswith('attachment'):
-                    attachments.append(self._Attachment(filename or 'attachment', content, info))
-                    continue
-                # 2) text/plain -> <pre/>
-                if part.get_content_type() == 'text/plain' and not (alternative and body):
-                    body = append_content_to_html(body, content, preserve=True)
-                # 3) text/html -> raw
-                elif part.get_content_type() == 'text/html':
-                    # multipart/alternative have one text and a html part, keep only the second
-                    if alternative and not (html and mixed):
-                        body = content
-                    else:
-                        # mixed allows several html parts, append html content
-                        body = append_content_to_html(body, content, plaintext=False)
-                    # TODO: maybe just setting to `True` is enough?
-                    html = html or bool(content)
-                    # we only strip_classes here everything else will be done in by html field of mail.message
-                    body = html_sanitize(body, sanitize_tags=False, strip_classes=True)
-                # 4) Anything else -> attachment
+        if message.is_multipart():
+            parts = message.get_payload()
+            if content_type == 'multipart/alternative':
+                best_part = next((p for p in parts if p.get_content_type() == 'text/html'), None)
+                if not best_part:
+                    best_part = next((p for p in parts if p.get_content_type() == 'text/plain'), None)
+                
+                if best_part:
+                    res = self._message_parse_extract_payload(best_part, {'body': body, 'attachments': attachments}, save_original=save_original)
+                    body = res.get('body', body)
+                    attachments = res.get('attachments', attachments)
+            else:
+                for part in parts:
+                    res = self._message_parse_extract_payload(part, {'body': body, 'attachments': attachments}, save_original=save_original)
+                    body = res.get('body', body)
+                    attachments = res.get('attachments', attachments)
+
+        elif content_type in ('text/plain', 'text/html'):
+            payload = message.get_payload(decode=True)
+            if payload:
+                charset = message.get_content_charset() or 'utf-8'
+                try:
+                    content = payload.decode(charset, errors='replace')
+                except Exception:
+                    content = payload.decode('utf-8', errors='replace')
+
+                if content_type == 'text/html':
+                    body = append_content_to_html(body, html_sanitize(content))
                 else:
-                    attachments.append(self._Attachment(filename or 'attachment', content, info))
+                    text_html = append_content_to_html('', content, preserve=True)
+                    body = append_content_to_html(body, text_html)
+
+        message_dict.update({'body': body, 'attachments': attachments})
+        return self._message_parse_extract_payload_postprocess(message, message_dict)
+
+        if message.is_multipart():
+            parts = message.get_payload()
+            if content_type == 'multipart/alternative':
+                best_part = next((p for p in parts if p.get_content_type() == 'text/html'), None)
+                if not best_part:
+                    best_part = next((p for p in parts if p.get_content_type() == 'text/plain'), None)
+                parts_to_process = [best_part] if best_part else []
+            else:
+                parts_to_process = parts
+
+            for part in parts_to_process:
+                res = self._message_parse_extract_payload(part, {'body': body, 'attachments': attachments}, save_original=save_original)
+                body = res.get('body', body)
+                attachments = res.get('attachments', attachments)
+
+        elif content_type in ('text/plain', 'text/html'):
+            payload = message.get_payload(decode=True)
+            if payload:
+                charset = message.get_content_charset() or 'utf-8'
+                try:
+                    content = payload.decode(charset, errors='replace')
+                except (UnicodeDecodeError, LookupError):
+                    content = payload.decode('utf-8', errors='replace')
+
+                if content_type == 'text/html':
+                    sanitized_content = html_sanitize(content)
+                    body = append_content_to_html(body, sanitized_content)
+                elif content_type == 'text/plain':
+                    plain_as_html = append_content_to_html('', content, preserve=True)
+                    body = append_content_to_html(body, plain_as_html)
 
         return self._message_parse_extract_payload_postprocess(message, {'body': body, 'attachments': attachments})
 
