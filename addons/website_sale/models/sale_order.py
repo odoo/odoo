@@ -9,7 +9,7 @@ from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request
-from odoo.tools import float_is_zero
+from odoo.tools import float_is_zero, str2bool
 
 from odoo.addons.website_sale.models.website import (
     FISCAL_POSITION_SESSION_CACHE_KEY,
@@ -271,11 +271,20 @@ class SaleOrder(models.Model):
     def _needs_customer_address(self):
         """Return whether we need the address details of the customer (country, street, ...).
 
-        Make it true by default as it's required before payment for taxes based on fiscal position.
+        Orders with physical goods always require full customer address.
+        Orders without goods (services only) require customer address by default to correctly
+        determine fiscal position, taxes, pricelists (if based on country and geoip cannot be
+        trusted).
+
+        A dedicated system parameter can be set to False/0 to speed up the checkout process
+        and skip the address requirement for services.
         """
-        # TODO: should probably be removed in master, as we cannot skip the address form
-        # when the taxes applied on product/service depend on the fiscal position.
-        return True
+        return not self.only_services or str2bool(
+            self
+            .env["ir.config_parameter"]
+            .sudo()
+            .get_param("website_sale.require_billing_details_for_services", "True")
+        )
 
     def _update_address(self, partner_id, fnames=None):
         if not fnames:
