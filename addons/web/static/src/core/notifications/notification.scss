@@ -4,40 +4,24 @@
 
 .o_notification_manager {
     position: fixed;
+    inset: auto $o-notification-margin ($o-navbar-height * 0.25) $o-notification-margin;
     z-index: $o-notification-zindex;
 
-    .o_notification_content {
-          overflow: hidden;
-          width: 100%;
-          display: -webkit-box;
-          -webkit-line-clamp: 1;
-          -webkit-box-orient: vertical;
-    }
-
     @include media-breakpoint-up(md) {
-        inset: ($o-navbar-height * 1.15) $o-notification-margin auto $o-notification-margin;
-        left: auto;
+        --lines-clamp: 1;
+
+        inset: ($o-navbar-height * 1.15) $o-notification-margin auto auto;
         min-width: $o-notification-min-width-md;
         max-width: $o-notification-max-width-md;
-
-        .o_notification_close {
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
     }
 
     @include media-breakpoint-down(md) {
-        inset: auto $o-notification-margin ($o-navbar-height * 0.25) $o-notification-margin;
-
         .o_notification_content {
-          -webkit-line-clamp: 2;
+            flex: 0 1 auto;
         }
 
-        .o_notification_inner {
-            display: flex;
-            align-items: center;
-            flex-direction: row-reverse;
+        .o_notification_buttons {
+            flex: 0 0 auto;
         }
     }
 
