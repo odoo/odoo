@@ -799,7 +799,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductCategory = request.env['product.public.category']
         product_markup_data = [product._to_markup_data(request.website)]
         original_category = category
-        category = category or product.public_categ_ids[:1]
+        category = category or product.public_categ_ids.filtered(
+            lambda c: c.can_access_from_current_website()
+        )[:1]
         if category:
             # Add breadcrumb's SEO data.
             product_markup_data.append(self._prepare_breadcrumb_markup_data(
