@@ -409,6 +409,15 @@ class AccountEdiFormat(models.Model):
                 'test_url': 'https://sii-prep.egoitza.gipuzkoa.eus/JBS/HACI/SSII-FACT/ws/fr/SiiFactFRV1SOAP',
             }
 
+    def _l10n_es_edi_web_service_navarra_vals(self, invoices):
+        wsdl = 'SuministroFactEmitidas' if invoices[0].is_sale_document() else 'SuministroFactRecibidas'
+        return {
+            'url': f'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii/fact/ws/{wsdl}.wsdl',
+            'address': 'https://siihacienda.navarra.es/SII_PRODUCCION.proxy/SiiMensajesXsdHandlet.ashx',
+            'test_url': 'https://siihacienda.navarra.es/SII_PRUEBAS.proxy/SiiMensajesXsdHandlet.ashx',
+            'custom_navarra': True,
+        }
+
     def _l10n_es_edi_call_web_service_sign(self, invoices, info_list):
         return self._l10n_es_edi_call_web_service_sign_common(invoices, info_list)
 
@@ -443,6 +452,14 @@ class AccountEdiFormat(models.Model):
         session.mount('https://', CertificateAdapter(ciphers=EUSKADI_CIPHERS))
 
         client = zeep.Client(connection_vals['url'], operation_timeout=60, timeout=60, session=session)
+
+        if connection_vals.get('custom_navarra'):
+            # We Inject the namespaces directly in the header dictionary
+            # This makes Odoo serializer to include them in the Envelope
+            header['_attributes'] = {
+                'xmlns:sum': 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii/fact/ws/SuministroLR.xsd',
+                'xmlns:sum1': 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii/fact/ws/SuministroInformacion.xsd',
+            }
 
         if invoices[0].is_sale_document():
             service_name = 'SuministroFactEmitidas'
