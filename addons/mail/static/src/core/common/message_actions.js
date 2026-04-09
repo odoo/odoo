@@ -67,6 +67,7 @@ registerMessageAction("reply-to", {
         return (
             message.canReplyTo(thread) ||
             (!["discuss.channel", "mail.box"].includes(thread?.model) &&
+                !message.isEmpty &&
                 message.isNote &&
                 !message.isSelfAuthored)
         );
@@ -100,36 +101,36 @@ registerMessageAction("reply-to", {
             composer.autofocus++;
         }
     },
-    sequence: ({ message, store, thread }) =>
-        thread?.eq(store.inbox) || message.isSelfAuthored ? 55 : 20,
+    sequence: ({ message }) => (message.isSelfAuthored ? 55 : 20),
 });
 registerMessageAction("add-bookmark", {
-    condition: ({ message }) => message.canToggleBookmark && !message.is_bookmarked,
+    condition: ({ message }) =>
+        message.canToggleBookmark && !message.isEmpty && !message.is_bookmarked,
     icon: "fa fa-bookmark-o",
     name: _t("Bookmark"),
     onSelected: ({ message }) => message.addBookmark(),
-    sequence: 30,
+    sequence: 80,
 });
 registerMessageAction("remove-bookmark", {
     condition: ({ message }) => message.canToggleBookmark && message.is_bookmarked,
     icon: "fa fa-bookmark",
     name: _t("Remove from Bookmarks"),
     onSelected: ({ message, thread }) => message.removeBookmark(thread),
-    sequence: 30,
+    sequence: 80,
 });
 registerMessageAction("mark-as-read", {
     condition: ({ store, thread }) => thread?.eq(store.inbox),
     icon: "fa fa-check",
     name: _t("Mark as Read"),
     onSelected: ({ message }) => message.setDone(),
-    sequence: 40,
+    sequence: 35,
 });
 registerMessageAction("mark-as-unread", {
     condition: ({ message, thread }) => message.canMarkAsUnread(thread),
     icon: "fa fa-eye-slash",
     name: _t("Mark as Unread"),
     onSelected: ({ message, thread }) => message.markAsUnread(thread),
-    sequence: 40,
+    sequence: 50,
 });
 registerMessageAction("reactions", {
     condition: ({ message }) => message.reactions.length,
@@ -138,14 +139,14 @@ registerMessageAction("reactions", {
     onSelected: ({ message, owner, store }) => {
         store.env.services.dialog.add(MessageReactionMenu, { message }, { context: owner });
     },
-    sequence: 50,
+    sequence: 60,
 });
 registerMessageAction("unfollow", {
     condition: ({ message, thread }) => message.canUnfollow(thread),
     icon: "fa fa-user-times",
     name: _t("Unfollow"),
     onSelected: ({ message }) => message.unfollow(),
-    sequence: 60,
+    sequence: 110,
 });
 registerMessageAction("edit", {
     condition: ({ message }) => message.editable,
@@ -156,6 +157,7 @@ registerMessageAction("edit", {
         owner.optionsDropdown?.close();
     },
     sequence: ({ message }) => (message.isSelfAuthored ? 20 : 115),
+    tags: ({ message }) => !message.isSelfAuthored && ACTION_TAGS.DANGER,
 });
 registerMessageAction("delete", {
     condition: ({ message }) => message.deletable,
@@ -193,7 +195,7 @@ registerMessageAction("copy-message", {
     onSelected: ({ message }) => message.copyMessageText(),
     name: _t("Copy Text"),
     icon: "fa fa-copy",
-    sequence: () => (isMobileOS() ? 30 : 105),
+    sequence: 40,
 });
 registerMessageAction("copy-link", {
     condition: ({ message, thread }) =>
@@ -204,7 +206,7 @@ registerMessageAction("copy-link", {
     icon: "fa fa-link",
     name: _t("Copy Link"),
     onSelected: ({ message }) => message.copyLink(),
-    sequence: 110,
+    sequence: 90,
 });
 registerMessageAction("end-poll", {
     condition: ({ message }) =>

@@ -102,12 +102,13 @@ test("replying to message should only render relevant part", async () => {
     await contains(".o-mail-Message", { count: 10 });
     const stopObserve = observeRenders();
     replying = true;
-    await click(".o-mail-Message:last [title='Reply']");
+    await click(".o-mail-Message:last [title='Expand']");
+    await click(".o-dropdown-item:contains('Reply')");
     await contains(".o-mail-Composer:has(:text('Replying to Mitchell Admin'))");
     replying = false;
     const result = stopObserve();
     expect(result.get(Composer)).toBeLessThan(2);
-    expect(result.get(Message)).toBeLessThan(2);
+    expect(result.get(Message)).toBeLessThan(3);
 });
 
 test("right-click message selection should only render relevant part", async () => {

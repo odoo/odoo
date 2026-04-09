@@ -6,11 +6,11 @@ import { patch } from "@web/core/utils/patch";
 const messagePatch = {
     /** @param {import("models").Thread} thread the thread where the message is shown */
     canReplyAll(thread) {
-        return this.canForward(thread) && !this.isNote;
+        return this.canForward(thread) && !this.isNote && !this.isEmpty;
     },
     /** @param {import("models").Thread} thread */
     canForward(thread) {
-        if (!thread) {
+        if (!thread || this.isEmpty) {
             return false;
         }
         return (

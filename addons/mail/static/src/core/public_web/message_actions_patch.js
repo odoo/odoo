@@ -11,7 +11,7 @@ registerMessageAction("pin", {
     icon: "fa fa-thumb-tack",
     name: _t("Pin"),
     onSelected: ({ message }) => (message.channel_id || message.thread).messagePin(message),
-    sequence: 110,
+    sequence: 70,
 });
 
 registerMessageAction("unpin", {
@@ -24,5 +24,5 @@ registerMessageAction("unpin", {
     icon: "fa fa-thumb-tack",
     name: _t("Unpin"),
     onSelected: ({ message }) => (message.channel_id || message.thread).messageUnpin(message),
-    sequence: 110,
+    sequence: 70,
 });

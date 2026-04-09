@@ -63,7 +63,7 @@ registerMessageAction("reply-all", {
         };
         messageActionOpenFullComposer(_t("Reply All"), context, owner);
     },
-    sequence: 71,
+    sequence: ({ message }) => (message.isSelfAuthored ? 55 : 20),
 });
 registerMessageAction("forward", {
     condition: ({ message, thread }) => message.canForward(thread),
@@ -104,5 +104,5 @@ registerMessageAction("forward", {
         };
         messageActionOpenFullComposer(_t("Forward Message"), context, owner);
     },
-    sequence: 72,
+    sequence: 30,
 });

@@ -5,7 +5,11 @@ registry.category("web_tour.tours").add("bookmark_message_tour", {
         {
             trigger:
                 "#chatterRoot:shadow .o-mail-Message:not([data-bookmarked]):contains(Test Message)",
-            run: "hover && click #chatterRoot:shadow [title='Bookmark']",
+            run: "hover && click #chatterRoot:shadow button[title='Expand']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
+            run: "click #chatterRoot:shadow button[name='add-bookmark']",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message[data-bookmarked]:contains(Test Message)",

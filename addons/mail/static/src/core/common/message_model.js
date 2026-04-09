@@ -599,6 +599,7 @@ export class Message extends Record {
     /** @param {import("models").Thread} thread  */
     canMarkAsUnread(thread) {
         return (
+            !this.isEmpty &&
             !this.needaction &&
             thread?.model !== "discuss.channel" &&
             this.self_notification?.notification_type === "inbox"
@@ -609,6 +610,7 @@ export class Message extends Record {
     canReplyTo(thread) {
         return (
             ["discuss.channel", "mail.box"].includes(thread?.model) &&
+            !this.isEmpty &&
             this.message_type !== "user_notification" &&
             !thread.channel?.composerHidden
         );

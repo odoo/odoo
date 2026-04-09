@@ -58,13 +58,20 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "press Enter",
         },
         {
-            trigger: ".o-mail-Message[data-persistent] [title='Bookmark']:not(:visible)",
-            content: _t("Hover on your message to bookmark it"),
+            trigger:
+                ".o-mail-Message[data-persistent] [name='more-action:undefined']:not(:visible)",
+            content: _t("Hover and click to view more actions on the message"),
             tooltipPosition: "top",
             async run(helpers) {
                 await delay(1000);
                 await helpers.click();
             },
+        },
+        {
+            trigger: ".o-dropdown-item[name='add-bookmark']",
+            content: _t("click to bookmark your message"),
+            tooltipPosition: "right",
+            run: "click",
         },
         {
             trigger: "button[data-mailbox-id='bookmark']",

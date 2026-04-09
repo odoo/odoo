@@ -444,8 +444,7 @@ test("reply to message from inbox (message linked to document)", async () => {
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-header small:text('on Mitchell Admin')");
-    await click("[title='Expand']");
-    await click(".o-dropdown-item:contains('Reply')");
+    await click("[title='Reply']");
     await contains(".o-mail-Message.o-selected");
     await contains(".o-mail-Composer");
     await contains(".o-mail-Composer-coreHeader:has(:text('on: Mitchell Admin'))");
@@ -828,10 +827,11 @@ test("rendering of inbox message", async () => {
     await contains(".o-mail-Message-header small:text('on Refactoring')");
     await contains(".o-mail-Message-actions i", { count: 4 });
     await contains("[title='Add a Reaction']");
-    await contains("[title='Bookmark']");
     await contains("[title='Mark as Read']");
+    await contains("[title='Copy Text']");
     await click("[title='Expand']");
     await contains(".o-dropdown-item:contains('Reply')");
+    await contains(".o-dropdown-item:contains('Bookmark')");
     await contains(".o-dropdown-item:contains('Translate')");
 });
 
@@ -2805,12 +2805,12 @@ test("Read-only channel have reactions for admin", async () => {
     await hover(".o-mail-Message");
     await contains(".o-mail-Message .o-mail-ActionList-button", { count: 3 });
     await contains(".o-mail-Message .o-mail-QuickReactionMenu-toggler[title='Add a Reaction']");
-    await contains(".o-mail-Message .o-mail-ActionList-button[title='Bookmark']");
     await contains(".o-mail-Message .o-mail-ActionList-button[title='Reply']");
+    await contains(".o-mail-Message .o-mail-ActionList-button[title='Copy Text']");
     await click(".o-mail-Message .o-mail-ActionList-button[title='Expand']");
+    await contains(".o-dropdown-item:text('Bookmark')");
     await contains(".o-dropdown-item:text('Create Thread')");
     await contains(".o-dropdown-item:text('Mark as Unread')");
-    await contains(".o-dropdown-item:text('Copy Text')");
     await contains(".o-dropdown-item:text('Pin')");
 });
 

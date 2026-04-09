@@ -719,9 +719,10 @@ test("Other messages are grayed out when replying to another one", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 2 });
-    await click(".o-mail-Message [title='Reply']", {
+    await rightClick(".o-mail-Message", {
         parent: [".o-mail-Message:has(:text('Hello world'))"],
     });
+    await click(".o-dropdown-item:contains('Reply')");
     await contains(".o-mail-Message.o-selected:has(:text('Hello world'))");
     expect(
         getComputedStyle(queryFirst(".o-mail-Message:has(:text('Goodbye world'))")).opacity
@@ -744,7 +745,9 @@ test("Parent message body is displayed on replies", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Message [title='Reply']");
+    await contains(".o-mail-Message");
+    await rightClick(".o-mail-Message");
+    await click(".o-dropdown-item:contains('Reply')");
     await insertText(".o-mail-Composer-input", "FooBarFoo");
     await press("Enter");
     await contains(".o-mail-MessageInReply-message:text('Hello world')");
@@ -1160,19 +1163,22 @@ test("add and remove bookmark from message", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
-    await contains(".o-mail-Message [title='Bookmark']");
-    await contains(".o-mail-Message [title='Bookmark']" + " i.fa-bookmark-o");
+    await rightClick(".o-mail-Message");
+    await contains(".o-dropdown-item:contains('Bookmark')");
+    await contains(".o-dropdown-item:contains('Bookmark')" + " i.fa-bookmark-o");
     await contains("button:has(:text('Bookmarks'))", { contains: [".badge", { count: 0 }] });
-    await click(".o-mail-Message [title='Bookmark']");
+    await click(".o-dropdown-item:contains('Bookmark')");
     await contains("button:has(:text('Bookmarks'))", { contains: [".badge:text('1')"] });
     await waitStoreFetch([["add_bookmark", { message_id: messageId }]]);
     await contains(".o-mail-Message");
-    await contains(".o-mail-Message [title='Remove from Bookmarks']" + " i.fa-bookmark");
-    await click(".o-mail-Message [title='Remove from Bookmarks']");
+    await rightClick(".o-mail-Message");
+    await contains(".o-dropdown-item:contains('Remove from Bookmarks')" + " i.fa-bookmark");
+    await click(".o-dropdown-item:contains('Remove from Bookmarks')");
     await contains("button:has(:text('Bookmarks'))", { contains: [".badge", { count: 0 }] });
     await waitStoreFetch([["remove_bookmark", { message_id: messageId }]]);
     await contains(".o-mail-Message");
-    await contains(".o-mail-Message [title='Bookmark']" + " i.fa-bookmark-o");
+    await rightClick(".o-mail-Message");
+    await contains(".o-dropdown-item:contains('Bookmark')" + " i.fa-bookmark-o");
 });
 
 test("can bookmark a persistent message without thread", async () => {
@@ -1532,7 +1538,9 @@ test("Toggle bookmark should update bookmark counter on all tabs", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
-    await click(`${env1.selector} .o-mail-Message [title='Bookmark']`);
+    await contains(`${env1.selector} .o-mail-Message`);
+    await rightClick(`${env1.selector} .o-mail-Message`);
+    await click(`.o-dropdown-item:contains('Bookmark')`);
     await contains(`${env2.selector} button:has(:text('Bookmarks'))`, {
         contains: [".badge:text('1')"],
     });
@@ -1981,8 +1989,7 @@ test("Mark as unread", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Message [title='Expand']");
-    await click(".o-dropdown-item:contains('Mark as Unread')");
+    await click(".o-mail-Message [title='Mark as Unread']");
     await contains(".o-mail-Thread-newMessage");
     await contains(".o-mail-DiscussSidebarChannel .badge:text('1')");
 });
@@ -2272,7 +2279,8 @@ test("deleted message should not have translate feature", async () => {
     await click(".modal button:contains('Delete')");
     await contains(".o-mail-Message:contains('This message has been removed')");
     await contains(".o-mail-Message [title='Add a Reaction']");
-    await contains(".o-mail-Message [title='Bookmark']");
+    await contains(".o-mail-Message [title*='Pin']");
+    await contains(".o-mail-Message [title*='Copy Link']");
     await contains(".o-mail-Message [title*='Translate']", { count: 0 });
     await animationFrame(); // in case some extra rendering for expand
     if (queryFirst(".o-mail-Message [title='Expand']")) {
