@@ -1274,6 +1274,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             if percentage is None:
                 percentage = elem.find('.//{*}Percent')
             amount = elem.find('.//{*}TaxAmount')
+            # When multi-currency invoices have TaxSubtotal in multiple TaxTotal nodes (e.g. JP PINT),
+            # only correct using the document currency's TaxTotal to avoid overwriting with the wrong amount.
+            if amount is not None and amount.get('currencyID') != currency.name:
+                continue
             if (percentage is not None and percentage.text is not None) and (amount is not None and amount.text is not None):
                 tax_percent = float(percentage.text)
                 # Compare the result with our tax total on the invoice, and apply correction if needed.
