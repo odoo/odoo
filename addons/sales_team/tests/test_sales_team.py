@@ -234,7 +234,7 @@ class TestAccessRights(SalesTeamCommon):
     def test_access_sales_manager(self):
         """ Test sales manager's access rights """
         # Manager can create a Sales Team
-        india_channel = self.env['crm.team'].with_context(tracking_disable=True).create({
+        india_channel = self.env['crm.team'].create({
             'name': 'India',
         })
         self.assertIn(

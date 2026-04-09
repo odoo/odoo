@@ -29,7 +29,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             'company_id': False,
         })
         cls.product_b.property_account_expense_id = cls.alt_exp_account
-        cls.purchase_order = cls.env['purchase.order'].with_context(tracking_disable=True).create({
+        cls.purchase_order = cls.env['purchase.order'].create({
             'partner_id': cls.partner_a.id,
             'order_line': [
                 Command.create({
