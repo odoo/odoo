@@ -24,7 +24,7 @@
             <!-- Content -->
             <t t-set="rowIndexGenerator" t-value="Array(this.rowPerSlide)"/>
             <t t-set="colIndexGenerator" t-value="Array(rowSize)"/>
-            <div id="s_dynamic_snippet_carousel" class="carousel-inner w-100 mx-auto" role="listbox"
+            <div class="carousel-inner w-100 mx-auto" role="listbox"
                  aria-label="Carousel">
                 <t t-foreach="slideIndexGenerator" t-as="slideIndex" t-key="slideIndex_index">
                     <t t-set="slideOffset" t-value="slideIndex_index * slideSize"/>
