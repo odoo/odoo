@@ -117,7 +117,7 @@
                                 </button>
                             </div>
                         </td>
-                        <td t-foreach="this.getAggregateColumns()" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">
+                        <td t-foreach="this.getAggregateColumns()" t-as="column" t-key="column.id" t-att-class="(column.type === 'field' ? 'o_list_number': '') + (column.widget ? ' o_' + column.widget + '_cell' : '')">
                             <span t-if="column.type === 'field' and this.aggregates[column.name]" t-att-data-tooltip="this.aggregates[column.name].help">
                                 <t t-out="this.aggregates[column.name].value"/>
                                 <sup
