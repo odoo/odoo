@@ -631,6 +631,7 @@ class IrQWeb(models.AbstractModel):
 
     @QwebTracker.wrap_compile
     def _compile(self, template):
+        assert isinstance(self, IrQWeb)
         if isinstance(template, etree._Element):
             self = self.with_context(is_t_cache_disabled=True)
             ref = None
@@ -2699,7 +2700,7 @@ class IrQWeb(models.AbstractModel):
         modules = self.env['ir.module.module'].search([('state', '=', 'installed')]).mapped('name')
         lazy_bundle_regex = re.compile(r'\bloadBundle\((["\'`])([\w\.-]+)\1\)', flags=re.ASCII)
         bundles = set()
-        for modroot in map(get_module_path, modules):
+        for modroot in filter(None, map(get_module_path, modules)):
             for fname in glob.iglob('**/static/src/**/*.js', root_dir=modroot, recursive=True):
                 with file_open(opj(modroot, fname)) as f:
                     fcontent = f.read()

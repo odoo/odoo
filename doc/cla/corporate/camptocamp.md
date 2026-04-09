@@ -58,3 +58,4 @@ Luca Policastro luca.policastro@camptocamp.com https://github.com/Luca-Policastr
 Tomasz Walter tomasz.walter@camptocamp.com https://github.com/twalter-c2c
 Paolo Yammouni paolo.yammouni@camptocamp.com https://github.com/paoloyam
 Henry Backman henry.backman@camptocamp.com https://github.com/henrybackman
+Florent Xicluna florent.xicluna@camptocamp.com https://github.com/florentx

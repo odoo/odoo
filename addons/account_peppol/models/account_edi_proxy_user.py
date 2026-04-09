@@ -159,14 +159,20 @@ class AccountEdiProxyClientUser(models.Model):
         return move
 
     def _peppol_get_import_journal_and_move_type(self, attachment):
-        self.ensure_one()
         # Self-billed invoices are invoices which your customer creates on your behalf and sends you via Peppol.
         # In this case, the invoice needs to be created as an out_invoice in a sale journal.
-        xml_tree = etree.fromstring(attachment.raw)
+        self.ensure_one()
+        journal = self.company_id.peppol_purchase_journal_id
+        move_type = 'in_invoice'
+
+        try:
+            xml_tree = etree.fromstring(attachment.raw)
+        except etree.XMLSyntaxError:
+            _logger.exception("The Peppol XML file is invalid for attachment ID %s", attachment.id)
+            return journal, move_type
 
         invoice_type_code = xml_tree.findtext('.//{*}InvoiceTypeCode')
         credit_note_type_code = xml_tree.findtext('.//{*}CreditNoteTypeCode')
-
         if invoice_type_code in ['389', '527'] or credit_note_type_code == '261':
             # 329/527: Self-billing invoice; 261: Self-billing credit note
             journal = self.env['account.journal'].search(
@@ -177,10 +183,6 @@ class AccountEdiProxyClientUser(models.Model):
                 limit=1,
             )
             move_type = 'out_invoice' if invoice_type_code else 'out_refund'
-        else:
-            journal = self.company_id.peppol_purchase_journal_id
-            move_type = 'in_invoice'
-
         return journal, move_type
 
     def _peppol_get_new_documents(self):

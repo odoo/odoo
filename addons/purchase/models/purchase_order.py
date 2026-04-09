@@ -71,7 +71,7 @@ class PurchaseOrder(models.Model):
             order.invoice_ids = invoices
             order.invoice_count = len(invoices)
 
-    name = fields.Char('Order Reference', required=True, index='trigram', copy=False, default='New')
+    name = fields.Char('Order Reference', required=True, index='trigram', copy=False, default=lambda self: _('New'))
     priority = fields.Selection(
         [('0', 'Normal'), ('1', 'Urgent')], 'Priority', default='0', index=True)
     origin = fields.Char('Source Document', copy=False,
@@ -279,7 +279,7 @@ class PurchaseOrder(models.Model):
             company_id = vals.get('company_id', self.default_get(['company_id'])['company_id'])
             # Ensures default picking type and currency are taken from the right company.
             self_comp = self.with_company(company_id)
-            if vals.get('name', 'New') == 'New':
+            if vals.get('name', _('New')) == _('New'):
                 seq_date = None
                 if 'date_order' in vals:
                     seq_date = fields.Datetime.context_timestamp(self, fields.Datetime.to_datetime(vals['date_order']))
