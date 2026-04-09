@@ -39,3 +39,25 @@ class TestVivaWalletHttpCommon(TestPointOfSaleHttpCommon):
         with patch.object(PosPaymentMethod, '_call_viva_wallet', mocked_call_viva_wallet_check_post_data):
             self.main_pos_config.open_ui()
             self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'VivaWalletTour', login="accountman")
+
+    def test_vw_kiosk_request_data(self):
+        """Kiosk: ``cashRegisterId`` must fall back to ``pos.config.name``."""
+        config_name = self.main_pos_config.name
+
+        def mocked_call_viva_wallet_kiosk(self, endpoint, action, data=None):
+            if action == 'post' and data is not None:
+                cash_register_id = data.get('cashRegisterId')
+                if cash_register_id != config_name:
+                    raise AssertionError(
+                        "Without a cashier, Viva payload must use pos.config.name as cashRegisterId "
+                        f"(expected {config_name!r}, got {cash_register_id!r})",
+                    )
+            return {}
+
+        with patch.object(PosPaymentMethod, '_call_viva_wallet', mocked_call_viva_wallet_kiosk):
+            self.main_pos_config.open_ui()
+            self.start_tour(
+                "/pos/ui?config_id=%d" % self.main_pos_config.id,
+                'VivaWalletKioskTour',
+                login="accountman",
+            )
