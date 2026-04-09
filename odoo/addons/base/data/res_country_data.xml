@@ -153,6 +153,7 @@
             <field name="code">bh</field>
             <field name="currency_id" ref="BHD" />
             <field eval="973" name="phone_code" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format"/>
         </record>
         <record id="bi" model="res.country">
             <field name="name">Burundi</field>
@@ -797,6 +798,7 @@
             <field name="code">kw</field>
             <field name="currency_id" ref="KWD" />
             <field eval="965" name="phone_code" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format"/>
         </record>
         <record id="ky" model="res.country">
             <field name="name">Cayman Islands</field>

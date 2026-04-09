@@ -14,9 +14,6 @@ Activates:
         'l10n_gcc_invoice',
     ],
     'auto_install': ['account'],
-    'data': [
-        'data/res.country.state.csv',
-    ],
     'demo': [
         'demo/demo_company.xml',
     ],
