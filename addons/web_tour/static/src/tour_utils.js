@@ -182,12 +182,15 @@ export const stepUtils = {
             {
                 isActive: ["auto"],
                 content: "save form",
-                trigger: ".o_form_button_save:enabled",
+                trigger: ".o_form_button_save",
                 run: "click",
             },
             {
                 content: "wait for save completion",
-                trigger: ".o_form_readonly, .o_form_saved",
+                trigger: ".o_form_saved",
+            },
+            {
+                trigger: `body:has(.o_form_status_indicator_buttons.invisible):not(:has(.o_form_dirty))`,
             },
         ];
     },

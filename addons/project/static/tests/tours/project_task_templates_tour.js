@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add("project_task_templates_tour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {
@@ -31,14 +30,7 @@ registry.category("web_tour.tours").add("project_task_templates_tour", {
             trigger: 'div[name="name"] .o_input',
             run: "edit Task",
         },
-        {
-            trigger: "button.o_form_button_save",
-            run: "click",
-        },
-        {
-            content: "Wait for save completion",
-            trigger: ".o_form_readonly, .o_form_saved",
-        },
+        ...stepUtils.saveForm(),
         {
             trigger: 'div.note-editable.odoo-editor-editable:contains("Template description")',
             content: "Check that the created task has copied the description of the template",
