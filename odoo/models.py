@@ -3666,7 +3666,7 @@ class BaseModel(metaclass=MetaModel):
                     rows = self.env.execute_query(SQL('SELECT data_type FROM information_schema.columns WHERE table_name = %s AND column_name = %s', cls._table, name))
                     if rows and rows[0][0] == 'jsonb':
                         # patch the field definition by adding an override
-                        _logger.warning("Patching %s.%s with company_dependent=True", cls._name, name)
+                        _logger.debug("Patching %s.%s with company_dependent=True", cls._name, name)
                         fields_.append(type(fields_[0])(company_dependent=True))
             if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == cls._name:
                 cls._fields[name] = fields_[0]
