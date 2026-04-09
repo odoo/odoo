@@ -1,5 +1,6 @@
 import os
 import tempfile
+import textwrap
 import unittest
 from unittest.mock import call, patch
 
@@ -811,3 +812,22 @@ class TestConfigManager(TransactionCase):
             # A glob with no matches silently resolves to an empty list
             _, options = self.parse_reset(['--addons-path', os.path.join(temp_dir, 'no_match_*')])
             self.assertEqual(options['addons_path'], [])
+
+    def test_15_persist_bin_path(self):
+        with file_open_temporary_directory(self.env) as temp_dir:
+            config_path = os.path.join(temp_dir, 'bin_path.conf')
+            # regular open, cause file_open can't create new files
+            with open(config_path, 'w', encoding='utf-8') as config_file:
+                config_file.write('[options]\nbin_path = /tmp\n')
+            self.config._parse_config(['--config', config_path, '--save'])
+            with file_open(config_path, 'r', env=self.env) as config_file:
+                config = config_file.read()
+
+        # it exported much more than only "bin_path", so search for it
+        for line in config.splitlines():
+            if line.startswith('bin_path'):
+                self.assertEqual(line, 'bin_path = /tmp')
+                break
+        else:
+            e = "bin_path should had been re-exported:\n"
+            self.fail(e + textwrap.indent(config, '    '))
