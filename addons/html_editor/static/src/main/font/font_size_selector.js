@@ -32,7 +32,7 @@ export class FontSizeSelector extends Component {
         this.menuRef = useChildRef();
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
         this.iframeContentRef = useRef("iframeContent");
-        this.debouncedCustomFontSizeInput = useDebounced(this.onCustomFontSizeInput, 1000);
+        this.debouncedCustomFontSizeInput = useDebounced(this.onCustomFontSizeInput, 200);
 
         onMounted(() => {
             const iframeEl = this.iframeContentRef.el;
@@ -46,6 +46,9 @@ export class FontSizeSelector extends Component {
                 }
 
                 this.fontSizeInput = iframeDoc.createElement("input");
+                this.fontSizeInput.addEventListener("blur", () => {
+                    this.props.onBlur?.();
+                });
                 const isDarkMode = cookie.get("color_scheme") === "dark";
                 const htmlStyle = getHtmlStyle(document);
                 const backgroundColor = getCSSVariableValue(

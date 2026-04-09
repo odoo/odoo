@@ -622,6 +622,7 @@ test("toolbar works: display correct font size on select all", async () => {
     expect(inputEl).toHaveValue(`${h1Size}`);
 });
 
+test.tags("desktop");
 test("toolbar works: displays correct font size on input", async () => {
     const { el } = await setupEditor("<p>test</p>");
     setContent(el, "<p>[test]</p>");
@@ -638,10 +639,12 @@ test("toolbar works: displays correct font size on input", async () => {
     expect(getContent(el)).toBe(`<p>[test]</p>`);
     expect(inputEl).toBeFocused();
 
-    await press("8");
-    expect(inputEl).toHaveValue("8");
-    await advanceTime(1000);
+    await press("5");
+    await advanceTime(200);
+    expect(inputEl).toHaveValue("5");
     expectElementCount(".o_font_size_selector_menu", 1);
+    inputEl.blur();
+    await animationFrame();
     // Responsive font-size: check for o_rfs class and clamp() value
     const rfsSpan = el.querySelector("span.o_rfs");
     expect(rfsSpan !== null).toBe(true);

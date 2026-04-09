@@ -180,6 +180,7 @@ export class FontPlugin extends Plugin {
                     getItems: () => this.fontSizeItems,
                     getDisplay: () => this.fontSize,
                     onFontSizeInput: (size) => {
+                        this.isTypingFontSize = true;
                         const resolvedSize = this.resolveFontSize(parseFloat(size));
                         if (resolvedSize === null) {
                             // Desired size matches the inherited value
@@ -192,7 +193,6 @@ export class FontPlugin extends Plugin {
                                 applyStyle: true,
                             });
                         }
-                        this.updateFontSizeSelectorParams();
                     },
                     onSelected: (item) => {
                         this.dependencies.format.formatSelection("setFontSizeClassName", {
@@ -201,7 +201,11 @@ export class FontPlugin extends Plugin {
                         });
                         this.updateFontSizeSelectorParams();
                     },
-                    onBlur: () => this.dependencies.selection.focusEditable(),
+                    onBlur: () => {
+                        this.isTypingFontSize = false;
+                        this.updateFontSizeSelectorParams();
+                        this.dependencies.selection.focusEditable();
+                    },
                     document: this.document,
                 },
                 isAvailable: isHtmlContentSupported,
@@ -336,6 +340,7 @@ export class FontPlugin extends Plugin {
     setup() {
         this.fontSize = reactive({ displayName: "" });
         this.font = reactive({ displayName: "" });
+        this.isTypingFontSize = false;
         this.blockFormatIsAvailableMemoized = weakMemoize(
             (selection) => isHtmlContentSupported(selection) && this.dependencies.dom.canSetBlock()
         );
@@ -638,6 +643,9 @@ export class FontPlugin extends Plugin {
     }
 
     updateFontSizeSelectorParams() {
+        if (this.isTypingFontSize) {
+            return;
+        }
         this.fontSize.displayName = this.fontSizeName;
     }
 
