@@ -490,3 +490,30 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
 
         leave.action_refuse()
         self.assertEqual(self.employee.total_overtime, 0, 'Should have 0 hours of overtime as the leave has been refused.')
+
+    def test_employee_kiosk_remaining_overtime(self):
+        self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 17))
+        self.new_attendance(check_in=datetime(2021, 1, 3, 8), check_out=datetime(2021, 1, 3, 17))
+        self.assertEqual(self.employee.total_overtime, 18, 'Should have 18 hours of overtime')
+
+        self.env['hr.leave'].with_context(leave_fast_create=True).create({
+            'name': 'overtime leave',
+            'employee_id': self.employee.id,
+            'work_entry_type_id': self.work_entry_type_no_alloc.id,
+            'request_date_from': datetime(2021, 1, 4),
+            'request_date_to': datetime(2021, 1, 4),
+        })
+
+        self._check_deductible(10)
+        response = self.make_jsonrpc_request(
+            '/hr_attendance/attendance_employee_data',
+            {
+                'token': self.employee.company_id.attendance_kiosk_key,
+                'employee_id': self.employee.id,
+            },
+        )
+        self.assertEqual(
+            response.get('total_overtime'),
+            10,
+            "Kiosk should show remaining deductible overtime after leave deduction",
+        )
