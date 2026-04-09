@@ -97,8 +97,12 @@
                                 </td>
                             </t>
                             <t t-if="line.display_type in ('line_section', 'line_subsection')">
+                                <t t-set="section_subtotal" t-value="line._get_section_subtotal()"/>
                                 <td colspan="99" id="section">
                                     <span t-field="line.name"/>
+                                </td>
+                                 <td colspan="1" class="text-end o_price_total">
+                                    <span t-out="section_subtotal" class="text-nowrap" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                 </td>
                                 <t t-set="current_section" t-value="line"/>
                                 <t t-set="current_subtotal" t-value="0"/>
@@ -109,17 +113,6 @@
                                 </td>
                             </t>
                         </tr>
-                        <t t-if="current_section and (line_last or o.order_line[line_index+1].display_type in ('line_section', 'line_subsection'))">
-                            <tr class="is-subtotal text-end">
-                                <td colspan="99" id="subtotal">
-                                    <strong class="mr16">Subtotal</strong>
-                                    <span
-                                        t-out="current_subtotal"
-                                        t-options='{"widget": "monetary", "display_currency": o.currency_id}'
-                                    />
-                                </td>
-                            </tr>
-                        </t>
                     </t>
                 </tbody>
             </table>
