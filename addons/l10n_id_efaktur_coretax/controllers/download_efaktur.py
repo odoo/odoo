@@ -31,3 +31,20 @@ class EfakturDownloadController(http.Controller):
             content = attachments._build_zip_from_attachments()
             headers = _get_headers(filename, 'zip', content)
             return request.make_response(content, headers)
+
+    @http.route('/l10n_id_efaktur_coretax/ebupot/download_attachments/<models("ir.attachment"):attachments>', type='http', auth='user')
+    def download_invoice_attachments_ebupot(self, attachments):
+        attachments.check_access('read')
+        assert all(
+            attachment.res_id and attachment.res_model == 'l10n_id_efaktur_coretax.ebupot.document'
+            for attachment in attachments
+        )
+        if len(attachments) == 1:
+            content = attachments.raw.content
+            headers = _get_headers(attachments.name, attachments.mimetype, content)
+            return request.make_response(content, headers)
+        # else:
+        #     filename = _('ebupot.zip')
+        #     content = attachments._build_zip_from_attachments()
+        #     headers = _get_headers(filename, 'application/zip', content)
+        #     return request.make_response(content, headers)

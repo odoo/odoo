@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_invoice_form_inherit_ebupot" model="ir.ui.view">
+        <field name="name">account.tax.form.inherit.ebupot</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='legal_notes']/.." position="after">
+                <group>
+                    <group string="E-Bupot" name="ebupot" invisible="
+                        country_code != 'ID' or
+                        type_tax_use != 'purchase' or
+                        amount > 0">
+                        <field name="l10n_id_ebupot_code"/>
+                        <field name="l10n_id_ebupot_facility"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

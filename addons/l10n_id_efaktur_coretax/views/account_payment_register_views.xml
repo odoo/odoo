@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_payment_register_form_inherit_ebupot" model="ir.ui.view">
+        <field name="name">account.payment.register.form.inherit.ebupot</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='communication']" position="after">
+                <field name="l10n_id_ebupot_doctype" invisible="country_code != 'ID' or payment_type == 'inbound'"/>
+                <field name="l10n_id_ebupot_sp2dnum" invisible="not l10n_id_ebupot_doctype"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

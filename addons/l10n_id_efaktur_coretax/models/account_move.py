@@ -159,6 +159,25 @@ class AccountMove(models.Model):
         store=True,
     )
 
+    l10n_id_ebupot_document = fields.Selection(selection=[
+        ('Announcement', 'Announcement - Pengumuman'),
+        ('CommercialInvoice', 'CommercialInvoice - Surat Tagihan'),
+        ('Contract', 'Contract - Kontrak'),
+        ('CurrentAccount', 'CurrentAccount - Jasa Giro'),
+        ('Decree', 'Decree - Decree'),
+        ('DeedOfEngagement', 'DeedOfEngagement - Akta Perjanjian'),
+        ('DeedOfGeneral', 'DeedOfGeneral - Akta RUPS'),
+        ('Other', 'Other - Lainnya'),
+        ('OtherFacilityDoc', 'OtherFacilityDoc - Dokumen Fasilitas Lainnya'),
+        ('PaymentProof', 'PaymentProof - Bukti Pembayaran'),
+        ('StatementLetter', 'StatementLetter - Surat Pernyataan'),
+        ('TaxInvoice', 'TaxInvoice - Faktur Pajak'),
+        ('TaxRegulationDoc', 'TaxRegulationDoc - Dokumen Perpajakan'),
+        ('TradeConfirmation', 'TradeConfirmation - Trade Confirmation')],
+        default='CommercialInvoice',
+        string="E-Bupot Document Type",
+    )
+
     @api.depends('partner_id')
     def _compute_kode_transaksi(self):
         for move in self:
@@ -396,6 +415,14 @@ class AccountMove(models.Model):
         elif trx_code == '08':
             vals['AddInfo'] = self.l10n_id_coretax_add_info_08
             vals['FacilityStamp'] = self.l10n_id_coretax_facility_info_08
+
+    def _l10n_id_ebupot_build_invoice_vals(self, vals):
+        self.ensure_one()
+        vals.update({
+            'Document': self.l10n_id_ebupot_document or 'CommercialInvoice',
+            'DocumentNumber': self.ref,
+            'DocumentDate': self.invoice_date.strftime("%Y-%m-%d"),
+        })
 
     def prepare_efaktur_vals(self):
         """ Get information required from invoice and lines to generate E-Faktur that will be used

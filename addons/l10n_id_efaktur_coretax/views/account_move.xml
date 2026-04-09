@@ -20,6 +20,18 @@
             </xpath>
         </field>
     </record>
+    <record id="account_move_ebupot_form_view" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.ebupot</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='other_tab_group']" position="inside">
+                <group string="Electronic Tax (E-Bupot)" invisible="country_code != 'ID' or move_type not in ('in_invoice', 'in_refund', 'in_receipt')">
+                    <field name="l10n_id_ebupot_document"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
 
     <record id="dowload_efaktur_action" model="ir.actions.server">
         <field name="name">Download e-Faktur</field>

@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Indonesia E-faktur (Coretax)',
+    'name': 'Indonesia Coretax',
     'icon': '/account/static/description/l10n.png',
     'description': """
         E-invoicing feature provided by DJP (Indonesian Tax Office). As of January 1st 2025,
@@ -19,6 +19,7 @@
         "data/l10n_id_efaktur_coretax.uom.code.csv",
         "data/uom.uom.csv",
         "data/efaktur_templates.xml",
+        "data/ebupot_templates.xml",
         "data/ir_action.xml",
 
         # Accesses
@@ -33,6 +34,10 @@
         "views/account_move.xml",
         "views/efaktur_document.xml",
         "views/uom_uom.xml",
+        "views/ebupot_document.xml",
+        "views/account_payment_register_views.xml",
+        "views/account_payment_views.xml",
+
     ],
     'auto_install': True,
     'author': 'Odoo S.A.',

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_id_ebupot_document_form_view" model="ir.ui.view">
+            <field name="name">l10n_id.ebupot_coretax.document.form.view</field>
+            <field name="model">l10n_id_efaktur_coretax.ebupot.document</field>
+            <field name="arch" type="xml">
+                <form string="E-Bupot Document" create="false">
+                    <header>
+                        <field name="attachment_ids" invisible="1"/> <!-- Needed for conditional check -->
+                        <button name="action_download" string="Download" class="btn-primary"
+                                type="object" groups="account.group_account_invoice" data-hotkey="q"
+                                invisible="not payment_ids"/>
+                        <button name="action_regenerate" string="Regenerate File" class="btn-secondary"
+                                type="object" groups="account.group_account_invoice" data-hotkey="q"
+                                invisible="not payment_ids or not attachment_ids"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Draft"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="company_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page id="invoice_tab" name="invoice_tab" string="Bills">
+                                <field name="payment_ids" force_save="1" widget="many2many">
+                                    <list create="False" edit="False">
+                                        <field name="name"/>
+                                        <field name="amount" />
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id="l10n_id_bupot_document_list_view" model="ir.ui.view">
+            <field name="name">l10n_id.bupot.document.list.view</field>
+            <field name="model">l10n_id_efaktur_coretax.ebupot.document</field>
+            <field name="arch" type="xml">
+                <list string="E-Bupot Document" create="false" sample="1">
+                    <field name="name"/>
+                    <field name="payment_ids" options="{'no_quick_create': True}" widget="many2many_tags"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="l10n_id_bupot_document_filter_view" model="ir.ui.view">
+            <field name="name">l10n_id.bupot.document.filter.view</field>
+            <field name="model">l10n_id_efaktur_coretax.ebupot.document</field>
+            <field name="arch" type="xml">
+                <search string="Search Document">
+                    <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                    <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+    </data>
+</odoo>

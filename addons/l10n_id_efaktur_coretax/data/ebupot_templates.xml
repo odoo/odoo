@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="ebupot_template">
+            <BpuBulk xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <TIN t-out="TIN"/>
+                <ListOfBpu>
+                    <t t-foreach="data" t-as="line">
+                        <Bpu>
+                            <TaxPeriodMonth t-out="line['TaxPeriodMonth']"/>
+                            <TaxPeriodYear t-out="line['TaxPeriodYear']"/>
+                            <CounterpartTin t-out="line['CounterpartTin']"/>
+                            <IDPlaceOfBusinessActivityOfIncomeRecipient t-out="line['IDPlaceOfBusinessActivityOfIncomeRecipient']"/>
+                            <TaxCertificate t-out="line['TaxCertificate']"/>
+                            <TaxObjectCode t-out="line['TaxObjectCode']"/>
+                            <TaxBase t-out="line['TaxBase']"/>
+                            <Rate t-out="line['Rate']"/>
+                            <Document t-out="line['Document']"/>
+                            <DocumentNumber t-out="line['DocumentNumber']"/>
+                            <DocumentDate t-out="line['DocumentDate']"/>
+                            <IDPlaceOfBusinessActivity t-out="line['IDPlaceOfBusinessActivity']"/>
+                            <GovTreasurerOpt t-out="line['GovTreasurerOpt']"/>
+                            <t t-if="line['SP2DNumber']"><SP2DNumber t-out="line['SP2DNumber']"/></t>
+                            <t t-else=""><SP2DNumber xsi:nil="true"/></t>
+                            <WithholdingDate t-out="line['WithholdingDate']"/>
+                        </Bpu>
+                    </t>
+                </ListOfBpu>
+            </BpuBulk>
+        </template>
+    </data>
+</odoo>
