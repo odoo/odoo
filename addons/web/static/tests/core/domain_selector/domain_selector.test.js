@@ -2551,3 +2551,29 @@ test("hide within operators when allowExpressions = False", async () => {
         "is not set",
     ]);
 });
+
+test("number formatting", async () => {
+    defineParams({
+        lang_parameters: {
+            decimal_point: "$",
+            thousands_sep: "~",
+        },
+    });
+
+    Partner._fields.number = fields.Float();
+    let expr;
+    await makeDomainSelector({
+        update: (e) => {
+            expr = e;
+        },
+        domain: `[("number", "=", 1989.45)]`,
+    });
+    expect(".o_tree_editor_editor input").toHaveValue("1~989$45");
+    await contains(".o_tree_editor_editor input").edit("1~989$46");
+    expect(".o_tree_editor_editor input").toHaveValue("1~989$46");
+    expect(expr).toEqual('[("number", "=", 1989.46)]');
+
+    await contains(".o_tree_editor_editor input").edit("1989.47");
+    expect(".o_tree_editor_editor input").toHaveValue("1~989$47");
+    expect(expr).toEqual('[("number", "=", 1989.47)]');
+});
