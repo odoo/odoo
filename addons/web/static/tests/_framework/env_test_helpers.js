@@ -107,6 +107,8 @@ export async function makeMockEnv(partialEnv, options) {
         currentEnv = env;
         startRouter();
         after(() => {
+            registry.category("services").trigger("CLEANUP");
+
             // Ideally: this should be done in a stop of the service !!!
             // This is done to remove the observer that disables the buttons.
             if (currentEnv.services.offline) {
