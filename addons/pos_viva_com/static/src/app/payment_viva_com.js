@@ -28,6 +28,10 @@ export class PaymentVivaCom extends PaymentInterface {
         return this._viva_com_cancel(order, uuid);
     }
 
+    getCashRegisterId() {
+        return this.pos.getCashier().name?.trim() || this.pos.config.name;
+    }
+
     _call_viva_com(data, action, paymentLine) {
         return this.env.services.orm.silent
             .call("pos.payment.method", action, [[this.payment_method_id.id], data])
@@ -71,11 +75,12 @@ export class PaymentVivaCom extends PaymentInterface {
         }
 
         line.viva_com_session_id = order.uuid + " - " + uuidv4();
+        const cashRegisterId = this.getCashRegisterId();
         var data = {
             sessionId: line.viva_com_session_id,
             parentSessionId: line.uiState.vivaComParentSessionId,
             terminalId: line.payment_method_id.viva_com_terminal_id,
-            cashRegisterId: this.pos.getCashier().name,
+            cashRegisterId,
             amount: roundPrecision(Math.abs(line.amount * 100)),
             currencyCode: this.pos.currency.iso_numeric.toString(),
             merchantReference: line.viva_com_session_id + "/" + this.pos.session.id,
@@ -96,9 +101,10 @@ export class PaymentVivaCom extends PaymentInterface {
     async _viva_com_cancel(order, uuid) {
         const line = order.getPaymentlineByUuid(uuid);
 
+        const cashRegisterId = this.getCashRegisterId();
         var data = {
             sessionId: line.viva_com_session_id,
-            cashRegisterId: this.pos.getCashier().name,
+            cashRegisterId,
         };
         return this._call_viva_com(data, "viva_com_send_payment_cancel", line).then((data) => {
             if (data.error) {
