@@ -92,6 +92,7 @@ export class ResourceEditor extends Component {
         });
 
         let showErrorInterval;
+        // @todo owl3 migration reactive with callback
         this.errors = reactive([], () => {
             clearInterval(showErrorInterval);
             if (this.errors.length) {
