@@ -333,3 +333,80 @@ test("Correctly determine the mimetype of an image with wrong extension", async 
     const mimetype = await getMimetype(imageEl);
     expect(mimetype).toBe("image/png");
 });
+
+test("image alignment option should be available for images", async () => {
+    await setupEditor(`
+        <p><img class="img-fluid test-image" src="${base64Img}"></p>
+    `);
+    await click("img.test-image");
+    await waitFor(".o-we-toolbar");
+    expectElementCount(".o-we-toolbar button[title='Set image alignment']", 1);
+});
+
+test("change image's alignment to 'Wrap text'", async () => {
+    await setupEditor(`
+        <p><img class="img-fluid" src="${base64Img}"></p>
+    `);
+    await click("img");
+    await waitFor(".o-we-toolbar");
+    await click(".o-we-toolbar button[title='Set image alignment']");
+    await animationFrame();
+    await click(".o-we-toolbar-dropdown .btn[title='Wrap text']");
+    await animationFrame();
+    expect("img").toHaveClass("float-start");
+});
+
+test("change image's alignment to 'Break text'", async () => {
+    await setupEditor(`
+        <p><img class="img-fluid" src="${base64Img}"></p>
+    `);
+    await click("img");
+    await waitFor(".o-we-toolbar");
+    await click(".o-we-toolbar button[title='Set image alignment']");
+    await animationFrame();
+    await click(".o-we-toolbar-dropdown .btn[title='Break text']");
+    await animationFrame();
+    expect("img").toHaveClass("d-block");
+});
+
+test("change image's alignment to 'Wrap text' then 'Break text' then 'Inline'", async () => {
+    await setupEditor(`
+        <p><img class="img-fluid" src="${base64Img}"></p>
+    `);
+    await click("img");
+    await waitFor(".o-we-toolbar");
+    await click(".o-we-toolbar button[title='Set image alignment']");
+    await animationFrame();
+    await click(".o-we-toolbar-dropdown .btn[title='Wrap text']");
+    await animationFrame();
+    expect("img").toHaveClass("float-start");
+    expect("img").not.toHaveClass("d-block");
+
+    await click(".o-we-toolbar button[title='Set image alignment']");
+    await animationFrame();
+    await click(".o-we-toolbar-dropdown .btn[title='Break text']");
+    await animationFrame();
+    expect("img").not.toHaveClass("float-start");
+    expect("img").toHaveClass("d-block");
+
+    await click(".o-we-toolbar button[title='Set image alignment']");
+    await animationFrame();
+    await click(".o-we-toolbar-dropdown .btn[title='Inline']");
+    await animationFrame();
+    expect("img").not.toHaveClass("float-start");
+    expect("img").not.toHaveClass("d-block");
+    expect("img").toHaveClass("img-fluid");
+});
+
+test("changing image alignment should not remove any existing classes", async () => {
+    await setupEditor(`
+        <p><img class="img-fluid p-2" src="${base64Img}"></p>
+    `);
+    await click("img");
+    await waitFor(".o-we-toolbar");
+    await click(".o-we-toolbar button[title='Set image alignment']");
+    await animationFrame();
+    await click(".o-we-toolbar-dropdown .btn[title='Wrap text']");
+    await animationFrame();
+    expect("img").toHaveClass("p-2 img-fluid float-start");
+});
