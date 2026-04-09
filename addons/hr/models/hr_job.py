@@ -26,7 +26,10 @@ class HrJob(models.Model):
     user_id = fields.Many2one(
         "res.users",
         "Recruiter",
-        domain="[('share', '=', False), ('company_ids', '=?', company_id)]",
+        domain=lambda self: [
+            ('share', '=', False),
+            ('company_ids', '=?', self.company_id.id if self.company_id else None)
+        ],
         default=lambda self: self.env.user,
         groups="hr.group_hr_user",
         tracking=True,
