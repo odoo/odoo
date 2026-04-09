@@ -55,8 +55,8 @@ msgid ""
 "Ready for \"{{ object.event_id.name }}\" {{ object.get_date_range_str(object.partner_id.lang) }}?\n"
 "{{ 'It starts at %s' % format_time(time=object.event_begin_date, tz=object.event_id.date_tz, time_format='short', lang_code=object.partner_id.lang) + (', at %s' % object.event_id.address_inline if object.event_id.address_inline else '') + '.\\nSee you there!' if object.event_id.address_inline or 'website_published' not in object.event_id._fields else 'Join us on %s/event/%i !' % (object.get_base_url(), object.event_id.id) }}"
 msgstr ""
-"Preparat per a \"{{ object.eventid.name }}\" {{ object.getdaterangestr(object.partnerid.lang) }}?\n"
-"{{ 'S'inicia a %s' % formattime(time=objecte.eventbegindate, tz=objecte.eventid.datetz, format de temps='curt', langcode=objecte.partnerid.lang) + (', a %s' % objecte.eventid.addressinline else '') + '.\\nVegeu-ho allà!' si object.eventid.addressinline o 'websitepublished' no és a object.eventid.fields altrament 'Uneix-vos a %s/event/%i !' % (object.getbaseurl(), object.eventid.id) }}"
+"Preparat per a \"{{ object.event_id.name }}\" {{ object.get_date_range_str(object.partner_id.lang) }}?\n"
+"{{ 'Comença a les %s' % format_time(time=object.event_begin_date, tz=object.event_id.date_tz, time_format='short', lang_code=object.partner_id.lang) + (', a %s' % object.event_id.address_inline if object.event_id.address_inline else '') + '.\\nEns veiem allà!' if object.event_id.address_inline or 'website_published' not in object.event_id._fields else 'Uneix-vos a %s/event/%i !' % (object.get_base_url(), object.event_id.id) }}"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail_registration
