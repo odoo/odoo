@@ -675,7 +675,7 @@ class TestActivityMixin(TestActivityCommon):
             'user_id': self.user_employee.id,
         })
 
-        test_record_1 = self.env['mail.test.activity'].with_context(self._test_context).create({'name': 'Test 1'})
+        test_record_1 = self.env['mail.test.activity'].create({'name': 'Test 1'})
         test_record_1_late_activity = Activity.create({
             'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
             'date_deadline': date_today,
@@ -703,8 +703,7 @@ class TestActivityMixin(TestActivityCommon):
     @users('employee')
     def test_record_unlinked_orphan_activities(self):
         """Test the fix preventing error on corrupted database where activities without related record are present."""
-        test_record = self.env['mail.test.activity'].with_context(
-            self._test_context).create({'name': 'Test'}).with_user(self.user_employee)
+        test_record = self.env['mail.test.activity'].create({'name': 'Test'}).with_user(self.user_employee)
         act = test_record.activity_schedule("test_mail.mail_act_test_todo", summary='Orphan activity')
         act.action_done()
         # Delete the record while preventing the cascade deletion of the activity to simulate a corrupted database

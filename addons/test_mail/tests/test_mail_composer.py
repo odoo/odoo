@@ -48,7 +48,7 @@ class TestMailComposer(MailCommon, TestRecipients):
         cls.env.ref('mail.group_mail_template_editor').write({'implied_by_ids': [Command.clear()]})
 
         with cls.mock_datetime_and_now(cls, cls.reference_now):
-            cls.test_record = cls.env['mail.test.ticket.mc'].with_context(cls._test_context).create({
+            cls.test_record = cls.env['mail.test.ticket.mc'].create({
                 'name': 'TestRecord',
                 'customer_id': cls.partner_1.id,
                 'user_id': cls.user_employee_2.id,

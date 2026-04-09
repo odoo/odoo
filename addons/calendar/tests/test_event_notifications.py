@@ -357,7 +357,7 @@ class TestEventNotifications(CalendarMailCommon):
                     'start': now + relativedelta(minutes=15),
                     'stop': now + relativedelta(minutes=20),
                     'alarm_ids': [fields.Command.link(alarm.id)],
-                }).with_context(mail_notrack=True)
+                })
                 self.env.flush_all()
                 self.assertEqual(len(capt.records), 1)
         with self.capture_triggers('calendar.ir_cron_scheduler_alarm') as capt:
@@ -372,7 +372,7 @@ class TestEventNotifications(CalendarMailCommon):
                     'day': 13,
                     'count': 5,
                     'alarm_ids': [fields.Command.link(alarm.id)],
-                }).with_context(mail_notrack=True)
+                })
                 self.env.flush_all()
                 self.assertEqual(len(capt.records), 1, "1 trigger should have been created for the whole recurrence")
                 self.assertEqual(capt.records.call_at, datetime(2022, 4, 13, 10, 14))
@@ -395,7 +395,7 @@ class TestEventNotifications(CalendarMailCommon):
                     'stop_date': now.date() + relativedelta(days=1),
                     'allday': True,
                     'alarm_ids': [fields.Command.link(alarm.id)],
-                }).with_context(mail_notrack=True)
+                })
                 self.env.flush_all()
                 self.assertEqual(len(capt.records), 1)
 
@@ -413,7 +413,7 @@ class TestEventNotifications(CalendarMailCommon):
                     'day': 13,
                     'count': 5,
                     'alarm_ids': [fields.Command.link(alarm.id)],
-                }).with_context(mail_notrack=True)
+                })
                 self.env.flush_all()
                 self.assertEqual(len(capt.records), 1)
 
@@ -438,7 +438,7 @@ class TestEventNotifications(CalendarMailCommon):
                     'count': 2,
                     'day': 16,
                     'alarm_ids': [fields.Command.link(alarm_hour.id)],
-                }).with_context(mail_notrack=True)
+                })
                 self.env.flush_all()
                 # Ensure that there is only one alarm set, exactly for one hour previous the event.
                 self.assertEqual(len(capt.records), 1, "Only one trigger must be created for the entire recurrence.")
@@ -474,7 +474,7 @@ class TestEventNotifications(CalendarMailCommon):
                     'rrule_type': 'daily',
                     'count': 3,
                     'alarm_ids': [fields.Command.link(alarm.id)],
-                }).with_context(mail_notrack=True)
+                })
                 self.env.flush_all()
                 self.assertEqual(len(capt.records), 1, "1 trigger should have been created for the whole recurrence (1)")
                 self.assertEqual(capt.records.call_at, datetime(2022, 4, 13, 10, 10))
@@ -508,7 +508,7 @@ class TestEventNotifications(CalendarMailCommon):
             'start': datetime(2023, 11, 15, 23, 0),  # 00:00 next day
             'stop': datetime(2023, 11, 16, 0, 0),  # 01:00 next day
         }
-        ]).with_context(mail_notrack=True)
+        ])
         with freeze_time('2023-11-15 17:30:00'):    # 18:30 before event
             self.assertEqual(search_event(), events[0])
         with freeze_time('2023-11-15 18:00:00'):    # 19:00 during event
@@ -526,7 +526,7 @@ class TestEventNotifications(CalendarMailCommon):
             'name': "Meeting",
             'start': datetime(2023, 11, 16, 0, 0), # 19:00 15th November
             'stop': datetime(2023, 11, 16, 1, 0),  # 20:00 15th November
-        }).with_context(mail_notrack=True)
+        })
         with freeze_time('2023-11-15 23:30:00'):    # 18:30 before event
             self.assertEqual(search_event(), event)
         with freeze_time('2023-11-16 00:00:00'):    # 19:00 during event
@@ -543,7 +543,7 @@ class TestEventNotifications(CalendarMailCommon):
             'name': "Meeting",
             'start': datetime(2023, 11, 16, 21, 0), # 16:00 16th November
             'stop': datetime(2023, 11, 16, 22, 0),  # 27:00 16th November
-        }).with_context(mail_notrack=True)
+        })
         with freeze_time('2023-11-15 19:00:00'):    # 14:00 the day before event
             self.assertEqual(len(search_event()), 0)
         event.unlink()
@@ -569,7 +569,7 @@ class TestEventNotifications(CalendarMailCommon):
             'allday': True,
             'start': "2023-11-15",
         }
-        ]).with_context(mail_notrack=True)
+        ])
         with freeze_time('2023-11-15 16:00:00'):
             self.assertEqual(len(search_event()), 3)
         events.unlink()

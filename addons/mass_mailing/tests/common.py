@@ -376,7 +376,7 @@ class MassMailCase(MailCase, MockLinkTracker):
     def _create_mailing_list(cls):
         """ Shortcut to create mailing lists. Currently hardcoded, maybe evolve
         in a near future. """
-        cls.mailing_list_1, cls.mailing_list_2, cls.mailing_list_3, cls.mailing_list_4 = cls.env['mailing.list'].with_context(cls._test_context).create([
+        cls.mailing_list_1, cls.mailing_list_2, cls.mailing_list_3, cls.mailing_list_4 = cls.env['mailing.list'].create([
             {
                 'contact_ids': [
                     (0, 0, {'name': 'Déboulonneur', 'email': 'fleurus@example.com'}),
@@ -410,7 +410,7 @@ class MassMailCase(MailCase, MockLinkTracker):
     def _create_mailing_list_of_x_contacts(cls, contacts_nbr):
         """ Shortcut to create a mailing list that contains a defined number
         of contacts. """
-        return cls.env['mailing.list'].with_context(cls._test_context).create({
+        lists = cls.env['mailing.list'].with_context(cls._test_context).create({
             'name': 'Test List',
             'contact_ids': [
                 (0, 0, {
@@ -420,6 +420,7 @@ class MassMailCase(MailCase, MockLinkTracker):
                 for idx in range(contacts_nbr)
             ],
         })
+        return cls._reset_mail_context(lists)
 
 
 class MassMailCommon(MailCommon, MassMailCase):

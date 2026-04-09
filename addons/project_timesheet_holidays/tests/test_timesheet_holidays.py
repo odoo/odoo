@@ -71,8 +71,8 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         })
 
         # HR Officer allocates some leaves to the employee 1
-        self.Requests = self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True)
-        self.Allocations = self.env['hr.leave.allocation'].with_context(mail_create_nolog=True, mail_notrack=True)
+        self.Requests = self.env['hr.leave']
+        self.Allocations = self.env['hr.leave.allocation']
         self.hr_leave_allocation_with_ts = self.Allocations.sudo().create({
             'name': 'Days for limited category with timesheet',
             'employee_id': self.empl_employee.id,

@@ -44,40 +44,35 @@ class TestSaleFlow(TestSaleCommon):
 
     def test_qty_delivered(self):
         """Test 'qty_delivered' at-install to avoid the change when 'sale_stock' is installed."""
-        sale_order = (
-            self
-            .env["sale.order"]
-            .with_context(mail_notrack=True, mail_create_nolog=True)
-            .create({
-                "partner_id": self.partner_a.id,
-                "partner_invoice_id": self.partner_a.id,
-                "partner_shipping_id": self.partner_a.id,
-                "order_line": [
-                    (
-                        0,
-                        0,
-                        {
-                            "name": self.company_data["product_order_cost"].name,
-                            "product_id": self.company_data["product_order_cost"].id,
-                            "product_uom_qty": 2,
-                            "qty_delivered": 1,
-                            "price_unit": self.company_data["product_order_cost"].list_price,
-                        },
-                    ),
-                    (
-                        0,
-                        0,
-                        {
-                            "name": self.company_data["product_delivery_cost"].name,
-                            "product_id": self.company_data["product_delivery_cost"].id,
-                            "product_uom_qty": 4,
-                            "qty_delivered": 1,
-                            "price_unit": self.company_data["product_delivery_cost"].list_price,
-                        },
-                    ),
-                ],
-            })
-        )
+        sale_order = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "partner_invoice_id": self.partner_a.id,
+            "partner_shipping_id": self.partner_a.id,
+            "order_line": [
+                (
+                    0,
+                    0,
+                    {
+                        "name": self.company_data["product_order_cost"].name,
+                        "product_id": self.company_data["product_order_cost"].id,
+                        "product_uom_qty": 2,
+                        "qty_delivered": 1,
+                        "price_unit": self.company_data["product_order_cost"].list_price,
+                    },
+                ),
+                (
+                    0,
+                    0,
+                    {
+                        "name": self.company_data["product_delivery_cost"].name,
+                        "product_id": self.company_data["product_delivery_cost"].id,
+                        "product_uom_qty": 4,
+                        "qty_delivered": 1,
+                        "price_unit": self.company_data["product_delivery_cost"].list_price,
+                    },
+                ),
+            ],
+        })
 
         sale_order.action_confirm()
 
