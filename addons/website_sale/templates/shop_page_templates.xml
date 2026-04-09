@@ -1461,8 +1461,9 @@
     <template id="website_sale.filter_products_price" name="Filter by Prices">
         <t t-set="is_disabled" t-value="available_min_price == available_max_price"/>
         <div
+            t-if="not is_disabled"
             id="o_wsale_price_range_option"
-            t-attf-class="position-relative {{_classes}} {{is_disabled and 'opacity-75 pe-none user-select-none'}}"
+            t-attf-class="position-relative {{_classes}}"
         >
             <t t-if="is_sidebar_collapsible">
                 <div class="accordion-item">

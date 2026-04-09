@@ -514,7 +514,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 order="attribute_id",
                 aggregates=["id:recordset"],
             )
-            pavs_per_attribute = dict(grouped_pavs)
+            pavs_per_attribute.update(grouped_pavs)
             # Return attributes as recordset of `product.attribute`
             attributes = ProductAttribute.union(pavs_per_attribute.keys())
         else:
