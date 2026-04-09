@@ -121,7 +121,10 @@ export class HintPlugin extends Plugin {
 
     shouldDisplayHint(el) {
         let shouldDisplay =
-            isEmptyBlock(el) && !isProtected(el) && !descendants(el).some(isEditorTab);
+            isEmptyBlock(el) &&
+            !isProtected(el) &&
+            !descendants(el).some(isEditorTab) &&
+            (this.checkPredicates("should_show_hint_predicates", el) ?? true);
         if (shouldDisplay && el.childNodes.length) {
             // Do not display hints if font sizes have been adjusted
             const elStyle = getComputedStyle(el);

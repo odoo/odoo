@@ -12,6 +12,7 @@ import { ImageTransformButton } from "./image_transform_button";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { fillEmpty } from "@html_editor/utils/dom";
+import { isElementOverlappingAnyFloatingImage } from "@html_editor/utils/dom_info";
 
 function hasShape(imagePlugin, shapeName) {
     return () => imagePlugin.isSelectionShaped(shapeName);
@@ -221,6 +222,11 @@ export class ImagePlugin extends Plugin {
                 if (element && element.tagName === "IMG") {
                     this.resetImageTransformation(element, { addStep: false });
                 }
+            }
+        },
+        should_show_hint_predicates: (node) => {
+            if (isElementOverlappingAnyFloatingImage(closestBlock(node))) {
+                return false;
             }
         },
 
