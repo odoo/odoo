@@ -1041,8 +1041,19 @@ class configmanager:
             option = self.options_index.get(opt)
             if keys is not None and opt not in keys:
                 continue
-            if opt == 'version' or (option and not option.file_exportable):
+            if opt == 'version':
                 continue
+            if option:
+                if option.file_exportable:
+                    pass
+                elif option.file_loadable and self.options[opt] != self._default_options[opt]:
+                    # Persist the option if we can load it from the file
+                    # and that it is different from the default value.
+                    # Even if it was marked "file_exportable=False", we
+                    # just don't want to export the default value.
+                    pass
+                else:
+                    continue
             if option:
                 p.set('options', opt, self.format(opt, self.options[opt]))
             else:
