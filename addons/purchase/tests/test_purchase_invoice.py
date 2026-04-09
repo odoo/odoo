@@ -82,8 +82,7 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
     def init_purchase(cls, partner=None, confirm=False, products=None, taxes=None, company=False):
         date_planned = fields.Datetime.now() - timedelta(days=1)
         po_form = Form(cls.env['purchase.order'] \
-                    .with_company(company or cls.env.company) \
-                    .with_context(tracking_disable=True))
+                    .with_company(company or cls.env.company))
         po_form.partner_id = partner or cls.partner_a
         po_form.partner_ref = 'my_match_reference'
 
@@ -112,10 +111,10 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
     def test_vendor_bill_delivered(self):
         """Test if a order of product invoiced by delivered quantity can be
         correctly invoiced."""
-        purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+        purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
         })
-        PurchaseOrderLine = self.env['purchase.order.line'].with_context(tracking_disable=True)
+        PurchaseOrderLine = self.env['purchase.order.line']
         pol_prod_deliver = PurchaseOrderLine.create({
             'name': self.product_deliver.name,
             'product_id': self.product_deliver.id,
@@ -162,10 +161,10 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
     def test_vendor_bill_ordered(self):
         """Test if a order of product invoiced by ordered quantity can be
         correctly invoiced."""
-        purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+        purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
         })
-        PurchaseOrderLine = self.env['purchase.order.line'].with_context(tracking_disable=True)
+        PurchaseOrderLine = self.env['purchase.order.line']
         pol_prod_order = PurchaseOrderLine.create({
             'name': self.product_order.name,
             'product_id': self.product_order.id,
@@ -206,10 +205,10 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
     def test_vendor_bill_delivered_return(self):
         """Test when return product, a order of product invoiced by delivered
         quantity can be correctly invoiced."""
-        purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+        purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
         })
-        PurchaseOrderLine = self.env['purchase.order.line'].with_context(tracking_disable=True)
+        PurchaseOrderLine = self.env['purchase.order.line']
         pol_prod_deliver = PurchaseOrderLine.create({
             'name': self.product_deliver.name,
             'product_id': self.product_deliver.id,
@@ -251,10 +250,10 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
     def test_vendor_bill_ordered_return(self):
         """Test when return product, a order of product invoiced by ordered
         quantity can be correctly invoiced."""
-        purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+        purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
         })
-        PurchaseOrderLine = self.env['purchase.order.line'].with_context(tracking_disable=True)
+        PurchaseOrderLine = self.env['purchase.order.line']
         pol_prod_order = PurchaseOrderLine.create({
             'name': self.product_order.name,
             'product_id': self.product_order.id,
@@ -304,7 +303,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         ResCurrencyRate.create({'currency_id': eur.id, 'rate': 2})
 
         for currency in [usd, eur]:
-            po = self.env['purchase.order'].with_context(tracking_disable=True).create({
+            po = self.env['purchase.order'].create({
                 'partner_id': self.partner_a.id,
                 'currency_id': currency.id,
             })
@@ -349,7 +348,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         self.env.ref('product.decimal_price').digits = 3
         self.env.company.currency_id.rounding = 0.01
 
-        po = self.env['purchase.order'].with_context(tracking_disable=True).create({
+        po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [(0, 0, {
                 'name': self.product_a.name,
@@ -385,7 +384,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         })
         analytic_distribution_manual = {str(analytic_account_manual.id): 100}
 
-        po_form = Form(self.env['purchase.order'].with_context(tracking_disable=True))
+        po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_a
         with po_form.order_line.new() as po_line_form:
             po_line_form.name = self.product_order.name
@@ -421,7 +420,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
                 'product_id': great_product.id,
             },
         ])
-        po_form = Form(self.env['purchase.order'].with_context(tracking_disable=True))
+        po_form = Form(self.env['purchase.order'])
         partner = self.env['res.partner'].create({'name': 'Test Partner'})
         po_form.partner_id = partner
         with po_form.order_line.new() as po_line_form:
@@ -505,7 +504,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
                     'tax_ids': False,
                     'sequence': sequence_number,
                 }) for sequence_number in range(10, 13)]
-            purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+            purchase_order = self.env['purchase.order'].create({
                 'partner_id': self.partner_a.id,
                 'order_line': pol_vals,
             })
@@ -539,7 +538,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
                     'tax_ids': False,
                     'sequence': sequence_number,
                 }) for sequence_number in range(10, 13)]
-            purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+            purchase_order = self.env['purchase.order'].create({
                 'partner_id': self.partner_a.id,
                 'order_line': pol_vals,
             })
@@ -569,7 +568,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         if not self.env['ir.module.module'].search([('name', '=', 'account_accountant'), ('state', '=', 'installed')]):
             self.skipTest("This test requires the installation of the account_account module")
 
-        purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+        purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 Command.create({
@@ -717,10 +716,10 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
     def test_invoice_line_name_has_product_name(self):
         """ Testing that when invoicing a sales order, the invoice line name ALWAYS contains the product name. """
         # Create a purchase order with different descriptions
-        po = self.env['purchase.order'].with_context(tracking_disable=True).create({
+        po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
         })
-        PurchaseOrderLine = self.env['purchase.order.line'].with_context(tracking_disable=True)
+        PurchaseOrderLine = self.env['purchase.order.line']
         pol_prod_no_redundancy = PurchaseOrderLine.create({
             'name': "just a description",
             'product_id': self.product_deliver.id,
@@ -1169,7 +1168,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
             'email': 'pu@odoo.com',
             'group_ids': [Command.set([group_purchase_user.id, group_employee.id, group_partner_manager.id])],
         })
-        po1 = self.env['purchase.order'].with_context(tracking_disable=True).create({
+        po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'user_id': purchase_user.id,
             'order_line': [
@@ -1199,7 +1198,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         """ Test that invoices can be created from purchase orders with different
         vendors without raising errors and with correct vendor mapping per invoice.
         """
-        purchase_orders = self.env['purchase.order'].with_context(tracking_disable=True).create([
+        purchase_orders = self.env['purchase.order'].create([
             {
                 'partner_id': self.partner_a.id,
                 'order_line': [

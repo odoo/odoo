@@ -60,7 +60,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
             'uom_id': cls.uom_unit.id,
             'invoice_policy': 'delivery',
         })
-        cls.sale_order = cls.env['sale.order'].with_context(tracking_disable=True).create({
+        cls.sale_order = cls.env['sale.order'].create({
             'partner_id': cls.partner_a.id,
             'order_line': [
                 Command.create({
@@ -205,7 +205,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         })
 
         # Case 1.: SO with more delivered quantities than invoiced quantities.
-        sale_order_1 = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order_1 = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 Command.create({
@@ -243,7 +243,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         ])
 
         # Case 2.: SO with more invoiced quantities than delivered quantities.
-        sale_order_2 = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order_2 = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 Command.create({
@@ -306,7 +306,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         } for (name, price) in (('Product 1', 50), ('Product 2', 30))])
 
         # Create a SO with three lines (2 of them are for the same product.)
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 Command.create({
@@ -400,7 +400,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         })
 
         # Create a SO with three lines (2 of them are for the same product.)
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 Command.create({
@@ -469,7 +469,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         self._make_in_move(avco_product, 10, 20)
 
         # Create a SO for 10 units, deliver 7 units and invoice 5 units.
-        sale_order_1 = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order_1 = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 Command.create({
@@ -539,7 +539,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         self._make_in_move(fifo_product, 10, 20)
 
         # Create a SO for 10 units, deliver 7 units and invoice 5 units.
-        sale_order_1 = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order_1 = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 Command.create({

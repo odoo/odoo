@@ -31,7 +31,7 @@ class TestWebPushNotification(SMSCommon):
             notification_type='inbox'
         )
 
-        cls.record_simple = cls.env['mail.test.simple'].with_context(cls._test_context).create({
+        cls.record_simple = cls.env['mail.test.simple'].create({
             'name': 'Test',
             'email_from': 'ignasse@example.com'
         })

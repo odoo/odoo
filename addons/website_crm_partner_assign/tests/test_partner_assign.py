@@ -119,7 +119,7 @@ class TestPartnerLeadPortal(TestCrmCommon, HttpCase):
         )
 
         # New lead, assigned to the new portal
-        self.lead_portal = self.env['crm.lead'].with_context(mail_notrack=True).create({
+        self.lead_portal = self.env['crm.lead'].create({
             'type': "lead",
             'name': "Test lead new",
             'user_id': False,
@@ -158,7 +158,7 @@ class TestPartnerLeadPortal(TestCrmCommon, HttpCase):
     def test_lead_access_right(self):
         """ Test another portal user can not write on every leads """
         # portal user having no right
-        poor_portal_user = self.env['res.users'].with_context({'no_reset_password': True, 'mail_notrack': True}).create({
+        poor_portal_user = self.env['res.users'].with_context({'no_reset_password': True}).create({
             'name': 'Poor Partner (not integrating one)',
             'email': 'poor.partner@ododo.com',
             'login': 'poorpartner',

@@ -140,7 +140,7 @@ class TestItEdiImport(TestItEdi, TestAccountEdiProxyUser):
             'name': 'DESCRIZIONE DELLA FORNITURA',
             'supplier_taxes_id': [Command.set(self.default_tax.ids)],
         })
-        purchase = self.env['purchase.order'].with_company(self.company).with_context(tracking_disable=True).create(
+        purchase = self.env['purchase.order'].with_company(self.company).create(
             {
                 'partner_id': self.italian_partner_a.id,
                 'partner_ref': 'PO-001',

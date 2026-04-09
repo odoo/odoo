@@ -371,10 +371,11 @@ class TestMailMessageAccess(MessageAccessCommon):
         """ Purpose is to test posting a message on a record whose first message / parent
         is not accessible by current user. This cause issues notably when computing
         references, checking ancestors message_ids. """
-        test_record = self.env['mail.test.simple'].with_context(self._test_context).create({
+        test_record = self.env['mail.test.simple'].create({
             'email_from': 'ignasse@example.com',
             'name': 'Test',
         })
+        create_log_msg = test_record.message_ids
         partner_1 = self.env['res.partner'].create({
             'name': 'Not Jitendra Prajapati',
             'email': 'not.jitendra@mycompany.example.com',
@@ -423,7 +424,7 @@ class TestMailMessageAccess(MessageAccessCommon):
             ('mail_message_id', '=', new_msg.id),
         ])
         self.assertEqual(
-            new_mail.references, f'{message.message_id} {new_msg.message_id}',
+            new_mail.references, f'{create_log_msg.message_id} {message.message_id} {new_msg.message_id}',
             'References should not include message parent message_id, even if internal note, to help thread formation')
         self.assertTrue(new_mail)
         self.assertEqual(new_msg.parent_id, message)

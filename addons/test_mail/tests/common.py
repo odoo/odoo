@@ -11,8 +11,6 @@ class TestRecipients(TransactionCase):
         super(TestRecipients, cls).setUpClass()
         Partner = cls.env['res.partner'].with_context({
             'mail_create_nolog': True,
-            'mail_create_nosubscribe': True,
-            'mail_notrack': True,
             'no_reset_password': True,
         })
         cls.partner_1 = Partner.create({

@@ -29,7 +29,7 @@ class TestMailMail(MailCommon):
     def setUpClass(cls):
         super(TestMailMail, cls).setUpClass()
 
-        cls.test_record = cls.env['mail.test.gateway'].with_context(cls._test_context).create({
+        cls.test_record = cls.env['mail.test.gateway'].create({
             'name': 'Test',
             'email_from': 'ignasse@example.com',
         }).with_context({})
@@ -797,7 +797,7 @@ class TestMailMailServer(MailCommon):
             'name': 'Server 2',
             'smtp_host': 'test_2.com',
         })
-        cls.test_record = cls.env['mail.test.gateway'].with_context(cls._test_context).create({
+        cls.test_record = cls.env['mail.test.gateway'].create({
             'name': 'Test',
             'email_from': 'ignasse@example.com',
         }).with_context({})

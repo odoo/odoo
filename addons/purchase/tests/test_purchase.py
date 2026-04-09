@@ -90,7 +90,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertNotEqual(po.order_line[0].date_planned, po.date_planned)
 
     def test_purchase_order_sequence(self):
-        PurchaseOrder = self.env['purchase.order'].with_context(tracking_disable=True)
+        PurchaseOrder = self.env['purchase.order']
         company = self.env.user.company_id
         self.env['ir.sequence'].search([
             ('code', '=', 'purchase.order'),

@@ -13,11 +13,10 @@ class TestSmsTemplate(SMSCommon, TestSMSRecipients):
     @classmethod
     def setUpClass(cls):
         super(TestSmsTemplate, cls).setUpClass()
-        cls.test_record = cls.env['mail.test.sms'].with_context(**cls._test_context).create({
+        cls.test_record = cls.env['mail.test.sms'].create({
             'name': 'Test',
             'customer_id': cls.partner_1.id,
         })
-        cls.test_record = cls._reset_mail_context(cls.test_record)
 
         cls.body_en = 'Dear {{ object.display_name }} this is an SMS.'
         cls.body_fr = u"Hello {{ object.display_name }} ceci est en français."

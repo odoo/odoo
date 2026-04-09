@@ -86,7 +86,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
         cls.external_user_employee = mail_new_test_user(cls.env, login='external', password='external', groups='base.group_user')
         cls.external_user_employee_id = cls.external_user_employee.id
         # Hr Data
-        Department = cls.env['hr.department'].with_context(tracking_disable=True)
+        Department = cls.env['hr.department']
 
         cls.hr_dept = Department.create({
             'name': 'Human Resources',

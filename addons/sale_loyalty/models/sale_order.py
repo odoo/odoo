@@ -881,7 +881,7 @@ class SaleOrder(models.Model):
             if pe.coupon_id in coupon_points:
                 pe.points = coupon_points.pop(pe.coupon_id)
         if coupon_points:
-            self.sudo().with_context(tracking_disable=True).write({
+            self.sudo().write({
                 "coupon_point_ids": [
                     (0, 0, {"coupon_id": coupon.id, "points": points})
                     for coupon, points in coupon_points.items()
@@ -1235,7 +1235,7 @@ class SaleOrder(models.Model):
                     new_coupons = (
                         self
                         .env["loyalty.card"]
-                        .with_context(loyalty_no_mail=True, tracking_disable=True)
+                        .with_context(loyalty_no_mail=True)
                         .create([
                             {
                                 "program_id": program.id,
@@ -1560,7 +1560,7 @@ class SaleOrder(models.Model):
                     self
                     .env["loyalty.card"]
                     .sudo()
-                    .with_context(loyalty_no_mail=True, tracking_disable=True)
+                    .with_context(loyalty_no_mail=True)
                     .create([
                         {
                             "program_id": program.id,

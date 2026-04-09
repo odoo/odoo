@@ -713,7 +713,7 @@ class TestHrVersion(TestHrCommon):
         )
 
     def test_search_on_version_fields(self):
-        Department = self.env['hr.department'].with_context(tracking_disable=True)
+        Department = self.env['hr.department']
         rd_dep = Department.create({
             'name': 'Research and devlopment',
         })

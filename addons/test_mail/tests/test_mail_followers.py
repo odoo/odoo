@@ -22,7 +22,7 @@ class BaseFollowersTest(MailCommon):
     @classmethod
     def setUpClass(cls):
         super(BaseFollowersTest, cls).setUpClass()
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+        cls.test_record = cls.env['mail.test.simple'].create({'name': 'Test', 'email_from': 'ignasse@example.com'})
         cls._create_portal_user()
 
         Subtype = cls.env['mail.message.subtype']
@@ -437,7 +437,7 @@ class AdvancedFollowersTest(MailCommon):
 
         Inactive partners should not be auto subscribed.
         """
-        container = self.env['mail.test.container'].with_context(self._test_context).create({
+        container = self.env['mail.test.container'].create({
             'name': 'Project-Like',
         })
 
@@ -888,9 +888,9 @@ class UnfollowLinkTest(MailCommon, HttpCase):
         super().setUpClass()
         cls.user_portal = cls._create_portal_user()
         cls.partner_portal = cls.user_portal.partner_id
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test'})
+        cls.test_record = cls.env['mail.test.simple'].create({'name': 'Test'})
         cls.test_record_copy = cls.test_record.copy()
-        cls.test_record_unfollow = cls.env['mail.test.simple.unfollow'].with_context(cls._test_context).create(
+        cls.test_record_unfollow = cls.env['mail.test.simple.unfollow'].create(
             {'name': 'unfollow'})
         cls.partner_without_user = cls.env['res.partner'].create({
             'name': 'Dave',

@@ -152,5 +152,6 @@ class TestMassSMSCommon(TestMassMailCommon):
             'customer_id': partner.id,
             'phone_nbr': mobile_number
         } for x, (mobile_number, partner) in enumerate(zip(mobile_numbers, partners))])
+        records = cls._reset_mail_context(records)
 
         return records

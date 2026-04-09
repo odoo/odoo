@@ -31,7 +31,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
 
     def test_access_saleperson(self):
         """ Check a saleperson (only) can generate a PO and a PO user can not confirm a SO """
-        SaleOrder = self.env['sale.order'].with_context(tracking_disable=True)
+        SaleOrder = self.env['sale.order']
 
         sale_order = SaleOrder.with_user(self.user_salesperson).create({
             'partner_id': self.partner_a.id,

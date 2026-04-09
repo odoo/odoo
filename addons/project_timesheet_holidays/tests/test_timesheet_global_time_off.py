@@ -459,7 +459,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         })
 
         # create and validate a leave for full time employee
-        HrLeave = self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True)
+        HrLeave = self.env['hr.leave']
         holiday = HrLeave.with_user(test_user).create({
             'name': 'Leave 1',
             'employee_id': test_user.employee_id.id,

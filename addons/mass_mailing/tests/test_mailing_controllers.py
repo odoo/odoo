@@ -83,7 +83,6 @@ class TestMailingControllers(TestMailingControllersCommon):
         )
         self.assertTrue(contact_l1)
         self.assertFalse(contact_l1.is_blacklisted)
-        self.assertFalse(contact_l1.message_ids)
         subscription_l1 = self.mailing_list_1.subscription_ids.filtered(
             lambda subscription: subscription.contact_id == contact_l1
         )
@@ -520,7 +519,7 @@ class TestMailingControllers(TestMailingControllersCommon):
         opt_out_reasons = self.env['mailing.subscription.optout'].search([])
 
         # list opted-out and non-public should not be displayed
-        private_list = self.env['mailing.list'].with_context(self._test_context).create({
+        private_list = self.env['mailing.list'].create({
             'contact_ids': [
                 (0, 0, {'name': 'Déboulonneur User', 'email': 'fleurus@example.com'}),
             ],
@@ -580,7 +579,7 @@ class TestMailingControllers(TestMailingControllersCommon):
                          'Subscription: opt-in during test, datetime should have been reset')
         self.assertFalse(subscription_l3.opt_out_reason_id)
         # message on contact for list 1: opt-out L1, join L2
-        msg_fb, msg_sub, msg_uns = contact_l1.message_ids
+        msg_fb, msg_sub, msg_uns, _create_log = contact_l1.message_ids
         self.assertEqual(
             msg_fb.body,
             f'<p>Feedback from {portal_user.name} ({test_email_normalized})<br>{test_feedback}</p>'
@@ -596,7 +595,7 @@ class TestMailingControllers(TestMailingControllersCommon):
             f'<ul><li>{self.mailing_list_1.name}</li></ul>'
         )
         # message on contact for list 2: opt-in L3 and L2
-        msg_fb, msg_sub = contact_l3.message_ids
+        msg_fb, msg_sub, _create_log = contact_l3.message_ids
         self.assertEqual(
             msg_fb.body,
             f'<p>Feedback from {portal_user.name} ({test_email_normalized})<br>{test_feedback}</p>'

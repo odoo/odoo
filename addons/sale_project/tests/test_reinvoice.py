@@ -33,7 +33,7 @@ class TestReInvoice(TestSaleCommon):
         # Remove the analytic account auto-generated when creating a timesheetable project if it exists
         cls.project.account_id = False
 
-        cls.sale_order = cls.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+        cls.sale_order = cls.env['sale.order'].create({
             'partner_id': cls.partner_a.id,
             'partner_invoice_id': cls.partner_a.id,
             'partner_shipping_id': cls.partner_a.id,
@@ -43,7 +43,6 @@ class TestReInvoice(TestSaleCommon):
         cls.AccountMove = cls.env['account.move'].with_context(
             default_move_type='in_invoice',
             default_invoice_date=cls.sale_order.date_order,
-            mail_notrack=True,
             mail_create_nolog=True,
         )
 

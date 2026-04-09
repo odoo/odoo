@@ -576,7 +576,7 @@ class TestCreateEvents(TestCommon):
 
         self.user_hrmanager = mail_new_test_user(self.env, login='bastien', groups='base.group_user,hr_holidays.group_hr_holidays_manager')
         self.user_employee = mail_new_test_user(self.env, login='enguerran', password='enguerran', groups='base.group_user,hr_holidays.group_hr_holidays_employee')
-        self.rd_dept = self.env['hr.department'].with_context(tracking_disable=True).create({
+        self.rd_dept = self.env['hr.department'].create({
             'name': 'Research and Development',
         })
         self.employee_emp = self.env['hr.employee'].create({
@@ -591,7 +591,7 @@ class TestCreateEvents(TestCommon):
             'request_unit': 'day',
             'unit_of_measure': 'day',
         })
-        self.holiday = self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True).with_user(self.user_employee).create({
+        self.holiday = self.env['hr.leave'].with_user(self.user_employee).create({
             'name': 'Time Off Employee',
             'employee_id': self.employee_emp.id,
             'work_entry_type_id': self.hr_work_entry_type.id,

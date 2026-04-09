@@ -17,7 +17,7 @@ class TestMailComposer(MailCommon):
         super(TestMailComposer, cls).setUpClass()
         cls.env['ir.config_parameter'].set_bool('mail.restrict.template.rendering', True)
         cls.user_employee.group_ids -= cls.env.ref('mail.group_mail_template_editor')
-        cls.test_record = cls.env['res.partner'].with_context(cls._test_context).create({
+        cls.test_record = cls.env['res.partner'].create({
             'name': 'Test',
         })
         cls.body_html = """<h1>Hello sir!</h1>

@@ -108,7 +108,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             }),
         })
         # create SO line and confirm SO (with only one line)
-        cls.expense_sale_order = cls.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+        cls.expense_sale_order = cls.env['sale.order'].create({
             'partner_id': cls.partner_a.id,
             'partner_invoice_id': cls.partner_a.id,
             'partner_shipping_id': cls.partner_a.id,
@@ -414,7 +414,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
         })
 
         # create SO line and confirm SO (with only one line)
-        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
@@ -497,7 +497,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
         })
 
         # create SO line and confirm SO (with only one line)
-        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,

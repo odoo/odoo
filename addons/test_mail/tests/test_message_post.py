@@ -43,7 +43,7 @@ class TestMessagePostCommon(MailCommon, TestRecipients):
         )
         cls.partner_employee_2 = cls.user_employee_2.partner_id
 
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({
+        cls.test_record = cls.env['mail.test.simple'].create({
             'name': 'Test',
             'email_from': 'ignasse@example.com'
         })
@@ -229,7 +229,7 @@ class TestMailNotifyAPI(TestMessagePostCommon):
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_notify_by_mail_add_signature(self):
-        test_track = self.env['mail.test.track'].with_context(self._test_context).with_user(self.user_employee).create({
+        test_track = self.env['mail.test.track'].with_user(self.user_employee).create({
             'name': 'Test',
             'email_from': 'ignasse@example.com'
         })
@@ -778,7 +778,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
     def test_assert_initial_values(self):
         """ Be sure of what we are testing """
-        self.assertFalse(self.test_record.message_ids)
+        self.assertEqual(len(self.test_record.message_ids), 1, 'Should have only creationg log')
         self.assertFalse(self.test_record.message_follower_ids)
         self.assertFalse(self.test_record.message_partner_ids)
 
@@ -1495,7 +1495,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         octet_attachment_data.write({'mimetype': 'application/octet-stream'})
         pdf_attachment_data.write({'mimetype': 'application/pdf'})
 
-        test_record = self.env['mail.test.simple.main.attachment'].with_context(self._test_context).create({
+        test_record = self.env['mail.test.simple.main.attachment'].create({
             'name': 'Test',
             'email_from': 'ignasse@example.com',
         })
@@ -1560,7 +1560,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         )
         _attachment_records[1].write({'mimetype': 'image/png'})  # to test message_main_attachment heuristic
 
-        test_record = self.env['mail.test.simple.main.attachment'].with_context(self._test_context).create({
+        test_record = self.env['mail.test.simple.main.attachment'].create({
             'name': 'Test',
             'email_from': 'ignasse@example.com',
         })
@@ -1744,6 +1744,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
     @users('employee')
     def test_post_internal(self):
         test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+        create_log = test_record.message_ids
 
         test_record.message_subscribe([self.user_admin.partner_id.id])
         with self.mock_mail_gateway():
@@ -1763,7 +1764,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
             msg_id='<1198923581.41972151344608186800.JavaMail.diff1@agrolait.example.com>',
             extra=f'In-Reply-To:\r\n\t{msg.message_id}\n',
             target_model='mail.test.simple')
-        reply = test_record.message_ids - msg
+        reply = test_record.message_ids - msg - create_log
         self.assertTrue(reply)
         self.assertTrue(reply.is_internal)
         self.assertEqual(reply.notified_partner_ids, self.user_employee.partner_id)
