@@ -239,7 +239,12 @@
                                 <form string="Contact / Address">
                                     <sheet>
                                         <field name="parent_id" invisible="1"/>  <!-- Used for partner_autocomplete -->
-                                        <field name="type" required="1" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="type" required="1" widget="badges_selection"
+                                            options="{ 'icon_mapping': {
+                                                'contact': 'fa-user', 'invoice': 'fa-file',
+                                                'delivery': 'fa-truck', 'other': 'fa-cube'
+                                            }}"
+                                        />
                                         <div class="d-flex flex-column flex-md-row align-items-center gap-3">
                                             <field name="image_1920" widget="contact_image" nolabel="1" options="{'preview_image': 'avatar_128', 'size': [100,100], 'img_class': 'rounded border'}"/>
                                             <group class="w-100">
