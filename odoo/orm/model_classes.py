@@ -395,7 +395,7 @@ def _setup(model: BaseModel):
                 ))
                 if rows and rows[0][0] == 'jsonb':
                     # patch the field definition by adding an override
-                    _logger.warning("Patching %s.%s with company_dependent=True", model_cls._name, name)
+                    _logger.debug("Patching %s.%s with company_dependent=True", model_cls._name, name)
                     fields_.append(type(fields_[0])(company_dependent=True))
         if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == model_cls._name:
             model_cls._fields[name] = fields_[0]
