@@ -3,7 +3,7 @@ import { translatedTermsGlobal } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { clickOnEditAndWaitEditMode } from "@website/js/tours/tour_utils";
 
-function runConfiguratorFlow(industrySearchText, featureOrPageName) {
+function runConfiguratorFlow(industrySearchText) {
     return [
         // Configurator first screen
         {
@@ -45,22 +45,10 @@ function runConfiguratorFlow(industrySearchText, featureOrPageName) {
             trigger: "button.o_change_website_purpose",
             run: "click",
         },
-        // Palette screen
-        {
-            content: "Choose a palette card",
-            trigger: ".palette_card",
-            run: "click",
-        },
-        // Features screen
-        {
-            content: "Select feature or page",
-            trigger: `.card:contains(${featureOrPageName})`,
-            run: "click",
-        },
         {
             id: "build_website",
-            content: "Click on build my website",
-            trigger: "button.btn-primary",
+            content: "Click on start building",
+            trigger: ".o_setup_style_screen button.btn-primary:contains(Start Building)",
             run: "click",
         },
         {
@@ -78,7 +66,7 @@ function runConfiguratorFlow(industrySearchText, featureOrPageName) {
 
 registry.category("web_tour.tours").add("configurator_translation", {
     steps: () => [
-        ...runConfiguratorFlow("in fr", "Parseltongue_pricing"),
+        ...runConfiguratorFlow("in fr"),
         {
             content: "Check if the current interface language is active and monkey patch terms",
             trigger: "body",
@@ -108,7 +96,7 @@ registry.category("web_tour.tours").add("configurator_translation", {
 
 registry.category("web_tour.tours").add("configurator_page_creation", {
     steps: () => [
-        ...runConfiguratorFlow("abbey", "Pricing Plan"),
+        ...runConfiguratorFlow("abbey"),
         // Verify configurator page templates exist in landing pages category.
         {
             content: "Open create content menu",
