@@ -131,19 +131,11 @@ class MrpProduction(models.Model):
                 quantity_to_process = min(quantity, ml.quantity)
                 quantity -= quantity_to_process
 
-                # on which lot of finished product
-                if float_compare(quantity_to_process, ml.quantity, precision_rounding=rounding) >= 0:
-                    ml.write({
-                        'quantity': quantity_to_process,
-                        'picked': True,
-                        'lot_id': self.lot_producing_id and self.lot_producing_id.id,
-                    })
-                else:
-                    ml.write({
-                        'quantity': quantity_to_process,
-                        'picked': True,
-                        'lot_id': self.lot_producing_id and self.lot_producing_id.id,
-                    })
+                ml.with_context(skip_subcontract_lot_propagation=True).write({
+                    'quantity': quantity_to_process,
+                    'picked': True,
+                    'lot_id': self.lot_producing_id and self.lot_producing_id.id,
+                })
 
             if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) > 0:
                 self.env['stock.move.line'].create({
