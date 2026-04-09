@@ -764,6 +764,46 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         self.assertEqual(inv.invoice_line_ids[2].name, f"{pol_prod_product_in_name.name}", "When description contains the product name, the invoice line name should only be the description")
         self.assertEqual(inv.invoice_line_ids[3].name, f"{pol_prod_name_in_product.product_id.display_name}\n{pol_prod_name_in_product.name}", "When the product name contains the description, the invoice line name should be the product name and the description")
 
+    def test_keep_distribution_on_analytic_account_change(self):
+        """
+        Checks that when we create a vendor bill from a PO on which we set an analytic distribution manually,
+        that analytic distribution doesn't change when we change the analytic account of the product on the bill.
+        """
+        analytic_plan = self.env['account.analytic.plan'].create({
+            'name': 'default',
+            'applicability_ids': [Command.create({
+                'business_domain': 'bill',
+                'applicability': 'optional',
+            })]
+        })
+        analytic_account = self.env['account.analytic.account'].create({'name': 'default', 'plan_id': analytic_plan.id})
+        distribution_model_product = self.env['account.analytic.distribution.model'].create({
+            'product_id': self.product_order.id,
+            'analytic_distribution': {str(analytic_account.id): 100},
+            'company_id': self.company.id,
+        })
+        analytic_plan_2 = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
+        analytic_account_2 = self.env['account.analytic.account'].create({'name': 'manual', 'plan_id': analytic_plan_2.id})
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.product_order.id}),
+            ],
+        })
+        self.assertEqual(purchase_order.order_line.analytic_distribution, distribution_model_product.analytic_distribution)
+        analytic_distribution_manual = {str(analytic_account.id) + "," + str(analytic_account_2.id): 100}
+        purchase_order.order_line.write({'analytic_distribution': analytic_distribution_manual})
+        purchase_order.button_confirm()
+        purchase_order.order_line.qty_received = 12
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-purchase_order.id)
+        invoice = move_form.save()
+
+        invoice.line_ids[0].account_id = self.cash_rounding_a.profit_account_id
+        # The analytic distribution of the line shouldn't change if its account changes.
+        self.assertEqual(invoice.line_ids[0].analytic_distribution, analytic_distribution_manual)
+
     def test_compute_po_count_with_different_plan(self):
         analytic_plan_1, analytic_plan_2 = self.env['account.analytic.plan'].create([
             {'name': 'Plan 1'}, {'name': 'Plan 2'}
