@@ -17,6 +17,10 @@ BIZKAIA_TEST_BASE_URL = "https://pruapps.bizkaia.eus/SSII-FACT/ws"
 GIPUZKOA_BASE_URL = "https://egoitza.gipuzkoa.eus/ogasuna/sii/ficheros/v1.1"
 GIPUZKOA_TEST_BASE_URL = "https://sii-prep.egoitza.gipuzkoa.eus/JBS/HACI/SSII-FACT/ws"
 
+NAVARRA_BASE_URL = "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii/fact/ws"
+NAVARRA_ADDRESS = "https://siihacienda.navarra.es/SII_PRODUCCION.proxy/SiiMensajesXsdHandlet.ashx"
+NAVARRA_TEST_ADDRESS = "https://siihacienda.navarra.es/SII_PRUEBAS.proxy/SiiMensajesXsdHandlet.ashx"
+
 
 class L10nEsEdiSiiDocument(models.Model):
     _name = 'l10n_es_edi_sii.document'
@@ -121,11 +125,20 @@ class L10nEsEdiSiiDocument(models.Model):
             "gipuzkoa": (GIPUZKOA_BASE_URL, GIPUZKOA_TEST_BASE_URL),
         }
 
+        suffix = "Emitidas" if is_sale else "Recibidas"
+
+        if agency == "navarra":
+            return {
+                "url": f"{NAVARRA_BASE_URL}/SuministroFact{suffix}.wsdl",
+                "address": NAVARRA_ADDRESS,
+                "test_url": NAVARRA_TEST_ADDRESS,
+                "custom_navarra": True,
+            }
+
         if agency not in BASE_URLS:
             return {}
 
         base_url, test_base_url = BASE_URLS[agency]
-        suffix = "Emitidas" if is_sale else "Recibidas"
         test_path = "fe/SiiFactFEV1SOAP" if is_sale else "fr/SiiFactFRV1SOAP"
 
         return {
@@ -220,6 +233,12 @@ class L10nEsEdiSiiDocument(models.Model):
                 service_name = 'SuministroFactEmitidas' if is_sale else 'SuministroFactRecibidas'
                 header = self._get_web_service_header(company, communication_type)
 
+                if connection_vals.get('custom_navarra'):
+                    header['_attributes'] = {
+                        'xmlns:sum': 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii/fact/ws/SuministroLR.xsd',
+                        'xmlns:sum1': 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii/fact/ws/SuministroInformacion.xsd',
+                    }
+
                 if company.l10n_es_sii_test_env and not connection_vals.get('test_url'):
                     service_name += 'Pruebas'
 
@@ -227,6 +246,9 @@ class L10nEsEdiSiiDocument(models.Model):
 
                 if company.l10n_es_sii_test_env and connection_vals.get('test_url'):
                     serv._binding_options['address'] = connection_vals['test_url']
+
+                elif not company.l10n_es_sii_test_env and connection_vals.get('address'):
+                    serv._binding_options['address'] = connection_vals['address']
 
                 if document.state == 'to_cancel':
                     if is_sale:
