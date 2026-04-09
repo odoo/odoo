@@ -389,14 +389,139 @@ class Product(models.Model):
         if not isinstance(value, (float, int)):
             raise UserError(_("Invalid domain right operand '%s'. It must be of type Integer/Float", value))
 
-        # TODO: Still optimization possible when searching virtual quantities
-        ids = []
-        # Order the search on `id` to prevent the default order on the product name which slows
-        # down the search because of the join on the translation table to get the translated names.
-        for product in self.with_context(prefetch_fields=False).search([], order='id'):
-            if OPERATORS[operator](product[field], value):
-                ids.append(product.id)
-        return [('id', 'in', ids)]
+        domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations()
+        from_date = fields.Datetime.to_datetime(self.env.context.get('from_date'))
+        to_date = fields.Datetime.to_datetime(self.env.context.get('to_date'))
+        dates_in_the_past = to_date and to_date < fields.Datetime.now()
+        lot_id = self.env.context.get('lot_id')
+        owner_id = self.env.context.get('owner_id')
+        package_id = self.env.context.get('package_id')
+
+        needs_quants = field in ('qty_available', 'virtual_available', 'free_qty')
+        needs_in = field in ('incoming_qty', 'virtual_available')
+        needs_out = field in ('outgoing_qty', 'virtual_available')
+
+        Move = self.env['stock.move'].with_context(active_test=False)
+        Quant = self.env['stock.quant'].with_context(active_test=False)
+        pending_states = ('waiting', 'confirmed', 'assigned', 'partially_available')
+
+        domain_quant_loc = list(domain_quant_loc)
+        domain_move_in_loc = list(domain_move_in_loc)
+        domain_move_out_loc = list(domain_move_out_loc)
+        if lot_id is not None:
+            domain_quant_loc += [('lot_id', '=', lot_id)]
+        if owner_id is not None:
+            domain_quant_loc += [('owner_id', '=', owner_id)]
+            domain_move_in_loc += [('restrict_partner_id', '=', owner_id)]
+            domain_move_out_loc += [('restrict_partner_id', '=', owner_id)]
+        if package_id is not None:
+            domain_quant_loc += [('package_id', '=', package_id)]
+
+        quants_res = {}
+        moves_in_res = {}
+        moves_out_res = {}
+        moves_in_res_past = defaultdict(float)
+        moves_out_res_past = defaultdict(float)
+
+        if needs_quants:
+            quants_res = {
+                p.id: (qty, reserved)
+                for p, qty, reserved in Quant._read_group(
+                    domain_quant_loc, ['product_id'],
+                    ['quantity:sum', 'reserved_quantity:sum'],
+                )
+            }
+
+        domain_move_in = list(domain_move_in_loc)
+        domain_move_out = list(domain_move_out_loc)
+        if from_date:
+            domain_move_in.append(('date', '>=', from_date))
+            domain_move_out.append(('date', '>=', from_date))
+        if to_date:
+            domain_move_in.append(('date', '<=', to_date))
+            domain_move_out.append(('date', '<=', to_date))
+
+        if needs_in:
+            moves_in_res = {
+                p.id: qty
+                for p, qty in Move._read_group(
+                    [('state', 'in', pending_states)] + domain_move_in,
+                    ['product_id'], ['product_qty:sum'],
+                )
+            }
+        if needs_out:
+            moves_out_res = {
+                p.id: qty
+                for p, qty in Move._read_group(
+                    [('state', 'in', pending_states)] + domain_move_out,
+                    ['product_id'], ['product_qty:sum'],
+                )
+            }
+
+        if dates_in_the_past and needs_quants:
+            domain_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + list(domain_move_in_loc)
+            domain_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + list(domain_move_out_loc)
+            for product, uom, quantity in Move._read_group(domain_in_done, ['product_id', 'product_uom'], ['quantity:sum']):
+                moves_in_res_past[product.id] += uom._compute_quantity(quantity, product.uom_id)
+            for product, uom, quantity in Move._read_group(domain_out_done, ['product_id', 'product_uom'], ['quantity:sum']):
+                moves_out_res_past[product.id] += uom._compute_quantity(quantity, product.uom_id)
+
+        all_product_ids = (
+            set(quants_res)
+            | set(moves_in_res)
+            | set(moves_out_res)
+            | set(moves_in_res_past)
+            | set(moves_out_res_past)
+        )
+
+        product_rounding = {
+            p.id: p.uom_id.rounding
+            for p in self.env['product.product'].search_fetch(
+                [('id', 'in', list(all_product_ids))], ['uom_id'],
+            )
+        }
+
+        def compute_qty(pid):
+            qty_avail, reserved = quants_res.get(pid, (0.0, 0.0))
+            if dates_in_the_past:
+                qty_avail = (
+                    qty_avail
+                    - moves_in_res_past.get(pid, 0.0)
+                    + moves_out_res_past.get(pid, 0.0)
+                )
+            in_qty = moves_in_res.get(pid, 0.0)
+            out_qty = moves_out_res.get(pid, 0.0)
+            rounding = product_rounding.get(pid, 0.01)
+            if field == 'qty_available':
+                return float_round(qty_avail, precision_rounding=rounding)
+            elif field == 'free_qty':
+                return float_round(qty_avail - reserved, precision_rounding=rounding)
+            elif field == 'incoming_qty':
+                return float_round(in_qty, precision_rounding=rounding)
+            elif field == 'outgoing_qty':
+                return float_round(out_qty, precision_rounding=rounding)
+            else:
+                return float_round(qty_avail + in_qty - out_qty, precision_rounding=rounding)
+
+        include_zero = (
+            value < 0.0 and operator in ('>', '>=')
+            or value > 0.0 and operator in ('<', '<=')
+            or value == 0.0 and operator in ('>=', '<=', '=')
+        )
+
+        product_ids = set()
+        for pid in all_product_ids:
+            if OPERATORS[operator](compute_qty(pid), value):
+                product_ids.add(pid)
+
+        if include_zero:
+            products_with_zero = self.env['product.product'].search(
+                [('id', 'not in', list(all_product_ids))], order='id'
+            )
+            if OPERATORS[operator](0.0, value):
+                product_ids |= set(products_with_zero.ids)
+
+        return [('id', 'in', list(product_ids))]
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
         ''' Optimized method which doesn't search on stock.moves, only on stock.quants. '''
