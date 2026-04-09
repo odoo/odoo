@@ -842,6 +842,7 @@ WEB_EXT_WHITELIST = {
     "web_studio.property.number": {'attribute'},  # dynamic t-call
     "web_studio.property.string": {'attribute'},  # dynamic t-call
     "web_studio.StudioHomeMenu": {'app_index'},  # xpath on a t-foreach
+    'web_studio.ViewSelector.ChoiceItemRecursive': {'choice'}  # dynamic t-call
 }
 MAIL_WHITELIST = {
     "discuss.GifPicker.gif": {'gif_value'},  # for-each above t-call
@@ -861,7 +862,20 @@ MAIL_WHITELIST = {
 }
 MISC_WHITELIST = {
     "account_disallowed_expenses.warning_multi_rate": {'warningParams'},  # dynamic t-call
+    'account_fiscal_categories.warning_multi_rate': {'warningParams'},  # dynamic t-call
     "account_fiscal_categories_fleet.warning_missing_fiscal_category": {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_expired_trans': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_premature_trans': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_missing_trans': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_expired_goods': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_premature_goods': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_missing_goods': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_expired_services': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_premature_services': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_missing_services': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_missing_weight': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_missing_unit': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_missing_product': {'warningParams'},  # dynamic t-call
     "account_reports.has_bank_miscellaneous_move_lines": {'warningParams'},  # dynamic t-call
     "account_reports.journal_balance": {'warningParams'},  # dynamic t-call
     "account_reports.inconsistent_statement_warning": {'warningParams'},  # dynamic t-call
@@ -878,6 +892,22 @@ MISC_WHITELIST = {
     "hr_calendar.AttendeeCalendarCommonPopover.body": {'slot'},  # dynamic t-call
     "hr_skills.SkillsListRenderer.Rows": {'list'},  # dynamic t-call I guess
     "lunch.LunchDashboardOrder": {'currency'},  # Var above t-call
+    'l10n_ae_faf.company_data_warning': {'warningParams'},  # dynamic t-call
+    'l10n_be_reports.partner_vat_listing_missing_partners_warning': {'warningParams'},  # dynamic t-call
+    'l10n_be_reports.duplicate_partner_vat': {'warningParams'},  # dynamic t-call
+    'l10n_be_reports.tax_report_warning_checks': {'warningParams'},  # dynamic t-call
+    'l10n_ee_reports.kmd_inf_listing_missing_partners_warning': {'warningParams'},  # dynamic t-call
+    'l10n_fr_reports.tax_report_warning_checks': {'warningParams'},  # dynamic t-call
+    'l10n_in_reports.invalid_intra_state_warning': {'warningParams'},  # dynamic t-call
+    'l10n_in_reports.invalid_inter_state_warning': {'warningParams'},  # dynamic t-call
+    'l10n_in_reports.missing_hsn_warning': {'warningParams'},  # dynamic t-call
+    'l10n_in_reports.invalid_uqc_code_warning': {'warningParams'},  # dynamic t-call
+    'l10n_in_reports.unlinked_reversed_moves_warning': {'warningParams'},  # dynamic t-call
+    'l10n_in_reports.missing_pan_tds_tcs_warning': {'warningParams'},  # dynamic t-call
+    'l10n_lu_reports.annual_tax_report_warning_checks': {'warningParams'},  # dynamic t-call
+    'l10n_ng_reports.tax_report_period_check': {'warningParams'},  # dynamic t-call
+    'l10n_tr_reports.waiting_nilvera_status_warning': {'warningParams'},  # dynamic t-call
+    'l10n_uk_reports_cis.warning_cis_unregistered_partner': {'warningParams'},  # dynamic t-call
     "mrp_workorder.ProductCatalogKanbanRenderer": {'groupOrRecord'},  # Nested t-call or inherit
     "planning.PlanningCalendarCommonPopover.body": {'slot'},  # dynamic t-calls from loops
     "pos_event.QuestionInputs": {'questions', 'stateObject'},  # Var above t-call
