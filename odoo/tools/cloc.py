@@ -298,7 +298,6 @@ class Cloc(object):
     #------------------------------------------------------
     # Report
     #------------------------------------------------------
-    # pylint: disable=W0141
     def report(self, verbose=False, width=None):
         def format_item(item, module):
             if isinstance(item, tuple):

@@ -123,11 +123,11 @@ class Obfuscate(Command):
 
     def confirm_not_secure(self):
         _logger.info("The obfuscate method is not considered as safe to transfer anonymous datas to a third party.")
-        conf_y = input(f"This will alter data in the database {self.dbname} and can lead to a data loss. Would you like to proceed [y/N]? ")
+        conf_y = input(f"This will alter data in the database {self.dbname} and can lead to a data loss. Would you like to proceed [y/N]? ")  # nosem: bad-builtins
         if conf_y.upper() != 'Y':
             self.rollback()
             sys.exit(0)
-        conf_db = input(f"Please type your database name ({self.dbname}) in UPPERCASE to confirm you understand this operation is not considered secure : ")
+        conf_db = input(f"Please type your database name ({self.dbname}) in UPPERCASE to confirm you understand this operation is not considered secure : ")  # nosem: bad-builtins
         if self.dbname.upper() != conf_db:
             self.rollback()
             sys.exit(0)
