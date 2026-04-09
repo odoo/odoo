@@ -3,7 +3,6 @@
 import base64
 import codecs
 import collections
-import contextlib
 import csv
 import datetime
 import difflib
@@ -18,7 +17,6 @@ from collections import defaultdict
 from collections.abc import Sequence
 
 import chardet
-import psycopg2
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
@@ -1438,48 +1436,46 @@ class Base_ImportImport(models.TransientModel):
         :rtype: dict(ids: list(int), messages: list({type, message, record}))
         """
         self.ensure_one()
-        import_savepoint = self.env.cr.savepoint(flush=False)
-
+        import_savepoint = self.env.cr.savepoint()
         try:
-            input_file_data, import_fields = self._convert_import_data(fields, options)
-            # Parse date and float field
-            input_file_data = self._parse_import_data(input_file_data, import_fields, options)
-        except ImportValidationError as error:
-            return {'messages': [error.__dict__]}
+            try:
+                input_file_data, import_fields = self._convert_import_data(fields, options)
+                # Parse date and float field
+                input_file_data = self._parse_import_data(input_file_data, import_fields, options)
+            except ImportValidationError as error:
+                return {'messages': [error.__dict__]}
 
-        _logger.info('importing %d rows...', len(input_file_data))
+            _logger.info('importing %d rows...', len(input_file_data))
 
-        binary_filenames = self._extract_binary_filenames(import_fields, input_file_data)
+            binary_filenames = self._extract_binary_filenames(import_fields, input_file_data)
 
-        import_fields, merged_data = self.with_context(import_options=options)._handle_multi_mapping(import_fields, input_file_data)
+            import_fields, merged_data = self.with_context(import_options=options)._handle_multi_mapping(import_fields, input_file_data)
 
-        if options.get('fallback_values'):
-            merged_data = self._handle_fallback_values(import_fields, merged_data, options['fallback_values'])
+            if options.get('fallback_values'):
+                merged_data = self._handle_fallback_values(import_fields, merged_data, options['fallback_values'])
 
-        name_create_enabled_fields = options.pop('name_create_enabled_fields', {})
-        import_limit = options.pop('limit', None)
-        model = self.env[self.res_model].with_context(
-            import_file=True,
-            name_create_enabled_fields=name_create_enabled_fields,
-            import_set_empty_fields=options.get('import_set_empty_fields', []),
-            import_skip_records=options.get('import_skip_records', []),
-            _import_limit=import_limit)
-        import_result = model.load(import_fields, merged_data)
-        _logger.info('done importing data into model: %s', model._name)
+            name_create_enabled_fields = options.pop('name_create_enabled_fields', {})
+            import_limit = options.pop('limit', None)
+            model = self.env[self.res_model].with_context(
+                import_file=True,
+                name_create_enabled_fields=name_create_enabled_fields,
+                import_set_empty_fields=options.get('import_set_empty_fields', []),
+                import_skip_records=options.get('import_skip_records', []),
+                _import_limit=import_limit)
+            import_result = model.load(import_fields, merged_data)
+            _logger.info('done importing data into model: %s', model._name)
 
-        # If transaction aborted, RELEASE SAVEPOINT is going to raise
-        # an InternalError (ROLLBACK should work, maybe). Ignore that.
-        with contextlib.suppress(psycopg2.InternalError):
             import_savepoint.close(rollback=dryrun)
+        finally:
+            # rollback if not already closed
+            import_savepoint.close(rollback=True)
+            if dryrun:
+                # cancel all changes done to the ormcache
+                # clear main caches only, these should already be invalidated while
+                # importing data and will be cleared when resetting changes
+                for cache_name in ('default', 'groups', 'stable'):
+                    self.pool.clear_cache(cache_name)
         if dryrun:
-            # TODO why isn't this a flushing savepoint?
-            # cancel all changes done to the registry/ormcache
-            # clear main caches only, these should already be invalidated while
-            # importing data and will be cleared when resetting changes
-            for cache_name in ('default', 'groups', 'stable'):
-                self.pool.clear_cache(cache_name)
-            # don't propagate to other workers since it was rollbacked
-            self.env.transaction.reset()
             _logger.info('Previous import was a dry/test run, changes were reset')
 
         # Insert/Update mapping columns when import complete successfully
