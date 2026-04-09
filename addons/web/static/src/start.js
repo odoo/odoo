@@ -6,6 +6,7 @@ import { user } from "@web/core/user";
 import { Component, whenReady } from "@odoo/owl";
 import { rpc } from "./core/network/rpc";
 import { RPCCache } from "./core/network/rpc_cache";
+import { _t } from "./core/l10n/translation";
 
 // Chrome iOS wraps some text nodes (like measures, email...)
 // with a `<chrome_annotation>` tag, which breaks OWL rendering.
@@ -40,6 +41,14 @@ export async function startWebClient(Webclient) {
     const app = await mountComponent(Webclient, document.body, { name: "Odoo Web Client" });
     const { env } = app;
     Component.env = env;
+
+    if (!window.isSecureContext) {
+        console.error(
+            _t(
+                "You are currently using a non-secure context. As a result, some Odoo features may be unavailable or function improperly. For more information, please visit: https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Secure_Contexts"
+            )
+        );
+    }
 
     const classList = document.body.classList;
     if (localization.direction === "rtl") {
