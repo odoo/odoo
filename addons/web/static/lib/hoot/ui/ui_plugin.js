@@ -5,13 +5,7 @@ import { computed, Plugin, signal, types as t } from "@odoo/owl";
 export class UiPlugin extends Plugin {
     /** @private */
     _statusFilter = signal(null, {
-        type: t.or([
-            t.literal("failed"),
-            t.literal("passed"),
-            t.literal("skipped"),
-            t.literal("todo"),
-            t.literal(null),
-        ]),
+        type: t.selection(["failed", "passed", "skipped", "todo", null]),
     });
 
     resultsPage = signal(0);
@@ -20,7 +14,7 @@ export class UiPlugin extends Plugin {
         type: t.or([t.string, t.literal(null)]),
     });
     sortResults = signal(false, {
-        type: t.or([t.literal(false), t.literal("asc"), t.literal("desc")]),
+        type: t.selection(["asc", "desc", false]),
     });
     totalResults = signal(0);
 

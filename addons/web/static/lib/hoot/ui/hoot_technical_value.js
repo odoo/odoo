@@ -31,15 +31,12 @@ const {
  * @param {unknown} value
  */
 function makePromiseWrapperSignal(value) {
-    if (!isInstanceOf(value, Promise)) {
+    if (!isPromise(value)) {
         return null;
     }
 
     const promiseSignal = signal(["pending", null], {
-        type: t.tuple([
-            t.or([t.literal("pending"), t.literal("fulfilled"), t.literal("rejected")]),
-            t.any,
-        ]),
+        type: t.tuple([t.selection(["pending", "fulfilled", "rejected"]), t.any]),
     });
 
     Promise.resolve(value).then(

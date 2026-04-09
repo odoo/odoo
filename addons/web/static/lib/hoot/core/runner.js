@@ -340,7 +340,7 @@ export class Runner {
     /** @type {Suite[]} */
     suiteStack = [];
     status = signal("ready", {
-        type: t.or([t.literal("ready"), t.literal("running"), t.literal("done")]),
+        type: t.selection(["ready", "running", "done"]),
     });
     /** @type {Map<string, Tag>} */
     tags = new Map();
