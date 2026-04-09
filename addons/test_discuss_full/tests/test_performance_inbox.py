@@ -16,20 +16,20 @@ class TestInboxPerformance(HttpCase, MailCommon):
         # Queries (in order):
         #   - search website (get_current_website by domain)
         #   - search website (get_current_website default)
-        #   - search website_rewrite (_get_rewrites) sometimes occurs depending on the routing cache
-        #   - insert res_device_log
+        #   - sometimes could occur depending on the routing cache (website_rewrite, ir_config_parameter, res.lang flag_image)
         #   - _xmlid_lookup (_get_public_users)
         #   - fetch website (_get_cached_values)
-        #   - get_param ir_config_parameter (_pre_dispatch website_sale)
+        #   - user authentication(_get_lock_timeouts)
         #   4 _message_fetch:
         #       2 _search_needaction:
         #           - fetch res_users (current user)
         #           - search ir_rule (_get_rules for mail.notification)
         #       - search ir_rule (_get_rules)
         #       - search mail_message
-        #   30 message _to_store:
+        #   - search bus_bus (_bus_last_id in bus.py)
+        #   29 message _to_store:
+        #       - fetch mail_message (_to_store_defaults)
         #       - search mail_message_schedule
-        #       - fetch mail_message
         #       - search mail_followers
         #       2 thread _to_store:
         #           - fetch slide_channel
@@ -37,33 +37,30 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #       - search mail_message_res_partner_starred_rel (_compute_starred)
         #       - search message_attachment_rel
         #       - search mail_link_preview
-        #       - search mail_message_reaction
         #       - search mail_message_res_partner_rel
-        #       - fetch mail_message_subtype
-        #       - search mail_notification
-        #       7 _filtered_for_web_client:
+        #       - search mail_message_reaction
+        #       4 _filtered_for_web_client:
+        #           - search mail_notification
         #           - fetch mail_notification
-        #           4 _compute_domain:
-        #               - search ir_rule (_get_rules for res.partner)
-        #               - search res_groups_users_rel
-        #               - search rule_group_rel
-        #               - fetch ir_rule
-        #           - fetch res_company
         #           - fetch res_partner
+        #           - fetch mail_message_subtype
         #       2 _compute_rating_id:
         #           - search rating_rating
         #           - fetch rating_rating
-        #       - search mail_tracking_value
-        #       3 _author_to_store:
+        #       3 author:
         #           - fetch res_partner
         #           - search res_users
         #           - fetch res_users
-        #       - search ir_rule (_get_rules for rating.rating)
-        #       - read group rating_rating (_rating_get_stats_per_record for slide.channel)
-        #       - read group rating_rating (_compute_rating_stats for slide.channel)
-        #       - read group rating_rating (_rating_get_stats_per_record for product.template)
-        #       - read group rating_rating (_compute_rating_stats for product.template)
-        #   - get_param ir_config_parameter (_save_session)
+        #       2 compute message_needaction for slide.channel (one query per record due to the lack of batching)
+        #       2 compute message_needaction for product.template (one query per record due to the lack of batching)
+        #       - search mail_tracking_value
+        #       5 compute rating stats
+        #           - search ir_rule (_get_rules for rating.rating)
+        #           - read group rating_rating (_rating_get_stats_per_record for slide.channel)
+        #           - read group rating_rating (_compute_rating_stats for slide.channel)
+        #           - read group rating_rating (_rating_get_stats_per_record for product.template)
+        #           - read group rating_rating (_compute_rating_stats for product.template)
+
         first_model_records = self.env["product.template"].create(
             [{"name": "Product A1"}, {"name": "Product A2"}]
         )
@@ -78,5 +75,5 @@ class TestInboxPerformance(HttpCase, MailCommon):
                 rating_value="4",
             )
         self.authenticate(self.user_employee.login, self.user_employee.password)
-        with self.assertQueryCount(43):
+        with self.assertQueryCount(40):
             self.make_jsonrpc_request("/mail/inbox/messages")
