@@ -1,5 +1,5 @@
 # The officially supported versions of the following packages are their
-# python3-* equivalent distributed in Ubuntu 22.04/24.04 and Debian 12/13
+# python3-* equivalent distributed in Ubuntu 22.04/24.04/26.04 and Debian 12/13
 Babel==2.9.1 ; python_version < '3.11'  # min version = 2.6.0 (Focal with security backports)
 Babel==2.10.3 ; python_version >= '3.11' and python_version < '3.13'
 Babel==2.17.0 ; python_version >= '3.13'
@@ -8,13 +8,15 @@ chardet==5.2.0 ; python_version >= '3.11'
 cryptography==3.4.8; python_version < '3.11'  # incompatibility between pyopenssl 19.0.0 and cryptography>=37.0.0
 cryptography==38.0.4 ; python_version >= '3.11' and python_version < '3.12'  # (Bookworm)
 cryptography==42.0.8 ; python_version >= '3.12' and python_version < '3.13'  # (Noble) min 41.0.7, pinning 42.0.8 for security fixes
-cryptography==43.0.0 ; python_version >= '3.13'  # (Trixie)
+cryptography==43.0.0 ; python_version >= '3.13' and python_version < '3.14'  # (Trixie)
+cryptography==46.0.5 ; python_version >= '3.14'  # (Resolute)
 decorator==4.4.2  ; python_version < '3.11'  # (Jammy)
 decorator==5.1.1 ; python_version >= '3.11' and python_version < '3.13'
 decorator==5.2.1 ; python_version >= '3.13'  # (Trixie)
 docutils==0.17 ; python_version < '3.11'  # (Jammy) even though Ubuntu package is named 0.17.1
 docutils==0.20.1 ; python_version >= '3.11' and python_version < '3.13'
-docutils==0.21.2 ; python_version >= '3.13'  # (Trixie)
+docutils==0.21.2 ; python_version >= '3.13' and python_version < '3.14'  # (Trixie)
+docutils==0.22.4 ; python_version >= '3.14'  # (Resolute)
 ebaysdk==2.1.5
 freezegun==1.1.0 ; python_version < '3.11'  # (Jammy)
 freezegun==1.2.1 ; python_version >= '3.11' and python_version < '3.13'
@@ -32,7 +34,8 @@ greenlet==3.3.2 ; sys_platform != 'win32' and python_version >= '3.14'  # (Resol
 idna==2.10 ; python_version < '3.11'  # (Jammy) requests 2.25.1 depends on idna<3 and >=2.5
 idna==3.3 ; python_version >= '3.11' and python_version < '3.12'  # (Bookworm)
 idna==3.6 ; python_version >= '3.12' and python_version < '3.13'  # (Noble)
-idna==3.10 ; python_version >= '3.13'  # (Trixie)
+idna==3.10 ; python_version >= '3.13' and python_version < '3.14'  # (Trixie)
+idna==3.11 ; python_version >= '3.14'  # (Resolute)
 Jinja2==3.0.3 ; python_version < '3.11'  # (Jammy)
 Jinja2==3.1.2 ; python_version >= '3.11' and python_version < '3.13'
 Jinja2==3.1.6 ; python_version >= '3.13'  # (Trixie)
@@ -42,15 +45,18 @@ libsass==0.23.0 ; python_version >= '3.13'  # (Trixie)
 lxml==4.8.0 ; python_version <= '3.10'
 lxml==4.9.3 ; python_version > '3.10' and python_version < '3.12' # min 4.9.2, pinning 4.9.3 because of missing wheels for darwin in 4.9.3
 lxml==5.2.1 ; python_version >= '3.12' and python_version < '3.13'  # (Noble - removed html clean)
-lxml==5.4.0 ; python_version >= '3.13'  # (Trixie)
+lxml==5.4.0 ; python_version >= '3.13' and python_version < '3.14'  # (Trixie)
+lxml==6.0.2 ; python_version >= '3.14'  # (Resolute)
 lxml-html-clean; python_version >= '3.12' # (Noble - removed from lxml, unpinned for futur security patches)
 MarkupSafe==2.0.1 ; python_version <= '3.10'
 MarkupSafe==2.1.2 ; python_version > '3.10' and python_version < '3.12'
-MarkupSafe==2.1.5 ; python_version >= '3.12'  # (Noble) Mostly to have a wheel package
+MarkupSafe==2.1.5 ; python_version >= '3.12' and python_version < '3.14'  # (Noble) Mostly to have a wheel package
+MarkupSafe==3.0.3 ; python_version >= '3.14' # (Resolute)
 num2words==0.5.10 ; python_version < '3.12'  # (Jammy / Bookworm)
 num2words==0.5.13 ; python_version >= '3.12'  # actually also matches Debian/Ubuntu package 0.5.14 due to missing release commit
 ofxparse==0.21
-passlib==1.7.4 # min version = 1.7.2 (Focal with security backports)
+passlib==1.7.4 ; python_version < '3.14'  # min version = 1.7.2 (Focal with security backports)
+libpass==1.9.3 ; python_version >= '3.14'  # (Resolute) passlib renamed in 1.8.0
 Pillow==9.0.1 ; python_version <= '3.10'
 Pillow==9.4.0 ; python_version > '3.10' and python_version < '3.12'
 Pillow==10.2.0 ; python_version >= '3.12' and python_version < '3.13'  # (Noble) Mostly to have a wheel package
@@ -61,20 +67,25 @@ polib==1.2.0 ; python_version >= '3.13'  # (Trixie)
 psutil==5.9.0 ; python_version < '3.11'  # (Jammy)
 psutil==5.9.4 ; python_version >= '3.11' and python_version < '3.12'
 psutil==5.9.8 ; python_version >= '3.12' and python_version < '3.13'  # (Noble) Mostly to have a wheel package
-psutil==7.0.0 ; python_version >= '3.13'  # (Trixie)
+psutil==7.0.0 ; python_version >= '3.13' and python_version < '3.14'  # (Trixie)
+psutil==7.1.0 ; python_version >= '3.14'  # (Resolute)
 psycopg2==2.9.2 ; python_version == '3.10' # (Jammy)
 psycopg2==2.9.5 ; python_version == '3.11'
 psycopg2==2.9.9 ; python_version >= '3.12' and python_version < '3.13' # (Noble)
-psycopg2==2.9.10 ; python_version >= '3.13' # (Trixie)
+psycopg2==2.9.10 ; python_version >= '3.13' and python_version < '3.14' # (Trixie)
+psycopg2==2.9.11 ; python_version >= '3.14'  # (Resolute)
 pydot==1.4.2 ; python_version < '3.13'
-pydot==2.0.0 ; python_version >= '3.13'  # (Trixie)
+pydot==2.0.0 ; python_version >= '3.13' and python_version < '3.14'  # (Trixie)
+pydot==4.0.1 ; python_version >= '3.14'  # (Resolute)
 pyopenssl==21.0.0 ; python_version < '3.11'  # (Jammy)
 pyopenssl==23.0.0 ; python_version >= '3.11' and python_version < '3.12'  # (Bookworm)
 pyopenssl==24.1.0 ; python_version >= '3.12' and python_version < '3.13' # (Noble) min 23.2.0, pinned for compatibility with cryptography==42.0.8 and security patches
-pyopenssl==25.0.0 ; python_version >= '3.13'  # (Trixie)
+pyopenssl==25.0.0 ; python_version >= '3.13' and python_version < '3.14'  # (Trixie)
+pyopenssl==25.3.0 ; python_version >= '3.14'  # (Resolute)
 PyPDF2==1.26.0 ; python_version <= '3.10'
 PyPDF2==2.12.1 ; python_version > '3.10' and python_version < '3.13' # (Noble and below)
-PyPDF==5.4.0 ; python_version >= '3.13' # (Trixie)
+PyPDF==5.4.0 ; python_version >= '3.13' and python_version < '3.14'  # (Trixie)
+PyPDF==6.9.2 ; python_version >= '3.14'  # (Resolute)
 pypiwin32 ; sys_platform == 'win32'
 pyserial==3.5
 python-dateutil==2.8.1 ; python_version < '3.11'  # (Jammy)
@@ -82,10 +93,12 @@ python-dateutil==2.8.2 ; python_version >= '3.11' and python_version < '3.13'
 python-dateutil==2.9.0 ; python_version >= '3.13'  # (Trixie)
 python-ldap==3.4.0 ; sys_platform != 'win32' and python_version < '3.11' # min version = 3.2.0 (Focal with security backports)
 python-ldap==3.4.3 ; sys_platform != 'win32' and python_version >= '3.11' and python_version < '3.12'  # (Bookworm)
-python-ldap==3.4.4 ; sys_platform != 'win32' and python_version >= '3.12'  # (Noble)
+python-ldap==3.4.4 ; sys_platform != 'win32' and python_version >= '3.12' and python_version < '3.14'  # (Noble)
+python-ldap==3.4.5 ; sys_platform != 'win32' and python_version >= '3.14'  # (Resolute)
 python-stdnum==1.17 ; python_version < '3.11'  # (jammy)
 python-stdnum==1.19 ; python_version >= '3.11' and python_version < '3.13'
-python-stdnum==1.20 ; python_version >= '3.13'  # (Trixie)
+python-stdnum==1.20 ; python_version >= '3.13' and python_version < '3.14'  # (Trixie)
+python-stdnum==2.2 ; python_version >= '3.14'  # (Resolute)
 pytz  # no version pinning to avoid OS perturbations
 pyusb==1.2.1
 qrcode==7.3.1 ; python_version < '3.11'  # (jammy)
@@ -94,30 +107,36 @@ qrcode==8.2 ; python_version >= '3.13'  # (Trixie)
 reportlab==3.6.8 ; python_version < '3.11'  # (Jammy)
 reportlab==3.6.12 ; python_version >= '3.11' and python_version < '3.12'  # (Bookworm)
 reportlab==4.1.0 ; python_version >= '3.12' and python_version < '3.13'  # (Noble) Mostly to have a wheel package
-reportlab==4.3.1 ; python_version >= '3.13'  # (Trixie)
+reportlab==4.3.1 ; python_version >= '3.13' and python_version < '3.14'  # (Trixie)
+reportlab==4.4.10 ; python_version >= '3.14'  # (Resolute)
 requests==2.25.1 ;  python_version < '3.11' # versions < 2.25 aren't compatible w/ urllib3 1.26. Bullseye = 2.25.1. min version = 2.22.0 (Focal)
 requests==2.28.1 ; python_version >= '3.11' and python_version < '3.12'  # (Bookworm)
 requests==2.31.0 ; python_version >= '3.12' and python_version < '3.13'  # (Noble)
-requests==2.32.3 ; python_version >= '3.13'  # (Trixie)
+requests==2.32.3 ; python_version >= '3.13' and python_version < '3.14'  # (Trixie)
+requests==2.32.5 ; python_version >= '3.14'  # (Resolute)
 rjsmin==1.1.0 ; python_version < '3.11'  # (jammy)
 rjsmin==1.2.0 ; python_version >= '3.11'
 rl-renderPM==4.0.3 ; sys_platform == 'win32' and python_version >= '3.12'  # Needed by reportlab 4.1.0 but included in deb package
 urllib3==1.26.5 ; python_version < '3.11' # indirect / min version = 1.25.8 (Focal with security backports)
 urllib3==1.26.12  ; python_version >= '3.11' and python_version < '3.12'  # (Noble) Compatibility with cryptography
 urllib3==2.0.7  ; python_version >= '3.12' and python_version < '3.13'  # (Noble) Compatibility with cryptography
-urllib3==2.3.0 ; python_version >= '3.13'  # (Trixie)
+urllib3==2.3.0 ; python_version >= '3.13' and python_version < '3.14'  # (Trixie)
+urllib3==2.6.3 ; python_version >= '3.14'  # (Resolute)
 vobject==0.9.6.1 ; python_version < '3.13'
 vobject==0.9.8 ; python_version >= '3.13' and python_version < '3.14'  # (Trixie)
 vobject==0.9.9 ; python_version >= '3.14'  # (Resolute)
 Werkzeug==2.0.2 ; python_version < '3.11'  # (Jammy)
 Werkzeug==2.2.2 ; python_version >= '3.11' and python_version < '3.12'
 Werkzeug==3.0.1 ; python_version >= '3.12' and python_version < '3.13'  # (Noble) Avoid deprecation warnings
-Werkzeug==3.1.3 ; python_version >= '3.13'  # (Trixie)
+Werkzeug==3.1.3 ; python_version >= '3.13' and python_version < '3.14'  # (Trixie)
+Werkzeug==3.1.5 ; python_version >= '3.14'  # (Resolute)
 xlrd==1.2.0 ; python_version < '3.12'  # (jammy)
-xlrd==2.0.1 ; python_version >= '3.12'
+xlrd==2.0.1 ; python_version >= '3.12' and python_version < '3.14'
+xlrd==2.0.2 ; python_version >= '3.14'  # (Resolute)
 XlsxWriter==3.0.2 ; python_version < '3.12'  # (jammy)
 XlsxWriter==3.1.9 ; python_version >= '3.12'
 xlwt==1.3.0
 zeep==4.1.0 ; python_version < '3.11'  # (jammy)
 zeep==4.2.1 ; python_version >= '3.11' and python_version < '3.13'
-zeep==4.3.1 ; python_version >= '3.13'
+zeep==4.3.1 ; python_version >= '3.13' and python_version < '3.14'  # (Trixie)
+zeep==4.3.2 ; python_version >= '3.14'  # (Resolute)
