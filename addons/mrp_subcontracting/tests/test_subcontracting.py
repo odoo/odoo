@@ -900,6 +900,39 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         subcontracted = move._get_subcontract_production().filtered(lambda p: p.state == 'done')
         self.assertEqual(sum(subcontracted.mapped('qty_produced')), quantities[-1])
 
+    def test_subcontracting_set_quantity_serial_preserves_backorder_serial(self):
+        """ Setting a partial quantity on a serial-tracked subcontract move splits
+        the MO into one MO per unit plus a remainder backorder. The recorded MOs
+        must each get a distinct serial, and the untouched backorder MO must keep
+        `lot_producing_id` empty so the next reception can generate a fresh one.
+        """
+        self.finished.tracking = 'serial'
+        self.bom.consumption = 'flexible'
+
+        picking_receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'partner_id': self.subcontractor_partner1.id,
+            'move_ids': [Command.create({
+                'name': self.finished.name,
+                'product_id': self.finished.id,
+                'product_uom_qty': 5,
+                'location_id': self.env.ref('stock.stock_location_suppliers').id,
+                'location_dest_id': self.warehouse.lot_stock_id.id,
+            })],
+        })
+        picking_receipt.action_confirm()
+
+        move = picking_receipt.move_ids_without_package
+        move.quantity = 3
+
+        productions = move._get_subcontract_production()
+        recorded = productions.filtered('subcontracting_has_been_recorded')
+        backorder = productions - recorded
+        self.assertEqual(len(recorded), 3)
+        self.assertEqual(len(recorded.lot_producing_id), 3)
+        self.assertEqual(len(backorder), 1)
+        self.assertFalse(backorder.lot_producing_id)
+
     def test_change_reception_serial(self):
         self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('stock.group_production_lot').id)]})
         self.finished.tracking = 'serial'
