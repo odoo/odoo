@@ -11,6 +11,17 @@ export class CarouselSlider extends Interaction {
             "t-on-slid.bs.carousel": this.onSlidCarousel,
             "t-on-focusin": () => window.Carousel.getInstance(this.el)?.pause(),
             "t-on-focusout": this.resumeCarouselCycling,
+            "t-on-keydown": (ev) => {
+                const hotkey = getActiveHotkey(ev);
+                if (/input|textarea/i.test(ev.target.tagName)) {
+                    return;
+                }
+                if (["home", "end"].includes(hotkey)) {
+                    const childToFocus = hotkey === "home" ? ":first-child" : ":last-child";
+                    ev.preventDefault();
+                    this.el.querySelector(`.carousel-indicators > ${childToFocus}`).click();
+                }
+            },
         },
         "img": {
             "t-on-load": this.computeMaxHeight,
