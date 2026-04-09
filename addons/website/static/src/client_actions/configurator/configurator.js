@@ -10,7 +10,6 @@ import {
 import { browser } from "@web/core/browser/browser";
 const sessionStorage = browser.sessionStorage;
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { delay } from "@web/core/utils/concurrency";
 import { getDataURLFromFile, redirect } from "@web/core/utils/urls";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
@@ -146,9 +145,8 @@ const RECOMMENDED_PALETTE_PLACEHOLDER = {
 export const CUSTOM_BG_COLOR_ATTRS = ["menu", "footer"];
 
 const MAX_NBR_DISPLAY_MAIN_THEMES = 3;
-const PREVIEW_BACKGROUND_SHAPE_SELECTOR = ".o_we_shape";
-const PREVIEW_IMAGE_SHAPE_URL_REGEX = /^\/?html_editor\/image_shape(_url)?\//;
-const PREVIEW_DYNAMIC_IMAGE_URL_REGEX = /^\/?html_editor\/(image_)?shape(_url)?\//;
+const PREVIEW_IMAGE_SHAPE_URL_REGEX = /^\/?(html_editor|web_editor)\/image_shape(_url)?\//;
+const PREVIEW_DYNAMIC_IMAGE_URL_REGEX = /^\/?(html_editor|web_editor)\/(image_)?shape(_url)?\//;
 
 /**
  * Returns a list of maximum "resultNbrMax" themes that depends on the wanted
@@ -464,116 +462,6 @@ export class DescriptionScreen extends Component {
     }
 }
 
-export class PaletteSelectionScreen extends Component {
-    static components = { SkipButton };
-    static template = "website.Configurator.PaletteSelectionScreen";
-    static props = {
-        navigate: Function,
-        skip: Function,
-    };
-    setup() {
-        this.state = useStore();
-        this.logoInputRef = useRef("logoSelectionInput");
-        this.notification = useService("notification");
-        this.orm = useService("orm");
-
-        onMounted(() => {
-            if (this.state.logo) {
-                this.updatePalettes();
-            }
-        });
-    }
-
-    uploadLogo() {
-        this.logoInputRef.el.click();
-    }
-
-    /**
-     * Removes the previously uploaded logo.
-     *
-     * @param {Event} ev
-     */
-    async removeLogo(ev) {
-        ev.stopPropagation();
-        // Permit to trigger onChange even with the same file.
-        this.logoInputRef.el.value = "";
-        if (this.state.logoAttachmentId) {
-            await this._removeAttachments([this.state.logoAttachmentId]);
-        }
-        this.state.changeLogo();
-        // Remove logo palette.
-        this.state.setLogoPalette();
-    }
-
-    async changeLogo() {
-        const logoSelectInput = this.logoInputRef.el;
-        if (logoSelectInput.files.length === 1) {
-            const previousLogoAttachmentId = this.state.logoAttachmentId;
-            const file = logoSelectInput.files[0];
-            if (file.size > 2500000) {
-                this.notification.add(
-                    _t("The logo is too large. Please upload a logo smaller than 2.5 MB."),
-                    {
-                        title: file.name,
-                        type: "warning",
-                    }
-                );
-                return;
-            }
-            const data = await getDataURLFromFile(file);
-            const attachment = await rpc("/web_editor/attachment/add_data", {
-                name: "logo",
-                data: data.split(",")[1],
-                is_image: true,
-            });
-            if (!attachment.error) {
-                if (previousLogoAttachmentId) {
-                    await this._removeAttachments([previousLogoAttachmentId]);
-                }
-                this.state.changeLogo(data, attachment.id);
-                this.updatePalettes();
-            } else {
-                this.notification.add(attachment.error, {
-                    title: file.name,
-                });
-            }
-        }
-    }
-
-    async updatePalettes() {
-        let img = this.state.logo;
-        if (img.startsWith("data:image/svg+xml")) {
-            img = await svgToPNG(img);
-        }
-        if (img.startsWith("data:image/webp")) {
-            img = await webpToPNG(img);
-        }
-        img = img.split(",")[1];
-        const [color1, color2] = await this.orm.call(
-            "base.document.layout",
-            "extract_image_primary_secondary_colors",
-            [img],
-            { mitigate: 255 }
-        );
-        this.state.setLogoPalette(color1, color2);
-    }
-
-    selectPalette(paletteName) {
-        this.state.selectPalette(paletteName);
-        this.props.navigate(ROUTES.featuresSelectionScreen);
-    }
-
-    /**
-     * Removes the attachments from the DB.
-     *
-     * @private
-     * @param {Array<number>} ids the attachment ids to remove
-     */
-    async _removeAttachments(ids) {
-        rpc("/html_editor/attachment/remove", { ids: ids });
-    }
-}
-
 export class ApplyConfiguratorScreen extends Component {
     static template = "";
     static props = ["*"];
@@ -602,7 +490,7 @@ export class ApplyConfiguratorScreen extends Component {
             return this.props.navigate(ROUTES.descriptionScreen);
         }
         if (!this.state.selectedPalette) {
-            return this.props.navigate(ROUTES.paletteSelectionScreen);
+            return this.props.navigate(ROUTES.setupStyleScreen);
         }
 
         const attemptConfiguratorApply = async (data, retryCount = 0) => {
@@ -620,48 +508,16 @@ export class ApplyConfiguratorScreen extends Component {
         };
 
         if (themeName !== undefined) {
-            const selectedFeatures = Object.values(this.state.features)
-                .filter((feature) => feature.selected)
-                .map((feature) => feature.id);
-            const loadingSteps = [
-                {
-                    description: _t("Applying your colors and design..."),
-                    flag: "colors",
-                },
-                {
-                    description: _t("Searching your images..."),
-                    flag: "images",
-                },
-                {
-                    description: _t("Generating inspiring text..."),
-                    flag: "text",
-                },
-                ...this.getSelectedFeaturesLoadingSteps(selectedFeatures),
-                {
-                    title: _t("Finalizing."),
-                    description: _t("Activating the last features."),
-                    flag: "generic",
-                },
-            ];
-
-            // Server requests are locked during module installation,
-            // uninstallation, or upgrade (when running without `workers`), so
-            // real-time progress can't be fetched. We simulate it instead.
-            const stopProgressSimulation = this.startConfiguratorProgressSimulation(
-                selectedFeatures.length
-            );
             this.websiteService.showLoader({
-                title: _t("Building your website."),
-                loadingSteps,
-                getProgress: () => this.configuratorProgress,
-                bottomMessageTemplate: "website.website_loader.tour_tip",
+                showTips: true,
+                selectedFeatures: [],
+                showWaitingMessages: true,
             });
             const resp = await attemptConfiguratorApply(
-                this.getConfigurationData(selectedFeatures, this.state.selectedPalette, themeName)
+                this.getConfigurationData(this.state.selectedPalette, themeName)
             );
 
             this.props.clearStorage();
-            stopProgressSimulation();
 
             this.websiteService.redirectOutFromLoader({
                 redirectAction: () => {
@@ -678,11 +534,10 @@ export class ApplyConfiguratorScreen extends Component {
         }
     }
 
-    getConfigurationData(selectedFeatures, selectedPalette, themeName) {
+    getConfigurationData(selectedPalette, themeName) {
         const selectedFontConfig = this.state.fonts?.[this.state.selectedFont];
         const toScssString = (value) => (value ? `'${value}'` : undefined);
         return {
-            selected_features: selectedFeatures,
             industry_id: this.state.selectedIndustry.id,
             industry_name: this.state.selectedIndustry.label.toLowerCase(),
             selected_palette:
@@ -824,44 +679,6 @@ export class ApplyConfiguratorScreen extends Component {
                 const highlight = markup`<span class="o_website_loader_text_highlight">${step.name}</span>`;
                 return { ...step, description: htmlSprintf(step.description, highlight) };
             });
-    }
-}
-
-export class FeaturesSelectionScreen extends Component {
-    static components = { SkipButton };
-    static template = "website.Configurator.FeatureSelection";
-    static props = {
-        navigate: Function,
-        skip: Function,
-    };
-    setup() {
-        super.setup();
-        this.state = useStore();
-    }
-
-    /**
-     * Return the theme selection screen as the next step, unless overridden.
-     *
-     * @return {int} Next step route.
-     */
-    static nextStep() {
-        return ROUTES.themeSelectionScreen;
-    }
-
-    async buildWebsite() {
-        const industryId = this.state.selectedIndustry && this.state.selectedIndustry.id;
-        if (!industryId) {
-            return this.props.navigate(ROUTES.descriptionScreen);
-        }
-
-        this.props.navigate(FeaturesSelectionScreen.nextStep());
-    }
-
-    onKeydown(ev) {
-        const hotkey = getActiveHotkey(ev);
-        if (["enter", "space"].includes(hotkey)) {
-            ev.target.click();
-        }
     }
 }
 
@@ -1323,31 +1140,27 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
             });
             return url.pathname + url.search;
         };
-        for (const [elements, datasetKey, getOriginalSrc] of [
-            [
-                Array.from(iframeDoc.querySelectorAll("img")).filter((imgEl) =>
-                    PREVIEW_IMAGE_SHAPE_URL_REGEX.test(imgEl.getAttribute("src") || "")
-                ),
-                "configuratorOriginalSrc",
-                (imgEl) => imgEl.getAttribute("src"),
-            ],
-            [
-                iframeDoc.querySelectorAll(PREVIEW_BACKGROUND_SHAPE_SELECTOR),
-                "configuratorOriginalBgSrc",
-                (shapeEl) => getBgImageURLFromEl(shapeEl),
-            ],
-        ]) {
-            for (const el of elements) {
-                if (el.dataset[datasetKey]) {
-                    continue;
-                }
-                const originalSrc = getOriginalSrc(el);
-                if (!originalSrc) {
-                    continue;
-                }
-                // Keep a palette-based source so shapes follow palette changes.
-                el.dataset[datasetKey] = getPaletteShapeURL(originalSrc);
+        for (const imgEl of iframeDoc.querySelectorAll("img")) {
+            if (imgEl.dataset.configuratorOriginalSrc) {
+                continue;
             }
+            const originalSrc = imgEl.getAttribute("src") || "";
+            if (!PREVIEW_IMAGE_SHAPE_URL_REGEX.test(originalSrc)) {
+                continue;
+            }
+            // Keep a palette-based source so shapes follow palette changes.
+            imgEl.dataset.configuratorOriginalSrc = getPaletteShapeURL(originalSrc);
+        }
+        for (const shapeEl of iframeDoc.querySelectorAll(".o_we_shape")) {
+            if (shapeEl.dataset.configuratorOriginalBgSrc) {
+                continue;
+            }
+            const originalSrc = getBgImageURLFromEl(shapeEl);
+            if (!originalSrc || !PREVIEW_DYNAMIC_IMAGE_URL_REGEX.test(originalSrc)) {
+                continue;
+            }
+            // Keep a palette-based source so shapes follow palette changes.
+            shapeEl.dataset.configuratorOriginalBgSrc = getPaletteShapeURL(originalSrc);
         }
     }
 
@@ -1370,7 +1183,6 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
             return { imageSrcUpdates: [], backgroundImageUpdates: [] };
         }
         const style = getComputedStyle(iframeDoc.documentElement);
-        const shapeURLRegex = /^\/html_editor\/(image_)?shape(_url)?\//;
         const colorizeShapeURL = (originalSrc) => {
             const url = new URL(originalSrc, window.location.origin);
             url.searchParams.forEach((value, key) => {
@@ -1385,27 +1197,30 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
             });
             return url.pathname + url.search;
         };
-        const imageSrcUpdates = Array.from(iframeDoc.querySelectorAll("img"))
-            .filter((imgEl) => PREVIEW_DYNAMIC_IMAGE_URL_REGEX.test(imgEl.getAttribute("src") || ""))
-            .map((imgEl) => {
-                // Keep the original palette-based URL so each palette change starts
-                // from c1=o-color-1, c2=o-color-2, ...
-                const originalSrc =
-                    imgEl.dataset.configuratorOriginalSrc || imgEl.getAttribute("src");
-                return { el: imgEl, originalSrc, src: colorizeShapeURL(originalSrc) };
+        const imageSrcUpdates = [];
+        for (const imgEl of iframeDoc.querySelectorAll("img")) {
+            const src = imgEl.getAttribute("src") || "";
+            if (!PREVIEW_DYNAMIC_IMAGE_URL_REGEX.test(src)) {
+                continue;
+            }
+            // Keep the original palette-based URL so each palette change starts
+            // from c1=o-color-1, c2=o-color-2, ...
+            const originalSrc = imgEl.dataset.configuratorOriginalSrc || src;
+            imageSrcUpdates.push({ el: imgEl, originalSrc, src: colorizeShapeURL(originalSrc) });
+        }
+        const backgroundImageUpdates = [];
+        for (const shapeEl of iframeDoc.querySelectorAll(".o_we_shape")) {
+            const originalSrc =
+                shapeEl.dataset.configuratorOriginalBgSrc || getBgImageURLFromEl(shapeEl);
+            if (!originalSrc || !PREVIEW_DYNAMIC_IMAGE_URL_REGEX.test(originalSrc)) {
+                continue;
+            }
+            backgroundImageUpdates.push({
+                el: shapeEl,
+                originalSrc,
+                src: colorizeShapeURL(originalSrc),
             });
-        const backgroundImageUpdates = Array.from(
-            iframeDoc.querySelectorAll(PREVIEW_BACKGROUND_SHAPE_SELECTOR)
-        )
-            .map((shapeEl) => {
-                const originalSrc =
-                    shapeEl.dataset.configuratorOriginalBgSrc || getBgImageURLFromEl(shapeEl);
-                if (!originalSrc || !shapeURLRegex.test(originalSrc)) {
-                    return false;
-                }
-                return { el: shapeEl, originalSrc, src: colorizeShapeURL(originalSrc) };
-            })
-            .filter(Boolean);
+        }
         // Wait for the new URLs before applying them to avoid a short flash.
         await Promise.all(
             [...new Set([...imageSrcUpdates, ...backgroundImageUpdates].map(({ src }) => src))].map(
@@ -1680,23 +1495,8 @@ export class Store {
         return id && WEBSITE_PURPOSES[id];
     }
 
-    getFeatures() {
-        return Object.values(this.features);
-    }
-
-    getPalettes() {
-        return Object.values(this.palettes);
-    }
-
     getThemeName(idx) {
         return this.themes.length > idx && this.themes[idx].name;
-    }
-
-    /**
-     * @returns {string | false}
-     */
-    getSelectedPaletteName() {
-        return this.selectedPalette || false;
     }
 
     //-------------------------------------------------------------------------
@@ -1704,13 +1504,6 @@ export class Store {
     //-------------------------------------------------------------------------
 
     selectWebsiteType(id) {
-        Object.values(this.features)
-            .filter((feature) => feature.module_state !== "installed")
-            .forEach((feature) => {
-                feature.selected = feature.website_config_preselection.includes(
-                    WEBSITE_TYPES[id].name
-                );
-            });
         this.selectedType = id;
     }
 
@@ -1721,13 +1514,6 @@ export class Store {
         if (!id && this.selectedPurpose) {
             this.formerSelectedPurpose = this.selectedPurpose;
         }
-        Object.values(this.features)
-            .filter((feature) => feature.module_state !== "installed")
-            .forEach((feature) => {
-                // need to check id, since we set to undefined in mount() to avoid the auto next screen on back button
-                feature.selected |=
-                    id && feature.website_config_preselection.includes(WEBSITE_PURPOSES[id].name);
-            });
         this.selectedPurpose = id;
     }
 
@@ -1746,12 +1532,6 @@ export class Store {
 
     selectPalette(paletteName) {
         this.selectedPalette = paletteName;
-    }
-
-    toggleFeature(featureId) {
-        const feature = this.features[featureId];
-        const isModuleInstalled = feature.module_state === "installed";
-        feature.selected = !feature.selected || isModuleInstalled;
     }
 
     setLogoPalette(color1, color2) {
@@ -1948,15 +1728,6 @@ export class Configurator extends Component {
             });
         }
 
-        const features = {};
-        results.features.forEach((feature) => {
-            features[feature.id] = Object.assign({}, feature, {
-                selected: feature.module_state === "installed",
-            });
-            const wtp = features[feature.id]["website_config_preselection"];
-            features[feature.id]["website_config_preselection"] = wtp ? wtp.split(",") : [];
-        });
-
         // Palette color used by default as background color for menu and footer.
         // Needed to build the recommended palette.
         const defaultColors = {};
@@ -1981,7 +1752,6 @@ export class Configurator extends Component {
             palettes: palettes,
             previewPaletteCSS: {},
             previewPaletteCSSPromises: {},
-            features: features,
             themes: [],
             logoAttachmentId: undefined,
         });
@@ -1990,7 +1760,6 @@ export class Configurator extends Component {
     updateStorage(state) {
         const newState = JSON.stringify({
             defaultColors: state.defaultColors,
-            features: state.features,
             logo: state.logo,
             logoAttachmentId: state.logoAttachmentId,
             selectedIndustry: state.selectedIndustry,

@@ -386,60 +386,6 @@
     </template>
 
     <!-- Template configurator (optional) -->
-    <template id="website.aboutus" name="About Us">
-        <t t-call="website.layout">
-            <div id="wrap">
-                <div class="oe_structure">
-                    <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
-                        <span class="s_parallax_bg_wrap">
-                            <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;"/>
-                        </span>
-                        <div class="o_we_bg_filter bg-black-50"/>
-                        <div class="container">
-                            <h1>About us</h1>
-                        </div>
-                    </section>
-                </div>
-                <div class="oe_structure"/>
-            </div>
-        </t>
-    </template>
-    <template id="website.our_services" name="Services">
-        <t t-call="website.layout">
-            <div id="wrap">
-                <div class="oe_structure">
-                    <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
-                        <span class="s_parallax_bg_wrap">
-                            <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;"/>
-                        </span>
-                        <div class="o_we_bg_filter bg-black-50"/>
-                        <div class="container">
-                            <h1>Services</h1>
-                        </div>
-                    </section>
-                </div>
-                <div class="oe_structure"/>
-            </div>
-        </t>
-    </template>
-    <template id="pricing" name="Pricing">
-        <t t-call="website.layout">
-            <div id="wrap">
-                <div class="oe_structure">
-                    <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
-                        <span class="s_parallax_bg_wrap">
-                            <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;"/>
-                        </span>
-                        <div class="o_we_bg_filter bg-black-50"/>
-                        <div class="container">
-                            <h1>Pricing</h1>
-                        </div>
-                    </section>
-                </div>
-                <div class="oe_structure"/>
-            </div>
-        </t>
-    </template>
     <template id="privacy_policy" name="Privacy Policy">
         <t t-call="website.layout">
             <div id="wrap">
@@ -458,39 +404,6 @@
             </div>
         </t>
     </template>
-
-    <!-- Configurator page features -->
-    <record id="feature_page_about_us" model="website.configurator.feature">
-        <field name="name">About Us</field>
-        <field name="description">Info and stats about your company</field>
-        <field name="iap_page_code">about_us</field>
-        <field name="sequence">1</field>
-        <field name="page_view_id" ref="aboutus"/>
-        <field name="icon">fa-building</field>
-        <field name="menu_company">True</field>
-        <field name="menu_sequence">50</field>
-        <field name="feature_url">/about-us</field>
-    </record>
-    <record id="feature_page_our_services" model="website.configurator.feature">
-        <field name="name">Services</field>
-        <field name="description">Description of your services offer</field>
-        <field name="iap_page_code">our_services</field>
-        <field name="sequence">3</field>
-        <field name="page_view_id" ref="our_services"/>
-        <field name="icon">fa-handshake-o</field>
-        <field name="menu_sequence">30</field>
-        <field name="feature_url">/our-services</field>
-    </record>
-    <record id="feature_page_pricing" model="website.configurator.feature">
-        <field name="name">Pricing Plan</field>
-        <field name="description">Useful if you sell subscriptions</field>
-        <field name="iap_page_code">pricing</field>
-        <field name="sequence">4</field>
-        <field name="page_view_id" ref="pricing"/>
-        <field name="icon">fa-random</field>
-        <field name="menu_sequence">35</field>
-        <field name="feature_url">/pricing</field>
-    </record>
 
     <!-- Configurator apps features -->
     <record id="feature_module_news" model="website.configurator.feature">
@@ -515,7 +428,7 @@
         <field name="name">Shop</field>
         <field name="description">Sell more with an eCommerce</field>
         <field name="sequence">9</field>
-        <field name="website_config_preselection">online_store</field>
+        <field name="website_config_preselection">eCommerce</field>
         <field name="module_id" ref="base.module_website_sale"/>
         <field name="icon">fa-shopping-cart</field>
         <field name="menu_sequence">15</field>

@@ -62,7 +62,9 @@ registry.category("web_tour.tours").add("configurator_flow", {
         },
         {
             content: "the header CTA should match the selected palette",
-            trigger: ":iframe header .btn_cta",
+            // The runbot screen is not wide enough to display the page in
+            // desktop mode, so we added "":not(:visible)"".
+            trigger: ":iframe header .btn_cta:not(:visible)",
             run: function () {
                 const expectedColor = getComputedStyle(
                     document.querySelector(".o_setup_style_screen_color_palette.active span")
@@ -92,7 +94,9 @@ registry.category("web_tour.tours").add("configurator_flow", {
         },
         {
             content: "the header CTA should match the new palette",
-            trigger: ":iframe header .btn_cta",
+            // The runbot screen is not wide enough to display the page in
+            // desktop mode, so we added "":not(:visible)"".
+            trigger: ":iframe header .btn_cta:not(:visible)",
             async run({ anchor, waitUntil }) {
                 let currentColor = "";
                 try {
