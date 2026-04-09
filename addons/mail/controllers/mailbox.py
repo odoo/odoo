@@ -17,7 +17,8 @@ class MailboxController(http.Controller):
             messages,
             extra_fields=[
                 Store.One("thread", [
-                    Store.Attr("message_needaction_counter"),
+                    # sudo: mail.thread: users can read their own message_needaction_counter on the thread
+                    Store.Attr("message_needaction_counter", sudo=True),
                     Store.Attr("message_needaction_counter_bus_id", bus_last_id)
                 ], as_thread=True)
             ],
