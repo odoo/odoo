@@ -31,7 +31,8 @@ class KswAnnualLeave(models.Model):
     total_accrued_days = fields.Float(
         string='Total Accrued', compute='_compute_leave_data',
         store=True, digits=(10, 4),
-        help='Total annual leave days accrued from joining date to today.',
+        help='Total annual leave days accrued based on effective days '
+             '(calendar days minus approved vacation days).',
     )
     leaves_taken = fields.Float(
         string='Leaves Taken',
@@ -89,22 +90,40 @@ class KswAnnualLeave(models.Model):
                 rdelta.years + rdelta.months / 12.0 + rdelta.days / 365.25, 2
             )
 
+            # --- Approved annual leave days taken ---
+            # Vacation days do NOT generate additional accrual.
+            taken = (
+                rec.allocation_id.sudo().leaves_taken
+                if rec.allocation_id else 0.0
+            )
+
             # --- Two-tier daily accrual (Saudi Labor Law Art. 109) ---
-            # Annual leave is paid leave; service continues uninterrupted.
-            # Accrual is based on total calendar days of employment, NOT
-            # reduced by leave days taken.
+            # FIFO deduction: vacation days consume tier-1 accrued balance
+            # first (max 105 days = 21 × 5 years), overflow to tier-2.
+            # Each vacation day removes one daily-rate unit of accrual
+            # from the relevant tier (21/365 for tier 1, 30/365 for tier 2).
             five_years_days = 5 * 365
-            if calendar_days <= five_years_days:
-                total_accrued = calendar_days * (21.0 / 365.0)
-            else:
-                total_accrued = (
-                    five_years_days * (21.0 / 365.0)
-                    + (calendar_days - five_years_days) * (30.0 / 365.0)
-                )
+            tier1_cal = min(calendar_days, five_years_days)
+            tier2_cal = max(calendar_days - five_years_days, 0)
+
+            # Maximum accrued days each tier can produce
+            tier1_max = tier1_cal * (21.0 / 365.0)   # up to 105
+            tier2_max = tier2_cal * (30.0 / 365.0)
+
+            # Convert vacation days to accrual-equivalent deductions (FIFO).
+            # Each vacation day in tier 1 removes 21/365 accrual days;
+            # once tier 1 is exhausted, each day in tier 2 removes 30/365.
+            tier1_deduction = min(taken * (21.0 / 365.0), tier1_max)
+            # How many raw vacation days were NOT covered by tier 1?
+            tier1_vac_days = min(taken, tier1_max / (21.0 / 365.0))
+            leftover_days = max(taken - tier1_vac_days, 0)
+            tier2_deduction = min(leftover_days * (30.0 / 365.0), tier2_max)
+
+            total_accrued = (tier1_max - tier1_deduction) + (tier2_max - tier2_deduction)
 
             rec.total_accrued_days = round(total_accrued, 4)
 
-            # --- Current daily rate ---
+            # --- Current daily rate (based on actual calendar service) ---
             rec.daily_rate = 30.0 / 365.0 if calendar_days > five_years_days else 21.0 / 365.0
 
     # ------------------------------------------------------------------
@@ -114,6 +133,36 @@ class KswAnnualLeave(models.Model):
     def _compute_remaining_balance(self):
         for rec in self:
             rec.remaining_balance = round(rec.total_accrued_days - rec.leaves_taken, 4)
+
+    # ------------------------------------------------------------------
+    # Refresh accrual — called whenever leaves_taken changes
+    # ------------------------------------------------------------------
+    def _refresh_accrual(self):
+        """Force recompute of accrued days and sync the allocation.
+
+        Call this whenever an annual leave is approved, refused, deleted,
+        or otherwise changes the leaves_taken value so that
+        effective_days (calendar_days - leaves_taken) stays accurate.
+        """
+        if not self:
+            return
+        # Clear ORM caches so allocation.leaves_taken is read fresh
+        # (it may have just changed in the same transaction).
+        self.env.invalidate_all()
+        field = self._fields['joining_date']
+        self.env.add_to_compute(field, self)
+        self.flush_recordset()
+        self._sync_allocations()
+
+    @api.model
+    def _refresh_accrual_for_employees(self, employee_ids):
+        """Convenience: refresh accrual for specific employees by id."""
+        if not employee_ids:
+            return
+        records = self.sudo().search([
+            ('employee_id', 'in', list(employee_ids)),
+        ])
+        records._refresh_accrual()
 
     # ------------------------------------------------------------------
     # Allocation sync
@@ -177,15 +226,10 @@ class KswAnnualLeave(models.Model):
         if vals_list:
             AnnualLeave.create(vals_list)
 
-        # Force recompute on ALL records by marking the field dirty
+        # Force recompute on ALL records
         all_records = AnnualLeave.search([])
         if all_records:
-            field = self._fields['joining_date']
-            self.env.add_to_compute(field, all_records)
-            # Flush the compute so stored values are written before syncing
-            all_records.flush_recordset()
-            # Now sync allocations with the freshly computed values
-            all_records._sync_allocations()
+            all_records._refresh_accrual()
 
     @api.model
     def _cron_refresh(self):

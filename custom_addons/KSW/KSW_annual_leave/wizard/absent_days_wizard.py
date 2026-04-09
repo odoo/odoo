@@ -86,25 +86,30 @@ class AbsentDaysWizard(models.TransientModel):
             # --- Entitlement ---
             self.entitlement_days = 30 if rdelta.years >= 5 else 21
 
-            # --- Two-tier accrual (Saudi Labor Law Art. 109) ---
-            # Annual leave is paid leave; service is NOT reduced by leave
-            # days taken.
-            five_years_days = 5 * 365
-            if calendar_days <= five_years_days:
-                total_accrued = calendar_days * (21.0 / 365.0)
-            else:
-                total_accrued = (
-                    five_years_days * (21.0 / 365.0)
-                    + (calendar_days - five_years_days) * (30.0 / 365.0)
-                )
-            self.total_accrued_days = round(total_accrued, 4)
-
             # --- All-time approved annual leave days taken ---
             ksw_rec = self.env['ksw.annual.leave'].sudo().search([
                 ('employee_id', '=', self.employee_id.id),
             ], limit=1)
             taken = ksw_rec.leaves_taken if ksw_rec else 0.0
             self.annual_leave_taken = taken
+
+            # --- Two-tier accrual (Saudi Labor Law Art. 109) ---
+            # FIFO deduction: vacation days consume tier-1 accrued balance
+            # first (max 105 days = 21 × 5), overflow to tier-2.
+            five_years_days = 5 * 365
+            tier1_cal = min(calendar_days, five_years_days)
+            tier2_cal = max(calendar_days - five_years_days, 0)
+
+            tier1_max = tier1_cal * (21.0 / 365.0)
+            tier2_max = tier2_cal * (30.0 / 365.0)
+
+            tier1_deduction = min(taken * (21.0 / 365.0), tier1_max)
+            tier1_vac_days = min(taken, tier1_max / (21.0 / 365.0))
+            leftover_days = max(taken - tier1_vac_days, 0)
+            tier2_deduction = min(leftover_days * (30.0 / 365.0), tier2_max)
+
+            total_accrued = (tier1_max - tier1_deduction) + (tier2_max - tier2_deduction)
+            self.total_accrued_days = round(total_accrued, 4)
             self.annual_leave_balance = round(total_accrued - taken, 4)
         else:
             self._reset_fields()

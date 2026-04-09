@@ -636,6 +636,9 @@ class HrLeave(models.Model):
         annual = self.filtered(self._is_annual_leave)
         if annual:
             annual.write({'x_return_state': 'on_vacation'})
+            # Refresh accrual — leaves_taken changed (leave now validated)
+            emp_ids = annual.mapped('employee_id').ids
+            self.env['ksw.annual.leave']._refresh_accrual_for_employees(emp_ids)
         return result
 
     # ==================================================================
@@ -650,6 +653,9 @@ class HrLeave(models.Model):
             and l.x_return_state != 'not_applicable'
         )
         annual_multi = self.filtered(self._is_annual_multi)
+
+        # Collect employee IDs before state changes
+        annual_emp_ids = self.filtered(self._is_annual_leave).mapped('employee_id').ids
 
         if annual:
             annual.write({
@@ -670,6 +676,10 @@ class HrLeave(models.Model):
         if annual_multi:
             annual_multi.write({'x_annual_approval_state': 'pending_dm'})
 
+        # Refresh accrual — leaves_taken changed
+        if annual_emp_ids:
+            self.env['ksw.annual.leave']._refresh_accrual_for_employees(annual_emp_ids)
+
         return result
 
     def action_refuse(self):
@@ -679,6 +689,9 @@ class HrLeave(models.Model):
             and l.x_return_state != 'not_applicable'
         )
         annual_multi = self.filtered(self._is_annual_multi)
+
+        # Collect employee IDs before state changes
+        annual_emp_ids = self.filtered(self._is_annual_leave).mapped('employee_id').ids
 
         result = super().action_refuse()
 
@@ -696,6 +709,10 @@ class HrLeave(models.Model):
             annual_multi._reset_annual_multi_fields()
             # Vacation payslip cancellation handled by KSW_payroll override
 
+        # Refresh accrual — leaves_taken changed (leave no longer validated)
+        if annual_emp_ids:
+            self.env['ksw.annual.leave']._refresh_accrual_for_employees(annual_emp_ids)
+
         return result
 
     # ==================================================================
@@ -704,6 +721,9 @@ class HrLeave(models.Model):
 
     def action_draft(self):
         """When resetting to draft, restart the approval chain."""
+        # Collect employee IDs before state changes
+        annual_emp_ids = self.filtered(self._is_annual_leave).mapped('employee_id').ids
+
         result = super().action_draft()
         annual_multi = self.filtered(self._is_annual_multi)
         if annual_multi:
@@ -711,4 +731,22 @@ class HrLeave(models.Model):
             for leave in annual_multi:
                 leave.x_annual_approval_state = 'pending_dm'
             # Vacation payslip cancellation handled by KSW_payroll override
+
+        # Refresh accrual — leaves_taken changed
+        if annual_emp_ids:
+            self.env['ksw.annual.leave']._refresh_accrual_for_employees(annual_emp_ids)
+
+        return result
+
+    # ==================================================================
+    # Override unlink — refresh accrual when annual leave is deleted
+    # ==================================================================
+
+    def unlink(self):
+        """Refresh accrual when an annual leave record is deleted."""
+        annual = self.filtered(self._is_annual_leave)
+        annual_emp_ids = annual.mapped('employee_id').ids
+        result = super().unlink()
+        if annual_emp_ids:
+            self.env['ksw.annual.leave']._refresh_accrual_for_employees(annual_emp_ids)
         return result
