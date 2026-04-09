@@ -2110,6 +2110,7 @@ class AccountEdiUBL(models.AbstractModel):
             partner_create_values['peppol_eas'] = peppol_eas
             partner_create_values['peppol_endpoint'] = peppol_endpoint
 
+        country = None
         if country_code := customer_values.get('country_code'):
             if country_code == 'GB':
                 # While the code is gb, the xml_id is uk
@@ -2117,6 +2118,8 @@ class AccountEdiUBL(models.AbstractModel):
             country = self.env.ref(f'base.{country_code.lower()}', raise_if_not_found=False)
             if country:
                 partner_create_values['country_id'] = country.id
+        if customer_values.get('vat') and self.env['res.partner']._run_vat_test(customer_values['vat'], country, True):
+            partner_create_values['vat'] = customer_values['vat']
         return partner_create_values
 
     def _import_ubl_create_missing_customer(self, collected_values):
@@ -2133,9 +2136,6 @@ class AccountEdiUBL(models.AbstractModel):
 
         partner_create_values = self._import_ubl_prepare_missing_customer_create_values(collected_values)
         customer = self.env['res.partner'].create(partner_create_values)
-        country = customer.country_id
-        if customer._run_vat_test(vat, country, customer.is_company):
-            customer.vat = vat
         logs.append(_("Could not retrieve a partner corresponding to '%s'. A new partner was created.", name))
         customer_values['customer'] = customer
         collected_values['to_write']['partner_id'] = customer.id
