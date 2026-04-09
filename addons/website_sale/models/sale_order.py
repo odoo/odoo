@@ -931,7 +931,7 @@ class SaleOrder(models.Model):
         partners_to_archive = self.env['res.partner']
         for order in self:
             if (
-                not (customer := order.partner_id.user_ids)
+                not (customer := order.partner_id).user_ids
                 and not (commercial_partner := order.partner_id.commercial_partner_id).user_ids
             ):
                 partners_to_archive |= (
