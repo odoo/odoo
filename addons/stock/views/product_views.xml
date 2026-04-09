@@ -203,6 +203,7 @@
                 <xpath expr="//field[@name='is_storable']" position="attributes">
                     <attribute name="groups">!stock.group_production_lot</attribute>
                     <attribute name="widget">boolean_toggle</attribute>
+                    <attribute name="options">{'autosave': False}</attribute>
                     <attribute name="invisible">type != 'consu'</attribute>
                 </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
