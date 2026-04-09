@@ -358,7 +358,7 @@
                                                 nolabel="1"/>
                                             </div>
                                         <field name="employee_type_id" string="Employee Type" placeholder="Select employee type"
-                                                invisible="not has_country_employee_type" domain="[('country_id', 'in', [company_country_id, False])]"
+                                                domain="[('country_id', '=', company_country_id)]"
                                                 required="contract_date_start"/>
                                         <label for="contract_date_start" string="Contract"/>
                                         <div class="o_row" name="contract_dates">

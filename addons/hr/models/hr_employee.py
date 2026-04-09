@@ -352,11 +352,6 @@ class HrEmployee(models.Model):
         'A user cannot be linked to multiple employees in the same company.',
     )
 
-    has_country_employee_type = fields.Boolean(
-        compute='_compute_has_country_employee_type',
-        groups="hr.group_hr_user",
-    )
-
     @api.model
     def _get_current_day_location_field(self):
         return DAYS[fields.Date.today().weekday()]
@@ -718,18 +713,6 @@ class HrEmployee(models.Model):
             # To not trigger computed properties if still the same version
             if employee.current_version_id != new_current_version:
                 employee.current_version_id = new_current_version
-
-    @api.depends('company_country_id')
-    def _compute_has_country_employee_type(self):
-        count_contract_type_by_country = dict(self.env['hr.employee.type']._read_group(
-            domain=[],
-            groupby=['country_id'],
-            aggregates=['__count']
-        ))
-        for employee in self:
-            employee.has_country_employee_type = bool(
-                count_contract_type_by_country.get(employee.company_country_id)
-            )
 
     def _cron_update_current_version_id(self):
         self.search([])._compute_current_version_id()
