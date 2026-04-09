@@ -158,11 +158,6 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
             ...clickOnSnippet({ id: "o_header_standard", name: "Header" }),
             ...changeOptionInPopover("Header", "Header Position", "Hidden"),
             goBackToBlocks(),
-        ]
-            .concat(steps)
-            .map((step) => {
-                delete step.noPrepend;
-                return step;
-            });
+        ].concat(steps);
     },
 });

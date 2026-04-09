@@ -285,17 +285,21 @@ const createMegaMenu = function (name) {
     return [
         {
             content: "Create a new mega menu item",
-            trigger: ".modal-body a:eq(1)",
+            trigger: ".modal-body a:eq(1):contains(add mega menu item)",
             run: "click",
         },
         {
             content: "Set the mega menu item name to " + name,
-            trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(0)",
-            run: "edit " + name,
+            trigger: ".modal:contains(mega menu item) .modal-dialog .o_website_dialog input:eq(0)",
+            run: `edit ${name}`,
         },
         {
-            trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary",
+            trigger:
+                ".modal:contains(mega menu item) .modal-footer .btn-primary:contains(continue)",
             run: "click",
+        },
+        {
+            trigger: `.modal:contains(Edit menu) .oe_menu_editor li:last:contains(${name})`,
         },
     ];
 };
@@ -304,42 +308,45 @@ const createDropdown = function (name) {
     return [
         {
             content: "Create a new menu item for the dropdown",
-            trigger: ".modal-body a:eq(0)",
+            trigger: ".modal:contains(edit menu) .modal-body a:eq(0):contains(add menu item)",
             run: "click",
         },
         {
             content: "Set the dropdown name to " + name,
-            trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(0)",
-            run: "edit " + name,
+            trigger: ".modal:contains(menu item) .modal-dialog .o_website_dialog input:eq(0)",
+            run: `edit ${name}`,
         },
         {
-            trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(1)",
+            trigger: ".modal:contains(menu item) .modal-dialog .o_website_dialog input:eq(1)",
             run: "edit /",
         },
         {
-            trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary",
+            trigger: ".modal:contains(menu item) .modal-footer .btn-primary:contains(continue)",
             run: "click",
+        },
+        {
+            trigger: `.modal:contains(Edit menu) .oe_menu_editor li:last:contains(${name})`,
         },
         {
             content: "Create a new menu item for the dropdown item",
-            trigger: ".modal-body a:eq(0)",
+            trigger: ".modal:contains(edit menu) .modal-body a:eq(0):contains(add menu item)",
             run: "click",
         },
         {
-            trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(0)",
-            run: "edit " + name + " item",
+            trigger: ".modal:contains(menu item) .modal-dialog .o_website_dialog input:eq(0)",
+            run: `edit ${name} item`,
         },
         {
-            trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(1)",
+            trigger: ".modal:contains(menu item) .modal-dialog .o_website_dialog input:eq(1)",
             run: "edit /",
         },
         {
-            trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary",
+            trigger: ".modal:contains(menu item) .modal-footer .btn-primary:contains(continue)",
             run: "click",
         },
         {
             content: "Move the dropdown item into the dropdown",
-            trigger: '.oe_menu_editor li:contains("' + name + " item" + '") .oi-draggable',
+            trigger: `.oe_menu_editor li:last:contains(${name} item) .oi-draggable`,
             run(helpers) {
                 return helpers.drag_and_drop('.oe_menu_editor li:contains("' + name + '")', {
                     position: {
@@ -349,6 +356,9 @@ const createDropdown = function (name) {
                     relative: true,
                 });
             },
+        },
+        {
+            trigger: `.modal:contains(menu item) .oe_menu_editor li:has(span:text(${name})):has(li:text(${name} item))`,
         },
     ];
 };
@@ -367,14 +377,13 @@ const testHeaderNavVisibility = function (elementsVisibility) {
 
 const openMenu = () => ({
     content: "Open Menu",
-    trigger: ":iframe span.navbar-toggler-icon",
+    trigger: ":iframe body[is-ready=true] span.navbar-toggler-icon",
     run: "click",
 });
 
 registerWebsitePreviewTour(
     "edit_megamenu_visibility",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps ) #245680
         edition: true,
     },
     () => [
@@ -429,6 +438,10 @@ registerWebsitePreviewTour(
                 '.options-container [data-label="Visibility"] button[data-action-param="no_mobile"]',
             run: "click",
         },
+        {
+            trigger:
+                '.options-container [data-label="Visibility"] button[data-action-param="no_mobile"].active',
+        },
         // Mega Menu 2: Mobile Only
         {
             content: "Open the second mega menu",
@@ -445,6 +458,15 @@ registerWebsitePreviewTour(
                 '.options-container [data-label="Visibility"] button[data-action-param="no_desktop"]',
             run: "click",
         },
+        {
+            content: "As we are in desktop mode, block is hidden",
+            trigger: ".o_we_invisible_entry:contains(block)",
+            run: "click",
+        },
+        {
+            trigger:
+                '.options-container [data-label="Visibility"] button[data-action-param="no_desktop"].active',
+        },
         // Mega Menu 3: Logged Out Only
         {
             content: "Open the third mega menu",
@@ -455,6 +477,9 @@ registerWebsitePreviewTour(
             content: "Click on the third mega menu content",
             trigger: ":iframe header#top div.o_mega_menu.show section",
             run: "click",
+        },
+        {
+            trigger: "#customize-tab.active:contains(style)",
         },
         ...changeOptionInPopover("Block", "Visibility", "Conditionally"),
         ...changeOptionInPopover("Block", "Users", "Visible for Logged Out"),

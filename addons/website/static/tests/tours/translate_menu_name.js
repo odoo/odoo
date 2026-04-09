@@ -41,7 +41,6 @@ registerWebsitePreviewTour(
         },
         {
             trigger: "body:not(.o_builder_open)",
-            noPrepend: true,
         },
         stepUtils.waitIframeIsReady(),
         {

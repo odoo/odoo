@@ -1,3 +1,4 @@
+import { registry } from "@web/core/registry";
 import {
     clickOnSnippet,
     insertSnippet,
@@ -5,6 +6,7 @@ import {
     toggleMobilePreview,
     changeOptionInPopover,
     unfoldOptionsGroup,
+    waitForEditMode,
 } from "@website/js/tours/tour_utils";
 
 const columnCountOptSelector = "div[data-label='Layout'] .dropdown-toggle";
@@ -194,13 +196,9 @@ registerWebsitePreviewTour(
     ]
 );
 
-registerWebsitePreviewTour(
-    "website_mobile_order_with_drag_and_drop",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        edition: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("website_mobile_order_with_drag_and_drop", {
+    steps: () => [
+        waitForEditMode,
         ...insertSnippet({ id: "s_three_columns", name: "Columns", groupName: "Columns" }),
         ...insertSnippet({ id: "s_text_image", name: "Text - Image", groupName: "Content" }),
         ...toggleMobilePreview(true),
@@ -251,5 +249,5 @@ registerWebsitePreviewTour(
                 `${columnsSnippetRow}:has(.order-lg-0[style*='order: 0;']:nth-child(1))` +
                 ":has(.order-lg-0[style*='order: 1;']:nth-child(2))",
         },
-    ]
-);
+    ],
+});

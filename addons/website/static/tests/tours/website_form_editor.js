@@ -956,7 +956,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_form_conditional_required_checkboxes",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
     },
     () => [
@@ -1133,7 +1132,6 @@ registerWebsitePreviewTour(
     () => [
         {
             trigger: ".o-website-builder_sidebar .o_snippets_container .o_snippet",
-            noPrepend: true,
         },
         {
             trigger:
@@ -1221,7 +1219,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_form_special_characters",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
     },
     () => [

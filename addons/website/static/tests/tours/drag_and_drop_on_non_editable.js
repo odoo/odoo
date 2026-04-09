@@ -7,7 +7,6 @@ import {
 registerWebsitePreviewTour(
     "test_drag_and_drop_on_non_editable",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
     },
     () => [

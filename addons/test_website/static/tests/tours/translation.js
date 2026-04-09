@@ -289,7 +289,6 @@ function saveTranslation(timeout = 50000) {
         },
         {
             trigger: "body:not(.o_builder_open)",
-            noPrepend: true,
             timeout,
         },
         stepUtils.waitIframeIsReady(),

@@ -1,10 +1,7 @@
 /** @odoo-module **/
-import {
-    clickOnEditAndWaitEditMode,
-    clickOnSave,
-    registerWebsitePreviewTour,
-} from "@website/js/tours/tour_utils";
+import { clickOnEditAndWaitEditMode, clickOnSave } from "@website/js/tours/tour_utils";
 import { stepUtils } from "@web_tour/tour_utils";
+import { registry } from "@web/core/registry";
 
 /**
  * The purpose of these tours is to check the systray visibility:
@@ -208,19 +205,8 @@ const ensureWebsiteSwitcherIsVisible = [
     },
 ];
 
-const register = (title, steps, undeterministicTour_doNotCopy) => {
-    registerWebsitePreviewTour(
-        title,
-        {
-            undeterministicTour_doNotCopy,
-        },
-        steps
-    );
-};
-
-register(
-    "test_systray_admin",
-    () => [
+registry.category("web_tour.tours").add("test_systray_admin", {
+    steps: () => [
         ...canPublish(),
         ...canToggleMobilePreview(),
         ...canSwitchWebsite(),
@@ -228,12 +214,10 @@ register(
         ...canEditInBackEnd(),
         ...canEdit(),
     ],
-    true
-);
+});
 
-register(
-    "test_systray_reditor_tester",
-    () => [
+registry.category("web_tour.tours").add("test_systray_reditor_tester", {
+    steps: () => [
         ...canPublish(),
         ...canToggleMobilePreview(),
         ...canSwitchWebsite(),
@@ -241,12 +225,10 @@ register(
         ...canEditInBackEnd(),
         ...canEdit(),
     ],
-    true
-);
+});
 
-register(
-    "test_systray_reditor_not_tester",
-    () => [
+registry.category("web_tour.tours").add("test_systray_reditor_not_tester", {
+    steps: () => [
         ...cannotPublish(),
         ...canToggleMobilePreview(),
         ...canSwitchWebsite(),
@@ -254,30 +236,37 @@ register(
         ...canViewInBackEnd(),
         ...canEditButCannotChange(),
     ],
-    true
-);
+});
 
-register("test_systray_not_reditor_tester", () => [
-    ...canPublish(),
-    ...cannotToggleMobilePreview(),
-    ...canSwitchWebsiteNoCheck(),
-    ...cannotAddNewContent(),
-    ...canEditInBackEnd(),
-    ...cannotEdit(),
-]);
+registry.category("web_tour.tours").add("test_systray_not_reditor_tester", {
+    steps: () => [
+        ...canPublish(),
+        ...cannotToggleMobilePreview(),
+        ...canSwitchWebsiteNoCheck(),
+        ...cannotAddNewContent(),
+        ...canEditInBackEnd(),
+        ...cannotEdit(),
+    ],
+});
 
-register("test_systray_not_reditor_not_tester", () => [
-    ...cannotPublish(),
-    ...cannotToggleMobilePreview(),
-    ...canSwitchWebsiteNoCheck(),
-    ...cannotAddNewContent(),
-    ...canViewInBackEnd(),
-    ...cannotEdit(),
-    {
-        trigger: ":iframe main:contains(test model)",
-    },
-]);
+registry.category("web_tour.tours").add("test_systray_not_reditor_not_tester", {
+    steps: () => [
+        ...cannotPublish(),
+        ...cannotToggleMobilePreview(),
+        ...canSwitchWebsiteNoCheck(),
+        ...cannotAddNewContent(),
+        ...canViewInBackEnd(),
+        ...cannotEdit(),
+        {
+            trigger: ":iframe main:contains(test model)",
+        },
+    ],
+});
 
-register("test_systray_single_website", () => ensureWebsiteSwitcherIsNotVisible);
+registry.category("web_tour.tours").add("test_systray_single_website", {
+    steps: () => ensureWebsiteSwitcherIsNotVisible,
+});
 
-register("test_systray_multi_website", () => ensureWebsiteSwitcherIsVisible);
+registry.category("web_tour.tours").add("test_systray_multi_website", {
+    steps: () => ensureWebsiteSwitcherIsVisible,
+});
