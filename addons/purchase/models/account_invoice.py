@@ -579,7 +579,7 @@ class AccountMoveLine(models.Model):
     def _related_analytic_distribution(self):
         # EXTENDS 'account'
         vals = super()._related_analytic_distribution()
-        if self.purchase_line_id and not self.analytic_distribution:
+        if self.purchase_line_id:
             vals |= self.purchase_line_id.analytic_distribution or {}
         return vals
 
