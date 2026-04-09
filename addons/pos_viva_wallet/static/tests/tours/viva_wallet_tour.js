@@ -20,3 +20,17 @@ registry.category("web_tour.tours").add("VivaWalletTour", {
             PaymentScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("VivaWalletKioskTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Desk Pad", "1", "5.1", "5.1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.isShown(),
+            ...PaymentScreenViva.simulateKioskNamelessCashier(),
+            PaymentScreen.clickPaymentMethod("Viva"),
+            PaymentScreen.isShown(),
+        ].flat(),
+});
