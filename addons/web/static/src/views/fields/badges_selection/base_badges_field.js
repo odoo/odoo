@@ -3,6 +3,7 @@ import { standardFieldProps } from "../standard_field_props";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { hasTouch } from "@web/core/browser/feature_detection";
+import { useNavigation } from "@web/core/navigation/navigation";
 
 const DROPDOWN_ITEM_LIMIT = 8;
 export class BaseBadgesField extends Component {
@@ -21,6 +22,20 @@ export class BaseBadgesField extends Component {
         Dropdown,
         DropdownItem,
     };
+
+    setup() {
+        useNavigation("badgesContainer", {
+            hotkeys: {
+                arrowright: (navigator) => navigator.next(),
+                arrowleft: (navigator) => navigator.previous(),
+                space: (navigator) => navigator.activeItem?.select(),
+                backspace: () => this.clearSelection(),
+                delete: () => this.clearSelection(),
+                arrowup: null,
+                arrowdown: null,
+            },
+        });
+    }
 
     /**
      * Computes the ordered list of options. If the selected value is
@@ -95,6 +110,22 @@ export class BaseBadgesField extends Component {
 
     getBadgeClassNames(option = false) {
         return this.props.readonly ? "" : { active: this.value === option[0] };
+    }
+
+    getNavigationTabIndex(navigationId) {
+        if (this.value) {
+            return this.value === navigationId ? 0 : -1;
+        }
+        return this.badgesOptions[0]?.[0] === navigationId ? 0 : -1;
+    }
+
+    clearSelection() {
+        if (!this.props.canDeselect || this.props.readonly) {
+            return;
+        }
+        if (this.value) {
+            this.onChange(false);
+        }
     }
 }
 

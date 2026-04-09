@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, press } from "@odoo/hoot-dom";
 import {
     clickSave,
     contains,
@@ -225,4 +225,52 @@ test("BadgesSelectionField: placeholder falls back to field label when not provi
     // With 2 options and badge_limit 1: 1 visible badge + "+1" overflow dropdown toggle
     expect("span.o_selection_badge").toHaveCount(2);
     expect(".o_selection_badge.o-dropdown-caret").toHaveText("+1");
+});
+
+test("BaseBadgesSelectionField: keyboard navigation (Tab / Arrows / Backspace / Delete)", async () => {
+    await mountView({
+        resModel: "res.partner",
+        type: "form",
+        arch: `
+            <form>
+                <button type="button" class="btn1">Btn</button>
+                <field name="color" widget="badges_selection"/>
+                <button type="button" class="btn2">Btn</button>
+            </form>
+        `,
+    });
+
+    await contains(".btn1").focus();
+    await press("Tab");
+    expect(".o_selection_badge.o-navigable:first").toBeFocused();
+
+    await press("Enter");
+    expect(".o_selection_badge.o-navigable:contains('Red')").toHaveClass("active");
+
+    await press("ArrowRight");
+    expect(".o_selection_badge.o-navigable:last").toBeFocused();
+
+    await press("Space");
+    await animationFrame();
+    expect(".o_selection_badge.o-navigable:contains('Black')").toHaveClass("active");
+
+    await press("ArrowLeft");
+    expect(".o_selection_badge.o-navigable:first").toBeFocused();
+
+    await press("Backspace");
+    await animationFrame();
+    expect(".o_selection_badge.o-navigable.active").toHaveCount(0);
+
+    await press("Enter");
+    await animationFrame();
+    expect(".o_selection_badge.o-navigable:contains('Red')").toHaveClass("active");
+
+    await press("Delete");
+    await animationFrame();
+    expect(".o_selection_badge.o-navigable.active").toHaveCount(0);
+
+    await press("Enter");
+    await animationFrame();
+    await press("Tab");
+    expect(".btn2").toBeFocused();
 });
