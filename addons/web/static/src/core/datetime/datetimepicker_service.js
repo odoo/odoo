@@ -490,6 +490,16 @@ export const datetimePickerService = {
                     },
                 });
 
+                const dateTimeManager = {
+                    /** @deprecated use {@link destroy} directly */
+                    enable: () => destroy,
+                    destroy,
+                    isOpen,
+                    open,
+                    close: popover.close,
+                    state: pickerProps,
+                };
+
                 let disposeEffect = () => {};
                 /** @type {boolean[]} */
                 let inputsChanged = [];
@@ -546,15 +556,7 @@ export const datetimePickerService = {
                     initInputs(...getInputs());
                     setup();
                 }
-                const dateTimeManager = {
-                    /** @deprecated use {@link destroy} directly */
-                    enable: () => destroy,
-                    destroy,
-                    isOpen,
-                    open,
-                    close: popover.close,
-                    state: pickerProps,
-                };
+
                 return dateTimeManager;
             },
         };
