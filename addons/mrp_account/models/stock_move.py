@@ -13,7 +13,7 @@ class StockMove(models.Model):
         self.ensure_one()
         if not self.production_id:
             return super()._get_value_from_production(quantity, at_date)
-        value = quantity * self.price_unit
+        value = self.value
         return {
             'value': value,
             'quantity': quantity,
