@@ -798,8 +798,9 @@ WEB_WHITELIST = {
     "web.CalendarFilterSection.filter": {'filter'},  # dynamic t-call
     "web.CalendarYearPopover.record": {'record'},  # t-for-each above dynamic t-call
     "web.FieldTooltip": {'field', 'debug', 'resModel'},  # JSON stringify context
-    "web.ListRenderer.RecordRow": {'record', 'group', 'groupId', '_canSelectRecord'},  # dynamic t-call I guess,
-    "web.ListRenderer.GroupRow": {'group', 'group_index'},  # dynamic t-call I guess
+    "web.ListRenderer.RecordRow": {'record', 'group', 'groupId', '_canSelectRecord'},  # dynamic t-call
+    'web.ListRenderer.Rows': {'list'},  # dynamic t-call
+    "web.ListRenderer.GroupRow": {'group', 'group_index'},  # dynamic t-call from loop
     "web.ListHeaderTooltip": {'field'},  # JSON stringify context
     "web.Many2ManyBinaryField.attachment_preview": {'file'},  # t-for-each above t-call
     "web.Many2ManyTagsAvatarField.option": {'autoCompleteItemScope'},  # t-slot-scope above dynamic t-call
@@ -807,7 +808,7 @@ WEB_WHITELIST = {
     "web.PivotMeasure": {'cell'},  # for each + t-call
     "web.SearchPanelContent": {'section'},  # dynamic t-call
     "web.SearchPanel.Small": {'section'},  # dynamic t-call
-    "web.SearchPanel.Category": {'section'},  # dynamic t-call
+    "web.SearchPanel.Category": {'isChildList', 'section', 'values'},  # dynamic t-call
     "web.SearchPanel.FiltersGroup": {'values', 'section', 'group', 'isChildList'},  # dynamic t-call
     "web.SectionMenu": {'subMenu_index', 'apps'},  # dynamic t-call in t-foreach
     "web.SelectMenu.ChoiceItem": {'choice', 'choice_index'},  # dynamic t-call

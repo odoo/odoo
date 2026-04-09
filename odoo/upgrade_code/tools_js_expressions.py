@@ -509,7 +509,7 @@ class VariableAggregator:
             if parent is None or 't-inherit' not in parent.attrib:
                 for attr in call_node.attrib:
                     if not attr.startswith("t-") and attr not in SKIP_XPATH_ATTRS:
-                        self.t_call_vars[template_name].add(attr)
+                        self.t_call_vars[template_name].add(attr.replace('.translate', ''))
 
             scope_nodes = call_node.xpath("ancestor::* | ancestor-or-self::*/preceding-sibling::*")
             self.t_call_outer_vars[template_name].update(self._extract_vars_from_nodes(scope_nodes))
