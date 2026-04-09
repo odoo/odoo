@@ -113,6 +113,38 @@ class ProductTemplate(models.Model):
     def _get_backend_root_menu_ids(self):
         return super()._get_backend_root_menu_ids() + [self.env.ref('mrp.menu_mrp_root').id]
 
+    def _get_available_variant_quantities_dict(self):
+        if not any(variant.is_kits for variant in self.product_variant_ids._origin):
+            return super()._get_available_variant_quantities_dict()
+        variants_kit = self.product_variant_ids._origin.filtered(lambda v: v.is_kits)
+        variants_regular = self.product_variant_ids._origin - variants_kit
+        res = {
+            p['id']: p for p in variants_regular.read(['qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'])
+        }
+        kit_boms = self.bom_ids.filtered(lambda bom: bom.type == "phantom")
+        component_availability = {
+            comp.id: comp.qty_available
+            for comp in kit_boms.bom_line_ids.mapped('product_id')
+        }
+        for variant in self.product_variant_ids._origin.filtered(lambda var: var.is_kits):
+            var_boms = kit_boms.filtered(lambda bom: bom.product_id == variant)
+            max_var_qty = 0
+            for bom in var_boms:
+                max_bom_qty = min(
+                    (component_availability[line.product_id.id] / line.product_qty for line in bom.bom_line_ids),
+                    default=variant.qty_available
+                )
+                for line in bom.bom_line_ids:
+                    component_availability[line.product_id.id] -= (max_bom_qty * line.product_qty)
+                max_var_qty += max_bom_qty
+            vals = variant.read(['incoming_qty', 'outgoing_qty'])[0]
+            vals.update({
+                'qty_available': max_var_qty,
+                'virtual_available': max_var_qty
+            })
+            res[variant.id] = vals
+        return res
+
 
 class ProductProduct(models.Model):
     _inherit = "product.product"

@@ -870,10 +870,13 @@ class ProductTemplate(models.Model):
             template.incoming_qty = res[template.id]['incoming_qty']
             template.outgoing_qty = res[template.id]['outgoing_qty']
 
-    def _compute_quantities_dict(self):
-        variants_available = {
+    def _get_available_variant_quantities_dict(self):
+        return {
             p['id']: p for p in self.product_variant_ids._origin.read(['qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'])
         }
+
+    def _compute_quantities_dict(self):
+        variants_available = self._get_available_variant_quantities_dict()
         prod_available = {}
         for template in self:
             qty_available = 0
