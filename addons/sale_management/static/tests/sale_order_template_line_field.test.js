@@ -297,7 +297,7 @@ test("Can't mark section hidden if optional and vice versa", async () => {
     });
 });
 
-test.debug("Setting section optional should reset some fields", async () => {
+test("Setting section optional should reset some fields", async () => {
     onRpc("web_save", ({ args }) => {
         expect.step("web_save");
         expect(args[1]).toEqual(
