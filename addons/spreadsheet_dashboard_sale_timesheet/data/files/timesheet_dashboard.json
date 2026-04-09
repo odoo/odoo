@@ -1,5 +1,5 @@
 {
-    "version": "19.1.2",
+    "version": "19.3.10",
     "sheets": [
         {
             "id": "sheet1",
@@ -157,252 +157,285 @@
                 "A23": "[Billed by Month](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"project_id\",\"!=\",false]],\"context\":{\"group_by\":[\"date:month\"],\"graph_measure\":\"billable_time\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"date:month\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Timesheets by Billing Type\"})",
                 "A40": "[Top Departments](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"department_id\",\"!=\",false]],\"context\":{\"group_by\":[\"department_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"department_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Departments\"})",
                 "A41": "=_t(\"Department\")",
-                "A42": "=TRIM(REGEXEXTRACT(PIVOT.HEADER(3, \"#department_id\", 1), \"[^/]+$\"))",
-                "A43": "=TRIM(REGEXEXTRACT(PIVOT.HEADER(3, \"#department_id\", 2), \"[^/]+$\"))",
-                "A44": "=TRIM(REGEXEXTRACT(PIVOT.HEADER(3, \"#department_id\", 3), \"[^/]+$\"))",
-                "A45": "=TRIM(REGEXEXTRACT(PIVOT.HEADER(3, \"#department_id\", 4), \"[^/]+$\"))",
-                "A46": "=TRIM(REGEXEXTRACT(PIVOT.HEADER(3, \"#department_id\", 5), \"[^/]+$\"))",
-                "A47": "=TRIM(REGEXEXTRACT(PIVOT.HEADER(3, \"#department_id\", 6), \"[^/]+$\"))",
-                "A48": "=TRIM(REGEXEXTRACT(PIVOT.HEADER(3, \"#department_id\", 7), \"[^/]+$\"))",
-                "A49": "=TRIM(REGEXEXTRACT(PIVOT.HEADER(3, \"#department_id\", 8), \"[^/]+$\"))",
-                "A50": "=TRIM(REGEXEXTRACT(PIVOT.HEADER(3, \"#department_id\", 9), \"[^/]+$\"))",
-                "A51": "=TRIM(REGEXEXTRACT(PIVOT.HEADER(3, \"#department_id\", 10), \"[^/]+$\"))",
+                "A42": "=TRIM(REGEXEXTRACT(PIVOT.HEADER(3,\"#department_id\",1),\"[^/]+$\"))",
+                "A43:A51": {
+                    "N": "=|+1",
+                    "S": [
+                        "=",
+                        "="
+                    ]
+                },
                 "A53": "[Top Projects](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"project_id.allow_billable\",\"!=\",false]],\"context\":{\"group_by\":[\"project_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"project_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Projects\"})",
                 "A54": "=_t(\"Project\")",
                 "A55": "=PIVOT.HEADER(1,\"#project_id\",1)",
-                "A56": "=PIVOT.HEADER(1,\"#project_id\",2)",
-                "A57": "=PIVOT.HEADER(1,\"#project_id\",3)",
-                "A58": "=PIVOT.HEADER(1,\"#project_id\",4)",
-                "A59": "=PIVOT.HEADER(1,\"#project_id\",5)",
-                "A60": "=PIVOT.HEADER(1,\"#project_id\",6)",
-                "A61": "=PIVOT.HEADER(1,\"#project_id\",7)",
-                "A62": "=PIVOT.HEADER(1,\"#project_id\",8)",
-                "A63": "=PIVOT.HEADER(1,\"#project_id\",9)",
-                "A64": "=PIVOT.HEADER(1,\"#project_id\",10)",
+                "A56:A64": {
+                    "N": "=|+1",
+                    "S": [
+                        "="
+                    ]
+                },
                 "A66": "[Non-Billable Projects Costs](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"project_id.allow_billable\",\"=\",false]],\"context\":{\"group_by\":[\"project_id\"],\"pivot_measures\":[\"amount\",\"non_billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"project_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Non-Billable Projects Costs\"})",
                 "A67": "=_t(\"Project\")",
-                "A68": "=PIVOT.HEADER(7, \"#project_id\", 1)",
-                "A69": "=PIVOT.HEADER(7,\"#project_id\",2)",
-                "A70": "=PIVOT.HEADER(7,\"#project_id\",3)",
-                "A71": "=PIVOT.HEADER(7,\"#project_id\",4)",
-                "A72": "=PIVOT.HEADER(7,\"#project_id\",5)",
-                "A73": "=PIVOT.HEADER(7,\"#project_id\",6)",
-                "A74": "=PIVOT.HEADER(7,\"#project_id\",7)",
-                "A75": "=PIVOT.HEADER(7,\"#project_id\",8)",
-                "A76": "=PIVOT.HEADER(7,\"#project_id\",9)",
-                "A77": "=PIVOT.HEADER(7,\"#project_id\",10)",
-                "B41": "=IF(Data!B15=\"Hours\", _t(\"Hours spent\"), _t(\"Days spent\"))",
-                "B42": "=IF(\n\tPIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 1)=\"\", \n\t\"\", \n\tIF(Data!B15=\"Hours\",PIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 1),PIVOT.VALUE(3,\"Days Spent\",\"#department_id\",1\n)))",
-                "B43": "=IF(\n\tPIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 2)=\"\", \n\t\"\", \n\tIF(Data!B15=\"Hours\",PIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 2),PIVOT.VALUE(3,\"Days Spent\",\"#department_id\",2\n)))",
-                "B44": "=IF(\n\tPIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 3)=\"\", \n\t\"\", \n\tIF(Data!B15=\"Hours\",PIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 3),PIVOT.VALUE(3,\"Days Spent\",\"#department_id\",3\n)))",
-                "B45": "=IF(\n\tPIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 4)=\"\", \n\t\"\", \n\tIF(Data!B15=\"Hours\",PIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 4),PIVOT.VALUE(3,\"Days Spent\",\"#department_id\",4\n)))",
-                "B46": "=IF(\n\tPIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 5)=\"\", \n\t\"\", \n\tIF(Data!B15=\"Hours\",PIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 5),PIVOT.VALUE(3,\"Days Spent\",\"#department_id\",5\n)))",
-                "B47": "=IF(\n\tPIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 6)=\"\", \n\t\"\", \n\tIF(Data!B15=\"Hours\",PIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 6),PIVOT.VALUE(3,\"Days Spent\",\"#department_id\",6\n)))",
-                "B48": "=IF(\n\tPIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 7)=\"\", \n\t\"\", \n\tIF(Data!B15=\"Hours\",PIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 7),PIVOT.VALUE(3,\"Days Spent\",\"#department_id\",7\n)))",
-                "B49": "=IF(\n\tPIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 8)=\"\", \n\t\"\", \n\tIF(Data!B15=\"Hours\",PIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 8),PIVOT.VALUE(3,\"Days Spent\",\"#department_id\",8\n)))",
-                "B50": "=IF(\n\tPIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 9)=\"\", \n\t\"\", \n\tIF(Data!B15=\"Hours\",PIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 9),PIVOT.VALUE(3,\"Days Spent\",\"#department_id\",9\n)))",
-                "B51": "=IF(\n\tPIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 10)=\"\", \n\t\"\", \n\tIF(Data!B15=\"Hours\",PIVOT.VALUE(3, \"unit_amount\", \"#department_id\", 10),PIVOT.VALUE(3,\"Days Spent\",\"#department_id\",10\n)))",
-                "B54": "=IF(Data!B15=\"Hours\", _t(\"Hours spent\"), _t(\"Days spent\"))",
-                "B55": "=IF(\n\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 1)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 1), \n\t\tPIVOT.VALUE(1, \"Days Spent\", \"#project_id\", 1)\n\t)\n)",
-                "B56": "=IF(\n\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 2)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 2), \n\t\tPIVOT.VALUE(1, \"Days Spent\", \"#project_id\", 2)\n\t)\n)",
-                "B57": "=IF(\n\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 3)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 3), \n\t\tPIVOT.VALUE(1, \"Days Spent\", \"#project_id\", 3)\n\t)\n)",
-                "B58": "=IF(\n\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 4)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 4), \n\t\tPIVOT.VALUE(1, \"Days Spent\", \"#project_id\", 4)\n\t)\n)",
-                "B59": "=IF(\n\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 5)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 5), \n\t\tPIVOT.VALUE(1, \"Days Spent\", \"#project_id\", 5)\n\t)\n)",
-                "B60": "=IF(\n\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 6)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 6), \n\t\tPIVOT.VALUE(1, \"Days Spent\", \"#project_id\", 6)\n\t)\n)",
-                "B61": "=IF(\n\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 7)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 7), \n\t\tPIVOT.VALUE(1, \"Days Spent\", \"#project_id\", 7)\n\t)\n)",
-                "B62": "=IF(\n\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 8)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 8), \n\t\tPIVOT.VALUE(1, \"Days Spent\", \"#project_id\", 8)\n\t)\n)",
-                "B63": "=IF(\n\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 9)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 9), \n\t\tPIVOT.VALUE(1, \"Days Spent\", \"#project_id\", 9)\n\t)\n)",
-                "B64": "=IF(\n\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 10)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"unit_amount\", \"#project_id\", 10), \n\t\tPIVOT.VALUE(1, \"Days Spent\", \"#project_id\", 10)\n\t)\n)",
-                "C41": "=IF(Data!B15=\"Hours\", _t(\"Hours billed\"), _t(\"Days billed\"))",
-                "C42": "=IF(\n\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 1)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 1), \n\t\tPIVOT.VALUE(3, \"Billable Days\", \"#department_id\", 1)\n\t)\n)",
-                "C43": "=IF(\n\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 2)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 2), \n\t\tPIVOT.VALUE(3, \"Billable Days\", \"#department_id\", 2)\n\t)\n)",
-                "C44": "=IF(\n\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 3)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 3), \n\t\tPIVOT.VALUE(3, \"Billable Days\", \"#department_id\", 3)\n\t)\n)",
-                "C45": "=IF(\n\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 4)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 4), \n\t\tPIVOT.VALUE(3, \"Billable Days\", \"#department_id\", 4)\n\t)\n)",
-                "C46": "=IF(\n\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 5)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 5), \n\t\tPIVOT.VALUE(3, \"Billable Days\", \"#department_id\", 5)\n\t)\n)",
-                "C47": "=IF(\n\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 6)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 6), \n\t\tPIVOT.VALUE(3, \"Billable Days\", \"#department_id\", 6)\n\t)\n)",
-                "C48": "=IF(\n\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 7)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 7), \n\t\tPIVOT.VALUE(3, \"Billable Days\", \"#department_id\", 7)\n\t)\n)",
-                "C49": "=IF(\n\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 8)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 8), \n\t\tPIVOT.VALUE(3, \"Billable Days\", \"#department_id\", 8)\n\t)\n)",
-                "C50": "=IF(\n\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 9)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 9), \n\t\tPIVOT.VALUE(3, \"Billable Days\", \"#department_id\", 9)\n\t)\n)",
-                "C51": "=IF(\n\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 10)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(3, \"billable_time\", \"#department_id\", 10), \n\t\tPIVOT.VALUE(3, \"Billable Days\", \"#department_id\", 10)\n\t)\n)",
-                "C54": "=IF(Data!B15=\"Hours\", _t(\"Hours billed\"), _t(\"Days billed\"))",
-                "C55": "=IF(\n\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 1)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 1), \n\t\tPIVOT.VALUE(1, \"Billable Days\", \"#project_id\", 1)\n\t)\n)",
-                "C56": "=IF(\n\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 2)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 2), \n\t\tPIVOT.VALUE(1, \"Billable Days\", \"#project_id\", 2)\n\t)\n)",
-                "C57": "=IF(\n\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 3)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 3), \n\t\tPIVOT.VALUE(1, \"Billable Days\", \"#project_id\", 3)\n\t)\n)",
-                "C58": "=IF(\n\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 4)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 4), \n\t\tPIVOT.VALUE(1, \"Billable Days\", \"#project_id\", 4)\n\t)\n)",
-                "C59": "=IF(\n\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 5)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 5), \n\t\tPIVOT.VALUE(1, \"Billable Days\", \"#project_id\", 5)\n\t)\n)",
-                "C60": "=IF(\n\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 6)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 6), \n\t\tPIVOT.VALUE(1, \"Billable Days\", \"#project_id\", 6)\n\t)\n)",
-                "C61": "=IF(\n\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 7)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 7), \n\t\tPIVOT.VALUE(1, \"Billable Days\", \"#project_id\", 7)\n\t)\n)",
-                "C62": "=IF(\n\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 8)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 8), \n\t\tPIVOT.VALUE(1, \"Billable Days\", \"#project_id\", 8)\n\t)\n)",
-                "C63": "=IF(\n\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 9)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 9), \n\t\tPIVOT.VALUE(1, \"Billable Days\", \"#project_id\", 9)\n\t)\n)",
-                "C64": "=IF(\n\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 10)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(1, \"billable_time\", \"#project_id\", 10), \n\t\tPIVOT.VALUE(1, \"Billable Days\", \"#project_id\", 10)\n\t)\n)",
-                "C67": "=IF(Data!B15=\"Hours\", _t(\"Hours spent\"), _t(\"Days spent\"))",
-                "C68": "=IF(\n\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 1)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 1), \n\t\tPIVOT.VALUE(7, \"NonBillable Days\", \"#project_id\", 1)\n\t)\n)",
-                "C69": "=IF(\n\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 2)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 2), \n\t\tPIVOT.VALUE(7, \"NonBillable Days\", \"#project_id\", 2)\n\t)\n)",
-                "C70": "=IF(\n\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 3)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 3), \n\t\tPIVOT.VALUE(7, \"NonBillable Days\", \"#project_id\", 3)\n\t)\n)",
-                "C71": "=IF(\n\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 4)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 4), \n\t\tPIVOT.VALUE(7, \"NonBillable Days\", \"#project_id\", 4)\n\t)\n)",
-                "C72": "=IF(\n\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 5)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 5), \n\t\tPIVOT.VALUE(7, \"NonBillable Days\", \"#project_id\", 5)\n\t)\n)",
-                "C73": "=IF(\n\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 6)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 6), \n\t\tPIVOT.VALUE(7, \"NonBillable Days\", \"#project_id\", 6)\n\t)\n)",
-                "C74": "=IF(\n\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 7)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 7), \n\t\tPIVOT.VALUE(7, \"NonBillable Days\", \"#project_id\", 7)\n\t)\n)",
-                "C75": "=IF(\n\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 8)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 8), \n\t\tPIVOT.VALUE(7, \"NonBillable Days\", \"#project_id\", 8)\n\t)\n)",
-                "C76": "=IF(\n\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 9)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 9), \n\t\tPIVOT.VALUE(7, \"NonBillable Days\", \"#project_id\", 9)\n\t)\n)",
-                "C77": "=IF(\n\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 10)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(7, \"non_billable_time\", \"#project_id\", 10), \n\t\tPIVOT.VALUE(7, \"NonBillable Days\", \"#project_id\", 10)\n\t)\n)",
+                "A68": "=PIVOT.HEADER(7,\"#project_id\",1)",
+                "A69:A77": {
+                    "N": "=|+1",
+                    "S": [
+                        "="
+                    ]
+                },
+                "B41": "=IF(Data!B15=\"hours\",_t(\"Hours spent\"),_t(\"Days spent\"))",
+                "B42": "=IF(PIVOT.VALUE(3,\"unit_amount\",\"#department_id\",1)=\"\",\"\",IF(Data!B15=\"hours\",PIVOT.VALUE(3,\"unit_amount\",\"#department_id\",1),PIVOT.VALUE(3,\"Days Spent\",\"#department_id\",1)))",
+                "B43:B51": {
+                    "N": "=|+1|=|+1|=|+1",
+                    "S": [
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "="
+                    ],
+                    "R": "="
+                },
+                "B54": "=IF(Data!B15=\"hours\",_t(\"Hours spent\"),_t(\"Days spent\"))",
+                "B55": "=IF(PIVOT.VALUE(1,\"unit_amount\",\"#project_id\",1)=\"\",\"\",IF(Data!B15=\"hours\",PIVOT.VALUE(1,\"unit_amount\",\"#project_id\",1),PIVOT.VALUE(1,\"Days Spent\",\"#project_id\",1)))",
+                "B56:B64": {
+                    "N": "=|+1|=|+1|=|+1",
+                    "S": [
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "="
+                    ],
+                    "R": "="
+                },
+                "C41": "=IF(Data!B15=\"hours\",_t(\"Hours billed\"),_t(\"Days billed\"))",
+                "C42": "=IF(PIVOT.VALUE(3,\"billable_time\",\"#department_id\",1)=\"\",\"\",IF(Data!B15=\"hours\",PIVOT.VALUE(3,\"billable_time\",\"#department_id\",1),PIVOT.VALUE(3,\"Billable Days\",\"#department_id\",1)))",
+                "C43:C51": {
+                    "N": "=|+1|=|+1|=|+1",
+                    "S": [
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "="
+                    ],
+                    "R": "="
+                },
+                "C54": "=IF(Data!B15=\"hours\",_t(\"Hours billed\"),_t(\"Days billed\"))",
+                "C55": "=IF(PIVOT.VALUE(1,\"billable_time\",\"#project_id\",1)=\"\",\"\",IF(Data!B15=\"hours\",PIVOT.VALUE(1,\"billable_time\",\"#project_id\",1),PIVOT.VALUE(1,\"Billable Days\",\"#project_id\",1)))",
+                "C56:C64": {
+                    "N": "=|+1|=|+1|=|+1",
+                    "S": [
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "="
+                    ],
+                    "R": "="
+                },
+                "C67": "=IF(Data!B15=\"hours\",_t(\"Hours spent\"),_t(\"Days spent\"))",
+                "C68": "=IF(PIVOT.VALUE(7,\"non_billable_time\",\"#project_id\",1)=\"\",\"\",IF(Data!B15=\"hours\",PIVOT.VALUE(7,\"non_billable_time\",\"#project_id\",1),PIVOT.VALUE(7,\"NonBillable Days\",\"#project_id\",1)))",
+                "C69:C77": {
+                    "N": "=|+1|=|+1|=|+1",
+                    "S": [
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "="
+                    ],
+                    "R": "="
+                },
                 "D41": "=_t(\"Billable rate\")",
-                "D42": "=IFERROR(C42/B42, \"\")",
-                "D43": "=IFERROR(C43/B43, \"\")",
-                "D44": "=IFERROR(C44/B44, \"\")",
-                "D45": "=IFERROR(C45/B45, \"\")",
-                "D46": "=IFERROR(C46/B46, \"\")",
-                "D47": "=IFERROR(C47/B47, \"\")",
-                "D48": "=IFERROR(C48/B48, \"\")",
-                "D49": "=IFERROR(C49/B49, \"\")",
-                "D50": "=IFERROR(C50/B50, \"\")",
-                "D51": "=IFERROR(C51/B51, \"\")",
+                "D42": "=IFERROR(C42/B42,\"\")",
+                "D43:D51": {
+                    "S": [
+                        "="
+                    ],
+                    "R": "+R1|+R1"
+                },
                 "D54": "=_t(\"Billable rate\")",
-                "D55": "=IFERROR(C55/B55, \"\")",
-                "D56": "=IFERROR(C56/B56, \"\")",
-                "D57": "=IFERROR(C57/B57, \"\")",
-                "D58": "=IFERROR(C58/B58, \"\")",
-                "D59": "=IFERROR(C59/B59, \"\")",
-                "D60": "=IFERROR(C60/B60, \"\")",
-                "D61": "=IFERROR(C61/B61, \"\")",
-                "D62": "=IFERROR(C62/B62, \"\")",
-                "D63": "=IFERROR(C63/B63, \"\")",
-                "D64": "=IFERROR(C64/B64, \"\")",
+                "D55": "=IFERROR(C55/B55,\"\")",
+                "D56:D64": {
+                    "S": [
+                        "="
+                    ],
+                    "R": "+R1|+R1"
+                },
                 "D67": "=_t(\"Costs\")",
-                "D68": "=IF(C68=\"\", \"\", ABS(PIVOT.VALUE(7, \"amount\", \"#project_id\", 1)))",
-                "D69": "=IF(C69=\"\", \"\", ABS(PIVOT.VALUE(7, \"amount\", \"#project_id\", 2)))",
-                "D70": "=IF(C70=\"\", \"\", ABS(PIVOT.VALUE(7, \"amount\", \"#project_id\", 3)))",
-                "D71": "=IF(C71=\"\", \"\", ABS(PIVOT.VALUE(7, \"amount\", \"#project_id\", 4)))",
-                "D72": "=IF(C72=\"\", \"\", ABS(PIVOT.VALUE(7, \"amount\", \"#project_id\", 5)))",
-                "D73": "=IF(C73=\"\", \"\", ABS(PIVOT.VALUE(7, \"amount\", \"#project_id\", 6)))",
-                "D74": "=IF(C74=\"\", \"\", ABS(PIVOT.VALUE(7, \"amount\", \"#project_id\", 7)))",
-                "D75": "=IF(C75=\"\", \"\", ABS(PIVOT.VALUE(7, \"amount\", \"#project_id\", 8)))",
-                "D76": "=IF(C76=\"\", \"\", ABS(PIVOT.VALUE(7, \"amount\", \"#project_id\", 9)))",
-                "D77": "=IF(C77=\"\", \"\", ABS(PIVOT.VALUE(7, \"amount\", \"#project_id\", 10)))",
+                "D68": "=IF(C68=\"\",\"\",ABS(PIVOT.VALUE(7,\"amount\",\"#project_id\",1)))",
+                "D69:D77": {
+                    "N": "=|+1",
+                    "S": [
+                        "=",
+                        "=",
+                        "=",
+                        "="
+                    ],
+                    "R": "+R1"
+                },
                 "F40": "[Top Employees](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"employee_id\",\"!=\",false]],\"context\":{\"group_by\":[\"employee_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"employee_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Employees\"})",
                 "F41": "=_t(\"Employee\")",
                 "F42": "=PIVOT.HEADER(4,\"#employee_id\",1)",
-                "F43": "=PIVOT.HEADER(4,\"#employee_id\",2)",
-                "F44": "=PIVOT.HEADER(4,\"#employee_id\",3)",
-                "F45": "=PIVOT.HEADER(4,\"#employee_id\",4)",
-                "F46": "=PIVOT.HEADER(4,\"#employee_id\",5)",
-                "F47": "=PIVOT.HEADER(4,\"#employee_id\",6)",
-                "F48": "=PIVOT.HEADER(4,\"#employee_id\",7)",
-                "F49": "=PIVOT.HEADER(4,\"#employee_id\",8)",
-                "F50": "=PIVOT.HEADER(4,\"#employee_id\",9)",
-                "F51": "=PIVOT.HEADER(4,\"#employee_id\",10)",
+                "F43:F51": {
+                    "N": "=|+1",
+                    "S": [
+                        "="
+                    ]
+                },
                 "F53": "[Top Tasks](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",\"&\",\"&\",[\"project_id\",\"!=\",false],[\"task_id\",\"!=\",false],[\"project_id.allow_billable\",\"!=\",false],[\"project_id.sale_line_id\",\"!=\",false]],\"context\":{\"group_by\":[\"task_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"task_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Tasks\"})",
                 "F54": "=_t(\"Task\")",
                 "F55": "=PIVOT.HEADER(2,\"#task_id\",1)",
-                "F56": "=PIVOT.HEADER(2,\"#task_id\",2)",
-                "F57": "=PIVOT.HEADER(2,\"#task_id\",3)",
-                "F58": "=PIVOT.HEADER(2,\"#task_id\",4)",
-                "F59": "=PIVOT.HEADER(2,\"#task_id\",5)",
-                "F60": "=PIVOT.HEADER(2,\"#task_id\",6)",
-                "F61": "=PIVOT.HEADER(2,\"#task_id\",7)",
-                "F62": "=PIVOT.HEADER(2,\"#task_id\",8)",
-                "F63": "=PIVOT.HEADER(2,\"#task_id\",9)",
-                "F64": "=PIVOT.HEADER(2,\"#task_id\",10)",
+                "F56:F64": {
+                    "N": "=|+1",
+                    "S": [
+                        "="
+                    ]
+                },
                 "F66": "[Non-Billable Tasks Costs](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",\"&\",[\"project_id\",\"!=\",false],[\"task_id\",\"!=\",false],\"|\",[\"project_id.allow_billable\",\"=\",false],[\"so_line\",\"=\",false]],\"context\":{\"group_by\":[\"task_id\"],\"pivot_measures\":[\"amount\",\"non_billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"task_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Non-Billable Tasks Costs\"})",
                 "F67": "=_t(\"Task\")",
-                "F68": "=PIVOT.HEADER(8, \"#task_id\", 1)",
-                "F69": "=PIVOT.HEADER(8, \"#task_id\", 2)",
-                "F70": "=PIVOT.HEADER(8,\"#task_id\",3)",
-                "F71": "=PIVOT.HEADER(8,\"#task_id\",4)",
-                "F72": "=PIVOT.HEADER(8,\"#task_id\",5)",
-                "F73": "=PIVOT.HEADER(8,\"#task_id\",6)",
-                "F74": "=PIVOT.HEADER(8,\"#task_id\",7)",
-                "F75": "=PIVOT.HEADER(8,\"#task_id\",8)",
-                "F76": "=PIVOT.HEADER(8,\"#task_id\",9)",
-                "F77": "=PIVOT.HEADER(8,\"#task_id\",10)",
-                "G41": "=IF(Data!B15=\"Hours\", _t(\"Hours spent\"), _t(\"Days spent\"))",
-                "G42": "=IF(\n\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 1)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 1), \n\t\tPIVOT.VALUE(4, \"Days Spent\", \"#employee_id\", 1)\n\t)\n)",
-                "G43": "=IF(\n\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 2)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 2), \n\t\tPIVOT.VALUE(4, \"Days Spent\", \"#employee_id\", 2)\n\t)\n)",
-                "G44": "=IF(\n\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 3)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 3), \n\t\tPIVOT.VALUE(4, \"Days Spent\", \"#employee_id\", 3)\n\t)\n)",
-                "G45": "=IF(\n\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 4)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 4), \n\t\tPIVOT.VALUE(4, \"Days Spent\", \"#employee_id\", 4)\n\t)\n)",
-                "G46": "=IF(\n\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 5)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 5), \n\t\tPIVOT.VALUE(4, \"Days Spent\", \"#employee_id\", 5)\n\t)\n)",
-                "G47": "=IF(\n\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 6)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 6), \n\t\tPIVOT.VALUE(4, \"Days Spent\", \"#employee_id\", 6)\n\t)\n)",
-                "G48": "=IF(\n\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 7)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 7), \n\t\tPIVOT.VALUE(4, \"Days Spent\", \"#employee_id\", 7)\n\t)\n)",
-                "G49": "=IF(\n\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 8)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 8), \n\t\tPIVOT.VALUE(4, \"Days Spent\", \"#employee_id\", 8)\n\t)\n)",
-                "G50": "=IF(\n\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 9)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 9), \n\t\tPIVOT.VALUE(4, \"Days Spent\", \"#employee_id\", 9)\n\t)\n)",
-                "G51": "=IF(\n\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 10)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"unit_amount\", \"#employee_id\", 10), \n\t\tPIVOT.VALUE(4, \"Days Spent\", \"#employee_id\", 10)\n\t)\n)",
-                "G54": "=IF(Data!B15=\"Hours\", _t(\"Hours spent\"), _t(\"Days spent\"))",
-                "G55": "=IF(\n\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 1)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 1), \n\t\tPIVOT.VALUE(2, \"Days Spent\", \"#task_id\", 1)\n\t)\n)",
-                "G56": "=IF(\n\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 2)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 2), \n\t\tPIVOT.VALUE(2, \"Days Spent\", \"#task_id\", 2)\n\t)\n)",
-                "G57": "=IF(\n\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 3)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 3), \n\t\tPIVOT.VALUE(2, \"Days Spent\", \"#task_id\", 3)\n\t)\n)",
-                "G58": "=IF(\n\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 4)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 4), \n\t\tPIVOT.VALUE(2, \"Days Spent\", \"#task_id\", 4)\n\t)\n)",
-                "G59": "=IF(\n\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 5)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 5), \n\t\tPIVOT.VALUE(2, \"Days Spent\", \"#task_id\", 5)\n\t)\n)",
-                "G60": "=IF(\n\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 6)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 6), \n\t\tPIVOT.VALUE(2, \"Days Spent\", \"#task_id\", 6)\n\t)\n)",
-                "G61": "=IF(\n\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 7)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 7), \n\t\tPIVOT.VALUE(2, \"Days Spent\", \"#task_id\", 7)\n\t)\n)",
-                "G62": "=IF(\n\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 8)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 8), \n\t\tPIVOT.VALUE(2, \"Days Spent\", \"#task_id\", 8)\n\t)\n)",
-                "G63": "=IF(\n\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 9)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 9), \n\t\tPIVOT.VALUE(2, \"Days Spent\", \"#task_id\", 9)\n\t)\n)",
-                "G64": "=IF(\n\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 10)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"unit_amount\", \"#task_id\", 10), \n\t\tPIVOT.VALUE(2, \"Days Spent\", \"#task_id\", 10)\n\t)\n)",
-                "H41": "=IF(Data!B15=\"Hours\", _t(\"Hours billed\"), _t(\"Days billed\"))",
-                "H42": "=IF(\n\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 1)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 1), \n\t\tPIVOT.VALUE(4, \"Billable Days\", \"#employee_id\", 1)\n\t)\n)",
-                "H43": "=IF(\n\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 2)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 2), \n\t\tPIVOT.VALUE(4, \"Billable Days\", \"#employee_id\", 2)\n\t)\n)",
-                "H44": "=IF(\n\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 3)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 3), \n\t\tPIVOT.VALUE(4, \"Billable Days\", \"#employee_id\", 3)\n\t)\n)",
-                "H45": "=IF(\n\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 4)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 4), \n\t\tPIVOT.VALUE(4, \"Billable Days\", \"#employee_id\", 4)\n\t)\n)",
-                "H46": "=IF(\n\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 5)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 5), \n\t\tPIVOT.VALUE(4, \"Billable Days\", \"#employee_id\", 5)\n\t)\n)",
-                "H47": "=IF(\n\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 6)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 6), \n\t\tPIVOT.VALUE(4, \"Billable Days\", \"#employee_id\", 6)\n\t)\n)",
-                "H48": "=IF(\n\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 7)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 7), \n\t\tPIVOT.VALUE(4, \"Billable Days\", \"#employee_id\", 7)\n\t)\n)",
-                "H49": "=IF(\n\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 8)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 8), \n\t\tPIVOT.VALUE(4, \"Billable Days\", \"#employee_id\", 8)\n\t)\n)",
-                "H50": "=IF(\n\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 9)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 9), \n\t\tPIVOT.VALUE(4, \"Billable Days\", \"#employee_id\", 9)\n\t)\n)",
-                "H51": "=IF(\n\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 10)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(4, \"billable_time\", \"#employee_id\", 10), \n\t\tPIVOT.VALUE(4, \"Billable Days\", \"#employee_id\", 10)\n\t)\n)",
-                "H54": "=IF(Data!B15=\"Hours\", _t(\"Hours billed\"), _t(\"Days billed\"))",
-                "H55": "=IF(\n\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 1)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 1), \n\t\tPIVOT.VALUE(2, \"Billable Days\", \"#task_id\", 1)\n\t)\n)",
-                "H56": "=IF(\n\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 2)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 2), \n\t\tPIVOT.VALUE(2, \"Billable Days\", \"#task_id\", 2)\n\t)\n)",
-                "H57": "=IF(\n\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 3)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 3), \n\t\tPIVOT.VALUE(2, \"Billable Days\", \"#task_id\", 3)\n\t)\n)",
-                "H58": "=IF(\n\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 4)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 4), \n\t\tPIVOT.VALUE(2, \"Billable Days\", \"#task_id\", 4)\n\t)\n)",
-                "H59": "=IF(\n\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 5)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 5), \n\t\tPIVOT.VALUE(2, \"Billable Days\", \"#task_id\", 5)\n\t)\n)",
-                "H60": "=IF(\n\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 6)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 6), \n\t\tPIVOT.VALUE(2, \"Billable Days\", \"#task_id\", 6)\n\t)\n)",
-                "H61": "=IF(\n\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 7)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 7), \n\t\tPIVOT.VALUE(2, \"Billable Days\", \"#task_id\", 7)\n\t)\n)",
-                "H62": "=IF(\n\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 8)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 8), \n\t\tPIVOT.VALUE(2, \"Billable Days\", \"#task_id\", 8)\n\t)\n)",
-                "H63": "=IF(\n\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 9)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 9), \n\t\tPIVOT.VALUE(2, \"Billable Days\", \"#task_id\", 9)\n\t)\n)",
-                "H64": "=IF(\n\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 10)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(2, \"billable_time\", \"#task_id\", 10), \n\t\tPIVOT.VALUE(2, \"Billable Days\", \"#task_id\", 10)\n\t)\n)",
-                "H67": "=IF(Data!B15=\"Hours\", _t(\"Hours spent\"), _t(\"Days spent\"))",
-                "H68": "=IF(\n\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 1)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 1), \n\t\tPIVOT.VALUE(8, \"NonBillable Days\", \"#task_id\", 1)\n\t)\n)",
-                "H69": "=IF(\n\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 2)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 2), \n\t\tPIVOT.VALUE(8, \"NonBillable Days\", \"#task_id\", 2)\n\t)\n)",
-                "H70": "=IF(\n\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 3)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 3), \n\t\tPIVOT.VALUE(8, \"NonBillable Days\", \"#task_id\", 3)\n\t)\n)",
-                "H71": "=IF(\n\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 4)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 4), \n\t\tPIVOT.VALUE(8, \"NonBillable Days\", \"#task_id\", 4)\n\t)\n)",
-                "H72": "=IF(\n\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 5)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 5), \n\t\tPIVOT.VALUE(8, \"NonBillable Days\", \"#task_id\", 5)\n\t)\n)",
-                "H73": "=IF(\n\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 6)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 6), \n\t\tPIVOT.VALUE(8, \"NonBillable Days\", \"#task_id\", 6)\n\t)\n)",
-                "H74": "=IF(\n\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 7)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 7), \n\t\tPIVOT.VALUE(8, \"NonBillable Days\", \"#task_id\", 7)\n\t)\n)",
-                "H75": "=IF(\n\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 8)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 8), \n\t\tPIVOT.VALUE(8, \"NonBillable Days\", \"#task_id\", 8)\n\t)\n)",
-                "H76": "=IF(\n\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 9)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 9), \n\t\tPIVOT.VALUE(8, \"NonBillable Days\", \"#task_id\", 9)\n\t)\n)",
-                "H77": "=IF(\n\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 10)=\"\", \n\t\"\", \n\tIF(\n\t\tData!B15=\"Hours\", \n\t\tPIVOT.VALUE(8, \"non_billable_time\", \"#task_id\", 10), \n\t\tPIVOT.VALUE(8, \"NonBillable Days\", \"#task_id\", 10)\n\t)\n)",
+                "F68": "=PIVOT.HEADER(8,\"#task_id\",1)",
+                "F69:F77": {
+                    "N": "=|+1",
+                    "S": [
+                        "="
+                    ]
+                },
+                "G41": "=IF(Data!B15=\"hours\",_t(\"Hours spent\"),_t(\"Days spent\"))",
+                "G42": "=IF(PIVOT.VALUE(4,\"unit_amount\",\"#employee_id\",1)=\"\",\"\",IF(Data!B15=\"hours\",PIVOT.VALUE(4,\"unit_amount\",\"#employee_id\",1),PIVOT.VALUE(4,\"Days Spent\",\"#employee_id\",1)))",
+                "G43:G51": {
+                    "N": "=|+1|=|+1|=|+1",
+                    "S": [
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "="
+                    ],
+                    "R": "="
+                },
+                "G54": "=IF(Data!B15=\"hours\",_t(\"Hours spent\"),_t(\"Days spent\"))",
+                "G55": "=IF(PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",1)=\"\",\"\",IF(Data!B15=\"hours\",PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",1),PIVOT.VALUE(2,\"Days Spent\",\"#task_id\",1)))",
+                "G56:G64": {
+                    "N": "=|+1|=|+1|=|+1",
+                    "S": [
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "="
+                    ],
+                    "R": "="
+                },
+                "H41": "=IF(Data!B15=\"hours\",_t(\"Hours billed\"),_t(\"Days billed\"))",
+                "H42": "=IF(PIVOT.VALUE(4,\"billable_time\",\"#employee_id\",1)=\"\",\"\",IF(Data!B15=\"hours\",PIVOT.VALUE(4,\"billable_time\",\"#employee_id\",1),PIVOT.VALUE(4,\"Billable Days\",\"#employee_id\",1)))",
+                "H43:H51": {
+                    "N": "=|+1|=|+1|=|+1",
+                    "S": [
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "="
+                    ],
+                    "R": "="
+                },
+                "H54": "=IF(Data!B15=\"hours\",_t(\"Hours billed\"),_t(\"Days billed\"))",
+                "H55": "=IF(PIVOT.VALUE(2,\"billable_time\",\"#task_id\",1)=\"\",\"\",IF(Data!B15=\"hours\",PIVOT.VALUE(2,\"billable_time\",\"#task_id\",1),PIVOT.VALUE(2,\"Billable Days\",\"#task_id\",1)))",
+                "H56:H64": {
+                    "N": "=|+1|=|+1|=|+1",
+                    "S": [
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "="
+                    ],
+                    "R": "="
+                },
+                "H67": "=IF(Data!B15=\"hours\",_t(\"Hours spent\"),_t(\"Days spent\"))",
+                "H68": "=IF(PIVOT.VALUE(8,\"non_billable_time\",\"#task_id\",1)=\"\",\"\",IF(Data!B15=\"hours\",PIVOT.VALUE(8,\"non_billable_time\",\"#task_id\",1),PIVOT.VALUE(8,\"NonBillable Days\",\"#task_id\",1)))",
+                "H69:H77": {
+                    "N": "=|+1|=|+1|=|+1",
+                    "S": [
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "=",
+                        "="
+                    ],
+                    "R": "="
+                },
                 "I41": "=_t(\"Billable rate\")",
-                "I42": "=IFERROR(H42/G42, \"\")",
-                "I43": "=IFERROR(H43/G43, \"\")",
-                "I44": "=IFERROR(H44/G44, \"\")",
-                "I45": "=IFERROR(H45/G45, \"\")",
-                "I46": "=IFERROR(H46/G46, \"\")",
-                "I47": "=IFERROR(H47/G47, \"\")",
-                "I48": "=IFERROR(H48/G48, \"\")",
-                "I49": "=IFERROR(H49/G49, \"\")",
-                "I50": "=IFERROR(H50/G50, \"\")",
-                "I51": "=IFERROR(H51/G51, \"\")",
+                "I42": "=IFERROR(H42/G42,\"\")",
+                "I43:I51": {
+                    "S": [
+                        "="
+                    ],
+                    "R": "+R1|+R1"
+                },
                 "I54": "=_t(\"Billable rate\")",
-                "I55": "=IFERROR(H55/G55, \"\")",
-                "I56": "=IFERROR(H56/G56, \"\")",
-                "I57": "=IFERROR(H57/G57, \"\")",
-                "I58": "=IFERROR(H58/G58, \"\")",
-                "I59": "=IFERROR(H59/G59, \"\")",
-                "I60": "=IFERROR(H60/G60, \"\")",
-                "I61": "=IFERROR(H61/G61, \"\")",
-                "I62": "=IFERROR(H62/G62, \"\")",
-                "I63": "=IFERROR(H63/G63, \"\")",
-                "I64": "=IFERROR(H64/G64, \"\")",
+                "I55": "=IFERROR(H55/G55,\"\")",
+                "I56:I64": {
+                    "S": [
+                        "="
+                    ],
+                    "R": "+R1|+R1"
+                },
                 "I67": "=_t(\"Costs\")",
-                "I68": "=IF(H68=\"\", \"\", ABS(PIVOT.VALUE(8, \"amount\", \"#task_id\", 1)))",
-                "I69": "=IF(H69=\"\", \"\", ABS(PIVOT.VALUE(8, \"amount\", \"#task_id\", 2)))",
-                "I70": "=IF(H70=\"\", \"\", ABS(PIVOT.VALUE(8, \"amount\", \"#task_id\", 3)))",
-                "I71": "=IF(H71=\"\", \"\", ABS(PIVOT.VALUE(8, \"amount\", \"#task_id\", 4)))",
-                "I72": "=IF(H72=\"\", \"\", ABS(PIVOT.VALUE(8, \"amount\", \"#task_id\", 5)))",
-                "I73": "=IF(H73=\"\", \"\", ABS(PIVOT.VALUE(8, \"amount\", \"#task_id\", 6)))",
-                "I74": "=IF(H74=\"\", \"\", ABS(PIVOT.VALUE(8, \"amount\", \"#task_id\", 7)))",
-                "I75": "=IF(H75=\"\", \"\", ABS(PIVOT.VALUE(8, \"amount\", \"#task_id\", 8)))",
-                "I76": "=IF(H76=\"\", \"\", ABS(PIVOT.VALUE(8, \"amount\", \"#task_id\", 9)))",
-                "I77": "=IF(H77=\"\", \"\", ABS(PIVOT.VALUE(8, \"amount\", \"#task_id\", 10)))"
+                "I68": "=IF(H68=\"\",\"\",ABS(PIVOT.VALUE(8,\"amount\",\"#task_id\",1)))",
+                "I69:I77": {
+                    "N": "=|+1",
+                    "S": [
+                        "=",
+                        "=",
+                        "=",
+                        "="
+                    ],
+                    "R": "+R1"
+                }
             },
             "styles": {
                 "A7": 1,
@@ -464,36 +497,28 @@
                 "G68:G77": 4
             },
             "borders": {
-                "C41": 1,
-                "A41:B41": 1,
-                "D41": 1,
-                "A8:I8": 1,
-                "H41": 1,
-                "G41": 1,
-                "F41": 1,
-                "I41": 1,
-                "D55:D64": 2,
-                "I55:I64": 2,
-                "A43:A51": 3,
-                "F43:F51": 3,
-                "A52:D52": 3,
-                "F52:I52": 3,
-                "A53": 4,
-                "D53": 4,
-                "A66:B66": 4,
-                "D66": 4,
-                "F53": 4,
-                "I53": 4,
-                "F66:G66": 4,
-                "I66": 4,
-                "A23": 4,
-                "B23:I23": 4,
-                "C54": 1,
-                "B54": 1,
-                "H54": 1,
-                "G54": 1,
+                "B54:C54": 1,
                 "C67": 1,
-                "H67": 1
+                "A41:D41": 1,
+                "G54:H54": 1,
+                "H67": 1,
+                "A8:I8": 1,
+                "F41:I41": 1,
+                "A53": 2,
+                "A66:B66": 2,
+                "D53": 2,
+                "D66": 2,
+                "F53": 2,
+                "F66:G66": 2,
+                "A23:I23": 2,
+                "I53": 2,
+                "I66": 2,
+                "A43:A52": 3,
+                "B52:D52": 3,
+                "F43:F52": 3,
+                "G52:I52": 3,
+                "D55:D64": 4,
+                "I55:I64": 4
             },
             "conditionalFormats": [
                 {
@@ -638,40 +663,40 @@
                         },
                         "background": "#FFFFFF",
                         "legendPosition": "none",
-                        "metaData": {
-                            "groupBy": [
-                                "date:week"
-                            ],
-                            "measure": "billable_time",
-                            "order": null,
-                            "resModel": "timesheets.analysis.report",
-                            "mode": "line",
-                            "cumulatedStart": false
-                        },
-                        "searchParams": {
-                            "comparison": null,
-                            "context": {},
-                            "domain": [
-                                [
-                                    "project_id",
-                                    "!=",
-                                    false
-                                ]
-                            ],
-                            "groupBy": [
-                                "date:week"
-                            ],
-                            "orderBy": []
-                        },
-                        "type": "odoo_line",
-                        "dataSets": [
-                            {}
-                        ],
+                        "type": "line",
                         "humanize": true,
-                        "verticalAxisPosition": "left",
                         "stacked": false,
-                        "cumulatedStart": false,
                         "fillArea": true,
+                        "dataSource": {
+                            "type": "odoo",
+                            "cumulatedStart": false,
+                            "metaData": {
+                                "groupBy": [
+                                    "date:week"
+                                ],
+                                "measure": "billable_time",
+                                "order": null,
+                                "resModel": "timesheets.analysis.report",
+                                "mode": "line",
+                                "cumulatedStart": false
+                            },
+                            "searchParams": {
+                                "comparison": null,
+                                "context": {},
+                                "domain": [
+                                    [
+                                        "project_id",
+                                        "!=",
+                                        false
+                                    ]
+                                ],
+                                "groupBy": [
+                                    "date:week"
+                                ],
+                                "orderBy": []
+                            }
+                        },
+                        "dataSetStyles": {},
                         "chartId": "39c6667b-b74a-478e-87e9-75c22de5ea1f",
                         "fieldMatching": {
                             "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": {
@@ -783,38 +808,38 @@
                         },
                         "background": "#FFFFFF",
                         "legendPosition": "none",
-                        "metaData": {
-                            "groupBy": [
-                                "date:month"
-                            ],
-                            "measure": "billable_time",
-                            "order": null,
-                            "resModel": "timesheets.analysis.report",
-                            "mode": "bar"
-                        },
-                        "searchParams": {
-                            "comparison": null,
-                            "context": {},
-                            "domain": [
-                                [
-                                    "project_id",
-                                    "!=",
-                                    false
-                                ]
-                            ],
-                            "groupBy": [
-                                "date:month"
-                            ],
-                            "orderBy": []
-                        },
-                        "type": "odoo_bar",
-                        "dataSets": [
-                            {}
-                        ],
+                        "type": "bar",
                         "humanize": true,
-                        "verticalAxisPosition": "left",
                         "stacked": false,
                         "horizontal": false,
+                        "dataSource": {
+                            "type": "odoo",
+                            "metaData": {
+                                "groupBy": [
+                                    "date:month"
+                                ],
+                                "measure": "billable_time",
+                                "order": null,
+                                "resModel": "timesheets.analysis.report",
+                                "mode": "bar"
+                            },
+                            "searchParams": {
+                                "comparison": null,
+                                "context": {},
+                                "domain": [
+                                    [
+                                        "project_id",
+                                        "!=",
+                                        false
+                                    ]
+                                ],
+                                "groupBy": [
+                                    "date:month"
+                                ],
+                                "orderBy": []
+                            }
+                        },
+                        "dataSetStyles": {},
                         "chartId": "26ef5620-3a5c",
                         "fieldMatching": {
                             "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": {
@@ -938,69 +963,193 @@
             "merges": [],
             "cells": {
                 "A1": "=_t(\"KPI\")",
-                "A2": "=_t(\"Billed fixed price\")",
-                "A3": "=_t(\"Billed manually\")",
-                "A4": "=_t(\"Billed timesheets\")",
-                "A5": "=_t(\"Billed milestones\")",
-                "A6": "=_t(\"Billable hours\")",
-                "A7": "=_t(\"Non-billable hours\")",
-                "A8": "=_t(\"Grand total\")",
-                "A9": "=_t(\"Billable rate\")",
-                "A15": "=_t(\"Time Encoding:\")",
-                "B1": "=_t(\"Current\")",
+                "A2": {
+                    "S": [
+                        "Billed fixed price"
+                    ]
+                },
+                "A3": {
+                    "S": [
+                        "Billed manually"
+                    ]
+                },
+                "A4": {
+                    "S": [
+                        "Billed timesheets"
+                    ]
+                },
+                "A5": {
+                    "S": [
+                        "Billed milestones"
+                    ]
+                },
+                "A6": {
+                    "S": [
+                        "Billable hours"
+                    ]
+                },
+                "A7": {
+                    "S": [
+                        "Non-billable hours"
+                    ]
+                },
+                "A8": {
+                    "S": [
+                        "Grand total"
+                    ]
+                },
+                "A9": {
+                    "S": [
+                        "Billable rate"
+                    ]
+                },
+                "A15": {
+                    "S": [
+                        "Time Encoding:"
+                    ]
+                },
+                "B1": {
+                    "S": [
+                        "Current"
+                    ]
+                },
                 "B2": "=PIVOT.VALUE(5,\"unit_amount\",\"billable_type\",\"02_billable_fixed\")",
-                "B3": "=PIVOT.VALUE(5,\"unit_amount\",\"billable_type\",\"08_billable_manual\")",
-                "B4": "=PIVOT.VALUE(5,\"unit_amount\",\"billable_type\",\"04_billable_time\")",
-                "B5": "=PIVOT.VALUE(5, \"unit_amount\", \"billable_type\", \"06_billable_milestones\")",
+                "B3": {
+                    "N": "=",
+                    "S": [
+                        "=",
+                        "=",
+                        "08_billable_manual"
+                    ]
+                },
+                "B4": {
+                    "N": "=",
+                    "S": [
+                        "=",
+                        "=",
+                        "04_billable_time"
+                    ]
+                },
+                "B5": {
+                    "N": "=",
+                    "S": [
+                        "=",
+                        "=",
+                        "06_billable_milestones"
+                    ]
+                },
                 "B6": "=SUM(B2:B5)",
                 "B7": "=PIVOT.VALUE(5,\"unit_amount\",\"billable_type\",\"09_non_billable\")",
                 "B8": "=PIVOT.VALUE(5,\"unit_amount\")",
                 "B9": "=IFERROR(B6/B8)",
-                "B15": "=PIVOT.HEADER(9, \"#company_id.timesheet_encode_uom_id\",1)",
+                "B15": "=PIVOT.HEADER(9,\"#timesheet_encode_method\",1)",
                 "C1": "=_t(\"Previous\")",
                 "C2": "=PIVOT.VALUE(6,\"unit_amount\",\"billable_type\",\"02_billable_fixed\")",
-                "C3": "=PIVOT.VALUE(6,\"unit_amount\",\"billable_type\",\"08_billable_manual\")",
-                "C4": "=PIVOT.VALUE(6,\"unit_amount\",\"billable_type\",\"04_billable_time\")",
-                "C5": "=PIVOT.VALUE(6, \"unit_amount\", \"billable_type\", \"06_billable_milestones\")",
+                "C3": {
+                    "N": "=",
+                    "S": [
+                        "=",
+                        "=",
+                        "08_billable_manual"
+                    ]
+                },
+                "C4": {
+                    "N": "=",
+                    "S": [
+                        "=",
+                        "=",
+                        "04_billable_time"
+                    ]
+                },
+                "C5": {
+                    "N": "=",
+                    "S": [
+                        "=",
+                        "=",
+                        "06_billable_milestones"
+                    ]
+                },
                 "C6": "=SUM(C2:C4)",
                 "C7": "=PIVOT.VALUE(6,\"unit_amount\",\"billable_type\",\"09_non_billable\")",
                 "C8": "=PIVOT.VALUE(6,\"unit_amount\")",
                 "C9": "=IFERROR(C6/C8)",
                 "D1": "=_t(\"Current Score\")",
-                "D2": "=FORMAT.LARGE.NUMBER(IF(B15=\"Hours\", B2, F2))",
-                "D3": "=FORMAT.LARGE.NUMBER(IF(B15=\"Hours\", B3, F3))",
-                "D4": "=FORMAT.LARGE.NUMBER(IF(B15=\"Hours\", B4, F4))",
-                "D5": "=FORMAT.LARGE.NUMBER(IF(B15=\"Hours\", B5, F5))",
-                "D6": "=FORMAT.LARGE.NUMBER(IF(B15=\"Hours\", B6, F6))",
-                "D7": "=FORMAT.LARGE.NUMBER(IF(B15=\"Hours\", B7, F7))",
-                "D8": "=FORMAT.LARGE.NUMBER(IF(B15=\"Hours\", B8, F8))",
-                "D9": "=IF(B15=\"Hours\", B9, F9)",
+                "D2": "=FORMAT.LARGE.NUMBER(IF(B15=\"hours\",B2,F2))",
+                "D3:D8": {
+                    "S": [
+                        "="
+                    ],
+                    "R": "=|+R1|+R1"
+                },
+                "D9": "=IF(B15=\"hours\",B9,F9)",
                 "E1": "=_t(\"Previous Score\")",
-                "E2": "=FORMAT.LARGE.NUMBER(IF(B15=\"Hours\", C2, G2))",
-                "E3": "=FORMAT.LARGE.NUMBER(IF(B15=\"Hours\", C3, G3))",
-                "E4": "=FORMAT.LARGE.NUMBER(IF(B15=\"Hours\", C4, G4))",
-                "E5": "=FORMAT.LARGE.NUMBER(IF(B15=\"Hours\", C5, G5))",
-                "E6": "=FORMAT.LARGE.NUMBER(IF(B15=\"Hours\", C6, G6))",
-                "E7": "=FORMAT.LARGE.NUMBER(IF(B15=\"Hours\", C7, G7))",
-                "E8": "=FORMAT.LARGE.NUMBER(IF(B15=\"Hours\", C8, G8))",
-                "E9": "=IF(B15=\"Hours\", C9, G9)",
+                "E2": "=FORMAT.LARGE.NUMBER(IF(B15=\"hours\",C2,G2))",
+                "E3:E8": {
+                    "S": [
+                        "="
+                    ],
+                    "R": "=|+R1|+R1"
+                },
+                "E9": "=IF(B15=\"hours\",C9,G9)",
                 "F1": "=_t(\"Current Days\")",
-                "F2": "=PIVOT.VALUE(5, \"Days\", \"billable_type\", \"02_billable_fixed\")",
-                "F3": "=PIVOT.VALUE(5, \"Days\", \"billable_type\", \"08_billable_manual\")",
-                "F4": "=PIVOT.VALUE(5, \"Days\", \"billable_type\", \"04_billable_time\")",
-                "F5": "=PIVOT.VALUE(5, \"Days\", \"billable_type\", \"06_billable_milestones\")",
+                "F2": "=PIVOT.VALUE(5,\"Days\",\"billable_type\",\"02_billable_fixed\")",
+                "F3": {
+                    "N": "=",
+                    "S": [
+                        "=",
+                        "=",
+                        "08_billable_manual"
+                    ]
+                },
+                "F4": {
+                    "N": "=",
+                    "S": [
+                        "=",
+                        "=",
+                        "04_billable_time"
+                    ]
+                },
+                "F5": {
+                    "N": "=",
+                    "S": [
+                        "=",
+                        "=",
+                        "06_billable_milestones"
+                    ]
+                },
                 "F6": "=SUM(F2:F5)",
-                "F7": "=PIVOT.VALUE(5, \"Days\", \"billable_type\", \"09_non_billable\")",
-                "F8": "=PIVOT.VALUE(5, \"Days\")",
+                "F7": "=PIVOT.VALUE(5,\"Days\",\"billable_type\",\"09_non_billable\")",
+                "F8": "=PIVOT.VALUE(5,\"Days\")",
                 "F9": "=B9",
                 "G1": "=_t(\"Previous Days\")",
-                "G2": "=PIVOT.VALUE(6, \"Days\", \"billable_type\", \"02_billable_fixed\")",
-                "G3": "=PIVOT.VALUE(6, \"Days\", \"billable_type\", \"08_billable_manual\")",
-                "G4": "=PIVOT.VALUE(6, \"Days\", \"billable_type\", \"04_billable_time\")",
-                "G5": "=PIVOT.VALUE(6, \"Days\", \"billable_type\", \"06_billable_milestones\")",
+                "G2": "=PIVOT.VALUE(6,\"Days\",\"billable_type\",\"02_billable_fixed\")",
+                "G3": {
+                    "N": "=",
+                    "S": [
+                        "=",
+                        "=",
+                        "08_billable_manual"
+                    ]
+                },
+                "G4": {
+                    "N": "=",
+                    "S": [
+                        "=",
+                        "=",
+                        "04_billable_time"
+                    ]
+                },
+                "G5": {
+                    "N": "=",
+                    "S": [
+                        "=",
+                        "=",
+                        "06_billable_milestones"
+                    ]
+                },
                 "G6": "=SUM(G2:G4)",
-                "G7": "=PIVOT.VALUE(6, \"Days\", \"billable_type\", \"09_non_billable\")",
-                "G8": "=PIVOT.VALUE(6, \"Days\")",
+                "G7": "=PIVOT.VALUE(6,\"Days\",\"billable_type\",\"09_non_billable\")",
+                "G8": "=PIVOT.VALUE(6,\"Days\")",
                 "G9": "=C9"
             },
             "styles": {
@@ -1077,8 +1226,8 @@
         },
         "2": {
             "bottom": {
-                "style": "thick",
-                "color": "#FFFFFF"
+                "color": "#CCCCCC",
+                "style": "thin"
             }
         },
         "3": {
@@ -1089,12 +1238,12 @@
         },
         "4": {
             "bottom": {
-                "color": "#CCCCCC",
-                "style": "thin"
+                "style": "thick",
+                "color": "#FFFFFF"
             }
         }
     },
-    "revisionId": "1f9dd7d9-2a44-4371-bffd-e356a4e9cf4e",
+    "revisionId": "de55bcfb-403e-460b-beed-76e2007ed1d1",
     "uniqueFigureIds": true,
     "settings": {
         "locale": {
@@ -1815,13 +1964,15 @@
             "columns": [],
             "rows": [
                 {
-                    "fieldName": "company_id.timesheet_encode_uom_id"
+                    "fieldName": "timesheet_encode_method",
+                    "order": "asc"
                 }
             ]
         }
     },
     "pivotNextId": 10,
     "customTableStyles": {},
+    "namedRanges": {},
     "globalFilters": [
         {
             "id": "fb3700b0-4ee9-4086-86ac-6c62a7d33d37",

@@ -26,7 +26,9 @@ class ProjectUpdate(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         updates = super().create(vals_list)
-        encode_uom = self.env.company.timesheet_encode_uom_id
+        uom_day = self.env.ref('uom.product_uom_day', raise_if_not_found=False)
+        uom_hour = self.env.ref('uom.product_uom_hour', raise_if_not_found=False)
+        encode_uom = uom_hour if self.env['ir.config_parameter'].sudo().get_str('hr_timesheet.timesheet_encode_method', 'hours') == 'hours' else uom_day
         ratio = self.env.ref("uom.product_uom_hour").factor / encode_uom.factor
         for update in updates:
             project = update.project_id

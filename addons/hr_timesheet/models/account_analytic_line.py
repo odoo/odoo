@@ -123,8 +123,11 @@ class AccountAnalyticLine(models.Model):
             (self - readonly_timesheets).readonly_timesheet = False
 
     def _compute_encoding_uom_id(self):
+        uom_day = self.env.ref('uom.product_uom_day', raise_if_not_found=False)
+        uom_hour = self.env.ref('uom.product_uom_hour', raise_if_not_found=False)
+        encode_uom = uom_hour if self.env['ir.config_parameter'].sudo().get_str('hr_timesheet.timesheet_encode_method', 'hours') == 'hours' else uom_day
         for analytic_line in self:
-            analytic_line.encoding_uom_id = analytic_line.company_id.timesheet_encode_uom_id
+            analytic_line.encoding_uom_id = encode_uom
 
     @api.depends('task_id.partner_id', 'project_id.partner_id')
     def _compute_partner_id(self):
@@ -163,13 +166,11 @@ class AccountAnalyticLine(models.Model):
             line.department_id = line.employee_id.department_id
 
     def _compute_calendar_display_name(self):
-        companies = self.company_id
-        encoding_in_days_per_company = dict(zip(companies, [company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day') for company in companies]))
         for line in self:
             if not line.project_id:
                 line.calendar_display_name = ""
                 continue
-            if encoding_in_days_per_company[line.company_id]:
+            if self.env['ir.config_parameter'].sudo().get_bool('hr_timesheet.is_encode_uom_days'):
                 days = line._get_timesheet_time_day()
                 if days == int(days):
                     days = int(days)
@@ -479,8 +480,7 @@ class AccountAnalyticLine(models.Model):
         return 'unit_amount' if self.project_id else super()._split_amount_fname()
 
     def _is_timesheet_encode_uom_day(self):
-        company_uom = self.env.company.timesheet_encode_uom_id
-        return company_uom == self.env.ref('uom.product_uom_day')
+        return self.env['ir.config_parameter'].sudo().get_bool('hr_timesheet.is_encode_uom_days')
 
     def _is_updatable_timesheet(self):
         return True

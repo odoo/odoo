@@ -38,13 +38,15 @@ class ProjectProject(models.Model):
     stat_success_rate = fields.Float(compute='_compute_timesheet_stat_values', export_string_translation=False)
 
     def _compute_encode_uom_in_days(self):
-        self.encode_uom_in_days = self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
+        self.encode_uom_in_days = self.env['ir.config_parameter'].sudo().get_bool('hr_timesheet.is_encode_uom_days')
 
-    @api.depends('company_id', 'company_id.timesheet_encode_uom_id')
     @api.depends_context('company')
     def _compute_timesheet_encode_uom_id(self):
+        uom_day = self.env.ref('uom.product_uom_day', raise_if_not_found=False)
+        uom_hour = self.env.ref('uom.product_uom_hour', raise_if_not_found=False)
+        timesheet_encode_method = uom_hour if self.env['ir.config_parameter'].sudo().get_str('hr_timesheet.timesheet_encode_method', 'hours') == 'hours' else uom_day
         for project in self:
-            project.timesheet_encode_uom_id = project.company_id.timesheet_encode_uom_id or self.env.company.timesheet_encode_uom_id
+            project.timesheet_encode_uom_id = timesheet_encode_method
 
     @api.depends('account_id')
     def _compute_allow_timesheets(self):
@@ -242,8 +244,10 @@ class ProjectProject(models.Model):
         return []
 
     def _convert_project_uom_to_timesheet_encode_uom(self, time):
+        uom_day = self.env.ref('uom.product_uom_day', raise_if_not_found=False)
+        uom_hour = self.env.ref('uom.product_uom_hour', raise_if_not_found=False)
         uom_from = self.company_id.project_time_mode_id
-        uom_to = self.env.company.timesheet_encode_uom_id
+        uom_to = uom_hour if self.env['ir.config_parameter'].sudo().get_str('hr_timesheet.timesheet_encode_method', 'hours') == 'hours' else uom_day
         return round(uom_from._compute_quantity(time, uom_to, raise_if_failure=False), 2)
 
     def action_project_timesheets(self):

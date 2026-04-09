@@ -1251,7 +1251,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         Ensure that invoice quantities are correctly computed when the
         sale order line UoM differs from the timesheet UoM.
         """
-        self.env.company.timesheet_encode_uom_id = self.uom_hour.id
+        self.env['res.config.settings'].create({'timesheet_encode_method': 'hours'}).execute()
         product = self.env['product.product'].create({
             'name': "Test service product",
             'standard_price': 30,

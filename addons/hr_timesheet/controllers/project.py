@@ -18,7 +18,9 @@ class ProjectCustomerPortal(CustomerPortal):
     def _prepare_project_sharing_session_info(self, project):
         session_info = super()._prepare_project_sharing_session_info(project)
         company = request.env['res.company'].sudo().browse(session_info['user_companies']['current_company'])
-        timesheet_encode_uom = company.timesheet_encode_uom_id
+        uom_day = self.env.ref('uom.product_uom_day', raise_if_not_found=False)
+        uom_hour = self.env.ref('uom.product_uom_hour', raise_if_not_found=False)
+        timesheet_encode_uom = uom_hour if self.env['ir.config_parameter'].sudo().get_str('hr_timesheet.timesheet_encode_method', 'hours') == 'hours' else uom_day
         project_time_mode_uom = company.project_time_mode_id
 
         session_info['user_companies']['allowed_companies'][company.id].update(

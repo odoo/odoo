@@ -19,12 +19,19 @@ class AccountMove(models.Model):
         export_string_translation=False,
     )
     timesheet_count = fields.Integer("Number of timesheets", compute='_compute_timesheet_count', compute_sudo=True, export_string_translation=False)
-    timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id', export_string_translation=False)
+    timesheet_encode_uom_id = fields.Many2one('uom.uom', compute="_compute_timesheet_encode_uom_id", export_string_translation=False)
     timesheet_total_duration = fields.Integer("Timesheet Total Duration",
         compute='_compute_timesheet_total_duration', compute_sudo=True,
         help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit")
 
-    @api.depends('timesheet_ids', 'company_id.timesheet_encode_uom_id')
+    def _compute_timesheet_encode_uom_id(self):
+        uom_day = self.env.ref('uom.product_uom_day', raise_if_not_found=False)
+        uom_hour = self.env.ref('uom.product_uom_hour', raise_if_not_found=False)
+        for team in self:
+            timesheet_encode_method = self.env['ir.config_parameter'].sudo().get_str('hr_timesheet.timesheet_encode_method', 'hours')
+            team.timesheet_encode_uom_id = uom_day if timesheet_encode_method == 'days' else uom_hour
+
+    @api.depends('timesheet_ids')
     def _compute_timesheet_total_duration(self):
         if not self.env.user.has_group('hr_timesheet.group_hr_timesheet_user'):
             self.timesheet_total_duration = 0

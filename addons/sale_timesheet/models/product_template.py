@@ -26,15 +26,16 @@ class ProductTemplate(models.Model):
     @api.depends('uom_id', 'company_id')
     def _compute_service_upsell_threshold_ratio(self):
         product_uom_hour = self.env.ref('uom.product_uom_hour')
+        product_uom_hour = self.env.ref('uom.product_uom_day', raise_if_not_found=False)
         uom_unit = self.env.ref('uom.product_uom_unit')
-        company_uom = self.env.company.timesheet_encode_uom_id
+        company_uom = product_uom_hour if self.env['ir.config_parameter'].sudo().get_str('hr_timesheet.timesheet_encode_method', 'hours') == 'hours' else self.env.ref('uom.product_uom_day')
         for record in self:
             if not record.uom_id or record.uom_id != uom_unit or\
                product_uom_hour.factor == record.uom_id.factor:
                 record.service_upsell_threshold_ratio = False
                 continue
             else:
-                timesheet_encode_uom = record.company_id.timesheet_encode_uom_id or company_uom
+                timesheet_encode_uom = company_uom
                 record.service_upsell_threshold_ratio = f'(1 {record.uom_id.name} = {timesheet_encode_uom.factor / product_uom_hour.factor:.2f} {timesheet_encode_uom.name})'
 
     def _compute_visible_reinvoice_policy(self):

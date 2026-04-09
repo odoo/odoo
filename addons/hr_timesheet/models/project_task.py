@@ -64,7 +64,7 @@ class ProjectTask(models.Model):
             raise UserError(_("This task cannot be private because there are some timesheets linked to it."))
 
     def _uom_in_days(self):
-        return self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
+        return self.env['ir.config_parameter'].sudo().get_bool('hr_timesheet.is_encode_uom_days')
 
     def _compute_encode_uom_in_days(self):
         self.encode_uom_in_days = self._uom_in_days()
