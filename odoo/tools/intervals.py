@@ -111,15 +111,16 @@ class Intervals[T]:
         return result
 
 
-def intervals_overlap[T](interval_a: tuple[T, T], interval_b: tuple[T, T]) -> bool:
+def intervals_overlap[T](interval_a: tuple[T, T] | tuple[T, T, AbstractSet],
+                         interval_b: tuple[T, T] | tuple[T, T, AbstractSet]) -> bool:
     """Check whether intervals intersect.
 
     :param interval_a:
     :param interval_b:
     :return: True if two non-zero intervals overlap
     """
-    start_a, stop_a = interval_a
-    start_b, stop_b = interval_b
+    start_a, stop_a = interval_a[0], interval_a[1]
+    start_b, stop_b = interval_b[0], interval_b[1]
     return start_a < stop_b and stop_a > start_b
 
 
