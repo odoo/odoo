@@ -1335,6 +1335,8 @@ class CalendarEvent(models.Model):
                 self.recurrence_id.unlink()
             elif self == self.recurrence_id.base_event_id:
                 self.recurrence_id._select_new_base_event()
+        elif not recurrence_update_setting:
+            self.write({'active': False})
 
     # ------------------------------------------------------------
     # MAILING
