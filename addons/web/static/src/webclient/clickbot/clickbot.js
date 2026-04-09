@@ -66,6 +66,7 @@ function setup(light, currentState) {
             menuIndex: 0,
             subMenuIndex: 0,
         },
+        // @todo owl3 migration reactive with callback
         () => browser.localStorage.setItem("running.clickbot", JSON.stringify(state))
     );
     browser.localStorage.setItem("running.clickbot", JSON.stringify(state));

@@ -35,6 +35,7 @@ export const profilingService = {
                     return Boolean(state.session);
                 },
             },
+            // @todo owl3 migration reactive with callback
             notify
         );
 

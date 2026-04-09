@@ -96,6 +96,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
                     }
                     if (!attachment.raw_access_token) {
                         await new Promise((resolve) => {
+                            // @todo owl3 migration reactive with callback
                             const proxy = reactive(attachment, () => {
                                 if (attachment.raw_access_token) {
                                     resolve();

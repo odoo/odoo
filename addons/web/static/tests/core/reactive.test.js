@@ -1,6 +1,6 @@
 import { reactive } from "@web/owl2/utils";
-import { describe, expect, test } from "@odoo/hoot";
-import { EventBus } from "@odoo/owl";
+import { after, describe, expect, test } from "@odoo/hoot";
+import { EventBus, effect as owlEffect } from "@odoo/owl";
 import { Reactive, effect } from "@web/core/utils/reactive";
 
 describe.current.tags("headless");
@@ -16,13 +16,15 @@ describe("class", () => {
             }
         }
 
-        const obj = reactive(new MyReactiveClass(), () => {
-            expect.step(`counter: ${obj.counter}`);
-        });
+        const obj = reactive(new MyReactiveClass());
+        after(
+            owlEffect(() => {
+                expect.step(`counter: ${obj.counter}`);
+            })
+        );
 
-        obj.counter; // initial subscription to counter
         obj.counter++;
-        expect.verifySteps(["counter: 1"]);
+        expect.verifySteps(["counter: 0", "counter: 1"]);
         bus.trigger("change");
         expect(obj.counter).toBe(2);
         expect.verifySteps([
@@ -40,12 +42,14 @@ describe("class", () => {
                 bus.addEventListener("change", () => this.counter++);
             }
         }
-        const obj = reactive(new MyReactiveClass(), () => {
-            expect.step(`counter: ${obj.counter}`);
-        });
-        obj.counter; // initial subscription to counter
+        const obj = reactive(new MyReactiveClass());
+        after(
+            owlEffect(() => {
+                expect.step(`counter: ${obj.counter}`);
+            })
+        );
         obj.counter++;
-        expect.verifySteps(["counter: 1"]);
+        expect.verifySteps(["counter: 0", "counter: 1"]);
         bus.trigger("change");
         expect(obj.counter).toBe(2);
         expect.verifySteps(["counter: 2"]);

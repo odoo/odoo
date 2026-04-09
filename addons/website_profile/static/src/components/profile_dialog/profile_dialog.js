@@ -70,6 +70,7 @@ export class ProfileDialog extends Component {
             const userData = users[0];
             userData.country_id = userData.country_id && userData.country_id[0]; // keep only id
             userData.website_description = markup(userData.website_description || "");
+            // @todo owl3 migration reactive with callback
             this.user = reactive(userData, () => this.validate());
             this.countries = countries;
             const isInternalUser = await user.hasGroup("base.group_user");
