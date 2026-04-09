@@ -1,37 +1,20 @@
-import { useRef } from "@web/owl2/utils";
-import { onWillDestroy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { useRef } from "@web/owl2/utils";
 
 /**
- * @typedef {import("./datetimepicker_service").DateTimePickerServiceParams & {
- *  endDateRefName?: string;
- *  startDateRefName?: string;
- * }} DateTimePickerHookParams
- */
-
-/**
- * @param {DateTimePickerHookParams} params
+ * @param {import("./datetimepicker_service").DateTimePickerServiceParams} params
  */
 export function useDateTimePicker(params) {
     function getInputs() {
         return inputRefs.map((ref) => ref.el);
     }
 
-    const inputRefs = [
-        useRef(params.startDateRefName || "start-date"),
-        useRef(params.endDateRefName || "end-date"),
-    ];
+    const inputRefs = [useRef("start-date"), useRef("end-date")];
 
-    // Need original object since 'pickerProps' (or any other param) can be defined
-    // as getters
-    const serviceParams = Object.assign(Object.create(params), {
-        getInputs,
-        useOwlHooks: true,
-    });
-
-    const picker = useService("datetime_picker").create(serviceParams);
-    onWillDestroy(() => {
-        picker.disable();
-    });
-    return picker;
+    return useService("datetime_picker").create(
+        // Need original object since 'pickerProps' (or any other param) can be defined
+        // as getters
+        Object.assign(Object.create(params), { getInputs }),
+        { useOwlHooks: true }
+    );
 }
