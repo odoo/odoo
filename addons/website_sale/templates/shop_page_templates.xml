@@ -828,11 +828,6 @@
             method="get"
             t-att-action="keep(attribute_values=0, tags=0)"
         >
-            <t
-                t-set="visible_attributes"
-                t-value="len([a for a in attributes if pavs_per_attribute[a] and len(pavs_per_attribute[a]) &gt; 1])"
-            />
-
             <t t-foreach="attributes" t-as="a">
                 <t t-set="_status" t-value="'inactive'"/>
                 <t t-set="current_attribute_pavs" t-value="pavs_per_attribute[a]" />
@@ -843,9 +838,12 @@
                     t-set="_status"
                     t-value="'active'"
                 />
-                <t t-set="_expand_attributes" t-value="_status == 'active' or visible_attributes &lt; 4"/>
+                <t
+                    t-set="_expand_attributes"
+                    t-value="_status == 'active' or len(attributes) &lt; 4"
+                />
                 <div
-                    t-if="current_attribute_pavs and len(current_attribute_pavs) &gt; 1"
+                    t-if="current_attribute_pavs"
                     t-attf-class="accordion-item {{('border-top-0 ' + ('order-1' if _status == 'active' else 'order-2')) if isMobile else 'nav-item mb-1 rounded-0'}}"
                 >
                     <h2

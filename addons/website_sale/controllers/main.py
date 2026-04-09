@@ -2,6 +2,7 @@
 
 import itertools
 import json
+from collections import defaultdict
 from datetime import datetime
 from urllib.parse import parse_qs, urlencode, urlparse
 
@@ -238,12 +239,17 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     def _shop_lookup_products(self, options, post, search, website):
         # No limit because attributes are obtained from complete product list
-        product_count, details, fuzzy_search_term = website._search_with_fuzzy("product_template", search,
-                                                                               offset=0,
-                                                                               limit=None,
-                                                                               order=self._get_search_order(post),
-                                                                               options=options)
-        search_result = details[0].get("results", request.env["product.template"]).with_context(bin_size=True)
+        product_count, details, fuzzy_search_term = website._search_with_fuzzy(
+            "product_template",
+            search,
+            offset=0,
+            limit=None,
+            order=self._get_search_order(post),
+            options=options,
+        )
+        search_result = (
+            details[0].get("results", request.env["product.template"]).with_context(bin_size=True)
+        )
 
         return fuzzy_search_term, product_count, search_result
 
@@ -492,13 +498,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
         )
 
         ProductAttribute = request.env["product.attribute"]
-        pavs_per_attribute = {}
+        ProductAttributeValue = request.env["product.attribute.value"]
+        pavs_per_attribute = defaultdict(lambda: ProductAttributeValue)
         if products:
             search_term = fuzzy_search_term if fuzzy_search_term else search
             product_query = request.env["product.template"]._search(
                 self._get_shop_domain(search_term, category, attribute_value_dict)
             )
-            grouped_pavs = request.env["product.attribute.value"]._read_group(
+            grouped_pavs = ProductAttributeValue._read_group(
                 domain=[
                     ("pav_attribute_line_ids.product_tmpl_id", "in", product_query),
                     ("attribute_id.visibility", "=", "visible"),
