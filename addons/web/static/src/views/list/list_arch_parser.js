@@ -36,8 +36,23 @@ export class GroupListArchParser {
 }
 
 export class ListArchParser {
-    parseFieldNode(node, models, modelName) {
-        return Field.parseFieldNode(node, models, modelName, "list");
+    parseFieldNode(node, models, modelName, fieldNextIds, fieldNodes) {
+        const fieldInfo = Field.parseFieldNode(node, models, modelName, "list");
+        if (!(fieldInfo.name in fieldNextIds)) {
+            fieldNextIds[fieldInfo.name] = 0;
+        }
+        const fieldId = `${fieldInfo.name}_${fieldNextIds[fieldInfo.name]++}`;
+        fieldNodes[fieldId] = fieldInfo;
+        node.setAttribute("field_id", fieldId);
+        const label = fieldInfo.field.label;
+        return {
+            ...fieldInfo,
+            className: node.getAttribute("class"),
+            optional: node.getAttribute("optional") || false,
+            type: "field",
+            fieldType: fieldInfo.type,
+            label: (fieldInfo.widget && label && label.toString()) || fieldInfo.string,
+        };
     }
 
     parseWidgetNode(node, models, modelName) {
@@ -101,29 +116,23 @@ export class ListArchParser {
                     }
                 }
             } else if (node.tagName === "field") {
-                const fieldInfo = this.parseFieldNode(node, models, modelName);
-                if (!(fieldInfo.name in fieldNextIds)) {
-                    fieldNextIds[fieldInfo.name] = 0;
+                const fieldDescriptor = this.parseFieldNode(
+                    node,
+                    models,
+                    modelName,
+                    fieldNextIds,
+                    fieldNodes
+                );
+                if (fieldDescriptor.isHandle) {
+                    handleField = fieldDescriptor.name;
                 }
-                const fieldId = `${fieldInfo.name}_${fieldNextIds[fieldInfo.name]++}`;
-                fieldNodes[fieldId] = fieldInfo;
-                node.setAttribute("field_id", fieldId);
-                if (fieldInfo.isHandle) {
-                    handleField = fieldInfo.name;
-                }
-                const label = fieldInfo.field.label;
                 columns.push({
-                    ...fieldInfo,
+                    ...fieldDescriptor,
                     id: `column_${nextId++}`,
-                    className: node.getAttribute("class"), // for oe_edit_only and oe_read_only
-                    optional: node.getAttribute("optional") || false,
-                    type: "field",
-                    fieldType: fieldInfo.type,
                     hasLabel: !(
-                        fieldInfo.field.label === false ||
-                        exprToBoolean(fieldInfo.attrs.nolabel) === true
+                        fieldDescriptor.field.label === false ||
+                        exprToBoolean(fieldDescriptor.attrs.nolabel) === true
                     ),
-                    label: (fieldInfo.widget && label && label.toString()) || fieldInfo.string,
                 });
                 return false;
             } else if (node.tagName === "widget") {
@@ -146,6 +155,37 @@ export class ListArchParser {
                     id: `column_${nextId++}`,
                     type: "widget",
                 });
+            } else if (node.tagName === "column") {
+                const columnFields = [];
+                for (const child of node.children) {
+                    if (child.tagName === "field") {
+                        const fieldDescriptor = this.parseFieldNode(
+                            child,
+                            models,
+                            modelName,
+                            fieldNextIds,
+                            fieldNodes
+                        );
+                        columnFields.push({
+                            ...fieldDescriptor,
+                            id: `field_${nextId++}`,
+                            hasLabel: false,
+                        });
+                    }
+                }
+                const labelAttr = node.getAttribute("string");
+                const widthAttr = node.getAttribute("width");
+                columns.push({
+                    id: `column_${nextId++}`,
+                    type: "column_group",
+                    label: labelAttr !== null ? labelAttr : columnFields[0].label,
+                    hasLabel: true,
+                    optional: false,
+                    column_invisible: node.getAttribute("column_invisible"),
+                    fields: columnFields,
+                    ...(widthAttr ? { attrs: { width: widthAttr } } : {}),
+                });
+                return false;
             } else if (node.tagName === "groupby" && node.getAttribute("name")) {
                 const fieldName = node.getAttribute("name");
                 const coModelName = fields[fieldName].relation;

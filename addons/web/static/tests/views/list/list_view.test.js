@@ -20650,6 +20650,316 @@ test(`widget column visibility with column_invisible attribute`, async () => {
     expect(`.o_data_row .test_widget`).toHaveCount(0);
 });
 
+test(`column tag: stacks multiple fields in a single cell`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <column>
+                    <field name="int_field"/>
+                    <field name="bar"/>
+                </column>
+            </list>
+        `,
+    });
+
+    expect(`thead th:not(.o_list_record_selector)`).toHaveCount(2);
+    expect(`thead th:not(.o_list_record_selector):eq(1)`).toHaveText("Int field", {
+        message: "The stacked cell uses the first field's label as header",
+    });
+    expect(`tbody tr:eq(0) td:not(.o_list_record_selector)`).toHaveCount(2, {
+        message: "Each row has 2 data cells",
+    });
+    expect(
+        `tbody tr:eq(0) td:not(.o_list_record_selector):eq(1) .o_column_group_field`
+    ).toHaveCount(2, { message: "Both sub-fields appear in the second cell" });
+});
+
+test(`column tag: uses string attribute as header label`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <column string="Details">
+                    <field name="int_field"/>
+                    <field name="bar"/>
+                </column>
+            </list>
+        `,
+    });
+
+    expect(`thead th:not(.o_list_record_selector):eq(1)`).toHaveText("Details");
+});
+
+test(`column tag: column_invisible hides the entire stacked column`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <column column_invisible="1">
+                    <field name="int_field"/>
+                    <field name="bar"/>
+                </column>
+            </list>
+        `,
+    });
+
+    expect(`thead th:not(.o_list_record_selector)`).toHaveCount(1);
+    expect(`tbody tr:eq(0) td:not(.o_list_record_selector)`).toHaveCount(1);
+});
+
+test(`column tag: sub-field invisible hides only that sub-field`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <column>
+                    <field name="int_field"/>
+                    <field name="bar" invisible="1"/>
+                </column>
+            </list>
+        `,
+    });
+
+    expect(`thead th:not(.o_list_record_selector)`).toHaveCount(2);
+    // Only one sub-field is visible in each cell (bar is invisible)
+    expect(
+        `tbody tr:eq(0) td:not(.o_list_record_selector):eq(1) .o_column_group_field`
+    ).toHaveCount(1);
+});
+
+test.tags("desktop");
+test(`column tag: clicking column_group cell focuses first sub-field`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list editable="bottom">
+                <field name="foo"/>
+                <column>
+                    <field name="int_field"/>
+                    <field name="date"/>
+                </column>
+            </list>
+        `,
+    });
+
+    await contains(`.o_data_row:eq(0) td[name='int_field']`).click();
+    expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
+    expect(`.o_selected_row td[name='int_field'] [name='int_field'] input`).toBeFocused();
+
+    // Re-clicking on the cell (not on a specific sub-field) keeps focus unchanged
+    await contains(`.o_data_row:eq(0) td[name='int_field']`).click();
+    expect(`.o_selected_row td[name='int_field'] [name='int_field'] input`).toBeFocused();
+});
+
+test.tags("desktop");
+test(`column tag: clicking a specific sub-field focuses that sub-field`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list editable="bottom">
+                <field name="foo"/>
+                <column>
+                    <field name="int_field"/>
+                    <field name="date"/>
+                </column>
+            </list>
+        `,
+    });
+
+    // Click on the second sub-field of an unselected row
+    await contains(`.o_data_row:eq(0) [data-field-name='date']`).click();
+    expect(`.o_selected_row td[name='int_field'] [name='date'] button`).toBeFocused();
+
+    // Re-clicking on the same sub-field keeps focus unchanged
+    await contains(`.o_selected_row [data-field-name='date']`).click();
+    expect(`.o_selected_row td[name='int_field'] [name='date'] input`).toBeFocused();
+
+    // Clicking the first sub-field now moves focus to it
+    await contains(`.o_selected_row [data-field-name='int_field']`).click();
+    expect(`.o_selected_row td[name='int_field'] [name='int_field'] input`).toBeFocused();
+});
+
+test.tags("desktop");
+test(`column tag: readonly column_group is skipped when entering edit mode`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list editable="bottom">
+                <column>
+                    <field name="int_field" readonly="1"/>
+                    <field name="date" readonly="1"/>
+                </column>
+                <field name="foo"/>
+            </list>
+        `,
+    });
+
+    await contains(`.o_data_row:eq(0) td[name='int_field']`).click();
+    expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
+    expect(`.o_selected_row [name='foo'] input`).toBeFocused();
+});
+
+test.tags("desktop");
+test(`column tag: Tab/Shift+Tab navigation through column_group`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list editable="bottom">
+                <field name="foo"/>
+                <column>
+                    <field name="int_field"/>
+                    <field name="bar"/>
+                </column>
+            </list>
+        `,
+    });
+
+    // Tab from regular field → first sub-field of column_group
+    await contains(`.o_data_row:first .o_data_cell[name='foo']`).click();
+    await press("Tab");
+    await animationFrame();
+    expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
+    expect(`.o_selected_row td[name='int_field'] [name='int_field'] input`).toBeFocused();
+
+    // Tab from column_group (first sub-field) → last sub-field
+    await press("Tab");
+    await animationFrame();
+    expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
+    expect(`.o_selected_row td[name='int_field'] [name='bar'] input`).toBeFocused();
+
+    // Tab from column_group (last column) → next row, first field
+    await press("Tab");
+    await animationFrame();
+    expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
+    expect(`.o_selected_row [name='foo'] input`).toBeFocused();
+
+    // Shift+Tab → previous row, last sub-field of column_group
+    await press("shift+Tab");
+    await animationFrame();
+    expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
+    expect(`.o_selected_row td[name='int_field'] [name='bar'] input`).toBeFocused();
+});
+
+test(`column tag: optional attribute on sub-fields shows/hides individual sub-fields`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <column>
+                    <field name="int_field"/>
+                    <field name="date" optional="hide"/>
+                </column>
+            </list>
+        `,
+    });
+
+    // Column is always shown; only the optional sub-field is hidden
+    expect(`thead th:not(.o_list_record_selector)`).toHaveCount(3);
+    expect(`tbody tr:eq(0) td:not(.o_list_record_selector)`).toHaveCount(3);
+    // Only int_field is visible inside the column group cell
+    expect(
+        `tbody tr:eq(0) td:not(.o_list_record_selector):eq(1) .o_column_group_field`
+    ).toHaveCount(1);
+
+    // Toggle date on via the optional columns dropdown
+    await contains(`table .o_optional_columns_dropdown .dropdown-toggle`).click();
+    await contains(`.o-dropdown-item`).click();
+    expect(
+        `tbody tr:eq(0) td:not(.o_list_record_selector):eq(1) .o_column_group_field`
+    ).toHaveCount(2);
+});
+
+test(`column tag: aggregate computed for first aggregatable stacked field`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <column>
+                    <field name="int_field" sum="Sum"/>
+                    <field name="bar"/>
+                </column>
+            </list>
+        `,
+    });
+    expect(queryAllTexts(`tfoot td`)).toEqual(["", "32"]);
+});
+
+test(`column tag: aggregate uses first aggregatable field, skipping non-aggregatable`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <column>
+                    <field name="bar"/>
+                    <field name="int_field" sum="Sum"/>
+                </column>
+            </list>
+        `,
+    });
+    expect(queryAllTexts(`tfoot td`)).toEqual(["", "32"]);
+});
+
+test(`column tag: aggregate shown in grouped list header for stacked field`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        groupBy: ["m2o"],
+        arch: `
+            <list>
+                <field name="foo"/>
+                <column>
+                    <field name="int_field" sum="Sum"/>
+                    <field name="bar"/>
+                </column>
+            </list>
+        `,
+    });
+    expect(`.o_group_header:eq(0) td:eq(-1)`).toHaveText("23");
+    expect(`.o_group_header:eq(1) td:eq(-1)`).toHaveText("9");
+    expect(`tfoot td:eq(-1)`).toHaveText("32");
+});
+
+test(`column tag: class attribute is applied to sub-field wrapper`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <column>
+                    <field name="int_field" class="my_class"/>
+                    <field name="bar"/>
+                </column>
+            </list>
+        `,
+    });
+
+    const groupFields = queryAll(
+        `tbody tr:eq(0) td:not(.o_list_record_selector):eq(1) .o_column_group_field`
+    );
+    expect(groupFields[0]).toHaveClass("my_class");
+    expect(groupFields[1]).not.toHaveClass("my_class");
+});
+
 test(`x2many list: create control supports hotkey`, async () => {
     Foo._records[0].o2m = [1];
 

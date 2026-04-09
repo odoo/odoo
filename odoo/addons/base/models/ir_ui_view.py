@@ -1888,7 +1888,7 @@ actual arch.
                 value=editable_attr,
             )
             self._raise_view_error(msg, node)
-        allowed_tags = ('field', 'button', 'control', 'groupby', 'widget', 'header')
+        allowed_tags = ('field', 'button', 'control', 'groupby', 'widget', 'header', 'column')
         for child in node.iterchildren(tag=etree.Element):
             if child.tag not in allowed_tags and not isinstance(child, etree._Comment):
                 msg = _(

@@ -1365,6 +1365,43 @@ test(`freeze widths: x2many, toggle optional field`, async () => {
     expect(getColumnWidths()).toEqual([110, 541, 80, 36]);
 });
 
+test(`width computation: column_group uses first stacked field's type width`, async () => {
+    Foo._records = [];
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list>
+                <field name="bar"/>
+                <column>
+                    <field name="int_field"/>
+                    <field name="foo"/>
+                </column>
+                <field name="m2o"/>
+            </list>
+        `,
+    });
+    expect(getColumnWidths()).toEqual([40, 109, 80, 570]);
+});
+
+test(`width computation: column_group with explicit width attribute`, async () => {
+    Foo._records = [];
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <column width="100">
+                    <field name="m2o"/>
+                    <field name="bar"/>
+                </column>
+            </list>
+        `,
+    });
+    expect(getColumnWidths()).toEqual([40, 640, 120]);
+});
+
 // manually resize columns
 test(`resize, reorder, resize again`, async () => {
     await mountView({
@@ -1674,4 +1711,26 @@ test(`dblclick on resize handle to force a recomputation of all widths`, async (
 
     await contains(".o_list_table th .o_resize", { visible: false }).dblclick();
     expect(getColumnWidths()).toEqual(originalWidths);
+});
+
+test(`resize: column_group column can be resized`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <column>
+                    <field name="int_field"/>
+                    <field name="bar"/>
+                </column>
+                <field name="foo"/>
+            </list>
+        `,
+    });
+
+    const originalWidths = getColumnWidths();
+    await contains(`th:eq(1) .o_resize`, { visible: false }).dragAndDrop(`th:eq(2)`);
+    const widthsAfterResize = getColumnWidths();
+    expect(widthsAfterResize[0]).toBe(originalWidths[0]);
+    expect(widthsAfterResize[1]).toBeGreaterThan(originalWidths[1]);
 });
