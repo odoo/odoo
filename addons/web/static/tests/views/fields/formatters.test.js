@@ -65,6 +65,8 @@ test("formatFloatTime", () => {
     expect(formatFloatTime(0.25 + 45 / 3600, { showSeconds: true })).toBe("0h 15m 45s");
     expect(formatFloatTime(56 / 3600, { showSeconds: true })).toBe("0h 0m 56s");
     expect(formatFloatTime(-0.5)).toBe("-0h 30m");
+    expect(formatFloatTime(1799.999, { unit: "minutes" })).toBe("30h 0m");
+    expect(formatFloatTime(1799.999, { unit: "minutes", showSeconds: true })).toBe("30h 0m 0s");
 
     const options = { numeric: true };
     expect(formatFloatTime(2, options)).toBe("2:00");

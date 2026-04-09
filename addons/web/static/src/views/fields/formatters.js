@@ -202,6 +202,16 @@ function formatDuration(value, options = {}) {
         seconds: showSeconds ? Math.round(seconds % 60) : 0,
     };
 
+    if (duration.seconds === 60) {
+        duration.minutes += 1;
+        duration.seconds = 0;
+    }
+
+    if (duration.minutes === 60) {
+        duration.hours += 1;
+        duration.minutes = 0;
+    }
+
     let durationParts = new Intl.DurationFormat(l10n.locale, {
         style: options.numeric ? "digital" : "narrow",
         hoursDisplay: unit === "hours" || options.numeric ? "always" : "auto",
