@@ -174,7 +174,7 @@ class PosConfig(models.Model):
     payment_method_ids = fields.Many2many('pos.payment.method', string='Payment Methods', bypass_search_access=True, default=lambda self: self._default_payment_methods(), copy=False)
     company_has_template = fields.Boolean(string="Company has chart of accounts", compute="_compute_company_has_template")
     current_user_id = fields.Many2one('res.users', string='Current Session Responsible', compute='_compute_current_session_user')
-    other_devices = fields.Boolean(string="Other Devices", help="Connect devices to your PoS without an IoT Box.")
+    other_devices = fields.Boolean(string="Other Devices", help="Connect printer devices to your PoS.")
     preparation_devices = fields.Boolean(string="Preparation devices", help="Connect preparation printers to print to the bar, kitchen,...")
     rounding_method = fields.Many2one('account.cash.rounding', string="Rounding Method")
     cash_rounding = fields.Boolean(string="Total Rounding")
