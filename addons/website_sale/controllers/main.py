@@ -883,7 +883,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         website = request.website
         ProductCategory = request.env["product.public.category"]
         original_category = category
-        category = category or product.public_categ_ids[:1]
+        category = category or product.public_categ_ids.filtered(
+            lambda c: c.can_access_from_current_website()
+        )[:1]
         markup_data = [
             website._prepare_ecommerce_store_markup_data(),
             product._to_markup_data(website),
