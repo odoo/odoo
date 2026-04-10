@@ -336,6 +336,16 @@ registry.category("web_tour.tours").add("test_pay_unpaid_order_from_kiosk", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_no_orders_from_other_config", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickOrders(),
+            TicketScreen.noOrderIsThere(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("refund_multiple_products_amounts_compliance", {
     undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
