@@ -2,56 +2,17 @@ import { startInteractions, setupInteractionWhiteList } from "@web/../tests/publ
 import { describe, expect, test } from "@odoo/hoot";
 import { switchToEditMode } from "../../helpers";
 import { queryAll } from "@odoo/hoot-dom";
+import { defaultCarouselStyleSnippet } from "./carousel_helpers";
 
 setupInteractionWhiteList("website.carousel_edit");
 
 describe.current.tags("interaction_dev");
 
 test("[EDIT] carousel_edit resets slide to attributes", async () => {
-    const { core } = await startInteractions(
-        `
-        <section>
-            <div id="slideshow_sample" class="carousel carousel-dark slide" data-bs-ride="ride" data-bs-interval="0">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.library_image_08" data-name="Image" data-index="0" alt=""/>
-                    </div>
-                    <div class="carousel-item">
-                        <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.library_image_03" data-name="Image" data-index="1" alt=""/>
-                    </div>
-                    <div class="carousel-item">
-                        <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.library_image_02" data-name="Image" data-index="2" alt=""/>
-                    </div>
-                </div>
-                <div class="o_carousel_controllers">
-                    <button class="carousel-control-prev o_not_editable" contenteditable="false" data-bs-target="#slideshow_sample" data-bs-slide="prev" aria-label="Previous" title="Previous">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"/>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="0" class="active">
-                            <span class="visually-hidden">Carousel indicator</span>
-                            <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_08"/>
-                        </button>
-                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="1">
-                            <span class="visually-hidden">Carousel indicator</span>
-                            <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_03"/>
-                        </button>
-                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="2">
-                            <span class="visually-hidden">Carousel indicator</span>
-                            <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_02"/>
-                        </button>
-                    </div>
-                    <button class="carousel-control-next o_not_editable" contenteditable="false" data-bs-target="#slideshow_sample" data-bs-slide="next" aria-label="Next" title="Next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"/>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            </div>
-        </section>
-    `,
-        { waitForStart: true, editMode: true }
-    );
+    const { core } = await startInteractions(defaultCarouselStyleSnippet("true", 3000), {
+        waitForStart: true,
+        editMode: true,
+    });
     await switchToEditMode(core);
 
     expect(core.interactions).toHaveLength(1);
