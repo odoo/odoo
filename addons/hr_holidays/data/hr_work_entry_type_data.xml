@@ -402,7 +402,7 @@
     <record id="hr_work_entry.l10n_be_work_entry_type_unpaid_compensatory_rest" model="hr.work.entry.type">
         <field name="count_days_as">calendar</field>
     </record>
-   
+
     <record id="hr_work_entry.l10n_be_work_entry_type_paid_recovered_compensatory_rest" model="hr.work.entry.type">
         <field name="count_days_as">calendar</field>
     </record>
@@ -417,6 +417,24 @@
 
     <record id="hr_work_entry.l10n_be_work_entry_type_other_training" model="hr.work.entry.type">
         <field name="count_days_as">calendar</field>
+    </record>
+
+    <record id="hr_work_entry.be_work_entry_type_additional_hours" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="hr_work_entry.be_work_entry_type_additional_hours_50" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="hr_work_entry.be_work_entry_type_additional_hours_100" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="country_id" ref="base.be"/>
     </record>
 
 <!-- CH: Switzerland -->
