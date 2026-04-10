@@ -276,6 +276,14 @@ class TestSalePurchaseStockFlow(TransactionCase):
         ])
         so.action_cancel()
         self.assertEqual(delivery.state, 'cancel')
+        po = so.stock_reference_ids.purchase_ids
+        self.assertRecordValues(po, [{'state': 'draft'}])
+        self.assertRegex(po.activity_ids.note, fr"Exception\(s\) occurred on the sale order\(s\)[\s\S]*{so.name}[\s\S]*Manual actions may be needed")
+        # Cancel the associated PO and reset to draft to see if it is properly re-considered
+        po.button_cancel()
+        po.button_draft()
+
+        # Reset the SO to draft and re-confirm
         so.action_draft()
         so.action_confirm()
         new_delivery = so.picking_ids - delivery
@@ -283,12 +291,19 @@ class TestSalePurchaseStockFlow(TransactionCase):
         self.assertRecordValues(new_delivery.move_ids, [
             {'product_id': self.mto_product.id, 'product_uom_qty': 2.0},
         ])
+        self.assertEqual(po, so.stock_reference_ids.purchase_ids)
+        self.assertRecordValues(po.order_line, [
+            {'product_id': self.mto_product.id, 'product_uom_qty': 4.0},
+        ])
         with Form(so) as so_form:
             with so_form.order_line.edit(0) as line:
                 line.product_uom_qty = 1
         self.assertEqual(so.picking_ids, delivery | new_delivery)
         self.assertRecordValues(new_delivery.move_ids, [
             {'product_id': self.mto_product.id, 'product_uom_qty': 1.0},
+        ])
+        self.assertRecordValues(po.order_line, [
+            {'product_id': self.mto_product.id, 'product_uom_qty': 3.0},
         ])
 
     def test_two_step_delivery_forecast_after_first_picking(self):
