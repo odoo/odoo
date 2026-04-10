@@ -125,3 +125,15 @@ class SaleOrder(models.Model):
         return super()._filter_can_send_abandoned_cart_mail().filtered(
             lambda so: all(ticket.sale_available for ticket in so.order_line.event_ticket_id),
         )
+
+    def _needs_customer_address(self):
+        """Override of `website_sale` to avoid requesting full address details for event
+        registrations."""
+        res = super()._needs_customer_address()
+
+        if self.order_line and all(line.event_ticket_id for line in self.order_line):
+            return self.env["ir.config_parameter"].sudo().get_bool(
+                    "website_event_sale.require_billing_details_for_events"
+            )
+
+        return res
