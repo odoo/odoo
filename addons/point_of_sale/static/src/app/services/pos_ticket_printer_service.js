@@ -5,7 +5,8 @@ import { RetryPrintPopup } from "../components/popups/retry_print_popup/retry_pr
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement, renderToString } from "@web/core/utils/render";
 import { toCanvas } from "../utils/html-to-image";
-import { logPosImage } from "../utils/pretty_console_log";
+import { logPosImage, logPosMessage } from "../utils/pretty_console_log";
+import { waitImages } from "@point_of_sale/utils";
 
 export const posTicketPrinterService = {
     dependencies: ["dialog", "pos_data", "notification"],
@@ -330,6 +331,13 @@ export class PosTicketPrinterService {
         container.innerHTML = "";
         container.appendChild(iframe);
         await new Promise((resolve) => (iframe.onload = resolve));
+        if ((await waitImages(iframe.contentDocument.body)).timedOut) {
+            logPosMessage(
+                "WARNING",
+                "generateIframe",
+                "Timeout while waiting for images to load in the receipt."
+            );
+        }
         return iframe;
     }
 
