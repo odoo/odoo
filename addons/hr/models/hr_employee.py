@@ -81,6 +81,7 @@ class HrEmployee(models.Model):
         required=True
     )
     versions_count = fields.Integer(string="Employee Records Count", compute='_compute_versions_count', groups="hr.group_hr_user")
+    version_revision = fields.Char(compute="_compute_version_revision", groups="hr.group_hr_user")
 
     contract_template_id = fields.Many2one(
         'hr.version',
@@ -970,6 +971,11 @@ class HrEmployee(models.Model):
         )
         for employee in self:
             employee.versions_count = version_count_per_employee.get(employee, 0)
+
+    @api.depends('version_ids.date_version')
+    def _compute_version_revision(self):
+        for employee in self:
+            employee.version_revision = ",".join(f"{v.id},{v.date_version!s}" for v in employee.version_ids)
 
     def _search_newly_hired(self, operator, value):
         if operator not in ('in', 'not in'):

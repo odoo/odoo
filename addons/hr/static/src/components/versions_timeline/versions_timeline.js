@@ -28,21 +28,18 @@ export class VersionsTimeline extends StatusBarField {
     }
 
     /** @override **/
-    getDomain() {
-        return Domain.and([super.getDomain(),
-            [["employee_id", "=", this.props.record.evalContext.id]]]
-        ).toList()
+    getDomain(props) {
+        return Domain.and([
+            super.getDomain(props),
+            [["employee_id", "=", props.record.evalContext.id]],
+        ]).toList();
     }
 
     /** @override **/
-    getFieldNames() {
-        const fieldNames = super.getFieldNames();
-        fieldNames.push([
-            "employee_type_id",
-            "contract_date_start",
-            "contract_date_end",
-        ]);
-        return fieldNames.filter((fName) => fName in this.props.record.fields);
+    getFieldNames(props) {
+        const fieldNames = super.getFieldNames(props);
+        fieldNames.push("employee_type_id", "contract_date_start", "contract_date_end");
+        return fieldNames.filter((fName) => fName in props.record.fields);
     }
 
     displayContractLines() {
@@ -57,10 +54,6 @@ export class VersionsTimeline extends StatusBarField {
             this.props.record.evalContext.id,
             { date_version: date },
         ]);
-
-        const { specialDataCaches } = this.props.record.model;
-        // Invalidate cache after creating new version.
-        Object.keys(specialDataCaches).forEach(key => delete specialDataCaches[key]);
 
         await this.props.record.model.load({
             context: {
