@@ -93,6 +93,13 @@ export class Message extends Component {
     ];
     static template = "mail.Message";
 
+    /**
+     * @type {boolean} Whether the right-click drodpown is being closed.
+     * Useful to detect when close comes from another right-click on the same message,
+     * in order to show the browser right-click instead.
+     */
+    isRightClickDropdownOngoingClose = false;
+
     setup() {
         super.setup();
         this.nbsp = nbsp;
@@ -105,7 +112,12 @@ export class Message extends Component {
             emailHeaderOpen: false,
         });
         this.rightClickDropdownState = useDropdownState({
-            onClose: () => this.props.messageSelection?.clearSelected(),
+            onClose: async () => {
+                this.props.messageSelection?.clearSelected();
+                this.isRightClickDropdownOngoingClose = true;
+                await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
+                this.isRightClickDropdownOngoingClose = false;
+            },
         });
         this.rightClickAnchor = useChildRef("rightClickAnchor");
         /** @type {ShadowRoot} */
@@ -467,7 +479,13 @@ export class Message extends Component {
             // Mobile OS long press is handled with useLongPress()
             return;
         }
-        if (ev.target.closest("a") || !this.props.hasActions || this.isEditing) {
+        if (
+            ev.target.closest("a") ||
+            !this.props.hasActions ||
+            this.isEditing ||
+            this.rightClickDropdownState.isOpen ||
+            this.isRightClickDropdownOngoingClose
+        ) {
             return;
         }
         this.showRightClickMessageActions(ev);

@@ -815,8 +815,10 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Refactoring" });
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    let lastOnContextMenuEv;
     patchWithCleanup(Message.prototype, {
-        onContextMenu() {
+        onContextMenu(ev) {
+            lastOnContextMenuEv = ev;
             expect.step("Message.onContextMenu");
             super.onContextMenu(...arguments);
         },
@@ -865,6 +867,7 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     await rightClick(".o-mail-Message:eq(0)");
     await animationFrame();
     await expect.waitForSteps(["Message.onContextMenu", "Message.showRightClickMessageActions"]);
+    expect(lastOnContextMenuEv.defaultPrevented).toBe(true);
     await contains(".o-dropdown-item", { count: 6 });
     await contains(".o-dropdown-item:contains('Add a Reaction')");
     await contains(".o-dropdown-item:contains('Bookmark')");
@@ -874,6 +877,12 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     await contains(".o-dropdown-item:contains('Copy Text')");
     await contains(".o-mail-Message:eq(0).o-selected");
     await contains(".o-mail-Message:eq(1):not(.o-selected)");
+    // Test right-click again doesn't show the menu (shows browser context menu instead)
+    await rightClick(".o-mail-Message:eq(0)");
+    await contains(".o-dropdown-item", { count: 0 });
+    await animationFrame();
+    expect.verifySteps(["Message.onContextMenu"]);
+    expect(lastOnContextMenuEv.defaultPrevented).toBe(false);
     // Test inner-link in body of message doesn't trigger showing of message actions
     await click(".o-mail-Thread");
     await contains(".o-dropdown-item", { count: 0 });
@@ -885,6 +894,7 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     await expect.waitForSteps(["Message.onContextMenu"]);
     await animationFrame();
     expect.verifySteps([]);
+    expect(lastOnContextMenuEv.defaultPrevented).toBe(false);
     // Test Pinned Panel right-click doesn't show message actions
     await click(".o-mail-DiscussSidebar-item:has(:text('General'))");
     await contains(".o-mail-DiscussContent-threadName:value('General')");
@@ -894,6 +904,7 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     await expect.waitForSteps(["Message.onContextMenu"]);
     await animationFrame();
     expect.verifySteps([]);
+    expect(lastOnContextMenuEv.defaultPrevented).toBe(false);
 });
 
 test("Can add reaction from right-click on message", async () => {
