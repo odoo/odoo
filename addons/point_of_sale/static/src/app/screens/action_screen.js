@@ -6,6 +6,7 @@ export class ActionScreen extends Component {
     static components = { ActionContainer };
     static props = {
         actionName: String,
+        viewMode: { type: String, optional: true },
     };
     static storeOnOrder = false;
     static template = xml`
