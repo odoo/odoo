@@ -176,6 +176,38 @@ class TestMrpAccount(TestBomPriceCommon):
         mo_1 = self._create_mo(self.bom_1, 1)
         mo_1.with_user(mrp_user).button_mark_done()
 
+    def test_kit_price_unit_bom_line_uom_conversion(self):
+        """_get_kit_price_unit must convert the BOM line qty from the BOM line UOM to
+        the component's product UOM before multiplying by price_unit."""
+        self.env.user.group_ids += self.env.ref('uom.group_uom')
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+        uom_gram = self.env.ref('uom.product_uom_gram')
+
+        flour = self._create_product('Flour', 430.0, quantity=0, category=self.category_avco_auto)
+        flour.product_tmpl_id.uom_id = uom_kg
+
+        kit = self._create_product('Bread Kit', 0.0, quantity=0, category=self.category_avco_auto)
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {
+                'product_id': flour.id,
+                'product_qty': 400.0,
+                'product_uom_id': uom_gram.id,
+            })],
+        })
+
+        # Incoming receipt at 430/kg sets the AVCO cost
+        self._make_in_move(flour, 10.0, unit_cost=430.0, uom_id=uom_kg.id)
+        # Outgoing move for 0.4 kg (= 400g) of flour — the component move for one kit
+        out_move = self._make_out_move(flour, 0.4, uom_id=uom_kg.id)
+
+        price_unit = out_move._get_kit_price_unit(kit, bom, 1.0)
+        self.assertAlmostEqual(price_unit, 172.0, places=2,
+            msg="Expected 430/kg * 0.4kg = 172, got %s" % price_unit)
+
 
 class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
 
