@@ -6610,7 +6610,7 @@ class AccountMove(models.Model):
                 self.company_id,
                 payment.date
             )
-            for payment in self.reconciled_payment_ids.filtered(
+            for payment in self.sudo().reconciled_payment_ids.filtered(
                 lambda p: (
                     not p.is_reconciled
                     and not p.is_matched

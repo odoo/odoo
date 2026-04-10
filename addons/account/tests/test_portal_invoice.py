@@ -41,6 +41,24 @@ class TestPortalInvoice(AccountTestInvoicingHttpCommon):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.content, invoice_with_pdf.invoice_pdf_report_id.raw.content)
 
+    def test_portal_my_invoices_with_matched_payment(self):
+        """Portal users must be able to list their invoices even when a payment
+        is linked via matched_payment_ids. Reading reconciled_payment_ids (which
+        internally reads matched_payment_ids -> account.payment) was done without
+        sudo, causing a 403 for portal users who have no read access on account.payment."""
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.portal_partner.id,
+            'invoice_line_ids': [Command.create({'price_unit': 100})],
+        })
+        invoice.action_post()
+        self.env['account.payment.register'].with_context(
+            active_model='account.move', active_ids=invoice.ids,
+        ).create({})._create_payments()
+        self.authenticate(self.user_portal.login, self.user_portal.login)
+        res = self.url_open('/my/invoices')
+        self.assertEqual(res.status_code, 200)
+
     def test_portal_my_invoice_detail_download_proforma(self):
         invoice_no_pdf = self.env['account.move'].create({
             'move_type': 'out_invoice',
