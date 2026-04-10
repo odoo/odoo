@@ -74,7 +74,7 @@ class StockWarehouse(models.Model):
 
     buy_to_resupply = fields.Boolean(
         'Buy to Resupply', compute='_compute_buy_to_resupply',
-        inverse="_inverse_buy_to_resupply", default=True,
+        readonly=False, default=True,
         help="When products are bought, they can be delivered to this warehouse")
     buy_pull_id = fields.Many2one('stock.rule', 'Buy rule', copy=False)
 
@@ -83,7 +83,7 @@ class StockWarehouse(models.Model):
             buy_route = warehouse.buy_pull_id.route_id
             warehouse.buy_to_resupply = warehouse.id in buy_route.warehouse_ids.ids or (buy_route.warehouse_selectable and not buy_route.warehouse_ids)
 
-    def _inverse_buy_to_resupply(self):
+    def _apply_buy_to_resupply(self):
         for warehouse in self:
             buy_route = warehouse.buy_pull_id.route_id
             if not buy_route:
@@ -94,6 +94,22 @@ class StockWarehouse(models.Model):
                 buy_route.warehouse_ids = [Command.link(warehouse.id)]
             else:
                 buy_route.warehouse_ids = [Command.unlink(warehouse.id)]
+        self.invalidate_recordset(['buy_to_resupply'])
+        self.modified(['buy_to_resupply'])
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        # logically inverse in the override of create method to apply the change after all logics in super().create()
+        res._apply_buy_to_resupply()
+        return res
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'buy_to_resupply' in vals:
+            # logically inverse in the override of write method to apply the change after all logics in super().write()
+            self._apply_buy_to_resupply()
+        return res
 
     def _create_or_update_route(self):
         purchase_route = self._find_or_create_global_route('purchase_stock.route_warehouse0_buy', _('Buy'))
