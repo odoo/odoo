@@ -326,7 +326,10 @@ function matchCondition(record, condition) {
         likeRegexp = new RegExp(`(.*)${escapeRegExp(value).replaceAll("%", "(.*)")}(.*)`, "g");
         ilikeRegexp = new RegExp(`(.*)${escapeRegExp(value).replaceAll("%", "(.*)")}(.*)`, "gi");
     }
-    const fieldValue = typeof field === "number" ? field : record[field];
+    let fieldValue = typeof field === "number" ? field : record[field];
+    if (typeof fieldValue == "object" && fieldValue["id"]) {
+        fieldValue = fieldValue.id;
+    }
     switch (operator) {
         case "=?":
             if ([false, null].includes(value)) {
