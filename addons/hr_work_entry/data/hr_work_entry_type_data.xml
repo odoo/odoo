@@ -452,6 +452,38 @@
         <field name="country_id" ref="base.be"/>
     </record>
 
+    <record id="be_work_entry_type_additional_hours" model="hr.work.entry.type">
+        <field name="name">Additional Hours for Part-time</field>
+        <field name="color">4</field>
+        <field name="display_code">AH</field>
+        <field name="code">ADDITHOURS</field>
+        <field name="count_as">working_time</field>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="be_work_entry_type_additional_hours_50" model="hr.work.entry.type">
+        <field name="name">Additional Hours +50% for Part-time</field>
+        <field name="color">4</field>
+        <field name="display_code">AH1</field>
+        <field name="code">ADDITHOURS50</field>
+        <field name="amount_rate">1.5</field>
+        <field name="count_as">working_time</field>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="be_work_entry_type_additional_hours_100" model="hr.work.entry.type">
+        <field name="name">Additional Hours +100% for Part-time</field>
+        <field name="color">4</field>
+        <field name="display_code">AH2</field>
+        <field name="code">ADDITHOURS100</field>
+        <field name="amount_rate">2</field>
+        <field name="count_as">working_time</field>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
     <record id="be_work_entry_type_sick_leave" model="hr.work.entry.type">
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
