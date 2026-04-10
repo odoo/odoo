@@ -1,7 +1,7 @@
-import { SelectableList } from "@mail/discuss/core/common/selectable_list";
+import { SelectableList, useSelectableListState } from "@mail/discuss/core/common/selectable_list";
 import { Gif } from "@mail/core/common/gif";
 
-import { onWillStart, useState } from "@odoo/owl";
+import { Component, onWillStart, useState } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { useSequential } from "@mail/utils/common/hooks";
@@ -16,11 +16,11 @@ import { createElementWithContent } from "@web/core/utils/html";
 
 const MAX_FORWARD_SELECTION_LIMIT = 5;
 
-export class ForwardDialog extends SelectableList {
+export class ForwardDialog extends Component {
     static components = {
-        ...SelectableList.components,
         Dialog,
         Gif,
+        SelectableList,
     };
     static props = ["sourceMessage", "close?"];
     static template = "mail.ForwardDialog";
@@ -34,6 +34,7 @@ export class ForwardDialog extends SelectableList {
             selectablePartners: [],
             optionalMsgBody: "",
         });
+        this.selectableListState = useSelectableListState();
         this.debouncedFetchThreadsForForward = useDebounced(
             this.fetchThreadsForForward.bind(this),
             250
@@ -52,7 +53,7 @@ export class ForwardDialog extends SelectableList {
     get subtitleText() {
         if (
             this.maxSelectionLimit &&
-            this.internalState.selectedOptions.length >= this.maxSelectionLimit
+            this.selectableListState.selectedOptions.length >= this.maxSelectionLimit
         ) {
             return _t("You can only select up to %s items", this.maxSelectionLimit);
         }
@@ -64,13 +65,13 @@ export class ForwardDialog extends SelectableList {
     }
 
     get selectedChannels() {
-        return this.internalState.selectedOptions
+        return this.selectableListState.selectedOptions
             .filter((option) => option.isChannel && option.channel)
             .map((option) => option.channel);
     }
 
     get selectedPartners() {
-        return this.internalState.selectedOptions
+        return this.selectableListState.selectedOptions
             .filter((option) => option.isPartner && option.partner)
             .map((option) => option.partner);
     }
@@ -149,7 +150,7 @@ export class ForwardDialog extends SelectableList {
         if (option.isPartner && option.partner) {
             return option.partner.avatarUrl ?? "";
         }
-        return super.getOptionAvatarUrl(option);
+        return undefined;
     }
 
     _shouldExcludeThreadForForward(thread) {
@@ -157,7 +158,7 @@ export class ForwardDialog extends SelectableList {
     }
 
     async fetchThreadsForForward() {
-        this.internalState.isLoading = true;
+        this.selectableListState.isLoading = true;
         try {
             await this.store.channels.fetch();
             await this.sequential(async () => {
@@ -206,7 +207,7 @@ export class ForwardDialog extends SelectableList {
             this.state.selectableChannels = filteredThreads;
             this.state.selectablePartners = selectablePartners;
         } finally {
-            this.internalState.isLoading = false;
+            this.selectableListState.isLoading = false;
         }
     }
 
@@ -253,7 +254,7 @@ export class ForwardDialog extends SelectableList {
             optional_msg_has_link: this._hasLinkInOptionalMsgBody(optionalMsgBody),
             source_msg_has_link: this.props.sourceMessage.hasLink ?? false,
         });
-        this.internalState.selectedOptions = [];
+        this.selectableListState.selectedOptions = [];
         this.state.optionalMsgBody = "";
         this.props.close?.();
         if (targetChannelsIds.length > 1) {

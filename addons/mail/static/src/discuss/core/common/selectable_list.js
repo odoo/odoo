@@ -1,39 +1,49 @@
 import { ImStatus } from "@mail/core/common/im_status";
 
-import { Component, useState, useRef } from "@odoo/owl";
+import { Component, useState, useRef, onMounted } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
+function makeSelectableListState() {
+    return useState({
+        searchTerm: "",
+        options: [],
+        selectedOptions: [],
+        isLoading: false,
+    });
+}
+
+export function useSelectableListState() {
+    return makeSelectableListState();
+}
+
 export class SelectableList extends Component {
     static components = { ImStatus };
-    static props = {};
+    static props = ["state?", "slots", "autofocus?", "optionAvatarUrl"];
     static template = "discuss.SelectableList";
 
     setup() {
         this.store = useService("mail.store");
         this.inputRef = useRef("input");
-        this.internalState = useState({
-            search: "",
-            selectedOptions: [],
-            isLoading: false,
+        this.internalState = makeSelectableListState();
+        onMounted(() => {
+            if (this.props.autofocus) {
+                this.inputRef.el.focus();
+            }
         });
     }
 
+    get state() {
+        return this.props.state || this.internalState;
+    }
+
     get search() {
-        return this.internalState.search;
+        return this.state.search;
     }
 
     set search(value) {
-        this.internalState.search = value;
-    }
-
-    get selectedOptions() {
-        return this.internalState.selectedOptions;
-    }
-
-    get options() {
-        return [];
+        this.state.search = value;
     }
 
     get maxSelectionLimit() {
@@ -54,7 +64,7 @@ export class SelectableList extends Component {
     }
 
     toggleSelection = (option) => {
-        const selectedOptions = [...this.selectedOptions];
+        const selectedOptions = [...this.state.selectedOptions];
         const idx = selectedOptions.findIndex((selected) => selected.id === option.id);
         if (idx === -1) {
             if (this.maxSelectionLimit && selectedOptions.length >= this.maxSelectionLimit) {
@@ -64,11 +74,11 @@ export class SelectableList extends Component {
         } else {
             selectedOptions.splice(idx, 1);
         }
-        this.internalState.selectedOptions = selectedOptions;
+        this.state.selectedOptions = selectedOptions;
     };
 
     isSelected(option) {
-        return this.selectedOptions.some((selected) => selected.id === option.id);
+        return this.state.selectedOptions.some((selected) => selected.id === option.id);
     }
 
     getOptionDisplayName(option) {
@@ -82,6 +92,10 @@ export class SelectableList extends Component {
     }
 
     getOptionAvatarUrl(option) {
+        const optionFromProp = this.props.optionAvatarUrl(option);
+        if (optionFromProp) {
+            return optionFromProp;
+        }
         if (option.isPartner && option.partner) {
             return option.partner.avatarUrl;
         }

@@ -1,25 +1,25 @@
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
-import { SelectableList } from "@mail/discuss/core/common/selectable_list";
+import { SelectableList, useSelectableListState } from "@mail/discuss/core/common/selectable_list";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { MessageLinkPreviewList } from "@mail/core/common/message_link_preview_list";
 import { Gif } from "@mail/core/common/gif";
 
-import { onMounted, onWillStart, useEffect, useState } from "@odoo/owl";
+import { Component, onWillStart, useEffect, useState } from "@odoo/owl";
 
 import { useSequential } from "@mail/utils/common/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 
-export class ChannelInvitation extends SelectableList {
+export class ChannelInvitation extends Component {
     static components = {
-        ...SelectableList.components,
         ActionPanel,
         DiscussAvatar,
         AttachmentList,
         MessageLinkPreviewList,
         Gif,
+        SelectableList,
     };
     static defaultProps = { hasSizeConstraints: false };
     static props = [
@@ -49,7 +49,8 @@ export class ChannelInvitation extends SelectableList {
             selectablePartners: [],
             sentEmails: new Set(),
         });
-        this.internalState.search = this.state.searchStr;
+        this.selectableListState = useSelectableListState();
+        this.selectableListState.search = this.state.searchStr;
         this.debouncedFetchPartnersToInvite = useDebounced(
             this.fetchPartnersToInvite.bind(this),
             250
@@ -65,11 +66,6 @@ export class ChannelInvitation extends SelectableList {
         onWillStart(() => {
             if (this.store.self_user) {
                 this.fetchPartnersToInvite();
-            }
-        });
-        onMounted(() => {
-            if (this.store.self_user && this.props.channel) {
-                this.inputRef.el.focus();
             }
         });
         useEffect(
@@ -91,13 +87,13 @@ export class ChannelInvitation extends SelectableList {
     }
 
     get selectedPartners() {
-        return this.internalState.selectedOptions
+        return this.selectableListState.selectedOptions
             .filter((option) => option.isPartner && option.partner)
             .map((option) => option.partner);
     }
 
     get selectedEmails() {
-        return this.internalState.selectedOptions
+        return this.selectableListState.selectedOptions
             .filter((option) => option.email)
             .map((option) => option.email);
     }
@@ -108,7 +104,7 @@ export class ChannelInvitation extends SelectableList {
 
     set searchStr(newSearchStr) {
         this.state.searchStr = newSearchStr;
-        this.internalState.search = newSearchStr;
+        this.selectableListState.search = newSearchStr;
     }
 
     get showingResultNarrowText() {
@@ -152,9 +148,7 @@ export class ChannelInvitation extends SelectableList {
     }
 
     getOptionAvatarUrl(option) {
-        return option.isPartner && option.partner
-            ? option.partner.avatarUrl ?? ""
-            : super.getOptionAvatarUrl(option);
+        return option.isPartner && option.partner ? option.partner.avatarUrl ?? "" : undefined;
     }
 
     get emptyStateText() {
@@ -201,6 +195,10 @@ export class ChannelInvitation extends SelectableList {
             this.state.sentEmails.add(results.selectable_email);
         }
         this.state.selectableEmails = [...new Set(selectableEmails)];
+        this.selectableListState.options = this._buildOptions(
+            this.state.selectablePartners,
+            this.state.selectableEmails
+        );
     }
 
     onInput() {
@@ -248,7 +246,7 @@ export class ChannelInvitation extends SelectableList {
             );
         }
         await Promise.all(invitePromises);
-        this.internalState.selectedOptions = [];
+        this.selectableListState.selectedOptions = [];
         this.props.close?.();
     }
 
