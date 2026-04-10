@@ -117,7 +117,8 @@
                             groups="hr.group_hr_user" invisible="not active or not id" context="{'sort_by_responsible': True}"/>
                         <button name="action_cancel_departure" string="Cancel End of Collaboration" type="object"
                             groups="hr.group_hr_user" invisible="not id or not departure_id or departure_apply_date"/>
-                        <field name="version_id" widget="versions_timeline" invisible="not id" options="{'clickable': True}" readonly="False"/>
+                        <field name="version_id" widget="versions_timeline" context="{'version_revision': version_revision}" invisible="not id" options="{'clickable': True}" readonly="False"/>
+                        <field name="version_revision" invisible="1"/>
                     </header>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
