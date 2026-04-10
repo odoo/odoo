@@ -124,9 +124,19 @@ export class InternalNoteButton extends NoteButton {
 
     async onClick() {
         const selectedOrderline = this.pos.getOrder().getSelectedOrderline();
+<<<<<<< 3bc4ee35b42976b418e7e538cad1afeda8f7cb1e
         const selectedNote = JSON.parse(this.currentNote || null);
         const payload = await this.openTextInput(selectedNote?.map((n) => n.text).join("\n"));
         const coloredNotes = payload ? this.reframeNotes(payload) : "";
+||||||| 3551d59f7fbacae132b9feef9b17ffbf559f109a
+        const selectedNote = JSON.parse(this.currentNote || "[]");
+        const payload = await this.openTextInput(selectedNote.map((n) => n.text).join("\n"));
+        const coloredNotes = payload ? this.reframeNotes(payload) : "[]";
+=======
+        const selectedNote = JSON.parse(this.currentNote || "[]");
+        const payload = await this.openTextInput(selectedNote.map((n) => n.text).join("\n"));
+        const coloredNotes = payload ? this.reframeNotes(payload) : "";
+>>>>>>> 4f1626430ec84f7321181e307fbbae53dd129b9d
         if (selectedOrderline) {
             this.setChanges(selectedOrderline, coloredNotes);
         } else {
