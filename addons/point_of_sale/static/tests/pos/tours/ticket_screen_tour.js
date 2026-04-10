@@ -340,6 +340,16 @@ registry.category("web_tour.tours").add("test_pay_unpaid_order_from_kiosk", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_self_order_mobile_not_visible_in_other_config", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickOrders(),
+            TicketScreen.noOrderIsThere(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("refund_multiple_products_amounts_compliance", {
     steps: () =>
         [

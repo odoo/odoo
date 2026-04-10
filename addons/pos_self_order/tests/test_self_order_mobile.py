@@ -387,3 +387,37 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
 
         order = self.pos_config.current_session_id.order_ids[0]
         self.assertEqual(order.self_ordering_table_id, order.table_id)
+
+    def test_self_order_mobile_not_visible_in_other_config(self):
+        """Self-orders from config A should not appear in config B's ticket screen."""
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'counter',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+
+        order = self.env['pos.order'].create({
+            'session_id': self.pos_config.current_session_id.id,
+            'source': 'mobile',
+            'amount_total': self.cola.lst_price,
+            'amount_tax': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+            'lines': [(0, 0, {
+                'qty': 1,
+                'product_id': self.cola.id,
+                'price_unit': self.cola.lst_price,
+                'price_subtotal': self.cola.lst_price,
+                'price_subtotal_incl': self.cola.lst_price,
+            })],
+        })
+        self.assertEqual(order.config_id, self.pos_config)
+
+        other_pos = self.env['pos.config'].create({
+            'name': 'OtherPOS',
+            'module_pos_restaurant': True,
+            'cash_control': False,
+        })
+        self.start_tour(f"/pos/ui/{other_pos.id}", 'test_self_order_mobile_not_visible_in_other_config', login="pos_admin")
