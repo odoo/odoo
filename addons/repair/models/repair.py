@@ -92,10 +92,10 @@ class RepairOrder(models.Model):
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     uom_id = fields.Many2one(
         'uom.uom', 'Unit', domain="[('id', 'in', allowed_uom_ids)]",
-        compute='compute_uom_id', store=True, precompute=True, readonly=False)
+        compute='_compute_uom_id', store=True, precompute=True, readonly=False)
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial',
-        compute="compute_lot_id", store=True,
+        compute="_compute_lot_id", store=True,
         domain="[('id', 'in', allowed_lot_ids)]", check_company=True,
         help="Products repaired are all belonging to this lot")
     tracking = fields.Selection(string='Product Tracking', related="product_id.tracking", readonly=False)
@@ -261,7 +261,7 @@ class RepairOrder(models.Model):
             )
 
     @api.depends('product_id', 'product_id.uom_id')
-    def compute_uom_id(self):
+    def _compute_uom_id(self):
         for repair in self:
             if not repair.product_id:
                 repair.uom_id = False
@@ -269,7 +269,7 @@ class RepairOrder(models.Model):
                 repair.uom_id = repair.product_id.uom_id
 
     @api.depends('product_id', 'lot_id', 'lot_id.product_id', 'picking_id')
-    def compute_lot_id(self):
+    def _compute_lot_id(self):
         for repair in self:
             if (repair.product_id and repair.lot_id and repair.lot_id.product_id != repair.product_id) or not repair.product_id:
                 repair.lot_id = False
