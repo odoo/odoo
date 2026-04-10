@@ -512,7 +512,7 @@ export class ListPlugin extends Plugin {
             baseContainerNodeName: this.dependencies.baseContainer.getDefaultNodeName(),
             cursors,
         });
-        callbacksForCursorUpdate.unwrap(element);
+        cursors.update(callbacksForCursorUpdate.unwrap(element));
         unwrapContents(element);
         cursors.restore();
     }
