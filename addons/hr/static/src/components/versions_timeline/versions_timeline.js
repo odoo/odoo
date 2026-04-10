@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { statusBarField, StatusBarField } from "@web/views/fields/statusbar/statusbar_field";
 import { _t } from "@web/core/l10n/translation";
+import { useEffect } from "@odoo/owl";
 
 export class VersionsTimeline extends StatusBarField {
     static template = "hr.VersionsTimeline";
@@ -25,24 +26,49 @@ export class VersionsTimeline extends StatusBarField {
                 return { type: "date" };
             },
         });
+
+        const { specialDataCaches, hooks } = this.props.record.model;
+
+        const clearCache = () => {
+            Object.keys(specialDataCaches).forEach((key) => {
+                // Invalidate cache after creating or removing version.
+                if (JSON.parse(key)[0] == "hr.version") {
+                    delete specialDataCaches[key];
+                }
+            });
+        };
+
+        let first = true; // Skip first execution
+        useEffect(() => {
+            if (!first) {
+                clearCache();
+                this.props.record.model.load();
+            }
+            first = false;
+        }, () => [this.props.record.data["versions_count"]]);
+
+        const onRecordSaved = hooks.onRecordSaved;
+        hooks.onRecordSaved = async (record, changes) => {
+            if (["hr.employee", "hr.version"].includes(record.resModel)) {
+                clearCache();
+            }
+            await onRecordSaved(record, changes);
+        };
     }
 
     /** @override **/
-    getDomain() {
-        return Domain.and([super.getDomain(),
-            [["employee_id", "=", this.props.record.evalContext.id]]]
-        ).toList()
+    getDomain(props) {
+        return Domain.and([
+            super.getDomain(props),
+            [["employee_id", "=", props.record.evalContext.id]],
+        ]).toList();
     }
 
     /** @override **/
-    getFieldNames() {
-        const fieldNames = super.getFieldNames();
-        fieldNames.push([
-            "contract_type_id",
-            "contract_date_start",
-            "contract_date_end",
-        ]);
-        return fieldNames.filter((fName) => fName in this.props.record.fields);
+    getFieldNames(props) {
+        const fieldNames = super.getFieldNames(props);
+        fieldNames.push("contract_type_id", "contract_date_start", "contract_date_end");
+        return fieldNames.filter((fName) => fName in props.record.fields);
     }
 
     displayContractLines() {
@@ -57,10 +83,6 @@ export class VersionsTimeline extends StatusBarField {
             this.props.record.evalContext.id,
             { date_version: date },
         ]);
-
-        const { specialDataCaches } = this.props.record.model;
-        // Invalidate cache after creating new version.
-        Object.keys(specialDataCaches).forEach(key => delete specialDataCaches[key]);
 
         await this.props.record.model.load({
             context: {
