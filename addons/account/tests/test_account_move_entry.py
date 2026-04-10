@@ -206,6 +206,27 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # The date has been changed to the first valid date.
         self.assertEqual(copy_move.date, copy_move.company_id.fiscalyear_lock_date + relativedelta(days=1))
 
+    def test_batch_reset_to_draft_partial_success(self):
+        locked_move = self.init_invoice('out_invoice', invoice_date='2016-01-01', post=True, amounts=[100.0], taxes=self.tax_sale_a)
+        resettable_move = self.init_invoice('out_invoice', invoice_date='2026-01-01', post=True, amounts=[200.0], taxes=self.tax_sale_a)
+
+        self.company.fiscalyear_lock_date = '2020-01-01'
+
+        action = (locked_move | resettable_move).action_reset_selected_to_draft()
+
+        self.assertEqual(locked_move.state, 'posted')
+        self.assertEqual(resettable_move.state, 'draft')
+        self.assertEqual(action['type'], 'ir.actions.client')
+        self.assertEqual(action['tag'], 'soft_reload')
+
+    def test_batch_reset_to_draft_all_failed(self):
+        locked_move = self.init_invoice('out_invoice', invoice_date='2016-01-01', post=True, amounts=[100.0], taxes=self.tax_sale_a)
+
+        self.company.fiscalyear_lock_date = '2020-01-01'
+
+        with self.assertRaises(UserError):
+            locked_move.action_reset_selected_to_draft()
+
     def test_misc_fiscalyear_lock_date_2(self):
         self.test_move.action_post()
 

@@ -2207,14 +2207,14 @@ if records:
             </field>
         </record>
 
-        <record id="accountant_confirm_entries_action" model="ir.actions.server">
-            <field name="name">Review Entries</field>
+        <record id="accountant_reset_to_draft_entries_action" model="ir.actions.server">
+            <field name="name">Reset to Draft</field>
             <field name="model_id" ref="account.model_account_move"/>
             <field name="binding_model_id" ref="account.model_account_move"/>
             <field name="binding_view_types">list,kanban</field>
             <field name="group_ids" eval="[Command.set([ref('account.group_account_user')])]"/>
             <field name="state">code</field>
-            <field name="code">action = model.check_selected_moves()</field>
+            <field name="code">action = records.action_reset_selected_to_draft()</field>
         </record>
 
         <!-- ============= LEGACY (kept to not break the previous action with their path ================-->

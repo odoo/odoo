@@ -6299,9 +6299,6 @@ class AccountMove(models.Model):
         partial = self.env['account.partial.reconcile'].browse(partial_id)
         (partial.credit_move_id + partial.debit_move_id).remove_move_reconcile()
 
-    def check_selected_moves(self):
-        self.env['account.move'].browse(self.env.context.get('active_ids', [])).set_moves_checked()
-
     def set_moves_checked(self, is_checked=True):
         for move in self.filtered(lambda m: m.state == 'posted'):
             move.review_state = 'reviewed' if is_checked else 'todo'
@@ -6317,6 +6314,43 @@ class AccountMove(models.Model):
         self.sending_data = False
 
         self._detach_attachments()
+
+    def action_reset_selected_to_draft(self):
+        if not self:
+            return False
+
+        failed_moves = self.env['account.move']
+        has_reset = False
+        last_error = None
+        for move in self:
+            try:
+                move.button_draft()
+                has_reset = True
+            except UserError as error:
+                failed_moves |= move
+                last_error = error
+
+        if not has_reset and last_error:
+            raise last_error
+
+        if failed_moves:
+            self.env.user.partner_id._bus_send('account_notification', {
+                'type': 'warning',
+                'title': _("Some entries could not be reset to draft"),
+                'message': _(
+                    "%(failed_count)s out of %(total_count)s entries could not be reset to draft.",
+                    failed_count=len(failed_moves),
+                    total_count=len(self),
+                ),
+                'action_button': {
+                    'name': _('Open'),
+                    'action_name': _('Entries in error'),
+                    'model': 'account.move',
+                    'res_ids': failed_moves.ids,
+                },
+            })
+
+        return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
 
     def _get_fields_to_detach(self):
         """"
