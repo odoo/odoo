@@ -420,6 +420,15 @@
         <field name="country_id" ref="base.be"/>
     </record>
 
+    <record id="be_work_entry_type_sick_leave_without_certificate" model="hr.work.entry.type">
+        <field name="name">Sick Time Off Without Certificate</field>
+        <field name="display_code">STOWC</field>
+        <field name="code">LEAVE111</field>
+        <field name="color">5</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
     <record id="be_work_entry_type_legal_leave" model="hr.work.entry.type">
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
