@@ -6,7 +6,10 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <field name="partner_shipping_id" position="after">
+            <xpath expr="//form" position="attributes">
+                <attribute name="js_class">sale_order_form</attribute>
+            </xpath>
+            <field name="company_id" position="after">
                 <field
                     name="sale_order_template_id"
                     options="{'no_create': True}"
