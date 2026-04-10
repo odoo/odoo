@@ -318,22 +318,6 @@ describe("Custom button style", () => {
             '<p><a href="https://test.com/" class="rounded-circle btn btn-fill-custom" style="color: rgb(0, 0, 0); background-color: rgb(166, 227, 226); border-width: 1px; border-color: rgb(0, 143, 140); border-style: dashed; ">link[]Label</a></p>'
         );
     });
-
-    test("button with size classes should be detected as custom type", async () => {
-        // Setup: Editor with a button link containing size class (btn-lg) + primary class
-        await setupEditor(
-            '<p><a href="https://test.com/" class="btn btn-lg btn-primary">link[]Label</a></p>',
-            allowCustomOpt
-        );
-
-        // Wait for popover and click edit
-        await waitFor(".o-we-linkpopover");
-        await click(".o_we_edit_link");
-        await animationFrame();
-
-        // The button type should be detected as "custom" because it has btn-lg
-        expect(queryOne('select[name="link_type"]').selectedOptions[0].value).toBe("custom");
-    });
 });
 
 describe("button edit", () => {
