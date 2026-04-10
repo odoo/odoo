@@ -64,7 +64,7 @@ class AccountMoveSend(models.AbstractModel):
             },
         }
         info_always_on_countries = {'BE', 'FI', 'LU', 'LV', 'NL', 'NO', 'SE'}
-        any_moves_not_sent_peppol = any(move.peppol_move_state not in ('processing', 'done') for move in moves)
+        any_moves_not_sent_peppol = any(not move.peppol_is_sent for move in moves)
         always_on_companies = moves.company_id.filtered(
             lambda c: c.country_code in info_always_on_countries and not c.peppol_can_send
         )
@@ -135,8 +135,7 @@ class AccountMoveSend(models.AbstractModel):
                 self._is_applicable_to_company(method, move.company_id),
                 partner.peppol_verification_state == 'valid',
                 move.company_id.account_peppol_proxy_state != 'rejected',
-                move._need_ubl_cii_xml(invoice_edi_format)
-                or move.ubl_cii_xml_id and move.peppol_move_state not in ('processing', 'done'),
+                move._need_ubl_cii_xml(invoice_edi_format) or move.ubl_cii_xml_id and not move.peppol_is_sent,
             ])
         else:
             return super()._is_applicable_to_move(method, move, **move_data)
@@ -168,7 +167,7 @@ class AccountMoveSend(models.AbstractModel):
                 if invoice_data.get('ubl_cii_xml_attachment_values'):
                     xml_file = BinaryBytes(invoice_data['ubl_cii_xml_attachment_values']['raw'])
                     filename = invoice_data['ubl_cii_xml_attachment_values']['name']
-                elif invoice.ubl_cii_xml_id and invoice.peppol_move_state not in ('processing', 'done'):
+                elif invoice.ubl_cii_xml_id and not invoice.peppol_is_sent:
                     xml_file = invoice.ubl_cii_xml_id.raw
                     filename = invoice.ubl_cii_xml_id.name
                 else:
