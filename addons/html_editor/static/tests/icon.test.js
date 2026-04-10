@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, hover, test } from "@odoo/hoot";
 import { click, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -192,6 +192,17 @@ test("Can set icon color", async () => {
     expect(getContent(el)).toBe(
         `<p>[<font style="color: rgb(107, 173, 222);">\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff</font>]</p>`
     );
+});
+
+test("color picker should not close when hovering color", async () => {
+    await setupEditor(
+        `<div>[<span class="fa fa-signal" contenteditable="false">\u200b</span>]</div>`
+    );
+    await waitFor(".o-select-color-foreground");
+    await click(".o-select-color-foreground");
+    await waitFor(".o_color_button[data-color='#6BADDE']");
+    await hover(`[data-color="o-color-1"]`);
+    await expectElementCount(".o_font_color_selector", 1);
 });
 
 test("Can undo to 1x size after applying 2x size", async () => {

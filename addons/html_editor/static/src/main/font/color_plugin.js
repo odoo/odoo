@@ -8,6 +8,7 @@ import {
 } from "@html_editor/utils/color";
 import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import {
+    isElement,
     isEmptyBlock,
     isRedundantElement,
     isTextNode,
@@ -260,7 +261,54 @@ export class ColorPlugin extends Plugin {
                     font = null;
                 }
                 const children = font && descendants(font);
+<<<<<<< 7d855b46498ad112a7a8882ffdd32e57d0cbdb69
                 if (font && !this.dependencies.split.isUnsplittable(font)) {
+||||||| da71f8e390957dbf5a18ed056eca2b5c969caf65
+                const hasInlineGradient = font && isColorGradient(font.style["background-image"]);
+                const isFullySelected =
+                    children && children.every((child) => selectedNodes.includes(child));
+                const isTextGradient =
+                    hasInlineGradient && font.classList.contains("text-gradient");
+                const shouldReplaceExistingGradient =
+                    isFullySelected &&
+                    ((mode === "color" && isTextGradient) ||
+                        (mode === "backgroundColor" && !isTextGradient));
+                if (
+                    font &&
+                    font.nodeName !== "T" &&
+                    (font.nodeName !== "SPAN" || font.style[mode] || font.style.backgroundImage) &&
+                    (isColorGradient(color) ||
+                        color === "" ||
+                        !hasInlineGradient ||
+                        shouldReplaceExistingGradient) &&
+                    !this.dependencies.split.isUnsplittable(font)
+                ) {
+=======
+                const hasInlineGradient = font && isColorGradient(font.style["background-image"]);
+                const isFullySelected =
+                    children &&
+                    children.every(
+                        (child) =>
+                            selectedNodes.includes(child) ||
+                            selectedNodes.some((node) => isElement(node) && node.contains(child))
+                    );
+                const isTextGradient =
+                    hasInlineGradient && font.classList.contains("text-gradient");
+                const shouldReplaceExistingGradient =
+                    isFullySelected &&
+                    ((mode === "color" && isTextGradient) ||
+                        (mode === "backgroundColor" && !isTextGradient));
+                if (
+                    font &&
+                    font.nodeName !== "T" &&
+                    (font.nodeName !== "SPAN" || font.style[mode] || font.style.backgroundImage) &&
+                    (isColorGradient(color) ||
+                        color === "" ||
+                        !hasInlineGradient ||
+                        shouldReplaceExistingGradient) &&
+                    !this.dependencies.split.isUnsplittable(font)
+                ) {
+>>>>>>> fe233d28238c567d3c09bf3c7d516bb7c241b31b
                     // Partially selected <font>: split it.
                     const selectedChildren = children.filter(
                         (child) => child.isConnected && selectedNodes.includes(child)
