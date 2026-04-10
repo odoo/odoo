@@ -171,3 +171,34 @@ class PaymentTransaction(models.Model):
                 self.reference,
             )
             self._set_error(_("Received data with invalid payment status: %s", payment_status))
+
+    def _extract_token_values(self, payment_data):
+        """Override of `payment` to extract the token values from the payment data."""
+        if self.provider_code != "paypal":
+            return super()._extract_token_values(payment_data)
+
+        if customer := payment_data.get(
+            "customer"
+        ):  # TODO LEKER patch, this is probably not the way to go
+            return {"provider_ref": payment_data["id"], "paypal_customer_id": customer["id"]}
+
+        vault_data = (
+            payment_data
+            .get("payment_source", {})
+            .get("card", {})
+            .get("attributes", {})
+            .get("vault")
+        )
+
+        if not vault_data:
+            return {}
+
+        if vault_data["status"] == "VAULTED":
+            return {
+                "provider_ref": vault_data["id"],
+                "paypal_customer_id": vault_data["customer"]["id"],
+            }
+
+        if vault_data["status"] == "APPROVED":
+            # https://developer.paypal.com/docs/checkout/save-payment-methods/during-purchase/js-sdk/cards/#link-saveapprovedpaymentsource
+            return {}  # TODO LEKER
