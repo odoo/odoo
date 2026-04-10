@@ -93,7 +93,7 @@ class WebsiteEventController(http.Controller):
             country = request.env["res.country"]
             if not request.env.user._is_public() and request.env.user.country_id:
                 country = request.env.user.country_id
-            elif (visitor := request.env['website.visitor']._get_visitor_from_request()) and visitor.country_id:
+            elif (visitor := request.env['ir.http']._get_visitor_from_request()) and visitor.country_id:
                 country = visitor.country_id
             elif request.geoip.country_code:
                 country = request.env['res.country'].search([('code', '=', request.geoip.country_code)])
@@ -356,7 +356,7 @@ class WebsiteEventController(http.Controller):
                 "phone": request.env.user.phone,
             }
         else:
-            visitor = request.env['website.visitor']._get_visitor_from_request()
+            visitor = request.env['ir.http']._get_visitor_from_request()
             if visitor.email:
                 default_first_attendee = {
                     "name": visitor.display_name,
@@ -460,7 +460,7 @@ class WebsiteEventController(http.Controller):
         a partner (if visitor linked to a user for example). Purpose is to gather
         as much informations as possible, notably to ease future communications.
         Also try to update visitor informations based on registration info. """
-        visitor_sudo = request.env['website.visitor']._get_visitor_from_request(force_create=True)
+        visitor_sudo = request.env['ir.http']._get_visitor_from_request(force_create=True)
 
         registrations_to_create = []
         for registration_values in registration_data:
@@ -507,7 +507,7 @@ class WebsiteEventController(http.Controller):
     @http.route(['/event/<model("event.event"):event>/registration/success'], type='http', auth="public", methods=['GET'], website=True, sitemap=False)
     def event_registration_success(self, event, registration_ids):
         # fetch the related registrations, make sure they belong to the correct visitor / event pair
-        visitor = request.env['website.visitor']._get_visitor_from_request()
+        visitor = request.env['ir.http']._get_visitor_from_request()
         if not visitor:
             raise NotFound()
         attendees_sudo = request.env['event.registration'].sudo().search([

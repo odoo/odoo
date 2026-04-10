@@ -477,7 +477,7 @@ class EventTrackController(http.Controller):
         valid_tag_indices = request.env['event.track.tag'].search([('id', 'in', input_tag_indices)]).ids
 
         contact = request.env['res.partner']
-        visitor_partner = request.env['website.visitor']._get_visitor_from_request().partner_id
+        visitor_partner = request.env['ir.http']._get_visitor_from_request().partner_id
         # Contact name is required. Therefore, empty contacts are not considered here. At least one of contact_phone
         # and contact_email must be filled. Email is verified. If the post tries to create contact with no valid entry,
         # raise exception. If normalized email is the same as logged partner, use its partner_id on track instead.

@@ -11,7 +11,7 @@ from unittest.mock import patch
 from odoo.tests import HttpCase, common, tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from odoo.addons.website.models.website_visitor import WebsiteVisitor
+from odoo.addons.website.models.ir_http import IrHttp
 
 
 class MockVisitor(common.BaseCase):
@@ -22,8 +22,8 @@ class MockVisitor(common.BaseCase):
         def _get_visitor_from_request(model, *args, **kwargs):
             return force_visitor
 
-        with patch.object(WebsiteVisitor, '_get_visitor_from_request',
-                          autospec=True, wraps=WebsiteVisitor,
+        with patch.object(IrHttp, '_get_visitor_from_request',
+                          autospec=True, wraps=IrHttp,
                           side_effect=_get_visitor_from_request) as _get_visitor_from_request_mock:
             yield
 

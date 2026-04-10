@@ -129,7 +129,7 @@ class EventEvent(models.Model):
           * logged as visitor: check partner or visitor are linked to a
             registration;
         """
-        current_visitor = self.env['website.visitor']._get_visitor_from_request()
+        current_visitor = self.env['ir.http']._get_visitor_from_request()
         if self.env.user._is_public() and not current_visitor:
             return self.env['event.event']
 

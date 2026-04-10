@@ -6,7 +6,7 @@ from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import fields
-from odoo.addons.website.models.website_visitor import WebsiteVisitor
+from odoo.addons.website.models.ir_http import IrHttp
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
 from odoo.tests.common import tagged, users
 
@@ -238,7 +238,7 @@ class TestTrackSuggestions(TestEventOnlineCommon):
             'is_wishlisted': True,
         })
 
-        with patch.object(WebsiteVisitor, '_get_visitor_from_request', lambda *args, **kwargs: emp_visitor), \
+        with patch.object(IrHttp, '_get_visitor_from_request', lambda *args, **kwargs: emp_visitor), \
                 self.with_user('user_employee'):
             current_track = self.env['event.track'].browse(track_1.id)
             all_suggestions = current_track._get_track_suggestions()

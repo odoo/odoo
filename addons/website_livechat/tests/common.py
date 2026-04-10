@@ -6,6 +6,7 @@ import random
 from odoo import fields
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.website.models.ir_http import IrHttp
 
 
 class TestLivechatCommon(MailCommon, TransactionCaseWithUserDemo):
@@ -101,7 +102,7 @@ class TestLivechatCommon(MailCommon, TransactionCaseWithUserDemo):
         self.target_visitor = self.visitor
         def get_visitor_from_request(self_mock, **kwargs):
             return self.target_visitor
-        self.patch(type(self.env['website.visitor']), '_get_visitor_from_request', get_visitor_from_request)
+        self.patch(IrHttp, '_get_visitor_from_request', get_visitor_from_request)
 
     def _send_message(self, channel, email_from, body, author_id=False):
         # As bus is unavailable in test mode, we cannot call /mail/message/post route to post a message.

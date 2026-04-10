@@ -12,7 +12,7 @@ class WebsiteForm(form.WebsiteForm):
     def insert_record(self, request, model_sudo, values, custom, meta=None):
         model_name = model_sudo.model
         if model_name == 'project.task':
-            visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
+            visitor_sudo = request.env['ir.http']._get_visitor_from_request()
             visitor_partner = visitor_sudo.partner_id
             if visitor_partner:
                 values['partner_id'] = visitor_partner.id

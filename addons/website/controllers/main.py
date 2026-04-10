@@ -241,7 +241,7 @@ class Website(Home):
             params = dict(kwargs, res_model=res_model, res_id=res_id, url=url)
             extra_tracking_vals = request.env[res_model].browse(res_id).sudo()._get_extra_tracking_values(**params)
 
-        request.env['website.visitor']._get_visitor_from_request(
+        request.env['ir.http']._get_visitor_from_request(
             force_create=True,
             force_track_values={
                 'url': url,

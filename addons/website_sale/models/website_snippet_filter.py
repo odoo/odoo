@@ -240,7 +240,7 @@ class WebsiteSnippetFilter(models.Model):
 
     def _get_products_latest_viewed(self, _website, limit, domain, **_kwargs):
         products = self.env["product.product"]
-        visitor = self.env["website.visitor"]._get_visitor_from_request()
+        visitor = self.env["ir.http"]._get_visitor_from_request()
         if visitor:
             excluded_products = request.cart.order_line.product_id.ids
             tracked_products = (

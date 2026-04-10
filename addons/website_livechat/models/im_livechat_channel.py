@@ -16,7 +16,7 @@ class Im_LivechatChannel(models.Model):
         )
         if not discuss_channel_vals:
             return False
-        visitor_sudo = self.env['website.visitor']._get_visitor_from_request()
+        visitor_sudo = self.env['ir.http']._get_visitor_from_request()
         if visitor_sudo:
             discuss_channel_vals['livechat_visitor_id'] = visitor_sudo.id
             # As chat requested by the visitor, delete the chat requested by an operator if any to avoid conflicts between two flows

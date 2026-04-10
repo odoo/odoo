@@ -19,7 +19,7 @@ class WebClient(WebclientController):
         to the chat request channel. Channel will then be returned as part of
         the mail store initialization (/mail/data).
         """
-        visitor = request.env['website.visitor']._get_visitor_from_request()
+        visitor = request.env['ir.http']._get_visitor_from_request()
         if not visitor:
             return
         # get active chat_request linked to visitor

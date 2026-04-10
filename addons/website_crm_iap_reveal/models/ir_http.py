@@ -17,7 +17,7 @@ class IrHttp(models.AbstractModel):
     def _serve_page(cls):
         response = super(IrHttp, cls)._serve_page()
         if response and getattr(response, 'status_code', 0) == 200 and request.env.user._is_public():
-            visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
+            visitor_sudo = request.env['ir.http']._get_visitor_from_request()
             # We are avoiding to create a reveal_view if a lead is already
             # created from another module, e.g. website_form
             if not (visitor_sudo and visitor_sudo.lead_ids):

@@ -2079,7 +2079,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def products_recently_viewed_delete(self, product_id=None, product_template_id=None, **_kwargs):
         if not (product_id or product_template_id):
             return None
-        visitor_sudo = request.env["website.visitor"]._get_visitor_from_request()
+        visitor_sudo = request.env["ir.http"]._get_visitor_from_request()
         if visitor_sudo:
             domain = [("visitor_id", "=", visitor_sudo.id)]
             if product_id:
