@@ -29,6 +29,7 @@ import {
     markup,
     onMounted,
     onWillStart,
+    useEffect,
 } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
@@ -1083,8 +1084,15 @@ export class Configurator extends Component {
         });
 
         const initialStep = router.current.step;
-        // @todo owl3 migration reactive with callback
-        const store = reactive(new Store(), () => this.updateStorage(store));
+        const store = reactive(new Store());
+        let isStoreStarted = false;
+        useEffect(() => {
+            if (!isStoreStarted) {
+                store; // consume signal
+                return;
+            }
+            this.updateStorage(store);
+        });
 
         this.state = useState({
             currentStep: initialStep,
@@ -1097,6 +1105,7 @@ export class Configurator extends Component {
 
             await store.start(() => this.getInitialState());
             this.updateStorage(store);
+            isStoreStarted = true;
             if (!store.industries || store.configurator_done) {
                 await this.skipConfigurator();
             }
