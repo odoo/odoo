@@ -240,7 +240,7 @@ $line-height-truncate: 1.5em;
 // Move the opacity to the container to ensure opacity is applied even if the card
 // is not wrapped in a <a> tag
 
-div:has(> .card + .card-body, > .o_wslides_course_unpublished > .card-body) {
+div:has(> .o_wslides_course_unpublished + .card-body, > .o_wslides_course_unpublished > .card-body) {
     opacity: 0.5;
 }
 
