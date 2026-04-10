@@ -1,10 +1,12 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, tick } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, defineStyle } from "@web/../tests/web_test_helpers";
 
 setupInteractionWhiteList("website.age_verification_popup");
+beforeEach(() => defineStyle(/* css */ `* { transition: none !important; }`));
+
 describe.current.tags("interaction_dev");
 
 const modalSelector = "#sAgeVerificationPopup .modal";
