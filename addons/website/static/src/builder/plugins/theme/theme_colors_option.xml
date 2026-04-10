@@ -25,66 +25,86 @@
                             </we-alert>-->
                             <BuilderOptionsSection>
                                 <BuilderRow>
-                                    <div class="d-flex flex-row gap-3 w-100 justify-content-between ps-2" style="height: 50px">
-                                        <div class="d-flex flex-column h-100 justify-content-between">
-                                            <span class="fst-italic">Main</span>
-                                            <div class="d-flex flex-row gap-1">
-                                                <BuilderColorPicker
-                                                    title="this.Primary"
-                                                    action="'customizeWebsiteColor'"
-                                                    actionParam="'o-color-1'"
-                                                    enabledTabs="['solid', 'custom']"
-                                                    selectedTab="'custom'"/>
-                                                <BuilderColorPicker
-                                                    title="this.Secondary"
-                                                    action="'customizeWebsiteColor'"
-                                                    actionParam="'o-color-2'"
-                                                    enabledTabs="['solid', 'custom']"
-                                                    selectedTab="'custom'"/>
-                                                <BuilderColorPicker
-                                                    action="'customizeWebsiteColor'"
-                                                    actionParam="'o-color-3'"
-                                                    enabledTabs="['solid', 'custom']"
-                                                    selectedTab="'custom'"/>
+                                    <div class="d-flex gap-3 w-100 ps-2 pt-2 align-items-end">
+                                        <div class="o-color-palette-editor-container d-flex flex-row gap-3 justify-content-between ps-2" style="height: 50px">
+                                            <div class="d-flex flex-column h-100 justify-content-between">
+                                                <span class="o-color-palette-editor-label text-100">Main</span>
+                                                <div class="o-color-palette-editor-section d-flex flex-row">
+                                                    <BuilderColorPicker
+                                                        title="this.Primary"
+                                                        tooltip.translate="Color 1: The main accent for your website. It defines the look of your headers, primary buttons, and key links to ensure brand consistency."
+                                                        action="'customizeWebsiteColor'"
+                                                        actionParam="'o-color-1'"
+                                                        enabledTabs="['solid', 'custom']"
+                                                        selectedTab="'custom'"/>
+                                                    <BuilderColorPicker
+                                                        title="this.Secondary"
+                                                        tooltip.translate="Color 2: A supporting color used for secondary buttons and as a distinct background for specific content blocks to create visual variety."
+                                                        action="'customizeWebsiteColor'"
+                                                        actionParam="'o-color-2'"
+                                                        enabledTabs="['solid', 'custom']"
+                                                        selectedTab="'custom'"/>
+                                                    <BuilderColorPicker
+                                                        action="'customizeWebsiteColor'"
+                                                        tooltip.translate="Color 3: A subtle mid-tone used for secondary background areas and decorative elements, helping to separate different sections of a page."
+                                                        actionParam="'o-color-3'"
+                                                        enabledTabs="['solid', 'custom']"
+                                                        selectedTab="'custom'"/>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column h-100 justify-content-between">
+                                                <span class="o-color-palette-editor-label text-100">Light &amp; Dark</span>
+                                                <div class="o-color-palette-editor-section o-color-palette-editor-section-last d-flex flex-row gap-0">
+                                                    <BuilderColorPicker
+                                                        action="'customizeWebsiteColor'"
+                                                        tooltip.translate="Color 4: The main background color for most of your website. Pair with a contrasting Color 5. Use a dark color here to create a 'Dark Mode' theme."
+                                                        actionParam="'o-color-4'"
+                                                        enabledTabs="['solid', 'custom']"
+                                                        selectedTab="'custom'"/>
+                                                    <BuilderColorPicker
+                                                        action="'customizeWebsiteColor'"
+                                                        tooltip.translate="Color 5: The main color for body text and headings. To achieve 'Dark Mode', set this to a light color and use a dark tone for Color 4."
+                                                        actionParam="'o-color-5'"
+                                                        enabledTabs="['solid', 'custom']"
+                                                        selectedTab="'custom'"/>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="d-flex flex-column h-100 justify-content-between">
-                                            <span class="fst-italic">Light &amp; Dark</span>
-                                            <div class="d-flex flex-row gap-1">
-                                                <BuilderColorPicker
-                                                    action="'customizeWebsiteColor'"
-                                                    actionParam="'o-color-4'"
-                                                    enabledTabs="['solid', 'custom']"
-                                                    selectedTab="'custom'"/>
-                                                <BuilderColorPicker
-                                                    action="'customizeWebsiteColor'"
-                                                    actionParam="'o-color-5'"
-                                                    enabledTabs="['solid', 'custom']"
-                                                    selectedTab="'custom'"/>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex flex-column h-100">
+                                        <div class="d-flex flex-column ms-auto">
                                             <div class="d-flex flex-column h-100 justify-content-center">
                                                 <BuilderSelect action="'changeColorPalette'" actionParam="'color-palettes-name'" dropdownContainerClass="'o-color-palette-dropdown'">
                                                     <t t-set-slot="fixedButton">
                                                         <Image class="'h-100'" src="'/website/static/src/img/snippets_options/palette.svg'"/>
                                                     </t>
-                                                    <t t-foreach="this.palettes" t-as="palette" t-key="palette.name">
-                                                        <BuilderSelectItem actionValue="`'${palette.name}'`">
-                                                            <div class="o-color-palette-pill d-flex flex-row border rounded-pill overflow-hidden">
-                                                                <t t-foreach="palette.colors" t-as="color" t-key="color">
-                                                                    <span class="w-100" t-attf-style="background-color: {{color}};"></span>
-                                                                </t>
+                                                    <t t-foreach="this.palettesByCategory" t-as="group" t-key="group.name">
+                                                        <h6 class="o-hb-select-dropdown-category py-1 px-3 fst-italic small sticky-top">
+                                                            <t t-esc="group.title"/>
+                                                        </h6>
+                                                        <div class="grid px-2 gap-0 pb-3">
+                                                            <div class="g-col-6" t-foreach="group.palettes" t-as="palette" t-key="palette.name" t-attf-title="Palette: {{palette.name}}">
+                                                                <BuilderSelectItem actionValue="`'${palette.name}'`">
+                                                                    <div
+                                                                        class="o-hb-theme-color-slider-btn rounded overflow-hidden d-flex w-100"
+                                                                        t-attf-style="--o-hb-theme-color-slider-btn-separator: {{palette.colors[4]}}"
+                                                                    >
+                                                                        <t t-foreach="palette.colors" t-as="i" t-key="i">
+                                                                            <span class="flex-grow-1 o_preview_alpha_background"
+                                                                                  t-attf-style="background-color: #{i};">
+                                                                            </span>
+                                                                        </t>
+                                                                    </div>
+                                                                </BuilderSelectItem>
                                                             </div>
-                                                        </BuilderSelectItem>
+
+                                                        </div>
                                                     </t>
                                                 </BuilderSelect>
                                             </div>
                                         </div>
                                     </div>
                                 </BuilderRow>
-                            </BuilderOptionsSection>
-                            <BuilderOptionsSection title.translate="Color Presets">
+
+                                <div class="o-color-palette-editor-label text-100 pt-4 ps-3 mb-1">Generated Presets</div>
                                 <t t-foreach="this.state.presets" t-as="preset" t-key="preset.id">
                                     <BuilderRow t-slot-scope="row" initialExpandAnim="this.colorPresetToShow === preset.id">
                                         <div class="o_cc_preview_wrapper w-100" t-on-click="row.toggleCollapseContent">
@@ -171,10 +191,11 @@
                             <BuilderOptionsSection title.translate="System">
                                 <BuilderRow label.translate="UI Elements">
                                     <BuilderColorPicker
-                                            action="'customizeWebsiteColor'"
-                                            actionParam="{colorType: 'theme', mainParam: 'light'}"
-                                            enabledTabs="['solid', 'custom']"
-                                            selectedTab="'custom'"/>
+                                        action="'customizeWebsiteColor'"
+                                        tooltip.translate="The default color used by the the system UI. Shop's filter, Porta navigation, etc.."
+                                        actionParam="{colorType: 'theme', mainParam: 'light'}"
+                                        enabledTabs="['solid', 'custom']"
+                                        selectedTab="'custom'"/>
                                 </BuilderRow>
                                 <BuilderRow label.translate="Status Colors">
                                     <BuilderColorPicker title.translate="Success"
