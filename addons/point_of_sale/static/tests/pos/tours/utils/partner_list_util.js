@@ -156,6 +156,13 @@ export function searchCustomerValue(val, pressEnter = false) {
             trigger: `.modal-dialog .input-group input`,
             run: `edit ${val}`,
         },
+        {
+            content: `Wait for search debounce`,
+            trigger: `.modal-dialog .input-group input`,
+            run: async function () {
+                await new Promise((resolve) => setTimeout(resolve, 350));
+            },
+        },
     ];
 
     if (pressEnter) {
