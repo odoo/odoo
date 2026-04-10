@@ -945,8 +945,9 @@ class HrLeave(models.Model):
         if any(not vals.get('employee_id') for vals in vals_list):
             raise UserError(_("There is no employee set on the time off. Please make sure you're logged in the correct company."))
         holidays = super(HrLeave, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
-        employees_without_allocation, zero_duration_employees = holidays.with_context(multi_leave_request=self.env.context.get('multi_leave_request'))._check_validity()
-        invalid_holidays = holidays.filtered(lambda l: l.employee_id in (employees_without_allocation | zero_duration_employees))
+        real_holidays = holidays.filtered(lambda leave: leave.work_entry_type_id.time_off_selectable)
+        employees_without_allocation, zero_duration_employees = real_holidays.with_context(multi_leave_request=self.env.context.get('multi_leave_request'))._check_validity()
+        invalid_holidays = real_holidays.filtered(lambda l: l.employee_id in (employees_without_allocation | zero_duration_employees))
         holidays -= invalid_holidays
         invalid_holidays.unlink()
         self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
@@ -1010,7 +1011,7 @@ class HrLeave(models.Model):
         result = super().write(values)
         if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'work_entry_type_id', 'employee_id', 'state']):
             if not values.get('state') or values.get('state') not in ('refuse', 'cancel'):
-                self._check_validity()
+                self.filtered(lambda leave: leave.work_entry_type_id.time_off_selectable)._check_validity()
             self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
         if not self.env.context.get('leave_fast_create'):
             for holiday in self:

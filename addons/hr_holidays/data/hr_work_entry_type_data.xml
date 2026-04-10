@@ -764,7 +764,7 @@
 
     <function model="hr.work.entry.type" name="write">
         <value model="hr.work.entry.type" eval="obj().sudo().search([('code', 'in', ['WORK100'])]).ids"/>
-        <value eval="{'request_unit': 'hour'}"/>
+        <value eval="{'request_unit': 'hour', 'time_off_selectable': False}"/>
     </function>
 
 </data></odoo>
