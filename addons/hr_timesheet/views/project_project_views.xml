@@ -33,11 +33,11 @@
                 <xpath expr="//t[@name='allocated_hours_placeholder']" position="replace">
                     <field name="allocated_hours" widget="timesheet_uom_no_toggle" invisible="not allow_timesheets" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </xpath>
-                <xpath expr="//group[@name='group_time_managment']" position="attributes">
+                <xpath expr="//div[@name='group_time_managment']" position="attributes">
                     <attribute name="invisible">0</attribute>
                 </xpath>
-                <xpath expr="//group[@name='group_time_managment']" position="inside">
-                    <setting class="col-lg-12" id="timesheet_settings" string="Timesheets" help="Log time on tasks">
+                <xpath expr="//div[@name='group_time_managment']" position="inside">
+                    <setting id="timesheet_settings" string="Timesheets" help="Log time on tasks">
                         <field name="allow_timesheets"/>
                     </setting>
                 </xpath>

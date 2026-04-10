@@ -181,22 +181,23 @@
                                     </group>
                                 </div>
                             </group>
-                            <group>
-                                <group name="group_tasks_managment" string="Tasks Management" col="1" class="row mt16 o_settings_container">
-                                    <div>
-                                        <setting class="col-lg-12" id="recurring_tasks_setting" help="Auto-generate tasks for regular activities">
-                                            <field name="allow_recurring_tasks"/>
-                                        </setting>
-                                        <setting class="col-lg-12" id="task_dependencies_setting" help="Determine the order in which to perform tasks">
-                                            <field name="allow_task_dependencies"/>
-                                        </setting>
-                                        <setting class="col-lg-12" id="project_milestone_setting" help="Track major progress points that must be reached to achieve success">
-                                            <field name="allow_milestones"/>
-                                        </setting>
-                                    </div>
-                                </group>
-                                <group name="group_time_managment" string="Time Management" invisible="1" col="1" class="row mt16 o_settings_container"/>
-                            </group>
+
+                            <div name="group_tasks_managment">
+                                <separator string="Tasks Management"/>
+                                <setting id="recurring_tasks_setting" help="Auto-generate tasks for regular activities">
+                                    <field name="allow_recurring_tasks"/>
+                                </setting>
+                                <setting id="task_dependencies_setting" help="Determine the order in which to perform tasks">
+                                    <field name="allow_task_dependencies"/>
+                                </setting>
+                                <setting id="project_milestone_setting" help="Track major progress points that must be reached to achieve success">
+                                    <field name="allow_milestones"/>
+                                </setting>
+                            </div>
+
+                            <div name="group_time_managment" invisible="1">
+                                <separator string="Time Management"/>
+                            </div>
                         </page>
                     </notebook>
                 </sheet>
