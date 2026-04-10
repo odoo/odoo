@@ -22,11 +22,12 @@ class AccountMove(models.Model):
         string='PEPPOL status',
         copy=False,
     )
+    peppol_is_sent = fields.Boolean(compute='_compute_peppol_is_sent')
 
     def action_cancel_peppol_documents(self):
-        # if the peppol_move_state is processing/done
+        # if the peppol_move_state is processing/done/has been replied to
         # then it means it has been already sent to peppol proxy and we can't cancel
-        if any(move.peppol_move_state in {'processing', 'done'} for move in self):
+        if any(move.peppol_is_sent for move in self):
             raise UserError(_("Cannot cancel an entry that has already been sent to PEPPOL"))
         self.peppol_move_state = False
         self.sending_data = False
@@ -46,11 +47,16 @@ class AccountMove(models.Model):
             elif (
                 move.state == 'draft'
                 and move.is_sale_document(include_receipts=True)
-                and move.peppol_move_state not in ('processing', 'done')
+                and not move.peppol_is_sent
             ):
                 move.peppol_move_state = False
             else:
                 move.peppol_move_state = move.peppol_move_state
+
+    @api.depends('peppol_move_state')
+    def _compute_peppol_is_sent(self):
+        for move in self:
+            move.peppol_is_sent = move.peppol_move_state not in {False, 'ready', 'to_send', 'error'}
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False):
@@ -66,7 +72,7 @@ class AccountMove(models.Model):
         if company_on_peppol and company_country in PEPPOL_MAILING_COUNTRIES and invoice_country in PEPPOL_MAILING_COUNTRIES:
             render_context['peppol_info'] = {
                 'peppol_country': invoice_country,
-                'is_peppol_sent': invoice.peppol_move_state in ('processing', 'done'),
+                'is_peppol_sent': invoice.peppol_is_sent,
                 'partner_on_peppol': invoice.commercial_partner_id.peppol_verification_state in ('valid', 'not_valid_format'),
             }
         return render_context
