@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useRef, useState } from "@web/owl2/utils";
 import { BuilderComponent } from "@html_builder/core/building_blocks/builder_component";
 import { BuilderListDialog } from "@html_builder/core/building_blocks/builder_list_dialog";
 import {
@@ -12,6 +12,7 @@ import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { useService } from "@web/core/utils/hooks";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
 
 export class BuilderList extends Component {
     static template = "html_builder.BuilderList";
@@ -72,34 +73,11 @@ export class BuilderList extends Component {
         this.commit = commit;
         this.preview = preview;
         this.allRecords = this.formatRawValue(this.props.records);
+        this.tableRef = useRef("table");
         this.visibilityState = useState({
             limit: this.props.limit,
         });
-        this.tableRef = useRef("table");
-        this.sentinelRef = useRef("sentinel");
-        useLayoutEffect(
-            () => {
-                const sentinelEl = this.sentinelRef.el;
-                if (!sentinelEl) {
-                    return;
-                }
-                const observer = new IntersectionObserver(
-                    ([entry]) => {
-                        if (entry.isIntersecting && this.hasMoreItems) {
-                            this.visibilityState.limit += this.props.limit;
-                        }
-                    },
-                    {
-                        root: this.tableRef.el.parentElement,
-                        threshold: 1.0,
-                        rootMargin: "100px",
-                    }
-                );
-                observer.observe(sentinelEl);
-                return () => observer.disconnect();
-            },
-            () => []
-        );
+        this.onTableScroll = useThrottleForAnimation(this._onTableScroll);
 
         onWillUpdateProps((props) => {
             this.allRecords = this.formatRawValue(props.records);
@@ -127,6 +105,25 @@ export class BuilderList extends Component {
 
     get hasMoreItems() {
         return this.cappedItems.length < this.getIncludedRecords().length;
+    }
+
+    loadMoreItems() {
+        if (!this.hasMoreItems) {
+            return;
+        }
+        this.visibilityState.limit = Math.min(
+            this.visibilityState.limit + this.props.limit,
+            this.getIncludedRecords().length
+        );
+    }
+
+    _onTableScroll(ev) {
+        const tableWrapperEl = ev.currentTarget;
+        const distanceToBottom =
+            tableWrapperEl.scrollHeight - (tableWrapperEl.scrollTop + tableWrapperEl.clientHeight);
+        if (distanceToBottom <= 100) {
+            this.loadMoreItems();
+        }
     }
 
     validateProps() {
