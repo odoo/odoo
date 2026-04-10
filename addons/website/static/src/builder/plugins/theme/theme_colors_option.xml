@@ -168,7 +168,14 @@
                                     </BuilderRow>
                                 </t>
                             </BuilderOptionsSection>
-                            <BuilderOptionsSection title.translate="Advanced">
+                            <BuilderOptionsSection title.translate="System">
+                                <BuilderRow label.translate="UI Elements">
+                                    <BuilderColorPicker
+                                            action="'customizeWebsiteColor'"
+                                            actionParam="{colorType: 'theme', mainParam: 'light'}"
+                                            enabledTabs="['solid', 'custom']"
+                                            selectedTab="'custom'"/>
+                                </BuilderRow>
                                 <BuilderRow label.translate="Status Colors">
                                     <BuilderColorPicker title.translate="Success"
                                         enabledTabs="['solid', 'custom']"

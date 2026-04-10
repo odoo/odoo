@@ -16,7 +16,9 @@ $black: #000 !default;
 // This coupling allows to control the appearance of some app components (and
 // more). Note that it is still possible to have more than 2 "bright" main
 // colors by using them in color combinations config instead of as theme colors.
-$light: o-color('o-color-3');
+// $light defaults to o-color-3 but can be overridden independently via the
+// editor's "UI elements" color picker, which writes to $o-user-theme-color-palette.
+$light: map-get($o-user-theme-color-palette, 'light') or o-color('o-color-3');
 $dark: o-color('o-color-5');
 
 // The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
