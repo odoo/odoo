@@ -828,7 +828,7 @@ test("Can right-click on message to opens message actions dropdown", async () =>
             res_id: partnerId,
         },
         {
-            body: "msg-body-2 <a href='#'>Test link</a>",
+            body: "msg-body-2 <a href='#'>Test link</a><a href='#'><font>Test link 2</font></a>",
             model: "res.partner",
             needaction: true,
             res_id: partnerId,
@@ -872,7 +872,11 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     // Test inner-link in body of message doesn't trigger showing of message actions
     await click(".o-mail-Thread");
     await contains(".o-dropdown-item", { count: 0 });
-    await rightClick(".o-mail-Message-body:eq(1) a");
+    await rightClick(".o-mail-Message-body:eq(1) a:eq(0)");
+    await expect.waitForSteps(["Message.onContextMenu"]);
+    await animationFrame();
+    expect.verifySteps([]);
+    await rightClick(".o-mail-Message-body:eq(1) a:eq(1) font");
     await expect.waitForSteps(["Message.onContextMenu"]);
     await animationFrame();
     expect.verifySteps([]);
