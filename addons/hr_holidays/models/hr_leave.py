@@ -135,7 +135,7 @@ class HrLeave(models.Model):
     # leave type configuration
     work_entry_type_id = fields.Many2one(
         "hr.work.entry.type", compute='_compute_work_entry_type_id',
-        store=True, string="Time Off Type",
+        store=True, string="Time Type",
         required=True, readonly=False,
         domain="""[
             '|',
@@ -187,7 +187,7 @@ class HrLeave(models.Model):
         help='This area is automatically filled by the user who validate the time off')
     second_approver_id = fields.Many2one(
         'hr.employee', string='Second Approval', readonly=True, copy=False,
-        help='This area is automatically filled by the user who validate the time off with second level (If time off type need second validation)')
+        help='This area is automatically filled by the user who validate the time off with second level (If time type need second validation)')
 
     can_approve = fields.Boolean(compute='_compute_can_approve', export_string_translation=False)
     can_validate = fields.Boolean(compute='_compute_can_validate', export_string_translation=False)
@@ -813,7 +813,7 @@ class HrLeave(models.Model):
                         if self.env.context.get('multi_leave_request', False):
                             employees_without_allocation |= employee
                         else:
-                            raise ValidationError(self.env._("You do not have any allocation for this time off type.\n"
+                            raise ValidationError(self.env._("You do not have any allocation for this time type.\n"
                                                              "Please request an allocation before submitting your time off request."))
                     if leave_data[employee] and leave_data[employee][0][1]['virtual_remaining_leaves'] < -max_excess:
                         if self.env.context.get('multi_leave_request', False):
@@ -832,7 +832,7 @@ class HrLeave(models.Model):
                     if self.env.context.get('multi_leave_request', False):
                         employees_without_allocation |= employee
                     else:
-                        raise ValidationError(self.env._("You do not have any allocation for this time off type.\n"
+                        raise ValidationError(self.env._("You do not have any allocation for this time type.\n"
                                                          "Please request an allocation before submitting your time off request."))
                 if not previous_emp_data and not emp_data:
                     continue

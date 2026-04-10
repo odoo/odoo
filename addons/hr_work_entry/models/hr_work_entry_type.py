@@ -20,7 +20,7 @@ class HrWorkEntryType(models.Model):
     sequence = fields.Integer(default=25)
     active = fields.Boolean(
         'Active', default=True,
-        help="If the active field is set to false, it will allow you to hide the work entry type without removing it.")
+        help="If the active field is set to false, it will allow you to hide the time type without removing it.")
     country_id = fields.Many2one(
         'res.country',
         string="Country",
@@ -52,7 +52,7 @@ class HrWorkEntryType(models.Model):
         for code, country_id in grouped_duplicates:
             if len(grouped_duplicates[code, country_id]) > 1:
                 raise UserError(self.env._(
-                    'You cannot create more than one work entry type of code "%(code)s" for the same country (%(country)s)',
+                    'You cannot create more than one time type of code "%(code)s" for the same country (%(country)s)',
                     code=code, country=(country_id.name if country_id else self.env._("All")),
                 ))
 
@@ -71,7 +71,7 @@ class HrWorkEntryType(models.Model):
                 raise UserError(self.env._(
                     """
 Cannot insert "%(insert_name)s":
-Work entry type "%(name)s" of code "%(code)s" already exists for country "%(country)s".
+Time type "%(name)s" of code "%(code)s" already exists for country "%(country)s".
                     """,
                     insert_name=we_type.name,
                     name=duplicate.name,
@@ -81,7 +81,7 @@ Work entry type "%(name)s" of code "%(code)s" already exists for country "%(coun
             raise UserError(self.env._(
                     """
 Cannot insert "%(insert_name)s":
-Work entry type "%(name)s" of code "%(code)s", with no country assigned, already exists.
+Time type "%(name)s" of code "%(code)s", with no country assigned, already exists.
                     """,
                 insert_name=we_type.name,
                 name=duplicate.name,

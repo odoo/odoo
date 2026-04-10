@@ -15,7 +15,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
     number_of_days = fields.Float('Number of Days', readonly=True, aggregator="sum")
     number_of_hours = fields.Float('Number of Hours', readonly=True, aggregator="sum")
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
-    work_entry_type_id = fields.Many2one("hr.work.entry.type", string="Time Off Type", readonly=True)
+    work_entry_type_id = fields.Many2one("hr.work.entry.type", string="Time Type", readonly=True)
     holiday_status = fields.Selection([
         ('taken', 'Taken'), #taken = validated
         ('left', 'Left'),

@@ -19,7 +19,7 @@ class HrLeaveReport(models.Model):
         ('request', 'Time Off')
         ], string='Request Type', readonly=True)
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
-    work_entry_type_id = fields.Many2one("hr.work.entry.type", string="Time Off Type", readonly=True)
+    work_entry_type_id = fields.Many2one("hr.work.entry.type", string="Time Type", readonly=True)
     state = fields.Selection([
         ('cancel', 'Cancelled'),
         ('confirm', 'To Approve'),

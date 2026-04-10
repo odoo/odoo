@@ -66,7 +66,7 @@ class HrLeaveAllocation(models.Model):
         tracking=True, required=True)
     date_to = fields.Date('End Date', copy=False, tracking=True)
     work_entry_type_id = fields.Many2one(
-        "hr.work.entry.type", compute='_compute_work_entry_type_id', store=True, string="Time Off Type", required=True, readonly=False,
+        "hr.work.entry.type", compute='_compute_work_entry_type_id', store=True, string="Time Type", required=True, readonly=False,
         domain=_domain_work_entry_type_id,
         default=_default_work_entry_type_id)
     employee_id = fields.Many2one(
@@ -95,7 +95,7 @@ class HrLeaveAllocation(models.Model):
         help='This area is automatically filled by the user who validates the allocation')
     second_approver_id = fields.Many2one(
         'hr.employee', string='Second Approval', readonly=True, copy=False,
-        help='This area is automatically filled by the user who validates the allocation with second level (If time off type need second validation)')
+        help='This area is automatically filled by the user who validates the allocation with second level (If time type need second validation)')
     validation_type = fields.Selection(string='Validation Type', related='work_entry_type_id.allocation_validation_type', readonly=True)
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
     can_validate = fields.Boolean('Can Validate', compute='_compute_can_validate')
@@ -276,7 +276,7 @@ class HrLeaveAllocation(models.Model):
             if allocation.number_of_days >= 0:
                 continue
             if not allocation.work_entry_type_id.allows_negative:
-                raise ValidationError(self.env._("Negative allocations are not allowed for this time off type."))
+                raise ValidationError(self.env._("Negative allocations are not allowed for this time type."))
             allocation_unit = allocation.type_request_unit
             if allocation_unit != 'hour' and abs(allocation.number_of_days_display) > allocation.work_entry_type_id.max_allowed_negative:
                 raise ValidationError(self.env._("The negative allocation cannot exceed the maximum allowed negative value of %(max)s day(s).",

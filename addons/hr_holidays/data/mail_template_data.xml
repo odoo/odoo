@@ -14,7 +14,7 @@
                     <br/><br/>
                     <p>I'm requesting a Time Off. I would appreciate if you could approve it whenever possible!</p>
                     <ul>
-                        <li>Time Off Type: <t t-out="object.work_entry_type_id.name"/></li>
+                        <li>Time Type: <t t-out="object.work_entry_type_id.name"/></li>
                         <li><t t-out="object.request_date_from"/> → <t t-out="object.request_date_to"/> (<t t-out="object.duration_display"/>)</li>
                         <li t-if="object.name">Reason: <t t-out="object.name"/></li>
                     </ul>

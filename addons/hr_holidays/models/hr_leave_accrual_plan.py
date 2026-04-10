@@ -25,7 +25,7 @@ class HrLeaveAccrualPlan(models.Model):
     show_transition_mode = fields.Boolean(compute='_compute_show_transition_mode', export_string_translation=False)
     is_based_on_worked_time = fields.Boolean(compute="_compute_is_based_on_worked_time", store=True, readonly=False,
         export_string_translation=False,
-        help="Only excludes requests where the time off type is set as unpaid kind of.")
+        help="Only excludes requests where the time type is set as unpaid kind of.")
     accrued_gain_time = fields.Selection([
         ("start", "At the start of the accrual period"),
         ("end", "At the end of the accrual period")],

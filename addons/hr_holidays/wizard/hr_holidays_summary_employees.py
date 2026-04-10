@@ -16,7 +16,7 @@ class HrHolidaysSummaryEmployee(models.TransientModel):
         ('Approved', 'Approved'),
         ('Confirmed', 'Confirmed'),
         ('both', 'Both Approved and Confirmed')
-    ], string='Select Time Off Type', required=True, default='Approved')
+    ], string='Select Time Type', required=True, default='Approved')
 
     def print_report(self):
         self.ensure_one()

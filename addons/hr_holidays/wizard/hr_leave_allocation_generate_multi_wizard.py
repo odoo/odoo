@@ -31,7 +31,7 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
     name = fields.Char("Description", compute="_compute_name", store=True, readonly=False)
     duration = fields.Float(string="Allocation")
     work_entry_type_id = fields.Many2one(
-        "hr.work.entry.type", string="Time Off Type", required=True,
+        "hr.work.entry.type", string="Time Type", required=True,
         domain=_domain_work_entry_type_id)
     unit_of_measure = fields.Selection(related="work_entry_type_id.unit_of_measure")
     employee_ids = fields.Many2many('hr.employee', string='Employees', domain=lambda self: self._get_employee_domain())

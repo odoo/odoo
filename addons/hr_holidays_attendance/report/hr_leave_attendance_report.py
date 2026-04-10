@@ -26,7 +26,7 @@ class HrLeaveAttendanceReport(models.Model):
     leave_hours = fields.Float("Approved Time Off")
     difference_hours = fields.Float("Difference", help="Worked Hours - Expected Hours + Approved Time Off")
 
-    work_entry_type_names = fields.Char("Time Off Types", compute="_compute_leave_attendance_fields")
+    work_entry_type_names = fields.Char("Time Types", compute="_compute_leave_attendance_fields")
     leave_ids = fields.Many2many("hr.leave", string="Time Offs", compute="_compute_leave_attendance_fields")
     attendance_ids = fields.Many2many("hr.attendance", string="Attendances", compute="_compute_leave_attendance_fields")
 

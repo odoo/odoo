@@ -22,7 +22,7 @@ class HrEmployee(models.Model):
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
         help='Select the user responsible for approving "Time Off" of this employee.\n'
              'If empty, the approval is done by an Administrator or Approver (determined in settings/users).')
-    current_work_entry_type_id = fields.Many2one('hr.work.entry.type', compute='_compute_current_work_entry_type_id', string="Current Work Entry Type",
+    current_work_entry_type_id = fields.Many2one('hr.work.entry.type', compute='_compute_current_work_entry_type_id', string="Current Time Type",
                                        groups="hr.group_hr_user")
     current_leave_state = fields.Selection(compute='_compute_leave_status', string="Current Time Off Status",
         selection=[

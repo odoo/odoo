@@ -23,7 +23,7 @@ class HrLeaveEmployeeReport(models.Model):
     number_of_days = fields.Float(compute='_compute_leave_duration', readonly=True, store=True)
     number_of_hours = fields.Float(compute='_compute_leave_duration', readonly=True, store=True)
     description = fields.Char()
-    work_entry_type_id = fields.Many2one("hr.work.entry.type", string="Time Off Type")
+    work_entry_type_id = fields.Many2one("hr.work.entry.type", string="Time Type")
     state = fields.Selection([
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),

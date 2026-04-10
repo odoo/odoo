@@ -39,7 +39,7 @@ class HrWorkEntryType(models.Model):
         return -1 * work_entry_type.sequence, not work_entry_type.employee_requests and remaining, work_entry_type.employee_requests and remaining, taken
 
     create_calendar_meeting = fields.Boolean(string="Display Time Off in Calendar", default=True)
-    color = fields.Integer(string='Color', help="The color selected here will be used in every screen with the time off type.")
+    color = fields.Integer(string='Color', help="The color selected here will be used in every screen with the time type.")
     hide_on_dashboard = fields.Boolean(default=False, string="Hide On Dashboard", help="Non-visible allocations can still be selected when taking a leave, but will simply not be displayed on the leave dashboard.")
 
     # employee specific computed data
@@ -87,7 +87,7 @@ class HrWorkEntryType(models.Model):
         ('hour', 'Custom Hours')], default='day', string='Duration Type', required=True,
         help="""Define the minimum time off duration in which an employee can take when requesting a leave""")
     unit_of_measure = fields.Selection([('hour', 'Hours'), ('day', 'Days')], default="hour", string="Unit of measure", required=True,
-                                       help="Define if the time off type will be allocated/accrued in hours or days")
+                                       help="Define if the time type will be allocated/accrued in hours or days")
     unpaid = fields.Boolean('Is Unpaid', default=False)
     include_public_holidays_in_duration = fields.Boolean('Ignore Public Holidays', default=False, help="Public holidays should be counted in the leave duration when applying for leaves")
     leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Time Off Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
@@ -96,7 +96,7 @@ class HrWorkEntryType(models.Model):
     allow_request_on_top = fields.Boolean(string='Allow Request on Top', default=False,
         help="If checked, users can request another leave on top of the ones of this type.")
     elligible_for_accrual_rate = fields.Boolean(string='Eligible for Accrual Rate', compute="_compute_eligible_for_accrual_rate", store=True, readonly=False,
-        help="If checked, this time off type will be taken into account for accruals computation.")
+        help="If checked, this time type will be taken into account for accruals computation.")
     # negative time off
     allows_negative = fields.Boolean(string='Allow Negative',
         help="If checked, users request can exceed the allocated days and balance can go in negative.")
@@ -185,7 +185,7 @@ class HrWorkEntryType(models.Model):
 
                 if leave_from_date <= public_holiday_to_date and leave_to_date >= public_holiday_from_date:
                     raise ValidationError(_("You cannot modify the 'Public Holiday Included' setting since one or more leaves for that \
-                        time off type are overlapping with public holidays, meaning that the balance of those employees would be affected by this change."))
+                        time type are overlapping with public holidays, meaning that the balance of those employees would be affected by this change."))
 
     def get_work_entry_types_with_valid_allocations(self, date_from, date_to, employee_id):
         allocation_by_work_entry_type = dict(self.env['hr.leave.allocation']._read_group(
@@ -232,7 +232,7 @@ class HrWorkEntryType(models.Model):
     @api.constrains('requires_allocation')
     def check_allocation_requirement_edit_validity(self):
         if not self.env.context.get('install_mode') and self.env['hr.leave'].search_count([('work_entry_type_id', 'in', self.ids)], limit=1):
-            raise UserError(_("The allocation requirement of a time off type cannot be changed once leaves of that type have been taken. You should create a new time off type instead."))
+            raise UserError(_("The allocation requirement of a time type cannot be changed once leaves of that type have been taken. You should create a new time type instead."))
 
     def _search_max_leaves(self, operator, value):
         op = PY_OPERATORS.get(operator)

@@ -6,7 +6,7 @@ from odoo import api, models, fields
 class ResourceCalendarAttendance(models.Model):
     _inherit = 'resource.calendar.attendance'
 
-    work_entry_type_id = fields.Many2one('hr.work.entry.type', 'Work Entry Type', store=True,
+    work_entry_type_id = fields.Many2one('hr.work.entry.type', 'Time Type', store=True,
         compute='_compute_work_entry_type_id', groups="hr.group_hr_user", readonly=False)
 
     @api.depends('calendar_id.country_id')

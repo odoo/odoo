@@ -5,8 +5,8 @@
         <field name="name">hr.work.entry.type.filter</field>
         <field name="model">hr.work.entry.type</field>
         <field name="arch" type="xml">
-            <search string="Search Time Off Type">
-                <field name="name" string="Time Off Types"/>
+            <search string="Search Time Type">
+                <field name="name" string="Time Types"/>
                 <field name="create_calendar_meeting"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
@@ -26,7 +26,7 @@
                         name="action_see_days_allocated"
                         icon="fa-calendar"
                         invisible="not requires_allocation or not id"
-                        help="Count of allocations for this time off type (approved or waiting for approbation) with a validity period starting this year.">
+                        help="Count of allocations for this time type (approved or waiting for approbation) with a validity period starting this year.">
                     <div class="o_stat_info">
                         <field name="allocation_count" class="o_stat_value"/>
                         <span class="o_stat_text">Allocations</span>
@@ -37,7 +37,7 @@
                         name="action_see_group_leaves"
                         icon="fa-calendar"
                         invisible="not id"
-                        help="Count of time off requests for this time off type (approved or waiting for approbation) with a start date in the current year.">
+                        help="Count of time off requests for this time type (approved or waiting for approbation) with a start date in the current year.">
                     <div class="o_stat_info">
                         <field name="group_days_leave" class="o_stat_value"/>
                         <span class="o_stat_text">Time Off</span>
@@ -121,12 +121,12 @@
         <field name="name">hr.work.entry.type.normal.list</field>
         <field name="model">hr.work.entry.type</field>
         <field name="arch" type="xml">
-            <list string="Time Off Type" multi_edit="1">
+            <list string="Time Type" multi_edit="1">
                 <field name="sequence" widget="handle"/>
                 <field name="display_name"/>
                 <field name="unit_of_measure" optional="hide"/>
                 <field name="request_unit" optional="hide"/>
-                <field name="leave_validation_type" optional="hide" string="Time Off Approval"/>
+                <field name="leave_validation_type" optional="hide" string="Time Type Approval"/>
                 <field name="requires_allocation" optional="hide"/>
                 <field name="allocation_validation_type" string="Allocation Approval"/>
                 <field name="employee_requests" optional="hide"/>
@@ -137,7 +137,7 @@
     </record>
 
     <record id="open_view_work_entry_type" model="ir.actions.act_window">
-        <field name="name">Time Off Types</field>
+        <field name="name">Time Types</field>
         <field name="res_model">hr.work.entry.type</field>
         <field name="view_mode">list,kanban,form</field>
     </record>

@@ -25,7 +25,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
 
     name = fields.Char("Description")
     work_entry_type_id = fields.Many2one(
-        "hr.work.entry.type", string="Time Off Type", required=True, domain="[('id', 'in', valid_work_entry_type_ids)]")
+        "hr.work.entry.type", string="Time Type", required=True, domain="[('id', 'in', valid_work_entry_type_ids)]")
     employee_ids = fields.Many2many('hr.employee', string='Employees', domain=lambda self: self._get_employee_domain())
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     date_from = fields.Date('Start Date', required=True, default=lambda self: fields.Date.today())

@@ -16,7 +16,7 @@ class HrLeaveAllocation(models.Model):
         if 'work_entry_type_id' in fields and self.env.context.get('deduct_extra_hours'):
             domain = Domain('overtime_deductible', '=', True) & Domain('requires_allocation', '=', True)
             if self.env.context.get('deduct_extra_hours_employee_request', False):
-                # Prevent loading manager allocated time off type in self request contexts
+                # Prevent loading manager allocated time type in self request contexts
                 domain &= Domain('employee_requests', '=', True)
             work_entry_type = self.env['hr.work.entry.type'].search(domain, limit=1)
             res['work_entry_type_id'] = work_entry_type.id
