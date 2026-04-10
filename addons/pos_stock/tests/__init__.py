@@ -9,3 +9,4 @@ from . import test_pos_stock_order_receipt
 from . import test_pos_stock_other_currency_config
 from . import test_pos_stock_products_with_tax
 from . import test_pos_stock
+from . import test_res_config_settings
