@@ -224,9 +224,6 @@ class PurchaseOrder(models.Model):
                 if picking.state == 'done':
                     picking.message_post(body=self.env._("The purchase order %s this receipt is linked to was cancelled.", order._get_html_link()))
 
-            if order.reference_ids:
-                order.reference_ids.purchase_ids = [Command.unlink(order.id)]
-
         order_lines = self.env['purchase.order.line'].browse(order_lines_ids)
         moves_to_cancel_ids = OrderedSet()
         moves_to_recompute_ids = OrderedSet()
