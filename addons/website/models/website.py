@@ -2217,7 +2217,7 @@ class Website(models.Model):
             where_clauses = []
             for field_name in fields:
                 field = model._fields[field_name]
-                if field.translate:
+                if field.translate and field.index == 'trigram':
                     alias = model._table
                     if field.related and not field.store:
                         _, field, alias = model._traverse_related_sql(model._table, field, subquery)
