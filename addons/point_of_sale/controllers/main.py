@@ -229,6 +229,7 @@ class PosController(PortalAccount):
             invoice_values, prefixed_invoice_values = _parse_additional_values(additional_invoice_fields, 'invoice_', kwargs)
             form_values['extra_field_values'].update(prefixed_invoice_values)
             # Check the basic form fields if the user is not connected as we will need these information to create the new user.
+            kwargs['required_fields'] = self._get_pos_billing_address_required_fields(pos_order, form_values)
             partner, feedback_dict = self._create_or_update_address(partner, **(kwargs | partner_values))
             form_values.update(feedback_dict)
             missing_fields, error_messages = self._validate_extra_form_details(
@@ -285,6 +286,13 @@ class PosController(PortalAccount):
                 missing_fields.add(field.name)
                 error_messages.append(_("The field %s must be filled.", field.field_description.lower()))
         return missing_fields, error_messages
+
+    def _get_pos_billing_address_required_fields(self, pos_order, form_values):
+        """ Return a comma-separated list of ``res.partner`` required fields to use at `_create_or_update_address` when
+        requesting an invoice from the POS invoicing portal.
+        It can be overriden to add specific fields (for specific localizations validation for example)
+        """
+        return form_values.get('required_fields', '')
 
     def _get_invoice(self, partner, invoice_values, pos_order, additional_invoice_fields, kwargs):
 
