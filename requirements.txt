@@ -5,21 +5,20 @@ asn1crypto==1.5.1 ; python_version >= '3.11'
 Babel==2.9.1 ; python_version < '3.11'  # min version = 2.6.0 (Focal with security backports)
 Babel==2.10.3 ; python_version >= '3.11' and python_version < '3.13'
 Babel==2.17.0 ; python_version >= '3.13'
-cbor2==5.4.2.post1 ; python_version < '3.11'  # (Jammy)
-cbor2==5.4.6 ; python_version >= '3.11' and python_version < '3.12'  # (Bookworm)
-cbor2==5.6.2 ; python_version >= '3.12'
+cbor2==5.9.0 ; python_version < '3.12'  # bumped from 5.4.2.post1/5.4.6 to fix CVE-2026-26209 (DoS via uncontrolled recursion)
+cbor2==5.9.0 ; python_version >= '3.12'  # bumped from 5.6.2 to fix CVE-2026-26209
 chardet==4.0.0 ; python_version < '3.11'  # (Jammy)
 chardet==5.2.0 ; python_version >= '3.11'
-cryptography==3.4.8; python_version < '3.12'  # incompatibility between pyopenssl 19.0.0 and cryptography>=37.0.0
-cryptography==42.0.8 ; python_version >= '3.12'  # (Noble) min 41.0.7, pinning 42.0.8 for security fixes
+cryptography==46.0.5 ; python_version < '3.12'  # bumped from 3.4.8 to fix CVE-2023-0286, CVE-2023-50782, CVE-2026-26007 (requires pyopenssl>=23.2.0)
+cryptography==46.0.5 ; python_version >= '3.12'  # bumped from 42.0.8 to fix CVE-2026-26007
 docutils==0.17 ; python_version < '3.11'  # (Jammy)
 docutils==0.20.1 ; python_version >= '3.11'
 freezegun==1.1.0 ; python_version < '3.11'  # (Jammy)
 freezegun==1.2.1 ; python_version >= '3.11' and python_version < '3.13'
 freezegun==1.5.1 ; python_version >= '3.13'
 geoip2==2.9.0
-gevent==21.8.0 ; sys_platform != 'win32' and python_version == '3.10'  # (Jammy)
-gevent==22.10.2; sys_platform != 'win32' and python_version > '3.10' and python_version < '3.12'
+gevent==23.9.1 ; sys_platform != 'win32' and python_version == '3.10'  # bumped from 21.8.0 to fix CVE-2023-41419 (CRITICAL: privilege escalation)
+gevent==23.9.1 ; sys_platform != 'win32' and python_version > '3.10' and python_version < '3.12'  # bumped from 22.10.2 to fix CVE-2023-41419
 gevent==24.2.1 ; sys_platform != 'win32' and python_version >= '3.12' and python_version < '3.13'  # (Noble)
 gevent==24.11.1 ; sys_platform != 'win32' and python_version >= '3.13'  # (Trixie)
 greenlet==1.1.2 ; sys_platform != 'win32' and python_version == '3.10'  # (Jammy)
@@ -45,10 +44,10 @@ ofxparse==0.21
 openpyxl==3.0.9 ; python_version < '3.12'
 openpyxl==3.1.2 ; python_version >= '3.12'
 passlib==1.7.4 # min version = 1.7.2 (Focal with security backports)
-Pillow==9.0.1 ; python_version <= '3.10'
-Pillow==9.4.0 ; python_version > '3.10' and python_version < '3.12'
-Pillow==10.2.0 ; python_version >= '3.12' and python_version < '3.13'  # (Noble) Mostly to have a wheel package
-Pillow==11.1.0 ; python_version >= '3.13'  # (Noble) Mostly to have a wheel package
+Pillow==12.1.1 ; python_version <= '3.10'  # bumped from 9.0.1 to fix CVE-2023-50447 (CRITICAL), CVE-2022-45198, CVE-2023-44271, CVE-2023-4863, CVE-2024-28219, CVE-2026-25990
+Pillow==12.1.1 ; python_version > '3.10' and python_version < '3.12'  # bumped from 9.4.0 to fix CVE-2023-50447 (CRITICAL), CVE-2023-44271, CVE-2023-4863, CVE-2024-28219, CVE-2026-25990
+Pillow==12.1.1 ; python_version >= '3.12' and python_version < '3.13'  # bumped from 10.2.0 to fix CVE-2024-28219, CVE-2026-25990
+Pillow==12.1.1 ; python_version >= '3.13'  # bumped from 11.1.0 to fix CVE-2026-25990
 polib==1.1.1
 psutil==5.9.0 ; python_version <= '3.10' 
 psutil==5.9.4 ; python_version > '3.10' and python_version < '3.12' 
@@ -57,8 +56,8 @@ psycopg2==2.9.2 ; python_version == '3.10' # (Jammy)
 psycopg2==2.9.5 ; python_version == '3.11'
 psycopg2==2.9.9 ; python_version >= '3.12' and python_version < '3.13' # (Noble)
 psycopg2==2.9.10 ; python_version >= '3.13' # (Trixie)
-pyopenssl==21.0.0 ; python_version < '3.12'
-pyopenssl==24.1.0 ; python_version >= '3.12' # (Noble) min 23.2.0, pinned for compatibility with cryptography==42.0.8 and security patches
+pyopenssl==26.0.0 ; python_version < '3.12'  # bumped from 21.0.0 to fix CVE-2026-27459 (DTLS cookie callback buffer overflow)
+pyopenssl==26.0.0 ; python_version >= '3.12'  # bumped from 24.1.0 to fix CVE-2026-27459
 PyPDF2==1.26.0 ; python_version <= '3.10'
 PyPDF2==2.12.1 ; python_version > '3.10' and python_version < '3.13' # (Noble and below)
 PyPDF==5.4.0 ; python_version >= '3.13' # (Trixie)
@@ -76,20 +75,20 @@ pytz  # no version pinning to avoid OS perturbations
 pyusb==1.2.1
 qrcode==7.3.1 ; python_version < '3.11'  # (jammy)
 qrcode==7.4.2 ; python_version >= '3.11'
-reportlab==3.6.8 ; python_version <= '3.10'
-reportlab==3.6.12 ; python_version > '3.10' and python_version < '3.12'
+reportlab==3.6.13 ; python_version <= '3.10'  # bumped from 3.6.8 to fix CVE-2023-33733 (RCE via crafted PDF)
+reportlab==3.6.13 ; python_version > '3.10' and python_version < '3.12'  # bumped from 3.6.12 to fix CVE-2023-33733
 reportlab==4.1.0 ; python_version >= '3.12' # (Noble) Mostly to have a wheel package
 requests==2.25.1 ;  python_version < '3.11' # versions < 2.25 aren't compatible w/ urllib3 1.26. Bullseye = 2.25.1. min version = 2.22.0 (Focal)
 requests==2.31.0 ; python_version >= '3.11' # (Noble)
 rjsmin==1.1.0 ; python_version < '3.11'  # (jammy)
 rjsmin==1.2.0 ; python_version >= '3.11'
 rl-renderPM==4.0.3 ; sys_platform == 'win32' and python_version >= '3.12'  # Needed by reportlab 4.1.0 but included in deb package
-urllib3==1.26.5 ; python_version < '3.12' # indirect / min version = 1.25.8 (Focal with security backports)
-urllib3==2.0.7  ; python_version >= '3.12'  # (Noble) Compatibility with cryptography
+urllib3==1.26.20 ; python_version < '3.12'  # bumped from 1.26.5 to fix CVE-2023-43804 (cookie header leak). Note: CVE-2025-66418/CVE-2025-66471/CVE-2026-21441 require urllib3>=2.6.0 but requests==2.25.1 requires urllib3<1.27
+urllib3==2.6.3  ; python_version >= '3.12'  # bumped from 2.0.7 to fix CVE-2023-43804, CVE-2025-66418, CVE-2025-66471, CVE-2026-21441
 vobject==0.9.6.1
-Werkzeug==2.0.2 ; python_version <= '3.10' 
-Werkzeug==2.2.2 ; python_version > '3.10' and python_version < '3.12'
-Werkzeug==3.0.1 ; python_version >= '3.12'  # (Noble) Avoid deprecation warnings
+Werkzeug==2.3.8 ; python_version <= '3.10'  # bumped from 2.0.2 to fix CVE-2023-25577 (multipart DoS), CVE-2023-46136 (resource consumption)
+Werkzeug==2.3.8 ; python_version > '3.10' and python_version < '3.12'  # bumped from 2.2.2 to fix CVE-2023-25577, CVE-2023-46136
+Werkzeug==3.1.6 ; python_version >= '3.12'  # bumped from 3.0.1 to fix CVE-2024-34069, CVE-2024-49766, CVE-2024-49767, CVE-2025-66221, CVE-2026-21860, CVE-2026-27199
 xlrd==1.2.0 ; python_version < '3.12'  # (jammy)
 xlrd==2.0.1 ; python_version >= '3.12'
 XlsxWriter==3.0.2 ; python_version < '3.12'  # (jammy)
