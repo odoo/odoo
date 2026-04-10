@@ -383,6 +383,30 @@ class HrWorkEntryType(models.Model):
         is an employee_id in context and that no other order has been given
         to the method.
         """
+        if self.env.context.get('gantt_multi_create_company_filter'):
+            company_ids = self.env.context.get('allowed_company_ids')
+
+            if company_ids:
+                company = self.env['res.company'].browse(company_ids)
+                country = company.country_id
+
+                existing_system_types = dict(self.with_context(gantt_multi_create_company_filter=False)._read_group(
+                    domain=[
+                        ('country_id', 'in', [False] + country.ids),
+                        ('create_uid', '=', 1),
+                    ],
+                    groupby=['country_id'],
+                    aggregates=['id:count'],
+                ))
+
+                if not country:
+                    extra_domain = [('country_id', '=', False)]
+                elif existing_system_types.get(country):
+                    extra_domain = [('country_id', '=', country.id)]
+                else:
+                    extra_domain = [('country_id', 'in', [False, country.id])]
+
+                domain = Domain.AND([domain, extra_domain])
         employee = self.env['hr.employee']._get_contextual_employee()
         if order == self._order and employee:
             # retrieve all leaves, sort them, then apply offset and limit
