@@ -3,6 +3,7 @@
 from itertools import chain
 
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.exceptions import AccessError
 from odoo.tests.common import HttpCase, tagged, warmup
 
 
@@ -26,14 +27,15 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #       - search ir_rule (_get_rules)
         #       - search mail_message
         #   - search bus_bus (_bus_last_id in bus.py)
-        #   31 store add message:
+        #   33 store add message:
         #       - fetch mail_message
         #       - search mail_message_schedule
         #       - search mail_followers
         #       - search ir_rule (_get_rules for rating.rating)
         #       - read group rating_rating (_rating_get_stats_per_record for slide.channel)
         #       - read group rating_rating (_rating_get_stats_per_record for product.template)
-        #       2 thread :
+        #       3 thread :
+        #           - fetch hr_employee
         #           - fetch slide_channel
         #           - fetch product_template
         #       - search mail_message_res_partner_starred_rel (_compute_starred)
@@ -56,18 +58,24 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #           - fetch res_partner
         #           - search res_users
         #           - fetch res_users
+        #       - compute message_needaction for hr.employee
         #       2 compute message_needaction for slide.channel (one query per record due to the lack of batching)
         #       2 compute message_needaction for product.template (one query per record due to the lack of batching)
         #       - read group rating_rating (_compute_rating_stats for slide.channel)
         #       - read group rating_rating (_compute_rating_stats for product.template)
 
+        # rating stats enabled
         first_model_records = self.env["product.template"].create(
             [{"name": "Product A1"}, {"name": "Product A2"}]
         )
         second_model_records = self.env["slide.channel"].create(
             [{"name": "Course B1"}, {"name": "Course B2"}]
         )
-        for record in chain(first_model_records, second_model_records):
+        # group restricted fields
+        third_model_record = self.env["hr.employee"].create({"name": "Employee"})
+        with self.assertRaises(AccessError):
+            third_model_record.with_user(self.user_employee).read("message_needaction_counter")
+        for record in chain(first_model_records, second_model_records, third_model_record):
             record.message_post(
                 body=f"<p>Test message for {record.name}</p>",
                 message_type="comment",
@@ -75,5 +83,5 @@ class TestInboxPerformance(HttpCase, MailCommon):
                 rating_value="4",
             )
         self.authenticate(self.user_employee.login, self.user_employee.password)
-        with self.assertQueryCount(41):
+        with self.assertQueryCount(43):
             self.make_jsonrpc_request("/mail/inbox/messages")

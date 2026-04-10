@@ -20,7 +20,8 @@ class MailboxController(http.Controller):
                 res.one(
                     "thread",
                     lambda res: (
-                        res.attr("message_needaction_counter"),
+                        # sudo: mail.thread: users can read their own message_needaction_counter on the thread
+                        res.attr("message_needaction_counter", sudo=True),
                         res.attr("message_needaction_counter_bus_id", bus_last_id),
                     ),
                     as_thread=True,
