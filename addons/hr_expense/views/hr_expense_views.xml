@@ -257,9 +257,44 @@
                             <field name="manager_id" widget="many2one_avatar_user" readonly="state != 'draft'" placeholder="Auto-validation"/>
                             <field name="department_id" invisible="1" readonly="not is_editable"
                                    context="{'default_company_id': company_id}"/>
-                            <field name="vendor_id" invisible="payment_mode != 'company_account'"/>
+                            <field name="vendor_id" invisible="payment_mode != 'company_account'" readonly="not is_editable"/>
+
+                            <label for="has_existing_bill" invisible="payment_mode != 'company_account'"/>
+                            <div class="d-flex flex-column flex-lg-row" invisible="payment_mode != 'company_account'">
+                                <field name="has_existing_bill"
+                                       string="Existing Bill"
+                                       widget="boolean_radio"
+                                       invisible="payment_mode != 'company_account'"
+                                       options="{'no_label_element_id': 'direct_expense', 'yes_label_element_id': 'match_bill', 'first_element': false}"
+                                       readonly="not is_editable"
+                                       style="width: 60%"
+                                       groups="account.group_account_readonly"/>
+                                <template id="direct_expense">No (Direct Expense)</template>
+                                <template id="match_bill">Yes (Match to Bill)</template>
+
+                                <field name="existing_bill_id"
+                                       invisible="not has_existing_bill"
+                                       class="justify-content-end"
+                                       style="margin-bottom: calc(0.25rem + var(--fieldWidget-margin-bottom))"
+                                       nolabel="1"
+                                       placeholder="Select Bill..."
+                                       context="{'name_as_amount_residual': 1, 'list_view_ref': 'hr_expense.view_move_list_expense'}"
+                                       readonly="not is_editable"
+                                       options="{'no_create': True}"
+                                       groups="account.group_account_readonly"/>
+                            </div>
+
                             <field name="account_id" options="{'no_create': True}"
-                                   domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('company_ids', 'parent_of', company_id)]"
+                                   domain = "
+                                        has_existing_bill and [
+                                            ('account_type', '=', 'liability_payable'),
+                                            ('company_ids', 'parent_of', company_id)
+                                        ]
+                                        or [
+                                            ('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card')),
+                                            ('company_ids', 'parent_of', company_id)
+                                        ]
+                                   "
                                    groups="account.group_account_readonly" readonly="not is_editable"
                                    context="{'default_company_id': company_id}"/>
                             <field name="payment_method_line_id"

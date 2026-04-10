@@ -8,7 +8,14 @@ export class BooleanRadio extends RadioField {
         ...RadioField.props,
         yes_label_element_id: { type: String },
         no_label_element_id: { type: String },
+        first_element: { optional: true, type: Boolean },
     };
+
+    static defaultProps = {
+        ...RadioField.defaultProps,
+        first_element: true,
+    };
+
     setup() {
         super.setup(...arguments);
         onMounted(() => {
@@ -30,7 +37,10 @@ export class BooleanRadio extends RadioField {
     }
 
     get items() {
-        if (this.type === "boolean") return [["true", ""], ["false", ""]];
+        if (this.type === "boolean") {
+            const items = [["true", ""], ["false", ""]];
+            return this.props.first_element ? items : items.reverse();
+        }
         return super.items;
     }
 
@@ -70,6 +80,12 @@ export const booleanRadio = {
             type: "string",
             help: _t("Link an element with the boolean False value."),
         },
+        {
+            label: _t("First Element"),
+            name: "first_element",
+            type: "Boolean",
+            help: _t("Defines which values comes first."),
+        },
     ],
     supportedTypes: ["boolean"],
     extractProps({ options }, dynamicInfo) {
@@ -78,6 +94,7 @@ export const booleanRadio = {
             readonly: dynamicInfo.readonly,
             yes_label_element_id: options.yes_label_element_id,
             no_label_element_id: options.no_label_element_id,
+            first_element: options.first_element,
         };
     },
 };

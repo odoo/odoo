@@ -5299,8 +5299,10 @@ class AccountMove(models.Model):
         :return:            A string representing the invoice.
         '''
         self.ensure_one()
-        if self.env.context.get('name_as_amount_total'):
-            currency_amount = self.currency_id.format(self.amount_total)
+        display_residual = self.env.context.get('name_as_amount_residual')
+        if self.env.context.get('name_as_amount_total') or display_residual:
+            amount = self.amount_residual if display_residual else self.amount_total
+            currency_amount = self.currency_id.format(amount)
             if self.is_sale_document(include_receipts=True) and self.state == "posted":
                 ref = f" - {self.ref}" if self.ref else ""
                 return _("%(name)s%(ref)s at %(currency_amount)s", name=(self.name), ref=ref, currency_amount=currency_amount)

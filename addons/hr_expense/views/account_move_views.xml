@@ -26,11 +26,11 @@
                     <field name="made_sequence_gap" column_invisible="True"/>
                     <field name="name" decoration-bf="1" decoration-danger="made_sequence_gap and state == 'posted'" widget="char_with_placeholder_field" placeholder="/"/>
                     <field name="partner_id" string="Partner" optional="show" readonly="True"/>
-                    <field name="date" optional="hide" string="Accounting Date" readonly="state in ['cancel', 'posted']"/>
+                    <field name="date" optional="show" string="Accounting Date" readonly="state in ['cancel', 'posted']"/>
                     <field name="invoice_date_due" widget="remaining_days" optional="show" invisible="payment_state in ('paid', 'in_payment', 'reversed') or state == 'cancel'"/>
                     <field name="invoice_origin" optional="hide" string="Source Document"/>
                     <field name="payment_reference" optional="hide"/>
-                    <field name="ref" optional="hide"/>
+                    <field name="ref" optional="show"/>
                     <field name="activity_ids" widget="list_activity" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="hide"/>
                     <field name="company_id" groups="!base.group_multi_company" column_invisible="True"/>
@@ -38,7 +38,7 @@
                     <field name="amount_tax_signed" string="Tax" sum="Total" optional="hide"/>
                     <field name="amount_total_in_currency_signed" string="Total" sum="Total" optional="show" decoration-bf="1" decoration-warning="abnormal_amount_warning" groups="base.group_multi_currency"/>
                     <field name="amount_total_in_currency_signed" string="Total" sum="Total" optional="hide" decoration-bf="1" decoration-warning="abnormal_amount_warning" groups="!base.group_multi_currency"/>
-                    <field name="amount_residual_signed" string="Amount Due" sum="Amount Due" optional="hide"/>
+                    <field name="amount_residual_signed" string="Amount Due" sum="Amount Due" optional="show"/>
                     <field name="currency_id" optional="hide" readonly="state in ['cancel', 'posted']"/>
                     <field name="company_currency_id" column_invisible="True"/>
                     <field name="review_state" optional="hide" groups="account.group_account_user"

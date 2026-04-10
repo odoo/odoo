@@ -237,6 +237,25 @@ class HrExpense(models.Model):
         domain="[('id', 'in', selectable_payment_method_line_ids)]",
         help="The payment method used when the expense is paid by the company.",
     )
+    has_existing_bill = fields.Boolean(
+        help=""" - When a bill already exists, the payment will use the supplier payable account so it can be matched with the bill.
+                 - When no bill exists, the payment will be recorded directly on the expense account, as usual.
+            """
+    )
+
+    existing_bill_id = fields.Many2one(
+        string="Existing Bill",
+        comodel_name='account.move',
+        domain="""[
+            ('company_id', '=', company_id),
+            ('move_type', '=', 'in_invoice'),
+            ('state', 'in', ['posted', 'draft']),
+            ('amount_residual', '>', 0),
+            '|', ('partner_id', '=', vendor_id), (not vendor_id, '=', True),
+        ]""",
+        copy=False,
+    )
+
     account_move_id = fields.Many2one(
         string="Journal Entry",
         comodel_name='account.move',
@@ -261,7 +280,8 @@ class HrExpense(models.Model):
         compute='_compute_account_id', precompute=True, store=True, readonly=False,
         check_company=True,
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'))]",
-        help="An expense account is expected",
+        help="An expense account is expected for employee paid expenses and company paid expenses without a matched bill.\n"
+             "For company paid expenses with a matched bill, the account needs to be the payable account of the bill.",
     )
     tax_ids = fields.Many2many(
         comodel_name='account.tax',
@@ -707,16 +727,33 @@ class HrExpense(models.Model):
                     ('journal_id.active', '=', True),
                 ])
 
-    @api.depends('product_id', 'company_id')
+    @api.onchange('has_existing_bill')
+    def _onchange_has_existing_bill(self):
+        if not self.has_existing_bill:
+            self.existing_bill_id = False
+
+    @api.onchange('existing_bill_id')
+    def _onchange_existing_bill_id(self):
+        if self.existing_bill_id:
+            self.vendor_id = self.existing_bill_id.partner_id
+
+    @api.depends('product_id', 'company_id', 'has_existing_bill', 'existing_bill_id', 'vendor_id')
     def _compute_account_id(self):
         for _expense in self:
             expense = _expense.with_company(_expense.company_id)
-            if not expense.product_id:
-                expense.account_id = _expense.company_id.expense_account_id
-                continue
-            account = expense.product_id.product_tmpl_id._get_product_accounts()['expense']
-            if account:
-                expense.account_id = account
+            account = False
+
+            if expense.existing_bill_id:
+                payable_line = expense.existing_bill_id.line_ids.filtered(lambda l: l.account_type == 'liability_payable')
+                account = payable_line[:1].account_id
+
+            elif expense.has_existing_bill:
+                account = expense.vendor_id.commercial_partner_id.property_account_payable_id or expense.company_id.payable_account_id
+
+            elif expense.product_id:
+                account = expense.product_id.product_tmpl_id._get_product_accounts()['expense']
+
+            expense.account_id = account or expense.company_id.expense_account_id
 
     @api.depends('company_id')
     def _compute_employee_id(self):
@@ -1599,28 +1636,42 @@ class HrExpense(models.Model):
         """
         self = self.with_context(clean_context(self.env.context))  # remove default_*
         company_account_expenses = self.filtered(lambda expense: expense.payment_mode == 'company_account')
-        moves_sudo = self.env['account.move'].sudo()
+        moves = self.env['account.move']
 
         if company_account_expenses:
             move_vals_list, payment_vals_list = zip(*[expense._prepare_payments_vals() for expense in company_account_expenses])
 
-            payment_moves_sudo = self.env['account.move'].sudo().create(move_vals_list)
-            for payment_vals, move in zip(payment_vals_list, payment_moves_sudo):
+            payment_moves = self.env['account.move'].create(move_vals_list)
+            for payment_vals, move in zip(payment_vals_list, payment_moves):
                 payment_vals['move_id'] = move.id
 
             payments_sudo = self.env['account.payment'].sudo().create(payment_vals_list)
-            for payment_sudo, move_sudo in zip(payments_sudo, payment_moves_sudo):
-                move_sudo.update({
-                    'origin_payment_id': payment_sudo.id,
+            for payment, move in zip(payments_sudo, payment_moves):
+                move.update({
+                    'origin_payment_id': payment.id,
                     # We need to put the journal_id because editing origin_payment_id triggers a re-computation chain
                     # that voids the company_currency_id of the lines
-                    'journal_id': move_sudo.journal_id.id,
+                    'journal_id': move.journal_id.id,
                 })
 
-            moves_sudo |= payment_moves_sudo
+                expense = move.expense_ids
+                if expense.existing_bill_id:
+                    expense._reconcile_expense_with_bill()
 
-        # returning the move with the superuser flag set back as it was at the origin of the call
-        return moves_sudo.sudo(self.env.su)
+            moves |= payment_moves
+
+        return moves
+
+    def _reconcile_expense_with_bill(self):
+        self.ensure_one()
+        if not self.existing_bill_id:
+            return
+
+        bill_payable_lines = self.existing_bill_id.line_ids.filtered(lambda l: l.account_id.account_type == 'liability_payable')
+        expense_payable_lines = self.account_move_id.line_ids.filtered(lambda l: l.account_id.account_type == 'liability_payable')
+
+        if bill_payable_lines and expense_payable_lines:
+            (bill_payable_lines + expense_payable_lines).reconcile()
 
     def _prepare_receipts_vals(self):
         return_vals = []
@@ -1652,6 +1703,9 @@ class HrExpense(models.Model):
         payment_method_line = self.payment_method_line_id
         if not payment_method_line:
             raise UserError(_("You need to add a manual payment method on the journal (%s)", journal.name))
+
+        if self.has_existing_bill:
+            return self._prepare_linked_bill_payment_vals()
 
         AccountTax = self.env['account.tax']
         rate = abs(self.total_amount_currency / self.total_amount) if self.total_amount else 0.0
@@ -1727,6 +1781,57 @@ class HrExpense(models.Model):
                 Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
                 for attachment in self.attachment_ids]
         }
+        return move_vals, payment_vals
+
+    def _prepare_linked_bill_payment_vals(self):
+        self.ensure_one()
+
+        move_lines = [
+            # Debit: The Payable Account (neutralizing the debt of the original bill)
+            {
+                'name': self._get_move_line_name(),
+                'account_id': self.account_id.id,
+                'expense_id': self.id,
+                'amount_currency': self.total_amount_currency,
+                'balance': self.total_amount,
+                'currency_id': self.currency_id.id,
+                'partner_id': self.vendor_id.id,
+            },
+            # Credit: Outstanding Payments
+            {
+                'name': self._get_move_line_name(),
+                'account_id': self._get_expense_account_destination(),
+                'amount_currency': -self.total_amount_currency,
+                'balance': -self.total_amount,
+                'currency_id': self.currency_id.id,
+                'partner_id': self.vendor_id.id,
+            }
+        ]
+
+        payment_vals = {
+            'date': self.date,
+            'memo': self.name,
+            'journal_id': self.journal_id.id,
+            'amount': self.total_amount_currency,
+            'payment_type': 'outbound',
+            'partner_type': 'supplier',
+            'partner_id': self.vendor_id.id,
+            'currency_id': self.currency_id.id,
+            'payment_method_line_id': self.payment_method_line_id.id,
+            'company_id': self.company_id.id,
+        }
+
+        move_vals = {
+            **self._prepare_move_vals(),
+            'date': self.date or fields.Date.context_today(self),
+            'ref': self.name,
+            'journal_id': self.journal_id.id,
+            'partner_id': self.vendor_id.id,
+            'currency_id': self.currency_id.id,
+            'company_id': self.company_id.id,
+            'line_ids': [Command.create(line) for line in move_lines],
+        }
+
         return move_vals, payment_vals
 
     def _prepare_move_vals(self):
