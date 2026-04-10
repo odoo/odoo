@@ -85,7 +85,7 @@ class ResPartner(models.Model):
                 else:
                     if not normalized_country:
                         normalized_country = normalized_vat[:2].upper()
-                    normalized_vat = normalized_vat[2:]
+                    normalized_vat = normalized_vat.removeprefix(normalized_country)
             # If customer is from San Marino
             elif is_sm:
                 normalized_vat = normalized_vat if normalized_vat[:2].isdecimal() else normalized_vat[2:]
