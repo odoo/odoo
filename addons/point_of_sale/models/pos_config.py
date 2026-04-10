@@ -175,7 +175,7 @@ class PosConfig(models.Model):
     has_active_session = fields.Boolean(compute='_compute_current_session')
     manual_discount = fields.Boolean(string="Line Discounts", default=True)
     ship_later = fields.Boolean(string="Ship Later")
-    warehouse_id = fields.Many2one('stock.warehouse', default=_default_warehouse_id, ondelete='restrict')
+    warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_warehouse_id', store=True, readonly=False, precompute=True, ondelete='restrict')
     route_id = fields.Many2one('stock.route', string="Spefic route for products delivered later.")
     picking_policy = fields.Selection([
         ('direct', 'As soon as possible, with back orders'),
@@ -342,6 +342,14 @@ class PosConfig(models.Model):
             config.fast_payment_method_ids = config.fast_payment_method_ids.filtered(lambda pm: pm.id in config.payment_method_ids.ids)
             if not config.fast_payment_method_ids:
                 config.use_fast_payment = False
+
+    @api.depends('picking_type_id')
+    def _compute_warehouse_id(self):
+        for config in self:
+            if config.picking_type_id.warehouse_id:
+                config.warehouse_id = config.picking_type_id.warehouse_id
+            else:
+                config.warehouse_id = config._default_warehouse_id()
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):
