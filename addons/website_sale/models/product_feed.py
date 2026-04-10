@@ -22,7 +22,9 @@ class ProductFeed(models.Model):
     _description = "Product Feed"
 
     name = fields.Char(required=True)
-    website_id = fields.Many2one("website", required=True)
+    website_id = fields.Many2one(
+        "website", required=True, default=lambda self: self.env.company.website_id
+    )
     pricelist_id = fields.Many2one(
         "product.pricelist",
         help="Specify a pricelist to localize the feed with a specific currency."
