@@ -1,34 +1,98 @@
-.o-color-palette-dropdown {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    width: $o-we-sidebar-width - 30px;
-    padding-block: 0.3rem;
+.o-color-palette-editor-container {
+    $_anim_timeline: 800ms;
+    $_anim_delay: 400ms;
+    $_anim_delay_late: 600ms;
+    gap: map-get($spacers, 3);
+    animation: paletteEditorContainer $_anim_timeline $_anim_delay backwards;
 
-    .o-hb-select-dropdown-item {
-        padding-block: 0.5em;
-        border-bottom: none;
+    .o-color-palette-editor-section {
+        gap: map-get($spacers, 1);
+        animation: paletteEditorSection $_anim_timeline $_anim_delay backwards;
+    }
 
-        &.focus {
-            background-color: inherit !important; // override
+    .o_we_color_preview {
+        height: 26px;
+        width: 26px;
+        border-radius: 50%;
+        animation: paletteEditorColor $_anim_timeline $_anim_delay backwards;
+    }
+
+    .o-color-palette-editor-section-last {
+        .o_we_color_preview {
+            border-radius: 26px;
+            width: 40%;
         }
 
-        .o-color-palette-pill {
-            height: 30px;
+        .o_we_color_preview:first-of-type {
+            border-top-right-radius: 0!important;
+            border-bottom-right-radius: 0!important;
         }
 
-        &:is(.focus, .active) .o-color-palette-pill {
-            box-shadow:
-                0 0 0 #{$o-we-border-width} #{$o-we-bg-light},
-                0 0 0 #{$o-we-border-width * 2} var(--o-hb-select-item-active-color, #{$o-we-sidebar-content-field-toggle-active-bg});
+        .o_we_color_preview:last-of-type {
+            border-top-left-radius: 0!important;
+            border-bottom-left-radius: 0!important;
+            margin-left: $border-width * -1;
         }
     }
 
+    .o-color-palette-editor-label {
+        white-space: nowrap;
+        animation: paletteEditorLabel $_anim_timeline $_anim_delay_late backwards;
+    }
+
+    @keyframes paletteEditorContainer {
+        from { gap: 0; }
+    }
+
+    @keyframes paletteEditorSection {
+        from { gap: 0; }
+    }
+
+    @keyframes paletteEditorLabel {
+        from { opacity: 0; }
+    }
+
+    @keyframes paletteEditorColor {
+        from {
+            border-radius: 0;
+            width: 30px;
+        }
+    }
+}
+
+
+.o-color-palette-dropdown {
+    width: $o-we-sidebar-width - ($border-width * 2);
+    max-width: 100%;
+    background-color: rgba(black, 0.5);
+
+    .o-hb-select-dropdown-item  {
+        padding: map-get($spacers, 2);
+        border: $border-width solid transparent;
+        border-radius: $border-radius;
+
+        &:hover {
+            box-shadow: inset 0 0 0 100px rgba(white, .1);
+        }
+
+        &.active {
+            border-color: $o-we-color-global;
+
+            &::before {
+                display: none !important;
+            }
+        }
+    }
 }
 
 .o-hb-theme-color-slider-btn {
     position: relative;
     min-height: unset;
     height: 22px;
+
+    span:where(:not(:last-child)) {
+        box-shadow: -1px 0 0 var(--o-hb-theme-color-slider-btn-separator, #{$o-we-bg-darker });
+    }
 
     &::after {
         content: "";
