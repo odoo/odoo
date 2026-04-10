@@ -82,7 +82,7 @@ class AccountMove(models.Model):
                 move.ubl_cii_xml_id
                 or (
                     (edi_format := move.commercial_partner_id.with_company(move.company_id)._get_ubl_cii_edi_format())
-                    and self._need_ubl_cii_xml(edi_format)
+                    and move._need_ubl_cii_xml(edi_format)
                 )
             )
             for move in posted_moves
