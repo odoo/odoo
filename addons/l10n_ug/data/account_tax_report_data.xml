@@ -521,6 +521,7 @@
                                 <field name="label">normal_formula_part1</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">UG_TAX_F31.result_cross_normal_formula_part1 - UG_TAX_F30.disallowed</field>
+                                <field name="subformula" eval="False"/>
                             </record>
                             <record id="F31_normal_tax_result_cross_part1" model="account.report.expression">
                                 <field name="label">result_cross_normal_formula_part1</field>
@@ -550,6 +551,7 @@
                                 <field name="label">sam_formula_part1</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">UG_TAX_F31.result_cross_sam_formula_part1 - UG_TAX_F29.allowed - UG_TAX_F30.disallowed</field>
+                                <field name="subformula" eval="False"/>
                             </record>
                             <record id="F31_sam_tax_result_cross_part1" model="account.report.expression">
                                 <field name="label">result_cross_sam_formula_part1</field>
@@ -608,6 +610,7 @@
                                 <field name="label">allowed</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">UG_TAX_F32.allowed + UG_TAX_F33_a.allowed + UG_TAX_F34.result_cross</field>
+                                <field name="subformula" eval="False"/>
                             </record>
                             <record id="F34_tax_result_cross" model="account.report.expression">
                                 <field name="label">result_cross</field>
