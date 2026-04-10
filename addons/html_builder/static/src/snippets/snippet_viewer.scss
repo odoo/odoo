@@ -5,7 +5,7 @@
         overflow-x: hidden;
         overflow-y: auto;
         width: 30%;
-        height: 30%;
+        height: 80%;
         background-color: unset;
         scrollbar-gutter: stable both-edges;
     }
@@ -34,26 +34,8 @@
                     height: fit-content;
                 }
             }
-            [data-snippet="s_three_columns"] .figure-img[style*="height:50vh"] {
-                /* In Travel theme. */
-                height: 500px !important;
-            }
             [data-snippet="s_numbers_charts"] .s_chart {
                 display: none;
-            }
-            .o_full_screen_height, .o_half_screen_height, .o_three_quarter_height {
-                height: unset !important;
-                min-height: unset !important;
-            }
-            .o_full_screen_height {
-                aspect-ratio: 4 / 3;
-            }
-            .o_three_quarter_height {
-                aspect-ratio: 6 / 3;
-            }
-            // This is kept for compatibility
-            .o_half_screen_height {
-                aspect-ratio: 8 / 3;
             }
             [inert="inert"] > [data-snippet] {
                 isolation: isolate;
