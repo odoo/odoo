@@ -20,6 +20,7 @@
         'security/ir.model.access.csv',
 
         'data/digest_data.xml',
+        'data/mail_message_subtype_data.xml',
         'data/mail_templates.xml',
         'data/default_barcode_patterns.xml',
         'data/stock_data.xml',
