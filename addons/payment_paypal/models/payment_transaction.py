@@ -89,6 +89,21 @@ class PaymentTransaction(models.Model):
         if company_email := self.provider_id.company_id.email:
             payload["purchase_units"][0]["payee"]["display_data"]["business_email"] = company_email
 
+        # Create Order and Save Card section
+
+        # Returning payer
+        if self.token_id:
+            payload["payment_source"]["paypal"]["attributes"] = {
+                "customer": {"id": self.token_id.paypal_customer_id},
+                "vault": {"store_in_vault": "ON_SUCCESS"},
+            }
+
+        # First time payer
+        elif self.tokenize:
+            payload["payment_source"]["paypal"]["attributes"] = {
+                "vault": {"store_in_vault": "ON_SUCCESS"}
+            }
+
         return payload
 
     @api.model
