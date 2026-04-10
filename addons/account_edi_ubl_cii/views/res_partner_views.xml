@@ -9,10 +9,11 @@
                 <field name="available_peppol_eas" invisible="1"/>
                 <field name="peppol_eas"
                        nolabel="1"
+                       placeholder="Peppol ID"
                        widget="filterable_selection"
                        options="{'whitelist_fname': 'available_peppol_eas'}"
                        class="o_field_peppol_eas_selection"/>
-                <field name="peppol_endpoint"/>
+                <field name="peppol_endpoint" nolabel="1"/>
             </xpath>
         </field>
     </record>
