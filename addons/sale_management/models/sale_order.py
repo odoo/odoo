@@ -12,12 +12,10 @@ class SaleOrder(models.Model):
 
     sale_order_template_id = fields.Many2one(
         comodel_name="sale.order.template",
-        string="Quotation Template",
-        compute="_compute_sale_order_template_id",
+        string="Template",
         store=True,
         readonly=False,
         check_company=True,
-        precompute=True,
         index='btree_not_null',
         domain="""[
             ('template_type', '=', 'quotation'),
@@ -28,17 +26,6 @@ class SaleOrder(models.Model):
     )
 
     # === COMPUTE METHODS ===#
-
-    # Do not make it depend on `company_id` field
-    # It is triggered manually by the _onchange_company_id below iff the SO has not been saved.
-    def _compute_sale_order_template_id(self):
-        for order in self:
-            company_template = order.company_id.sale_order_template_id
-            if company_template and order.sale_order_template_id != company_template:
-                if "website_id" in self._fields and order.website_id:
-                    # don't apply quotation template for order created via eCommerce
-                    continue
-                order.sale_order_template_id = order.company_id.sale_order_template_id.id
 
     @api.depends("partner_id", "sale_order_template_id")
     def _compute_note(self):
@@ -81,14 +68,6 @@ class SaleOrder(models.Model):
             order.journal_id = order.sale_order_template_id.journal_id
 
     # === ONCHANGE METHODS ===#
-
-    @api.onchange("company_id")
-    def _onchange_company_id(self):
-        """Trigger quotation template recomputation on unsaved records company change."""
-        super()._onchange_company_id()
-        if self._origin.id:
-            return
-        self._compute_sale_order_template_id()
 
     @api.onchange("sale_order_template_id")
     def _onchange_sale_order_template_id(self):

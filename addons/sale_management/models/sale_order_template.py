@@ -209,11 +209,6 @@ class SaleOrderTemplate(models.Model):
         return records
 
     def write(self, vals):
-        if "active" in vals and not vals.get("active"):
-            companies = (
-                self.env["res.company"].sudo().search([("sale_order_template_id", "in", self.ids)])
-            )
-            companies.sale_order_template_id = None
         result = super().write(vals)
         self._update_product_translations()
         return result

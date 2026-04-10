@@ -51,7 +51,10 @@ The Dashboard for the Sales Manager will include
     ],
     "demo": ["data/sale_order_template_demo.xml"],
     "assets": {
-        "web.assets_backend": ["sale_management/static/src/fields/**/*"],
+        "web.assets_backend": [
+            "sale_management/static/src/fields/**/*",
+            "sale_management/static/src/views/**/*",
+        ],
         "web.assets_frontend": ["sale_management/static/src/interactions/**/*"],
         "web.assets_tests": ["sale_management/static/tests/tours/**/*"],
         "web.assets_unit_tests": [

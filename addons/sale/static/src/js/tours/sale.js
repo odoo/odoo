@@ -54,8 +54,8 @@ registry.category("web_tour.tours").add("sale_tour", {
         },
         {
             trigger: `
-                .o_field_widget[name='product_id'] input,
-                .o_field_widget[name='product_template_id'] input
+                .o_field_widget[name='product_id'] .o-autocomplete--input,
+                .o_field_widget[name='product_template_id'] .o-autocomplete--input
             `,
             content: _t("Select a product, or create a new one on the fly."),
             tooltipPosition: "right",
