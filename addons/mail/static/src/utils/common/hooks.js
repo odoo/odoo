@@ -16,6 +16,12 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
 
+/**
+ * @param {() => HTMLElement} target
+ * @param {string} eventName
+ * @param {Function} handler
+ * @param {boolean|AddEventListenerOptions} [eventParams]
+ */
 export function useLazyExternalListener(target, eventName, handler, eventParams) {
     const boundHandler = handler.bind(useComponent());
     let t;
@@ -703,11 +709,15 @@ export function useLongPress(refName, { action, predicate = () => true } = {}) {
         clearTimeout(timer);
         timer = null;
     }
+    /** @param {TouchEvent} ev */
+    function isTouchTargetInside(ev) {
+        return ref.el?.contains(ev.target);
+    }
     useLazyExternalListener(
-        () => ref.el,
+        () => window,
         "touchstart",
         (ev) => {
-            if (!predicate()) {
+            if (!isTouchTargetInside(ev) || !predicate()) {
                 return;
             }
             const touch = ev.touches[0];
@@ -717,13 +727,14 @@ export function useLongPress(refName, { action, predicate = () => true } = {}) {
                 action();
                 reset();
             }, LONG_PRESS_DELAY);
-        }
+        },
+        true
     );
     useLazyExternalListener(
-        () => ref.el,
+        () => window,
         "touchmove",
         (ev) => {
-            if (!timer) {
+            if (!isTouchTargetInside(ev) || !timer) {
                 return;
             }
             const touch = ev.touches[0];
@@ -732,10 +743,29 @@ export function useLongPress(refName, { action, predicate = () => true } = {}) {
             if (Math.hypot(dx, dy) > MOVE_TRESHOLD) {
                 reset();
             }
-        }
+        },
+        true
     );
-    useLazyExternalListener(() => ref.el, "touchend", reset);
-    useLazyExternalListener(() => ref.el, "touchcancel", reset);
+    useLazyExternalListener(
+        () => window,
+        "touchend",
+        (ev) => {
+            if (isTouchTargetInside(ev)) {
+                reset();
+            }
+        },
+        true
+    );
+    useLazyExternalListener(
+        () => window,
+        "touchcancel",
+        (ev) => {
+            if (isTouchTargetInside(ev)) {
+                reset();
+            }
+        },
+        true
+    );
 }
 
 export const inDiscussCallViewProps = ["isPip?"];
