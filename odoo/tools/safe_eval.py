@@ -318,6 +318,27 @@ def assert_no_dunder_name(code_obj, expr):
         if "__" in name or name in _UNSAFE_ATTRIBUTES:
             raise NameError('Access to forbidden name %r (%r)' % (name, expr))
 
+
+def _get_opcodes_fast(code_obj: CodeType) -> set[int]:
+    """Fast implementation of `dis.get_instructions` to retrieve the opcodes"""
+    # each instruction is 2-byte wide, use byte slicing over `dis.get_instructions` for performance
+    # https://github.com/python/cpython/blob/7f2d89a444bb389a4f4ded13204e71c0af06ee76/Include/cpython/code.h#L29-L44
+    opcodes = set(code_obj.co_code[::2])
+    # Remove the CACHE opcode (0)
+    opcodes.discard(0)
+    return opcodes
+
+
+def _get_opcodes_fallback(code_obj: CodeType) -> set[int]:
+    """Fallback function that is slower than the original, but safer and works
+    on all versions"""
+    return {i.opcode for i in dis.get_instructions(code_obj, show_caches=False)}
+
+
+# Use the fast impl when supported
+get_opcodes = _get_opcodes_fallback if sys.version_info >= (3, 15) else _get_opcodes_fast
+
+
 def assert_valid_codeobj(allowed_codes, code_obj, expr):
     """ Asserts that the provided code object validates against the bytecode
     and name constraints.
@@ -340,7 +361,7 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
 
     # set operations are almost twice as fast as a manual iteration + condition
     # when loading /web according to line_profiler
-    code_codes = {i.opcode for i in dis.get_instructions(code_obj)}
+    code_codes = get_opcodes(code_obj)
     if not allowed_codes >= code_codes:
         raise ValueError("forbidden opcode(s) in %r: %s" % (expr, ', '.join(opname[x] for x in (code_codes - allowed_codes))))
 
