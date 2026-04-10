@@ -38,7 +38,7 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.can_edit_wizard
                 and wizard.use_electronic_payment_method
                 and (provider := wizard.payment_method_line_id.payment_provider_id)
-                and not provider.capture_manually
+                and not provider.sudo().capture_manually
             ):
                 token_partners = wizard.partner_id
                 batch = wizard._get_batches()[0]
