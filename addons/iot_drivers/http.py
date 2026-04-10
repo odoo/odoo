@@ -19,17 +19,19 @@ class JsonRPCDispatcherPatch(JsonRPCDispatcher):
         :returns: a WSGI application
         """
         error = {
-            'code': 200,  # this code is the JSON-RPC level code, it is
+            "code": 200,  # this code is the JSON-RPC level code, it is
             # distinct from the HTTP status code. This
             # code is ignored and the value 200 (while
             # misleading) is totally arbitrary.
-            'message': "Odoo Server Error",
-            'data': serialize_exception(exc),
+            "message": "Odoo Server Error",
+            "data": serialize_exception(exc),
         }
         if isinstance(exc, Forbidden):
-            error['code'] = 403
-            error['message'] = "403: Forbidden"
-            error['data'] = {"message": error['data']["message"]}  # only keep the message, not the traceback
+            error["code"] = 403
+            error["message"] = "403: Forbidden"
+            error["data"] = {
+                "message": error["data"]["message"]
+            }  # only keep the message, not the traceback
 
         return self._response(error=error)
 

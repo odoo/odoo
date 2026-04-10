@@ -1,19 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ctypes
-from time import sleep
 from logging import getLogger
+from time import sleep
 
 from odoo.addons.iot_drivers.iot_handlers.drivers.ctypes_terminal_driver import (
     CtypesTerminalDriver,
-    create_ctypes_string_buffer
+    create_ctypes_string_buffer,
 )
 
 _logger = getLogger(__name__)
 
 
 class SixDriver(CtypesTerminalDriver):
-    connection_type = 'tim'
+    connection_type = "tim"
     cancelled_by_pos = 2  # Error code returned when you press "cancel" in PoS
 
     def __init__(self, identifier, device):
@@ -24,35 +24,35 @@ class SixDriver(CtypesTerminalDriver):
 
         # int six_perform_transaction
         self.terminal.six_perform_transaction.argtypes = [
-            ctypes.c_void_p,                # t_terminal_manager *terminal_manager
-            ctypes.c_char_p,                # char *pos_id
-            ctypes.c_int,                   # int user_id
-
-            ctypes.c_int,                   # int transaction_type
-            ctypes.c_int,                   # int amount
-            ctypes.c_char_p,                # char *currency_str
-
-            ctypes.c_char_p,                # char *transaction_id,
-            ctypes.c_char_p,                # char *merchant_receipt
-            ctypes.c_char_p,                # char *customer_receipt
-            ctypes.c_char_p,                # char *card_number
-            ctypes.c_char_p,                # char *card_brand
-            ctypes.POINTER(ctypes.c_int),   # int *error_code
-            ctypes.c_char_p,                # char *error
+            ctypes.c_void_p,  # t_terminal_manager *terminal_manager
+            ctypes.c_char_p,  # char *pos_id
+            ctypes.c_int,  # int user_id
+            ctypes.c_int,  # int transaction_type
+            ctypes.c_int,  # int amount
+            ctypes.c_char_p,  # char *currency_str
+            ctypes.c_char_p,  # char *transaction_id,
+            ctypes.c_char_p,  # char *merchant_receipt
+            ctypes.c_char_p,  # char *customer_receipt
+            ctypes.c_char_p,  # char *card_number
+            ctypes.c_char_p,  # char *card_brand
+            ctypes.POINTER(ctypes.c_int),  # int *error_code
+            ctypes.c_char_p,  # char *error
         ]
 
         self.terminal.six_terminal_balance.argtypes = [
-            ctypes.c_void_p,                # t_terminal_manager *terminal_manager
-            ctypes.c_char_p,                # char *balance_receipt_buffer
-            ctypes.POINTER(ctypes.c_int),   # int *n_receipts
+            ctypes.c_void_p,  # t_terminal_manager *terminal_manager
+            ctypes.c_char_p,  # char *balance_receipt_buffer
+            ctypes.POINTER(ctypes.c_int),  # int *n_receipts
         ]
 
     def process_transaction(self, transaction):
         if not super().process_transaction(transaction):
             return None
 
-        if transaction['transactionType'] not in ['Refund', 'Payment']:
-            return self.send_status(error='Invalid transaction type.', request_data=transaction)
+        if transaction["transactionType"] not in ["Refund", "Payment"]:
+            return self.send_status(
+                error="Invalid transaction type.", request_data=transaction
+            )
 
         # Transaction buffers
         transaction_id = create_ctypes_string_buffer()
@@ -65,14 +65,16 @@ class SixDriver(CtypesTerminalDriver):
 
         # Transaction
         try:
-            _logger.info('Start transaction #%s', transaction)
+            _logger.info("Start transaction #%s", transaction)
             result = self.terminal.six_perform_transaction(
                 self.manager,  # t_terminal_manager *terminal_manager
-                str(transaction['posId']).encode(),  # char *pos_id
-                ctypes.c_int(transaction['userId']),  # int user_id
-                ctypes.c_int(1) if transaction['transactionType'] == 'Payment' else ctypes.c_int(2),  # int transaction_type
-                ctypes.c_int(transaction['amount']),  # int amount
-                transaction['currency'].encode(),  # char *currency_str
+                str(transaction["posId"]).encode(),  # char *pos_id
+                ctypes.c_int(transaction["userId"]),  # int user_id
+                ctypes.c_int(1)
+                if transaction["transactionType"] == "Payment"
+                else ctypes.c_int(2),  # int transaction_type
+                ctypes.c_int(transaction["amount"]),  # int amount
+                transaction["currency"].encode(),  # char *currency_str
                 transaction_id,  # char *transaction_id
                 merchant_receipt,  # char *merchant_receipt
                 customer_receipt,  # char *customer_receipt
@@ -83,9 +85,9 @@ class SixDriver(CtypesTerminalDriver):
             )
             # Transaction successful
             if result == 1:
-                _logger.info('Successfully finished transaction #%s', transaction)
+                _logger.info("Successfully finished transaction #%s", transaction)
                 self.send_status(
-                    response='Approved',
+                    response="Approved",
                     ticket=customer_receipt.value.decode(),
                     ticket_merchant=merchant_receipt.value.decode(),
                     card=card_brand.value.decode(),
@@ -97,21 +99,31 @@ class SixDriver(CtypesTerminalDriver):
             elif result == 0:
                 # If cancelled by Odoo Pos
                 if error_code.value == self.cancelled_by_pos:
-                    sleep(3)  # Wait a couple of seconds between cancel requests as per documentation
+                    sleep(
+                        3
+                    )  # Wait a couple of seconds between cancel requests as per documentation
                     _logger.info("Transaction #%s cancelled by PoS user", transaction)
-                    self.send_status(stage='Cancel', request_data=transaction)
+                    self.send_status(stage="Cancel", request_data=transaction)
                     _logger.info("Transaction %s cancelled by Odoo PoS", transaction)
                 # If an error was encountered
                 else:
                     error_message = f"{error_code.value}: {error.value.decode()}"
-                    _logger.info("Transaction #%s failed with error: %s", transaction, error_message)
+                    _logger.info(
+                        "Transaction #%s failed with error: %s",
+                        transaction,
+                        error_message,
+                    )
                     self.send_status(error=error_message, request_data=transaction)
             # Terminal disconnected
             elif result == -1:
-                _logger.warning("Terminal disconnected during transaction #%s", transaction)
+                _logger.warning(
+                    "Terminal disconnected during transaction #%s", transaction
+                )
                 self.send_status(disconnected=True)
         except OSError:
-            _logger.exception("Failed to perform Six transaction. Check for potential segmentation faults")
+            _logger.exception(
+                "Failed to perform Six transaction. Check for potential segmentation faults"
+            )
             sleep(3)  # needed to space out transaction requests
             self.send_status(
                 error="An error has occured. Check the transaction result manually with the payment provider",
@@ -119,7 +131,7 @@ class SixDriver(CtypesTerminalDriver):
             )
 
     def cancel_transaction(self, transaction):
-        self.send_status(stage='waitingCancel', request_data=transaction)
+        self.send_status(stage="waitingCancel", request_data=transaction)
         if not self.terminal_busy:
             # In case of restart after sending a payment request, the terminal is not busy
             # but the pos is still waiting for the transaction confirmation: we need to be
@@ -127,11 +139,19 @@ class SixDriver(CtypesTerminalDriver):
             return self.send_status(stage="Cancel", request_data=transaction)
         try:
             _logger.info("cancel transaction request for %s", transaction)
-            if not self.terminal.six_cancel_transaction(ctypes.cast(self.manager, ctypes.c_void_p)):
+            if not self.terminal.six_cancel_transaction(
+                ctypes.cast(self.manager, ctypes.c_void_p)
+            ):
                 _logger.info("Transaction #%s could not be cancelled", transaction)
-                self.send_status(stage='Cancel', error='Transaction could not be cancelled', request_data=transaction)
+                self.send_status(
+                    stage="Cancel",
+                    error="Transaction could not be cancelled",
+                    request_data=transaction,
+                )
         except OSError:
-            _logger.exception("Failed to cancel Six transaction. Check for potential segmentation faults.")
+            _logger.exception(
+                "Failed to cancel Six transaction. Check for potential segmentation faults."
+            )
             sleep(3)  # needed to space out cancellation requests
             self.send_status(
                 error="An error has occured when cancelling Six transaction. Check the transaction result manually with the payment provider",
@@ -143,23 +163,34 @@ class SixDriver(CtypesTerminalDriver):
         n_receipts = ctypes.c_int(0)
         try:
             _logger.info("Requesting terminal balance")
-            result = self.terminal.six_terminal_balance(self.manager, balance_receipt_buffer, ctypes.byref(n_receipts))
+            result = self.terminal.six_terminal_balance(
+                self.manager, balance_receipt_buffer, ctypes.byref(n_receipts)
+            )
             if result:
                 _logger.info("Terminal balance request success")
                 # If this ever occurs the C code will need to be adapted to handle multiple receipts
                 n_receipts_val = n_receipts.value
                 receipt_val = balance_receipt_buffer.value.decode()
                 if n_receipts_val > 1:
-                    _logger.warning("%s receipts returned from terminal balance request, only the first will be used", n_receipts_val)
+                    _logger.warning(
+                        "%s receipts returned from terminal balance request, only the first will be used",
+                        n_receipts_val,
+                    )
                 elif n_receipts_val == -1:
                     receipt_val += "\nTruncated receipt"
-                    _logger.warning("The balance receipt was truncated, consider increasing the buffer size")
+                    _logger.warning(
+                        "The balance receipt was truncated, consider increasing the buffer size"
+                    )
                 self.send_status(request_data=data, ticket=receipt_val)
             else:
                 _logger.info("Failed to get terminal balance")
-                self.send_status(error="Failed to get terminal balance", request_data=data)
+                self.send_status(
+                    error="Failed to get terminal balance", request_data=data
+                )
         except OSError:
-            _logger.exception("Failed to get terminal balance. Check for potential segmentation faults.")
+            _logger.exception(
+                "Failed to get terminal balance. Check for potential segmentation faults."
+            )
             self.send_status(
                 error="An error has occured when requesting the terminal balance. Check the terminal manually",
                 request_data=data,

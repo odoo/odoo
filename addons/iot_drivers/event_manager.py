@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from threading import Event
 import time
+from threading import Event
 
 from odoo.http import request
+
 from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
 from odoo.addons.iot_drivers.websocket_client import send_to_controller
 
@@ -21,7 +22,7 @@ class EventManager:
         self.sessions = {
             session: self.sessions[session]
             for session in self.sessions
-            if self.sessions[session]['time_request'] + ttl < time.time()
+            if self.sessions[session]["time_request"] + ttl < time.time()
         }
 
     def add_request(self, listener):
@@ -29,13 +30,13 @@ class EventManager:
         :param dict listener: listener id and devices
         :return: the session created
         """
-        session_id = listener['session_id']
+        session_id = listener["session_id"]
         session = {
-            'session_id': session_id,
-            'devices': listener['devices'],
-            'event': Event(),
-            'result': {},
-            'time_request': time.time(),
+            "session_id": session_id,
+            "devices": listener["devices"],
+            "event": Event(),
+            "result": {},
+            "time_request": time.time(),
         }
         self._delete_expired_sessions()
 
@@ -51,30 +52,37 @@ class EventManager:
         :param Driver device: actual device class
         :param dict data: data returned by the device (optional)
         """
-        data = data or (request.params.get('data', {}) if request else {})
+        data = data or (request.params.get("data", {}) if request else {})
 
         # Make notification available to longpolling event route
         event = {
             **device.data,
-            'device_identifier': device.device_identifier,
-            'time': time.time(),
+            "device_identifier": device.device_identifier,
+            "time": time.time(),
             **data,
         }
-        send_to_controller({
-            **event,
-            'iot_box_identifier': IOT_IDENTIFIER,
-        })
+        send_to_controller(
+            {
+                **event,
+                "iot_box_identifier": IOT_IDENTIFIER,
+            }
+        )
         self.events.append(event)
         for session in self.sessions:
-            session_devices = self.sessions[session]['devices']
+            session_devices = self.sessions[session]["devices"]
             if (
-                any(d in [device.device_identifier, device.device_type] for d in session_devices)
-                and not self.sessions[session]['event'].is_set()
+                any(
+                    d in [device.device_identifier, device.device_type]
+                    for d in session_devices
+                )
+                and not self.sessions[session]["event"].is_set()
             ):
                 if device.device_type in session_devices:
-                    event['device_identifier'] = device.device_type  # allow device type as identifier (longpolling)
-                self.sessions[session]['result'] = event
-                self.sessions[session]['event'].set()
+                    event["device_identifier"] = (
+                        device.device_type
+                    )  # allow device type as identifier (longpolling)
+                self.sessions[session]["result"] = event
+                self.sessions[session]["event"].set()
 
 
 event_manager = EventManager()

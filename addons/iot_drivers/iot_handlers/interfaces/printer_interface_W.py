@@ -2,6 +2,7 @@
 
 import logging
 from threading import Lock
+
 import win32print
 
 from odoo.addons.iot_drivers.interface import Interface
@@ -13,7 +14,7 @@ win32print_lock = Lock()  # Calling win32print in parallel can cause failed prin
 
 class PrinterInterface(Interface):
     _loop_delay = 30
-    connection_type = 'printer'
+    connection_type = "printer"
 
     def get_devices(self):
         printer_devices = {}
@@ -29,18 +30,20 @@ class PrinterInterface(Interface):
                 printer_port = None
                 if printer_details:
                     # see: https://learn.microsoft.com/en-us/windows/win32/printdocs/printer-info-2#members
-                    printer_port = printer_details.get('pPortName')
+                    printer_port = printer_details.get("pPortName")
                 if printer_port is None:
-                    _logger.warning('Printer "%s" has no port name. Used dummy port', identifier)
-                    printer_port = 'IOT_DUMMY_PORT'
+                    _logger.warning(
+                        'Printer "%s" has no port name. Used dummy port', identifier
+                    )
+                    printer_port = "IOT_DUMMY_PORT"
 
                 if printer_port == "PORTPROMPT:":
                     # discard virtual printers (like "Microsoft Print to PDF") as they will trigger dialog boxes prompt
                     continue
 
                 printer_devices[identifier] = {
-                    'identifier': identifier,
-                    'printer_handle': handle_printer,
-                    'port': printer_port,
+                    "identifier": identifier,
+                    "printer_handle": handle_printer,
+                    "port": printer_port,
                 }
         return printer_devices

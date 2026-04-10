@@ -1,13 +1,15 @@
 import logging
 import queue
-import requests
 import threading
 import time
-
 from collections.abc import Generator
+
+import requests
+
+from odoo.netsvc import ColoredFormatter
+
 from odoo.addons.iot_drivers.tools import helpers, system
 from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
-from odoo.netsvc import ColoredFormatter
 
 _logger = logging.getLogger(__name__)
 
@@ -25,14 +27,16 @@ class ServerLogger(logging.Handler):
         """
         super().__init__()
         self.setFormatter(
-            ColoredFormatter('(%(asctime)s) %(name)s: %(message)s %(perf_info)s')
+            ColoredFormatter("(%(asctime)s) %(name)s: %(message)s %(perf_info)s"),
         )
         self.addFilter(self._logs_filter)
-        self._server_iot_log_url = server_url + '/iot/log'
-        self._db_name = system.get_conf('db_name') or ''
+        self._server_iot_log_url = server_url + "/iot/log"
+        self._db_name = system.get_conf("db_name") or ""
         self._queue = queue.Queue(self._MAX_QUEUE_SIZE)
         self._active = True
-        self._flush_thread = threading.Thread(target=self.share_logs_loop, name="ThreadServerLogger", daemon=True)
+        self._flush_thread = threading.Thread(
+            target=self.share_logs_loop, name="ThreadServerLogger", daemon=True
+        )
         self._flush_thread.start()
 
     def share_logs_loop(self):
@@ -54,18 +58,20 @@ class ServerLogger(logging.Handler):
 
         # Report to the server if the queue is close from saturation
         queue_size = self._queue.qsize()
-        if queue_size >= .8 * self._MAX_QUEUE_SIZE:
+        if queue_size >= 0.8 * self._MAX_QUEUE_SIZE:
             log_message = f"The Server Logger queue is {100 * queue_size / self._MAX_QUEUE_SIZE:.2f}%"
-            _logger.warning(log_message)  # As we don't log our own logs, this will be part of the IoT logs
+            _logger.warning(
+                log_message
+            )  # As we don't log our own logs, this will be part of the IoT logs
             # In order to report this to the server (on the current batch) we will append it manually
             yield self.format_logs(logging.WARNING, log_message)
 
     def _share_logs(self):
         odoo_session = requests.Session()
         odoo_session.headers = {
-            'X-Odoo-Database': self._db_name,
-            'User-Agent': 'OdooIoTBox/1.0',
-            'Authorization': f'Bearer {helpers.get_token()}',
+            "X-Odoo-Database": self._db_name,
+            "User-Agent": "OdooIoTBox/1.0",
+            "Authorization": f"Bearer {helpers.get_token()}",
         }
         if self._queue.qsize() == 0:
             return
@@ -73,16 +79,19 @@ class ServerLogger(logging.Handler):
             odoo_session.post(
                 self._server_iot_log_url,
                 data=self.get_batch(),
-                timeout=10
+                timeout=10,
             ).raise_for_status()
             self._previous_disconnection = 0.0
-        except (requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError) as e:
+        except (
+            requests.exceptions.ConnectTimeout,
+            requests.exceptions.ConnectionError,
+        ) as e:
             now = time.time()
             if now > self._previous_disconnection + 5 * 60:  # 5 minutes
                 _logger.info("Failed to send logs to the db. It is likely down: %s", e)
                 self._previous_disconnection = now
         except Exception:  # noqa: BLE001
-            _logger.exception('Unexpected error happened while sending logs to server')
+            _logger.exception("Unexpected error happened while sending logs to server")
 
     def emit(self, record: logging.LogRecord) -> None:
         """This is important that this method is as fast as possible.
@@ -112,14 +121,11 @@ class ServerLogger(logging.Handler):
 
     @staticmethod
     def _logs_filter(log_record):
-        return (
-                log_record.name != __name__
-                and not (
-                    log_record.name == "werkzeug"
-                    and log_record.args
-                    and len(log_record.args) > 0
-                    and str(log_record.args[0]).startswith('GET /hw_proxy/hello ')
-            )
+        return log_record.name != __name__ and not (
+            log_record.name == "werkzeug"
+            and log_record.args
+            and len(log_record.args) > 0
+            and str(log_record.args[0]).startswith("GET /hw_proxy/hello ")
         )
 
 

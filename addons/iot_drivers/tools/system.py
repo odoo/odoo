@@ -2,17 +2,17 @@
 
 import configparser
 import logging
-import netifaces
 import re
 import secrets
 import socket
 import subprocess
 import sys
 import time
-
 from functools import cache
 from pathlib import Path
-from platform import system, release
+from platform import release, system
+
+import netifaces
 
 from odoo import release as odoo_release
 
@@ -24,7 +24,7 @@ IOT_SYSTEM = system()
 IOT_RPI_CHAR, IOT_WINDOWS_CHAR, IOT_TEST_CHAR = "L", "W", "T"
 
 IS_WINDOWS = IOT_SYSTEM[0] == IOT_WINDOWS_CHAR
-IS_RPI = 'rpi' in release()
+IS_RPI = "rpi" in release()
 IS_TEST = not IS_RPI and not IS_WINDOWS
 """IoT system "Test" correspond to any non-Raspberry Pi nor windows system.
 Expected to be Linux or macOS used locally for development purposes."""
@@ -36,10 +36,12 @@ IOT_CHAR = IOT_RPI_CHAR if IS_RPI else IOT_WINDOWS_CHAR if IS_WINDOWS else IOT_T
 - 'T' for Test (non-Raspberry Pi nor Windows)"""
 
 if IS_RPI:
+
     def rpi_only(function):
         """Decorator to check if the system is raspberry pi before running the function."""
         return function
 else:
+
     def rpi_only(_):
         """No-op decorator for non raspberry pi systems."""
         return lambda *args, **kwargs: None
@@ -60,8 +62,13 @@ def git(*args):
 
     :param args: list of arguments to pass to git
     """
-    git_executable = 'git' if IS_RPI else path_file('git', 'cmd', 'git.exe')
-    command = [git_executable, f'--work-tree={path_file("odoo")}', f'--git-dir={path_file("odoo", ".git")}', *args]
+    git_executable = "git" if IS_RPI else path_file("git", "cmd", "git.exe")
+    command = [
+        git_executable,
+        f"--work-tree={path_file('odoo')}",
+        f"--git-dir={path_file('odoo', '.git')}",
+        *args,
+    ]
 
     p = subprocess.run(command, stdout=subprocess.PIPE, text=True, check=False)
     if p.returncode == 0:
@@ -76,11 +83,11 @@ def pip(*args):
     :param args: list of arguments to pass to pip install
     :return: True if the command was successful, False otherwise
     """
-    python_executable = [] if IS_RPI else [path_file('python', 'python.exe'), '-m']
-    command = [*python_executable, 'pip', 'install', *args]
+    python_executable = [] if IS_RPI else [path_file("python", "python.exe"), "-m"]
+    command = [*python_executable, "pip", "install", *args]
 
     if IS_RPI:
-        command.append('--break-system-package')
+        command.append("--break-system-package")
 
     p = subprocess.run(command, stdout=subprocess.PIPE, check=False)
     return p.returncode == 0
@@ -89,13 +96,13 @@ def pip(*args):
 @cache
 def get_version(detailed_version=False):
     if IS_RPI:
-        with open('/var/odoo/iotbox_version', encoding='utf-8') as f:
+        with open("/var/odoo/iotbox_version", encoding="utf-8") as f:
             image_version = f.readline().strip()
     elif IS_WINDOWS:
         # updated manually when big changes are made to the windows virtual IoT
-        image_version = '23.11'
+        image_version = "23.11"
     else:
-        image_version = 'test'
+        image_version = "test"
 
     version = IOT_CHAR + image_version
     if detailed_version:
@@ -103,12 +110,12 @@ def get_version(detailed_version=False):
         version += f"-{odoo_release.version}"
         if IS_RPI:
             commit_hash = git("rev-parse", "--short", "HEAD")
-            version += f'#{commit_hash or "unknown"}'
+            version += f"#{commit_hash or 'unknown'}"
 
     return version
 
 
-def update_conf(values, section='iot.box'):
+def update_conf(values, section="iot.box"):
     """Update odoo.conf with the given key and value.
 
     :param dict values: key-value pairs to update the config with.
@@ -124,11 +131,11 @@ def update_conf(values, section='iot.box'):
     for key, value in values.items():
         conf.set(section, key, value) if value else conf.remove_option(section, key)
 
-    with open(path_file("odoo.conf"), "w", encoding='utf-8') as f:
+    with open(path_file("odoo.conf"), "w", encoding="utf-8") as f:
         conf.write(f)
 
 
-def get_conf(key=None, section='iot.box'):
+def get_conf(key=None, section="iot.box"):
     """Get the value of the given key from odoo.conf, or the full config if no key is provided.
 
     :param key: The key to get the value of.
@@ -138,27 +145,37 @@ def get_conf(key=None, section='iot.box'):
     conf = configparser.RawConfigParser()
     conf.read(path_file("odoo.conf"))
 
-    return conf.get(section, key, fallback=None) if key else conf  # Return the key's value or the configparser object
+    return (
+        conf.get(section, key, fallback=None) if key else conf
+    )  # Return the key's value or the configparser object
 
 
 def _get_identifier():
     if IS_RPI:
-        with open('/sys/firmware/devicetree/base/serial-number', encoding='utf-8') as f:
+        with open("/sys/firmware/devicetree/base/serial-number", encoding="utf-8") as f:
             return f.readline().strip("\x00")
     elif IS_TEST:
-        return 'test_identifier'
+        return "test_identifier"
 
     # On windows, get motherboard's uuid (serial number isn't reliable as it's not always present)
-    command = ['powershell', '-Command', "(Get-CimInstance Win32_ComputerSystemProduct).UUID"]
+    command = [
+        "powershell",
+        "-Command",
+        "(Get-CimInstance Win32_ComputerSystemProduct).UUID",
+    ]
     p = subprocess.run(command, stdout=subprocess.PIPE, check=False)
-    identifier = get_conf('generated_identifier')  # Fallback identifier if windows does not return mb UUID
+    identifier = get_conf(
+        "generated_identifier"
+    )  # Fallback identifier if windows does not return mb UUID
     if p.returncode == 0 and p.stdout.decode().strip():
         return p.stdout.decode().strip()
 
-    _logger.error("Failed to get Windows IoT serial number, defaulting to a random identifier")
+    _logger.error(
+        "Failed to get Windows IoT serial number, defaulting to a random identifier"
+    )
     if not identifier:
         identifier = secrets.token_hex()
-        update_conf({'generated_identifier': identifier})
+        update_conf({"generated_identifier": identifier})
 
     return identifier
 
@@ -166,13 +183,13 @@ def _get_identifier():
 def _get_system_uptime():
     if not IS_RPI:
         return 0
-    with open("/proc/uptime", encoding='utf-8') as f:
+    with open("/proc/uptime", encoding="utf-8") as f:
         return float(f.readline().split()[0])
 
 
 def is_remote_debug_enabled():
     """Check if the tailscale connection is up on the IoT Box"""
-    p = subprocess.run(['tailscale', 'status'], check=False)
+    p = subprocess.run(["tailscale", "status"], check=False)
     return p.returncode == 0
 
 
@@ -182,18 +199,25 @@ def toggle_remote_debug(auth_key=""):
     :param auth_key: The auth key to use to enable remote access.
     If empty, remote access will be disabled.
     """
-    _logger.info("%s remote access", 'enabling' if auth_key else 'disabling')
+    _logger.info("%s remote access", "enabling" if auth_key else "disabling")
 
-    hostname = get_conf('remote_server') or 'iotbox'
-    server_url = re.sub(r'^https?://|/|:', '', hostname + "-" + IOT_IDENTIFIER)
-    args = ['sudo', 'tailscale', 'up' if auth_key else 'logout']
+    hostname = get_conf("remote_server") or "iotbox"
+    server_url = re.sub(r"^https?://|/|:", "", hostname + "-" + IOT_IDENTIFIER)
+    args = ["sudo", "tailscale", "up" if auth_key else "logout"]
     if auth_key:
-        args.extend([f'--auth-key={auth_key.strip()}', f'--hostname={server_url}'])
+        args.extend([f"--auth-key={auth_key.strip()}", f"--hostname={server_url}"])
     p = subprocess.run(args, check=False)
     if auth_key and p.returncode == 0:
         # Tailscale stores its state in /var, we need to copy it in the root filesystem to persist after reboot
         subprocess.run(
-            ['sudo', 'cp', '-r', '/var/lib/tailscale/', '/root_bypass_ramdisks/var/lib/tailscale/'], check=False
+            [
+                "sudo",
+                "cp",
+                "-r",
+                "/var/lib/tailscale/",
+                "/root_bypass_ramdisks/var/lib/tailscale/",
+            ],
+            check=False,
         )
         return True
     return False
@@ -207,11 +231,13 @@ def generate_password():
     """
     password = secrets.token_urlsafe(16)
     try:
-        subprocess.run(['sudo', 'chpasswd'], input=f"pi:{password}", text=True, check=True)
+        subprocess.run(
+            ["sudo", "chpasswd"], input=f"pi:{password}", text=True, check=True
+        )
         return password
     except subprocess.CalledProcessError as e:
         _logger.exception("Failed to generate password: %s", e.output)
-        return 'Error: Check IoT log'
+        return "Error: Check IoT log"
 
 
 def get_ip():
@@ -220,7 +246,7 @@ def get_ip():
     """
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
-        s.connect((get_gateway() or '8.8.8.8', 1))  # Google DNS
+        s.connect((get_gateway() or "8.8.8.8", 1))  # Google DNS
         return s.getsockname()[0]
     except OSError as e:
         _logger.warning("Could not get local IP address: %s", e)
@@ -233,22 +259,25 @@ def get_mac_address():
     interfaces = netifaces.interfaces()
     for interface in map(netifaces.ifaddresses, interfaces):
         if interface.get(netifaces.AF_INET):
-            addr = interface.get(netifaces.AF_LINK)[0]['addr']
-            if addr != '00:00:00:00:00:00':
+            addr = interface.get(netifaces.AF_LINK)[0]["addr"]
+            if addr != "00:00:00:00:00:00":
                 return addr
     return None
 
 
-NGINX_PATH = path_file('nginx')
+NGINX_PATH = path_file("nginx")
 
 if IS_WINDOWS and NGINX_PATH:
+
     def start_nginx_server():
-        _logger.info('Start Nginx server: %s\\nginx.exe', NGINX_PATH)
-        subprocess.Popen([str(NGINX_PATH / 'nginx.exe')], cwd=str(NGINX_PATH))
+        _logger.info("Start Nginx server: %s\\nginx.exe", NGINX_PATH)
+        subprocess.Popen([str(NGINX_PATH / "nginx.exe")], cwd=str(NGINX_PATH))
 elif IS_RPI:
+
     def start_nginx_server():
         subprocess.check_call(["sudo", "service", "nginx", "restart"])
 else:
+
     def start_nginx_server():
         pass
 
@@ -267,7 +296,21 @@ def mtr(host):
         return None, None
 
     # sudo is required for probe interval < 1s, which almost divides execution time by 2
-    command = ["sudo", "mtr", "-r", "-C", "--no-dns", "-c", "3", "-i", "0.2", "-4", "-G", "1", host]
+    command = [
+        "sudo",
+        "mtr",
+        "-r",
+        "-C",
+        "--no-dns",
+        "-c",
+        "3",
+        "-i",
+        "0.2",
+        "-4",
+        "-G",
+        "1",
+        host,
+    ]
     p = subprocess.run(command, stdout=subprocess.PIPE, text=True, check=False)
     if p.returncode != 0:
         return None, None

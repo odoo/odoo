@@ -2,29 +2,30 @@
 import logging
 import subprocess
 from enum import Enum
-from odoo.addons.iot_drivers.tools import helpers
 
+from odoo.addons.iot_drivers.tools import helpers
 
 _logger = logging.getLogger(__name__)
 
 CHROMIUM_ARGS = [
-    '--incognito',
-    '--disable-infobars',
-    '--noerrdialogs',
-    '--no-first-run',
-    '--bwsi',                       # Use chromium without signing in
-    '--disable-extensions',         # Disable extensions as they fill up /tmp
-    '--disk-cache-dir=/dev/null',   # Disable disk cache
-    '--disk-cache-size=1',          # Set disk cache size to 1 byte
-    '--log-level=3',                # Reduce amount of logs
+    "--incognito",
+    "--disable-infobars",
+    "--noerrdialogs",
+    "--no-first-run",
+    "--bwsi",  # Use chromium without signing in
+    "--disable-extensions",  # Disable extensions as they fill up /tmp
+    "--disk-cache-dir=/dev/null",  # Disable disk cache
+    "--disk-cache-size=1",  # Set disk cache size to 1 byte
+    "--log-level=3",  # Reduce amount of logs
 ]
 
 
 class BrowserState(Enum):
     """Enum to represent the state of the browser"""
-    NORMAL = 'normal'
-    KIOSK = 'kiosk'
-    FULLSCREEN = 'fullscreen'
+
+    NORMAL = "normal"
+    KIOSK = "kiosk"
+    FULLSCREEN = "fullscreen"
 
 
 class Browser:
@@ -38,7 +39,7 @@ class Browser:
         :param kiosk: Whether the browser should be in kiosk mode
         """
         self.url = url
-        self.browser = 'chromium'
+        self.browser = "chromium"
         self.state = BrowserState.NORMAL
         self._x_screen = _x_screen
         self._set_environment(env)
@@ -50,10 +51,10 @@ class Browser:
         :param env: Environment variables (os.environ.copy())
         """
         self.env = env
-        self.env['DISPLAY'] = f':0.{self._x_screen}'
-        self.env['XAUTHORITY'] = '/run/lightdm/pi/xauthority'
-        for key in ['HOME', 'XDG_RUNTIME_DIR', 'XDG_CACHE_HOME']:
-            self.env[key] = '/tmp/' + self._x_screen
+        self.env["DISPLAY"] = f":0.{self._x_screen}"
+        self.env["XAUTHORITY"] = "/run/lightdm/pi/xauthority"
+        for key in ["HOME", "XDG_RUNTIME_DIR", "XDG_CACHE_HOME"]:
+            self.env[key] = "/tmp/" + self._x_screen
 
     def open_browser(self, url=None, state=BrowserState.FULLSCREEN):
         """
@@ -89,37 +90,53 @@ class Browser:
         """close the browser"""
         # Kill browser instance (can't `instance.pkill()` as we can't keep the instance after Odoo service restarts)
         # We need to terminate it because Odoo will create a new instance each time it is restarted.
-        subprocess.run(['pkill', self.browser], check=False)
+        subprocess.run(["pkill", self.browser], check=False)
 
     def xdotool_keystroke(self, keystroke):
         """
         Execute a keystroke using xdotool
         :param keystroke: Keystroke to execute
         """
-        subprocess.run([
-            'xdotool', 'search',
-            '--sync', '--onlyvisible',
-            '--screen', self._x_screen,
-            '--class', self.browser,
-            'key', keystroke,
-        ], check=False)
+        subprocess.run(
+            [
+                "xdotool",
+                "search",
+                "--sync",
+                "--onlyvisible",
+                "--screen",
+                self._x_screen,
+                "--class",
+                self.browser,
+                "key",
+                keystroke,
+            ],
+            check=False,
+        )
 
     def xdotool_type(self, text):
         """
         Type text using xdotool
         :param text: Text to type
         """
-        subprocess.run([
-            'xdotool', 'search',
-            '--sync', '--onlyvisible',
-            '--screen', self._x_screen,
-            '--class', self.browser,
-            'type', text,
-        ], check=False)
+        subprocess.run(
+            [
+                "xdotool",
+                "search",
+                "--sync",
+                "--onlyvisible",
+                "--screen",
+                self._x_screen,
+                "--class",
+                self.browser,
+                "type",
+                text,
+            ],
+            check=False,
+        )
 
     def refresh(self):
         """Refresh the current tab"""
-        self.xdotool_keystroke('ctrl+r')
+        self.xdotool_keystroke("ctrl+r")
 
     def disable_kiosk_mode(self):
         """Removes arguments to chromium-browser cli to open it without kiosk mode"""

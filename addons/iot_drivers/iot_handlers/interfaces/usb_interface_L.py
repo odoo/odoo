@@ -6,7 +6,7 @@ from odoo.addons.iot_drivers.interface import Interface
 
 
 class USBInterface(Interface):
-    connection_type = 'usb'
+    connection_type = "usb"
     allow_unsupported = True
 
     @staticmethod
@@ -16,7 +16,7 @@ class USBInterface(Interface):
         if dev.bDeviceClass in [7, 9]:
             return False
         # If the device has generic base class (0) check its interface descriptor
-        elif dev.bDeviceClass == 0:
+        if dev.bDeviceClass == 0:
             for conf in dev:
                 for interface in conf:
                     if interface.bInterfaceClass == 7:  # 7 = printer
@@ -44,7 +44,7 @@ class USBInterface(Interface):
         for dev in devs:
             identifier = "usb_%04x:%04x" % (dev.idVendor, dev.idProduct)
             if identifier in usb_devices:
-                identifier += '_%s' % cpt
+                identifier += "_%s" % cpt
                 cpt += 1
             usb_devices[identifier] = dev
         return usb_devices

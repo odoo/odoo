@@ -3,15 +3,16 @@ NetworkManager and ``nmcli`` tool.
 """
 
 import base64
-from io import BytesIO
 import logging
-import qrcode
 import re
 import secrets
 import subprocess
 import time
-from pathlib import Path
 from functools import cache
+from io import BytesIO
+from pathlib import Path
+
+import qrcode
 
 from . import system
 from .system import IOT_IDENTIFIER
@@ -30,9 +31,9 @@ def _nmcli(args, sudo=False):
     :return: Output of the command
     :rtype: str
     """
-    command = ['nmcli', '-t', *args]
+    command = ["nmcli", "-t", *args]
     if sudo:
-        command = ['sudo', *command]
+        command = ["sudo", *command]
 
     p = subprocess.run(command, stdout=subprocess.PIPE, check=False)
     if p.returncode == 0:
@@ -46,12 +47,16 @@ def _scan_network():
     :return: list of found SSIDs with a flag indicating whether it's the connected network
     :rtype: list[tuple[bool, str]]
     """
-    ssids = _nmcli(['-f', 'ACTIVE,SSID', 'dev', 'wifi'], sudo=True)
-    ssids_dict = {
-        ssid.split(':')[-1]: ssid.startswith('yes:')
-        for ssid in sorted(ssids.splitlines())
-        if ssid
-    } if ssids else {}
+    ssids = _nmcli(["-f", "ACTIVE,SSID", "dev", "wifi"], sudo=True)
+    ssids_dict = (
+        {
+            ssid.split(":")[-1]: ssid.startswith("yes:")
+            for ssid in sorted(ssids.splitlines())
+            if ssid
+        }
+        if ssids
+        else {}
+    )
     _logger.debug("Found networks: %s", ssids_dict)
 
     return [(status, ssid) for ssid, status in ssids_dict.items()]
@@ -65,11 +70,15 @@ def _reload_network_manager():
     :return: True if the service is reloaded successfully
     :rtype: bool
     """
-    if subprocess.run(['sudo', 'systemctl', 'reload', 'NetworkManager'], check=False).returncode == 0:
+    if (
+        subprocess.run(
+            ["sudo", "systemctl", "reload", "NetworkManager"], check=False
+        ).returncode
+        == 0
+    ):
         return True
-    else:
-        _logger.error('Failed to reload NetworkManager service')
-        return False
+    _logger.error("Failed to reload NetworkManager service")
+    return False
 
 
 def get_current():
@@ -78,15 +87,17 @@ def get_current():
     :return: The connected network's SSID, or None
     :rtype: str | None
     """
-    nmcli_output = _nmcli(['-f', 'GENERAL.CONNECTION,GENERAL.STATE', 'dev', 'show', 'wlan0'])
+    nmcli_output = _nmcli(
+        ["-f", "GENERAL.CONNECTION,GENERAL.STATE", "dev", "show", "wlan0"]
+    )
     if not nmcli_output:
         return None
 
-    ssid_match = re.match(r'GENERAL\.CONNECTION:(\S+)\n', nmcli_output)
+    ssid_match = re.match(r"GENERAL\.CONNECTION:(\S+)\n", nmcli_output)
     if not ssid_match:
         return None
 
-    return ssid_match[1] if '(connected)' in nmcli_output else None
+    return ssid_match[1] if "(connected)" in nmcli_output else None
 
 
 def get_available_ssids():
@@ -120,8 +131,8 @@ def disconnect():
     if not ssid:
         return True
 
-    _logger.info('Disconnecting from network %s', ssid)
-    _nmcli(['con', 'down', ssid], sudo=True)
+    _logger.info("Disconnecting from network %s", ssid)
+    _nmcli(["con", "down", ssid], sudo=True)
 
     if not system.get_ip():
         toggle_access_point(START)
@@ -139,11 +150,11 @@ def _connect(ssid, password):
     if ssid not in get_available_ssids() or not toggle_access_point(STOP):
         return False
 
-    _logger.info('Connecting to network %s', ssid)
-    _nmcli(['device', 'wifi', 'connect', ssid, 'password', password], sudo=True)
+    _logger.info("Connecting to network %s", ssid)
+    _nmcli(["device", "wifi", "connect", ssid, "password", password], sudo=True)
 
     if not _validate_configuration(ssid):
-        _logger.warning('Failed to make network configuration persistent for %s', ssid)
+        _logger.warning("Failed to make network configuration persistent for %s", ssid)
 
     return is_current(ssid)
 
@@ -159,13 +170,15 @@ def reconnect(ssid=None, password=None, force_update=False):
     :return: True if reconnected successfully
     """
     if not force_update:
-        timer = time.time() + 10  # Required on boot: wait 10 sec (see: https://github.com/odoo/odoo/pull/187862)
+        timer = (
+            time.time() + 10
+        )  # Required on boot: wait 10 sec (see: https://github.com/odoo/odoo/pull/187862)
         while time.time() < timer:
             if system.get_ip():
                 if is_access_point():
                     toggle_access_point(STOP)
                 return True
-            time.sleep(.5)
+            time.sleep(0.5)
 
     if not ssid:
         return toggle_access_point(START)
@@ -173,7 +186,7 @@ def reconnect(ssid=None, password=None, force_update=False):
     should_start_access_point_on_failure = is_access_point() or not system.get_ip()
 
     # Try to re-enable an existing connection, or set up a new persistent one
-    if toggle_access_point(STOP) and not _nmcli(['con', 'up', ssid], sudo=True):
+    if toggle_access_point(STOP) and not _nmcli(["con", "up", ssid], sudo=True):
         _connect(ssid, password)
 
     connected_successfully = is_current(ssid)
@@ -195,25 +208,31 @@ def _validate_configuration(ssid):
     :return: True if the configuration file is saved successfully
     :rtype: bool
     """
-    source_path = Path('/etc/netplan/')
+    source_path = Path("/etc/netplan/")
     if not source_path.exists():
         return False
 
-    destination_path = Path('/root_bypass_ramdisks') / source_path.relative_to('/')
+    destination_path = Path("/root_bypass_ramdisks") / source_path.relative_to("/")
     if source_path.is_dir():
         source_path = f"{source_path}/"
 
     # Copy the configuration file to the root filesystem
-    if subprocess.run(['sudo', 'rsync', '--dirs', '--delete', source_path, destination_path], check=False).returncode == 0:
+    if (
+        subprocess.run(
+            ["sudo", "rsync", "--dirs", "--delete", source_path, destination_path],
+            check=False,
+        ).returncode
+        == 0
+    ):
         return True
-    else:
-        _logger.error('Failed to apply the network configuration to /root_bypass_ramdisks.')
-        return False
+    _logger.error("Failed to apply the network configuration to /root_bypass_ramdisks.")
+    return False
 
 
 # -------------------------- #
 # Access Point Configuration #
 # -------------------------- #
+
 
 @cache
 def get_access_point_ssid():
@@ -239,13 +258,16 @@ def _configure_access_point(on=True):
 
     if on:
         _logger.info("Starting access point with SSID %s", ssid)
-        with open('/etc/hostapd/hostapd.conf', 'w', encoding='utf-8') as f:
+        with open("/etc/hostapd/hostapd.conf", "w", encoding="utf-8") as f:
             f.write(f"interface=wlan0\nssid={ssid}\nchannel=36\nhw_mode=a\n")
-    mode = 'add' if on else 'del'
+    mode = "add" if on else "del"
     return (
         subprocess.run(
-            ['sudo', 'ip', 'address', mode, '10.11.12.1/24', 'dev', 'wlan0'], check=False, stderr=subprocess.DEVNULL
-        ).returncode == 0
+            ["sudo", "ip", "address", mode, "10.11.12.1/24", "dev", "wlan0"],
+            check=False,
+            stderr=subprocess.DEVNULL,
+        ).returncode
+        == 0
         or not on  # Don't fail if stopping access point: IP address might not exist
     )
 
@@ -260,13 +282,15 @@ def toggle_access_point(state=START):
     if not _configure_access_point(state):
         return False
 
-    mode = 'start' if state else 'stop'
+    mode = "start" if state else "stop"
     _logger.info("%sing access point.", mode.capitalize())
-    if subprocess.run(['sudo', 'systemctl', mode, 'hostapd'], check=False).returncode == 0:
+    if (
+        subprocess.run(["sudo", "systemctl", mode, "hostapd"], check=False).returncode
+        == 0
+    ):
         return True
-    else:
-        _logger.error("Failed to %s access point.", mode)
-        return False
+    _logger.error("Failed to %s access point.", mode)
+    return False
 
 
 def is_access_point():
@@ -275,16 +299,21 @@ def is_access_point():
     :return: True if the device is in access point mode
     :rtype: bool
     """
-    return subprocess.run(
-        ['systemctl', 'is-active', 'hostapd'], stdout=subprocess.DEVNULL, check=False
-    ).returncode == 0
+    return (
+        subprocess.run(
+            ["systemctl", "is-active", "hostapd"],
+            stdout=subprocess.DEVNULL,
+            check=False,
+        ).returncode
+        == 0
+    )
 
 
 def get_qr_data_for_wifi():
     if is_access_point():
         return f"WIFI:S:{get_access_point_ssid()};T:nopass;;;"
-    wifi_ssid = system.get_conf('wifi_ssid')
-    wifi_password = system.get_conf('wifi_password')
+    wifi_ssid = system.get_conf("wifi_ssid")
+    wifi_password = system.get_conf("wifi_password")
     if wifi_ssid and wifi_password:
         return f"WIFI:S:{wifi_ssid};T:WPA;P:{wifi_password};;;"
     return None
@@ -323,6 +352,8 @@ def generate_network_qr_codes():
     """
     wifi_network_qr_data = get_qr_data_for_wifi()
     return {
-        'qr_wifi': generate_qr_code_image(wifi_network_qr_data) if wifi_network_qr_data else None,
-        'qr_url': generate_qr_code_image(f'http://{system.get_ip()}'),
+        "qr_wifi": generate_qr_code_image(wifi_network_qr_data)
+        if wifi_network_qr_data
+        else None,
+        "qr_url": generate_qr_code_image(f"http://{system.get_ip()}"),
     }
