@@ -16,32 +16,33 @@
         <span t-else="">Order # </span>
         <span t-field="doc.name">SO0000</span>
     </t>
-    <t t-call="web.external_layout"
-        forced_vat="doc.fiscal_position_id.foreign_vat"
-        address="address"
-        layout_document_title="layout_document_title">
-        <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" /> <!-- So that it appears in the footer of the report instead of the company VAT if it's set -->
-        <t t-if="doc.partner_shipping_id == doc.partner_invoice_id
-                             and doc.partner_invoice_id != doc.partner_id
-                             or doc.partner_shipping_id != doc.partner_invoice_id">
-            <t t-set="information_block">
-                <strong>
-                    <t t-if="doc.partner_shipping_id == doc.partner_invoice_id">
-                        Invoicing and Shipping Address
-                    </t>
-                    <t t-else="">
-                        Invoicing Address
-                    </t>
-                </strong>
-                <div t-field="doc.partner_invoice_id"
-                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                <t t-if="doc.partner_shipping_id != doc.partner_invoice_id">
-                    <strong class="d-block mt-3">Shipping Address</strong>
-                    <div t-field="doc.partner_shipping_id"
-                        t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+    <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
+    <t t-if="doc.partner_shipping_id == doc.partner_invoice_id
+                         and doc.partner_invoice_id != doc.partner_id
+                         or doc.partner_shipping_id != doc.partner_invoice_id">
+        <t t-set="information_block">
+            <strong>
+                <t t-if="doc.partner_shipping_id == doc.partner_invoice_id">
+                    Invoicing and Shipping Address
                 </t>
+                <t t-else="">
+                    Invoicing Address
+                </t>
+            </strong>
+            <div t-field="doc.partner_invoice_id"
+                t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+            <t t-if="doc.partner_shipping_id != doc.partner_invoice_id">
+                <strong class="d-block mt-3">Shipping Address</strong>
+                <div t-field="doc.partner_shipping_id"
+                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
             </t>
         </t>
+    </t>
+    <t t-call="web.external_layout"
+        address="address"
+        layout_document_title="layout_document_title"
+        information_block="information_block"
+        forced_vat="doc.fiscal_position_id.foreign_vat"> <!-- So that it appears in the footer of the report instead of the company VAT if it's set -->
         <div class="page">
             <div class="oe_structure"/>
 
