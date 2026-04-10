@@ -1,4 +1,4 @@
-import { reactive, useChildSubEnv, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
@@ -13,6 +13,8 @@ import {
     onWillUnmount,
     onWillUpdateProps,
     toRaw,
+    untrack,
+    useEffect,
 } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 
@@ -68,8 +70,11 @@ export class Thread extends Component {
         this.saveScroll = this.saveScroll.bind(this);
         this.onScroll = this.onScroll.bind(this);
         this.onWheel = this.onWheel.bind(this);
-        // @todo owl3 migration reactive with callback
-        this.messageRefs = reactive(useChildRefs(), () => this.scrollToHighlighted());
+        this.messageRefs = useChildRefs();
+        useEffect(() => {
+            this.messageRefs; // trigger effect only when messageRefs changes
+            untrack(() => this.scrollToHighlighted());
+        });
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.state = useState({

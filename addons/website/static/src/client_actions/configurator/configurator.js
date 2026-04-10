@@ -22,7 +22,7 @@ import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { mixCssColors } from "@web/core/utils/colors";
 import { router } from "@web/core/browser/router";
-import { Component, onMounted, onWillStart } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useEffect } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
@@ -917,8 +917,15 @@ export class Configurator extends Component {
         });
 
         const initialStep = router.current.step;
-        // @todo owl3 migration reactive with callback
-        const store = reactive(new Store(), () => this.updateStorage(store));
+        const store = reactive(new Store());
+        let isStoreStarted = false;
+        useEffect(() => {
+            if (!isStoreStarted) {
+                store; // consume signal
+                return;
+            }
+            this.updateStorage(store);
+        });
 
         this.state = useState({
             currentStep: initialStep,
@@ -931,6 +938,7 @@ export class Configurator extends Component {
 
             await store.start(() => this.getInitialState());
             this.updateStorage(store);
+            isStoreStarted = true;
             if (!store.industries || store.configurator_done) {
                 await this.skipConfigurator();
             }
