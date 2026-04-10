@@ -439,6 +439,7 @@ class IrCron(models.Model):
             cron = env[cls._name].browse(job['id'])
 
             status = None
+            error_per_run = []
             loop_count = 0
             _logger.info('Job %r (%s) starting', job['cron_name'], job['id'])
 
@@ -454,7 +455,8 @@ class IrCron(models.Model):
                 try:
                     # signaling check and commit is done inside `_callback`
                     cron._callback(job['cron_name'], job['ir_actions_server_id'])
-                except Exception:  # noqa: BLE001
+                except Exception as error:  # noqa: BLE001
+                    error_per_run.append(error)
                     _logger.exception('Job %r (%s) server action #%s failed',
                         job['cron_name'], job['id'], job['ir_actions_server_id'])
                     if progress.done and progress.remaining:
@@ -464,6 +466,7 @@ class IrCron(models.Model):
                     else:
                         status = CompletionStatus.FAILED
                 else:
+                    error_per_run.append(None)
                     if not progress.remaining:
                         # assume the server action doesn't use the progress API
                         # and that there is nothing left to process
@@ -488,6 +491,10 @@ class IrCron(models.Model):
                 if status in (CompletionStatus.FULLY_DONE, CompletionStatus.FAILED):
                     break
 
+            if status == CompletionStatus.PARTIALLY_DONE and all(error_per_run) and set(map(type, error_per_run)) == 1:
+                # When a cron job always finished in a partially done state with
+                # the same error, it will probably continue doing so.
+                status = CompletionStatus.FAILED
             _logger.info(
                 'Job %r (%s) %s (#loop %s; done %s; remaining %s; duration %.2fs)',
                 job['cron_name'], job['id'], status,
