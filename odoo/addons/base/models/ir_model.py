@@ -655,8 +655,10 @@ class IrModelFields(models.Model):
         names = self.related.split(".")
         last = len(names) - 1
         model_name = self.model or self.model_id.model
+        Model = self.env[model_name]
         for index, name in enumerate(names):
             field = self._get(model_name, name)
+            fields = Model._fields[name]
             if not field:
                 raise UserError(_(
                     'Unknown field name "%(field_name)s" in related field "%(related_field)s"',
@@ -670,7 +672,7 @@ class IrModelFields(models.Model):
                     field_name=name,
                     related_field=self.related,
                 ))
-            if not field.store:
+            if not fields._description_searchable:
                 raise ValidationError(_(
                     'Field "%(field_name)s" in related path "%(related_field)s" is not stored. '
                     'Non-stored fields cannot be used in related fields.',
