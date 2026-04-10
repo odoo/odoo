@@ -42,7 +42,7 @@ describe("transform on space", () => {
     test("typing valid URL + space should convert to link", async () => {
         const { editor, el } = await setupEditor("<p>[]</p>");
         await insertText(editor, "http://google.co.in");
-        await insertText(editor, " ");
+        await insertSpace(editor);
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p><a href="http://google.co.in">http://google.co.in</a>&nbsp;[]</p>'
         );
@@ -50,7 +50,7 @@ describe("transform on space", () => {
     test("typing valid URL without protocol + space should convert to https link", async () => {
         const { editor, el } = await setupEditor("<p>[]</p>");
         await insertText(editor, "google.com");
-        await insertText(editor, " ");
+        await insertSpace(editor);
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p><a href="https://google.com">google.com</a>&nbsp;[]</p>'
         );
@@ -58,7 +58,7 @@ describe("transform on space", () => {
     test("typing valid http URL + space should convert to http link", async () => {
         const { editor, el } = await setupEditor("<p>[]</p>");
         await insertText(editor, "http://google.com");
-        await insertText(editor, " ");
+        await insertSpace(editor);
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p><a href="http://google.com">http://google.com</a>&nbsp;[]</p>'
         );
@@ -66,8 +66,8 @@ describe("transform on space", () => {
     test("typing invalid URL + space should not convert to link", async () => {
         const { editor, el } = await setupEditor("<p>[]</p>");
         await insertText(editor, "www.odoo");
-        await insertText(editor, " ");
-        expect(cleanLinkArtifacts(getContent(el))).toBe("<p>www.odoo []</p>");
+        await insertSpace(editor);
+        expect(cleanLinkArtifacts(getContent(el))).toBe("<p>www.odoo&nbsp;[]</p>");
     });
 
     test("should transform url followed by punctuation characters after space (1)", async () => {
@@ -120,7 +120,7 @@ describe("transform on space", () => {
         const { el, editor } = await setupEditor(`<p>[]</p>`);
         await insertText(editor, "www.abc.jpg");
         await ensureDistinctHistoryStep();
-        await insertText(editor, " ");
+        await insertSpace(editor);
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p><a href="https://www.abc.jpg">www.abc.jpg</a>&nbsp;[]</p>'
         );

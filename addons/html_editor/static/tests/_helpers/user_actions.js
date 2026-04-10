@@ -126,34 +126,9 @@ export async function insertSpace(editor) {
     if (!range.collapsed) {
         throw new Error("need to implement something... maybe");
     }
-    let offset = range.startOffset;
-    const node = range.startContainer;
+
     // mimic the behavior of the browser when inserting a &nbsp
-    const twoSpace = " \u00A0";
-    node.textContent = (
-        node.textContent.slice(0, offset) +
-        " " +
-        node.textContent.slice(offset)
-    ).replaceAll("  ", twoSpace);
-
-    if (
-        node.nextSibling &&
-        node.nextSibling.textContent.startsWith(" ") &&
-        node.textContent.endsWith(" ")
-    ) {
-        node.nextSibling.textContent = "\u00A0" + node.nextSibling.textContent.slice(1);
-    }
-
-    offset++;
-    // If inserted space is the trailing space, convert it to &nbsp
-    if (node.textContent.length == offset && node.textContent.endsWith(" ")) {
-        node.textContent = node.textContent.slice(0, -1) + "\u00A0";
-    }
-
-    setSelection({
-        anchorNode: node,
-        anchorOffset: offset,
-    });
+    document.execCommand("insertText", false, " ");
 
     const [inputEvent] = await manuallyDispatchProgrammaticEvent(editor.editable, "input", {
         inputType: "insertText",
