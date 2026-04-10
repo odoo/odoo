@@ -11,7 +11,7 @@ class StockWarehouse(models.Model):
 
     manufacture_to_resupply = fields.Boolean(
         'Manufacture to Resupply', compute='_compute_manufacture_to_resupply',
-        inverse='_inverse_manufacture_to_resupply', default=True,
+        readonly=False, default=True,
         help="When products are manufactured, they can be manufactured in this warehouse.")
     manufacture_pull_id = fields.Many2one(
         'stock.rule', 'Manufacture Rule', copy=False)
@@ -48,7 +48,7 @@ class StockWarehouse(models.Model):
             warehouse.manufacture_to_resupply = warehouse.id in manufacture_route.warehouse_ids.ids or \
                                                 (manufacture_route.warehouse_selectable and not manufacture_route.warehouse_ids)
 
-    def _inverse_manufacture_to_resupply(self):
+    def _apply_manufacture_to_resupply(self):
         for warehouse in self:
             manufacture_route = warehouse.manufacture_pull_id.route_id
             if not manufacture_route:
@@ -61,6 +61,8 @@ class StockWarehouse(models.Model):
                 manufacture_route.warehouse_ids = [Command.link(warehouse.id)]
             else:
                 manufacture_route.warehouse_ids = [Command.unlink(warehouse.id)]
+        self.invalidate_recordset(['manufacture_to_resupply'])
+        self.modified(['manufacture_to_resupply'])
 
     def _create_or_update_route(self):
         manufacture_route = self._find_or_create_global_route('mrp.route_warehouse0_manufacture', _('Manufacture'))
@@ -281,11 +283,22 @@ class StockWarehouse(models.Model):
             if not location:
                 company_id._create_production_location()
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        # logically inverse in the override of create method to apply the change after all logics in super().create()
+        res._apply_manufacture_to_resupply()
+        return res
+
     def write(self, vals):
         if any(field in vals for field in ('manufacture_steps', 'manufacture_to_resupply')):
             for warehouse in self:
                 warehouse._update_location_manufacture(vals.get('manufacture_steps', warehouse.manufacture_steps))
-        return super(StockWarehouse, self).write(vals)
+        super().write(vals)
+        if 'manufacture_to_resupply' in vals:
+            # logically inverse in the override of write method to apply the change after all logics in super().write()
+            self._apply_manufacture_to_resupply()
+        return True
 
     def _get_all_routes(self):
         routes = super(StockWarehouse, self)._get_all_routes()
