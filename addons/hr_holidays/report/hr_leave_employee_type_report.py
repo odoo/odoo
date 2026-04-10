@@ -59,7 +59,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
 						employee.active as active_employee,
 						allocation.number_of_days as number_of_days,
 						allocation.number_of_hours_display as number_of_hours,
-						allocation.department_id as department_id,
+						v.department_id as department_id,
 						allocation.holiday_status_id as leave_type,
 						allocation.state as state,
 						allocation.date_from as date_from,
@@ -76,6 +76,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
 						END as is_new_group
                     FROM hr_leave_allocation allocation
                     JOIN hr_employee employee ON (allocation.employee_id = employee.id)
+                    LEFT JOIN hr_version v ON v.id = employee.current_version_id
                     WHERE allocation.state = 'validate'
                 ),
 
@@ -200,7 +201,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
 						employee.active as active_employee,
 						request.number_of_days as number_of_days,
 						request.number_of_hours as number_of_hours,
-						request.department_id as department_id,
+						v.department_id as department_id,
 						request.holiday_status_id as leave_type,
 						request.state as state,
 						request.date_from as date_from,
@@ -212,6 +213,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
 						request.employee_company_id as company_id
                     FROM hr_leave as request
                     JOIN hr_employee as employee ON (request.employee_id = employee.id)
+                    LEFT JOIN hr_version v ON v.id = employee.current_version_id
                     WHERE request.state IN ('confirm', 'validate', 'validate1')
                 ) leaves
             );
