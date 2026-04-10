@@ -291,6 +291,7 @@ class PosOrder(models.Model):
         parent_lst_price = self.pricelist_id._get_product_price(parent_line.product_id, parent_line.qty)
         child_line_free = []
         child_line_extra = []
+        parent_coef = parent_line.qty or 1
 
         child_lines_by_combo = {}
         for line in child_lines:
@@ -299,7 +300,7 @@ class PosOrder(models.Model):
 
         for combo, child_lines in child_lines_by_combo.items():
             free_count = 0
-            max_free = combo.qty_free
+            max_free = combo.qty_free * parent_coef
 
             for line in child_lines:
                 qty_per_line = line.qty / line.combo_parent_id.qty if line.combo_parent_id.qty else line.qty
@@ -321,8 +322,8 @@ class PosOrder(models.Model):
             combo_item = child.combo_item_id
             combo = combo_item.combo_id
             unit_devision_factor = original_total or 1
-            price_unit = currency.round(combo.base_price * parent_lst_price / unit_devision_factor)
-            remaining_total -= price_unit * (child.qty / child.combo_parent_id.qty if child.combo_parent_id.qty else child.qty)
+            price_unit = currency.round(combo.base_price * parent_lst_price * parent_coef / unit_devision_factor)
+            remaining_total -= price_unit * child.qty / parent_coef
 
             if index == len(child_line_free) - 1:
                 price_unit += remaining_total

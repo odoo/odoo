@@ -145,6 +145,80 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
             msg="When qty_free=0, remaining_total must be proportionally distributed to extra lines",
         )
 
+    def test_combo_price_free_items_multi_qty(self):
+        """
+        Regression test: when buying qty > 1 of a combo, free child line prices must
+        equal the same per-unit amount as buying qty=1.  The parent_coef factor
+        (parent_line.qty) must be applied so that original_total (which uses full qty)
+        and parent_lst_price (per-unit) are on the same scale.
+        """
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+
+        free_combo = self.env['product.combo'].create({
+            'name': 'Free Combo',
+            'qty_free': 1,
+            'qty_max': 1,
+            'combo_item_ids': [
+                Command.create({'product_id': self.cola.id, 'extra_price': 0}),
+                Command.create({'product_id': self.fanta.id, 'extra_price': 0}),
+            ],
+        })
+        combo_product = self.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'name': 'Free Combo Product',
+            'type': 'combo',
+            'combo_ids': [Command.set([free_combo.id])],
+            'taxes_id': False,
+        })
+
+        cola_item = free_combo.combo_item_ids.filtered(
+            lambda i: i.product_id == self.cola
+        )
+
+        price_unit_by_qty = {}
+        for parent_qty in (1, 2):
+            order = self.env['pos.order'].create({
+                'amount_total': 0,
+                'amount_paid': 0,
+                'amount_tax': 0,
+                'amount_return': 0,
+                'company_id': self.env.company.id,
+                'session_id': self.pos_config.current_session_id.id,
+                'lines': [
+                    Command.create({
+                        'product_id': combo_product.id,
+                        'qty': parent_qty,
+                        'price_unit': combo_product.lst_price,
+                        'price_subtotal': combo_product.lst_price * parent_qty,
+                        'price_subtotal_incl': combo_product.lst_price * parent_qty,
+                        'tax_ids': False,
+                    }),
+                ],
+            })
+
+            parent_line = order.lines
+            child_line = self.env['pos.order.line'].create({
+                'order_id': order.id,
+                'product_id': self.cola.id,
+                'qty': parent_qty,
+                'price_unit': 0,
+                'price_subtotal': 0,
+                'price_subtotal_incl': 0,
+                'tax_ids': False,
+                'combo_parent_id': parent_line.id,
+                'combo_item_id': cola_item.id,
+            })
+
+            order.recompute_prices()
+            price_unit_by_qty[parent_qty] = child_line.price_unit
+
+        self.assertAlmostEqual(
+            price_unit_by_qty[1], price_unit_by_qty[2], places=2,
+            msg="Child line price_unit must be the same whether buying 1 or 2 parent combos",
+        )
+
     def test_product_dont_display_all_variants(self):
         """
         Tests that when a variant is in a combo, clicking the variant
