@@ -62,7 +62,8 @@ export function makeActiveField({
 export const AGGREGATABLE_FIELD_TYPES = ["float", "integer", "monetary"]; // types that can be aggregated in grouped views
 
 export function addFieldDependencies(activeFields, fields, fieldDependencies = []) {
-    for (const field of fieldDependencies) {
+    for (let field of fieldDependencies) {
+        field = { ...field };
         if (!("readonly" in field)) {
             field.readonly = true;
         }

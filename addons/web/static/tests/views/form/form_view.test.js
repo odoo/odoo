@@ -13774,3 +13774,42 @@ test("twice same many2one, one invisible, one with widget with related field", a
     expect(".o_field_widget[name=product_id] input").toHaveValue("xphone");
     expect(".o_field_widget[name=product_id] .date").toHaveText("13/02/2023");
 });
+
+test(`Do not mix dependencies across multiple widgets in multiple views`, async () => {
+    onRpc("web_save", () => expect.step("web_save"));
+    class MyField extends CharField {}
+    fieldsRegistry.add("my_widget", {
+        component: MyField,
+        fieldDependencies: [{ name: "name", type: "char" }],
+    });
+
+    Partner._records[1].child_ids = [1];
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="foo" widget="my_widget"/>
+                <field name="name" />
+                <field name="child_ids">
+                    <list editable="top">
+                        <field name="foo" widget="my_widget"/>
+                        <field name="name" required="1"/>
+                    </list>
+                </field>
+            </form>
+        `,
+        resId: 2,
+    });
+    expect(`.o_field_widget[name=name] input`).toHaveValue("second record");
+
+    await contains(`.o_field_widget[name=name] input`).edit("");
+    await clickSave();
+    expect.verifySteps(["web_save"]);
+
+    await contains(`.o_field_one2many:eq(0) .o_field_x2many_list_row_add button`).click();
+    await contains(".o_selected_row input").edit("Foo value");
+    await clickSave();
+    expect(`.o_notification_content`).toHaveText("Missing required fields");
+});
