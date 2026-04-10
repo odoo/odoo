@@ -98,12 +98,12 @@ export class StatusBarField extends Component {
             this.specialData = useSpecialData(async (orm, props) => {
                 const { foldField, name: fieldName, record } = props;
                 const { relation } = record.fields[fieldName];
-                const fieldNames = this.getFieldNames();
+                const fieldNames = this.getFieldNames(props);
                 if (foldField) {
                     fieldNames.push(foldField);
                 }
                 let domain = getFieldDomain(record, fieldName, props.domain);
-                domain = Domain.and([this.getDomain(), domain]).toList();
+                domain = Domain.and([this.getDomain(props), domain]).toList();
                 const res = await orm.searchRead(relation, domain, fieldNames).catch((error) => {
                     if (error instanceof ConnectionLostError) {
                         if (this.props.record.data[this.props.name]) {
@@ -173,14 +173,14 @@ export class StatusBarField extends Component {
     /**
      * Override this to force a dynamic domain on the records
      */
-    getDomain() {
+    getDomain(props) {
         return [];
     }
 
     /**
      * Override this to change the fields to fetch
      */
-    getFieldNames() {
+    getFieldNames(props) {
         return ['display_name'];
     }
 
