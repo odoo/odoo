@@ -10,9 +10,8 @@
             Save which plan is used for Projects. Once it is set, even if not used, it cannot be changed safely without a SQL script.
             The other plans will generate dynamic columns, so changing this param would require renaming the columns also.
         -->
-        <function model="ir.config_parameter" name="set_int" eval="('analytic.project_plan', 1)"/>
         <record id="analytic_plan_projects" model="account.analytic.plan" forcecreate="0">
-            <field name="name">Project</field>
+            <field name="name">Project Plan</field>
             <field name="default_applicability">optional</field>
         </record>
         <function model="ir.config_parameter" name="set_int" eval="('analytic.project_plan', ref('analytic_plan_projects'))"/>
