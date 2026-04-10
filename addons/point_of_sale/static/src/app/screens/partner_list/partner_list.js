@@ -146,7 +146,7 @@ export class PartnerList extends Component {
         );
 
         const availablePartners = searchWord
-            ? partners.filter((p) => regex.test(normalize(p.searchString)))
+            ? partners.filter((p) => regex.test(normalize(p.searchString))).slice(0, 50)
             : partners
                   .slice(0, 1000)
                   .toSorted((a, b) =>
