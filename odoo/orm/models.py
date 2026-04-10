@@ -2935,10 +2935,11 @@ class BaseModel(metaclass=MetaModel):
         if not field.translate:
             translations = []
         elif field.translate is True:
+            stored = field._get_stored_translations(self) or {}
             translations = [{
                 'lang': lang,
                 'source': val_en,
-                'value': self_lang.with_context(lang=lang)[field_name]
+                'value': stored.get(lang, ''),
             } for lang in langs]
         else:
             translation_dictionary = field.get_translation_dictionary(

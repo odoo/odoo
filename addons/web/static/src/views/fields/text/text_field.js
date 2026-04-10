@@ -1,5 +1,6 @@
 import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
+import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { useAutoresize } from "@web/core/utils/autoresize";
 import { useSpellCheck } from "@web/core/utils/hooks";
@@ -7,7 +8,7 @@ import { useDynamicPlaceholder } from "../dynamic_placeholder_hook";
 import { useInputField } from "../input_field_hook";
 import { parseInteger } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
-import { TranslationButton } from "../translation_button";
+import { TranslationButton, useTranslationDialog } from "../translation_button";
 
 import { Component } from "@odoo/owl";
 
@@ -48,6 +49,7 @@ export class TextField extends Component {
             preventLineBreaks: !this.props.lineBreaks,
         });
         useSpellCheck({ refName: "textarea" });
+        this.translationDialog = useTranslationDialog();
 
         useAutoresize(this.textareaRef, { minimumHeight: this.minimumHeight });
 
@@ -63,6 +65,13 @@ export class TextField extends Component {
             return value.trim();
         }
         return value;
+    }
+
+    onFocus() {
+        if (this.isTranslatable && localization.multiLang && this.props.record.resId) {
+            this.textareaRef.el.blur();
+            this.translationDialog({ record: this.props.record, fieldName: this.props.name });
+        }
     }
 
     async onBlur() {

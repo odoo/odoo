@@ -4,7 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { loadLanguages, _t } from "@web/core/l10n/translation";
 import { jsToPyLocale } from "@web/core/l10n/utils";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, useState } from "@odoo/owl";
 
 export class TranslationDialog extends Component {
     static template = "web.TranslationDialog";
@@ -29,6 +29,9 @@ export class TranslationDialog extends Component {
 
         this.terms = [];
         this.updatedTerms = {};
+        this.state = useState({
+            enValue: undefined,
+        });
 
         onWillStart(async () => {
             const languages = await loadLanguages(this.orm);
@@ -68,6 +71,13 @@ export class TranslationDialog extends Component {
             domain.push(["name", "=", `${this.props.searchName}`]);
         }
         return domain;
+    }
+
+    onTermInput(ev, term) {
+        if (term.lang === "en_US") {
+            this.state.enValue = ev.target.value;
+        }
+        this.updatedTerms[term.id] = ev.target.value;
     }
 
     /**
