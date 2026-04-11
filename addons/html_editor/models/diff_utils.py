@@ -3,7 +3,6 @@
 import re
 
 from difflib import SequenceMatcher, unified_diff
-from bs4 import BeautifulSoup
 
 
 # ------------------------------------------------------------
@@ -324,6 +323,7 @@ def _indent(content):
     :return: string: the indented content
     """
     content = "<document>" + _remove_html_attribute(content, HTML_ATTRIBUTES_TO_REMOVE) + "</document>"
+    from bs4 import BeautifulSoup  # noqa: PLC0415
     soup = BeautifulSoup(content, 'html.parser')
     return soup.prettify()
 
