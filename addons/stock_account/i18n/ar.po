@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:37+0000\n"
+"POT-Creation-Date: 2026-04-10 18:40+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -79,11 +79,6 @@ msgstr ""
 ")\n"
 "                            <small class=\"mx-2 fst-italic\">استخدم قيمة "
 "سالبة مضافة لتسجيل انخفاض في قيمة المنتج</small>"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
-msgid "6.00"
-msgstr "6.00"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -696,6 +691,14 @@ msgstr ""
 "يحتوي المنتج %(product)s على كمية في موقع التقييم %(location)s دون أي "
 "مجموعة. \n"
 "يرجى تعيين مجموعات لكافة الكميات التي لديك قبل تمكين تقييم المجموعة. "
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"Product %(product)s is valuated by lot: an explicit Lot/Serial number is "
+"required."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -1446,3 +1449,6 @@ msgstr "وحدات "
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_graph
 msgid "valuation graph"
 msgstr "الرسم البياني للتقييم "
+
+#~ msgid "6.00"
+#~ msgstr "6.00"
