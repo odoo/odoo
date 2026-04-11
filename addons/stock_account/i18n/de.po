@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:37+0000\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
 "PO-Revision-Date: 2025-11-08 14:50+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -90,11 +90,6 @@ msgstr ""
 "                            <small class=\"mx-2 fst-italic\">Verwenden Sie "
 "einen negativen hinzugefügten Wert, um eine Verminderung des Produktwerts zu "
 "erfassen</small>"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
-msgid "6.00"
-msgstr "6,00"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -736,6 +731,20 @@ msgstr ""
 "Lagerort %(location)s.\n"
 "Bitte weisen Sie Lose zu all Ihren Mengen zu, bevor Sie die Losbwertung "
 "aktivieren."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+#, fuzzy
+#| msgid ""
+#| "This product is valuated by lot: an explicit Lot/Serial number is "
+#| "required when adding quantity"
+msgid ""
+"Product %(product)s is valuated by lot: an explicit Lot/Serial number is "
+"required."
+msgstr ""
+"Dieses Produkt wird nach Los bewertet: Bei der Angabe der Menge ist eine "
+"eindeutige Los-/Seriennummer erforderlich."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -1510,3 +1519,6 @@ msgstr "Einheiten"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_graph
 msgid "valuation graph"
 msgstr "Bewertungsgrafik"
+
+#~ msgid "6.00"
+#~ msgstr "6,00"

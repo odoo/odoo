@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:37+0000\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
 "PO-Revision-Date: 2025-11-08 14:50+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -84,11 +84,6 @@ msgstr ""
 "                            <small class=\"mx-2 fst-italic\">Utilizați o "
 "valoare adăugată negativă pentru a înregistra o scădere a valorii "
 "produsului</small>"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
-msgid "6.00"
-msgstr "6.00"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -724,6 +719,14 @@ msgstr ""
 "niciun lot.\n"
 "Vă rugăm să alocați loturi tuturor cantităților înainte de a activa "
 "evaluarea pe lot."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"Product %(product)s is valuated by lot: an explicit Lot/Serial number is "
+"required."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -1489,6 +1492,9 @@ msgstr "unități"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_graph
 msgid "valuation graph"
 msgstr "grafic evaluare"
+
+#~ msgid "6.00"
+#~ msgstr "6.00"
 
 #~ msgid " Product cost updated from %(previous)s to %(new_cost)s."
 #~ msgstr "Costul produsului actualizat de la %(previous)s la %(new_cost)s."

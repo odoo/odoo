@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:37+0000\n"
-"PO-Revision-Date: 2026-01-31 11:23+0000\n"
+"POT-Creation-Date: 2026-04-10 18:39+0000\n"
+"PO-Revision-Date: 2026-04-11 11:56+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/"
 "pos_self_order/hi/>\n"
@@ -22,18 +22,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
+#, fuzzy
 msgid "\"QR codes\""
-msgstr ""
+msgstr "\"क्यूआर कोड\""
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "(require Odoo Enterprise)"
-msgstr ""
+msgstr "(Odoo Enterprise की ज़रूरत है)"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -41,6 +42,8 @@ msgid ""
 "<br/>\n"
 "                    URL:"
 msgstr ""
+"<br/>\n"
+"                    यूआरएल:"
 
 #. module: pos_self_order
 #: model:mail.template,body_html:pos_self_order.delivery_email_template
@@ -85,6 +88,44 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
+"                   <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
+"                    <t t-set=\"street\" t-value=\"client.street or ''\"/> \n"
+"                   <t t-set=\"state\" t-value=\"client.state_id.name or ''\"/"
+">\n"
+"                    <t t-set=\"city\" t-value=\"client.city or ''\"/> \n"
+"                   <t t-set=\"country\" t-value=\"client.country_id.name or "
+"''\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/> \n"
+"                   <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/> \n"
+"                   <div>\n"
+"                        <t t-if=\"client_name\"> नमस्ते <t t-"
+"out=\"client_name\">क्लाइंट का नाम</t>,</t>\n"
+"                        <t t-else=\"\">नमस्ते,</t>\n"
+"                    </div>\n"
+"                   <br/>\n"
+"                    <div> आपका ऑर्डर <t t-out=\"object.tracking_number\">...</"
+"t> की कुल कीमत <t t-out=\"object.amount_total\">$xx.xx</t> की पुष्टि हो गई है. "
+"<span t-if=\"object.preset_time or client.street\">यह</span> <span t-"
+"if=\"object.preset_time\">पर <t t-out=\"format_time(time=object.preset_time, "
+"tz=tz, time_format='short', lang_code=lg)\">दोपहर 12:00 बजे</t></span> <span "
+"t-if=\"client.street\"> पर <t t-out=\"street\">स्ट्रीट</t>, <t t-"
+"out=\"state\">राज्य</t>, <t t-out=\"client.zip or ''\">ज़िप</t>, <t t-"
+"out=\"city\">शहर</t>, <t t-out=\"country\">देश</t></span></div> पर तैयार रहेगा\n"
+"                    <br/> \n"
+"                   <div> धन्यवाद,</div>\n"
+"                    <br/>\n"
+"                   <div t-if=\"object.state == 'paid'\">\n"
+"                        <div> अटैच किया गया, आपको अपनी रसीद मिलेगी</div>\n"
+"                        <br/>\n"
+"                   </div>\n"
+"                    <t t-out=\"store_name\"> स्टोर का नाम</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:mail.template,body_html:pos_self_order.takeout_email_template
@@ -117,6 +158,33 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                   <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/> \n"
+"                   <div>\n"
+"                        <t t-if=\"client_name\"> नमस्ते <t t-"
+"out=\"client_name\">क्लाइंट का नाम</t>,</t>\n"
+"                        <t t-else=\"\">नमस्ते,</t>\n"
+"                    </div>\n"
+"                   <br/>\n"
+"                    <div> आपका ऑर्डर <t t-out=\"object.tracking_number\">...</"
+"t> की कुल कीमत <t t-out=\"object.amount_total\">$xx.xx</t> की पुष्टि हो गई है. "
+"<span t-if=\"object.preset_time\">यह <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">दोपहर 12:00 बजे</t></span> पर मिलेगा.</div>\n"
+"                    <br/> \n"
+"                   <div> धन्यवाद,</div>\n"
+"                    <br/>\n"
+"                   <div t-if=\"object.state == 'paid'\">\n"
+"                        <div> अचैट किया गया, आपको अपनी रसीद मिलेगी</div>\n"
+"                        <br/>\n"
+"                   </div>\n"
+"                    <t t-out=\"store_name\"> स्टोर का नाम</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -125,53 +193,56 @@ msgid ""
 "Access rights of this user will be used when visiting self order website "
 "when no session is open."
 msgstr ""
+"जब कोई सेशन खुला नहीं होगा, तो सेल्फ़ ऑर्डर वेबसाइट पर जाने पर इस उपयोगकर्ता के ऐक्सेस "
+"अधिकारों का उपयोग किया जाएगा।"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__active
 msgid "Active"
-msgstr "सक्रिय"
+msgstr "ऐक्टिव"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Add"
-msgstr "जोड़ना"
+msgstr "जोड़ें"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Add Languages"
-msgstr ""
+msgstr "भाषाएं जोड़ें"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_home_ids
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
 msgid "Add images"
-msgstr ""
+msgstr "इमेज जोड़ें"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
+#, fuzzy
 msgid "Add to cart"
-msgstr ""
+msgstr "कार्ट में जोड़ें"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 msgid "All"
-msgstr "सभी "
+msgstr "सभी"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "An error has occurred"
-msgstr ""
+msgstr "कोई गड़बड़ी हुई"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
 msgid "Are you sure you want to cancel this order?"
-msgstr ""
+msgstr "क्या आप इस ऑर्डर को रद्द करना चाहते हैं?"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -184,28 +255,29 @@ msgstr "उपलब्ध"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_available_language_ids
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_available_language_ids
 msgid "Available Languages"
-msgstr ""
+msgstr "उपलब्ध भाषाएं"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
+#, fuzzy
 msgid "Available in Self"
-msgstr ""
+msgstr "सेल्फ़ में उपलब्ध"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_available
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_available
 msgid "Available in Self Order"
-msgstr ""
+msgstr "सेल्फ़ ऑर्डर में उपलब्ध"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__available_in_self
 msgid "Available in self"
-msgstr ""
+msgstr "सेल्फ़ में उपलब्ध"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Available interface languages"
-msgstr ""
+msgstr "उपलब्ध इंटरफ़ेस भाषाएं"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -221,27 +293,29 @@ msgstr "वापस जाएं"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Background"
-msgstr "इतिहास"
+msgstr "बैकग्राउंड"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 msgid "Cancel"
-msgstr "रद्द"
+msgstr "रद्द करें"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
+#, fuzzy
 msgid "Cancel Order"
-msgstr ""
+msgstr "ऑर्डर रद्द करें"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
+#, fuzzy
 msgid "Cancel order"
-msgstr ""
+msgstr "ऑर्डर रद्द करें"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -265,19 +339,20 @@ msgstr "चेकआउट"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_service_mode
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_service_mode
 msgid "Choose the kiosk mode"
-msgstr ""
+msgstr "किऑस्क मोड चुनें"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_mode
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_mode
 msgid "Choose the self ordering mode"
-msgstr ""
+msgstr "सेल्फ़ ऑर्डरिंग मोड चुनें"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_pay_after
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_pay_after
+#, fuzzy
 msgid "Choose when the customer will pay"
-msgstr ""
+msgstr "चुनें कि ग्राहक कब भुगतान करेगा"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -288,8 +363,9 @@ msgstr "चुनें"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+#, fuzzy
 msgid "Choose your time"
-msgstr ""
+msgstr "अपना समय चुनें"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -304,24 +380,25 @@ msgstr "शहर"
 #: code:addons/pos_self_order/static/src/app/components/product_info_popup/product_info_propup.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Close"
-msgstr "बंद"
+msgstr "बंद करें"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
 msgid "Close Session"
-msgstr ""
+msgstr "सेशन बंद करें"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+#, fuzzy
 msgid "Combo"
-msgstr ""
+msgstr "कॉम्बो"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_id
 msgid "Combo reference"
-msgstr ""
+msgstr "कॉम्बो रेफ़रेंस"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_res_config_settings
@@ -332,7 +409,7 @@ msgstr "कॉन्फ़िगरेशन सेटिंग"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Connection lost, please try again later"
-msgstr ""
+msgstr "कनेक्शन खत्म हो गया, कृपया बाद में फिर से प्रयास करें"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_res_partner
@@ -352,13 +429,13 @@ msgstr "जारी रखें"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 msgid "Continue with table"
-msgstr ""
+msgstr "टेबल के साथ जारी रखें"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 msgid "Could you please confirm your table number?"
-msgstr ""
+msgstr "क्या आप कृपया अपने टेबल नंबर की पुष्टि कर सकते हैं?"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_res_country
@@ -373,7 +450,7 @@ msgstr "ग्राहक बनाएं"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__create_uid
 msgid "Created by"
-msgstr "द्वारा निर्मित"
+msgstr "इन्होंने बनाया"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__create_date
@@ -384,19 +461,19 @@ msgstr "इस तारीख को बनाया गया"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.js:0
 msgid "Current"
-msgstr "करंट"
+msgstr "मौजूदा"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "Custom Links"
-msgstr ""
+msgstr "कस्टम लिंक"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_self_order_custom_link
 msgid ""
 "Custom links that the restaurant can configure to be displayed on the self "
 "order screen"
-msgstr ""
+msgstr "कस्टम लिंक जिन्हें रेस्टोरेंट सेल्फ़-ऑर्डर स्क्रीन पर दिखाने के लिए कॉन्फ़िगर कर सकता है"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__danger
@@ -416,21 +493,22 @@ msgstr "डिफ़ॉल्ट"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_default_language_id
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_default_language_id
+#, fuzzy
 msgid "Default Language"
-msgstr ""
+msgstr "डिफ़ॉल्ट भाषा"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_default_user_id
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_default_user_id
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Default User"
-msgstr ""
+msgstr "डिफ़ॉल्ट उपयोगकर्ता"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_language_id
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_default_language_id
 msgid "Default language for the kiosk mode"
-msgstr ""
+msgstr "किऑस्क मोड के लिए डिफ़ॉल्ट भाषा"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -442,7 +520,7 @@ msgstr "डिलीवरी"
 #. module: pos_self_order
 #: model:mail.template,name:pos_self_order.delivery_email_template
 msgid "Delivery: Confirmation order for self"
-msgstr ""
+msgstr "डिलीवरी: खुद के लिए ऑर्डर की पुष्टि"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__nothing
@@ -483,20 +561,21 @@ msgstr "डिस्प्ले नाम"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
 msgid "Download QR Codes"
-msgstr ""
+msgstr "क्यूआर कोड डाउनलोड करें"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Download your receipt here"
-msgstr ""
+msgstr "अपनी रसीद यहां डाउनलोड करें"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Each Order"
-msgstr ""
+msgstr "हर ऑर्डर"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -506,11 +585,16 @@ msgid ""
 "                    both the point of sale and table names are encrypted in "
 "the generated URL, as shown in the example below:."
 msgstr ""
+"आपके फ्लोर प्लान में हर टेबल को आपकी कॉन्फ़िगरेशन के आधार पर एक यूनीक क्यूआर कोड असाइन "
+"जाता है. सुरक्षा कारणों से,\n"
+"                    जनरेट किए गए यूआरएल में पॉइंट ऑफ़ सेल और टेबल दोनों के नाम एन्क्रिप्ट "
+"किए जाते हैं, जैसा कि नीचे दिए गए उदाहरण में दिखाया गया है:।"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_preset
+#, fuzzy
 msgid "Easily load a set of configuration options"
-msgstr ""
+msgstr "कॉन्फ़िगरेशन विकल्पों का एक सेट आसानी से लोड करें"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -521,7 +605,7 @@ msgstr "ईमेल"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__mail_template_id
 msgid "Email Confirmation"
-msgstr ""
+msgstr "ईमेल की पुष्टि"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_mail_template
@@ -533,13 +617,13 @@ msgstr "ईमेल टेंप्लेट"
 #: code:addons/pos_self_order/static/src/backend/qr_order_button/qr_order_button.js:0
 msgid ""
 "Enable QR menu in the Restaurant settings to get QR codes for free on tables."
-msgstr ""
+msgstr "टेबल पर मुफ़्त क्यूआर कोड लगाने के लिए रेस्टोरेंट सेटिंग से क्यूआर मेन्यू का विकल्प चालू करें।"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
 msgid "Enter your custom value"
-msgstr ""
+msgstr "अपना कस्टम वैल्यू दर्ज करें"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -547,6 +631,7 @@ msgid ""
 "Feel free to use and print this QR code as many times as needed according to "
 "your requirements."
 msgstr ""
+"अपनी ज़रूरत के अनुसार इस क्यूआर कोड का जितनी बार चाहें उतनी बार उपयोग और प्रिंट करें।"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_account_fiscal_position
@@ -556,32 +641,35 @@ msgstr "वित्तीय स्थिति"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
+#, fuzzy
 msgid "Follow instructions on the terminal"
-msgstr ""
+msgstr "टर्मिनल पर दिए गए निर्देशों का पालन करें"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
 msgid "Free Metal / Wood Stands"
-msgstr ""
+msgstr "धातु / लकड़ी के स्टैंड"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
+#, fuzzy
 msgid "Generic"
-msgstr ""
+msgstr "सामान्य"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/navbar/navbar.xml:0
 #: code:addons/pos_self_order/static/src/overrides/screens/floor_screen/floor_screen.xml:0
 msgid "Get QR Codes"
-msgstr ""
+msgstr "क्यूआर कोड पाएं"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/backend/qr_order_button/qr_order_button.js:0
 msgid "Get QR codes"
-msgstr ""
+msgstr "क्यूआर कोड पाएं"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_ir_http
@@ -590,8 +678,9 @@ msgstr "एचटीपीपी राउटिंग"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__has_paper
+#, fuzzy
 msgid "Has paper"
-msgstr ""
+msgstr "पेपर है"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -600,27 +689,32 @@ msgid ""
 "Hey, looks like you forgot to create products or add them to pos_config. "
 "Please add them before using the Self Order"
 msgstr ""
+"अरे, ऐसा लगता है कि आप प्रॉडक्ट बनाने या उन्हें pos_config में जोड़ने भूल गए हैं. कृपया सेल्फ "
+"ऑर्डर का उपयोग करने से पहले उन्हें जोड़ दें"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
 msgid "Home buttons"
-msgstr ""
+msgstr "होम बटन"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Hope you enjoyed your meal!"
-msgstr ""
+msgstr "उम्मीद है कि आपने अपना भोजन पसंद किया होगा!"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+#, fuzzy
 msgid "How to customize"
-msgstr ""
+msgstr "कस्टमाइज़ कैसे करें"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+#, fuzzy
 msgid "How to use"
-msgstr ""
+msgstr "कैसे उपयोग करें"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_account_fiscal_position__id
@@ -650,7 +744,7 @@ msgstr "आईडी"
 #: model:ir.model.fields,help:pos_self_order.field_product_product__self_order_available
 #: model:ir.model.fields,help:pos_self_order.field_product_template__self_order_available
 msgid "If this product is available in the Self Order screens"
-msgstr ""
+msgstr "अगर यह प्रॉडक्ट सेल्फ़ ऑर्डर स्क्रीन में उपलब्ध है"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -660,12 +754,16 @@ msgid ""
 "                use of a QR code generator like https://www.qrcode-"
 "monkey.com or https://www.qr-code-generator.com"
 msgstr ""
+"अगर आपको कस्टमाइज़ किए गए क्यूआर कोड की ज़रूरत है, तो यूआरएल पाने करने के लिए संबंधित "
+"क्यूआर कोड को स्कैन करके शुरुआत करें. फिर,\n"
+"                 https://www.qrcode-monkey.com या https://www.qr-code-"
+"generator.com जैसे क्यूआर कोड जनरेटर का उपयोग करें"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_background_ids
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_background_ids
 msgid "Image to be displayed in the background"
-msgstr ""
+msgstr "बैकग्राउंड में दिखाई जाने वाली इमेज"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -673,7 +771,7 @@ msgstr ""
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
 msgid "Image to display on the self order screen"
-msgstr ""
+msgstr "सेल्फ़ ऑर्डर स्क्रीन में दिखाई जाने वाली इमेज"
 
 #. module: pos_self_order
 #. odoo-python
@@ -681,11 +779,12 @@ msgstr ""
 msgid ""
 "In Self-Order mode, you must have at least one table to generate QR codes"
 msgstr ""
+"सेल्फ़-ऑर्डर मोड में, क्यूआर कोड जनरेट करने के लिए आपके पास कम से कम एक टेबल होनी चाहिए"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__inactive
 msgid "Inactive"
-msgstr "निष्क्रि"
+msgstr "बंद है"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__info
@@ -695,8 +794,9 @@ msgstr "जानकारी"
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
+#, fuzzy
 msgid "Invalid preset"
-msgstr ""
+msgstr "अमान्य प्रीसेट"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -707,8 +807,9 @@ msgstr "इनवॉइस किया गया"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
+#, fuzzy
 msgid "It seems that"
-msgstr ""
+msgstr "ऐसा लगता है कि"
 
 #. module: pos_self_order
 #. odoo-python
@@ -723,7 +824,7 @@ msgstr "किऑस्क"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
 msgid "Kiosk T"
-msgstr ""
+msgstr "किऑस्क T"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__name
@@ -739,7 +840,7 @@ msgstr "भाषा"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_available_language_ids
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_available_language_ids
 msgid "Languages available for the kiosk mode"
-msgstr ""
+msgstr "किऑस्क मोड के लिए उपलब्ध भाषाएं"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__write_uid
@@ -1586,6 +1687,11 @@ msgid "Zip"
 msgstr "पिन"
 
 #. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "a"
+msgstr ""
+
+#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "are"
@@ -1640,4 +1746,11 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "odoo"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "x"
 msgstr ""

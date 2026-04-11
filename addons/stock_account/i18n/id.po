@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:37+0000\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -84,11 +84,6 @@ msgstr ""
 ")\n"
 "                            <small class=\"mx-2 fst-italic\">Gunakan "
 "negative added value untuk mencatat pengurangan di nilai produk</small>"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
-msgid "6.00"
-msgstr "6.00"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -723,6 +718,14 @@ msgstr ""
 "Produk %(product)s memiliki kuantitas di lokasi %(location)s tanpa lot apa "
 "pun.\n"
 "Silakan berikan lot ke semua kuantitas Anda sebelum mengaktifkan valuasi lot."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"Product %(product)s is valuated by lot: an explicit Lot/Serial number is "
+"required."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -1488,3 +1491,6 @@ msgstr "units"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_graph
 msgid "valuation graph"
 msgstr "grafik valuasi"
+
+#~ msgid "6.00"
+#~ msgstr "6.00"
