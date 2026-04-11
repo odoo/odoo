@@ -10,13 +10,14 @@
 # Marta Wacławek, 2025
 # "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Harkot <kharkot@trilab.pl>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:39+0000\n"
-"PO-Revision-Date: 2026-04-01 09:02+0000\n"
-"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"PO-Revision-Date: 2026-04-11 09:08+0000\n"
+"Last-Translator: Harkot <kharkot@trilab.pl>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/mail/pl/"
 ">\n"
 "Language: pl\n"
@@ -4002,12 +4003,12 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Failed to render inline_template template: %(template_txt)s"
 msgid ""
 "Failed to render inline_template template: %(template_txt)s\n"
 "Error details: %(error)s"
-msgstr "Nie udało się wyrenderować szablonu inline_template: %(template_txt)s"
+msgstr ""
+"Nie udało się wyrenderować szablonu inline_template: %(template_txt)s\n"
+"Szczegóły błędu: %(error)s"
 
 #. module: mail
 #. odoo-python
@@ -5929,10 +5930,8 @@ msgstr "Reset Szablonu Email"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Unnamed %(record_model_name)s (%(record_id)s)"
 msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
-msgstr "Bez tytułu %(record_model_name)s (%(record_id)s)"
+msgstr "Szablon e-mail: '%(name)s' (ID: %(record_id)s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
@@ -6733,10 +6732,8 @@ msgstr "Brak wiadomości historycznych"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Result of the language detection based on its content."
 msgid "No language detected in context"
-msgstr "Wynik wykrywania języka na podstawie jego zawartości."
+msgstr "Nie wykryto języka w kontekście"
 
 #. module: mail
 #. odoo-python
@@ -9637,10 +9634,8 @@ msgstr "Tworzenie szablonów z poziomu kompozytora wymaga prawidłowego modelu."
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Message unique identifier"
 msgid "Template name not identified"
-msgstr "Unikalny identyfikator wiadomości"
+msgstr "Nie zidentyfikowano nazwy szablonu"
 
 #. module: mail
 #. odoo-python
@@ -10642,10 +10637,8 @@ msgstr "Bez tytułu %(record_model_name)s (%(record_id)s)"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Related Mail Template"
 msgid "Unnamed Mail Template"
-msgstr "Powiązany Szablon Wiadomości"
+msgstr "Szablon wiadomości bez nazwy"
 
 #. module: mail
 #. odoo-python
@@ -11592,7 +11585,7 @@ msgstr "Ty:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 msgid "Your"
-msgstr "Twój"
+msgstr "Dotyczy:"
 
 #. module: mail
 #. odoo-python
@@ -12263,6 +12256,12 @@ msgstr "{{ object.partner_id.lang }}"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” w “%(channel_name)s”"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.js:0
+msgid "“%s”"
+msgstr ""
 
 #~ msgid ""
 #~ "Failed to render QWeb template: %(template_src)s\n"

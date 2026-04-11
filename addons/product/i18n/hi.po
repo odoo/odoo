@@ -16,11 +16,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-03-21 09:23+0000\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"PO-Revision-Date: 2026-04-11 09:08+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/product/"
-"hi/>\n"
+"Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/product/hi/"
+">\n"
 "Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,28 +36,21 @@ msgid ""
 "\n"
 "Note: products that you don't have access to will not be shown above."
 msgstr ""
+"\n"
+"\n"
+"नोट: जिन प्रॉडक्ट का ऐक्सेस नहीं है, वे प्रॉडक्ट ऊपर नहीं दिखेंगे।"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_template__product_variant_count
 msgid "# Product Variants"
-msgstr ""
+msgstr "# प्रॉडक्ट वैरिएंट"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_count
 msgid "# Products"
-msgstr ""
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-msgid "$14.00"
-msgstr ""
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-msgid "$15.00"
-msgstr ""
+msgstr "# प्रॉडक्ट"
 
 #. module: product
 #. odoo-python
@@ -68,6 +61,9 @@ msgid ""
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
 "(total_amount)s"
 msgstr ""
+"%(base)s पर %(discount)s %% %(discount_type)s और %(surcharge)s अतिरिक्त शुल्क\n"
+"उदाहरण: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -76,24 +72,26 @@ msgid ""
 "%(item_name)s: end date (%(end_date)s) should be after start date (%"
 "(start_date)s)"
 msgstr ""
+"%(item_name)s: खत्म होने की तारीख (%(end_date)s) शुरू होने की तारीख (%"
+"(start_date)s) के बाद होनी चाहिए"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
-msgstr ""
+msgstr "%(base)s %(extra)s पर %(percentage)s %% %(discount_type)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on %(pricelist)s"
-msgstr ""
+msgstr "%(pricelist)s पर %(percentage)s %% छूट"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on sales price"
-msgstr ""
+msgstr "सेल्स प्राइस पर %(percentage)s %% छूट"
 
 #. module: product
 #. odoo-python
@@ -110,7 +108,7 @@ msgstr "%s (कॉपी)"
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_4x7
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_dymo
 msgid "'Products Labels - %s' % (object.name)"
-msgstr ""
+msgstr "'प्रॉडक्ट लेबल - %s' % (object.name)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
@@ -121,19 +119,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "(e.g: product description, ebook, legal notice, ...)."
-msgstr ""
+msgstr "(उदाहरण के लिए: प्रॉडक्ट विवरण, ई-बुक, कानूनी नोटिस, ...)।"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "+ %(amount)s extra fee"
-msgstr ""
+msgstr "+ %(amount)s अतिरिक्त शुल्क"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "- %(amount)s rebate"
-msgstr ""
+msgstr "- %(amount)s छूट"
 
 #. module: product
 #. odoo-python
@@ -141,6 +139,8 @@ msgstr ""
 msgid ""
 "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr ""
+"- बारकोड \"%(barcode)s\" पहले से ही इन प्रॉडक्ट को असाइन किया गया है: %"
+"(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -152,46 +152,43 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: this cannot be changed once the attribute is used on a product."
 msgstr ""
+"- तुरंत: जैसे ही आप किसी प्रॉडक्ट में कोई विशेषता और उसकी वैल्यू जोड़ते हैं, उसके सभी संभावित "
+"वेरिएंट तुरंत बन जाते हैं.\n"
+"        - डाइनैमिक तौर पर: हर वेरिएंट तभी बनाया जाता है जब उसके संबंधित विशेषता और "
+"वैल्यू किसी सेल्स ऑर्डर में जोड़ी जाती हैं.\n"
+"        - कभी नहीं: उस विशेषता के लिए कभी भी कोई वेरिएंट नहीं बनाया जाता है।.\n"
+"        ध्यान दें: एक बार जब किसी प्रॉडक्ट पर उस विशेषता का उपयोग कर लिया जाता है, "
+"तो इस सेटिंग को बदला नहीं जा सकता।"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
 msgid "1 year"
-msgstr ""
+msgstr "1 साल"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_warranty
 msgid "1 year warranty extension"
-msgstr ""
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "10"
-msgstr "10"
+msgstr "1 साल की वारंटी का एक्सटेंशन"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "10 Units"
-msgstr ""
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "123456789012"
-msgstr ""
+msgstr "10 यूनिट"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
 msgid "160x80cm, with large legs."
-msgstr ""
+msgstr "160x80 सेमी, बड़े पैरों के साथ।"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
 msgid "2 x 7 with price"
-msgstr ""
+msgstr "2 x 7 कीमत के साथ"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_6
 msgid "2 year"
-msgstr ""
+msgstr "2 साल"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12
@@ -201,17 +198,17 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12xprice
 msgid "4 x 12 with price"
-msgstr ""
+msgstr "4 x 12 कीमत के साथ"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x7xprice
 msgid "4 x 7 with price"
-msgstr ""
+msgstr "4 x 7 कीमत के साथ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<b>Tip: want to round at 9.99?</b>"
-msgstr ""
+msgstr "<b>सलाह: क्या आप कीमत को 9.99 पर राउंड करना चाहते हैं?</b>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -238,6 +235,13 @@ msgid ""
 "                                            Rule\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                            नियम\n"
+"                                        </span>\n"
+"                                        <span class=\"o_stat_text\" "
+"invisible=\"pricelist_item_count != 1\">\n"
+"                                            नियम\n"
+"                                        </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -250,16 +254,23 @@ msgid ""
 "                                        Pricelist\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                        प्राइसलिस्ट\n"
+"                                    </span>\n"
+"                                    <span class=\"o_stat_text\" "
+"invisible=\"pricelist_item_count != 1\">\n"
+"                                        प्राइसलिस्ट\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> प्रॉडक्ट</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "<span class=\"o_stat_text\">Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">प्रॉडक्ट</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -272,16 +283,18 @@ msgid ""
 "<span>%</span>\n"
 "                                <span>on</span>"
 msgstr ""
+"<span>%</span>\n"
+"                                <span>पर</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
-msgstr ""
+msgstr "<span>इस प्रॉडक्ट की सभी सामान्य सेटिंग्स का प्रबंधन यहां किया जाता है</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "<strong>Qty: </strong>"
-msgstr ""
+msgstr "<strong>मात्रा: </strong>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -297,35 +310,39 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
+"<strong>चेतावनी</strong>: विशेषताओं को जोड़ने या हटाने से मौजूदा\n"
+"                        वेरिएंट्स मिट जाएंगे और दोबारा बनाए जाएंगे, जिससे उनमें किए "
+"गए\n"
+"                        संभावित कस्टमाइज़ेशन खराब हो सकते हैं।"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_barcode_uniq
 msgid "A barcode can only be assigned to one packaging."
-msgstr ""
+msgstr "एक बारकोड का इस्तेमाल सिर्फ़ एक ही तरह की पैकिंग के लिए किया जाता है।"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice can't contain duplicate products."
-msgstr ""
+msgstr "एक कॉम्बो विकल्प में डुप्लीकेट प्रॉडक्ट नहीं हो सकते।"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo_item.py:0
 msgid "A combo choice can't contain products of type \"combo\"."
-msgstr ""
+msgstr "एक कॉम्बो विकल्प में \"कॉम्बो\" टाइप के प्रॉडक्ट शामिल नहीं हो सकते।"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice must contain at least 1 product."
-msgstr ""
+msgstr "एक कॉम्बो विकल्प में कम से कम 1 प्रॉडक्ट होना चाहिए।"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A combo product must contain at least 1 combo choice."
-msgstr ""
+msgstr "एक कॉम्बो प्रॉडक्ट में कम से कम 1 कॉम्बो विकल्प होना चाहिए।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -335,12 +352,14 @@ msgid ""
 "This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
+"प्रॉडक्ट का वह विवरण जिसे आप अपने ग्राहकों को बताना चाहते हैं. यह विवरण हर सेल्स ऑर्डर, "
+"डिलीवरी ऑर्डर और कस्टमर इनवॉइस/क्रेडिट नोट पर कॉपी किया जाएगा"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "A packaging already uses the barcode"
-msgstr ""
+msgstr "यह बारकोड पहले से ही किसी दूसरी पैकिंग में इस्तेमाल हो चुका है"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -351,6 +370,9 @@ msgid ""
 "            This is the perfect tool to handle several pricings, seasonal "
 "discounts, etc."
 msgstr ""
+"प्राइस लिस्ट, सेल्स ऑर्डर लाइनों के लिए प्रॉडक्ट, प्रॉडक्ट कैटेगरी, तारीखों और ऑर्डर की "
+"मात्रा के आधार पर बिक्री की कीमतें या नियम तय करती है.\n"
+"            यह अलग-अलग कीमतों और मौसमी छूट को संभालने के लिए सबसे सही टूल है।"
 
 #. module: product
 #. odoo-python
@@ -359,18 +381,19 @@ msgid ""
 "A pricelist item with \"Other Pricelist\" as base must have a "
 "base_pricelist_id."
 msgstr ""
+"\"अन्य मूल्य सूची\" पर आधारित मूल्य सूची आइटम में एक base_pricelist_id होना चाहिए।"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_packaging.py:0
 msgid "A product already uses the barcode"
-msgstr ""
+msgstr "यह बारकोड पहले से ही किसी अन्य प्रॉडक्ट के लिए इस्तेमाल किया जा रहा है"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A sellable combo product can only contain sellable products."
-msgstr ""
+msgstr "एक बेचने योग्य कॉम्बो प्रॉडक्ट में सिर्फ़ बेचने योग्य प्रॉडक्ट ही हो सकते हैं।"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -380,17 +403,17 @@ msgstr "ऐक्सेस टोकन"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Acme Widget"
-msgstr ""
+msgstr "Acme विजेट"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Acme Widget - Blue"
-msgstr ""
+msgstr "Acme विजेट - ब्लू"
 
 #. module: product
 #: model:product.template,name:product.product_template_acoustic_bloc_screens
 msgid "Acoustic Bloc Screens"
-msgstr ""
+msgstr "अकॉस्टिक ब्लॉक स्क्रीन"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_needaction
@@ -418,7 +441,7 @@ msgstr "सक्रिय"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Active Products"
-msgstr ""
+msgstr "ऐक्टिव प्रॉडक्ट"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_ids
@@ -464,13 +487,13 @@ msgstr "प्रॉडक्ट जोड़ें"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Add Products to pricelist report"
-msgstr ""
+msgstr "प्राइस लिस्ट रिपोर्ट में प्रॉडक्ट जोड़ें"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Add a quantity"
-msgstr ""
+msgstr "मात्रा जोड़ें"
 
 #. module: product
 #. odoo-javascript
@@ -479,22 +502,24 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
+"रिपोर्ट में शामिल करने के लिए ऊपर दाईं ओर \"प्रॉडक्ट जोड़ें\" बटन का \n"
+"                                उपयोग करके प्रॉडक्ट जोड़ें।"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Add to all products"
-msgstr ""
+msgstr "सभी प्रॉडक्ट में जोड़ें"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
 msgid "Add to existing products"
-msgstr ""
+msgstr "पहले से मौजूद प्रॉडक्ट में जोड़ें"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Add to products"
-msgstr ""
+msgstr "प्रॉडक्ट में जोड़ें"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -505,17 +530,17 @@ msgstr "सभी "
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "All Categories"
-msgstr ""
+msgstr "सभी कैटगरी"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
 msgid "All Product Tag"
-msgstr ""
+msgstr "सभी प्रॉडक्ट टैग"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_ids
 msgid "All Product Variants using this Tag"
-msgstr ""
+msgstr "इस टैग का उपयोग करने वाले सभी प्रॉडक्ट वेरिएंट"
 
 #. module: product
 #. odoo-python
@@ -528,55 +553,55 @@ msgstr "सभी प्रॉडक्ट"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "All categories"
-msgstr ""
+msgstr "सभी कैटगरी"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_tree
 msgid "All countries"
-msgstr ""
+msgstr "सभी देश"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/controllers/product_document.py:0
 msgid "All files uploaded"
-msgstr ""
+msgstr "सभी फ़ाइलें अपलोड हो गईं"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "All products"
-msgstr ""
+msgstr "सभी प्रॉडक्ट"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 msgid "All variants"
-msgstr ""
+msgstr "सभी वैरिएंट"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
 msgid "Allow customers to set their own value"
-msgstr ""
+msgstr "ग्राहकों को अपनी पसंद की कीमत या मूल्य चुनने का विकल्प दें"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
 msgid "Aluminium"
-msgstr ""
+msgstr "एल्युमीनियम"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
 msgid "Applied On"
-msgstr ""
+msgstr "लागू हुआ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
 msgid "Apply On"
-msgstr ""
+msgstr "लागू करें"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Apply To"
-msgstr ""
+msgstr "पर लागू करें"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
@@ -599,7 +624,7 @@ msgstr "संग्रहीत किया गया"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__sequence
 msgid "Assigns the priority to the list of product vendor."
-msgstr ""
+msgstr "प्रॉडक्ट वेंडर की सूची को प्राथमिकता असाइन करें।"
 
 #. module: product
 #. odoo-javascript
@@ -608,11 +633,13 @@ msgid ""
 "At most %s quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
 msgstr ""
+"एक बार में सिर्फ %s मात्राएं ही दिखाई जा सकती हैं. नई मात्रा जोड़ने के लिए पहले वाली को "
+"हटाएं।"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
 msgid "Attached To"
-msgstr ""
+msgstr "अटैच किया गया"
 
 #. module: product
 #: model:ir.model,name:product.model_ir_attachment
@@ -638,18 +665,18 @@ msgstr "अटैचमेंट का यूआरएल"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__attribute_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_id
 msgid "Attribute"
-msgstr ""
+msgstr "एट्रिब्यूट"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_line_id
 msgid "Attribute Line"
-msgstr ""
+msgstr "एट्रिब्यूट लाइन"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Attribute Name"
-msgstr ""
+msgstr "एट्रिब्यूट का नाम"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_value
@@ -658,7 +685,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_attribute_value_id
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__attribute_value_id
 msgid "Attribute Value"
-msgstr ""
+msgstr "एट्रिब्यूट वैल्यू"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_attribute_value_ids
@@ -674,24 +701,24 @@ msgstr "एट्रिब्यूट वैल्यू"
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Attributes"
-msgstr ""
+msgstr "एट्रिब्यूट"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Attributes & Variants"
-msgstr ""
+msgstr "एट्रिब्यूट और वैरिएंट"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_controller.js:0
 msgid "Back to Order"
-msgstr ""
+msgstr "ऑर्डर पर वापस जाएं"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_controller.js:0
 msgid "Back to Quotation"
-msgstr ""
+msgstr "कोटेशन पर वापस जाएं"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__barcode
@@ -715,6 +742,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"बारकोड पहले ही असाइन किया जा चुका है:\n"
+"\n"
+"%s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -724,6 +754,10 @@ msgid ""
 "Cost Price: The base price will be the cost price.\n"
 "Other Pricelist: Computation of the base price based on another Pricelist."
 msgstr ""
+"गणना के लिए आधार मूल्य.\n"
+"बिक्री मूल्य: आधार मूल्य बिक्री मूल्य होगा.\n"
+"लागत मूल्य: आधार मूल्य लागत मूल्य होगा.\n"
+"अन्य मूल्य सूची: दूसरी मूल्य सूची के आधार पर गणना।"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
@@ -733,12 +767,12 @@ msgstr "इस पर आधारित है"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Based price"
-msgstr ""
+msgstr "आधार मूल्य"
 
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Basic Pricelists"
-msgstr ""
+msgstr "बेसिक प्राइसलिस्ट"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
@@ -754,18 +788,18 @@ msgstr "अलविदा, रिकॉर्ड!"
 #. module: product
 #: model:product.template,name:product.product_product_10_product_template
 msgid "Cabinet with Doors"
-msgstr ""
+msgstr "कैबिनेट वाला दरवाजा"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
 #: model:ir.model.fields,field_description:product.field_product_template__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr ""
+msgstr "क्या इमेज 1024 को ज़ूम किया जा सकता है"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
 msgid "Can Variant Image 1024 be zoomed"
-msgstr ""
+msgstr "क्या वैरिएंट इमेज 1024 को ज़ूम किया जा सकता है"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.update_product_attribute_value_form
@@ -784,7 +818,7 @@ msgstr "वर्ग"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "Category: %s"
-msgstr ""
+msgstr "कैटगरी: %s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__checksum
@@ -794,7 +828,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__child_id
 msgid "Child Categories"
-msgstr ""
+msgstr "चाइल्ड कैटगरी"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_open_label_layout
@@ -804,12 +838,12 @@ msgstr "लेबल लेआउट चुनें"
 #. module: product
 #: model:ir.model,name:product.model_product_label_layout
 msgid "Choose the sheet layout to print the labels"
-msgstr ""
+msgstr "लेबल प्रिंट करने के लिए शीट लेआउट चुनें"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_cleaning_kit
 msgid "Cleaning kit"
-msgstr ""
+msgstr "क्लीनिंग किट"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -840,19 +874,19 @@ msgstr "कॉलम"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__combination_indices
 msgid "Combination Indices"
-msgstr ""
+msgstr "कॉम्बिनेशन इंडिसेस (संयोजन सूचकांक)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__combo_id
 #: model:ir.model.fields.selection,name:product.selection__product_template__type__combo
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Combo"
-msgstr ""
+msgstr "कॉम्बो"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 msgid "Combo Choice"
-msgstr ""
+msgstr "कॉम्बो में से अपनी पसंद की चीज़ें चुनना"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_combo_action
@@ -860,23 +894,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template__combo_ids
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_tree
 msgid "Combo Choices"
-msgstr ""
+msgstr "कॉम्बो में से अपनी पसंद की चीज़ें चुनना"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_ids
 msgid "Combo Item"
-msgstr ""
+msgstr "कॉम्बो आइटम"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__base_price
 msgid "Combo Price"
-msgstr ""
+msgstr "कॉम्बो कीमत"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Combo products can't have attributes."
-msgstr ""
+msgstr "कॉम्बो प्रॉडक्ट में एट्रिब्यूट्स नहीं हो सकते।"
 
 #. module: product
 #. odoo-python
@@ -884,7 +918,7 @@ msgstr ""
 msgid ""
 "Combos allow to choose one product amongst a selection of choices per "
 "category."
-msgstr ""
+msgstr "कॉम्बो हर कैटगरी के विकल्पों में से एक प्रॉडक्ट चुनने की अनुमति देते हैं।"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -917,17 +951,17 @@ msgstr "पूरा नाम"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__compute_price
 msgid "Compute Price"
-msgstr ""
+msgstr "कीमत की गणना करें"
 
 #. module: product
 #: model:product.template,name:product.product_product_11_product_template
 msgid "Conference Chair"
-msgstr ""
+msgstr "कॉन्फ्रेंस चेयर"
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid "Conference room table"
-msgstr ""
+msgstr "कॉन्फ्रेंस रूम टेबल"
 
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
@@ -981,12 +1015,12 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
-msgstr ""
+msgstr "कॉर्नर डेस्क लेफ्ट सीट"
 
 #. module: product
 #: model:product.template,name:product.product_product_5_product_template
 msgid "Corner Desk Right Sit"
-msgstr ""
+msgstr "कॉर्नर डेस्क राइट सीट"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__standard_price
@@ -999,7 +1033,7 @@ msgstr "कीम"
 #: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
 #: model:ir.model.fields,field_description:product.field_product_template__cost_currency_id
 msgid "Cost Currency"
-msgstr ""
+msgstr "लागत की करेंसी"
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
@@ -1009,37 +1043,37 @@ msgstr "कंट्री ग्रुप"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__country_group_ids
 msgid "Country Groups"
-msgstr ""
+msgstr "देशों के समूह"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Create a new pricelist"
-msgstr ""
+msgstr "एक नई प्राइसलिस्ट बनाएं"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_template_action
 #: model_terms:ir.actions.act_window,help:product.product_template_action_all
 msgid "Create a new product"
-msgstr ""
+msgstr "नया प्रॉडक्ट बनाएं"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
 msgid "Create a new product variant"
-msgstr ""
+msgstr "एक नया प्रॉडक्ट वेरिएंट बनाएं"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 msgid "Create a product"
-msgstr ""
+msgstr "प्रॉडक्ट बनाएं"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:product.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "ऑर्डर पर बनाएं"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -1123,22 +1157,22 @@ msgstr "कस्टम"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__custom_value
 msgid "Custom Value"
-msgstr ""
+msgstr "कस्टम वैल्यू"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "ग्राहक रेफ़रेंस"
 
 #. module: product
 #: model:product.template,name:product.product_product_4_product_template
 msgid "Customizable Desk"
-msgstr ""
+msgstr "कस्टमाइज़ेबल डेस्क"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__db_datas
 msgid "Database Data"
-msgstr ""
+msgstr "डेटाबेस डेटा"
 
 #. module: product
 #: model:ir.model,name:product.model_decimal_precision
@@ -1154,12 +1188,12 @@ msgstr "डिफ़ॉल्ट"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price
 msgid "Default Extra Price"
-msgstr ""
+msgstr "डिफ़ॉल्ट अतिरिक्त कीमत"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price_changed
 msgid "Default Extra Price Changed"
-msgstr ""
+msgstr "डिफ़ॉल्ट अतिरिक्त कीमत बदल दिया गया"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1180,17 +1214,17 @@ msgstr ""
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Define a new tag"
-msgstr ""
+msgstr "एक नया टैग परिभाषित करें"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your volume unit of measure"
-msgstr ""
+msgstr "अपनी आयतन माप की इकाई परिभाषित करें"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your weight unit of measure"
-msgstr ""
+msgstr "अपनी वजन माप की इकाई परिभाषित करें"
 
 #. module: product
 #. odoo-javascript
@@ -1202,7 +1236,7 @@ msgstr "हटाएं"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "डिलीवरी लीड टाइम"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__description
@@ -1214,27 +1248,27 @@ msgstr "विवरण"
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Desk Combination"
-msgstr ""
+msgstr "डेस्क कॉम्बिनेशन"
 
 #. module: product
 #: model:product.template,name:product.desk_organizer_product_template
 msgid "Desk Organizer"
-msgstr ""
+msgstr "डेस्क ऑर्गनाइज़र"
 
 #. module: product
 #: model:product.template,name:product.desk_pad_product_template
 msgid "Desk Pad"
-msgstr ""
+msgstr "डेस्क पैड"
 
 #. module: product
 #: model:product.template,name:product.product_product_22_product_template
 msgid "Desk Stand with Screen"
-msgstr ""
+msgstr "स्क्रीन वाला डेस्क स्टैंड"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_3_product_template
 msgid "Desk combination, black-brown: chair + desk + drawer."
-msgstr ""
+msgstr "डेस्क कॉम्बिनेशन, ब्लैक-ब्राउन: चेयर + डेस्क + ड्रॉर।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__sequence
@@ -1261,12 +1295,12 @@ msgstr "छूट (%)"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__price_discounted
 msgid "Discounted Price"
-msgstr ""
+msgstr "डिस्काउंट के बाद की कीमत"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__display_applied_on
 msgid "Display Applied On"
-msgstr ""
+msgstr "दिखाएं कि यह कहां लागू है"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__display_name
@@ -1316,12 +1350,12 @@ msgstr "डॉक्यूमेंट्स"
 #: model:ir.model.fields,field_description:product.field_product_product__product_document_count
 #: model:ir.model.fields,field_description:product.field_product_template__product_document_count
 msgid "Documents Count"
-msgstr ""
+msgstr "दस्तावेज़ की संख्या"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
 msgid "Documents of this variant"
-msgstr ""
+msgstr "इस वैरिएंट के दस्तावेज़"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1332,7 +1366,7 @@ msgstr "डाउनलोड"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Download examples"
-msgstr ""
+msgstr "डाउनलोड के उदाहरण"
 
 #. module: product
 #: model:product.template,name:product.product_product_27_product_template
@@ -1347,7 +1381,7 @@ msgstr "ड्रॉअर ब्लैक"
 #. module: product
 #: model_terms:product.template,description:product.product_product_27_product_template
 msgid "Drawer with two routing possiblities."
-msgstr ""
+msgstr "दो अलग-अलग तरीकों से व्यवस्थित किया जा सकने वाला दराज।"
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_3
@@ -1362,17 +1396,18 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
 msgid "Dynamically"
-msgstr ""
+msgstr "डाइनैमिक तौर पर"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
 msgid "Each value should be defined only once per attribute per product."
 msgstr ""
+"प्रत्येक वैल्यू को प्रति एट्रिब्यूट प्रति प्रॉडक्ट केवल एक बार परिभाषित किया जाना चाहिए।"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Eco-friendly Wooden Chair"
-msgstr ""
+msgstr "इको-फ्रेंडली लकड़ी की कुर्सी"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1389,7 +1424,7 @@ msgstr "समाप्ति तिथि"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__date_end
 msgid "End date for this vendor price"
-msgstr ""
+msgstr "इस वेंडर प्राइस के खत्म होने की तारीख"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__date_end
@@ -1397,38 +1432,40 @@ msgid ""
 "Ending datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"प्राइसलिस्ट आइटम वैलिडेशन के खत्म होने की तारीख और समय\n"
+"दिखाया गया मान आपकी प्रेफरेंस में सेट किए गए टाइमज़ोन पर निर्भर करता है।"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Ergonomic"
-msgstr ""
+msgstr "अर्गोनॉमिक"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Error exporting file. Please try again."
-msgstr ""
+msgstr "फ़ाइल एक्सपोर्ट करने में गड़बड़ी हुई. कृपया फिर से कोशिश करें।"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
 msgid "Exclude for"
-msgstr ""
+msgstr "के लिए शामिल न करें"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__name
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price
 msgid "Explicit rule name for this pricelist line."
-msgstr ""
+msgstr "इस प्राइसलिस्ट लाइन के लिए सटीक नियम का नाम।"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__extra_html
 msgid "Extra Content"
-msgstr ""
+msgstr "अतिरिक्त कॉन्टेंट"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_surcharge
 msgid "Extra Fee"
-msgstr ""
+msgstr "अतिरिक्त शुल्क"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1438,13 +1475,13 @@ msgstr "अतिरिक्त जानकारी"
 #. module: product
 #: model:product.attribute,name:product.pa_extra_options
 msgid "Extra Options"
-msgstr ""
+msgstr "अतिरिक्त विकल्प"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__extra_price
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
 msgid "Extra Price"
-msgstr ""
+msgstr "अतिरिक्त कीमत"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
@@ -1452,11 +1489,13 @@ msgid ""
 "Extra price for the variant with this attribute value on sale price. eg. 200 "
 "price extra, 1000 + 200 = 1200."
 msgstr ""
+"इस एट्रिब्यूट वैल्यू वाले वैरिएंट के लिए सेल प्राइस पर अतिरिक्त कीमत. जैसे 200 अतिरिक्त "
+"कीमत, 1000 + 200 = 1200।"
 
 #. module: product
 #: model:product.attribute,name:product.fabric_attribute
 msgid "Fabric"
-msgstr ""
+msgstr "फैब्रिक"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_favorite
@@ -1494,7 +1533,7 @@ msgstr "तय कीमत"
 #. module: product
 #: model:product.template,name:product.product_product_20_product_template
 msgid "Flipover"
-msgstr ""
+msgstr "फ्लिपओवर"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_follower_ids
@@ -1526,6 +1565,9 @@ msgid ""
 "the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
+"नियम लागू होने के लिए, खरीदी/बेची गई मात्रा इस फ़ील्ड में दी गई न्यूनतम मात्रा के बराबर "
+"या उससे अधिक होनी चाहिए.\n"
+"यह प्रॉडक्ट की डिफ़ॉल्ट माप की इकाई (UoM) में दिखाई गई है।"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__print_format
@@ -1540,23 +1582,23 @@ msgstr "फ़ॉर्मूला"
 #. module: product
 #: model:product.template,name:product.consu_delivery_03_product_template
 msgid "Four Person Desk"
-msgstr ""
+msgstr "चार लोगों का डेस्क"
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_03_product_template
 msgid "Four person modern office workstation"
-msgstr ""
+msgstr "चार लोगों के बैठने की मॉडर्न ऑफिस टेबल"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__is_custom
 msgid "Free text"
-msgstr ""
+msgstr "फ्री टेक्स्ट"
 
 #. module: product
 #: model:product.template,name:product.product_product_furniture_product_template
 msgid "Furniture Assembly"
-msgstr ""
+msgstr "फ़र्नीचर असेंबली"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -1583,12 +1625,12 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product__sequence
 #: model:ir.model.fields,help:product.field_product_template__sequence
 msgid "Gives the sequence order when displaying a product list"
-msgstr ""
+msgstr "प्रॉडक्ट लिस्ट दिखाते समय क्रम संख्या देता है"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Gold Member Pricelist"
-msgstr ""
+msgstr "गोल्ड मेंबर प्राइसलिस्ट"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__type__consu
@@ -1604,6 +1646,8 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"माल वह चीजें हैं जिन्हें छुआ जा सकता है और बेचा जाता है.\n"
+"सेवा वह काम या सुविधा है जिसे छुआ नहीं जा सकता, पर दिया जाता है।"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -1621,7 +1665,7 @@ msgstr "इन्होंने ग्रुप किया"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__html_color
 msgid "HTML Color Index"
-msgstr ""
+msgstr "एचटीएमएल कलर इंडेक्स"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__has_message
@@ -1638,6 +1682,8 @@ msgid ""
 "Here you can set a specific HTML color index (e.g. #ff0000) to display the "
 "color if the attribute type is 'Color'."
 msgstr ""
+"यहां आप एक खास एचटीएमएल कलर इंडेक्स (जैसे #ff0000) सेट कर सकते हैं, ताकि एट्रिब्यूट टाइप "
+"'कलर' होने पर वह रंग दिखाई दे।"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -1647,7 +1693,7 @@ msgstr "इतिहास"
 #. module: product
 #: model:product.template,name:product.expense_hotel_product_template
 msgid "Hotel Accommodation"
-msgstr ""
+msgstr "होटल में रुकने की जगह"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__id
@@ -1706,26 +1752,27 @@ msgstr "अगर बॉक्स पर टिक है, तो कुछ म�
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
 msgid ""
 "If not set, the vendor price will apply to all variants of this product."
-msgstr ""
+msgstr "अगर सेट नहीं किया गया है, तो वेंडर प्राइस इस प्रॉडक्ट के सभी वैरिएंट पर लागू होगा।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__active
 msgid ""
 "If unchecked, it will allow you to hide the attribute without removing it."
-msgstr ""
+msgstr "अगर अनचेक किया गया, तो यह आपको एट्रिब्यूट को हटाए बिना छिपाने की अनुमति देगा।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
 msgid ""
 "If unchecked, it will allow you to hide the pricelist without removing it."
 msgstr ""
+"अगर अनचेक किया गया, तो यह आपको प्राइसलिस्ट को हटाए बिना छिपाने की अनुमति देगा।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__active
 #: model:ir.model.fields,help:product.field_product_template__active
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
-msgstr ""
+msgstr "अगर अनचेक किया गया, तो यह आपको प्रॉडक्ट को हटाए बिना छिपाने की अनुमति देगा।"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__image
@@ -1783,19 +1830,19 @@ msgstr "इमेज लिंक है"
 #. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 msgid "Import Template for Pricelists"
-msgstr ""
+msgstr "प्राइसलिस्ट के लिए टेम्प्लेट इंपोर्ट करें"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Import Template for Products"
-msgstr ""
+msgstr "प्रॉडक्ट के लिए टेम्प्लेट इंपोर्ट करें"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_supplierinfo.py:0
 msgid "Import Template for Vendor Pricelists"
-msgstr ""
+msgstr "वेंडर प्राइसलिस्ट के लिए टेम्प्लेट इंपोर्ट करें"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_search
@@ -1811,12 +1858,12 @@ msgstr "इंडेक्स किया गया कॉन्टेंट"
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Individual Workplace"
-msgstr ""
+msgstr "व्यक्तिगत वर्कस्टेशन"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__always
 msgid "Instantly"
-msgstr ""
+msgstr "तुरंत"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1838,7 +1885,7 @@ msgstr "प्रॉडक्ट की पहचान के लिए इस�
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_attribute_value_list.js:0
 msgid "Invalid Operation"
-msgstr ""
+msgstr "अमान्य ऑपरेशन"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1856,23 +1903,23 @@ msgstr "फ़ॉलोवर है"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_product_variant
 msgid "Is Product Variant"
-msgstr ""
+msgstr "प्रॉडक्ट वैरिएंट है"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__has_configurable_attributes
 #: model:ir.model.fields,field_description:product.field_product_template__has_configurable_attributes
 msgid "Is a configurable product"
-msgstr ""
+msgstr "एक कॉन्फ़िगर करने योग्य प्रॉडक्ट है"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template__is_product_variant
 msgid "Is a product variant"
-msgstr ""
+msgstr "प्रॉडक्ट वैरिएंट है"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__public
 msgid "Is public document"
-msgstr ""
+msgstr "पब्लिक दस्तावेज़ है"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__0
@@ -1880,19 +1927,24 @@ msgid "Kilograms"
 msgstr "किलोग्राम"
 
 #. module: product
+#: model:product.attribute.value,name:product.size_attribute_l
+msgid "L"
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_6_product_template
 msgid "Large Cabinet"
-msgstr ""
+msgstr "बड़ा कैबिनेट"
 
 #. module: product
 #: model:product.template,name:product.product_product_8_product_template
 msgid "Large Desk"
-msgstr ""
+msgstr "बड़ा डेस्क"
 
 #. module: product
 #: model:product.template,name:product.consu_delivery_02_product_template
 msgid "Large Meeting Table"
-msgstr ""
+msgstr "बड़ा मीटिंग टेबल"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__write_uid
@@ -1951,6 +2003,8 @@ msgid ""
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
 msgstr ""
+"ऑर्डर कन्फर्म होने से लेकर सामान हाथ में आने तक लगने वाले कुल दिन. सिस्टम इसी नंबर का "
+"उपयोग करके अपने आप तय करता है कि अगला ऑर्डर कब देना चाहिए।"
 
 #. module: product
 #: model:product.attribute.value,name:product.fabric_attribute_leather
@@ -1960,7 +2014,7 @@ msgstr "लेदर"
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
 msgid "Legs"
-msgstr ""
+msgstr "लैग्स"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__attribute_line_ids
@@ -1976,7 +2030,7 @@ msgstr "लोकल डिलीवरी"
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Locally handmade"
-msgstr ""
+msgstr "हाथ से बना हुआ लोकल सामान"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1990,6 +2044,12 @@ msgid ""
 "Looking for a custom bamboo stain to match existing furniture? Contact us "
 "for a quote."
 msgstr ""
+"मौजूदा फर्नीचर से मेल खाने वाले कस्टम बांस के स्टेन की तलाश है? कोटेशन के लिए हमसे संपर्क करें।"
+
+#. module: product
+#: model:product.attribute.value,name:product.size_attribute_m
+msgid "M"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
@@ -1997,6 +2057,8 @@ msgid ""
 "Make this attribute value not compatible with other values of the product or "
 "some attribute values of optional and accessory products."
 msgstr ""
+"इस एट्रिब्यूट वैल्यू को प्रॉडक्ट की अन्य वैल्यू या विकल्प और एक्सेसरी प्रॉडक्ट्स की कुछ एट्रिब्यूट "
+"वैल्यूज़ के साथ काम नहीं करते हैं।"
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -2006,28 +2068,28 @@ msgstr ""
 #. module: product
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr ""
+msgstr "प्रॉडक्ट वैरिएंट मैनेज करें"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Margins"
-msgstr ""
+msgstr "मार्जिन"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_markup
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Markup"
-msgstr ""
+msgstr "मार्कअप"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Max. Margin"
-msgstr ""
+msgstr "अधिकतम मार्जिन"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_max_margin
 msgid "Max. Price Margin"
-msgstr ""
+msgstr "अधिकतम मूल्य मार्जिन"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__message
@@ -2058,22 +2120,22 @@ msgstr "Mime टाइप"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Min Qty"
-msgstr ""
+msgstr "न्यूनतम मात्रा"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Min. Margin"
-msgstr ""
+msgstr "न्यूनतम मार्जिन"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_min_margin
 msgid "Min. Price Margin"
-msgstr ""
+msgstr "न्यूनतम कीमत मार्जिन"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__min_quantity
 msgid "Min. Quantity"
-msgstr ""
+msgstr "न्यूनतम मात्रा"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__mode
@@ -2083,18 +2145,20 @@ msgstr "मोड"
 #. module: product
 #: model:product.template,name:product.monitor_stand_product_template
 msgid "Monitor Stand"
-msgstr ""
+msgstr "मॉनिटर स्टैंड"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__multi
 msgid "Multi-checkbox"
-msgstr ""
+msgstr "मल्टी-चेकबॉक्स"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_check_multi_checkbox_no_variant
 msgid ""
 "Multi-checkbox display type is not compatible with the creation of variants"
 msgstr ""
+"अगर आप 'मल्टी-चेकबॉक्स' वाला डिजाइन चुनते हैं, तो आप उस प्रॉडक्ट के अलग-अलग वेरिएंट्स नहीं "
+"बना पाएंगे"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__my_activity_date_deadline
@@ -2161,23 +2225,25 @@ msgid ""
 "No product to print, if the product is archived please unarchive it before "
 "printing its label."
 msgstr ""
+"प्रिंट करने के लिए कोई प्रॉडक्ट नहीं है. यदि प्रॉडक्ट आर्काइव है, तो लेबल प्रिंट करने से पहले "
+"इसे अनआर्काइव करें।"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 msgid "No products could be found."
-msgstr ""
+msgstr "कोई भी प्रॉडक्ट नहीं मिल सका।"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "No products found in the report"
-msgstr ""
+msgstr "रिपोर्ट में कोई भी प्रॉडक्ट नहीं मिला"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
-msgstr ""
+msgstr "कोई भी वेंडर प्राइसलिस्ट नहीं मिला"
 
 #. module: product
 #. odoo-javascript
@@ -2200,7 +2266,7 @@ msgstr "कुछ नहीं"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__number_related_products
 msgid "Number Related Products"
-msgstr ""
+msgstr "संबंधित प्रॉडक्ट्स की संख्या"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_needaction_counter
@@ -2238,7 +2304,7 @@ msgstr "ऐसे मैसेज की संख्या जिनमें �
 #: model:ir.model.fields,field_description:product.field_product_product__pricelist_item_count
 #: model:ir.model.fields,field_description:product.field_product_template__pricelist_item_count
 msgid "Number of price rules"
-msgstr ""
+msgstr "प्राइस रूल की संख्या"
 
 #. module: product
 #: model:product.template,name:product.product_delivery_01_product_template
@@ -2248,22 +2314,22 @@ msgstr "ऑफ़िस चेयर"
 #. module: product
 #: model:product.template,name:product.product_product_12_product_template
 msgid "Office Chair Black"
-msgstr ""
+msgstr "ऑफ़िस चेयर ब्लैक"
 
 #. module: product
 #: model:product.template,name:product.office_combo_product_template
 msgid "Office Combo"
-msgstr ""
+msgstr "ऑफ़िस कॉम्बो"
 
 #. module: product
 #: model:product.template,name:product.product_order_01_product_template
 msgid "Office Design Software"
-msgstr ""
+msgstr "ऑफ़िस डिज़ाइन सॉफ़्टवेयर"
 
 #. module: product
 #: model:product.template,name:product.product_delivery_02_product_template
 msgid "Office Lamp"
-msgstr ""
+msgstr "ऑफ़िस लैंप"
 
 #. module: product
 #. odoo-python
@@ -2272,6 +2338,8 @@ msgid ""
 "On the product %(product)s you cannot associate the value %(value)s with the "
 "attribute %(attribute)s because they do not match."
 msgstr ""
+"प्रॉडक्ट %(product)s पर आप वैल्यू %(value)s को एट्रिब्यूट %(attribute)s के साथ नहीं "
+"जोड़ सकते, क्योंकि वे मेल नहीं खाते।"
 
 #. module: product
 #. odoo-python
@@ -2280,12 +2348,14 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute %"
 "(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
+"प्रॉडक्ट %(product)s पर आप एट्रिब्यूट %(attribute_src)s को एट्रिब्यूट %"
+"(attribute_dest)s में नहीं बदल सकते।"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
 msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
-msgstr ""
+msgstr "माफ करें! '%(fileName)s' अपलोड नहीं हुआ, क्योंकि इसका फ़ॉर्मेट सही नहीं है।"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2295,24 +2365,24 @@ msgstr "ओरिजिनल (अनऑप्टिमाइज़्ड, अ�
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__lst_price
 msgid "Original Price"
-msgstr ""
+msgstr "मूल कीमत"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__base__pricelist
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Other Pricelist"
-msgstr ""
+msgstr "अन्य प्राइसलिस्ट"
 
 #. module: product
 #: model:product.template,name:product.product_template_dining_table
 msgid "Outdoor dining table"
-msgstr ""
+msgstr "आउटडोर डाइनिंग टेबल"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Package Type A"
-msgstr ""
+msgstr "पैकेज टाइप A"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
@@ -2325,7 +2395,7 @@ msgstr "पैकेजिंग"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
 msgid "Parent Category"
-msgstr ""
+msgstr "पैरंट कैटगरी"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_path
@@ -2335,28 +2405,28 @@ msgstr "पैरंट पाथ"
 #. module: product
 #: model:product.template,name:product.product_product_9_product_template
 msgid "Pedal Bin"
-msgstr ""
+msgstr "पेडल बिन"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__percent_price
 msgid "Percentage Price"
-msgstr ""
+msgstr "प्रतिशत मूल्य"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
 msgid "Pills"
-msgstr ""
+msgstr "पिल्स"
 
 #. module: product
 #: model:product.attribute.value,name:product.fabric_attribute_plastic
 msgid "Plastic"
-msgstr ""
+msgstr "प्लास्टिक"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Please enter a positive whole number."
-msgstr ""
+msgstr "कृपया 1 या उससे बड़ी कोई भी पूरी दर्ज करें।"
 
 #. module: product
 #. odoo-python
@@ -2367,31 +2437,35 @@ msgid ""
 "\n"
 "Invalid URL: %s"
 msgstr ""
+"कृपया एक मान्य यूआरएल दर्ज करें.\n"
+"उदाहरण: https://www.odoo.com\n"
+"\n"
+"अमान्य यूआरएल: %s"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Please select some products first."
-msgstr ""
+msgstr "कृपया पहले कुछ प्रॉडक्ट चुनें।"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "Please specify the category for which this rule should be applied"
-msgstr ""
+msgstr "कृपया वह कैटेगरी चुनें या बताएं जिस पर आप यह नियम लगाना चाहते हैं"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "Please specify the product for which this rule should be applied"
-msgstr ""
+msgstr "कृपया वह प्रॉडक्ट चुनें या बताएं जिस पर आप यह नियम लगाना चाहते हैं"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
 "Please specify the product variant for which this rule should be applied"
-msgstr ""
+msgstr "कृपया वह प्रॉडक्ट वैरिएंट चुनें या बताएं जिस पर आप यह नियम लगाना चाहते हैं"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__1
@@ -2404,6 +2478,8 @@ msgid ""
 "Press a button and watch your desk glide effortlessly from sitting to "
 "standing height in seconds."
 msgstr ""
+"एक बटन दबाएं और अपनी डेस्क को कुछ ही सेकंड में आसानी से बैठने की ऊंचाई से खड़े होने की ऊंचाई "
+"तक सरकते हुए देखें।"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
@@ -2417,12 +2493,12 @@ msgstr "कीम"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_discount
 msgid "Price Discount"
-msgstr ""
+msgstr "कीमत में छूट"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_round
 msgid "Price Rounding"
-msgstr ""
+msgstr "कीमत का राउंड फ़िगर"
 
 #. module: product
 #. odoo-python
@@ -2437,13 +2513,13 @@ msgstr "कीमत से जुड़े नियम"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Price Type"
-msgstr ""
+msgstr "प्राइस टाइप"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__list_price
 #: model:ir.model.fields,help:product.field_product_template__list_price
 msgid "Price at which the product is sold to customers."
-msgstr ""
+msgstr "वह कीमत जिस पर प्रॉडक्ट ग्राहकों को बेचा जाता है।"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_kanban_view
@@ -2471,12 +2547,12 @@ msgstr "मूल्य सूची"
 #: model:ir.model.fields,help:product.field_product_pricelist_item__applied_on
 #: model:ir.model.fields,help:product.field_product_pricelist_item__display_applied_on
 msgid "Pricelist Item applicable on selected option"
-msgstr ""
+msgstr "प्राइसलिस्ट आइटम चुनी गई सेटिंग पर लागू होता है"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__name
 msgid "Pricelist Name"
-msgstr ""
+msgstr "प्राइसलिस्ट का नाम"
 
 #. module: product
 #. odoo-javascript
@@ -2485,26 +2561,26 @@ msgstr ""
 #: model:ir.actions.server,name:product.action_product_template_price_list_report
 #: model:ir.model,name:product.model_report_product_report_pricelist
 msgid "Pricelist Report"
-msgstr ""
+msgstr "प्राइसलिस्ट रिपोर्ट"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 msgid "Pricelist Report Preview"
-msgstr ""
+msgstr "प्राइसलिस्ट रिपोर्ट का प्रीव्यू"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Pricelist Rule"
-msgstr ""
+msgstr "प्राइसलिस्ट से जुड़ा नियम"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__item_ids
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Pricelist Rules"
-msgstr ""
+msgstr "प्राइसलिस्ट से जुड़े नियम"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
@@ -2572,33 +2648,33 @@ msgstr "उत्पाद"
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_form
 msgid "Product Attribute"
-msgstr ""
+msgstr "प्रॉडक्ट एट्रिब्यूट"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr ""
+msgstr "प्रॉडक्ट एट्रिब्यूट कस्टम वैल्यू"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_template_value_ids
 msgid "Product Attribute Values"
-msgstr ""
+msgstr "प्रॉडक्ट एट्रिब्यूट वैल्यू"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Product Attribute and Values"
-msgstr ""
+msgstr "प्रॉडक्ट एट्रिब्यूट और वैल्यू"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template__attribute_line_ids
 msgid "Product Attributes"
-msgstr ""
+msgstr "प्रॉडक्ट एट्रिब्यूट"
 
 #. module: product
 #: model:ir.model,name:product.model_product_catalog_mixin
 msgid "Product Catalog Mixin"
-msgstr ""
+msgstr "प्रॉडक्ट कैटलॉग मिक्सिन"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
@@ -2621,12 +2697,12 @@ msgstr "उत्पाद श्रेणी"
 #. module: product
 #: model:ir.model,name:product.model_product_combo
 msgid "Product Combo"
-msgstr ""
+msgstr "प्रॉडक्ट कॉम्बो"
 
 #. module: product
 #: model:ir.model,name:product.model_product_combo_item
 msgid "Product Combo Item"
-msgstr ""
+msgstr "प्रॉडक्ट कॉम्बो आइटम"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_count
@@ -2647,52 +2723,52 @@ msgstr "प्रॉडक्ट डॉक्यूमेंट"
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_dymo
 msgid "Product Label (PDF)"
-msgstr ""
+msgstr "प्रॉडक्ट लेबल (पीडीएफ़)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_2x7
 msgid "Product Label 2x7 (PDF)"
-msgstr ""
+msgstr "प्रॉडक्ट लेबल 2x7 (पीडीएफ़)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x12
 msgid "Product Label 4x12 (PDF)"
-msgstr ""
+msgstr "प्रॉडक्ट लेबल 4x12 (पीडीएफ़)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x12_noprice
 msgid "Product Label 4x12 No Price (PDF)"
-msgstr ""
+msgstr "प्रॉडक्ट लेबल 4x12 कोई कीमत नहीं (पीडीएफ़)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x7
 msgid "Product Label 4x7 (PDF)"
-msgstr ""
+msgstr "प्रॉडक्ट लेबल 4x7 (पीडीएफ़)"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel_dymo
 msgid "Product Label Report"
-msgstr ""
+msgstr "प्रॉडक्ट लेबल रिपोर्ट"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel2x7
 msgid "Product Label Report 2x7"
-msgstr ""
+msgstr "प्रॉडक्ट लेबल रिपोर्ट 2x7"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12
 msgid "Product Label Report 4x12"
-msgstr ""
+msgstr "प्रॉडक्ट लेबल रिपोर्ट 4x12"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12noprice
 msgid "Product Label Report 4x12 No Price"
-msgstr ""
+msgstr "प्रॉडक्ट लेबल रिपोर्ट 4x12 कोई कीमत नहीं"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x7
 msgid "Product Label Report 4x7"
-msgstr ""
+msgstr "प्रॉडक्ट लेबल रिपोर्ट 4x7"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
@@ -2730,7 +2806,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_properties_definition
 msgid "Product Properties"
-msgstr ""
+msgstr "प्रॉडक्ट से जुड़ी प्रॉपर्टीज़"
 
 #. module: product
 #: model:ir.model,name:product.model_product_tag
@@ -2758,35 +2834,35 @@ msgstr "उत्पाद  प्रारूप"
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_exclusion
 msgid "Product Template Attribute Exclusion"
-msgstr ""
+msgstr "प्रॉडक्ट टेम्प्लेट एट्रिब्यूट एक्सक्लूज़न"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr ""
+msgstr "प्रॉडक्ट टेम्प्लेट एट्रिब्यूट लाइन"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr ""
+msgstr "प्रॉडक्ट टेम्प्लेट एट्रिब्यूट वैल्यू"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_template_ids
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_view_tree_tag
 msgid "Product Templates"
-msgstr ""
+msgstr "प्रॉडक्ट टेम्प्लेट"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
 msgid "Product Tmpl"
-msgstr ""
+msgstr "प्रॉडक्ट टेम्प्लेट"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tooltip
 #: model:ir.model.fields,field_description:product.field_product_template__product_tooltip
 msgid "Product Tooltip"
-msgstr ""
+msgstr "प्रॉडक्ट टूलटिप"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__type
@@ -2794,7 +2870,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Product Type"
-msgstr ""
+msgstr "प्रॉडक्ट टाइप"
 
 #. module: product
 #: model:ir.model,name:product.model_uom_uom
@@ -2815,7 +2891,7 @@ msgstr "उत्पाद प्रकार"
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid "Product Variant Values"
-msgstr ""
+msgstr "प्रॉडक्ट वैरिएंट वैल्यू"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -2833,7 +2909,7 @@ msgstr "प्रॉडक्ट के वेरिएंट"
 #. odoo-python
 #: code:addons/product/report/product_label_report.py:0
 msgid "Product model not defined, Please contact your administrator."
-msgstr ""
+msgstr "प्रॉडक्ट मॉडल सेट नहीं है, कृपया अपने एडमिनिस्ट्रेटर से संपर्क करें।"
 
 #. module: product
 #. odoo-python
@@ -2851,34 +2927,34 @@ msgstr "प्रॉडक्ट"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price"
-msgstr ""
+msgstr "प्रॉडक्ट की कीमत"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_tree
 msgid "Products Price List"
-msgstr ""
+msgstr "प्रॉडक्ट की कीमत की सूची"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 msgid "Products Price Rules Search"
-msgstr ""
+msgstr "प्रॉडक्ट पर लागू होने वाले कीमतों के नियमों को खोजने की सुविधा"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price Search"
-msgstr ""
+msgstr "प्रॉडक्ट की कीमतों को खोजने की सुविधा"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "Products: %(category)s"
-msgstr ""
+msgstr "प्रॉडक्ट: %(category)s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_loyalty
 msgid "Promotions, Coupons, Gift Card & Loyalty Program"
-msgstr ""
+msgstr "प्रमोशन, कूपन, गिफ़्ट कार्ड और लॉयल्टी प्रोग्राम"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_properties
@@ -2889,7 +2965,7 @@ msgstr "प्रॉपर्टीज़"
 #. module: product
 #: model:product.attribute.value,name:product.pav_protection_kit
 msgid "Protection kit"
-msgstr ""
+msgstr "प्रोटेक्शन किट"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__purchase_ok
@@ -2903,7 +2979,7 @@ msgstr "परचेज"
 #: model:ir.model.fields,field_description:product.field_product_product__description_purchase
 #: model:ir.model.fields,field_description:product.field_product_template__description_purchase
 msgid "Purchase Description"
-msgstr ""
+msgstr "परचेज़ का विवरण"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
@@ -2915,12 +2991,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Quantities"
-msgstr ""
+msgstr "मात्राएं"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Quantities (Price)"
-msgstr ""
+msgstr "मात्राएं (कीमत)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__custom_quantity
@@ -2932,13 +3008,13 @@ msgstr "मात्रा"
 #. odoo-python
 #: code:addons/product/controllers/pricelist_report.py:0
 msgid "Quantity (%s UoM)"
-msgstr ""
+msgstr "मात्रा (%s यूओएम)"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Quantity already present (%s)."
-msgstr ""
+msgstr "मात्रा पहले से मौजूद है (%s)।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
@@ -2948,7 +3024,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Quotation Description"
-msgstr ""
+msgstr "कोटेशन की जानकारी"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
@@ -2967,16 +3043,18 @@ msgid ""
 "Register the prices requested by your vendors for each product, based on the "
 "quantity and the period."
 msgstr ""
+"मात्रा और समय अवधि के आधार पर, हर प्रॉडक्ट के लिए अपने वेंडर द्वारा मांगी गई कीमतें दर्ज "
+"करें।"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
 msgid "Related Products"
-msgstr ""
+msgstr "संबंधित प्रॉडक्ट"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__ptav_product_variant_ids
 msgid "Related Variants"
-msgstr ""
+msgstr "संबंधित वैरिएंट"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__ir_attachment_id
@@ -2993,12 +3071,12 @@ msgstr "हटाओ"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Remove quantity"
-msgstr ""
+msgstr "मात्रा हटाएं"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__res_field
 msgid "Resource Field"
-msgstr ""
+msgstr "रिसोर्स फ़ील्ड"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__res_id
@@ -3025,12 +3103,12 @@ msgstr "जिम्मेदार उपयोगकर्ता"
 #. module: product
 #: model:product.template,name:product.expense_product_product_template
 msgid "Restaurant Expenses"
-msgstr ""
+msgstr "रेस्टोरेंट का खर्च"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Round off to"
-msgstr ""
+msgstr "कीमत को पास के पूरे नंबर में बदलें"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__rows
@@ -3040,6 +3118,11 @@ msgstr "लाइन"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
 msgid "Rule Tip"
+msgstr "नियम से जुड़ा सलाह"
+
+#. module: product
+#: model:product.attribute.value,name:product.size_attribute_s
+msgid "S"
 msgstr ""
 
 #. module: product
@@ -3055,7 +3138,7 @@ msgstr "सेल्स"
 #: model:ir.model.fields,field_description:product.field_product_product__description_sale
 #: model:ir.model.fields,field_description:product.field_product_template__description_sale
 msgid "Sales Description"
-msgstr ""
+msgstr "सेल्स की जानकारी"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__list_price
@@ -3070,7 +3153,7 @@ msgstr "सेल्स प्राइस"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__lst_price
 msgid "Sales Price"
-msgstr ""
+msgstr "सेल्स कीमत"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__select
@@ -3110,6 +3193,9 @@ msgid ""
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, round off to 10.00 and set an extra at -0.01"
 msgstr ""
+"कीमत इस तरह सेट करें कि वह इस वैल्यू का गुणांक हो.\n"
+"राउंडिंग डिस्काउंट के बाद और सरचार्ज से पहले लागू की जाती है.\n"
+"कीमतों को 9.99 पर खत्म करने के लिए, 10.00 पर राउंड ऑफ करें और एक्स्ट्रा वैल्यू -0.01 सेट करें"
 
 #. module: product
 #. odoo-javascript
@@ -3131,7 +3217,7 @@ msgstr "साइज़"
 #: model:ir.model.fields,field_description:product.field_res_partner__specific_property_product_pricelist
 #: model:ir.model.fields,field_description:product.field_res_users__specific_property_product_pricelist
 msgid "Specific Property Product Pricelist"
-msgstr ""
+msgstr "खास प्रॉपर्टी प्रॉडक्ट प्राइसलिस्ट"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
@@ -3139,6 +3225,8 @@ msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
 msgstr ""
+"अगर यह नियम सिर्फ़ इस कैटेगरी या इसकी सब-कैटेगरी के प्रॉडक्ट पर लागू होता है, तो एक "
+"प्रॉडक्ट कैटेगरी तय करें. अन्यथा इसे खाली छोड़ दें।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_id
@@ -3146,6 +3234,8 @@ msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
 msgstr ""
+"अगर यह नियम सिर्फ़ एक प्रॉडक्ट पर लागू होता है, तो एक प्रॉडक्ट तय करें. अन्यथा इसे खाली "
+"छोड़ दें।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_tmpl_id
@@ -3153,6 +3243,8 @@ msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
 msgstr ""
+"अगर यह नियम सिर्फ़ एक प्रॉडक्ट टेम्प्लेट पर लागू होता है, तो एक टेम्प्लेट तय करें. अन्यथा इसे "
+"खाली छोड़ दें।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
@@ -3160,16 +3252,18 @@ msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
 msgstr ""
+"डिस्काउंट के साथ गणना की गई राशि में जोड़ने या घटाने (अगर नकारात्मक हो) के लिए एक "
+"निश्चित राशि तय करें।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
 msgid "Specify the maximum amount of margin over the base price."
-msgstr ""
+msgstr "बेस प्राइस पर मार्जिन की अधिकतम राशि तय करें।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_min_margin
 msgid "Specify the minimum amount of margin over the base price."
-msgstr ""
+msgstr "बेस प्राइस पर मार्जिन की न्यूनतम राशि तय करें।"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_start
@@ -3180,7 +3274,7 @@ msgstr "प्रारंभ दिनांक"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__date_start
 msgid "Start date for this vendor price"
-msgstr ""
+msgstr "इस वेंडर प्राइस के लिए शुरू होने की तारीख"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__date_start
@@ -3188,6 +3282,8 @@ msgid ""
 "Starting datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"प्राइसलिस्ट आइटम की वैधता शुरू होने की तारीख और समय\n"
+"दिखाई गई वैल्यू आपकी प्रेफरेंस में सेट किए गए टाइमज़ोन पर निर्भर करती है।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__activity_state
@@ -3207,17 +3303,17 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_1
 msgid "Steel"
-msgstr ""
+msgstr "स्टील"
 
 #. module: product
 #: model:product.template,name:product.product_product_7_product_template
 msgid "Storage Box"
-msgstr ""
+msgstr "स्टोरेज बॉक्स"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__store_fname
 msgid "Stored Filename"
-msgstr ""
+msgstr "स्टोर की गई फ़ाइलनेम"
 
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
@@ -3240,24 +3336,24 @@ msgstr "टैग"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Tags are used to search product for a given theme."
-msgstr ""
+msgstr "टैग्स का उपयोग किसी खास थीम के आधार पर प्रॉडक्ट को खोजने के लिए किया जाता है।"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__template_value_ids
 msgid "Template Values"
-msgstr ""
+msgstr "टेम्प्लेट वैल्यू"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "The Internal Reference '%s' already exists."
-msgstr ""
+msgstr "इंटरनल रेफ़रेंस '%s' पहले से ही मौजूद है।"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "The Reference '%s' already exists."
-msgstr ""
+msgstr "रेफ़रेंस '%s' पहले से ही मौजूद है।"
 
 #. module: product
 #. odoo-python
@@ -3266,13 +3362,14 @@ msgid ""
 "The attribute %(attribute)s must have at least one value for the product %"
 "(product)s."
 msgstr ""
+"प्रॉडक्ट %(product)s के लिए एट्रिब्यूट %(attribute)s की कम से कम एक वैल्यू होनी चाहिए।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
 msgid ""
 "The attribute cannot be changed once the value is used on at least one "
 "product."
-msgstr ""
+msgstr "एट्रिब्यूट को एक बार किसी प्रॉडक्ट पर इस्तेमाल करने के बाद बदला नहीं जा सकता।"
 
 #. module: product
 #. odoo-python
@@ -3289,13 +3386,15 @@ msgid ""
 "since the 5 boxes are loose, you can move and place them in the way that "
 "suits you and your things best."
 msgstr ""
+"डेस्क ऑर्गनाइज़र छोटी चीज़ों को रखने के लिए बेहतरीन है. इसके 5 बॉक्स अलग-अलग हैं, इसलिए आप "
+"उन्हें अपनी ज़रूरत और सुविधा के अनुसार कहीं भी रख सकते हैं।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__display_type
 #: model:ir.model.fields,help:product.field_product_attribute_value__display_type
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__display_type
 msgid "The display type used in the Product Configurator."
-msgstr ""
+msgstr "प्रॉडक्ट कॉन्फ़िगरेटर में इस्तेमाल किया गया डिस्प्ले टाइप।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__sequence
@@ -3307,13 +3406,13 @@ msgstr ""
 msgid ""
 "The minimum height is 65 cm, and for standing work the maximum height "
 "position is 125 cm."
-msgstr ""
+msgstr "न्यूनतम ऊंचाई 65 सेमी है, और खड़े होकर काम करने के लिए अधिकतम ऊंचाई 125 सेमी है।"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "The minimum margin should be lower than the maximum margin."
-msgstr ""
+msgstr "न्यूनतम मार्जिन, अधिकतम मार्जिन से कम होना चाहिए।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_combo__base_price
@@ -3323,16 +3422,16 @@ msgid ""
 "combo product. This heuristic ensures that whatever product the user chooses "
 "in a combo, it will always be the same price."
 msgstr ""
-"इस कॉम्बो में प्रॉडक्ट का न्यूनतम मूल्य. इस मान का उपयोग कॉम्बो प्रॉडक्ट के अन्य कॉम्बो के संबंध में इस कॉम्बो के"
-" मूल्य को प्रोरैट करने के लिए किया जाएगा. यह नियम सुनिश्चित करता है कि उपयोगकर्ता कॉम्बो में जो भी प्रॉडक्ट चुने"
-", उसका मूल्य हमेशा बराबर रहेगा।"
+"इस कॉम्बो में प्रॉडक्ट का न्यूनतम मूल्य. इस मान का उपयोग कॉम्बो प्रॉडक्ट के अन्य कॉम्बो के "
+"संबंध में इस कॉम्बो के मूल्य को प्रोरैट करने के लिए किया जाएगा. यह नियम सुनिश्चित करता है "
+"कि उपयोगकर्ता कॉम्बो में जो भी प्रॉडक्ट चुने, उसका मूल्य हमेशा बराबर रहेगा।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
 msgid ""
 "The number of products under this category (Does not consider the children "
 "categories)"
-msgstr ""
+msgstr "इस कैटेगरी के तहत प्रॉडक्ट की संख्या (इसमें चाइल्ड कैटेगरी शामिल नहीं हैं)"
 
 #. module: product
 #. odoo-python
@@ -3343,20 +3442,22 @@ msgid ""
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
 msgstr ""
-"सिस्टम में वेरिएंट्स बनाने की एक तय सीमा है और आपका डेटा उस लिमिट को पार कर रहा है. इसे ठीक करने के लिए "
-"आपको हर संभावित कॉम्बिनेशन को ऑटोमैटिक बनाने के बजाय 'ऑन डिमांड' (जब ज़रूरत हो तब) का विकल्प चुनना होगा. "
-"यह बदलाव आप एट्रिब्यूट सेटिंग्स में जाकर \"वैरिएंट बनाएं\" विकल्प को अपडेट करके कर सकते हैं।"
+"सिस्टम में वेरिएंट्स बनाने की एक तय सीमा है और आपका डेटा उस लिमिट को पार कर रहा है. इसे "
+"ठीक करने के लिए आपको हर संभावित कॉम्बिनेशन को ऑटोमैटिक बनाने के बजाय 'ऑन डिमांड' (जब "
+"ज़रूरत हो तब) का विकल्प चुनना होगा. यह बदलाव आप एट्रिब्यूट सेटिंग्स में जाकर \"वैरिएंट "
+"बनाएं\" विकल्प को अपडेट करके कर सकते हैं।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
 msgid "The price to purchase a product"
-msgstr ""
+msgstr "प्रॉडक्ट खरीदने की कीमत"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "The product template is archived so no combination is possible."
 msgstr ""
+"प्रॉडक्ट टेम्प्लेट आर्काइव कर दिया गया है, इसलिए अब कोई भी कॉम्बिनेशन बनाना संभव नहीं है।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
@@ -3370,7 +3471,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "The rounding method must be strictly positive."
-msgstr ""
+msgstr "कीमत या संख्या को राउंड करने का मान हमेशा शून्य से अधिक होना चाहिए।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_combo_item__lst_price
@@ -3379,6 +3480,8 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Configure "
 "Variants' button to set the extra attribute prices."
 msgstr ""
+"बिक्री मूल्य प्रॉडक्ट टेम्प्लेट से मैनेज किया जाता है. एक्स्ट्रा एट्रिब्यूट की कीमतें सेट करने के "
+"लिए 'कॉन्फ़िगर वेरिएंट्स' बटन पर क्लिक करें।"
 
 #. module: product
 #. odoo-python
@@ -3387,24 +3490,26 @@ msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
 msgstr ""
+"प्रॉडक्ट %(product)s के एट्रिब्यूट %(attribute)s के लिए वैल्यू %(value)s परिभाषित नहीं "
+"है।"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "There are no possible combination."
-msgstr ""
+msgstr "कोई भी कॉम्बिनेशन संभव नहीं है।"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "There are no remaining closest combination."
-msgstr ""
+msgstr "अब कोई भी मिलता-जुलता कॉम्बिनेशन बाकी नहीं है।"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "There are no remaining possible combination."
-msgstr ""
+msgstr "अब कोई भी संभावित कॉम्बिनेशन बाकी नहीं है।"
 
 #. module: product
 #. odoo-python
@@ -3414,21 +3519,23 @@ msgid ""
 "to no possible variant. Please archive or delete your product directly if "
 "intended."
 msgstr ""
+"प्रॉडक्ट एट्रिब्यूट्स, वैल्यू और एक्सक्लूजन के इस कॉन्फ़िगरेशन से कोई भी वेरिएंट नहीं बन सकता. "
+"अगर आप ऐसा ही चाहते हैं, तो कृपया अपने प्रॉडक्ट को सीधे आर्काइव या मिटाएं।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
 msgid "This is the sum of the extra price of all attributes"
-msgstr ""
+msgstr "यह सभी एट्रिब्यूट्स की अतिरिक्त कीमतों का कुल योग है"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is added to sales orders and invoices."
-msgstr ""
+msgstr "यह नोट सेल्स ऑर्डर और इनवॉइस में जोड़ा जाता है।"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is only for internal purposes."
-msgstr ""
+msgstr "यह नोट सिर्फ़ इंटरनल इस्तेमाल के लिए है।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
@@ -3444,6 +3551,8 @@ msgstr ""
 msgid ""
 "This product is part of a combo, so its type can't be changed to \"combo\"."
 msgstr ""
+"यह प्रॉडक्ट कॉम्बो का हिस्सा है, इसलिए इसका प्रकार बदलकर \"कॉम्बो\" नहीं किया जा "
+"सकता।"
 
 #. module: product
 #. odoo-python
@@ -3461,6 +3570,8 @@ msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+"रिक्वेस्ट फॉर कोटेशन प्रिंट करते समय इस वेंडर का प्रॉडक्ट कोड इस्तेमाल किया जाएगा. इंटरनल "
+"कोड के लिए इसे खाली छोड़ दें।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_name
@@ -3468,16 +3579,18 @@ msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+"रिक्वेस्ट फॉर कोटेशन प्रिंट करते समय इस वेंडर का प्रॉडक्ट नाम इस्तेमाल किया जाएगा. इंटरनल "
+"नाम के लिए इसे खाली छोड़ दें।"
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
 msgid "Three Seater Sofa with Lounger in Steel Grey Colour"
-msgstr ""
+msgstr "स्टील ग्रे रंग में लाउंजर के साथ थ्री सीटर सोफा"
 
 #. module: product
 #: model:product.template,name:product.consu_delivery_01_product_template
 msgid "Three-Seat Sofa"
-msgstr ""
+msgstr "तीन सीटों वाला सोफा"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -3501,13 +3614,13 @@ msgstr "रिकॉर्ड में जो अलग तरह की गत
 #: code:addons/product/controllers/pricelist_report.py:0
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "UOM"
-msgstr ""
+msgstr "यूओएम"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 msgid "Unable to find report template for %s format"
-msgstr ""
+msgstr "%s फॉर्मेट के लिए रिपोर्ट टेम्प्लेट नहीं मिल सका"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
@@ -3539,7 +3652,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "Unit price:"
-msgstr ""
+msgstr "यूनिट की कीमत:"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -3561,23 +3674,23 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Update extra prices"
-msgstr ""
+msgstr "अतिरिक्त कीमतें अपडेट करें"
 
 #. module: product
 #: model:ir.model,name:product.model_update_product_attribute_value
 msgid "Update product attribute value"
-msgstr ""
+msgstr "प्रॉडक्ट एट्रिब्यूट वैल्यू अपडेट करें"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Update product extra prices"
-msgstr ""
+msgstr "प्रॉडक्ट की अतिरिक्त कीमतें अपडेट करें"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__update_extra_price
 msgid "Update the extra price on existing products"
-msgstr ""
+msgstr "मौजूदा प्रॉडक्ट्स पर अतिरिक्त कीमत अपडेट करें"
 
 #. module: product
 #. odoo-javascript
@@ -3589,12 +3702,12 @@ msgstr "अपलोड करें"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Upload files to your product"
-msgstr ""
+msgstr "अपने प्रॉडक्ट के लिए फ़ाइलें अपलोड करें"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Upsell & Cross-Sell"
-msgstr ""
+msgstr "अपसेल और क्रॉस-सेल"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__url
@@ -3607,6 +3720,8 @@ msgid ""
 "Use the discount rules and activate the discount settings in order to show "
 "discount to customer."
 msgstr ""
+"कस्टमर को डिस्काउंट दिखाने के लिए डिस्काउंट रूल्स का इस्तेमाल करें और डिस्काउंट सेटिंग्स को "
+"एक्टिवेट करें।"
 
 #. module: product
 #. odoo-python
@@ -3615,11 +3730,12 @@ msgid ""
 "Use this feature to store any files you would like to share with your "
 "customers"
 msgstr ""
+"अपने ग्राहकों के साथ शेयर की जाने वाली फ़ाइलें स्टोर करने के लिए इस फ़ीचर का इस्तेमाल करें"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
 msgid "Used on Products"
-msgstr ""
+msgstr "प्रॉडक्ट पर इस्तेमाल किया"
 
 #. module: product
 #. odoo-javascript
@@ -3652,7 +3768,7 @@ msgstr "वैल्यू"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__value_count
 msgid "Value Count"
-msgstr ""
+msgstr "वैल्यू की संख्या"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__standard_price
@@ -3663,6 +3779,10 @@ msgid ""
 "inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"प्रॉडक्ट की वैल्यू (AVCO में अपने आप कैलकुलेट होती है).\n"
+"        इसका इस्तेमाल तब किया जाता है जब खरीद की लागत पता न हो (जैसे इन्वेंटरी "
+"एडजस्टमेंट).\n"
+"        इसका इस्तेमाल सेल्स ऑर्डर पर मार्जिन निकालने के लिए किया जाता है।"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -3670,7 +3790,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Values"
-msgstr ""
+msgstr "वैल्यू"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
@@ -3682,70 +3802,70 @@ msgstr "वैरिएंट"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_variant_count
 msgid "Variant Count"
-msgstr ""
+msgstr "वैरिएंट की संख्या"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Variant Creation"
-msgstr ""
+msgstr "वैरिएंट क्रिएशन"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1920
 msgid "Variant Image"
-msgstr ""
+msgstr "वैरिएंट इमेज"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1024
 msgid "Variant Image 1024"
-msgstr ""
+msgstr "वैरिएंट इमेज 1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_128
 msgid "Variant Image 128"
-msgstr ""
+msgstr "वैरिएंट इमेज 128"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_256
 msgid "Variant Image 256"
-msgstr ""
+msgstr "वैरिएंट इमेज 256"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_512
 msgid "Variant Image 512"
-msgstr ""
+msgstr "वैरिएंट इमेज 512"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Variant Information"
-msgstr ""
+msgstr "वैरिएंट की जानकारी"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__price_extra
 msgid "Variant Price Extra"
-msgstr ""
+msgstr "वैरिएंट की अतिरिक्त कीमत"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__variant_seller_ids
 #: model:ir.model.fields,field_description:product.field_product_template__variant_seller_ids
 msgid "Variant Seller"
-msgstr ""
+msgstr "वैरिएंट सेलर"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
 msgid "Variant Tags"
-msgstr ""
+msgstr "वैरिएंट टैग"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_variant_value_ids
 #: model_terms:ir.ui.view,arch_db:product.attribute_tree_view
 msgid "Variant Values"
-msgstr ""
+msgstr "वैरिएंट की वैल्यू"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "Variant: %s"
-msgstr ""
+msgstr "वैरिएंट: %s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
@@ -3770,22 +3890,22 @@ msgstr "वेंडर बिल"
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Vendor Information"
-msgstr ""
+msgstr "वेंडर की जानकारी"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
 msgid "Vendor Pricelists"
-msgstr ""
+msgstr "वेंडर प्राइसलिस्ट"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_code
 msgid "Vendor Product Code"
-msgstr ""
+msgstr "वेंडर प्रॉडक्ट कोड"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_name
 msgid "Vendor Product Name"
-msgstr ""
+msgstr "वेंडर प्रॉडक्ट का नाम"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__seller_ids
@@ -3796,13 +3916,13 @@ msgstr "वेंडर"
 #. module: product
 #: model:product.template,name:product.product_product_2_product_template
 msgid "Virtual Home Staging"
-msgstr ""
+msgstr "वर्चुअल होम स्टेगिंग"
 
 #. module: product
 #: model:product.template,name:product.product_product_1_product_template
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Virtual Interior Design"
-msgstr ""
+msgstr "वर्चुअल इंटिरियर डिज़ाइन"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
@@ -3826,7 +3946,7 @@ msgstr "आवाज़"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_volume_volume_in_cubic_feet
 msgid "Volume unit of measure"
-msgstr ""
+msgstr "आयतन की माप इकाई"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__volume_uom_name
@@ -3852,6 +3972,7 @@ msgid ""
 "We pay special attention to detail, which is why our desks are of a superior "
 "quality."
 msgstr ""
+"हम बारीकियों पर विशेष ध्यान देते हैं, यही कारण है कि हमारे डेस्क बेहतरीन गुणवत्ता के होते हैं।"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
@@ -3863,7 +3984,7 @@ msgstr "वज़न"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
 msgid "Weight unit of measure"
-msgstr ""
+msgstr "वजन मापने की इकाई"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight_uom_name
@@ -3879,12 +4000,12 @@ msgstr "सफेद"
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_color_wood
 msgid "Wood"
-msgstr ""
+msgstr "लकड़ी"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__write_date
 msgid "Write Date"
-msgstr ""
+msgstr "तारीख लिखें"
 
 #. module: product
 #. odoo-python
@@ -3892,13 +4013,13 @@ msgstr ""
 msgid ""
 "You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
 "products."
-msgstr ""
+msgstr "आप %(product_count)s प्रॉडक्ट में \"%(attribute_value)s\" वैल्यू जोड़ने वाले हैं।"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/update_product_attribute_value.py:0
 msgid "You are about to update the extra price of %s products."
-msgstr ""
+msgstr "आप %s प्रॉडक्ट की अतिरिक्त कीमत अपडेट करने वाले हैं।"
 
 #. module: product
 #. odoo-python
@@ -3907,6 +4028,7 @@ msgid ""
 "You are deactivating the pricelist feature. Every active pricelist will be "
 "archived."
 msgstr ""
+"आप प्राइसलिस्ट फ़ीचर को बंद कर रहे हैं. सभी एक्टिव प्राइसलिस्ट आर्काइव कर दी जाएंगी।"
 
 #. module: product
 #. odoo-python
@@ -3923,12 +4045,12 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_discount
 msgid "You can apply a mark-up by setting a negative discount."
-msgstr ""
+msgstr "नेगेटिव डिस्काउंट सेट करके मार्क-अप जोड़ें।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_markup
 msgid "You can apply a mark-up on the cost"
-msgstr ""
+msgstr "लागत पर मार्क-अप लगा सकते हैं"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -3936,6 +4058,8 @@ msgid ""
 "You can assign pricelists to your customers or select one when creating a "
 "new sales quotation."
 msgstr ""
+"आप अपने ग्राहकों को प्राइसलिस्ट असाइन कर सकते हैं या नया सेल्स कोटेशन बनाते समय किसी एक "
+"को चुन सकते हैं।"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_document__type
@@ -3953,26 +4077,27 @@ msgid ""
 "You can upload an image that will be used as the color of the attribute "
 "value."
 msgstr ""
+"आप एक इमेज अपलोड कर सकते हैं जिसका इस्तेमाल एट्रिब्यूट वैल्यू के रंग के तौर पर किया जाएगा।"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "You can't edit this product in the catalog."
-msgstr ""
+msgstr "आप कैटलॉग में इस प्रॉडक्ट में बदलाव नहीं कर सकते।"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
 "You cannot archive this attribute as there are still products linked to it"
-msgstr ""
+msgstr "आप इस एट्रिब्यूट को आर्काइव नहीं कर सकते, क्योंकि अभी भी कुछ प्रॉडक्ट इससे जुड़े हुए हैं"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
 "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
-msgstr ""
+msgstr "आप प्राइसलिस्ट आइटम में मुख्य प्राइसलिस्ट को अन्य प्राइसलिस्ट के रूप में नहीं चुन सकते"
 
 #. module: product
 #. odoo-python
@@ -3982,6 +4107,9 @@ msgid ""
 "because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"आप एट्रिब्यूट %(attribute)s के वेरिएंट क्रिएशन मोड को नहीं बदल सकते, क्योंकि इसका "
+"इस्तेमाल इन प्रॉडक्ट्स पर किया जा रहा है:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3990,6 +4118,8 @@ msgid ""
 "You cannot change the attribute of the value %(value)s because it is used on "
 "the following products: %(products)s"
 msgstr ""
+"आप वैल्यू %(value)s के एट्रिब्यूट को नहीं बदल सकते, क्योंकि इसका इस्तेमाल इन प्रॉडक्ट पर "
+"किया जा रहा है: %(products)s"
 
 #. module: product
 #. odoo-python
@@ -3998,6 +4128,7 @@ msgid ""
 "You cannot change the product of the value %(value)s set on product %"
 "(product)s."
 msgstr ""
+"आप वैल्यू %(value)s के प्रॉडक्ट को नहीं बदल सकते जो प्रॉडक्ट %(product)s पर सेट है।"
 
 #. module: product
 #. odoo-python
@@ -4005,13 +4136,13 @@ msgstr ""
 msgid ""
 "You cannot change the value of the value %(value)s set on product %"
 "(product)s."
-msgstr ""
+msgstr "आप प्रॉडक्ट %(product)s पर सेट की गई वैल्यू %(value)s को नहीं बदल सकते।"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_category.py:0
 msgid "You cannot create recursive categories."
-msgstr ""
+msgstr "आप रिकर्सिव कैटेगरी नहीं बना सकते।"
 
 #. module: product
 #. odoo-python
@@ -4030,6 +4161,10 @@ msgid ""
 "They are used within pricelist(s):\n"
 "%(other_pricelists)s"
 msgstr ""
+"आप प्राइसलिस्ट नहीं मिटा सकते:\n"
+"(%(pricelists)s)\n"
+"इनका इस्तेमाल प्राइसलिस्ट में किया जा रहा है:\n"
+"%(other_pricelists)s"
 
 #. module: product
 #. odoo-python
@@ -4045,6 +4180,9 @@ msgid ""
 "following products:\n"
 "%(products)s"
 msgstr ""
+"आप एट्रिब्यूट %(attribute)s को मिटा नहीं सकते, क्योंकि इसका इस्तेमाल इन प्रॉडक्ट पर "
+"किया जा रहा है:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -4054,6 +4192,9 @@ msgid ""
 "products:\n"
 "%(products)s\n"
 msgstr ""
+"आप वैल्यू %(value)s को मिटा नहीं सकते, क्योंकि इसका इस्तेमाल इन प्रॉडक्ट पर किया जा रहा "
+"है:\n"
+"%(products)s\n"
 
 #. module: product
 #. odoo-python
@@ -4069,6 +4210,8 @@ msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s "
 "to the product %(product_dest)s."
 msgstr ""
+"आप एट्रिब्यूट %(attribute)s को प्रॉडक्ट %(product_src)s से हटाकर प्रॉडक्ट %"
+"(product_dest)s में नहीं भेज सकते।"
 
 #. module: product
 #. odoo-python
@@ -4077,6 +4220,7 @@ msgid ""
 "You cannot update related variants from the values. Please update related "
 "values from the variants."
 msgstr ""
+"आप वैल्यू से संबंधित वेरिएंट्स को अपडेट नहीं कर सकते. कृपया वेरिएंट से संबंधित वैल्यू को अपडेट करें।"
 
 #. module: product
 #. odoo-javascript
@@ -4086,6 +4230,9 @@ msgid ""
 "                            whether it's a storable product, a consumable or "
 "a service."
 msgstr ""
+"आपको अपनी हर खरीद-बिक्री के लिए एक प्रॉडक्ट बनाना होगा,\n"
+"                            चाहे वह स्टोर करने लायक सामान, उपभोग्य सामग्री या कोई "
+"सेवा हो।"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -4094,6 +4241,9 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
+"बेचने या खरीदने वाली हर चीज़ के लिए एक प्रॉडक्ट बनाना ज़रूरी है,\n"
+"                चाहे वह स्टॉक में रखने वाला सामान हो, इस्तेमाल होने वाली सामग्री या "
+"कोई सेवा।"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
@@ -4105,6 +4255,12 @@ msgid ""
 "                price, notes in the quotation, accounting data, procurement "
 "methods, etc."
 msgstr ""
+"बेचने या खरीदने वाली हर चीज़ के लिए एक प्रॉडक्ट बनाना ज़रूरी है,\n"
+"                चाहे वह स्टॉक में रखने वाला सामान हो, इस्तेमाल होने वाली सामग्री या "
+"कोई सेवा.\n"
+"                प्रॉडक्ट फॉर्म में बिक्री की प्रक्रिया को आसान बनाने के लिए जानकारी "
+"होती है:\n"
+"                जैसे: कीमत, कोटेशन के लिए नोट्स, अकाउंटिंग डेटा, खरीदारी के तरीके वगैरह।"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
@@ -4117,18 +4273,23 @@ msgid ""
 "                price, notes in the quotation, accounting data, procurement "
 "methods, etc."
 msgstr ""
+"आप जो भी बेचते हैं, उसके लिए एक प्रॉडक्ट बनाना ज़रूरी है, चाहे वह कोई भौतिक सामान हो,\n"
+"                इस्तेमाल होने वाली सामग्री या कोई सेवा.\n"
+"                प्रॉडक्ट फ़ॉर्म में बिक्री की प्रक्रिया को आसान बनाने के लिए जानकारी "
+"होती है:\n"
+"                जैसे: कीमत, कोटेशन के नोट्स, अकाउंटिंग डेटा, खरीदारी के तरीके वगैरह।"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "You must leave at least one quantity."
-msgstr ""
+msgstr "आपको कम से कम एक मात्रा छोड़नी होगी।"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 msgid "You need to set a positive quantity."
-msgstr ""
+msgstr "आपको एक पॉजिटिव मात्रा सेट करनी होगी।"
 
 #. module: product
 #. odoo-javascript
@@ -4151,44 +4312,44 @@ msgstr "डिस्काउंट"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
 msgid "e.g. 1234567890"
-msgstr ""
+msgstr "जैसे, 1234567890"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 msgid "e.g. Burger Choice"
-msgstr ""
+msgstr "जैसे, बर्गर चॉइस"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Cheese Burger"
-msgstr ""
+msgstr "जैसे, चीज़ बर्गर"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "e.g. Lamps"
-msgstr ""
+msgstr "जैसे, लैम्प"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "e.g. Odoo Enterprise Subscription"
-msgstr ""
+msgstr "जैसे, Odoo एंटरप्राइज़ सब्सक्रिप्शन"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Starter - Meal - Desert"
-msgstr ""
+msgstr "जैसे, स्टार्टर - मील - डेज़र्ट"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "e.g. USD Retailers"
-msgstr ""
+msgstr "जैसे, यूएसडी रिटेलर्स"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "markup"
-msgstr ""
+msgstr "मार्कअप"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -4218,19 +4379,19 @@ msgstr "प्रॉडक्ट"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "product cost"
-msgstr ""
+msgstr "प्रॉडक्ट की कीमत"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "round off to 10.00 and set an extra at -0.01"
-msgstr ""
+msgstr "10.00 पर राउंड ऑफ करें और एक्स्ट्रा को -0.01 पर सेट करें"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "sales price"
-msgstr ""
+msgstr "सेल्स प्राइस"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.view_partner_property_form
@@ -4240,7 +4401,7 @@ msgstr "पैरंट कंपनी"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "the product template."
-msgstr ""
+msgstr "प्रॉडक्ट टेम्प्लेट।"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -4252,3 +4413,6 @@ msgstr " "
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr ""
+
+#~ msgid "10"
+#~ msgstr "10"

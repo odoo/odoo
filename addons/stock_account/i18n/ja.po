@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
 "PO-Revision-Date: 2026-02-14 09:15+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/"
@@ -83,11 +83,6 @@ msgstr ""
 ")\n"
 "                            <small class=\"mx-2 fst-italic\">負の付加価値を使"
 "用して、プロダクト価値の減少を記録する</small>"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
-msgid "6.00"
-msgstr "6.00"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -652,6 +647,20 @@ msgstr ""
 "ロット評価を有効にする前に、全ての数量にロットを割当てて下さい。"
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+#, fuzzy
+#| msgid ""
+#| "This product is valuated by lot: an explicit Lot/Serial number is "
+#| "required when adding quantity"
+msgid ""
+"Product %(product)s is valuated by lot: an explicit Lot/Serial number is "
+"required."
+msgstr ""
+"このプロダクトはロット別に評価されています: 数量を追加する際にロット/シリアル"
+"を指定してください。"
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__categ_id
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -943,7 +952,8 @@ msgid ""
 "The move lines are not in a consistent states: they are doing an "
 "intercompany in a single step while they should go through the intercompany "
 "transit location."
-msgstr "移動明細が一貫していません。グループ内積送ロケーションを経由すべきなのに、グ"
+msgstr ""
+"移動明細が一貫していません。グループ内積送ロケーションを経由すべきなのに、グ"
 "ループ内移動がワンステップで処理されています。"
 
 #. module: stock_account
@@ -1396,3 +1406,6 @@ msgstr "単位"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_graph
 msgid "valuation graph"
 msgstr "評価グラフ"
+
+#~ msgid "6.00"
+#~ msgstr "6.00"

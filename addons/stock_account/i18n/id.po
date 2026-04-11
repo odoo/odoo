@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
 "PO-Revision-Date: 2025-12-26 14:00+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-18/"
@@ -80,11 +80,6 @@ msgstr ""
 ")\n"
 "                            <small class=\"mx-2 fst-italic\">Gunakan "
 "negative added value untuk mencatat pengurangan di nilai produk</small>"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
-msgid "6.00"
-msgstr "6.00"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -655,6 +650,20 @@ msgstr ""
 "Produk %(product)s memiliki kuantitas di lokasi %(location)s tanpa lot apa "
 "pun.\n"
 "Silakan berikan lot ke semua kuantitas Anda sebelum mengaktifkan valuasi lot."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+#, fuzzy
+#| msgid ""
+#| "This product is valuated by lot: an explicit Lot/Serial number is "
+#| "required when adding quantity"
+msgid ""
+"Product %(product)s is valuated by lot: an explicit Lot/Serial number is "
+"required."
+msgstr ""
+"Produk ini dinilai berdasarkan lot: nomor Lot/Seri eksplisit diperlukan saat "
+"menambahkan kuantitas"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -1423,3 +1432,6 @@ msgstr "units"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_graph
 msgid "valuation graph"
 msgstr "grafik valuasi"
+
+#~ msgid "6.00"
+#~ msgstr "6.00"

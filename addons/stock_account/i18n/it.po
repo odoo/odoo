@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
 "PO-Revision-Date: 2025-10-27 22:20+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-18/"
@@ -82,11 +82,6 @@ msgstr ""
 "                            <small class=\"mx-2 fst-italic\">Utilizza un "
 "valore aggiunto negativo per registrare una dimunizione del valore del "
 "prodotto</small>"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
-msgid "6.00"
-msgstr "6.00"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -662,6 +657,20 @@ msgstr ""
 "Il prodotto %(product)s presenta una quantità nell'ubicazione %(location)s "
 "senza lotto.\n"
 "Assegna i lotti a tutte le tue quantità prima di attivare la valutazione."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+#, fuzzy
+#| msgid ""
+#| "This product is valuated by lot: an explicit Lot/Serial number is "
+#| "required when adding quantity"
+msgid ""
+"Product %(product)s is valuated by lot: an explicit Lot/Serial number is "
+"required."
+msgstr ""
+"Questo prodotto viene valutato per lotto: è richiesto un lotto/numero di "
+"serie specifico quando si aggiunge la quantità"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -1442,3 +1451,6 @@ msgstr "unità"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_graph
 msgid "valuation graph"
 msgstr "grafico di valutazione"
+
+#~ msgid "6.00"
+#~ msgstr "6.00"
