@@ -1023,11 +1023,24 @@ class BaseCase(case.TestCase):
             return BinaryBytes(f.read())
 
     @classmethod
-    def _registry_test_mode_patches(cls, *, cr: Cursor, registry: Registry):
+    @contextmanager
+    def registry_test_mode(cls, *, cr: Cursor | None = None, registry: Registry | None = None):
+        """ Entering registry test mode.
+
+        New cursors returned by the registry will be instances of `TestCursor`
+        which will wrap the current cursor.
+
+        Defined in BaseCase because used by upgrade for IntegrityCase.
+        This should be used on TransactionCase only.
         """
-        Returns the patches required for entering registry test mode.
-        The patches are not started.
-        """
+        assert not cls._registry_patched, 'Can only patch registry once'
+        if cr is None:
+            cr = cls.cr
+        if registry is None:
+            registry = cls.registry
+        assert cr, 'No cursor'
+        assert registry, 'No registry'
+
         def _patched_cursor(readonly: bool = False):
             return test_cursor.TestCursor(
                 cr, _registry_test_lock, readonly and cls._registry_readonly_enabled
@@ -1036,7 +1049,8 @@ class BaseCase(case.TestCase):
         def get_sequences(cr):
             return registry.registry_sequence, registry.cache_sequences.copy()
 
-        return [
+        with (
+            patch.object(cls, '_registry_patched', True),
             # New cursor should point to the test's cursor
             patch.object(registry, 'cursor', _patched_cursor),
             # Disable locking and signaling
@@ -1044,59 +1058,8 @@ class BaseCase(case.TestCase):
             patch.object(registry, 'setup_signaling', return_value=None),  # noop
             patch.object(registry, 'check_signaling', return_value=registry),
             patch.object(registry, 'get_sequences', get_sequences),
-        ]
-
-    @classmethod
-    def registry_enter_test_mode_cls(cls):
-        """
-        Puts the registry in test mode.
-
-        New cursors returned by the registry will be instances of `TestCursor`
-        which will wrap the current cursor.
-        """
-        assert not cls._registry_patched, 'Can only patch registry once'
-        assert cls.cr, 'No cursor'
-        assert cls.registry, 'No registry'
-
-        cls.registry_patches = cls._registry_test_mode_patches(
-            cr=cls.cr, registry=cls.registry,
-        )
-        for p in cls.registry_patches:
-            p.start()
-        cls._registry_patched = True
-        cls.addClassCleanup(cls.registry_leave_test_mode)
-
-    def registry_enter_test_mode(self, *, cr: Cursor | None = None, register_cleanup: bool = True) -> None:
-        """
-        Puts the registry in test mode.
-
-        New cursors returned by the registry will be instances of `TestCursor`
-        which will wrap the current cursor.
-
-        :param cr: the cursor to wrap (defaults to the current cursor if none)
-        :param register_cleanup: whether to register cleanup.
-        """
-        assert not type(self)._registry_patched, 'Can only patch registry once'
-        assert cr or self.cr, 'No cursor'
-        assert self.registry, 'No registry'
-
-        type(self).registry_patches = self._registry_test_mode_patches(
-            cr=cr or self.cr, registry=self.registry,
-        )
-        for p in self.registry_patches:
-            p.start()
-        type(self)._registry_patched = True
-        if register_cleanup:
-            self.addCleanup(self.registry_leave_test_mode)
-
-    @classmethod
-    def registry_leave_test_mode(cls):
-        assert cls._registry_patched, 'Registry is not patched'
-
-        for p in cls.registry_patches:
-            p.stop()
-        cls.registry_patches.clear()
-        cls._registry_patched = False
+        ):
+            yield
 
     @classmethod
     def set_registry_readonly_mode(cls, enabled: bool):
@@ -1257,7 +1220,6 @@ class Approx:  # noqa: PLW1641
         return self.cmp(self.value, other) == 0
 
 
-
 class TransactionCase(BaseCase):
     """ Test class in which all test methods are run in a single transaction,
     but each test method is run in a sub-transaction managed by a savepoint.
@@ -1396,20 +1358,17 @@ class TransactionCase(BaseCase):
 
         self.addCleanup(self.savepoint.rollback)
 
+    @classmethod
     @contextmanager
-    def enter_registry_test_mode(self):
-        """
-        Make so that all new cursors opened on this database registry reuse the
-        one currenly used by the tests. See ``registry_enter_test_mode``.
-        """
-        # entering the test mode should flush/invalidate all changes in the
-        # current environment because changes happen inside other cursors
-        with flushing_cursor(self.env.cr):
-            self.registry_enter_test_mode(register_cleanup=False)
-            try:
-                yield
-            finally:
-                self.registry_leave_test_mode()
+    def registry_test_mode(cls, *, cr: Cursor | None = None, registry: Registry | None = None):
+        if cr is None:
+            cr = cls.cr
+        with flushing_cursor(cr), super().registry_test_mode(cr=cr, registry=registry):
+            yield
+
+    @typing.final
+    def enter_registry_test_mode(self):  # deprecated: alias for registry_test_mode
+        return self.registry_test_mode()
 
     @contextmanager
     def allow_pdf_render(self):
@@ -1419,7 +1378,7 @@ class TransactionCase(BaseCase):
         """
         with ExitStack() as stack:
             if not type(self)._registry_patched:
-                stack.enter_context(self.enter_registry_test_mode())
+                stack.enter_context(self.registry_test_mode())
             old_run_wkhtmltopdf = ir_actions_report._run_wkhtmltopdf
 
             def _patched_run_wkhtmltopdf(args):
@@ -2484,7 +2443,6 @@ class JsonRpcException(Exception):
 
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and Chrome headless helpers. """
-    registry_test_mode = True
     browser = None
     browser_size = '1366x768'
     touch_enabled = False
@@ -2495,8 +2453,7 @@ class HttpCase(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        if cls.registry_test_mode:
-            cls.registry_enter_test_mode_cls()
+        cls.enterClassContext(cls.registry_test_mode())
 
         ICP = cls.env['ir.config_parameter']
         ICP.set_str('web.base.url', cls.base_url())
@@ -2535,11 +2492,6 @@ class HttpCase(TransactionCase):
         self.startPatcher(
             patch.object(ir_actions_report, '_run_wkhtmltopdf', _patched_run_wkhtmltopdf),
         )
-
-    @contextmanager
-    def enter_registry_test_mode(self):
-        _logger.warning("HTTPCase is already in test mode")
-        yield
 
     @contextmanager
     def allow_pdf_render(self):

@@ -364,7 +364,7 @@ class TestTestCursor(common.TransactionCase):
     def setUp(self):
         super().setUp()
         # make the registry in test mode
-        self.registry_enter_test_mode()
+        self.enterContext(self.enter_registry_test_mode())
         # now we make a test cursor for self.cr
         self.cr = self.registry.cursor()
         self.addCleanup(self.cr.close)
@@ -552,7 +552,7 @@ class TestCursorHooks(common.TransactionCase):
         self.assertEqual(self.log, ['preR', 'postR'])
 
     def test_hooks_on_testcursor(self):
-        self.registry_enter_test_mode()
+        self.enterContext(self.enter_registry_test_mode())
 
         cr = self.registry.cursor()
 

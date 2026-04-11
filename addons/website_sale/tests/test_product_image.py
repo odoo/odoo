@@ -21,7 +21,6 @@ def _create_image(color="black", dims=(1920, 1080), format="JPEG"):
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
-    # registry_test_mode = False  # uncomment to save the product to test in browser
 
     def test_01_admin_shop_zoom_tour(self):
         color_red = "#CD5C5C"

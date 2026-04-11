@@ -13,7 +13,7 @@ class TestLeadMine(TestCrmCommon, MockIAPReveal):
     @classmethod
     def setUpClass(cls):
         super(TestLeadMine, cls).setUpClass()
-        cls.registry_enter_test_mode_cls()
+        cls.enterClassContext(cls.registry_test_mode())
 
         cls.test_crm_tags = cls.env['crm.tag'].create([
             {'name': 'TestTag1'},
