@@ -23,6 +23,7 @@ class AccountJournalGroup(models.Model):
         'account.journal',
         'journal_group_id',
         string="Included Journals",
+        context={'active_test': False},
     )
     sequence = fields.Integer(default=10)
 
@@ -1065,6 +1066,8 @@ class AccountJournal(models.Model):
             name = journal.name
             if journal.currency_id and journal.currency_id != journal.company_id.sudo().currency_id:
                 name = f"{name} ({journal.currency_id.name})"
+            if len(self.env.companies) > 1 and self.env.context.get('show_company_journal'):
+                name = f"{journal.company_id.name} - {name}"
             journal.display_name = name
 
     def action_configure_bank_journal(self):

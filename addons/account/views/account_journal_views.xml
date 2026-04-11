@@ -268,7 +268,7 @@
                 <list editable="bottom">
                     <field name="sequence"  widget="handle"/>
                     <field name="name" placeholder="e.g. GAAP, IFRS, ..."/>
-                    <field name="included_journal_ids" widget="many2many_tags" options="{'no_create': True}" optional="show"/>
+                    <field name="included_journal_ids" widget="many2many_tags" options="{'no_create': True}" context="{'show_company_journal': True}" optional="show"/>
                 </list>
             </field>
         </record>
@@ -283,7 +283,7 @@
                         <group>
                             <field name="name" placeholder="e.g. GAAP, IFRS, ..."/>
                             <field name="sequence" groups="base.group_no_one"/>
-                            <field name="included_journal_ids" options="{'no_create': True}" optional="hide"/>
+                            <field name="included_journal_ids" options="{'no_create': True}" context="{'show_company_journal': True}" optional="hide"/>
                         </group>
                     </sheet>
                 </form>
