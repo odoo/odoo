@@ -43,6 +43,7 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { Partner, Product } from "../../helpers/data";
 const { toZone } = spreadsheet.helpers;
+const { pivotRegistry, pivotNormalizationValueRegistry } = spreadsheet.registries;
 
 describe.current.tags("headless");
 defineSpreadsheetModels();
@@ -2448,4 +2449,54 @@ test("Pivot headers day of week are still correct after updating the locale's we
     });
     await waitForDataLoaded(model);
     expect(getEvaluatedGrid(model, "A22:A24")).toEqual([["Monday"], ["Thursday"], ["Friday"]]);
+});
+
+test("Groupable fields in pivot", async function () {
+    const groupableFieldTypes = [
+        "boolean",
+        "integer",
+        "float",
+        "monetary",
+        "char",
+        "text",
+        "date",
+        "datetime",
+        "selection",
+        "reference",
+        "many2one",
+        "many2many",
+        "many2one_reference",
+    ];
+    const { model, pivotId } = await createSpreadsheetWithPivot({});
+    expect(pivotId).toBe(model.getters.getPivotId("1"));
+    const pivot = model.getters.getPivot(pivotId);
+    let mockField = Object.values(pivot.getFields())[0];
+
+    for (const fieldType of groupableFieldTypes) {
+        mockField = { ...mockField, type: fieldType, groupable: true };
+        expect(pivotRegistry.get(pivot.type).isGroupable(mockField)).toBe(true, {
+            message: `Field ${fieldType} should be groupable`,
+        });
+        expect(pivotNormalizationValueRegistry.contains(fieldType)).toBe(true, {
+            message: `Field ${fieldType} should be normalizable`,
+        });
+    }
+
+    const nonGroupableFieldTypes = [
+        "html",
+        "binary",
+        "json",
+        "properties",
+        "properties_definition",
+        "one2many",
+    ];
+    for (const fieldType of nonGroupableFieldTypes) {
+        mockField = { ...mockField, type: fieldType, groupable: true };
+        expect(pivotRegistry.get(pivot.type).isGroupable(mockField)).toBe(false, {
+            message: `Field ${fieldType} should not be groupable`,
+        });
+        expect(pivotNormalizationValueRegistry.contains(fieldType)).toBe(false, {
+            message: `Field ${fieldType} should not be normalizable`,
+        });
+    }
 });

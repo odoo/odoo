@@ -46,7 +46,7 @@ class StockMoveLine(models.Model):
     package_level_id = fields.Many2one('stock.package_level', 'Package Level', check_company=True)
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial Number',
-        domain="[('product_id', '=', product_id)]", check_company=True)
+        domain="[('product_id', '=', product_id)]", check_company=True, index=True)
     lot_name = fields.Char('Lot/Serial Number Name')
     result_package_id = fields.Many2one(
         'stock.quant.package', 'Destination Package',

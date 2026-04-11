@@ -9,7 +9,8 @@ import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
 import { omit } from "@web/core/utils/objects";
 import { OdooPivotLoader } from "./odoo_pivot_loader";
 
-const { pivotRegistry, supportedPivotPositionalFormulaRegistry } = registries;
+const { pivotRegistry, supportedPivotPositionalFormulaRegistry, pivotNormalizationValueRegistry } =
+    registries;
 const { pivotTimeAdapter, toString, areDomainArgsFieldsValid, toNormalizedPivotValue, deepEquals } =
     helpers;
 
@@ -631,7 +632,7 @@ pivotRegistry.add("ODOO", {
         ((MEASURES_TYPES.includes(field.type) && field.aggregator) || field.type === "many2one") &&
         field.name !== "id" &&
         field.store,
-    isGroupable: (field) => field.groupable,
+    isGroupable: (field) => field.groupable && pivotNormalizationValueRegistry.contains(field.type),
 });
 
 supportedPivotPositionalFormulaRegistry.add("ODOO", true);

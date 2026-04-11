@@ -371,7 +371,7 @@ class Partner(models.Model):
         if self.company_name or self.parent_id:
             if not name and self.type in displayed_types:
                 name = type_description[self.type]
-            if not self.is_company:
+            if not self.is_company and not self.env.context.get('partner_display_name_hide_company'):
                 name = f"{self.commercial_company_name or self.sudo().parent_id.name}, {name}"
         return name.strip()
 
@@ -772,6 +772,11 @@ class Partner(models.Model):
             vals['website'] = self._clean_website(vals['website'])
         if vals.get('parent_id'):
             vals['company_name'] = False
+        if vals.get('name'):
+            for partner in self:
+                for bank in partner.bank_ids:
+                    if bank.acc_holder_name == partner.name:
+                        bank.acc_holder_name = vals['name']
         if 'company_id' in vals:
             company_id = vals['company_id']
             for partner in self:
@@ -896,7 +901,10 @@ class Partner(models.Model):
                 }
 
     @api.depends('complete_name', 'email', 'vat', 'state_id', 'country_id', 'commercial_company_name')
-    @api.depends_context('show_address', 'partner_show_db_id', 'address_inline', 'show_email', 'show_vat', 'lang')
+    @api.depends_context(
+        'show_address', 'partner_display_name_hide_company', 'partner_show_db_id', 'address_inline',
+        'show_email', 'show_vat', 'lang',
+    )
     def _compute_display_name(self):
         for partner in self:
             name = partner.with_context(lang=self.env.lang)._get_complete_name()

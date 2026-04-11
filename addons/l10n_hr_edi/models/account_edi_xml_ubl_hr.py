@@ -78,7 +78,8 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         constraints = {}
         if vals['document_type'] in ['invoice', 'credit_note']:
             for node in vals['document_node']['cac:PaymentMeans']:
-                if any(char.isspace() for char in node.get('cac:PayeeFinancialAccount', {}).get('cbc:ID', {}).get('_text', '')):
+                payee_account = node.get('cac:PayeeFinancialAccount')
+                if payee_account and any(char.isspace() for char in payee_account['cbc:ID']['_text']):
                     constraints['ubl_hr_br_1'] = self.env._("HR-BR-1: The account number must not contain whitespace characters.")
             if invoice.amount_residual > 0 and not invoice.invoice_date_due:
                 constraints.update({'ubl_hr_br_4': self.env._("HR-BT-4: In the case of a positive amount due for payment (BT-115), the payment due date (BT-9) must be specified.")})
@@ -200,10 +201,8 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
             vals['document_node']['cac:BillingReference'] = [{
                 'cac:InvoiceDocumentReference': {
                     'cbc:ID': {'_text': invoice.ref},
+                    'cbc:IssueDate': {'_text': invoice.reversed_entry_id.invoice_date},
                 },
-                'cbc:IssueDate': {
-                    '_text': invoice.reversed_entry_id.invoice_date
-                }
             }]
 
     def _add_hr_extension_node(self, document_node):

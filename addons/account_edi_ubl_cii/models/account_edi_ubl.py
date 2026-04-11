@@ -2111,6 +2111,9 @@ class AccountEdiUBL(models.AbstractModel):
             partner_create_values['peppol_endpoint'] = peppol_endpoint
 
         if country_code := customer_values.get('country_code'):
+            if country_code == 'GB':
+                # While the code is gb, the xml_id is uk
+                country_code = 'UK'
             country = self.env.ref(f'base.{country_code.lower()}', raise_if_not_found=False)
             if country:
                 partner_create_values['country_id'] = country.id
@@ -2941,6 +2944,9 @@ class AccountEdiUBL(models.AbstractModel):
                         product_uom_values['uom'] = uom
 
     def _import_ubl_invoice_retrieve_accounts(self, collected_values):
+        if not self.module_installed('account_accountant'):
+            # _predict_specific_account is defined in account_accountant
+            return
         lines_collected_values = collected_values['lines_collected_values']
         for line_collected_values in lines_collected_values:
             account_values = line_collected_values['account_values']

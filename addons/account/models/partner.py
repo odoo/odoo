@@ -882,7 +882,7 @@ class ResPartner(models.Model):
                  against the provided or guessed country. None if no country was available
                  for the check, and no conclusion could be made with certainty.
         """
-        return default_country.code.lower()
+        return default_country.code.lower() if default_country else None
 
     @api.model
     def _build_vat_error_message(self, country_code, wrong_vat, record_label):
