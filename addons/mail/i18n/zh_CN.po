@@ -19,13 +19,14 @@
 # Emily Jia <eji@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# "Chloe Wang (chwa)" <chwa@odoo.com>, 2025.
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2025, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:36+0000\n"
-"PO-Revision-Date: 2025-12-20 09:47+0000\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"PO-Revision-Date: 2026-04-09 11:29+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/mail/zh_Hans/>\n"
@@ -34,7 +35,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -131,7 +132,7 @@ msgstr "%(author)s 开始呼叫。"
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "%(author_name)s has invited you to a channel"
-msgstr ""
+msgstr "%(author_name)s 邀请您加入了一个频道"
 
 #. module: mail
 #. odoo-javascript
@@ -250,7 +251,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "%(numberOfDays)sd"
-msgstr ""
+msgstr "%(numberOfDays)s天"
 
 #. module: mail
 #. odoo-javascript
@@ -292,25 +293,25 @@ msgstr "%(partner_name)s <%(partner_email)s>"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(user)s changed the channel name to %(name)s"
-msgstr ""
+msgstr "%(user)s 将频道名称更改为 %(name)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(user)s changed the thread name to %(name)s"
-msgstr ""
+msgstr "%(user)s 将话题名称更改为 %(name)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(user)s deleted the thread \"%(thread_name)s\""
-msgstr ""
+msgstr "%(user)s 删除了话题 \"%(thread_name)s\""
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
 msgid "%(user)s just connected for the first time. Wish them luck!"
-msgstr ""
+msgstr "%(user)s 第一次登录了。祝他们好运！"
 
 #. module: mail
 #. odoo-python
@@ -337,6 +338,8 @@ msgid ""
 "%(user_name)s has invited you to the %(strong_start)s%(channel_name)s%"
 "(strong_end)s channel."
 msgstr ""
+"%(user_name)s 邀请您加入 %(strong_start)s%(channel_name)s%(strong_end)s 频"
+"道。"
 
 #. module: mail
 #. odoo-python
@@ -393,7 +396,7 @@ msgstr "%s 新消息"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 msgid "%s others"
-msgstr ""
+msgstr "另外 %s 人"
 
 #. module: mail
 #. odoo-javascript
@@ -405,7 +408,7 @@ msgstr "%s举手"
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "%s's outgoing email"
-msgstr ""
+msgstr "%s 的发件邮箱"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_attachment_links
@@ -501,12 +504,7 @@ msgstr "1 条新信息"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 msgid "1 other"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.account_security_alert
-msgid "111.222.333.444"
-msgstr "111.222.333.444"
+msgstr "另外 1 人"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.action_email_server_tree
@@ -515,6 +513,9 @@ msgid ""
 "                        No Incoming Servers yet\n"
 "                    </b>"
 msgstr ""
+"<b class=\"o_view_nocontent_smiling_face\">\n"
+"                        暂无收件服务器\n"
+"                    </b>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -616,22 +617,22 @@ msgstr "<span class=\"d-block w-75 py-2\">按钮文字</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_kanban
 msgid "<span class=\"fw-bold me-1\">Credential:</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold me-1\">凭证：</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_kanban
 msgid "<span class=\"fw-bold me-1\">Type:</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold me-1\">类型：</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_kanban
 msgid "<span class=\"fw-bold me-1\">URI:</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold me-1\">URI：</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_kanban
 msgid "<span class=\"fw-bold me-1\">Username:</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold me-1\">用户名：</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -650,6 +651,8 @@ msgid ""
 "<span class=\"o_form_label fw-bold\" invisible=\"not "
 "has_external_mail_server\">Outgoing Mail Server</span>"
 msgstr ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not "
+"has_external_mail_server\">发件服务器</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -830,7 +833,7 @@ msgstr "只能在使用活动的模型上计划下一个活动。"
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 msgid "A personal mail server is using that address, you can not use it."
-msgstr ""
+msgstr "此地址已被个人邮件服务器使用，您无法使用它。"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_role_unique_name
@@ -907,13 +910,13 @@ msgstr "科目"
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_token
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Account Auth Token"
-msgstr ""
+msgstr "账户认证令牌"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_sid
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Account SID"
-msgstr ""
+msgstr "账户 SID"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_category
@@ -1200,7 +1203,7 @@ msgstr "添加 GIF"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Add Star"
-msgstr ""
+msgstr "添加星标"
 
 #. module: mail
 #. odoo-javascript
@@ -1733,7 +1736,7 @@ msgstr "附件"
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
 msgid "Audio Output"
-msgstr ""
+msgstr "音频输出"
 
 #. module: mail
 #. odoo-javascript
@@ -1816,13 +1819,13 @@ msgstr "自动订阅"
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Auto: %(subject)s"
-msgstr ""
+msgstr "自动：%(subject)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Autofocus speaker"
-msgstr ""
+msgstr "自动聚焦发言者"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__auto_comment
@@ -1850,7 +1853,7 @@ msgstr "将当前活动标记为完成后，自动安排此活动。"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "Available everywhere"
-msgstr ""
+msgstr "随处可用"
 
 #. module: mail
 #. odoo-javascript
@@ -1908,7 +1911,7 @@ msgstr "离开"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
 msgid "Background Blur Performance Warning"
-msgstr ""
+msgstr "背景虚化性能警告"
 
 #. module: mail
 #. odoo-javascript
@@ -2004,7 +2007,7 @@ msgstr "模糊背景"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/quick_video_settings.xml:0
 msgid "Blur background"
-msgstr ""
+msgstr "虚化背景"
 
 #. module: mail
 #. odoo-javascript
@@ -2121,7 +2124,7 @@ msgstr "恢复通话"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
 msgid "Bring the call back here"
-msgstr ""
+msgstr "将通话拉回此处"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -2132,7 +2135,7 @@ msgstr "浏览器"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/device_select.xml:0
 msgid "Browser Default"
-msgstr ""
+msgstr "浏览器默认"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__endpoint
@@ -2154,12 +2157,12 @@ msgstr "忙碌"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__email
 msgid "By Emails"
-msgstr ""
+msgstr "通过邮件"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "By order of server priority"
-msgstr ""
+msgstr "按服务器优先级顺序"
 
 #. module: mail
 #. odoo-javascript
@@ -2217,13 +2220,13 @@ msgstr "摄像头"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Camera access blocked. Enable in browser settings."
-msgstr ""
+msgstr "摄像头访问被阻止。请在浏览器设置中启用。"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Camera and microphone access blocked. Enable in browser settings."
-msgstr ""
+msgstr "摄像头和麦克风访问被阻止。请在浏览器设置中启用。"
 
 #. module: mail
 #. odoo-javascript
@@ -2339,6 +2342,8 @@ msgid ""
 "in your messages. Type '::' followed by the name of your shortcut "
 "(e.g. ::hello) to use in your messages."
 msgstr ""
+"快捷回复，将自动替换为更长的内容。在消息中输入 '::' 加快捷名称（如 ::hello）"
+"即可使用。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
@@ -2369,7 +2374,7 @@ msgstr "不能更改频道类型：%(channel_names)s"
 msgid ""
 "Cannot create %(channels)s: initial message should belong to parent channel "
 "or one of its sub-channels."
-msgstr ""
+msgstr "无法创建 %(channels)s：初始消息应属于父频道或其子频道之一。"
 
 #. module: mail
 #. odoo-python
@@ -2385,7 +2390,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Capture replies in the chatter"
-msgstr ""
+msgstr "在消息记录中捕获回复"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
@@ -2488,7 +2493,7 @@ msgstr "频道成员"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_name_member_ids
 msgid "Channel Name Member"
-msgstr ""
+msgstr "频道名称成员"
 
 #. module: mail
 #. odoo-javascript
@@ -2717,7 +2722,7 @@ msgstr "经常来这里？安装应用程序，方便快捷地访问！"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated carbon copy of recipients addresses"
-msgstr ""
+msgstr "抄送收件人地址（逗号分隔）"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2877,7 +2882,7 @@ msgstr "连接失败(发件服务器问题)"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/mail_server_configurator_selection/mail_server_configurator_selection.js:0
 msgid "Connection failed: %s"
-msgstr ""
+msgstr "连接失败：%s"
 
 #. module: mail
 #. odoo-python
@@ -2985,7 +2990,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.js:0
 msgid "Conversations"
-msgstr ""
+msgstr "会话"
 
 #. module: mail
 #. odoo-javascript
@@ -3005,7 +3010,7 @@ msgstr "复制到剪贴板"
 msgid ""
 "Could not contact the mail server, please check your outgoing email server "
 "configuration."
-msgstr ""
+msgstr "无法联系邮件服务器，请检查发件服务器配置。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_bounce
@@ -3248,17 +3253,17 @@ msgstr "自定义退回消息"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom ICE Server with Twilio"
-msgstr ""
+msgstr "使用 Twilio 的自定义 ICE 服务器"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom ICE Servers"
-msgstr ""
+msgstr "自定义 ICE 服务器"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom SFU Server"
-msgstr ""
+msgstr "自定义 SFU 服务器"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__custom_template
@@ -3278,12 +3283,12 @@ msgstr "自定义频道名称"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_required
 msgid "Customer is required for inbox notification"
-msgstr ""
+msgstr "收件箱通知需要客户"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_or_email_required
 msgid "Customer or email is required for inbox / email notification"
-msgstr ""
+msgstr "收件箱/邮件通知需要客户或邮箱地址"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -3344,7 +3349,7 @@ msgstr "信息被固定的日期时间"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_duration_mixin__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "自此资源上次更新以来的天数"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__days
@@ -3354,7 +3359,7 @@ msgstr "天"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_duration_mixin__rotting_days
 msgid "Days Rotting"
-msgstr ""
+msgstr "滞留天数"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -3440,7 +3445,7 @@ msgstr "默认备注"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
 msgid "Default Recipients"
-msgstr ""
+msgstr "默认收件人"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
@@ -3543,7 +3548,7 @@ msgstr "删除邮件"
 #: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Delete Thread"
-msgstr ""
+msgstr "删除话题"
 
 #. module: mail
 #. odoo-javascript
@@ -3555,7 +3560,7 @@ msgstr "删除全部预览"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.xml:0
 msgid "Deleted document"
-msgstr ""
+msgstr "已删除的文档"
 
 #. module: mail
 #. odoo-javascript
@@ -3584,7 +3589,7 @@ msgstr "'default_res_id\" 已过时，应使用 'default_res_ids'。"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Describe when this template should be used"
-msgstr ""
+msgstr "描述此模板的适用场景"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__description
@@ -3607,7 +3612,7 @@ msgstr "将为该子模型的消息添加注解。如为空，则添加名称。
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_spam
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_spam
 msgid "Detected As Spam"
-msgstr ""
+msgstr "被检测为垃圾邮件"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__default_display_mode
@@ -3637,7 +3642,7 @@ msgstr "私聊消息"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Disable speaker autofocus"
-msgstr ""
+msgstr "禁用发言者自动聚焦"
 
 #. module: mail
 #. odoo-javascript
@@ -3658,7 +3663,7 @@ msgstr "丢弃"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Discard editing"
-msgstr ""
+msgstr "放弃编辑"
 
 #. module: mail
 #. odoo-javascript
@@ -3672,7 +3677,7 @@ msgstr "中断连接"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Disconnected from the call by the server"
-msgstr ""
+msgstr "服务器断开了通话连接"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_discuss
@@ -3713,7 +3718,7 @@ msgstr "拒绝受理"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
 msgid "Dismiss warning"
-msgstr ""
+msgstr "关闭警告"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_base_module_uninstall__display_name
@@ -3833,13 +3838,13 @@ msgstr "您确定要删除这个预览吗？"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Do you want people to hear you in the meeting?"
-msgstr ""
+msgstr "您是否希望会议中的其他人听到您的声音？"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Do you want people to see you in the meeting?"
-msgstr ""
+msgstr "您是否希望会议中的其他人看到您？"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_upload_document
@@ -4282,7 +4287,7 @@ msgstr "邮件发送给"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/mail_server_configurator_selection/mail_server_configurator_selection.xml:0
 msgid "Emails sent via"
-msgstr ""
+msgstr "邮件通过以下方式发送"
 
 #. module: mail
 #. odoo-javascript
@@ -4526,12 +4531,10 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Failed to render inline_template template: %(template_txt)s"
 msgid ""
 "Failed to render inline_template template: %(template_txt)s\n"
 "Error details: %(error)s"
-msgstr "渲染 inline_template 模板失败：%(template_txt)s"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -4677,7 +4680,7 @@ msgstr "文件"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
 msgid "Filter Messages"
-msgstr ""
+msgstr "过滤消息"
 
 #. module: mail
 #. odoo-javascript
@@ -4862,7 +4865,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
 msgid "For performance reasons, use \"=\" operators on rotting fields."
-msgstr ""
+msgstr "出于性能考虑，请对滞留字段使用 \"=\" 运算符。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_form
@@ -4872,7 +4875,7 @@ msgstr "强制发送"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Force a Language"
-msgstr ""
+msgstr "强制指定语言"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
@@ -5068,17 +5071,17 @@ msgstr "HTTP 路由"
 msgid ""
 "Hardware acceleration is disabled. Blur effect impacts performance "
 "significantly."
-msgstr ""
+msgstr "硬件加速已禁用。模糊效果会显著影响性能。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__has_attachments
 msgid "Has Attachments"
-msgstr ""
+msgstr "含附件"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__has_dynamic_reports
 msgid "Has Dynamic Reports"
-msgstr ""
+msgstr "含动态报告"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__has_error
@@ -5103,7 +5106,7 @@ msgstr "有邮件黑名单"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__has_mail_server
 msgid "Has Mail Server"
-msgstr ""
+msgstr "有邮件服务器"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_thread
@@ -5133,12 +5136,12 @@ msgstr "有消息"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__has_several_languages_installed
 msgid "Has Several Languages Installed"
-msgstr ""
+msgstr "已安装多种语言"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_attachment__has_thumbnail
 msgid "Has Thumbnail"
-msgstr ""
+msgstr "有缩略图"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__has_warning
@@ -5199,7 +5202,7 @@ msgstr "隐藏所有对话"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "Hide camera preview"
-msgstr ""
+msgstr "隐藏摄像头预览"
 
 #. module: mail
 #. odoo-javascript
@@ -5235,7 +5238,7 @@ msgstr "邮件服务器的主机名或IP"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid "Hover on your message and add a star"
-msgstr ""
+msgstr "悬停在您的消息上并添加星标"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__voice_active_duration
@@ -5247,12 +5250,12 @@ msgstr "超过音量阈值后音频广播将保持活动多长时间"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_ice_server
 msgid "ICE Server"
-msgstr ""
+msgstr "ICE 服务器"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_form
 msgid "ICE Server Configuration"
-msgstr ""
+msgstr "ICE 服务器配置"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_ice_servers
@@ -5377,7 +5380,7 @@ msgstr "IM的状态"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__manual_im_status
 msgid "IM status manually set by the user"
-msgstr ""
+msgstr "用户手动设置的即时通讯状态"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -5548,7 +5551,7 @@ msgstr "如果您设置了电子邮件域名重定向到这个Odoo服务器，�
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_sfu_server
 msgid "If you want to setup SFU server for large group calls."
-msgstr ""
+msgstr "如果您想为大型群组通话设置 SFU 服务器。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -5668,7 +5671,7 @@ msgstr "通话来电"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "Incoming call from %(inviter)s"
-msgstr ""
+msgstr "来自 %(inviter)s 的来电"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__automated
@@ -5862,19 +5865,19 @@ msgstr "邀请URL"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
 msgid "Invitation already sent to this address"
-msgstr ""
+msgstr "邀请已发送到此地址"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Invitation link copied!"
-msgstr ""
+msgstr "邀请链接已复制！"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Invitation link copy failed (Permission denied?)!"
-msgstr ""
+msgstr "邀请链接复制失败（权限被拒绝？）！"
 
 #. module: mail
 #. odoo-python
@@ -5898,7 +5901,7 @@ msgstr "邀请"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/avatar_autocomplete/avatar_many2x_autocomplete.js:0
 msgid "Invite \"%s\""
-msgstr ""
+msgstr "邀请 \"%s\""
 
 #. module: mail
 #. odoo-javascript
@@ -5923,19 +5926,19 @@ msgstr "邀请人员"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Invite people or email"
-msgstr ""
+msgstr "邀请成员或输入邮箱"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/avatar_autocomplete/avatar_many2x_autocomplete.js:0
 msgid "Invite teammates"
-msgstr ""
+msgstr "邀请团队成员"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/avatar_autocomplete/avatar_many2x_autocomplete.js:0
 msgid "Invite teammates via email"
-msgstr ""
+msgstr "通过邮件邀请团队成员"
 
 #. module: mail
 #. odoo-javascript
@@ -5952,7 +5955,7 @@ msgstr "已邀请成员"
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Inviting by email is not allowed for this channel type (%s)."
-msgstr ""
+msgstr "此频道类型 (%s) 不允许通过邮件邀请。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__is_active
@@ -6139,7 +6142,7 @@ msgstr "加入群组"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
 msgid "Join call"
-msgstr ""
+msgstr "加入通话"
 
 #. module: mail
 #. odoo-javascript
@@ -6169,7 +6172,7 @@ msgstr "跳转到现在"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 msgid "KB"
-msgstr ""
+msgstr "KB"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__attach
@@ -6461,7 +6464,7 @@ msgstr "连接到"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__linked_message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__linked_message_ids
 msgid "Linked Message"
-msgstr ""
+msgstr "关联消息"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
@@ -6655,7 +6658,7 @@ msgstr "邮件编辑器混合"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__mail_email_address
 msgid "Mail Email Address"
-msgstr ""
+msgstr "邮件地址"
 
 #. module: mail
 #. odoo-javascript
@@ -6720,10 +6723,8 @@ msgstr "邮件模板重置"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "alias %(name)s: %(error)s"
 msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
-msgstr "别名 %(name)s: %(error)s"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
@@ -6809,7 +6810,7 @@ msgstr "主要附件"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Main partner's language"
-msgstr ""
+msgstr "主要业务伙伴的语言"
 
 #. module: mail
 #. odoo-javascript
@@ -6919,7 +6920,7 @@ msgstr "成员"
 #: model:ir.model.fields,help:mail.field_discuss_channel__channel_name_member_ids
 msgid ""
 "Members from which the channel name is computed when the name field is empty."
-msgstr ""
+msgstr "当名称字段为空时，用于计算频道名称的成员。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__group_ids
@@ -7228,13 +7229,13 @@ msgstr "语音附件的元数据"
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
 msgid "Microphone"
-msgstr ""
+msgstr "麦克风"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Microphone access blocked. Enable in browser settings."
-msgstr ""
+msgstr "麦克风访问被阻止。请在浏览器设置中启用。"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_missing
@@ -7280,7 +7281,7 @@ msgstr "模型"
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
 msgid "Model configuration does not support the rotting feature"
-msgstr ""
+msgstr "模型配置不支持滞留功能"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__res_model_change
@@ -7427,7 +7428,7 @@ msgstr "新频道"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_search.js:0
 msgid "New Meeting"
-msgstr ""
+msgstr "新建会议"
 
 #. module: mail
 #. odoo-javascript
@@ -7564,7 +7565,7 @@ msgstr "无关注者"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.action_ice_servers
 msgid "No ICE servers found. Let's create one!"
-msgstr ""
+msgstr "未找到 ICE 服务器。来创建一个吧！"
 
 #. module: mail
 #. odoo-javascript
@@ -7591,7 +7592,7 @@ msgstr "未找到预设回复。让我们创建一个！"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/action_list.xml:0
 msgid "No content."
-msgstr ""
+msgstr "无内容。"
 
 #. module: mail
 #. odoo-javascript
@@ -7626,10 +7627,8 @@ msgstr "没有历史讯息"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Result of the language detection based on its content."
 msgid "No language detected in context"
-msgstr "基于语言内容的语言检测结果。"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -7641,7 +7640,7 @@ msgstr "无已连接记录"
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "No mail server configured"
-msgstr ""
+msgstr "未配置邮件服务器"
 
 #. module: mail
 #. odoo-javascript
@@ -7653,7 +7652,7 @@ msgstr "找不到消息"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
 msgid "No one else is here."
-msgstr ""
+msgstr "这里暂时没有其他人。"
 
 #. module: mail
 #. odoo-python
@@ -7750,7 +7749,7 @@ msgstr "无"
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "None planned"
-msgstr ""
+msgstr "未计划"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__email_normalized
@@ -8109,7 +8108,7 @@ msgstr "如果消息已生效，您可以返回并随时在此对它进行检查
 msgid ""
 "One or more attachments do not exist, or you do not have the rights to "
 "access them."
-msgstr ""
+msgstr "一个或多个附件不存在，或您无权访问它们。"
 
 #. module: mail
 #. odoo-javascript
@@ -8136,7 +8135,7 @@ msgstr "在线 - %(online_count)s"
 #. odoo-python
 #: code:addons/mail/controllers/attachment.py:0
 msgid "Only PDF files can have thumbnail."
-msgstr ""
+msgstr "只有 PDF 文件才能有缩略图。"
 
 #. module: mail
 #. odoo-python
@@ -8165,13 +8164,13 @@ msgstr "只有内部用户才能在Odoo中接收通知"
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Only internal users can configure a personal mail server."
-msgstr ""
+msgstr "只有内部用户才能配置个人邮件服务器。"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Only internal users can configure personal mail servers."
-msgstr ""
+msgstr "只有内部用户才能配置个人邮件服务器。"
 
 #. module: mail
 #. odoo-python
@@ -8198,10 +8197,6 @@ msgstr "只有消息类型的备注才能在模型“discuss.channel”上更新
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
-#, fuzzy
-#| msgid ""
-#| "Oops! We couldn't save your template due to an issue with this value: %"
-#| "(template_txt)s. Correct it and try again."
 msgid ""
 "Oops! We couldn't save your template due to an issue.\n"
 "\n"
@@ -8209,7 +8204,6 @@ msgid ""
 "\n"
 "Correct it and try again."
 msgstr ""
-"哎呀！由于以下值的问题，我们无法保存您的模板：%(template_txt)s。更正后重试。"
 
 #. module: mail
 #. odoo-javascript
@@ -8328,6 +8322,8 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"发送邮件时选择的可选翻译语言（ISO 代码）。如果未设置，将使用主要业务伙伴的语"
+"言。通常应为提供适当语言的占位符表达式，如 {{ object.partner_id.lang }}。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -8374,34 +8370,34 @@ msgstr "否则，您可以放心地忽略这封邮件。"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_from
 msgid "Out Of Office From"
-msgstr ""
+msgstr "外出开始时间"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_to
 msgid "Out Of Office To"
-msgstr ""
+msgstr "外出结束时间"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__is_out_of_office
 msgid "Out of Office"
-msgstr ""
+msgstr "外出"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "Out-of-office"
-msgstr ""
+msgstr "外出中"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__out_of_office
 msgid "Out-of-office Message"
-msgstr ""
+msgstr "外出消息"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "Out-of-office message"
-msgstr ""
+msgstr "外出消息"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
@@ -8516,12 +8512,12 @@ msgstr "所有者"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__owner_limit_count
 msgid "Owner Limit Count"
-msgstr ""
+msgstr "所有者发送数量限制"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__owner_limit_time
 msgid "Owner Limit Time"
-msgstr ""
+msgstr "所有者发送时间限制"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -8671,19 +8667,19 @@ msgstr "负载"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
 msgid "Performance Warning:"
-msgstr ""
+msgstr "性能警告："
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
 msgid "Permanently delete this thread?"
-msgstr ""
+msgstr "永久删除此话题？"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/device_select.xml:0
 msgid "Permission Needed"
-msgstr ""
+msgstr "需要权限"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__phone
@@ -8866,7 +8862,7 @@ msgstr "请提供有效的电子邮件"
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Please set your email before connecting your mail server."
-msgstr ""
+msgstr "请在连接邮件服务器之前设置您的邮箱地址。"
 
 #. module: mail
 #. odoo-javascript
@@ -8881,6 +8877,9 @@ msgid ""
 "- By Emails: notifications are sent to your email address\n"
 "- In Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
+"消息通知的处理策略：\n"
+"- 通过邮件：通知发送到您的邮箱地址\n"
+"- 在 Odoo 中：通知出现在您的 Odoo 收件箱"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_contact
@@ -9002,7 +9001,7 @@ msgstr "按键可将其注册为 \"一键通话\" 快捷方式。"
 msgid ""
 "Prevent sending messages to blacklisted contacts. Disable only when "
 "absolutely necessary."
-msgstr ""
+msgstr "阻止向黑名单联系人发送消息。仅在绝对必要时禁用。"
 
 #. module: mail
 #. odoo-javascript
@@ -9104,7 +9103,7 @@ msgstr "一键通话快捷方式"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
 msgid "Push-to-Talk"
-msgstr ""
+msgstr "按键通话"
 
 #. module: mail
 #. odoo-javascript
@@ -9213,7 +9212,7 @@ msgstr "准备好发送"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
 msgid "Ready to join?"
-msgstr ""
+msgstr "准备好加入了吗？"
 
 #. module: mail
 #. odoo-javascript
@@ -9252,7 +9251,7 @@ msgstr "收件人"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_email_address
 msgid "Recipient email address"
-msgstr ""
+msgstr "收件人邮箱地址"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__partner_ids
@@ -9402,7 +9401,7 @@ msgstr "删除关注者"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Remove Star"
-msgstr ""
+msgstr "取消星标"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
@@ -9599,7 +9598,7 @@ msgstr "限制邮件模板版本和 QWEB 占位符的使用。"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.ir_mail_server_view_form
 msgid "Restrict usage to a user"
-msgstr ""
+msgstr "限制为指定用户使用"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__restricted_attachment_count
@@ -9670,7 +9669,7 @@ msgstr "角色搜索"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_duration_mixin__is_rotting
 msgid "Rotting"
-msgstr ""
+msgstr "滞留"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__rtc_session_ids
@@ -9707,7 +9706,7 @@ msgstr "SSL/TLS"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_search
 msgid "STUN"
-msgstr ""
+msgstr "STUN"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__user_id
@@ -9855,7 +9854,7 @@ msgstr "安排个人活动需要指定用户。"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Screen sharing access blocked. Enable in browser settings."
-msgstr ""
+msgstr "屏幕共享访问被阻止。请在浏览器设置中启用。"
 
 #. module: mail
 #. odoo-javascript
@@ -9887,7 +9886,7 @@ msgstr "搜索群组"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_search
 msgid "Search ICE Servers"
-msgstr ""
+msgstr "搜索 ICE 服务器"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -9949,7 +9948,7 @@ msgstr "通过名称搜索"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_search.xml:0
 msgid "Search conversations"
-msgstr ""
+msgstr "搜索会话"
 
 #. module: mail
 #. odoo-javascript
@@ -10090,7 +10089,7 @@ msgstr "选择用户…"
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
-msgstr ""
+msgstr "所选用户 '%(user)s' 无法在模型 '%(model)s' 上传文档"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__self_member_id
@@ -10120,7 +10119,7 @@ msgstr "发送和关闭"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/view_dialog/avatar_user_form_view_dialog.xml:0
 msgid "Send & New Invitation"
-msgstr ""
+msgstr "发送并新建邀请"
 
 #. module: mail
 #. odoo-javascript
@@ -10143,7 +10142,7 @@ msgstr "发送自"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Send Instantly"
-msgstr ""
+msgstr "立即发送"
 
 #. module: mail
 #. odoo-javascript
@@ -10214,12 +10213,12 @@ msgstr "发送消息"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_confirm_dialog.js:0
 msgid "Send this message to the great trash can in the sky?"
-msgstr ""
+msgstr "确定要删除这条消息吗？"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Sender & Recipients"
-msgstr ""
+msgstr "发件人与收件人"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_from
@@ -10238,7 +10237,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Sender's email"
-msgstr ""
+msgstr "发件人邮箱"
 
 #. module: mail
 #. odoo-javascript
@@ -10353,13 +10352,13 @@ msgstr "将 有效 设置为 否 以隐藏频道而不删除它。"
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid ""
 "Set up your own server for large group calls by routing connections centrally"
-msgstr ""
+msgstr "通过集中路由连接，为大型群组通话设置您自己的服务器"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid ""
 "Set up your own server for small group calls using peer-to-peer connections"
-msgstr ""
+msgstr "使用点对点连接为小型群组通话设置您自己的服务器"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -10391,7 +10390,7 @@ msgstr "分享"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Shared with all users"
-msgstr ""
+msgstr "与所有用户共享"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__source
@@ -10453,7 +10452,7 @@ msgstr "显示所有逾期未完成活动的记录"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "Show camera preview"
-msgstr ""
+msgstr "显示摄像头预览"
 
 #. module: mail
 #. odoo-javascript
@@ -10564,13 +10563,13 @@ msgstr "星标消息"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.xml:0
 msgid "Starred message"
-msgstr ""
+msgstr "已加星标的消息"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/store_service_patch.js:0
 msgid "Starred messages"
-msgstr ""
+msgstr "已加星标的消息"
 
 #. module: mail
 #. odoo-javascript
@@ -10610,7 +10609,7 @@ msgstr "开启新会议"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "Started by %(authorName)s"
-msgstr ""
+msgstr "由 %(authorName)s 发起"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
@@ -10718,7 +10717,7 @@ msgstr "存储链接预览数据"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 msgid "Stream paused"
-msgstr ""
+msgstr "流已暂停"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__push_to_talk_key
@@ -10837,13 +10836,13 @@ msgstr "支持Outlook身份验证"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Switch Camera"
-msgstr ""
+msgstr "切换摄像头"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Switching back to the default server."
-msgstr ""
+msgstr "正在切换回默认服务器。"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_config_parameter
@@ -10861,7 +10860,7 @@ msgstr "系统通知"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_search
 msgid "TURN"
-msgstr ""
+msgstr "TURN"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__target_lang
@@ -10939,7 +10938,7 @@ msgstr "模板预览语言"
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 msgid "Template Preview: \"%(template_name)s\""
-msgstr ""
+msgstr "模板预览：\"%(template_name)s\""
 
 #. module: mail
 #: model:ir.model,name:mail.model_template_reset_mixin
@@ -10955,10 +10954,8 @@ msgstr "从合成器创建模板需要有效的模型。"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Message unique identifier"
 msgid "Template name not identified"
-msgstr "消息唯一编号"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -11294,20 +11291,20 @@ msgstr ""
 #: code:addons/mail/models/ir_mail_server.py:0
 msgid ""
 "The server \"%s\" cannot be forced as it belongs to a user and is archived."
-msgstr ""
+msgstr "服务器 \"%s\" 无法被强制使用，因为它属于某个用户且已被归档。"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_mail_server.py:0
 msgid "The server \"%s\" cannot be forced as it belongs to a user."
-msgstr ""
+msgstr "服务器 \"%s\" 无法被强制使用，因为它属于某个用户。"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_mail_server.py:0
 msgid ""
 "The server \"%s\" cannot be forced as the owner does not use it anymore."
-msgstr ""
+msgstr "服务器 \"%s\" 无法被强制使用，因为所有者已不再使用它。"
 
 #. module: mail
 #. odoo-python
@@ -11344,7 +11341,7 @@ msgstr "没有候选公司有读取记录的访问权限。"
 msgid ""
 "There was an error when trying to deliver your Email, please check your "
 "configuration."
-msgstr ""
+msgstr "尝试发送邮件时出错，请检查您的配置。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -11379,7 +11376,7 @@ msgstr "此操作将发出EMail。"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "This applicant has been stuck in this stage for %(numberOfDays)s days."
-msgstr ""
+msgstr "此申请人已在此阶段停滞 %(numberOfDays)s 天。"
 
 #. module: mail
 #. odoo-javascript
@@ -11453,13 +11450,13 @@ msgstr "这是 %(conversationName)s 群组的开端"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of the #%(channelName)s channel"
-msgstr ""
+msgstr "这是 #%(channelName)s 频道的开始"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of your direct chat with %(userName)s"
-msgstr ""
+msgstr "这是您与 %(userName)s 私信的开始"
 
 #. module: mail
 #. odoo-python
@@ -11471,7 +11468,7 @@ msgstr "这种布局似乎已不复存在。"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "This lead has been stuck in this stage for %(numberOfDays)s days."
-msgstr ""
+msgstr "此潜在客户已在此阶段停滞 %(numberOfDays)s 天。"
 
 #. module: mail
 #. odoo-javascript
@@ -11509,7 +11506,7 @@ msgstr "此记录有异常活动。"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "This record has been stuck in this stage for %(numberOfDays)s days."
-msgstr ""
+msgstr "此记录已在此阶段停滞 %(numberOfDays)s 天。"
 
 #. module: mail
 #. odoo-javascript
@@ -11530,13 +11527,13 @@ msgstr "此设置仅适用于频道。未指定时仅提及。"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "This task has been stuck in this stage for %(numberOfDays)s days."
-msgstr ""
+msgstr "此任务已在此阶段停滞 %(numberOfDays)s 天。"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/store_service.js:0
 msgid "This thread is no longer available."
-msgstr ""
+msgstr "此话题已不再可用。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -11566,13 +11563,13 @@ msgstr "线程"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.js:0
 msgid "Thread \"%(thread_name)s\" has been deleted"
-msgstr ""
+msgstr "话题 \"%(thread_name)s\" 已被删除"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
 msgid "Thread Actions"
-msgstr ""
+msgstr "话题操作"
 
 #. module: mail
 #. odoo-javascript
@@ -11622,7 +11619,7 @@ msgstr "时区"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Tip: Write /field to insert dynamic content!"
-msgstr ""
+msgstr "提示：输入 /field 可插入动态内容！"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_summary
@@ -11655,7 +11652,7 @@ msgstr "至（合作伙伴）"
 msgid ""
 "To avoid the infinite mirror effect, please share a specific window or tab "
 "or another monitor."
-msgstr ""
+msgstr "为避免无限镜像效果，请共享特定窗口、标签页或其他显示器。"
 
 #. module: mail
 #. odoo-javascript
@@ -11806,7 +11803,7 @@ msgstr "跟踪收件人"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.js:0
 msgid "Tracked Changes"
-msgstr ""
+msgstr "跟踪更改"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__tracking_value_ids
@@ -12000,7 +11997,7 @@ msgstr "未分配活动"
 #. odoo-python
 #: code:addons/mail/models/mail_mail.py:0
 msgid "Unauthorized server for some of the sending mails."
-msgstr ""
+msgstr "部分发件邮件使用了未授权的服务器。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
@@ -12023,7 +12020,7 @@ msgstr "打开扬声器"
 #. odoo-python
 #: code:addons/mail/controllers/im_status.py:0
 msgid "Unexpected IM status %(status)s"
-msgstr ""
+msgstr "意外的即时通讯状态 %(status)s"
 
 #. module: mail
 #. odoo-javascript
@@ -12057,7 +12054,7 @@ msgstr "未知"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/im_status_dropdown.js:0
 msgid "Unknown Status"
-msgstr ""
+msgstr "未知状态"
 
 #. module: mail
 #. odoo-python
@@ -12100,23 +12097,19 @@ msgstr "未命名的"
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_value.py:0
 msgid "Unnamed %(record_model_name)s (%(record_id)s)"
+msgstr "未命名的 %(record_model_name)s（%(record_id)s）"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Unnamed Mail Template"
 msgstr ""
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Related Mail Template"
-msgid "Unnamed Mail Template"
-msgstr "相关的邮件模板"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Unnamed"
 msgid "Unnamed Mailing"
-msgstr "未命名的"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -12258,7 +12251,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Use Camera"
-msgstr ""
+msgstr "使用摄像头"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__external_email_server_default
@@ -12274,18 +12267,18 @@ msgstr "使用默认"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__use_exclusion_list
 msgid "Use Exclusion List"
-msgstr ""
+msgstr "使用排除列表"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Use Microphone"
-msgstr ""
+msgstr "使用麦克风"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_sfu_server
 msgid "Use SFU server"
-msgstr ""
+msgstr "使用 SFU 服务器"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -12342,7 +12335,7 @@ msgstr "使用 message_notify 通知用户。"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.xml:0
 msgid "Use microphone and camera"
-msgstr ""
+msgstr "使用麦克风和摄像头"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__template_id
@@ -12359,7 +12352,7 @@ msgstr "使用一键通话功能"
 msgid ""
 "Use your own servers for calls to manage heavy traffic and ensure "
 "reliability if Twilio is unavailable"
-msgstr ""
+msgstr "使用您自己的服务器处理通话，以应对大流量并确保 Twilio 不可用时的可靠性"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.action_ice_servers
@@ -12367,6 +12360,7 @@ msgid ""
 "Use your own servers for calls to manage heavy traffic and ensure "
 "reliability if Twilio is unavailable."
 msgstr ""
+"使用您自己的服务器处理通话，以应对大流量并确保 Twilio 不可用时的可靠性。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -12460,7 +12454,7 @@ msgstr "用户类型"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.ir_mail_server_view_form
 msgid "User email"
-msgstr ""
+msgstr "用户邮箱"
 
 #. module: mail
 #. odoo-javascript
@@ -12543,7 +12537,7 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
 msgid ""
 "Using picture-in-picture lets you stay in the call while you do other things."
-msgstr ""
+msgstr "使用画中画可让您在进行其他操作时保持通话。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -12558,7 +12552,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_message
 msgid "Vacation Responder"
-msgstr ""
+msgstr "外出自动回复"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__valid
@@ -12663,7 +12657,7 @@ msgstr "查看所有活动"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "View chat with %(channel_name)s"
-msgstr ""
+msgstr "查看与 %(channel_name)s 的聊天"
 
 #. module: mail
 #. odoo-javascript
@@ -12675,7 +12669,7 @@ msgstr "查看或加入频道"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "View the %(channel_name)s channel"
-msgstr ""
+msgstr "查看 %(channel_name)s 频道"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -12899,7 +12893,7 @@ msgstr "在这里写下您的消息..."
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Wrong email address %s."
-msgstr ""
+msgstr "邮箱地址错误：%s。"
 
 #. module: mail
 #. odoo-python
@@ -12999,7 +12993,7 @@ msgstr "不允许更改已安排消息的目标记录。"
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "You are not allowed to create a personal mail server."
-msgstr ""
+msgstr "您无权创建个人邮件服务器。"
 
 #. module: mail
 #. odoo-python
@@ -13011,7 +13005,7 @@ msgstr "不允许发送这则预定的消息"
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "You are not allowed to test personal mail servers."
-msgstr ""
+msgstr "您无权测试个人邮件服务器。"
 
 #. module: mail
 #. odoo-python
@@ -13054,13 +13048,13 @@ msgstr "您只能与拥有专属用户的业务合作伙伴聊天。"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "You can still turn off your %s anytime."
-msgstr ""
+msgstr "您仍可随时关闭您的 %s。"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_activity_type.py:0
 msgid "You cannot delete %(activity_names)s as it is required in various apps."
-msgstr ""
+msgstr "您无法删除 %(activity_names)s，因为它被多个应用使用。"
 
 #. module: mail
 #. odoo-python
@@ -13076,7 +13070,7 @@ msgstr "您不能删除这些群组，因为整个公司群组被其它模块引
 msgid ""
 "You cannot modify %(activities_names)s target model as they are are required "
 "in various apps."
-msgstr ""
+msgstr "您无法修改 %(activities_names)s 的目标模型，因为它们被多个应用使用。"
 
 #. module: mail
 #. odoo-python
@@ -13112,7 +13106,7 @@ msgstr "<br>您没有将电子邮件列入黑名单的访问权限。请联系�
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "You don't have access to invite users to this channel."
-msgstr ""
+msgstr "您无权邀请用户加入此频道。"
 
 #. module: mail
 #. odoo-python
@@ -13135,7 +13129,7 @@ msgstr "您已受邀参加  #%s"
 #. odoo-python
 #: code:addons/mail/models/mail_mail.py:0
 msgid "You may not create a message using another user's mail server."
-msgstr ""
+msgstr "您不能使用其他用户的邮件服务器创建消息。"
 
 #. module: mail
 #. odoo-python
@@ -13213,7 +13207,7 @@ msgstr "您的浏览器不支持 webRTC."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
 msgid "Your call is in another window."
-msgstr ""
+msgstr "您的通话在另一个窗口中。"
 
 #. module: mail
 #. odoo-python
@@ -13221,7 +13215,7 @@ msgstr ""
 msgid ""
 "Your email address is used by an alias domain, and so you can not create a "
 "mail server for it."
-msgstr ""
+msgstr "您的邮箱地址已被别名域使用，因此无法为其创建邮件服务器。"
 
 #. module: mail
 #. odoo-javascript
@@ -13233,7 +13227,7 @@ msgstr "您的名字"
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "Your out-of-office message..."
-msgstr ""
+msgstr "您的外出消息..."
 
 #. module: mail
 #. odoo-python
@@ -13336,6 +13330,14 @@ msgstr "对话"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "created this channel."
 msgstr "创建了这个频道。"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
+#, fuzzy
+#| msgid "id"
+msgid "d"
+msgstr "id"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -13496,19 +13498,19 @@ msgstr "例如安排会议"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "e.g. Welcome to MyCompany!"
-msgstr ""
+msgstr "例如：欢迎来到我的公司！"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/shortcut_char_field/shortcut_char_field.js:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
 msgid "e.g. hello"
-msgstr ""
+msgstr "例如：hello"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "e.g. info@company.com"
-msgstr ""
+msgstr "例如：info@company.com"
 
 #. module: mail
 #. odoo-javascript
@@ -13541,7 +13543,7 @@ msgstr "例如：发送订单确认"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__outgoing_email_to
 #: model:ir.model.fields,field_description:mail.field_mail_message__outgoing_email_to
 msgid "emails To"
-msgstr ""
+msgstr "发件至"
 
 #. module: mail
 #. odoo-javascript
@@ -13733,7 +13735,7 @@ msgstr "其他成员."
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_ir_mail_server_unique_owner_user_id
 msgid "owner_user_id must be unique"
-msgstr ""
+msgstr "owner_user_id 必须唯一"
 
 #. module: mail
 #. odoo-javascript
@@ -13789,7 +13791,7 @@ msgstr "stun:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_form
 msgid "stun:stun.google.com:19302 or turn:turn.example.com:3478"
-msgstr ""
+msgstr "stun:stun.google.com:19302 或 turn:turn.example.com:3478"
 
 #. module: mail
 #. odoo-python
@@ -13877,6 +13879,15 @@ msgstr "你的别名"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "\"%(channel_name)s\"中的\"%(member_name)s\""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.js:0
+msgid "“%s”"
+msgstr ""
+
+#~ msgid "111.222.333.444"
+#~ msgstr "111.222.333.444"
 
 #~ msgid ""
 #~ "Failed to render QWeb template: %(template_src)s\n"

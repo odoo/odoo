@@ -44,8 +44,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2026-03-25 13:53+0000\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"PO-Revision-Date: 2026-04-08 14:23+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/mrp/pl/>\n"
 "Language: pl\n"
@@ -283,55 +283,14 @@ msgstr ""
 "przenieś końcowe produkty z obszaru produkcyjnego do magazynu."
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "100"
-msgstr "100"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
-msgid "12345678901"
-msgstr "12345678901"
-
-#. module: mrp
 #: model_terms:product.template,description:mrp.product_product_computer_desk_leg_product_template
 msgid "18″ x 2½″ Square Leg"
 msgstr "18″ x 2½″ Noga kwadratowa"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "2023-09-15"
-msgstr "2023-09-15"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
-msgid "25"
-msgstr "25"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "50"
-msgstr "50"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "58"
-msgstr "58"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "60"
-msgstr "60"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "8 GB RAM"
 msgstr "8 GB RAM"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "987654321098"
-msgstr "987654321098"
 
 #. module: mrp
 #. odoo-javascript
@@ -895,7 +854,7 @@ msgid ""
 "products on BoMs!"
 msgstr ""
 "Wszystkie ilości produktów muszą być większe lub równe 0.\n"
-"Linie z ilością 0 mogą być używane jako linie opcjonalne. \n"
+"Linie z ilością 0 mogą być używane jako pozycje opcjonalne. \n"
 "Jeśli chcesz zarządzać dodatkowymi produktami w BoM, powinieneś zainstalować "
 "moduł mrp_byproduct!"
 
@@ -1201,7 +1160,8 @@ msgstr "Warianty produktu BOM"
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__bom_product_template_attribute_value_ids
 msgid "BOM Product Variants needed to apply this line."
-msgstr "Warianty zest. materiałów produktu wymagane do zastosowania tej linii."
+msgstr ""
+"Warianty zest. materiałów produktu wymagane do zastosowania tej pozycji."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_line_ids
@@ -2871,7 +2831,7 @@ msgstr "Ma wiadomość"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__has_routing_lines
 msgid "Has Routing Lines"
-msgstr "Posiada linie routingu"
+msgstr "Posiada pozycje routingu"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__product_document__attached_on_mrp__hidden
@@ -4006,7 +3966,7 @@ msgstr "Nie znaleziono zlecenia produkcyjnego. Utwórzmy je."
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
 msgid "No product found. Let's create one!"
-msgstr "Nie znaleziono żadnego produktu. Stwórzmy jeden!"
+msgstr "Nie znaleziono żadnego produktu. Stwórzmy jakiś!"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_blocked
@@ -4017,6 +3977,14 @@ msgstr "Brak utraty produktywności dla tego sprzętu"
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "No unbuild order found"
 msgstr "Nie znaleziono polecenia demontażu"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
+#, fuzzy
+#| msgid "Assign serial numbers to production order"
+msgid "No valid serial numbers provided."
+msgstr "Przypisz numery seryjne do zlecenia produkcyjnego"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -4599,6 +4567,11 @@ msgstr "Postprodukcja"
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid "Pre-Production"
 msgstr "Preprodukcja"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
+msgid "Prepare MO"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -5512,7 +5485,7 @@ msgstr "Pokaż wszystkie zapisy, których data kolejnej aktywności wypada po"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__show_backorder_lines
 msgid "Show backorder lines"
-msgstr "Pokaż linie zaległych zamówień"
+msgstr "Pokaż pozycje zaległych zamówień"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
@@ -5903,7 +5876,7 @@ msgid ""
 "(divided between the quantity produced).The total of all by-products' cost "
 "share must be less than or equal to 100."
 msgstr ""
-"Procent końcowego kosztu produkcji dla tej linii produktów ubocznych "
+"Procent końcowego kosztu produkcji dla tej pozycji produktów ubocznych "
 "(podzielony między wyprodukowaną ilość). Łączny udział w kosztach wszystkich "
 "produktów ubocznych musi być mniejszy lub równy 100."
 
@@ -6584,7 +6557,7 @@ msgstr "Ważny"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__valid_product_template_attribute_line_ids
 msgid "Valid Product Attribute Lines"
-msgstr "Prawidłowe linie atrybutów produktu"
+msgstr "Prawidłowe pozycje atrybutów produktu"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -7420,6 +7393,30 @@ msgstr "rzeczywisty czas trwania"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "podział"
+
+#~ msgid "100"
+#~ msgstr "100"
+
+#~ msgid "12345678901"
+#~ msgstr "12345678901"
+
+#~ msgid "2023-09-15"
+#~ msgstr "2023-09-15"
+
+#~ msgid "25"
+#~ msgstr "25"
+
+#~ msgid "50"
+#~ msgstr "50"
+
+#~ msgid "58"
+#~ msgstr "58"
+
+#~ msgid "60"
+#~ msgstr "60"
+
+#~ msgid "987654321098"
+#~ msgstr "987654321098"
 
 #~ msgid ""
 #~ "You need to supply Lot/Serial Number for products and 'consume' them: %"

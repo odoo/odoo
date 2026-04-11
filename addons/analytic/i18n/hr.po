@@ -15,13 +15,14 @@
 # Bole <bole@dajmi5.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Boris Peko <boris.peko@ecodica.eu>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-16 15:05+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-04-11 00:33+0000\n"
+"Last-Translator: Boris Peko <boris.peko@ecodica.eu>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/"
 "analytic/hr/>\n"
 "Language: hr\n"
@@ -30,7 +31,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: analytic
 #. odoo-python
@@ -42,7 +43,7 @@ msgstr "%s (kopija)"
 #. odoo-python
 #: code:addons/analytic/models/analytic_line.py:0
 msgid "%s analytic lines created"
-msgstr ""
+msgstr "Kreirano je %s analitičkih stavki"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
@@ -61,6 +62,8 @@ msgid ""
 "A 'Project' plan needs to exist and its id needs to be set as "
 "`analytic.project_plan` in the system variables"
 msgstr ""
+"Plan 'Project' mora postojati i njegov id mora biti postavljen kao "
+"`analytic.project_plan` u sistemskim varijablama"
 
 #. module: analytic
 #. odoo-javascript
@@ -76,7 +79,7 @@ msgstr "Konta"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_agrolait
 msgid "Acme Corporation"
-msgstr ""
+msgstr "Acme Corporation"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
@@ -467,7 +470,7 @@ msgstr "Opis"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_desertic_hispafuentes
 msgid "Desertic - Hispafuentes"
-msgstr ""
+msgstr "Desertic - Hispafuentes"
 
 #. module: analytic
 #. odoo-javascript
@@ -486,7 +489,7 @@ msgstr "Onemogući spremanje"
 #: model:ir.model.fields,field_description:analytic.field_ir_config_parameter__display_name
 #: model:ir.model.fields,field_description:analytic.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr "Naziv"
+msgstr "Naziv za prikaz"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__distribution_analytic_account_ids
@@ -514,7 +517,7 @@ msgstr "Ne ažuriraj"
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 msgid "Dynamic Placeholder"
-msgstr ""
+msgstr "Dinamički rezervirano mjesto"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_finance
@@ -661,7 +664,7 @@ msgstr "Razno"
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 msgid "Multi edit"
-msgstr ""
+msgstr "Višestruko uređivanje"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__name
@@ -786,7 +789,7 @@ msgstr "Plan"
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 msgid "Product field"
-msgstr ""
+msgstr "Polje proizvoda"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_production
@@ -866,7 +869,7 @@ msgstr "Traži analitičke linije"
 #. odoo-python
 #: code:addons/analytic/models/analytic_account.py:0
 msgid "See them"
-msgstr ""
+msgstr "Prikaži ih"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__company_id
@@ -875,6 +878,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this company, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"Odaberite tvrtku za koju će se koristiti analitička raspodjela (npr. ako pri "
+"kreiranju novog izlaznog računa ili prodajnog naloga odaberete ovu tvrtku, "
+"automatski će se koristiti ovaj analitički konto)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -883,6 +889,9 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
+"Odaberite kategoriju partnera za koju će se koristiti analitička raspodjela "
+"(npr. ako pri kreiranju novog izlaznog računa ili prodajnog naloga odaberete "
+"ovog partnera, automatski će se koristiti ovaj analitički konto)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
@@ -891,6 +900,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this partner, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"Odaberite partnera za kojeg će se koristiti analitička raspodjela (npr. ako "
+"pri kreiranju novog izlaznog računa ili prodajnog naloga odaberete ovog "
+"partnera, automatski će se koristiti ovaj analitički konto)"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__sequence
@@ -901,7 +913,7 @@ msgstr "Sekvenca"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_spark
 msgid "Spark Systems"
-msgstr ""
+msgstr "Spark Systems"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
@@ -911,7 +923,7 @@ msgstr "Subplanovi"
 #. module: analytic
 #: model:ir.model,name:analytic.model_ir_config_parameter
 msgid "System Parameter"
-msgstr ""
+msgstr "Sistemski parametar"
 
 #. module: analytic
 #. odoo-python
@@ -920,6 +932,7 @@ msgid ""
 "The value for %s must be the ID to a valid analytic plan that is not a "
 "subplan"
 msgstr ""
+"Vrijednost za %s mora biti ID važećeg analitičkog plana koji nije podplan"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_absences
@@ -959,7 +972,7 @@ msgstr "Korisnik"
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "Visible to all"
-msgstr ""
+msgstr "Vidljivo svima"
 
 #. module: analytic
 #. odoo-python
@@ -968,6 +981,7 @@ msgid ""
 "Whoa there! Making this change would wipe out your current data. Let's avoid "
 "that, shall we?"
 msgstr ""
+"Stanite! Ova promjena bi obrisala vaše trenutne podatke. Izbjegnimo to, može?"
 
 #. module: analytic
 #. odoo-python
@@ -976,12 +990,14 @@ msgid ""
 "You can't change the company of an analytic account that already has "
 "analytic items! It's a recipe for an analytical disaster!"
 msgstr ""
+"Ne možete promijeniti tvrtku analitičkog konta koji već ima analitičke "
+"stavke! To je recept za analitičku katastrofu!"
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_plan.py:0
 msgid "You cannot add a parent to the base plan '%s'"
-msgstr ""
+msgstr "Ne možete dodati nadređeni element osnovnom planu '%s'"
 
 #. module: analytic
 #. odoo-python
@@ -990,6 +1006,9 @@ msgid ""
 "You defined a distribution with analytic account(s) belonging to a specific "
 "company but a model shared between companies or with a different company"
 msgstr ""
+"Definirali ste raspodjelu s analitičkim kontom/kontima koji pripadaju "
+"određenoj tvrtki, ali je model dijeljen između tvrtki ili pripada drugoj "
+"tvrtki"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form

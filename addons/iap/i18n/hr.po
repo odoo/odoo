@@ -7,22 +7,23 @@
 # Martin Trigaux, 2022
 # Bole <bole@dajmi5.com>, 2022
 # Zvonimir Galić <zvonimir.galic@viavista.ba>, 2026.
+# Boris Peko <boris.peko@ecodica.eu>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-01-23 07:31+0000\n"
-"Last-Translator: Zvonimir Galić <zvonimir.galic@viavista.ba>\n"
-"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/iap/hr/"
-">\n"
+"PO-Revision-Date: 2026-04-11 07:41+0000\n"
+"Last-Translator: Boris Peko <boris.peko@ecodica.eu>\n"
+"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/iap/hr/>"
+"\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -30,6 +31,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                                    Buy Credit"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                    Kupi kredit"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -46,6 +49,7 @@ msgstr "Token računa"
 msgid ""
 "Account token is your authentication key for this service. Do not share it."
 msgstr ""
+"Token računa je vaš autentifikacijski ključ za ovu uslugu. Ne dijelite ga."
 
 #. module: iap
 #. odoo-python
@@ -54,16 +58,18 @@ msgid ""
 "An error occurred while reaching %s. Please contact Odoo support if this "
 "error persists."
 msgstr ""
+"Došlo je do pogreške prilikom pristupa %s. Obratite se Odoo podršci ako se "
+"ova pogreška nastavi pojavljivati."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
 msgid "Balance"
-msgstr ""
+msgstr "Stanje"
 
 #. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__banned
 msgid "Banned"
-msgstr ""
+msgstr "Zabranjeno"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__company_ids
@@ -85,30 +91,30 @@ msgstr "Kreirano"
 #. module: iap
 #: model:iap.service,unit_name:iap.iap_service_reveal
 msgid "Credits"
-msgstr ""
+msgstr "Krediti"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__description
 #: model:ir.model.fields,field_description:iap.field_iap_service__description
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_enrich_api__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_service__display_name
 msgid "Display Name"
-msgstr "Naziv"
+msgstr "Naziv za prikaz"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_user_ids
 msgid "Email Alert Recipients"
-msgstr ""
+msgstr "Primatelji e-mail upozorenja"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_threshold
 msgid "Email Alert Threshold"
-msgstr ""
+msgstr "Prag e-mail upozorenja"
 
 #. module: iap
 #: model:iap.service,description:iap.iap_service_reveal
@@ -117,34 +123,37 @@ msgid ""
 "leads, generate leads based on a set of criteria and enrich the company data "
 "of your opportunities."
 msgstr ""
+"Dobijte kvalitetne potencijalne kontakte i prilike: pretvorite posjetitelje "
+"vaše web stranice u potencijalne kontakte, generirajte potencijalne kontakte "
+"na temelju skupa kriterija i obogatite podatke tvrtke svojih prilika."
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
 msgid "IAP"
-msgstr ""
+msgstr "IAP"
 
 #. module: iap
 #: model:ir.actions.act_window,name:iap.iap_account_action
 #: model:ir.model,name:iap.model_iap_account
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "IAP Account"
-msgstr ""
+msgstr "IAP račun"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_account_menu
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
 msgid "IAP Accounts"
-msgstr ""
+msgstr "IAP računi"
 
 #. module: iap
 #: model:ir.model,name:iap.model_iap_enrich_api
 msgid "IAP Lead Enrichment API"
-msgstr ""
+msgstr "IAP API za obogaćivanje potencijalnih kontakata"
 
 #. module: iap
 #: model:ir.model,name:iap.model_iap_service
 msgid "IAP Service"
-msgstr ""
+msgstr "IAP usluga"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
@@ -156,19 +165,19 @@ msgstr "ID"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__integer_balance
 msgid "Integer Balance"
-msgstr ""
+msgstr "Cjelobrojno stanje"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
 #: model:ir.model.fields,field_description:iap.field_iap_service__write_uid
 msgid "Last Updated by"
-msgstr "Promijenio"
+msgstr "Posljednju izmjenu izvršio"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_date
 #: model:ir.model.fields,field_description:iap.field_iap_service__write_date
 msgid "Last Updated on"
-msgstr "Vrijeme promjene"
+msgstr "Posljednja izmjena"
 
 #. module: iap
 #. odoo-javascript
@@ -180,18 +189,18 @@ msgstr "Upravljanje uslugom i kupnja kredita"
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
 #: model:ir.model.fields,field_description:iap.field_iap_service__name
 msgid "Name"
-msgstr ""
+msgstr "Naziv"
 
 #. module: iap
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
 msgid "No service exists with the provided technical name"
-msgstr ""
+msgstr "Ne postoji usluga s navedenim tehničkim nazivom"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "Odoo IAP"
-msgstr ""
+msgstr "Odoo IAP"
 
 #. module: iap
 #. odoo-python
@@ -200,49 +209,51 @@ msgid ""
 "One of the email alert recipients doesn't have an email address set. Users: "
 "%s"
 msgstr ""
+"Jedan od primatelja e-mail upozorenja nema postavljenu e-mail adresu. "
+"Korisnici: %s"
 
 #. module: iap
 #: model:ir.model.constraint,message:iap.constraint_iap_service_unique_technical_name
 msgid "Only one service can exist with a specific technical_name"
-msgstr ""
+msgstr "Samo jedna usluga može postojati s određenim technical_name"
 
 #. module: iap
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
 msgid "Please set a positive email alert threshold."
-msgstr ""
+msgstr "Postavite pozitivan prag e-mail upozorenja."
 
 #. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__registered
 msgid "Registered"
-msgstr ""
+msgstr "Registrirano"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_id
 msgid "Service"
-msgstr ""
+msgstr "Usluga"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_locked
 msgid "Service Locked"
-msgstr ""
+msgstr "Usluga zaključana"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__state
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_name
 #: model:ir.model.fields,field_description:iap.field_iap_service__technical_name
 msgid "Technical Name"
-msgstr ""
+msgstr "Tehnički naziv"
 
 #. module: iap
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
 msgid "The IAP token provided is invalid or empty."
-msgstr ""
+msgstr "Navedeni IAP token nije valjan ili je prazan."
 
 #. module: iap
 #. odoo-python
@@ -251,16 +262,18 @@ msgid ""
 "The request to the service timed out. Please contact the author of the app. "
 "The URL it tried to contact was %s"
 msgstr ""
+"Zahtjev prema usluzi je istekao. Obratite se autoru aplikacije. URL na koji "
+"je pokušao doći bio je %s"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__unit_name
 msgid "Unit Name"
-msgstr ""
+msgstr "Naziv jedinice"
 
 #. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__unregistered
 msgid "Unregistered"
-msgstr ""
+msgstr "Neregistrirano"
 
 #. module: iap
 #. odoo-javascript
@@ -272,7 +285,7 @@ msgstr "Pregled mojih usluga"
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "View your IAP Services and recharge your credits"
-msgstr ""
+msgstr "Pogledajte svoje IAP usluge i nadopunite kredite"
 
 #~ msgid "Buy credits"
 #~ msgstr "Kupi kredite"

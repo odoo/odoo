@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-03-14 09:35+0000\n"
+"POT-Creation-Date: 2026-04-10 18:39+0000\n"
+"PO-Revision-Date: 2026-04-07 15:52+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/product/"
 "fr/>\n"
@@ -52,16 +52,6 @@ msgstr "# Variantes d'article"
 #: model:ir.model.fields,field_description:product.field_product_category__product_count
 msgid "# Products"
 msgstr "# Produits"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-msgid "$14.00"
-msgstr "14,00 $"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-msgid "$15.00"
-msgstr "15,00 $"
 
 #. module: product
 #. odoo-python
@@ -184,39 +174,9 @@ msgid "1 year"
 msgstr "1 an"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "10"
-msgstr "10"
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "10 Units"
 msgstr "10 unités"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_height_100
-msgid "100"
-msgstr "100"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_length_120
-msgid "120"
-msgstr "120"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "123456789012"
-msgstr "123456789012"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_length_140
-msgid "140"
-msgstr "140"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_length_160
-msgid "160"
-msgstr "160"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
@@ -244,11 +204,6 @@ msgid "3 years"
 msgstr "3 ans"
 
 #. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_39
-msgid "39"
-msgstr "39"
-
-#. module: product
 #: model:product.attribute.value,name:product.pav_size_3xl
 msgid "3XL"
 msgstr "3XL"
@@ -269,31 +224,6 @@ msgid "4 x 7 with price"
 msgstr "4 x 7 avec le prix"
 
 #. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_40
-msgid "40"
-msgstr "40"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_41
-msgid "41"
-msgstr "41"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_42
-msgid "42"
-msgstr "42"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_43
-msgid "43"
-msgstr "43"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_height_45
-msgid "45"
-msgstr "45"
-
-#. module: product
 #: model:product.attribute.value,name:product.pav_size_4xl
 msgid "4XL"
 msgstr "4XL"
@@ -307,11 +237,6 @@ msgstr "5XL"
 #: model:product.attribute.value,name:product.pav_duration_month_6
 msgid "6 months"
 msgstr "6 mois"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_height_85
-msgid "85"
-msgstr "85"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -1568,7 +1493,7 @@ msgstr "Tiroirs"
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "Duplicate values in attribute values are not allowed: %s"
-msgstr ""
+msgstr "Les doublons dans les valeurs d’attribut ne sont pas autorisés : %s"
 
 #. module: product
 #: model:product.attribute,name:product.pa_duration
@@ -2180,11 +2105,20 @@ msgstr "Est un document public"
 msgid ""
 "It is not possible to import different values for the same attribute: %s"
 msgstr ""
+"Il n’est pas possible d’importer des valeurs différentes pour le même "
+"attribut : %s"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__0
 msgid "Kilograms (kg)"
 msgstr "Kilogrammes (kg)"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_l
+#, fuzzy
+#| msgid "LG"
+msgid "L"
+msgstr "LG"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_loreal
@@ -2356,6 +2290,11 @@ msgid ""
 msgstr ""
 "À la recherche d'une teinte bambou personnalisée pour correspondre aux "
 "meubles existants ? Contactez-nous pour obtenir un devis."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_m
+msgid "M"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
@@ -3274,10 +3213,8 @@ msgstr "Unité de mesure du produit"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__import_attribute_values
 #: model:ir.model.fields,field_description:product.field_product_template__import_attribute_values
-#, fuzzy
-#| msgid "Product Variant Values"
 msgid "Product Values"
-msgstr "Valeurs des variantes de produit"
+msgstr "Valeurs du produit"
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
@@ -3544,6 +3481,13 @@ msgstr "Lignes"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
 msgid "Rule Tip"
 msgstr "Règle astuces"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_s
+#, fuzzy
+#| msgid "XS"
+msgid "S"
+msgstr "XS"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
@@ -3882,6 +3826,9 @@ msgid ""
 "is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", \"%"
 "(id)s\""
 msgstr ""
+"Le produit existant a une valeur d’attribut différente. \"%"
+"(imported_values)s\" n’est pas équivalent à \"%(existing_values)s\" pour \"%"
+"(external_id)s\", \"%(id)s\""
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -4117,6 +4064,8 @@ msgid ""
 "Unable to import products with attribute value without attribute name "
 "(defined as: attribute:value): %s"
 msgstr ""
+"Impossible d’importer des produits avec une valeur d’attribut sans nom "
+"d’attribut (défini sous la forme : attribut:valeur) : %s"
 
 #. module: product
 #. odoo-python
@@ -4125,6 +4074,8 @@ msgid ""
 "Unable to import products with attribute values but without name of product "
 "set"
 msgstr ""
+"Impossible d’importer des produits avec des valeurs d’attribut mais sans nom "
+"de produit défini"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_underarmour
@@ -4959,6 +4910,51 @@ msgstr "au"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid "$14.00"
+#~ msgstr "14,00 $"
+
+#~ msgid "$15.00"
+#~ msgstr "15,00 $"
+
+#~ msgid "10"
+#~ msgstr "10"
+
+#~ msgid "100"
+#~ msgstr "100"
+
+#~ msgid "120"
+#~ msgstr "120"
+
+#~ msgid "123456789012"
+#~ msgstr "123456789012"
+
+#~ msgid "140"
+#~ msgstr "140"
+
+#~ msgid "160"
+#~ msgstr "160"
+
+#~ msgid "39"
+#~ msgstr "39"
+
+#~ msgid "40"
+#~ msgstr "40"
+
+#~ msgid "41"
+#~ msgstr "41"
+
+#~ msgid "42"
+#~ msgstr "42"
+
+#~ msgid "43"
+#~ msgstr "43"
+
+#~ msgid "45"
+#~ msgstr "45"
+
+#~ msgid "85"
+#~ msgstr "85"
 
 #~ msgid ""
 #~ "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"

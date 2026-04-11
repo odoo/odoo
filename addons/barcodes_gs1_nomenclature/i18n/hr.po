@@ -3,13 +3,14 @@
 # * barcodes_gs1_nomenclature
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Boris Peko <boris.peko@ecodica.eu>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-16 15:23+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-04-11 00:34+0000\n"
+"Last-Translator: Boris Peko <boris.peko@ecodica.eu>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/"
 "barcodes_gs1_nomenclature/hr/>\n"
 "Language: hr\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -27,11 +28,13 @@ msgid ""
 "A GS1 barcode nomenclature pattern was matched. However, the barcode failed "
 "to be converted to a valid date: '%(error_message)s'"
 msgstr ""
+"Uzorak GS1 nomenklature barkoda je usklađen. Međutim, barkod nije bilo "
+"moguće pretvoriti u valjani datum: '%(error_message)s'"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
 msgid "Alpha-Numeric Name"
-msgstr ""
+msgstr "Alfanumerički naziv"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
@@ -39,16 +42,18 @@ msgid ""
 "Alternative regex delimiter for the FNC1. The separator must not match the "
 "begin/end of any related rules pattern."
 msgstr ""
+"Alternativni regex razdjelnik za FNC1. Razdjelnik se ne smije podudarati s "
+"početkom/krajem uzorka bilo kojeg povezanog pravila."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
 msgid "Associated Uom"
-msgstr ""
+msgstr "Povezana JM"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_nomenclature
 msgid "Barcode Nomenclature"
-msgstr "Barkod nomenklatura"
+msgstr "Nomenklatura barkoda"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_rule
@@ -68,7 +73,7 @@ msgstr "Datum"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
 msgid "Decimal"
-msgstr "Decimala"
+msgstr "Decimalno"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location_dest
@@ -80,7 +85,7 @@ msgstr "Odredišna lokacija"
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__display_name
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_ir_http__display_name
 msgid "Display Name"
-msgstr "Naziv"
+msgstr "Naziv za prikaz"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__encoding
@@ -100,12 +105,12 @@ msgstr "FNC1 separator"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
 msgid "GS1 Content Type"
-msgstr ""
+msgstr "Vrsta GS1 sadržaja"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__encoding__gs1-128
 msgid "GS1-128"
-msgstr ""
+msgstr "GS1-128"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model,name:barcodes_gs1_nomenclature.model_ir_http
@@ -124,18 +129,20 @@ msgstr "ID"
 msgid ""
 "If True, use the last digit of AI to determine where the first decimal is"
 msgstr ""
+"Ako je Točno, koristi zadnju znamenku AI-ja za određivanje gdje se nalazi "
+"prvi decimalni znak"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 msgid "Invalid barcode: can't be formated as date"
-msgstr ""
+msgstr "Neispravan barkod: ne može se formatirati kao datum"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 msgid "Invalid barcode: the check digit is incorrect"
-msgstr ""
+msgstr "Neispravan barkod: kontrolna znamenka je netočna"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
@@ -151,7 +158,7 @@ msgstr "Lokacija"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__lot
 msgid "Lot"
-msgstr "Lot"
+msgstr "Serija"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__measure
@@ -161,7 +168,7 @@ msgstr "Mjera"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__identifier
 msgid "Numeric Identifier"
-msgstr ""
+msgstr "Brojčani identifikator"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__pack_date
@@ -187,7 +194,7 @@ msgstr "Količina"
 #. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 msgid "The FNC1 Separator Alternative is not a valid Regex: %(error)s"
-msgstr ""
+msgstr "FNC1 razdjelnik nije valjan Regex: %(error)s"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
@@ -198,6 +205,12 @@ msgid ""
 "unit;        * Numeric Identifier: fixed length barcode following a specific "
 "encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
+"Vrsta GS1 sadržaja definira koju vrstu podataka će pravilo obrađivati iz "
+"barkoda:        * Datum: barkod će se pretvoriti u Odoo datum i "
+"vrijeme;        * Mjera: vrijednost barkoda povezana je s određenom "
+"jedinicom;        * Brojčani identifikator: barkod fiksne duljine koji "
+"slijedi određeno kodiranje;        * Alfanumerički naziv: barkod promjenjive "
+"duljine."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -207,12 +220,15 @@ msgid ""
 "\t- A first one for the Application Identifier (usually 2 to 4 digits);\n"
 "\t- A second one to catch the value."
 msgstr ""
+"Uzorak pravila \"%s\" nije valjan, treba mu dvije grupe:\n"
+"\t- Prva za identifikator aplikacije (obično 2 do 4 znamenke);\n"
+"\t- Druga za hvatanje vrijednosti."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
 msgid "The rule pattern '%(rule)s' is not a valid Regex: %(error)s"
-msgstr ""
+msgstr "Uzorak pravila '%(rule)s' nije valjan Regex: %(error)s"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -224,6 +240,11 @@ msgid ""
 "Check also the possible matched values can only be digits, otherwise the "
 "value can't be casted as a measure."
 msgstr ""
+"Nešto nije u redu s uzorkom pravila barkoda \"%s\".\n"
+"Ako ovo pravilo koristi decimalno, provjerite da kao zadnji znak za "
+"identifikator aplikacije ne može dobiti nešto drugo osim znamenke.\n"
+"Provjerite također da moguće usklađene vrijednosti mogu biti samo znamenke, "
+"inače se vrijednost ne može tretirati kao mjera."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
@@ -232,18 +253,20 @@ msgid ""
 "This Nomenclature use the GS1 specification, only GS1-128 encoding rules is "
 "accepted is this kind of nomenclature."
 msgstr ""
+"Ova nomenklatura koristi GS1 specifikaciju, samo pravila GS1-128 kodiranja "
+"su prihvaćena u ovoj vrsti nomenklature."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 msgid "This barcode can't be parsed by any barcode rules."
-msgstr ""
+msgstr "Ovaj barkod ne može biti analiziran nijednim pravilom barkoda."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 msgid "This barcode can't be partially or fully parsed."
-msgstr ""
+msgstr "Ovaj barkod ne može biti djelomično ili potpuno analiziran."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__encoding

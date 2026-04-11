@@ -9,13 +9,13 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# "Tony Ng (ngto)" <ngto@odoo.com>, 2025.
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:36+0000\n"
-"PO-Revision-Date: 2025-11-24 12:08+0000\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"PO-Revision-Date: 2026-04-09 17:13+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-19/mail/zh_Hant/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -496,11 +496,6 @@ msgstr "1 個新訊息"
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 msgid "1 other"
 msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.account_security_alert
-msgid "111.222.333.444"
-msgstr "111.222.333.444"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.action_email_server_tree
@@ -4526,12 +4521,10 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Failed to render inline_template template: %(template_txt)s"
 msgid ""
 "Failed to render inline_template template: %(template_txt)s\n"
 "Error details: %(error)s"
-msgstr "未能繪製 inline_template 範本：%(template_txt)s"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -6724,10 +6717,8 @@ msgstr "郵件範本重設"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "alias %(name)s: %(error)s"
 msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
-msgstr "別名 %(name)s：%(error)s"
+msgstr "郵件範本：「%(name)s」（識別碼：%(record_id)s）"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
@@ -7629,10 +7620,8 @@ msgstr "沒有歷史訊息"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Result of the language detection based on its content."
 msgid "No language detected in context"
-msgstr "基於語言內容的語言偵測結果。"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -8201,10 +8190,6 @@ msgstr "只限註釋類型訊息才可在 mail.channel 模型上更新其內容"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
-#, fuzzy
-#| msgid ""
-#| "Oops! We couldn't save your template due to an issue with this value: %"
-#| "(template_txt)s. Correct it and try again."
 msgid ""
 "Oops! We couldn't save your template due to an issue.\n"
 "\n"
@@ -8212,8 +8197,6 @@ msgid ""
 "\n"
 "Correct it and try again."
 msgstr ""
-"哎唷！由於此值有問題（%(template_txt)s），系統未能儲存你的範本。請更正後再"
-"試。"
 
 #. module: mail
 #. odoo-javascript
@@ -10963,10 +10946,8 @@ msgstr "若要從編寫器創建範本，需要有效的模型。"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Message unique identifier"
 msgid "Template name not identified"
-msgstr "訊息唯一編號"
+msgstr "未能識別範本名稱"
 
 #. module: mail
 #. odoo-python
@@ -12112,18 +12093,14 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Related Mail Template"
 msgid "Unnamed Mail Template"
-msgstr "相關信件範本"
+msgstr "未命名郵件範本"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Unnamed"
 msgid "Unnamed Mailing"
-msgstr "未命名的"
+msgstr "未命名的郵寄"
 
 #. module: mail
 #. odoo-javascript
@@ -13349,6 +13326,14 @@ msgid "created this channel."
 msgstr "已建立這個頻道。"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
+#, fuzzy
+#| msgid "id"
+msgid "d"
+msgstr "id"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
 msgstr "day, month dd, yyyy - hh:mm:ss (GMT)"
@@ -13889,6 +13874,15 @@ msgstr "你的別名"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "\"%(channel_name)s\" 中的 \"%(member_name)s\""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.js:0
+msgid "“%s”"
+msgstr ""
+
+#~ msgid "111.222.333.444"
+#~ msgstr "111.222.333.444"
 
 #~ msgid ""
 #~ "Failed to render QWeb template: %(template_src)s\n"

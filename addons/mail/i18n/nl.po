@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:36+0000\n"
-"PO-Revision-Date: 2026-03-31 14:18+0000\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"PO-Revision-Date: 2026-04-08 07:35+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/mail/nl/>\n"
 "Language: nl\n"
@@ -509,11 +509,6 @@ msgstr "1 nieuw bericht"
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 msgid "1 other"
 msgstr "1 andere"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.account_security_alert
-msgid "111.222.333.444"
-msgstr "111.222.333.444"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.action_email_server_tree
@@ -4654,14 +4649,13 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Failed to render inline_template template: %(template_txt)s"
 msgid ""
 "Failed to render inline_template template: %(template_txt)s\n"
 "Error details: %(error)s"
 msgstr ""
 "Het is niet gelukt om de inline_template-sjabloon te renderen: %"
-"(template_txt)s"
+"(template_txt)s\n"
+"Foutgegevens: %(error)s"
 
 #. module: mail
 #. odoo-python
@@ -6908,10 +6902,8 @@ msgstr "E-mailsjabloon resetten"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Unnamed %(record_model_name)s (%(record_id)s)"
 msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
-msgstr "Naamloos %(record_model_name)s%(record_id)s"
+msgstr "Mailsjabloon: '%(name)s' (ID: %(record_id)s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
@@ -7838,10 +7830,8 @@ msgstr "Geen berichtengeschiedenis"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Result of the language detection based on its content."
 msgid "No language detected in context"
-msgstr "Resultaat van de taaldetectie op basis van de inhoud."
+msgstr "Geen taal gedetecteerd in context"
 
 #. module: mail
 #. odoo-javascript
@@ -8435,10 +8425,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
-#, fuzzy
-#| msgid ""
-#| "Oops! We couldn't save your template due to an issue with this value: %"
-#| "(template_txt)s. Correct it and try again."
 msgid ""
 "Oops! We couldn't save your template due to an issue.\n"
 "\n"
@@ -8446,8 +8432,11 @@ msgid ""
 "\n"
 "Correct it and try again."
 msgstr ""
-"Oeps! We konden je sjabloon niet opslaan vanwege een probleem met deze "
-"waarde: %(template_txt)s. Corrigeer dit en probeer opnieuw."
+"Oeps! We konden je sjabloon niet opslaan vanwege een probleem.\n"
+"\n"
+"Fout: %(error_details)s\n"
+"\n"
+"Corrigeer en probeer opnieuw."
 
 #. module: mail
 #. odoo-javascript
@@ -11262,10 +11251,8 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Message unique identifier"
 msgid "Template name not identified"
-msgstr "Bericht unieke identificatie"
+msgstr "Sjabloonnaam niet geïdentificeerd"
 
 #. module: mail
 #. odoo-python
@@ -12466,18 +12453,14 @@ msgstr "Naamloos %(record_model_name)s%(record_id)s"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Related Mail Template"
 msgid "Unnamed Mail Template"
-msgstr "Gerelateerd e-mailsjabloon"
+msgstr "Naamloos e-mailsjabloon"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Unnamed"
 msgid "Unnamed Mailing"
-msgstr "Naamloos"
+msgstr "Naamloze mailing"
 
 #. module: mail
 #. odoo-javascript
@@ -13757,6 +13740,14 @@ msgid "created this channel."
 msgstr "heeft dit kanaal gemaakt."
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
+#, fuzzy
+#| msgid "id"
+msgid "d"
+msgstr "id"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
 msgstr "dag, maand dd, jjjj - uu:mm:ss (GMT)"
@@ -14302,6 +14293,15 @@ msgstr "je alias"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” in “%(channel_name)s”"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.js:0
+msgid "“%s”"
+msgstr ""
+
+#~ msgid "111.222.333.444"
+#~ msgstr "111.222.333.444"
 
 #~ msgid ""
 #~ "Failed to render QWeb template: %(template_src)s\n"

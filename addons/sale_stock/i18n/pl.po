@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-13 18:36+0000\n"
-"PO-Revision-Date: 2026-02-25 14:48+0000\n"
+"PO-Revision-Date: 2026-04-08 14:23+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "sale_stock/pl/>\n"
@@ -31,9 +31,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
-"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -125,10 +125,10 @@ msgid ""
 msgstr ""
 "Zgodnie z konfiguracją produktu, dostarczona ilość może być automatycznie "
 "obliczana przez mechanizm:\n"
-"- Ręcznie: ilość jest ustawiana ręcznie na linii\n"
+"- Ręcznie: ilość jest ustawiana ręcznie na pozycji\n"
 "- Analityczne z wydatków: ilość jest sumą ilości z zaksięgowanych wydatków\n"
 "- Z karty pracy: ilość jest sumą godzin zarejestrowanych na zadaniach "
-"powiązanych z tą linią sprzedaży\n"
+"powiązanych z tą pozycją sprzedaży\n"
 "- Przesunięcia zasobów: ilość pochodzi z potwierdzonych pobrań\n"
 
 #. module: sale_stock
@@ -184,7 +184,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
-msgstr "Wybierz zastosowanie określonych tras linii SO."
+msgstr "Wybierz zastosowanie określonych tras pozycji SO."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -245,9 +245,9 @@ msgid ""
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
 "Termin dostawy, który możesz obiecać klientowi, obliczony z minimalnego "
-"czasu realizacji linii zamówienia w przypadku produktów usługowych. W "
+"czasu realizacji pozycji zamówienia w przypadku produktów usługowych. W "
 "przypadku wysyłki, polityka wysyłkowa zamówienia zostanie wzięta pod uwagę, "
-"aby wykorzystać minimalny lub maksymalny czas realizacji linii zamówienia."
+"aby wykorzystać minimalny lub maksymalny czas realizacji pozycji zamówienia."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__display_name
@@ -824,7 +824,7 @@ msgid ""
 "The ordered quantity of a sale order line cannot be decreased below the "
 "amount already delivered. Instead, create a return in your inventory."
 msgstr ""
-"Zamówiona ilość w linii zamówienia sprzedaży nie może zostać zmniejszona "
+"Zamówiona ilość w pozycji zamówienia sprzedaży nie może zostać zmniejszona "
 "poniżej ilości już dostarczonej. Zamiast tego należy utworzyć zwrot w "
 "zapasach."
 

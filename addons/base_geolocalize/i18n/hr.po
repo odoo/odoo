@@ -7,13 +7,14 @@
 # Bole <bole@dajmi5.com>, 2022
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2022
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Boris Peko <boris.peko@ecodica.eu>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-10 13:15+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-04-11 00:33+0000\n"
+"Last-Translator: Boris Peko <boris.peko@ecodica.eu>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/"
 "base_geolocalize/hr/>\n"
 "Language: hr\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_id
@@ -37,6 +38,9 @@ msgid ""
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key "
 "for more information."
 msgstr ""
+"Potreban je API ključ za GeoCoding (Places).\n"
+"Posjetite https://developers.google.com/maps/documentation/geocoding/get-api-"
+"key za više informacija."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
@@ -46,7 +50,7 @@ msgstr "API:"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Compute Localization"
-msgstr ""
+msgstr "Izračunaj lokalizaciju"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -56,7 +60,7 @@ msgstr "Izračunaj na temelju adrese"
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_config_settings
 msgid "Config Settings"
-msgstr "Postavke"
+msgstr "Konfiguracijske postavke"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_partner
@@ -66,7 +70,7 @@ msgstr "Kontakt"
 #. module: base_geolocalize
 #: model:ir.model,website_form_label:base_geolocalize.model_res_partner
 msgid "Create a Customer"
-msgstr "Kreiraj kupca"
+msgstr "Kreirajte kupca"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_uid
@@ -84,18 +88,18 @@ msgstr "Kreirano"
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__display_name
 msgid "Display Name"
-msgstr "Naziv"
+msgstr "Naziv za prikaz"
 
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 msgid "Error with geolocation server: %s"
-msgstr ""
+msgstr "Pogreška s poslužiteljem geolokacije: %s"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
 msgid "Geo Coder"
-msgstr ""
+msgstr "Geokoder"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -105,7 +109,7 @@ msgstr "Geolokacija"
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geo_provider
 msgid "Geo Provider"
-msgstr ""
+msgstr "Pružatelj geolokacije"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -121,7 +125,7 @@ msgstr "Datum geolociranja"
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
 msgid "Google Map API Key"
-msgstr ""
+msgstr "Google Map API ključ"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__id
@@ -134,27 +138,27 @@ msgstr "ID"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "Key:"
-msgstr ""
+msgstr "Ključ:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_uid
 msgid "Last Updated by"
-msgstr "Promijenio"
+msgstr "Posljednju izmjenu izvršio"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_date
 msgid "Last Updated on"
-msgstr "Vrijeme promjene"
+msgstr "Posljednja izmjena"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Lat :"
-msgstr ""
+msgstr "Zem. širina:"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Long:"
-msgstr ""
+msgstr "Zem. duljina:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__name
@@ -165,13 +169,13 @@ msgstr "Naziv"
 #. odoo-python
 #: code:addons/base_geolocalize/models/res_partner.py:0
 msgid "No match found for %(partner_names)s address(es)."
-msgstr ""
+msgstr "Nije pronađeno podudaranje za adresu/e partnera %(partner_names)s."
 
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 msgid "OpenStreetMap calls disabled in testing environment."
-msgstr ""
+msgstr "OpenStreetMap pozivi onemogućeni u testnom okruženju."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -182,7 +186,7 @@ msgstr "Dodjela partnera"
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 msgid "Provider %s is not implemented for geolocation service."
-msgstr ""
+msgstr "Pružatelj %s nije implementiran za uslugu geolokacije."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -192,7 +196,7 @@ msgstr "Osvježi"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Refresh Localization"
-msgstr ""
+msgstr "Osvježi lokalizaciju"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
@@ -212,6 +216,13 @@ msgid ""
 "Then, go to Developer Console, and enable the APIs:\n"
 "Geocoding, Maps Static, Maps Javascript.\n"
 msgstr ""
+"Nije moguće geolocirati, primljena pogreška:\n"
+"%s\n"
+"\n"
+"Google je ovo pretvorio u plaćenu značajku.\n"
+"Prvo trebate omogućiti naplatu na svom Google računu.\n"
+"Zatim idite u Developer Console i omogućite API-je:\n"
+"Geocoding, Maps Static, Maps Javascript.\n"
 
 #. module: base_geolocalize
 #. odoo-python
@@ -222,7 +233,7 @@ msgstr "Nepoznato"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Updated on:"
-msgstr ""
+msgstr "Ažurirano:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
@@ -230,6 +241,8 @@ msgid ""
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key "
 "for more information."
 msgstr ""
+"Posjetite https://developers.google.com/maps/documentation/geocoding/get-api-"
+"key za više informacija."
 
 #. module: base_geolocalize
 #. odoo-python

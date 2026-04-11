@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:37+0000\n"
-"PO-Revision-Date: 2026-03-25 08:43+0000\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"PO-Revision-Date: 2026-04-08 14:24+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "account_edi_ubl_cii/pl/>\n"
@@ -51,8 +51,8 @@ msgstr "(Od)grupuj pozycje wg. podatku"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
-msgid "1.0"
-msgstr "1.0"
+msgid "A"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1383,6 +1383,13 @@ msgstr ""
 "Dyrektywy Rady 2006/112/WE"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-135-1
+msgid ""
+"VATEX-EU-135-1 - Exempt based on article 135, section 1 of Council Directive "
+"2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143
 msgid ""
 "VATEX-EU-143 - Exempt based on article 143 of Council Directive 2006/112/EC"
@@ -1889,10 +1896,9 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-3
 msgid ""
 "VATEX-FR-CGI261D-3 - Exempt based on 3° of article 261 D of the Code Général "
-"des Impôts (CGI ; General tax code)"
+"des Impôts (CGI ; General tax code) Exonération de TVA - Article 261 D-3° du "
+"Code Général des Impôts"
 msgstr ""
-"VATEX-FR-CGI261D-3 – Zwolnienie na podstawie art. 261 D § 3 Code Général des "
-"Impôts (CGI; Kodeksu ogólnego podatków)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-4
@@ -1981,7 +1987,7 @@ msgid ""
 "each invoice line should be greater than 0."
 msgstr ""
 "W przypadku zastosowania kanaryjskiego ogólnego podatku pośredniego (IGIC), "
-"stawka podatku w każdej linii faktury powinna być większa niż 0."
+"stawka podatku w każdej pozycji faktury powinna być większa niż 0."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__aq
@@ -1993,6 +1999,12 @@ msgstr "X.400 adres do poczty tekstowej"
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "You can only (un)group lines of a draft invoice"
 msgstr "Można (od)grupować tylko pozycje faktury w wersji roboczej"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+msgid "You can only group lines of an invoice"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -2031,6 +2043,16 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid "1.0"
+#~ msgstr "1.0"
+
+#~ msgid ""
+#~ "VATEX-FR-CGI261D-3 - Exempt based on 3° of article 261 D of the Code "
+#~ "Général des Impôts (CGI ; General tax code)"
+#~ msgstr ""
+#~ "VATEX-FR-CGI261D-3 – Zwolnienie na podstawie art. 261 D § 3 Code Général "
+#~ "des Impôts (CGI; Kodeksu ogólnego podatków)"
 
 #~ msgid "Articles 226 items 11 to 15 Directive 2006/112/EN"
 #~ msgstr "Artykuły 226 elementy 11 do 15 Dyrektywa 2006/112/EN"

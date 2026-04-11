@@ -3,13 +3,14 @@
 # * account_fleet
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Boris Peko <boris.peko@ecodica.eu>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-16 15:18+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-04-10 18:01+0000\n"
+"Last-Translator: Boris Peko <boris.peko@ecodica.eu>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/"
 "account_fleet/hr/>\n"
 "Language: hr\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_log_services_view_form
@@ -29,6 +30,11 @@ msgid ""
 "invisible=\"account_move_state == 'posted'\" title=\"Service's "
 "Bill\">Service's Bill</span>"
 msgstr ""
+"<span class=\"o_stat_text text-success\" invisible=\"account_move_state != "
+"'posted'\" title=\"Račun usluge\">Račun usluge</span>\n"
+"                            <span class=\"o_stat_text text-warning\" "
+"invisible=\"account_move_state == 'posted'\" title=\"Račun usluge\">Račun "
+"usluge</span>"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__account_move_ids
@@ -78,7 +84,7 @@ msgstr "Datum kreiranja"
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__display_name
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__display_name
 msgid "Display Name"
-msgstr "Naziv"
+msgstr "Naziv za prikaz"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_account_automatic_entry_wizard__id
@@ -139,6 +145,8 @@ msgid ""
 "You cannot delete log services records because one or more of them were bill "
 "created."
 msgstr ""
+"Ne možete obrisati zapise servisnog dnevnika jer je za jedan ili više njih "
+"kreiran račun."
 
 #. module: account_fleet
 #. odoo-python
@@ -147,6 +155,8 @@ msgid ""
 "You cannot modify amount of services linked to an account move line. Do it "
 "on the related accounting entry instead."
 msgstr ""
+"Ne možete izmijeniti iznos usluga povezanih sa stavkom knjiženja. Umjesto "
+"toga to učinite na povezanoj temeljnici."
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
