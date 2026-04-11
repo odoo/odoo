@@ -609,6 +609,8 @@ export class TicketScreen extends Component {
                 productId: orderline.product.id,
                 price: orderline.price,
                 qty: orderline.quantity,
+                price_subtotal: orderline.get_price_without_tax(),
+                price_subtotal_incl: orderline.get_price_with_tax(),
                 refundedQty: orderline.refunded_qty,
                 orderUid: orderline.order.uid,
                 orderBackendId: orderline.order.backendId,
@@ -655,10 +657,15 @@ export class TicketScreen extends Component {
         const draftPackLotLines = orderline.pack_lot_lines
             ? { modifiedPackLotLines: [], newPackLotLines: orderline.pack_lot_lines }
             : false;
+        const ratio = qty / Math.abs(orderline.qty);
         return {
             quantity: -qty,
             price: orderline.price,
-            extras: { price_type: "automatic" },
+            extras: {
+                price_type: "automatic",
+                price_subtotal: -ratio * orderline.price_subtotal,
+                price_subtotal_incl: -ratio * orderline.price_subtotal_incl,
+            },
             merge: false,
             refunded_orderline_id: orderline.id,
             tax_ids: orderline.tax_ids,

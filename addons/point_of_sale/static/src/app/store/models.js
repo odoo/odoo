@@ -465,6 +465,10 @@ export class Orderline extends PosModel {
         }
         this.tax_ids = json.tax_ids && json.tax_ids.length !== 0 ? json.tax_ids[0][2] : undefined;
         this.set_customer_note(json.customer_note);
+        if (this.order?.locked) {
+            this.price_subtotal = json.price_subtotal;
+            this.price_subtotal_incl = json.price_subtotal_incl;
+        }
         this.refunded_qty = json.refunded_qty;
         this.refunded_orderline_id = json.refunded_orderline_id;
         this.saved_quantity = json.qty;
@@ -1065,6 +1069,20 @@ export class Orderline extends PosModel {
         return this.pos.get_taxes_after_fp(taxesIds, this.order.fiscal_position);
     }
     get_all_prices(qty = this.get_quantity()) {
+        if (this.price_subtotal !== undefined && this.price_subtotal_incl !== undefined) {
+            const lineQty = this.get_quantity();
+            const ratio = lineQty && qty !== lineQty ? qty / lineQty : 1;
+            const discountFactor = 1 - (this.get_discount() || 0) / 100;
+            const undiscount = discountFactor > 0 ? 1 / discountFactor : 1;
+            return {
+                priceWithTax: this.price_subtotal_incl * ratio,
+                priceWithoutTax: this.price_subtotal * ratio,
+                priceWithTaxBeforeDiscount: this.price_subtotal_incl * ratio * undiscount,
+                priceWithoutTaxBeforeDiscount: this.price_subtotal * ratio * undiscount,
+                tax: (this.price_subtotal_incl - this.price_subtotal) * ratio,
+                taxDetails: {},
+            };
+        }
         var price_unit = this.get_unit_price() * (1.0 - this.get_discount() / 100.0);
         var taxtotal = 0;
 
@@ -1577,6 +1595,12 @@ export class Order extends PosModel {
         this.to_invoice = json.to_invoice || false;
         this.shippingDate = json.shipping_date;
 
+        // Tag this order as 'locked' before creating orderlines so that
+        // Orderline.init_from_JSON can detect a paid order and pin the
+        // historical price_subtotal/price_subtotal_incl from the JSON
+        // instead of recomputing them from current tax definitions.
+        this.locked = ["paid", "done", "invoiced"].includes(json.state);
+
         var orderlines = json.lines;
         for (var i = 0; i < orderlines.length; i++) {
             var orderline = orderlines[i][2];
@@ -1604,10 +1628,10 @@ export class Order extends PosModel {
             }
         }
 
-        // Tag this order as 'locked' if it is already paid.
-        this.locked = ["paid", "done", "invoiced"].includes(json.state);
         this.state = json.state;
         this.amount_return = json.amount_return;
+        this.amount_total = json.amount_total;
+        this.amount_tax = json.amount_tax;
         this.account_move = json.account_move;
         this.backendId = json.id;
         this.is_tipped = json.is_tipped || false;
@@ -2553,6 +2577,9 @@ export class Order extends PosModel {
         );
     }
     get_total_with_tax() {
+        if (this.locked && this.amount_total !== undefined) {
+            return this.amount_total;
+        }
         return this.get_total_without_tax() + this.get_total_tax();
     }
     get_total_without_tax() {
@@ -2601,6 +2628,9 @@ export class Order extends PosModel {
         );
     }
     get_total_tax() {
+        if (this.locked && this.amount_tax !== undefined) {
+            return this.amount_tax;
+        }
         if (this.pos.company.tax_calculation_rounding_method === "round_globally") {
             // As always, we need:
             // 1. For each tax, sum their amount across all order lines
