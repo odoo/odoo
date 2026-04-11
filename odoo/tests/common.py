@@ -542,7 +542,7 @@ class BaseCase(case.TestCase):
 
     _registry_patched = False
     _registry_readonly_enabled = True
-    test_cursor_lock_timeout: int = 20
+    test_cursor_lock_timeout: int = 3600 if DISABLE_TIMEOUTS else 20
 
     @classmethod
     def __init_subclass__(cls):
