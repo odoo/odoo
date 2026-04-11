@@ -235,6 +235,8 @@ class HrAttendance(http.Controller):
     @http.route('/hr_attendance/employees_infos', type="jsonrpc", auth="public")
     def employees_infos(self, token, limit, offset, domain):
         for condition in domain:
+            if not isinstance(condition, (list, tuple)) or len(condition) != 3:
+                continue
             field_name, operator, _value = condition  # Force '&' implicit syntax
             if field_name not in ('name', 'department_id') or operator not in ('=', 'ilike'):
                 raise UserError(_(
