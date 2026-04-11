@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
+
 from odoo.tests.common import tagged, HttpCase
 from unittest.mock import patch
 from odoo.http import Request
@@ -37,3 +39,28 @@ class TestHrAttendanceKiosk(HttpCase):
         kiosk_info = kiosk_info['kiosk_backend_info']
         self.assertEqual(kiosk_info['company_name'], 'company_B')
         self.assertEqual(kiosk_info['departments'][0]['count'], 1)
+
+    def test_employee_infos_on_kiosk(self):
+        with patch.object(Request, "render", return_value=None) as render:
+            self.url_open(self.company_B.attendance_kiosk_url)
+        _template, kiosk_info = render.call_args[0]
+
+        kiosk_info = kiosk_info['kiosk_backend_info']
+        token = kiosk_info.get('token')
+        domain = ['&', ('department_id', '=', self.department_A.id), ('name', 'ilike', 'employee')]
+
+        # search the employee with department
+        response = self.url_open(
+            url='/hr_attendance/employees_infos',
+            data=json.dumps({
+                'params': {
+                    'token': token,
+                    'limit': 10,
+                    'offset': 0,
+                    'domain': domain,
+                }
+            }),
+            headers={'Content-Type': 'application/json'},
+        )
+        result = json.loads(response.content).get('result')
+        self.assertTrue(result['records'])
