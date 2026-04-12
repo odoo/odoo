@@ -239,7 +239,7 @@ def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are t
                     return
                 log_msgs.append(f'Database {dbname or "<no_db>"}:')
                 log_msgs.extend(
-                    f" * {cache_name}: {entries}/{count}{' (' if cache_total_size else ''}{cache_total_size}{' bytes)' if cache_total_size else ''}"
+                    f" * {cache_name}: {entries}/{count}{' (' if cache_total_size else ''}{cache_total_size or ''}{' bytes)' if cache_total_size else ''}"
                     for cache_name, entries, count, cache_total_size in db_cache_usage
                 )
                 log_msgs.append('Details:')
@@ -269,7 +269,7 @@ def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are t
                     )
             _logger.info('\n'.join(log_msgs))
         except Exception:  # noqa: BLE001
-            _logger.exception()
+            _logger.exception("Failed to log ormcache stats")
         finally:
             global _logger_state  # noqa: PLW0603
             with _logger_lock:
