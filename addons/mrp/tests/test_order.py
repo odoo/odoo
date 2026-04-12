@@ -5505,7 +5505,7 @@ class TestMrpOrderPostInstall(TestMrpCommon):
             {'name': f"sn#0{13 + i}"} for i in range(20)
         ])
         mo.button_mark_done()
-        self.assertRecordValues(mo.backorder_ids.sorted('state'), [
+        self.assertRecordValues(mo.production_group_id.production_ids.sorted('state'), [
             {'state': 'confirmed', 'product_qty': 16.0, 'qty_produced': 0.0},
             {'state': 'done', 'product_qty': 20.0, 'qty_produced': 20.0},
         ])
