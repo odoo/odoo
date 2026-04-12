@@ -538,6 +538,18 @@ class IrCron(models.Model):
                     count=MIN_FAILURE_COUNT_BEFORE_DEACTIVATION,
                     time=now,
                 ))
+            elif (
+                # XXX too much notifications like this
+                failure_count >= MIN_FAILURE_COUNT_BEFORE_DEACTIVATION // 2
+                and first_failure_date + MIN_DELTA_BEFORE_DEACTIVATION / 2 < now
+            ):
+                self._notify_admin(self.env._(
+                    "Cron job %(name)s (%(id)s) is failing and will be deactivated if you don't take action. "
+                    "More information can be found in the server logs around %(time)s.",
+                    name=repr(job['cron_name']),
+                    id=job['id'],
+                    time=now,
+                ))
         else:
             failure_count = 0
             first_failure_date = None
