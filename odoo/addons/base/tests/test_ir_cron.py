@@ -71,7 +71,7 @@ class CronMixinCase:
         return {'name': f'Dummy partner for TestIrCron {unique}'}
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestIrCron(TransactionCase, CronMixinCase):
 
     @classmethod
@@ -487,6 +487,50 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.assertEqual(self.cron.active, True, 'The cron should not have been deactivated due to time constraint')
         self.assertFalse(notify.called)
 
+        self.cron.failure_count = 3
+        self.cron.first_failure_date = fields.Datetime.now() - timedelta(days=10)
+
+        self.cron._trigger()
+        self.env.flush_all()
+        with (
+            self.enter_registry_test_mode(),
+            patch.object(self.registry['ir.cron'], '_callback', side_effect=Exception),
+            patch.object(self.registry['ir.cron'], '_notify_admin') as notify,
+            mute_logger('odoo.addons.base.models.ir_cron'),
+            self.registry.cursor() as cr,
+        ):
+            self.registry['ir.cron']._process_job(
+                cr,
+                {**self.cron.read(load=None)[0], **default_progress}
+            )
+
+        self.env.invalidate_all()
+        self.assertEqual(self.cron.failure_count, 4, 'The cron should have failed one more time but not reset (due to time)')
+        self.assertEqual(self.cron.active, True, 'The cron should not have been deactivated due to fail count constraint')
+        self.assertTrue(notify.called, 'Warning notification should be sent')
+
+        self.cron.failure_count = 9  # next is 10 (see throttling)
+        self.cron.first_failure_date = fields.Datetime.now() - timedelta(days=5)
+
+        self.cron._trigger()
+        self.env.flush_all()
+        with (
+            self.enter_registry_test_mode(),
+            patch.object(self.registry['ir.cron'], '_callback', side_effect=Exception),
+            patch.object(self.registry['ir.cron'], '_notify_admin') as notify,
+            mute_logger('odoo.addons.base.models.ir_cron'),
+            self.registry.cursor() as cr,
+        ):
+            self.registry['ir.cron']._process_job(
+                cr,
+                {**self.cron.read(load=None)[0], **default_progress}
+            )
+
+        self.env.invalidate_all()
+        self.assertEqual(self.cron.failure_count, 10, 'The cron should have failed one more time but not reset (due to time)')
+        self.assertEqual(self.cron.active, True, 'The cron should not have been deactivated due to time constraint')
+        self.assertTrue(notify.called, 'Warning notification should be sent')
+
         self.cron.failure_count = 4
         self.cron.first_failure_date = fields.Datetime.now() - timedelta(days=8)
 
@@ -507,7 +551,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.env.invalidate_all()
         self.assertEqual(self.cron.failure_count, 0, 'The cron should have failed one more time and reset to 0')
         self.assertEqual(self.cron.active, False, 'The cron should have been deactivated after 5 failures')
-        self.assertTrue(notify.called)
+        self.assertTrue(notify.called, "Admin must be notified")
 
     def test_cron_timeout_failure(self):
         self.cron._trigger()
