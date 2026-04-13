@@ -695,7 +695,6 @@ class TestEventNotifications(CalendarMailCommon):
         """ Ensure that we can delete a specific occurrence of a recurring event
             and notify the participants about the cancellation. """
         # Setup for creating a test event with recurring properties.
-        user_admin = self.env.ref('base.user_admin')
         start = datetime.combine(date.today(), datetime.min.time()).replace(hour=9)
         stop = datetime.combine(date.today(), datetime.min.time()).replace(hour=12)
         event = self.env['calendar.event'].create({
@@ -708,6 +707,7 @@ class TestEventNotifications(CalendarMailCommon):
             'rrule_type': 'daily',
             'count': 3,
             'location': 'Odoo S.A.',
+            'partner_ids': [(6, 0, self.user_employee_2.partner_id.ids)],
             'privacy': 'public',
             'show_as': 'busy',
         })
@@ -722,17 +722,25 @@ class TestEventNotifications(CalendarMailCommon):
 
         # Unlink the event and send a cancellation notification.
         event.action_unlink_event()
-        wizard = self.env['calendar.popover.delete.wizard'].create({
-            'calendar_event_id': event.id,
-            'subject': 'Event Cancellation',
-            'body': 'The event has been cancelled.',
-            'recipient_ids': [(6, 0, [user_admin.partner_id.id])],
-        })
+
+        # Edit the default cancellation email template and select future_events to delete the next events of the recurrence.
+        wizard = self.env['calendar.popover.delete.wizard'].with_context(
+            form_view_ref='calendar.view_event_delete_wizard_form').create({'calendar_event_id': event.id})
+        form = Form(wizard)
+        form.body = f'{form.body} (edited)'
+        form.recipient_ids.add(self.user_admin.partner_id)
+        form.subject = f'{form.subject} (edited)'
+        form.save()
 
         # Simulate sending the email and ensure one email was sent.
         with self.mock_mail_gateway():
             wizard.action_send_mail_and_delete()
         self.assertEqual(len(self._new_mails), 1)
+        # Check that the mail has been generated from the edition of the default cancellation email template.
+        self.assertIn('Event canceled', self._new_mails.body)
+        self.assertIn('(edited)', self._new_mails.body)
+        self.assertEqual(self._new_mails.subject, 'Canceled event: Test Event Delete Notification (edited)')
+        self.assertEqual(self._new_mails.partner_ids, self.user_admin.partner_id + self.user_employee_2.partner_id)
 
     def test_get_next_potential_limit_alarm(self):
         """
