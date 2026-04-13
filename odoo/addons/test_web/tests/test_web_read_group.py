@@ -143,6 +143,9 @@ class TestWebReadGroup(common.TransactionCase):
                 },
             )
 
+        with self.assertRaisesRegex(ValueError, "Need at least one item to groupby"):
+            Model.web_read_group(domain=[], groupby=[], aggregates=['__count'])
+
     @patch("odoo.addons.web.models.models.MAX_NUMBER_OPENED_GROUPS", 2)
     def test_auto_unfold_limit(self):
         Model = self.env["test_read_group.aggregate"]

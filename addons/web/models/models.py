@@ -577,7 +577,9 @@ class Base(models.AbstractModel):
             for records within the group.
 
         """
-        assert isinstance(groupby, (list, tuple)) and groupby
+        assert isinstance(groupby, (list, tuple))
+        if not groupby:
+            raise ValueError(self.env._("Need at least one item to groupby"))
 
         aggregates = list(aggregates)
         if '__count' not in aggregates:  # Used for computing length of sublevel groups
