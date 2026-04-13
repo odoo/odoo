@@ -429,12 +429,14 @@ class App extends owl.App {
 
     createRoot(component, config = {}) {
         if (config.env) {
-            component = class extends component {
-                constructor(node) {
-                    provideEnv(config.env);
-                    super(node);
-                }
-            };
+            component = {
+                [component.name]: class extends component {
+                    constructor(node) {
+                        provideEnv(config.env);
+                        super(node);
+                    }
+                },
+            }[component.name];
         }
         return super.createRoot(component, config);
     }
