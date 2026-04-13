@@ -858,3 +858,21 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
 
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_BR_E_08_line_extension_amount')
+
+    def test_invoice_tax_subtotal_exempt_amount(self):
+        """ Test that the taxable amount for exempt taxes is correctly computed,
+        regardless of the tax calculation rounding method.
+        """
+        tax_0 = self.percent_tax(0.0)
+        for rounding_method in ('round_per_line', 'round_globally'):
+            self.env.company.tax_calculation_rounding_method = rounding_method
+            invoice = self._create_invoice(
+                partner_id=self.partner_be,
+                invoice_line_ids=[
+                    self._prepare_invoice_line(product_id=self.product_a, price_unit=39.615, quantity=4.0, discount=20.0, tax_ids=tax_0),
+                    self._prepare_invoice_line(product_id=self.product_a, price_unit=0.84, quantity=4.0, discount=20.0, tax_ids=tax_0),
+                ],
+                post=True,
+            )
+            self._generate_invoice_ubl_file(invoice)
+            self._assert_invoice_ubl_file(invoice, f'test_invoice_tax_subtotal_exempt_amount_{rounding_method}')
