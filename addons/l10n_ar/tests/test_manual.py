@@ -408,3 +408,40 @@ class TestArManual(common.TestArCommon):
             .sorted(lambda x: (x.move_id.id, x.tax_line_id.id, x.tax_ids.ids, x.tax_repartition_line_id.id))
 
         self.assertEqual(tax_lines_a.balance, tax_lines_b.balance, 'Tax balances should be equal since both invoices have a single line and the total matches the line amount.')
+
+    def test_vendor_bill_hash_out_of_order(self):
+        """ Vendor bills with 'Lock Posted Entries with Hash' enabled can be posted in any order.
+        Vendors assign document numbers independently of Odoo's sequence, so a bill with a lower
+        document number may be entered after one with a higher number. """
+        purchase_journal = self.env['account.journal'].search([
+            ('type', '=', 'purchase'),
+            ('company_id', '=', self.env.company.id),
+            ('l10n_latam_use_documents', '=', True),
+        ], limit=1)
+        purchase_journal.restrict_mode_hash_table = True
+
+        bill_high = self._create_invoice(
+            move_type='in_invoice',
+            invoice_date='2024-01-01',
+            partner_id=self.res_partner_adhoc,
+            journal_id=purchase_journal,
+            l10n_latam_document_type_id=self.document_type['invoice_a'],
+            invoice_line_ids=[self._prepare_invoice_line(price_unit=100, product_id=self.product_iva_21)],
+        )
+        bill_high.l10n_latam_document_number = '00001-00009999'
+        bill_high.action_post()
+        self.assertEqual(bill_high.state, 'posted')
+        self.assertTrue(bill_high.inalterable_hash)
+
+        bill_low = self._create_invoice(
+            move_type='in_invoice',
+            invoice_date='2024-01-02',
+            partner_id=self.res_partner_adhoc,
+            journal_id=purchase_journal,
+            l10n_latam_document_type_id=self.document_type['invoice_a'],
+            invoice_line_ids=[self._prepare_invoice_line(price_unit=100, product_id=self.product_iva_21)],
+        )
+        bill_low.l10n_latam_document_number = '00001-01009992'
+        bill_low.action_post()
+        self.assertEqual(bill_low.state, 'posted')
+        self.assertTrue(bill_low.inalterable_hash)

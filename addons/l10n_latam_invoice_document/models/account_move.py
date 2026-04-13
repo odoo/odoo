@@ -248,3 +248,16 @@ class AccountMove(models.Model):
     def _set_next_made_sequence_gap(self, made_gap: bool):
         if other_moves := self.filtered(lambda m: not m.journal_id.l10n_latam_use_documents):
             super(AccountMove, other_moves)._set_next_made_sequence_gap(made_gap)
+
+    def _hash_moves(self, **kwargs):
+        latam_purchase = self.filtered(
+            lambda m: m.is_purchase_document() and m.l10n_latam_use_documents
+        )
+        super(AccountMove, self - latam_purchase)._hash_moves(**kwargs)
+        force_hash = kwargs.get('force_hash', False)
+        for move in latam_purchase:
+            if self._is_move_restricted(move, force_hash=force_hash) and not move.inalterable_hash:
+                move_hash = move.sudo()._calculate_hashes('')
+                for m, h in move_hash.items():
+                    m.inalterable_hash = h
+                move._message_log_batch(bodies={move.id: self.env._("This journal entry has been secured.")})
