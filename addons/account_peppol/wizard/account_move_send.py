@@ -4,6 +4,7 @@
 from base64 import b64encode
 
 from odoo import api, fields, models, _
+from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
 
@@ -45,7 +46,12 @@ class AccountMoveSend(models.TransientModel):
     @api.depends('enable_peppol')
     def _compute_checkbox_send_peppol(self):
         for wizard in self:
-            wizard.checkbox_send_peppol = wizard.enable_peppol and not wizard.peppol_warning
+            countries = wizard.move_ids.partner_id.commercial_partner_id.mapped('country_code')
+            wizard.checkbox_send_peppol = (
+                wizard.enable_peppol
+                and not wizard.peppol_warning
+                and any(country in PEPPOL_DEFAULT_COUNTRIES for country in countries)
+            )
 
     def _compute_checkbox_send_mail(self):
         super()._compute_checkbox_send_mail()
