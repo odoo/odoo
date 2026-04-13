@@ -6516,6 +6516,64 @@ class Model(AbstractModel):
     _abstract: typing.Literal[False] = False  # not abstract
 
 
+class TopModel(BaseModel):
+    """ Plain Python base placed at position 0 of every model class's MRO
+    (between the model class itself and its inner implementation layer).
+
+    Because ``TopModel`` is always directly above the inner implementation
+    class in the MRO, ``super(TopModel, self).write()`` chains cleanly through
+    all model-definition ``write`` overrides without any dynamic patching or
+    closure tricks, and without causing C3 MRO conflicts.
+    """
+    _register: bool = False
+
+    def write(self, vals):
+        if not vals or not self:
+            # TBD: should directly return True
+            # but is used to check access in test_cross_record_copies
+            return super().write(vals)
+
+        field_protected_ids: dict[str, set | frozenset] = {}
+        unprotected_fnames = []
+        for fname in vals:
+            if (field := self._fields.get(fname)) and (protected_ids := self.env._protected.get(field)):
+                field_protected_ids[fname] = protected_ids
+            else:
+                unprotected_fnames.append(fname)
+
+        for fname, protected_ids in field_protected_ids.items():
+            protected_recs = self.browse(id_ for id_ in self._ids if id_ in protected_ids)
+            if protected_recs:
+                protected_recs[fname] = vals[fname]
+                if len(protected_recs) == len(self):
+                    vals.pop(fname)
+        if not vals:
+            # all fields for records are protected
+            return True
+
+        if not field_protected_ids:
+            # all fields for records are unprotected
+            return super().write(vals)
+
+        # _logger.warning("Mixing protected and unprotected fields when writing")
+        unprotected_fnames = frozenset(unprotected_fnames)
+        unprotected_groups: dict[frozenset, list] = defaultdict(list)
+        for id_ in self._ids:
+            fnames = frozenset(
+                fname for fname, protected_ids in field_protected_ids.items()
+                if id_ not in protected_ids
+            ) | unprotected_fnames
+            if fnames:
+                unprotected_groups[fnames].append(id_)
+
+        for fnames, ids in unprotected_groups.items():
+            super(TopModel, self.browse(ids)).write(
+                {fname: val for fname, val in vals.items() if fname in fnames},
+            )
+
+        return True
+
+
 @functools.total_ordering
 class ReversibleComparator:
     __slots__ = ('__item', '__none_first', '__reverse')
