@@ -1955,8 +1955,6 @@ class BaseModel(metaclass=MetaModel):
 
         :raise AccessError: if user is not allowed to access requested information
         """
-        self.browse().check_access('read')
-
         query = self._search(domain)
         if query.is_empty():
             if not groupby:
@@ -1983,6 +1981,8 @@ class BaseModel(metaclass=MetaModel):
             query.order = self._read_group_orderby(query.table, order, groupby_terms)
             query.groupby = SQL(", ").join(groupby_terms.values())
             query.having = self._read_group_having(query.table, list(having))
+        elif not select_args:
+            raise ValueError(self.env._("Need groupby or aggregates."))
 
         # row_values: [(a1, b1, c1), (a2, b2, c2), ...]
         row_values = self.env.execute_query(query.select(*select_args))
