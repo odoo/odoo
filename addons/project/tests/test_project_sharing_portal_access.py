@@ -174,6 +174,15 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         self.assertIn(f'href="http://localhost:{config["http_port"]}/web/signup', str(mail_partner.body), 'The message link should contain the url to register to the portal')
         self.assertIn('token=', str(mail_partner.body), 'The message link should contain a personalized token to register to the portal')
 
+    def test_followers_task_created_by_portal_user(self):
+        """Tests that the auto-subscription system properly add the followers of
+        the parent project when a portal user creates a task
+        """
+        self.project_portal.message_subscribe(self.user_projectmanager.partner_id.ids)
+        task = self.env["project.task"].with_user(self.user_portal).with_context(default_project_id=self.project_portal.id).create({'name': 'Task created by portal_user'})
+        self.assertIn(self.user_portal.partner_id, task.sudo().message_partner_ids)
+        self.assertIn(self.user_projectmanager.partner_id, task.sudo().message_partner_ids)
+
 
 class TestProjectSharingChatterAccess(TestProjectSharingCommon, HttpCase):
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')

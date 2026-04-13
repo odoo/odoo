@@ -340,8 +340,8 @@ class MailThread(models.AbstractModel):
         for thread, values in zip(threads, vals_list):
             create_values = dict(values)
             for key, val in self.env.context.items():
-                if key.startswith('default_') and key[8:] not in create_values:
-                    create_values[key[8:]] = val
+                if (field_name := self._get_field_name_from_context_variable(key)) and field_name not in create_values:
+                    create_values[field_name] = val
             thread._message_auto_subscribe(create_values, followers_existing_policy='update')
             create_values_list[thread.id] = create_values
 
@@ -379,6 +379,10 @@ class MailThread(models.AbstractModel):
                     self.env.cr.precommit.add(thread._track_post_template_finalize)  # call to _track_post_template_finalize bound to this record
                     self.env.cr.precommit.data.setdefault(f'mail.tracking.create.{self._name}.{thread.id}', changes)
         return threads
+
+    @api.model
+    def _get_field_name_from_context_variable(self, name):
+        return name[8:] if name.startswith('default_') else False
 
     def write(self, vals):
         if self.env.context.get('tracking_disable'):
