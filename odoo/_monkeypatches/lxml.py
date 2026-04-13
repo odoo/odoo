@@ -24,13 +24,13 @@ ARIA_ATTRIBUTES = frozenset([
 def patch_module():
     """
     Patches lxml to:
-    1. Add ARIA attributes to the allowed whitelist for lxml.html.clean (versions < 7.0.0).
+    1. Add ARIA attributes to the allowed whitelist for lxml.html.clean (versions < 6.1.0).
     2. Fix an issue where data URLs in style attributes are removed erroneously (versions 4.6.0 - 5.2.0).
     """
     lxml_version = parse_version(version("lxml"))
 
     # 1. Add missing ARIA attributes
-    if lxml_version < parse_version("7.0.0"):
+    if lxml_version < parse_version("6.1.0"):
         import lxml.html.defs  # noqa: PLC0415
         lxml.html.defs.safe_attrs |= ARIA_ATTRIBUTES
 
