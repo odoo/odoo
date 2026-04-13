@@ -27,3 +27,4 @@ from . import test_res_config_settings
 from . import test_pos_product_variants
 from . import test_generic_localization
 from . import test_order_receipt
+from . import test_pos_picking_backorder
