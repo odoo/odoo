@@ -38,6 +38,7 @@ function toIgnore(node) {
         "IMG",
         "BR",
         "LI",
+        ".OI",
         "COL",
         "COLGROUP",
         ...iconClasses.map((cls) => `.${cls.toUpperCase()}`),
@@ -4593,9 +4594,9 @@ describe("onDrop", () => {
     });
     test("should drag and drop icon", async () => {
         const { el } = await setupEditor(
-            `<p>[a</p><p><span class="fa fa-heart"></span>b]</p><p>c</p>`
+            `<p>[a</p><p><span class="oi oi-filled" data-icon="favorite"></span>b]</p><p>c</p>`
         );
-        const iconElement = el.querySelector(".fa");
+        const iconElement = el.querySelector(".oi");
         const targetNodeForDrop = el.lastChild;
 
         patchWithCleanup(document, {
@@ -4619,7 +4620,7 @@ describe("onDrop", () => {
         await animationFrame();
 
         expect(getContent(el)).toBe(
-            '<p><br></p><p>ca</p><p>\ufeff<span class="fa fa-heart" contenteditable="false">\u200b</span>\ufeffb[]</p>'
+            '<p><br></p><p>ca</p><p>\ufeff<span class="oi oi-filled" data-icon="favorite" contenteditable="false">\u200b</span>\ufeffb[]</p>'
         );
     });
 });
