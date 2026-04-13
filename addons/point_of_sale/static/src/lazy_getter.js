@@ -19,7 +19,7 @@ export function createLazyGetter(object, name, func) {
     }
     let d = keys.get(name);
     if (!d) {
-        d = derived(() => func.call(object), { name: `lazyGetter(${name})` });
+        d = computed(() => func.call(object), { name: `lazyGetter(${name})` });
         keys.set(name, d);
     }
 
