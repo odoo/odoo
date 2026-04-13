@@ -14,7 +14,7 @@
 
         <!-- App Brand -->
         <DropdownItem
-          t-if="!env.isSmall and currentApp"
+          t-if="!this.ui.isSmall and currentApp"
           t-esc="currentApp.name"
           class="'o_menu_brand d-flex'"
           onSelected="() => this.onNavBarDropdownItemSelection(currentApp)"
@@ -23,7 +23,7 @@
 
         <div class="o_navbar_breadcrumbs d-contents"/>
 
-        <t t-if="!env.isSmall">
+        <t t-if="!this.ui.isSmall">
           <!-- Current App Sections -->
           <t t-if="currentAppSections.length" t-call="web.NavBar.SectionsMenu">
             <t t-set="sections" t-value="currentAppSections" />
@@ -73,7 +73,7 @@
   </t>
 
   <t t-name="web.NavBar.AppsMenu">
-    <t t-if="env.isSmall">
+    <t t-if="this.ui.isSmall">
       <a href="/odoo" class="o_menu_toggle border-0" t-att-class="{'hasImage': currentApp?.webIconData}" accesskey="h" t-ref="menuApps" t-on-click.prevent="_openAppMenuSidebar">
         <t t-call="web.NavBar.AppsMenu.Sidebar"/>
       </a>
@@ -146,7 +146,7 @@
 
   <t t-name="web.NavBar.SectionsMenu">
     <div class="o_menu_sections d-flex flex-grow-1 flex-shrink-1 w-0" t-ref="appSubMenus" role="menu">
-        <t t-if="!env.isSmall">
+        <t t-if="!this.ui.isSmall">
             <DropdownGroup>
                 <t t-foreach="sections" t-as="section" t-key="section.id">
                     <t
