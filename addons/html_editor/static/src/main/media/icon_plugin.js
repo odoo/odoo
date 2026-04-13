@@ -237,7 +237,7 @@ export class IconPlugin extends Plugin {
     computeBackgroundColorForIcon() {
         const nodes = this.dependencies.selection
             .getTargetedNodes()
-            .filter((node) => node.classList?.contains("fa"));
+            .filter((node) => node.classList?.contains("oi"));
         if (nodes.length === 0) {
             return;
         }

@@ -37,10 +37,10 @@ test("Media should not be replaceable if not inside a savable zone", async () =>
     await setupHTMLBuilder("", {
         headerContent: `
         <header id="top" data-anchor="true" data-name="Header">
-            <i class="fa fa-shopping-cart fa-stack target" data-oe-model="ir.ui.view" data-oe-id="786" data-oe-field="arch" data-oe-xpath="/data/xpath/li[1]/a[1]"/>
+            <i class="oi oi-stack target" data-oe-model="ir.ui.view" data-oe-id="786" data-icon="shopping_cart" data-oe-field="arch" data-oe-xpath="/data/xpath/li[1]/a[1]"/>
         </header>`,
         styleContent: `
-            .fa {
+            .oi {
                 display: flex;
                 justify-content: center;
                 align-items: center;
