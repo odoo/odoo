@@ -30,7 +30,6 @@ class ResConfigSettings(models.TransientModel):
     module_website_sale_collect = fields.Boolean("Click & Collect")
 
     # Website-dependent settings
-    add_to_cart_action = fields.Selection(related="website_id.add_to_cart_action", readonly=False)
     cart_recovery_mail_template = fields.Many2one(
         related="website_id.cart_recovery_mail_template_id", readonly=False
     )
