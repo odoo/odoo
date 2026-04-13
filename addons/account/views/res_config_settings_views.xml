@@ -23,14 +23,13 @@
                     <app data-string="Invoicing" string="Invoicing" name="account" groups="account.group_account_manager">
                         <field name="has_chart_of_accounts" invisible="1"/>
                         <field name="has_accounting_entries" invisible="1"/>
-                        <block title="Fiscal Localization" name="fiscal_localization_setting_container" invisible="not is_root_company">
+                        <block title="Initial Setup" name="fiscal_localization_setting_container" invisible="not is_root_company">
                             <setting string="Fiscal Localization" company_dependent="1" help="Taxes, fiscal positions, chart of accounts &amp; legal statements for your country"
                                 documentation="/applications/finance/fiscal_localizations.html">
                                 <div class="content-group">
                                     <div class="mt16">
                                         <div>
-                                            <label for="chart_template" string="Package" class="col-2 o_light_label"/>
-                                            <field name="chart_template" readonly="has_accounting_entries" required="chart_template"/>
+                                            <field name="chart_template" readonly="has_accounting_entries" required="chart_template" class="w-100" placeholder="Package"/>
                                         </div>
                                         <div class="mt16">
                                             <button name="reload_template" type="object" string="Reload" class="btn-secondary ps-2 w-100" icon="fa-refresh"
@@ -196,7 +195,7 @@
                             </setting>
                         </block>
                         <block title="Customer Payments" id="pay_invoice_online_setting_container">
-                            <setting help="Let your customers pay their invoices online"
+                            <setting help="Let your customers pay their invoices on your portal"
                                 documentation="/applications/finance/accounting/receivables/customer_payments/online_payment.html">
                                 <field name="module_account_payment"/>
                                 <div class="mt-3 d-flex" invisible="not module_account_payment">
@@ -220,7 +219,7 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting id="qr_code_invoices" title="Add a QR-code to your invoices so that your customers can pay instantly with their mobile banking application." string="QR Codes" company_dependent="1" help="Add a payment QR-code to your invoices"
+                            <setting id="qr_code_invoices" help="Add a QR-code to your invoices so that your customers can pay instantly with their mobile banking application." string="SEPA QR Codes" company_dependent="1"
                                 documentation="/applications/finance/accounting/receivables/customer_invoices/epc_qr_code.html">
                                 <field name="qr_code" class="oe_inline"/>
                             </setting>
@@ -243,7 +242,7 @@
 
                         <block title="Digitization" id="account_digitalization">
                             <setting id="account_ocr_settings" help="Digitize your PDF or scanned documents with OCR and Artificial Intelligence"
-                                documentation="/applications/finance/accounting/payables/supplier_bills/invoice_digitization.html">
+                                documentation="/applications/finance/accounting/payables/supplier_bills/invoice_digitization.html" class="oe_inline mb-0">
                                 <field name="module_account_extract" widget="upgrade_boolean"/>
                                 <div id="msg_invoice_extract" class="content-group" invisible="not module_account_extract">
                                     <div class="text-warning mt16 mb4">
@@ -251,6 +250,7 @@
                                     </div>
                                 </div>
                             </setting>
+                            <div id="account_ocr_settings_moves" class="row"/>
                         </block>
 
                         <t groups="account.group_account_user">
