@@ -64,3 +64,33 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
         with self.assertRaises(AccessError):
             partner.with_user(user.id).signup_url
+
+    def test_email_is_validated_signup(self):
+        """
+        Check that the signup form rejects invalid email addresses
+        """
+
+        # Activate free signup
+        self._activate_free_signup()
+
+        # Get csrf_token
+        self.authenticate(None, None)
+        csrf_token = http.Request.csrf_token(self)
+
+        # Sign up with invalid email
+        name = 'mario'
+        payload = {
+            'login': 'mario@example',
+            'name': name,
+            'password': 'mypassword',
+            'confirm_password': 'mypassword',
+            'csrf_token': csrf_token,
+        }
+
+        # Signup attempt
+        url_free_signup = self._get_free_signup_url()
+        self.url_open(url_free_signup, data=payload)
+
+        # Expect user not to be registered because of invalid email
+        new_user = self.env['res.users'].search([('name', '=', name)])
+        self.assertFalse(new_user)
