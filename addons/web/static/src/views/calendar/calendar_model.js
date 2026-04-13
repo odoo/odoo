@@ -735,30 +735,71 @@ export class CalendarModel extends Model {
         this.notify();
     }
     /**
-     * @protected
-     * @param {Number} eventId
-     * @param {DateTime} rawRecord
+     * @private
+     * @param {DateTime} date
      */
-    async scheduleEvent(eventId, date) {
+    _getScheduleData(date) {
         const [start, end] = this.hasTimePrecision
             ? [date, date.plus({ hours: 1 })]
             : this.getAllDayDates(date);
         const { date_start, date_stop } = this.meta.fieldMapping;
-        await this.orm.write(this.meta.resModel, [eventId], {
+        return {
             [date_stop]: serializeDateTime(end),
             [date_start]: serializeDateTime(start),
-        });
+        };
+    }
+    /**
+     * @private
+     */
+    _getScheduleContext() {
+        return { ...this.meta.context };
+    }
+    /**
+     * @private
+     * @param {Boolean} result
+     */
+    _onEventScheduled(result) {}
+    /**
+     * @protected
+     * @param {Number} eventId
+     * @param {DateTime} date
+     */
+    async scheduleEvent(eventId, date) {
+        const result = await this.orm.write(
+            this.meta.resModel,
+            [eventId],
+            this._getScheduleData(date),
+            {
+                context: this._getScheduleContext(),
+            }
+        );
+        this._onEventScheduled(result);
         await this.load();
+    }
+    /**
+     * @private
+     * @param {Number} eventId
+     */
+    _getUnscheduleData(eventId) {
+        const { date_start, date_stop } = this.meta.fieldMapping;
+        return {
+            [date_stop]: false,
+            [date_start]: false,
+        };
+    }
+    /**
+     * @private
+     */
+    _getUnscheduleContext() {
+        return { ...this.meta.context };
     }
     /**
      * @protected
      * @param {Number} eventId
      */
     async unscheduleEvent(eventId) {
-        const { date_start, date_stop } = this.meta.fieldMapping;
-        await this.orm.write(this.meta.resModel, [eventId], {
-            [date_stop]: false,
-            [date_start]: false,
+        await this.orm.write(this.meta.resModel, [eventId], this._getUnscheduleData(eventId), {
+            context: this._getUnscheduleContext(),
         });
         await this.load();
     }
@@ -1086,8 +1127,7 @@ export class CalendarModel extends Model {
             colorField &&
             (() => {
                 const sameRelatedModel = colorField.relation === field.relation;
-                const sameRelatedField =
-                    colorField.related === `${fieldName}.${colorFieldName}`;
+                const sameRelatedField = colorField.related === `${fieldName}.${colorFieldName}`;
                 const shouldHaveColor = sameRelatedModel || sameRelatedField;
                 const colorToUse = raw ? value : rawRecord[fieldMapping.color];
                 return shouldHaveColor ? colorToUse : null;
