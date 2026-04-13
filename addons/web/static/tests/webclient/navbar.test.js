@@ -7,6 +7,7 @@ import {
     defineMenus,
     getService,
     makeMockEnv,
+    mockService,
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
@@ -259,9 +260,12 @@ test("can adapt with 'more' menu sections behavior", async () => {
     await resize({ width: 1080 });
 
     // TODO: this test case doesn't make sense since it relies on small widths
-    // with `env.isSmall` still returning `false`.
-    const env = await makeMockEnv();
-    Object.defineProperty(env, "isSmall", { get: () => false });
+    // with `ui.isSmall` still returning `false`.
+    mockService("ui", () => ({
+        isSmall: false,
+        getActiveElementOf: () => document.activeElement,
+    }));
+    await makeMockEnv();
 
     // Set menu and mount
     getService("menu").setCurrentMenu(1);
@@ -330,9 +334,12 @@ test("'more' menu sections adaptations do not trigger render in some cases", asy
     await resize({ width: 600 });
 
     // TODO: this test case doesn't make sense since it relies on small widths
-    // with `env.isSmall` still returning `false`.
-    const env = await makeMockEnv();
-    Object.defineProperty(env, "isSmall", { get: () => false });
+    // with `ui.isSmall` still returning `false`.
+    mockService("ui", () => ({
+        isSmall: false,
+        getActiveElementOf: () => document.activeElement,
+    }));
+    await makeMockEnv();
 
     const navbar = await mountWithCleanup(MyNavbar);
 
@@ -435,9 +442,12 @@ test("'more' menu sections properly updated on app change", async () => {
     await resize({ width: 1080 });
 
     // TODO: this test case doesn't make sense since it relies on small widths
-    // with `env.isSmall` still returning `false`.
-    const env = await makeMockEnv();
-    Object.defineProperty(env, "isSmall", { get: () => false });
+    // with `ui.isSmall` still returning `false`.
+    mockService("ui", () => ({
+        isSmall: false,
+        getActiveElementOf: () => document.activeElement,
+    }));
+    await makeMockEnv();
 
     // Set menu and mount
     getService("menu").setCurrentMenu(1);
@@ -497,4 +507,47 @@ test("Do not execute adapt when navbar is destroyed", async () => {
     destroy(navbar);
     await runAllTimers();
     expect.verifySteps([]);
+});
+
+test.tags("desktop");
+test("navbar adapts app brand and menu sections on resize from mobile to desktop and back to mobile", async () => {
+    defineMenus([
+        {
+            id: 1,
+            name: "My App",
+            children: [
+                { id: 10, name: "Section 1" },
+                { id: 11, name: "Section 2" },
+            ],
+        },
+    ]);
+
+    // Start with mobile width
+    await resize({ width: 500 });
+
+    await makeMockEnv();
+    getService("menu").setCurrentMenu(1);
+    await mountWithCleanup(NavBar);
+
+    // App brand and menu sections should be hidden on mobile width
+    expect(".o_menu_brand").toHaveCount(0);
+    expect(".o_menu_sections").toHaveCount(0);
+
+    // Resize to desktop width
+    await resize({ width: 1200 });
+    await waitNavbarAdaptation();
+
+    // App brand and menu sections should be visible on desktop width
+    expect(".o_menu_brand").toBeVisible();
+    expect(".o_menu_brand").toHaveText("My App");
+    expect(".o_menu_sections").toBeVisible();
+    expect(".o_menu_sections > *").toHaveCount(2);
+
+    // Resize back to mobile width
+    await resize({ width: 500 });
+    await waitNavbarAdaptation();
+
+    // App brand and menu sections should be hidden again on mobile width
+    expect(".o_menu_brand").toHaveCount(0);
+    expect(".o_menu_sections").toHaveCount(0);
 });
