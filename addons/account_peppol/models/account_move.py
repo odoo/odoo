@@ -89,3 +89,13 @@ class AccountMove(models.Model):
                 'partner_on_peppol': invoice.commercial_partner_id.peppol_verification_state in ('valid', 'not_valid_format'),
             }
         return render_context
+
+    def action_peppol_cancel_and_remove_sequence(self):
+        self.button_cancel()
+        self.write({'name': '/'})
+
+    def action_peppol_reset_documents(self, ids_to_delete=None):
+        self.filtered(lambda m: m.state == 'draft').action_peppol_cancel_and_remove_sequence()
+        self.filtered(lambda m: m.state not in ('draft', 'cancel') and not m.inalterable_hash).button_draft()
+        if ids_to_delete:
+            self.env['account.move'].browse(ids_to_delete).exists().unlink()
