@@ -87,6 +87,78 @@ def get_existing_attachment(IrAttachment, vals):
     return IrAttachment.search(domain, limit=1) or None
 
 
+def attachment_create(IrAttachment, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
+    """Create and return a new attachment."""
+    if name.lower().endswith('.bmp'):
+        # Avoid mismatch between content type and mimetype, see commit msg
+        name = name[:-4]
+
+    if not name and url:
+        name = url.split("/").pop()
+
+    if res_model != 'ir.ui.view' and res_id:
+        res_id = int(res_id)
+    else:
+        res_id = False
+
+    attachment_data = {
+        'name': name,
+        'public': res_model == 'ir.ui.view',
+        'res_id': res_id,
+        'res_model': res_model,
+    }
+
+    if data:
+        attachment_data['raw'] = data
+        if url:
+            attachment_data['url'] = url
+    elif url:
+        attachment_data.update({
+            'type': 'url',
+            'url': url,
+        })
+        # The code issues a HEAD request to retrieve headers from the URL.
+        # This approach is beneficial when the URL doesn't conclude with an
+        # image extension. By verifying the MIME type, the code ensures that
+        # only supported image types are incorporated into the data.
+        response = requests.head(url, timeout=10)
+        if response.status_code == 200:
+            mime_type = response.headers.get('content-type')
+            if mime_type in SUPPORTED_IMAGE_MIMETYPES:
+                attachment_data['mimetype'] = mime_type
+    else:
+        raise UserError(_("You need to specify either data or url to create an attachment."))
+
+    # Despite the user having no right to create an attachment, he can still
+    # create an image attachment through some flows
+    if (
+        not IrAttachment.env.is_admin()
+        and IrAttachment._can_bypass_rights_on_media_dialog(**attachment_data)
+    ):
+        attachment = IrAttachment.sudo().create(attachment_data)
+        # When portal users upload an attachment with the wysiwyg widget,
+        # the access token is needed to use the image in the editor. If
+        # the attachment is not public, the user won't be able to generate
+        # the token, so we need to generate it using sudo
+        if not attachment_data['public']:
+            attachment.sudo().generate_access_token()
+
+        if IrAttachment.env.user.share:
+            max_portal_file_size = int(IrAttachment.env["ir.config_parameter"].sudo().get_int(
+                "html_editor.max_portal_file_size",
+                100_000_000,
+            ))
+            if not (attachment.mimetype or '').startswith('image/'):
+                raise AccessError(IrAttachment.env._("Non-internal users can only upload image."))
+            if attachment.file_size >= max_portal_file_size:
+                raise AccessError(IrAttachment.env._("Non-internal users can't upload large files."))
+    else:
+        attachment = get_existing_attachment(IrAttachment, attachment_data) \
+            or IrAttachment.create(attachment_data)
+
+    return attachment
+
+
 class HTML_Editor(Controller):
 
     def _get_shape_svg(self, module, *segments):
@@ -258,79 +330,6 @@ class HTML_Editor(Controller):
         context.pop('allowed_company_ids', None)
         request.update_env(context=context)
 
-    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
-        """Create and return a new attachment."""
-        IrAttachment = request.env['ir.attachment']
-
-        if name.lower().endswith('.bmp'):
-            # Avoid mismatch between content type and mimetype, see commit msg
-            name = name[:-4]
-
-        if not name and url:
-            name = url.split("/").pop()
-
-        if res_model != 'ir.ui.view' and res_id:
-            res_id = int(res_id)
-        else:
-            res_id = False
-
-        attachment_data = {
-            'name': name,
-            'public': res_model == 'ir.ui.view',
-            'res_id': res_id,
-            'res_model': res_model,
-        }
-
-        if data:
-            attachment_data['raw'] = data
-            if url:
-                attachment_data['url'] = url
-        elif url:
-            attachment_data.update({
-                'type': 'url',
-                'url': url,
-            })
-            # The code issues a HEAD request to retrieve headers from the URL.
-            # This approach is beneficial when the URL doesn't conclude with an
-            # image extension. By verifying the MIME type, the code ensures that
-            # only supported image types are incorporated into the data.
-            response = requests.head(url, timeout=10)
-            if response.status_code == 200:
-                mime_type = response.headers.get('content-type')
-                if mime_type in SUPPORTED_IMAGE_MIMETYPES:
-                    attachment_data['mimetype'] = mime_type
-        else:
-            raise UserError(_("You need to specify either data or url to create an attachment."))
-
-        # Despite the user having no right to create an attachment, he can still
-        # create an image attachment through some flows
-        if (
-            not request.env.is_admin()
-            and IrAttachment._can_bypass_rights_on_media_dialog(**attachment_data)
-        ):
-            attachment = IrAttachment.sudo().create(attachment_data)
-            # When portal users upload an attachment with the wysiwyg widget,
-            # the access token is needed to use the image in the editor. If
-            # the attachment is not public, the user won't be able to generate
-            # the token, so we need to generate it using sudo
-            if not attachment_data['public']:
-                attachment.sudo().generate_access_token()
-
-            if request.env.user.share:
-                max_portal_file_size = int(request.env["ir.config_parameter"].sudo().get_int(
-                    "html_editor.max_portal_file_size",
-                    100_000_000,
-                ))
-                if not (attachment.mimetype or '').startswith('image/'):
-                    raise AccessError(request.env._("Non-internal users can only upload image."))
-                if attachment.file_size >= max_portal_file_size:
-                    raise AccessError(request.env._("Non-internal users can't upload large files."))
-        else:
-            attachment = get_existing_attachment(IrAttachment, attachment_data) \
-                or IrAttachment.create(attachment_data)
-
-        return attachment
-
     @route(['/web_editor/get_image_info', '/html_editor/get_image_info'], type='jsonrpc', auth='user', website=True)
     def get_image_info(self, src='', href_base=''):
         """This route is used to determine the information of an attachment so that
@@ -449,13 +448,13 @@ class HTML_Editor(Controller):
                 return {'error': e.args[0]}
 
         self._clean_context()
-        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model)
+        attachment = attachment_create(request.env['ir.attachment'], name=name, data=data, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
 
     @route(['/web_editor/attachment/add_url', '/html_editor/attachment/add_url'], type='jsonrpc', auth='user', methods=['POST'], website=True)
     def add_url(self, url, res_id=False, res_model='ir.ui.view', **kwargs):
         self._clean_context()
-        attachment = self._attachment_create(url=url, res_id=res_id, res_model=res_model)
+        attachment = attachment_create(request.env['ir.attachment'], url=url, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
 
     @route(['/web_editor/modify_image/<model("ir.attachment"):attachment>', '/html_editor/modify_image/<model("ir.attachment"):attachment>'], type="jsonrpc", auth="user", website=True)

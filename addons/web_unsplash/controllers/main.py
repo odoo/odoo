@@ -10,7 +10,7 @@ from odoo import http, modules, _
 from odoo.tools.image import image_process
 from odoo.tools.mimetypes import guess_mimetype
 
-from odoo.addons.html_editor.controllers.main import HTML_Editor
+from odoo.addons.html_editor.controllers.main import attachment_create
 
 logger = logging.getLogger(__name__)
 
@@ -115,7 +115,7 @@ class Web_Unsplash(http.Controller):
                 'res_id': res_id,
                 'res_model': res_model,
             }
-            attachment = HTML_Editor._attachment_create(self, **attachment_data)
+            attachment = attachment_create(self.env['ir.attachment'], **attachment_data)
             if value.get('description'):
                 attachment.description = value.get('description')
             attachment.generate_access_token()
