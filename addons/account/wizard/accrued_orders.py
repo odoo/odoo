@@ -163,7 +163,8 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                 values = _get_aml_vals(order, self.amount, 0, account.id, label=_('Manual entry'), analytic_distribution=distribution)
                 move_lines.append(Command.create(values))
             else:
-                accrual_entry_date = self.env.context.get('accrual_entry_date', self.date)
+                accrual_entry_date = self.env.context.get('accrual_entry_date')
+                accrual_entry_date = fields.Date.from_string(accrual_entry_date) if accrual_entry_date else self.date
                 precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
                 order_lines = lines.with_context(accrual_entry_date=accrual_entry_date).filtered(
                     # We only want non-comment lines (no sections, notes, ...) and include all lines

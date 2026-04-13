@@ -182,6 +182,29 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             {'account_id': self.account_revenue.id, 'debit': 12000.0, 'credit': 0.0},
         ])
 
+    def test_accrual_entry_date_as_string_from_context(self):
+        """
+        Test that passing `accrual_entry_date` as a string in the context
+        does not raise an error and accrual entries are created correctly.
+        """
+        self.purchase_order.order_line.qty_received = 10
+        move = self.env['account.move'].browse(self.purchase_order.action_create_invoice()['res_id'])
+        move.invoice_date = '2020-01-01'
+        move.action_post()
+        self.purchase_order.order_line.qty_received = 5
+        wizard = self.wizard.with_context(accrual_entry_date='2020-01-30')
+        res = self.env['account.move'].search(wizard.create_entries()['domain']).line_ids
+        self.assertRecordValues(res, [
+            # move lines
+            {'account_id': self.account_expense.id, 'debit': 0.0, 'credit': 5000.0},
+            {'account_id': self.alt_exp_account.id, 'debit': 0.0, 'credit': 1000.0},
+            {'account_id': self.account_revenue.id, 'debit': 6000.0, 'credit': 0.0},
+            # reverse move lines
+            {'account_id': self.account_expense.id, 'debit': 5000.0, 'credit': 0.0},
+            {'account_id': self.alt_exp_account.id, 'debit': 1000.0, 'credit': 0.0},
+            {'account_id': self.account_revenue.id, 'debit': 0.0, 'credit': 6000.0},
+        ])
+
     def test_error_when_different_currencies_accrued(self):
         """
         Tests that if two Purchase Orders with different currencies are selected for Accrued Expense Entry, 
