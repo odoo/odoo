@@ -50,7 +50,6 @@ export class CookiesBar extends Popup {
     }
 
     onToggleCookiesBar() {
-        this.cookieValue = cookie.get(this.el.id);
         this.bsModal.toggle();
         // As we're using Bootstrap's events, the Popup class prevents the modal
         // from being shown after hiding it: override that behavior.
@@ -72,6 +71,12 @@ export class CookiesBar extends Popup {
     }
 
     onHideModal() {
+        // cookieValue starts as true in Popup.setup() and is only replaced
+        // after explicit consent. If it is still true here, the modal was
+        // closed without a user choice, so nothing should be persisted.
+        if (this.cookieValue === true) {
+            return;
+        }
         super.onHideModal();
         const params = new URLSearchParams(window.location.search);
         const trackingFields = {
