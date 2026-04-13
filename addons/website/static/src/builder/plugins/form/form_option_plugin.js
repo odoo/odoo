@@ -174,6 +174,7 @@ export class FormOptionPlugin extends Plugin {
             SetMultipleFilesAction,
             ToggleAllowEmptyAction,
             SetEmptyPlaceholderAction,
+            ToggleCheckboxLabel,
         },
         content_not_editable_selectors: ".s_website_form form",
         content_editable_selectors: [
@@ -436,6 +437,9 @@ export class FormOptionPlugin extends Plugin {
      */
     setLabelsMark(formEl) {
         formEl.querySelectorAll(".s_website_form_mark").forEach((el) => el.remove());
+        formEl
+            .querySelectorAll("[data-description-mark]")
+            .forEach((el) => (el.dataset.descriptionMark = ""));
         const mark = getMark(formEl);
         if (!mark) {
             return;
@@ -453,6 +457,10 @@ export class FormOptionPlugin extends Plugin {
             span.classList.add("s_website_form_mark");
             span.textContent = ` ${mark}`;
             field.querySelector(".s_website_form_label").appendChild(span);
+            const descriptionMarkEl = field.querySelector("[data-description-mark]");
+            if (descriptionMarkEl) {
+                descriptionMarkEl.dataset.descriptionMark = ` ${mark}`;
+            }
         });
     }
     addFieldToForm(formEl) {
@@ -1145,11 +1153,9 @@ export class CustomFieldAction extends BuilderAction {
             if (!isFieldRequired) {
                 field.required = true;
             }
-            if (field.description) {
-                // Sets a default checkbox description & description layout.
-                field.description = !!field.description;
-                field.formatInfo.textPosition = "top";
-            }
+            // Sets a default checkbox description & description layout.
+            field.description = true;
+            field.formatInfo.textPosition = "top";
         }
         this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
         if (isCheckbox(value) && !isFieldRequired) {
@@ -1328,6 +1334,7 @@ export class SelectLabelsPositionAction extends BuilderAction {
             const fieldClassName = !isTargetVisible(fieldEl) ? fieldEl.className : "";
             const field = getActiveField(fieldEl, { fields });
             field.formatInfo.labelPosition = value;
+            field.formatInfo.labelInvisible = value === "none";
             // Reset label width for the "top" position.
             if (value === "top") {
                 delete field.formatInfo.labelWidth;
@@ -1355,7 +1362,7 @@ export class SetDescriptionAction extends BuilderAction {
     load(context) {
         return this.dependencies.websiteFormOption.prepareFields(context);
     }
-    apply({ editingElement: fieldEl, loadResult: fields, value }) {
+    apply({ isPreviewing, editingElement: fieldEl, loadResult: fields, value }) {
         const field = getActiveField(fieldEl, { fields });
         // This action is used for two scenarios:
         // 1. The target field is a checkbox: The field description will be set
@@ -1372,6 +1379,9 @@ export class SetDescriptionAction extends BuilderAction {
         const description = fieldEl.querySelector(".s_website_form_field_description")
             ?.childNodes[0];
         if (description) {
+            if (!isPreviewing) {
+                this.editable.focus();
+            }
             // Select the field description text in the editor.
             this.dependencies.selection.setSelection({
                 anchorNode: description,
@@ -1629,6 +1639,32 @@ export class SetMultipleFilesAction extends BuilderAction {
     static id = "setMultipleFiles";
     apply({ editingElement }) {
         editingElement.multiple = editingElement.dataset.maxFilesNumber > 1;
+    }
+}
+
+export class ToggleCheckboxLabel extends BuilderAction {
+    static id = "toggleCheckboxLabel";
+    static dependencies = ["websiteFormOption"];
+
+    load(context) {
+        return this.dependencies.websiteFormOption.prepareFields(context);
+    }
+    apply({ editingElement: fieldEl, loadResult: fields }) {
+        const field = getActiveField(fieldEl, { fields });
+        const labelPosition = field.formatInfo.labelPosition;
+        const labelInvisible = !field.formatInfo.labelInvisible;
+
+        if (labelInvisible && labelPosition === "top") {
+            field.formatInfo.labelPosition = "none";
+        } else if (labelPosition === "none") {
+            field.formatInfo.labelPosition = "top";
+        }
+        field.formatInfo.labelInvisible = labelInvisible;
+        this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+    }
+    isApplied({ editingElement: fieldEl }) {
+        const formatInfo = getFieldFormat(fieldEl);
+        return formatInfo.labelInvisible;
     }
 }
 

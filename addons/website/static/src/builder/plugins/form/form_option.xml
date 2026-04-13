@@ -171,6 +171,7 @@
     </BuilderRow>
     <BuilderRow label.translate="Label">
         <BuilderTextInput action="'setLabelText'" default="this.domState.fieldTranslatedName"/>
+        <BuilderButton title.translate="Hide" action="'toggleCheckboxLabel'" t-if="isActiveItem('custom_field_boolean_opt')" icon="'fa-eye-slash'" preview="false"/>
     </BuilderRow>
     <BuilderRow label.translate="Required">
         <BuilderCheckbox t-if="!this.domState.elClassList.includes('s_website_form_model_required')"

@@ -64,6 +64,7 @@ export function getDefaultFormat(el) {
         optionalMark: isOptionalMark(el),
         mark: getMark(el),
         textPosition: getFieldType(el) === "boolean" ? "top" : "stacked",
+        labelInvisible: false,
     };
 }
 
@@ -199,6 +200,9 @@ export function getFieldFormat(fieldEl) {
         mark: mark && mark.textContent,
         textPosition:
             getFieldType(fieldEl) == "boolean" ? getDescriptionPosition(fieldEl) : "stacked",
+        labelInvisible:
+            !!fieldEl.querySelector(".s_website_form_label")?.classList.contains("invisible") ||
+            getLabelPosition(fieldEl) === "none",
     };
     return format;
 }

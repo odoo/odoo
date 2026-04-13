@@ -29,7 +29,7 @@
             data-name="Field"
             t-att-data-translated-name="this.defaultName">
             <div t-if="this.field.formatInfo.labelPosition !== 'none' and this.field.formatInfo.labelPosition !== 'top'" class="row s_col_no_resize s_col_no_bgcolor">
-                <label t-attf-class="#{!this.field.isCheck and 'col-form-label' or ''} col-sm-auto s_website_form_label #{this.field.formatInfo.labelPosition === 'right' and 'text-end' or ''}" t-attf-style="width: #{this.field.formatInfo.labelWidth or '200px'}" t-att-for="this.field.id">
+                <label t-attf-class="#{!this.field.isCheck and 'col-form-label' or ''} col-sm-auto s_website_form_label #{this.field.formatInfo.labelPosition === 'right' and 'text-end' or ''} #{this.field.formatInfo.labelInvisible and 'invisible' or ''}" t-attf-style="width: #{this.field.formatInfo.labelWidth or '200px'}" t-att-for="this.field.id">
                      <t t-call="website.form_label_content"/>
                 </label>
                 <div class="col-sm">
@@ -70,7 +70,7 @@
             form descriptions as the behavior is kinda weird (but it mainly does
             not make sense to try and change it over there anyway).
         -->
-        <span t-if="default_description" class="s_website_form_field_description small form-text text-muted" contenteditable="true">
+        <span t-if="default_description" class="s_website_form_field_description small form-text text-muted" contenteditable="true" t-att-data-description-mark="descriptionRequiredMark">
             <t t-out="default_description"/>
         </span>
     </t>
@@ -214,6 +214,7 @@
     <!-- Boolean Field -->
     <t t-name="website.form_field_boolean">
         <t t-set="fieldTypeClasses" t-value="['top', 'center', 'wrap'].includes(field.formatInfo.textPosition) and 's_website_form_description_' + field.formatInfo.textPosition"/>
+        <t t-set="descriptionRequiredMark" t-value="' ' + field.formatInfo.mark"/>
         <t t-call="website.form_field">
             <div class="form-check">
                 <input

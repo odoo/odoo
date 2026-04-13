@@ -127,9 +127,9 @@
     // and its label is hidden.
     .s_website_form_field[data-type="boolean"] {
         &.s_website_form_required, &.s_website_form_model_required {
-            .s_website_form_label.d-none ~ .s_website_form_field_description {
-                &::after {
-                    content: " *";
+            &:has(.s_website_form_label.d-none, .s_website_form_label.invisible) {
+                .s_website_form_field_description::after {
+                    content: attr(data-description-mark);
                 }
             }
         }
