@@ -224,10 +224,13 @@ class PosSession(models.Model):
             }
         if self.state != 'opening_control' or len(self.order_ids) > 0:
             raise UserError(_("You can only cancel a session that is in opening control state and has no orders."))
-        self.sudo().unlink()
+        self._delete_session()
         return {
             'status': 'success',
         }
+
+    def _delete_session(self):
+        self.sudo().unlink()
 
     def get_pos_ui_product_pricelist_item_by_product(self, product_tmpl_ids, product_ids, config_id):
         pricelist_fields = self.env['product.pricelist']._load_pos_data_fields(config_id)
