@@ -1,5 +1,8 @@
+from unittest.mock import patch
+
 from odoo.fields import Command
 from odoo.tests.common import tagged
+from odoo.addons.account.controllers.portal import PortalAccount
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 from odoo.addons.base.tests.common import BaseUsersCommon
 
@@ -54,3 +57,38 @@ class TestPortalInvoice(BaseUsersCommon, AccountTestInvoicingHttpCommon):
         res = self.url_open(url)
         self.assertEqual(res.status_code, 200)
         self.assertIn("<span>PROFORMA</span>", res.content.decode('utf-8'))
+
+    def test_invoice_page_view_values_backend_url(self):
+        """backend_url is present in portal page view values and falls back
+        to the action URL per direction when there is no HTTP Referer.
+        """
+        out_invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.portal_partner.id,
+            'invoice_line_ids': [Command.create({'price_unit': 100})],
+        })
+        in_invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.portal_partner.id,
+            'invoice_line_ids': [Command.create({'price_unit': 100})],
+        })
+
+        def _bypass(self, document, access_token, values, *args, **kwargs):
+            return values
+
+        with patch.object(PortalAccount, '_get_page_view_values', _bypass):
+            out_values = PortalAccount()._invoice_get_page_view_values(
+                out_invoice, out_invoice.access_token,
+            )
+            in_values = PortalAccount()._invoice_get_page_view_values(
+                in_invoice, in_invoice.access_token,
+            )
+
+        self.assertEqual(
+            out_values['backend_url'],
+            '/odoo/action-account.action_move_out_invoice_type/%s' % out_invoice.id,
+        )
+        self.assertEqual(
+            in_values['backend_url'],
+            '/odoo/action-account.action_move_in_invoice_type/%s' % in_invoice.id,
+        )

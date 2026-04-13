@@ -5494,10 +5494,12 @@ class AccountMove(models.Model):
 
     def preview_invoice(self):
         self.ensure_one()
+        from odoo.http import request  # noqa: PLC0415
+        back = request and request.httprequest.referrer or ''
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url': self.get_portal_url(),
+            'url': self.get_portal_url(query_string=back and '&back=%s' % back),
         }
 
     def action_reverse(self):

@@ -1323,10 +1323,13 @@ class SaleOrder(models.Model):
 
     def action_preview_sale_order(self):
         self.ensure_one()
+        back = request and request.httprequest.referrer or ''
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url': self.get_portal_url(),
+            'url': self.get_portal_url(
+                query_string=back and '&back=%s' % back,
+            ),
         }
 
     def action_update_taxes(self):

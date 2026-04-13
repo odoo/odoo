@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import OrderedDict
+from urllib.parse import urlparse
 
 from odoo import fields, http, _
 from odoo.osv import expression
@@ -36,12 +37,27 @@ class PortalAccount(CustomerPortal):
             if request.env['account.move'].has_access('read') else 0
         return overdue_invoice_count
 
+    def _invoice_get_backend_url(self, invoice):
+        """Return the URL for the 'Back to edit mode' button.
+
+        preview_invoice() embeds the current backend URL in the portal URL as a
+        'back' query parameter. Falls back to the action URL per direction.
+        """
+        back = request and request.params.get('back', '')
+        if back:
+            parsed = urlparse(back)
+            return parsed.path + (('?' + parsed.query) if parsed.query else '')
+        if invoice.move_type in ('in_invoice', 'in_refund'):
+            return '/odoo/action-account.action_move_in_invoice/%s' % invoice.id
+        return '/odoo/action-account.action_move_out_invoice/%s' % invoice.id
+
     def _invoice_get_page_view_values(self, invoice, access_token, **kwargs):
         custom_amount = None
         if kwargs.get('amount'):
             custom_amount = float(kwargs['amount'])
         values = {
             'page_name': 'invoice',
+            'backend_url': self._invoice_get_backend_url(invoice),
             **invoice._get_invoice_portal_extra_values(custom_amount=custom_amount),
         }
         return self._get_page_view_values(invoice, access_token, values, 'my_invoices_history', False, **kwargs)
