@@ -9,6 +9,7 @@ import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
+import { usePartnerSelectionState } from "@mail/discuss/core/common/partner_selection";
 
 const commandSetupRegistry = registry.category("command_setup");
 const commandProviderRegistry = registry.category("command_provider");
@@ -24,11 +25,8 @@ class CreateChatDialog extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.invitePeopleState = useState({
-            selectablePartners: [],
-            selectedPartners: [],
-            searchStr: this.props.name,
-        });
+        this.invitePeopleState = usePartnerSelectionState();
+        this.invitePeopleState.searchStr = this.props.name;
     }
 
     get createText() {
