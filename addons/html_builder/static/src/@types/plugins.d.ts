@@ -22,7 +22,7 @@ declare module "plugins" {
     import { is_draggable_predicates, on_element_dragged_handlers, on_element_dropped_handlers, on_element_dropped_near_handlers, on_element_dropped_over_handlers, on_element_move_handlers, on_element_out_dropzone_handlers, on_element_over_dropzone_handlers, on_prepare_drag_handlers } from "@html_builder/core/drag_and_drop_plugin";
     import { lower_panel_entries, on_dom_updated_handlers, on_mobile_view_switched_handlers } from "@html_builder/builder";
     import { on_snippet_dragged_handlers, on_snippet_dropped_handlers, on_snippet_dropped_near_handlers, on_snippet_dropped_over_handlers, on_snippet_move_handlers, on_snippet_out_dropzone_handlers, on_snippet_over_dropzone_handlers } from "@html_builder/sidebar/block_tab";
-    import { snippet_preview_dialog_bundles, snippet_preview_dialog_stylesheets_processors } from "@html_builder/snippets/add_snippet_dialog";
+    import { snippet_preview_dialog_bundles, snippet_preview_dialog_iframe_processors } from "@html_builder/snippets/add_snippet_dialog";
     import { background_shape_groups_providers, background_shape_target_providers, is_element_in_invisible_panel_predicates } from "@html_builder/plugins/background_option/background_shape_option_plugin";
     import { mark_color_level_selector_params } from "@html_builder/plugins/background_option/background_option_plugin";
     import { is_movable_selectors, is_move_neighbor_predicates, on_element_arrow_moved_handlers, MoveShared } from "@html_builder/core/move_plugin";
@@ -119,7 +119,7 @@ declare module "plugins" {
         // Processors
         reload_context_processors: reload_context_processors;
         scroll_destination_processors: scroll_destination_processors;
-        snippet_preview_dialog_stylesheets_processors: snippet_preview_dialog_stylesheets_processors;
+        snippet_preview_dialog_iframe_processors: snippet_preview_dialog_iframe_processors;
 
         // Providers
         auto_unfold_container_providers: auto_unfold_container_providers;

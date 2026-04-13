@@ -413,9 +413,16 @@ test("hidden conditionally invisible elements are shown when entering the builde
             test
         </section>`,
         {
-            styleContent: `html:not([data-utm-medium="Email"]) body:not(.editor_enable) [data-visibility-id="utm-medium_o_4"] {
-                display: none !important;
-            }`,
+            onIframeLoaded: (iframe) => {
+                // We create the element instead of relying on `styleContent`
+                // because we need to set an id to the style sheet
+                const style = document.createElement("style");
+                style.id = "conditional_visibility";
+                style.textContent = `html:not([data-utm-medium="Email"]) body:not(.editor_enable) [data-visibility-id="utm-medium_o_4"] {
+                    display: none !important;
+                }`;
+                iframe.contentDocument.head.appendChild(style);
+            },
             openEditor: false,
         }
     );
