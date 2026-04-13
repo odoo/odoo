@@ -1274,3 +1274,56 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         self.assertEqual(due_date.text, '20251231')
         self.assertEqual(days.text, '15')
         self.assertEqual(percent.text, '3.0')
+
+    def test_import_tax_country(self):
+        """ We are going to create 2 tax with same value but different countries and import the e-invoice.
+            The tax linked to the same country as the partner should be selected.
+            Then we test the case where no country is set on the partner, it should then select the first
+            matching tax it finds.
+        """
+        self.env.ref('base.EUR').active = True  # EUR might not be active and is used in the xml testing file
+        # Tax with a country different than the partner in the XML
+        new_tax_1 = self.env["account.tax"].create({
+            'name': 'tax 1',
+            'amount_type': 'percent',
+            'country_id': self.env.ref('base.de').id,
+            'tax_group_id': self.env['account.tax.group'].create({
+                'name': 'Tax group',
+                'company_id': self.company.id,
+                'country_id': self.env.ref('base.de').id,
+            }).id,
+            'type_tax_use': 'purchase',
+            'amount': 16.0,
+        })
+
+        # Tax for Luxembourg as the partner in the XML is from Luxembourg
+        new_tax_2 = self.env["account.tax"].create({
+            'name': 'tax 2',
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+            'country_id': self.env.ref('base.lu').id,
+            'amount': 16.0,
+            'tax_group_id': self.env['account.tax.group'].create({
+                'name': 'Tax group',
+                'company_id': self.company.id,
+                'country_id': self.env.ref('base.lu').id,
+            }).id,
+        })
+
+        file_path = "bis3_bill_example.xml"
+        file_path = f"{self.test_module}/tests/test_files/{file_path}"
+        with file_open(file_path, 'rb') as file:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': file.read(),
+            })
+
+        # Import the document for the first time
+        bill = self._import_as_attachment_on(attachment=xml_attachment)
+        self.assertEqual(bill.invoice_line_ids.tax_ids, new_tax_2)
+
+        bill.partner_id.country_id = False
+        # Partner has no country set so it should fallback to first tax matching amount
+        bill = self._import_as_attachment_on(attachment=xml_attachment)
+        self.assertEqual(bill.invoice_line_ids.tax_ids, new_tax_1)

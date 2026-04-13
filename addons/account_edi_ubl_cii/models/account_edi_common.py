@@ -1013,6 +1013,8 @@ class AccountEdiCommon(models.AbstractModel):
                 ('type_tax_use', '=', tax_type),
                 ('amount', '=', amount),
             ]
+            if record.partner_id.country_id:
+                domain += [('country_id.id', '=', record.partner_id.country_id.id)]
             tax = self.env['account.tax']
             if hasattr(record, '_get_specific_tax'):
                 tax = record._get_specific_tax(line_values['name'], 'percent', amount, tax_type).filtered_domain(domain)[:1]
