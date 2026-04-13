@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.ThemeFontFamilyOption">
+<t t-name="website.ThemeFontFamilyOption">
     <BuilderFontFamilyPicker
-        action="'customizeWebsiteVariable'"
+        action="'customizeWebsiteFontFamily'"
         actionParam="this.props.cssVariable"
         valueParamName="'actionValue'"/>
     <BuilderButton
         t-if="this.state.isFontSpecified"
-        action="'customizeWebsiteVariable'"
+        action="'customizeWebsiteFontFamily'"
         actionParam="this.props.cssVariable"
         className="'btn-danger-color-hover'"
         icon="this.props.buttonIcon"

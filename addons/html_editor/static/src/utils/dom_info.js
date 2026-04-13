@@ -38,19 +38,34 @@ export function isEmptyTextNode(node) {
 
 /**
  * Return true if the given node appears bold. The node is considered to appear
- * bold if its font weight is bigger than 500 (eg.: Heading 1), or if its font
- * weight is bigger than that of its closest block.
+ * bold if its font weight is bigger than the regular font weight configured
+ * for its context, or if its font weight is bigger than that of its closest
+ * block.
  *
  * @param {Node} node
  * @returns {boolean}
  */
 export function isBold(node) {
-    const fontWeight = +getComputedStyle(closestElement(node)).fontWeight;
+    const element = closestElement(node);
+    let regularFontWeightVariable = "--font-weight-normal";
+    if (element.closest(".btn")) {
+        regularFontWeightVariable = "--btn-font-weight";
+    } else if (element.closest(".display-1, .display-2, .display-3, .display-4")) {
+        regularFontWeightVariable = "--display-font-weight";
+    } else if (element.closest("h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6")) {
+        regularFontWeightVariable = "--headings-font-weight";
+    }
+    const style = getComputedStyle(element);
+    const fontWeight = +style.fontWeight;
+    const regularFontWeight = +style.getPropertyValue(regularFontWeightVariable) || 500;
     const referenceElement = closestElement(
         node,
         (el) => isBlock(el) || +getComputedStyle(el).fontWeight !== fontWeight
     );
-    return fontWeight > 500 || fontWeight > +getComputedStyle(referenceElement).fontWeight;
+    return (
+        fontWeight > regularFontWeight ||
+        fontWeight > +getComputedStyle(referenceElement).fontWeight
+    );
 }
 
 /**

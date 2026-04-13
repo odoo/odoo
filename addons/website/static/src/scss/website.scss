@@ -128,6 +128,17 @@ $-seen-urls: ();
     @include print-variable('display-4-margin-bottom', $display-4-margin-bottom);
 
     @include print-variable('set-buttons-font', o-get-font-info('buttons'));
+
+    @include print-variable('font-weight-normal', o-website-value('font-weight-normal'));
+    @include print-variable('lead-font-weight', o-website-value('lead-font-weight'));
+    @include print-variable('font-weight-bolder', o-website-value('font-weight-bolder'));
+    @include print-variable('headings-font-weight', o-website-value('headings-font-weight'));
+    @include print-variable('headings-font-weight-bold', o-website-value('headings-font-weight-bold'));
+    @include print-variable('display-font-weight', o-website-value('display-font-weight'));
+    @include print-variable('display-font-weight-bold', o-website-value('display-font-weight-bold'));
+    @include print-variable('btn-font-weight', o-website-value('btn-font-weight'));
+    @include print-variable('btn-font-weight-bold', o-website-value('btn-font-weight-bold'));
+
     @include print-variable('btn-padding-y', $btn-padding-y);
     @include print-variable('btn-padding-x', $btn-padding-x);
     @include print-variable('btn-font-size', $btn-font-size);
@@ -247,6 +258,27 @@ body {
         // as it would impact other Bootstrap components that could take profit
         // of the transparency.
         @include force-opaque-bg-color($body-bg, $if-necessary: true);
+    }
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    b, strong {
+        font-weight: o-website-value('headings-font-weight-bold') !important;
+    }
+}
+
+// Keep display-5/6 covered for Bootstrap/custom markup, even though the editor
+// only exposes display-1 through display-4.
+.display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
+    b, strong {
+        font-weight: o-website-value('display-font-weight-bold') !important;
+    }
+}
+
+.btn {
+    b, strong {
+        font-weight: o-website-value('btn-font-weight-bold') !important;
     }
 }
 

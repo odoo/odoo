@@ -35,6 +35,48 @@ class GoogleFontAutoComplete extends AutoComplete {
     }
 }
 
+// These Google Fonts weight names should stay in sync with FONT_WEIGHT_OPTIONS
+// in theme_tab_plugin.js.
+const UPLOADED_FONT_WEIGHT_BY_NAME = {
+    thin: 100,
+    "extra light": 200,
+    light: 300,
+    regular: 400,
+    normal: 400,
+    medium: 500,
+    "semi bold": 600,
+    bold: 700,
+    "extra bold": 800,
+    black: 900,
+};
+
+const EXPLICIT_FONT_WEIGHT_REGEX = /(?:^|[^0-9])(100|200|300|400|500|600|700|800|900)(?=$|[^0-9])/;
+const NORMALIZED_FONT_WEIGHT_REGEX =
+    /(?:^|[^a-z])(extra light|semi bold|extra bold|thin|light|regular|normal|medium|bold|black)(?: italic| oblique)?$/;
+
+/**
+ * Normalizes uploaded font filenames so weight/style keywords can be matched
+ * consistently across extension-based, dash/underscore-separated, and camel-cased names.
+ */
+function normalizeUploadedFontName(fontName) {
+    return fontName
+        .replace(/\.[^.]+$/, "")
+        .replace(/([a-z])([A-Z])/g, "$1 $2")
+        .replace(/[-_]+/g, " ")
+        .trim()
+        .toLowerCase();
+}
+
+function getUploadedFontWeight(fontName) {
+    const normalizedFontName = normalizeUploadedFontName(fontName);
+    const explicitWeight = normalizedFontName.match(EXPLICIT_FONT_WEIGHT_REGEX);
+    if (explicitWeight) {
+        return parseInt(explicitWeight[1]);
+    }
+    const namedWeight = normalizedFontName.match(NORMALIZED_FONT_WEIGHT_REGEX);
+    return namedWeight && UPLOADED_FONT_WEIGHT_BY_NAME[namedWeight[1]];
+}
+
 export class AddFontDialog extends Component {
     static template = "website.dialog.addFont";
     static components = { GoogleFontAutoComplete, Dialog };
@@ -111,7 +153,7 @@ export class AddFontDialog extends Component {
             const result = await fetch(
                 `https://fonts.googleapis.com/css?family=${encodeURIComponent(
                     fontFamily
-                )}:300,300i,400,400i,700,700i`,
+                )}:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i`,
                 { method: "HEAD" }
             );
             // Google fonts server returns a 400 status code if family is not valid.
@@ -171,26 +213,17 @@ export class AddFontDialog extends Component {
                 shortestNamedFont = font;
             }
             font.isItalic = /italic/i.test(font.name);
-            font.isLight = /light|300/i.test(font.name);
-            font.isBold = /bold|700/i.test(font.name);
-            font.isRegular = /regular|400/i.test(font.name);
-            font.weight = font.isRegular ? 400 : font.isLight ? 300 : font.isBold ? 700 : undefined;
-            if (font.isItalic && !font.weight) {
-                if (!/00|thin|medium|black|condense|extrude/i.test(font.name)) {
-                    font.isRegular = true;
-                    font.weight = 400;
-                }
-            }
+            font.weight = getUploadedFontWeight(font.name);
             font.style = font.isItalic ? "italic" : "normal";
             if (font.weight) {
                 targetFonts[`${font.weight}${font.style}`] = font;
             }
         }
-        if (!Object.values(targetFonts).filter((font) => font.isRegular).length) {
+        if (!Object.values(targetFonts).some((font) => font.weight === 400)) {
             // Keep font with shortest name.
             shortestNamedFont.weight = 400;
             shortestNamedFont.style = "normal";
-            targetFonts["400"] = shortestNamedFont;
+            targetFonts["400normal"] = shortestNamedFont;
         }
         const fontFaces = [];
         for (const font of Object.values(targetFonts)) {
@@ -269,7 +302,7 @@ export class AddFontDialog extends Component {
                 const result = await fetch(
                     "https://fonts.googleapis.com/css?family=" +
                         encodeURIComponent(font) +
-                        ":300,300i,400,400i,700,700i",
+                        ":100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i",
                     { method: "HEAD" }
                 );
                 // Google fonts server returns a 400 status code if family is not valid.

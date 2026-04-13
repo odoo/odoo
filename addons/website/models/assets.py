@@ -248,7 +248,7 @@ class WebsiteAssets(models.AbstractModel):
                 else:
                     font_family_attachments = IrAttachment
                     font_content = requests.get(
-                        f'https://fonts.googleapis.com/css?family={font_name}:300,300i,400,400i,700,700i&display=swap',
+                        f'https://fonts.googleapis.com/css?family={font_name}:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap',
                         timeout=5, headers=headers_woff2,
                     ).content.decode()
 

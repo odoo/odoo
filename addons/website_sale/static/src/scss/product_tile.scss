@@ -248,7 +248,7 @@
     .o_wsale_products_item_title {
         max-width: 66ch;
         font-size: var(--o-wsale-card-info-title-font-size, 1.1em);
-        font-weight: var(--o-wsale-card-info-title-font-weight, 500);
+        font-weight: var(--o-wsale-card-info-title-font-weight, #{$headings-font-weight});
         margin-bottom:  var(--o-wsale-card-info-title-margin-bottom, #{map-get($spacers, 2)});
 
         > a {
@@ -1453,7 +1453,7 @@ $_wsale_products_roundness_map: (
     }
 }
 .o_wsale_products_opt_name_weight_bold {
-    --o-wsale-card-info-title-font-weight: bold;
+    --o-wsale-card-info-title-font-weight: #{o-website-value('headings-font-weight-bold') or $font-weight-bold};
 }
 .o_wsale_products_opt_name_size_body {
     --o-wsale-card-info-font-size: var(--body-font-size);

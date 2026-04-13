@@ -1118,7 +1118,13 @@ export const clickableBuilderComponentProps = {
     inverseAction: { type: Boolean, optional: true },
 
     actionValue: {
-        type: [Boolean, String, Number, { type: Array, element: [Boolean, String, Number] }],
+        type: [
+            Boolean,
+            String,
+            Number,
+            validateIsNull,
+            { type: Array, element: [Boolean, String, Number] },
+        ],
         optional: true,
     },
 
