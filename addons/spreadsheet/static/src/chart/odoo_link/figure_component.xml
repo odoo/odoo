@@ -12,7 +12,7 @@
         <div t-name="spreadsheet.ScorecardChart" t-inherit="o-spreadsheet-ScorecardChart" t-inherit-mode="extension">
             <xpath expr="//canvas[1]" position="attributes">
                 <attribute name="t-on-click">() => this.onClick()</attribute>
-                <attribute name="t-att-role">this.env.isDashboard() and this.hasOdooMenu ? "button" : ""</attribute>
+                <attribute name="t-att-role">this.env.isDashboard() and this.hasOdooLink ? "button" : ""</attribute>
             </xpath>
     </div>
     <div t-name="spreadsheet.GaugeChartComponent" t-inherit="o-spreadsheet-GaugeChartComponent" t-inherit-mode="extension">
