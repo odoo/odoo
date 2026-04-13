@@ -91,7 +91,7 @@ class AccountEdiUBL(models.AbstractModel):
                 tax = tax_data['tax']
                 return {
                     'tax_category_code': self._get_tax_category_code(customer.commercial_partner_id, supplier, tax),
-                    **self._get_tax_exemption_reason(customer.commercial_partner_id, supplier, tax),
+                    **self.with_context(tax_exemption_reason_invoice=vals['invoice'])._get_tax_exemption_reason(customer.commercial_partner_id, supplier, tax),
                     # Reverse-charge taxes with +100/-100% repartition lines are used in vendor bills.
                     # In a self-billed invoice, we report them from the seller's perspective, so
                     # we change their percentage to 0%.

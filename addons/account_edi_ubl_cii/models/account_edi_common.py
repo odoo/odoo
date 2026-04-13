@@ -3,8 +3,9 @@ from markupsafe import Markup
 from odoo import _, api, models
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_compare, float_is_zero, float_repr, format_list
+from odoo.tools import float_compare, float_is_zero, float_repr, format_list, html2plaintext
 from odoo.tools.float_utils import float_round
+from odoo.tools.translate import _lt
 from odoo.tools.misc import clean_context, formatLang, html_escape
 from odoo.tools.xml_utils import find_xml_value
 from datetime import datetime
@@ -131,6 +132,11 @@ EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES = {
     'IS', 'LI', 'NO',
 }
 
+COCONTRACTANT_DEFAULT_NOTE = _lt('Reverse charge: In the absence of a written objection within one month of receipt of the invoice, '
+                              'the customer is deemed to acknowledge that they are a taxable person required to file periodic returns. '
+                              'If this condition is not met, the customer will be liable for the payment of the tax, interest, '
+                              'and penalties due in relation to this condition.')
+
 # -------------------------------------------------------------------------
 # SUPPORTED FILE TYPES FOR IMPORT
 # -------------------------------------------------------------------------
@@ -226,6 +232,15 @@ class AccountEdiCommon(models.AbstractModel):
     def _can_export_selfbilling(self):
         return False
 
+    def _get_belgian_cocontractant_note(self, customer, supplier):
+        invoice = self.env.context.get('tax_exemption_reason_invoice')
+        if invoice and customer.country_id.code == 'BE' and supplier.country_id == customer.country_id and invoice:
+            co_contractant = self.env['account.chart.template'].ref('fiscal_position_template_4', raise_if_not_found=False)
+            if co_contractant and invoice.fiscal_position_id == co_contractant:
+                note = html2plaintext(invoice.fiscal_position_id.note) if invoice.fiscal_position_id.note else ''
+                return note or COCONTRACTANT_DEFAULT_NOTE
+        return ''
+
     # -------------------------------------------------------------------------
     # TAXES
     # -------------------------------------------------------------------------
@@ -267,6 +282,10 @@ class AccountEdiCommon(models.AbstractModel):
                 return create_dict(tax_category_code='L')
             if customer.zip[:2] in ('51', '52'):
                 return create_dict(tax_category_code='M')  # Ceuta & Mellila
+
+        cocontractant_note = self._get_belgian_cocontractant_note(customer, supplier)
+        if cocontractant_note:
+            return create_dict(tax_category_code='AE', tax_exemption_reason_code='VATEX-EU-AE - Reverse charge', tax_exemption_reason=cocontractant_note)
 
         if supplier.country_id == customer.country_id:
             if not tax or tax.amount == 0:
