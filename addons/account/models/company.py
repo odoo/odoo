@@ -31,8 +31,8 @@ MONTH_SELECTION = [
 # List of countries where Peppol should be used by default.
 PEPPOL_DEFAULT_COUNTRIES = [
     'AT', 'BE', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI',
-    'FR', 'GR', 'IE', 'IS', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL',
-    'NO', 'PL', 'PT', 'RO', 'SE', 'SI',
+    'FR', 'IE', 'IS', 'LT', 'LU', 'LV', 'MT', 'NL', 'NO', 'SE',
+    'SI',
 ]
 
 # List of countries where Peppol footnote will be added when sending by mail.
@@ -42,8 +42,9 @@ PEPPOL_MAILING_COUNTRIES = [
 
 # List of countries where Peppol is accessible.
 PEPPOL_LIST = PEPPOL_DEFAULT_COUNTRIES + [
-    'AD', 'AL',  'BA', 'BG', 'GB', 'HR', 'HU', 'LI', 'MC', 'ME',
-    'MK', 'RS', 'SK', 'SM', 'TR', 'VA',
+    'AD', 'AL', 'BA', 'BG', 'GB', 'GR', 'HR', 'HU', 'IT', 'LI',
+    'MC', 'ME', 'MK', 'PL', 'PT', 'RO', 'RS', 'SK', 'SM', 'TR',
+    'VA',
 ]
 
 
