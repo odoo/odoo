@@ -170,6 +170,7 @@ class HrLeaveAttendanceReport(models.Model):
             LEFT JOIN LATERAL (
                         SELECT SUM(lv.number_of_hours / NULLIF(wd.working_days,0)) AS leave_hours
                           FROM hr_leave AS lv
+                          JOIN hr_leave_type as lvt ON lvt.id = lv.holiday_status_id
                           JOIN LATERAL (
                                            SELECT COUNT(*) AS working_days
                                              FROM generate_series(
@@ -194,6 +195,7 @@ class HrLeaveAttendanceReport(models.Model):
                                                ON (
                                                           (rc.id = rcl2.calendar_id OR rcl2.calendar_id IS NULL)
                                                       AND rcl2.resource_id IS NULL
+                                                      AND NOT lvt.include_public_holidays_in_duration
                                                       AND rcl2.company_id = emp.company_id
                                                       AND d.day
                                                   BETWEEN (rcl2.date_from AT TIME ZONE 'UTC')::date
