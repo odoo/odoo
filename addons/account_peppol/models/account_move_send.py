@@ -5,7 +5,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models, _
 
-from odoo.addons.account.models.company import PEPPOL_LIST
+from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES, PEPPOL_LIST
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.account_peppol.exceptions import get_peppol_error_message
 
@@ -20,7 +20,10 @@ class AccountMoveSend(models.AbstractModel):
         """ By default, we use the sending method set on the partner or email and peppol. """
         # EXTENDS 'account'
         default_sending_methods = super()._get_default_sending_methods(move)
-        if self._is_applicable_to_move('peppol', move):
+        if (
+            self._is_applicable_to_move('peppol', move)
+            and any(country in PEPPOL_DEFAULT_COUNTRIES for country in move.commercial_partner_id.mapped('country_id.code'))
+        ):
             default_sending_methods.add('peppol')
         return default_sending_methods
 
@@ -82,6 +85,7 @@ class AccountMoveSend(models.AbstractModel):
         elif all((
             (peppol_not_selected_partners := filter_peppol_state(not_peppol_moves, ['valid'])),
             any_moves_not_sent_peppol,
+            any(code in PEPPOL_DEFAULT_COUNTRIES for code in peppol_partner(moves).mapped('country_id.code')),
             len(peppol_not_selected_partners) == 1,  # Check for not peppol partners that are on the network
         )):
             alerts['account_peppol_partner_want_peppol'] = {
