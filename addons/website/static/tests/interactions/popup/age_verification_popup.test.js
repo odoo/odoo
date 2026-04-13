@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, tick } from "@odoo/hoot-dom";
+import { animationFrame, runAllTimers, tick } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 import { contains, defineStyle } from "@web/../tests/web_test_helpers";
@@ -104,6 +104,7 @@ test("Yes button closes popup and No button displays the error message", async (
     expect("#sAgeVerificationPopup").toHaveAttribute("data-age-verification-pending", "true");
     expect(modalErrorMessageSelector).toBeVisible();
 
+    await runAllTimers();
     await contains(`${modalSelector} .o_age_verification_yes_btn`).click();
     expect("#sAgeVerificationPopup").toHaveAttribute("data-age-verification-pending", "false");
     expect(modalSelector).not.toBeVisible();
