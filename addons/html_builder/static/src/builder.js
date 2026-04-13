@@ -261,10 +261,6 @@ export class Builder extends Component {
 
         onMounted(() => {
             this.editor.document.body.classList.add("editor_enable");
-            // The rules created for conditionally visible elements depends on
-            // `editor_enable` to make them visible
-            this.editor.shared.visibility.invalidateVisibility();
-
             setBuilderCSSVariables(getHtmlStyle(this.editor.document));
             // TODO: onload editor
             this.editableEl.addEventListener("dragstart", this.onDragStart);
