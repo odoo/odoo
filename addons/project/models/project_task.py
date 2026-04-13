@@ -1003,9 +1003,6 @@ class ProjectTask(models.Model):
     def default_get(self, fields):
         vals = super().default_get(fields)
 
-        if project_id := self.env.context.get('default_create_in_project_id'):
-            vals['project_id'] = project_id
-
         # prevent creating new task in the waiting state
         if 'state' in fields and vals.get('state') == '04_waiting_normal':
             vals['state'] = '01_in_progress'
@@ -1050,6 +1047,13 @@ class ProjectTask(models.Model):
         writeable = frozenset(self.TASK_PORTAL_WRITABLE_FIELDS)
         return readable | writeable, writeable
 
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        attributes_per_field_name = super().fields_get(allfields, attributes)
+        if not attributes_per_field_name.get('project_id', {}).get('readonly', True) and self.env.user._is_portal():
+            attributes_per_field_name['project_id']['readonly'] = True
+        return attributes_per_field_name
+
     def _has_field_access(self, field, operation):
         if not super()._has_field_access(field, operation):
             return False
@@ -1059,7 +1063,7 @@ class ProjectTask(models.Model):
             if operation == 'read':
                 return field.name in readable
             if operation == 'write':
-                return field.name in writeable
+                return field.name in writeable or (field.name == 'project_id' and not self)
         return True
 
     def _ensure_fields_write(self, vals, defaults=False):
@@ -1110,17 +1114,18 @@ class ProjectTask(models.Model):
 
         new_context = dict(self.env.context)
         default_personal_stage = new_context.pop('default_personal_stage_type_ids', False)
-        default_project_id = new_context.pop('default_project_id', False)
+        default_project_id = new_context.get('default_project_id', False)
         if not default_project_id:
             parent_task = self.browse({parent_id for vals in vals_list if (parent_id := vals.get('parent_id'))})
             if len(parent_task) == 1:
                 default_project_id = parent_task.sudo().project_id.id
-        # (portal) users that don't have write access can still create a task
-        # in the project that will be checked using record rules
-        new_context["default_create_in_project_id"] = default_project_id
         if not self._has_field_access(self._fields['user_ids'], 'write'):
             # remove user_ids if we have no access to it
             new_context.pop('default_user_ids', False)
+        is_portal_user = self.env.user._is_portal()
+        if 'default_project_id' not in new_context and default_project_id:
+            # when subtask is created in form view of task in project sharing
+            new_context['default_project_id'] = default_project_id
         self_ctx = self.with_context(new_context)
 
         self_ctx.browse().check_access('create')
@@ -1139,7 +1144,7 @@ class ProjectTask(models.Model):
             if not vals.get('name') and vals.get('display_name'):
                 vals['name'] = vals['display_name']
 
-            if self_ctx.env.user._is_portal() and not self_ctx.env.su:
+            if is_portal_user and not self_ctx.env.su:
                 self_ctx._ensure_fields_write(vals, defaults=True)
 
             if project_id and not "company_id" in vals:
