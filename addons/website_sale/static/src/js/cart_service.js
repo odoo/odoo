@@ -12,7 +12,6 @@ import { serializeDateTime } from '@web/core/l10n/dates';
 import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { redirect } from '@web/core/utils/urls';
-import { session } from '@web/session';
 import {
     CartNotificationContainer
 } from '@website_sale/js/cart_notification/cart_notification_container/cart_notification_container';
@@ -487,7 +486,7 @@ export class CartService {
         if (!data) {
             return 0;
         }
-        if (shouldRedirectToCart || session.add_to_cart_action === 'go_to_cart') {
+        if (shouldRedirectToCart) {
             redirect('/shop/cart');
             return data.quantity;
         }

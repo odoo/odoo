@@ -76,9 +76,6 @@ class Website(models.Model):
         store=True,
     )
 
-    add_to_cart_action = fields.Selection(
-        selection=[("stay", "Stay on Product Page"), ("go_to_cart", "Go to cart")], default="stay"
-    )
     auth_signup_uninvited = fields.Selection(default="b2c")
     account_on_checkout = fields.Selection(
         string="Customer Accounts",
