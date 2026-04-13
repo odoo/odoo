@@ -72,7 +72,7 @@ def varname_is_used_inside(tset, tcall):
 def _varname_is_used_inside(tset, container, skip_to):
     used = set()
     varname = tset.get('t-set')
-    REG = re.compile(rf"(^|[,({{ /*+-]){ varname }([\[\] .()}})/*+-]|$)")
+    REG = re.compile(rf"(^|[,({{ /*+-]){ varname }([\[\] ,.()}})/*+-]|$)")
 
     for el in container.iter():
         if skip_to is not None and el is not skip_to:
