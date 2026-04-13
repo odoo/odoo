@@ -185,3 +185,16 @@ class TestTaskDependencies(TestProjectCommon):
         # Original Node should have new relations
         self.assertEqual(len(node1.dependent_ids), 2)
         self.assertEqual(len(node3.depend_on_ids), 2)
+
+    def test_admin_dependency_toggle(self):
+        """ Test that a Project Manager can toggle task dependencies without raising
+            an AccessError on global message subtypes. Additionally, ensure that
+            toggling this feature does not incorrectly strip the global dependency
+            group when a project that is hidden from the user is still utilizing it.
+        """
+        self.env['project.project'].search([]).write({'allow_task_dependencies': False})
+        self.assertFalse(self.user_projectmanager.has_group('project.group_project_task_dependencies'))
+        self.project_pigs.with_user(self.user_projectmanager).write({'allow_task_dependencies': True})
+        self.assertTrue(self.user_projectmanager.has_group('project.group_project_task_dependencies'))
+        self.project_pigs.with_user(self.user_projectmanager).write({'allow_task_dependencies': False})
+        self.assertFalse(self.user_projectmanager.has_group('project.group_project_task_dependencies'))
