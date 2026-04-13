@@ -11,7 +11,7 @@ import requests
 import socket
 from urllib.parse import parse_qs
 import urllib3.util
-from threading import Thread
+import threading
 import time
 import zipfile
 from werkzeug.exceptions import Locked
@@ -35,19 +35,6 @@ class Orientation(Enum):
     INVERTED = '180'
     LEFT = '90'
     RIGHT = '270'
-
-
-class IoTRestart(Thread):
-    """
-    Thread to restart odoo server in IoT Box when we must return a answer before
-    """
-    def __init__(self, delay):
-        super().__init__(daemon=True)
-        self.delay = delay
-
-    def run(self):
-        time.sleep(self.delay)
-        service.server.restart()
 
 
 def toggleable(function):
@@ -201,13 +188,21 @@ def get_handlers_files_to_load(handler_path):
     return []
 
 
-def odoo_restart(delay=0):
+def odoo_restart(delay: float = 0):
+    """Restart Odoo service
+
+    :param delay: seconds to wait before restarting the service
     """
-    Restart Odoo service
-    :param delay: Delay in seconds before restarting the service (Default: 0)
-    """
-    IR = IoTRestart(delay)
-    IR.start()
+    def _restart():
+        start = time.monotonic()
+        while service.server.server is None:
+            if time.monotonic() - start > 30:
+                _logger.warning("Odoo IoT Restart: server never initialized, giving up")
+                return
+            time.sleep(0.5)
+        service.server.restart()
+
+    threading.Timer(delay, _restart).start()
 
 
 def download_from_url(url, dest):
