@@ -304,15 +304,25 @@ class TestStockMoveInvoice(TestSaleCommon):
             {'date': today},
         ])
 
+    @freeze_time("2024-06-06 11:00")
     def test_delivery_slip_product_value(self):
         """Test that product value reported on the delivery slip is correct.
         """
         product = self.product_cable_management_box
         tax = self.company_data['default_tax_sale']
+        other_currency = self.setup_other_currency('EUR', rates=[
+            ('2024-06-06', 0.1),
+        ])
+        pricelist_in_other_curr = self.env['product.pricelist'].create({
+            'name': 'Test Pricelist (EUR)',
+            'currency_id': other_currency.id,
+        })
+
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': pricelist_in_other_curr.id,
             'order_line': [
                 Command.create({
                     'name': product.name,
