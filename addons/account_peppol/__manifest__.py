@@ -48,6 +48,7 @@
     'assets': {
         'web.assets_backend': [
             'account_peppol/static/src/components/**/*',
+            'account_peppol/static/src/web/**/*',
             'account_peppol/static/src/css/**/*',
         ],
         'web.assets_frontend': [
