@@ -1136,6 +1136,48 @@ class TestProcurement(TestMrpCommon):
         update_quantity_wizard.change_prod_qty()
         self.assertEqual(replenishment.product_uom_qty, 7)
 
+    def test_update_mo_producing_qty_with_mtso_rule_and_available_stock(self):
+        """Have 10 units of a component in stock and a mts_else_mto rule.
+        - When confirming a MO for 1 unit, the component is fully reserved from stock, no procurement is created.
+        - When updating the producing quantity to 2, the component is still fully reserved from stock.
+        - When updating the producing quantity to 11, stock can only cover 10 units,
+        so a procurement is created for the remaining 1 unit.
+        """
+        self.product_1.is_storable = True
+        self.route_mto.active = True
+        self.route_mto.rule_ids.procure_method = 'mts_else_mto'
+        self.product_1.route_ids = [
+            Command.link(self.route_mto.id),
+            Command.link(self.route_manufacture.id),
+        ]
+        self.env['stock.quant']._update_available_quantity(self.product_1, self.warehouse_1.lot_stock_id, 10)
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+            'product_uom_id': self.bom_4.bom_line_ids.product_uom_id.id,
+            'bom_line_ids': [Command.create({'product_id': self.product.id, 'product_qty': 1})]
+        })
+        # create MO with MTSO rule
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_4.id,
+        })
+        mo.action_confirm()
+        self.assertEqual(mo.move_raw_ids.quantity, 1)
+        update_quantity_wizard = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 2,
+        })
+        update_quantity_wizard.change_prod_qty()
+        self.assertEqual(mo.move_raw_ids.quantity, 2)
+        update_quantity_wizard = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 11,
+        })
+        update_quantity_wizard.change_prod_qty()
+        self.assertEqual(mo.move_raw_ids.quantity, 10)
+        child_mo = mo._get_children()
+        self.assertEqual(len(child_mo), 1)
+        self.assertEqual(child_mo.product_qty, 1)
+
     def test_update_mo_producing_qty_mto_chain(self):
         """
         Test that an MTO child MO correctly handles UoM conversions between the component UoM and
