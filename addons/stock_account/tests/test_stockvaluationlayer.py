@@ -180,18 +180,26 @@ class TestStockValuationStandard(TestStockValuationCommon):
 
     def test_multicompany(self):
         """Standard: total_value = standard_price * qty, isolated per company."""
+        child_location = self.env['stock.location'].create({
+            'name': 'Shell',
+            'location_id': self.warehouse.lot_stock_id.id,
+        })
+
         self.product.with_company(self.company).standard_price = 10
         self.product.with_company(self.other_company).standard_price = 50
 
-        # Company 1: receive 15 units at 10$
+        # Company 1: 15 units in warehouse + 5 units in internal non-warehouse location
+        # All 20 units are valuated @ 10$ = 200$, but only 15 units are in hand (warehouse stock)
         self._make_in_move(self.product, 15)
+        self._make_in_move(self.product, 5, location_dest_id=child_location.id, unit_cost=10)
+        child_location.location_id = None
         # Company 2: receive 100 units at 50$
         self._make_in_move(self.product, 100, unit_cost=50, company=self.other_company)
 
-        # Company 1 only: 15 units @ 10$ = 150$
+        # Company 1 only: 15 in warehouse, 5 in internal location => 20 total valued units
         product_company_1 = self.product.with_company(self.company).with_context(allowed_company_ids=self.company.ids)
         self.assertEqual(product_company_1.qty_available, 15)
-        self.assertEqual(product_company_1.total_value, 150)
+        self.assertEqual(product_company_1.total_value, 200)
 
         # Company 2 only: 100 units @ 50$ = 5000$
         product_company_2 = self.product.with_company(self.other_company).with_context(allowed_company_ids=self.other_company.ids)
@@ -465,17 +473,24 @@ class TestStockValuationAVCO(TestStockValuationCommon):
 
     def test_multicompany(self):
         """AVCO: standard_price auto-updates per company; total_value is isolated."""
+        child_location = self.env['stock.location'].create({
+            'name': 'Shell',
+            'location_id': self.warehouse.lot_stock_id.id,
+        })
         self.category_avco.with_company(self.other_company).property_cost_method = 'average'
 
-        # Company 1: receive 15 units at 10$ → AVCO = 10, value = 150$
+        # Company 1: 15 units in warehouse + 5 units in non-warehouse location
+        # All 20 units are valuated @ 10$ = 200$, but only 15 units are in hand (warehouse stock)
         self._make_in_move(self.product, 15, unit_cost=10)
+        self._make_in_move(self.product, 5, location_dest_id=child_location.id, unit_cost=10)
+        child_location.location_id = None
         # Company 2: receive 100 units at 50$ → AVCO = 50, value = 5000$
         self._make_in_move(self.product, 100, unit_cost=50, company=self.other_company)
 
-        # Company 1 only: 15 units @ 10$ = 150$
+        # Company 1 only: 15 in warehouse, 5 in internal location => 20 total valued units
         product_company_1 = self.product.with_company(self.company).with_context(allowed_company_ids=self.company.ids)
         self.assertEqual(product_company_1.qty_available, 15)
-        self.assertEqual(product_company_1.total_value, 150)
+        self.assertEqual(product_company_1.total_value, 200)
 
         # Company 2 only: 100 units @ 50$ = 5000$
         product_company_2 = self.product.with_company(self.other_company).with_context(allowed_company_ids=self.other_company.ids)
@@ -702,17 +717,24 @@ class TestStockValuationFIFO(TestStockValuationCommon):
 
     def test_multicompany(self):
         """FIFO: value computed from each company's own move stack."""
+        child_location = self.env['stock.location'].create({
+            'name': 'Shell',
+            'location_id': self.warehouse.lot_stock_id.id,
+        })
         self.category_fifo.with_company(self.other_company).property_cost_method = 'fifo'
 
-        # Company 1: receive 15 units at 10$
+        # Company 1: 15 units in warehouse + 5 units in internal non-warehouse location
+        # All 20 units are valuated @ 10$ = 200$, but only 15 units are in hand (warehouse stock)
         self._make_in_move(self.product, 15, unit_cost=10)
+        self._make_in_move(self.product, 5, location_dest_id=child_location.id, unit_cost=10)
+        child_location.location_id = None
         # Company 2: receive 100 units at 50$
         self._make_in_move(self.product, 100, unit_cost=50, company=self.other_company)
 
-        # Company 1 only: 15 units @ 10$ = 150$
+        # Company 1 only: 15 in warehouse, 5 in internal location => 20 total valued units
         product_company_1 = self.product.with_company(self.company).with_context(allowed_company_ids=self.company.ids)
         self.assertEqual(product_company_1.qty_available, 15)
-        self.assertEqual(product_company_1.total_value, 150)
+        self.assertEqual(product_company_1.total_value, 200)
 
         # Company 2 only: 100 units @ 50$ = 5000$
         product_company_2 = self.product.with_company(self.other_company).with_context(
