@@ -17,6 +17,7 @@ Vietnam - POS E-invoicing
 Using SInvoice by Viettel
     """,
     'data': [
+        "security/ir.model.access.csv",
         "data/res_partner_data.xml",
         "views/res_config_settings_views.xml",
         "views/account_move_views.xml",
