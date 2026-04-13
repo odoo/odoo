@@ -113,7 +113,13 @@ class AccountEdiCommon(models.AbstractModel):
         if tax.ubl_cii_tax_category_code:
             reason_code = tax.ubl_cii_tax_exemption_reason_code
             reason_code = FIX_WRONG_CODES_MAPPING.get(reason_code, reason_code)
-            tax_exemption_reason = TAX_EXEMPTION_MAPPING.get(reason_code, _("Exempt from tax") if tax._requires_exemption_reason() else None)
+
+            cocontractant_note = self._get_belgian_cocontractant_note(customer, supplier)
+            if cocontractant_note:
+                tax_exemption_reason = TAX_EXEMPTION_MAPPING.get(reason_code)
+                tax_exemption_reason = f"{tax_exemption_reason} - {cocontractant_note}" if tax_exemption_reason else cocontractant_note
+            else:
+                tax_exemption_reason = TAX_EXEMPTION_MAPPING.get(reason_code, _("Exempt from tax") if tax._requires_exemption_reason() else None)
             return {
                 'tax_category_code': tax.ubl_cii_tax_category_code,
                 'tax_exemption_reason_code': reason_code,
