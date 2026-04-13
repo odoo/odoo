@@ -1,0 +1,85 @@
+.s_references_carousel {
+    overflow-x: clip;
+
+    .s_references_carousel_container {
+        flex-wrap: nowrap;
+    }
+
+    .s_references_carousel_group {
+        flex-shrink: 0;
+        gap: map-get($spacers, 5);
+        padding-inline-end: map-get($spacers, 5);
+    }
+
+    .s_references_carousel_item {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+            height: 60px;
+            width: 150px;
+            object-fit: contain;
+        }
+    }
+
+    // Direction variants
+    &.s_references_carousel_direction_right {
+        --carousel-animation: o-references-carousel-scroll-right;
+    }
+    &.s_references_carousel_direction_none {
+        --carousel-animation: none;
+    }
+
+    // Animation states, only when ready (public mode)
+    &.s_references_carousel_ready {
+        .s_references_carousel_group {
+            --carousel-animation-time: calc(
+                (25s - var(--carousel-animation-speed) * 2)
+                * var(--carousel-group-size) * .001
+            );
+
+            animation-composition: add;
+            animation:
+                var(--carousel-animation, o-references-carousel-scroll-left) linear infinite var(--carousel-animation-time),
+                var(--carousel-animation, o-references-carousel-scroll-left) linear infinite calc(var(--carousel-animation-time) * var(--carousel-animation-hover-multiplier, 1)) reverse paused;
+
+            @media (prefers-reduced-motion: reduce) {
+                & {
+                    animation: none !important;
+                }
+            }
+        }
+        &.s_references_carousel_hover_slow .s_references_carousel_group {
+            --carousel-animation-hover-multiplier: 2;
+        }
+
+        // Hover effects, only on devices that support hover and when not
+        // scrolling the page.
+        @media (hover: hover) {
+            &:where(:hover:not(.s_references_carousel_page_scrolling)) {
+                &.s_references_carousel_hover_pause .s_references_carousel_group {
+                    animation-play-state: paused;
+                }
+                &.s_references_carousel_hover_slow .s_references_carousel_group {
+                    animation-play-state: running;
+                }
+                &.s_references_carousel_hover_direction .s_references_carousel_group {
+                    animation-play-state: paused, running;
+                }
+            }
+        }
+    }
+}
+
+@keyframes o-references-carousel-scroll-left {
+    to {
+        transform: translateX(-100%);
+    }
+}
+@keyframes o-references-carousel-scroll-right {
+    from {
+        transform: translateX(-100%);
+    }
+}
