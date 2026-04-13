@@ -5771,7 +5771,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.strictEqual(input_stop.value, "12/30/2016 10:00:00", "should display the datetime");
     });
 
-    QUnit.test("html field on calendar shouldn't have a tooltip", async (assert) => {
+    QUnit.test("html and boolean fields on calendar shouldn't have a tooltip", async (assert) => {
         serverData.models.event.fields.description = { string: "Description", type: "html" };
         serverData.models.event.records.push({
             id: 8,
@@ -5793,6 +5793,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             arch: `
                 <calendar date_start="start">
                     <field name="description"/>
+                    <field name="allday"/>
                 </calendar>
             `,
         });
@@ -5801,7 +5802,13 @@ QUnit.module("Views", ({ beforeEach }) => {
         const descriptionField = target.querySelector(
             '.o_cw_popover_field .o_field_widget[name="description"]'
         );
-        const parentLi = descriptionField.closest("li");
+        let parentLi = descriptionField.closest("li");
+        assert.strictEqual(parentLi.getAttribute("data-tooltip"), "");
+
+        const alldayField = target.querySelector(
+            '.o_cw_popover_field .o_field_widget[name="allday"]'
+        );
+        parentLi = alldayField.closest("li");
         assert.strictEqual(parentLi.getAttribute("data-tooltip"), "");
     });
 });
