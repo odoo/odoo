@@ -87,12 +87,16 @@ class SQL:
 
     # pylint: disable=keyword-arg-before-vararg
     def __init__(self, code: (str | SQL) = "", /, *args, to_flush: (Field | Iterable[Field] | None) = None, **kwargs):
-        if isinstance(code, SQL):
-            if args or kwargs or to_flush:
+        if isinstance(code, SQL) or (code == "%s" and len(args) == 1 and isinstance(args[0], SQL)):
+            if code == "%s":
+                code, args = args[0], ()
+            if args or kwargs:
                 raise TypeError("SQL() unexpected arguments when code has type SQL")
             self.__code = code.__code
             self.__params = code.__params
-            self.__to_flush = code.__to_flush
+            self.__to_flush = (code.__to_flush if to_flush is None
+                        else tuple(to_flush) if getattr(to_flush.__class__, '__iter__', None) is not None
+                        else (to_flush,))
             return
 
         # validate the format of code and parameters
@@ -107,7 +111,7 @@ class SQL:
             self.__params = ()
             if to_flush is None:
                 self.__to_flush = ()
-            elif hasattr(to_flush, '__iter__'):
+            elif getattr(to_flush.__class__, '__iter__', None) is not None:
                 self.__to_flush = tuple(to_flush)
             else:
                 self.__to_flush = (to_flush,)
@@ -125,7 +129,7 @@ class SQL:
                 code_list.append("%s")
                 params_list.append(arg)
         if to_flush is not None:
-            if hasattr(to_flush, '__iter__'):
+            if getattr(to_flush.__class__, '__iter__', None) is not None:
                 to_flush_list.extend(to_flush)
             else:
                 to_flush_list.append(to_flush)
