@@ -3,7 +3,7 @@
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.addons.sale_stock.tests.common import TestSaleStockCommon
 from odoo import fields
-from odoo.tests import tagged
+from odoo.tests import Command, freeze_time, tagged
 
 from datetime import timedelta
 
@@ -229,3 +229,32 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
         out_date = order.date_order + timedelta(days=self.test_product_order.sale_delay) - timedelta(days=self.env.company.security_lead)
         min_date = order.picking_ids[0].scheduled_date
         self.assertTrue(abs(min_date - out_date) <= timedelta(seconds=1), 'Schedule date of picking should be equal to: order date + Customer Lead Time - Sales Safety Days.')
+
+    @freeze_time('2024-01-01')
+    def test_move_deadline_respects_per_line_customer_lead(self):
+        """When confirming a SO with multiple lines having different
+        customer_lead, the generated picking's move deadlines are correctly computed per line
+        and not overridden by the SO's commitment_date.
+        """
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'picking_policy': 'direct',
+            'warehouse_id': self.company_data['default_warehouse'].id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1,
+                    'customer_lead': 5.0,
+                }),
+                Command.create({
+                    'product_id': self.product_b.id,
+                    'product_uom_qty': 1,
+                    'customer_lead': 10.0,
+                }),
+            ],
+        })
+        order.action_confirm()
+        self.assertRecordValues(order.picking_ids.move_ids, [
+            {'product_id': self.product_a.id, 'date_deadline': fields.Datetime.today() + timedelta(days=5)},
+            {'product_id': self.product_b.id, 'date_deadline': fields.Datetime.today() + timedelta(days=10)},
+        ])
