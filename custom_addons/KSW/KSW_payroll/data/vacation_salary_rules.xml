@@ -58,6 +58,42 @@ Filled by HR during the leave approval process.</field>
         </record>
 
         <!-- ========================================================= -->
+        <!-- Additional Commissions (ALW)                               -->
+        <!-- Reads from payslip input line 'ADDITIONAL_COMMISSIONS'     -->
+        <!-- ========================================================= -->
+        <record id="hr_rule_additional_commissions" model="hr.salary.rule">
+            <field name="name">Additional Commissions</field>
+            <field name="sequence" eval="18"/>
+            <field name="code">ADDITIONAL_COMMISSIONS</field>
+            <field name="category_id" ref="om_hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.ADDITIONAL_COMMISSIONS and inputs.ADDITIONAL_COMMISSIONS.amount</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.ADDITIONAL_COMMISSIONS.amount if inputs.ADDITIONAL_COMMISSIONS else 0.0</field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="note">Additional commissions for the employee. Filled by the
+Accounting department during the annual leave approval process.</field>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Remaining Loans Deduction (DED)                            -->
+        <!-- Reads from payslip input line 'REMAINING_LOANS'            -->
+        <!-- ========================================================= -->
+        <record id="hr_rule_remaining_loans" model="hr.salary.rule">
+            <field name="name">Remaining Loans</field>
+            <field name="sequence" eval="171"/>
+            <field name="code">REMAINING_LOANS</field>
+            <field name="category_id" ref="om_hr_payroll.DED"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.REMAINING_LOANS and inputs.REMAINING_LOANS.amount</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -inputs.REMAINING_LOANS.amount if inputs.REMAINING_LOANS else 0.0</field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="note">Remaining loan amount to deduct from the vacation payslip.
+Filled by the Accounting department during the annual leave approval process.</field>
+        </record>
+
+        <!-- ========================================================= -->
         <!-- Attach all vacation rules to the BASE salary structure     -->
         <!-- ========================================================= -->
         <record id="om_hr_payroll.structure_base" model="hr.payroll.structure">
@@ -65,6 +101,8 @@ Filled by HR during the leave approval process.</field>
                 (4, ref('hr_rule_vacation_balance')),
                 (4, ref('hr_rule_flight_ticket')),
                 (4, ref('hr_rule_penalty')),
+                (4, ref('hr_rule_additional_commissions')),
+                (4, ref('hr_rule_remaining_loans')),
             ]"/>
         </record>
 

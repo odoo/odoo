@@ -21,7 +21,11 @@ Connecting attendance records with leave management to be a list to choose from
         # 'security/hr_payroll_security.xml',
         'security/ir.model.access.csv',
 
+        # Data
+        'data/attendance_issue_defaults.xml',
+
         # Views
+        'views/hr_leave_type_views.xml',
         'views/hr_leave_views.xml',
         'views/hr_attendance_views.xml',
     ],

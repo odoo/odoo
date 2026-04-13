@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Add x_leave_id column to attendance sheet line list -->
+    <record id="ksw_attendance_sheet_view_form_inherit_leave" model="ir.ui.view">
+        <field name="name">ksw.attendance.sheet.form.inherit.leave</field>
+        <field name="model">ksw.attendance.sheet</field>
+        <field name="inherit_id" ref="KSW_attendance_sheet.ksw_attendance_sheet_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='line_ids']//list//field[@name='attendance_id']"
+                   position="after">
+                <field name="x_leave_id" readonly="1" optional="show"
+                       string="Leave Lock"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+

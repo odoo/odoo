@@ -105,14 +105,38 @@ class HrLeave(models.Model):
         string='Iqama Renewal Description', copy=False,
     )
 
-    # --- Accounting-filled fields (flight ticket) ---
+    # --- HR-filled fields (flight ticket) ---
     x_flight_ticket_amount = fields.Float(
         string='Flight Ticket Amount', digits=(16, 2), copy=False, tracking=True,
-        help='Flight ticket allowance to add to the vacation payslip (filled by Accounting).',
+        help='Flight ticket allowance to add to the vacation payslip (filled by HR).',
     )
     x_flight_ticket_description = fields.Text(
         string='Flight Ticket Description', copy=False,
     )
+    x_commission_line_ids = fields.One2many(
+        'hr.leave.commission.line', 'leave_id',
+        string='Commission Lines', copy=False,
+        help='Individual monthly commission entries (filled by Accounting).',
+    )
+    x_additional_commissions = fields.Float(
+        string='Total Additional Commissions', digits=(16, 2),
+        compute='_compute_additional_commissions', store=True,
+        tracking=True,
+        help='Sum of all commission lines. Automatically computed.',
+    )
+    x_remaining_loans = fields.Float(
+        string='Remaining Loans', digits=(16, 2), copy=False, tracking=True,
+        help='Remaining loan amount to deduct from the vacation payslip (filled by Accounting).',
+    )
+    x_remaining_loans_description = fields.Text(
+        string='Remaining Loans Description', copy=False,
+    )
+
+    @api.depends('x_commission_line_ids.amount')
+    def _compute_additional_commissions(self):
+        for leave in self:
+            leave.x_additional_commissions = sum(
+                leave.x_commission_line_ids.mapped('amount'))
 
     # --- Approver tracking ---
     x_dm_approved_by = fields.Many2one(
@@ -483,6 +507,14 @@ class HrLeave(models.Model):
                     body_parts.append(
                         ' — %s' % leave.x_iqama_renewal_description)
                 body_parts.append('<br/>')
+            if leave.x_flight_ticket_amount:
+                body_parts.append(
+                    '<b>Flight Ticket:</b> %.2f SAR'
+                    % leave.x_flight_ticket_amount)
+                if leave.x_flight_ticket_description:
+                    body_parts.append(
+                        ' — %s' % leave.x_flight_ticket_description)
+                body_parts.append('<br/>')
             leave.message_post(
                 body=Markup(''.join(body_parts)),
                 subtype_xmlid='mail.mt_note',
@@ -531,13 +563,23 @@ class HrLeave(models.Model):
                 '<strong>✅ Step 4 — Accounting Approval</strong><br/>',
                 '<b>Approved by:</b> %s<br/>' % self.env.user.name,
             ]
-            if leave.x_flight_ticket_amount:
+            if leave.x_commission_line_ids:
                 body_parts.append(
-                    '<b>Flight Ticket:</b> %.2f SAR'
-                    % leave.x_flight_ticket_amount)
-                if leave.x_flight_ticket_description:
+                    '<b>Additional Commissions:</b><br/>')
+                for line in leave.x_commission_line_ids:
                     body_parts.append(
-                        ' — %s' % leave.x_flight_ticket_description)
+                        '&nbsp;&nbsp;• %s: %.2f SAR<br/>'
+                        % (line.name, line.amount))
+                body_parts.append(
+                    '<b>Total:</b> %.2f SAR<br/>'
+                    % leave.x_additional_commissions)
+            if leave.x_remaining_loans:
+                body_parts.append(
+                    '<b>Remaining Loans:</b> %.2f SAR'
+                    % leave.x_remaining_loans)
+                if leave.x_remaining_loans_description:
+                    body_parts.append(
+                        ' — %s' % leave.x_remaining_loans_description)
                 body_parts.append('<br/>')
             leave.message_post(
                 body=Markup(''.join(body_parts)),
@@ -606,6 +648,8 @@ class HrLeave(models.Model):
 
     def _reset_annual_multi_fields(self):
         """Reset all multi-step approval fields to their defaults."""
+        # Delete commission lines (cascaded by ORM, but explicit is clearer)
+        self.mapped('x_commission_line_ids').unlink()
         self.write({
             'x_annual_approval_state': False,
             'x_penalty_amount': 0,
@@ -614,6 +658,8 @@ class HrLeave(models.Model):
             'x_iqama_renewal_description': False,
             'x_flight_ticket_amount': 0,
             'x_flight_ticket_description': False,
+            'x_remaining_loans': 0,
+            'x_remaining_loans_description': False,
             'x_dm_approved_by': False,
             'x_dm_approved_date': False,
             'x_hr_approved_by': False,

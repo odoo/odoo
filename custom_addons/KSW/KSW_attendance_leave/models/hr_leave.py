@@ -26,6 +26,17 @@ class HrLeave(models.Model):
              "that this time-off request is meant to cover.",
     )
 
+    holiday_status_is_attendance_issue = fields.Boolean(
+        related='holiday_status_id.is_attendance_issue',
+    )
+
+    def action_submit(self):
+        """Called by the 'Submit' button on new records.
+        The record is auto-saved by Odoo before this method runs,
+        so create() has already set state='confirm' and posted activities.
+        Nothing else to do here."""
+        return True
+
     x_total_late_minutes = fields.Float(
         string='Total Late Minutes',
         compute='_compute_attendance_summary',
@@ -227,9 +238,9 @@ class HrLeave(models.Model):
     @api.constrains('x_attendance_ids', 'holiday_status_id')
     def _check_attendance_ids_required(self):
         for leave in self:
-            # Allocated leave types (e.g. Annual Vacation) use normal
-            # date-based flow — no attendance issues required.
-            if leave.holiday_status_id and leave.holiday_status_id.requires_allocation:
+            # Only leave types flagged as "Depends on Attendance Issue"
+            # require at least one attendance record.
+            if not leave.holiday_status_id or not leave.holiday_status_id.is_attendance_issue:
                 continue
             if not leave.x_attendance_ids:
                 raise ValidationError(_("You must select at least one attendance issue to cover."))
@@ -685,8 +696,15 @@ class HrLeave(models.Model):
         """Discard tracking that mail.thread._compute_field_value prepares
         for attendance-based leaves.  This prevents the ORM-triggered
         recompute of number_of_days / number_of_hours from posting noisy
-        '0.52 → 0.54 (Duration)' messages in the chatter."""
-        result = super()._compute_field_value(field)
+        '0.52 → 0.54 (Duration)' messages in the chatter.
+
+        Also passes leave_skip_state_check in context to avoid
+        _check_date_state ValidationError when validated leaves have
+        their computed fields recomputed during module upgrades.
+        """
+        result = super(
+            HrLeave, self.with_context(leave_skip_state_check=True)
+        )._compute_field_value(field)
         if getattr(field, 'tracking', False) and not self.env.context.get('tracking_disable'):
             att_leaves = self.filtered('x_attendance_ids')
             if att_leaves:

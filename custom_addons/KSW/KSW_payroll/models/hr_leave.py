@@ -187,6 +187,26 @@ class HrLeave(models.Model):
         # Note: x_iqama_renewal_amount is recorded on the leave for
         # decision-making only — it is NOT included as a payslip input.
 
+        # 4. Additional Commissions
+        if leave.x_additional_commissions:
+            vals_list.append({
+                'payslip_id': payslip.id,
+                'version_id': version_id,
+                'name': 'Additional Commissions',
+                'code': 'ADDITIONAL_COMMISSIONS',
+                'amount': leave.x_additional_commissions,
+            })
+
+        # 5. Remaining Loans
+        if leave.x_remaining_loans:
+            vals_list.append({
+                'payslip_id': payslip.id,
+                'version_id': version_id,
+                'name': 'Remaining Loans',
+                'code': 'REMAINING_LOANS',
+                'amount': leave.x_remaining_loans,
+            })
+
         return vals_list
 
     # ------------------------------------------------------------------

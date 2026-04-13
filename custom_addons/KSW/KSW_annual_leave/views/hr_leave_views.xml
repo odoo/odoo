@@ -129,8 +129,8 @@
             <xpath expr="//group[@name='col_left']" position="after">
                 <group invisible="not x_annual_approval_state or x_annual_approval_state == 'pending_dm'"
                        col="2">
-                    <!-- Left: HR Deductions -->
-                    <group string="HR — Deductions">
+                    <!-- Left: HR -->
+                    <group string="HR">
                         <field name="x_penalty_amount"
                                readonly="x_annual_approval_state != 'pending_hr'"/>
                         <field name="x_penalty_description"
@@ -141,17 +141,39 @@
                         <field name="x_iqama_renewal_description"
                                readonly="x_annual_approval_state != 'pending_hr'"
                                placeholder="Reason..."/>
-                    </group>
-                    <!-- Right: Accounting Allowances -->
-                    <group string="Accounting — Allowances"
-                           invisible="x_annual_approval_state in ('pending_hr', 'pending_gm_initial')">
                         <field name="x_flight_ticket_amount"
-                               readonly="x_annual_approval_state != 'pending_acc'"/>
+                               readonly="x_annual_approval_state != 'pending_hr'"/>
                         <field name="x_flight_ticket_description"
+                               readonly="x_annual_approval_state != 'pending_hr'"
+                               placeholder="Details..."/>
+                    </group>
+                    <!-- Right: Accounting -->
+                    <group string="Accounting"
+                           name="accounting_allowances"
+                           invisible="x_annual_approval_state in ('pending_hr', 'pending_gm_initial')">
+                        <field name="x_additional_commissions" string="Total Commissions"
+                               readonly="1"/>
+                        <field name="x_remaining_loans"
+                               readonly="x_annual_approval_state != 'pending_acc'"/>
+                        <field name="x_remaining_loans_description"
                                readonly="x_annual_approval_state != 'pending_acc'"
                                placeholder="Details..."/>
                     </group>
                 </group>
+
+                <!-- Commission Lines — full sheet width -->
+                <separator string="Additional Commissions Detail"
+                           name="commission_lines_section"
+                           invisible="x_annual_approval_state in ('pending_dm', 'pending_hr', 'pending_gm_initial') or not x_annual_approval_state"/>
+                <field name="x_commission_line_ids" nolabel="1"
+                       readonly="x_annual_approval_state != 'pending_acc'"
+                       invisible="x_annual_approval_state in ('pending_dm', 'pending_hr', 'pending_gm_initial') or not x_annual_approval_state">
+                    <list editable="bottom">
+                        <field name="sequence" widget="handle"/>
+                        <field name="name" string="Month / Description"/>
+                        <field name="amount" sum="Total"/>
+                    </list>
+                </field>
 
                 <!-- Approval History — compact 2-column grid -->
                 <group string="Approval History" col="4"

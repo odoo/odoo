@@ -7,21 +7,30 @@
         <field name="model">hr.leave</field>
         <field name="inherit_id" ref="hr_holidays.hr_leave_view_form"/>
         <field name="arch" type="xml">
+            <!-- Submit button for new records (visible before save) -->
+            <xpath expr="//button[@name='action_approve']" position="before">
+                <button string="✅ Submit"
+                        name="action_submit"
+                        type="object"
+                        class="oe_highlight"
+                        invisible="id"/>
+            </xpath>
+
             <xpath expr="//field[@name='name']" position="before">
-                <field name="holiday_status_requires_allocation" invisible="1"/>
+                <field name="holiday_status_is_attendance_issue" invisible="1"/>
                 <field name="x_attendance_ids" widget="many2many_tags"
                        options="{'no_create': True, 'no_edit': True}"
-                       invisible="holiday_status_requires_allocation"
+                       invisible="not holiday_status_is_attendance_issue"
                        readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="x_total_late_minutes" readonly="1"
-                       invisible="x_total_late_minutes == 0 or holiday_status_requires_allocation"/>
+                       invisible="x_total_late_minutes == 0 or not holiday_status_is_attendance_issue"/>
                 <field name="x_total_early_leave_minutes" readonly="1"
-                       invisible="x_total_early_leave_minutes == 0 or holiday_status_requires_allocation"/>
+                       invisible="x_total_early_leave_minutes == 0 or not holiday_status_is_attendance_issue"/>
                 <field name="x_total_absent_days" readonly="1" invisible="1"/>
 
                 <!-- Attendance issue breakdown lines -->
                 <field name="x_attendance_line_ids"
-                       invisible="not request_unit_hours or x_attendance_count == 0 or holiday_status_requires_allocation"
+                       invisible="not request_unit_hours or x_attendance_count == 0 or not holiday_status_is_attendance_issue"
                        readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"
                        nolabel="1" colspan="2">
                     <list editable="bottom" create="false" delete="false"
