@@ -2585,7 +2585,7 @@ class AccountEdiUBL(models.AbstractModel):
                 price_subtotal = price_allowance_base_amount
             elif price_allowance_amount:
                 price_discount_amount = -price_allowance_amount
-                price_subtotal = price_amount
+                price_subtotal = price_amount - price_allowance_amount
             else:
                 price_discount_amount = 0.0
                 price_subtotal = price_amount
