@@ -382,9 +382,9 @@ test("set section desktop invisible then show then set conditionally invisible t
     expect(":iframe section").toBeVisible();
 });
 
-test("elements with visibility=conditional are saved with o_conditional_hidden", async () => {
+test("elements with visibility=conditional are saved without o_conditional_hidden", async () => {
     onRpc("ir.ui.view", "save", ({ args }) => {
-        expect(args[1]).toMatch(/o_conditional_hidden/);
+        expect(args[1]).not.toMatch(/o_conditional_hidden/);
         expect.step("save");
         return true;
     });
@@ -394,9 +394,10 @@ test("elements with visibility=conditional are saved with o_conditional_hidden",
     await contains(":iframe section").click();
     await contains("[data-label='Visibility'] button.dropdown").click();
     await contains("div.dropdown-item:contains(Conditionally)").click();
-    expect(".o_we_invisible_entry i").toHaveClass("fa-eye");
-    expect(":iframe section").toBeVisible();
-    expect(":iframe section").not.toHaveClass("o_conditional_hidden");
+    await contains(".o_we_invisible_entry i.fa-eye").click();
+    expect(".o_we_invisible_entry i").toHaveClass("fa-eye-slash");
+    expect(":iframe section").not.toBeVisible();
+    expect(":iframe section").toHaveClass("o_conditional_hidden");
 
     await contains(".o-snippets-top-actions button:contains(Save)").click();
     expect.verifySteps(["save"]);
@@ -450,14 +451,14 @@ describe("drop invisible elements", () => {
             </section>
         </section>`;
     const snippetConditionalInvisible = `
-        <section class="s_conditional_test o_conditional_hidden" data-visibility="conditional" data-snippet="s_conditional_test" data-name="Test conditional">
+        <section class="s_conditional_test" data-visibility="conditional" data-snippet="s_conditional_test" data-name="Test conditional">
             <p>Hello All</p>
-            <section class="o_conditional_hidden" data-visibility="conditional" data-snippet="s_inner_conditional_test">
+            <section data-visibility="conditional" data-snippet="s_inner_conditional_test">
                 <p>Hello Sometimes</p>
             </section>
         </section>`;
     const snippetDesktopAndConditionalInvisible = `
-        <section class="s_desktop_and_conditional_test o_snippet_desktop_invisible d-lg-none o_conditional_hidden" data-visibility="conditional" data-snippet="s_desktop_and_conditional_test" data-name="Test desktop and conditional">
+        <section class="s_desktop_and_conditional_test o_snippet_desktop_invisible d-lg-none" data-visibility="conditional" data-snippet="s_desktop_and_conditional_test" data-name="Test desktop and conditional">
             <p>Hello Mobile Sometimes</p>
         </section>`;
 
@@ -593,7 +594,7 @@ describe("drop invisible elements", () => {
     });
 
     describe("snippets shown with invisible elements in snippet dialog", () => {
-        test("elements with o_conditional_hidden are visible", async () => {
+        test("elements with [data-visibility=conditional] are visible", async () => {
             await setupWebsiteBuilder(`<section>test</section>`, {
                 snippets: getSnippetInfos(snippetConditionalInvisible),
             });

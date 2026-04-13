@@ -58,7 +58,7 @@ patch(SnippetViewer.prototype, {
                 },
             });
         }
-        if (snippetContentEl.matches(".o_conditional_hidden")) {
+        if (snippetContentEl.matches("[data-visibility=conditional]")) {
             icons.push({
                 keyClass: "o_prefix_conditional",
                 title: "Conditionally visible",
