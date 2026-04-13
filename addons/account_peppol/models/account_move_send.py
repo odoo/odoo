@@ -5,7 +5,7 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models
 
-from odoo.addons.account.models.company import PEPPOL_LIST
+from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES, PEPPOL_LIST
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
 _logger = logging.getLogger(__name__)
@@ -19,7 +19,12 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         preferred_method = move.commercial_partner_id.with_company(move.company_id).invoice_sending_method
         company_registered_on_peppol = move.company_id.account_peppol_proxy_state not in ('not_registered', 'in_verification')
-        if company_registered_on_peppol and not preferred_method and self._is_applicable_to_move('peppol', move):
+        if (
+            company_registered_on_peppol
+            and not preferred_method
+            and self._is_applicable_to_move('peppol', move)
+            and any(country in PEPPOL_DEFAULT_COUNTRIES for country in move.commercial_partner_id.mapped('country_id.code'))
+        ):
             return 'peppol'
         return super()._get_default_sending_method(move)
 
@@ -80,6 +85,7 @@ class AccountMoveSend(models.AbstractModel):
         elif (
             (peppol_not_selected_partners := filter_peppol_state(not_peppol_moves, ['valid']))
             and any_moves_not_sent_peppol
+            and any(code in PEPPOL_DEFAULT_COUNTRIES for code in peppol_partner(moves).mapped('country_id.code'))
             and len(peppol_not_selected_partners) == 1  # Check for not peppol partners that are on the network
         ):
             alerts['account_peppol_partner_want_peppol'] = {
