@@ -1,6 +1,6 @@
 {
     'name': 'Italy - E-invoicing',
-    'version': '0.4',
+    'version': '0.5',
     'depends': [
         'l10n_it',
         'account_edi_proxy_client',
