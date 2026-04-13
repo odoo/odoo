@@ -358,6 +358,12 @@
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate,validate1" invisible="validation_type != 'both'"/>
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate" invisible="validation_type == 'both'"/>
             </header>
+            <div class="alert alert-warning"
+                    name="warning_wrong_company"
+                    role="alert"
+                    invisible="employee_id">
+                You are not assigned to any employee in the current company. Therefore, you can't request time off for yourself.
+            </div>
             <sheet>
                 <field name="dashboard_warning_message" class="alert alert-danger d-flex mt-2" role="alert" style="white-space: pre-wrap;" invisible="not dashboard_warning_message"/>
                 <field name="work_entry_type_increases_duration" class="alert alert-info d-flex mt-2" role="alert" style="white-space: pre-wrap;" invisible="not work_entry_type_increases_duration"/>
@@ -582,6 +588,7 @@
                                     ('allows_negative', '=', False),
                 ]</attribute>
             </xpath>
+            <xpath expr="//div[@name='warning_wrong_company']" position="replace"/>
         </field>
     </record>
 

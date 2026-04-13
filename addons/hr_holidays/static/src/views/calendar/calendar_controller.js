@@ -1,7 +1,8 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
+import { AlertDialog, ConfirmationDialog} from "@web/core/confirmation_dialog/confirmation_dialog";
+import { userHasEmployeeInCurrentCompany } from "@hr_holidays/utils";
 
 import { serializeDate } from "@web/core/l10n/dates";
 
@@ -9,7 +10,7 @@ import { TimeOffCalendarSidePanel } from "./calendar_side_panel/calendar_side_pa
 import { TimeOffCalendarMobileFilterPanel } from "./calendar_filter_panel/calendar_mobile_filter_panel";
 import { TimeOffFormViewDialog } from "../view_dialog/form_view_dialog";
 import { useLeaveCancelWizard } from "../hooks";
-import { EventBus } from "@odoo/owl";
+import { EventBus, onWillStart } from "@odoo/owl";
 
 export class TimeOffCalendarController extends CalendarController {
     static components = {
@@ -24,6 +25,16 @@ export class TimeOffCalendarController extends CalendarController {
             timeOffBus: new EventBus(),
         });
         this.leaveCancelWizard = useLeaveCancelWizard();
+
+        onWillStart(async () => {
+            this.hasEmployee = await userHasEmployeeInCurrentCompany(this.orm);
+            if (!this.employeeId && !this.hasEmployee) {
+                this.env.services.notification.add(
+                    _t("You are not linked to an employee in the current company, so you cannot create requests for yourself."),
+                    { type: "warning", sticky: true }
+                );
+            }
+        });
     }
 
     get employeeId() {
@@ -31,6 +42,13 @@ export class TimeOffCalendarController extends CalendarController {
     }
 
     newTimeOffRequest() {
+        if (!this.employeeId && !this.hasEmployee) {
+            this.displayDialog(AlertDialog, {
+                title: _t("UserError"),
+                body: _t("This operation is not allowed as you are not linked to an employee in the current company."),
+            });
+            return;
+        }
         const context = {};
         if (this.props.context.active_id && this.props.context.active_model === "hr.employee") {
             context["default_employee_id"] = this.props.context.active_id;
@@ -87,6 +105,13 @@ export class TimeOffCalendarController extends CalendarController {
     }
 
     _editRecord(record, context, props = {}) {
+        if (!this.employeeId && !this.hasEmployee) {
+            this.displayDialog(AlertDialog, {
+                title: _t("UserError"),
+                body: _t("This operation is not allowed as you are not linked to an employee in the current company."),
+            });
+            return;
+        }
         const onDialogClosed = () => {
             this.model.load();
             this.env.timeOffBus.trigger("update_dashboard");

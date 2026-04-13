@@ -11,6 +11,7 @@ export class HrEmployee extends hrModels.HrEmployee {
             id: 100,
             name: "Richard",
             department_id: 11,
+            company_id: 1,
         },
         {
             id: 200,

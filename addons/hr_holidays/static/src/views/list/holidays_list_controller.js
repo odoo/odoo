@@ -3,6 +3,9 @@ import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { listView } from "@web/views/list/list_view";
 import { ListController } from "@web/views/list/list_controller";
+import { onWillStart } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { userHasEmployeeInCurrentCompany } from "@hr_holidays/utils";
 
 export class HolidaysListController extends ListController {
     static template = "hr_holidays.HolidaysListView";
@@ -16,6 +19,21 @@ export class HolidaysListController extends ListController {
 
         useSubEnv({
             onClickViewButton: (params) => this.handleViewButtonClick(params),
+        });
+
+        onWillStart(async () => {
+            const hasEmployee = await userHasEmployeeInCurrentCompany(this.orm);
+            const ignoreActions = [
+                "hr_holidays.hr_leave_action_action_approve_department",
+                "hr_holidays.hr_leave_allocation_action_approve_department",
+            ];
+            const ignoreHasEmployee = ignoreActions.includes(this.env.config.actionXmlId);
+            if (!hasEmployee && !ignoreHasEmployee) {
+                this.env.services.notification.add(
+                    _t("You are not linked to an employee in the current company, so you cannot create requests for yourself."),
+                    { type: "warning", sticky: true }
+                );
+            }
         });
     }
 

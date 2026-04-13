@@ -1,9 +1,23 @@
 import { useState } from "@web/owl2/utils";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { TimeOffCard } from "./time_off_card";
 import { useNewAllocationRequest } from "@hr_holidays/views/hooks";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
+import { useBus, useService, useOwnedDialogs } from "@web/core/utils/hooks";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { Component, onWillStart } from "@odoo/owl";
+import { userHasEmployeeInCurrentCompany } from "@hr_holidays/utils";
+
+function useUniqueDialog() {
+    const displayDialog = useOwnedDialogs();
+    let close = null;
+    return (...args) => {
+        if (close) {
+            close();
+        }
+        close = displayDialog(...args);
+    };
+}
 
 export class TimeOffDashboard extends Component {
     static components = { TimeOffCard, DateTimeInput };
@@ -20,6 +34,7 @@ export class TimeOffDashboard extends Component {
             holidays: [],
             allocationRequests: 0,
         });
+        this.displayDialog = useUniqueDialog();
         useBus(this.env.timeOffBus, "update_dashboard", async () => {
             await this.loadDashboardData();
         });
@@ -54,6 +69,14 @@ export class TimeOffDashboard extends Component {
     }
 
     async newAllocationRequest() {
+        const hasEmployee = await userHasEmployeeInCurrentCompany(this.orm);
+        if (!this.props.employeeId && !hasEmployee) {
+            this.displayDialog(AlertDialog, {
+                title: _t("UserError"),
+                body: _t("This operation is not allowed as you are not linked to an employee in the current company."),
+            });
+            return;
+        }
         await this.newRequest(this.props.employeeId);
     }
 

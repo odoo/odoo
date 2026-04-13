@@ -13,6 +13,7 @@ export class HrEmployee extends models.ServerModel {
     work_location_type = fields.Char();
     work_location_id = fields.Many2one({ relation: "hr.work.location" });
     job_title = fields.Char();
+    company_id = fields.Many2one({ relation: "res.company" });
 
     _get_store_avatar_card_fields({ add_user = true, ...args } = {}) {
         const res = [
