@@ -9,23 +9,29 @@ from odoo.addons.iot_drivers.driver import Driver
 _logger = logging.getLogger(__name__)
 
 
+class CameraException(Exception):
+    pass
+
+
 class CameraDriver(Driver):
-    connection_type = 'video'
+    connection_type = "video"
 
     def __init__(self, identifier, device):
         super().__init__(identifier, device)
-        self.device_type = 'camera'
-        self.device_connection = 'direct'
-        self.device_name = device['name']
-        self.interface = device['interface']
+        self.device_type = "camera"
+        self.device_connection = "direct"
+        self.device_name = device["name"]
+        self.interface = device["interface"]
 
-        self._actions.update({
-            '': self._action_default,
-        })
+        self._actions.update(
+            {
+                "": self._action_default,
+            }
+        )
 
     @classmethod
     def supported(cls, device):
-        return bool(device['interface'])
+        return bool(device["interface"])
 
     def _action_default(self, _data):
         """Capture an image from the camera.
@@ -33,12 +39,14 @@ class CameraDriver(Driver):
         """
         # "-" to output to stdout (avoid writing to disk)
         image = subprocess.run(
-            ["fswebcam", "-d", self.interface, "-r", "1920x1080", "-"], capture_output=True, check=False
+            ["fswebcam", "-d", self.interface, "-r", "1920x1080", "-"],
+            capture_output=True,
+            check=False,
         )
         if image.returncode == 0:
             return {
-                'image': base64.b64encode(image.stdout).decode(),
+                "image": base64.b64encode(image.stdout).decode(),
             }
-        else:
-            _logger.error('Failed to capture image: %s', image.stderr.decode())
-            raise Exception('Failed to capture image from camera.')
+        msg = "Failed to capture image from camera."
+        _logger.error("%s: %s", msg, image.stderr.decode())
+        raise CameraException(msg)

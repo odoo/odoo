@@ -1,9 +1,10 @@
-from gatt import DeviceManager as Gatt_DeviceManager
-from gatt.errors import NotReady
-import dbus
-from gi.repository import GLib
 import logging
 from threading import Thread
+
+import dbus
+from gatt import DeviceManager as Gatt_DeviceManager
+from gatt.errors import NotReady
+from gi.repository import GLib
 
 from odoo.addons.iot_drivers.interface import Interface
 
@@ -20,26 +21,28 @@ class GattBtManager(Gatt_DeviceManager):
             bluetooth_devices[identifier] = device
 
     def run(self):
-        """ Override gatt.DeviceManager.run() method
+        """Override gatt.DeviceManager.run() method
         to avoid calling GObject.MainLoop() deprecated method inside it.
         MainLoop.run() will 'infinite loop' until MainLoop.quit()
         method is called which we never do, so we don't need to reimplement
-        the rest of the MainLoop.run() method """
+        the rest of the MainLoop.run() method"""
 
         if self._main_loop:
             return
 
         self._interface_added_signal = self._bus.add_signal_receiver(
             self._interfaces_added,
-            dbus_interface='org.freedesktop.DBus.ObjectManager',
-            signal_name='InterfacesAdded')
+            dbus_interface="org.freedesktop.DBus.ObjectManager",
+            signal_name="InterfacesAdded",
+        )
 
         self._properties_changed_signal = self._bus.add_signal_receiver(
             self._properties_changed,
             dbus_interface=dbus.PROPERTIES_IFACE,
-            signal_name='PropertiesChanged',
-            arg0='org.bluez.Device1',
-            path_keyword='path')
+            signal_name="PropertiesChanged",
+            arg0="org.bluez.Device1",
+            path_keyword="path",
+        )
 
         def disconnect_signals():
             for device in self._devices.values():
@@ -61,18 +64,22 @@ class BtManager(Thread):
         super().__init__(daemon=True)
 
     def run(self):
-        dm = GattBtManager(adapter_name='hci0')
-        for device in [device_con for device_con in dm.devices() if device_con.is_connected()]:
+        dm = GattBtManager(adapter_name="hci0")
+        for device in [
+            device_con for device_con in dm.devices() if device_con.is_connected()
+        ]:
             device.disconnect()
         try:
             dm.start_discovery()
             dm.run()
         except NotReady:
-            _logger.error("Bluetooth adapter not ready. Set `is_adapter_powered` to `True` or run 'echo power on | sudo bluetoothctl'")
+            _logger.error(
+                "Bluetooth adapter not ready. Set `is_adapter_powered` to `True` or run 'echo power on | sudo bluetoothctl'"
+            )
 
 
 class BTInterface(Interface):
-    connection_type = 'bluetooth'
+    connection_type = "bluetooth"
 
     def get_devices(self):
         return bluetooth_devices.copy()

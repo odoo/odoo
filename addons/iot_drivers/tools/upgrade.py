@@ -2,16 +2,17 @@
 
 import logging
 import subprocess
+
 from odoo.addons.iot_drivers.tools.helpers import (
     odoo_restart,
     toggleable,
 )
 from odoo.addons.iot_drivers.tools.system import (
-    rpi_only,
     IS_TEST,
     git,
-    pip,
     path_file,
+    pip,
+    rpi_only,
     update_conf,
 )
 
@@ -35,10 +36,14 @@ def check_git_branch():
     try:
         target_branch = get_last_stable_odoo_version()
         if not target_branch:
-            _logger.warning("Could not get latest stable Odoo branch, will update following the local branch")
-            target_branch = git('symbolic-ref', '-q', '--short', 'HEAD')
-            if not git('ls-remote', 'origin', target_branch):
-                _logger.warning("'%s' does not exist on remote, assuming 'master'", target_branch)
+            _logger.warning(
+                "Could not get latest stable Odoo branch, will update following the local branch"
+            )
+            target_branch = git("symbolic-ref", "-q", "--short", "HEAD")
+            if not git("ls-remote", "origin", target_branch):
+                _logger.warning(
+                    "'%s' does not exist on remote, assuming 'master'", target_branch
+                )
                 target_branch = "master"
 
         # Repository updates
@@ -53,7 +58,7 @@ def check_git_branch():
         _logger.warning("Update completed, restarting...")
         odoo_restart()
     except Exception:
-        _logger.exception('An error occurred while trying to update the code with git')
+        _logger.exception("An error occurred while trying to update the code with git")
 
 
 def _ensure_production_remote():
@@ -85,20 +90,24 @@ def checkout(branch):
 
     _logger.info("Cleaning the working directory")
     git("clean", "-dfx")
-    update_conf({"iot_handlers_etag": ""})  # Reset to trigger handlers re-download as `clean -dfx` deletes custom one
+    update_conf(
+        {"iot_handlers_etag": ""}
+    )  # Reset to trigger handlers re-download as `clean -dfx` deletes custom one
 
 
 def update_requirements():
     """Update the Python requirements of the IoT Box, installing the ones
     listed in the requirements.txt file.
     """
-    requirements_file = path_file('odoo', 'setup', 'iot_box_builder', 'configuration', 'requirements.txt')
+    requirements_file = path_file(
+        "odoo", "setup", "iot_box_builder", "configuration", "requirements.txt"
+    )
     if not requirements_file.exists():
         _logger.info("No requirements file found, not updating.")
         return
 
     _logger.info("Updating pip requirements")
-    pip('-r', requirements_file)
+    pip("-r", requirements_file)
 
 
 @rpi_only
@@ -107,7 +116,9 @@ def update_packages():
     the packages.txt file.
     Requires ``writable`` context manager.
     """
-    packages_file = path_file('odoo', 'setup', 'iot_box_builder', 'configuration', 'packages.txt')
+    packages_file = path_file(
+        "odoo", "setup", "iot_box_builder", "configuration", "packages.txt"
+    )
     if not packages_file.exists():
         _logger.info("No packages file found, not updating.")
         return
@@ -120,12 +131,21 @@ def update_packages():
         f"xargs apt-get -y -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' install < {packages_file}"
     )
     _logger.warning("Updating apt packages")
-    if subprocess.run(
-        f'sudo chroot /root_bypass_ramdisks /bin/bash -c "{commands}"', shell=True, check=False
-    ).returncode != 0:
+    if (
+        subprocess.run(
+            f'sudo chroot /root_bypass_ramdisks /bin/bash -c "{commands}"',
+            shell=True,
+            check=False,
+        ).returncode
+        != 0
+    ):
         _logger.error("An error occurred while trying to update the packages")
         return
 
     # upgrade and remove packages in the background
     background_cmd = 'chroot /root_bypass_ramdisks /bin/bash -c "apt-get upgrade -y && apt-get -y autoremove"'
-    subprocess.Popen(["sudo", "bash", "-c", background_cmd], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.Popen(
+        ["sudo", "bash", "-c", background_cmd],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )

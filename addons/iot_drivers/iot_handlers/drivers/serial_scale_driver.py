@@ -2,12 +2,16 @@
 
 import logging
 import re
-import serial
 import time
 
-from odoo.addons.iot_drivers.event_manager import event_manager
-from odoo.addons.iot_drivers.iot_handlers.drivers.serial_driver_base import SerialDriver, SerialProtocol, serial_connection
+import serial
 
+from odoo.addons.iot_drivers.event_manager import event_manager
+from odoo.addons.iot_drivers.iot_handlers.drivers.serial_driver_base import (
+    SerialDriver,
+    SerialProtocol,
+    serial_connection,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -18,7 +22,7 @@ _logger = logging.getLogger(__name__)
 # We use the default serial protocol settings, the scale's settings can be configured in the
 # scale's menu anyway.
 Toledo8217Protocol = SerialProtocol(
-    name='Toledo 8217',
+    name="Toledo 8217",
     baudrate=9600,
     bytesize=serial.SEVENBITS,
     stopbits=serial.STOPBITS_ONE,
@@ -30,14 +34,15 @@ Toledo8217Protocol = SerialProtocol(
     commandDelay=0.2,
     measureDelay=0.5,
     newMeasureDelay=0.2,
-    commandTerminator=b'',
-    measureCommand=b'W',
+    commandTerminator=b"",
+    measureCommand=b"W",
     emptyAnswerValid=False,
 )
 
 
 class ScaleDriver(SerialDriver):
     """Driver for the Toldedo 8217 serial scale."""
+
     _protocol = Toledo8217Protocol
     last_sent_value: float = None
 
@@ -55,7 +60,9 @@ class ScaleDriver(SerialDriver):
     def _read_weight(self) -> float:
         """Asks for a new weight from the scale, checks if it is valid
         and, if it is, makes it the current value."""
-        self._connection.write(self._protocol.measureCommand + self._protocol.commandTerminator)
+        self._connection.write(
+            self._protocol.measureCommand + self._protocol.commandTerminator
+        )
         answer = self._get_raw_response(self._connection)
         match = re.search(self._protocol.measureRegexp, answer)
         if match:
@@ -76,20 +83,24 @@ class ScaleDriver(SerialDriver):
         protocol = cls._protocol
 
         try:
-            with serial_connection(device['identifier'], protocol, is_probing=True) as connection:
+            with serial_connection(
+                device["identifier"], protocol, is_probing=True
+            ) as connection:
                 connection.reset_input_buffer()
 
-                connection.write(b'Ehello' + protocol.commandTerminator)
+                connection.write(b"Ehello" + protocol.commandTerminator)
                 time.sleep(protocol.commandDelay)
                 answer = connection.read(8)
-                if answer == b'\x02E\rhello':
-                    connection.write(b'F' + protocol.commandTerminator)
+                if answer == b"\x02E\rhello":
+                    connection.write(b"F" + protocol.commandTerminator)
                     connection.reset_input_buffer()
                     return True
         except serial.serialutil.SerialTimeoutException:
             pass
         except Exception:
-            _logger.exception('Error while probing %s with protocol %s', device, protocol.name)
+            _logger.exception(
+                "Error while probing %s with protocol %s", device, protocol.name
+            )
         return False
 
     @staticmethod
@@ -107,24 +118,32 @@ class ScaleDriver(SerialDriver):
         :param answer: scale answer (Example: b"\x02?D\r")
         """
         status_char_error_bits = (
-            'Scale in motion',  # 0
-            'Over capacity',  # 1
-            'Under zero',  # 2
-            'Outside zero capture range',  # 3
-            'Center of zero',  # 4
-            'Net weight',  # 5
-            'Bad Command from host',  # 6
+            "Scale in motion",  # 0
+            "Over capacity",  # 1
+            "Under zero",  # 2
+            "Outside zero capture range",  # 3
+            "Center of zero",  # 4
+            "Net weight",  # 5
+            "Bad Command from host",  # 6
         )
 
-        status_match = self._protocol.statusRegexp and re.search(self._protocol.statusRegexp, answer)
+        status_match = self._protocol.statusRegexp and re.search(
+            self._protocol.statusRegexp, answer
+        )
         if status_match:
-            status_char = status_match.group(1).decode()  # Example: b'D' extracted from b'\x02?D\r'
-            binary_status_char = format(ord(status_char), '08b')  # Example: '00001101'
-            for index, bit in enumerate(binary_status_char[1:][::-1]):  # Read the bits in reverse order (LSB is at the last char) + ignore the first "parity" bit
+            status_char = status_match.group(
+                1
+            ).decode()  # Example: b'D' extracted from b'\x02?D\r'
+            binary_status_char = format(ord(status_char), "08b")  # Example: '00001101'
+            for index, bit in enumerate(
+                binary_status_char[1:][::-1]
+            ):  # Read the bits in reverse order (LSB is at the last char) + ignore the first "parity" bit
                 if int(bit):
                     _logger.debug(
                         "Scale error: %s. Status string: %s. Scale answer: %s.",
-                        status_char_error_bits[index], binary_status_char, answer
+                        status_char_error_bits[index],
+                        binary_status_char,
+                        answer,
                     )
                     self.data.update({"status": "error", "result": 0})
                     return 0.0

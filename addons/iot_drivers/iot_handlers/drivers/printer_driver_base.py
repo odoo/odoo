@@ -1,10 +1,11 @@
-from abc import ABC, abstractmethod
-from base64 import b64decode
 import io
 import logging
-from PIL import Image, ImageOps
 import re
 import time
+from abc import ABC, abstractmethod
+from base64 import b64decode
+
+from PIL import Image, ImageOps
 
 from odoo.addons.iot_drivers.driver import Driver
 from odoo.addons.iot_drivers.event_manager import event_manager
@@ -13,36 +14,42 @@ _logger = logging.getLogger(__name__)
 
 
 class PrinterDriverBase(Driver, ABC):
-    connection_type = 'printer'
+    connection_type = "printer"
     job_timeout_seconds = 30
 
     RECEIPT_PRINTER_COMMANDS = {
-        'star': {
-            'center': b'\x1b\x1d\x61\x01',  # ESC GS a n
-            'cut': b'\x1b\x64\x02',  # ESC d n
-            'title': b'\x1b\x69\x01\x01%s\x1b\x69\x00\x00',  # ESC i n1 n2
-            'drawers': [b'\x07', b'\x1a']  # BEL & SUB
+        "star": {
+            "center": b"\x1b\x1d\x61\x01",  # ESC GS a n
+            "cut": b"\x1b\x64\x02",  # ESC d n
+            "title": b"\x1b\x69\x01\x01%s\x1b\x69\x00\x00",  # ESC i n1 n2
+            "drawers": [b"\x07", b"\x1a"],  # BEL & SUB
         },
-        'escpos': {
-            'center': b'\x1b\x61\x01',  # ESC a n
-            'cut': b'\x1d\x56\x41\n',  # GS V m
-            'title': b'\x1b\x21\x30%s\x1b\x21\x00',  # ESC ! n
-            'drawers': [b'\x1b\x3d\x01', b'\x1b\x70\x00\x19\x19', b'\x1b\x70\x01\x19\x19']  # ESC = n then ESC p m t1 t2
-        }
+        "escpos": {
+            "center": b"\x1b\x61\x01",  # ESC a n
+            "cut": b"\x1d\x56\x41\n",  # GS V m
+            "title": b"\x1b\x21\x30%s\x1b\x21\x00",  # ESC ! n
+            "drawers": [
+                b"\x1b\x3d\x01",
+                b"\x1b\x70\x00\x19\x19",
+                b"\x1b\x70\x01\x19\x19",
+            ],  # ESC = n then ESC p m t1 t2
+        },
     }
 
     def __init__(self, identifier, device):
         super().__init__(identifier, device)
 
-        self.device_type = 'printer'
+        self.device_type = "printer"
         self.job_ids = []
         self.job_action_ids = {}
 
-        self._actions.update({
-            'cashbox': self.open_cashbox,
-            'print_receipt': self.print_receipt,
-            '': self._action_default,
-        })
+        self._actions.update(
+            {
+                "cashbox": self.open_cashbox,
+                "print_receipt": self.print_receipt,
+                "": self._action_default,
+            }
+        )
 
     def send_status(self, status, message=None, action_unique_id=None):
         """Sends a status update event for the printer.
@@ -52,15 +59,17 @@ class PrinterDriverBase(Driver, ABC):
         :param str action_unique_id: The unique identifier of the action
         """
         if status == "error":
-            self._recent_action_ids.pop(action_unique_id, None)  # avoid filtering duplicates on errors
-        self.data['status'] = status
-        self.data['message'] = message
-        event_manager.device_changed(self, {'session_id': self.data.get('owner')})
+            self._recent_action_ids.pop(
+                action_unique_id, None
+            )  # avoid filtering duplicates on errors
+        self.data["status"] = status
+        self.data["message"] = message
+        event_manager.device_changed(self, {"session_id": self.data.get("owner")})
 
     def print_receipt(self, data):
         _logger.debug("print_receipt called for printer %s", self.device_name)
 
-        receipt = b64decode(data['receipt'])
+        receipt = b64decode(data["receipt"])
         im = Image.open(io.BytesIO(receipt))
 
         # Convert to greyscale then to black and white
@@ -68,26 +77,31 @@ class PrinterDriverBase(Driver, ABC):
         im = ImageOps.invert(im)
         im = im.convert("1")
 
-        print_command = getattr(self, 'format_%s' % self.receipt_protocol)(im)
+        print_command = getattr(self, "format_%s" % self.receipt_protocol)(im)
         self.print_raw(print_command, action_unique_id=data.get("action_unique_id"))
 
     @classmethod
     def format_escpos_bit_image_raster(cls, im):
-        """ prints with the `GS v 0`-command """
+        """prints with the `GS v 0`-command"""
         width = int((im.width + 7) / 8)
 
-        raster_send = b'\x1d\x76\x30\x00'
+        raster_send = b"\x1d\x76\x30\x00"
         max_slice_height = 255
 
-        raster_data = b''
+        raster_data = b""
         dots = im.tobytes()
         while len(dots):
-            im_slice = dots[:width * max_slice_height]
+            im_slice = dots[: width * max_slice_height]
             slice_height = int(len(im_slice) / width)
-            raster_data += raster_send + width.to_bytes(2, 'little') + slice_height.to_bytes(2, 'little') + im_slice
-            dots = dots[width * max_slice_height:]
+            raster_data += (
+                raster_send
+                + width.to_bytes(2, "little")
+                + slice_height.to_bytes(2, "little")
+                + im_slice
+            )
+            dots = dots[width * max_slice_height :]
 
-        return raster_data + cls.RECEIPT_PRINTER_COMMANDS['escpos']['cut']
+        return raster_data + cls.RECEIPT_PRINTER_COMMANDS["escpos"]["cut"]
 
     @classmethod
     def extract_columns_from_picture(cls, im, line_height):
@@ -100,7 +114,11 @@ class PrinterDriverBase(Driver, ABC):
             yield im_chunk.tobytes()
 
     def format_escpos_bit_image_column(
-        self, im, high_density_vertical=True, high_density_horizontal=True, size_scale=100
+        self,
+        im,
+        high_density_vertical=True,
+        high_density_horizontal=True,
+        size_scale=100,
     ):
         """Prints with the `ESC *`-command
         reference: https://reference.epson-biz.com/modules/ref_escpos/index.php?content_id=88
@@ -122,19 +140,20 @@ class PrinterDriverBase(Driver, ABC):
 
         # Most of the code here is inspired from python escpos library
         # https://github.com/python-escpos/python-escpos/blob/4a0f5855ef118a2009b843a3a106874701d8eddf/src/escpos/escpos.py#L237C9-L251
-        ESC = b'\x1b'
-        density_byte = (1 if high_density_horizontal else 0) + \
-                       (32 if high_density_vertical else 0)
+        ESC = b"\x1b"
+        density_byte = (1 if high_density_horizontal else 0) + (
+            32 if high_density_vertical else 0
+        )
         nL = im.height & 0xFF
         nH = (im.height >> 8) & 0xFF
-        HEADER = ESC + b'*' + bytes([density_byte, nL, nH])
+        HEADER = ESC + b"*" + bytes([density_byte, nL, nH])
 
-        raster_data = ESC + b'3\x10'  # Adjust line-feed size
+        raster_data = ESC + b"3\x10"  # Adjust line-feed size
         line_height = 24 if high_density_vertical else 8
         for column in self.extract_columns_from_picture(im, line_height):
-            raster_data += HEADER + column + b'\n'
-        raster_data += ESC + b'2'  # Reset line-feed size
-        return raster_data + self.RECEIPT_PRINTER_COMMANDS['escpos']['cut']
+            raster_data += HEADER + column + b"\n"
+        raster_data += ESC + b"2"  # Reset line-feed size
+        return raster_data + self.RECEIPT_PRINTER_COMMANDS["escpos"]["cut"]
 
     def format_escpos(self, im):
         # Epson support different command to print pictures.
@@ -150,16 +169,16 @@ class PrinterDriverBase(Driver, ABC):
         #  horizontal density and a scale of 70%)
 
         # Default image printing mode
-        image_mode = 'raster'
+        image_mode = "raster"
 
-        options_str = self.device_name.split('__')
+        options_str = self.device_name.split("__")
         option_str = ""
         if len(options_str) > 2:
             option_str = options_str[1].upper()
-            if option_str.startswith('IMC'):
-                image_mode = 'column'
+            if option_str.startswith("IMC"):
+                image_mode = "column"
 
-        if image_mode == 'raster':
+        if image_mode == "raster":
             return self.format_escpos_bit_image_raster(im)
 
         # Default printing mode parameters
@@ -169,27 +188,32 @@ class PrinterDriverBase(Driver, ABC):
 
         # Parse the printer name to get the needed parameters
         # The separator need to not be filtered by `get_identifier`
-        options = option_str.split('_')
+        options = option_str.split("_")
         for option in options:
-            if option == 'LDV':
+            if option == "LDV":
                 high_density_vertical = False
-            elif option == 'LDH':
+            elif option == "LDH":
                 high_density_horizontal = False
-            elif option.startswith('SCALE'):
-                scale_value_str = re.search(r'\d+$', option)
+            elif option.startswith("SCALE"):
+                scale_value_str = re.search(r"\d+$", option)
                 if scale_value_str is not None:
                     scale = int(scale_value_str.group())
                 else:
-                    raise ValueError("Missing printer SCALE parameter integer value in option: " + option)
+                    raise ValueError(
+                        "Missing printer SCALE parameter integer value in option: "
+                        + option
+                    )
 
-        return self.format_escpos_bit_image_column(im, high_density_vertical, high_density_horizontal, scale)
+        return self.format_escpos_bit_image_column(
+            im, high_density_vertical, high_density_horizontal, scale
+        )
 
     def open_cashbox(self, data):
         """Sends a signal to the current printer to open the connected cashbox."""
         _logger.debug("open_cashbox called for printer %s", self.device_name)
 
         commands = self.RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
-        for drawer in commands['drawers']:
+        for drawer in commands["drawers"]:
             self.print_raw(drawer, action_unique_id=data.get("action_unique_id"))
 
     def run(self):

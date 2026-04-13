@@ -1,8 +1,6 @@
-
-from io import StringIO
-
 import logging
 import sys
+from io import StringIO
 
 from odoo.addons.iot_drivers.tools.system import IS_TEST
 
@@ -13,17 +11,18 @@ class ExceptionLogger:
     """
     Redirect any unhandled python exception to the logger to keep track of them in the log file.
     """
+
     def __init__(self):
         self._buffer = StringIO()
 
     def write(self, message):
         self._buffer.write(message)
-        if message.endswith('\n'):
+        if message.endswith("\n"):
             self._flush_buffer()
 
     def _flush_buffer(self):
         self._buffer.seek(0)
-        _logger.error(self._buffer.getvalue().rstrip('\n'))
+        _logger.error(self._buffer.getvalue().rstrip("\n"))
         self._buffer = StringIO()  # Reset the buffer
 
     def flush(self):
