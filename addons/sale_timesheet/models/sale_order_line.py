@@ -62,6 +62,19 @@ class SaleOrderLine(models.Model):
                 remaining_hours = line.product_uom_id._compute_quantity(qty_left, uom_hour, round=False)
             line.remaining_hours = remaining_hours
 
+    @api.depends('product_id.service_policy', 'product_uom_id', 'project_id.allow_timesheets', 'task_id.project_id.allow_timesheets', 'order_id.project_id.allow_timesheets')
+    def _compute_qty_delivered_method(self):
+        super()._compute_qty_delivered_method()
+        uom_hour = self.env.ref('uom.product_uom_hour')
+        for line in self:
+            if line.qty_delivered_method != 'timesheet':
+                continue
+            is_prepaid = line.product_id.service_policy == 'ordered_prepaid'
+            is_non_time_uom = line.product_uom_id and not line.product_uom_id._has_common_reference(uom_hour)
+            has_timesheet_enabled = line.project_id.allow_timesheets or line.task_id.project_id.allow_timesheets or line.order_id.project_id.allow_timesheets
+            if is_prepaid and is_non_time_uom and not has_timesheet_enabled:
+                line.qty_delivered_method = 'manual'
+
     @api.depends('analytic_line_ids.project_id', 'project_id.pricing_type')
     def _compute_qty_delivered(self):
         super()._compute_qty_delivered()
