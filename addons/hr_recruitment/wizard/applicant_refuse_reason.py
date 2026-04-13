@@ -105,11 +105,16 @@ class ApplicantGetRefuseReason(models.TransientModel):
             'subject': 'subject',
         }
         for wizard in self:
+            template = wizard.template_id
             for wizard_field_name, template_field_name in fields_to_copy_name_mapping.items():
-                if wizard.template_id:
-                    wizard[wizard_field_name] = wizard.template_id[template_field_name]
-                else:
-                    wizard[wizard_field_name] = False
+                wizard[wizard_field_name] = template[template_field_name] if template else False
+
+            if template and len(wizard.applicant_ids) == 1:
+                rendered_values = self._prepare_mail_values(wizard.applicant_ids._origin)
+                wizard.update({
+                    'subject': rendered_values.get('subject'),
+                    'body': rendered_values.get('body'),
+                })
 
     def action_refuse_reason_apply(self):
         if self.send_mail:
