@@ -73,6 +73,13 @@ export class WebsiteVisibilityPlugin extends Plugin {
         },
     };
 
+    setup() {
+        const styleSheet = this.document.querySelector("style#conditional_visibility");
+        if (styleSheet) {
+            styleSheet.disabled = true;
+        }
+    }
+
     removeTemporaryClass(el, className) {
         if (el.classList.contains(className)) {
             if (this.dependencies.history.getIsPreviewing()) {
