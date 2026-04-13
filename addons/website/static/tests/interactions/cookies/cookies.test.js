@@ -118,6 +118,14 @@ test("toggling the cookies bar should not rewrite the cookie preferences", async
     expect(cookie.get("website_cookies_bar")).toBe(essentialConsentCookies);
 });
 
+test("toggling the cookies bar before any consent should not write any cookie", async () => {
+    await startInteractions(getCookiesBarTemplate(true));
+    expect(cookie.get("website_cookies_bar")).toBe(undefined);
+    await click(".o_cookies_bar_toggle");
+    await click(".o_cookies_bar_toggle");
+    expect(cookie.get("website_cookies_bar")).toBe(undefined);
+});
+
 test("show warning instead of iframe if no consent", async () => {
     const { core } = await startInteractions(cookiesApprovalTemplate);
     expect(core.interactions).toHaveLength(2);
