@@ -100,7 +100,7 @@ class AccountMove(models.Model):
                     and move._need_ubl_cii_xml(edi_format)
                 )
             )
-            for move in posted_moves
+            for move in posted_moves.filtered(lambda move: move.ubl_cii_xml_id or move.commercial_partner_id)
         )
         if can_export_xml:
             print_items.append({
