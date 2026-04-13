@@ -8,7 +8,6 @@ import functools
 import importlib
 import logging
 import os
-import pkg_resources
 import re
 import sys
 import warnings
@@ -19,6 +18,36 @@ import odoo.tools as tools
 import odoo.release as release
 from odoo.tools import pycompat
 from odoo.tools.misc import file_path
+
+try:
+    from pkg_resources import DistributionNotFound, VersionConflict, get_distribution
+except ImportError:
+    class DistributionNotFound(Exception):
+        ...
+
+    class VersionConflict(Exception):
+        ...
+
+    RE_PKG_NAME = re.compile(r'^([a-zA-Z0-9\-_.]+)')
+
+    def get_distribution(pydep: str):
+        """
+        Replacement for pkg_resources.get_distribution(pydep).
+        """
+        match = RE_PKG_NAME.match(pydep)
+        if not match:
+            raise ValueError(f"Invalid requirement string: {pydep}")
+        pkg_name = match.group(1)
+        try:
+            dist = importlib.metadata.distribution(pkg_name)
+            # Mimic VersionConflict for exact '==' matches
+            if '==' in pydep:
+                pydep = pydep.split(';', maxsplit=1)[0].strip()  # strip markers
+                required_version = pydep.split('==')[-1].strip()
+                if dist.version != required_version:
+                    raise VersionConflict(f'{dist.version} is installed, but {pydep} is required')
+        except importlib.metadata.PackageNotFoundError:
+            raise DistributionNotFound(pkg_name)
 
 
 MANIFEST_NAMES = ('__manifest__.py', '__openerp__.py')
@@ -464,8 +493,8 @@ current_test = False
 
 def check_python_external_dependency(pydep):
     try:
-        pkg_resources.get_distribution(pydep)
-    except pkg_resources.DistributionNotFound as e:
+        get_distribution(pydep)
+    except DistributionNotFound as e:
         try:
             importlib.import_module(pydep)
             _logger.info("python external dependency on '%s' does not appear to be a valid PyPI package. Using a PyPI package name is recommended.", pydep)
@@ -473,7 +502,7 @@ def check_python_external_dependency(pydep):
             # backward compatibility attempt failed
             _logger.warning("DistributionNotFound: %s", e)
             raise Exception('Python library not installed: %s' % (pydep,))
-    except pkg_resources.VersionConflict as e:
+    except VersionConflict as e:
         _logger.warning("VersionConflict: %s", e)
         raise Exception('Python library version conflict: %s' % (pydep,))
     except Exception as e:

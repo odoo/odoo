@@ -14,7 +14,6 @@ import traceback
 import warnings
 
 import werkzeug.serving
-from pkg_resources import PkgResourcesDeprecationWarning
 
 from . import release
 from . import sql_db
@@ -225,8 +224,12 @@ def init_logger():
     #
     # - the first signals a fallback after failing to parse the above as a `Version`
     # - the second signals the use of the `LegacyVersion`... as fallback
-    warnings.filterwarnings("ignore", r'.*-VERSION-', category=PkgResourcesDeprecationWarning, module="pkg_resources")
-    warnings.filterwarnings("ignore", r'.*\bLegacyVersion\b', category=DeprecationWarning, module="pkg_resources")
+    try:
+        from pkg_resources import PkgResourcesDeprecationWarning  # noqa: PLC0415
+        warnings.filterwarnings("ignore", r'.*-VERSION-', category=PkgResourcesDeprecationWarning, module="pkg_resources")
+        warnings.filterwarnings("ignore", r'.*\bLegacyVersion\b', category=DeprecationWarning, module="pkg_resources")
+    except ImportError:
+        pass
     from .tools.translate import resetlocale
     resetlocale()
 
