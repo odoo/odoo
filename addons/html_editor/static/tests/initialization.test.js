@@ -91,10 +91,10 @@ describe("No orphan inline elements compatibility mode", () => {
         });
     });
 
-    test("should transform root .fa", async () => {
+    test("should transform root .oi", async () => {
         await testEditor({
-            contentBefore: '<p>ab</p><i class="fa fa-beer"></i><p>c</p>',
-            contentAfter: '<p>ab</p><div><i class="fa fa-beer"></i></div><p>c</p>',
+            contentBefore: '<p>ab</p><i class="oi" data-icon="sports_bar"></i><p>c</p>',
+            contentAfter: '<p>ab</p><div><i class="oi" data-icon="sports_bar"></i></div><p>c</p>',
         });
     });
 

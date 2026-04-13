@@ -158,12 +158,12 @@ test("should not remove a document link on save", async () => {
 
 test("should not remove a link containing a pictogram on save", async () => {
     await testEditor({
-        contentBefore: '<p>a<a href="exist"><span class="fa fa-star"></span></a>b</p>',
+        contentBefore: '<p>a<a href="exist"><span class="oi oi-filled" data-icon="star"></span></a>b</p>',
         contentBeforeEdit:
-            '<p>a\ufeff<a href="exist">\ufeff<span class="fa fa-star" contenteditable="false">\u200b</span>\ufeff</a>\ufeffb</p>',
+            '<p>a\ufeff<a href="exist">\ufeff<span class="oi oi-filled" data-icon="star" contenteditable="false">\u200b</span>\ufeff</a>\ufeffb</p>',
         contentAfterEdit:
-            '<p>a\ufeff<a href="exist">\ufeff<span class="fa fa-star" contenteditable="false">\u200b</span>\ufeff</a>\ufeffb</p>',
-        contentAfter: '<p>a<a href="exist"><span class="fa fa-star"></span></a>b</p>',
+            '<p>a\ufeff<a href="exist">\ufeff<span class="oi oi-filled" data-icon="star" contenteditable="false">\u200b</span>\ufeff</a>\ufeffb</p>',
+        contentAfter: '<p>a<a href="exist"><span class="oi oi-filled" data-icon="star"></span></a>b</p>',
     });
 });
 

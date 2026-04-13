@@ -94,7 +94,7 @@ test("should add opacity to custom background colors but not to theme colors", a
 });
 
 test("default opacity should get applied when applying background color to icon", async () => {
-    const { el } = await setupEditor('<p>[ab<span class="fa fa-glass"></span>cd]</p>');
+    const { el } = await setupEditor('<p>[ab<span class="oi" data-icon="local_bar"></span>cd]</p>');
 
     await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
@@ -108,7 +108,7 @@ test("default opacity should get applied when applying background color to icon"
     await expectElementCount(".o-we-toolbar", 1);
     expect(".o_font_color_selector").toHaveCount(0); // selector closed
     expect(getContent(el)).toBe(
-        `<p><font style="background-color: rgba(255, 0, 0, 0.6);">[ab\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeffcd]</font></p>`
+        `<p><font style="background-color: rgba(255, 0, 0, 0.6);">[ab\ufeff<span class="oi" data-icon="local_bar" contenteditable="false">\u200b</span>\ufeffcd]</font></p>`
     );
 });
 
@@ -1688,10 +1688,10 @@ describe("color preview", () => {
 
 test("Should not close the color picker on icon color change", async () => {
     const { el } = await setupEditor(
-        `<p><span class="fa fa-glass" contenteditable="false"></span></p>`
+        `<p><span class="oi" data-icon="local_bar" contenteditable="false"></span></p>`
     );
     await animationFrame();
-    const icon = el.querySelector(".fa");
+    const icon = el.querySelector(".oi");
     setSelection({
         anchorNode: icon.previousSibling,
         anchorOffset: 1,
