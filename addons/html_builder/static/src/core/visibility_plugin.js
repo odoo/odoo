@@ -39,6 +39,7 @@ export class VisibilityPlugin extends Plugin {
             Component: InvisibleElementsPanel,
             props: { state: this.invisibleElementsPanelState },
         }),
+        on_editor_started_handlers: () => this.refreshInvisibleElementsPanel(),
         pending_history_commit_data_processors: withSequence(20, (data) => {
             if (this.dependencies.history.getIsPreviewing()) {
                 return data;
