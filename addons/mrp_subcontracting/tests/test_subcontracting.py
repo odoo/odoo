@@ -1030,15 +1030,16 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         # Create a receipt picking from the subcontractor
         self.finished.tracking = 'lot'
         self.comp1.tracking = 'serial'
-        picking_form = Form(self.env['stock.picking'])
-        picking_form.picking_type_id = self.warehouse.in_type_id
-        picking_form.partner_id = self.subcontractor_partner1
-        with picking_form.move_ids.new() as move:
-            move.product_id = self.finished
-            move.product_uom_qty = 1
-            move.picked = True
-        picking_receipt = picking_form.save()
+        picking_receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'partner_id': self.subcontractor_partner1.id,
+            'move_ids': [Command.create({
+                'product_id': self.finished.id,
+                'product_uom_qty': 1.0,
+            })],
+        })
         picking_receipt.action_confirm()
+        picking_receipt.move_ids.picked = True
 
         # Check the created manufacturing order
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
@@ -1056,22 +1057,17 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             'product_id': self.comp1.id,
         })
 
-        action = picking_receipt.move_ids.action_show_details()
-        with Form(picking_receipt.move_ids.with_context(action['context']), view=action['view_id']) as move_form:
+        with Form.from_action(self.env, picking_receipt.move_ids.action_show_details()) as move_form:
             with move_form.move_line_ids.new() as move_line:
                 move_line.lot_id = lot_id
-                move_line.picked = True
                 move_line.quantity = 1
-            move_form.save()
+            move_form.move_line_ids.remove(0)
         action = picking_receipt.move_ids.action_show_subcontract_details()
         mo = self.env['mrp.production'].browse(action['res_id'])
-        action = mo.move_raw_ids[0].action_show_details()
-        with Form(mo.move_raw_ids[0].with_context(action['context']), view=action['view_id']) as move_form:
+        with Form.from_action(self.env, mo.move_raw_ids[0].action_show_details()) as move_form:
             with move_form.move_line_ids.new() as move_line:
                 move_line.lot_id = serial_id
-                move_line.picked = True
                 move_line.quantity = 1
-            move_form.save()
 
         picking_receipt.button_validate()
         self.assertEqual(mo.state, 'done')
