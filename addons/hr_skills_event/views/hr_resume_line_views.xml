@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="hr_skills.resume_line_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='external_url']" position="before">
-                <field name="event_id" readonly="0"/>
+                <field name="event_id" readonly="0" context="{'default_employee_id': context.get('default_employee_id')}"/>
             </xpath>
             <xpath expr="//field[@name='course_type']" position="attributes">
                 <attribute name="invisible">0</attribute>
