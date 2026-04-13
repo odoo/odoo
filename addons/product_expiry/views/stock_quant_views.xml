@@ -7,7 +7,13 @@
         <field name="arch" type="xml">
             <xpath expr="//list" position="attributes">
                 <attribute name="decoration-danger">
+<<<<<<< 598aa2a210ecae2124fb4021c35fba6c4172d704
                     (removal_date and removal_date &lt; current_date) or quantity &lt; 0
+||||||| 3ddf6cab68905f0369d15ab2591e10cb1ab527df
+                    removal_date &lt; current_date or quantity &lt; 0
+=======
+                    removal_date and removal_date &lt; current_date or quantity &lt; 0
+>>>>>>> a3a82af0a35f64b8f97e314c2996c457540d9906
                 </attribute>
             </xpath>
             <xpath expr="//field[@name='quantity']" position="after" >
