@@ -476,3 +476,33 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             {'quantity': 0.0, 'picked': False},
             {'quantity': 0.0, 'picked': False},
         ])
+
+    def test_consume_post_confirmation_reservation(self):
+        """
+        Check that moves created after setting the qty producing are
+        also taken into considaration once the MO is marked as done
+        """
+        self.env.user.group_ids += self.env.ref('stock.group_production_lot')
+        mo = self.env['mrp.production'].create({
+            'product_id': self.produced_serial.id,
+            'product_qty': 1,
+            'bom_id': False,
+        })
+        mo.action_confirm()
+        sn = self.env['stock.lot'].create({'product_id': self.raw_serial.id, 'name': 'SN0013'})
+        self.env['stock.quant']._update_available_quantity(self.raw_serial, mo.warehouse_id.lot_stock_id, 1, lot_id=sn)
+        mo.action_generate_serial()
+        with Form(mo) as mo_form:
+            with mo_form.move_raw_ids.new() as move_raw:
+                move_raw.product_id = self.raw_serial
+                move_raw.product_uom_qty = 1.0
+        # The following step does not exactly reproduce the flow performed from the UI
+        # since adding a new move line from the detailed operations will be done by
+        # opening the quant list view cleaning certain default context keys
+        with Form.from_action(self.env, mo.move_raw_ids.action_show_details()) as wiz_form:
+            with wiz_form.move_line_ids.new() as move_line:
+                move_line.lot_id = sn
+        mo.button_mark_done()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'quantity': 1.0, 'lot_ids': sn.ids, 'state': 'done'},
+        ])
