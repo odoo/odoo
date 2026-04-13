@@ -17,8 +17,8 @@ registry.category("web_tour.tours").add("course_reviews", {
             run: "click",
         },
         {
-            trigger:
-                "#chatterRoot:shadow .o-mail-Chatter-content:not(:has(.o-mail-Message-content))",
+            // If it fails here, it means that the portal chatter has fetched the notes.
+            trigger: "#chatterRoot:shadow .o-mail-Chatter:has(:text(The conversation is empty.))",
         },
         {
             // If it fails here, it means the log note is considered as a review
