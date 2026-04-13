@@ -1,4 +1,5 @@
 from odoo import Command
+from lxml import etree
 from odoo.addons.account_edi_ubl_cii.tests.common import TestUblBis3Common, TestUblCiiBECommon
 try:
     from odoo.addons.test_mimetypes.tests.test_guess_mimetypes import contents
@@ -939,3 +940,32 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         )
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_tax_out_of_scope')
+
+
+@tagged('post_install_l10n', 'post_install', '-at_install')
+class TestBeExport(TestUblExportBis3BE):
+    @classmethod
+    @TestUblExportBis3BE.setup_chart_template('be_comp')
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.ubl_namespaces = {
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+        }
+
+    def test_invoice_cocontractant_tax_exemption_reason(self):
+
+        co_contractant = self.env['account.chart.template'].ref('fiscal_position_template_4', raise_if_not_found=False)
+        valid_tax = self.env['account.chart.template'].ref('attn_VAT-OUT-00-CC', raise_if_not_found=False)
+        co_contractant.note = "Test note"
+        invoice = self._create_invoice_one_line(
+            product_id=self.product_a,
+            partner_id=self.partner_be,
+            tax_ids=valid_tax,
+        )
+        invoice.fiscal_position_id = co_contractant
+        invoice.action_post()
+        xml_content = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+        xml_tree = etree.fromstring(xml_content)
+        note = xml_tree.find('.//cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:TaxExemptionReason', self.ubl_namespaces)
+        self.assertEqual(note.text, 'Test note')
