@@ -4,13 +4,23 @@ import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting
 import { showAddFontDialog } from "./add_font_dialog";
 import { TextEffectPlugin } from "@html_builder/plugins/font/text_effect_plugin";
 
+export const FONT_VARIABLES_TO_RESET = {
+    font: ["font-weight-normal", "lead-font-weight", "font-weight-bolder"],
+    "headings-font": [
+        "headings-font-weight",
+        "headings-font-weight-bold",
+        "display-font-weight",
+        "display-font-weight-bold",
+    ],
+    "buttons-font": ["btn-font-weight", "btn-font-weight-bold"],
+};
+
 /**
  * @typedef { Object } WebsiteFontShared
  * @property { WebsiteFontPlugin['addFont'] } addFont
  * @property { WebsiteFontPlugin['deleteFont'] } deleteFont
  */
 
-// TODO Website-specific
 export class WebsiteFontPlugin extends Plugin {
     static id = "websiteFont";
     static shared = ["addFont", "deleteFont"];
@@ -84,6 +94,9 @@ export class WebsiteFontPlugin extends Plugin {
                 // If an element is using the google font being removed, reset
                 // it to the theme default.
                 values[variable] = "null";
+                for (const resetVariable of FONT_VARIABLES_TO_RESET[variable] || []) {
+                    values[resetVariable] = "null";
+                }
             }
         });
         await this.customizeFonts({

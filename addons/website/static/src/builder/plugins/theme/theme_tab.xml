@@ -98,8 +98,16 @@
             </t>
         </BuilderRow>
         <BuilderRow label.translate="Font Family">
-            <BuilderFontFamilyPicker action="'customizeWebsiteVariable'" actionParam="'font'" valueParamName="'actionValue'"/>
+            <BuilderFontFamilyPicker
+                action="'customizeWebsiteFontFamily'"
+                actionParam="'font'"
+                valueParamName="'actionValue'"/>
         </BuilderRow>
+        <ThemeFontWeightOption
+            regularVariables="['font-weight-normal']"
+            lightVariables="['lead-font-weight']"
+            boldVariables="['font-weight-bolder']"
+            fontVariable="'font'"/>
         <BuilderRow label.translate="Line Height">
             <!-- "×": \u00D7\u2000 -->
             <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'body-line-height'" default="null" unit="'✕'" saveUnit="''"/>

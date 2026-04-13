@@ -18,6 +18,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { CompositeAction } from "@html_builder/core/composite_action_plugin";
 import { ImagePositionOverlay } from "@html_builder/plugins/image/image_position_overlay";
 import { loadImage } from "@html_editor/utils/image_processing";
+
 /**
  * @typedef { Object } CustomizeWebsiteShared
  * @property { CustomizeWebsitePlugin['customizeWebsiteColors'] } customizeWebsiteColors
@@ -138,6 +139,10 @@ export class CustomizeWebsitePlugin extends Plugin {
         let tempValue = finalValue;
         while (tempValue) {
             finalValue = tempValue;
+            if (tempValue !== "" && Number.isFinite(Number(tempValue))) {
+                // the CSS variable value is a number and not a variable name.
+                break;
+            }
             tempValue = getCSSVariableValue(tempValue.replaceAll("'", ""), style);
             if (tempValue === finalValue) {
                 // the CSS variable value is identical to its name.
