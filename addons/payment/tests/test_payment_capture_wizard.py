@@ -36,7 +36,7 @@ class TestPaymentCaptureWizard(PaymentCommon):
             "name": "Dummy Brand",
             "code": "dumbrand",
             "primary_payment_method_id": self.payment_method.id,
-            "provider_ids": self.provider.ids,
+            "provider_id": self.provider.id,
         })
         source_tx = self._create_transaction(
             "direct", state="authorized", payment_method_id=dummy_brand.id

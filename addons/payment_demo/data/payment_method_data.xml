@@ -5,9 +5,21 @@
         <field name="name">Demo</field>
         <field name="code">demo</field>
         <field name="sequence">1</field>
+        <field name="provider_id" ref="payment.payment_provider_demo"/>
         <field name="image" type="bytes" file="payment_demo/static/img/demo.png"/>
         <field name="support_tokenization">True</field>
         <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">partial</field>
+    </record>
+
+    <record id="payment_method_unknown" model="payment.method">
+        <field name="name">Express Checkout</field>
+        <field name="code">unknown</field>
+        <field name="provider_id" ref="payment.payment_provider_demo"/>
+        <field name="image" type="bytes" file="payment/static/img/unknown.png"/>
+        <field name="support_tokenization">True</field>
+        <field name="support_express_checkout">True</field>
         <field name="support_manual_capture">partial</field>
         <field name="support_refund">partial</field>
     </record>

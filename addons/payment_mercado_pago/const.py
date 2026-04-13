@@ -30,29 +30,8 @@ CURRENCY_MAPPING = {
 # vs. https://api.mercadopago.com/currencies. Last seen online: 2024-10-29.
 CURRENCY_DECIMALS = {"COP": 0, "HNL": 0, "NIO": 0}
 
-# The codes of the payment methods to activate when Mercado Pago is activated.
-DEFAULT_PAYMENT_METHOD_CODES = {
-    # Primary payment methods.
-    "card",
-    # Brand payment methods.
-    "amex",
-    "visa",
-    "mastercard",
-    "argencard",
-    "ceconsud",
-    "cordobesa",
-    "codensa",
-    "lider",
-    "magna",
-    "naranja",
-    "nativa",
-    "oca",
-    "presto",
-    "tarjeta_mercadopago",
-    "shopping",
-    "elo",
-    "hipercard",
-}
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {"card"}
 
 # Mapping of payment method codes to Mercado Pago codes.
 PAYMENT_METHODS_MAPPING = {

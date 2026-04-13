@@ -283,15 +283,15 @@ class Cart(PaymentPortal):
             "transaction_route": f"/shop/payment/transaction/{order.id}",
             "express_checkout_route": WebsiteSale._express_checkout_route,
             "landing_route": "/shop/payment/validate",
-            "payment_method_unknown_id": self.env.ref("payment.payment_method_unknown").id,
             "shipping_info_required": order._has_deliverable_products(),
-            # Todo: remove in master
-            "delivery_amount": payment_utils.to_minor_currency_units(
-                order.amount_total - order._compute_amount_total_without_delivery(),
-                order.currency_id,
-            ),
             "shipping_address_update_route": WebsiteSale._express_checkout_delivery_route,
         })
+        provider_sudo = payment_form_values["providers_sudo"][:1]
+        if provider_sudo:
+            payment_form_values["express_checkout_provider_sudo"] = provider_sudo
+            payment_form_values["payment_method_unknown_id"] = provider_sudo._get_pm_from_code(
+                "unknown"
+            ).id
         if self.env.website.is_public_user():
             payment_form_values["partner_id"] = -1
         return payment_form_values

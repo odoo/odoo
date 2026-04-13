@@ -796,14 +796,16 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         self.env.company.sale_automatic_invoice = True
         so = self._create_sale_order_one_line(product_id=product, partner_id=partner)
 
-        payment_method = self.env.ref('payment.payment_method_unknown')
-
         dummy_provider = self.env['payment.provider'].create({
             'name': "Dummy Provider",
             'code': 'none',
             'is_published': True,
-            'payment_method_ids': [Command.set(payment_method.ids)],
             'allow_tokenization': True,
+        })
+        payment_method = self.env["payment.method"].create({
+            "name": "Payment method",
+            "code": "unknown",
+            "provider_id": dummy_provider.id,
         })
         self._create_dummy_payment_method_for_provider(
             provider=dummy_provider,

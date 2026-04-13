@@ -19,10 +19,10 @@ class TestPaymentProvider(RazorpayCommon):
         with self.assertRaises(ValidationError):
             self.provider.is_live = True
 
-    def test_incompatible_with_unsupported_currencies(self):
+    def test_not_available_for_unsupported_currencies(self):
         """Test that Razorpay providers are filtered out from compatible providers when the
         currency is not supported."""
-        compatible_providers = self.env["payment.provider"]._get_compatible_providers(
+        available_providers = self.env["payment.provider"]._find_available_providers(
             self.company_id, self.partner.id, self.amount, currency_id=self.env.ref("base.AFN").id
         )
-        self.assertNotIn(self.provider, compatible_providers)
+        self.assertNotIn(self.provider, available_providers)

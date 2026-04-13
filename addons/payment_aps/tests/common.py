@@ -19,6 +19,8 @@ class APSCommon(PaymentHttpCommon):
         )
 
         cls.provider = cls.aps
+        cls.payment_method = cls.payment_method.copy({"provider_id": cls.aps.id})
+        cls.payment_method_id = cls.payment_method.id
 
         cls.payment_data_signature = (
             "6d2bb7904ac6141a0c10375c70fd417616c740bb1ddab862a224777880aa3600"

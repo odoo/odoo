@@ -227,9 +227,17 @@ export class PaymentForm extends Interaction {
         const paymentOptionId = this._getPaymentOptionId(radio);
         const paymentMethodCode = this._getPaymentMethodCode(radio);
         const flow = this._getPaymentFlow(radio);
-        await this.waitFor(this._prepareInlineForm(
-            providerId, providerCode, paymentOptionId, paymentMethodCode, flow
-        ));
+        try {
+            await this.waitFor(this._prepareInlineForm(
+                providerId, providerCode, paymentOptionId, paymentMethodCode, flow
+            ));
+        } catch {
+            this._displayErrorDialog(
+                _t("Payment method unavailable"),
+                _t("Please choose another payment method."),
+            );
+            return;
+        }
 
         // Adapt the payment button's label based on the selected payment method.
         this._adaptSubmitButtonLabel(paymentMethodCode);

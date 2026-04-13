@@ -126,8 +126,7 @@ class PaymentTransaction(models.Model):
 
         # Force PayPal as the payment method if it exists.
         self.payment_method_id = (
-            self.env["payment.method"].search([("code", "=", "paypal")], limit=1)
-            or self.payment_method_id
+            self.provider_id._get_pm_from_code("paypal") or self.payment_method_id
         )
 
         # Update the payment state.

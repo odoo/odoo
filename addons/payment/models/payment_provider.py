@@ -48,16 +48,23 @@ class PaymentProvider(models.Model):
         copy=False,
     )
     active = fields.Boolean(string="Active", default=True)
-    sequence = fields.Integer(string="Sequence", help="Define the display order")
+    sequence = fields.Integer(string="Sequence", help="Define the display order", default=1000)
     image_128 = fields.Image(string="Logo", max_width=128, max_height=128)
 
     # === RELATED RECORD FIELDS === #
 
-    payment_method_ids = fields.Many2many(
+    payment_method_ids = fields.One2many(
         string="Supported Payment Methods",
         comodel_name="payment.method",
+        inverse_name="provider_id",
         context={"active_test": False},
     )
+    primary_payment_method_ids = fields.One2many(
+        string="Primary Payment Methods",
+        comodel_name="payment.method",
+        compute="_compute_primary_payment_method_ids",
+        context={"active_test": False},
+    )  # PMs with code "unknown" are excluded from this set
     payment_transaction_ids = fields.One2many(
         string="Payment Transactions",
         comodel_name="payment.transaction",
@@ -241,6 +248,28 @@ class PaymentProvider(models.Model):
 
     # === COMPUTE METHODS === #
 
+    @api.depends("payment_method_ids.primary_payment_method_id", "payment_method_ids.code")
+    def _compute_primary_payment_method_ids(self):
+        pm_data = (
+            self
+            .env["payment.method"]
+            .with_context(active_test=False)
+            ._read_group(
+                domain=[
+                    ("provider_id", "in", self.ids),
+                    ("primary_payment_method_id", "=", False),
+                    ("code", "!=", "unknown"),
+                ],
+                groupby=["provider_id"],
+                aggregates=["id:recordset"],
+            )
+        )
+        pm_by_provider = {provider.id: pms for provider, pms in pm_data}
+        for provider in self:
+            provider.primary_payment_method_ids = pm_by_provider.get(
+                provider.id, self.env["payment.method"]
+            )
+
     @api.depends("payment_transaction_ids")
     def _compute_processed_amount(self):
         # Compute the sum of confirmed transactions, grouped by provider and currency
@@ -401,7 +430,11 @@ class PaymentProvider(models.Model):
     def _check_manual_capture_supported_by_payment_methods(self):
         if self.capture_manually:
             incompatible_pms = self.payment_method_ids.filtered(
-                lambda method: method.active and method.support_manual_capture == "none"
+                lambda method: (
+                    method.active
+                    and not method.primary_payment_method_id
+                    and method.support_manual_capture == "none"
+                )
             )
             if incompatible_pms:
                 raise ValidationError(
@@ -436,7 +469,7 @@ class PaymentProvider(models.Model):
 
         # Apply the side-effects to related records
         (live_mode_toggling | being_archived)._archive_linked_tokens()
-        being_archived._deactivate_unsupported_payment_methods()
+        being_archived.payment_method_ids.active = False
         being_unarchived._activate_default_pms()
 
         # Run checks
@@ -471,44 +504,26 @@ class PaymentProvider(models.Model):
             )
 
     def _archive_linked_tokens(self):
-        """Archive all the payment tokens linked to the providers.
+        """Archive all the payment tokens of the providers.
 
         :return: None
         """
         self.env["payment.token"].search([("provider_id", "in", self.ids)]).write({"active": False})
-
-    def _deactivate_unsupported_payment_methods(self):
-        """Deactivate payment methods linked to only disabled providers.
-
-        :return: None
-        """
-        unsupported_pms = self.payment_method_ids.filtered(
-            lambda pm: not any(p.module_state == "installed" and p.active for p in pm.provider_ids)
-        )
-        (unsupported_pms + unsupported_pms.brand_ids).active = False
 
     def _activate_default_pms(self):
         """Activate the default payment methods of the provider.
 
         :return: None
         """
-        # Filter out pms that are not compatible with manual capture if any provider requires it.
-        manual_capture_providers = self.env["payment.provider"].search([
-            ("capture_manually", "=", True)
-        ])
-        # TODO VCHU remove the context
-        compatible_pms = self.with_context(active_test=False).payment_method_ids.filtered(
-            lambda pm: (
-                not pm.provider_ids & manual_capture_providers
-                or pm.support_manual_capture != "none"
-            )
+        # Filter out pms that are not compatible with manual capture if the provider requires it
+        compatible_primary_pms = self.primary_payment_method_ids.filtered(
+            lambda pm: pm.support_manual_capture != "none" or not pm.provider_id.capture_manually
         )
-        # Activate the compatible PMs and brands that are listed as default methods.
-        default_pm_codes = {code for p in self for code in p._get_default_payment_method_codes()}
-        pms_to_activate = (compatible_pms + compatible_pms.brand_ids).filtered(
-            lambda pm: pm.code in default_pm_codes
+        # Activate primary PMs listed as default for their own provider and all their brands
+        primary_pms_to_activate = compatible_primary_pms.filtered(
+            lambda pm: pm.code in pm.provider_id._get_default_payment_method_codes()
         )
-        pms_to_activate.active = True
+        (primary_pms_to_activate + primary_pms_to_activate.brand_ids).active = True
 
     def _get_default_payment_method_codes(self):
         """Return the default payment methods for this provider.
@@ -520,6 +535,19 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
         return set()
+
+    def copy(self, default=None):
+        """Override of `base` to copy the payment methods linked to the providers."""
+        new_providers = super().copy(default=default)
+        for src_provider, new_provider in zip(self, new_providers):
+            src_primary_pms = src_provider.payment_method_ids.filtered("is_primary")
+            new_primary_pms = src_primary_pms.copy({"provider_id": new_provider.id})
+            for src_primary_pm, new_primary_pm in zip(src_primary_pms, new_primary_pms):
+                src_primary_pm.brand_ids.copy({
+                    "provider_id": new_provider.id,
+                    "primary_payment_method_id": new_primary_pm.id,
+                })
+        return new_providers
 
     def copy_data(self, default=None):
         default = dict(default or {})
@@ -593,6 +621,20 @@ class PaymentProvider(models.Model):
         """
         return {}
 
+    def action_add_payment_method(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "payment.method",
+            "view_mode": "form",
+            "context": {
+                "default_provider_id": self.id,
+                "default_sequence": 1,
+                "default_active": True,
+            },
+            "target": "new",
+        }
+
     def action_toggle_is_published(self):
         """Toggle the field `is_published`.
 
@@ -626,11 +668,12 @@ class PaymentProvider(models.Model):
     # === BUSINESS METHODS === #
 
     @api.model
-    def _get_compatible_providers(
+    def _find_available_providers(
         self,
         company_id,
         partner_id,
         amount,
+        *,
         currency_id=None,
         force_tokenization=False,
         is_express_checkout=False,
@@ -638,46 +681,36 @@ class PaymentProvider(models.Model):
         report=None,
         **kwargs,
     ):
-        """Search and return the providers matching the compatibility criteria.
+        """Find the providers available for the given payment context.
 
-        The compatibility criteria are that providers must:
-
-        - be installed (the provider is also considered installed if `module_id` is unset);
-        - be in the company that is provided;
-        - support the country of the partner if it exists;
-        - be compatible with the currency if provided.
-
-        If provided, the optional keyword arguments further refine the criteria.
-
-        :param int company_id: The company to which providers must belong, as a `res.company` id.
-        :param int partner_id: The partner making the payment, as a `res.partner` id.
-        :param float amount: The amount to pay. `0` for validation transactions.
-        :param int currency_id: The payment currency, if known beforehand, as a `res.currency` id.
-        :param bool force_tokenization: Whether only providers allowing tokenization can be matched.
-        :param bool is_express_checkout: Whether the payment is made through express checkout.
-        :param bool is_validation: Whether the operation is a validation.
-        :param dict report: The report in which each provider's availability status and reason must
-                            be logged.
-        :param dict kwargs: Optional data. This parameter is not used here.
-        :return: The compatible providers.
+        :param int company_id: The company to which providers must belong, as a `res.company` id
+        :param int partner_id: The partner making the payment, as a `res.partner` id
+        :param float amount: The amount to pay (`0` for validation transactions)
+        :param int currency_id: The payment currency, as a `res.currency` id
+        :param bool force_tokenization: Whether providers must allow tokenization
+        :param bool is_express_checkout: Whether providers must allow express checkout
+        :param bool is_validation: Whether the operation is a validation
+        :param dict report: The report into which availability statuses are to be logged
+        :param dict kwargs: Forwarded to `_is_tokenization_required` and available to overrides
+        :return: The available providers
         :rtype: payment.provider
         """
-        # Search compatible providers with the base domain.
+        # Search available providers with the base domain
         providers = self.env["payment.provider"].search([
-            *self.env["payment.provider"]._check_company_domain(company_id),
             "|",
             ("module_state", "=", "installed"),
             ("module_id", "=", False),
+            *self.env["payment.provider"]._check_company_domain(company_id),
         ])
         payment_utils.add_to_report(report, providers)
 
-        # Filter by `is_published` state.
+        # Filter by `is_published` state
         if not self.env.user._is_internal():
             providers = providers.filtered("is_published")
 
-        # Handle the partner country; allow all countries if the list is empty.
+        # Handle the partner country; allow all countries if the list is empty
         partner = self.env["res.partner"].browse(partner_id)
-        if partner.country_id:  # The partner country must either not be set or be supported.
+        if partner.country_id:  # The partner country must either not be set or be supported
             unfiltered_providers = providers
             providers = providers.filtered(
                 lambda p: (
@@ -692,9 +725,24 @@ class PaymentProvider(models.Model):
                 reason=REPORT_REASONS_MAPPING["incompatible_country"],
             )
 
-        # Handle the minimum and maximum amounts.
+        # Handle the available currencies; allow all currencies if the list is empty
         currency = self.env["res.currency"].browse(currency_id).exists()
-        if not is_validation and currency:  # The currency is required to convert the amount.
+        if currency:
+            unfiltered_providers = providers
+            providers = providers.filtered(
+                lambda p: (
+                    not p.available_currency_ids or currency.id in p.available_currency_ids.ids
+                )
+            )
+            payment_utils.add_to_report(
+                report,
+                unfiltered_providers - providers,
+                available=False,
+                reason=REPORT_REASONS_MAPPING["incompatible_currency"],
+            )
+
+        # Handle the minimum and maximum amounts
+        if not is_validation and currency:  # The currency is required to convert the amount
             company = self.env["res.company"].browse(company_id).exists()
             converted_amount = currency._convert(amount, company.currency_id, company)
             unfiltered_providers = providers
@@ -717,22 +765,7 @@ class PaymentProvider(models.Model):
                 reason=REPORT_REASONS_MAPPING["exceed_min_or_max_amount"],
             )
 
-        # Handle the available currencies; allow all currencies if the list is empty.
-        if currency:
-            unfiltered_providers = providers
-            providers = providers.filtered(
-                lambda p: (
-                    not p.available_currency_ids or currency.id in p.available_currency_ids.ids
-                )
-            )
-            payment_utils.add_to_report(
-                report,
-                unfiltered_providers - providers,
-                available=False,
-                reason=REPORT_REASONS_MAPPING["incompatible_currency"],
-            )
-
-        # Handle tokenization support requirements.
+        # Handle tokenization support requirements
         if force_tokenization or self._is_tokenization_required(**kwargs):
             unfiltered_providers = providers
             providers = providers.filtered("allow_tokenization")
@@ -743,7 +776,7 @@ class PaymentProvider(models.Model):
                 reason=REPORT_REASONS_MAPPING["tokenization_not_supported"],
             )
 
-        # Handle express checkout.
+        # Handle express checkout
         if is_express_checkout:
             unfiltered_providers = providers
             providers = providers.filtered("allow_express_checkout")
@@ -762,11 +795,102 @@ class PaymentProvider(models.Model):
         For a module to make the tokenization required based on the payment context, it must
         override this method and return whether it is required.
 
-        :param dict _kwargs: The payment context. This parameter is not used here.
-        :return: Whether tokenizing the transaction is required.
+        :param dict _kwargs: The payment context
+        :return: Whether tokenizing the transaction is required
         :rtype: bool
         """
         return False
+
+    def _find_available_payment_methods(
+        self,
+        partner_id,
+        *,
+        currency_id=None,
+        force_tokenization=False,
+        is_express_checkout=False,
+        report=None,
+        **_kwargs,
+    ):
+        """Find the providers' payment methods available for the given payment context.
+
+        :param int partner_id: The partner making the payment, as a `res.partner` id
+        :param int currency_id: The payment currency, as a `res.currency` id
+        :param bool force_tokenization: Whether payment methods must support tokenization
+        :param bool is_express_checkout: Whether payment methods must support express checkout
+        :param dict report: The report into which availability statuses are to be logged
+        :return: The available payment methods
+        :rtype: payment.method
+        """
+        payment_methods = self.primary_payment_method_ids.filtered("active")
+        payment_utils.add_to_report(report, payment_methods)
+
+        # Handle the partner country; allow all countries if the list is empty
+        partner = self.env["res.partner"].browse(partner_id)
+        if partner.country_id:  # The partner country must either not be set or be supported
+            unfiltered_pms = payment_methods
+            payment_methods = payment_methods.filtered(
+                lambda pm: (
+                    not pm.supported_country_ids
+                    or partner.country_id.id in pm.supported_country_ids.ids
+                )
+            )
+            payment_utils.add_to_report(
+                report,
+                unfiltered_pms - payment_methods,
+                available=False,
+                reason=REPORT_REASONS_MAPPING["incompatible_country"],
+            )
+
+        # Handle the supported currencies; allow all currencies if the list is empty
+        if currency_id:
+            unfiltered_pms = payment_methods
+            payment_methods = payment_methods.filtered(
+                lambda pm: (
+                    not pm.supported_currency_ids or currency_id in pm.supported_currency_ids.ids
+                )
+            )
+            payment_utils.add_to_report(
+                report,
+                unfiltered_pms - payment_methods,
+                available=False,
+                reason=REPORT_REASONS_MAPPING["incompatible_currency"],
+            )
+
+        # Handle tokenization support requirements
+        if force_tokenization:
+            unfiltered_pms = payment_methods
+            payment_methods = payment_methods.filtered("support_tokenization")
+            payment_utils.add_to_report(
+                report,
+                unfiltered_pms - payment_methods,
+                available=False,
+                reason=REPORT_REASONS_MAPPING["tokenization_not_supported"],
+            )
+
+        # Handle express checkout
+        if is_express_checkout:
+            unfiltered_pms = payment_methods
+            payment_methods = payment_methods.filtered("support_express_checkout")
+            payment_utils.add_to_report(
+                report,
+                unfiltered_pms - payment_methods,
+                available=False,
+                reason=REPORT_REASONS_MAPPING["express_checkout_not_supported"],
+            )
+
+        return payment_methods
+
+    def _find_available_tokens(self, partner_id, **_kwargs):
+        """Find the providers' tokens available for the given payment context.
+
+        :param int partner_id: The partner making the payment, as a `res.partner` id
+        :return: The available tokens
+        :rtype: payment.token
+        """
+        return self.env["payment.token"].search([
+            ("provider_id", "in", self.ids),
+            ("partner_id", "=", partner_id),
+        ])
 
     def _get_validation_amount(self):
         """Return the amount to use for validation operations.
@@ -1032,15 +1156,20 @@ class PaymentProvider(models.Model):
         """
         existing_providers = self.search(self._get_provider_domain(provider_code, **kwargs))
         main_provider = existing_providers[:1]
+
+        # Activate default PMs on install
+        main_provider._activate_default_pms()
+
+        # Duplicate providers in existing companies
         existing_provider_companies = existing_providers.company_id
         companies_needing_provider = self.env["res.company"].search([
             ("id", "not in", existing_provider_companies.ids),
             ("parent_id", "=", False),
         ])
         for company in companies_needing_provider:
-            # Create a copy of the provider for each company.
             main_provider.copy({"company_id": company.id})
 
+        # Enable the post-processing cron if still deactivated
         self._toggle_post_processing_cron()
 
     @api.model
@@ -1053,8 +1182,11 @@ class PaymentProvider(models.Model):
         providers = self.search(self._get_provider_domain(provider_code, **kwargs))
         providers.write(self._get_removal_values())
 
+        # Deactivate all PMs on uninstall
+        providers.payment_method_ids.active = False
+
+        # Disable the post-processing cron if the last provider is uninstalled
         providers._toggle_post_processing_cron()
-        providers._deactivate_unsupported_payment_methods()
 
     @api.model
     def _get_provider_domain(self, provider_code, **_kwargs):
@@ -1115,3 +1247,22 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
         return self.code
+
+    def _get_pm_from_code(self, generic_code, mapping=None):
+        """Return the payment method with the given code linked to the provider.
+
+        If a mapping is given, the search uses the generic payment method code that corresponds to
+        the given provider-specific code.
+
+        :param str generic_code: The provider-specific code of the payment method to get
+        :param dict mapping: A non-exhaustive mapping of generic payment method codes to
+                             provider-specific codes
+        :return: The matching payment method, if any
+        :rtype: payment.method
+        """
+        self.ensure_one()
+
+        generic_to_specific_mapping = mapping or {}
+        specific_to_generic_mapping = {v: k for k, v in generic_to_specific_mapping.items()}
+        generic_code = specific_to_generic_mapping.get(generic_code, generic_code)
+        return self.payment_method_ids.filtered(lambda pm: pm.code == generic_code)

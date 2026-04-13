@@ -10,8 +10,8 @@ PAYMENT_STATUS_MAPPING = {
     "error": ("801", "802", "803", "804"),
 }
 
-# The codes of the payment methods to activate when DPO is activated.
-DEFAULT_PAYMENT_METHOD_CODES = {
-    # Primary payment methods
-    "dpo"
-}
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {"card", "mobile"}
+
+# Mapping of payment method codes to DPO codes
+PAYMENT_METHODS_MAPPING = {"card": "CC", "mobile": "MO"}

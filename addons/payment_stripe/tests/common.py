@@ -16,7 +16,6 @@ class StripeCommon(PaymentCommon):
                 "stripe_secret_key": "sk_test_KJtHgNwt2KS3xM7QJPr4O5E8",
                 "stripe_publishable_key": "pk_test_QSPnimmb4ZhtkEy3Uhdm4S6J",
                 "stripe_webhook_secret": "whsec_vG1fL6CMUouQ7cObF2VJprLVXT5jBLxB",
-                "payment_method_ids": [(5, 0, 0)],
             },
         )
 

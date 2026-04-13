@@ -9,27 +9,8 @@ WEBHOOK_ROUTE = "/payment/ecpay/webhook"
 # The currency supported by ECPay, in ISO 4217 format.
 SUPPORTED_CURRENCY = "TWD"
 
-# The codes of the payment methods to activate when ECPay is activated.
-DEFAULT_PAYMENT_METHOD_CODES = (
-    # Primary payment methods.
-    "card",
-    "wechat_pay",
-    "cvs",
-    "bank_transfer",
-    "mobile_wallet",
-    "twqr",
-    # Brand payment methods.
-    "visa",
-    "mastercard",
-    "jcb",
-    "unionpay",
-    "ok_mart",
-    "hi_life",
-    "family_mart",
-    "7eleven",
-    "jkopay",
-    "ipass_money",
-)
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {"card"}
 
 # Mapping of payment method codes to ECPay codes.
 PAYMENT_METHODS_MAPPING = frozendict({

@@ -57,16 +57,8 @@ LANGUAGE_CODES_MAPPING = {
     "vi_VN": "S",
 }
 
-# The codes of the payment methods to activate when Asiapay is activated.
-DEFAULT_PAYMENT_METHOD_CODES = {
-    # Primary payment methods.
-    "card",
-    # Brand payment methods.
-    "visa",
-    "mastercard",
-    "amex",
-    "discover",
-}
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {"card"}
 
 # Mapping of payment method codes to AsiaPay codes.
 PAYMENT_METHODS_MAPPING = {
@@ -81,7 +73,7 @@ PAYMENT_METHODS_MAPPING = {
     "card": "CC",
     "cimb": "CIMBCLICK",
     "dana": "DANA",
-    "ditnow": "DuitNow",
+    "duitnow": "DuitNow",
     "diners": "Diners",
     "enets": "ENETS",
     "enetsbanking": "ENETSBANKING",
@@ -93,8 +85,8 @@ PAYMENT_METHODS_MAPPING = {
     "hoolah": "HOOLAH",
     "humm": "humm",
     "jkopay": "JKOPAY",
-    "jcs": "JCB",
-    "kungthai_bank": "KTB",
+    "jcb": "JCB",
+    "krungthai_bank": "KTB",
     "linepay": "LINEPAY",
     "maya": "PayMaya",
     "mastercard": "Master",
@@ -104,6 +96,7 @@ PAYMENT_METHODS_MAPPING = {
     "octopus": "OCTOPUS",
     "ovo": "OVO",
     "pace": "Pace",
+    "paypal": "PAYPAL",
     "pay_id": "PAYID",
     "paymaya": "PayMaya",
     "payme": "PayMe",

@@ -72,7 +72,6 @@ def add_to_report(report, records, available=True, reason=""):
                 pm_record : {
                     'available': true|false,
                     'reason': "",
-                    'supported_providers': [(provider_record, report['providers'][p]['available'])],
                 },
             },
         }
@@ -90,12 +89,6 @@ def add_to_report(report, records, available=True, reason=""):
     report.setdefault(category, {})
     for r in records:
         report[category][r] = {"available": available, "reason": reason}
-        if category == "payment_methods" and "providers" in report:
-            report[category][r]["supported_providers"] = [
-                (p, report["providers"][p]["available"])
-                for p in r.provider_ids
-                if p in report["providers"]
-            ]
 
 
 # URL parsing

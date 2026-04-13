@@ -15,7 +15,7 @@ class PortalEntryPayment(models.Model):
                 self
                 .env["payment.provider"]
                 .sudo()
-                ._get_compatible_providers(
+                ._find_available_providers(
                     self.env.company.id,
                     partner_sudo.id,
                     0.0,
@@ -23,13 +23,8 @@ class PortalEntryPayment(models.Model):
                     is_validation=True,
                 )
             )
-            methods_allowing_tokenization = (
-                self
-                .env["payment.method"]
-                .sudo()
-                ._get_compatible_payment_methods(
-                    providers_sudo.ids, partner_sudo.id, force_tokenization=True
-                )
+            methods_allowing_tokenization = providers_sudo._find_available_payment_methods(
+                partner_sudo.id, force_tokenization=True
             )
             existing_tokens = (
                 partner_sudo.payment_token_ids

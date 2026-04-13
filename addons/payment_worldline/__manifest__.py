@@ -7,7 +7,11 @@
     "summary": "A French payment provider covering several European countries.",
     "description": " ",  # Non-empty string to avoid loading the README file.
     "depends": ["payment"],
-    "data": ["data/payment_provider_data.xml", "views/payment_provider_views.xml"],
+    "data": [
+        "data/payment_method_data.xml",
+        "data/payment_provider_data.xml",
+        "views/payment_provider_views.xml",
+    ],
     "assets": {
         "web.assets_frontend": ["payment_worldline/static/src/interactions/payment_form.js"]
     },

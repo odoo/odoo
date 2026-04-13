@@ -190,9 +190,7 @@ class PaymentProvider(models.Model):
         for gateway_data in matched_gateways_data:
             payment_method_code = const.PAYMENT_METHODS_MAPPING[gateway_data["gateway_type"]]
             if payment_method_code == "card" and gateway_data.get("installments"):
-                installment_payment_method = self.env["payment.method"].search(
-                    [("code", "=", "installments_eg")], limit=1
-                )
+                installment_payment_method = self._get_pm_from_code("installments_eg")
                 if not installment_payment_method:
                     continue
                 payment_method_code = "installments_eg"

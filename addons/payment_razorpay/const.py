@@ -103,18 +103,8 @@ SUPPORTED_CURRENCIES = [
 # The codes of the countries where OAuth is enabled
 OAUTH_SUPPORTED_COUNTRY_CODES = ["IN"]
 
-# The codes of the payment methods to activate when Razorpay is activated.
-DEFAULT_PAYMENT_METHOD_CODES = {
-    # Primary payment methods.
-    "card",
-    "netbanking",
-    "upi",
-    # Brand payment methods.
-    "visa",
-    "mastercard",
-    "amex",
-    "discover",
-}
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {"card"}
 
 # The codes of payment methods that are not recognized by the orders API.
 FALLBACK_PAYMENT_METHOD_CODES = {"emi_india", "fpx", "paylater_india", "wallets_india"}

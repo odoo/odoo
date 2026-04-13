@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- === PRIMARY PAYMENT METHODS === -->
+
+    <record id="payment_method_astropay" model="payment.method">
+        <field name="name">Astropay TEF</field>
+        <field name="code">astropay</field>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.ec')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.USD')])]"/>
+    </record>
+
+    <record id="payment_method_boleto" model="payment.method">
+        <field name="name">Boleto</field>
+        <field name="code">boleto</field>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/boleto.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_refund">none</field>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BRL')])]"/>
+    </record>
+
+    <record id="payment_method_card" model="payment.method">
+        <field name="name">Card</field>
+        <field name="code">card</field>
+        <field name="sequence">10</field>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+        <field name="support_tokenization">True</field>
+        <field name="support_refund">partial</field>
+    </record>
+
+    <record id="payment_method_nuvei_local" model="payment.method">
+        <field name="name">Local Payments</field>
+        <field name="code">nuvei_local</field>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.uy')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.UYU')])]"/>
+    </record>
+
+    <record id="payment_method_oxxopay" model="payment.method">
+        <field name="name">Oxxo Pay</field>
+        <field name="code">oxxopay</field>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/oxxopay.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.mx')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.MXN')])]"/>
+    </record>
+
+    <record id="payment_method_pix" model="payment.method">
+        <field name="name">Pix</field>
+        <field name="code">pix</field>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/pix.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.br')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BRL')])]"/>
+    </record>
+
+    <record id="payment_method_pse" model="payment.method">
+        <field name="name">PSE</field>
+        <field name="code">pse</field>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.co')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.COP')])]"/>
+    </record>
+
+    <record id="payment_method_spei" model="payment.method">
+        <field name="name">SPEI</field>
+        <field name="code">spei</field>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/spei.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.mx')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.MXN')])]"/>
+    </record>
+
+    <record id="payment_method_webpay" model="payment.method">
+        <field name="name">WebPay</field>
+        <field name="code">webpay</field>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/webpay.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.cl')])]"/>
+        <field
+            name="supported_currency_ids" eval="[Command.set([ref('base.CLP'), ref('base.USD')])]"
+        />
+    </record>
+
+    <!-- === PAYMENT METHOD BRANDS === -->
+
+    <record id="payment_method_abitab" model="payment.method">
+        <field name="name">Abitab</field>
+        <field name="code">abitab</field>
+        <field name="primary_payment_method_id" eval="ref('payment_nuvei.payment_method_nuvei_local')"/>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/abitab.png"/>
+    </record>
+
+    <record id="payment_method_amex" model="payment.method">
+        <field name="name">American Express</field>
+        <field name="code">amex</field>
+        <field name="primary_payment_method_id" eval="ref('payment_nuvei.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/amex.png"/>
+    </record>
+
+    <record id="payment_method_banco_guayaquil" model="payment.method">
+        <field name="name">Banco Guayaquil</field>
+        <field name="code">banco_guayaquil</field>
+        <field name="primary_payment_method_id" eval="ref('payment_nuvei.payment_method_astropay')"/>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/banco_guayaquil.png"/>
+    </record>
+
+    <record id="payment_method_banco_pichincha" model="payment.method">
+        <field name="name">Banco Pichincha</field>
+        <field name="code">banco_pichincha</field>
+        <field name="primary_payment_method_id" eval="ref('payment_nuvei.payment_method_astropay')"/>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/banco_pichincha.png"/>
+    </record>
+
+    <record id="payment_method_diners" model="payment.method">
+        <field name="name">Diners Club International</field>
+        <field name="code">diners</field>
+        <field name="primary_payment_method_id" eval="ref('payment_nuvei.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/diners.png"/>
+    </record>
+
+    <record id="payment_method_discover" model="payment.method">
+        <field name="name">Discover</field>
+        <field name="code">discover</field>
+        <field name="primary_payment_method_id" eval="ref('payment_nuvei.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/discover.png"/>
+    </record>
+
+    <record id="payment_method_facilito" model="payment.method">
+        <field name="name">Facilito</field>
+        <field name="code">facilito</field>
+        <field name="primary_payment_method_id" eval="ref('payment_nuvei.payment_method_astropay')"/>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/facilito.png"/>
+    </record>
+
+    <record id="payment_method_mastercard" model="payment.method">
+        <field name="name">MasterCard</field>
+        <field name="code">mastercard</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_nuvei.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
+    </record>
+
+    <record id="payment_method_naranja" model="payment.method">
+        <field name="name">Naranja</field>
+        <field name="code">naranja</field>
+        <field name="primary_payment_method_id" eval="ref('payment_nuvei.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/naranja.png"/>
+    </record>
+
+    <record id="payment_method_redpagos" model="payment.method">
+        <field name="name">Redpagos</field>
+        <field name="code">redpagos</field>
+        <field name="primary_payment_method_id" eval="ref('payment_nuvei.payment_method_nuvei_local')"/>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/redpagos.png"/>
+    </record>
+
+    <record id="payment_method_tarjeta_mercadopago" model="payment.method">
+        <field name="name">Tarjeta MercadoPago</field>
+        <field name="code">tarjeta_mercadopago</field>
+        <field name="primary_payment_method_id" eval="ref('payment_nuvei.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/tarjeta_mercadopago.png"/>
+    </record>
+
+    <record id="payment_method_unionpay" model="payment.method">
+        <field name="name">UnionPay</field>
+        <field name="code">unionpay</field>
+        <field name="primary_payment_method_id" eval="ref('payment_nuvei.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/unionpay.png"/>
+    </record>
+
+    <record id="payment_method_visa" model="payment.method">
+        <field name="name">VISA</field>
+        <field name="code">visa</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_nuvei.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_nuvei"/>
+        <field name="image" type="bytes" file="payment/static/img/visa.png"/>
+    </record>
+
+</odoo>

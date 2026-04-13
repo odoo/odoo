@@ -64,9 +64,9 @@ class PaymentProvider(models.Model):
     # === BUSINESS METHODS ===#
 
     @api.model
-    def _get_compatible_providers(self, *args, is_validation=False, report=None, **kwargs):
+    def _find_available_providers(self, *args, is_validation=False, report=None, **kwargs):
         """Override of `payment` to filter out Flutterwave providers for validation operations."""
-        providers = super()._get_compatible_providers(
+        providers = super()._find_available_providers(
             *args, is_validation=is_validation, report=report, **kwargs
         )
 

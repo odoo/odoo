@@ -9,6 +9,7 @@ from odoo.fields import Command
 from odoo.tests.common import MockHTTPClient, tagged
 from odoo.tools import mute_logger
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING
 from odoo.addons.payment.tests.common import PaymentCommon
 
@@ -59,14 +60,9 @@ class TestPaymentProvider(PaymentCommon):
             "name": "Payment Method With Manual Capture",
             "code": "pm_with_manual_capture",
             "support_manual_capture": "full_only",
+            "provider_id": self.provider.id,
         })
-        self.provider.write({
-            "active": False,
-            "capture_manually": True,
-            "payment_method_ids": [
-                Command.set([self.payment_method.id, payment_method_with_manual_capture.id])
-            ],
-        })
+        self.provider.write({"active": False, "capture_manually": True})
         self.payment_method.support_manual_capture = "none"
         with patch(
             "odoo.addons.payment.models.payment_provider.PaymentProvider"
@@ -77,23 +73,91 @@ class TestPaymentProvider(PaymentCommon):
             self.assertFalse(self.payment_method.active)
             self.assertTrue(payment_method_with_manual_capture.active)
 
+    def test_copy_provider_copies_methods(self):
+        """Ensure primary PMs are copied to the new provider when the provider is copied."""
+        primary_pm = self.env["payment.method"].create({
+            "name": "Card",
+            "code": "card_test",
+            "active": True,
+            "provider_id": self.dummy_provider.id,
+        })
+        new_provider = self.dummy_provider.copy()
+        new_primary = new_provider.payment_method_ids.filtered(
+            lambda pm: pm.code == primary_pm.code and not pm.primary_payment_method_id
+        )
+        self.assertEqual(len(new_primary), 1)
+
+    def test_copy_provider_copies_brands(self):
+        primary_pm = self.env["payment.method"].create({
+            "name": "Card",
+            "code": "card_test",
+            "active": True,
+            "provider_id": self.dummy_provider.id,
+        })
+        brand_pm = self.env["payment.method"].create({
+            "name": "Visa",
+            "code": "visa_test",
+            "active": True,
+            "primary_payment_method_id": primary_pm.id,
+            "provider_id": self.dummy_provider.id,
+        })
+        new_provider = self.dummy_provider.copy()
+        new_primary = new_provider.payment_method_ids.filtered(
+            lambda pm: pm.code == primary_pm.code and not pm.primary_payment_method_id
+        )
+        new_brand = new_provider.payment_method_ids.filtered(lambda pm: pm.code == brand_pm.code)
+        self.assertEqual(new_brand.primary_payment_method_id, new_primary)
+
+    def test_installing_provider_activates_default_pms(self):
+        self.provider.payment_method_ids.active = False
+        PaymentProvider = self.registry["payment.provider"]
+        with (
+            patch.object(
+                PaymentProvider,
+                "_get_default_payment_method_codes",
+                return_value={self.payment_method_code},
+            ),
+            patch.object(
+                PaymentProvider,
+                "_get_provider_domain",
+                return_value=[("id", "=", self.dummy_provider.id)],
+            ),
+        ):
+            self.provider._setup_provider("none")
+        self.assertTrue(self.payment_method.active)
+
+    def test_installing_provider_activates_default_pms_in_other_companies(self):
+        self.provider.payment_method_ids.active = False
+        other_company = self.env["res.company"].create({"name": "Other Company"})
+        PaymentProvider = self.registry["payment.provider"]
+        with (
+            patch.object(
+                PaymentProvider,
+                "_get_default_payment_method_codes",
+                return_value={self.payment_method_code},
+            ),
+            patch.object(
+                PaymentProvider,
+                "_get_provider_domain",
+                return_value=[("id", "=", self.dummy_provider.id)],
+            ),
+        ):
+            self.provider._setup_provider("none")
+        copied_provider = self.env["payment.provider"].search([
+            ("code", "=", "none"),
+            ("company_id", "=", other_company.id),
+        ])
+        new_default_pm = copied_provider.payment_method_ids.filtered(
+            lambda pm: pm.code == self.payment_method_code
+        )
+        self.assertTrue(new_default_pm.active)
+
     def test_installing_provider_activates_post_processing_cron(self):
         """Test that the post-processing cron is activated when a provider is installed."""
         post_processing_cron = self.env.ref("payment.cron_post_process_payment_tx")
         post_processing_cron.active = False
         self.provider._setup_provider("none")
         self.assertTrue(post_processing_cron.active)
-
-    def test_uninstalling_provider_deactivates_post_processing_cron(self):
-        """Test that the post-processing cron is deactivated when a provider is uninstalled."""
-        post_processing_cron = self.env.ref("payment.cron_post_process_payment_tx")
-        post_processing_cron.active = True
-        with patch(
-            "odoo.addons.payment.models.payment_provider.PaymentProvider.search_count",
-            return_value=0,
-        ):
-            self.provider._remove_provider("none")
-        self.assertFalse(post_processing_cron.active)
 
     def test_uninstalling_provider_deactivates_default_payment_methods(self):
         """Test that uninstalling a provider deactivates its default payment methods ."""
@@ -106,242 +170,218 @@ class TestPaymentProvider(PaymentCommon):
             self.provider._remove_provider("none")
             self.assertFalse(self.payment_methods.active)
 
-    def test_published_provider_compatible_with_all_users(self):
-        """Test that a published provider is always available to all users."""
+    def test_uninstalling_provider_deactivates_post_processing_cron(self):
+        """Test that the post-processing cron is deactivated when a provider is uninstalled."""
+        post_processing_cron = self.env.ref("payment.cron_post_process_payment_tx")
+        post_processing_cron.active = True
+        with patch(
+            "odoo.addons.payment.models.payment_provider.PaymentProvider.search_count",
+            return_value=0,
+        ):
+            self.provider._remove_provider("none")
+        self.assertFalse(post_processing_cron.active)
+
+    def test_published_provider_available_to_all_users(self):
         for user in (self.public_user, self.portal_user):
             self.env = self.env(user=user)
 
-            compatible_providers = (
+            available_providers = (
                 self
                 .env["payment.provider"]
                 .sudo()
-                ._get_compatible_providers(self.company.id, self.partner.id, self.amount)
+                ._find_available_providers(self.company.id, self.partner.id, self.amount)
             )
-            self.assertIn(self.provider, compatible_providers)
+            self.assertIn(self.provider, available_providers)
 
-    def test_unpublished_provider_compatible_with_internal_user(self):
-        """Test that an unpublished provider is still available to internal users."""
+    def test_unpublished_provider_available_to_internal_user(self):
         self.provider.is_published = False
 
-        compatible_providers = self.env["payment.provider"]._get_compatible_providers(
+        available_providers = self.env["payment.provider"]._find_available_providers(
             self.company.id, self.partner.id, self.amount
         )
-        self.assertIn(self.provider, compatible_providers)
+        self.assertIn(self.provider, available_providers)
 
-    def test_unpublished_provider_not_compatible_with_non_internal_user(self):
-        """Test that an unpublished provider is not available to non-internal users."""
+    def test_unpublished_provider_not_available_to_non_internal_user(self):
         self.provider.is_published = False
         for user in (self.public_user, self.portal_user):
             self.env = self.env(user=user)
 
-            compatible_providers = (
+            available_providers = (
                 self
                 .env["payment.provider"]
                 .sudo()
-                ._get_compatible_providers(self.company.id, self.partner.id, self.amount)
+                ._find_available_providers(self.company.id, self.partner.id, self.amount)
             )
-            self.assertNotIn(self.provider, compatible_providers)
+            self.assertNotIn(self.provider, available_providers)
 
-    def test_provider_compatible_with_branch_companies(self):
-        """Test that the provider is available to branch companies."""
+    def test_provider_available_in_branch_companies(self):
         branch_company = self.env["res.company"].create({
             "name": "Provider Branch Company",
             "parent_id": self.provider.company_id.id,
         })
-        compatible_providers = self.provider._get_compatible_providers(
+        available_providers = self.provider._find_available_providers(
             branch_company.id, self.partner.id, self.amount
         )
-        self.assertIn(self.provider, compatible_providers)
+        self.assertIn(self.provider, available_providers)
 
-    def test_provider_compatible_with_available_countries(self):
-        """Test that the provider is compatible with its available countries."""
+    def test_provider_available_in_available_countries(self):
         belgium = self.env.ref("base.be")
         self.provider.available_country_ids = [Command.set([belgium.id])]
         self.partner.country_id = belgium
-        compatible_providers = self.provider._get_compatible_providers(
+        available_providers = self.provider._find_available_providers(
             self.company.id, self.partner.id, self.amount
         )
-        self.assertIn(self.provider, compatible_providers)
+        self.assertIn(self.provider, available_providers)
 
-    def test_provider_not_compatible_with_unavailable_countries(self):
-        """Test that the provider is not compatible with a country that is not available."""
+    def test_provider_not_available_in_unavailable_countries(self):
         belgium = self.env.ref("base.be")
         self.provider.available_country_ids = [Command.set([belgium.id])]
         france = self.env.ref("base.fr")
         self.partner.country_id = france
-        compatible_providers = self.provider._get_compatible_providers(
+        available_providers = self.provider._find_available_providers(
             self.company.id, self.partner.id, self.amount
         )
-        self.assertNotIn(self.provider, compatible_providers)
+        self.assertNotIn(self.provider, available_providers)
 
-    def test_provider_compatible_when_no_available_countries_set(self):
-        """Test that the provider is always compatible when no available countries are set."""
+    def test_provider_available_when_no_available_countries_set(self):
         self.provider.available_country_ids = [Command.clear()]
         belgium = self.env.ref("base.be")
         self.partner.country_id = belgium
-        compatible_providers = self.provider._get_compatible_providers(
+        available_providers = self.provider._find_available_providers(
             self.company.id, self.partner.id, self.amount
         )
-        self.assertIn(self.provider, compatible_providers)
+        self.assertIn(self.provider, available_providers)
 
-    def test_provider_compatible_when_minimum_amount_is_zero(self):
-        """Test that the maximum amount has no effect on the provider's compatibility when it is set
-        to 0."""
+    def test_provider_available_when_minimum_amount_is_zero(self):
         self.provider.minimum_amount = 0
         currency = self.provider.main_currency_id.id
 
-        compatible_providers = self.env["payment.provider"]._get_compatible_providers(
+        available_providers = self.env["payment.provider"]._find_available_providers(
             self.company.id, self.partner.id, self.amount, currency_id=currency
         )
-        self.assertIn(self.provider, compatible_providers)
+        self.assertIn(self.provider, available_providers)
 
-    def test_provider_compatible_when_payment_above_minimum_amount(self):
-        """Test that a provider is compatible when the payment amount is less than the maximum
-        amount."""
+    def test_provider_available_when_payment_above_minimum_amount(self):
         self.provider.minimum_amount = self.amount - 10
         currency = self.provider.main_currency_id.id
 
-        compatible_providers = self.env["payment.provider"]._get_compatible_providers(
+        available_providers = self.env["payment.provider"]._find_available_providers(
             self.company.id, self.partner.id, self.amount, currency_id=currency
         )
-        self.assertIn(self.provider, compatible_providers)
+        self.assertIn(self.provider, available_providers)
 
-    def test_provider_not_compatible_when_payment_below_minimum_amount(self):
-        """Test that the provider is not compatible when the payment amount is less than the minimum
-        amount."""
+    def test_provider_not_available_when_payment_below_minimum_amount(self):
         self.provider.minimum_amount = self.amount + 10
         currency = self.provider.main_currency_id.id
 
-        compatible_providers = self.env["payment.provider"]._get_compatible_providers(
+        available_providers = self.env["payment.provider"]._find_available_providers(
             self.company.id, self.partner.id, self.amount, currency_id=currency
         )
-        self.assertNotIn(self.provider, compatible_providers)
+        self.assertNotIn(self.provider, available_providers)
 
-    def test_provider_compatible_when_maximum_amount_is_zero(self):
-        """Test that the maximum amount has no effect on the provider's compatibility when it is
-        set to 0."""
+    def test_provider_available_when_maximum_amount_is_zero(self):
         self.provider.maximum_amount = 0.0
         currency = self.provider.main_currency_id.id
 
-        compatible_providers = self.env["payment.provider"]._get_compatible_providers(
+        available_providers = self.env["payment.provider"]._find_available_providers(
             self.company.id, self.partner.id, self.amount, currency_id=currency
         )
-        self.assertIn(self.provider, compatible_providers)
+        self.assertIn(self.provider, available_providers)
 
-    def test_provider_compatible_when_payment_below_maximum_amount(self):
-        """Test that a provider is compatible when the payment amount is less than the maximum
-        amount."""
+    def test_provider_available_when_payment_below_maximum_amount(self):
         self.provider.maximum_amount = self.amount + 10.0
         currency = self.provider.main_currency_id.id
 
-        compatible_providers = self.env["payment.provider"]._get_compatible_providers(
+        available_providers = self.env["payment.provider"]._find_available_providers(
             self.company.id, self.partner.id, self.amount, currency_id=currency
         )
-        self.assertIn(self.provider, compatible_providers)
+        self.assertIn(self.provider, available_providers)
 
-    def test_provider_not_compatible_when_payment_above_maximum_amount(self):
-        """Test that a provider is not compatible when the payment amount is more than the maximum
-        amount."""
+    def test_provider_not_available_when_payment_above_maximum_amount(self):
         self.provider.maximum_amount = self.amount - 10.0
         currency = self.provider.main_currency_id.id
 
-        compatible_providers = self.env["payment.provider"]._get_compatible_providers(
+        available_providers = self.env["payment.provider"]._find_available_providers(
             self.company.id, self.partner.id, self.amount, currency_id=currency
         )
-        self.assertNotIn(self.provider, compatible_providers)
+        self.assertNotIn(self.provider, available_providers)
 
-    def test_provider_compatible_with_available_currencies(self):
-        """Test that the provider is compatible with its available currencies."""
-        compatible_providers = self.provider._get_compatible_providers(
+    def test_provider_available_for_available_currencies(self):
+        available_providers = self.provider._find_available_providers(
             self.company.id, self.partner.id, self.amount, currency_id=self.currency_euro.id
         )
-        self.assertIn(self.provider, compatible_providers)
+        self.assertIn(self.provider, available_providers)
 
-    def test_provider_not_compatible_with_unavailable_currencies(self):
-        """Test that the provider is not compatible with a currency that is not available."""
+    def test_provider_not_available_for_unavailable_currencies(self):
         # Make sure the list of available currencies is not empty.
         self.provider.available_currency_ids = [Command.unlink(self.currency_usd.id)]
-        compatible_providers = self.provider._get_compatible_providers(
+        available_providers = self.provider._find_available_providers(
             self.company.id, self.partner.id, self.amount, currency_id=self.currency_usd.id
         )
-        self.assertNotIn(self.provider, compatible_providers)
+        self.assertNotIn(self.provider, available_providers)
 
-    def test_provider_compatible_when_no_available_currencies_set(self):
-        """Test that the provider is always compatible when no available currency is set."""
+    def test_provider_available_when_no_available_currencies_set(self):
         self.provider.available_currency_ids = [Command.clear()]
-        compatible_providers = self.provider._get_compatible_providers(
+        available_providers = self.provider._find_available_providers(
             self.company.id, self.partner.id, self.amount, currency_id=self.currency_euro.id
         )
-        self.assertIn(self.provider, compatible_providers)
+        self.assertIn(self.provider, available_providers)
 
-    def test_provider_compatible_when_tokenization_forced(self):
-        """Test that the provider is compatible when it allows tokenization while it is forced by
-        the calling module."""
+    def test_provider_available_when_tokenization_forced(self):
         self.provider.allow_tokenization = True
-        compatible_providers = self.provider._get_compatible_providers(
+        available_providers = self.provider._find_available_providers(
             self.company.id, self.partner.id, self.amount, force_tokenization=True
         )
-        self.assertIn(self.provider, compatible_providers)
+        self.assertIn(self.provider, available_providers)
 
-    def test_provider_not_compatible_when_tokenization_forced(self):
-        """Test that the provider is not compatible when it does not allow tokenization while it
-        is forced by the calling module."""
+    def test_provider_not_available_when_tokenization_forced(self):
         self.provider.allow_tokenization = False
-        compatible_providers = self.provider._get_compatible_providers(
+        available_providers = self.provider._find_available_providers(
             self.company.id, self.partner.id, self.amount, force_tokenization=True
         )
-        self.assertNotIn(self.provider, compatible_providers)
+        self.assertNotIn(self.provider, available_providers)
 
-    def test_provider_compatible_when_tokenization_required(self):
-        """Test that the provider is compatible when it allows tokenization while it is required by
-        the payment context (e.g., when paying for a subscription)."""
+    def test_provider_available_when_tokenization_required(self):
         self.provider.allow_tokenization = True
         with patch(
             "odoo.addons.payment.models.payment_provider.PaymentProvider._is_tokenization_required",
             return_value=True,
         ):
-            compatible_providers = self.provider._get_compatible_providers(
+            available_providers = self.provider._find_available_providers(
                 self.company.id, self.partner.id, self.amount
             )
-        self.assertIn(self.provider, compatible_providers)
+        self.assertIn(self.provider, available_providers)
 
-    def test_provider_not_compatible_when_tokenization_required(self):
-        """Test that the provider is not compatible when it does not allow tokenization while it
-        is required by the payment context (e.g., when paying for a subscription)."""
+    def test_provider_not_available_when_tokenization_required(self):
         self.provider.allow_tokenization = False
         with patch(
             "odoo.addons.payment.models.payment_provider.PaymentProvider._is_tokenization_required",
             return_value=True,
         ):
-            compatible_providers = self.provider._get_compatible_providers(
+            available_providers = self.provider._find_available_providers(
                 self.company.id, self.partner.id, self.amount
             )
-        self.assertNotIn(self.provider, compatible_providers)
+        self.assertNotIn(self.provider, available_providers)
 
-    def test_provider_compatible_with_express_checkout(self):
-        """Test that the provider is compatible when it allows express checkout while it is an
-        express checkout flow."""
+    def test_provider_available_for_express_checkout(self):
         self.provider.allow_express_checkout = True
-        compatible_providers = self.provider._get_compatible_providers(
+        available_providers = self.provider._find_available_providers(
             self.company.id, self.partner.id, self.amount, is_express_checkout=True
         )
-        self.assertIn(self.provider, compatible_providers)
+        self.assertIn(self.provider, available_providers)
 
-    def test_provider_not_compatible_with_express_checkout(self):
-        """Test that the provider is not compatible when it does not allow express checkout while
-        it is an express checkout flow."""
+    def test_provider_not_available_for_express_checkout(self):
         self.provider.allow_express_checkout = False
-        compatible_providers = self.provider._get_compatible_providers(
+        available_providers = self.provider._find_available_providers(
             self.company.id, self.partner.id, self.amount, is_express_checkout=True
         )
-        self.assertNotIn(self.provider, compatible_providers)
+        self.assertNotIn(self.provider, available_providers)
 
-    def test_availability_report_covers_all_reasons(self):
-        """Test that every possible unavailability reason is correctly reported."""
+    def test_provider_availability_report_covers_all_reasons(self):
         # Prepare a base provider.
         self.provider.write({"allow_express_checkout": True, "allow_tokenization": True})
 
-        # Prepare a provider with an incompatible country.
+        # Prepare a provider with an unavailable country.
         invalid_country_provider = self.provider.copy()
         belgium = self.env.ref("base.be")
         invalid_country_provider.write({"available_country_ids": [Command.set([belgium.id])]})
@@ -356,7 +396,7 @@ class TestPaymentProvider(PaymentCommon):
         exceeding_max_provider = self.provider.copy()
         exceeding_max_provider.write({"maximum_amount": self.amount - 10.0})
 
-        # Prepare a provider with an incompatible currency.
+        # Prepare a provider with an unavailable currency.
         invalid_currency_provider = self.provider.copy()
         invalid_currency_provider.write({
             "available_currency_ids": [Command.unlink(self.currency_usd.id)]
@@ -370,9 +410,9 @@ class TestPaymentProvider(PaymentCommon):
         no_express_checkout_provider = self.provider.copy()
         no_express_checkout_provider.write({"allow_express_checkout": False})
 
-        # Get compatible providers to generate their availability report.
+        # Get available providers to generate their availability report.
         report = {}
-        self.env["payment.provider"]._get_compatible_providers(
+        self.env["payment.provider"]._find_available_providers(
             self.company_id,
             self.partner.id,
             self.amount,
@@ -412,6 +452,165 @@ class TestPaymentProvider(PaymentCommon):
                 "reason": REPORT_REASONS_MAPPING["express_checkout_not_supported"],
             },
         )
+
+    def test_payment_method_available_when_active(self):
+        self.payment_method.active = True
+        available_pms = self.provider._find_available_payment_methods(self.partner.id)
+        self.assertIn(self.payment_method, available_pms)
+
+    def test_payment_method_not_available_when_inactive(self):
+        self.payment_method.active = False
+        available_pms = self.provider._find_available_payment_methods(self.partner.id)
+        self.assertNotIn(self.payment_method, available_pms)
+
+    def test_payment_method_not_available_when_provider_is_not_installed(self):
+        self.provider._remove_provider("none")
+        available_pms = self.provider._find_available_payment_methods(self.partner.id)
+        self.assertNotIn(self.payment_method, available_pms)
+
+    def test_brand_payment_method_not_available(self):
+        brand_payment_method = self.payment_method.copy({"code": "dummy_brand"})
+        brand_payment_method.primary_payment_method_id = self.payment_method_id  # Make it a brand
+        available_pms = self.provider._find_available_payment_methods(self.partner.id)
+        self.assertNotIn(brand_payment_method, available_pms)
+
+    def test_payment_method_available_in_supported_countries(self):
+        belgium = self.env.ref("base.be")
+        self.payment_method.supported_country_ids = [Command.set([belgium.id])]
+        self.partner.country_id = belgium
+        available_pms = self.provider._find_available_payment_methods(self.partner.id)
+        self.assertIn(self.payment_method, available_pms)
+
+    def test_payment_method_not_available_in_unsupported_countries(self):
+        belgium = self.env.ref("base.be")
+        self.payment_method.supported_country_ids = [Command.set([belgium.id])]
+        france = self.env.ref("base.fr")
+        self.partner.country_id = france
+        available_pms = self.provider._find_available_payment_methods(self.partner.id)
+        self.assertNotIn(self.payment_method, available_pms)
+
+    def test_payment_method_available_when_no_supported_countries_set(self):
+        self.payment_method.supported_country_ids = [Command.clear()]
+        belgium = self.env.ref("base.be")
+        self.partner.country_id = belgium
+        available_pms = self.provider._find_available_payment_methods(self.partner.id)
+        self.assertIn(self.payment_method, available_pms)
+
+    def test_payment_method_available_for_supported_currencies(self):
+        self.payment_method.supported_currency_ids = [Command.set([self.currency_euro.id])]
+        available_pms = self.provider._find_available_payment_methods(
+            self.partner.id, currency_id=self.currency_euro.id
+        )
+        self.assertIn(self.payment_method, available_pms)
+
+    def test_payment_method_not_available_for_unsupported_currencies(self):
+        self.payment_method.supported_currency_ids = [Command.set([self.currency_euro.id])]
+        available_pms = self.provider._find_available_payment_methods(
+            self.partner.id, currency_id=self.currency_usd.id
+        )
+        self.assertNotIn(self.payment_method, available_pms)
+
+    def test_payment_method_available_when_no_supported_currencies_set(self):
+        self.payment_method.supported_currency_ids = [Command.clear()]
+        available_pms = self.provider._find_available_payment_methods(
+            self.partner.id, currency_id=self.currency_euro.id
+        )
+        self.assertIn(self.payment_method, available_pms)
+
+    def test_payment_method_available_when_tokenization_forced(self):
+        self.payment_method.support_tokenization = True
+        available_pms = self.provider._find_available_payment_methods(
+            self.partner.id, force_tokenization=True
+        )
+        self.assertIn(self.payment_method, available_pms)
+
+    def test_payment_method_not_available_when_tokenization_forced(self):
+        self.payment_method.support_tokenization = False
+        available_pms = self.provider._find_available_payment_methods(
+            self.partner.id, force_tokenization=True
+        )
+        self.assertNotIn(self.payment_method, available_pms)
+
+    def test_payment_method_available_for_express_checkout(self):
+        self.payment_method.support_express_checkout = True
+        available_pms = self.provider._find_available_payment_methods(
+            self.partner.id, is_express_checkout=True
+        )
+        self.assertIn(self.payment_method, available_pms)
+
+    def test_payment_method_not_available_for_express_checkout(self):
+        self.payment_method.support_express_checkout = False
+        available_pms = self.provider._find_available_payment_methods(
+            self.partner.id, is_express_checkout=True
+        )
+        self.assertNotIn(self.payment_method, available_pms)
+
+    def test_payment_method_availability_report_covers_all_reasons(self):
+        # Disable all payment methods.
+        pms = self.env["payment.method"].search([("is_primary", "=", True)])
+        pms.active = False
+
+        # Prepare a base payment method.
+        self.payment_method.write({
+            "active": True,
+            "support_express_checkout": True,
+            "support_tokenization": True,
+        })
+
+        # Prepare the report with a provider to allow checking provider availability.
+        report = {}
+        payment_utils.add_to_report(report, self.provider)
+
+        # Prepare a payment method with an unavailable country.
+        invalid_country_pm = self.payment_method.copy({"code": "unknown_country"})
+        belgium = self.env.ref("base.be")
+        invalid_country_pm.supported_country_ids = [Command.set([belgium.id])]
+        france = self.env.ref("base.fr")
+        self.partner.country_id = france
+
+        # Prepare a payment method with an unavailable currency.
+        invalid_currency_pm = self.payment_method.copy({"code": "unknown_currency"})
+        invalid_currency_pm.supported_currency_ids = [Command.set([self.currency_euro.id])]
+
+        # Prepare a payment method without support for tokenization.
+        no_tokenization_pm = self.payment_method.copy({"code": "unknown_no_token"})
+        no_tokenization_pm.support_tokenization = False
+
+        # Prepare a payment method without support for express checkout.
+        no_express_checkout_pm = self.payment_method.copy({"code": "unknown_no_express"})
+        no_express_checkout_pm.support_express_checkout = False
+
+        # Get available payment methods to generate their availability report.
+        self.provider._find_available_payment_methods(
+            self.partner.id,
+            currency_id=self.currency_usd.id,
+            force_tokenization=True,
+            is_express_checkout=True,
+            report=report,
+        )
+
+        # Compare the generated payment methods report with the expected one.
+        expected_pms_report = {
+            self.payment_method: {"available": True, "reason": ""},
+            invalid_country_pm: {
+                "available": False,
+                "reason": REPORT_REASONS_MAPPING["incompatible_country"],
+            },
+            invalid_currency_pm: {
+                "available": False,
+                "reason": REPORT_REASONS_MAPPING["incompatible_currency"],
+            },
+            no_tokenization_pm: {
+                "available": False,
+                "reason": REPORT_REASONS_MAPPING["tokenization_not_supported"],
+            },
+            no_express_checkout_pm: {
+                "available": False,
+                "reason": REPORT_REASONS_MAPPING["express_checkout_not_supported"],
+            },
+        }
+        self.maxDiff = None
+        self.assertDictEqual(report["payment_methods"], expected_pms_report)
 
     def test_validation_currency_is_supported(self):
         """Test that only currencies supported by both the provider and the payment method can be
