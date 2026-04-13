@@ -239,6 +239,14 @@ class TestSafeEvalRuntime(TransactionCase):
             'wrapper_A', 'wrapper_B',  # Evaluation order
         ])
 
+    def test_transform_decorators_assert_name_bindings(self):
+        expr = """
+            @((x := func), lambda _: _)[1]
+            def func(*args, **kwargs): ...
+        """
+        with self.assertRaisesRegex(ValueError, '^NameError'):
+            safe_eval(dedent(expr), {}, mode='exec')
+
     @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
     def test_check_callee(self):
         expr = """
@@ -323,14 +331,14 @@ class TestSafeEvalRuntime(TransactionCase):
     def test_override_call(self):
         expr = """
             # Override in locals
-            _save_eval_call = lambda callee, *args, **kwargs: callee(*args, **kwargs)
+            _safe_eval_call = lambda callee, *args, **kwargs: callee(*args, **kwargs)
             UnsafeClass()
         """
         with self.assertRaisesRegex(ValueError, '^UnsafeContextError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
         # Note that without the assert protection, we get a `RecursionError`,
         # because after transformer, the code becomes:
-        # `_save_eval_call = lambda callee, *args, **kwargs: _save_eval_call(callee, *args, **kwargs)`
+        # `_safe_eval_call = lambda callee, *args, **kwargs: _safe_eval_call(callee, *args, **kwargs)`
 
     @mute_logger('odoo.tools.safe_eval.evaluation.runtime')
     def test_prevent_bare_except(self):

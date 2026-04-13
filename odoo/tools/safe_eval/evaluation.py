@@ -629,7 +629,7 @@ dateutil.tz.gettz = zoneinfo.ZoneInfo
 
 class _SafeTransformer(ast.NodeTransformer):
     """
-    Code transformer that wraps calls with :func:`_save_eval_call` in
+    Code transformer that wraps calls with :func:`_safe_eval_call` in
     order to check that the arguments are "safe".
     """
 
@@ -638,7 +638,8 @@ class _SafeTransformer(ast.NodeTransformer):
     # The expression will be used later and therefore re-parsed.
     # It is therefore necessary for the identifiers to be valid.
 
-    CALL_ID = '_save_eval_call'
+    CALL_ID = '_safe_eval_call'
+    DECO_ID = '_safe_eval_deco'
 
     def visit_Call(self, node):
         """
@@ -646,7 +647,7 @@ class _SafeTransformer(ast.NodeTransformer):
             func(*args, **kwargs)
 
         Into:
-            _save_eval_call(func, *args, **kwargs)
+            _safe_eval_call(func, *args, **kwargs)
         """
         self.generic_visit(node)
         call = ast.Call(
@@ -660,45 +661,38 @@ class _SafeTransformer(ast.NodeTransformer):
     def visit_FunctionDef(self, node):
         """
         Transforms:
-            @decorator_A()
-            @decorator_B()
+            @decorator_A
+            @decorator_B
             def func():
                 pass
 
         Into:
+            @_safe_eval_deco(decorator_A)
+            @_safe_eval_deco(decorator_B)
             def func():
                 pass
-
-            func = _save_eval_call(_save_eval_call(decorator_A), _save_eval_call(_save_eval_call(decorator_B), func))
         """
         self.generic_visit(node)
         if not node.decorator_list:
             return node
 
-        current_wrapper = ast.Name(id=node.name, ctx=ast.Load())
-        ast.copy_location(current_wrapper, node)
+        new_decorators = []
 
-        while node.decorator_list:
-            decorator = node.decorator_list.pop()
-            current_wrapper = ast.Call(
-                func=ast.Name(id=self.CALL_ID, ctx=ast.Load()),
-                args=[
-                    decorator,
-                    current_wrapper,
-                ],
+        for decorator in node.decorator_list:
+            wrapped_decorator = ast.Call(
+                func=ast.Name(id=self.DECO_ID, ctx=ast.Load()),
+                args=[decorator],
                 keywords=[],
             )
-            ast.copy_location(current_wrapper, node)
-            ast.copy_location(current_wrapper.func, node)
+            ast.copy_location(wrapped_decorator, decorator)
+            ast.copy_location(wrapped_decorator.func, decorator)
+            new_decorators.append(wrapped_decorator)
 
-        assign = ast.Assign(
-            targets=[ast.Name(id=node.name, ctx=ast.Store())],
-            value=current_wrapper,
-        )
-        ast.copy_location(assign, node)
-        ast.copy_location(assign.targets[0], node)
+        node.decorator_list = new_decorators
 
-        return [node, assign]
+        return node
+
+    visit_AsyncFunctionDef = visit_FunctionDef
 
     def visit_Try(self, node):
         """ Ensure no bare except is used """
@@ -1062,23 +1056,27 @@ def safe_call(callee, /, *args, **kwargs):
     return callee(*args, **kwargs)
 
 
-safe_whitelist.TRUSTED_FUNCTIONS |= {safe_call}
+def safe_call_deco(func):
+    """ Ensure call `safe_call` for decorators """
+    return lambda *args, **kwargs: safe_call(func, *args, **kwargs)
+
+
+safe_whitelist.TRUSTED_FUNCTIONS |= {safe_call, safe_call_deco}
 
 
 def monitoring_call(code, instruction_offset, callee, arg0):
-    """ Ensure `_save_eval_call` is not overridden """
-    if callee is safe_call:
+    """ Ensure `_MONITORING_BUILTINS` are not overridden """
+    if callee in (safe_call, safe_call_deco):
         return
 
     frame = sys._getframe(1)
-    call_id = safe_transformer.CALL_ID
-
-    if (
-        (call_id in frame.f_locals and frame.f_locals[call_id] is not safe_call) or
-        (call_id in frame.f_globals and frame.f_globals[call_id] is not safe_call) or
-        frame.f_builtins[call_id] is not safe_call
-    ):
-        raise UnsafeContextError(f'{call_id} is overridden')
+    for identifier, expected in _MONITORING_BUILTINS.items():
+        if (
+            (identifier in frame.f_locals and frame.f_locals[identifier] is not expected) or
+            (identifier in frame.f_globals and frame.f_globals[identifier] is not expected) or
+            frame.f_builtins[identifier] is not expected
+        ):
+            raise UnsafeContextError(f'{identifier} is overridden')
 
 
 def monitoring_yield(code, instruction_offset, retval):
@@ -1096,7 +1094,11 @@ def monitoring_yield(code, instruction_offset, retval):
         handle_unsafe_error(e)
 
 
-_BUILTINS[safe_transformer.CALL_ID] = safe_call
+_MONITORING_BUILTINS = {
+    safe_transformer.CALL_ID: safe_call,
+    safe_transformer.DECO_ID: safe_call_deco,
+}
+_BUILTINS.update(_MONITORING_BUILTINS)
 
 EVENTS = sys.monitoring.events
 TOOL_ID = 4  # Not prevent other tools from using "official IDs"
