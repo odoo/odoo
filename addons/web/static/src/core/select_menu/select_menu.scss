@@ -66,6 +66,15 @@
         top: calc(var(--border-width) * -1);
     }
 
+    .o_select_menu-choices {
+        > *:first-child {
+            margin-top: 0.5rem;
+        }
+        > *:last-child {
+            margin-bottom: 0.5rem;
+        }
+    }
+
     &:not(.o_bottom_sheet) {
         max-height: 300px;
 
