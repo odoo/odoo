@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.fields import Command
 
 from odoo.addons.payment.tests.common import PaymentCommon
 
@@ -16,9 +15,6 @@ class RazorpayCommon(PaymentCommon):
                 "razorpay_key_id": "rzp_123",
                 "razorpay_key_secret": "Y63AyP9eL91",
                 "razorpay_webhook_secret": "coincoin_motherducker",
-                "payment_method_ids": [
-                    Command.set([cls.env.ref("payment.payment_method_card").id])
-                ],
                 "allow_tokenization": True,
             },
         )

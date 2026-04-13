@@ -18,16 +18,8 @@ API_ENDPOINT_VERSIONS = {
 # See https://docs.adyen.com/development-resources/currency-codes
 CURRENCY_DECIMALS = {"CLP": 2, "CVE": 0, "IDR": 0, "ISK": 2}
 
-# The codes of the payment methods to activate when Adyen is activated.
-DEFAULT_PAYMENT_METHOD_CODES = {
-    # Primary payment methods.
-    "card",
-    # Brand payment methods.
-    "visa",
-    "mastercard",
-    "amex",
-    "discover",
-}
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {"card"}
 
 # Mapping of payment method codes to Adyen codes.
 PAYMENT_METHODS_MAPPING = {

@@ -222,32 +222,32 @@ class PaymentPortal(payment_portal.PaymentPortal):
         limit = self._cast_as_int(limit)
 
         # For any primary payment method with at least one compatible provider.
-        compatible_providers_sudo = (
+        available_providers_sudo = (
             request.env['payment.provider']
                 # Force the public user such that editors see what customers will see
                 .with_user(self.env.website.user_id)
                 .sudo()  # Needed to read providers' fields with public user
-                ._get_compatible_providers(
+                ._find_available_providers(
                     self.env.website.company_id.id, None, 0, website_id=self.env.website.id
                 )
         )
         # Select the brands, i.e. non-primary payment methods. E.g., Amex for Card.
         brands_domain = Domain([
             ('is_primary', '=', False),
-            ('primary_payment_method_id.provider_ids', 'in', compatible_providers_sudo.ids),
+            ('primary_payment_method_id.provider_id', 'in', available_providers_sudo.ids),
             ('primary_payment_method_id.active', '=', True),
         ])
         # Or, select the primary payment methods without any brands. E.g., PayPal.
         primary_without_brands_domain = Domain([
             ('is_primary', '=', True),
             ('brand_ids', '=', False),
-            ('provider_ids', 'in', compatible_providers_sudo.ids),
+            ('provider_id', 'in', available_providers_sudo.ids),
         ])
 
         supported_pms = request.env['payment.method'].search(
             Domain.OR([brands_domain, primary_without_brands_domain]),
             limit=limit,
-        ).mapped(lambda pm: {
+        )._deduplicate_by_code().mapped(lambda pm: {
             'name': pm.name,
             # Loading the image via this url caches the image on the client browser
             'image_url': request.env['website'].image_url(pm, 'image'),

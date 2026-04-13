@@ -489,6 +489,11 @@ class TestAccountPayment(AccountPaymentCommon):
             'name': 'Test',
             'journal_id': self.company_data['default_journal_bank'].id,
         })
+        payment_method = self.env["payment.method"].create({
+            "name": "Payment method",
+            "code": "unknown",
+            "provider_id": provider.id,
+        })
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
@@ -504,7 +509,7 @@ class TestAccountPayment(AccountPaymentCommon):
         })
         payment_transaction = self.env['payment.transaction'].create({
             'provider_id': provider.id,
-            'payment_method_id': self.env.ref('payment.payment_method_unknown').id,
+            'payment_method_id': payment_method.id,
             'invoice_ids': [invoice.id],
             'partner_id': self.partner_a.id,
             'amount': 200,

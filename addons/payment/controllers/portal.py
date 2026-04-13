@@ -113,70 +113,33 @@ class PaymentPortal(portal.CustomerPortal):
         if not currency or not currency.active:
             raise NotFound  # The currency must exist and be active.
 
-        availability_report = {}
-        # Select all the payment methods and tokens that match the payment context.
-        providers_sudo = (
-            self
-            .env["payment.provider"]
-            .sudo()  # In sudo mode to read the fields of providers and partner (if logged out).
-            ._get_compatible_providers(
-                company_id,
-                partner_sudo.id,
-                amount,
-                currency_id=currency.id,
-                report=availability_report,
-                **kwargs,
-            )
-        )
-        payment_methods_sudo = (
-            self
-            .env["payment.method"]
-            .sudo()  # In sudo mode to read the fields of providers.
-            ._get_compatible_payment_methods(
-                providers_sudo.ids,
-                partner_sudo.id,
-                currency_id=currency.id,
-                report=availability_report,
-                **kwargs,
-            )
-        )
-        tokens_sudo = (
-            self
-            .env["payment.token"]
-            .sudo()  # In sudo mode to read tokens of other partners and the fields of providers.
-            ._get_available_tokens(providers_sudo.ids, partner_sudo.id)
-        )
-
-        # Make sure that the partner's company matches the company passed as parameter.
+        # Prepare the portal page values
         company_mismatch = not PaymentPortal._can_partner_pay_in_company(partner_sudo, company)
-
-        # Generate a new access token in case the partner id or the currency id was updated
-        access_token = payment_utils.generate_access_token(partner_sudo.id, amount, currency.id)
-
         portal_page_values = {
-            "res_company": company,  # Display the correct logo in a multi-company environment.
+            "res_company": company,  # Display the correct logo in a multi-company environment
             "company_mismatch": company_mismatch,
             "expected_company": company,
             "partner_is_different": partner_is_different,
         }
-        payment_form_values = {
-            "show_tokenize_input_mapping": self._compute_show_tokenize_input_mapping(
-                providers_sudo, **kwargs
-            )
-        }
+
+        # Prepare the payment form values
+        payment_form_values = self._prepare_payment_form_values(
+            company_id, partner_sudo.id, amount, currency_id=currency.id, **kwargs
+        )
+
+        # Prepare the payment context
         payment_context = {
             "reference_prefix": reference,
             "amount": amount,
             "currency": currency,
             "partner_id": partner_sudo.id,
-            "providers_sudo": providers_sudo,
-            "payment_methods_sudo": payment_methods_sudo,
-            "tokens_sudo": tokens_sudo,
-            "availability_report": availability_report,
             "transaction_route": "/payment/transaction",
             "landing_route": "/payment/confirmation",
-            "access_token": access_token,
+            "access_token": payment_utils.generate_access_token(
+                partner_sudo.id, amount, currency.id
+            ),  # Generate a new access token in case the partner id or the currency id was updated
         }
+
         rendering_context = {
             **portal_page_values,
             **payment_form_values,
@@ -186,26 +149,6 @@ class PaymentPortal(portal.CustomerPortal):
             ),  # Pass the payment context to allow overriding modules to check document access.
         }
         return request.render(self._get_payment_page_template_xmlid(**kwargs), rendering_context)
-
-    @staticmethod
-    def _compute_show_tokenize_input_mapping(providers_sudo, **kwargs):
-        """Determine for each provider whether the tokenization input should be shown or not.
-
-        :param recordset providers_sudo: The providers for which to determine whether the
-                                         tokenization input should be shown or not, as a sudoed
-                                         `payment.provider` recordset.
-        :param dict kwargs: The optional data passed to the helper methods.
-        :return: The mapping of the computed value for each provider id.
-        :rtype: dict
-        """
-        show_tokenize_input_mapping = {}
-        for provider_sudo in providers_sudo:
-            show_tokenize_input = (
-                provider_sudo.allow_tokenization
-                and not provider_sudo._is_tokenization_required(**kwargs)
-            )
-            show_tokenize_input_mapping[provider_sudo.id] = show_tokenize_input
-        return show_tokenize_input_mapping
 
     def _get_payment_page_template_xmlid(self, **_kwargs):
         return "payment.pay"
@@ -220,64 +163,131 @@ class PaymentPortal(portal.CustomerPortal):
         """
         partner_sudo = self.env.user.partner_id  # env.user is always sudoed
 
-        availability_report = {}
-        # Select all the payment methods and tokens that match the payment context.
-        providers_sudo = (
-            self
-            .env["payment.provider"]
-            .sudo()  # In sudo mode to read the fields of providers and partner (if logged out).
-            ._get_compatible_providers(
-                self.env.company.id,
-                partner_sudo.id,
-                0.0,  # There is no amount to pay with validation transactions.
-                force_tokenization=True,
-                is_validation=True,
-                report=availability_report,
-                **kwargs,
-            )
+        # Prepare the payment form values
+        payment_form_values = self._prepare_payment_form_values(
+            self.env.company.id,
+            partner_sudo.id,
+            0.0,
+            force_tokenization=True,
+            is_validation=True,
+            **kwargs,
         )
-        payment_methods_sudo = (
-            self
-            .env["payment.method"]
-            .sudo()  # In sudo mode to read the fields of providers.
-            ._get_compatible_payment_methods(
-                providers_sudo.ids,
-                partner_sudo.id,
-                force_tokenization=True,
-                report=availability_report,
-            )
-        )
-        tokens_sudo = (
-            self
-            .env["payment.token"]
-            .sudo()  # In sudo mode to read the commercial partner's and providers' fields.
-            ._get_available_tokens(None, partner_sudo.id, is_validation=True)
-        )
-
-        access_token = payment_utils.generate_access_token(partner_sudo.id, None, None)
-
-        payment_form_values = {
+        payment_form_values.update({
             "mode": "validation",
             "allow_token_selection": False,
             "allow_token_deletion": True,
-        }
+        })
+
+        # Prepare the payment context
+        access_token = payment_utils.generate_access_token(partner_sudo.id, None, None)
         payment_context = {
             "reference_prefix": payment_utils.singularize_reference_prefix(prefix="V"),
             "partner_id": partner_sudo.id,
-            "providers_sudo": providers_sudo,
-            "payment_methods_sudo": payment_methods_sudo,
-            "tokens_sudo": tokens_sudo,
-            "availability_report": availability_report,
             "transaction_route": "/payment/transaction",
             "landing_route": "/my/payment_method",
             "access_token": access_token,
         }
+
         rendering_context = {
             **payment_form_values,
             **payment_context,
             **self._get_extra_payment_form_values(**kwargs),
         }
         return request.render("payment.payment_methods", rendering_context)
+
+    def _prepare_payment_form_values(
+        self,
+        company_id,
+        partner_id,
+        amount,
+        currency_id=None,
+        force_tokenization=False,
+        is_express_checkout=False,
+        is_validation=False,
+        **kwargs,
+    ):
+        """Prepare the payment form values with available payment providers, methods, and tokens.
+
+        :param int company_id: The company to which providers must belong, as a `res.company` id
+        :param int partner_id: The partner making the payment, as a `res.partner` id
+        :param float amount: The amount to pay (`0` for validation transactions)
+        :param int currency_id: The payment currency, as a `res.currency` id
+        :param bool force_tokenization: Whether providers and methods must allow tokenization
+        :param bool is_express_checkout: Whether providers and methods must allow express checkout
+        :param bool is_validation: Whether the operation is a validation
+        :param dict kwargs: Forwarded to underlying methods
+        :return: The prepared payment form values
+        :rtype: dict
+        """
+        availability_report = {}  # The report in which availability statuses are to be logged
+
+        # Find available providers
+        providers_sudo = (
+            self
+            .env["payment.provider"]
+            .sudo()
+            ._find_available_providers(
+                company_id,
+                partner_id,
+                amount,
+                currency_id=currency_id,
+                force_tokenization=force_tokenization,
+                is_express_checkout=is_express_checkout,
+                is_validation=is_validation,
+                report=availability_report,
+                **kwargs,
+            )
+        )  # In sudo mode to read the fields of providers
+
+        # Find available payment methods
+        payment_methods_sudo = providers_sudo._find_available_payment_methods(
+            partner_id,
+            currency_id=currency_id,
+            force_tokenization=force_tokenization,
+            is_express_checkout=is_express_checkout,
+            report=availability_report,
+            **kwargs,
+        )._deduplicate_by_code(report=availability_report)
+
+        # Find available tokens
+        if not is_validation:  # Payment flow
+            tokens_sudo = providers_sudo._find_available_tokens(partner_id, **kwargs)
+        else:  # Validation flow
+            # Include tokens of unpublished providers to allow managing them
+            partner_sudo = self.env["res.partner"].sudo().browse(partner_id)
+            tokens_sudo = partner_sudo._get_payment_tokens(**kwargs)
+
+        # Determine tokenization input mapping
+        show_tokenize_input_mapping = self._compute_show_tokenize_input_mapping(
+            providers_sudo, **kwargs
+        )
+
+        return {
+            "providers_sudo": providers_sudo,
+            "payment_methods_sudo": payment_methods_sudo,
+            "tokens_sudo": tokens_sudo,
+            "show_tokenize_input_mapping": show_tokenize_input_mapping,
+            "availability_report": availability_report,
+        }
+
+    @staticmethod
+    def _compute_show_tokenize_input_mapping(providers_sudo, **kwargs):
+        """Determine for each provider whether the tokenization input should be shown or not.
+
+        :param payment.provider providers_sudo: The providers for which to determine whether the
+                                                tokenization input should be shown
+        :param dict kwargs: Forwarded to underlying methods
+        :return: The mapping of the computed value for each provider id
+        :rtype: dict
+        """
+        show_tokenize_input_mapping = {}
+        for provider_sudo in providers_sudo:
+            show_tokenize_input = (
+                provider_sudo.allow_tokenization
+                and not provider_sudo._is_tokenization_required(**kwargs)
+            )
+            show_tokenize_input_mapping[provider_sudo.id] = show_tokenize_input
+        return show_tokenize_input_mapping
 
     def _get_extra_payment_form_values(self, **_kwargs):
         """Return a dict of extra payment form values to include in the rendering context.
@@ -388,7 +398,7 @@ class PaymentPortal(portal.CustomerPortal):
         )
         if is_validation:  # Providers determine the amount and currency in validation operations
             amount = provider_sudo._get_validation_amount()
-            payment_method = self.env["payment.method"].browse(payment_method_id)
+            payment_method = self.env["payment.method"].sudo().browse(payment_method_id)
             currency_id = (
                 provider_sudo
                 .with_context(

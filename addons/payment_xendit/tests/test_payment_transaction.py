@@ -35,12 +35,17 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
     def test_empty_rendering_values_if_direct(self):
         """Test that if it's a card payment (like in direct flow), rendering_values should be empty
         and no API call should be committed in the process."""
-        card_pm = self.env.ref("payment.payment_method_card").id
-        tx = self._create_transaction("direct", payment_method_id=card_pm)
-        with patch(
-            "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
-            return_value={"data": {"link": "https://dummy.com"}},
-        ) as mock:
+        tx = self._create_transaction("direct", payment_method_id=self.payment_method_card.id)
+        with (
+            patch(
+                "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
+                return_value={"data": {"link": "https://dummy.com"}},
+            ) as mock,
+            patch(
+                "odoo.addons.payment.utils.generate_access_token",
+                new=self._generate_test_access_token,
+            ),
+        ):
             rendering_values = tx._get_specific_rendering_values(None)
             self.assertEqual(mock.call_count, 0)
         self.assertDictEqual(rendering_values, {})

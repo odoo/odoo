@@ -16,6 +16,7 @@ class XenditCommon(PaymentCommon):
                 "xendit_webhook_token": "xnd_webhook_token",
             },
         )
+        cls.payment_method_card = cls.xendit._get_pm_from_code("card")
         cls.provider = cls.xendit
         cls.amount = 11100
         cls.currency = cls._enable_currency("IDR")

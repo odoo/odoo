@@ -4,10 +4,8 @@ payment_capture_wizard_rule,Payment Capture Wizard,payment.capture.wizard,,crud,
 payment_data_system,payment.data.system,payment.data,base.group_system,crud,
 payment_provider_system,payment.provider.system,payment.provider,base.group_system,crud,
 payment_provider_company_rule,Access providers in own companies only,payment.provider,,crud,"[('company_id', 'parent_of', company_ids)]"
-payment_method_public,payment.method.all,payment.method,base.group_public,r,
-payment_method_portal,payment.method.all,payment.method,base.group_portal,r,
-payment_method_employee,payment.method.all,payment.method,base.group_user,r,
 payment_method_system,payment.method.system,payment.method,base.group_system,crud,
+payment_method_rule,Restrict access based on provider,payment.method,,crud,"[('provider_id', 'access', 'read')]"
 payment_token_public_rule,Public users can access only their own tokens,payment.token,base.group_public,r,"[('partner_id', '=', user.partner_id.id)]"
 payment_token_portal_rule,Portal users can access only their own tokens,payment.token,base.group_portal,r,"[('partner_id', '=', user.partner_id.id)]"
 payment_token_user_rule,Users can access only their own tokens,payment.token,base.group_user,r,"[('partner_id', '=', user.partner_id.id)]"

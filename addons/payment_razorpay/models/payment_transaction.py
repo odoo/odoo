@@ -390,7 +390,7 @@ class PaymentTransaction(models.Model):
         payment_method_type = entity_data.get("method", "")
         if payment_method_type == "card":
             payment_method_type = entity_data.get("card", {}).get("network", "").lower()
-        payment_method = self.env["payment.method"]._get_from_code(
+        payment_method = self.provider_id._get_pm_from_code(
             payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
         )
         if allowed_to_modify and payment_method:

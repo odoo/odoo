@@ -105,15 +105,14 @@ class PaymentTransaction(models.Model):
         self.provider_reference = payment_data.get("paymentId")
 
         # Update the payment method.
+        payment_method_code = ""
         if bool(payment_data.get("cardType")):
             payment_method_code = payment_data.get("cardAssociation", "")
-            payment_method = self.env["payment.method"]._get_from_code(
-                payment_method_code.lower(), mapping=const.PAYMENT_METHODS_MAPPING
-            )
         elif bool(payment_data.get("bankName")):
-            payment_method = self.env.ref("payment.payment_method_bank_transfer")
-        else:
-            payment_method = self.env.ref("payment.payment_method_unknown")
+            payment_method_code = "bank_transfer"
+        payment_method = self.provider_id._get_pm_from_code(
+            payment_method_code.lower(), mapping=const.PAYMENT_METHODS_MAPPING
+        )
         self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the payment state.

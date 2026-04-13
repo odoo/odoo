@@ -104,7 +104,7 @@ class PaymentTransaction(models.Model):
 
         # Update the payment method.
         payment_method_code = payment_data.get("PaymentType")
-        payment_method = self.env["payment.method"]._get_from_code(
+        payment_method = self.provider_id._get_pm_from_code(
             payment_method_code, mapping=const.PAYMENT_METHODS_RESPONSE_MAPPING
         )
         self.payment_method_id = payment_method or self.payment_method_id

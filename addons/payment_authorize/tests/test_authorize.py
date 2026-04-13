@@ -11,14 +11,14 @@ from odoo.addons.payment_authorize.tests.common import AuthorizeCommon
 
 @tagged("post_install", "-at_install")
 class AuthorizeTest(AuthorizeCommon):
-    def test_compatible_providers(self):
+    def test_available_providers(self):
         # Note: in the test common, 'USD' is specified as the currency linked to the user account.
         unsupported_currency = self._enable_currency("CHF")
-        providers = self.env["payment.provider"]._get_compatible_providers(
+        providers = self.env["payment.provider"]._find_available_providers(
             self.company.id, self.partner.id, self.amount, currency_id=unsupported_currency.id
         )
         self.assertNotIn(self.authorize, providers)
-        providers = self.env["payment.provider"]._get_compatible_providers(
+        providers = self.env["payment.provider"]._find_available_providers(
             self.company.id, self.partner.id, self.amount, currency_id=self.currency_usd.id
         )
         self.assertIn(self.authorize, providers)

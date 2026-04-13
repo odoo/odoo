@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- https://dpogroup.com/Payment-methods/ -->
+
+    <!-- === PRIMARY PAYMENT METHODS === -->
+
+    <record id="payment_method_card" model="payment.method">
+        <field name="name">Card</field>
+        <field name="code">card</field>
+        <field name="provider_id" ref="payment.payment_provider_dpo"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+    </record>
+
+    <record id="payment_method_mobile" model="payment.method">
+        <field name="name">Mobile</field>
+        <field name="code">mobile</field>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([
+                        ref('base.bf'),
+                        ref('base.bw'),
+                        ref('base.cd'),
+                        ref('base.ci'),
+                        ref('base.et'),
+                        ref('base.gh'),
+                        ref('base.ke'),
+                        ref('base.ls'),
+                        ref('base.mu'),
+                        ref('base.mw'),
+                        ref('base.na'),
+                        ref('base.ng'),
+                        ref('base.rw'),
+                        ref('base.sn'),
+                        ref('base.sz'),
+                        ref('base.tz'),
+                        ref('base.ug'),
+                        ref('base.za'),
+                        ref('base.zm'),
+                        ref('base.zw'),
+                ])]"
+        />
+        <field name="provider_id" ref="payment.payment_provider_dpo"/>
+        <field name="image" type="bytes" file="payment/static/img/mobile.png"/>
+    </record>
+
+    <!-- === PAYMENT METHOD BRANDS === -->
+
+    <record id="payment_method_amex" model="payment.method">
+        <field name="name">American Express</field>
+        <field name="code">amex</field>
+        <field name="primary_payment_method_id" eval="ref('payment_dpo.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_dpo"/>
+        <field name="image" type="bytes" file="payment/static/img/amex.png"/>
+    </record>
+
+    <record id="payment_method_mastercard" model="payment.method">
+        <field name="name">MasterCard</field>
+        <field name="code">mastercard</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_dpo.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_dpo"/>
+        <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
+    </record>
+
+    <record id="payment_method_visa" model="payment.method">
+        <field name="name">VISA</field>
+        <field name="code">visa</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_dpo.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_dpo"/>
+        <field name="image" type="bytes" file="payment/static/img/visa.png"/>
+    </record>
+
+</odoo>

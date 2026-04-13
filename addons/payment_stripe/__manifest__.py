@@ -12,6 +12,7 @@
         "views/payment_provider_views.xml",
         "views/payment_stripe_templates.xml",
         "views/payment_templates.xml",  # Only load the SDK on pages with a payment form.
+        "data/payment_method_data.xml",
         "data/payment_provider_data.xml",  # Depends on views/payment_stripe_templates.xml
     ],
     "post_init_hook": "post_init_hook",

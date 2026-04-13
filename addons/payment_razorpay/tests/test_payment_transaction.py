@@ -129,7 +129,7 @@ class TestPaymentTransaction(RazorpayCommon):
     def test_apply_updates_updates_reference_if_not_confirmed(self):
         """Test that the provider reference and payment method are not changed when the transaction
         is already confirmed. This can happen in case of multiple payment attempts."""
-        upi = self.env.ref("payment.payment_method_upi")
+        upi = self.provider._get_pm_from_code("upi")
         tx = self._create_transaction(
             "direct", state="done", provider_reference=self.payment_id, payment_method_id=upi.id
         )

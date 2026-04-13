@@ -1,15 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# The codes of the payment methods to activate when Worldline is activated.
-DEFAULT_PAYMENT_METHOD_CODES = {
-    # Primary payment methods.
-    "card",
-    # Brand payment methods.
-    "amex",
-    "discover",
-    "mastercard",
-    "visa",
-}
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {"card"}
 
 # Mapping of payment method codes to Worldline codes.
 # See https://docs.direct.worldline-solutions.com/en/payment-methods-and-features/index.

@@ -71,7 +71,7 @@ class TestPaymentTransaction(RedsysCommon):
         """Test that the payment method is updated according to the brand."""
         tx = self._create_transaction("redirect")
         tx.with_context(payment_safe_write=True)._apply_updates(self.merchant_parameters)
-        self.assertEqual(tx.payment_method_id, self.env.ref("payment.payment_method_visa"))
+        self.assertEqual(tx.payment_method_id, self.provider._get_pm_from_code("visa"))
 
     def test_apply_updates_confirms_transaction(self):
         """Test that the transaction state is set to 'done' when the payment data indicate a

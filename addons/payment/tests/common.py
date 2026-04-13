@@ -60,12 +60,10 @@ class PaymentCommon(BaseCommon):
             "arch": arch,
         })
 
-        cls.pm_unknown = cls.quick_ref("payment.payment_method_unknown")
         cls.dummy_provider = cls.env["payment.provider"].create({
             "name": "Dummy Provider",
             "code": "none",
             "is_published": True,
-            "payment_method_ids": [Command.set([cls.pm_unknown.id])],
             "allow_tokenization": True,
             "redirect_form_view_id": redirect_form.id,
             "available_currency_ids": [
@@ -74,8 +72,15 @@ class PaymentCommon(BaseCommon):
                 )
             ],
         })
-        # Activate pm
-        cls.pm_unknown.write({"active": True, "support_tokenization": True})
+        cls.dummy_payment_method = cls.env["payment.method"].create({
+            "name": "Dummy Payment Method",
+            "code": "dummy",
+            "active": True,
+            "support_tokenization": True,
+            "support_manual_capture": "partial",
+            "support_refund": "partial",
+            "provider_id": cls.dummy_provider.id,
+        })
 
         cls.provider = cls.dummy_provider
         cls.payment_methods = cls.provider.payment_method_ids

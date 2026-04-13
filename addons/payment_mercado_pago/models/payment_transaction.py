@@ -207,13 +207,9 @@ class PaymentTransaction(models.Model):
             payment_method_code = payment_data.get("payment_method_id")
         else:
             payment_method_code = payment_method_type
-        payment_method = self.env["payment.method"]._get_from_code(
+        payment_method = self.provider_id._get_pm_from_code(
             payment_method_code, mapping=const.PAYMENT_METHODS_MAPPING
         )
-        # Fall back to "unknown" if the payment method is not found (and if "unknown" is found), as
-        # the user might have picked a different payment method than on Odoo's payment form.
-        if not payment_method:
-            payment_method = self.env["payment.method"].search([("code", "=", "unknown")], limit=1)
         self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the payment state.

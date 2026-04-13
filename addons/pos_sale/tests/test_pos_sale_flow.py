@@ -1206,9 +1206,14 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'name': 'Test',
             'code': 'none',
         })
+        payment_method = self.env["payment.method"].create({
+            "name": "Payment method",
+            "code": "unknown",
+            "provider_id": provider.id,
+        })
         self.env['payment.transaction'].create({
             'provider_id': provider.id,
-            'payment_method_id': self.env.ref('payment.payment_method_unknown').id,
+            'payment_method_id': payment_method.id,
             'amount': sale_order.amount_total,
             'currency_id': sale_order.currency_id.id,
             'partner_id': sale_order.partner_id.id,

@@ -20,7 +20,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         provider_sudo = self.env["payment.provider"].sudo().browse(provider_id)
         if provider_sudo.code == "demo" and provider_sudo not in self.env[
             "payment.provider"
-        ].sudo()._get_compatible_providers(provider_sudo.company_id.id, partner_id, amount):
+        ].sudo()._find_available_providers(provider_sudo.company_id.id, partner_id, amount):
             raise ValidationError(
                 self.env._("Provider %s is not properly configured.", provider_sudo.name)
             )

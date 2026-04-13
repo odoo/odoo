@@ -36,7 +36,6 @@
                         <button
                             type="object"
                             name="action_view_payment_transactions"
-                            invisible="transaction_count == 0"
                             icon="fa-dollar"
                             context="{'search_default_confirmed_transactions': 1}"
                             class="oe_stat_button"
@@ -132,12 +131,11 @@
                     <notebook invisible="module_id and module_state != 'installed'">
                         <page string="Payment Methods" name="payment_methods">
                             <field
-                                name="payment_method_ids"
-                                link="False"
-                                unlink="False"
-                                options="{'no_create': True, 'no_delete': True}"
+                                name="primary_payment_method_ids"
+                                readonly="0"
+                                context="{'hide_provider': True}"
                             >
-                                <list>
+                                <list create="0" delete="0" limit="100">
                                     <field name="sequence" widget="handle"/>
                                     <field
                                         name="image"

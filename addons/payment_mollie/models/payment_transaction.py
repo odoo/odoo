@@ -172,7 +172,7 @@ class PaymentTransaction(models.Model):
         payment_method_type = payment_data.get("method", "")
         if payment_method_type == "creditcard":
             payment_method_type = payment_data.get("details", {}).get("cardLabel", "").lower()
-        payment_method = self.env["payment.method"]._get_from_code(
+        payment_method = self.provider_id._get_pm_from_code(
             payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
         )
         self.payment_method_id = payment_method or self.payment_method_id

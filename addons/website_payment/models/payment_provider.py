@@ -20,7 +20,7 @@ class PaymentProvider(models.Model):
     )
 
     @api.model
-    def _get_compatible_providers(self, *args, website_id=None, report=None, **kwargs):
+    def _find_available_providers(self, *args, website_id=None, report=None, **kwargs):
         """ Override of `payment` to only return providers matching website-specific criteria.
 
         In addition to the base criteria, the website must either not be set or be the same as the
@@ -28,10 +28,10 @@ class PaymentProvider(models.Model):
 
         :param int website_id: The provided website, as a `website` id.
         :param dict report: The availability report.
-        :return: The compatible providers.
+        :return: The available providers.
         :rtype: payment.provider
         """
-        providers = super()._get_compatible_providers(
+        providers = super()._find_available_providers(
             *args, website_id=website_id, report=report, **kwargs
         )
         if website_id:

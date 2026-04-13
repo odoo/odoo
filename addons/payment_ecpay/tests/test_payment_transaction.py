@@ -28,7 +28,7 @@ class TestPaymentTransaction(EcpayCommon):
         self.env["ir.config_parameter"].sudo().set_str("web.base.url", localhost_url)
 
         tx = self._create_transaction(
-            "redirect", payment_method_id=self.env.ref("payment.payment_method_card").id
+            "redirect", payment_method_id=self.provider._get_pm_from_code("card").id
         )
         # The ignored payment methods are computed from the mapping
         all_payment_methods = {
@@ -101,4 +101,6 @@ class TestPaymentTransaction(EcpayCommon):
         """Test that the payment method is updated from the payment data."""
         tx = self._create_transaction("redirect")
         tx.with_context(payment_safe_write=True)._apply_updates(self.payment_result_data)
-        self.assertEqual(tx.payment_method_id, self.env.ref("payment.payment_method_ipass_money"))
+        self.assertEqual(
+            tx.payment_method_id, self.env.ref("payment_ecpay.payment_method_ipass_money")
+        )

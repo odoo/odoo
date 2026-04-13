@@ -266,8 +266,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         :param sale.order order_sudo: The sales order being paid.
         :param bool is_down_payment: Whether the current payment is a down payment.
         :param float payment_amount: The amount suggested in the payment link.
-        :param dict kwargs: Locally unused data passed to `_get_compatible_providers` and
-                            `_get_available_tokens`.
+        :param dict kwargs: Forwarded to underlying methods
         :return: The payment-specific values.
         :rtype: dict
         """
@@ -286,65 +285,30 @@ class CustomerPortal(payment_portal.PaymentPortal):
         else:
             amount = order_sudo.amount_total
 
-        availability_report = {}
-        # Select all the payment methods and tokens that match the payment context.
-        providers_sudo = (
-            self
-            .env["payment.provider"]
-            .sudo()
-            ._get_compatible_providers(
-                company.id,
-                partner_sudo.id,
-                amount,
-                currency_id=currency.id,
-                sale_order_id=order_sudo.id,
-                report=availability_report,
-                **kwargs,
-            )
-        )  # In sudo mode to read the fields of providers and partner (if logged out).
-        payment_methods_sudo = (
-            self
-            .env["payment.method"]
-            .sudo()
-            ._get_compatible_payment_methods(
-                providers_sudo.ids,
-                partner_sudo.id,
-                currency_id=currency.id,
-                sale_order_id=order_sudo.id,
-                report=availability_report,
-                **kwargs,
-            )
-        )  # In sudo mode to read the fields of providers.
-        tokens_sudo = (
-            self
-            .env["payment.token"]
-            .sudo()
-            ._get_available_tokens(providers_sudo.ids, partner_sudo.id, **kwargs)
-        )  # In sudo mode to read the partner's tokens (if logged out) and provider fields.
-
-        # Make sure that the partner's company matches the invoice's company.
+        # Prepare the portal page values
         company_mismatch = not payment_portal.PaymentPortal._can_partner_pay_in_company(
             partner_sudo, company
         )
-
         portal_page_values = {
             "company_mismatch": company_mismatch,
             "expected_company": company,
             "payment_amount": payment_amount,
         }
-        payment_form_values = {
-            "show_tokenize_input_mapping": PaymentPortal._compute_show_tokenize_input_mapping(
-                providers_sudo, sale_order_id=order_sudo.id
-            )
-        }
+
+        # Prepare the payment form values
+        payment_form_values = self._prepare_payment_form_values(
+            company.id,
+            partner_sudo.id,
+            amount,
+            currency_id=currency.id,
+            sale_order_id=order_sudo.id,
+            **kwargs,
+        )
+
         payment_context = {
             "amount": amount,
             "currency": currency,
             "partner_id": partner_sudo.id,
-            "providers_sudo": providers_sudo,
-            "payment_methods_sudo": payment_methods_sudo,
-            "tokens_sudo": tokens_sudo,
-            "availability_report": availability_report,
             "transaction_route": order_sudo.get_portal_url(suffix="/transaction"),
             "landing_route": order_sudo.get_portal_url(),
             "access_token": order_sudo._portal_ensure_token(),

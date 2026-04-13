@@ -1,17 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# The codes of the payment methods to activate when Redsys is activated.
-DEFAULT_PAYMENT_METHOD_CODES = {
-    # Primary payment methods
-    "card",
-    "bizum",
-    # Brand payment methods
-    "visa",
-    "mastercard",
-    "amex",
-    "diners",
-    "jcb",
-}
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {"bizum", "card"}
 
 # Mapping of payment method codes to Redsys codes.
 PAYMENT_METHODS_MAPPING = {

@@ -36,8 +36,8 @@ class TestPaymentProviderVisibility(PaymentHttpCommon, SaleCommon):
         portal_url = f"{website_portal.domain}{url_so}"
 
         with patch(
-            "odoo.addons.website_payment.models.payment_provider.PaymentProvider._get_compatible_providers",
-            side_effect=lambda *args, **kwargs: PaymentProvider._get_compatible_providers(
+            "odoo.addons.website_payment.models.payment_provider.PaymentProvider._find_available_providers",
+            side_effect=lambda *args, **kwargs: PaymentProvider._find_available_providers(
                 self.env["payment.provider"], *args, **kwargs
             ),
         ) as mock_method:
@@ -49,10 +49,10 @@ class TestPaymentProviderVisibility(PaymentHttpCommon, SaleCommon):
         mock_method.call_args.kwargs.pop("show_non_tokenize_provider", None)
         providers = self.provider + restricted_provider
         with patch(
-            "odoo.addons.payment.models.payment_provider.PaymentProvider._get_compatible_providers",
+            "odoo.addons.payment.models.payment_provider.PaymentProvider._find_available_providers",
             return_value=providers,
         ):
-            providers = self.env["payment.provider"]._get_compatible_providers(
+            providers = self.env["payment.provider"]._find_available_providers(
                 *mock_method.call_args.args, **mock_method.call_args.kwargs
             )
 

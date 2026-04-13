@@ -29,6 +29,11 @@ SUPPORTED_CURRENCIES = [
     "ZMW",
 ]
 
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {"card"}
+
+PAYMENT_METHODS_MAPPING = {"bank_transfer": "banktransfer"}
+
 # Mapping of transaction states to Flutterwave payment statuses.
 PAYMENT_STATUS_MAPPING = {
     "pending": ["pending", "pending auth"],
@@ -36,17 +41,3 @@ PAYMENT_STATUS_MAPPING = {
     "cancel": ["cancelled"],
     "error": ["failed"],
 }
-
-# The codes of the payment methods to activate when Flutterwave is activated.
-DEFAULT_PAYMENT_METHOD_CODES = {
-    # Primary payment methods.
-    "card",
-    "mpesa",
-    # Brand payment methods.
-    "visa",
-    "mastercard",
-    "amex",
-    "discover",
-}
-
-PAYMENT_METHODS_MAPPING = {"bank_transfer": "banktransfer"}

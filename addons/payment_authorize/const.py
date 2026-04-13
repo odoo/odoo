@@ -3,17 +3,8 @@
 PAYMENT_REQUEST_ROUTE = "/payment/authorize/payment"
 WEBHOOK_ROUTE = "/payment/authorize/webhook"
 
-# The codes of the payment methods to activate when Authorize is activated.
-DEFAULT_PAYMENT_METHOD_CODES = {
-    # Primary payment methods.
-    "ach_direct_debit",
-    "card",
-    # Brand payment methods.
-    "visa",
-    "mastercard",
-    "amex",
-    "discover",
-}
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {"ach_direct_debit", "card"}
 
 # Mapping of payment method codes to Authorize codes.
 PAYMENT_METHODS_MAPPING = {
