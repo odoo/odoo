@@ -202,6 +202,9 @@ export class ColorPlugin extends Plugin {
                 if (systemNodesSelector && closestElement(node, systemNodesSelector)) {
                     return false;
                 }
+                if (!(this.checkPredicates("is_formattable_node_predicates", node) ?? true)) {
+                    return false;
+                }
                 if (mode === "backgroundColor" && color) {
                     return !closestElement(node, "table.o_selected_table");
                 }
