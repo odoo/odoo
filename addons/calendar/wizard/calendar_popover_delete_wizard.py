@@ -86,8 +86,13 @@ class CalendarPopoverDeleteWizard(models.TransientModel):
         }
 
     def action_send_mail_and_delete(self):
-        """ Send email notification and delete the event based on the specified deletion type. """
-        self.env.ref('calendar.calendar_template_delete_event').send_mail(
-            self.calendar_event_id.id, email_layout_xmlid='mail.mail_notification_light', force_send=True
-        )
+        """Send the composed email and delete the event based on the specified deletion type."""
+        self.ensure_one()
+        self.env['mail.mail'].sudo().create([{
+            'auto_delete': True,
+            'body_html': self.body,
+            'email_from': self.env.user.email_formatted,
+            'recipient_ids': self.recipient_ids.ids,
+            'subject': self.subject,
+        }])
         return self.action_delete()
