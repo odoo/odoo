@@ -9,7 +9,7 @@ import {
     setInputFiles,
     waitFor,
 } from "@odoo/hoot-dom";
-import { animationFrame, runAllTimers, mockDate } from "@odoo/hoot-mock";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
     clickSave,
     defineModels,
@@ -23,8 +23,6 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { getOrigin } from "@web/core/utils/urls";
-
-const { DateTime } = luxon;
 
 const MY_IMAGE =
     "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -172,8 +170,6 @@ test("ImageField on a many2one", async () => {
     Partner._fields.parent_id = fields.Many2one({ relation: "partner" });
     Partner._records[1].parent_id = 1;
 
-    mockDate("2017-02-06 10:00:00");
-
     await mountView({
         type: "form",
         resModel: "partner",
@@ -187,7 +183,7 @@ test("ImageField on a many2one", async () => {
     expect(".o_field_widget[name=parent_id] img").toHaveCount(1);
     expect('div[name="parent_id"] img').toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/partner/1/document?unique=1486375200000`
+        `${getOrigin()}/web/image/partner/1/document`
     );
     expect(".o_field_widget[name='parent_id'] img").toHaveAttribute("alt", "first record");
 });
@@ -198,8 +194,6 @@ test("url should not use the record last updated date when the field is related"
     Partner._records[1].parent_id = 1;
     Partner._records[0].write_date = "2017-02-04 10:00:00";
     Partner._records[0].document = "3 kb";
-
-    mockDate("2017-02-06 10:00:00");
 
     await mountView({
         type: "form",
@@ -212,18 +206,19 @@ test("url should not use the record last updated date when the field is related"
             </form>`,
     });
 
-    const initialUnique = Number(getUnique(queryFirst('div[name="related"] img')));
-    expect(DateTime.fromMillis(initialUnique).hasSame(DateTime.fromISO("2017-02-06"), "days")).toBe(
-        true
+    expect('div[name="related"] img').toHaveAttribute(
+        "data-src",
+        `${getOrigin()}/web/image/partner/2/related`
     );
 
     await click(".o_field_widget[name='foo'] input");
     await edit("grrr");
     await animationFrame();
 
-    expect(Number(getUnique(queryFirst('div[name="related"] img')))).toBe(initialUnique);
-
-    mockDate("2017-02-09 10:00:00");
+    expect('div[name="related"] img').toHaveAttribute(
+        "data-src",
+        `${getOrigin()}/web/image/partner/2/related`
+    );
 
     await click("input[type=file]", { visible: false });
     await setFiles(
@@ -242,8 +237,10 @@ test("url should not use the record last updated date when the field is related"
 
     await clickSave();
 
-    const unique = Number(getUnique(queryFirst('div[name="related"] img')));
-    expect(DateTime.fromMillis(unique).hasSame(DateTime.fromISO("2017-02-09"), "days")).toBe(true);
+    expect('div[name="related"] img').toHaveAttribute(
+        "data-src",
+        `${getOrigin()}/web/image/partner/2/related`
+    );
 });
 
 test("url should use the record last updated date when the field is related on the same model", async () => {
