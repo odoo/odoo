@@ -65,6 +65,12 @@ patch(PosOrderline.prototype, {
             this.settled_order_id
         );
     },
+    isGlobalDiscountApplicable() {
+        if (this.isGiftCardOrEWalletReward()) {
+            return false;
+        }
+        return super.isGlobalDiscountApplicable?.() ?? true;
+    },
     isGiftCardOrEWalletReward() {
         const coupon = this.coupon_id;
         if (!coupon || !this.is_reward_line) {
