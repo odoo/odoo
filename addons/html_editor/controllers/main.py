@@ -13,6 +13,7 @@ from lxml import etree, html
 
 from odoo import SUPERUSER_ID, _, tools
 from odoo.exceptions import AccessError, MissingError, UserError
+from odoo.fields import Domain
 from odoo.http import Controller, request, route
 from odoo.http.stream import STATIC_CACHE_LONG
 from odoo.tools.image import (
@@ -345,10 +346,22 @@ class HTML_Editor(Controller):
             default snippet images referencing the same image in /static/, so we
             limit to 1.
             """
-            return request.env['ir.attachment'].search([
-                '|', ('url', '=like', src), ('url', '=like', '%s?%%' % src),
-                ('mimetype', 'in', list(SUPPORTED_IMAGE_MIMETYPES.keys())),
-            ], limit=1)
+            return request.env['ir.attachment'].search(
+                Domain.AND([
+                    Domain.OR([
+                        Domain('url', '=like', src),
+                        Domain('url', '=like', '%s?%%' % src),
+                    ]),
+                    Domain.OR([
+                        Domain('mimetype', 'in', list(SUPPORTED_IMAGE_MIMETYPES.keys())),
+                        # Add mimetype with optional parameters:
+                        # e.g: `image/svg+xml; charset=utf-8`
+                        *[
+                            Domain('mimetype', '=like', image_mimetype + ';%')
+                            for image_mimetype in SUPPORTED_IMAGE_MIMETYPES
+                        ],
+                    ]),
+                ]), limit=1)
 
         def _extract_attachment_info(attachment):
             original = (attachment.original_id or attachment)
@@ -644,6 +657,13 @@ class HTML_Editor(Controller):
                 ], limit=1)
                 if not attachment:
                     raise werkzeug.exceptions.NotFound()
+
+            if not re.match(r'^image\/svg\+xml(;.*)?$', attachment.mimetype):
+                return request.make_response(attachment.raw, [
+                    ('Content-type', attachment.mimetype),
+                    ('Cache-control', 'max-age=%s' % STATIC_CACHE_LONG),
+                ])
+
             svg = attachment.raw.decode('utf-8')
         else:
             # Used for compatibility
