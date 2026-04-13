@@ -1193,19 +1193,6 @@ class ProductTemplate(models.Model):
         product_template_attribute_values = self.valid_product_template_attribute_line_ids.product_template_value_ids
         result = {}
 
-        domain_ptav = [('ptav_active', '=', True)]
-
-        if combination_ids:
-            domain_ptav = Domain.OR([
-                domain_ptav,
-                [('id', 'in', combination_ids)]
-            ])
-
-        domain_ptav = Domain.AND([
-            domain_ptav,
-            [('id', 'in', product_template_attribute_values.ids)],
-        ])
-
         for ptav in product_template_attribute_values:
             if ptav.ptav_active or combination_ids and ptav.id in combination_ids:
                 if exclusions := ptav.excluded_value_ids:
