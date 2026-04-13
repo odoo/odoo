@@ -205,32 +205,30 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <div class="d-flex flex-column-reverse flex-md-row align-items-center gap-3">
-                        <group name="name" class="d-flex flex-column w-100">
-                            <label for="name" class="d-md-none"/>
-                            <h1>
-                                <field name="name" placeholder="e.g. Cheese Burger"/>
-                            </h1>
+                    <div class="d-flex flex-column flex-md-row-reverse align-items-center gap-3">
+                        <field name="image_1920" widget="image" class="oe_avatar align-self-md-start" nolabel="1" options="{ 'size': [90, 90], 'zoom': True, 'convert_to_webp': True, 'preview_image': 'image_128'}"/>
+                        <group name="name" class="w-100">
+                            <field name="name" placeholder="e.g. Cheese Burger" string="Product Name"/>
+                            <field name="barcode" class="d-flex" placeholder="e.g. 1234567890"/>
+                            <label for="is_storable" class="oe_inline" invisible="type != 'consu'"/>
+                            <div class="o_row" invisible="type != 'consu'">
+                                <field name="is_storable"/>
+                                <field name="tracking" class="pe-1" invisible="not is_storable" groups="stock.group_production_lot"/>
+                            </div>
+                            <field name="list_price" widget="monetary"
+                                    options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                            <label for="taxes_id"/>
+                            <div name="tax_info" class="o_row">
+                                <field name="taxes_id" widget="many2many_tags"
+                                    readonly="context.get('taxes_readonly', False)"
+                                    context="{'search_default_sale': 1}"
+                                    create="False"/>
+                                <field name="tax_string"/>
+                            </div>
+                            <field name="pos_categ_ids" string="POS Category" widget="many2many_tags"/>
+                            <field name="color" widget="color_picker" string="Color" />
                         </group>
-                        <field name="image_1920" widget="image" options="{'zoom': True, 'convert_to_webp': True,'preview_image': 'image_128'}"/>
                     </div>
-                    <group>
-                        <field name="barcode" placeholder="e.g. 1234567890"/>
-                        <field name="is_storable" invisible="type != 'consu'" widget="boolean_toggle"/>
-                        <field name="tracking" invisible="type != 'consu' or not is_storable" groups="stock.group_production_lot"/>
-                        <field name="list_price" widget="monetary"
-                                options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                        <label for="taxes_id"/>
-                        <div name="tax_info" class="o_row">
-                            <field name="taxes_id" widget="many2many_tags"
-                                readonly="context.get('taxes_readonly', False)"
-                                context="{'search_default_sale': 1}"
-                                create="False"/>
-                            <field name="tax_string"/>
-                        </div>
-                        <field name="pos_categ_ids" string="POS Category" widget="many2many_tags"/>
-                        <field name="color" widget="color_picker" string="Color" />
-                    </group>
                 </sheet>
             </form>
         </field>
