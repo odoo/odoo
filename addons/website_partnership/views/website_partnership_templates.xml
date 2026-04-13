@@ -3,8 +3,8 @@
 
 <!-- Page -->
 <template id="index_layout" name="Partners Page Layout">
+    <t t-set="additional_title">Partners</t>
     <t t-call="website.layout">
-        <t t-set="additional_title">Partners</t>
         <div id="wrap">
             <div class="oe_structure oe_empty" id="oe_structure_website_partnership_layout_1"
                 data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS PARTNERS"/>
@@ -105,9 +105,7 @@
             </div>
         </t>
         <div class="navbar">
-            <t t-call="website.pager">
-                <t t-set="classname" t-valuef="mx-auto"/>
-            </t>
+            <t t-call="website.pager" classname.f="mx-auto"/>
         </div>
     </div>
 </template>
