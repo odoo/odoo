@@ -55,3 +55,13 @@ class TestPortalInvoice(AccountTestInvoicingHttpCommon):
         res = self.url_open(url)
         self.assertEqual(res.status_code, 200)
         self.assertIn("Proforma", res.content.decode('utf-8'))
+
+    def test_portal_invoice_next_payment_values_access(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.portal_partner.id,
+            'invoice_line_ids': [Command.create({'name': 'line', 'price_unit': 100})]
+        })
+        invoice.action_post()
+        invoice.invalidate_recordset(['reconciled_payment_ids'])
+        invoice.with_user(self.user_portal)._get_invoice_next_payment_values()
