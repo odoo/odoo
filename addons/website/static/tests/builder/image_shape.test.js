@@ -724,6 +724,7 @@ test("Shape should not be applied on replaced CORS-protected image", async () =>
         },
     ]);
     await contains(":iframe img").click();
+    await waitSidebarUpdated();
     await contains("[data-action-id=replaceMedia]").click();
     await contains("img.o_we_attachment_highlight").click();
     await waitSidebarUpdated();
