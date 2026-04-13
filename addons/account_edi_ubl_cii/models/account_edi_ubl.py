@@ -140,7 +140,7 @@ class AccountEdiUBL(models.AbstractModel):
                     percent = tax.amount if not tax.has_negative_factor else 0.0
                 return {
                     'tax_category_code': tax_category_code,
-                    **self._get_tax_exemption_reason(customer.commercial_partner_id, supplier, tax),
+                    **self.with_context(tax_exemption_reason_invoice=vals.get('invoice'))._get_tax_exemption_reason(customer.commercial_partner_id, supplier, tax),
                     'percent': percent,
                     'scheme_id': scheme_id,
                     'is_withholding': tax.amount < 0.0,
