@@ -987,17 +987,17 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             company = invoice_line.company_id
 
             # Product.
-            product_id = previously_retrieved_product.get((default_code, name, barcode, company))
-            if not product_id:
-                product_id = self.env['product.product']._retrieve_product(
-                    default_code=default_code,
-                    name=name,
-                    barcode=barcode,
-                    company=company
-                )
-                previously_retrieved_product[default_code, name, barcode, company] = product_id
+            product_params = {
+                'default_code': default_code,
+                'name': name,
+                'barcode': barcode,
+                'company': company,
+            }
+            product_key = tuple(product_params.values())
+            if product_key not in previously_retrieved_product:
+                previously_retrieved_product[product_key] = self.env['product.product']._retrieve_product(**product_params)
 
-            invoice_line.product_id = product_id
+            invoice_line.product_id = previously_retrieved_product[product_key]
 
             # Description
             description_node = tree.find('./{*}Item/{*}Description')
