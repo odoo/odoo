@@ -85,3 +85,6 @@ class Data_RecycleRecord(models.Model):
 
     def action_discard(self):
         self.write({'active': False})
+
+    def action_undiscard(self):
+        self.write({'active': True})

@@ -21,7 +21,6 @@
             'data_recycle/static/src/cog_menu/data_refresh_cog_menu.js',
             'data_recycle/static/src/cog_menu/data_refresh_cog_menu.xml',
             'data_recycle/static/src/views/*.js',
-            'data_recycle/static/src/views/*.xml',
         ],
     },
     'author': 'Odoo S.A.',
