@@ -396,4 +396,20 @@ describe("button", () => {
             '<p>before\ufeff<a class="btn" href="#/">\ufeffinside[]\ufeff</a>\ufeffafter</p>'
         );
     });
+
+    test("should delete previous character without errors when backspacing with the cursor in between a zwnbsp and the left edge of a button", async () => {
+        const { editor, el } = await setupEditor(
+            '<p>before[]<a class="btn" href="#/">in</a>after</p>'
+        );
+        const p = el.querySelector("p");
+        setSelection({ anchorNode: p, anchorOffset: 2 });
+        await tick();
+        expect(getContent(el)).toBe(
+            '<p>before\ufeff[]<a class="btn" href="#/">\ufeffin\ufeff</a>\ufeffafter</p>'
+        );
+        deleteBackward(editor);
+        expect(getContent(el)).toBe(
+            '<p>befor[]\ufeff<a class="btn" href="#/">\ufeffin\ufeff</a>\ufeffafter</p>'
+        );
+    });
 });
