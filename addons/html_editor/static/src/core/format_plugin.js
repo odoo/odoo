@@ -380,7 +380,11 @@ export class FormatPlugin extends Plugin {
                         isContentEditable(n)
                 )
         );
-        const unformattedTextNodes = selectedTextNodes.filter((n) => !formattedNodes.has(n));
+        const unformattedTextNodes = selectedTextNodes.filter(
+            (n) =>
+                !formattedNodes.has(n) &&
+                (this.checkPredicates("is_formattable_node_predicates", n) ?? true)
+        );
         const formatSpec = formatsSpecs[formatName];
         for (const node of unformattedTextNodes) {
             const inlineAncestors = [];

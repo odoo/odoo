@@ -211,15 +211,12 @@ export class ColorPlugin extends Plugin {
 
         const systemNodesSelector = this.getResource("system_node_selectors").join(", ");
         const selectedNodes = targetedNodes
-            .filter((node) => {
-                if (
-                    coloredNodes.has(node) ||
-                    (systemNodesSelector && closestElement(node, systemNodesSelector))
-                ) {
-                    return false;
-                }
-                return true;
-            })
+            .filter(
+                (node) =>
+                    !coloredNodes.has(node) &&
+                    !(systemNodesSelector && closestElement(node, systemNodesSelector)) &&
+                    (this.checkPredicates("is_formattable_node_predicates", node) ?? true)
+            )
             .map((node) => findTopMostDecoration(node));
 
         const alreadyWithinFont = new Set();
