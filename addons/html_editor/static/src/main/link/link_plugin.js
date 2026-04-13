@@ -1305,7 +1305,10 @@ export class LinkPlugin extends Plugin {
         if (startContainer.nodeType !== Node.TEXT_NODE || startContainer.textContent != "\uFEFF") {
             return;
         }
-        if (!startContainer.previousSibling?.matches("a.btn")) {
+        const previousSibling = startContainer.previousSibling;
+        // We must ensure that previous sibling is an element node before
+        // calling `matches` (text nodes do not implement this method).
+        if (previousSibling?.nodeType !== Node.ELEMENT_NODE || !previousSibling.matches("a.btn")) {
             return;
         }
         // Move before inner FEFF of the button.
