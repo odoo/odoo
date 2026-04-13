@@ -16,22 +16,17 @@ class TestInboxPerformance(HttpCase, MailCommon):
         # Queries (in order):
         #   - search website (get_current_website by domain)
         #   - search website (get_current_website default)
-        #   - search website_rewrite (_get_rewrites) sometimes occurs depending on the routing cache
-        #   - _get ir_config_parameter (web.max_file_upload_size) sometimes occurs depending on the routing cache
-        #   - fetch ir_attachment (res.lang flag_image) sometimes occurs depending on the routing cache
+        #   - sometimes could occur depending on the routing cache (website_rewrite, ir_config_parameter, res.lang flag_image)
         #   4 _message_fetch:
-        #       2 _search_needaction:
-        #           - fetch res_users (current user)
-        #           - search ir_rule (_get_rules for mail.notification)
-        #       - search ir_rule (_get_rules)
-        #       - search mail_message
-        #   - fetch bus_bus (_bus_last_id)
-        #   30 store add message:
-        #       - search mail_message
-        #       - fetch mail_message
+        #       - fetch res_users (search_needaction)
+        #       - search mail_message (_filter_accessible_from_query)
+        #       - search mail_notification
+        #       - fetch mail_notification
+        #   - search bus_bus (_bus_last_id)
+        #   28 store add message:
+        #       - fetch mail_message (_records_by_model_name/prefetch)
         #       - search mail_message_schedule
         #       - search mail_followers
-        #       - search ir_rule (_get_rules for rating.rating)
         #       - read group rating_rating (_rating_get_stats_per_record for slide.channel)
         #       - read group rating_rating (_rating_get_stats_per_record for product.template)
         #       2 thread:
@@ -44,7 +39,6 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #       - search mail_poll (start_message_id)
         #       - search mail_poll (end_message_id)
         #       - search mail_message_link_preview
-        #       - search mail_notification
         #       - fetch mail_notification
         #       - search mail_tracking_value
         #       2 _compute_rating_id:
@@ -56,12 +50,12 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #           - fetch res_users
         #           - fetch res_partner
         #       - fetch mail_message_subtype
-        #       6 rating stats computation:
-        #           - read group rating_rating (_rating_get_stats_per_record for slide.channel)
-        #           - read group rating_rating (_rating_get_stats_per_record for product.template)
-        #           - compute message_needaction for slide.channel
-        #           - compute message_needaction for product.template
+        #       - read group rating_rating (_compute_rating_stats for slide.channel)
+        #       - read group rating_rating (_compute_rating_stats for product.template)
+        #       - compute message_needaction for slide.channel
+        #       - compute message_needaction for product.template
         #       - select current db snapshot
+
         first_model_records = self.env["product.template"].create(
             [{"name": "Product A1"}, {"name": "Product A2"}]
         )
@@ -76,5 +70,5 @@ class TestInboxPerformance(HttpCase, MailCommon):
                 rating_value="4",
             )
         self.authenticate(self.user_employee.login, self.user_employee.password)
-        with self.assertQueryCount(41):
+        with self.assertQueryCount(36):
             self.make_jsonrpc_request("/mail/data", {"fetch_params": ["/mail/inbox/messages"]})
