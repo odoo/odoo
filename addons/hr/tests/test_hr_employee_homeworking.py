@@ -29,6 +29,12 @@ class TestHrEmployeeHomeworking(common.TransactionCase):
             },
         ])
 
+        cls.test_user = cls.env['res.users'].create({
+            'name': 'Test User IM Status',
+            'login': 'test_im_status',
+            'email': 'test_im@example.com',
+        })
+
         cls.employee_1 = cls.env['hr.employee'].create([{
             'name': 'Employee Test',
             'monday_location_id': cls.work_home.id,
@@ -37,6 +43,7 @@ class TestHrEmployeeHomeworking(common.TransactionCase):
             'thursday_location_id': cls.work_office_2.id,
             'friday_location_id': cls.work_office_2.id,
             'work_location_id': cls.work_office_2.id,
+            'user_id': cls.test_user.id,
         }])
 
     @freeze_time("2025-07-13")
@@ -74,3 +81,11 @@ class TestHrEmployeeHomeworking(common.TransactionCase):
         self.employee_1.wednesday_location_id = self.work_office_1.id
         self.assertEqual(self.employee_1.work_location_name, "Office 1")
         self.assertEqual(self.employee_1.work_location_type, "office")
+
+    def test_im_status_format_with_location(self):
+        """Test that im_status uses format 'location_status' without 'presence_' prefix"""
+        with freeze_time('2025-01-06'):  # Monday
+            self.assertEqual(self.test_user.im_status, 'home_offline')
+        with freeze_time('2025-01-07'):  # Tuesday
+            self.test_user.invalidate_recordset(['im_status'])
+            self.assertEqual(self.test_user.im_status, 'office_offline')
