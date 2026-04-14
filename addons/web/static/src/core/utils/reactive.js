@@ -1,6 +1,7 @@
 import { reactive } from "@web/owl2/utils";
 
 /**
+ * @deprecated
  * This class should be used as a base when creating a class that is intended to
  * be used within the reactivity system, it avoids a specific class of bug where
  * callbacks that capture `this` declared in the constructor would escape the
