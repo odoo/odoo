@@ -4,13 +4,14 @@ import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { onWillStart } from "@odoo/owl";
-import { CalendarQuickCreate } from "@calendar/views/calendar_form/calendar_quick_create";
+import { CalendarEventQuickCreate } from "@calendar/views/calendar_form/calendar_event_quick_create";
+
 export class AttendeeCalendarController extends CalendarController {
     static template = "calendar.AttendeeCalendarController";
     static components = {
         ...AttendeeCalendarController.components,
         CalendarSidePanel: AttendeeCalendarSidePanel,
-        QuickCreateFormView: CalendarQuickCreate,
+        QuickCreateFormView: CalendarEventQuickCreate,
     };
 
     setup() {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="calendar.CalendarQuickCreateButtons" t-inherit="web.FormViewDialog.ToOne.buttons">
+    <t t-name="calendar.CalendarEventQuickCreateButtons" t-inherit="web.FormViewDialog.ToOne.buttons">
         <xpath expr="//button[hasclass('o_form_button_save')]" position="after">
             <button t-if="!this.props.resId" class="btn btn-secondary" t-on-click="this.goToFullEvent">More Options</button>
         </xpath>

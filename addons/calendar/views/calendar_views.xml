@@ -102,7 +102,7 @@
         <field name="model">calendar.event</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <form string="Meetings" class="o_calendar_event_form_view" js_class="calendar_form">
+            <form string="Meetings" class="o_calendar_event_form_view" js_class="calendar_event_form">
                 <header>
                     <button name="action_open_composer" class="btn btn-primary" type="object" string="Send email" invisible="not user_can_edit"/>
                 </header>
@@ -310,7 +310,7 @@
         <field name="model">calendar.event</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <form string="Meetings" class="o_calendar_event_form_quick_create" js_class="calendar_quick_create_form_view">
+            <form string="Meetings" class="o_calendar_event_form_quick_create" js_class="calendar_event_quick_create_form_view">
                 <div class="o_unavailability_alert alert alert-warning border-0 d-flex flex-wrap m-0 mb-3" role="alert"
                     invisible="not unavailable_partner_ids or allday">
                     <span class="me-1">Not available at the selected time:</span>
@@ -365,7 +365,7 @@
                     <field name="location" nolabel="1" class="w-100"
                         placeholder="Room or Location"
                     />
-                    <!--fields set via the fake front-end only actions must be force saved (see calendar_form)-->
+                    <!--fields set via the fake front-end only actions must be force saved (see calendar_event_form)-->
                     <field name="recurrence_update" invisible="1"/>
                     <field name="access_token" force_save="1" invisible="1"/>
                     <field name="videocall_location" force_save="1" invisible="1"/>
