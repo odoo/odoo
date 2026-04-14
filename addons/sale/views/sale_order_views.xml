@@ -546,7 +546,7 @@
                         <label for="commitment_date" invisible="state == 'draft'"/>
                         <label for="commitment_date" string="Delivery Date" invisible="state != 'draft'"/>
                         <div name="commitment_date_div" class="o_row align-items-center">
-                            <field name="commitment_date" readonly="state == 'cancel' or locked"/>
+                            <field name="commitment_date" options="{'placeholder_field': 'expected_date'}" readonly="state == 'cancel' or locked"/>
                             <field
                                 name="delivery_status"
                                 widget="badge"
@@ -556,6 +556,7 @@
                                 invisible="state != 'sale'"
                             />
                         </div>
+                        <field name="expected_date" invisible="1"/>  <!-- Needed for the placeholder widget -->
                    </group>
                 </group>
                 <notebook>

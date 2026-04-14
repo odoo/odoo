@@ -51,6 +51,7 @@ class ProductProduct(models.Model):
         domain = Domain.AND([
             Domain("order_id.state", "=", "sale"),
             Domain("product_id", "in", self.ids),
+            Domain("company_id", "in", self.env.companies.ids),
         ])
         if self.env.context.get("to_date"):
             domain = Domain.AND([

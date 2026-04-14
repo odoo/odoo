@@ -926,7 +926,7 @@ class SaleOrder(models.Model):
         for order in self:
             if order.state != "sale" or not order.order_line:
                 order.delivery_status = False
-            elif all(line.qty_delivered >= line.product_uom_qty for line in order.order_line):
+            elif all(line.qty_delivered >= line.product_uom_qty if line.product_uom_qty > 0 else line.qty_delivered <= line.product_uom_qty for line in order.order_line):
                 order.delivery_status = "full"
             elif any(line.qty_delivered for line in order.order_line):
                 order.delivery_status = "partial"
@@ -1030,7 +1030,7 @@ class SaleOrder(models.Model):
         for order in self:
             order.show_deliver_button = (
                 order.state == "sale"
-                and any(line.qty_delivered < line.product_uom_qty for line in order.order_line)
+                and any(line.qty_delivered < line.product_uom_qty if line.product_uom_qty > 0 else line.qty_delivered > line.product_uom_qty for line in order.order_line)
                 and all(line.qty_delivered_method == "manual" for line in order.order_line)
             )
 

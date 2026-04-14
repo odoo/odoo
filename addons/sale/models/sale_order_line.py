@@ -713,7 +713,7 @@ class SaleOrderLine(models.Model):
             line.virtual_available_at_date = line.product_id.with_context(
                 to_date=schedule_date
             ).virtual_available
-            line.qty_available_today = line.product_id.qty_available
+            line.qty_available_today = line.product_id.qty_available - line.product_id.outgoing_qty
 
     def _reset_price_unit(self):
         self.ensure_one()
