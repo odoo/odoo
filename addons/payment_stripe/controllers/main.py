@@ -115,6 +115,9 @@ class StripeController(http.Controller):
                     stripe_object['payment_method'] = payment_method
                     self._include_setup_intent_in_notification_data(stripe_object, data)
                 elif event['type'] == 'charge.refunded':  # Refund operation (refund creation).
+                    if not stripe_object['captured']:  # The charge was authorized and then voided
+                        return request.make_json_response('')  # Don't process void-related events
+
                     refunds = stripe_object['refunds']['data']
 
                     # The refunds linked to this charge are paginated, fetch the remaining refunds.
