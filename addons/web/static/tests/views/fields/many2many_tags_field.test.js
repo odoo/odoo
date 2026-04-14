@@ -249,6 +249,42 @@ test("[Offline] Many2ManyTagsField", async () => {
     await expect.waitForSteps(["web_save"]); // We sync when the connection returns
 });
 
+test.tags("desktop");
+test("[Offline] Many2ManyTagsField autopopulated", async () => {
+    const setOffline = mockOffline();
+
+    Partner._fields.partner_ids = fields.Many2many({
+        string: "Partner",
+        relation: "partner",
+    });
+    Partner._records[0].partner_ids = [1, 4];
+    Partner._records[1].partner_ids = [1];
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+          <form>
+              <field name="partner_ids" widget="many2many_tags"/>
+          </form>`,
+        resIds: [1, 2, 4],
+        resId: 1,
+    });
+
+    expect(".o_field_many2many_tags .badge").toHaveCount(2);
+    expect(queryAllTexts(".o_field_many2many_tags .badge")).toEqual(["first record", "aaa"]);
+    await contains(`.o_pager_next`).click();
+
+    expect(".o_field_many2many_tags .badge").toHaveCount(1);
+    expect(queryAllTexts(".o_field_many2many_tags .badge")).toEqual(["first record"]);
+    await contains(`.o_pager_next`).click();
+
+    await setOffline(true);
+
+    await contains(".o_field_many2many_selection input").click();
+    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual(["first record", "aaa"]);
+});
+
 test.tags("mobile");
 test("Many2ManyTagsField with and without color on mobile", async () => {
     expect.assertions(14);

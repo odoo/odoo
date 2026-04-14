@@ -266,6 +266,48 @@ export class RelationalModel extends Model {
     }
 
     /**
+     * Cache the many2X records in the root
+     *
+     * @param {RelationalModelConfig} config
+     * @param {Object} data
+     */
+    _cacheMany2X(config, data) {
+        let records = [];
+        if (config.isMonoRecord) {
+            if (!config.resId) {
+                records = [data.value];
+            } else {
+                records = data;
+            }
+        } else if (config.groupBy.length) {
+            records = data.groups.flatMap((group) => group.__records).filter(Boolean);
+        } else {
+            records = data.records;
+        }
+        for (const record of records) {
+            for (const [fieldName, value] of Object.entries(record)) {
+                const field = config.fields[fieldName];
+                const activeField = config.activeFields[fieldName];
+                if (
+                    activeField &&
+                    activeField.invisible !== "True" &&
+                    activeField.invisible !== "1"
+                ) {
+                    let values = [];
+                    if (field.type === "many2one" && value && value.id && value.display_name) {
+                        values = [value];
+                    } else if (field.type === "many2many" && value && Array.isArray(value)) {
+                        values = value.filter((v) => v.id && v.display_name);
+                    }
+                    if (values.length) {
+                        this.offline.cacheMany2XSearch(field.relation, values);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Creates a root datapoint without data. Supported root types are DynamicRecordList and
      * DynamicGroupList.
      *
@@ -313,6 +355,7 @@ export class RelationalModel extends Model {
             noCache,
             callback: async (result, hasChanged) => {
                 this._setAvailableOffline(config, result);
+                this._cacheMany2X(config, result);
                 if (!hasChanged) {
                     return;
                 }

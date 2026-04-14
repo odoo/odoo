@@ -415,6 +415,29 @@ test("[Offline] many2one", async () => {
     await expect.waitForSteps(["web_save"]); // We sync when the connection returns
 });
 
+test("[Offline] many2one autopopulated", async () => {
+    const setOffline = mockOffline();
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form> <field name="trululu"/> </form>`,
+        resIds: [1, 2, 4],
+        resId: 1,
+    });
+
+    expect(`.o_field_many2one input`).toHaveValue("aaa");
+    await contains(`.o_pager_next`).click();
+
+    expect(`.o_field_many2one input`).toHaveValue("first record");
+    await contains(`.o_pager_next`).click();
+
+    await setOffline(true);
+
+    await contains(".o_field_many2one input").click();
+    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual(["first record", "aaa"]);
+});
+
 test("editing a many2one (with form view opened with external button)", async () => {
     expect.assertions(4);
     Partner._views = {
