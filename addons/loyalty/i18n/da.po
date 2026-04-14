@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2026-04-01 07:57+0000\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"PO-Revision-Date: 2026-04-11 14:57+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "loyalty/da/>\n"
@@ -59,11 +59,6 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid " (Max %s)"
 msgstr " (Maks. %s)"
-
-#. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
-msgid "$100"
-msgstr "100 €"
 
 #. module: loyalty
 #. odoo-python
@@ -122,25 +117,10 @@ msgid "10% on your order"
 msgstr "10 % på din ordre"
 
 #. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
-msgid "1000"
-msgstr "1000"
-
-#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "2+1 Free"
 msgstr "2+1 Gratis"
-
-#. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
-msgid "2023-08-20"
-msgstr "20-08-2023"
-
-#. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
-msgid "2023-12-31"
-msgstr "31-12-2023"
 
 #. module: loyalty
 #: model:mail.template,body_html:loyalty.mail_template_gift_card
@@ -233,19 +213,19 @@ msgstr ""
 "                    <h3 style=\"margin:0px; line-height:17px; font-"
 "family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-"
 "style:normal; font-weight:normal; color:#A9A9A9; text-align:center\"> Kortet "
-"udløber <t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t>"
-"</h3>\n"
+"udløber <t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</"
+"t></h3>\n"
 "               </div>\n"
-"                <div style=\"padding:20px; margin:0px; text-align:center;\"> "
-"\n"
+"                <div style=\"padding:20px; margin:0px; text-align:center;"
+"\"> \n"
 "                   <span style=\"background-color:#999999; display:inline-"
 "block; width:auto; border-radius:5px;\">\n"
 "                        <a t-attf-href=\"{{ object.get_base_url() }}/shop\" "
 "target=\"_blank\" t-attf-style=\"text-decoration:none; font-family:arial, "
-"'helvetica neue', helvetica, sans-serif; font-size:22px; color: {"
-"{object.company_id.email_primary_color or '#FFFFFF'}}; border-style:solid; "
-"border-width:20px 30px; display:inline-block; background-color: {"
-"{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:5px; "
+"'helvetica neue', helvetica, sans-serif; font-size:22px; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-style:solid; "
+"border-width:20px 30px; display:inline-block; background-color: "
+"{{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:5px; "
 "font-weight:bold; font-style:normal; line-height:26px; width:auto; text-"
 "align:center\"> Brug det med det samme!</a>\n"
 "                    </span>\n"
@@ -462,8 +442,8 @@ msgstr ""
 "<tr>\n"
 "    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
 "       <t t-if=\"object._mail_get_customer().name\"> \n"
-"            Tillykke <t t-out=\"object._mail_get_customer().name or ''\">"
-"Brandon Freeman</t>,<br/>\n"
+"            Tillykke <t t-out=\"object._mail_get_customer().name or "
+"''\">Brandon Freeman</t>,<br/>\n"
 "        </t>\n"
 "\n"
 "        Her er din belønning fra <t t-"
@@ -471,8 +451,8 @@ msgstr ""
 "\n"
 "        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"reward\">\n"
 "           <t t-if=\"reward.required_points &lt;= object.points\">\n"
-"                <span t-attf-style=\"font-size: 50px; color: {"
-"{object.program_id.company_id.email_secondary_color or '#875A7B'}}; font-"
+"                <span t-attf-style=\"font-size: 50px; color: "
+"{{object.program_id.company_id.email_secondary_color or '#875A7B'}}; font-"
 "weight: bold;\" t-esc=\"reward.description\"> Belønningsbeskrivelse</span>\n"
 "                <br/>\n"
 "           </t>\n"
@@ -483,8 +463,8 @@ msgstr ""
 "    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
 "        Brug denne kampagnekode\n"
 "       <t t-if=\"object.expiration_date\"> \n"
-"            inden den <t t-out=\"format_date(object.expiration_date) or ''\">"
-"16-06-2021</t>\n"
+"            inden den <t t-out=\"format_date(object.expiration_date) or "
+"''\">16-06-2021</t>\n"
 "        </t>\n"
 "       <p style=\"margin-top: 16px;\">\n"
 "            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; "
@@ -508,8 +488,8 @@ msgstr ""
 "       </t>\n"
 "        <br/> \n"
 "        Tak.\n"
-"       <t t-if=\"object._get_signature()\" data-o-mail-quote-container=\"1\">"
-"\n"
+"       <t t-if=\"object._get_signature()\" data-o-mail-quote-"
+"container=\"1\">\n"
 "            <br/> \n"
 "           <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/><t t-"
 "out=\"object._get_signature() or ''\" data-o-mail-quote=\"1\">Mitchell "
@@ -2446,7 +2426,24 @@ msgid "used)"
 msgstr "brugt(e))"
 
 #. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
+msgid "x"
+msgstr ""
+
+#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "your order"
 msgstr "din ordre"
+
+#~ msgid "$100"
+#~ msgstr "100 €"
+
+#~ msgid "1000"
+#~ msgstr "1000"
+
+#~ msgid "2023-08-20"
+#~ msgstr "20-08-2023"
+
+#~ msgid "2023-12-31"
+#~ msgstr "31-12-2023"

@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2026-04-01 07:57+0000\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"PO-Revision-Date: 2026-04-14 06:06+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "hr_holidays/da/>\n"
@@ -246,12 +246,24 @@ msgstr ": opsummering i denne periode"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
+msgid "(s)"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid ""
 "(s)\n"
 "                                    and a balance cap is set to"
 msgstr ""
 "(er)\n"
 "                                    og den maksimale grænse er sat til"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
+msgid "(s)."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -270,11 +282,6 @@ msgstr ", tilbage den"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "- '%(version)s' from %(start_date)s to %(end_date)s"
 msgstr "- '%(version)s' fra %(start_date)s til %(end_date)s"
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
-msgid "00:00"
-msgstr "00:00"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -315,8 +322,8 @@ msgid ""
 "'hour'\">Hours</span>"
 msgstr ""
 "<span class=\"ml8\" invisible=\"request_unit == 'hour'\">Dage</span>\n"
-"                            <span class=\"ml8\" invisible="
-"\"request_unit != 'hour'\">Timer</span>"
+"                            <span class=\"ml8\" invisible=\"request_unit != "
+"'hour'\">Timer</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -326,8 +333,8 @@ msgid ""
 "invisible=\"type_request_unit != 'hour'\">Hours</span>"
 msgstr ""
 "<span class=\"ml8\" invisible=\"type_request_unit == 'hour'\">Dage</span>\n"
-"                                <span class=\"ml8\" invisible="
-"\"type_request_unit != 'hour'\">Timer</span>"
+"                                <span class=\"ml8\" "
+"invisible=\"type_request_unit != 'hour'\">Timer</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -342,8 +349,8 @@ msgid ""
 "invisible=\"request_unit != 'hour'\">hours</span>"
 msgstr ""
 "<span class=\"mx-2\" invisible=\"request_unit == 'hour'\">dage</span>\n"
-"                                    <span class=\"mx-2\" invisible="
-"\"request_unit != 'hour'\">timer</span>"
+"                                    <span class=\"mx-2\" "
+"invisible=\"request_unit != 'hour'\">timer</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1545,8 +1552,8 @@ msgid ""
 "Count of allocations for this time off type (approved or waiting for "
 "approbation) with a validity period starting this year."
 msgstr ""
-"Antal tildelinger af denne fraværstype (godkendte eller afventer godkendelse)"
-", hvor gyldighedsperioden begynder i det indeværende år."
+"Antal tildelinger af denne fraværstype (godkendte eller afventer "
+"godkendelse), hvor gyldighedsperioden begynder i det indeværende år."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2507,7 +2514,8 @@ msgstr ""
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
 msgid ""
 "If you want to change the number of days you should use the 'period' mode"
-msgstr "Hvis du vil ændre antallet af dage, bør du anvende 'periode'-tilstanden"
+msgstr ""
+"Hvis du vil ændre antallet af dage, bør du anvende 'periode'-tilstanden"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__include_public_holidays_in_duration
@@ -3121,8 +3129,8 @@ msgstr "Ingen milepæle i planen endnu. Lad os oprette en ny"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "No, always consider the entire accrual period (whole calendar days)."
 msgstr ""
-"Nej, man skal altid tage hele periodiseringen i betragtning "
-"(dvs. hele kalenderdage)."
+"Nej, man skal altid tage hele periodiseringen i betragtning (dvs. hele "
+"kalenderdage)."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3341,7 +3349,8 @@ msgstr "Kun en leder kan redigere annulleret fravær."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a time off Administrator can approve/refuse their own requests."
-msgstr "Kun en fraværsadministrator kan godkende/afvise deres egne anmodninger."
+msgstr ""
+"Kun en fraværsadministrator kan godkende/afvise deres egne anmodninger."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__is_based_on_worked_time
@@ -3354,7 +3363,8 @@ msgstr "Udelukker kun anmodninger, hvor fraværstypen er angivet som ubetalt."
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "Oops! %(state)s Time-Off requests can only be deleted by Administrators."
-msgstr "Hovsa! %(state)s fraværsanmodninger kan kun slettes af administratorer."
+msgstr ""
+"Hovsa! %(state)s fraværsanmodninger kan kun slettes af administratorer."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4071,7 +4081,8 @@ msgstr ""
 msgid ""
 "The number of carried over days that will expire on "
 "carried_over_days_expiration_date"
-msgstr "Antal overførte dage, der udløber den carried_over_days_expiration_date"
+msgstr ""
+"Antal overførte dage, der udløber den carried_over_days_expiration_date"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -4081,7 +4092,8 @@ msgstr "Planen sættes på pause, når grænses nås"
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check3
 msgid "The request start date must be before or equal to the request end date."
-msgstr "Anmodningens startdato skal være før eller på samme dag som slutdatoen."
+msgstr ""
+"Anmodningens startdato skal være før eller på samme dag som slutdatoen."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_mandatory_day_date_from_after_day_to
@@ -4170,7 +4182,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__approver_id
 msgid ""
 "This area is automatically filled by the user who validates the allocation"
-msgstr "Dette område udfyldes automatisk af brugeren, som validerer tildelingen"
+msgstr ""
+"Dette område udfyldes automatisk af brugeren, som validerer tildelingen"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
@@ -5526,6 +5539,9 @@ msgstr "gyldig til"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "validér"
+
+#~ msgid "00:00"
+#~ msgstr "00:00"
 
 #~ msgid ""
 #~ "You cannot refuse this allocation request since the employee has already "

@@ -1,23 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_tax_python
+# * account_tax_python
 #
 # Translators:
 # Wil Odoo, 2025
 #
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"PO-Revision-Date: 2026-04-11 14:52+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s18-4/"
+"account_tax_python/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
@@ -34,15 +37,15 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"    - Grupp av skatter: Skatten är en uppsättning underskatter.\n"
-"    - Fast: Skattebeloppet förblir detsamma oavsett pris.\n"
-"    - Procentuell: Skattebeloppet är en % av priset:\n"
-"        t.ex. 100 * (1 + 10%) = 110 (ingår inte i priset)\n"
-"        t.ex. 110 / (1 + 10%) = 100 (priset ingår)\n"
-"    - Procentuell skatt inkluderad: Skattebeloppet är en division av "
-"priset:\n"
-"        t.ex. 180 / (1 - 10%) = 200 (ingår ej i priset)\n"
-"        t.ex. 200 * (1 - 10%) = 180 (priset ingår)\n"
+"    - Skattegrupp: Skatten är en samling av skatter.\n"
+"     - Fast summa: Skattebeloppet är detsamma oavsett grundbeloppet.\n"
+"     - Procentuell skatt: Skattebeloppet är en procentandel av "
+"grundbeloppet:\n"
+"        t.ex. 100 * (1 + 10%) = 110 (pris exklusive skatt)\n"
+"        t.ex. 110 / (1 + 10%) = 100 (pris inklusive skatt)\n"
+"     - Procentuell skatt inkluderad: Skattebeloppet är en andel av priset:\n"
+"        t.ex. 180 / (1 - 10%) = 200 (pris exklusive skatt)\n"
+"        t.ex. 200 * (1 - 10%) = 180 (pris inklusive skatt)\n"
 "        "
 
 #. module: account_tax_python
@@ -57,10 +60,10 @@ msgid ""
 msgstr ""
 "Beräkna skattebeloppet.\n"
 "\n"
-":param base: float, det faktiska belopp som skatten tillämpas på\n"
-":param pris_enhet: float\n"
-":param kvantitet: float\n"
-":param produkt: Ett objekt som representerar produkten\n"
+":param base: float, Det faktiska beloppet som skatten tillämpas på\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: Ett objekt som representerar produkten\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
@@ -76,7 +79,7 @@ msgstr "Visningsnamn"
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Field '%s' is not accessible"
-msgstr ""
+msgstr "Fält '%s ' går inte att använda"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
@@ -86,7 +89,7 @@ msgstr "Formel"
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
 msgid "Formula Decoded Info"
-msgstr "Formel Avkodad Info"
+msgstr "Avkodad information om formel"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
@@ -97,7 +100,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Invalid AST node: %s"
-msgstr ""
+msgstr "Ogiltig AST-nod: %s"
 
 #. module: account_tax_python
 #. odoo-python
@@ -109,31 +112,34 @@ msgstr "Ogiltig formel"
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Kwargs are not allowed"
-msgstr ""
+msgstr "Kwarger är inte tillåtna"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Only int, float or None are allowed as constant values"
-msgstr ""
+msgstr "Endast int, float eller None är tillåtna som konstanta värden"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/models/account_tax.py:0
 msgid "Only primitive types are allowed in python tax formula context."
 msgstr ""
+"Inom kontexten av Python-skatteformler är det bara tillåtet med primitiva "
+"typer."
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Only product['string'] or uom['string'] read-access is allowed"
 msgstr ""
+"Endast läsbehörighet till product['string'] eller uom['string'] är tillåtet"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Only read access to identifiers is allowed"
-msgstr ""
+msgstr "Identifierare har bara tillgång till läsbehörighet"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
@@ -149,10 +155,10 @@ msgstr "Skatteberäkning"
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Unknown function call"
-msgstr ""
+msgstr "Okänt funktionsanrop"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Unknown identifier: %s"
-msgstr ""
+msgstr "Okänd identifierare: %s"

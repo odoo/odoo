@@ -6,15 +6,15 @@
 # Martin Trigaux, 2025
 # Сергей Шебанин <sergey@shebanin.ru>, 2025
 # Wil Odoo, 2025
-# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:37+0000\n"
-"PO-Revision-Date: 2025-11-08 23:02+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"PO-Revision-Date: 2026-04-11 15:04+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s18-4/mail/"
 "ru/>\n"
 "Language: ru\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -456,11 +456,6 @@ msgstr "---------- Пересланное сообщение ----------"
 #: code:addons/mail/static/src/discuss/core/common/thread_patch.js:0
 msgid "1 new message"
 msgstr "1 новое сообщение"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.account_security_alert
-msgid "111.222.333.444"
-msgstr "111.222.333.444"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -4361,12 +4356,10 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Failed to render inline_template template: %(template_txt)s"
 msgid ""
 "Failed to render inline_template template: %(template_txt)s\n"
 "Error details: %(error)s"
-msgstr "Не удалось сформировать встроенный шаблон: %(template_txt)s"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -6518,10 +6511,8 @@ msgstr "Сброс шаблона письма"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "alias %(name)s: %(error)s"
 msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
-msgstr "псевдоним %(name)s: %(error)s"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
@@ -7417,10 +7408,8 @@ msgstr "Нет сообщений в истории"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Result of the language detection based on its content."
 msgid "No language detected in context"
-msgstr "Результат определения языка на основе содержимого."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -10576,10 +10565,8 @@ msgstr "Создание шаблона из редактора требует �
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Message unique identifier"
 msgid "Template name not identified"
-msgstr "Уникальный идентификатор сообщения"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -11709,18 +11696,14 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Related Mail Template"
 msgid "Unnamed Mail Template"
-msgstr "Связанный шаблон письма"
+msgstr ""
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Unnamed"
 msgid "Unnamed Mailing"
-msgstr "Без названия"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -13391,6 +13374,15 @@ msgstr "{{ object.partner_id.lang }}"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "«%(member_name)s» в «%(channel_name)s»"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.js:0
+msgid "“%s”"
+msgstr ""
+
+#~ msgid "111.222.333.444"
+#~ msgstr "111.222.333.444"
 
 #~ msgid ""
 #~ "Failed to render QWeb template: %(template_src)s\n"

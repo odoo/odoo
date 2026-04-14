@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:35+0000\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
 "PO-Revision-Date: 2025-11-08 22:43+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -83,11 +83,6 @@ msgstr ""
 ")\n"
 "                            <small class=\"mx-2 fst-italic\">Sử dụng giá trị "
 "gia tăng âm để ghi giảm giá trị sản phẩm</small>"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
-msgid "6.00"
-msgstr "6.00"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -742,6 +737,14 @@ msgstr ""
 "không có lô nào.\n"
 "Vui lòng chỉ định lô cho tất cả số lượng sản phẩm của bạn trước khi kích "
 "hoạt định giá lô."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"Product %(product)s is valuated by lot: an explicit Lot/Serial number is "
+"required."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -1524,3 +1527,6 @@ msgstr "đơn vị"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_graph
 msgid "valuation graph"
 msgstr "biểu đồ định giá"
+
+#~ msgid "6.00"
+#~ msgstr "6.00"

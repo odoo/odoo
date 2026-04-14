@@ -11,11 +11,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2026-03-31 12:04+0000\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"PO-Revision-Date: 2026-04-11 15:00+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
-"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/mrp/"
-"da/>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/mrp/da/"
+">\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,8 +38,8 @@ msgstr ""
 " * Kladde: Produktionsordren er ikke godkendt endnu.\n"
 "* Godkendt: Produktionsordren er godkendt, og lagerregler samt omrokering af "
 "komponenter er sat i gang.\n"
-"* I gang: Produktion er påbegyndt (på produktionsordren eller arbejdsordren)"
-".\n"
+"* I gang: Produktion er påbegyndt (på produktionsordren eller "
+"arbejdsordren).\n"
 "* Afslutning: Produktionen er færdig, og produktionsordren skal lukkes.\n"
 "* Fuldført: Produktionsordren er lukket, og lagerbevægelsen er bogført.\n"
 "* Annulleret: Produktionsordren er blevet annulleret og kan ikke længere "
@@ -248,55 +248,14 @@ msgstr ""
 "flyt derefter det/de færdige produk/produkter til lageret."
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "100"
-msgstr "100"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
-msgid "12345678901"
-msgstr "12345678901"
-
-#. module: mrp
 #: model_terms:product.template,description:mrp.product_product_computer_desk_leg_product_template
 msgid "18″ x 2½″ Square Leg"
 msgstr "45,7 x 6,4 cm bordben (firkantet)"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "2023-09-15"
-msgstr "2023-09-15"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
-msgid "25"
-msgstr "25"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "50"
-msgstr "50"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "58"
-msgstr "58"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "60"
-msgstr "60"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "8 GB RAM"
 msgstr "8 GB RAM"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "987654321098"
-msgstr "987654321098"
 
 #. module: mrp
 #. odoo-javascript
@@ -4191,7 +4150,8 @@ msgstr "Overordnet effektivitet for udstyr, baseret på den sidste måned"
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_oee
 msgid "Overall Equipment Effectiveness: no working or blocked time"
-msgstr "Overordnet effektivitet for udstyr: ingen arbejdstid eller blokeret tid"
+msgstr ""
+"Overordnet effektivitet for udstyr: ingen arbejdstid eller blokeret tid"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__pdf
@@ -5584,7 +5544,8 @@ msgstr "Teknisk felt til arbejdscentervisninger"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce_all
 msgid "Technical field to check if produce all button can be shown"
-msgstr "Teknisk felt til at kontrollere, om knappen \"Producér alle\" kan vises"
+msgstr ""
+"Teknisk felt til at kontrollere, om knappen \"Producér alle\" kan vises"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce
@@ -6538,7 +6499,7 @@ msgid ""
 msgstr ""
 "Med Odoo-arbejdscenterkontrolpaneler kan medarbejdere påbegynde "
 "arbejdsordrer i butikken og følge instruktionerne i arbejdssedlen. "
-"Kvalitetstest er fuldt integreret i processen, og medarbejdere kan udløse "
+"Kvalitetstests er fuldt integreret i processen, og medarbejdere kan udløse "
 "tilbagemeldingsløb, vedligeholdelsesalarmer, kassering af produkter m.m."
 
 #. module: mrp
@@ -7012,10 +6973,10 @@ msgstr ""
 "                        <b invisible=\"consumption != 'strict'\">\n"
 "                            Kontrollér dit komponentforbrug, eller bed en "
 "leder om at godkende\n"
-"                            <span invisible=\"mrp_production_count != 1\">"
-"denne produktionsordre</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\">"
-"disse produktionsordrer</span>.\n"
+"                            <span invisible=\"mrp_production_count != "
+"1\">denne produktionsordre</span>\n"
+"                            <span invisible=\"mrp_production_count == "
+"1\">disse produktionsordrer</span>.\n"
 "                        </b>"
 
 #. module: mrp
@@ -7214,3 +7175,27 @@ msgstr "opdelt"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "work orders"
 msgstr "arbejdsordrer"
+
+#~ msgid "100"
+#~ msgstr "100"
+
+#~ msgid "12345678901"
+#~ msgstr "12345678901"
+
+#~ msgid "2023-09-15"
+#~ msgstr "2023-09-15"
+
+#~ msgid "25"
+#~ msgstr "25"
+
+#~ msgid "50"
+#~ msgstr "50"
+
+#~ msgid "58"
+#~ msgstr "58"
+
+#~ msgid "60"
+#~ msgstr "60"
+
+#~ msgid "987654321098"
+#~ msgstr "987654321098"
