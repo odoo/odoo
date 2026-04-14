@@ -195,6 +195,33 @@ describe("onClickSaleOrder", () => {
         expect(order.lines[2].price_unit).toBe(100);
         expect(order.lines[2].prices.total_excluded).toBe(500);
     });
+
+    test("import sale downpayment with percentage", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
+        order.setOrderPrices();
+        const original_price = order.amount_total;
+
+        const promiseResult = store.onClickSaleOrder(4);
+        const buttonDownPaymentPercentage =
+            ".modal-body button:contains('Apply a down payment (percentage)')";
+        await waitFor(buttonDownPaymentPercentage);
+        await click(buttonDownPaymentPercentage);
+        await waitFor(".modal-title:contains('Down Payment')");
+        await click(".modal-body .numpad .numpad-button[value='+50']");
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        await click(".modal-body .numpad .numpad-button[value='+50']");
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        await click(".modal-footer .btn:contains('Apply')");
+        await promiseResult;
+
+        const currentOrder = store.getOrder();
+        currentOrder.setOrderPrices();
+        expect(currentOrder.amount_total).toBe(
+            650 - store.models["sale.order.line"].get(6).price_unit + original_price
+        );
+    });
 });
 
 describe("getConvertedQuantityFromSaleOrderline", () => {
