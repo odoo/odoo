@@ -6,6 +6,7 @@ import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Notification from "@point_of_sale/../tests/generic_helpers/notification_util";
 import { registry } from "@web/core/registry";
 import { scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
+import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 
 registry.category("web_tour.tours").add("BarcodeScanningTour", {
     steps: () =>
@@ -145,6 +146,32 @@ registry.category("web_tour.tours").add("test_variants_merge_line_barcode", {
                 quantity: 2,
                 attributeLine: "S, Blue",
             }),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_gs1_barcode_scan_missing_product_variant", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            scan_barcode("0105400000002649"),
+            inLeftSide(
+                Order.hasLine({
+                    productName: "GS1 Missing Variant Product",
+                    quantity: 1,
+                    attributeLine: "S",
+                })
+            ),
+            scan_barcode("0105400000002649"),
+            inLeftSide(
+                Order.hasLine({
+                    productName: "GS1 Missing Variant Product",
+                    quantity: 2,
+                    attributeLine: "S",
+                })
+            ),
             Chrome.endTour(),
         ].flat(),
 });

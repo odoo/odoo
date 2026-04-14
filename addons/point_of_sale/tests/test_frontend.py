@@ -1380,6 +1380,47 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'GS1BarcodeScanningTour', login="pos_user")
 
+    def test_gs1_barcode_scan_missing_product_variant(self):
+        """
+        Scanning a GS1 barcode for a product that is not loaded must add the specific
+        matching variant, not the first variant of the template.
+        """
+        barcodes_gs1_nomenclature = self.env.ref("barcodes_gs1_nomenclature.default_gs1_nomenclature")
+        default_nomenclature_id = self.env.ref("barcodes.default_barcode_nomenclature")
+        self.main_pos_config.company_id.write({
+            'nomenclature_id': barcodes_gs1_nomenclature.id,
+        })
+        self.main_pos_config.write({
+            'fallback_nomenclature_id': default_nomenclature_id,
+        })
+
+        size_attribute = self.env['product.attribute'].create({
+            'name': 'Size',
+            'create_variant': 'always',
+            'value_ids': [
+                Command.create({'name': 'L', 'sequence': 1}),
+                Command.create({'name': 'S', 'sequence': 2}),
+            ],
+        })
+        product_tmpl = self.env['product.template'].create({
+            'name': 'GS1 Missing Variant Product',
+            'available_in_pos': False,
+            'list_price': 10,
+            'taxes_id': False,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': size_attribute.id,
+                'value_ids': [Command.set(size_attribute.value_ids.ids)],
+            })],
+        })
+
+        variant_s = product_tmpl.product_variant_ids.filtered(
+            lambda v: any(val.name == 'S' for val in v.product_template_attribute_value_ids.mapped('product_attribute_value_id'))
+        )
+        variant_s.write({'barcode': '5400000002649'})
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'test_gs1_barcode_scan_missing_product_variant', login="pos_user")
+
     def test_refund_order_with_fp_tax_included(self):
         # create a fiscal position
         self.fiscal_position = self.env['account.fiscal.position'].create({
