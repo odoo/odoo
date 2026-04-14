@@ -125,9 +125,14 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             .with_context(active_test=False)
             .search([("name", "!=", company_currency.name)], limit=1)
         )
-        with self.mock_request():
+        with self.mock_request() as request:
             result = self.env["product.template"]._get_additional_combination_info(
-                self.product, 1.0, self.product.uom_id, self.website
+                self.product,
+                1.0,
+                self.product.uom_id,
+                self.website,
+                request.pricelist,
+                request.fiscal_position,
             )
         # Expected converted price
         expected_price = company_currency._convert(

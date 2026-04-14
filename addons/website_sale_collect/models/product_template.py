@@ -9,10 +9,14 @@ from odoo.addons.website_sale_collect import utils
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    def _get_additional_combination_info(self, product_or_template, quantity, uom, website):
+    def _get_additional_combination_info(
+        self, product_or_template, quantity, uom, website, pricelist, fiscal_position
+    ):
         """Override of `website_sale` to add information on whether Click & Collect is enabled and
         on the stock of the product."""
-        res = super()._get_additional_combination_info(product_or_template, quantity, uom, website)
+        res = super()._get_additional_combination_info(
+            product_or_template, quantity, uom, website, pricelist, fiscal_position
+        )
         in_store_dm = website.sudo().in_store_dm_id
         if (
             bool(in_store_dm)  # Click & Collect is enabled.
@@ -20,7 +24,11 @@ class ProductTemplate(models.Model):
             and product_or_template.is_storable
         ):
             product_sudo = product_or_template.sudo()  # To read the stock values when public user.
-            order_sudo = request.cart
+            order_sudo = (
+                request.cart
+                if (request and hasattr(request, "cart"))
+                else self.env["sale.order"].sudo()
+            )
             cart_qty = order_sudo._get_cart_qty(product_sudo.id)
             # Enable the Click & Collect Availability widget.
             res["show_click_and_collect_availability"] = True
