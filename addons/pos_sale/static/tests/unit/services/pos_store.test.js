@@ -177,4 +177,27 @@ describe("onClickSaleOrder", () => {
         expect(cell(2, 2)).toHaveText("TEST 2");
         expect(cell(2, 4)).toHaveText(`$ 150.00 (tax incl.)`);
     });
+
+    test("import sale downpayment with percentage", async () => {
+        const store = await setupPosEnv();
+        await mountWithCleanup(ProductScreen, {});
+
+        const promiseResult = store.onClickSaleOrder(3);
+        const buttonDownPaymentPercentage =
+            ".modal-body button:contains('Apply a down payment (percentage)')";
+        await waitFor(buttonDownPaymentPercentage);
+        await click(buttonDownPaymentPercentage);
+        await waitFor(".modal-title:contains('Down Payment')");
+        await click(".modal-body .numpad .numpad-button[value='+50']");
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        await click(".modal-body .numpad .numpad-button[value='+50']");
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        await click(".modal-footer .btn:contains('Ok')");
+        await promiseResult;
+
+        const currentOrder = store.getOrder();
+        expect(currentOrder.amount_total).toBe(
+            650 - store.models["sale.order.line"].get(4).price_unit
+        );
+    });
 });

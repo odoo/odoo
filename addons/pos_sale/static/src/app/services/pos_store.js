@@ -308,6 +308,9 @@ patch(PosStore.prototype, {
         const saleOrderLines = saleOrder.order_line.filter((soLine) => !soLine.display_type);
         const baseLines = [];
         for (const saleOrderLine of saleOrderLines) {
+            if (saleOrderLine.is_downpayment) {
+                saleOrderLine.product_uom_qty = -1;
+            }
             baseLines.push(
                 accountTaxHelpers.prepare_base_line_for_taxes_computation(
                     saleOrderLine,
