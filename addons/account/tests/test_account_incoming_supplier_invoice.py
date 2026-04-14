@@ -678,7 +678,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
             attachments_vals=[self.pdf1_vals, self.xml1_vals],
             expected_invoices={
                 1: {
-                    'invoice1.xml': {'on_message': True, 'is_decoded': True},
+                    'invoice1.xml': {'on_invoice': True, 'on_message': True, 'is_decoded': True},
                     'invoice1.pdf': {'on_invoice': True, 'on_message': True},
                 },
             },
@@ -690,7 +690,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
             attachments_vals=[self.pdf1_vals, self.xml1_vals],
             expected_invoices={
                 1: {
-                    'invoice1.xml': {'on_message': True},
+                    'invoice1.xml': {'on_invoice': True, 'on_message': True},
                     'invoice1.pdf': {'on_invoice': True, 'on_message': True},
                 },
             },
@@ -712,7 +712,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
             attachments_vals=[self.pdf1_vals, self.xml1_vals],
             expected_invoices={
                 1: {
-                    'invoice1.xml': {'on_message': True, 'is_decoded': True, 'is_new': True},
+                    'invoice1.xml': {'on_invoice': True, 'on_message': True, 'is_decoded': True, 'is_new': True},
                     'invoice1.pdf': {'on_invoice': True, 'on_message': True},
                 },
             },
@@ -736,8 +736,8 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
             attachments_vals=[self.xml1_vals, self.xml2_vals],
             expected_invoices={
                 1: {
-                    'invoice1.xml': {'on_message': True, 'is_decoded': True},
-                    'invoice2.xml': {'on_message': True},
+                    'invoice1.xml': {'on_invoice': True, 'on_message': True, 'is_decoded': True},
+                    'invoice2.xml': {'on_invoice': True, 'on_message': True},
                 },
             },
         )
@@ -748,8 +748,8 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
             attachments_vals=[self.xml1_vals, self.xml2_vals],
             expected_invoices={
                 1: {
-                    'invoice1.xml': {'on_message': True},
-                    'invoice2.xml': {'on_message': True},
+                    'invoice1.xml': {'on_invoice': True, 'on_message': True},
+                    'invoice2.xml': {'on_invoice': True, 'on_message': True},
                 },
             },
         )
@@ -769,8 +769,8 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
             origin='mail_alias',
             attachments_vals=[self.xml1_vals, self.xml2_vals],
             expected_invoices={
-                1: {'invoice1.xml': {'on_message': True, 'is_decoded': True, 'is_new': True}},
-                2: {'invoice2.xml': {'on_message': True, 'is_decoded': True, 'is_new': True}},
+                1: {'invoice1.xml': {'on_invoice': True, 'on_message': True, 'is_decoded': True, 'is_new': True}},
+                2: {'invoice2.xml': {'on_invoice': True, 'on_message': True, 'is_decoded': True, 'is_new': True}},
             },
         )
 
@@ -860,7 +860,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
             attachments_vals=[self.pdf3_vals, self.xml1_vals],
             expected_invoices={
                 1: {
-                    'invoice1.xml': {'on_message': True, 'is_decoded': True},
+                    'invoice1.xml': {'on_invoice': True, 'on_message': True, 'is_decoded': True},
                     'invoice3.pdf': {'on_invoice': True, 'on_message': True},
                 },
             },
@@ -872,7 +872,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
             attachments_vals=[self.pdf3_vals, self.xml1_vals],
             expected_invoices={
                 1: {
-                    'invoice1.xml': {'on_message': True},
+                    'invoice1.xml': {'on_invoice': True, 'on_message': True},
                     'invoice3.pdf': {'on_invoice': True, 'on_message': True},
                 },
             },
@@ -899,7 +899,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
             attachments_vals=[self.pdf3_vals, self.xml1_vals],
             expected_invoices={
                 1: {
-                    'invoice1.xml': {'on_message': True, 'is_decoded': True, 'is_new': True},
+                    'invoice1.xml': {'on_invoice': True, 'on_message': True, 'is_decoded': True, 'is_new': True},
                     'invoice3.pdf': {'on_invoice': True, 'on_message': True},
                 },
             },
@@ -939,8 +939,8 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                     'invoice3.pdf': {'on_invoice': True, 'on_message': True},
                     'invoice2.xlsx': {'on_invoice': True, 'on_message': True},
                     # The code doesn't put a hard constraint on which of the XMLs gets decoded.
-                    'invoice1.xml': {'is_decoded': True, 'on_message': True},
-                    'invoice2.xml': {'on_message': True},
+                    'invoice1.xml': {'on_invoice': True, 'is_decoded': True, 'on_message': True},
+                    'invoice2.xml': {'on_invoice': True, 'on_message': True},
                 },
             },
         )
@@ -958,8 +958,8 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                     'invoice2.pdf': {'on_invoice': True, 'on_message': True},
                     'invoice3.pdf': {'on_invoice': True, 'on_message': True},
                     'invoice2.xlsx': {'on_invoice': True, 'on_message': True},
-                    'invoice1.xml': {'on_message': True},
-                    'invoice2.xml': {'on_message': True},
+                    'invoice1.xml': {'on_invoice': True, 'on_message': True},
+                    'invoice2.xml': {'on_invoice': True, 'on_message': True},
                 },
             },
         )
@@ -993,11 +993,11 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                     'gif1.gif': {'on_message': True},
                     'gif2.gif': {'on_message': True},
                     'invoice1.pdf': {'on_invoice': True, 'on_message': True},
-                    'invoice1.xml': {'is_decoded': True, 'is_new': True, 'on_message': True},
+                    'invoice1.xml': {'on_invoice': True, 'is_decoded': True, 'is_new': True, 'on_message': True},
                 },
                 2: {
                     'invoice2.pdf': {'on_invoice': True, 'on_message': True},
-                    'invoice2.xml': {'is_decoded': True, 'is_new': True, 'on_message': True},
+                    'invoice2.xml': {'on_invoice': True, 'is_decoded': True, 'is_new': True, 'on_message': True},
                     # The XLSX and DOCX are attached to this invoice due to filename similarity
                     'invoice2.xlsx': {'on_invoice': True, 'on_message': True},
                     'invoice2.docx': {'on_invoice': True, 'on_message': True},
