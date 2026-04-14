@@ -286,7 +286,7 @@ export class DiscussChannel extends Record {
         /** @this {import("models").DiscussChannel} */
         compute() {
             return this.channel_member_ids
-                .filter((member) => member.isOnline)
+                .filter((member) => this.store.onlineMemberStatuses.includes(member.imStatusUI))
                 .sort((m1, m2) => this.store.sortMembers(m1, m2)); // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
         },
     });
@@ -451,9 +451,9 @@ export class DiscussChannel extends Record {
     offlineMembers = fields.Many("discuss.channel.member", {
         /** @this {import("models").DiscussChannel} */
         compute() {
-            return this._computeOfflineMembers().sort(
-                (m1, m2) => this.store.sortMembers(m1, m2) // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
-            );
+            return this.channel_member_ids
+                .filter((member) => member.imStatusUI === "offline")
+                .sort((m1, m2) => this.store.sortMembers(m1, m2)); // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
         },
     });
     /** @type {true|undefined} */
@@ -529,6 +529,14 @@ export class DiscussChannel extends Record {
     get unknownMembersCount() {
         return (this.member_count ?? 0) - (this.channel_member_ids.length ?? 0);
     }
+    unknownStatusMembers = fields.Many("discuss.channel.member", {
+        /** @this {import("models").DiscussChannel} */
+        compute() {
+            return this._computeUnknownStatusMembers().sort(
+                (m1, m2) => this.store.sortMembers(m1, m2) // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
+            );
+        },
+    });
 
     _onDeleteChatWindow() {}
 
@@ -804,8 +812,10 @@ export class DiscussChannel extends Record {
     }
 
     /** @returns {import("models").ChannelMember[]} */
-    _computeOfflineMembers() {
-        return this.channel_member_ids.filter((member) => !member.isOnline);
+    _computeUnknownStatusMembers() {
+        return this.channel_member_ids.filter((member) =>
+            [undefined, "im_partner"].includes(member.imStatusUI)
+        );
     }
     get composerHidden() {
         return !this.canSelfInteractWithChannel;

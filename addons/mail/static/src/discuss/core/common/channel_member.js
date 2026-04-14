@@ -33,7 +33,10 @@ export class ChannelMember extends Component {
     }
 
     get attClass() {
-        return { "cursor-pointer": this.isClickable, "o-offline": !this.member.isOnline };
+        return {
+            "cursor-pointer": this.isClickable,
+            "o-offline": this.member.imStatusUI === "offline",
+        };
     }
 
     get canOpenChat() {

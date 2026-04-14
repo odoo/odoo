@@ -56,10 +56,7 @@ export class DiscussAvatar extends Component {
         if (this.channel) {
             return this.channel.showThreadIcon({ ignoreTyping: !this.props.typing });
         }
-        if (this.props.member || this.persona) {
-            return true;
-        }
-        return false;
+        return this.props.member?.imStatusUI || this.persona?.imStatusUI;
     }
 
     get user() {

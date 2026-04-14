@@ -41,6 +41,12 @@ export class ChannelMemberList extends Component {
         });
     }
 
+    get unknownStatusSectionText() {
+        return _t("Others - %(unknown_status_count)s", {
+            unknown_status_count: this.props.channel.unknownStatusMembers.length,
+        });
+    }
+
     onClickInviteButton() {
         if (this.env.inMeetingView) {
             this.props.openChannelInvitePanel?.({ keepPrevious: true });

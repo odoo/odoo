@@ -182,10 +182,6 @@ export class ChannelMember extends Record {
         return this.partner_id?.imStatusUI || this.guest_id?.imStatusUI;
     }
 
-    get isOnline() {
-        return this.store.onlineMemberStatuses.includes(this.imStatusUI);
-    }
-
     /**
      * @returns {string}
      */

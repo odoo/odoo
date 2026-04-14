@@ -77,11 +77,12 @@ test("should have correct members in member list", async () => {
     await contains(".o-discuss-ChannelMember:text('Demo')");
 });
 
-test("members should be correctly categorised into online/offline", async () => {
+test("members should be correctly categorised into online/offline/others", async () => {
     const pyEnv = await startServer();
-    const [onlinePartnerId, idlePartnerId] = pyEnv["res.partner"].create([
+    const [onlinePartnerId, idlePartnerId, offlinePartnerId] = pyEnv["res.partner"].create([
         { name: "Online Partner", im_status: "online" },
         { name: "Idle Partner", im_status: "away" },
+        { name: "Offline Partner", im_status: "offline" },
     ]);
     pyEnv["res.partner"].write([serverState.partnerId], { im_status: "im_partner" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -90,6 +91,7 @@ test("members should be correctly categorised into online/offline", async () => 
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: onlinePartnerId }),
             Command.create({ partner_id: idlePartnerId }),
+            Command.create({ partner_id: offlinePartnerId }),
         ],
         channel_type: "channel",
     });
@@ -97,6 +99,7 @@ test("members should be correctly categorised into online/offline", async () => 
     await openDiscuss(channelId);
     await contains(".o-discuss-ChannelMemberList h6:text('Online - 2')");
     await contains(".o-discuss-ChannelMemberList h6:text('Offline - 1')");
+    await contains(".o-discuss-ChannelMemberList h6:text('Others - 1')");
 });
 
 test("chat with member should be opened after clicking on channel member", async () => {
