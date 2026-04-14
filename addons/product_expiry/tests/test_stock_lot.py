@@ -738,5 +738,5 @@ class TestStockLot(TestStockCommon):
             'default_lot_ids': [lot.id],
         }
         wizard = self.env['expiry.picking.confirmation'].with_context(context).create({})
-        self.assertFalse(wizard.picking_ids.move_line_ids.removal_date)
+        self.assertFalse(wizard.picking_ids.move_line_ids._get_removal_date())
         wizard.process_no_expired()
