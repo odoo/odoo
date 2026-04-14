@@ -389,7 +389,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
 
         # Patch the field `res.partner.image_128` to make it unreadable by the demo user
         self.patch(self.env.registry['res.partner']._fields['image_128'], 'groups', 'base.group_system')
-        self.env.transaction.reset()
+        self.env.transaction.clear()
 
         # Assert the field can't be read
         with self.assertRaises(AccessError):

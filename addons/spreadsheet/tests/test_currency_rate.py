@@ -117,7 +117,7 @@ class TestCurrencyRates(TransactionCase):
         cad = self.env.ref("base.CAD")
         self.env.user.tz = "UTC"
         self.env.flush_all()
-        self.env.transaction.reset()
+        self.env.transaction.clear()
         self.env["res.currency.rate"].create(
             {
                 "name": fields.Date.subtract(fields.Date.context_today(self), days=1),
@@ -127,7 +127,7 @@ class TestCurrencyRates(TransactionCase):
         )
         self.env.user.tz = "Australia/Sydney"
         self.env.flush_all()
-        self.env.transaction.reset()
+        self.env.transaction.clear()
         self.env["res.currency.rate"].create(
             {
                 "name": fields.Date.subtract(fields.Date.context_today(self), days=1),

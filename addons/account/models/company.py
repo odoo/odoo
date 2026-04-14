@@ -999,8 +999,6 @@ class ResCompany(models.Model):
             return False
         if res := super().install_l10n_modules():
             env = self.env
-            env.flush_all()
-            env.transaction.reset()
             for company in self.filtered(lambda c: c.country_id and not c.chart_template):
                 template_code = company.parent_id.chart_template or self.env['account.chart.template']._guess_chart_template(company.country_id)
                 if template_code != 'generic_coa':

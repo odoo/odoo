@@ -731,21 +731,31 @@ class Transaction:
             env.__dict__.pop('_field_cache_memo', None)
 
     def clear(self):
-        """ Clear the caches and pending computations and updates in the transactions. """
-        self.invalidate_access_cache()
+        """ Clear the transaction data (for testing or internal).
+
+        Clear the caches and pending computations, access and updates in the
+        transaction and linked environments.
+        """
+        self.access_read.clear()  # faster invalidate_access_cache
         self.invalidate_field_data()
         self.field_data_patches.clear()
         self.field_dirty.clear()
         self.tocompute.clear()
+        self._recent_envs.clear()
         self.compactify_envs()
+        env = None
         for env in self.envs:
+            reset_cached_properties(env)
+        if env is not None:
+            # all envs of the transaction share the same cursor
             env.cr.cache.clear()
-            break  # all envs of the transaction share the same cursor
 
     def reset(self) -> None:
-        """ Reset the transaction.  This clears the transaction, and reassigns
-            the registry on all its environments.  This operation is strongly
-            recommended after reloading the registry.
+        """ Reset the transaction.
+
+        This clears the transaction, and reassigns the registry on all its
+        environments. Use it *only after a commit or rollback* when the registry
+        may have changed!
         """
         # get the registry and rebuild the stack of states
         self.registry = Registry(self.registry.db_name)
@@ -756,11 +766,6 @@ class Transaction:
                 registry_sequence=self._registry_sequence,
             ) for state in self._state_stack]
 
-        for env in self.envs:
-            reset_cached_properties(env)
-        self.access_read.clear()
-        # make all environments weak
-        self._recent_envs.clear()
         self.clear()
 
     @contextmanager
@@ -802,8 +807,6 @@ class Transaction:
             return
 
         self.clear()
-        for env in self.envs:
-            reset_cached_properties(env)
 
 
 class TransactionState(typing.NamedTuple):

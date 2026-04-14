@@ -280,6 +280,7 @@ class ResCompany(models.CachedModel):
             company.uninstalled_l10n_module_ids = self.env['ir.module.module'].browse(mapping.get(company.country_id.id))
 
     def install_l10n_modules(self):
+        self.env.flush_all()
         uninstalled_modules = self.uninstalled_l10n_module_ids
         is_ready_and_not_test = (
             not tools.config['test_enable']

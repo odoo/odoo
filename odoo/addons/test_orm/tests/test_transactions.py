@@ -16,7 +16,7 @@ class TestTransactionEnvs(TransactionCase):
         self.assertEqual(id(base_x.env), base_x_env_id, "We should get the same environment")
         del base_x
 
-        transaction.reset()
+        transaction.clear()
         self.assertEqual(set(transaction.envs), starting_envs)
 
     def test_transaction_envs_many(self):
@@ -44,14 +44,14 @@ class TestTransactionEnvs(TransactionCase):
         transaction = self.env.transaction
         starting_envs = set(transaction.envs)
         self.do_stuff_with_env()
-        transaction.reset()
+        transaction.clear()
         self.assertEqual(set(transaction.envs), starting_envs)
 
     def test_transation_envs_weakrefs_return(self):
         transaction = self.env.transaction
         starting_envs = set(transaction.envs)
         base_test = self.do_stuff_with_env()
-        transaction.reset()
+        transaction.clear()
         self.assertEqual(set(transaction.envs), starting_envs | {base_test.env})
 
     def test_transation_envs_ordered(self):
@@ -64,5 +64,5 @@ class TestTransactionEnvs(TransactionCase):
         env_items = [env.context['item'] for env in transaction.envs if env not in starting_envs]
         self.assertEqual(env_items, items)
         del envs
-        transaction.reset()
+        transaction.clear()
         self.assertEqual(set(transaction.envs), starting_envs)
