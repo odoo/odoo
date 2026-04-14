@@ -566,6 +566,7 @@ class AccountMove(models.Model):
             ('draft', "Draft"),
             ('cancel', "Cancelled"),
         ],
+        search='_search_status_in_payment',
         compute='_compute_status_in_payment',
         copy=False,
     )
@@ -1273,6 +1274,27 @@ class AccountMove(models.Model):
     def _compute_status_in_payment(self):
         for move in self:
             move.status_in_payment = move.state if move.state in ('draft', 'cancel') else move.payment_state
+
+    def _search_status_in_payment(self, operator, value):
+        if operator in ('=', '!=') and isinstance(value, bool):
+            return [] if (operator == '=') == value else [('id', '=', 0)]
+
+        values = value if isinstance(value, (list, tuple, set)) else [value]
+        state_vals = [v for v in values if v in ('draft', 'cancel')]
+        payment_vals = [v for v in values if v not in ('draft', 'cancel')]
+        negative = operator in ('!=', 'not in')
+        op = 'not in' if negative else 'in'
+
+        domains = []
+        if state_vals:
+            domains.append([('state', op, state_vals)])
+        if payment_vals:
+            if negative:
+                domains.append(['|', ('state', 'in', ('draft', 'cancel')), ('payment_state', 'not in', payment_vals)])
+            else:
+                domains.append([('state', 'not in', ('draft', 'cancel')), ('payment_state', 'in', payment_vals)])
+        combine = expression.AND if negative else expression.OR
+        return combine(domains) if domains else ([] if negative else [('id', '=', 0)])
 
     def _field_to_sql(self, alias: str, fname: str, query=None, flush: bool = True) -> SQL:
         if fname == 'status_in_payment':

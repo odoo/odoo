@@ -2823,3 +2823,43 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         action = credit_note_wizard.reverse_moves()
         credit_note = self.env['account.move'].browse(action['res_id'])
         self.assertEqual(credit_note.amount_total, invoice.amount_total)
+
+    def test_search_status_in_payment(self):
+        def get_ids(status, operator='='):
+            return self.env['account.move'].search([('status_in_payment', operator, status)]).ids
+
+        # --- Draft state ---
+        self.assertIn(self.invoice.id, get_ids('draft'))
+        self.assertNotIn(self.invoice.id, get_ids('not_paid'))
+
+        # --- is set / is not set (bool domain) ---
+        self.assertIn(self.invoice.id, get_ids(False, '!='))
+        self.assertNotIn(self.invoice.id, get_ids(False, '='))
+
+        # not in / != checks
+        self.assertIn(self.invoice.id, get_ids('not_paid', '!='))
+        self.assertIn(self.invoice.id, get_ids(['not_paid', 'paid'], 'not in'))
+        self.assertNotIn(self.invoice.id, get_ids('draft', '!='))
+
+        # --- Posted (not_paid) ---
+        self.invoice.action_post()
+        self.assertNotIn(self.invoice.id, get_ids('draft'))
+        self.assertIn(self.invoice.id, get_ids('not_paid'))
+
+        # in/not in operator
+        self.assertIn(self.invoice.id, get_ids(['not_paid', 'paid'], 'in'))
+        self.assertNotIn(self.invoice.id, get_ids(['paid', 'in_payment'], 'in'))
+        self.assertNotIn(self.invoice.id, get_ids(['not_paid', 'paid'], 'not in'))
+        self.assertIn(self.invoice.id, get_ids(['paid', 'in_payment'], 'not in'))
+
+        # --- Registered payment (in_payment) ---
+        self._register_payment(self.invoice)
+        self.assertIn(self.invoice.id, get_ids('in_payment'))
+        self.assertNotIn(self.invoice.id, get_ids('not_paid'))
+        self.assertIn(self.invoice.id, get_ids(['in_payment', 'paid'], 'in'))
+        self.assertNotIn(self.invoice.id, get_ids(['in_payment', 'paid'], 'not in'))
+
+        # --- Cancelled state ---
+        self.invoice.button_cancel()
+        self.assertIn(self.invoice.id, get_ids('cancel'))
+        self.assertIn(self.invoice.id, get_ids(['not_paid', 'paid'], 'not in'))
