@@ -3,6 +3,8 @@
 
 from odoo import api, fields, models, tools, _
 
+from .mail_render_mixin import BYPASS_RESTRICTED_RENDERING
+
 
 class MailComposerMixin(models.AbstractModel):
     """ Mixin used to edit and render some fields used when sending emails or
@@ -84,10 +86,10 @@ class MailComposerMixin(models.AbstractModel):
             if not self.can_edit_body or composer_value in (sanitized_template_value, template_value):
                 # Take the previous body which we can trust without HTML editor reformatting
                 self.body = self.template_id.body_html
-                return super(MailComposerMixin, self.sudo())._render_field(field, *args, **kwargs)
+                return super(MailComposerMixin, self.with_context(bypass_restricted_rendering=BYPASS_RESTRICTED_RENDERING))._render_field(field, *args, **kwargs)
 
         elif composer_value == template_value:
             # The value is the same as the mail template so we trust it
-            return super(MailComposerMixin, self.sudo())._render_field(field, *args, **kwargs)
+            return super(MailComposerMixin, self.with_context(bypass_restricted_rendering=BYPASS_RESTRICTED_RENDERING))._render_field(field, *args, **kwargs)
 
         return super(MailComposerMixin, self)._render_field(field, *args, **kwargs)
