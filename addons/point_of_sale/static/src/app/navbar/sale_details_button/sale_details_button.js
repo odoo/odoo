@@ -5,6 +5,10 @@ import { renderToElement } from "@web/core/utils/render";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { formatDateTime } from "@web/core/l10n/dates";
+
+const { DateTime } = luxon;
+
 
 export class SaleDetailsButton extends Component {
     static template = "point_of_sale.SaleDetailsButton";
@@ -29,7 +33,7 @@ export class SaleDetailsButton extends Component {
         const report = renderToElement(
             "point_of_sale.SaleDetailsReport",
             Object.assign({}, saleDetails, {
-                date: new Date().toLocaleString(),
+                date: formatDateTime(DateTime.now()),
                 pos: this.pos,
                 formatCurrency: this.env.utils.formatCurrency,
             })
