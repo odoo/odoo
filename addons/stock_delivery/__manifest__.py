@@ -10,9 +10,11 @@ Allows you to add delivery methods in pickings.
 
 When creating invoices from picking, the system is able to add and compute the shipping line.
 """,
-    'depends': ['sale_stock', 'delivery'],
+    'depends': ['printer', 'sale_stock', 'delivery'],
     'data': [
         "data/mail_template_data.xml",
+        'report/shipping_reports.xml',
+        'views/ir_actions_report.xml',
         'views/product_template_view.xml',
         'views/product_product_view.xml',
         'views/delivery_view.xml',
@@ -26,12 +28,16 @@ When creating invoices from picking, the system is able to add and compute the s
         'views/stock_picking_type_views.xml',
         'views/stock_rule_views.xml',
         'views/stock_move_line_views.xml',
+        'views/stock_menu_views.xml',
         'report/product_templates.xml',
         'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_frontend': [
             'stock_delivery/static/src/return_order_dialog/*',
+        ],
+        'web.assets_tests': [
+            ('include', 'printer.assets_tests'),
         ],
     },
     'demo': ['data/delivery_demo.xml'],
