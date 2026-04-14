@@ -33,8 +33,5 @@ export class Reactive {
  * @deprecated
  */
 export function effect(cb, deps) {
-    const reactiveDeps = reactive(deps, () => {
-        cb(...reactiveDeps);
-    });
-    cb(...reactiveDeps);
+    // odoo effect should be replaced by owl effect, make sure to dispose the effect!
 }
