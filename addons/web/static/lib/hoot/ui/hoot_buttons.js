@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, signal, xml } from "@odoo/owl";
+import { Component, signal, types as t, xml } from "@odoo/owl";
 import { refresh } from "../core/url";
 import { STORAGE, storageSet } from "../hoot_utils";
 import { HootLink } from "./hoot_link";
@@ -97,8 +97,8 @@ export class HootButtons extends Component {
     runner = getRunnerPlugin();
 
     // Reactive values
-    isDisabled = signal(false);
-    isOpen = signal(false);
+    isDisabled = signal(false, { type: t.boolean });
+    isOpen = signal(false, { type: t.boolean });
 
     // Other members
     disableTimeout = 0;

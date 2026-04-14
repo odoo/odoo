@@ -8,15 +8,11 @@ export class UiPlugin extends Plugin {
         type: t.selection(["failed", "passed", "skipped", "todo", null]),
     });
 
-    resultsPage = signal(0);
-    resultsPerPage = signal(40);
-    selectedSuiteId = signal(null, {
-        type: t.or([t.string, t.literal(null)]),
-    });
-    sortResults = signal(false, {
-        type: t.selection(["asc", "desc", false]),
-    });
-    totalResults = signal(0);
+    resultsPage = signal(0, { type: t.number });
+    resultsPerPage = signal(40, { type: t.number });
+    selectedSuiteId = signal(null, { type: t.or([t.string, t.literal(null)]) });
+    sortResults = signal(false, { type: t.selection(["asc", "desc", false]) });
+    totalResults = signal(0, { type: t.number });
 
     statusFilter = computed(this._statusFilter, {
         set: (status) => {

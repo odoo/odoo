@@ -1,6 +1,15 @@
 /** @odoo-module */
 
-import { Component, computed, onPatched, onWillPatch, plugin, signal, xml } from "@odoo/owl";
+import {
+    Component,
+    computed,
+    onPatched,
+    onWillPatch,
+    plugin,
+    signal,
+    types as t,
+    xml,
+} from "@odoo/owl";
 import { getActiveElement } from "@web/../lib/hoot-dom/helpers/dom";
 import { R_REGEX, REGEX_MARKER } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { Suite } from "../core/suite";
@@ -412,16 +421,13 @@ export class HootSearch extends Component {
     /** @type {ReturnType<typeof elSignal<HTMLInputElement>>} */
     searchInputRef = elSignal();
     categories = {
-        /** @type {import("@odoo/owl").Signal<Suite[]>} */
-        suite: signal.Array([]),
-        /** @type {import("@odoo/owl").Signal<Tag[]>} */
-        tag: signal.Array([]),
-        /** @type {import("@odoo/owl").Signal<Test[]>} */
-        test: signal.Array([]),
+        suite: signal.Array([], { type: t.instanceOf(Suite) }),
+        tag: signal.Array([], { type: t.instanceOf(Tag) }),
+        test: signal.Array([], { type: t.instanceOf(Test) }),
     };
-    query = signal(this.config.filter() || "");
-    isEmpty = signal(!this.query().trim());
-    showDropdown = signal(false);
+    query = signal(this.config.filter() || "", { type: t.string });
+    isEmpty = signal(!this.query().trim(), { type: t.string });
+    showDropdown = signal(false, { type: t.boolean });
     trimmedQuery = computed(() => this.query().trim());
 
     // Other members
@@ -863,7 +869,7 @@ export class HootSearch extends Component {
             }
             for (const test of this.runner.tests.values()) {
                 test.config.todo = false;
-                test.status = Test.PASSED;
+                test.status.set(Test.PASSED);
                 for (const result of test.results()) {
                     result.pass = true;
                     result.currentErrors = [];

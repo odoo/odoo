@@ -188,7 +188,7 @@ export class HootTechnicalValue extends Component {
     rawValue = toRaw(this.props.value);
 
     // Reactive values
-    isOpen = signal(false);
+    isOpen = signal(false, { type: t.boolean });
     promiseState = makePromiseWrapperSignal(this.rawValue);
 
     // Other members

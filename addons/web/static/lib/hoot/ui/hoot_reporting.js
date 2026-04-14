@@ -115,7 +115,7 @@ export class HootReporting extends Component {
                                 skipped
                             </t>
                             <t t-else="">
-                                <t t-if="result.test.status === this.Test.ABORTED">
+                                <t t-if="result.test.status() === this.Test.ABORTED">
                                     aborted after
                                 </t>
                                 <t t-out="this.formatTime(result.test.duration, 'ms')" />
@@ -264,7 +264,7 @@ export class HootReporting extends Component {
             if (
                 showdetail &&
                 !(showdetail === "first-fail" && didShowDetail) &&
-                [Test.FAILED, Test.ABORTED].includes(test.status)
+                [Test.FAILED, Test.ABORTED].includes(test.status())
             ) {
                 didShowDetail = true;
                 this.openTests().add(test.id);
@@ -321,7 +321,7 @@ export class HootReporting extends Component {
             }
             results.push({
                 duration: test.lastResults?.duration,
-                status: test.status,
+                status: test.status(),
                 id: `test#${test.id}`,
                 test: test,
             });

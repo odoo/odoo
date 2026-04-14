@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, plugin, signal, useEffect, xml } from "@odoo/owl";
+import { Component, plugin, signal, useEffect, types as t, xml } from "@odoo/owl";
 import { getColorHex } from "../../hoot-dom/hoot_dom_utils";
 import { Test } from "../core/test";
 import { elSignal, formatTime } from "../hoot_utils";
@@ -213,9 +213,9 @@ export class HootStatusPanel extends Component {
     // Reactive values
     /** @type {ReturnType<typeof elSignal<HTMLCanvasElement>>} */
     canvasRef = elSignal();
-    timer = signal(null);
-    progressBarIndex = signal(0);
-    isDebugging = signal(false);
+    timer = signal(0, { type: t.number });
+    progressBarIndex = signal(0, { type: t.number });
+    isDebugging = signal(false, { type: t.boolean });
 
     // Other members
     currentTestStart = 0;
@@ -316,7 +316,7 @@ export class HootStatusPanel extends Component {
         while (this.progressBarIndex() < doneList.length) {
             const test = doneList[this.progressBarIndex()];
             const x = $floor(this.progressBarIndex() * cellSize);
-            switch (test.status) {
+            switch (test.status()) {
                 case Test.ABORTED:
                     ctx.fillStyle = getColorHex("amber");
                     break;

@@ -310,8 +310,8 @@ export class HootTestResult extends Component {
     filteredResults = computed(() =>
         filterResults(this.props.test.results(), this.ui.statusFilter())
     );
-    showCode = signal(false);
-    showDetails = signal(Boolean(this.props.open));
+    showCode = signal(false, { type: t.boolean });
+    showDetails = signal(Boolean(this.props.open), { type: t.boolean });
 
     // Other members
     CASE_EVENT_TYPES = CASE_EVENT_TYPES;
@@ -328,7 +328,7 @@ export class HootTestResult extends Component {
         if (this.props.test.logs.error) {
             return "bg-rose-900";
         }
-        switch (this.props.test.status) {
+        switch (this.props.test.status()) {
             case Test.ABORTED: {
                 return "bg-amber-900";
             }

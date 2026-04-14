@@ -3,7 +3,7 @@
 import { Component, computed, plugin, props, signal, types as t, useEffect, xml } from "@odoo/owl";
 import { Suite } from "../core/suite";
 import { createUrlFromId } from "../core/url";
-import { lookup, parseQuery, elSignal } from "../hoot_utils";
+import { elSignal, lookup, parseQuery } from "../hoot_utils";
 import { HootJobButtons } from "./hoot_job_buttons";
 import { getRunnerPlugin } from "./runner_plugin";
 import { UiPlugin } from "./ui_plugin";
@@ -203,10 +203,9 @@ export class HootSideBar extends Component {
     /** @type {ReturnType<typeof elSignal<HTMLInputElement>>} */
     searchInputRef = elSignal();
     suitesListRef = elSignal();
-    filter = signal("");
-    hideEmpty = signal(false);
-    suites = signal.Array([]);
-    unfoldedIds = signal.Set(new Set(["fake_ID"])); // fake ID used to render on start
+    filter = signal("", { type: t.string });
+    hideEmpty = signal(false, { type: t.boolean });
+    unfoldedIds = signal.Set(new Set(["fake_ID"]), { type: t.string }); // fake ID used to render on start
     unfoldedSuites = computed(() => this.getFilteredVisibleSuites());
 
     setup() {

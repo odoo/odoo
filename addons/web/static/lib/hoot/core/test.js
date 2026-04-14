@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { markup, proxy, signal } from "@odoo/owl";
+import { markup, proxy, signal, types as t } from "@odoo/owl";
 import { HootError, stringify } from "../hoot_utils";
 import { Job } from "./job";
 import { Tag } from "./tag";
@@ -57,7 +57,9 @@ export class Test extends Job {
     /** @type {() => MaybePromise<void> | null} */
     run = null;
     runFnString = "";
-    status = Test.SKIPPED;
+    status = signal(Test.SKIPPED, {
+        type: t.selection([Test.SKIPPED, Test.PASSED, Test.FAILED, Test.ABORTED]),
+    });
 
     get code() {
         if (!this.formatted) {

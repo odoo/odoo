@@ -84,7 +84,7 @@ export class HootTestPath extends Component {
     ui = plugin(UiPlugin);
 
     getStatusInfo() {
-        switch (this.props.test.status) {
+        switch (this.props.test.status()) {
             case Test.ABORTED: {
                 return { className: "amber", text: "aborted" };
             }
