@@ -3,7 +3,6 @@ import { getElementsWithOption } from "@html_builder/utils/utils";
 
 /**
  * @typedef { Object } VisibilityShared
- * @property { VisibilityPlugin['getVisibleSibling'] } getVisibleSibling
  * @property { VisibilityPlugin['toggleTargetVisibility'] } toggleTargetVisibility
  * @property { VisibilityPlugin['onOptionVisibilityUpdate'] } onOptionVisibilityUpdate
  * @property { VisibilityPlugin['hideElement'] } hideElement
@@ -21,12 +20,7 @@ const deviceInvisibleSelector = ".o_snippet_mobile_invisible, .o_snippet_desktop
 export class VisibilityPlugin extends Plugin {
     static id = "visibility";
     static dependencies = ["builderOptions", "disableSnippets", "history"];
-    static shared = [
-        "getVisibleSibling",
-        "toggleTargetVisibility",
-        "onOptionVisibilityUpdate",
-        "hideElement",
-    ];
+    static shared = ["toggleTargetVisibility", "onOptionVisibilityUpdate", "hideElement"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         on_mobile_view_switched_handlers: this.onMobileViewSwitched.bind(this),
@@ -60,29 +54,6 @@ export class VisibilityPlugin extends Plugin {
                 invisibleEl.removeAttribute("data-invisible");
             }
         });
-    }
-
-    getVisibleSibling(target, direction) {
-        const systemNodeSelectors = this.getResource("system_node_selectors").join(",");
-        const siblingEls = [...target.parentNode.children];
-        const visibleSiblingEls = siblingEls.filter(
-            (el) =>
-                !el.classList.contains("o_we_no_overlay") &&
-                window.getComputedStyle(el).display !== "none" &&
-                !el.closest(systemNodeSelectors)
-        );
-        const targetMobileOrder = target.style.order;
-        // On mobile, if the target has a mobile order (which is independent
-        // from desktop), consider these orders instead of the DOM order.
-        if (targetMobileOrder && this.config.isMobileView(target)) {
-            visibleSiblingEls.sort((a, b) => parseInt(a.style.order) - parseInt(b.style.order));
-        }
-        const targetIndex = visibleSiblingEls.indexOf(target);
-        const siblingIndex = direction === "prev" ? targetIndex - 1 : targetIndex + 1;
-        if (siblingIndex === -1 || siblingIndex === visibleSiblingEls.length) {
-            return false;
-        }
-        return visibleSiblingEls[siblingIndex];
     }
 
     /**
