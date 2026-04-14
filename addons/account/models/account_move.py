@@ -6418,12 +6418,15 @@ class AccountMove(models.Model):
     def _get_invoice_report_filename(self, extension='pdf'):
         """ Get the filename of the generated invoice report with extension file. """
         self.ensure_one()
-        report_id = self.partner_id.invoice_template_pdf_report_id or self.env.ref('account.account_invoices')
-        if report_id.print_report_name and isinstance(report_id.print_report_name, str):
+        report_id = (
+            self.env.context.get('invoice_report')
+            or self.partner_id.invoice_template_pdf_report_id
+            or self.env.ref('account.account_invoices')
+        )
+        if report_id.print_report_name:
             file_name = safe_eval(report_id.print_report_name, {'object': self})
-        else:
-            file_name = self.name
-        return f"{file_name.replace('/', '_')}.{extension}"
+            return f"{file_name.replace('/', '_')}.{extension}"
+        return False
 
     def _get_invoice_proforma_pdf_report_filename(self):
         """ Get the filename of the generated proforma PDF invoice report. """
