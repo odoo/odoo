@@ -63,6 +63,20 @@ export class SaleOrderLine extends models.ServerModel {
             extra_tax_data: {},
             write_date: "2025-07-03 17:04:14",
         },
+        {
+            id: 4,
+            display_name: "S00002 - Down Payment (ref: INV/2026/00011 on 03/07/2025)",
+            name: "Down Payment (ref: INV/2026/00011 on 03/07/2025)",
+            is_downpayment: true,
+            product_id: false,
+            product_uom_qty: 0,
+            price_unit: 100,
+            price_total: 0,
+            qty_invoiced: 0,
+            qty_to_invoice: 0,
+            tax_ids: [],
+            write_date: "2025-07-03 17:04:14",
+        },
     ];
 
     async read_converted(ids) {
