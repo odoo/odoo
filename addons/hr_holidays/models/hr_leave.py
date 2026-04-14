@@ -983,6 +983,9 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         return holidays
 
     def write(self, values):
+        if 'manager_id' in values:
+            self.message_unsubscribe(partner_ids=[self.manager_id.user_id.partner_id.id])
+
         if 'active' in values and not self.env.context.get('from_cancel_wizard'):
             raise UserError(_("You can't manually archive/unarchive a time off."))
 
