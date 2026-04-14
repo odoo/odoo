@@ -43,6 +43,7 @@ export class PopupVisibilityPlugin extends Plugin {
             }
             return value;
         },
+        ignored_sibling_selectors: ".s_popup",
     };
 
     setup() {
