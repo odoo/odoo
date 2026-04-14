@@ -292,21 +292,29 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             amount_total = invoice.amount_total_signed * -invoice.direction_sign
             amount_residual = invoice.amount_residual_signed * -invoice.direction_sign
 
-        node['cbc:PayableAmount']['_text'] = FloatFmt(
-            amount_residual,
-            min_dp=currency.decimal_places,
-        )
-        node['cbc:PrepaidAmount']['_text'] = FloatFmt(
-            amount_total
-            - amount_residual
-            # WithholdingTaxTotal is not allowed.
-            # Instead, withholding tax amounts are reported as a PrepaidAmount.
-            # Suppose an invoice of 1000 with a tax 21% +100 -100.
-            # The super will compute a PrepaidAmount or 0.0 and a PayableAmount or 1000.
-            # This extension is there to increase PrepaidAmount to 210 and PayableAmount to 1210.
-            + vals['_ubl_values']['tax_withholding_amount'],
-            min_dp=currency.decimal_places,
-        )
+        # WithholdingTaxTotal is not allowed. Instead, withholding tax amounts are reported
+        # as a PrepaidAmount. Suppose an invoice of 1000 with a tax 21% +100 -100. The super
+        # will compute a PrepaidAmount of 0.0 and a PayableAmount of 1000. This extension is
+        # there to increase PrepaidAmount to 210 and PayableAmount to 1210.
+        tax_withholding_amount = vals['_ubl_values']['tax_withholding_amount']
+        prepaid_amount = amount_total - amount_residual + tax_withholding_amount
+        payable_amount = amount_residual
+        # Enforce BR-CO-16: BT-115 = BT-112 - BT-113 + BT-114. Overriding PayableAmount to
+        # amount_residual can desync it from the aggregated tax-inclusive amount used by super
+        # (e.g. when line-level rounding makes invoice.amount_total differ from that aggregate),
+        # so we recompute the PayableRoundingAmount here to keep the rule satisfied.
+        tax_inclusive_amount = node['cbc:TaxInclusiveAmount']['_text']
+        payable_rounding_amount = payable_amount + prepaid_amount - tax_inclusive_amount
+
+        node['cbc:PayableAmount']['_text'] = FloatFmt(payable_amount, min_dp=currency.decimal_places)
+        node['cbc:PrepaidAmount']['_text'] = FloatFmt(prepaid_amount, min_dp=currency.decimal_places)
+        if currency.is_zero(payable_rounding_amount):
+            node['cbc:PayableRoundingAmount'] = {'_text': None, 'currencyID': None}
+        else:
+            node['cbc:PayableRoundingAmount'] = {
+                '_text': FloatFmt(payable_rounding_amount, min_dp=currency.decimal_places),
+                'currencyID': currency.name,
+            }
 
     def _add_invoice_monetary_total_nodes(self, document_node, vals):
         # OVERRIDE

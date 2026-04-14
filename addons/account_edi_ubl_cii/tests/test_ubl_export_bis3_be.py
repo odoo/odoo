@@ -858,3 +858,29 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
 
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_BR_E_08_line_extension_amount')
+
+    def test_invoice_BR_CO_16_payable_amount_with_line_rounding(self):
+        """ BR-CO-16: Amount due for payment (BT-115) = Invoice total amount with VAT (BT-112)
+            - Paid amount (BT-113) + Rounding amount (BT-114).
+
+            When combining tax-included percent taxes, fixed per-unit taxes and a line discount
+            on many small-priced lines, the per-line rounding can make invoice.amount_total
+            differ from the aggregated tax-inclusive amount. In that case the PayableRoundingAmount
+            must be recomputed so that BR-CO-16 stays satisfied.
+        """
+        tax_consigne = self.fixed_tax(0.60)
+        tax_6 = self.percent_tax(6.0, price_include_override='tax_included')
+        product_consigne = self._create_product(lst_price=3.8, taxes_id=tax_consigne + tax_6)
+        product_vat_only = self._create_product(lst_price=30.5, taxes_id=tax_6)
+
+        invoice = self._create_invoice(
+            partner_id=self.partner_be,
+            invoice_line_ids=[
+                self._prepare_invoice_line(product_id=product_consigne, discount=15.0),
+                self._prepare_invoice_line(product_id=product_vat_only, discount=15.0),
+            ],
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_BR_CO_16_payable_amount_with_line_rounding')
