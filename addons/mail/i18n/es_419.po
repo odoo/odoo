@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:39+0000\n"
-"PO-Revision-Date: 2026-03-04 18:45+0000\n"
-"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"PO-Revision-Date: 2026-04-11 09:07+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-18/mail/es_419/>\n"
 "Language: es_419\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: mail
 #. odoo-python
@@ -4015,16 +4015,24 @@ msgid ""
 "Template Source Snippet:\n"
 "%(template_src)s"
 msgstr ""
+"Ocurrió un error al renderizar la plantilla QWeb para %(template_label)s\n"
+"Modelo objetivo: %(model_name)s\n"
+"Contexto de idioma: %(lang_context)s\n"
+"Error: %(error_details)s\n"
+"\n"
+"Fragmento o snippet de origen de la plantilla:\n"
+"%(template_src)s"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Failed to render inline_template template: %(template_txt)s"
 msgid ""
 "Failed to render inline_template template: %(template_txt)s\n"
 "Error details: %(error)s"
-msgstr "Error al visualizar la plantilla inline_template: %(template_txt)s"
+msgstr ""
+"Ocurrió un error al renderizar la plantilla inline_template: %"
+"(template_txt)s\n"
+"Detalles del error: %(error)s"
 
 #. module: mail
 #. odoo-python
@@ -5951,10 +5959,8 @@ msgstr "Restablecer plantilla de correo"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Unnamed %(record_model_name)s (%(record_id)s)"
 msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
-msgstr "Sin nombre %(record_model_name)s (%(record_id)s)"
+msgstr "Plantilla de correo: \"%(name)s\" (ID: %(record_id)s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
@@ -6111,7 +6117,7 @@ msgstr "Marcar como hecho"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "Plantilla de correo masivo: \"%(name)s\" (ID: %(record_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -6766,10 +6772,8 @@ msgstr "No hay mensajes en el historial"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Result of the language detection based on its content."
 msgid "No language detected in context"
-msgstr "Resultado de la detección del idioma según su contenido."
+msgstr "No detectamos ningún idioma en el contexto"
 
 #. module: mail
 #. odoo-python
@@ -9688,10 +9692,8 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Message unique identifier"
 msgid "Template name not identified"
-msgstr "Identificador único del mensaje"
+msgstr "Nombre de la plantilla no identificado"
 
 #. module: mail
 #. odoo-python
@@ -10701,16 +10703,14 @@ msgstr "Sin nombre %(record_model_name)s (%(record_id)s)"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Related Mail Template"
 msgid "Unnamed Mail Template"
-msgstr "Plantilla del correo relacionado"
+msgstr "Correo sin nombre"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Unnamed Mailing"
-msgstr ""
+msgstr "Correo sin nombre"
 
 #. module: mail
 #. odoo-javascript
@@ -12334,6 +12334,12 @@ msgstr "{{ object.partner_id.lang }}"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” en “%(channel_name)s”"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.js:0
+msgid "“%s”"
+msgstr ""
 
 #~ msgid ""
 #~ "Failed to render QWeb template: %(template_src)s\n"

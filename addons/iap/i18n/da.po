@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-03-21 09:18+0000\n"
+"PO-Revision-Date: 2026-04-11 09:05+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/iap/da/>\n"
 "Language: da\n"
@@ -28,6 +28,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                                    Buy Credit"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                    Tank saldo op"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -44,6 +46,8 @@ msgstr "Konto token"
 msgid ""
 "Account token is your authentication key for this service. Do not share it."
 msgstr ""
+"Kontotoken fungerer som din adgangsnøgle til tjenesten – del den ikke med "
+"andre."
 
 #. module: iap
 #. odoo-python
@@ -52,6 +56,8 @@ msgid ""
 "An error occurred while reaching %s. Please contact Odoo support if this "
 "error persists."
 msgstr ""
+"Der opstod en fejl under opkaldet til %s. Kontakt Odoo-support, hvis fejlen "
+"fortsætter."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
@@ -61,7 +67,7 @@ msgstr "Balance"
 #. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__banned
 msgid "Banned"
-msgstr ""
+msgstr "Blokeret"
 
 #. module: iap
 #. odoo-javascript
@@ -95,7 +101,7 @@ msgstr "Oprettet den"
 #. module: iap
 #: model:iap.service,unit_name:iap.iap_service_reveal
 msgid "Credits"
-msgstr ""
+msgstr "Kredit"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__description
@@ -112,12 +118,12 @@ msgstr "Vis navn"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_user_ids
 msgid "Email Alert Recipients"
-msgstr ""
+msgstr "Modtager af advarselsmail"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_threshold
 msgid "Email Alert Threshold"
-msgstr ""
+msgstr "Grænse for advarselsmail"
 
 #. module: iap
 #: model:iap.service,description:iap.iap_service_reveal
@@ -126,6 +132,9 @@ msgid ""
 "leads, generate leads based on a set of criteria and enrich the company data "
 "of your opportunities."
 msgstr ""
+"Få kvalificerede leads og salgsmuligheder: Konvertér dine websitebesøgende "
+"til leads, generér leads ud fra definerede kriterier, og berig data om dine "
+"potentielle kunder."
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -153,7 +162,7 @@ msgstr "IAP Kundeemne berigelse API"
 #. module: iap
 #: model:ir.model,name:iap.model_iap_service
 msgid "IAP Service"
-msgstr ""
+msgstr "IAP-service"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
@@ -170,7 +179,7 @@ msgstr "Utilstrækkelig kredit til at udføre denne service."
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__integer_balance
 msgid "Integer Balance"
-msgstr ""
+msgstr "Heltalsaldo"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
@@ -188,7 +197,7 @@ msgstr "Sidst opdateret den"
 #. odoo-javascript
 #: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
 msgid "Manage Service & Buy Credits"
-msgstr ""
+msgstr "Håndtér tjenester og tank saldo op"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
@@ -208,17 +217,19 @@ msgid ""
 "One of the email alert recipients doesn't have an email address set. Users: "
 "%s"
 msgstr ""
+"En af modtagerne af advarselsmailen har ikke angivet en e-mailadresse. "
+"Brugere: %s"
 
 #. module: iap
 #: model:ir.model.constraint,message:iap.constraint_iap_service_unique_technical_name
 msgid "Only one service can exist with a specific technical_name"
-msgstr ""
+msgstr "Der kan kun være én tjeneste med et bestemt teknisk navn"
 
 #. module: iap
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
 msgid "Please set a positive email alert threshold."
-msgstr ""
+msgstr "Angiv venligst en positiv grænseværdi for advarselsmails."
 
 #. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__registered
@@ -233,7 +244,7 @@ msgstr "Ydelse"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_locked
 msgid "Service Locked"
-msgstr ""
+msgstr "Tjeneste blokeret"
 
 #. module: iap
 #. odoo-javascript
@@ -259,6 +270,8 @@ msgid ""
 "The request to the service timed out. Please contact the author of the app. "
 "The URL it tried to contact was %s"
 msgstr ""
+"Anmodningen til tjenesten er udløbet. Kontakt venligst appens udvikler. Den "
+"URL, der blev forsøgt kontaktet, var %s"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__unit_name

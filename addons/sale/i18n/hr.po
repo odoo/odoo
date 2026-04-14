@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:39+0000\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
 "PO-Revision-Date: 2026-02-21 18:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-18/sale/hr/"
@@ -93,21 +93,6 @@ msgid ""
 msgstr ""
 "(object.state in ('draft', 'sent') and 'Ponuda - %s' % (object.name)) or "
 "'Prodajni nalog - %s' % (object.name)"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "2023-12-31"
-msgstr "2023-12-31"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "27.00"
-msgstr "27.00"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "31.05"
-msgstr "31.05"
 
 #. module: sale
 #. odoo-javascript
@@ -5507,7 +5492,8 @@ msgstr "Valjanost narudžbe, nakon toga nećete moći potpisati i platiti ponudu
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Values set here are company-specific."
-msgstr "Vrijednosti koje su ovdje postavljene specifične su za pojedine tvrtke."
+msgstr ""
+"Vrijednosti koje su ovdje postavljene specifične su za pojedine tvrtke."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5803,6 +5789,12 @@ msgid "units"
 msgstr "jedinice"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/xml/sale_product_field.xml:0
+msgid "x"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "you confirm acceptance on the behalf of"
 msgstr ""
@@ -5836,6 +5828,15 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} Otkazani (Ref {{ object.name or '/' }})"
+
+#~ msgid "2023-12-31"
+#~ msgstr "2023-12-31"
+
+#~ msgid "27.00"
+#~ msgstr "27.00"
+
+#~ msgid "31.05"
+#~ msgstr "31.05"
 
 #~ msgid ""
 #~ "<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "

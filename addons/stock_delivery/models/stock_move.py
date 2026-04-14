@@ -66,7 +66,7 @@ class StockMoveLine(models.Model):
                 base_line.update({'quantity': qty})
                 self.env['account.tax']._add_tax_details_in_base_line(base_line, sale_line_id.company_id)
                 tax_results = base_line['tax_details']
-                move_line.sale_price = tax_results['raw_total_included']
+                move_line.sale_price = tax_results['raw_total_included_currency']
             else:
                 # For kits, use the regular unit price
                 unit_price = move_line.product_id.list_price

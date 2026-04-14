@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from unittest import SkipTest
+from lxml import etree
 from odoo import Command
 from odoo.tests import freeze_time, tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
@@ -695,3 +696,22 @@ class TestItEdiExport(TestItEdi):
         })
         invoice.action_post()
         self._assert_export_invoice(invoice, 'invoice_with_oss_tax.xml')
+
+    def test_export_invoice_uom_unicode_normalization(self):
+        """Test that non-standard Unicode characters (e.g. m², m³) are correctly normalized for XML invoices."""
+        uom_category = self.env['uom.category'].create({
+            'name': 'Test Surface',
+        })
+
+        self.product_a.uom_id = self.product_a.uom_id.copy({'name': 'm²', 'category_id': uom_category.id})
+        invoice = self._create_invoice(
+            partner_id=self.italian_partner_a,
+            post=True,
+            invoice_line_ids=[self._prepare_invoice_line(product_id=self.product_a, price_unit=800.40)],
+        )
+
+        xml = invoice._l10n_it_edi_render_xml()
+        invoice_tree = etree.fromstring(xml)
+
+        uom_nodes = invoice_tree.xpath("//*[local-name()='DettaglioLinee']/*[local-name()='UnitaMisura']")
+        self.assertEqual(uom_nodes[0].text, 'm2')

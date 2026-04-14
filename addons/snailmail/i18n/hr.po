@@ -13,13 +13,14 @@
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
 # Luka Carević <luka@uvid.hr>, 2025
 # Ana Matulin <ana@uvid.hr>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2025-12-02 08:22+0000\n"
-"Last-Translator: Ana Matulin <ana@uvid.hr>\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"PO-Revision-Date: 2026-04-11 14:58+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-18/"
 "snailmail/hr/>\n"
 "Language: hr\n"
@@ -28,7 +29,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__attachment_error
@@ -257,7 +258,7 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__failure_type
 msgid "Failure type"
-msgstr ""
+msgstr "Vrsta pogreške"
 
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_format_error_action
@@ -359,7 +360,7 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__notification_type
 msgid "Notification Type"
-msgstr ""
+msgstr "Vrsta obavijesti"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__notification_ids
@@ -624,6 +625,12 @@ msgstr ""
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
+msgid "The document to be sent exceeds the maximum allowed limit of 8 pages."
+msgstr ""
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "The document was correctly sent by post.<br>The tracking id is %s"
 msgstr ""
 
@@ -673,6 +680,14 @@ msgid ""
 "acknowledgment\n"
 "'user_notification': generated for a specific recipient"
 msgstr ""
+"Koristi se za kategorizaciju generatora poruka\n"
+"'email': generirano dolaznim e-mailom npr. mailgatewayom\n"
+"'comment': generirano unosom korisnika npr. kroz discuss ili composer\n"
+"'email_outgoing': generirano slanjem\n"
+"'notification': generirano sustavom npr. poruke praćenja\n"
+"'auto_comment': generirano automatskim mehanizmom obavijesti npr. potvrda "
+"primitka\n"
+"'user_notification': generirano za određenog primatelja"
 
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state

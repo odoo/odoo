@@ -48,8 +48,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:39+0000\n"
-"PO-Revision-Date: 2026-03-21 09:21+0000\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"PO-Revision-Date: 2026-04-11 09:07+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/mail/fi/"
 ">\n"
@@ -4046,12 +4046,12 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Failed to render inline_template template: %(template_txt)s"
 msgid ""
 "Failed to render inline_template template: %(template_txt)s\n"
 "Error details: %(error)s"
-msgstr "Inline_template-mallin renderöinti epäonnistui: %(template_txt)s)"
+msgstr ""
+"inline_template -mallipohjan renderöinti epäonnistui: %(template_txt)s\n"
+"Virhetidot: %(error)s"
 
 #. module: mail
 #. odoo-python
@@ -5974,10 +5974,8 @@ msgstr "Sähköpostimallin nollaus"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Unnamed %(record_model_name)s (%(record_id)s)"
 msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
-msgstr "Nimeämätön %(record_model_name)s (%(record_id)s)"
+msgstr "Viestipohja: '%(name)s' (Tunnus: %(record_id)s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
@@ -6779,10 +6777,8 @@ msgstr "Ei viestihistoriaa"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Result of the language detection based on its content."
 msgid "No language detected in context"
-msgstr "Kielen tunnistuksen tulos sen sisällön perusteella."
+msgstr "Kieltä ei tunnistettu kontekstista"
 
 #. module: mail
 #. odoo-python
@@ -9680,10 +9676,8 @@ msgstr "Mallien luominen editoijalta edellyttää kelvollista mallia."
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Message unique identifier"
 msgid "Template name not identified"
-msgstr "Viestin yksilöivä tunniste"
+msgstr "Mallipohjan nimeä ei tunnistettu"
 
 #. module: mail
 #. odoo-python
@@ -10681,10 +10675,8 @@ msgstr "Nimeämätön %(record_model_name)s (%(record_id)s)"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
-#| msgid "Related Mail Template"
 msgid "Unnamed Mail Template"
-msgstr "Liittyvä sähköpostin malli"
+msgstr "Nimeämätön viestipohja"
 
 #. module: mail
 #. odoo-python
@@ -12302,6 +12294,12 @@ msgstr "{{ object.partner_id.lang }}"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "\"%(member_name)s\" kohdassa \"%(channel_name)s\""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.js:0
+msgid "“%s”"
+msgstr ""
 
 #~ msgid ""
 #~ "Failed to render QWeb template: %(template_src)s\n"

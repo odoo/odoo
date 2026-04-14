@@ -40,11 +40,11 @@ class HtmlFieldHistory(models.AbstractModel):
                         history_metadata[field_name].append(metadata)
             rec.html_field_history_metadata = history_metadata
 
-    def copy_data(self, default=None):
-        vals = super().copy_data(default)
-        if 'html_field_history' in vals:
-            del vals['html_field_history']
-        return vals
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals.pop('html_field_history', None)
+        return super().create(vals_list)
 
     def write(self, vals):
         rec_db_contents = {}
