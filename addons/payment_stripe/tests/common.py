@@ -58,6 +58,15 @@ class StripeCommon(PaymentCommon):
             },
             'type': 'charge.refunded'
         }
+        cls.void_payment_data = {
+            'data': {
+                'object': {
+                    'captured': False,
+                    **cls.refund_notification_data['data']['object'],
+                }
+            },
+            'type': 'charge.refunded',
+        }
         cls.canceled_refund_notification_data = {
             'data': {
                 'object': dict(cls.refund_object, status='failed'),
