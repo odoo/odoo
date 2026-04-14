@@ -278,3 +278,16 @@ class TestMultistepManufacturing(TestMrpCommon):
         self.assertEqual(so.mrp_production_count, 2, "There should be 2 manufactured orders linked to this sale order.")
         self.assertEqual(len(so.mrp_production_ids.picking_ids), 1, "There should only be 1 pick components transfer for the 2 manufacturing orders.")
         self.assertEqual(len(so.mrp_production_ids.picking_ids.production_ids), 2, "There should be 2 manufacture orders linked to the pick components transfer.")
+
+    def test_duplicate_mo_smartbutton_consistency(self):
+        """
+        Test that duplicating a Manufacturing Order (MO) created
+        from a Sales Order does not keep the original sales link
+        """
+        self.warehouse.manufacture_steps = 'mrp_one_step'
+        self.sale_order.action_confirm()
+        mo = self.sale_order.mrp_production_ids
+        self.assertEqual(self.sale_order.mrp_production_count, 1)
+        self.assertEqual(mo.sale_order_count, 1)
+        duplicate_mo = mo.copy()
+        self.assertEqual(duplicate_mo.sale_order_count, 0)
