@@ -311,6 +311,22 @@ class TestMailComposerRendering(TestMailComposer):
             [('mail_email_address', '=', self.partner_employee.email)])
         self.assertEqual(len(notification), 1)
 
+    @users('employee')
+    def test_prevent_sudo_rendering(self):
+        test_template = self.env['mail.template'].sudo().create({
+            'body_html': '<t t-if="not object.env.su">1</t>',
+            'model_id': self.env['ir.model']._get_id('res.partner'),
+        })
+        partner = self.test_record.with_env(self.env)
+        composer = self.env['mail.compose.message'].create({
+            'model': partner._name,
+            'res_ids': f'{[partner.id]}',
+            'template_id': test_template.id,
+            'composition_mode': 'mass_mail',
+        })
+        result = composer._render_field('body', partner.ids)[partner.id]
+        self.assertEqual(result, '1')
+
 @tagged("mail_composer")
 class TestMailComposerUI(MailCommon, HttpCase):
 
