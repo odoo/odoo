@@ -565,12 +565,12 @@ class ProductProduct(models.Model):
             # If delivered quantity is not invoiced then no need to create this entry
             if not account_move:
                 continue
-            accounts = svl_to_vacuum.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=account_move.fiscal_position_id)
+            accounts = svl_to_vacuum.product_id.product_tmpl_id.with_company(vacuum_svl.company_id).get_product_accounts(fiscal_pos=account_move.fiscal_position_id)
             if not accounts.get('stock_output') or not accounts.get('expense'):
                 continue
             svls_accounts[svl_to_vacuum.id] = accounts
             description = "Expenses %s" % (vacuum_svl.description)
-            move_lines = vacuum_svl.stock_move_id._prepare_account_move_line(
+            move_lines = vacuum_svl.stock_move_id.with_company(vacuum_svl.company_id)._prepare_account_move_line(
             vacuum_svl.quantity, vacuum_svl.value * -1,
             accounts['stock_output'].id, accounts['expense'].id,
             vacuum_svl.id, description)
