@@ -323,7 +323,7 @@
                         </ul>
                     </t>
 
-                    <t t-elif="attribute.display_type == 'pills'">
+                    <t t-elif="attribute.display_type in ('pills', 'range')">
                         <ul
                             t-att-data-attribute-id="attribute.id"
                             t-attf-class="o_wsale_product_attribute d-flex flex-wrap list-unstyled gap-2 #{'d-none' if single_and_custom else ''}"

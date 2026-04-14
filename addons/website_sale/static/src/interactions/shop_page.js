@@ -9,7 +9,7 @@ import wSaleUtils from "@website_sale/js/website_sale_utils";
 export class ShopPage extends Interaction {
     static selector = '.o_wsale_products_page';
     dynamicContent = {
-        'form.js_attributes input, form.js_attributes select': {
+        'form.js_attributes input:not(.o_attr_range), form.js_attributes select': {
             't-on-change.prevent': this.onChangeAttribute,
         },
         '.o_wsale_products_searchbar_form': { 't-on-submit': this.onSearch },

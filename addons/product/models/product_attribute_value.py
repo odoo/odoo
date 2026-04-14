@@ -114,6 +114,17 @@ class ProductAttributeValue(models.Model):
             self.env.invalidate_all()
         return res
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for record in records.filtered(
+            lambda r: r.attribute_id.display_type == "range"
+        ):
+            record.sequence = max(
+                record.attribute_id.value_ids.mapped("sequence") or [-1],
+            ) + 1
+        return records
+
     def check_is_used_on_products(self):
         for pav in self.filtered('is_used_on_products'):
             return _(

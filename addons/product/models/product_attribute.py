@@ -42,6 +42,7 @@ class ProductAttribute(models.Model):
             ('color', 'Color'),
             ('multi', 'Multi-checkbox'),
             ('image', 'Image'),
+            ('range', 'Range'),
         ],
         default='radio',
         required=True,
@@ -99,7 +100,7 @@ class ProductAttribute(models.Model):
 
     @api.onchange('display_type')
     def _onchange_display_type(self):
-        if self.display_type == 'multi' and self.number_related_products == 0:
+        if self.display_type in ('multi', 'range') and self.number_related_products == 0:
             self.create_variant = 'no_variant'
 
     # === CRUD METHODS === #
@@ -121,6 +122,12 @@ class ProductAttribute(models.Model):
                         attribute=pa.display_name,
                         products=", ".join(pa.product_tmpl_ids.mapped('display_name')),
                     ))
+        if vals.get("display_type") == "range":
+            for attribute in self:
+                values = attribute.value_ids.sorted("id")
+                if set(values.mapped("sequence")) == {0}:
+                    for index, value in enumerate(values):
+                        value.sequence = index
         invalidate = 'sequence' in vals and any(record.sequence != vals['sequence'] for record in self)
         res = super().write(vals)
         if invalidate:
