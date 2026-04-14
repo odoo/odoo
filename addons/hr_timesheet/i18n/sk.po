@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-04-02 17:21+0000\n"
+"PO-Revision-Date: 2026-04-14 08:30+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-18/"
 "hr_timesheet/sk/>\n"
@@ -20,8 +20,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
-">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
+"n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 "X-Generator: Weblate 5.16.2\n"
 
 #. module: hr_timesheet
@@ -33,43 +33,43 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid "%(effective)s %(uom_name)s"
-msgstr ""
+msgstr "%(effective)s %(uom_name)s"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid "%(effective)s / %(allocated)s %(uom_name)s"
-msgstr ""
+msgstr "%(effective)s / %(allocated)s %(uom_name)s"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid "%(effective)s / %(allocated)s %(uom_name)s (%(success_rate)s%%)"
-msgstr ""
+msgstr "%(effective)s / %(allocated)s %(uom_name)s (%(success_rate)s%%)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid "%(exceeding_hours)s %(uom_name)s (+%(exceeding_rate)s%%)"
-msgstr ""
+msgstr "%(exceeding_hours)s %(uom_name)s (+%(exceeding_rate)s%%)"
 
 #. module: hr_timesheet
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/components/time_hour_field/time_hour_field.js:0
 msgid "%(hours)sh"
-msgstr ""
+msgstr "%(hours)sh"
 
 #. module: hr_timesheet
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/components/time_hour_field/time_hour_field.js:0
 msgid "%(hours)sh%(minutes)s"
-msgstr ""
+msgstr "%(hours)sh%(minutes)s"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid "%(name)s's Timesheets"
-msgstr ""
+msgstr "Pracovné výkazy - %(name)s"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -78,6 +78,8 @@ msgid ""
 "'%(missing_plan_names)s' analytic plan(s) required on the project '%"
 "(project_name)s' linked to the timesheet."
 msgstr ""
+"'%(missing_plan_names)s' analytické plány požadované v projekte '%"
+"(project_name)s' prepojenom s pracovným výkazom."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -100,17 +102,19 @@ msgstr "(vrátanie"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "1 day"
-msgstr ""
+msgstr "1 deň"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "2 hours"
-msgstr ""
+msgstr "2 hodiny"
 
 #. module: hr_timesheet
 #: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "<b class=\"tip_title\">Tip: Record your Timesheets faster</b>"
 msgstr ""
+"<b class=\"tip_title\">Tip: Zaznamenávajte svoje pracovné výkazy rýchlejšie "
+"</b>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -118,6 +122,8 @@ msgid ""
 "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
 "title=\"Date\"/>"
 msgstr ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Dátum\" "
+"title=\"Dátum\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -133,7 +139,7 @@ msgstr "<span class=\"o_stat_text\">Pracovné výkazy</span>"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "<span class=\"text-nowrap\">Time Spent on Sub-tasks:</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">Čas vykázaný na podúlohách:</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -142,6 +148,9 @@ msgid ""
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"has_timesheet\">\n"
+"                        Naozaj chcete odstrániť týchto zamestnancov?\n"
+"                   </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -166,7 +175,7 @@ msgstr "<span>Popis</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span>Employee</span>"
-msgstr ""
+msgstr "<span>Zamestnanec</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -176,27 +185,27 @@ msgstr "<span>Vykázaný čas</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
 msgid "<strong>Progress:</strong>"
-msgstr ""
+msgstr "<strong>Pokrok:</strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Time Remaining: </strong>"
-msgstr ""
+msgstr "<strong>Zostávajúci čas: </strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Time recorded on sub-tasks: </strong>"
-msgstr ""
+msgstr "<strong>Čas zaznamenaný na podúlohách: </strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Total Days: </strong>"
-msgstr ""
+msgstr "<strong>Celkom dní: </strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Total Hours: </strong>"
-msgstr ""
+msgstr "<strong>Celkom hodín: </strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
@@ -262,26 +271,30 @@ msgid ""
 "<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
+"Analyzujte projekty a úlohy, na ktorých vaši zamestnanci trávia svoj čas.<br>"
+"\n"
+"                Zhodnoťte, ktorá časť je fakturovateľná a aké náklady "
+"predstavuje."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_allow
 msgid "Approver Reminder"
-msgstr ""
+msgstr "Pripomienka pre schvaľovateľa"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Archive Employees"
-msgstr ""
+msgstr "Archivovať zamestnancov"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "Audrey Peterson"
-msgstr ""
+msgstr "Audrey Peterson"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Average of Progress"
-msgstr ""
+msgstr "Priemerný pokrok"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_activity_analysis
@@ -301,7 +314,7 @@ msgstr "Podľa úlohy"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "Call client and discuss project"
-msgstr ""
+msgstr "Zavolať klientovi a prediskutovať projekt"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
@@ -361,18 +374,18 @@ msgstr "Dátum"
 #. module: hr_timesheet
 #: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__days
 msgid "Days / Half-Days"
-msgstr ""
+msgstr "Dni / Polovice dní"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 msgid "Days Remaining"
-msgstr ""
+msgstr "Zostávajúce dni"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__analytic_account_active
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__analytic_account_active
 msgid "Deactivate the account."
-msgstr ""
+msgstr "Deaktivovať účet."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
@@ -396,7 +409,7 @@ msgstr "Zmazať"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Delete Employee"
-msgstr ""
+msgstr "Odstrániť zamestnanca"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__milestone_id
@@ -418,7 +431,7 @@ msgstr "Oddelenie"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_form
 msgid "Describe your activity"
-msgstr ""
+msgstr "Popíšte svoju činnosť"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -468,7 +481,7 @@ msgstr "Zamestnanec"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_employee_delete_wizard
 msgid "Employee Delete Wizard"
-msgstr ""
+msgstr "Sprievodca odstránením zamestnanca"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_user_allow
@@ -485,23 +498,23 @@ msgstr "Výpoveď zamestnanca"
 #. odoo-python
 #: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
 msgid "Employees' Timesheets"
-msgstr ""
+msgstr "Pracovné výkazy zamestnancov"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_method
 msgid "Encoding Method"
-msgstr ""
+msgstr "Spôsob zadávania"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid "Extra Time"
-msgstr ""
+msgstr "Čas navyše"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Generate timesheets for validated time off requests and public holidays"
-msgstr ""
+msgstr "Vytvorte pracovné výkazy pre schválené žiadosti o voľno a sviatky"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_ir_http
@@ -511,12 +524,12 @@ msgstr "HTTP smerovanie"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__has_department_manager_access
 msgid "Has Department Manager Access"
-msgstr ""
+msgstr "Má prístup vedúceho oddelenia"
 
 #. module: hr_timesheet
 #: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__hours
 msgid "Hours / Minutes"
-msgstr ""
+msgstr "Hodiny / Minúty"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
@@ -616,7 +629,7 @@ msgstr "Menu"
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__message_partner_ids
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__message_partner_ids
 msgid "Message Partner"
-msgstr ""
+msgstr "Partneri pre správy"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__milestone_id
@@ -651,12 +664,12 @@ msgstr "Najnovšie"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "No Parent Task"
-msgstr ""
+msgstr "Žiadna nadradená úloha"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "No Task"
-msgstr ""
+msgstr "Žiadna úloha"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -680,7 +693,7 @@ msgstr "Žiadne"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__remaining_hours
 msgid "Number of allocated hours minus the number of hours spent."
-msgstr ""
+msgstr "Počet pridelených hodín mínus počet odpracovaných hodín."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -711,7 +724,7 @@ msgstr "Partner"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Please first delete all of their timesheets."
-msgstr ""
+msgstr "Najprv prosím vymažte všetky ich pracovné výkazy."
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
@@ -773,6 +786,8 @@ msgid ""
 "Record your timesheets in an instant by pressing Shift + the corresponding "
 "hotkey to add 15min to your projects."
 msgstr ""
+"Zaznamenajte si odpracované hodiny jedným stlačením klávesov Shift + "
+"príslušná klávesová skratka a pridajte tak 15 minút k svojim projektom."
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
@@ -782,17 +797,17 @@ msgstr "Prehľady"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Research and Development"
-msgstr ""
+msgstr "Výskum a vývoj"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "Research and Development/New Portal System"
-msgstr ""
+msgstr "Výskum a vývoj/Nový portálový systém"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_home_timesheet
 msgid "Review all timesheets related to your projects"
-msgstr ""
+msgstr "Skontrolujte všetky pracovné výkazy súvisiace s vašimi projektmi"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -810,7 +825,7 @@ msgstr "Hľadajte v sekcii Zamestnanec"
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Search in Parent Task"
-msgstr ""
+msgstr "Hľadať v nariadených úlohách"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -827,7 +842,7 @@ msgstr "Hľadajte v úlohe"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "See Timesheets"
-msgstr ""
+msgstr "Pozrieť pracovné výkazy"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -842,6 +857,8 @@ msgid ""
 "Send a periodical email reminder to timesheets approvers that still have "
 "timesheets to validate"
 msgstr ""
+"Posielajte pravidelné e-mailové pripomienky schvaľovateľom pracovných "
+"výkazov, ktorí ešte majú pracovné výkazy na schálenie"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -849,6 +866,8 @@ msgid ""
 "Send a periodical email reminder to timesheets users that still have "
 "timesheets to encode"
 msgstr ""
+"Posielajte pravidelné e-mailové pripomienky užívateľom pracovných výkazov, "
+"ktorí ešte majú pracovné výkazy na zaznamenanie"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -858,13 +877,13 @@ msgstr "Nastavenia"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
 msgid "Sub-Task of '"
-msgstr ""
+msgstr "Podúloha '"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Sub-tasks Time Spent"
-msgstr ""
+msgstr "Vykázaný čas na podúlohách"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -901,6 +920,8 @@ msgid ""
 "The project, the task and the analytic accounts of the timesheet must belong "
 "to the same company."
 msgstr ""
+"Projekt, úloha a analytické účty v pracovnom výkaze musia patriť tej istej "
+"spoločnosti."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -977,6 +998,8 @@ msgstr ""
 msgid ""
 "This task cannot be private because there are some timesheets linked to it."
 msgstr ""
+"Táto úloha nemôže byť súkromná, pretože sú s ňou prepojené niektoré pracovné "
+"výkazy."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1023,12 +1046,12 @@ msgstr "Zostávajúci čas"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__remaining_hours_percentage
 msgid "Time Remaining Percentage"
-msgstr ""
+msgstr "Zostávajúci čas v percentách"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Time Remaining on SO"
-msgstr ""
+msgstr "Zostávajúci čas na predajnej objednávke"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__effective_hours
@@ -1055,7 +1078,7 @@ msgstr "Strávený čas"
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__subtask_effective_hours
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Time Spent on Sub-Tasks"
-msgstr ""
+msgstr "Vykázaný čas na podúlohách"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__subtask_effective_hours
@@ -1074,6 +1097,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
 msgid "Time spent on this task and its sub-tasks (and their own sub-tasks)."
 msgstr ""
+"Vykázaný čas na tejto úlohe a jej podúlohách (a ich vlastných podúlohách)."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_report_project_task_user__total_hours_spent
@@ -1124,12 +1148,12 @@ msgstr "Kódová jednotka pracovného výkazu"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_report_search
 msgid "Timesheet Report"
-msgstr ""
+msgstr "Prehľad pracovných výkazov"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_update__timesheet_time
 msgid "Timesheet Time"
-msgstr ""
+msgstr "Čas pracovného výkazu"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1173,18 +1197,18 @@ msgstr "Pracovné výkazy"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Timesheets - %s"
-msgstr ""
+msgstr "Pracovné výkazy - %s"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_view_search
 msgid "Timesheets 80%"
-msgstr ""
+msgstr "Pracovné výkazy 80%"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_view_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_project_project_filter_inherit_timesheet
 msgid "Timesheets >100%"
-msgstr ""
+msgstr "Pracovné výkazy >100%"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_form
@@ -1192,38 +1216,38 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_project
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_task
 msgid "Timesheets Analysis"
-msgstr ""
+msgstr "Analýza pracovných výkazov"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_timesheets_analysis_report
 msgid "Timesheets Analysis Report"
-msgstr ""
+msgstr "Prehľad pracovných výkazov"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Timesheets Control"
-msgstr ""
+msgstr "Kontrola pracovných výkazov"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
 msgid "Timesheets by Employee"
-msgstr ""
+msgstr "Pracovné výkazy podľa zamestnanca"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_project
 msgid "Timesheets by Project"
-msgstr ""
+msgstr "Pracovné výkazy podľa projektu"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_task
 msgid "Timesheets by Task"
-msgstr ""
+msgstr "Pracovné výkazy podľa úlohy"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Timesheets cannot be created on a private task."
-msgstr ""
+msgstr "Na súkromnej úlohe nie je možné vytvoriť pracovné výkazy."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1231,6 +1255,8 @@ msgstr ""
 msgid ""
 "Timesheets must be created with an active employee in the selected companies."
 msgstr ""
+"Pracovné výkazy musia byť vytvorené s aktívnym zamestnancom vo vybraných "
+"spoločnostiach."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1239,6 +1265,8 @@ msgid ""
 "Timesheets must be created with at least an active analytic account defined "
 "in the plan '%(plan_name)s'."
 msgstr ""
+"Pracovné výkazy musia byť vytvorené s aspoň jedným aktívnym analytickým "
+"účtom definovaným v pláne „%(plan_name)s “."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1249,7 +1277,7 @@ msgstr "Pracovné výkazy %(name)s"
 #. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "Tip: Record your Timesheets faster"
-msgstr ""
+msgstr "Tip: Zaznamenávajte svoje pracovné výkazy rýchlejšie"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1259,6 +1287,9 @@ msgid ""
 "project. Please set one up in the plan '%(plan_name)s' or turn off the "
 "timesheets feature."
 msgstr ""
+"Na používanie funkcie pracovného výkazu potrebujete analytický účet "
+"projektu. Prosím, vytvorte si ho v pláne „%(plan_name)s “ alebo vypnite "
+"funkciu pracovných výkazov."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1283,7 +1314,7 @@ msgstr "Celkový pridelený čas"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 msgid "Total Days Spent"
-msgstr ""
+msgstr "Celkový počet vykázaných dní"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
@@ -1291,7 +1322,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Time Spent"
-msgstr ""
+msgstr "Celkový vykázaný čas"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1338,12 +1369,12 @@ msgstr "Užívateľ"
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_approver
 msgid "User: all timesheets"
-msgstr ""
+msgstr "Užívateľ: všetky pracovné výkazy"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
 msgid "User: own timesheets only"
-msgstr ""
+msgstr "Užívateľ: iba vlastné pracovné výkazy"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -1358,6 +1389,11 @@ msgid ""
 "and can be re-invoiced to\n"
 "                    customers if required."
 msgstr ""
+"Môžete si každý deň zaznamenávať a sledovať odpracované hodiny podľa "
+"projektu.\n"
+"                    Všetok čas strávený na projekte sa stane nákladom a v "
+"prípade potreby môže byť fakturovaný\n"
+"                    zákazníkom."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1369,7 +1405,7 @@ msgstr "Nemáte prístup k pracovným výkazom, ktoré nie sú vaše."
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_employee.py:0
 msgid "You cannot delete employees who have timesheets."
-msgstr ""
+msgstr "Zamestnancov, ktorí majú pracovné výkazy, nie je možné odstrániť."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -1389,6 +1425,10 @@ msgid ""
 "                            Please switch to another account, or reactivate "
 "the current one to timesheet on the project."
 msgstr ""
+"V tomto projekte nemôžete zaznamenávať pracovné výkazy, pretože je prepojený "
+"s neaktívnym Analytickým účtom.<br/>\n"
+"                            Zmeňte nastavenie na iný účet alebo reaktivujte "
+"aktuálny účet, aby ste mohli zaznamenávať pracovné výkazy v projekte."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -1397,12 +1437,17 @@ msgid ""
 "analytic account.<br/> Please change this account, or reactivate the current "
 "one to timesheet on the project."
 msgstr ""
+"V tomto projekte nemôžete zaznamenávať pracovné výkazy, pretože je prepojený "
+"s neaktívnym analytickým účtom.<br/> Zmeňte tento účet alebo reaktivujte "
+"aktuálny, aby ste mohli zaznamenávať pracovné výkazy v projekte."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "You cannot set an archived employee on existing timesheets."
 msgstr ""
+"Na existujúcich pracovných výkazoch nemôžete nastaviť archivovaného "
+"zamestnanca."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_task
@@ -1421,6 +1466,9 @@ msgid ""
 "                            <span class=\"fw-bold text-dark\"> Sub-tasks</"
 "span>)"
 msgstr ""
+"na\n"
+"                           <span class=\"fw-bold text-dark\"> podúlohách</"
+"span>)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1428,3 +1476,6 @@ msgid ""
 "on\n"
 "                        <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
 msgstr ""
+"na\n"
+"                           <span class=\"fw-bold text-dark\"> podúlohách</"
+"span>)"
