@@ -132,7 +132,7 @@ class ProductFeed(models.Model):
             self.cache_expiry = fields.Datetime.today() + relativedelta(days=1)
             return compressed_gmc_xml  # Avoid encoding and directly decoding
 
-        return self.feed_cache
+        return self.feed_cache.content
 
     def _render_gmc_feed(self):
         """Render the Google Merchant Center feed.
