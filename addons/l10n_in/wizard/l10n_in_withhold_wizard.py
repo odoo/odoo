@@ -205,7 +205,7 @@ class L10n_InWithholdWizard(models.TransientModel):
             if wizard.tax_id:
                 taxes_res = wizard.tax_id.compute_all(
                     wizard.base,
-                    currency=wizard.tax_id.company_id.currency_id,
+                    currency=wizard.company_id.currency_id,
                     quantity=1.0,
                     product=False,
                     partner=False,
