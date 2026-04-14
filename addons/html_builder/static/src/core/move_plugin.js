@@ -25,6 +25,7 @@ import { localization } from "@web/core/l10n/localization";
  *      movedEl: HTMLElement,
  *      dragState: DragState,
  * }) => void)[]} on_element_arrow_moved_handlers
+ * @typedef {((el: HTMLElement) => boolean | undefined)[]} is_move_neighbor_predicates
  *
  * @typedef { Object } MoveShared
  * @property { MovePlugin['getNeighbors'] } getNeighbors
@@ -306,6 +307,7 @@ export class MovePlugin extends Plugin {
                 el === target ||
                 (!el.classList.contains("o_we_no_overlay") &&
                     window.getComputedStyle(el).display !== "none" &&
+                    (this.checkPredicates("is_move_neighbor_predicates", el) ?? true) &&
                     !el.closest(systemNodeSelectors))
         );
     }

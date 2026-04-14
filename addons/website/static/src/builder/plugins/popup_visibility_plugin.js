@@ -41,6 +41,7 @@ export class PopupVisibilityPlugin extends Plugin {
             }
             return value;
         },
+        is_move_neighbor_predicates: (el) => (el.matches(".s_popup") ? false : undefined),
     };
 
     setup() {

@@ -32,10 +32,14 @@ async function expectToTriggerEvent(target, type, callback) {
 }
 
 describe("Popup options: empty page before edit", () => {
+    let builder;
     // Note: for some reason, `before()` doesn't work.
     // Done in `beforeEach` because frontend JS takes too much time to load.
     beforeEach(async () => {
-        await setupWebsiteBuilder("", { loadIframeBundles: true, loadAssetsFrontendJS: true });
+        builder = await setupWebsiteBuilder("", {
+            loadIframeBundles: true,
+            loadAssetsFrontendJS: true,
+        });
     });
     test("dropping the popup snippet automatically displays it", async () => {
         await insertCategorySnippet({ group: "content", snippet: "s_popup" });
@@ -61,6 +65,37 @@ describe("Popup options: empty page before edit", () => {
             display: "block",
             "background-color": "rgb(255, 0, 0)",
         });
+    });
+    test("hidden popup are not taken into account when moving other snippets", async () => {
+        await insertCategorySnippet({ group: "intro", snippet: "s_cover" });
+        await insertCategorySnippet({ group: "content", snippet: "s_popup" });
+        await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
+            contains(".o_we_invisible_entry .fa-eye").click()
+        );
+        await insertCategorySnippet({ group: "intro", snippet: "s_cover" });
+        await contains(":iframe .s_cover:last").click();
+        expect(".o_overlay_options button.fa-angle-up").toHaveCount(1);
+        expect(".o_overlay_options button.fa-angle-down").toHaveCount(0);
+        await contains(".o_overlay_options button.fa-angle-up").click();
+        expect(".o_overlay_options button.fa-angle-up").toHaveCount(0);
+        expect(".o_overlay_options button.fa-angle-down").toHaveCount(1);
+    });
+    test("popup are never taken into account to show arrow to move another snippet", async () => {
+        await insertCategorySnippet({ group: "intro", snippet: "s_cover" });
+        await insertCategorySnippet({ group: "content", snippet: "s_popup" });
+        await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
+            contains(".o_we_invisible_entry .fa-eye").click()
+        );
+        await contains(":iframe .s_cover").click();
+        await contains("button:contains(Grid)").click(); // arbitrary thing to undo
+        await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () =>
+            contains(".o_we_invisible_entry .fa-eye-slash").click()
+        );
+        await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
+            undo(builder.getEditor())
+        );
+        expect(".o_overlay_options button.fa-angle-up").toHaveCount(0);
+        expect(".o_overlay_options button.fa-angle-down").toHaveCount(0);
     });
 });
 
