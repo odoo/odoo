@@ -163,9 +163,13 @@ def migrate(
     dry_run: bool = False,
 ):
     if script:
-        script_path = next(UPGRADE.glob(f'*{script.removesuffix(".py")}*.py'), None)
-        if not script_path:
-            raise FileNotFoundError(script)
+        script_path = Path(script).absolute()
+        if not script_path.is_file():
+            candidate_paths = list(UPGRADE.glob(f'*{script.removesuffix(".py")}*.py'))
+            if len(candidate_paths) == 1:
+                script_path = candidate_paths[0]
+            else:
+                raise FileNotFoundError(script)
         script_path.relative_to(UPGRADE)  # safeguard, prevent going up
         module = SourceFileLoader(script_path.name, str(script_path)).load_module()
         modules = [(script_path.name, module)]
