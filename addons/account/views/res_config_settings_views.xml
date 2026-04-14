@@ -79,6 +79,14 @@
                                 invisible="not('EU' in company_country_group_codes or company_country_code in ('CH', 'UK'))">
                                 <button type="object" name="action_eu_oss_tax_mapping" icon="fa-refresh" string="OSS Tax mapping" class="btn-link"/>
                             </setting>
+                            <setting id="vies_service_setting"
+                                    help="Verify VAT numbers using the European VIES service"
+                                    company_dependent="1"
+                                    title="If this checkbox is ticked, the default fiscal position that applies will
+                                           depend upon the output of the verification by the European VIES Service."
+                                    documentation="/applications/finance/accounting/taxation/taxes/vat_validation.html">
+                                <field name="vat_check_vies"/>
+                            </setting>
                             <setting id="tax_exigibility" company_dependent="1" help="Allow to configure taxes using cash basis" title="Select this if the taxes should use cash basis, which will create an entry for such taxes on a given account during reconciliation."
                                 documentation="/applications/finance/accounting/taxation/taxes/cash_basis_taxes.html">
                                 <field name="tax_exigibility"/>

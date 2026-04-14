@@ -10,7 +10,6 @@ Chart accounting and taxes for Bulgaria
     """,
     'depends': [
         'account',
-        'base_vat',
     ],
     'auto_install': ['account'],
     'data': [

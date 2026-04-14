@@ -13,7 +13,6 @@ Source: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racu
     'author': 'Modoolar, Odoo S.A.',
     'depends': [
         'account',
-        'base_vat',
     ],
     'auto_install': ['account'],
     'data': [

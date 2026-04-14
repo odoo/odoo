@@ -164,8 +164,7 @@ class ResPartner(models.Model):
     @api.model
     def _validate_partner_autocomplete_response(self, autocomplete_response):
         if (
-            self.env['ir.module.module']._get('base_vat').state == 'installed'
-            and (vat_number := autocomplete_response.get('vat'))
+            (vat_number := autocomplete_response.get('vat'))
             and (enriched_company := self.env.context.get('enriched_company_data'))
             ):
             country = self.env['res.country'].browse(enriched_company['country_id']['id']).exists()

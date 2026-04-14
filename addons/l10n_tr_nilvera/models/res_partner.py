@@ -57,7 +57,7 @@ class ResPartner(models.Model):
         super(ResPartner, self - l10n_tr_partners)._compute_is_company()
 
     def check_vat_tr(self, vat):
-        # EXTENDS 'base_vat'
+        # EXTENDS 'base_setup'
         company = self.env.company
         return (
             super().check_vat_tr(vat)

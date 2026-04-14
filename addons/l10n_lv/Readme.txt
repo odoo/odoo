@@ -7,7 +7,6 @@ Pēc šī moduļa uzstādīšanas tiks izveidoti:
 
 Lai varētu pilnvērtīgi izmantot šī moduļa iespējas, jums būs nepieciešami sekojoši moduļi:
 * account,
-* base_vat,
 * l10n_multilang,
 * kā arī account_accountant Enterprise versijai vai analogs modulis Community versijai.
 
@@ -23,7 +22,6 @@ by installing these modules, will be created:
 
 To get around and make full use of these features, you will need the following modules:
 * account,
-* base_vat,
 * l10n_multilang,
 * as well as account_accountant (for Enterprise version) or similar modules for Community version.
 

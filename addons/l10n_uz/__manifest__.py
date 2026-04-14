@@ -11,7 +11,6 @@ Uzbekistan accounting chart and localization.
     'category': 'Accounting/Localizations/Account Charts',
     'depends': [
         'account',
-        'base_vat',
     ],
     'demo': [
         'demo/demo_company.xml'
