@@ -639,7 +639,7 @@ class CrmTeam(models.Model):
         for team, leads_to_assign_ids in leads_per_team.items():
             members_to_assign = list(team.crm_team_member_ids.filtered(lambda member:
                 member.assignment_max != 0 and quota_per_member.get(member, 0) > 0
-            ).sorted(key=lambda member: quota_per_member.get(member, 0), reverse=True))
+            ).sorted(key=lambda member: (quota_per_member.get(member, 0), random.random()), reverse=True))
             if not members_to_assign:
                 continue
             result_data.update({
