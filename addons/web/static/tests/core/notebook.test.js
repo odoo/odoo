@@ -255,7 +255,7 @@ test("defaultPage recomputed when isVisible is dynamic", async () => {
                     <t t-set-slot="2" title="'page2'" isVisible="true">
                         <div class="page2" />
                     </t>
-                    <t t-set-slot="3" title="'page3'" isVisible="defaultPageVisible">
+                    <t t-set-slot="3" title="'page3'" isVisible="this.defaultPageVisible">
                         <div class="page3" />
                     </t>
                 </Notebook>`;
