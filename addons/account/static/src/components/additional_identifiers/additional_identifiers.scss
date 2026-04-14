@@ -1,0 +1,8 @@
+// Make intermediate wrappers transparent to the parent form grid so the
+// identifier label/value cells participate directly in the inner group grid,
+// aligning with the VAT field above.
+.o_inner_group > .o_cell:has(.o_additional_identifiers_list),
+.o_cell > .o_field_widget:has(.o_additional_identifiers_list),
+.o_additional_identifiers_list {
+    display: contents;
+}

@@ -9,10 +9,10 @@
             <xpath expr="//field[@name='vat']" position="attributes">
                 <attribute name="required">l10n_in_is_gst_registered_enabled and l10n_in_gst_treatment in ['regular', 'composition', 'special_economic_zone', 'deemed_export']</attribute>
             </xpath>
-            <xpath expr="//field[@name='vat']" position="before">
+            <xpath expr="//label[@for='vat']" position="before">
                 <field name="l10n_in_gst_treatment" invisible="'IN' not in fiscal_country_codes or not l10n_in_is_gst_registered_enabled" readonly="parent_id"/>
             </xpath>
-            <xpath expr="//field[@name='vat']" position="after">
+            <xpath expr="//div[@id='vat_div']" position="after">
                 <field name="l10n_in_pan_entity_id" invisible="country_code != 'IN'" readonly="parent_id"/>
                 <field name="l10n_in_tan" invisible="country_code != 'IN' or not l10n_in_pan_entity_id" readonly="parent_id"/>
             </xpath>

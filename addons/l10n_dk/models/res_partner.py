@@ -109,11 +109,6 @@ class ResPartner(models.Model):
     # OVERRIDE AND HELPERS
     # -------------------------------------------------------------------------
 
-    def _get_company_registry_labels(self):
-        labels = super()._get_company_registry_labels()
-        labels['DK'] = 'CVR'
-        return labels
-
     def _get_edi_builder(self, invoice_edi_format):
         # EXTENDS 'account_edi_ubl_cii'
         if invoice_edi_format == 'oioubl_21':

@@ -6,10 +6,10 @@ from odoo import _, api, models
 from odoo.tools import html2plaintext
 from odoo.tools.misc import formatLang, NON_BREAKING_SPACE
 from odoo.addons.account.tools import dict_to_xml
+from odoo.addons.account.tools.country_groups import EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
     FloatFmt,
     GST_COUNTRY_CODES,
-    EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES,
 )
 from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
 

@@ -29,7 +29,7 @@ class TestUblExportBis3InvoiceSelfBillingBE(TestUblBis3Common, TestUblCiiBECommo
             'street': 'Chaussée de Namur 40',
             'city': 'Ramillies',
             'zip': '1367',
-            'global_location_number': '0123456789',
+            'global_location_number': '9780471117094',
             'country_id': self.ref('base.be'),
         })
         tax_21 = self.percent_tax(21.0, type_tax_use='purchase')

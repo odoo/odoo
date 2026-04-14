@@ -12,6 +12,7 @@ from . import test_account_journal
 from . import test_account_account
 from . import test_account_tax
 from . import test_account_to_check
+from . import test_additional_identifiers
 from . import test_account_analytic
 from . import test_account_payment
 from . import test_account_payment_method_line

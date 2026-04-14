@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="account.AdditionalIdentifiersButton">
+        <div class="ms-2 d-inline-block">
+             <Dropdown t-if="identifiersInDropdown.length > 0">
+                <button class="btn btn-link p-0" type="button">
+                    <i class="fa fa-plus me-1"/>
+                </button>
+                <t t-set-slot="content">
+                    <DropdownItem t-foreach="identifiersInDropdown" t-as="identifier" t-key="identifier.identifierType"
+                                  onSelected="() => this.onAdd(identifier.identifierType)"
+                                  attrs="{title: identifier.help}">
+                        <t t-out="identifier.label"/>
+                    </DropdownItem>
+                </t>
+            </Dropdown>
+        </div>
+    </t>
+
+    <t t-name="account.AdditionalIdentifiersList">
+        <div class="o_additional_identifiers_list" t-if="sortedIdentifiers.length > 0">
+            <t t-foreach="sortedIdentifiers" t-as="identifierPair" t-key="identifierPair[0]">
+                <t t-set="identifierType" t-value="identifierPair[0]"/>
+                <t t-set="identifierValue" t-value="identifierPair[1]"/>
+                <t t-set="meta" t-value="state.metadata[identifierType]"/>
+
+                <div class="o_cell o_wrap_label text-break text-900">
+                    <label t-att-for="identifierType" class="o_form_label">
+                        <t t-out="meta and meta.label ? meta.label : identifierType"/>
+                        <sup t-if="meta and meta.help"
+                             class="d-print-none text-info p-1 ms-1"
+                             data-tooltip-template="web.FieldTooltip"
+                             t-att-data-tooltip-info="getTooltipInfo(meta.help)"
+                             data-tooltip-touch-tap-to-show="true">?</sup>
+                    </label>
+                </div>
+                <div class="o_cell o_wrap_input">
+                    <input type="text"
+                           t-att-id="identifierType"
+                           class="o_input w-50"
+                           t-att-value="identifierValue"
+                           t-att-placeholder="meta ? meta.placeholder : ''"
+                           t-on-change="(ev) => this.onUpdateValue(identifierType, ev)"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

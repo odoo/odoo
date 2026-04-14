@@ -233,8 +233,6 @@ class ResPartner(models.Model):
     same_company_registry_partner_id: ResPartner = fields.Many2one('res.partner', string='Partner with same Company Registry', compute='_compute_same_vat_partner_id', store=False)
     company_registry = fields.Char(string="Company ID", compute='_compute_company_registry', store=True, readonly=False, index='btree_not_null',
        help="The registry number of the company. Use it if it is different from the Tax ID. It must be unique across all partners of a same country")
-    company_registry_label = fields.Char(string='Company ID Label', compute='_compute_company_registry_label')
-    company_registry_placeholder = fields.Char(compute='_compute_company_registry_placeholder')
     bank_ids: ResPartnerBank = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
     website = fields.Char('Website Link')
     comment = fields.Html(string='Notes')
@@ -515,19 +513,6 @@ class ResPartner(models.Model):
         # exists to allow overrides
         for company in self:
             company.company_registry = company.company_registry
-
-    @api.depends('country_id')
-    def _compute_company_registry_label(self):
-        label_by_country = self._get_company_registry_labels()
-        for company in self:
-            country_code = company.country_id.code
-            company.company_registry_label = label_by_country.get(country_code, _("Company ID"))
-
-    def _get_company_registry_labels(self):
-        return {}
-
-    def _compute_company_registry_placeholder(self):
-        self.company_registry_placeholder = False
 
     @api.constrains('parent_id')
     def _check_parent_id(self):

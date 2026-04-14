@@ -21,7 +21,7 @@ class TestSgUBLPint(AccountTestInvoicingCommon):
         # TIN number is required
         cls.company_data['company'].write({
             'vat': '197401143C',
-            'l10n_sg_unique_entity_number': '201131415A',
+            'l10n_sg_unique_entity_number': '00192200M',
             'street': 'Tyersall Avenue',
             'zip': '248048',
             'city': 'Central Singapore',
@@ -29,7 +29,7 @@ class TestSgUBLPint(AccountTestInvoicingCommon):
         })
         cls.partner_a.write({
             'vat': 'S16FC0121D',
-            'l10n_sg_unique_entity_number': '301131415A',
+            'l10n_sg_unique_entity_number': '197401143C',
             'country_id': cls.env.ref('base.sg').id,
             'street': 'that other street, 3',
             'zip': '248050',

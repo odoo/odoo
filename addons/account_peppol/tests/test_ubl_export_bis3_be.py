@@ -41,7 +41,7 @@ class TestUblExportBis3BEPeppol(TestUblExportBis3BE):
         partner.peppol_eas = '0208'
         partner.peppol_endpoint = '0477472701'
         self.env.company.partner_id.vat = None
-        self.env.company.partner_id.company_registry = None
+        self.env.company.partner_id.additional_identifiers = None
         self.env.company.partner_id.peppol_eas = None
         self.env.company.partner_id.peppol_endpoint = None
         with self.assertRaisesRegex(UserError, r".*\[PEPPOL\-EN16931\-R020\].*"):

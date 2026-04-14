@@ -32,18 +32,19 @@ class TestAccountUblCii(AccountTestInvoicingCommon):
         'odoo.addons.account_edi_ubl_cii.models.res_partner.ResPartner._build_error_peppol_endpoint',
         _build_error_peppol_endpoint,
     )
-    @patch.dict(EAS_MAPPING, {'BA': {'0184': 'company_registry', '0198': 'vat'}})
+    @patch.dict(EAS_MAPPING, {'BA': {'0184': 'additional_identifiers', '0198': 'vat'}})
     def test_peppol_eas_endpoint(self):
         partner = self.company_data['company'].partner_id
 
-        partner.company_registry = "12345674"
+        partner.additional_identifiers = {'DK_CVR': "12345674"}
         partner.vat = "BA12345674"
 
-        # Base case -> (0184, company_registry)
-        with self.check_peppol_vals(partner, expected=("0184", partner.company_registry)):
+        # Base case -> (0184, additional_identifiers)
+        with self.check_peppol_vals(partner, expected=("0184", partner._get_additional_identifier('DK_CVR'))):
             pass
 
         # No company_registry -> (0198, vat)
+        partner.additional_identifiers = False
         with self.check_peppol_vals(partner, expected=("0198", partner.vat)):
             partner.company_registry = False
 
@@ -54,7 +55,7 @@ class TestAccountUblCii(AccountTestInvoicingCommon):
         # No company_registry nor vat -> (0184, False)
         with self.check_peppol_vals(partner, expected=("0184", False)):
             partner.write({
-                'company_registry': False,
+                'additional_identifiers': False,
                 'vat': False,
             })
 
@@ -110,12 +111,12 @@ class TestAccountUblCii(AccountTestInvoicingCommon):
             self.assertEqual(partner_nz._get_suggested_ubl_cii_edi_format(), 'peppol')
             self.assertFalse(partner_be._get_suggested_ubl_cii_edi_format())
 
-    def test_peppol_endpoint_sanitized_be_company_registry(self):
+    def test_peppol_endpoint_sanitized_be_additional_identifiers(self):
         partner = self.env['res.partner'].create({
             'name': "BE partner dots",
             'country_id': self.env.ref('base.be').id,
-            'company_registry': '0123.456.789',
+            'additional_identifiers': {'BE_EN': '0477.472.701'},
             'vat': False
         })
         self.assertEqual(partner.peppol_eas, '0208')
-        self.assertEqual(partner.peppol_endpoint, '0123456789')
+        self.assertEqual(partner.peppol_endpoint, '0477472701')

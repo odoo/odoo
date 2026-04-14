@@ -1,17 +1,19 @@
 import re
+
+from copy import deepcopy
+from datetime import datetime
 from collections import defaultdict
 from markupsafe import Markup
 
 from odoo import _, api, models
-from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import float_compare, float_is_zero, float_repr
 from odoo.tools.float_utils import float_round
-from odoo.tools.misc import clean_context, formatLang, html_escape
+from odoo.tools.misc import formatLang, html_escape
 from odoo.tools.xml_utils import find_xml_value
-from datetime import datetime
-from copy import deepcopy
+
+from odoo.addons.account.tools.country_groups import EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
 
 # -------------------------------------------------------------------------
 # UNIT OF MEASURE
@@ -57,7 +59,7 @@ EAS_MAPPING = {
     'AT': {'9915': 'vat'},
     'AU': {'0151': 'vat'},
     'BA': {'9924': 'vat'},
-    'BE': {'0208': 'company_registry', '9925': 'vat'},
+    'BE': {'0208': 'additional_identifiers', '9925': 'vat'},
     'BG': {'9926': 'vat'},
     'CH': {'9927': 'vat', '0183': None},
     'CY': {'9928': 'vat'},
@@ -67,8 +69,8 @@ EAS_MAPPING = {
     'EE': {'9931': 'vat'},
     'ES': {'9920': 'vat'},
     'FI': {'0216': None},
-    'FR': {'0009': 'company_registry', '9957': 'vat', '0002': None},
-    'SG': {'0195': 'l10n_sg_unique_entity_number'},
+    'FR': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},
+    'SG': {'0195': 'additional_identifiers'},
     'GB': {'9932': 'vat'},
     'GR': {'9933': 'vat'},
     'HR': {'9934': 'vat', '0088': 'company_registry'},
@@ -90,7 +92,7 @@ EAS_MAPPING = {
     # MUST be either a KVK or OIN number (schemeID 0106 or 0190)" in the Bis 3 rules (in PartyLegalEntity/CompanyID).
     'NG': {'0244': 'vat'},
     'NL': {'0106': None, '0190': None},
-    'NO': {'0192': 'l10n_no_bronnoysund_number'},
+    'NO': {'0192': 'additional_identifiers'},
     'NZ': {'0088': 'company_registry'},
     'PL': {'9945': 'vat'},
     'PT': {'9946': 'vat'},
@@ -103,18 +105,18 @@ EAS_MAPPING = {
     'TR': {'9952': 'vat'},
     'VA': {'9953': 'vat'},
     # DOM-TOM
-    'BL': {'0009': 'siret', '9957': 'vat', '0002': None},  # Saint Barthélemy
-    'GF': {'0009': 'siret', '9957': 'vat', '0002': None},  # French Guiana
-    'GP': {'0009': 'siret', '9957': 'vat', '0002': None},  # Guadeloupe
-    'MF': {'0009': 'siret', '9957': 'vat', '0002': None},  # Saint Martin
-    'MQ': {'0009': 'siret', '9957': 'vat', '0002': None},  # Martinique
-    'NC': {'0009': 'siret', '9957': 'vat', '0002': None},  # New Caledonia
-    'PF': {'0009': 'siret', '9957': 'vat', '0002': None},  # French Polynesia
-    'PM': {'0009': 'siret', '9957': 'vat', '0002': None},  # Saint Pierre and Miquelon
-    'RE': {'0009': 'siret', '9957': 'vat', '0002': None},  # Réunion
-    'TF': {'0009': 'siret', '9957': 'vat', '0002': None},  # French Southern and Antarctic Lands
-    'WF': {'0009': 'siret', '9957': 'vat', '0002': None},  # Wallis and Futuna
-    'YT': {'0009': 'siret', '9957': 'vat', '0002': None},  # Mayotte
+    'BL': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # Saint Barthélemy
+    'GF': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # French Guiana
+    'GP': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # Guadeloupe
+    'MF': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # Saint Martin
+    'MQ': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # Martinique
+    'NC': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # New Caledonia
+    'PF': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # French Polynesia
+    'PM': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # Saint Pierre and Miquelon
+    'RE': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # Réunion
+    'TF': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # French Southern and Antarctic Lands
+    'WF': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # Wallis and Futuna
+    'YT': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # Mayotte
 
     'AX': {'0216': None},  # Åland Islands
 }
@@ -213,22 +215,9 @@ TAX_EXEMPTION_MAPPING = {
     'VATEX-FR-AE': 'Exempt based on 2 of article 283 of the Code Général des Impôts (CGI ; General tax code)',
 }
 
-# -------------------------------------------------------------------------
-# AREA of countries
-# -------------------------------------------------------------------------
-
 GST_COUNTRY_CODES = {
     'AU', 'NZ', 'IN', 'SG', 'MY', 'PK', 'BD', 'LK', 'NP', 'BT', 'PG', 'SA',
     'AG', 'BS', 'BB', 'DM', 'GD', 'JM', 'KN', 'LC', 'VC', 'TT',
-}
-
-EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES = {
-    # EU Member States
-    'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE',
-    'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'CH',
-
-    # EFTA Countries in the EEA
-    'IS', 'LI', 'NO',
 }
 
 # -------------------------------------------------------------------------
@@ -731,7 +720,7 @@ class AccountEdiCommon(models.AbstractModel):
 
         return attachments
 
-    def _import_partner(self, company_id, name, phone, email, vat, *, peppol_eas=False, peppol_endpoint=False, postal_address={}, **kwargs):
+    def _import_partner(self, company_id, name, phone, email, vat, *, peppol_eas=False, peppol_endpoint=False, additional_identifiers=None, postal_address={}, **kwargs):
         """ Retrieve the partner, if no matching partner is found, create it (only if he has a vat and a name) """
         logs = []
         if peppol_eas and peppol_endpoint:
@@ -740,7 +729,7 @@ class AccountEdiCommon(models.AbstractModel):
             domain = False
         partner = self.env['res.partner'] \
             .with_company(company_id) \
-            ._retrieve_partner(name=name, phone=phone, email=email, vat=vat, domain=domain)
+            ._retrieve_partner(name=name, phone=phone, email=email, vat=vat, additional_identifiers=additional_identifiers, domain=domain)
         country_code = postal_address.get('country_code')
         country = self.env['res.country'].search([('code', '=', country_code.upper())]) if country_code else self.env['res.country']
         state_code = postal_address.get('state_code')
@@ -752,6 +741,8 @@ class AccountEdiCommon(models.AbstractModel):
             partner_vals = {'name': name, 'email': email, 'phone': phone, 'is_company': True}
             if peppol_eas and peppol_endpoint:
                 partner_vals.update({'peppol_eas': peppol_eas, 'peppol_endpoint': peppol_endpoint})
+            if additional_identifiers:
+                partner_vals['additional_identifiers'] = additional_identifiers
             partner = self.env['res.partner'].create(partner_vals)
             if vat:
                 partner.vat, _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')

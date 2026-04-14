@@ -159,12 +159,22 @@
                     </button>
                 </div>
 
-                <field name="vat" position="before">
-                    <field name="partner_vat_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
-                </field>
+                <label for="vat" position="before">
+                    <field name="partner_vat_placeholder" invisible="1"/>
+                    <field name="country_code" invisible="1"/>
+                </label>
                 <field name="vat" position="attributes">
                     <attribute name="options">{'placeholder_field': 'partner_vat_placeholder'}</attribute>
                 </field>
+                <div id="vat_div" position="attributes">
+                    <attribute name="class">o_row d-flex</attribute>
+                </div>
+                <div id="vat_div" position="inside">
+                    <field name="additional_identifiers" widget="additional_identifiers_button" nolabel="1" seqMax="199"/>
+                </div>
+                <div id="vat_div" position="after">
+                    <field name="additional_identifiers" widget="additional_identifiers_list" colspan="2" nolabel="1"/>
+                </div>
 
                 <xpath expr=".//page[@name='sales_purchases']//group[@name='misc']" position="inside">
                     <field name="global_location_number" invisible="type != 'delivery'"/>
@@ -172,6 +182,7 @@
                 <xpath expr=".//page[@name='contact_addresses']/field[@name='child_ids']/form//field[@name='company_id']" position="after">
                     <field name="global_location_number" invisible="type != 'delivery'"/>
                 </xpath>
+
             </field>
         </record>
 
