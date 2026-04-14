@@ -354,7 +354,7 @@
                         </group>
                     </sheet>
                     <footer>
-                        <button name="action_scrap" type="object" string="Confirm" class="btn-primary" invisible="state in ('done', 'cancel')" context="{'default_is_scrap': True}"/>
+                        <button name="action_scrap" type="object" string="Confirm" class="btn-primary" invisible="state in ('done', 'cancel')" context="{'default_is_scrap': True, 'unlink_on_discard': True}"/>
                     </footer>
                 </form>
             </field>
