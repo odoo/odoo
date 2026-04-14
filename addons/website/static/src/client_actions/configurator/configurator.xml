@@ -137,12 +137,6 @@
         class="btn btn-outline-secondary d-flex w-100 o_setup_style_screen_color_palette p-2 position-relative"
         t-att-class="{'active': this.state.selectedPalette === palette.name}"
         t-on-click="() => this.setPalette(palette.name)">
-        <t t-if="palette.name === 'logoPalette'">
-            <div class="o_setup_style_screen_logo_palette_info shadow-sm position-absolute top-0 start-100 translate-middle d-inline-flex align-items-center justify-content-center rounded-circle border bg-light p-1"
-                data-tooltip="Palette extracted from your logo">
-                <i class="fa fa-eyedropper"/>
-            </div>
-        </t>
         <t t-foreach="[1, 2, 3, 4, 5]" t-as="i" t-key="i">
             <span class="flex-grow-1 border rounded"
                 t-attf-style="background-color: {{(palette and palette['color' + i]) || 'transparent'}};"/>
@@ -164,29 +158,39 @@
                             </div>
                             <div class="mb-5">
                                 <h3><b>Logo</b></h3>
-                                <button class="btn btn-outline-secondary w-100 p-2 position-relative"
-                                    t-att-class="this.state.logo ? 'bg-transparent' : 'bg-100'"
-                                    t-on-click="this.uploadLogo">
-                                    <input type="file" class="d-none"
-                                        t-on-change="this.onLogoChange" name="logo_selection"
-                                        t-custom-ref="logoSelectionInput" accept="image/*"/>
-                                    <div t-att-class="{'invisible': this.state.logo}">
-                                        <i class="fa fa-cloud-upload fa-2x"></i>
-                                        <p class="text-muted m-0">Upload your logo</p>
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-secondary w-100 p-2 position-relative"
+                                            t-att-class="this.state.logo ? 'bg-transparent' : 'bg-100'"
+                                            t-on-click="this.uploadLogo">
+                                            <input type="file" class="d-none"
+                                                t-on-change="this.onLogoChange" name="logo_selection"
+                                                t-custom-ref="logoSelectionInput" accept="image/*"/>
+                                            <div t-att-class="{'invisible': this.state.logo}">
+                                                <i class="fa fa-cloud-upload fa-2x"></i>
+                                                <p class="text-muted m-0">Upload your logo</p>
+                                            </div>
+                                            <t t-if="this.state.logo">
+                                                <div class="position-absolute top-0 bottom-0 end-0 start-0 py-1 px-4">
+                                                    <img class="h-100 mw-100 object-fit-contain" t-attf-src="{{this.state.logo}}" alt="Logo"/>
+                                                </div>
+                                                <i class="fa fa-trash text-danger position-absolute top-0 end-0 pe-1 pt-1"
+                                                    t-on-click="this.removeLogo"/>
+                                            </t>
+                                        </button>
                                     </div>
-                                    <t t-if="this.state.logo">
-                                        <div class="position-absolute top-0 bottom-0 end-0 start-0 py-1 px-4">
-                                            <img class="h-100 mw-100 object-fit-contain" t-attf-src="{{this.state.logo}}" alt="Logo"/>
-                                        </div>
-                                        <i class="fa fa-trash text-danger position-absolute top-0 end-0 pe-1 pt-1"
-                                            t-on-click="this.removeLogo"/>
-                                    </t>
-                                </button>
+                                    <div class="col-6">
+                                        <t t-if="this.state.logoPalette">
+                                            <t t-set="palette" t-value="Object.assign({ name: 'logoPalette' }, this.state.logoPalette)"/>
+                                            <t t-call="website.Configurator.SetupStyleScreenPaletteButton"/>
+                                        </t>
+                                    </div>
+                                </div>
                             </div>
                             <div class="mb-5">
                                 <h3><b>Colors</b></h3>
                                 <div class="row g-3">
-                                    <t t-foreach="!this.previewState.initialLoaded ? this.recommendedPalettePlaceholders : this.getFeaturedPalettes()" t-as="palette" t-key="palette.name">
+                                    <t t-foreach="!this.previewState.initialLoaded ? this.featuredPalettePlaceholders : this.getFeaturedPalettes()" t-as="palette" t-key="palette.name">
                                         <div class="col-6" t-att-class="{'o_configurator_screen_option_loading': !this.previewState.initialLoaded}">
                                             <t t-call="website.Configurator.SetupStyleScreenPaletteButton"/>
                                         </div>

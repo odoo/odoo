@@ -238,7 +238,7 @@
 
                 height: var(--ConfiguratorPreview-height);
 
-                img {
+                img, .theme_img_container {
                     box-shadow: $box-shadow-sm;
                 }
 
@@ -254,7 +254,7 @@
                 }
 
                 &:hover {
-                    img {
+                    img, .theme_img_container {
                         box-shadow: $box-shadow;
                     }
 
@@ -302,15 +302,6 @@
                         border-inline-end: 0 !important;
                         border-start-end-radius: 0 !important;
                         border-end-end-radius: 0 !important;
-                    }
-                }
-
-                .o_setup_style_screen_logo_palette_info {
-                    width: 23px;
-                    height: 23px;
-
-                    > i {
-                        font-size: 12px;
                     }
                 }
             }

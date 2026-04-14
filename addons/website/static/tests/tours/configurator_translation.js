@@ -5,25 +5,6 @@ import { clickOnEditAndWaitEditMode } from "@website/js/tours/tour_utils";
 
 function runConfiguratorFlow(industrySearchText) {
     return [
-        // Configurator first screen
-        {
-            content: "Click next",
-            trigger: "button.o_configurator_show",
-            run: "click",
-        },
-        // Make sure "Back" works
-        {
-            content: "Use browser's Back",
-            trigger: "button.o_change_website_type",
-            run() {
-                window.history.back();
-            },
-        },
-        {
-            content: "Return to description screen",
-            trigger: "button.o_configurator_show",
-            run: "click",
-        },
         // Description screen
         {
             content: "Select a website type",
@@ -45,10 +26,20 @@ function runConfiguratorFlow(industrySearchText) {
             trigger: "button.o_change_website_purpose",
             run: "click",
         },
+        // Set up style screen
+        {
+            content: "loader should be shown",
+            trigger: ".o_configurator_preview_loader",
+        },
+        {
+            content: "loader should be hidden",
+            trigger: ".o_configurator_screen_content:not(:has(.o_configurator_preview_loader))",
+            timeout: 20000,
+        },
         {
             id: "build_website",
-            content: "Click on start building",
-            trigger: ".o_setup_style_screen button.btn-primary:contains(Start Building)",
+            content: "click the 'Start Building' button",
+            trigger: ".o_setup_style_screen_footer button.btn.btn-primary",
             run: "click",
         },
         {
