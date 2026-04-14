@@ -1,7 +1,7 @@
 import { render } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
 import { click, queryFirst } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
