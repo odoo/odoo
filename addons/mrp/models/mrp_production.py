@@ -1332,7 +1332,7 @@ class MrpProduction(models.Model):
             | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id or m.product_id.tracking == 'serial')
         ):
             # picked + manual means the user set the quantity manually
-            if move.manual_consumption and move.picked:
+            if (move.manual_consumption and move.picked) or move.picking_type_id.reservation_method == 'manual':
                 continue
 
             # sudo needed for portal users

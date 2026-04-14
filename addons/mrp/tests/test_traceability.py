@@ -423,6 +423,28 @@ class TestTraceability(TestMrpCommon):
         self.assertEqual(lot_B03.product_qty, 15)
         self.assertEqual(productA.qty_available, 15)
 
+    def test_tracked_and_manual_reservation(self):
+        """ Verify that starting an operation on an MO does not trigger automatic lot reservation
+        for components when the warehouse reservation method is set to 'manual'.
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+        stock_location.warehouse_id.manu_type_id.reservation_method = 'manual'
+        self.product_4.tracking = 'lot'
+        lot_1 = self.env['stock.lot'].create({
+            'name': 'lot 1',
+            'product_id': self.product_4.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_4, stock_location, 2, lot_id=lot_1)
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_5.id,
+            'product_qty': 1,
+            'bom_id': self.bom_2.id,
+        })
+        mo.action_confirm()
+        self.assertRecordValues(mo.move_raw_ids[0], [{'product_id': self.product_4.id, 'product_qty': 2.0, 'lot_ids': []}])
+        mo.workorder_ids.button_start()
+        self.assertRecordValues(mo.move_raw_ids[0], [{'product_id': self.product_4.id, 'product_qty': 2.0, 'lot_ids': []}])
+
     def test_last_delivery_traceability(self):
         """
         Suppose this structure (-> means 'produces')
