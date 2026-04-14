@@ -1011,10 +1011,10 @@ test("Should should show link popover without edit", async () => {
         },
     });
     const { el } = await setupEditor(
-        '<p contenteditable="false"><a href="#"><i class="fa"></i></a></p>'
+        '<p contenteditable="false"><a href="#"><i class="oi"></i></a></p>'
     );
     await animationFrame();
-    await click(el.querySelector(".fa"));
+    await click(el.querySelector(".oi"));
     // Should open the link popover without edit button
     expectElementCount(".o-we-linkpopover", 1);
     expectElementCount(".o_we_edit_link", 0);
