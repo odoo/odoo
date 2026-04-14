@@ -62,6 +62,20 @@ class Action extends Component {
         );
     }
 
+    get isInlineCircleButtonValue() {
+        if (!this.props.inline || !this.action.icon) {
+            return false;
+        }
+        if (this.env.inComposer || this.env.inMessage) {
+            return true;
+        }
+        return (
+            this.action.tags.includes("JOIN_LEAVE_CALL") &&
+            this.action.icon &&
+            !this.action.inlineName
+        );
+    }
+
     onSelected(action, ev) {
         action.onSelected?.(ev);
         this.env.inCallDropdown?.close();

@@ -43,7 +43,7 @@
 </t>
 
 <t t-name="mail.Action.main">
-    <t t-set="isInlineCircleButton" t-value="this.env.inComposer or this.env.inMessage or (this.action.tags.includes('JOIN_LEAVE_CALL') and this.action.icon and !this.action.inlineName)"/>
+    <t t-set="isInlineCircleButton" t-value="this.isInlineCircleButtonValue"/>
     <!-- core-->
     <t t-set="btnClass" t-value="this.attClassObjectToString({
         'o-mail-ActionList-button btn btn-group-item position-relative': true,
