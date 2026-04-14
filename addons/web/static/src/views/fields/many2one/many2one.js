@@ -185,6 +185,7 @@ export class Many2One extends Component {
                 return this.update(idNamePair);
             },
             value: this.displayName,
+            originalValue: this.props.value,
         };
     }
 

@@ -223,6 +223,7 @@ export class Many2XAutocomplete extends Component {
         specification: { type: Object, optional: true },
         update: Function,
         value: { type: String, optional: true },
+        originalValue: { type: [Array, Object, { value: false }], optional: true },
     };
     static defaultProps = {
         context: {},
@@ -287,6 +288,24 @@ export class Many2XAutocomplete extends Component {
             onCreateEdit: ({ context }) => this.openMany2X({ context }),
             onUnselect: isToMany ? undefined : () => update(),
         });
+
+        this.cacheMany2X(this.props);
+        onWillUpdateProps((props) => this.cacheMany2X(props));
+    }
+
+    cacheMany2X(props) {
+        if (props.originalValue) {
+            let values = [];
+            if (props.originalValue.records) {
+                values = props.originalValue.records.map((r) => ({
+                    id: r.resId,
+                    display_name: r.data.display_name,
+                }));
+            } else {
+                values = [props.originalValue];
+            }
+            this.offline.cacheMany2XSearch(props.resModel, values);
+        }
     }
 
     get autoCompleteProps() {

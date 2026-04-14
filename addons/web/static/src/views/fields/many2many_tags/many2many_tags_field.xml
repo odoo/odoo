@@ -26,6 +26,7 @@
                     isToMany="true"
                     nameCreateField="this.props.nameCreateField"
                     searchThreshold="this.props.searchThreshold"
+                    originalValue="this.props.record.data[this.props.name]"
                 >
                     <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                         <span t-att-class="{ 'fw-bold': this.isSelected(autoCompleteItemScope.record) }">
