@@ -521,6 +521,9 @@ export class Thread extends Component {
     }
 
     onClickLoadOlder() {
+        if (this.messageHighlight?.highlightedMessageId) {
+            return;
+        }
         this.props.thread.fetchMoreMessages({ routeParams: this.messageFetchRouteParams });
     }
 
@@ -689,9 +692,7 @@ export class Thread extends Component {
             this.props.thread.loadOlder &&
             this.props.thread.isLoaded &&
             !this.props.thread.isTransient &&
-            !this.props.thread.hasLoadingFailed &&
-            !this.messageHighlight?.initiated &&
-            !this.messageHighlight?.highlightedMessageId
+            !this.props.thread.hasLoadingFailed
         );
     }
 
@@ -724,6 +725,7 @@ export class Thread extends Component {
     get showStartMessage() {
         return (
             this.state.mountedAndLoaded &&
+            !this.props.thread.loadOlder &&
             ["channel", "group", "chat"].includes(this.channel?.channel_type)
         );
     }
