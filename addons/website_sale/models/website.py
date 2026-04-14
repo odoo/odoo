@@ -1162,7 +1162,7 @@ class Website(models.Model):
             for website in self.filtered(lambda w: w._default_feed_is_valid())
         ])
 
-    def _get_product_available_qty(self, product, **_kwargs):
+    def _get_product_available_qty(self, product, **kwargs):
         """Give the available quantity of a given product.
 
         :param product: product.product record
@@ -1170,7 +1170,7 @@ class Website(models.Model):
         :return: available quantity
         :rtype: float
         """
-        return product.qty_available - product.outgoing_qty
+        return product._get_free_qty(**kwargs)
 
     @api.model
     def _get_settings_to_copy_onto_new_default_website(self):
