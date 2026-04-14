@@ -956,15 +956,15 @@ class Website(models.CachedModel):
         # Configure the color palette
         Assets = self.env['website.assets']
         selected_palette = kwargs.get('selected_palette')
+        custom_palette = {}
         user_values_to_customize = {}
         if selected_palette:
             selected_palette_name = selected_palette if isinstance(selected_palette, str) else 'base-1'
             user_values_to_customize['color-palettes-name'] = "'%s'" % selected_palette_name
             if isinstance(selected_palette, list):
-                Assets.make_scss_customization(
-                    '/website/static/src/scss/options/colors/user_color_palette.scss',
-                    {f'o-color-{i}': color for i, color in enumerate(selected_palette, 1)}
-                )
+                custom_palette = {
+                    f'o-color-{i}': color for i, color in enumerate(selected_palette, 1)
+                }
 
         # Configure selected fonts
         selected_font = kwargs.get('selected_font')
@@ -977,6 +977,11 @@ class Website(models.CachedModel):
             Assets.make_scss_customization(
                 '/website/static/src/scss/options/user_values.scss',
                 user_values_to_customize,
+            )
+        if custom_palette:
+            Assets.make_scss_customization(
+                '/website/static/src/scss/options/colors/user_color_palette.scss',
+                custom_palette,
             )
 
         # Update CTA

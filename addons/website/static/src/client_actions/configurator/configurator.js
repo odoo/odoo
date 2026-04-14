@@ -132,7 +132,7 @@ export const PALETTE_SECTIONS = [
 
 export const PALETTE_NAMES = PALETTE_SECTIONS.flatMap((section) => section.names);
 
-const RECOMMENDED_PALETTE_PLACEHOLDER = {
+const FEATURED_PALETTE_PLACEHOLDER = {
     color1: "#868e96",
     color2: "#adb5bd",
     color3: "#ced4da",
@@ -806,9 +806,9 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         this.orm = useService("orm");
         this.notification = useService("notification");
         this.state = useStore();
-        this.recommendedPalettePlaceholders = [0, 1, 2, 3].map((index) => ({
-            name: `recommended_palette_placeholder_${index}`,
-            ...RECOMMENDED_PALETTE_PLACEHOLDER,
+        this.featuredPalettePlaceholders = [0, 1, 2, 3].map((index) => ({
+            name: `featured_palette_placeholder_${index}`,
+            ...FEATURED_PALETTE_PLACEHOLDER,
         }));
         this.fontPlaceholders = [0, 1, 2, 3].map((index) => ({
             name: `font_placeholder_${index}`,
@@ -876,10 +876,9 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
             await this._removeAttachments([this.state.logoAttachmentId]);
         }
         this.state.changeLogo();
-        // Remove the logo palette and fill the gap with recommended ones.
         this.state.setLogoPalette();
         this.state.featuredPaletteNames = this.completeFeaturedPaletteNames(
-            this.state.featuredPaletteNames.filter((paletteName) => paletteName !== "logoPalette")
+            this.state.featuredPaletteNames
         );
         if (this.state.selectedPalette === "logoPalette" && this.state.featuredPaletteNames[0]) {
             await this.setPalette(this.state.featuredPaletteNames[0]);
@@ -956,8 +955,6 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
             { mitigate: 255 }
         );
         this.state.setLogoPalette(color1, color2);
-        // Logo colors are always featured first when available.
-        this.updateFeaturedPaletteNames("logoPalette");
     }
 
     /**
@@ -974,8 +971,7 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         this.props.navigate(ROUTES.themeSelectionScreen);
     }
 
-    // When logo is removed => Fill missing featured slots with recommended
-    // palettes, in order.
+    // Fill missing featured slots with recommended palettes, in order.
     completeFeaturedPaletteNames(featuredPaletteNames) {
         for (const palette of this.state.recommendedPalettes || []) {
             if (featuredPaletteNames.length >= 4) {
@@ -989,12 +985,11 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
     }
 
     // Keep featured palettes ordered by recent user actions.
-    // If logo palette is added, drop the last non-active palette.
-    updateFeaturedPaletteNames(paletteName, position = 0) {
+    updateFeaturedPaletteNames(paletteName) {
         const featuredPaletteNames = this.state.featuredPaletteNames.filter(
             (featuredPaletteName) => featuredPaletteName !== paletteName
         );
-        featuredPaletteNames.splice(position, 0, paletteName);
+        featuredPaletteNames.unshift(paletteName);
         if (featuredPaletteNames.length > 4) {
             for (let index = featuredPaletteNames.length - 1; index >= 0; index--) {
                 if (featuredPaletteNames[index] !== this.state.selectedPalette) {
@@ -1030,9 +1025,6 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
                 ? [...this.state.featuredPaletteNames]
                 : this.state.recommendedPalettes.slice(0, 4).map((palette) => palette.name)
         );
-        if (this.state.logoPalette) {
-            this.updateFeaturedPaletteNames("logoPalette");
-        }
         // Keep the selected swatch aligned with the palette currently shown
         // in the preview.
         if (this.state.selectedPalette !== "logoPalette") {
@@ -1041,11 +1033,7 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
     }
 
     getFeaturedPalettes() {
-        return this.state.featuredPaletteNames.map((paletteName) =>
-            paletteName === "logoPalette"
-                ? { name: "logoPalette", ...(this.state.logoPalette || {}) }
-                : this.state.palettes[paletteName]
-        );
+        return this.state.featuredPaletteNames.map((paletteName) => this.state.palettes[paletteName]);
     }
 
     getOtherPaletteSections() {
@@ -1092,12 +1080,8 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
 
     async setPalette(paletteName) {
         this.state.selectedPalette = paletteName;
-        if (!this.state.featuredPaletteNames.includes(paletteName)) {
-            // Keep the logo palette first if it is already featured.
-            this.updateFeaturedPaletteNames(
-                paletteName,
-                this.state.featuredPaletteNames[0] === "logoPalette" ? 1 : 0
-            );
+        if (paletteName !== "logoPalette" && !this.state.featuredPaletteNames.includes(paletteName)) {
+            this.updateFeaturedPaletteNames(paletteName);
         }
         this.cancelPreviewPalettePrefetch();
         const loadingTimer = browser.setTimeout(() => {

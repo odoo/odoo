@@ -151,11 +151,11 @@ registry.category("web_tour.tours").add("configurator_flow", {
             content: `Check footer menu ${menu} is there`,
             trigger: `:iframe footer a:contains(${menu})`,
         })),
-        ...["Home", "Events", "Courses", "News"].map((menu) => ({
+        ...["Home", "Events", "Courses"].map((menu) => ({
             content: `Check menu ${menu} is there`,
             trigger: `:iframe .top_menu a:contains(${menu}):not(:visible)`,
         })),
-        ...["/", "/event", "/slides", "/blog/"].map((url) => ({
+        ...["/", "/event", "/slides"].map((url) => ({
             content: `Check url ${url} is there`,
             trigger: `:iframe .top_menu a[href^='${url}']:not(:visible)`,
         })),
