@@ -88,8 +88,8 @@ class DeliveryCarrier(models.Model):
                 pickup_location_values = {
                     'id': wh.id,
                     'name': wh_location['name'],
-                    'street': wh_location['street'],
-                    'city': wh_location.city,
+                    'street': wh_location['street'] or '',
+                    'city': wh_location.city or '',
                     'zip_code': wh_location.zip or '',
                     'country_code': wh_location.country_code,
                     'state': wh_location.state_id.code,
