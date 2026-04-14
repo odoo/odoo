@@ -1169,6 +1169,12 @@ class TestCRMLeadRotting(TestCrmCommon):
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLeadFormTools(FormatAddressCase):
 
+    def test_action_open_unassigned_opportunities(self):
+        sales_team = self.env['crm.team'].create({'name': 'Test Sales Team'})
+        action = sales_team.action_open_unassigned_opportunities()
+        self.assertEqual(action['context']['search_default_team_id'], [sales_team.id])
+        self.assertEqual(action['context']['default_team_id'], sales_team.id)
+
     def test_address_view(self):
         self.env.company.country_id = self.env.ref('base.us')
         self.assertAddressView('crm.lead')

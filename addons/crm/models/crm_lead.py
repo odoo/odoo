@@ -721,9 +721,9 @@ class CrmLead(models.Model):
         return False
 
     def _evaluate_context_from_action(self, action):
-        context_str = action.get('context', '{}')
+        context_str = action.get('context', '{}').strip()
         context_str = re.sub(r'\buid\b', str(self.env.uid), context_str)
-        context_str = re.sub(r'\bactive_id\b', str(self.id), context_str)
+        context_str = re.sub(r'\bactive_id\b', str(self.id or self.env.context.get('force_active_id')), context_str)
         return literal_eval(context_str)
 
     # ------------------------------------------------------------
