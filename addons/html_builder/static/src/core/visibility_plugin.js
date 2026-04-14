@@ -13,12 +13,7 @@ const deviceInvisibleSelector = ".o_snippet_mobile_invisible, .o_snippet_desktop
 export class VisibilityPlugin extends Plugin {
     static id = "visibility";
     static dependencies = ["builderOptions", "disableSnippets", "history"];
-    static shared = shared([
-        "getVisibleSibling",
-        "toggleTargetVisibility",
-        "onOptionVisibilityUpdate",
-        "hideElement",
-    ]);
+    static shared = shared(["toggleTargetVisibility", "onOptionVisibilityUpdate", "hideElement"]);
     /** @type {import("plugins").BuilderResources} */
     resources = {
         on_mobile_view_switched_handlers: this.onMobileViewSwitched.bind(this),
@@ -52,30 +47,6 @@ export class VisibilityPlugin extends Plugin {
                 invisibleEl.removeAttribute("data-invisible");
             }
         });
-        this.ignoredSiblingSelectors = this.getResource("ignored_sibling_selectors").join(", ");
-    }
-
-    getVisibleSibling(target, direction) {
-        const systemNodeSelectors = this.getResource("system_node_selectors").join(",");
-        const siblingEls = [...target.parentNode.children];
-        const visibleSiblingEls = siblingEls.filter(
-            (el) =>
-                !el.matches(this.ignoredSiblingSelectors) &&
-                window.getComputedStyle(el).display !== "none" &&
-                !el.closest(systemNodeSelectors)
-        );
-        const targetMobileOrder = target.style.order;
-        // On mobile, if the target has a mobile order (which is independent
-        // from desktop), consider these orders instead of the DOM order.
-        if (targetMobileOrder && this.config.isMobileView(target)) {
-            visibleSiblingEls.sort((a, b) => parseInt(a.style.order) - parseInt(b.style.order));
-        }
-        const targetIndex = visibleSiblingEls.indexOf(target);
-        const siblingIndex = direction === "prev" ? targetIndex - 1 : targetIndex + 1;
-        if (siblingIndex === -1 || siblingIndex === visibleSiblingEls.length) {
-            return false;
-        }
-        return visibleSiblingEls[siblingIndex];
     }
 
     /**
