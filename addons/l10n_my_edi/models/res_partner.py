@@ -132,7 +132,7 @@ class ResPartner(models.Model):
         self.ensure_one()
         # When l10n_my_edi_malaysian_tin is set, it will be used instead of the VAT.
         # A user may want to keep the correct VAT on a foreign contact while also use myinvois with a malaysia TIN/Generic TIN
-        # Using the Tax ID field also causes issue when base_vat is enabled, which block setting foreign VAT numbers.
+        # Using the Tax ID field also causes issue with standard vat validation, which block setting foreign VAT numbers.
         return self.l10n_my_edi_malaysian_tin or self.vat
 
     @api.model

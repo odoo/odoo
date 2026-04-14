@@ -820,12 +820,12 @@ class TestPartnerAddressCompany(TransactionCase):
             'industry_id': self.test_industries[0].id,
             'name': 'Individual',
             'ref': 'REFINDIVIDUAL',
-            'vat': 'BEINDIVIDUAL',
+            'vat': 'BE0477472701',
             **self.test_address_values,
         })
         self.assertEqual(individual.type, 'contact')
         self.assertEqual(individual.ref, 'REFINDIVIDUAL')
-        self.assertEqual(individual.vat, 'BEINDIVIDUAL')
+        self.assertEqual(individual.vat, 'BE0477472701')
         for fname, fvalue in self.test_address_values_cmp.items():
             self.assertEqual(individual[fname], fvalue)
 
@@ -843,13 +843,13 @@ class TestPartnerAddressCompany(TransactionCase):
             individual.write({'parent_id': company})
         self.assertFalse(company.industry_id, 'Industry is not considered for upstream')
         self.assertEqual(company.ref, 'COMPANYREF', 'not updated from contact child')
-        self.assertEqual(company.vat, 'BEINDIVIDUAL')
+        self.assertEqual(company.vat, 'BE0477472701')
         for fname, fvalue in self.test_address_values_cmp.items():
             self.assertEqual(company[fname], fvalue, 'Void parent should have been updated when adding a contact with address')
             self.assertEqual(individual[fname], fvalue, 'Setting parent with void address should not reset child')
         self.assertEqual(individual.industry_id, self.test_industries[0], 'No upstream sync, but no reset either')
         self.assertEqual(individual.ref, 'COMPANYREF', 'downstream update')
-        self.assertEqual(individual.vat, 'BEINDIVIDUAL')
+        self.assertEqual(individual.vat, 'BE0477472701')
 
     def test_commercial_partner_nullcompany(self):
         """ The commercial partner is the first ancestor-or-self which doesn't have a parent """
@@ -983,12 +983,12 @@ class TestPartnerAddressCompany(TransactionCase):
         individual = self.env['res.partner'].create({
             'name': 'Individual',
             'ref': 'REFINDIV',
-            'vat': 'BEINDIVIDUAL',
+            'vat': 'BE0477472701',
             **self.test_address_values,
         })
         self.assertEqual(individual.type, 'contact')
         self.assertEqual(individual.ref, 'REFINDIV')
-        self.assertEqual(individual.vat, 'BEINDIVIDUAL')
+        self.assertEqual(individual.vat, 'BE0477472701')
         for fname, fvalue in self.test_address_values_cmp.items():
             self.assertEqual(individual[fname], fvalue)
 
@@ -997,7 +997,7 @@ class TestPartnerAddressCompany(TransactionCase):
             'industry_id': self.test_industries[1].id,
             'name': 'Company',
             'ref': 'REFCOMPANY',
-            'vat': 'BECOMPANY',
+            'vat': 'BE0477472701',
             **self.test_address_values_2,
         })
         # set it as parent of individual
@@ -1010,12 +1010,12 @@ class TestPartnerAddressCompany(TransactionCase):
             self.assertEqual(company[fname], fvalue, 'Parent address should have been kept')
         self.assertEqual(company.industry_id, self.test_industries[1], 'Parent commercial field industry should have been kept')
         self.assertEqual(company.ref, 'REFCOMPANY', 'Parent commercial field VAT should have been kept')
-        self.assertEqual(company.vat, 'BECOMPANY', 'Parent commercial field VAT should have been kept')
+        self.assertEqual(company.vat, 'BE0477472701', 'Parent commercial field VAT should have been kept')
         for fname, fvalue in self.test_address_values_2_cmp.items():
             self.assertNotEqual(individual[fname], fvalue, 'Setting parent with an address should not force contact address')
         self.assertEqual(individual.industry_id, self.test_industries[1], 'Commercial fields should be synced from parent')
         self.assertEqual(individual.ref, 'REFCOMPANY', 'Commercial fields should be synced from parent')
-        self.assertEqual(individual.vat, 'BECOMPANY', 'Commercial fields should be synced from parent')
+        self.assertEqual(individual.vat, 'BE0477472701', 'Commercial fields should be synced from parent')
 
         # void from parent: DOWNSTREAM reset
         with patch.object(
@@ -1034,16 +1034,16 @@ class TestPartnerAddressCompany(TransactionCase):
         # reset values, and void from child: UPSTREAM RESET
         company.write({
             'industry_id': self.test_industries[1].id,
-            'vat': 'BECOMPANY'
+            'vat': 'BE0477472701'
         })
         self.assertEqual(individual.industry_id, self.test_industries[1])
-        self.assertEqual(individual.vat, 'BECOMPANY')
+        self.assertEqual(individual.vat, 'BE0477472701')
         individual.write({
             'industry_id': False,
             'vat': False,
         })
         self.assertEqual(company.industry_id, self.test_industries[1], 'No upstream support of reset')
-        self.assertEqual(company.vat, 'BECOMPANY', 'No upstream support of reset')
+        self.assertEqual(company.vat, 'BE0477472701', 'No upstream support of reset')
         self.assertFalse(individual.industry_id)
         self.assertFalse(individual.vat)
 
@@ -1060,7 +1060,6 @@ class TestPartnerAddressCompany(TransactionCase):
         company = self.env['res.partner'].create({
             'is_company': True,
             'name': 'Test Company',
-            'vat': 'BE0123456789',
             **self.test_address_values,
         })
         contacts = self.env['res.partner'].create([

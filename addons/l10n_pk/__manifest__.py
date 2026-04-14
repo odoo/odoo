@@ -20,7 +20,6 @@ Activates:
     'depends': [
         'account',
         'account_tax_python',
-        'base_vat',
         'l10n_account_withholding_tax',
         'product',
     ],

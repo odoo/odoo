@@ -43,7 +43,6 @@ There are 2 main Payment Methods additions:
     'license': 'LGPL-3',
     'depends': [
         'account',
-        'base_vat',
     ],
     'data': [
         'data/account_payment_method_data.xml',

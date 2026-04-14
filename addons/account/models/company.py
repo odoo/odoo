@@ -10,7 +10,7 @@ from odoo.tools.misc import format_date
 
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 from odoo.addons.account.models.product import ACCOUNT_DOMAIN
-from odoo.addons.base_vat.models.res_partner import _ref_vat
+from odoo.addons.base.models.res_partner import _ref_vat
 from odoo.addons.base.models.res_company import company_default_for
 from odoo.fields import Domain
 
@@ -167,6 +167,7 @@ class ResCompany(models.Model):
         readonly=True,
         copy=False,
     )
+    vat_check_vies = fields.Boolean(string='Verify VAT Numbers with VIES')
 
     #Fields of the setup step for opening move
     account_opening_move_id = fields.Many2one(string='Opening Journal Entry', comodel_name='account.move', help="The journal entry containing the initial balance of all this company's accounts.")

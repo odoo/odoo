@@ -42,10 +42,7 @@ class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
         Ensure that a CH partner can be created and re-matched on subsequent imports,
         including when the partner's stored VAT uses a different language suffix
         (TVA/IVA/MWST) than the one present in the EDI document.
-        Requires `base_vat` to be installed for CH VAT variant generation.
         """
-        if self.env['ir.module.module']._get('base_vat').state != 'installed':
-            self.skipTest("base_vat module is not installed")
         self.assertFalse(self.env['res.partner']._retrieve_partner(vat='CHE-107.787.577 TVA'))
 
         # Test the partner has been created.

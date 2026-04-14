@@ -34,4 +34,5 @@ from . import test_res_partner_addresses
 from . import test_res_partner_bank
 from . import test_res_users
 from . import test_res_users_has_group
+from . import test_vat_numbers
 from . import test_wizard_base_partner_merge

@@ -41,12 +41,10 @@ Rules when creating a new partner: We will only see the identification types tha
 When creating a new company, will set to the related partner always the related country is_vat identification type.
 
 All the defined identification types can be reviewed and activate/deactivate in "Contacts / Configuration / Identification Type" menu.
-
-This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.
 """,
     'depends': [
         'contacts',
-        'base_vat',
+        'account',
     ],
     'data': [
         'data/res_country_group.xml',
