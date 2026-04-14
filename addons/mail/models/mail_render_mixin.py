@@ -20,6 +20,9 @@ from odoo.tools.rendering_tools import convert_inline_template_to_qweb, parse_in
 
 _logger = logging.getLogger(__name__)
 
+BYPASS_RESTRICTED_RENDERING = object()
+
+
 def format_date(env, date, pattern=False, lang_code=False):
     try:
         return tools.format_date(env, date, date_format=pattern, lang_code=lang_code)
@@ -207,6 +210,14 @@ class MailRenderMixin(models.AbstractModel):
     # SECURITY
     # ------------------------------------------------------------
 
+    def _is_restricted(self):
+        return (
+            not self._unrestricted_rendering
+            and self.env.context.get("bypass_restricted_rendering") is not BYPASS_RESTRICTED_RENDERING
+            and not self.env.is_admin()
+            and not self.env.user.has_group('mail.group_mail_template_editor')
+        )
+
     def _has_unsafe_expression(self):
         for template in self.sudo():
             for fname, field in template._fields.items():
@@ -310,12 +321,10 @@ class MailRenderMixin(models.AbstractModel):
         if add_context:
             variables.update(**add_context)
 
-        is_restricted = not self._unrestricted_rendering and not self.env.is_admin() and not self.env.user.has_group('mail.group_mail_template_editor')
-
         for record in self.env[model].browse(res_ids):
             variables['object'] = record
             options = options or {}
-            if is_restricted:
+            if self._is_restricted():
                 options['raise_on_forbidden_code_for_model'] = model
             try:
                 render_result = self.env['ir.qweb']._render(
@@ -512,9 +521,7 @@ class MailRenderMixin(models.AbstractModel):
             # do not call the qweb engine
             return self._render_template_inline_template_regex(str(template_txt), model, res_ids)
 
-        if (not self._unrestricted_rendering
-            and not self.env.is_admin()
-            and not self.env.user.has_group('mail.group_mail_template_editor')):
+        if self._is_restricted():
             group = self.env.ref('mail.group_mail_template_editor')
             raise AccessError(
                 _('Only members of %(group_name)s group are allowed to edit templates containing sensible placeholders',
