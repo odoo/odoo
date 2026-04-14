@@ -14,7 +14,7 @@ from odoo.models import BaseModel, NewId
 from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
 from odoo.tools import date_utils, unique
 from odoo.tools.misc import OrderedSet, get_lang
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from collections import defaultdict
 
 SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
@@ -136,14 +136,42 @@ class Base(models.AbstractModel):
 
                 field_spec_order = field_spec.get('order')
                 field_spec_has_fields = 'fields' in field_spec
+                has_co_records = any(co_records.ids)
+                has_model_read_access = (
+                    has_co_records
+                    and co_records.env['ir.model.access'].check(
+                        co_records._name, 'read', raise_exception=False,
+                    )
+                )
 
-                if field_spec_order or field_spec_has_fields:
-                    # Re-search the records to apply read record rules
-                    # (cache may contain inaccessible ids after write/read) and apply order.
-                    co_records = co_records.with_context(active_test=False).search(
-                        [('id', 'in', co_records.ids)], order=field_spec_order,
-                    ).with_context(co_records.env.context)  # Reapply previous context
+                # Filter out co-records the user cannot read (cache may keep
+                # inaccessible ids after a sudo write/read).
+                if field_spec_order and has_co_records:
+                    if not has_model_read_access:
+                        # If the comodel is not readable, keep the x2many empty.
+                        co_records = co_records.browse()
+                    else:
+                        try:
+                            co_records = co_records.with_context(active_test=False).search(
+                                [('id', 'in', co_records.ids)], order=field_spec_order,
+                            ).with_context(co_records.env.context)  # Reapply previous context
+                        # Keep UserError if the model does not accept the search
+                        # (e.g. account.code.mapping).
+                        except (AccessError, UserError):
+                            co_records = co_records.browse()
 
+                elif field_spec_has_fields and has_model_read_access:
+                    # Filter co-records only if the user can read the comodel.
+                    # Some x2many fields have models that are not directly
+                    # readable by the user (e.g. hr.employee from hr.appraisal for a
+                    # base.group_user). In that case, keep the relation ids unchanged.
+                    co_records = co_records.with_context(
+                        active_test=False,
+                    )._filter_access_rules('read').with_context(
+                        co_records.env.context
+                    )
+
+                if has_co_records and (field_spec_order or field_spec_has_fields):
                     co_records_ids = set(co_records.ids)
 
                     for values in values_list:
