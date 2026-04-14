@@ -402,7 +402,11 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         test_customer = self.test_customers[0].with_env(self.env)
         move_template = self.move_template.with_env(self.env)
 
-        extra_dynamic_report = self.env.ref('account.action_account_original_vendor_bill')
+        extra_dynamic_report = self.env.ref('account.action_account_original_vendor_bill').sudo().copy({
+            'name': 'Invoice PDF 2',
+            'print_report_name': "'CUSTOM_%s' % object.name",
+        })
+
         move_template.report_template_ids += extra_dynamic_report
 
         composer = self.env['account.move.send.wizard'].with_context(active_model='account.move', active_ids=test_move.ids).create({
@@ -425,7 +429,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                     {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
                     {'name': 'AttFileName_01.txt', 'raw': b'AttContent_01', 'type': 'text/plain'},
                     {'name': f'{test_move.name}.pdf', 'type': 'application/pdf'},
-                    {'name': f'{extra_dynamic_report.name.lower()}_{test_move.name}.pdf', 'type': 'application/pdf'},
+                    {'name': 'CUSTOM_INVOICE_00.pdf', 'type': 'application/pdf'},
                 ],
                 'body_content': f'TemplateBody for {test_move.name}',
                 'email_from': self.user_account_other.email_formatted,
