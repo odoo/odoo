@@ -25,7 +25,7 @@ export class HootCopyButton extends Component {
     });
 
     // Reactive values
-    copied = signal(false);
+    copied = signal(false, { type: t.boolean });
 
     // Other members
     hasClipboard = hasClipboard;

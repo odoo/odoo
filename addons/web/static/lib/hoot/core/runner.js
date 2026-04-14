@@ -279,7 +279,7 @@ export class Runner {
     // Properties
     aborted = false;
     /** @type {import("@odoo/owl").Signal<Test | null>} */
-    currentTest = signal(null);
+    currentTest = signal(null, { type: t.or([t.instanceOf(Test), t.literal(null)]) });
     /** @type {boolean | Test | Suite} */
     debug = false;
     dry = false;
@@ -287,26 +287,14 @@ export class Runner {
     expect;
     /** @type {ReturnType<typeof makeExpect>[1]} */
     expectHooks;
-    /**
-     * List of IDs of tests that have failed (previously AND during this run).
-     * @type {import("@odoo/owl").Signal<Set<string>>}
-     */
-    failedIds = signal.Set(new Set(storageGet(STORAGE.failed)));
-    /**
-     * List of suites that will be run (only available after {@link Runner.start})
-     * @type {Suite[]}
-     */
-    filteredSuites = signal.Array([]);
-    /**
-     * List of tests that will be run (only available after {@link Runner.start})
-     * @type {Test[]}
-     */
-    filteredTests = signal.Array([]);
-    /**
-     * List of tests that have been run
-     * @type {import("@odoo/owl").Signal<Set<Test>>}
-     */
-    finishedTests = signal.Set(new Set());
+    /** List of IDs of tests that have failed (previously AND during this run) */
+    failedIds = signal.Set(new Set(storageGet(STORAGE.failed)), { type: t.string });
+    /** List of suites that will be run (only available after {@link Runner.start}) */
+    filteredSuites = signal.Array([], { type: t.instanceOf(Suite) });
+    /** List of tests that will be run (only available after {@link Runner.start}) */
+    filteredTests = signal.Array([], { type: t.instanceOf(Test) });
+    /** List of tests that have been run */
+    finishedTests = signal.Set(new Set(), { type: t.instanceOf(Test) });
     fixture = new FixtureManager(this);
     /**
      * @type {Record<string, GlobalIssueReport>}
@@ -339,9 +327,7 @@ export class Runner {
     suites = new Map();
     /** @type {Suite[]} */
     suiteStack = [];
-    status = signal("ready", {
-        type: t.selection(["ready", "running", "done"]),
-    });
+    status = signal("ready", { type: t.selection(["ready", "running", "done"]) });
     /** @type {Map<string, Tag>} */
     tags = new Map();
     /** @type {Map<string, Test>} */
@@ -598,7 +584,7 @@ export class Runner {
                 `expected second argument to be a function and got ${String(fn)}`
             );
         }
-        if (this.status === "running") {
+        if (this.status() === "running") {
             throw testError(
                 { name, parent: parentSuite },
                 `cannot add a test after the test runner started.`

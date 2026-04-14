@@ -41,7 +41,7 @@ export class HootDropdown extends Component {
     });
 
     // Reactive values
-    isOpen = signal(false);
+    isOpen = signal(false, { type: t.boolean });
     rootRef = elSignal();
     togglerRef = elSignal();
 

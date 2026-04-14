@@ -55,7 +55,7 @@ export class HootLink extends Component {
     runner = getRunnerPlugin();
 
     // Reactive values
-    href = signal("#");
+    href = signal("#", { type: t.string });
 
     /**
      * @param {PointerEvent} ev

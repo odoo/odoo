@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { markRaw, signal } from "@odoo/owl";
+import { markRaw, signal, untrack } from "@odoo/owl";
 import {
     formatXml,
     getActiveElement,
@@ -137,7 +137,7 @@ const {
     Error,
     Intl: { ListFormat },
     Math: { abs: $abs, floor: $floor },
-    Object: { assign: $assign, create: $create, entries: $entries, keys: $keys },
+    Object: { create: $create, entries: $entries, keys: $keys },
     parseFloat,
     performance,
     Promise,
@@ -536,11 +536,14 @@ export function makeExpect(params) {
         if (test) {
             // Set test status
             if (options?.aborted) {
-                test.status = Test.ABORTED;
+                test.status.set(Test.ABORTED);
             } else if (currentResult.pass) {
-                test.status ||= Test.PASSED;
+                // Only set to "passed" if the status was null (= default = SKIPPED)
+                if (!test.status()) {
+                    test.status.set(Test.PASSED);
+                }
             } else {
-                test.status = Test.FAILED;
+                test.status.set(Test.FAILED);
             }
 
             /** @type {import("../hoot_utils").Reporting} */
@@ -918,7 +921,7 @@ export function makeExpect(params) {
         return new Matcher(currentResult, received, flags);
     }
 
-    const enrichedExpect = $assign(expect, {
+    const expectFns = [
         assertions,
         errors,
         step,
@@ -926,7 +929,13 @@ export function makeExpect(params) {
         verifySteps,
         waitForErrors,
         waitForSteps,
-    });
+    ];
+    for (const fn of expectFns) {
+        // Functions are bound to keep their name when debugging
+        expect[fn.name] = function (...args) {
+            return untrack(fn.bind(this, ...args));
+        };
+    }
     const expectHooks = {
         after: afterTest,
         before: beforeTest,
@@ -939,7 +948,7 @@ export function makeExpect(params) {
 
     let removeInteractionListener;
 
-    return [enrichedExpect, expectHooks];
+    return [expect, expectHooks];
 }
 
 export class CaseResult {
@@ -2167,6 +2176,44 @@ export class Matcher {
 
     /**
      * @private
+     * @param {PromiseRejectedResult} reason
+     * @param {() => MatcherSpecifications<R, A>} specCallback
+     */
+    _onRejected(reason, specCallback) {
+        if (this._flags & FLAGS.resolves) {
+            this._result.registerEvent("assertion", {
+                label: "resolves",
+                pass: false,
+                reportMessage: [r`expected promise to resolve, instead rejected with:`, reason],
+            });
+            return false;
+        }
+
+        this._received = reason;
+        return this._resolveFinalResult(specCallback);
+    }
+
+    /**
+     * @private
+     * @param {PromiseFulfilledResult<R>} reason
+     * @param {() => MatcherSpecifications<R, A>} specCallback
+     */
+    _onResolved(result, specCallback) {
+        if (this._flags & FLAGS.rejects) {
+            this._result.registerEvent("assertion", {
+                label: "rejects",
+                pass: false,
+                reportMessage: [r`expected promise to reject, instead resolved with:`, result],
+            });
+            return false;
+        }
+
+        this._received = result;
+        return this._resolveFinalResult(specCallback);
+    }
+
+    /**
+     * @private
      * @param {() => MatcherSpecifications<R, A>} specCallback
      * @returns {Async extends true ? Promise<boolean> : boolean}
      */
@@ -2178,44 +2225,13 @@ export class Matcher {
         }
         if (isAsync) {
             return Promise.resolve(this._received).then(
-                /** @param {PromiseFulfilledResult<R>} reason */
-                (result) => {
-                    if (this._flags & FLAGS.rejects) {
-                        this._result.registerEvent("assertion", {
-                            label: "rejects",
-                            pass: false,
-                            reportMessage: [
-                                r`expected promise to reject, instead resolved with:`,
-                                result,
-                            ],
-                        });
-                        return false;
-                    } else {
-                        this._received = result;
-                        return this._resolveFinalResult(specCallback);
-                    }
-                },
+                /** @param {PromiseFulfilledResult<R>} result */
+                (result) => untrack(this._onResolved.bind(this, result, specCallback)),
                 /** @param {PromiseRejectedResult} reason */
-                (reason) => {
-                    if (this._flags & FLAGS.resolves) {
-                        this._result.registerEvent("assertion", {
-                            label: "resolves",
-                            pass: false,
-                            reportMessage: [
-                                r`expected promise to resolve, instead rejected with:`,
-                                reason,
-                            ],
-                        });
-                        return false;
-                    } else {
-                        this._received = reason;
-                        return this._resolveFinalResult(specCallback);
-                    }
-                }
+                (reason) => untrack(this._onRejected.bind(this, reason, specCallback))
             );
-        } else {
-            return this._resolveFinalResult(specCallback);
         }
+        return untrack(this._resolveFinalResult.bind(this, specCallback));
     }
 
     /**
