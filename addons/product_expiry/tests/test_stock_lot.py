@@ -740,7 +740,7 @@ class TestStockLot(TestStockCommon):
             'default_lot_ids': [lot.id],
         }
         wizard = self.env['expiry.picking.confirmation'].with_context(context).create({})
-        self.assertFalse(wizard.picking_ids.move_line_ids.removal_date)
+        self.assertFalse(wizard.picking_ids.move_line_ids._get_removal_date())
         wizard.process_no_expired()
 
     def test_no_expiration_wizard_when_tracking_removed(self):
@@ -814,7 +814,7 @@ class TestStockLot(TestStockCommon):
 
         receipt.move_line_ids.write({
             'lot_name': 'new-expired-lot',
-            'removal_date': datetime.today() - timedelta(days=1),
+            'expiration_date': datetime.today() - timedelta(days=1),
             'quantity': 1,
         })
         receipt.move_ids.picked = True
