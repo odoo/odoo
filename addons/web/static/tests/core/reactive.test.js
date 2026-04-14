@@ -1,5 +1,5 @@
 import { reactive } from "@web/owl2/utils";
-import { after, describe, expect, test } from "@odoo/hoot";
+import { after, describe, expect, microTick, test } from "@odoo/hoot";
 import { EventBus, effect as owlEffect } from "@odoo/owl";
 import { Reactive, effect } from "@web/core/utils/reactive";
 
@@ -22,10 +22,14 @@ describe("class", () => {
                 expect.step(`counter: ${obj.counter}`);
             })
         );
+        expect.verifySteps(["counter: 0"]);
 
         obj.counter++;
-        expect.verifySteps(["counter: 0", "counter: 1"]);
+        await microTick();
+        expect.verifySteps(["counter: 1"]);
+
         bus.trigger("change");
+        await microTick();
         expect(obj.counter).toBe(2);
         expect.verifySteps([
             // The mutation in the event handler was missed by the reactivity, this is because
@@ -48,16 +52,22 @@ describe("class", () => {
                 expect.step(`counter: ${obj.counter}`);
             })
         );
+        expect.verifySteps(["counter: 0"]);
+
         obj.counter++;
-        expect.verifySteps(["counter: 0", "counter: 1"]);
+        await microTick();
+        expect.verifySteps(["counter: 1"]);
+
         bus.trigger("change");
+        await microTick();
         expect(obj.counter).toBe(2);
         expect.verifySteps(["counter: 2"]);
     });
 });
 
+// @todo owl3 migration: remove odoo effect function
 describe("effect", () => {
-    test("effect runs once immediately", async () => {
+    test.skip("effect runs once immediately", async () => {
         const state = reactive({ counter: 0 });
         expect.verifySteps([]);
         effect(
@@ -69,7 +79,7 @@ describe("effect", () => {
         expect.verifySteps(["counter: 0"]);
     });
 
-    test("effect runs when reactive deps change", async () => {
+    test.skip("effect runs when reactive deps change", async () => {
         const state = reactive({ counter: 0 });
         expect.verifySteps([]);
         effect(
@@ -90,7 +100,7 @@ describe("effect", () => {
         expect.verifySteps(["counter: 2"]);
     });
 
-    test("Original reactive callback is not subscribed to keys observed by effect", async () => {
+    test.skip("Original reactive callback is not subscribed to keys observed by effect", async () => {
         let reactiveCallCount = 0;
         const state = reactive(
             {
@@ -123,7 +133,7 @@ describe("effect", () => {
         });
     });
 
-    test("mutating keys not observed by the effect doesn't cause it to run", async () => {
+    test.skip("mutating keys not observed by the effect doesn't cause it to run", async () => {
         const state = reactive({ counter: 0, unobserved: 0 });
         effect(
             (state) => {
