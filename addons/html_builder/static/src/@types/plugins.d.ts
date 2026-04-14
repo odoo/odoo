@@ -26,7 +26,7 @@ declare module "plugins" {
     import { snippet_preview_dialog_bundles, snippet_preview_dialog_stylesheets_processors } from "@html_builder/snippets/add_snippet_dialog";
     import { background_shape_groups_providers, background_shape_target_providers, is_element_in_invisible_panel_predicates } from "@html_builder/plugins/background_option/background_shape_option_plugin";
     import { mark_color_level_selector_params } from "@html_builder/plugins/background_option/background_option_plugin";
-    import { is_movable_selectors, on_element_arrow_moved_handlers } from "@html_builder/core/move_plugin";
+    import { is_movable_selectors, on_element_arrow_moved_handlers, MoveShared } from "@html_builder/core/move_plugin";
     import { content_editable_selectors, content_not_editable_selectors } from "@html_builder/core/builder_content_editable_plugin";
     import { builder_actions, BuilderActionsShared } from "@html_builder/core/builder_actions_plugin";
     import { so_content_addition_selectors, so_snippet_addition_selectors } from "@html_builder/core/dropzone_selector_plugin";
@@ -51,6 +51,7 @@ declare module "plugins" {
         disableSnippets: DisableSnippetsShared;
         dropzone: DropZoneShared;
         media_website: MediaWebsiteShared;
+        move: MoveShared;
         operation: OperationShared;
         overlayButtons: OverlayButtonsShared;
         remove: RemoveShared;

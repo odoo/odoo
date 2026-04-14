@@ -25,10 +25,13 @@ import { localization } from "@web/core/l10n/localization";
  *      movedEl: HTMLElement,
  *      dragState: DragState,
  * }) => void)[]} on_element_arrow_moved_handlers
+ *
+ * @typedef { Object } MoveShared
+ * @property { MovePlugin['getNeighbors'] } getNeighbors
  */
 export class MovePlugin extends Plugin {
     static id = "move";
-    static dependencies = ["visibility"];
+    static shared = ["getNeighbors"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         has_overlay_options: { hasOption: (el) => this.isMovable(el) },
@@ -145,16 +148,9 @@ export class MovePlugin extends Plugin {
                 (this.overlayTarget.matches(this.verticalMove.selector) &&
                     !this.overlayTarget.matches(this.verticalMove.exclude)) ||
                 this.isFullWidthColumn(this.overlayTarget);
-            const previousSiblingEl = this.dependencies.visibility.getVisibleSibling(
-                this.overlayTarget,
-                "prev"
-            );
-            const nextSiblingEl = this.dependencies.visibility.getVisibleSibling(
-                this.overlayTarget,
-                "next"
-            );
+            const neigborSiblings = this.getNeighbors(this.overlayTarget);
 
-            if (previousSiblingEl) {
+            if (neigborSiblings.prev) {
                 const direction = isVertical ? "up" : reverseButtons ? "right" : "left";
                 const button = {
                     class: `fa fa-fw fw-bolder fa-angle-${direction}`,
@@ -168,7 +164,7 @@ export class MovePlugin extends Plugin {
                 buttons.push(button);
             }
 
-            if (nextSiblingEl) {
+            if (neigborSiblings.next) {
                 const direction = isVertical ? "down" : reverseButtons ? "left" : "right";
                 const button = {
                     class: `fa fa-fw fw-bolder fa-angle-${direction}`,
@@ -236,14 +232,11 @@ export class MovePlugin extends Plugin {
     areArrowsHidden() {
         const isMobile = this.config.isMobileView(this.overlayTarget);
         const isGridItem = this.overlayTarget.classList.contains("o_grid_item");
-        const siblingsEl = [...this.overlayTarget.parentNode.children];
-        const visibleSiblingEl = siblingsEl.find(
-            (el) => el !== this.overlayTarget && window.getComputedStyle(el).display !== "none"
-        );
+        const siblingsEl = this.getSiblings(this.overlayTarget);
         // The arrows are not displayed if:
         // - the target has no visible siblings
         // - the target is a grid item and is not in mobile view
-        return !visibleSiblingEl || (isGridItem && !isMobile);
+        return siblingsEl.length === 1 || (isGridItem && !isMobile);
     }
 
     /**
@@ -273,10 +266,7 @@ export class MovePlugin extends Plugin {
             hasMobileOrder = false;
         }
 
-        const siblingEl = this.dependencies.visibility.getVisibleSibling(
-            this.overlayTarget,
-            direction
-        );
+        const siblingEl = this.getNeighbors(this.overlayTarget)[direction];
         if (hasMobileOrder) {
             // Swap the mobile orders.
             const currentOrder = this.overlayTarget.style.order;
@@ -306,5 +296,36 @@ export class MovePlugin extends Plugin {
                 duration: 500,
             });
         }
+    }
+
+    getSiblings(target) {
+        const systemNodeSelectors = this.getResource("system_node_selectors").join(",");
+        const siblingEls = [...target.parentNode.children];
+        return siblingEls.filter(
+            (el) =>
+                el === target ||
+                (!el.classList.contains("o_we_no_overlay") &&
+                    window.getComputedStyle(el).display !== "none" &&
+                    !el.closest(systemNodeSelectors))
+        );
+    }
+
+    /**
+     * @param {HTMLElement} target
+     * @returns {{prev: HTMLElement, next: HTMLElement}}
+     */
+    getNeighbors(target) {
+        const visibleSiblingEls = this.getSiblings(target);
+        const targetMobileOrder = target.style.order;
+        // On mobile, if the target has a mobile order (which is independent
+        // from desktop), consider these orders instead of the DOM order.
+        if (targetMobileOrder && this.config.isMobileView(target)) {
+            visibleSiblingEls.sort((a, b) => parseInt(a.style.order) - parseInt(b.style.order));
+        }
+        const targetIndex = visibleSiblingEls.indexOf(target);
+        return {
+            prev: visibleSiblingEls[targetIndex - 1],
+            next: visibleSiblingEls[targetIndex + 1],
+        };
     }
 }

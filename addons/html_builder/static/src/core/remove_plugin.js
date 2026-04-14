@@ -53,7 +53,7 @@ export function isRemovable(el) {
 
 export class RemovePlugin extends Plugin {
     static id = "remove";
-    static dependencies = ["builderOptions", "visibility"];
+    static dependencies = ["builderOptions", "move"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         get_overlay_buttons: withSequence(3, {
@@ -163,11 +163,7 @@ export class RemovePlugin extends Plugin {
 
         // Get the parent and the previous and next visible siblings.
         let parentEl = toRemoveEl.parentElement;
-        const previousSiblingEl = this.dependencies.visibility.getVisibleSibling(
-            toRemoveEl,
-            "prev"
-        );
-        const nextSiblingEl = this.dependencies.visibility.getVisibleSibling(toRemoveEl, "next");
+        const neigborSiblings = this.dependencies.move.getNeighbors(toRemoveEl);
         if (parentEl.matches(".o_savable:not(body)")) {
             // If we target the savable, we want to reset the selection to the
             // body. If the savable has options, we do not want to show them.
@@ -195,7 +191,7 @@ export class RemovePlugin extends Plugin {
 
         // Set the sibling as the next element to activate, if any, otherwise
         // set it as the parent.
-        let nextTargetEl = previousSiblingEl || nextSiblingEl;
+        let nextTargetEl = neigborSiblings.prev || neigborSiblings.next;
         if (!nextTargetEl) {
             // Remove potential ancestors (like when removing the last column of
             // a snippet).
