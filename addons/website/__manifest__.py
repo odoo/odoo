@@ -76,6 +76,7 @@
         'views/snippets/s_rating.xml',
         'views/snippets/s_hr.xml',
         'views/snippets/s_closer_look.xml',
+        'views/snippets/s_awards_list.xml',
         'views/snippets/s_facebook_page.xml',
         'views/snippets/s_whatsapp.xml',
         'views/snippets/s_image_gallery.xml',
