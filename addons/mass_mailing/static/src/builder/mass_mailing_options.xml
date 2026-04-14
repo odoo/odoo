@@ -2,8 +2,8 @@
 
 <templates xml:space="preserve">
 <t t-name="mass_mailing.BuilderOptions">
-    <t t-set="socialMediaElementsSelector" t-value="'.s_social_media i.fa, .s_share i.fa, .social_media_img'"/>
-    <t t-set="replaceMediaOptionSelector" t-value="'img, .media_iframe_video, span.fa, i.fa'"/>
+    <t t-set="socialMediaElementsSelector" t-value="'.s_social_media i.oi, .s_share i.oi, .social_media_img'"/>
+    <t t-set="replaceMediaOptionSelector" t-value="'img, .media_iframe_video, span.oi, i.oi'"/>
     <t t-set="replaceMediaOptionExclude" t-value="'[data-oe-xpath], ' + socialMediaElementsSelector"/>
     <t t-set="cardBorderOptionSelector"
         t-value="`.s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div`"/>
@@ -31,10 +31,10 @@
         <mass_mailing_image_tool_option selector="img" exclude="[data-oe-type='image'] > img"/>
         <font_awesome_option
             template="mass_mailing.FontAwesomeOption"
-            selector="span.fa, i.fa"/>
+            selector="span.oi, i.oi"/>
         <image_and_fa_option
             template="mass_mailing.ImageAndFaOption"
-            selector="span.fa, i.fa, img"/>
+            selector="span.oi, i.oi, img"/>
         <text_alignment_option
             template="html_builder.TextAlignmentOption"
             selector=".s_share, .s_text_highlight, .s_social_media"/>

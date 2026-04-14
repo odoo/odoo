@@ -13,7 +13,7 @@
     </BuilderRow>
 
     <BuilderRow label.translate="Layout">
-        <BuilderSelect applyTo="'.fa, .social_media_img'">
+        <BuilderSelect applyTo="'.oi, .social_media_img'">
             <BuilderSelectItem classAction="'rounded shadow-sm'">Square</BuilderSelectItem>
             <BuilderSelectItem classAction="'rounded-empty-circle shadow-sm'">Circle</BuilderSelectItem>
             <BuilderSelectItem classAction="'rounded-circle shadow-sm'">Disk</BuilderSelectItem>
@@ -25,7 +25,7 @@
     <BuilderRange
         withNumberInput="true"
         action="'resetSocialMediaIconSize'"
-        applyTo="'.fa, .social_media_img'"
+        applyTo="'.oi, .social_media_img'"
         styleAction="{ mainParam: '--oi-icon-size', extraClass: 'o_sm_custom_size' }"
         unit="'px'"
         saveUnit="'rem'"
@@ -46,7 +46,7 @@
     </BuilderRow>
 
     <BuilderRow label.translate="Background Color">
-        <BuilderColorPicker applyTo="'.fa'" styleAction="'background-color'"/>
+        <BuilderColorPicker applyTo="'.oi'" styleAction="'background-color'"/>
     </BuilderRow>
 </t>
 
