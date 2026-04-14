@@ -463,12 +463,12 @@
 
     <template id="external_layout_standard">
         <div t-attf-class="o_company_#{company.id}_layout header">
-            <table class="table-borderless">
+            <table class="table-borderless w-100">
                 <tr>
                     <td t-if="company.logo" class="align-top pe-3">
                         <img class="o_company_logo_big" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
                     </td>
-                    <td class="align-top text-start">
+                    <td class="align-top text-start w-100">
                         <t t-call="web.company_address_list"/>
                     </td>
                 </tr>
