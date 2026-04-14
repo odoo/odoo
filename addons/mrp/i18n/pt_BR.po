@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2026-04-04 12:58+0000\n"
+"POT-Creation-Date: 2026-04-10 18:35+0000\n"
+"PO-Revision-Date: 2026-04-11 14:26+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-2/mrp/pt_BR/>\n"
@@ -255,55 +255,14 @@ msgstr ""
 "produto(s) final(is) da área de produção para o estoque."
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "100"
-msgstr "100"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
-msgid "12345678901"
-msgstr "12345678901"
-
-#. module: mrp
 #: model_terms:product.template,description:mrp.product_product_computer_desk_leg_product_template
 msgid "18″ x 2½″ Square Leg"
 msgstr "Perna quadrada 18″ x 2½″"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "2023-09-15"
-msgstr "15-09-2023"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
-msgid "25"
-msgstr "25"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "50"
-msgstr "50"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "58"
-msgstr "58"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "60"
-msgstr "60"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "8 GB RAM"
 msgstr "8 GB de RAM"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "987654321098"
-msgstr "987654321098"
 
 #. module: mrp
 #. odoo-javascript
@@ -5962,7 +5921,7 @@ msgstr "A quantidade a ser desmontada deve ser positiva."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__remaining_time
 msgid "The remaining time to finish this work order in hours."
-msgstr ""
+msgstr "O tempo restante para concluir esta ordem de trabalho em horas."
 
 #. module: mrp
 #. odoo-python
@@ -6020,7 +5979,7 @@ msgstr "A ordem de trabalho já deve ter sido processada."
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__cost_mode__estimated
 msgid "Theoretical time"
-msgstr ""
+msgstr "Tempo teórico"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -6039,7 +5998,7 @@ msgstr "Não há um calendário definido no centro de trabalho %s."
 #. odoo-python
 #: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
 msgid "There is no serial numbers to apply."
-msgstr ""
+msgstr "Não há números de série a aplicar."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
@@ -6231,7 +6190,7 @@ msgstr "A ser pedida"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "To Plan"
-msgstr ""
+msgstr "A planejar"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -6336,6 +6295,8 @@ msgstr "Duração total esperada (em minutos)"
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__cost
 msgid "Total real cost of the work order based on duration and hourly cost."
 msgstr ""
+"Custo real total da ordem de trabalho com base na duração e no custo por "
+"hora."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -6524,7 +6485,7 @@ msgstr "Atualizar LM"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Update Planning"
-msgstr ""
+msgstr "Atualizar planejamento"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__1
@@ -6559,12 +6520,12 @@ msgstr "Usado em"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__production_group_id
 msgid "Used for Productions"
-msgstr ""
+msgstr "Usado para Produções"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_line_action_used_in_boms
 msgid "Used in BoM"
-msgstr ""
+msgstr "Usado na LM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__user_id
@@ -6764,6 +6725,8 @@ msgid ""
 "Wizard for warning about mismatching expected vs actual component "
 "consumption quantities for MOs"
 msgstr ""
+"Assistente para alertar sobre incompatibilidade entre as quantidades "
+"esperadas e reais de consumo de componentes para MOs"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_multi
@@ -7004,7 +6967,7 @@ msgstr "Ordem de trabalho"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss_type
 msgid "Workorder Productivity Loss Type"
-msgstr ""
+msgstr "Tipo de perda de produtividade da ordem de trabalho"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__yesterday
@@ -7083,6 +7046,7 @@ msgstr "Só é possível mesclar fabricações com a mesma situação."
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "You cannot cancel a manufacturing order that is already done."
 msgstr ""
+"Não é possível cancelar uma ordem de produção que já tenha sido concluída."
 
 #. module: mrp
 #. odoo-python
@@ -7099,6 +7063,8 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "You cannot change the workcenter of a work order that is done."
 msgstr ""
+"Não é possível alterar o centro de trabalho de uma ordem de trabalho que já "
+"foi concluída."
 
 #. module: mrp
 #. odoo-python
@@ -7118,6 +7084,7 @@ msgstr "Não é possível criar uma dependência cíclica."
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "You cannot delete a manufacturing order that is already done."
 msgstr ""
+"Não é possível excluir uma ordem de produção que já tenha sido concluída."
 
 #. module: mrp
 #. odoo-python
@@ -7161,13 +7128,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "You cannot set more than 1 lot"
-msgstr ""
+msgstr "Não é possível definir mais de 1 lote"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "You cannot set more than 1 lot per product"
-msgstr ""
+msgstr "Não é possível definir mais de 1 lote por produto"
 
 #. module: mrp
 #. odoo-python
@@ -7201,6 +7168,11 @@ msgid ""
 "the bill of materials.\n"
 "                        Please confirm it has been done on purpose."
 msgstr ""
+"Você consumiu uma quantidade diferente da esperada para os seguintes "
+"produtos\n"
+"                        e/ou consumiu um produto que não está incluído na "
+"lista de materiais.\n"
+"                        Confirme se isso foi feito propositalmente."
 
 #. module: mrp
 #. odoo-python
@@ -7296,7 +7268,7 @@ msgstr "cancelados"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
 msgid "copy paste a list and/or use Generate"
-msgstr ""
+msgstr "copie e cole uma lista e/ou use 'Gerar'"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -7377,6 +7349,30 @@ msgstr "duração real"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "divididas"
+
+#~ msgid "100"
+#~ msgstr "100"
+
+#~ msgid "12345678901"
+#~ msgstr "12345678901"
+
+#~ msgid "2023-09-15"
+#~ msgstr "15-09-2023"
+
+#~ msgid "25"
+#~ msgstr "25"
+
+#~ msgid "50"
+#~ msgstr "50"
+
+#~ msgid "58"
+#~ msgstr "58"
+
+#~ msgid "60"
+#~ msgstr "60"
+
+#~ msgid "987654321098"
+#~ msgstr "987654321098"
 
 #~ msgid "Finished"
 #~ msgstr "Concluído"

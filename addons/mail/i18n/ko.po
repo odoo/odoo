@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:37+0000\n"
-"PO-Revision-Date: 2026-04-04 12:57+0000\n"
+"POT-Creation-Date: 2026-04-10 18:35+0000\n"
+"PO-Revision-Date: 2026-04-13 19:28+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-2/mail/"
 "ko/>\n"
@@ -585,11 +585,6 @@ msgstr "1표"
 #: code:addons/mail/static/src/core/common/create_poll_dialog.xml:0
 msgid "10 minutes"
 msgstr "10분"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.account_security_alert
-msgid "111.222.333.444"
-msgstr "111.222.333.444"
 
 #. module: mail
 #. odoo-javascript
@@ -5011,19 +5006,22 @@ msgstr "메시지를 게시하지 못했습니다. 다시 시도하려면 클릭
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
-"Failed to render QWeb template: %(template_src)s\n"
+"Failed to render QWeb template for %(template_label)s\n"
+"Target Model: %(model_name)s\n"
+"Language context: %(lang_context)s\n"
+"Error: %(error_details)s\n"
 "\n"
-"%(template_traceback)s)"
+"Template Source Snippet:\n"
+"%(template_src)s"
 msgstr ""
-"QWeb 서식 렌더링에 실패했습니다: %(template_src)s\n"
-"\n"
-"%(template_traceback)s)"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-msgid "Failed to render inline_template template: %(template_txt)s"
-msgstr "inline_template을 렌더링하지 못했습니다: %(template_txt)s"
+msgid ""
+"Failed to render inline_template template: %(template_txt)s\n"
+"Error details: %(error)s"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -7340,6 +7338,12 @@ msgid "Mail Template Reset"
 msgstr "메일 서식 재설정"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Thread"
 msgstr "메일 스레드"
@@ -7510,6 +7514,12 @@ msgstr "완료"
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Marked as unread"
 msgstr "읽지 않음으로 표시"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -8275,6 +8285,12 @@ msgid "No history messages"
 msgstr "이전 메시지 내역이 없습니다."
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "No language detected in context"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/activity_model_selector/activity_model_selector.xml:0
 msgid "No linked record"
@@ -8894,11 +8910,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 msgid ""
-"Oops! We couldn't save your template due to an issue with this value: %"
-"(template_txt)s. Correct it and try again."
+"Oops! We couldn't save your template due to an issue.\n"
+"\n"
+"Error: %(error_details)s\n"
+"\n"
+"Correct it and try again."
 msgstr ""
-"죄송합니다! 템플릿을 저장할 수 없습니다. %(template_txt)s 값에 문제가 있습니"
-"다. 값을 수정한 후 다시 시도하세요."
 
 #. module: mail
 #. odoo-javascript
@@ -10990,10 +11007,8 @@ msgstr "서식 선택"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
-#, fuzzy
-#| msgid "Select a Record To Link"
 msgid "Select a record"
-msgstr "연결할 레코드 선택"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -11975,6 +11990,12 @@ msgstr "서식 재설정 혼합"
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Template creation from composer requires a valid model."
 msgstr "컴포저에서 서식을 작성하려면 유효한 모델이 필요합니다."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Template name not identified"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -13202,6 +13223,18 @@ msgstr "이름 없음"
 #: code:addons/mail/models/mail_tracking_value.py:0
 msgid "Unnamed %(record_model_name)s (%(record_id)s)"
 msgstr "이름 없는 %(record_model_name)s (%(record_id)s)"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Unnamed Mail Template"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Unnamed Mailing"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -14586,6 +14619,12 @@ msgid "created this channel."
 msgstr "이 채널을 생성했습니다."
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
+msgid "d"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
 msgstr "일, 월 dd, yyyy - hh:mm:ss (GMT)"
@@ -15149,10 +15188,28 @@ msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s”의 “%(channel_name)s”"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.js:0
+msgid "“%s”"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr ""
+
+#~ msgid "111.222.333.444"
+#~ msgstr "111.222.333.444"
+
+#~ msgid ""
+#~ "Failed to render QWeb template: %(template_src)s\n"
+#~ "\n"
+#~ "%(template_traceback)s)"
+#~ msgstr ""
+#~ "QWeb 서식 렌더링에 실패했습니다: %(template_src)s\n"
+#~ "\n"
+#~ "%(template_traceback)s)"
 
 #~ msgid "Add GIFs"
 #~ msgstr "GIF 추가"

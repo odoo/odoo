@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-04-10 18:35+0000\n"
 "PO-Revision-Date: 2026-01-14 10:28+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-1/survey/"
@@ -41,36 +41,6 @@ msgstr "# Otázek"
 #: model:ir.model.fields,field_description:survey.field_survey_question__random_questions_count
 msgid "# Questions Randomly Picked"
 msgstr "# Náhodně vybrané otázky"
-
-#. module: survey
-#: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_4
-msgid "$100"
-msgstr "100€"
-
-#. module: survey
-#: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_1
-msgid "$20"
-msgstr "$20"
-
-#. module: survey
-#: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_5
-msgid "$200"
-msgstr "200€"
-
-#. module: survey
-#: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_6
-msgid "$300"
-msgstr "300€"
-
-#. module: survey
-#: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_2
-msgid "$50"
-msgstr "50€"
-
-#. module: survey
-#: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_3
-msgid "$80"
-msgstr "80€"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_progression
@@ -113,11 +83,6 @@ msgid "'Certification - %s' % (object.survey_id.display_name)"
 msgstr "'Osvědčení - %s' % (object.survey_id.display_name)"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
-msgid "0000000010"
-msgstr ""
-
-#. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p4_q2_sug2
 msgid "10 kg"
 msgstr "10 kg"
@@ -128,29 +93,14 @@ msgid "100 years"
 msgstr "100 let"
 
 #. module: survey
-#: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q1_sug3
-msgid "1055"
-msgstr "1055"
-
-#. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q3_sug3
 msgid "116 years"
 msgstr "116 let"
 
 #. module: survey
-#: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q1_sug1
-msgid "1227"
-msgstr "1227"
-
-#. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q3_sug4
 msgid "127 years"
 msgstr "127 let"
-
-#. module: survey
-#: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q1_sug2
-msgid "1324"
-msgstr "1324"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q1_sug1
@@ -161,11 +111,6 @@ msgstr "1450 km"
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p4_q2_sug3
 msgid "16.2 kg"
 msgstr "16.2 kg"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
-msgid "2023-08-18"
-msgstr "2023-08-18"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q1_sug2
@@ -236,17 +181,17 @@ msgstr ""
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_certification
 msgid ""
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:"
-"Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
+"family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- We use the logo of the company that created the survey "
 "(to handle multi company cases) -->\n"
-"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid."
-"company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object."
-"survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-"
-"width:100px;\"/></a>\n"
+"                <a href=\"/\"><img t-if=\"not "
+"object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
+"logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
+"style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Certification: <t t-out=\"object.survey_id.display_name "
 "or ''\">Feedback Form</t>\n"
@@ -273,17 +218,17 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:"
-"Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
+"family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- Používáme logo společnosti, která průzkum vytvořila "
 "(pro řešení případů s více společnostmi) -->\n"
-"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid."
-"company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object."
-"survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-"
-"width:100px;\"/></a>\n"
+"                <a href=\"/\"><img t-if=\"not "
+"object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
+"logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
+"style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Certifikace <t t-out=\"object.survey_id.display_name or "
 "''\">Feedback Form</t>\n"
@@ -339,8 +284,8 @@ msgid ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the survey for <t t-out=\"format_date(object."
-"deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Please answer the survey for <t t-"
+"out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            We wish you good luck!\n"
@@ -377,8 +322,8 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Odpovězte prosím na průzkum k datu <t t-out=\"format_date(object."
-"deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Odpovězte prosím na průzkum k datu <t t-"
+"out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Přejeme hodně štěstí\n"
@@ -5418,3 +5363,33 @@ msgid ""
 "⚠️ This question is positioned before some or all of its triggers and could "
 "be skipped."
 msgstr ""
+
+#~ msgid "$100"
+#~ msgstr "100€"
+
+#~ msgid "$20"
+#~ msgstr "$20"
+
+#~ msgid "$200"
+#~ msgstr "200€"
+
+#~ msgid "$300"
+#~ msgstr "300€"
+
+#~ msgid "$50"
+#~ msgstr "50€"
+
+#~ msgid "$80"
+#~ msgstr "80€"
+
+#~ msgid "1055"
+#~ msgstr "1055"
+
+#~ msgid "1227"
+#~ msgstr "1227"
+
+#~ msgid "1324"
+#~ msgstr "1324"
+
+#~ msgid "2023-08-18"
+#~ msgstr "2023-08-18"

@@ -27,10 +27,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:37+0000\n"
-"PO-Revision-Date: 2026-02-07 12:26+0000\n"
+"POT-Creation-Date: 2026-04-10 18:35+0000\n"
+"PO-Revision-Date: 2026-04-13 19:25+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-1/mail/"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-2/mail/"
 "es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -595,11 +595,6 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/create_poll_dialog.xml:0
 msgid "10 minutes"
 msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.account_security_alert
-msgid "111.222.333.444"
-msgstr "111.222.333.444"
 
 #. module: mail
 #. odoo-javascript
@@ -3276,7 +3271,7 @@ msgstr "¡Prueba de conexión exitosa!"
 #: code:addons/mail/static/src/core/common/notification_model.js:0
 #: code:addons/mail/static/src/views/fields/mail_server_configurator_selection/mail_server_configurator_selection.xml:0
 msgid "Connection failed"
-msgstr "La conexión falló"
+msgstr "La conexión ha fallado"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_smtp
@@ -5066,19 +5061,22 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
-"Failed to render QWeb template: %(template_src)s\n"
+"Failed to render QWeb template for %(template_label)s\n"
+"Target Model: %(model_name)s\n"
+"Language context: %(lang_context)s\n"
+"Error: %(error_details)s\n"
 "\n"
-"%(template_traceback)s)"
+"Template Source Snippet:\n"
+"%(template_src)s"
 msgstr ""
-"Error al visualizar la plantilla QWeb: %(template_src)s\n"
-"\n"
-"%(template_traceback)s)"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-msgid "Failed to render inline_template template: %(template_txt)s"
-msgstr "Error al visualizar la plantilla inline_template: %(template_txt)s"
+msgid ""
+"Failed to render inline_template template: %(template_txt)s\n"
+"Error details: %(error)s"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -7417,6 +7415,12 @@ msgid "Mail Template Reset"
 msgstr "Restablecimiento de la plantilla de correo"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Thread"
 msgstr "Hilo de correos"
@@ -7591,6 +7595,12 @@ msgstr "Marcar como hecho"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Marked as unread"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
 msgstr ""
 
 #. module: mail
@@ -8363,6 +8373,12 @@ msgid "No history messages"
 msgstr "Sin mensajes de historial"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "No language detected in context"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/activity_model_selector/activity_model_selector.xml:0
 msgid "No linked record"
@@ -8991,11 +9007,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 msgid ""
-"Oops! We couldn't save your template due to an issue with this value: %"
-"(template_txt)s. Correct it and try again."
+"Oops! We couldn't save your template due to an issue.\n"
+"\n"
+"Error: %(error_details)s\n"
+"\n"
+"Correct it and try again."
 msgstr ""
-"¡Uy! No fue posible guardar su plantilla debido a un problema con este "
-"valor: %(template_txt)s. Corríjalo y vuelva a intentarlo."
 
 #. module: mail
 #. odoo-javascript
@@ -11099,10 +11116,8 @@ msgstr "Seleccionar una plantilla"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
-#, fuzzy
-#| msgid "Select a Record To Link"
 msgid "Select a record"
-msgstr "Seleccione un registro para vincular"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -12092,6 +12107,12 @@ msgstr "Mixin de restablecimiento de plantilla"
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Template creation from composer requires a valid model."
 msgstr "La creación de plantillas desde el editor requiere un modelo válido."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Template name not identified"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -13343,6 +13364,18 @@ msgstr "Sin nombre"
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_value.py:0
 msgid "Unnamed %(record_model_name)s (%(record_id)s)"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Unnamed Mail Template"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Unnamed Mailing"
 msgstr ""
 
 #. module: mail
@@ -14752,6 +14785,12 @@ msgid "created this channel."
 msgstr "creó este canal."
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
+msgid "d"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
 msgstr "día, mes, año - hh:mm:ss (GMT)"
@@ -15316,10 +15355,28 @@ msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” en “%(channel_name)s”"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.js:0
+msgid "“%s”"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr ""
+
+#~ msgid "111.222.333.444"
+#~ msgstr "111.222.333.444"
+
+#~ msgid ""
+#~ "Failed to render QWeb template: %(template_src)s\n"
+#~ "\n"
+#~ "%(template_traceback)s)"
+#~ msgstr ""
+#~ "Error al visualizar la plantilla QWeb: %(template_src)s\n"
+#~ "\n"
+#~ "%(template_traceback)s)"
 
 #~ msgid "Add GIFs"
 #~ msgstr "Añadir GIF"

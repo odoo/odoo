@@ -22,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:37+0000\n"
-"PO-Revision-Date: 2026-04-04 12:54+0000\n"
+"POT-Creation-Date: 2026-04-10 18:35+0000\n"
+"PO-Revision-Date: 2026-04-14 12:05+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/mail/"
 "fr/>\n"
@@ -609,11 +609,6 @@ msgstr "1 vote"
 #: code:addons/mail/static/src/core/common/create_poll_dialog.xml:0
 msgid "10 minutes"
 msgstr "10 minutes"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.account_security_alert
-msgid "111.222.333.444"
-msgstr "111.222.333.444"
 
 #. module: mail
 #. odoo-javascript
@@ -5138,19 +5133,31 @@ msgstr "Le message n'a pas été publié. Cliquer pour réessayer"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
-"Failed to render QWeb template: %(template_src)s\n"
+"Failed to render QWeb template for %(template_label)s\n"
+"Target Model: %(model_name)s\n"
+"Language context: %(lang_context)s\n"
+"Error: %(error_details)s\n"
 "\n"
-"%(template_traceback)s)"
+"Template Source Snippet:\n"
+"%(template_src)s"
 msgstr ""
-"Échec du rendu du modèle QWeb : %(template_src)s\n"
+"Échec du rendu du modèle QWeb pour %(template_label)s\n"
+"Modèle cible : %(model_name)s\n"
+"Contexte de langue : %(lang_context)s\n"
+"Erreur : %(error_details)s\n"
 "\n"
-"%(template_traceback)s)"
+"Snippet source du modèle :\n"
+"%(template_src)s"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-msgid "Failed to render inline_template template: %(template_txt)s"
-msgstr "Échec du rendu du modèle inline_template : %(template_txt)s"
+msgid ""
+"Failed to render inline_template template: %(template_txt)s\n"
+"Error details: %(error)s"
+msgstr ""
+"Échec du rendu du modèle inline_template : %(template_txt)s\n"
+"Détails de l’erreur : %(error)s"
 
 #. module: mail
 #. odoo-python
@@ -6241,8 +6248,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Si l'adresse e-mail est sur liste noire, le contact ne recevra plus d'e-mail "
-"marketing d'aucune liste."
+"Si l'adresse e-mail est sur liste noire, le contact ne recevra plus de "
+"massmail d'aucune liste"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_scheduled_message__is_note
@@ -7513,6 +7520,12 @@ msgid "Mail Template Reset"
 msgstr "Réinitialisation du modèle d'e-mail"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
+msgstr "Modèle d’e-mail : '%(name)s' (ID : %(record_id)s)"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Thread"
 msgstr "Fil de discussion"
@@ -7688,6 +7701,12 @@ msgstr "Marquer comme terminé"
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Marked as unread"
 msgstr "Marqué comme non lu"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
+msgstr "Modèle de massmail : '%(name)s' (ID : %(record_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -8463,6 +8482,12 @@ msgid "No history messages"
 msgstr "Aucun message"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "No language detected in context"
+msgstr "Aucune langue détectée dans le contexte"
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/activity_model_selector/activity_model_selector.xml:0
 msgid "No linked record"
@@ -9109,11 +9134,17 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 msgid ""
-"Oops! We couldn't save your template due to an issue with this value: %"
-"(template_txt)s. Correct it and try again."
+"Oops! We couldn't save your template due to an issue.\n"
+"\n"
+"Error: %(error_details)s\n"
+"\n"
+"Correct it and try again."
 msgstr ""
-"Oups ! Nous n’avons pas pu sauvegarder votre modèle à cause d’un problème "
-"avec cette valeur : %(template_txt)s. Corrigez-la et réessayez."
+"Oups ! Nous n’avons pas pu enregistrer votre modèle à cause d’un problème.\n"
+"\n"
+"Erreur : %(error_details)s\n"
+"\n"
+"Corrigez-le et réessayez."
 
 #. module: mail
 #. odoo-javascript
@@ -11247,10 +11278,8 @@ msgstr "Sélectionnez un modèle"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
-#, fuzzy
-#| msgid "Select a Record To Link"
 msgid "Select a record"
-msgstr "Sélectionner un enregistrement à lier"
+msgstr "Sélectionnez un enregistrement"
 
 #. module: mail
 #. odoo-javascript
@@ -12253,6 +12282,12 @@ msgstr "Réinitialisation du modèle Mixin"
 msgid "Template creation from composer requires a valid model."
 msgstr ""
 "La création de modèles à partir du compositeur nécessite un modèle valide."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Template name not identified"
+msgstr "Nom du modèle non identifié"
 
 #. module: mail
 #. odoo-python
@@ -13521,6 +13556,18 @@ msgstr "Sans nom"
 #: code:addons/mail/models/mail_tracking_value.py:0
 msgid "Unnamed %(record_model_name)s (%(record_id)s)"
 msgstr "Sans nom %(record_model_name)s (%(record_id)s)"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Unnamed Mail Template"
+msgstr "Modèle d’e-mail sans nom"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Unnamed Mailing"
+msgstr "Mailing sans nom"
 
 #. module: mail
 #. odoo-javascript
@@ -14962,6 +15009,12 @@ msgid "created this channel."
 msgstr "a créé ce canal"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
+msgid "d"
+msgstr "j"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
 msgstr "jour, mois dd, aaaa - hh:mm:ss (GMT)"
@@ -15528,10 +15581,28 @@ msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” dans “%(channel_name)s”"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.js:0
+msgid "“%s”"
+msgstr "\"%s\""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privé"
+
+#~ msgid "111.222.333.444"
+#~ msgstr "111.222.333.444"
+
+#~ msgid ""
+#~ "Failed to render QWeb template: %(template_src)s\n"
+#~ "\n"
+#~ "%(template_traceback)s)"
+#~ msgstr ""
+#~ "Échec du rendu du modèle QWeb : %(template_src)s\n"
+#~ "\n"
+#~ "%(template_traceback)s)"
 
 #~ msgid "Do you want to remove \"%(member_name)s\" from this channel?"
 #~ msgstr "Souhaitez-vous supprimer \"%(member_name)s\" de ce canal ?"

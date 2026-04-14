@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:35+0000\n"
+"POT-Creation-Date: 2026-04-10 18:35+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -522,53 +522,10 @@ msgid "1 Week"
 msgstr "1 hafta"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-#: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_aggregated_move_lines
-msgid "1.00"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_content
-msgid "12.0"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_generic_barcode
-msgid "1234567890"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
-msgid "12345678901"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__2x7xprice
 #, fuzzy
 msgid "2 x 7 with price"
 msgstr "2 x 7 narx bilan"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
-msgid "2021-09-01"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
-msgid "2023-01-01"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "2023-09-24"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_content
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "3.00"
-msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__print_format__4x12
@@ -600,11 +557,6 @@ msgstr "4 x 12 narx bilan"
 #, fuzzy
 msgid "4 x 7 with price"
 msgstr "4 x 7 narx bilan"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_content
-msgid "54326786758"
-msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -652,8 +604,8 @@ msgid ""
 "<br>The products will be moved towards <b>%(destination)s</b>, <br/> as "
 "specified from <b>%(operation)s</b> destination."
 msgstr ""
-"<br>Mahsulotlar <b>%(operation)s</b> manzilidan belgilanganidek "
-"<b>%(destination)s</b> tomon <br/> ko‘chiriladi."
+"<br>Mahsulotlar <b>%(operation)s</b> manzilidan belgilanganidek <b>%"
+"(destination)s</b> tomon <br/> ko‘chiriladi."
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -663,13 +615,13 @@ msgid ""
 "        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
 "<br/><br/>\n"
 "        We are glad to inform you that your order has been shipped.\n"
-"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object."
-"carrier_tracking_ref\">\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object."
-"get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-"
 "as=\"line\">\n"
@@ -1689,8 +1641,8 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"Bu mahsulot uchun %(uom)s dan boshqa o‘lchov birliklari (masalan: "
-"%(problem_uom)s) ishlatilganligi sababli, o‘lchov birligini o‘zgartirib "
+"Bu mahsulot uchun %(uom)s dan boshqa o‘lchov birliklari (masalan: %"
+"(problem_uom)s) ishlatilganligi sababli, o‘lchov birligini o‘zgartirib "
 "bo‘lmaydi. Agar uni o‘zgartirmoqchi bo‘lsangiz, mahsulotni arxivlang va "
 "yangisini yarating."
 
@@ -2134,8 +2086,8 @@ msgstr "%s umumiy yo‘nalishi topilmadi."
 #: code:addons/stock/models/stock_package.py:0
 #, fuzzy
 msgid ""
-"Can't move a container having packages in another location "
-"(%(old_location)s) to a different location (%(new_location)s)."
+"Can't move a container having packages in another location (%"
+"(old_location)s) to a different location (%(new_location)s)."
 msgstr ""
 "Boshqa joylashuvda (%(old_location)s) paketlari bo‘lgan konteynerni boshqa "
 "joylashuvga (%(new_location)s) ko‘chirish mumkin emas."
@@ -2278,8 +2230,8 @@ msgstr "Mahsulotni o‘zgartirish faqat \"Qoralama\" holatida ruxsat etiladi."
 #: model:ir.model.fields,help:stock.field_res_config_settings__barcode_separator
 #, fuzzy
 msgid ""
-"Character(s) used to separate data contained within an aggregate barcode (i."
-"e. a barcode containing multiple barcode encodings)"
+"Character(s) used to separate data contained within an aggregate barcode "
+"(i.e. a barcode containing multiple barcode encodings)"
 msgstr ""
 "Yig‘ma shtrix-kod (ya'ni bir nechta shtrix-kod kodlashtiruvlarini o‘z ichiga "
 "olgan shtrix-kod) tarkibidagi ma'lumotlarni ajratish uchun ishlatiladigan "
@@ -7543,11 +7495,11 @@ msgid ""
 msgstr ""
 "Agar hisob-fakturada yoki buyurtmada boshqa to‘lov muddati ko‘rsatilmagan "
 "bo‘lsa, bizning hisob-fakturalarimiz 21 ish kuni ichida to‘lanishi kerak. "
-"To‘lov muddati o‘tganda to‘lanmagan taqdirda, \"Mening "
-"kompaniyam\" (Chikago) qolgan summaning 10 foizi miqdorida belgilangan foiz "
-"to‘lovini talab qilish huquqini o‘zida saqlab qoladi. To‘lov kechiktirilgan "
-"taqdirda, \"Mening kompaniyam\" (Chikago) oldindan ogohlantirishsiz har "
-"qanday xizmatlar ko‘rsatishni to‘xtatib qo‘yishga haqli bo‘ladi."
+"To‘lov muddati o‘tganda to‘lanmagan taqdirda, \"Mening kompaniyam\" "
+"(Chikago) qolgan summaning 10 foizi miqdorida belgilangan foiz to‘lovini "
+"talab qilish huquqini o‘zida saqlab qoladi. To‘lov kechiktirilgan taqdirda, "
+"\"Mening kompaniyam\" (Chikago) oldindan ogohlantirishsiz har qanday "
+"xizmatlar ko‘rsatishni to‘xtatib qo‘yishga haqli bo‘ladi."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
@@ -9746,11 +9698,11 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, fuzzy
 msgid ""
-"Rule %(rule)s belongs to %(rule_company)s while the route belongs to "
-"%(route_company)s."
+"Rule %(rule)s belongs to %(rule_company)s while the route belongs to %"
+"(route_company)s."
 msgstr ""
-"%(rule)s qoidasi %(rule_company)s kompaniyasiga tegishli, yo‘nalish esa "
-"%(route_company)s kompaniyasiga tegishli."
+"%(rule)s qoidasi %(rule_company)s kompaniyasiga tegishli, yo‘nalish esa %"
+"(route_company)s kompaniyasiga tegishli."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -10147,11 +10099,11 @@ msgstr "Seriya raqamlari"
 #: code:addons/stock/models/stock_move_line.py:0
 #, fuzzy
 msgid ""
-"Serial number (%(serial_number)s) already exists in location(s): "
-"%(location_list)s. Please correct the serial number encoded."
+"Serial number (%(serial_number)s) already exists in location(s): %"
+"(location_list)s. Please correct the serial number encoded."
 msgstr ""
-"Seriya raqami (%(serial_number)s) quyidagi joylarda allaqachon mavjud: "
-"%(location_list)s. Iltimos, kiritilgan seriya raqamini to‘g‘rilang"
+"Seriya raqami (%(serial_number)s) quyidagi joylarda allaqachon mavjud: %"
+"(location_list)s. Iltimos, kiritilgan seriya raqamini to‘g‘rilang"
 
 #. module: stock
 #. odoo-python
@@ -10178,8 +10130,8 @@ msgid ""
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
 "Seriya raqami (%(serial_number)s) %(source_location)s joyida emas, balki "
-"quyidagi joylarda: %(other_locations)s.  Bu harakat uchun manba joylashuvi "
-"%(recommended_location)s ga o‘zgartiriladi"
+"quyidagi joylarda: %(other_locations)s.  Bu harakat uchun manba joylashuvi %"
+"(recommended_location)s ga o‘zgartiriladi"
 
 #. module: stock
 #. odoo-javascript
@@ -11171,8 +11123,8 @@ msgstr "Partiya/seriya raqami (%s) boshqa mahsulot bilan bog‘langan."
 #: code:addons/stock/models/stock_quant.py:0
 #, fuzzy
 msgid ""
-"The Serial Number (%(serial_number)s) is already used in location(s): "
-"%(location_list)s.\n"
+"The Serial Number (%(serial_number)s) is already used in location(s): %"
+"(location_list)s.\n"
 "\n"
 "Is this expected? For example, this can occur if a delivery operation is "
 "validated before its corresponding receipt operation is validated. In this "
@@ -11468,8 +11420,8 @@ msgid ""
 "The serial number has already been assigned: \n"
 " Product: %(product)s, Serial Number: %(serial_number)s"
 msgstr ""
-"Seriya raqami allaqachon berilgan: Mahsulot: %(product)s, Seriya raqami: "
-"%(serial_number)s"
+"Seriya raqami allaqachon berilgan: Mahsulot: %(product)s, Seriya raqami: %"
+"(serial_number)s"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
@@ -12303,8 +12255,8 @@ msgstr "Topshiriqni bekor qilish"
 #: code:addons/stock/models/stock_move.py:0
 #, fuzzy
 msgid ""
-"Unavailable Serial numbers. Please correct the serial numbers encoded: "
-"%(serial_numbers_to_locations)s"
+"Unavailable Serial numbers. Please correct the serial numbers encoded: %"
+"(serial_numbers_to_locations)s"
 msgstr ""
 "Mavjud bo‘lmagan seriya raqamlari. Iltimos, kodlangan seriya raqamlarini "
 "tuzating: %(serial_numbers_to_locations)s"
@@ -12907,8 +12859,8 @@ msgstr "Mahsulot kelganda"
 #, fuzzy
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> <b>%(operation)s</"
-"b> are created from <b>%(source_location)s</b> to fulfill the need. "
-"%(suffix)s"
+"b> are created from <b>%(source_location)s</b> to fulfill the need. %"
+"(suffix)s"
 msgstr ""
 "<b>%(destination)s</b> da mahsulotlar kerak bo‘lganda, <br> ehtiyojni "
 "qondirish uchun <b>%(source_location)s</b> dan <b>%(operation)s</b> "
@@ -12922,15 +12874,15 @@ msgid ""
 "When products arrive in <b>%(source_location)s</b>, <br> <b>%(operation)s</"
 "b> are created to send them to <b>%(destination)s</b>."
 msgstr ""
-"Mahsulotlar <b>%(source_location)s</b> ga yetib kelganda, <br> ularni "
-"<b>%(destination)s</b> ga yuborish uchun <b>%(operation)s</b> yaratiladi."
+"Mahsulotlar <b>%(source_location)s</b> ga yetib kelganda, <br> ularni <b>%"
+"(destination)s</b> ga yuborish uchun <b>%(operation)s</b> yaratiladi."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
 #, fuzzy
 msgid ""
-"When set to True the destination location of the stock.move will be the rule."
-"Otherwise, it takes it from the picking type."
+"When set to True the destination location of the stock.move will be the "
+"rule.Otherwise, it takes it from the picking type."
 msgstr ""
 "Rost qiymatga o‘rnatilganda, stock.move manzili qoida bo‘yicha aniqlanadi. "
 "Aks holda, u tanlash turidan olinadi."
@@ -13228,8 +13180,8 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 #, fuzzy
 msgid ""
-"You cannot archive location %(location)s because it is used by warehouse "
-"%(warehouse)s"
+"You cannot archive location %(location)s because it is used by warehouse %"
+"(warehouse)s"
 msgstr ""
 "%(location)s joyini arxivlay olmaysiz, chunki u %(warehouse)s ombori "
 "tomonidan ishlatilmoqda."
@@ -13464,8 +13416,8 @@ msgid ""
 "You need to supply a Lot/Serial Number for product:\n"
 "%(products)s"
 msgstr ""
-"Quyidagi mahsulot uchun partiya/seriya raqamini kiritishingiz kerak: "
-"%(products)s"
+"Quyidagi mahsulot uchun partiya/seriya raqamini kiritishingiz kerak: %"
+"(products)s"
 
 #. module: stock
 #. odoo-python
@@ -13960,10 +13912,15 @@ msgid "units"
 msgstr "birlik"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid "x"
+msgstr ""
+
+#. module: stock
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 #, fuzzy
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Yetkazib berish buyurtmasi (Havola {{ object."
-"name or 'mavjud emas' }})"
+"{{ object.company_id.name }} Yetkazib berish buyurtmasi (Havola "
+"{{ object.name or 'mavjud emas' }})"

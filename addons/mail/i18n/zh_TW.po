@@ -14,17 +14,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:37+0000\n"
-"PO-Revision-Date: 2026-01-16 05:56+0000\n"
+"POT-Creation-Date: 2026-04-10 18:35+0000\n"
+"PO-Revision-Date: 2026-04-13 19:31+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-1/mail/zh_Hant/>\n"
+"projects/odoo-s19-2/mail/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -575,11 +575,6 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/create_poll_dialog.xml:0
 msgid "10 minutes"
 msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.account_security_alert
-msgid "111.222.333.444"
-msgstr "111.222.333.444"
 
 #. module: mail
 #. odoo-javascript
@@ -4961,19 +4956,22 @@ msgstr "發佈訊息失敗。按一下再試"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
-"Failed to render QWeb template: %(template_src)s\n"
+"Failed to render QWeb template for %(template_label)s\n"
+"Target Model: %(model_name)s\n"
+"Language context: %(lang_context)s\n"
+"Error: %(error_details)s\n"
 "\n"
-"%(template_traceback)s)"
+"Template Source Snippet:\n"
+"%(template_src)s"
 msgstr ""
-"繪製 QWeb 範本失敗：%(template_src)s\n"
-"\n"
-"%(template_traceback)s)"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-msgid "Failed to render inline_template template: %(template_txt)s"
-msgstr "未能繪製 inline_template 範本：%(template_txt)s"
+msgid ""
+"Failed to render inline_template template: %(template_txt)s\n"
+"Error details: %(error)s"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -7262,6 +7260,12 @@ msgid "Mail Template Reset"
 msgstr "郵件範本重設"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Thread"
 msgstr "信件線程"
@@ -7429,6 +7433,12 @@ msgstr "標記為完成"
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Marked as unread"
 msgstr "已標記未讀"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -8184,6 +8194,12 @@ msgid "No history messages"
 msgstr "沒有歷史訊息"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "No language detected in context"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/activity_model_selector/activity_model_selector.xml:0
 msgid "No linked record"
@@ -8793,11 +8809,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 msgid ""
-"Oops! We couldn't save your template due to an issue with this value: %"
-"(template_txt)s. Correct it and try again."
+"Oops! We couldn't save your template due to an issue.\n"
+"\n"
+"Error: %(error_details)s\n"
+"\n"
+"Correct it and try again."
 msgstr ""
-"哎唷！由於此值有問題（%(template_txt)s），系統未能儲存你的範本。請更正後再"
-"試。"
 
 #. module: mail
 #. odoo-javascript
@@ -10871,10 +10888,8 @@ msgstr "選擇範本"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
-#, fuzzy
-#| msgid "Select a Record To Link"
 msgid "Select a record"
-msgstr "選取要連結的記錄"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -11847,6 +11862,12 @@ msgstr "範本重設混入程式"
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Template creation from composer requires a valid model."
 msgstr "若要從編寫器創建範本，需要有效的模型。"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Template name not identified"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -13057,6 +13078,18 @@ msgstr "未命名的"
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_value.py:0
 msgid "Unnamed %(record_model_name)s (%(record_id)s)"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Unnamed Mail Template"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Unnamed Mailing"
 msgstr ""
 
 #. module: mail
@@ -14422,6 +14455,12 @@ msgid "created this channel."
 msgstr "已建立這個頻道。"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
+msgid "d"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
 msgstr "day, month dd, yyyy - hh:mm:ss (GMT)"
@@ -14981,10 +15020,28 @@ msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "\"%(channel_name)s\" 中的 \"%(member_name)s\""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.js:0
+msgid "“%s”"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr ""
+
+#~ msgid "111.222.333.444"
+#~ msgstr "111.222.333.444"
+
+#~ msgid ""
+#~ "Failed to render QWeb template: %(template_src)s\n"
+#~ "\n"
+#~ "%(template_traceback)s)"
+#~ msgstr ""
+#~ "繪製 QWeb 範本失敗：%(template_src)s\n"
+#~ "\n"
+#~ "%(template_traceback)s)"
 
 #~ msgid "Add GIFs"
 #~ msgstr "加入 GIF"

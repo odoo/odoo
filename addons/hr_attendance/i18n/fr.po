@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2026-04-04 12:45+0000\n"
+"POT-Creation-Date: 2026-04-10 18:35+0000\n"
+"PO-Revision-Date: 2026-04-14 13:44+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/"
 "hr_attendance/fr/>\n"
@@ -1021,11 +1021,6 @@ msgstr "Erreur : impossible de trouver l'employé correspondant."
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Errors"
 msgstr "Erreurs"
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__expected_hours
-msgid "Expected Hours"
-msgstr "Heures prévues"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__validated_overtime_hours
@@ -2194,6 +2189,11 @@ msgstr ""
 "employés pour lesquels il a été désigné comme manager des présences"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__expected_hours
+msgid "Theoretical Hours"
+msgstr "Heures théoriques"
+
+#. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_version_list_view
 msgid "There are no employees assigned to this overtime ruleset."
 msgstr ""
@@ -2542,6 +2542,12 @@ msgid "from the amount defined on the contract"
 msgstr "du montant défini sur le contrat"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+msgid "h"
+msgstr "h"
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "hours"
 msgstr "heures"
@@ -2579,6 +2585,9 @@ msgstr "avec un taux de"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "avec un code PIN optionnel"
+
+#~ msgid "Expected Hours"
+#~ msgstr "Heures prévues"
 
 #~ msgid "Location"
 #~ msgstr "Lieu"

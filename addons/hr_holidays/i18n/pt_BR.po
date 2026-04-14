@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:35+0000\n"
-"PO-Revision-Date: 2026-04-04 12:47+0000\n"
+"POT-Creation-Date: 2026-04-10 18:35+0000\n"
+"PO-Revision-Date: 2026-04-13 19:24+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-2/hr_holidays/pt_BR/>\n"
@@ -205,6 +205,12 @@ msgstr "%(work_entry_type)s: %(duration)s (%(start)s)"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid "%s"
+msgstr "%s"
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid "%s (copy)"
@@ -263,12 +269,24 @@ msgstr "resumo nesse período"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
+msgid "(s)"
+msgstr "(s)"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid ""
 "(s)\n"
 "                                    and a balance cap is set to"
 msgstr ""
 "(s)\n"
 "                                    e um limite de saldo é definido como"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
+msgid "(s)."
+msgstr "(s)."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2239,9 +2257,9 @@ msgid ""
 "{{ object.work_entry_type_id.name }} from {{ object.request_date_from }} to "
 "{{ object.request_date_to }}"
 msgstr ""
-"Estou solicitando {{ object.duration_display }} de {{ "
-"object.work_entry_type_id.name }} de {{ object.request_date_from }} para {{ "
-"object.request_date_to }}"
+"Estou solicitando {{ object.duration_display }} de "
+"{{ object.work_entry_type_id.name }} de {{ object.request_date_from }} para "
+"{{ object.request_date_to }}"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_calendar_event__id

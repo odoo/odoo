@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2026-04-04 12:47+0000\n"
+"POT-Creation-Date: 2026-04-10 18:35+0000\n"
+"PO-Revision-Date: 2026-04-13 19:24+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-2/"
 "hr_attendance/vi/>\n"
@@ -994,11 +994,6 @@ msgstr "Lỗi: Không tìm thấy nhân viên tương ứng."
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Errors"
 msgstr "Lỗi"
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__expected_hours
-msgid "Expected Hours"
-msgstr "Giờ dự kiến"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__validated_overtime_hours
@@ -2150,6 +2145,11 @@ msgstr ""
 "báo cáo và dữ liệu chấm công của nhân viên."
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__expected_hours
+msgid "Theoretical Hours"
+msgstr ""
+
+#. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_version_list_view
 msgid "There are no employees assigned to this overtime ruleset."
 msgstr ""
@@ -2491,6 +2491,12 @@ msgid "from the amount defined on the contract"
 msgstr ""
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+msgid "h"
+msgstr ""
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "hours"
 msgstr "giờ"
@@ -2528,6 +2534,9 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "bằng mã PIN tuỳ chọn"
+
+#~ msgid "Expected Hours"
+#~ msgstr "Giờ dự kiến"
 
 #~ msgid "Location"
 #~ msgstr "Vị trí"

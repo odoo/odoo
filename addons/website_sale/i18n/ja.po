@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2026-04-04 13:09+0000\n"
+"POT-Creation-Date: 2026-04-10 18:35+0000\n"
+"PO-Revision-Date: 2026-04-14 06:05+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-2/"
 "website_sale/ja/>\n"
@@ -294,11 +294,6 @@ msgid "1 Column"
 msgstr "1 列"
 
 #. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__100_pc
-msgid "100 %"
-msgstr "100%"
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
@@ -310,11 +305,6 @@ msgstr "2 列"
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "3 Columns"
 msgstr "3列"
-
-#. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__33_pc
-msgid "33 %"
-msgstr "33 %"
 
 #. module: website_sale
 #. odoo-javascript
@@ -329,20 +319,10 @@ msgid "5 Columns"
 msgstr "5 列"
 
 #. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__50_pc
-msgid "50 %"
-msgstr "50%"
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "6 Columns"
 msgstr "6 列"
-
-#. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__66_pc
-msgid "66 %"
-msgstr "66%"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -424,8 +404,8 @@ msgid ""
 "ms-1\">Contact Us</span>"
 msgstr ""
 "<i class=\"fa fa-envelope fa-fw\" role=\"presentation\"/>\n"
-"                                            <span class=\"o_label small ms-"
-"1\">お問い合わせ</span>"
+"                                            <span class=\"o_label small "
+"ms-1\">お問い合わせ</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -458,8 +438,8 @@ msgid ""
 "<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-label=\"Add to "
 "wishlist\"/>"
 msgstr ""
-"<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-"
-"label=\"ウィッシュリストに追加\"/>"
+"<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-label=\"ウィッシュ"
+"リストに追加\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -502,7 +482,8 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "<i class=\"fa fa-shopping-cart me-2\" aria-hidden=\"true\"/>Add to Cart"
-msgstr "<i class=\"fa fa-shopping-cart me-2\" aria-hidden=\"true\"/>カートに入れる"
+msgstr ""
+"<i class=\"fa fa-shopping-cart me-2\" aria-hidden=\"true\"/>カートに入れる"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper
@@ -791,7 +772,7 @@ msgstr "<span class=\"s_website_form_label_content\">参照番号</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_cart_lines
 msgid "<span class=\"text-300\">|</span>"
-msgstr ""
+msgstr "<span class=\"text-300\">|</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_only_website_form_view
@@ -2835,7 +2816,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__disabled
 msgid "Disabled"
-msgstr "無効化されました"
+msgstr "無効"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__account_on_checkout__disabled
@@ -5792,6 +5773,7 @@ msgstr "グローバル検索"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 #: model_terms:ir.ui.view,arch_db:website_sale.product
+#: model_terms:ir.ui.view,arch_db:website_sale.product_search
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Search in {{0}}"
 msgstr "検索{{0}}"
@@ -7662,6 +7644,23 @@ msgid "terms &amp; conditions"
 msgstr "利用規約"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_combo_item_line
+msgid "x"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "{{0}} image"
 msgstr "{{0}} 画像"
+
+#~ msgid "100 %"
+#~ msgstr "100%"
+
+#~ msgid "33 %"
+#~ msgstr "33 %"
+
+#~ msgid "50 %"
+#~ msgstr "50%"
+
+#~ msgid "66 %"
+#~ msgstr "66%"

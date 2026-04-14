@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-06 18:36+0000\n"
+"POT-Creation-Date: 2026-04-10 18:35+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -56,9 +56,8 @@ msgstr "<br/><br/> Komponentlar <b>%s</b> dan olinadi."
 #: code:addons/mrp/models/stock_rule.py:0
 #, fuzzy
 msgid ""
-" <br/><br/> The manufactured products will be moved towards "
-"<b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> "
-"destination."
+" <br/><br/> The manufactured products will be moved towards <b>%"
+"(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
 msgstr ""
 "<br/><br/> Ishlab chiqarilgan mahsulotlar <b>%(operation)s</b> manzilidan "
 "belgilanganidek, <b>%(destination)s</b> tomon <br/> ko‘chiriladi."
@@ -279,57 +278,16 @@ msgstr ""
 "ko‘chirish."
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "100"
-msgstr ""
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
-msgid "12345678901"
-msgstr ""
-
-#. module: mrp
 #: model_terms:product.template,description:mrp.product_product_computer_desk_leg_product_template
 #, fuzzy
 msgid "18″ x 2½″ Square Leg"
 msgstr "18″ x 2½″ Kvadrat oyoq"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "2023-09-15"
-msgstr ""
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
-msgid "25"
-msgstr ""
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "50"
-msgstr ""
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "58"
-msgstr ""
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "60"
-msgstr ""
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 #, fuzzy
 msgid "8 GB RAM"
 msgstr "8 GB tezkor xotira"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "987654321098"
-msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -1109,8 +1067,8 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"Ushbu mahsulot uchun %(uom)s dan boshqa o‘lchov birliklari (masalan: "
-"%(problem_uom)s) ishlatilganligi sababli, o‘lchov birligini o‘zgartirib "
+"Ushbu mahsulot uchun %(uom)s dan boshqa o‘lchov birliklari (masalan: %"
+"(problem_uom)s) ishlatilganligi sababli, o‘lchov birligini o‘zgartirib "
 "bo‘lmaydi. Agar uni o‘zgartirmoqchi bo‘lsangiz, mahsulotni arxivlang va "
 "yangisini yarating."
 
@@ -4123,6 +4081,7 @@ msgstr "Ishlab chiqarish buyurtmasi"
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_form
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_picking_deshboard
+#: model:ir.model.fields,field_description:mrp.field_stock_picking__production_ids
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_action
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_to_plan
@@ -5533,7 +5492,6 @@ msgstr "Ishlab chiqarish kechikib boshlandi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_group__production_ids
-#: model:ir.model.fields,field_description:mrp.field_stock_picking__production_ids
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__production_ids
 #, fuzzy
 msgid "Productions"
@@ -8243,8 +8201,8 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 #, fuzzy
 msgid ""
-"You need to supply Lot/Serial Number for products and 'consume' them: "
-"%(missing_products)s"
+"You need to supply Lot/Serial Number for products and 'consume' them: %"
+"(missing_products)s"
 msgstr ""
 "Mahsulotlar uchun partiya/seriya raqamini taqdim etishingiz va ularni "
 "\"sarflashingiz\" kerak: %(missing_products)s"
