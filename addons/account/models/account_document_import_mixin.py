@@ -387,29 +387,12 @@ class AccountDocumentImportMixin(models.AbstractModel):
         """ Return a list of fields that should be cleared when an attachment is unattached from the record. """
         return []
 
-    def _fix_attachments_on_record(self, attachments):
-        """ Ensure that only attachments of certain types appear in `self`'s attachments.
-
-        This is to provide a consistent behaviour where only certain attachment types
-        appear in the chatter's attachments, to avoid cluttering the attachments view.
-        """
+    def _fix_attachments_on_record_from_files_data(self, valid_files_data, extra_files_data):
         self.ensure_one()
-        attachments_to_attach = attachments.filtered(self._should_attach_to_record)
-        if attachments_to_attach:
-            # No need to write to attachments that have the same res_model and res_id
-            attachments_to_write = attachments_to_attach.filtered(lambda a: a.res_model != self._name or a.res_id != self.id)
-            attachments_to_write.write({
-                'res_model': self._name,
-                'res_id': self.id,
-            })
-        attachments_to_unattach = (attachments - attachments_to_attach).filtered(lambda a: a.res_model == self._name and not a.res_field)
-        if attachments_to_unattach:
-            for fname in self._attachment_fields_to_clear():
-                self[fname] -= attachments_to_unattach
-            attachments_to_unattach.write({
-                'res_model': False,
-                'res_id': 0,
-            })
+        valid_attachments = self._from_files_data(valid_files_data).filtered(lambda a: a.res_model != self._name or a.res_id != self.id)
+        extra_attachments = self._from_files_data(extra_files_data).filtered(lambda a: a.res_model == self._name and not a.res_field)
+        valid_attachments.write({'res_model': self._name, 'res_id': self.id})
+        extra_attachments.write({'res_model': False, 'res_id': 0})
 
     def _should_attach_to_record(self, attachment):
         """ Indicate whether a given attachment should be displayed in the record's attachments. """
