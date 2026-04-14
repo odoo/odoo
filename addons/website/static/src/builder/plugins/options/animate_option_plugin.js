@@ -10,6 +10,7 @@ import { childNodeIndex, DIRECTIONS, nodeSize } from "@html_editor/utils/positio
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { EmphasizeAnimatedText } from "./emphasize_animated_text";
 import { handleImagesIfDataset } from "@html_builder/utils/image";
+import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
 
 /**
  * @typedef { Object } AnimateOptionShared
@@ -78,6 +79,16 @@ export class AnimateOptionPlugin extends Plugin {
             }
         },
         lower_panel_entries: withSequence(10, { Component: EmphasizeAnimatedText }),
+        // This is done to clean the dataset of the images saved in the db.
+        on_will_save_handlers: () =>
+            applyFunDependOnSelectorAndExclude(
+                this.cleanImageHoverDataset.bind(this),
+                this.editable,
+                {
+                    selector: "img",
+                    exclude: "[data-oe-type='image'] > img",
+                }
+            ),
         on_will_save_media_dialog_handlers: withSequence(
             5,
             this.onWillSaveMediaDialogHandlers.bind(this)
@@ -405,6 +416,19 @@ export class AnimateOptionPlugin extends Plugin {
             el.classList.remove("o_animate_preview");
         }
         return root;
+    }
+    async cleanImageHoverDataset(imgEl) {
+        if (!imgEl.dataset.hoverEffect) {
+            return;
+        }
+        const canImgHaveHoverEffect = await this.canHaveHoverEffect(imgEl);
+        if (!canImgHaveHoverEffect) {
+            delete imgEl.dataset.hoverEffect;
+            delete imgEl.dataset.hoverEffectColor;
+            delete imgEl.dataset.hoverEffectStrokeWidth;
+            delete imgEl.dataset.hoverEffectIntensity;
+            imgEl.classList.remove("o_animate_on_hover");
+        }
     }
 }
 
