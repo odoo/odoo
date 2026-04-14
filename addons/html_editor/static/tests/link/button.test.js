@@ -109,6 +109,22 @@ describe("button style", () => {
             `),
         });
     });
+
+    test("backspace on button should not remove editor", async () => {
+        const { el, editor } = await setupEditor(
+            '<p><a href="https://test.com/" class="btn btn-lg btn-primary">#</a>[]</p>'
+        );
+        expect(getContent(el)).toBe(
+            `<p>\ufeff<a href="https://test.com/" class="btn btn-lg btn-primary">\ufeff#\ufeff</a>\ufeff[]</p>`
+        );
+        deleteBackward(editor);
+        deleteBackward(editor);
+        deleteBackward(editor);
+        expect(getContent(el)).toBe(
+            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        );
+        expect(editor.editable.isConnected).toBe(true);
+    });
 });
 
 describe("Custom button style", () => {
