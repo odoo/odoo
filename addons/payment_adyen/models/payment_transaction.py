@@ -130,7 +130,7 @@ class PaymentTransaction(models.Model):
             'POST',
             '/payments/{}/captures',
             json=data,
-            endpoint_param=self.provider_reference,
+            endpoint_param=self.source_transaction_id.provider_reference,
         )
 
         # Process the capture request response.
@@ -159,7 +159,7 @@ class PaymentTransaction(models.Model):
             'POST',
             '/payments/{}/cancels',
             json=data,
-            endpoint_param=self.provider_reference,
+            endpoint_param=self.source_transaction_id.provider_reference,
         )
 
         # Process the void request response.
