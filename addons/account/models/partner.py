@@ -14,7 +14,7 @@ from odoo.tools import SQL, unique
 from odoo.tools.partner_identifiers import is_identifier_void
 
 from odoo.addons.account.models.account_move import BYPASS_LOCK_CHECK
-from odoo.addons.base_vat.models.res_partner import _ref_vat
+from odoo.addons.base.models.res_partner import _ref_vat
 
 _logger = logging.getLogger(__name__)
 
@@ -948,11 +948,6 @@ class ResPartner(models.Model):
         return {
             'criteria': criteria,
         }
-
-    @api.model
-    def _get_country_specific_vat_variants(self, normalized_vat, country_prefix):
-        """Return additional formatted VAT values to consider during EDI partner matching."""
-        return []
 
     @api.model
     def _import_retrieve_customer_from_bank_account_number(self, customer_values):

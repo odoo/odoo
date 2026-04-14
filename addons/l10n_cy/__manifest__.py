@@ -11,7 +11,6 @@ Basic package for Cyprus that contains the chart of accounts, taxes, tax reports
     'depends': [
         'account',
         'account_edi_ubl_cii',
-        'base_vat',
     ],
     'auto_install': ['account'],
     'data': [

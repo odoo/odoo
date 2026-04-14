@@ -11,7 +11,6 @@ Accounting chart and localization for Hungary
     """,
     'depends': [
         'account',
-        'base_vat',
     ],
     'auto_install': ['account'],
     'data': [

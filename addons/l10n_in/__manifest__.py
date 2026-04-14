@@ -20,7 +20,6 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
     'category': 'Accounting/Localizations/Account Charts',
     'depends': [
         'account_tax_python',
-        'base_vat',
         'account_debit_note',
         'account',
         'iap',

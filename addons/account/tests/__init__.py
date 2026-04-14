@@ -42,6 +42,7 @@ from . import test_taxes_downpayment
 from . import test_taxes_dispatching_base_lines
 from . import test_invoice_taxes
 from . import test_account_move_send
+from . import test_partner_matching
 from . import test_portal_attachment
 from . import test_portal_invoice
 from . import test_tax_report

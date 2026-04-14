@@ -12,7 +12,7 @@
     """,
     'author': 'Odoo S.A.',
     "license": "LGPL-3",
-    "depends": ["l10n_tw", "base_vat"],
+    "depends": ["l10n_tw"],
     "data": [
         "views/res_config_setting_view.xml",
         "views/account_tax.xml",
