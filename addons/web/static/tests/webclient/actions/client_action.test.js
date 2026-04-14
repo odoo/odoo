@@ -488,3 +488,35 @@ test("test home client action", async () => {
     await animationFrame();
     expect.verifySteps(["/web/webclient/version_info", "assign /"]);
 });
+
+test("discarded dialogs has special=true in onClose params", async () => {
+    Partner._views = {
+        form: /* xml */ `
+            <form>
+                <footer>
+                    <button class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        `,
+    };
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(
+        {
+            name: "Partners",
+            res_model: "partner",
+            views: [[false, "form"]],
+            target: "new",
+            type: "ir.actions.act_window",
+        },
+        {
+            onClose: (params) => {
+                expect.step(`special:${params?.special}`);
+            },
+        }
+    );
+
+    await contains(".modal footer .btn[special=cancel]").click();
+    expect(".modal .test_client_action").toHaveCount(0);
+    expect.verifySteps(["special:true"]);
+});
