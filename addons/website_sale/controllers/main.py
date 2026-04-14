@@ -23,7 +23,7 @@ from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
-from odoo.addons.website_sale.const import SHOP_PATH
+from odoo.addons.website_sale.const import MAX_EXPANDED_FILTER_SECTIONS, SHOP_PATH
 from odoo.addons.website_sale.models.website import (
     PRICELIST_SELECTED_SESSION_CACHE_KEY,
     PRICELIST_SESSION_CACHE_KEY,
@@ -149,7 +149,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def _add_search_subdomains_hook(self, _search):
         return []
 
-    def _get_shop_domain(self, search, category, attribute_value_dict, search_in_description=True):
+    def _get_shop_domain(
+        self, search, category, attribute_value_dict, search_in_description=True, tags=None
+    ):
         domains = [request.website.sale_product_domain()]
         if search:
             for srch in search.split(" "):
@@ -173,6 +175,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if attribute_value_dict:
             domains.extend(
                 self.env["product.template"]._get_attribute_value_domain(attribute_value_dict)
+            )
+
+        if tags:
+            domains.append(
+                Domain.OR([
+                    Domain("product_tag_ids", "in", tags),
+                    Domain("product_variant_ids.additional_product_tag_ids", "in", tags),
+                ])
             )
 
         return Domain.AND(domains)
@@ -424,17 +434,21 @@ class WebsiteSale(payment_portal.PaymentPortal):
             options, post, search, website
         )
 
+        search_term = fuzzy_search_term if fuzzy_search_term else search
+        shop_domain = self._get_shop_domain(
+            search_term,
+            category,
+            attribute_value_dict,
+            tags=tags if filter_by_tags_enabled else None,
+        )
+        shop_query = request.env["product.template"]._search(shop_domain)
+
         filter_by_price_enabled = website.is_view_active("website_sale.filter_products_price")
         if filter_by_price_enabled:
             # TODO Find an alternative way to obtain the domain through the search metadata.
-            Product = self.env["product.template"]
-            search_term = fuzzy_search_term if fuzzy_search_term else search
-            domain = self._get_shop_domain(search_term, category, attribute_value_dict)
-
             # This is ~4 times more efficient than a search for the cheapest and most expensive
             # products
-            query = Product._search(domain)
-            sql = query.select(
+            sql = shop_query.select(
                 SQL(
                     "COALESCE(MIN(list_price), 0) * %(conversion_rate)s, COALESCE(MAX(list_price), 0) * %(conversion_rate)s",  # noqa: E501
                     conversion_rate=conversion_rate,
@@ -467,6 +481,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
                         max_price if max_price >= available_min_price else available_max_price
                     )
                     post["max_price"] = max_price
+        if filter_by_price_enabled and (min_price or max_price):
+            price_domain = Domain.AND([
+                Domain("list_price", ">=", (min_price or available_min_price) / conversion_rate),
+                Domain("list_price", "<=", (max_price or available_max_price) / conversion_rate),
+            ])
+            filtered_query = request.env["product.template"]._search(
+                Domain.AND([shop_domain, price_domain])
+            )
+        else:
+            filtered_query = shop_query
 
         ProductTag = self.env["product.tag"]
         if filter_by_tags_enabled and search_product:
@@ -474,8 +498,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 Domain.AND([
                     Domain("visible_to_customers", "=", True),
                     Domain.OR([
-                        Domain("product_template_ids.is_published", "=", True),
-                        Domain("product_ids.is_published", "=", True),
+                        Domain("product_template_ids", "in", filtered_query),
+                        Domain("product_product_ids.product_tmpl_id", "in", filtered_query),
                     ]),
                     website_domain,
                 ])
@@ -539,13 +563,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductAttributeValue = self.env["product.attribute.value"]
         pavs_per_attribute = defaultdict(lambda: ProductAttributeValue)
         if products:
-            search_term = fuzzy_search_term if fuzzy_search_term else search
-            product_query = self.env["product.template"]._search(
-                self._get_shop_domain(search_term, category, attribute_value_dict)
-            )
             grouped_pavs = ProductAttributeValue._read_group(
                 domain=[
-                    ("pav_attribute_line_ids.product_tmpl_id", "in", product_query),
+                    ("pav_attribute_line_ids.product_tmpl_id", "in", filtered_query),
                     ("attribute_id.visibility", "=", "visible"),
                 ],
                 groupby=["attribute_id"],
@@ -600,13 +620,18 @@ class WebsiteSale(payment_portal.PaymentPortal):
             ),
             "pavs_per_attribute": pavs_per_attribute,
         }
+        nb_filter_sections = len(attributes)
         if filter_by_price_enabled:
             values["min_price"] = min_price or available_min_price
             values["max_price"] = max_price or available_max_price
             values["available_min_price"] = float_round(available_min_price, 2)
             values["available_max_price"] = float_round(available_max_price, 2)
+            if available_min_price != available_max_price:
+                nb_filter_sections += 1
         if filter_by_tags_enabled:
             values.update({"all_tags": all_tags, "tags": tags})
+            if all_tags:
+                nb_filter_sections += 1
         if category:
             values["main_object"] = category
             values["markup_data_json"] = json_scriptsafe.dumps(
@@ -617,6 +642,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 indent=2,
             )
         values.update(self._get_additional_shop_values(values, **post))
+
+        values["default_expand_filter_sections"] = nb_filter_sections < MAX_EXPANDED_FILTER_SECTIONS
+
         return request.render("website_sale.products", values)
 
     @route(
