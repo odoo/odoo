@@ -22,7 +22,7 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
 import { useDebounced } from "@web/core/utils/timing";
 
-import { Component, markup, onMounted, onWillUnmount, toRaw, EventBus } from "@odoo/owl";
+import { Component, markup, onMounted, onWillUnmount, toRaw, EventBus, useEffect } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -295,7 +295,8 @@ export class Composer extends Component {
         onWillUnmount(() => {
             this.props.composer.isFocused = false;
         });
-        const composerProxy = reactive(this.props.composer, () => {
+        const composerProxy = reactive(this.props.composer);
+        useEffect(() => {
             if (this.status === 2 /* DESTROYED */) {
                 return;
             }
@@ -310,7 +311,6 @@ export class Composer extends Component {
             this.setEditorCursorEnd();
             this.editor.shared.history.addStep();
         });
-        void composerProxy.composerHtml; // start observing
     }
 
     setEditorCursorEnd() {
