@@ -694,7 +694,14 @@ class ProductTemplate(models.Model):
         return next(self._get_possible_combinations(), False) is not False
 
     def _get_combination_info(
-        self, combination=False, product_id=False, add_qty=1.0, uom_id=False, only_template=False
+        self,
+        combination=False,
+        product_id=False,
+        add_qty=1.0,
+        uom_id=False,
+        only_template=False,
+        pricelist=None,
+        fiscal_position=None,
     ):
         """Return info about a given combination.
 
@@ -782,6 +789,10 @@ class ProductTemplate(models.Model):
                 quantity=add_qty or 1.0,
                 uom=uom,
                 website=website,
+                pricelist=pricelist if pricelist is not None else request.pricelist,
+                fiscal_position=(
+                    fiscal_position if fiscal_position is not None else request.fiscal_position
+                ),
             ),
         }
 
@@ -802,7 +813,9 @@ class ProductTemplate(models.Model):
 
         return combination_info
 
-    def _get_additional_combination_info(self, product_or_template, quantity, uom, website):
+    def _get_additional_combination_info(
+        self, product_or_template, quantity, uom, website, pricelist, fiscal_position
+    ):
         """Compute additional combination info, based on given parameters.
 
         :param product_or_template: `product.product` or `product.template` record
@@ -814,7 +827,7 @@ class ProductTemplate(models.Model):
         :returns: additional product/template information
         :rtype: dict
         """
-        pricelist = request.pricelist.with_context(self.env.context)
+        pricelist = pricelist.with_context(self.env.context)
         currency = website.currency_id.with_context(self.env.context)
 
         # Pricelist price doesn't have to be converted
@@ -856,7 +869,7 @@ class ProductTemplate(models.Model):
         product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company()
         taxes = self.env["account.tax"]
         if product_taxes:
-            taxes = request.fiscal_position.map_tax(product_taxes)
+            taxes = fiscal_position.map_tax(product_taxes)
             # We do not apply taxes on the compare_list_price value because it's meant to be
             # a strict value displayed as is.
             for price_key in ("price", "list_price"):
