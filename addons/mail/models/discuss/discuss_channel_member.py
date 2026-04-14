@@ -105,6 +105,66 @@ class DiscussChannelMember(models.Model):
         for member, store in members._get_member_store_list():
             store.add(member.channel_id, {"close_chat_window": True})
 
+    @api.autovacuum
+    def _gc_unpin_obsolete_conversations(self):
+        outdated_dt = fields.Datetime.now() - timedelta(days=90)
+        keep_last = 30
+        max_unpin = 1000
+        self.env["discuss.channel"].flush_model()
+        self.env["discuss.channel.member"].flush_model()
+        self.env["mail.message"].flush_model()
+        self.env.cr.execute(
+            """
+            WITH member_activity AS (
+                SELECT member.id,
+                       member.partner_id,
+                       member.guest_id,
+                       GREATEST(
+                           member.last_interest_dt,
+                           channel.last_interest_dt
+                       ) AS last_activity_dt
+                  FROM discuss_channel_member member
+                  JOIN discuss_channel channel
+                    ON channel.id = member.channel_id
+                 WHERE channel.channel_type IN ('chat', 'group')
+                   AND member.is_favorite IS NOT TRUE
+                   AND (
+                           member.unpin_dt IS NULL
+                        OR channel.last_interest_dt >= member.unpin_dt
+                   )
+                   AND NOT EXISTS (
+                       SELECT 1
+                         FROM mail_message
+                        WHERE mail_message.model = 'discuss.channel'
+                          AND mail_message.res_id = channel.id
+                          AND mail_message.message_type NOT IN ('notification', 'user_notification')
+                          AND mail_message.id >= member.new_message_separator
+                   )
+            )
+            SELECT id
+              FROM (
+                    SELECT id,
+                           last_activity_dt,
+                           ROW_NUMBER() OVER (
+                               PARTITION BY partner_id, guest_id
+                               ORDER BY last_activity_dt DESC, id DESC
+                           ) AS rn
+                      FROM member_activity
+                     WHERE last_activity_dt < %(outdated_dt)s
+                   ) AS ranked_members
+             WHERE ranked_members.rn > %(keep_last)s
+             ORDER BY ranked_members.last_activity_dt ASC, ranked_members.id ASC
+             LIMIT %(max_unpin)s
+            """,
+            {"outdated_dt": outdated_dt, "keep_last": keep_last, "max_unpin": max_unpin},
+        )
+        members = self.env["discuss.channel.member"].search(
+            [("id", "in", [row[0] for row in self.env.cr.fetchall()])],
+        )
+        members.unpin_dt = fields.Datetime.now()
+        for member, store in members._get_member_store_list():
+            store.add(member.channel_id, {"close_chat_window": True})
+
     @api.constrains('partner_id')
     def _contrains_no_public_member(self):
         for member in self:

@@ -1154,3 +1154,29 @@ class TestChannelInternals(MailCommon, HttpCase):
         actual_member_ids = [m.partner_id.id if m.partner_id else m.guest_id.id for m in channel.channel_member_ids]
         expected_member_ids = [self.partner_employee.id, self.guest.id, self.env.user.partner_id.id]
         self.assertCountEqual(actual_member_ids, expected_member_ids)
+
+    @users("employee")
+    @freeze_time("2025-01-01 10:00:00")
+    def test_gc_unpin_obsolete_conversations(self):
+        members = self.env["discuss.channel.member"]
+        partners = self.env["res.partner"].create([{"name": f"Partner {index}"} for index in range(35)])
+        for partner in partners:
+            chat = self.env["discuss.channel"]._get_or_create_chat(partner.ids)
+            members |= chat.self_member_id
+        favorite_member = members[0]
+        unread_member = members[1]
+        favorite_member.is_favorite = True
+        unread_member.channel_id.message_post(
+            body="Unread message",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        unread_member.new_message_separator = 0
+        self.assertEqual(len(members.filtered("is_pinned")), 35)
+        with freeze_time("2025-04-15 10:00:00"):
+            self.env["discuss.channel.member"]._gc_unpin_obsolete_conversations()
+        remaining_members = (members - favorite_member - unread_member).filtered("is_pinned")
+        self.assertTrue(favorite_member.is_pinned)
+        self.assertTrue(unread_member.is_pinned)
+        self.assertEqual(len(remaining_members), 30)
+        self.assertEqual(len(members.filtered("is_pinned")), 32)
