@@ -5,7 +5,7 @@
         <div t-att-class="this.className" t-custom-ref="root">
             <Layout className="this.model.useSampleModel ? 'o_view_sample_data' : ''" display="this.props.display">
                 <t t-set-slot="control-panel-additional-actions">
-                    <CogMenu/>
+                    <CogMenu t-props="this.cogMenuProps"/>
                 </t>
                 <t t-set-slot="control-panel-buttons">
                     <t t-call="{{ this.props.buttonTemplate }}"/>
