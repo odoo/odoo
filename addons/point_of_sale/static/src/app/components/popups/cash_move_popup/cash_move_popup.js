@@ -11,6 +11,7 @@ import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
+import { formatDateTime } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
 
@@ -78,7 +79,7 @@ export class CashMovePopup extends Component {
             translatedType,
             order: order,
             formattedAmount,
-            date: new Date().toLocaleString(),
+            date: formatDateTime(DateTime.now()),
         });
         this.pos.models["pos.order"].delete(order);
 
