@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import contextlib
+import enum
 import json
 import logging
 import logging.handlers
@@ -95,6 +96,40 @@ class PostgreSQLHandler(logging.Handler):
                 VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s)
             """, val)
 
+
+class ColorOutput(enum.Flag):
+    NO = 0
+    LOGS = enum.auto()
+    PIDS = enum.auto()
+    ALL = LOGS | PIDS
+    AUTO = ~NO
+
+    @classmethod
+    def from_env(cls):
+        if os.getenv("NO_COLOR"):
+            # See https://no-color.org/
+            return cls.NO
+        if force_color := os.getenv("FORCE_COLOR"):
+            # See https://force-color.org/
+            if force_color == "-pid":
+                return cls.LOGS
+            return cls.ALL
+        if os.getenv("ODOO_PY_COLORS"):
+            # This env variable is deprecated; wait for the logging to be configured before informing user.
+            return cls.ALL
+        return cls.AUTO
+
+    @classmethod
+    def from_log_handler(cls, handler):
+        # Check that handler.stream has a fileno() method: when running OpenERP
+        # behind Apache with mod_wsgi, handler.stream will have type mod_wsgi.Log,
+        # which has no fileno() method. (mod_wsgi.Log is what is being bound to
+        # sys.stderr when the logging.StreamHandler is being constructed in `init_logger`.)
+        return cls.ALL if isinstance(handler, logging.StreamHandler) and hasattr(handler.stream, 'fileno') and os.isatty(handler.stream.fileno()) else cls.NO
+
+
+COLORING = ColorOutput.from_env()
+
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, HIGH_INTENSITY, DEFAULT = range(10)
 HI_BLACK, HI_RED, HI_GREEN, HI_YELLOW, HI_BLUE, HI_MAGENTA, HI_CYAN, HI_WHITE = range(
     BLACK + HIGH_INTENSITY, WHITE + HIGH_INTENSITY + 1)
@@ -117,7 +152,7 @@ PID_COLORS = (
     GREEN, BLUE, MAGENTA, CYAN,
     HI_RED, HI_GREEN, HI_YELLOW, HI_BLUE, HI_MAGENTA, HI_CYAN, HI_WHITE,
 )
-if os.environ.get('ODOO_PY_COLORS_NOPID'):
+if ColorOutput.PIDS not in COLORING:
     TRUE_COLOR_PATTERN = f"\033[%dm%s{RESET_SEQ}"
     PID_COLORS = [0]
 
@@ -188,7 +223,7 @@ class LogRecord(logging.LogRecord):
 
 showwarning = None
 def init_logger():
-    global showwarning  # noqa: PLW0603
+    global showwarning, COLORING  # noqa: PLW0603
     if logging.getLogRecordFactory() is LogRecord:
         return
 
@@ -269,14 +304,10 @@ def init_logger():
         except Exception:
             sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
 
-    # Check that handler.stream has a fileno() method: when running OpenERP
-    # behind Apache with mod_wsgi, handler.stream will have type mod_wsgi.Log,
-    # which has no fileno() method. (mod_wsgi.Log is what is being bound to
-    # sys.stderr when the logging.StreamHandler is being constructed above.)
-    def is_a_tty(stream):
-        return hasattr(stream, 'fileno') and os.isatty(stream.fileno())
+    if COLORING is ColorOutput.AUTO:
+        COLORING = ColorOutput.from_log_handler(handler)
 
-    if isinstance(handler, logging.StreamHandler) and (is_a_tty(handler.stream) or os.environ.get("ODOO_PY_COLORS")):
+    if ColorOutput.LOGS in COLORING:
         formatter = ColoredFormatter(format)
         perf_filter = ColoredPerfFilter()
     else:
@@ -310,6 +341,10 @@ def init_logger():
         level = getattr(logging, level, logging.INFO)
         logger = logging.getLogger(loggername)
         logger.setLevel(level)
+
+    # Now that the logging is configured, we can warn about usage of deprecated env variable.
+    if os.getenv("ODOO_PY_COLORS"):
+        _logger.warning("The `ODOO_PY_COLORS` env variable is deprecated; use the `FORCE_COLOR` env variable.")
 
     for logconfig_item in logging_configurations:
         _logger.debug('logger level set: "%s"', logconfig_item)
