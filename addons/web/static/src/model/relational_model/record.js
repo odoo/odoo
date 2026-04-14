@@ -8,6 +8,7 @@ import { FetchRecordError } from "./errors";
 import {
     createPropertyActiveField,
     getBasicEvalContext,
+    getDefaultValues,
     getFieldContext,
     getFieldsSpec,
     getOfflineDisplayName,
@@ -766,6 +767,7 @@ export class Record extends DataPoint {
         for (const [fieldName, value] of Object.entries(values)) {
             const field = this.fields[fieldName];
             switch (field.type) {
+                case "one2many":
                 case "many2many": {
                     if (value) {
                         result[fieldName] = {};
@@ -833,23 +835,7 @@ export class Record extends DataPoint {
     }
 
     _getDefaultValues(fieldNames = this.fieldNames) {
-        const defaultValues = {};
-        for (const fieldName of fieldNames) {
-            switch (this.fields[fieldName].type) {
-                case "integer":
-                case "float":
-                case "monetary":
-                    defaultValues[fieldName] = fieldName === "id" ? false : 0;
-                    break;
-                case "one2many":
-                case "many2many":
-                    defaultValues[fieldName] = [];
-                    break;
-                default:
-                    defaultValues[fieldName] = false;
-            }
-        }
-        return defaultValues;
+        return getDefaultValues(fieldNames, this.fields);
     }
 
     /**
@@ -1035,6 +1021,7 @@ export class Record extends DataPoint {
         for (const [fieldName, value] of Object.entries(changes)) {
             const field = this.fields[fieldName];
             switch (field.type) {
+                case "one2many":
                 case "many2many":
                     result[fieldName] = value ? value.commands : false;
                     break;

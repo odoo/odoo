@@ -932,3 +932,23 @@ export function getOfflineDisplayName(record) {
         _t("Record")
     );
 }
+
+export function getDefaultValues(fieldNames, fields) {
+    const defaultValues = {};
+    for (const fieldName of fieldNames) {
+        switch (fields[fieldName].type) {
+            case "integer":
+            case "float":
+            case "monetary":
+                defaultValues[fieldName] = fieldName === "id" ? false : 0;
+                break;
+            case "one2many":
+            case "many2many":
+                defaultValues[fieldName] = [];
+                break;
+            default:
+                defaultValues[fieldName] = false;
+        }
+    }
+    return defaultValues;
+}

@@ -41,6 +41,7 @@ export class KanbanHeader extends Component {
     setup() {
         this.dialog = useService("dialog");
         this.orm = useService("orm");
+        this.offlineService = useService("offline");
         this.rootRef = useRef("root");
         this.popover = usePopover(KanbanHeaderTooltip);
         this.onTitleMouseEnter = useDebounced(this.onTitleMouseEnter, 400);
@@ -104,6 +105,14 @@ export class KanbanHeader extends Component {
         const { group, progressBarState } = this.props;
         const { sumField } = progressBarState.progressAttributes;
         return progressBarState.getAggregateValue(group, sumField);
+    }
+
+    get isNewButtonAvailableOffline() {
+        return this.offlineService.isAvailableOffline(
+            this.env.config.actionId,
+            "kanban_quick_create",
+            false
+        );
     }
 
     // ------------------------------------------------------------------------
