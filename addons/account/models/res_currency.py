@@ -177,19 +177,22 @@ class ResCurrency(models.Model):
                 LEFT JOIN res_currency_rate rate
                     ON rate.currency_id = other_company.currency_id
                     AND rate.name <= %(date_to)s
-                    AND rate.company_id = %(main_company_id)s
+                    AND (rate.company_id = %(root_company_id)s OR rate.company_id IS NULL)
                 WHERE
                     other_company.id IN %(other_company_ids)s
                 ORDER BY other_company.id, rate.name DESC
             """,
             period_key=period_key,
-            main_company_id=main_company.root_id.id,
+            root_company_id=main_company.root_id.id,
             other_company_ids=tuple(other_companies.ids),
             date_to=date_to,
             main_company_unit_factor=main_company_unit_factor,
         )
 
     def _get_table_builder_historical(self, main_company, other_companies, date_to, main_company_unit_factor, date_exclude) -> SQL:
+        # main_company_unit_factor is kept for API stability but superseded: the domestic
+        # rate is now looked up per-date via a lateral join so that fluctuations in the
+        # domestic currency's own rate are correctly reflected in historical entries.
         return SQL(
             """
                 SELECT
@@ -198,19 +201,28 @@ class ResCurrency(models.Model):
                     rate.name,
                     LAG(rate.name, 1) OVER (PARTITION BY other_company.id, rate.currency_id ORDER BY rate.name DESC),
                     'historical',
-                    %(main_company_unit_factor)s / rate.rate
+                    COALESCE(domestic_rate.rate, 1) / rate.rate
                 FROM res_company other_company
                 JOIN res_currency_rate rate
                     ON rate.currency_id = other_company.currency_id
+                LEFT JOIN LATERAL (
+                    SELECT dr.rate
+                    FROM res_currency_rate dr
+                    WHERE dr.currency_id = %(domestic_currency_id)s
+                      AND dr.name <= rate.name
+                      AND (dr.company_id = %(root_company_id)s OR dr.company_id IS NULL)
+                    ORDER BY dr.name DESC
+                    LIMIT 1
+                ) domestic_rate ON true
                 WHERE
                     other_company.id IN %(other_company_ids)s
-                    AND rate.company_id = %(main_company_id)s
+                    AND (rate.company_id = %(root_company_id)s OR rate.company_id IS NULL)
                     AND rate.name <= %(date_to)s
                     %(exclusion_condition)s
             """,
-            main_company_id=main_company.root_id.id,
+            domestic_currency_id=main_company.currency_id.id,
+            root_company_id=main_company.root_id.id,
             other_company_ids=tuple(other_companies.ids),
-            main_company_unit_factor=main_company_unit_factor,
             date_to=date_to,
             exclusion_condition=SQL("AND rate.name > %(date_exclude)s", date_exclude=date_exclude) if date_exclude else SQL(),
         )
@@ -220,6 +232,13 @@ class ResCurrency(models.Model):
             # When there is no start date, we want to compute the average rate on the current year only
             date_from = date_utils.start_of(fields.Date.from_string(date_to), 'year')
 
+        # main_company_unit_factor is kept for API stability but superseded: the domestic
+        # rate is now looked up per-segment via lateral joins so that fluctuations in the
+        # domestic currency's own rate are correctly weighted in the average.
+        #
+        # The period is split into segments on every rate change of either the foreign
+        # currency or the domestic currency. Within each segment both rates are constant,
+        # so the conversion factor is (domestic_rate / foreign_rate) for that segment.
         return SQL(
             """
                 SELECT
@@ -228,58 +247,74 @@ class ResCurrency(models.Model):
                     CAST(NULL AS DATE),
                     CAST(NULL AS DATE),
                     'average',
-                    SUM(%(main_company_unit_factor)s / rate_with_days.rate * rate_with_days.number_of_days) / SUM(rate_with_days.number_of_days)
+                    SUM(rate_with_days.domestic_rate / rate_with_days.foreign_rate * rate_with_days.number_of_days)
+                        / SUM(rate_with_days.number_of_days)
                 FROM (
                     SELECT
-                        other_company.id as other_company_id,
-                        rate.rate AS rate,
-                        EXTRACT (
-                            'Day' FROM COALESCE(
-                                LEAD(rate.name, 1) OVER (PARTITION BY other_company.id, rate.currency_id ORDER BY rate.name ASC)::TIMESTAMP,
-                                %(date_to)s::TIMESTAMP + INTERVAL '1' DAY
-                            ) - rate.name::TIMESTAMP
-                        ) AS number_of_days
-                    FROM res_company other_company
-                    JOIN res_currency_rate rate
-                        ON rate.currency_id = other_company.currency_id
-                    WHERE
-                    rate.name <= %(date_to)s
-                    AND rate.name >= %(date_from)s
-                    AND other_company.id IN %(other_company_ids)s
-                    AND rate.company_id = %(main_company_id)s
-
-                    UNION ALL
-
-                    (
-                        SELECT DISTINCT ON (other_company.id)
-                            other_company.id as other_company_id,
-                            COALESCE(out_period_rate.rate, 1.0) AS rate,
-                            EXTRACT('Day' FROM COALESCE(in_period_rate.name::TIMESTAMP, %(date_to)s::TIMESTAMP + INTERVAL '1' DAY) - %(date_from)s::TIMESTAMP) AS number_of_days
-
+                        seg.other_company_id,
+                        EXTRACT(
+                            'Day' FROM COALESCE(seg.next_date, %(date_to)s::TIMESTAMP + INTERVAL '1' DAY)
+                                     - seg.seg_date::TIMESTAMP
+                        ) AS number_of_days,
+                        COALESCE(foreign_rate.rate, 1.0) AS foreign_rate,
+                        COALESCE(domestic_rate.rate, 1.0) AS domestic_rate
+                    FROM (
+                        -- One row per (company, breakpoint). Breakpoints are the start of the
+                        -- period plus every rate change — for the foreign OR domestic currency —
+                        -- that falls strictly inside the period.
+                        SELECT
+                            other_company.id AS other_company_id,
+                            other_company.currency_id AS foreign_currency_id,
+                            breakpoint.date AS seg_date,
+                            LEAD(breakpoint.date) OVER (PARTITION BY other_company.id ORDER BY breakpoint.date) AS next_date
                         FROM res_company other_company
-
-                        LEFT JOIN res_currency_rate in_period_rate
-                            ON in_period_rate.currency_id = other_company.currency_id
-                            AND in_period_rate.name <= %(date_to)s
-                            AND in_period_rate.name >= %(date_from)s
-                            AND in_period_rate.company_id = %(main_company_id)s
-
-                        LEFT JOIN res_currency_rate out_period_rate
-                            ON out_period_rate.currency_id = other_company.currency_id
-                            AND out_period_rate.company_id = %(main_company_id)s
-                            AND out_period_rate.name < %(date_from)s
-
-                        WHERE
-                        other_company.id IN %(other_company_ids)s
-                        ORDER BY other_company.id, in_period_rate.name ASC, out_period_rate.name DESC
-                    )
+                        JOIN LATERAL (
+                            SELECT %(date_from)s AS date
+                            UNION
+                            SELECT rate.name
+                            FROM res_currency_rate rate
+                            WHERE rate.currency_id = other_company.currency_id
+                              AND rate.name > %(date_from)s
+                              AND rate.name <= %(date_to)s
+                              AND (rate.company_id = %(root_company_id)s OR rate.company_id IS NULL)
+                            UNION
+                            SELECT dr.name
+                            FROM res_currency_rate dr
+                            WHERE dr.currency_id = %(domestic_currency_id)s
+                              AND dr.name > %(date_from)s
+                              AND dr.name <= %(date_to)s
+                              AND (dr.company_id = %(root_company_id)s OR dr.company_id IS NULL)
+                        ) breakpoint ON true
+                        WHERE other_company.id IN %(other_company_ids)s
+                    ) seg
+                    -- Foreign rate in effect at the start of this segment
+                    LEFT JOIN LATERAL (
+                        SELECT cr.rate
+                        FROM res_currency_rate cr
+                        WHERE cr.currency_id = seg.foreign_currency_id
+                          AND cr.name <= seg.seg_date
+                          AND (cr.company_id = %(root_company_id)s OR cr.company_id IS NULL)
+                        ORDER BY cr.name DESC
+                        LIMIT 1
+                    ) foreign_rate ON true
+                    -- Domestic rate in effect at the start of this segment
+                    LEFT JOIN LATERAL (
+                        SELECT cr.rate
+                        FROM res_currency_rate cr
+                        WHERE cr.currency_id = %(domestic_currency_id)s
+                          AND cr.name <= seg.seg_date
+                          AND (cr.company_id = %(root_company_id)s OR cr.company_id IS NULL)
+                        ORDER BY cr.name DESC
+                        LIMIT 1
+                    ) domestic_rate ON true
                 ) rate_with_days
+                WHERE rate_with_days.number_of_days > 0
                 GROUP BY rate_with_days.other_company_id
             """,
             period_key=period_key,
-            main_company_id=main_company.root_id.id,
+            root_company_id=main_company.root_id.id,
             other_company_ids=tuple(other_companies.ids),
             date_from=date_from,
             date_to=date_to,
-            main_company_unit_factor=main_company_unit_factor,
+            domestic_currency_id=main_company.currency_id.id,
         )
