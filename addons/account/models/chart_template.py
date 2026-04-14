@@ -378,6 +378,10 @@ class AccountChartTemplate(models.AbstractModel):
                     if xmlid not in xmlid2tax_group and not force_create:
                         skip_update.add((model_name, xmlid))
                         continue
+                    if xmlid in xmlid2tax_group:
+                        for field_name in ["tax_payable_account_id", "tax_receivable_account_id"]:
+                            if field_name in values and self.ref(values[field_name], raise_if_not_found=False):
+                                values.pop(field_name, None)
 
                 elif model_name == 'account.tax':
                     if xmlid not in xmlid2tax or (tax_template_changed(xmlid2tax[xmlid], values) and not force_update):
