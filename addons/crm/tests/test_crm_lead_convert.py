@@ -377,6 +377,9 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
                 if lead_partner:
                     # if the lead started with a partner, it shouldn't change
                     self.assertEqual(lead_partner, lead.partner_id)
+                if lead_company_name:
+                    # The company created from partner_name must stay top-level.
+                    self.assertFalse(lead.partner_id.parent_id.parent_id)
                 if link_customer:
                     self.assertEqual(lead.partner_id.name, lead_partner.name or 'Test Contact Name')
 
