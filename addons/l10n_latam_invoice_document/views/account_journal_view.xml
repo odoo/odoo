@@ -13,6 +13,9 @@
             <field name="type" position="after">
                 <field name="l10n_latam_use_documents" invisible="not l10n_latam_company_use_documents or type not in ['purchase', 'sale']"/>
             </field>
+            <field name="restrict_mode_hash_table" position="attributes">
+                <attribute name="invisible" separator=" or " add="(l10n_latam_use_documents and type == 'purchase')"/>
+            </field>
         </field>
     </record>
 
