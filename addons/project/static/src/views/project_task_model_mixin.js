@@ -19,7 +19,7 @@ export const ProjectTaskModelMixin = (T) => class ProjectTaskModelMixin extends 
             ]);
             const templateTaskDomain = Domain.or([[["has_template_ancestor", "=", true]],
                 "default_project_id" in this.env.searchModel.globalContext ?
-                        Domain.TRUE :
+                        Domain.FALSE :
                         [["project_id.is_template", "=", true]]]);
             domain = Domain.and([domain, templateTaskDomain]).toList({});
         }
