@@ -39,7 +39,9 @@ function useClickAway(callback) {
     }
 
     function pointerDownHandler(ev) {
-        callback(ev.composedPath()[0]);
+        if (ev.button === 0) {
+            callback(ev.composedPath()[0]);
+        }
     }
 
     useEarlyExternalListener(window, "pointerdown", pointerDownHandler, { capture: true });

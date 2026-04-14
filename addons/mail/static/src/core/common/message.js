@@ -483,8 +483,8 @@ export class Message extends Component {
             ev.target.closest("a") ||
             !this.props.hasActions ||
             this.isEditing ||
-            this.rightClickDropdownState.isOpen ||
-            this.isRightClickDropdownOngoingClose
+            this.rightClickDropdownState.isOpen //||
+            // this.isRightClickDropdownOngoingClose
         ) {
             return;
         }
