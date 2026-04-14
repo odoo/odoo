@@ -6,7 +6,7 @@ import { Notebook } from "@web/core/notebook/notebook";
 
 import { Component } from "@odoo/owl";
 import { iconClasses } from "@html_editor/utils/dom_info";
-import { TABS, renderAndSaveMedia } from "./media_dialog_utils";
+import { TABS, renderMedia } from "./media_dialog_utils";
 
 const DEFAULT_SEQUENCE = 50;
 const sequence = (tab) => tab.sequence ?? DEFAULT_SEQUENCE;
@@ -204,7 +204,7 @@ export class MediaDialog extends Component {
                 !this.props.media);
         this.state.isSaving = true;
         if (saveSelectedMedia) {
-            await renderAndSaveMedia({
+            let elements = await renderMedia({
                 orm: this.orm,
                 activeTab: this.state.activeTab,
                 availableTabs: this.tabs,
@@ -212,22 +212,23 @@ export class MediaDialog extends Component {
                 selectedMedia: selectedMedia,
                 extraClassesToAdd: this.extraClassesToAdd(),
                 extraClassesToRemove: this.initialIconClasses,
-                multiImages: this.props.multiImages,
-                saveFunction: this.props.save,
             });
+            elements = this.props.multiImages ? elements : elements[0];
+            await this.props.save(elements, selectedMedia, this.state.activeTab, this.props.media);
         }
-        this.close({ closeReason: "save" });
+        this.props.close();
+        this.state.isSaving = false;
     }
 
     onTabChange(tab) {
         this.state.activeTab = tab;
     }
-    async close(closeParams = {}) {
+    async close() {
         if (this.abortUploads) {
             this.abortUploads();
             delete this.abortUploads;
         }
         this.state.isSaving = false;
-        await this.props.close(closeParams);
+        await this.props.close();
     }
 }

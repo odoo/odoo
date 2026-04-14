@@ -224,7 +224,14 @@ export class MediaPlugin extends Plugin {
     }
 
     openMediaDialog(params = {}, editableEl = null) {
-        const oldSave = params.save || this.getSaveFunction(params);
+        const oldSave =
+            params.save ||
+            ((...args) => {
+                // The media dialog calls the save function with 4 params: this.props.save(elements, selectedMedia, this.state.activeTab, this.props.media)
+                const [elements, , , oldMediaNode] = args;
+                const node = oldMediaNode || params.node;
+                this.onSaveMediaDialog(elements, { node });
+            });
         params.save = async (...args) => {
             const selection = args[0];
             const elements = selection
@@ -256,14 +263,6 @@ export class MediaPlugin extends Plugin {
             ...params,
         });
         return mediaDialogClosedPromise;
-    }
-
-    getSaveFunction(params) {
-        return (...args) => {
-            const element = args[0];
-            const node = args[3] || params.node;
-            this.onSaveMediaDialog(element, { node });
-        };
     }
 
     /**

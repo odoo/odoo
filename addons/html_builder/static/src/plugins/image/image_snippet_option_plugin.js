@@ -16,19 +16,12 @@ export class ImageSnippetOptionPlugin extends Plugin {
             return;
         }
 
-        let discardSnippet = false;
         // Open the media dialog and replace the image snippet placeholder by
         // the selected image.
-        await new Promise((resolve) => {
-            const onClose = this.dependencies.media.openMediaDialog(
-                this.getMediaDialogProps(snippetEl, dragState)
-            );
-            onClose.then((closeParams) => {
-                discardSnippet = this.onCloseMediaDialog({ closeParams, snippetEl, dragState });
-                resolve();
-            });
-        });
-        return discardSnippet;
+        await this.dependencies.media.openMediaDialog(
+            this.getMediaDialogProps(snippetEl, dragState)
+        );
+        return !dragState.replacedSnippetEl;
     }
 
     getMediaDialogProps(snippetEl, dragState) {
@@ -46,10 +39,6 @@ export class ImageSnippetOptionPlugin extends Plugin {
                 dragState.replacedSnippetEl = selectedImageEl;
             },
         };
-    }
-
-    onCloseMediaDialog({ closeParams, snippetEl, dragState }) {
-        return closeParams.closeReason !== "save";
     }
 }
 

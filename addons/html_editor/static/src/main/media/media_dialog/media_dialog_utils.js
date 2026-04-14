@@ -1,4 +1,3 @@
-import { ATTACHMENT_FIELDS } from "./file_selector";
 import { ImageSelector } from "./image_selector";
 import { IconSelector } from "./icon_selector";
 import { _t } from "@web/core/l10n/translation";
@@ -17,35 +16,6 @@ export const TABS = {
         sequence: 20,
     },
 };
-
-export async function renderAndSaveMedia({
-    orm,
-    activeTab,
-    availableTabs,
-    oldMediaNode,
-    selectedMedia,
-    extraClassesToAdd,
-    extraClassesToRemove,
-    multiImages,
-    saveFunction,
-    aiChannelId = null,
-}) {
-    const elements = await renderMedia({
-        orm,
-        activeTab,
-        availableTabs,
-        oldMediaNode,
-        selectedMedia,
-        extraClassesToAdd,
-        extraClassesToRemove,
-        aiChannelId,
-    });
-    if (multiImages) {
-        await saveFunction(elements, selectedMedia, activeTab, oldMediaNode);
-    } else {
-        await saveFunction(elements[0], selectedMedia, activeTab, oldMediaNode);
-    }
-}
 
 /**
  * Render the selected media for insertion in the editor
@@ -66,7 +36,6 @@ export async function renderMedia({
     selectedMedia,
     extraClassesToAdd,
     extraClassesToRemove,
-    aiChannelId = null,
 }) {
     const elements = await availableTabs[activeTab].Component.createElements(selectedMedia, {
         orm: orm,
@@ -78,9 +47,6 @@ export async function renderMedia({
             if (style) {
                 element.setAttribute("style", style);
             }
-        }
-        if (aiChannelId) {
-            element.dataset.aiChannelId = aiChannelId;
         }
         for (const otherTab of Object.keys(availableTabs).filter((key) => key !== activeTab)) {
             for (const property of availableTabs[otherTab].Component.mediaSpecificStyles) {
@@ -128,12 +94,4 @@ export async function renderMedia({
         element.classList.add(...availableTabs[activeTab].Component.mediaSpecificClasses);
     });
     return elements;
-}
-
-export function convertAttachmentRecordToObject(attachment_record) {
-    const imageAttachmentObject = {};
-    for (const attachment_field of ATTACHMENT_FIELDS) {
-        imageAttachmentObject[attachment_field] = attachment_record[attachment_field];
-    }
-    return imageAttachmentObject;
 }

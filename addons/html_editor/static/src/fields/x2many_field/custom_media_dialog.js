@@ -15,26 +15,22 @@ export class CustomMediaDialog extends MediaDialog {
             return;
         }
         if (this.state.activeTab == "IMAGES") {
-            await this.imageSave({
-                attachments: this.selectedMedia[this.state.activeTab],
-                superSaveFunction: () => super.save(),
-                propsSaveFunction: (attachments) => this.props.imageSave(attachments),
-            });
+            await this.imageSave(this.selectedMedia[this.state.activeTab]);
         } else {
             this.props.videoSave(this.selectedMedia[this.state.activeTab]);
         }
         this.props.close();
     }
 
-    async imageSave({ attachments, superSaveFunction, propsSaveFunction }) {
+    async imageSave(attachments) {
         const preloadedAttachments = attachments.filter((attachment) => attachment.res_model);
         const nonPreloadedAttachments = attachments.filter((attachment) => !attachment.res_model);
         if (nonPreloadedAttachments.length > 0) {
-            await superSaveFunction();
-            await propsSaveFunction(nonPreloadedAttachments);
+            await super.save();
+            await this.props.imageSave(nonPreloadedAttachments);
         }
         if (preloadedAttachments.length) {
-            await propsSaveFunction(preloadedAttachments);
+            await this.props.imageSave(preloadedAttachments);
         }
     }
 }
