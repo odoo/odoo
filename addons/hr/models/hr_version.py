@@ -643,6 +643,38 @@ class HrVersion(models.Model):
             return self.hours_per_day
         return self.company_id.resource_calendar_id._get_hours_per_day()
 
+    def _get_field_block_start_date(self, field_name):
+        """
+        Return the contract_date_start of the earliest contiguous version
+        that shares the same value for `field_name` as the current version.
+
+        Useful to determine since when a given field value has been
+        continuously active (e.g. job category, job position, wage, ...).
+
+        :param field_name: str, the field to track (e.g. 'l10n_be_job_category_id')
+        :return: date or None
+        """
+        self.ensure_one()
+        current_value = self[field_name]
+        if not current_value:
+            return None
+
+        versions = self.employee_id.version_ids.sorted(key=lambda v: v.contract_date_start or date.min)
+
+        try:
+            idx = next(i for i, v in enumerate(versions) if v.id == self.id)
+        except StopIteration:
+            idx = len(versions) - 1
+
+        start_version = versions[idx]
+        for j in range(idx - 1, -1, -1):
+            prev = versions[j]
+            if prev[field_name] != current_value:
+                break
+            start_version = prev
+
+        return start_version.contract_date_start
+
     def action_open_version(self):
         self.ensure_one()
 
