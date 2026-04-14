@@ -632,6 +632,11 @@ def split_every[T](n: int, iterable: Iterable[T], piece_maker=tuple):
         piece = piece_maker(islice(iterator, n))
 
 
+def uniquify_list(seq: Iterable) -> Iterable:
+    seen = set()
+    return [x for x in seq if x not in seen and not seen.add(x)]
+
+
 def discardattr(obj: object, key: str) -> None:
     """ Perform a ``delattr(obj, key)`` but without crashing if ``key`` is not present. """
     try:
