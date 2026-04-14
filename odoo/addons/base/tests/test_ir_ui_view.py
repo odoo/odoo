@@ -4948,7 +4948,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'hr_timesheet',
             'hr_work_entry',
             'im_livechat',
-            'iot',
             'knowledge',
             'l10n_ae_hr_payroll',
             'l10n_ar',

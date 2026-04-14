@@ -90,7 +90,9 @@ class ReportProductLabelBase(models.AbstractModel):
         if qty_by_product_in:
             products = Product.search([('id', 'in', [int(p) for p in qty_by_product_in])], order='name desc')
             for product in products:
-                quantity_by_product[product].append((product.barcode, qty_by_product_in[str(product.id)]))
+                # from js report action handler, int keys are converted to str, but from report_action method, kept as int
+                q = qty_by_product_in.get(str(product.id)) or qty_by_product_in.get(product.id)
+                quantity_by_product[product].append((product.barcode, q))
         if data.get('custom_barcodes'):
             for product, barcodes_qtys in data.get('custom_barcodes').items():
                 quantity_by_product[Product.browse(int(product))] += barcodes_qtys

@@ -6,6 +6,7 @@ import json
 
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
+from odoo.addons.web.controllers.utils import clean_action
 
 
 class StockPicking(models.Model):
@@ -252,3 +253,33 @@ class StockPicking(models.Model):
         if carrier_key in ("fixed", "base_on_rule"):
             carrier_key = self.carrier_id.name
         return carrier_key
+
+    def _get_autoprint_report_actions(self):
+        report_actions = []
+        shipping_labels_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_carrier_labels)
+        if shipping_labels_to_print:
+            action = self.env.ref("stock_delivery.action_report_shipping_labels").report_action(shipping_labels_to_print.ids, config=False)
+            clean_action(action, self.env)
+            report_actions.append(action)
+        shipping_documents_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_export_documents)
+        if shipping_documents_to_print:
+            action = self.env.ref("stock_delivery.action_report_shipping_docs").report_action(shipping_documents_to_print.ids, config=False)
+            clean_action(action, self.env)
+            report_actions.append(action)
+        return report_actions + super()._get_autoprint_report_actions()
+
+
+class StockPickingType(models.Model):
+    _inherit = "stock.picking.type"
+
+    auto_print_carrier_labels = fields.Boolean(
+        "Auto Print Carrier Labels",
+        help="Automatically print the carrier labels of the picking when they are created.",
+    )
+    auto_print_export_documents = fields.Boolean(
+        "Auto Print Export Documents",
+        help=(
+            "Automatically print the export documents of the picking when they are created. "
+            "Availability of export documents depends on the carrier and the destination."
+        ),
+    )
