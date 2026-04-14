@@ -452,6 +452,48 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             },
         )
 
+    def test_move_composer_with_dynamic_report_print_report_name(self):
+        """
+        Additional dynamic report with custom print_report_name,
+        uses its own filename instead of reusing the invoice PDF filename.
+        """
+        test_move = self.test_account_moves[0].with_env(self.env)
+        test_customer = self.test_customers[0].with_env(self.env)
+        move_template = self.move_template.with_env(self.env)
+
+        extra_dynamic_report = self.env.ref('account.action_account_original_vendor_bill').copy({
+            'name': 'Invoice PDF 2',
+            'print_report_name': "'CUSTOM_%s' % object.name",
+        })
+        move_template.report_template_ids += extra_dynamic_report
+
+        composer = self.env['account.move.send.wizard']\
+            .with_context(active_model='account.move', active_ids=test_move.ids)\
+            .create({
+                'sending_methods': ['email'],
+                'mail_template_id': move_template.id,
+            })
+
+        with self.mock_mail_gateway(mail_unlink_sent=False), \
+                self.mock_mail_app():
+            composer.action_send_and_print()
+            self.env.cr.flush()
+
+        self.assertMailMail(
+            test_customer,
+            'sent',
+            author=self.user_account_other.partner_id,
+            content=f'TemplateBody for {test_move.name}',
+            email_values={
+                'attachments_info': [
+                    {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
+                    {'name': 'AttFileName_01.txt', 'raw': b'AttContent_01', 'type': 'text/plain'},
+                    {'name': f'{test_move.name}.pdf'},
+                    {'name': 'CUSTOM_INVOICE_00.pdf'},
+                ],
+            },
+        )
+
     def test_invoice_sent_to_additional_partner(self):
         """
         Make sure that when an invoice is sent to a partner who is not
