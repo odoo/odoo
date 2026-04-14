@@ -19,10 +19,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-09 11:25+0000\n"
+"PO-Revision-Date: 2026-04-14 07:05+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/mail/ja/"
-">\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/mail/"
+"ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -244,9 +244,9 @@ msgstr ""
 "%(new_line)s%(new_line)s  %(bold_start)s@username%(bold_end)s を入力して誰か"
 "をメンションし、注意を引きましょう。%(new_line)sチャネルをメンションするには "
 "%(bold_start)s#channel%(bold_end)s を入力します。%(new_line)sコマンドを実行す"
-"るには %(bold_start)s/command%(bold_end)s を入力します。%(new_line)s 定型返信"
-"文をメッセージに入力するには %(bold_start)s::shortcut%(bold_end)sを入力しま"
-"す。 %(new_line)s 絵文字をメッセージに挿入するには %(bold_start)s:emoji:%"
+"るには %(bold_start)s/command%(bold_end)s を入力します。%(new_line)s 返信定型"
+"文をメッセージに入力するには %(bold_start)s::shortcut%(bold_end)sを入力します"
+"。 %(new_line)s 絵文字をメッセージに挿入するには %(bold_start)s:emoji:%"
 "(bold_end)sを入力します。"
 
 #. module: mail
@@ -2356,7 +2356,7 @@ msgstr "返信定型文"
 #. module: mail
 #: model:res.groups,name:mail.group_mail_canned_response_admin
 msgid "Canned Response Administrator"
-msgstr "返信定型文責任管理者"
+msgstr "返信定型文管理者"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_canned_response_action
@@ -4559,7 +4559,7 @@ msgstr "失敗メール"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Failed"
-msgstr "不合格"
+msgstr "失敗"
 
 #. module: mail
 #. odoo-javascript
@@ -7715,7 +7715,7 @@ msgstr "活動がありません"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
 msgid "No canned response found. Let's create one!"
-msgstr "定型回答が見つかりません。作成しましょう!"
+msgstr "返信定型文が見つかりません。作成しましょう!"
 
 #. module: mail
 #. odoo-javascript
@@ -12519,8 +12519,8 @@ msgid ""
 "Use canned responses to quickly insert prewritten messages with "
 "<i>::shortcut</i>. You can edit the text before sending."
 msgstr ""
-"定型文を使用して、あらかじめ作成したメッセージを<i>::shortcut</i>で素早く挿入"
-"します。送信前にテキストを編集できます。"
+"返信定型文を使用して、あらかじめ作成したメッセージを<i>::shortcut</i>で素早く"
+"挿入します。送信前にテキストを編集できます。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__custom_notifications
@@ -13579,10 +13579,8 @@ msgstr "このチャンネルを作成しました"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
-#, fuzzy
-#| msgid "id"
 msgid "d"
-msgstr "ID"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert

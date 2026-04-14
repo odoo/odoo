@@ -36,7 +36,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-10 08:34+0000\n"
+"PO-Revision-Date: 2026-04-13 11:42+0000\n"
 "Last-Translator: Boris Peko <boris.peko@ecodica.eu>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/account/"
 "hr/>\n"
@@ -600,6 +600,42 @@ msgid ""
 "        </div>\n"
 "                    "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"Poštovani\n"
+"<t t-if=\"object.partner_id.parent_id\">\n"
+"<t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-"
+"out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"<t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"</t>\n"
+"<br/><br/>\n"
+"Evo vašeg\n"
+"<t t-if=\"object.name\">\n"
+"kreditne obavijesti za samonaplatu <span style=\"font-weight:bold;\" t-"
+"out=\"object.name ili ''\">RINV/2021/05/0001</span>\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"kreditna nota za samonaplatu\n"
+"</t>\n"
+"<t t-if=\"object.invoice_origin\">\n"
+"(s referencom: <t t-out=\"object.invoice_origin ili ''\">SUB003</t>)\n"
+"</t>\n"
+"iznos u <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) ili ''\">143.750,00 USD</span>\n"
+"od <t t-out=\"object.company_id.name ili ''\">VašaTvrtka</t>.\n"
+"<br/><br/>\n"
+"Slobodno nas kontaktirajte ako imate bilo kakvih pitanja.\n"
+"<t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"<br/><br/>\n"
+"<div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.invoice_user_id.signature ili ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div>\n"
+"</t>\n"
+"</p>\n"
+"</div>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -806,6 +842,30 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"Poštovani <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/>"
+"<br/>\n"
+"Hvala vam na uplati.\n"
+"Ovdje je vaša potvrda o uplati <span style=\"font-weight:bold;\" t-out=\""
+"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> u "
+"iznosu\n"
+"do <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, "
+"object.currency_id) ili ''\">10,00 USD</span> od <t t-"
+"out=\"object.company_id.name or ''\">VašaTvrtka</t>.\n"
+"<br/><br/>\n"
+"Ne ustručavajte se kontaktirati nas ako imate bilo kakvih pitanja.\n"
+"<br/><br/>\n"
+"S poštovanjem,\n"
+"<t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-"
+"container=\"1\">\n"
+"<br/><br/>\n"
+"<div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature ili ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
+"</t>\n"
+"</p>\n"
+"</div>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -989,6 +1049,15 @@ msgid ""
 "class=\"text-success\">Trusted</span>\n"
 "                        </span>"
 msgstr ""
+"<span class=\"d-flex gap-2 w-100\">\n"
+"\n"
+"<span invisible=\"allow_out_payment\" class=\"text-muted\">Nepouzdano</span>"
+"\n"
+"\n"
+"<span invisible=\"not allow_out_payment\" class=\"text-success\">Pouzdano</"
+"span>\n"
+"\n"
+"</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -1972,6 +2041,12 @@ msgid ""
 "You\n"
 "                should receive this periodically from your bank."
 msgstr ""
+"Kreditni izvod je sažetak svih financijskih transakcija\n"
+"\n"
+"koje se događaju tijekom određenog vremenskog razdoblja na kreditnom računu. "
+"Trebali biste ga\n"
+"\n"
+"periodično primati od svoje banke."
 
 #. module: account
 #. odoo-python
@@ -2147,6 +2222,8 @@ msgid ""
 "Account %s cannot be unmerged as it already belongs to a single company. The "
 "unmerge operation only splits an account based on its companies."
 msgstr ""
+"Račun %s ne može se razdvojiti jer već pripada jednoj tvrtki. Operacija "
+"razdvajanja dijeli račun samo na temelju njegovih tvrtki."
 
 #. module: account
 #. odoo-python
@@ -2513,6 +2590,8 @@ msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
 msgstr ""
+"Konto koji će biti postavljen na redove kreirane u dnevniku knjiženja na "
+"temelju gotovine i koji će se koristiti za praćenje iznosa porezne osnovice."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
@@ -2548,6 +2627,10 @@ msgid ""
 "reconciled ; at reconciliation, this amount cancelled on this account and "
 "put on the regular tax account."
 msgstr ""
+"Račun koji se koristi za prijenos iznosa poreza za poreze na temelju "
+"gotovine. Sadržavat će iznos poreza sve dok se izvorni račun ne uskladi; "
+"prilikom usklađivanja, ovaj iznos se poništava na ovom računu i stavlja na "
+"redovni porezni račun."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -2697,6 +2780,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
+"Obračunski unos kreiran %(date)s: %(accrual_entry)s. I njegov obrnuti unos: %"
+"(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -3807,7 +3892,6 @@ msgstr "Kolovoz"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_auto_insurance
-#, fuzzy
 msgid "Auto Insurance"
 msgstr ""
 "\n"
@@ -4630,7 +4714,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "C"
-msgstr ""
+msgstr "C"
 
 #. module: account
 #. odoo-python
@@ -5156,6 +5240,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence on payments and "
 "bank transactions posted on this journal"
 msgstr ""
+"Označite ovaj okvir ako ne želite dijeliti isti slijed plaćanja i bankovnih "
+"transakcija knjiženih u ovom dnevniku"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -6484,7 +6570,7 @@ msgstr "Razgraničenje {label} {percent}%"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "D"
-msgstr ""
+msgstr "D"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -8787,6 +8873,9 @@ msgid ""
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
 msgstr ""
+"Formula u obliku kod_linije.oznaka_izraza. Ovo omogućuje postavljanje cilja "
+"prijenosa za ovaj izraz (na izrazu označenom s _carryover_*), u slučaju da "
+"se razlikuje od nadređene linije."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -9087,6 +9176,8 @@ msgid ""
 "Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
 "groupby value on '%(report_line)s'"
 msgstr ""
+"Značajka Groupby nije podržana od strane '%(engine)s' engine-a. Molimo "
+"uklonite vrijednost groupby na '%(report_line)s'."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__grouping_key
@@ -9263,6 +9354,9 @@ msgid ""
 "date are secured. Only journal entries after the hard lock date are "
 "considered."
 msgstr ""
+"Najviši datum tako da su svi uneseni dnevnički unosi prije (uključujući) "
+"datuma osigurani. Uzimaju se u obzir samo dnevnički unosi nakon datuma "
+"zaključavanja."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
@@ -9517,6 +9611,8 @@ msgid ""
 "If empty, the discount will be discounted directly on the income/expense "
 "account. If set, discount on invoices will be realized in separate accounts."
 msgstr ""
+"Ako je prazno, popust će se izravno uračunati na račun prihoda/rashoda. Ako "
+"je postavljeno, popust na fakture će se ostvariti na odvojenim računima."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
@@ -9577,6 +9673,10 @@ msgid ""
 "excluding this tax group before displaying it. If not set, the tax group "
 "will be displayed after the 'Untaxed amount' subtotal."
 msgstr ""
+"Ako je postavljena, ova će se vrijednost koristiti na dokumentima kao oznaka "
+"međuzbroja koji isključuje ovu poreznu skupinu prije prikaza. Ako nije "
+"postavljena, porezna će se skupina prikazati nakon međuzbroja 'Neoporezovani "
+"iznos'."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__active
@@ -9634,6 +9734,11 @@ msgid ""
 "based on the delivery address.                                 This rule "
 "applies regardless of where you are located."
 msgstr ""
+"Ako prodajete robu i usluge kupcima u "
+"stranoj........................................zemlji EU, morate obračunati "
+"PDV na temelju adrese "
+"dostave................................................. Ovo pravilo "
+"primjenjuje se bez obzira na vašu lokaciju."
 
 #. module: account
 #. odoo-python
