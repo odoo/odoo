@@ -1390,6 +1390,7 @@ export class DeletePlugin extends Plugin {
             !this.isUnremovable(closestUnmergeable)
         ) {
             closestUnmergeable.remove();
+            this.fillShrunkBlocks(commonAncestor);
             this.dependencies.selection.setSelection({
                 anchorNode: destContainer,
                 anchorOffset: destOffset,
