@@ -488,6 +488,9 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
                     self.assertTrue(lead.partner_id)
                     self.assertEqual(lead.partner_id.name, lead_contact_name)
                     self.assertEqual(lead.partner_id.parent_id, wizard_company)
+                if wizard_action == 'create' and not lead_partner and not wizard_contact and lead_company_name:
+                    # The company created from partner_name must stay top-level.
+                    self.assertFalse(lead.partner_id.parent_id.parent_id)
                 if wizard_action == 'create' and (wizard_contact or lead_partner):
                     self.assertEqual(lead.partner_id, wizard_contact or lead_partner)
                     self.assertFalse(lead.partner_id.parent_id)
