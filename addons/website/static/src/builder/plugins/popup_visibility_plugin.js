@@ -51,6 +51,7 @@ export class PopupVisibilityPlugin extends Plugin {
                 this.onTargetShow(cloneEl);
             }
         },
+        ignored_sibling_selectors: ".s_popup",
     };
 
     setup() {
