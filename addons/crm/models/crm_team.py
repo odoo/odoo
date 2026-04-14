@@ -769,7 +769,7 @@ class CrmTeam(models.Model):
 
     def action_open_unassigned_opportunities(self):
         action = self.action_open_opportunities()
-        context = self.env['crm.lead']._evaluate_context_from_action(action)
+        context = self.env['crm.lead'].with_context(force_active_id=self.id)._evaluate_context_from_action(action)
         action['context'] = context | {'search_default_unassigned': True}
         return action
 
