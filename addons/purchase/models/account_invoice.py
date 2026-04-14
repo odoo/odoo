@@ -16,6 +16,12 @@ TOLERANCE = 0.02  # tolerance applied to the total when searching for a matching
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
+    purchase_vendor_bill_id = fields.Many2one(
+        'purchase.bill.union',
+        store=False,
+        readonly=False,
+        help="Auto-complete from a previous bill, refund, or purchase order."
+    )
     purchase_id = fields.Many2one('purchase.order', store=False, readonly=False,
         string='Purchase Order',
         help="Auto-complete from a past purchase order.")
@@ -28,8 +34,22 @@ class AccountMove(models.Model):
         help="Internal warning for the partner or the products as set by the user.",
         compute='_compute_purchase_warning_text')
 
-    @api.onchange('purchase_id')
+    @api.onchange('purchase_vendor_bill_id', 'purchase_id')
     def _onchange_purchase_auto_complete(self):
+        r''' Load from either an old purchase order, either an old vendor bill.
+
+        When setting a 'purchase.bill.union' in 'purchase_vendor_bill_id':
+        * If it's a vendor bill, 'invoice_vendor_bill_id' is set and the loading is done by '_onchange_invoice_vendor_bill'.
+        * If it's a purchase order, 'purchase_id' is set and this method will load lines.
+
+        /!\ All this not-stored fields must be empty at the end of this function.
+        '''
+        if self.purchase_vendor_bill_id.vendor_bill_id:
+            self.invoice_vendor_bill_id = self.purchase_vendor_bill_id.vendor_bill_id
+            self._onchange_invoice_vendor_bill()
+        elif self.purchase_vendor_bill_id.purchase_order_id:
+            self.purchase_id = self.purchase_vendor_bill_id.purchase_order_id
+        self.purchase_vendor_bill_id = False
 
         if not self.purchase_id:
             return
