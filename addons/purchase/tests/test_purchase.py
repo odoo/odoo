@@ -1294,3 +1294,68 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.order_line[0].name, "[Code 1] Name 1\nSome Variant: Some Value: Some Text")
         self.assertEqual(po.order_line[1].name, "[Code 1] Name 1")
         self.assertEqual(po.order_line[2].name, custom_desc)
+
+    def test_supplier_info_uom_on_variant(self):
+        """Test that supplier info defined on a variant with a specific UoM is correctly applied on the purchase order line.
+        Test also other variant for the same template cannot use the uom."""
+        self.env.user.group_ids += self.env.ref('uom.group_uom')
+
+        # Create a product template with two variants (Color: Red / Blue)
+        color_attribute = self.env['product.attribute'].create({'name': 'Color'})
+        color_red = self.env['product.attribute.value'].create({
+            'name': 'Red',
+            'attribute_id': color_attribute.id,
+        })
+        color_blue = self.env['product.attribute.value'].create({
+            'name': 'Blue',
+            'attribute_id': color_attribute.id,
+        })
+        product_template = self.env['product.template'].create({
+            'name': 'Colored Widget',
+            'type': 'consu',
+            'uom_id': self.uom_unit.id,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': color_attribute.id,
+                'value_ids': [Command.set([color_red.id, color_blue.id])],
+            })],
+        })
+        variant_red = product_template.product_variant_ids.filtered(
+            lambda v: color_red in v.product_template_attribute_value_ids.product_attribute_value_id
+        )
+        variant_blue = product_template.product_variant_ids.filtered(
+            lambda v: color_blue in v.product_template_attribute_value_ids.product_attribute_value_id
+        )
+
+        # Create a supplier info specific to the Red variant with uom_dozens
+        self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_a.id,
+            'product_tmpl_id': product_template.id,
+            'product_id': variant_red.id,
+            'product_uom_id': self.uom_dozen.id,
+            'min_qty': 1,
+            'price': 120,
+        })
+
+        # For the Red variant: the supplier info UoM (dozens) should be selected
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as line:
+            line.product_id = variant_red
+        po = po_form.save()
+        po_line_red = po.order_line
+        self.assertEqual(po_line_red.product_uom_id, self.uom_dozen,
+            "The UoM of the PO line for the Red variant should match the supplier info UoM (dozens).")
+        self.assertEqual(po_line_red.price_unit, 120,
+            "The price from the supplier info should be applied on the Red variant PO line.")
+
+        # For the Blue variant: the supplier info UoM (dozens) must not be available since it is tied to Red
+        po_form2 = Form(self.env['purchase.order'])
+        po_form2.partner_id = self.partner_a
+        with po_form2.order_line.new() as line:
+            line.product_id = variant_blue
+        po2 = po_form2.save()
+        po_line_blue = po2.order_line
+        self.assertNotEqual(po_line_blue.product_uom_id, self.uom_dozen,
+            "The UoM of the PO line for the Blue variant should not be the supplier info UoM (dozens) tied to Red.")
+        self.assertNotIn(self.uom_dozen, po_line_blue.allowed_uom_ids,
+            "The dozens UoM should not be allowed for the Blue variant since the supplier info is specific to Red.")
