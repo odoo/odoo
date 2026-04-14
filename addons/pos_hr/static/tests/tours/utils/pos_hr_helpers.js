@@ -60,7 +60,11 @@ export function login(name, pin) {
     return res.concat(enterPin(pin));
 }
 export function enterPin(pin) {
-    return [...NumberPopup.enterValue(pin), ...NumberPopup.isShown("••••"), Dialog.confirm()];
+    return [
+        ...NumberPopup.enterValue(pin, false),
+        ...NumberPopup.isShown("••••"),
+        Dialog.confirm(),
+    ];
 }
 export function clickLockButton() {
     return {

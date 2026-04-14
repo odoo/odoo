@@ -168,7 +168,11 @@ export function clickValidate() {
         {
             content: "validate payment",
             trigger: `.payment-screen button.validation-button.next`,
-            run: "click",
+            async run({ click }) {
+                //FIXME. Find why we must wait few ms before click to avoid undeterministic behaviors.
+                await new Promise((r) => setTimeout(r, 500));
+                await click();
+            },
         },
     ];
 }
@@ -526,5 +530,21 @@ export function showQrPopupIsDisabled(opts) {
     return {
         content: `open QR code popup from paymentline is disabled (opts: ${JSON.stringify(opts)})`,
         trigger: ` ${_getPaymentlineSelector(opts)} .paymentline_show_qr_code[disabled]`,
+    };
+}
+
+export function checkPaymentLines(lines) {
+    return {
+        content: "Check payment lines",
+        trigger:
+            ".paymentlines" +
+            lines
+                .map(
+                    (line, i) =>
+                        `:has(.paymentline:eq(${i})${line.selected ? ".selected" : ""}:contains(${
+                            line.name
+                        }):contains(${line.amount}))`
+                )
+                .join(""),
     };
 }

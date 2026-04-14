@@ -27,7 +27,6 @@ import {
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
 registry.category("web_tour.tours").add("pos_restaurant_sync", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -94,9 +93,12 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             FloorScreen.clickTable("4"),
             ProductScreen.orderlinesHaveNoChange(),
             checkPreparationTicketData([]),
+            ProductScreen.orderLineHas("Desk Organizer", 1, 5.87),
             ProductScreen.totalAmountIs("5.87"),
             ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickPaymentMethod("Bank", true, {
+                amount: 5.87,
+            }),
             PaymentScreen.clickValidate(),
             FeedbackScreen.clickNextOrder(),
 
@@ -138,7 +140,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
  * This tour should be run after the first tour is done.
  */
 registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             // There is one draft synced order from the previous tour
@@ -336,7 +337,6 @@ registry.category("web_tour.tours").add("CategLabelCheck", {
         ].flat(),
 });
 registry.category("web_tour.tours").add("OrderChangeTour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -346,9 +346,12 @@ registry.category("web_tour.tours").add("OrderChangeTour", {
             ProductScreen.clickOrderButton(),
             Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
+            ProductScreen.isShown(),
             ProductScreen.orderlinesHaveNoChange(),
+            ProductScreen.orderLineHas("coca-cola", 1, 2.2),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.checkPaymentLines([{ name: "cash", amount: "2.20", selected: true }]),
             PaymentScreen.clickNumpad("+10"),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
@@ -834,7 +837,6 @@ registry.category("web_tour.tours").add("test_customer_alone_saved", {
 });
 
 registry.category("web_tour.tours").add("test_no_kitchen_confirmation_for_deposit_money", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -974,7 +976,6 @@ registry
     );
 
 registry.category("web_tour.tours").add("test_transfering_orders", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -1019,7 +1020,10 @@ registry.category("web_tour.tours").add("test_transfering_orders", {
             TicketScreen.loadSelectedOrder(),
             ProductScreen.clickControlButton("Transfer"),
             Chrome.clickOrders(),
-            TicketScreen.selectOrder("Water"),
+            {
+                trigger: `.ticket-screen .order-row:contains(Water)`,
+                run: "click",
+            },
             ProductScreen.isShown(),
             ProductScreen.clickLine("Coca-Cola", "3"),
             ProductScreen.clickLine("Water", "3"),
@@ -1041,7 +1045,10 @@ registry.category("web_tour.tours").add("test_transfering_orders", {
             FloorScreen.clickTable("4"),
             ProductScreen.clickControlButton("Transfer"),
             Chrome.clickOrders(),
-            TicketScreen.selectOrder("Water"),
+            {
+                trigger: `.ticket-screen .order-row:contains(Water)`,
+                run: "click",
+            },
             ProductScreen.isShown(),
             ProductScreen.clickLine("Coca-Cola", "6"),
             ProductScreen.clickLine("Water", "3"),

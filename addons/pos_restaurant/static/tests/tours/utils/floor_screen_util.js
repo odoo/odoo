@@ -16,7 +16,18 @@ export function table({ name, withClass = "", withoutClass, run = () => {}, numO
         run: typeof run === "string" ? run : (helpers) => run(helpers, trigger),
     };
 }
-export const clickTable = (name) => table({ name, run: "click" });
+export const clickTable = (name, badge) => [
+    table({ name, run: "click" }),
+    {
+        // Should find better way to check we are on the good table
+        trigger: `body:has(.pos-leftheader .badge:contains(${badge || name}))`,
+        async run() {
+            // Must wait a delay before to click on a product
+            // to avoid undeterministic behavior
+            await new Promise((r) => setTimeout(r, 500));
+        },
+    },
+];
 export const hasTable = (name) => table({ name });
 export const selectedTableIs = (name) => table({ name, withClass: ".selected" });
 export const ctrlClickTable = (name) =>
@@ -159,6 +170,9 @@ export function goTo(name) {
     return [
         ...clickTableSelectorButton(),
         ...Numpad.enterValue(name),
+        {
+            trigger: `.input-value:contains(${name})`,
+        },
         {
             trigger: ".floor-screen .jump-button",
             run: "click",

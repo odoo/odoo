@@ -19,8 +19,11 @@ export function clickDiscard() {
 export function selectOrder(orderName) {
     return [
         {
-            trigger: `.ticket-screen .order-row:contains("${orderName}")`,
+            trigger: `.ticket-screen .order-row:contains(${orderName})`,
             run: "click",
+        },
+        {
+            trigger: `.ticket-screen .order-row:contains(${orderName}).highlight`,
         },
     ];
 }

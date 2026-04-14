@@ -15,7 +15,6 @@ const Chrome = { ...ChromePos, ...ChromeRestaurant };
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosResTipScreenTour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             // Create order that is synced when draft.
@@ -169,7 +168,6 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
 });
 
 registry.category("web_tour.tours").add("test_edit_payments_with_tip", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -178,12 +176,8 @@ registry.category("web_tour.tours").add("test_edit_payments_with_tip", {
             ProductScreen.addOrderline("Minute Maid", "1", "3"),
             ProductScreen.clickPayButton(false),
             PaymentScreen.clickTipButton(),
-            {
-                content: "click numpad button: 1",
-                trigger: ".modal div.numpad button:contains(/^1/)",
-                run: "click",
-            },
-            Dialog.confirm(),
+            NumberPopup.enterValue("1"),
+            Dialog.proceed({ title: "add tip", button: "confirm" }),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.selectedPaymentlineHas("Cash", "4.00"),
             PaymentScreen.remainingIs("0"),
@@ -191,19 +185,15 @@ registry.category("web_tour.tours").add("test_edit_payments_with_tip", {
             FeedbackScreen.isShown(),
             FeedbackScreen.clickEditPayment(),
             PaymentScreen.clickTipButton(),
-            {
-                content: "click numpad button: 5",
-                trigger: ".modal div.numpad button:contains(/^5/)",
-                run: "click",
-            },
-            Dialog.confirm(),
+            NumberPopup.enterValue("5"),
+            Dialog.proceed({ title: "change tip", button: "confirm" }),
             // The selected payment line amount should be updated
             PaymentScreen.selectedPaymentlineHas("Cash", "8.00"),
             PaymentScreen.remainingIs("0"),
             // Edit paymentlines
             PaymentScreen.clickPaymentlineDelButton("Cash", "8.00"),
-            PaymentScreen.enterPaymentLineAmount("Bank", "2"),
-            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.enterPaymentLineAmount("Bank", "2", true, { amount: 2 }),
+            PaymentScreen.clickPaymentMethod("Cash", true, { amount: 6 }),
             PaymentScreen.clickValidate(),
             Chrome.clickOrders(),
             TicketScreen.selectFilter("Paid"),
@@ -232,7 +222,6 @@ registry.category("web_tour.tours").add("test_edit_payments_with_tip", {
 });
 
 registry.category("web_tour.tours").add("test_tip_after_payment", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -242,38 +231,38 @@ registry.category("web_tour.tours").add("test_tip_after_payment", {
             ProductScreen.clickPayButton(false),
             // case 1: remaining < 0 => increase PaymentLine amount
             PaymentScreen.clickPaymentMethod("Bank"),
-            PaymentScreen.enterPaymentLineAmount("Bank", "1"),
+            PaymentScreen.enterPaymentLineAmount("Bank", "1", true, { amount: 1 }),
             PaymentScreen.clickTipButton(),
-            {
-                content: "click numpad button: 1",
-                trigger: ".modal div.numpad button:contains(/^1/)",
-                run: "click",
-            },
-            Dialog.confirm(),
+            NumberPopup.enterValue("1"),
+            Dialog.proceed({ title: "add tip", button: "confirm" }),
             PaymentScreen.selectedPaymentlineHas("Bank", "2.00"),
             // case 2: remaining >= 0 and remaining >= tip => don't change PaymentLine amount
             PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.selectedPaymentlineHas("Bank", "2.00"),
+            PaymentScreen.checkPaymentLines([
+                { name: "bank", amount: "2.00" },
+                { name: "bank", amount: "2.00", seleced: true },
+            ]),
             PaymentScreen.clickPaymentlineDelButton("Bank", "2.00"),
-            PaymentScreen.enterPaymentLineAmount("Bank", "5"),
+            PaymentScreen.checkPaymentLines([{ name: "bank", amount: "2.00", seleced: true }]),
+            PaymentScreen.enterPaymentLineAmount("Bank", "5", true, { amount: 5 }),
+            PaymentScreen.checkPaymentLines([{ name: "bank", amount: "5.00", seleced: true }]),
             PaymentScreen.clickTipButton(),
-            {
-                content: "click numpad button: 2",
-                trigger: ".modal div.numpad button:contains(/^2/)",
-                run: "click",
-            },
-            Dialog.confirm(),
-            PaymentScreen.selectedPaymentlineHas("Bank", "5.00"),
+            NumberPopup.enterValue("2"),
+            Dialog.proceed({ title: "change tip", button: "confirm" }),
+            PaymentScreen.checkPaymentLines([{ name: "bank", amount: "5.00", seleced: true }]),
             // case 3: remaining >= 0 and remaining < tip => increase by the difference
             PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.checkPaymentLines([
+                { name: "bank", amount: "5.00" },
+                { name: "bank", amount: "0.00", seleced: true },
+            ]),
             PaymentScreen.clickPaymentlineDelButton("Bank", "5.00"),
-            PaymentScreen.enterPaymentLineAmount("Bank", "5"),
+            PaymentScreen.checkPaymentLines([{ name: "bank", amount: "0.00", seleced: true }]),
+            PaymentScreen.enterPaymentLineAmount("Bank", "5", true, { amount: 5 }),
             PaymentScreen.clickTipButton(),
-            {
-                content: "click numpad button: 3",
-                trigger: ".modal div.numpad button:contains(/^3/)",
-                run: "click",
-            },
-            Dialog.confirm(),
+            NumberPopup.enterValue("3"),
+            Dialog.proceed({ title: "change tip", button: "confirm" }),
             PaymentScreen.selectedPaymentlineHas("Bank", "6.00"),
             Chrome.endTour(),
         ].flat(),

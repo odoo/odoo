@@ -204,6 +204,10 @@ export function clickPayButton(shouldCheck = true) {
         steps.push({
             content: "now in payment screen",
             trigger: ".pos-content .payment-screen",
+            async run() {
+                // Wait this.pos_order_id is set
+                await new Promise((r) => setTimeout(r, 500));
+            },
         });
     }
     return steps;

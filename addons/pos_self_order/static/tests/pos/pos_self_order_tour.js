@@ -23,7 +23,7 @@ registry.category("web_tour.tours").add("test_pos_self_order_table_transfer", {
     steps: () =>
         [
             Chrome.startPoS(),
-            FloorScreen.clickTable("1"),
+            FloorScreen.clickTable("1", "direct sale"),
             ProductScreen.isShown(),
             ProductScreen.clickControlButton("Transfer"),
             FloorScreen.clickTable("2"),

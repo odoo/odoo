@@ -10,10 +10,8 @@ import * as ChromePos from "@point_of_sale/../tests/pos/tours/utils/chrome_util"
 import * as ChromeRestaurant from "@pos_restaurant/../tests/tours/utils/chrome";
 const Chrome = { ...ChromePos, ...ChromeRestaurant };
 import { registry } from "@web/core/registry";
-import { delay } from "@web/core/utils/concurrency";
 
 registry.category("web_tour.tours").add("ControlButtonsTour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             // Test merging table, transfer is already tested in pos_restaurant_sync_second_login.
@@ -30,13 +28,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             ProductScreen.selectedOrderlineHas("Coca-Cola", "1"),
 
             ProductScreen.clickControlButton("Transfer"),
-            {
-                trigger: ".table:contains(2)",
-                async run(helpers) {
-                    await delay(500);
-                    await helpers.click();
-                },
-            },
+            FloorScreen.clickTable("2"),
             Order.hasLine({ productName: "Water", quantity: "5" }),
             Order.hasLine({ productName: "Minute Maid", quantity: "3" }),
             Order.hasLine({ productName: "Coca-Cola", quantity: "1" }),
@@ -44,6 +36,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             // Test SplitBillButton
             ProductScreen.clickControlButton("Split"),
             SplitBillScreen.clickBack(),
+            ProductScreen.isShown(),
             ProductScreen.clickLine("Water", "5"),
             ProductScreen.addInternalNote("test note", "Note"),
             Order.hasLine({
@@ -67,17 +60,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
 
             // Test GuestButton
             ProductScreen.clickControlButton("Guest"),
-            {
-                content: `click numpad button: 1`,
-                trigger: ".modal div.numpad button:text(1)",
-                run: "click",
-            },
-            {
-                content: `click numpad button: 5`,
-                trigger: ".modal div.numpad button:text(5)",
-                run: "click",
-            },
-            NumberPopup.isShown("15"),
+            NumberPopup.enterValue("15"),
             Dialog.confirm(),
             ProductScreen.guestNumberIs("15"),
             {
@@ -85,12 +68,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
                 trigger: `.modal .control-buttons .o_guests_button:contains("15")`,
                 run: "click",
             },
-            {
-                content: `click numpad button: 5`,
-                trigger: ".modal div.numpad button:text(5)",
-                run: "click",
-            },
-            NumberPopup.isShown("5"),
+            NumberPopup.enterValue("5"),
             Dialog.confirm(),
             ProductScreen.guestNumberIs("5"),
 
@@ -104,6 +82,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
 
             // Test moving order to a table on a different floor
             FloorScreen.clickTable("5"),
+            ProductScreen.orderIsEmpty(),
             ProductScreen.addOrderline("Water", "5", "2", "10.0"),
             ProductScreen.clickControlButton("Transfer"),
             FloorScreen.clickFloor("Second Floor"),
