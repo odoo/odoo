@@ -678,6 +678,7 @@ test("activity updates are shared between tabs", async () => {
     ]);
     await click(".o-mail-Activity:eq(0) button:text(Cancel)");
     await expect.waitForSteps([`DELETE - ${firstActivityId}`]);
+    await contains(".o-mail-Activity", { count: 1 });
     await contains(".o-mail-Activity-info:has(:text(“Say hello to Bob”))");
     await click(".o-mail-Activity-markDone");
     await click(".o-mail-ActivityMarkAsDone button:text(Done)");
