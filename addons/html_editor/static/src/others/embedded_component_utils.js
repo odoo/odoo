@@ -1,5 +1,5 @@
 import { onRendered, reactive, useComponent, useRef, useState } from "@web/owl2/utils";
-import { onMounted, onPatched, onWillDestroy, toRaw } from "@odoo/owl";
+import { effect, onMounted, onPatched, onWillDestroy, toRaw } from "@odoo/owl";
 
 /**
  * @typedef {HTMLElement} HostElement host element for an embedded component
@@ -291,6 +291,7 @@ export class StateChangeManager {
      */
     constructor(config) {
         this.config = config;
+        this.effects = new WeakMap();
     }
     setup() {
         const defaultState = sortedCopy(this.getEmbeddedState());
@@ -318,6 +319,10 @@ export class StateChangeManager {
      * handled differently when unmounted.
      */
     setupUnmounted() {
+        if (this.embeddedState) {
+            this.effects.get(this.embeddedState)();
+            this.effects.delete(this.embeddedState);
+        }
         this.previousEmbeddedState = null;
         this.state = null;
         this.embeddedState = null;
@@ -336,16 +341,17 @@ export class StateChangeManager {
      */
     constructEmbeddedState(state) {
         this.state = state;
-        this.embeddedState = reactive(
-            this.assignDeepProxyCopy({}, state),
-            this.batchedChangeState()
-        );
+        this.embeddedState = reactive(this.assignDeepProxyCopy({}, state));
         this.embeddedStateProxy = new Proxy(
             this.embeddedState,
             embeddedStateProxyHandler(state, this)
         );
-        // First subscription to changes.
-        observeAllKeys(this.embeddedStateProxy);
+        const onStateChanged = this.batchedChangeState();
+        const disposeEffect = effect(() => {
+            observeAllKeys(this.embeddedStateProxy);
+            onStateChanged();
+        });
+        this.effects.set(this.embeddedState, disposeEffect);
         this.isLiveComponent = true;
         return this.embeddedStateProxy;
     }
