@@ -120,7 +120,10 @@ class PaymentTransaction(models.Model):
         }
 
         response_content = self._send_api_request(
-            "POST", "/payments/{}/captures", json=data, endpoint_param=self.provider_reference
+            "POST",
+            "/payments/{}/captures",
+            json=data,
+            endpoint_param=self.source_transaction_id.provider_reference,
         )
 
         # Process the capture request response.
@@ -149,7 +152,10 @@ class PaymentTransaction(models.Model):
             "reference": self.reference,
         }
         response_content = self._send_api_request(
-            "POST", "/payments/{}/cancels", json=data, endpoint_param=self.provider_reference
+            "POST",
+            "/payments/{}/cancels",
+            json=data,
+            endpoint_param=self.source_transaction_id.provider_reference,
         )
 
         # Process the void request response.
