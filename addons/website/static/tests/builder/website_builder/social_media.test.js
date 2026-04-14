@@ -72,7 +72,7 @@ async function testSocialSnippetOptions(snippetName, containerTitle, iconName) {
     expect(":iframe .no_icon_color").toHaveCount(1);
     const textColor = "rgb(255, 0, 0)";
     core.getEditableContent().style.color = textColor;
-    const icon = await queryOne(`${snippetSelector} a .fa-${iconName}`);
+    const icon = await queryOne(`${snippetSelector} a [data-icon="oi_${iconName}"]`);
     if (icon) {
         const iconColor = getComputedStyle(icon).color;
         expect(iconColor).toBe(textColor);
@@ -105,14 +105,14 @@ async function testSocialSnippetOptions(snippetName, containerTitle, iconName) {
     );
     await edit("70");
     await animationFrame();
-    expect(`${snippetSelector} > a > i`).toHaveStyle("--fa-icon-size: 4.375rem");
+    expect(`${snippetSelector} > a > i`).toHaveStyle("--oi-icon-size: 4.375rem");
 
     await click(
         `[data-container-title='${containerTitle}'] [data-label='Size'] input[type='number']`
     );
     await edit("100");
     await animationFrame();
-    expect(`${snippetSelector} > a > i`).toHaveStyle("--fa-icon-size: 6.25rem");
+    expect(`${snippetSelector} > a > i`).toHaveStyle("--oi-icon-size: 6.25rem");
 }
 
 test("add social medias", async () => {
