@@ -145,7 +145,7 @@ class StockPicking(models.Model):
         for picking in self:
             if picking.country_code != 'TR' or picking.picking_type_code != 'outgoing' or picking.state != 'done':
                 continue
-            else:
+            elif not picking.partner_id:
                 picking.message_post(
                     body=_("e-Dispatch will not be generated as the Delivery Address is not set.")
                 )
