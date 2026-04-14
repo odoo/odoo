@@ -1327,8 +1327,15 @@ class ProductTemplate(models.Model):
             "sequence": 20,
         }
 
+    def _search_fetch(self, search_detail, search, offset, limit, order):
+        results, count = super()._search_fetch(search_detail, search, offset, limit, order)
+        return results.with_context(search_term=search), count
+
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        search_term = self.env.context.get("search_term", "")
+        search_words = search_term.lower().split() if search_term else []
+
         for product, data in zip(self, results_data):
             combination_info = product._get_combination_info(only_template=True)
             values = product.mapped("attribute_line_ids.value_ids")
@@ -1338,6 +1345,17 @@ class ProductTemplate(models.Model):
             if price:
                 data["price"] = price
             data["image_url"] = "/web/image/product.template/%s/image_128" % data["id"]
+
+            if search_words and values:
+                matched_values = values.filtered(
+                    lambda attribute_value: any(
+                        word in (attribute_value.name or "").lower() for word in search_words
+                    )
+                )
+                if matched_values:
+                    data["website_url"] = product._get_product_url(
+                        grouped_attributes_values=matched_values.grouped("attribute_id")
+                    )
         return results_data
 
     def _search_render_results_prices(self, mapping, combination_info):
