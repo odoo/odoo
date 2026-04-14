@@ -1221,6 +1221,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         if not self.env['ir.module.module'].search([('name', '=', 'account_accountant'), ('state', '=', 'installed')]):
             self.skipTest("This test requires the installation of the account_account module")
 
+        self.env['ir.config_parameter'].sudo().set_param('sale.invoiced_timesheet', 'approved')
+
         product = self.env['product.product'].create({
             'name': "Service delivered, create task in global project",
             'standard_price': 30,
@@ -1244,7 +1246,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         })
         sale_order.action_confirm()
         task = sale_order.tasks_ids
-        self.env['account.analytic.line'].create({
+        timesheets = self.env['account.analytic.line'].create([{
             'name': 'Test Line',
             'date': '2026-01-08',
             'project_id': task.project_id.id,
@@ -1252,7 +1254,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'unit_amount': 2,
             'employee_id': self.employee_user.id,
             'company_id': self.company_data['company'].id,
-        })
+        }] * 2)
+        timesheets[0].validated = True
         context = {
             'active_model': 'sale.order',
             'active_ids': [self.so.id],
