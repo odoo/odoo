@@ -51,8 +51,12 @@ class ProductTemplate(models.Model):
             else:
                 res['in_store_stock_data'] = utils.format_product_stock_values(
                     product_or_template.sudo(),
-                    free_qty=website.sudo()._get_max_in_store_product_available_qty(
-                        product_or_template.sudo()
-                    )
+                    free_qty=max(
+                        website._get_product_available_qty(
+                            product_or_template.sudo(),
+                            warehouse_id=wh.id,
+                        )
+                        for wh in website.sudo().in_store_dm_id.warehouse_ids
+                    ),
                 )
         return res

@@ -6,6 +6,16 @@
         <div id="threshold_message" position="attributes">
             <attribute name="t-elif" add="!show_click_and_collect_availability" separator=" and "/>
         </div>
+
+        <div id="out_of_stock_message" position="attributes">
+            <attribute name="t-attf-class" add="{{ show_click_and_collect_availability ? 'd-none' : '' }}" separator=" "/>
+        </div>
+    </t>
+
+    <t t-inherit="website_sale_stock.product_out_of_stock_badge" t-inherit-mode="extension">
+        <div id="product_stock_badge" position="attributes">
+            <attribute name="t-if" add="!show_click_and_collect_availability" separator=" and "/>
+        </div>
     </t>
 
 </templates>

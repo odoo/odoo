@@ -12,7 +12,7 @@ from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 @tagged('post_install', '-at_install')
 class TestProductTemplate(ClickAndCollectCommon):
 
-    def test_out_of_stock_product_available_when_allow_continue_selling(self):
+    def test_out_of_stock_product_not_available_when_allow_continue_selling(self):
         product = self._create_product(allow_out_of_stock_order=True)
         self.free_delivery.is_published = True
         with MockRequest(self.env, website=self.website, sale_order_id=self.cart.id):
@@ -23,8 +23,8 @@ class TestProductTemplate(ClickAndCollectCommon):
                 uom=self.uom_unit,
                 website=self.website,
             )
-        self.assertTrue(comb_info['delivery_stock_data']['in_stock'])
-        self.assertTrue(comb_info['in_store_stock_data']['in_stock'])
+        self.assertFalse(comb_info['delivery_stock_data']['in_stock'])
+        self.assertFalse(comb_info['in_store_stock_data']['in_stock'])
 
     def test_click_and_collect_unavailable_for_product_with_excluded_tag(self):
         """Pick Up in Store hidden when product has a tag excluded by the delivery method."""

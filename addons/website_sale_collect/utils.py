@@ -12,15 +12,16 @@ def format_product_stock_values(product, wh_id=None, free_qty=None):
     :rtype: dict
     """
     if product.is_product_variant:  # Only available for `product.product` records.
+        website = product.env["website"].get_current_website()
         if free_qty is None:
-            free_qty = product.with_context(warehouse_id=wh_id).free_qty
+            free_qty = website._get_product_available_qty(product, warehouse_id=wh_id)
 
         in_stock = free_qty > 0
         show_quantity = (
             product.show_availability and in_stock and product.available_threshold >= free_qty
         )
         return {
-            'in_stock': in_stock or product.allow_out_of_stock_order,
+            'in_stock': in_stock or not product.is_storable,
             'show_quantity': show_quantity,
             'quantity': free_qty,
         }

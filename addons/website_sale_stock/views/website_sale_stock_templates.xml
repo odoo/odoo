@@ -12,8 +12,12 @@
 
     <template id="website_sale_stock_product" inherit_id="website_sale.cta_wrapper" priority="4">
         <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="before">
-            <div class="availability_messages o_not_editable"/>
+            <div class="out_of_stock_messages o_not_editable"/>
             <input id="wsale_user_email" type="hidden" t-att-value="user_email"/>
+        </xpath>
+
+        <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="after">
+            <div class="availability_messages o_not_editable"/>
         </xpath>
     </template>
 

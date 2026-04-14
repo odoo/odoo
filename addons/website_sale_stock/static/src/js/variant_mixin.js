@@ -50,7 +50,7 @@ VariantMixin._onChangeCombinationStock = async function (ev, parent, combination
                 addQtyInput.value = addQtyInput.dataset.max;
             }
         }
-        if (combination.free_qty < 1) {
+        if (combination.free_qty < 1 && !combination.is_rental) {
             ctaWrapper.classList.replace('d-flex', 'd-none');
             ctaWrapper.classList.add('out_of_stock');
         }
@@ -63,7 +63,7 @@ VariantMixin._onChangeCombinationStock = async function (ev, parent, combination
                 addQtyInput.value = addQtyInput.dataset.max;
             }
         }
-        if (combination.max_combo_quantity < 1) {
+        if (combination.max_combo_quantity < 1 && !combination.is_rental) {
             ctaWrapper.classList.replace('d-flex', 'd-none');
             ctaWrapper.classList.add('out_of_stock');
         }
@@ -83,7 +83,7 @@ VariantMixin._onChangeCombinationStock = async function (ev, parent, combination
     }
 
     document.querySelector('.oe_website_sale')
-        .querySelectorAll('.availability_message_' + combination.product_template)
+        .querySelectorAll('#product_stock_badge, #product_stock_availability')
         .forEach(el => el.remove());
     if (combination.out_of_stock_message) {
         combination.out_of_stock_message = markup(combination.out_of_stock_message);
@@ -91,9 +91,13 @@ VariantMixin._onChangeCombinationStock = async function (ev, parent, combination
         setElementContent(outOfStockMessage, combination.out_of_stock_message);
         combination.has_out_of_stock_message = !!outOfStockMessage.textContent.trim();
     }
+    this.el.querySelector('div.out_of_stock_messages')?.append(renderToFragment(
+        'website_sale_stock.product_out_of_stock_badge', combination
+    ));
     this.el.querySelector('div.availability_messages').append(renderToFragment(
         'website_sale_stock.product_availability', combination
     ));
+    this.env.bus.trigger('updateCombinationInfo', combination);
 };
 
 VariantMixin._getUnavailableQty = async function (combination) {
