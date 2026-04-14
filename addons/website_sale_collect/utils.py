@@ -1,15 +1,17 @@
 import math
 
 
-def format_product_stock_values(product, wh_id=None, uom=None, free_qty=None, cart_qty=None):
+def format_product_stock_values(
+    product, uom=None, free_qty=None, cart_qty=None, **kwargs
+):
     """Format product stock values for the location selector.
 
     :param product.product|product.template product: The product whose stock values to format.
-    :param int wh_id: The warehouse whose stock to check for the given product.
     :param uom.uom uom: The unit of measure to use for the quantity. If not given, the product's.
     :param int free_qty: The free quantity of the product. If not given, calculated from the
                          warehouse.
     :param int cart_qty: The quantity of the product in the cart.
+    :param dict kwargs: additional values given for inherited models.
     :return: The formatted product stock values.
     :rtype: dict
     """
@@ -17,7 +19,7 @@ def format_product_stock_values(product, wh_id=None, uom=None, free_qty=None, ca
         uom = uom or product.uom_id
         # Only available for `product.product` records.
         if free_qty is None:
-            free_qty = product.with_context(warehouse_id=wh_id).free_qty
+            free_qty = product._get_free_qty(**kwargs)
         if cart_qty is not None:
             free_qty -= cart_qty or 0
         free_qty_in_uom = max(
@@ -29,7 +31,7 @@ def format_product_stock_values(product, wh_id=None, uom=None, free_qty=None, ca
             product.show_availability and in_stock and product.available_threshold >= free_qty
         )
         return {
-            "in_stock": in_stock or product.allow_out_of_stock_order,
+            "in_stock": in_stock or not product.is_storable,
             "uom_name": uom.name,
             "show_quantity": show_quantity,
             "quantity": free_qty_in_uom,

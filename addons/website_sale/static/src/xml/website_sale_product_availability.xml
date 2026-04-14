@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <templates>
+    <t t-name="website_sale.product_out_of_stock_badge">
+        <div
+            t-if="this.is_storable and !this.prevent_sale"
+            id="product_stock_badge"
+        >
+            <div
+                t-if="this.free_qty lte 0 and !this.cart_qty"
+                t-attf-class="availability_message_#{this.product_template} d-flex flex-column gap-2 mb-4"
+            >
+                <div id="out_of_stock_message_badge" class="d-flex flex-column gap-1 align-items-start">
+                    <t t-if="this.has_out_of_stock_message and !this.allow_out_of_stock_order">
+                        <div class="d-inline-flex align-items-center badge text-start text-bg-danger text-wrap">
+                            <i class="fa fa-circle text-danger me-2"/>
+                            <span>
+                                <t t-out="this.out_of_stock_message"/>
+                            </span>
+                        </div>
+                    </t>
+                    <t t-elif="!this.allow_out_of_stock_order">
+                        <div class="badge text-bg-danger">
+                            <i class="fa fa-circle me-2 text-danger"/>Out of Stock
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
     <t t-name="website_sale.product_availability">
         <div
             t-if="this.is_storable and !this.prevent_sale"
@@ -11,15 +38,13 @@
                 t-attf-class="availability_message_#{this.product_template} d-flex flex-column gap-2 mb-2"
             >
                 <div id="out_of_stock_message" class="d-flex flex-column gap-1 align-items-start">
-                    <t t-if="!this.allow_out_of_stock_order">
-                        <div class="badge text-bg-danger">
-                            <i class="fa fa-circle me-2 text-danger"/>Out of Stock
-                        </div>
-                    </t>
-                    <t t-if="this.has_out_of_stock_message" t-out="this.out_of_stock_message"/>
+                    <t
+                        t-if="this.allow_out_of_stock_order and this.has_out_of_stock_message"
+                        t-out="this.out_of_stock_message"
+                    />
                 </div>
                 <div id="stock_notification_div" t-if="!this.allow_out_of_stock_order">
-                    <div class="btn btn-link px-0" t-if="!this.has_stock_notification"
+                    <div class="btn btn-link p-0" t-if="!this.has_stock_notification"
                          id="product_stock_notification_message">
                         <i class="fa fa-envelope-o me-2"/>Get notified when back in stock
                     </div>
@@ -75,7 +100,7 @@
         <div
             t-if="this.is_storable and !this.free_qty and !this.allow_out_of_stock_order and !this.prevent_sale"
             id="stock_wishlist_message"
-            t-attf-class="availability_message_#{this.product_template} d-flex align-items-center flex-column flex-md-row mb-2"
+            t-attf-class="availability_message_#{this.product_template} d-flex align-items-center flex-column flex-md-row mb-4"
         >
             <button
                 t-if="!this.is_in_wishlist"

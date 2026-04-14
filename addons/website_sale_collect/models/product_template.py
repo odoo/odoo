@@ -10,12 +10,12 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     def _get_additional_combination_info(
-        self, product_or_template, quantity, uom, website, pricelist, fiscal_position
+        self, product_or_template, quantity, uom, website, pricelist, fiscal_position, **kwargs
     ):
         """Override of `website_sale` to add information on whether Click & Collect is enabled and
         on the stock of the product."""
         res = super()._get_additional_combination_info(
-            product_or_template, quantity, uom, website, pricelist, fiscal_position
+            product_or_template, quantity, uom, website, pricelist, fiscal_position, **kwargs
         )
         in_store_dm = website.sudo().in_store_dm_id
         if (
@@ -49,7 +49,11 @@ class ProductTemplate(models.Model):
             )
             if valid_delivery_methods:
                 res["delivery_stock_data"] = utils.format_product_stock_values(
-                    product_sudo, wh_id=website.warehouse_id.id, uom=uom, cart_qty=cart_qty
+                    product_sudo,
+                    warehouse_id=website.warehouse_id.id,
+                    uom=uom,
+                    cart_qty=cart_qty,
+                    **kwargs,
                 )
             else:
                 res["delivery_stock_data"] = {}
@@ -64,17 +68,22 @@ class ProductTemplate(models.Model):
                     res["in_store_stock_data"] = utils.format_product_stock_values(
                         product_sudo,
                         uom=uom,
-                        wh_id=order_sudo.partner_shipping_id.pickup_location_data["id"],
+                        warehouse_id=order_sudo.partner_shipping_id.pickup_location_data["id"],
                         cart_qty=cart_qty,
+                        **kwargs,
                     )
                 else:
                     res["in_store_stock_data"] = utils.format_product_stock_values(
                         product_sudo,
                         uom=uom,
-                        free_qty=website.sudo()._get_max_in_store_product_available_qty(
-                            product_sudo
+                        free_qty=max(
+                            product_sudo._get_free_qty(
+                                warehouse_id=wh.id, **kwargs
+                            )
+                            for wh in website.sudo().in_store_dm_id.warehouse_ids
                         ),
                         cart_qty=cart_qty,
+                        **kwargs
                     )
             else:
                 # In-store dm is not compatible with the product.

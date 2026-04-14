@@ -9,7 +9,7 @@ registry.category("web_tour.tours").add('website_sale_stock.product_warning_mult
             expectUnloadPage: true,
         }, {
             content: "Check out of stock message",
-            trigger: '#out_of_stock_message:contains("Hors-stock")',
+            trigger: '#out_of_stock_message_badge:contains("Hors-stock"), [name="click_and_collect_availability"]:contains("Hors-stock")',
         }, {
             content: "Check price",
             trigger: 'span:contains("123,45")',
@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add('website_sale_stock.product_warning_mult
             expectUnloadPage: true,
         }, {
             content: "Check out of stock message",
-            trigger: '#out_of_stock_message:contains("Out of stock")',
+            trigger: '#out_of_stock_message_badge:contains("Out of stock"), [name="click_and_collect_availability"]:contains("Out of stock")',
         }, {
             content: "Check price",
             trigger: 'span:contains("123.45")',
@@ -39,7 +39,7 @@ registry.category("web_tour.tours").add('website_sale_stock.product_warning_mult
             expectUnloadPage: true,
         }, {
             content: "Check out of stock message",
-            trigger: '#out_of_stock_message:contains("Hors-stock")',
+            trigger: '#out_of_stock_message_badge:contains("Hors-stock"), [name="click_and_collect_availability"]:contains("Hors-stock")',
         }, {
             content: "Check price",
             trigger: 'span:contains("123,45")',

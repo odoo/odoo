@@ -30,6 +30,13 @@
                             <i class="fa fa-fw fa-circle text-success"/> Available
                         </div>
                     </t>
+                    <div
+                        t-elif="this.state.hasOutOfStockMessage"
+                        class="d-flex align-items-baseline text-wrap gap-1 text-muted"
+                    >
+                        <i class="fa fa-fw fa-circle text-danger"/>
+                        <t t-out="this.state.outOfStockMessage"/>
+                    </div>
                     <div t-else="" class="text-muted">
                         <i class="fa fa-fw fa-circle text-danger"/> Not available
                     </div>
@@ -66,6 +73,13 @@
                     <div t-else="" class="text-muted">
                         <i class="fa fa-fw fa-circle text-success"/> Available
                     </div>
+                </div>
+                <div
+                    t-elif="this.state.hasOutOfStockMessage"
+                    class="d-flex align-items-baseline text-wrap gap-1 text-muted"
+                >
+                    <i class="fa fa-fw fa-circle text-danger"/>
+                    <t t-out="this.state.outOfStockMessage"/>
                 </div>
                 <div t-else="" class="text-muted">
                     <i class="fa fa-fw fa-circle text-danger"/> Not available

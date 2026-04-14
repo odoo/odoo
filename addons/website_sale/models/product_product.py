@@ -328,6 +328,9 @@ class ProductProduct(models.Model):
         self.ensure_one()
         return partner in self.stock_notification_partner_ids
 
+    def _get_free_qty(self, **_kwargs):
+        return self.qty_available - self.outgoing_qty
+
     def _get_max_quantity(self, website, sale_order, **kwargs):
         """Return The max quantity of a product.
         It is the difference between the quantity that's free to use and the quantity that's already

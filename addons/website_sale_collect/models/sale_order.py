@@ -133,7 +133,7 @@ class SaleOrder(models.Model):
         """
         return not self._get_insufficient_stock_data(wh_id, add_alerts=add_alerts)
 
-    def _get_insufficient_stock_data(self, wh_id, *, add_alerts=False):
+    def _get_insufficient_stock_data(self, wh_id, *, add_alerts=False, **kwargs):
         """Return the mapping of order lines with insufficient stock in the given warehouse to their
         maximum available quantity in the line's UoM.
         If there are multiple order lines for the same product, consider the sum of their
@@ -148,7 +148,9 @@ class SaleOrder(models.Model):
         for product, ols in self.order_line.grouped("product_id").items():
             if not product.is_storable or product.allow_out_of_stock_order:
                 continue
-            free_qty = product.with_context(warehouse_id=wh_id).free_qty
+            free_qty = product.sudo()._get_free_qty(
+                warehouse_id=wh_id, **kwargs
+            )
             for ol in ols:
                 free_qty_in_uom = product.uom_id._compute_quantity(
                     free_qty, ol.product_uom_id, rounding_method="DOWN"

@@ -946,7 +946,9 @@ class Website(models.Model):
             if not all_abandoned_carts:
                 continue
 
-            abandoned_carts = all_abandoned_carts._filter_can_send_abandoned_cart_mail()
+            abandoned_carts = all_abandoned_carts.with_context(
+                website_id=website.id
+            )._filter_can_send_abandoned_cart_mail()
             # Mark abandoned carts that failed the filter as sent to avoid rechecking them more than
             # once.
             (all_abandoned_carts - abandoned_carts).cart_recovery_email_sent = True
@@ -1147,7 +1149,7 @@ class Website(models.Model):
             for website in self.filtered(lambda w: w._default_feed_is_valid())
         ])
 
-    def _get_product_available_qty(self, product, **_kwargs):
+    def _get_product_available_qty(self, product, **kwargs):
         """Give the available quantity of a given product.
 
         :param product: product.product record
@@ -1155,12 +1157,4 @@ class Website(models.Model):
         :return: available quantity
         :rtype: float
         """
-        return product.qty_available - product.outgoing_qty
-
-    @api.model
-    def _get_settings_to_copy_onto_new_default_website(self):
-        """ Provides a list of settings that should always be set on the default
-        website. When the default website changes, a check is performed. If some
-        of these settings are not already set on the new default website, they
-        are copied from the previous default website."""
-        return super()._get_settings_to_copy_onto_new_default_website() + ['salesperson_id', 'salesteam_id']
+        return product._get_free_qty(**kwargs)

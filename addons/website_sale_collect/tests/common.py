@@ -28,13 +28,14 @@ class ClickAndCollectCommon(PaymentCustomCommon, WebsiteSaleStockCommon):
             is_published=True,
         )
 
-    def _create_in_store_delivery_order(self, **values):
+    @classmethod
+    def _create_in_store_delivery_order(cls, **values):
         default_values = {
-            "partner_id": self.partner.id,
-            "website_id": self.website.id,
+            "partner_id": cls.partner.id,
+            "website_id": cls.website.id,
             "order_line": [
-                Command.create({"product_id": self.storable_product.id, "product_uom_qty": 5.0})
+                Command.create({"product_id": cls.storable_product.id, "product_uom_qty": 5.0})
             ],
-            "carrier_id": self.in_store_dm.id,
+            "carrier_id": cls.in_store_dm.id,
         }
-        return self.env["sale.order"].create(dict(default_values, **values))
+        return cls.env["sale.order"].create(dict(default_values, **values))
