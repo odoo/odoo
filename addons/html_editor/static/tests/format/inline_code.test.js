@@ -137,6 +137,7 @@ test("should open toolbar for mixed selection and apply formatting outside inlin
     // Apply text color should still affect only the non-inline-code portion.
     await click(".o-we-toolbar .o-select-color-foreground");
     await expectElementCount(".o_font_color_selector", 1);
+    await contains(".btn:contains('Solid')").click();
     await contains(".o_color_button[data-color='#0000FF']").click();
     expect(getContent(el)).toBe(
         `<p>abc<code class="o_inline_code">t[est</code><font style="color: rgb(0, 0, 255);"><strong>de]</strong></font>f</p>`
