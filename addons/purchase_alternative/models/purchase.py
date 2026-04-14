@@ -22,11 +22,27 @@ class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
     purchase_group_id = fields.Many2one('purchase.order.group', index='btree_not_null')
-    alternative_po_ids = fields.One2many(
-        'purchase.order', related='purchase_group_id.order_ids', readonly=False,
+    alternative_po_ids = fields.Many2many(
+        'purchase.order', compute='_compute_alternative_po_ids', inverse='_inverse_alternative_po_ids', readonly=False,
         domain="[('id', '!=', id), ('state', 'in', ['draft', 'sent', 'to approve'])]",
         string="Alternative POs", check_company=True,
         help="Other potential purchase orders for purchasing products")
+
+    @api.depends('purchase_group_id.order_ids')
+    def _compute_alternative_po_ids(self):
+        for po in self:
+            po.alternative_po_ids = po.purchase_group_id.order_ids
+
+    def _inverse_alternative_po_ids(self):
+        for po in self:
+            if po.alternative_po_ids - po:  # has other alternative pos
+                pos_to_remove = po.purchase_group_id.order_ids - po.alternative_po_ids
+                group_orders = (po + po.alternative_po_ids + po.alternative_po_ids.alternative_po_ids) - pos_to_remove
+                purchase_group = group_orders.purchase_group_id[:1] or self.env['purchase.order.group'].create({})
+                purchase_group.order_ids = group_orders
+            else:
+                # write in purchase group isn't called so we have to manually unlink obsolete groups here
+                po.purchase_group_id.unlink()
 
     def button_confirm(self):
         if self.alternative_po_ids and not self.env.context.get('skip_alternative_check', False):
@@ -56,30 +72,6 @@ class PurchaseOrder(models.Model):
             else:
                 self.env['purchase.order.group'].create({'order_ids': [Command.set(origin_po_id.ids + orders.ids)]})
         return orders
-
-    def write(self, vals):
-        if vals.get('purchase_group_id', False):
-            # store in case linking to a PO with existing linkages
-            orig_purchase_group = self.purchase_group_id
-        result = super().write(vals)
-        if vals.get('alternative_po_ids', False):
-            if not self.purchase_group_id and len(self.alternative_po_ids + self) > len(self):
-                # this can create a new group + delete an existing one (or more) when linking to already linked PO(s), but this is
-                # simplier than additional logic checking if exactly 1 exists or merging multiple groups if > 1
-                self.env['purchase.order.group'].create({'order_ids': [Command.set(self.ids + self.alternative_po_ids.ids)]})
-            elif self.purchase_group_id and len(self.alternative_po_ids + self) <= 1:
-                # write in purchase group isn't called so we have to manually unlink obsolete groups here
-                self.purchase_group_id.unlink()
-        if vals.get('purchase_group_id', False):
-            # the write is for multiple POs => don't double count the POs of the final group
-            additional_groups = orig_purchase_group - self.purchase_group_id
-            if additional_groups:
-                additional_pos = (additional_groups.order_ids - self.purchase_group_id.order_ids)
-                additional_groups.unlink()
-                if additional_pos:
-                    self.purchase_group_id.order_ids |= additional_pos
-
-        return result
 
     def action_create_alternative(self):
         ctx = dict(**self.env.context, default_origin_po_id=self.id)
