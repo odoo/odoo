@@ -4398,7 +4398,7 @@ class AccountMove(models.Model):
 
                         if success or file_data['type'] == 'pdf' or file_data['attachment'].mimetype in ALLOWED_MIMETYPES:
                             (invoice.invoice_line_ids - existing_lines).is_imported = True
-                            if not extend_with_existing_lines:
+                            if not extend_with_existing_lines and not file_data.get('po_matching_done'):
                                 try:
                                     invoice.with_context(default_move_type=invoice.move_type)._link_bill_origin_to_purchase_orders(timeout=4)
                                 except (UserError, ValueError):
@@ -4406,7 +4406,6 @@ class AccountMove(models.Model):
                             invoices |= invoice
                             current_invoice = self.env['account.move']
                             add_file_data_results(file_data, invoice)
-                            self._post_process_link_to_purchase_order(invoice)
 
                 except RedirectWarning:
                     raise
@@ -4432,6 +4431,7 @@ class AccountMove(models.Model):
 
     @api.model
     def _post_process_link_to_purchase_order(self, invoice):
+        # DEPRECATED, will be removed in master
         # To be implemented in modules needing to process the invoice after it was linked (or not) to a PO
         pass
 

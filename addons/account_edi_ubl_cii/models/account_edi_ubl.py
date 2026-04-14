@@ -3045,6 +3045,89 @@ class AccountEdiUBL(models.AbstractModel):
             if not base_line['currency_id'].is_zero(base_line['tax_details']['total_included_currency'])
         ]
 
+    def _import_ubl_invoice_add_purchase_order(self, collected_values):
+        """
+        This method tries to find the potential purchase orders that could match the invoice we're currently importing
+        We need to do it before writing lines on invoice so that we know if we can group lines
+        """
+        if not self.module_installed('purchase'):
+            return
+
+        invoice_origin = collected_values['to_write'].get('invoice_origin', '')
+        po_references = [ref.strip() for ref in invoice_origin.split(',') if ref.strip()] if invoice_origin else []
+
+        # Get base lines total amount
+        AccountTax = self.env['account.tax']
+        base_lines = collected_values['base_lines']
+        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, lambda base_line, tax_data: True)
+        values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+        amount_total = sum(
+            values['total_excluded_currency'] + values['tax_amount_currency']
+            for values in values_per_grouping_key.values()
+        )
+
+        # Write po matching in collected values
+        collected_values['po_matching'] = {'amount_total': amount_total}
+        collected_values['po_matching']['potential_matching'] = self.env['account.move']._find_purchase_orders(
+            po_references,
+            collected_values['company'].id,
+            collected_values['customer_values'].get('customer', self.env['res.partner']).id,
+            amount_total,
+        )
+
+    def _import_ubl_invoice_group_lines(self, collected_values):
+        """
+        This method group lines based on base lines (no invoice_line_ids are written)
+        :param invoice_lines_created: bool, invoice line are already written on invoice
+        """
+        if collected_values['invoice']._context.get('ungroup_lines'):
+            return
+
+        # Check if there's a potential matching
+        if collected_values.get('po_matching', {}).get('potential_matching'):
+            return
+
+        if not self._is_last_bill_from_vendor_grouped(collected_values):
+            return
+
+        base_lines = collected_values['base_lines']
+        AccountTax = self.env['account.tax']
+
+        def aggregate_function(target_base_line, base_line):
+            target_base_line.setdefault('_aggregated_quantity', 0.0)
+            target_base_line['_aggregated_quantity'] += base_line['quantity']
+
+        def grouping_function(base_line):
+            return {
+                '_grouping_key': frozendict(AccountTax._prepare_base_line_grouping_key(base_line)),
+            }
+
+        base_lines = AccountTax._reduce_base_lines_with_grouping_function(
+            base_lines,
+            grouping_function=grouping_function,
+            aggregate_function=aggregate_function,
+        )
+
+    def _is_last_bill_from_vendor_grouped(self, collected_values):
+        if not (customer_values := collected_values['customer_values']):
+            return False
+
+        invoice = collected_values['invoice']
+        if invoice.journal_id.type == 'sale':
+            move_types = invoice.get_sale_types(include_receipts=True)
+        else:
+            move_types = invoice.get_purchase_types(include_receipts=True)
+
+        last_bill_from_vendor = invoice.search([
+            ('move_type', 'in', move_types),
+            ('partner_id', '=', customer_values['customer'].id),
+            ('state', '=', 'posted'),
+            ('id', '!=', invoice.id),
+            *invoice._check_company_domain(collected_values['company']),
+        ], order='create_date desc', limit=1)
+
+        return last_bill_from_vendor and last_bill_from_vendor._has_lines_grouped()
+
     def _import_ubl_invoice_write_collected_values(self, collected_values):
         invoice = collected_values['invoice']
         base_lines = collected_values['base_lines']
@@ -3203,6 +3286,41 @@ class AccountEdiUBL(models.AbstractModel):
             _logger.exception("Error while generating substitute PDF attachment for invoice %s", invoice.id)
         return additional_docs
 
+    def _import_ubl_invoice_match_and_set_purchase_order(self, collected_values):
+        """
+        This method get the potential purchase orders found in _import_ubl_invoice_add_purchase_order
+        and tries to match them with the current invoice
+        """
+        if not (po_matching := collected_values.get('po_matching')):
+            return
+
+        invoice = collected_values['invoice']
+        method, matched_po_lines, matched_inv_lines = invoice._match_potential_purchase_orders(
+            po_matching['potential_matching'], po_matching['amount_total'])
+
+        # we write the values of the po matched on the invoice and we store the result (matched or not) in collected values
+        # to group lines later if no match was done
+        collected_values['po_matching']['matched'] = invoice._write_values_from_po(method, matched_po_lines, matched_inv_lines)
+
+    def _import_ubl_invoice_group_lines_after(self, collected_values):
+        """
+        This method
+        """
+        if collected_values['invoice']._context.get('ungroup_lines'):
+            return
+
+        # Group if finally we couldn't match a PO in _import_ubl_invoice_match_and_set_purchase_order
+        matching = collected_values.get('po_matching')
+        if (
+            not matching  # not potential match -> we already grouped in _import_ubl_invoice_group_lines
+            or (matching and matching['matched'])  # we matched a PO -> no grouping
+        ):
+            return
+
+        invoice = collected_values['invoice']
+        if self._is_last_bill_from_vendor_grouped(collected_values):
+            invoice._group_lines_by_tax()
+
     def _import_ubl_invoice_post_processing(self, collected_values):
         # During the import, fill 'ubl_cii_xml_file' to be retrieved later if necessary.
         invoice = collected_values['invoice']
@@ -3287,8 +3405,19 @@ class AccountEdiUBL(models.AbstractModel):
         self._import_ubl_invoice_retrieve_taxes(collected_values)
         self._import_ubl_invoice_add_base_lines(collected_values)
 
+        # Search for potential PO to match
+        self._import_ubl_invoice_add_purchase_order(collected_values)
+
+        # First lines grouping (based on base_lines)
+        self._import_ubl_invoice_group_lines(collected_values)
+
         # End the invoice.
         self._import_ubl_invoice_write_collected_values(collected_values)
         self._import_ubl_invoice_fix_taxes_amounts(collected_values)
+        # Actually match the potential PO's
+        self._import_ubl_invoice_match_and_set_purchase_order(collected_values)
+        # Second lines grouping (based on invoice_line_ids)
+        self._import_ubl_invoice_group_lines_after(collected_values)
         self._import_ubl_invoice_post_processing(collected_values)
+        file_data['po_matching_done'] = True  # We already tried to match PO so no need to try it later again
         return True
