@@ -52,6 +52,8 @@ export class ClickAndCollectAvailability extends Component {
         this.state.deliveryStockData = combinationInfo.delivery_stock_data;
         this.state.active = combinationInfo.is_combination_possible;
         this.state.uomId = combinationInfo.uom_id;
+        this.state.hasOutOfStockMessage = combinationInfo.has_out_of_stock_message;
+        this.state.outOfStockMessage = combinationInfo.out_of_stock_message;
     }
 
     /**
@@ -63,8 +65,17 @@ export class ClickAndCollectAvailability extends Component {
         if (!this.state.active) { // Combination is not possible.
             return; // Do not open the location selector.
         }
+        this.dialog.add(LocationSelectorDialog, this._getLocationSelectorDialogProps());
+    }
+
+    /**
+     * Build the props to pass to the LocationSelectorDialog.
+     *
+     * @return {Object} Props for LocationSelectorDialog.
+     */
+    _getLocationSelectorDialogProps() {
         const { zip_code, country_code, id } = this.state.selectedLocationData;
-        this.dialog.add(LocationSelectorDialog, {
+        return {
             isProductPage: true,
             isFrontend: true,
             productId: this.state.productId,
@@ -74,16 +85,23 @@ export class ClickAndCollectAvailability extends Component {
             countryCode: country_code || this.props.countryCode,
             deliveryMethodId: this.props.deliveryMethodId,
             deliveryMethodType: this.props.deliveryMethodType,
-            save: async location => {
-                this.state.selectedLocationData = location;
-                this.state.inStoreStockData = location.additional_data.in_store_stock_data;
-                const jsonLocation = JSON.stringify(location);
-                // Set the in-store delivery method and the selected pickup location on the order.
-                await rpc(
-                    '/shop/set_click_and_collect_location', { pickup_location_data: jsonLocation }
-                );
-            },
-        });
+            save: this._saveSelectedLocation.bind(this),
+        }
+    }
+
+    /**
+     * Saves the selected pickup location and updates the current order.
+     *
+     * @param {Object} location - The location selected by the user.
+     */
+    async _saveSelectedLocation(location) {
+        this.state.selectedLocationData = location;
+        this.state.inStoreStockData = location.additional_data.in_store_stock_data;
+        const jsonLocation = JSON.stringify(location);
+        // Set the in-store delivery method and the selected pickup location on the order.
+        await rpc(
+            '/shop/set_click_and_collect_location', { pickup_location_data: jsonLocation }
+        );
     }
 
 }

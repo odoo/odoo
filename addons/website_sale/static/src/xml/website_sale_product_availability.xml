@@ -11,12 +11,23 @@
                 t-attf-class="availability_message_#{this.product_template} d-flex flex-column gap-2 mb-2"
             >
                 <div id="out_of_stock_message" class="d-flex flex-column gap-1 align-items-start">
-                    <t t-if="!this.allow_out_of_stock_order">
+                    <t
+                        t-if="this.allow_out_of_stock_order and this.has_out_of_stock_message"
+                        t-out="this.out_of_stock_message"
+                    />
+                    <t t-elif="this.has_out_of_stock_message">
+                        <div class="d-inline-flex align-items-center badge text-start text-bg-danger text-wrap">
+                            <i class="oi oi-filled me-2 text-danger" data-icon="circle"/>
+                            <span>
+                                <t t-out="this.out_of_stock_message"/>
+                            </span>
+                        </div>
+                    </t>
+                    <t t-elif="!this.allow_out_of_stock_order">
                         <div class="badge text-bg-danger">
                             <i class="oi oi-filled me-2 text-danger" data-icon="circle"/>Out of Stock
                         </div>
                     </t>
-                    <t t-if="this.has_out_of_stock_message" t-out="this.out_of_stock_message"/>
                 </div>
                 <div id="stock_notification_div" t-if="!this.allow_out_of_stock_order">
                     <div class="btn btn-link px-0" t-if="!this.has_stock_notification"

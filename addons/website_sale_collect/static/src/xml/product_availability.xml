@@ -3,8 +3,8 @@
 <templates>
 
     <t t-inherit="website_sale.product_availability" t-inherit-mode="extension">
-        <div id="threshold_message" position="attributes">
-            <attribute name="t-elif" add="!this.show_click_and_collect_availability" separator=" and "/>
+        <div id="product_stock_availability" position="attributes">
+            <attribute name="t-if" add="!this.show_click_and_collect_availability" separator=" and "/>
         </div>
     </t>
 

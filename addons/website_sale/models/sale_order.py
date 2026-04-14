@@ -1524,7 +1524,7 @@ class SaleOrder(models.Model):
         )
 
     def _get_free_qty(self, product):
-        return self.website_id._get_product_available_qty(product)
+        return self.website_id._get_product_available_qty(product, sale_order=self)
 
     def _all_product_available(self):
         """Whether all the products are available on the current website."""

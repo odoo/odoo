@@ -34,10 +34,10 @@ class ProductTemplate(models.Model):
         return prices
 
     def _get_additional_combination_info(
-        self, product_or_template, quantity, uom, website, pricelist, fiscal_position
+        self, product_or_template, quantity, uom, website, pricelist, fiscal_position, **kwargs
     ):
         combination_info = super()._get_additional_combination_info(
-            product_or_template, quantity, uom, website, pricelist, fiscal_position
+            product_or_template, quantity, uom, website, pricelist, fiscal_position, **kwargs
         )
         if (
             website

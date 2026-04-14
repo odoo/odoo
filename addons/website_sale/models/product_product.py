@@ -335,6 +335,15 @@ class ProductProduct(models.Model):
             )
         )
 
+    def _get_free_qty(self, **_kwargs):
+        """Return the free quantity of the product.
+
+        :param dict _kwargs: Optional data used in overrides of this method
+        :return: available quantity
+        :rtype: float
+        """
+        return self.qty_available - self.outgoing_qty
+
     def _get_max_quantity(self, website, sale_order, **kwargs):
         """Return The max quantity of a product.
         It is the difference between the quantity that's free to use and the quantity that's already

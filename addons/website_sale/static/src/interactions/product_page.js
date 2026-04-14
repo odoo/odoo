@@ -808,7 +808,7 @@ export class ProductPage extends Interaction {
                     addQtyInput.value = addQtyInput.dataset.max;
                 }
             }
-            if (combination.free_qty < 1 && !combination.prevent_sale) {
+            if (combination.free_qty < 1 && this._showOutOfStock(combination)) {
                 ctaWrapper.classList.replace('d-flex', 'd-none');
                 ctaWrapper.classList.add('out_of_stock');
             }
@@ -821,7 +821,7 @@ export class ProductPage extends Interaction {
                     addQtyInput.value = addQtyInput.dataset.max;
                 }
             }
-            if (combination.max_combo_quantity < 1 && !combination.prevent_sale) {
+            if (combination.max_combo_quantity < 1 && this._showOutOfStock(combination)) {
                 ctaWrapper.classList.replace('d-flex', 'd-none');
                 ctaWrapper.classList.add('out_of_stock');
             }
@@ -837,9 +837,9 @@ export class ProductPage extends Interaction {
             }
         }
 
-        this.el.querySelectorAll(
-            '.availability_message_' + combination.product_template
-        ).forEach(el => el.remove());
+        document.querySelector('.oe_website_sale')
+            .querySelector('#product_stock_availability')
+            ?.remove();
         if (combination.out_of_stock_message) {
             const outOfStockMessage = document.createElement('div');
             setElementContent(outOfStockMessage, combination.out_of_stock_message);
@@ -848,7 +848,9 @@ export class ProductPage extends Interaction {
         this.el.querySelector('div.availability_messages').append(renderToFragment(
             'website_sale.product_availability', combination
         ));
-        if (this.el.querySelector('.o_add_wishlist_dyn')) {
+        if (!this._showOutOfStock(combination)) {
+            this.el.querySelector('#stock_notification_div')?.classList.add('d-none')
+        } else if (this.el.querySelector('.o_add_wishlist_dyn')) {
             const messageEl = this.el.querySelector('div.availability_messages');
             if (messageEl && !this.el.querySelector('#stock_wishlist_message')) {
                 this.services['public.interactions'].stopInteractions(messageEl);
@@ -863,6 +865,16 @@ export class ProductPage extends Interaction {
 
     async _getUnavailableQty(combination) {
         return parseInt(combination.cart_qty);
+    }
+
+    /**
+     * Whether the combination should be displayed as out-of-stock when its free quantity runs out.
+     *
+     * @param {Object} combination
+     * @return {boolean}
+     */
+    _showOutOfStock(combination) {
+        return !combination.prevent_sale;
     }
 
     /**
