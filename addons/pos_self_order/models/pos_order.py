@@ -40,6 +40,11 @@ class PosOrder(models.Model):
         result = super().sync_from_ui(orders)
         order_ids = self.browse([order['id'] for order in result['pos.order'] if order.get('id')])
         self._send_notification(order_ids)
+
+        if not self.env.context.get('device_identifier'):
+            for order in order_ids:
+                if order.source in ('kiosk', 'mobile') and order.config_id.self_ordering_mode not in ['nothing', 'consultation'] and (order.config_id.self_ordering_pay_after == 'meal' or not order.config_id.has_valid_self_payment_method()):
+                    order.config_id._notify('SELF_ORDER_PRINT_REQ', {'order_id': order.id})
         return result
 
     def cancel_order_from_pos(self):
@@ -205,7 +210,7 @@ class PosOrder(models.Model):
             'access_token': order.get('access_token'),
             'customer_count': order.get('customer_count'),
             'self_ordering_table_id': table.id if table else False,
-            'last_order_preparation_change': order.get('last_order_preparation_change'),
+
             'date_order': str(fields.Datetime.now()),
             'amount_difference': order.get('amount_difference'),
             'amount_tax': order.get('amount_tax'),
