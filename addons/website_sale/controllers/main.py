@@ -2138,24 +2138,38 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :rtype: dict(int, list(int))
         """
         unslug = self.env["ir.http"]._unslug
-        # For each attribute value query param, unslug its key (attribute) and value (attribute
-        # values).
-        attribute_value_dict = {
-            unslug(attr)[1]: [unslug(attr_value)[1] for attr_value in attr_values.split(",")]
-            for attr, attr_values in attribute_value_params.items()
-        }
-        # Only keep the attributes and attribute values that were correctly unslugged.
-        filtered_attribute_value_dict = {
-            attr_id: [attr_value_id for attr_value_id in attr_value_ids if attr_value_id]
-            for attr_id, attr_value_ids in attribute_value_dict.items()
-            if attr_id
-        }
-        # Only keep attributes that have at least one attribute value.
-        return {
-            attr_id: attr_value_ids
-            for attr_id, attr_value_ids in filtered_attribute_value_dict.items()
-            if attr_value_ids
-        }
+        # For each attribute value query param, unslug its key (attribute)
+        # and value (attribute values).
+        attribute_value_dict = {}
+        for attr, attr_values in attribute_value_params.items():
+            attr_id = unslug(attr)[1]
+            attribute = self.env["product.attribute"].browse(attr_id).exists()
+            if not attribute:
+                continue
+
+            if attribute.display_type == "range":
+                pavs = attribute.value_ids.sorted("sequence")
+                min_slug, _separator, max_slug = attr_values.partition("<")
+                min_id = unslug(min_slug)[1]
+                max_id = unslug(max_slug)[1]
+
+                if min_id not in pavs._ids or max_id not in pavs._ids:
+                    continue
+
+                min_index = pavs._ids.index(min_id)
+                max_index = pavs._ids.index(max_id)
+                attribute_value_dict[attr_id] = pavs._ids[min_index:max_index + 1]
+                continue
+
+            value_ids = []
+            for attr_value in attr_values.split(","):
+                if value_id := unslug(attr_value)[1]:
+                    value_ids.append(value_id)
+
+            if value_ids:
+                attribute_value_dict[attr_id] = value_ids
+
+        return attribute_value_dict
 
     def _get_url_with_attribute_values(self, grouped_attributes_values):
         """Return the current request's URL, but replace the attribute value query params with

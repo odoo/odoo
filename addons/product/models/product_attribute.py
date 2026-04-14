@@ -42,6 +42,7 @@ class ProductAttribute(models.Model):
             ('color', 'Color'),
             ('multi', 'Multi-checkbox'),
             ('image', 'Image'),
+            ('range', 'Range'),
         ],
         default='radio',
         required=True,

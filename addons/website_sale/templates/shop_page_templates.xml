@@ -830,6 +830,39 @@
         </t>
     </template>
 
+    <template id="website_sale.filter_range_attributes" name="Range attributes in Filter">
+        <t t-set="values" t-value="pavs_per_attribute[a].sorted('sequence')"/>
+        <t t-set="value_ids" t-value="[v.id for v in values]"/>
+        <t t-set="selected_pav_ids" t-value="attrib_values.get(a.id, [])"/>
+        <t t-set="max_value_idx" t-value="len(values) - 1"/>
+        <t
+            t-set="min_idx"
+            t-value="
+                value_ids.index(selected_pav_ids[0])
+                if selected_pav_ids and selected_pav_ids[0] in value_ids else 0
+            "
+        />
+        <t
+            t-set="max_idx"
+            t-value="
+                value_ids.index(selected_pav_ids[-1])
+                if selected_pav_ids and selected_pav_ids[-1] in value_ids else max_value_idx
+            "
+        />
+        <input
+            type="range"
+            multiple="multiple"
+            class="form-range o_attr_range"
+            t-att-data-attribute-slug="slug(a)"
+            t-att-data-values="json.dumps([v.name for v in values])"
+            t-att-data-value-slugs="json.dumps([slug(v) for v in values])"
+            min="0"
+            t-att-max="max_value_idx"
+            t-att-value="'%d,%d' % (min_idx, max_idx)"
+            step="1"
+        />
+    </template>
+
     <template
         id="website_sale.product_attribute_filters_form"
         name="Product Attribute Filters Form"
@@ -854,7 +887,7 @@
                     t-value="_status == 'active' or default_expand_filter_sections"
                 />
                 <div
-                    t-if="current_attribute_pavs"
+                    t-if="current_attribute_pavs and not(a.display_type == 'range' and len(current_attribute_pavs) &lt;= 1)"
                     t-attf-class="accordion-item {{'border-top-0' if isMobile else 'nav-item mb-1 rounded-0'}}"
                 >
                     <h2
@@ -911,6 +944,12 @@
                                 data-bs-toggle="buttons"
                             >
                                 <t t-call="website_sale.filter_pills_attributes"/>
+                            </div>
+                            <div
+                                t-elif="a.display_type == 'range'"
+                                t-attf-class="{{'my-2' if isMobile else 'mb-3'}}"
+                            >
+                                <t t-call="website_sale.filter_range_attributes"/>
                             </div>
                         </div>
                     </div>
