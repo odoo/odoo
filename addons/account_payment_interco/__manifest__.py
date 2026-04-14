@@ -1,0 +1,11 @@
+{
+    'name': "Intercompany Payment - Account",
+    'category': 'Accounting/Accounting',
+    'summary': "Enable Intercompany payments to reconcile with their invoices on post.",
+    'depends': ['account_payment'],
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
+    'data': [
+        'views/res_config_settings_views.xml',
+    ]
+}

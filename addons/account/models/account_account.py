@@ -807,6 +807,13 @@ class AccountAccount(models.Model):
                 direction=SQL('ASC') if reverse else SQL('DESC'),
                 base_order=sql_order,
             )
+        if order == self._order and self.env.context.get('sort_by_non_trade'):
+            sql_order = SQL(
+                "%(field_sql)s %(direction)s, %(base_order)s",
+                field_sql=table.non_trade,
+                direction=SQL('ASC') if reverse else SQL('DESC'),
+                base_order=sql_order,
+            )
         return sql_order
 
     def _get_name_search_account_types(self, move_type):
