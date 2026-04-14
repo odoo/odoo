@@ -164,9 +164,11 @@ owl.useState = function useState(data) {
  * @param {() => void} [callback]
  */
 owl.reactive = function reactive(data, callback) {
-    // if (callback) {
-    //     console.trace("reactive called with callback");
-    // }
+    if (callback) {
+        throw new Error(
+            "owl.reactive is used with callback, replace callback by an effect and make sure to dispose the effect!"
+        );
+    }
     return owl.proxy(data);
 };
 
