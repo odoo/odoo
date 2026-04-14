@@ -70,3 +70,22 @@ class PosPaymentMethod(models.Model):
     def _mollie_get_payment(self, payment_id: str):
         self.ensure_one()
         return self.mollie_payment_provider_id._send_api_request("GET", f"/payments/{payment_id}")
+
+    def mollie_get_payment_status(self, transaction_id: str):
+        self.ensure_one()
+        payment_info = self._mollie_get_payment(transaction_id)
+        payment_details = payment_info.get("details", {})
+        message = {
+            'session_id': self.env.context.get("pos_session_id"), # Just for reference
+            'payment_id': transaction_id,
+            'status': payment_info.get("status"),
+        }
+        if message['status'] == "paid":
+            message.update({
+                'card_type': payment_details.get("cardFunding"),
+                'card_no': payment_details.get("cardNumber"),
+                'card_brand': payment_details.get("cardLabel"),
+            })
+        elif message['status'] in ['expired', 'failed', 'canceled']:
+            message['status_reason'] = payment_info.get("statusReason")
+        return message

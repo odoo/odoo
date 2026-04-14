@@ -1,4 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
+import { browser } from "@web/core/browser/browser";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { roundPrecision } from "@web/core/utils/numbers";
@@ -145,14 +146,14 @@ export class PaymentVivaCom extends PaymentInterface {
         return new Promise((resolve) => {
             const sessionId = paymentLine.uiState.vivaSessionId;
             this.paymentLineResolvers[paymentLine.uuid] = resolve;
-            const intervalId = setInterval(async () => {
+
+            const checkStatus = async () => {
                 const isPaymentStillValid = () =>
                     this.paymentLineResolvers[paymentLine.uuid] &&
                     paymentLine.payment_status === "waitingCard" &&
                     sessionId === paymentLine.uiState.vivaSessionId;
                 if (!isPaymentStillValid()) {
-                    clearInterval(intervalId);
-                    return;
+                    return false;
                 }
 
                 const result = await this._call_viva_com(
@@ -161,7 +162,6 @@ export class PaymentVivaCom extends PaymentInterface {
                     paymentLine
                 );
                 if ("success" in result && isPaymentStillValid()) {
-                    clearInterval(intervalId);
                     if (this.isPaymentSuccessful(result)) {
                         this.handleSuccessResponse(paymentLine, result);
                         resolve(true);
@@ -170,8 +170,29 @@ export class PaymentVivaCom extends PaymentInterface {
                         resolve(false);
                     }
                     this.paymentLineResolvers[paymentLine.uuid] = null;
+                    return false;
+                }
+                return true;
+            };
+
+            const intervalId = setInterval(async () => {
+                const shouldContinue = await checkStatus();
+                if (!shouldContinue) {
+                    clearInterval(intervalId);
+                    browser.removeEventListener("visibilitychange", visibilityHandler);
                 }
             }, POLLING_INTERVAL_MS);
+
+            const visibilityHandler = async () => {
+                if (document.visibilityState === "visible") {
+                    const shouldContinue = await checkStatus();
+                    if (!shouldContinue) {
+                        clearInterval(intervalId);
+                        browser.removeEventListener("visibilitychange", visibilityHandler);
+                    }
+                }
+            };
+            browser.addEventListener("visibilitychange", visibilityHandler);
         });
     }
 

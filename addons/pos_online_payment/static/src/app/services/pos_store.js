@@ -1,6 +1,7 @@
 import { patch } from "@web/core/utils/patch";
 import { CONSOLE_COLOR, PosStore } from "@point_of_sale/app/services/pos_store";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
+import { browser } from "@web/core/browser/browser";
 
 patch(PosStore.prototype, {
     async setup() {
@@ -12,6 +13,22 @@ patch(PosStore.prototype, {
             // the server to check the new state of the order.
             if (this.getOrder()?.id === id) {
                 this.updateOnlinePaymentsDataWithServer(this.getOrder(), false);
+            }
+        });
+
+        browser.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "visible") {
+                const order = this.getOrder();
+                if (
+                    order &&
+                    order.payment_ids.some(
+                        (line) =>
+                            line.payment_method_id.is_online_payment &&
+                            line.getPaymentStatus() === "waiting"
+                    )
+                ) {
+                    this.updateOnlinePaymentsDataWithServer(order, false);
+                }
             }
         });
     },

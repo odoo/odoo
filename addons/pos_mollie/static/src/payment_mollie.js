@@ -62,8 +62,32 @@ export class PaymentMollie extends PaymentInterface {
             paymentLine.transaction_id = data.id;
             await this.pos.data.synchronizeLocalDataInIndexedDB();
 
-            const { promise, resolve } = Promise.withResolvers();
-            this.paymentLineResolvers[paymentLine.uuid] = resolve;
+            let resolveFunc;
+            const promise = new Promise((resolve) => {
+                resolveFunc = resolve;
+            });
+
+            const visibilityHandler = async () => {
+                if (document.visibilityState === "visible") {
+                    try {
+                        const status = await this.pos.data.call("pos.payment.method", "mollie_get_payment_status", [
+                            this.payment_method_id.id,
+                            paymentLine.transaction_id,
+                        ]);
+                        if (status && !["open", "pending"].includes(status.status)) {
+                            this.handleMollieStatusResponse(paymentLine, status);
+                        }
+                    } catch (e) {
+                        // ignore error and let bus_service handle it or try again later
+                    }
+                }
+            };
+            browser.addEventListener("visibilitychange", visibilityHandler);
+
+            this.paymentLineResolvers[paymentLine.uuid] = (result) => {
+                browser.removeEventListener("visibilitychange", visibilityHandler);
+                resolveFunc(result);
+            };
 
             return promise;
         } catch (error) {
