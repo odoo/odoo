@@ -557,8 +557,11 @@ class L10nInEwaybill(models.Model):
         return False
 
     @api.model
-    def _get_partner_state_code(self, partner):
-        return int(partner.state_id.l10n_in_tin) if partner.country_id.code == "IN" else 99
+    def _get_partner_state_code(self, partner, is_to_state=False):
+        is_sez = (self.account_move_id or partner).l10n_in_gst_treatment == "special_economic_zone"
+        if partner.country_id.code != "IN" or (is_to_state and is_sez):
+            return 99
+        return int(partner.state_id.l10n_in_tin)
 
     def _get_l10n_in_ewaybill_line_details(self, line, tax_details):
         sign = self.account_move_id.is_inbound() and -1 or 1
@@ -606,7 +609,7 @@ class L10nInEwaybill(models.Model):
 
         def prepare_details(key_paired_function, partner_detail):
             return {
-                f"{place}{key}": fun(partner)
+                f"{place}{key}": fun(partner, place) if key == "StateCode" else fun(partner)
                 for key, fun in key_paired_function
                 for place, partner in partner_detail
             }
@@ -629,7 +632,7 @@ class L10nInEwaybill(models.Model):
                     key_paired_function={
                         'Gstin': lambda p: p.commercial_partner_id.vat or "URP",
                         'TrdName': lambda p: p.commercial_partner_id.name,
-                        'StateCode': self._get_partner_state_code,
+                        'StateCode': lambda p, place: self._get_partner_state_code(p, is_to_state=place == 'to'),
                     }.items(),
                     partner_detail={'from': self.partner_bill_from_id, 'to': self.partner_bill_to_id}.items()
                 ),
