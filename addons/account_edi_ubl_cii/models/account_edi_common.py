@@ -730,13 +730,14 @@ class AccountEdiCommon(models.AbstractModel):
             line_values = self.with_company(record.company_id)._retrieve_invoice_line_vals(line_tree, document_type, qty_factor)
             if line_values is None:
                 continue
-
-            line_values['tax_ids'], tax_logs = self._retrieve_taxes(record, line_values, tax_type)
+            line_values['tax_ids'] = []
+            lines_values += self._retrieve_line_charges(record, line_values, line_values['tax_ids'])
+            tax_ids, tax_logs = self._retrieve_taxes(record, line_values, tax_type)
+            line_values['tax_ids'] += tax_ids
             logs += tax_logs
             if not line_values['product_uom_id']:
                 line_values.pop('product_uom_id')  # if no uom, pop it so it's inferred from the product_id
             lines_values.append(line_values)
-            lines_values += self._retrieve_line_charges(record, line_values, line_values['tax_ids'])
         return lines_values, logs
 
     def _import_rounding_amount(self, invoice, tree, xpath, document_type=False, qty_factor=1):

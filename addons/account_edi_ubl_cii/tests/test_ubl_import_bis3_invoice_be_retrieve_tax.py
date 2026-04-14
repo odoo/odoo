@@ -119,3 +119,18 @@ class TestUblImportBis3InvoiceBERetrieveTax(TestUblImportBis3InvoiceBE):
                 },
             ],
         )
+
+    def test_partial_import_tax_with_tax_included_in_price_config_with_allowance_charge(self):
+        self.company.account_price_include = 'tax_included'
+        tax_21 = self.percent_tax(21.0, type_tax_use='purchase')
+        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_tax_with_tax_included_in_price_config_with_allowance_charge')
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {
+                'price_unit': 121.0,
+                'quantity': 1.0,
+                'discount': 0.0,
+                'price_subtotal': 100.0,
+                'price_total': 121.0,
+                'tax_ids': tax_21.ids,
+            },
+        ])
