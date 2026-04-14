@@ -74,7 +74,7 @@ class TestResCompany(common.TransactionCase, MockIAPPartnerAutocomplete):
             'duns': 'BE1234567',
             'name': 'Test BE Company',
             'country_id': {
-                'id': 20, 'display_name': 'Belgium'
+                'id': self.ref('base.be'), 'display_name': 'Belgium'
             },
             'query': 'BE Comp',
             'description': 'Belgium'
