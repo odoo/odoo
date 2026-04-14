@@ -164,6 +164,38 @@ describe("Popup options: empty page before edit", () => {
         );
         expect(originalPopupEl.querySelector(".modal")).not.toBeVisible();
     });
+
+    test("hidden popup are not taken into account when moving other snippets", async () => {
+        await insertCategorySnippet({ group: "intro", snippet: "s_cover" });
+        await insertCategorySnippet({ group: "content", snippet: "s_popup" });
+        await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
+            contains(".o_we_invisible_entry [data-icon='visibility']").click()
+        );
+        await insertCategorySnippet({ group: "intro", snippet: "s_cover" });
+        await contains(":iframe .s_cover:last").click();
+        expect(".o_overlay_options button[data-icon=keyboard_arrow_up]").toHaveCount(1);
+        expect(".o_overlay_options button[data-icon=keyboard_arrow_down]").toHaveCount(0);
+        await contains(".o_overlay_options button[data-icon=keyboard_arrow_up]").click();
+        expect(".o_overlay_options button[data-icon=keyboard_arrow_up]").toHaveCount(0);
+        expect(".o_overlay_options button[data-icon=keyboard_arrow_down]").toHaveCount(1);
+    });
+    test("popup are never taken into account to show arrow to move another snippet", async () => {
+        await insertCategorySnippet({ group: "intro", snippet: "s_cover" });
+        await insertCategorySnippet({ group: "content", snippet: "s_popup" });
+        await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
+            contains(".o_we_invisible_entry [data-icon='visibility']").click()
+        );
+        await contains(":iframe .s_cover").click();
+        await contains("button:contains(Grid)").click(); // arbitrary thing to undo
+        await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () =>
+            contains(".o_we_invisible_entry [data-icon='visibility_off']").click()
+        );
+        await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
+            undo(builder.getEditor())
+        );
+        expect(".o_overlay_options button[data-icon=keyboard_arrow_up]").toHaveCount(0);
+        expect(".o_overlay_options button[data-icon=keyboard_arrow_down]").toHaveCount(0);
+    });
 });
 
 test("dropping the popup snippet appends it to the end of the container", async () => {
