@@ -8,7 +8,9 @@ export class PosPayment extends Base {
 
     setup(vals) {
         super.setup(...arguments);
-        this.payment_date = DateTime.now();
+        if (!this.payment_date) {
+            this.payment_date = DateTime.now();
+        }
         this.amount = vals.amount || 0;
         this.ticket = vals.ticket || "";
     }
