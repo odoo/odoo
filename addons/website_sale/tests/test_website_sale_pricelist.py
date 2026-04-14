@@ -844,3 +844,43 @@ class TestWebsiteSaleSession(HttpCaseWithUserPortal):
         })
         test_user.partner_id.property_product_pricelist = user_pricelist
         self.start_tour("/shop", 'website_sale.website_sale_shop_pricelist_tour', login="")
+
+
+@tagged('post_install', '-at_install')
+class TestWebsitePriceListInverse(WebsiteSaleCommon):
+
+    def test_inverse_pricelist_website_context(self):
+        """The pricelist inverse should store the correct value regardless of
+        the website request context.
+
+        When creating a partner via a website form with a specific pricelist,
+        the inverse of `property_product_pricelist` determines the "default"
+        pricelist to decide whether to store the value explicitly or not. If
+        the default lookup is filtered by website availability, the inverse may
+        incorrectly clear the stored value for the pricelist that happens to be
+        the first website-available one (2nd by global sequence), causing it to
+        revert to the global default (1st by sequence).
+        """
+        self.env['product.pricelist'].create({
+            'name': 'Backend Default',
+            'sequence': 1,
+            'website_id': False,
+            'selectable': False,
+        })
+        pl_second = self.env['product.pricelist'].create({
+            'name': 'Second PL',
+            'sequence': 2,
+            'website_id': self.website.id,
+        })
+
+        simulate_frontend_context(self, self.website.id)
+        partner_second = self.env['res.partner'].create({
+            'name': 'Partner Second',
+            'property_product_pricelist': pl_second.id,
+        })
+
+        self.assertEqual(
+            partner_second.specific_property_product_pricelist, pl_second,
+            "The 2nd pricelist by sequence should be stored explicitly, not "
+            "cleared because it matches the website-filtered default",
+        )

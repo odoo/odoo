@@ -29,6 +29,9 @@ class ResPartner(models.Model):
             else:
                 partner.last_website_so_id = SaleOrder  # Not in a website context or public User
 
+    def _inverse_product_pricelist(self):
+        return super(ResPartner, self.with_context(website_sale_pricelist_default=True))._inverse_product_pricelist()
+
     @api.onchange('property_product_pricelist')
     def _onchange_property_product_pricelist(self):
         open_order = self.env['sale.order'].sudo().search([
