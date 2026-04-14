@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.addons.l10n_vn_edi_viettel.models.account_move import _l10n_vn_edi_send_request, SINVOICE_API_URL
+from odoo.addons.l10n_vn_edi_viettel.models.sinvoice_service import SInvoiceService
 
 
 class L10n_Vn_Edi_ViettelSinvoiceSymbol(models.Model):
@@ -84,27 +84,13 @@ class L10n_Vn_Edi_ViettelSinvoiceSymbol(models.Model):
             symbol.display_name = f'{symbol.name} ({symbol.invoice_template_code})'
 
     @api.model
-    def _l10n_vn_edi_lookup_symbols(self, company_id):
+    def _l10n_vn_edi_lookup_symbols(self, company):
         """Lookup available invoice symbols based on the company's tax code."""
-
-        # Get access token from the company
-        access_token, error = company_id._l10n_vn_edi_get_access_token()
+        access_token, error = company._l10n_vn_edi_get_access_token()
         if error:
-            return {}, error
-
-        symbols_data, error_message = _l10n_vn_edi_send_request(
-            method='POST',
-            url=f'{SINVOICE_API_URL}InvoiceAPI/InvoiceUtilsWS/getAllInvoiceTemplates',
-            json_data={
-                'taxCode': company_id.vat,
-                'invoiceType': "all",
-            },
-            headers={
-                'Content-Type': 'application/json',
-            },
-            cookies={'access_token': access_token},
-        )
-        return symbols_data, error_message
+            return [], error
+        with SInvoiceService(access_token=access_token, vat=company.vat, env=self.env) as sinvoice:
+            return sinvoice.get_all_invoice_templates()
 
     def action_fetch_symbols(self):
         """Fetch symbols from the API and populate the list."""
@@ -131,17 +117,17 @@ class L10n_Vn_Edi_ViettelSinvoiceSymbol(models.Model):
                 errors.append(_('VAT number is missing on company %s.', company.display_name))
                 continue
 
-            symbols_data, error = self._l10n_vn_edi_lookup_symbols(company)
+            templates, error = self._l10n_vn_edi_lookup_symbols(company)
 
             if error:
                 errors.append(_('%(company)s: %(error)s', company=company.display_name, error=error))
                 continue
 
-            if not symbols_data:
+            if not templates:
                 errors.append(_('No symbols found for company %s. Please check your configuration and try again.', company.display_name))
                 continue
 
-            for symbol_data in symbols_data.get('template', []):
+            for symbol_data in templates:
                 symbol_code = symbol_data.get('invoiceSeri')
                 template_name = symbol_data.get('templateCode')
                 key = (symbol_code, template_name, company)

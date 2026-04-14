@@ -1,36 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import io
-import re
 import textwrap
-import time
 import uuid
-import zipfile
-
-import requests
-from requests import RequestException
 
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.tools import float_round, float_repr
-
-SINVOICE_API_URL = 'https://api-vinvoice.viettel.vn/services/einvoiceapplication/api/'
-SINVOICE_TIMEOUT = 60  # They recommend between 60 and 90 seconds, but 60s is already quite long.
-
-
-def _l10n_vn_edi_send_request(method, url, json_data=None, params=None, headers=None, cookies=None):
-    """ Send a request to the API based on the given parameters. In case of errors, the error message is returned. """
-    try:
-        response = requests.request(method, url, json=json_data, params=params, headers=headers, cookies=cookies, timeout=SINVOICE_TIMEOUT)
-        resp_json = response.json()
-        error = None
-        if resp_json.get('code') or resp_json.get('error'):
-            data = resp_json.get('data') or resp_json.get('error')
-            error = _('Error when contacting SInvoice: %s.', data)
-        return resp_json, error
-    except (RequestException, ValueError) as err:
-        return {}, _('Something went wrong, please try again later: %s', err)
+from odoo.addons.l10n_vn_edi_viettel.models.sinvoice_service import SInvoiceService
 
 
 class AccountMove(models.Model):
@@ -214,97 +191,60 @@ class AccountMove(models.Model):
         fields_list.extend(['l10n_vn_edi_sinvoice_file', 'l10n_vn_edi_sinvoice_xml_file', 'l10n_vn_edi_sinvoice_pdf_file'])
         return fields_list
 
-    def _l10n_vn_edi_fetch_invoice_file_data(self, file_format):
-        """ Helper to try fetching a few time in case the files are not yet ready. """
-        self.ensure_one()
-        files_data, error_message = self._l10n_vn_edi_try_fetch_invoice_file_data(file_format)
-
-        if error_message:
-            return '', error_message
-
-        # Sometimes the documents are not available right away. This is quite rare, but I saw it happen a few times.
-        # To handle that we will try up to three time to fetch the document => The impact should be negligible.
-        threshold = 1
-        while not files_data['fileToBytes'] and threshold < 3:
-            time.sleep(0.125 * threshold)
-            files_data, error_message = self._l10n_vn_edi_try_fetch_invoice_file_data(file_format)
-            threshold += 1
-        return files_data, error_message
-
-    def _l10n_vn_edi_try_fetch_invoice_file_data(self, file_format):
+    def _l10n_vn_edi_fetch_invoice_xml_file_data(self):
         """
-        Query sinvoice in order to fetch the data representation of the invoice, either zip or pdf.
+        Query sinvoice in order to fetch the xsl and xml data representation of the invoice.
+
+        Returns a tuple of (file_dict, error_message).
         """
         self.ensure_one()
         if not self._l10n_vn_edi_is_sent():
-            return {}, _("In order to download the invoice's PDF file, you must first send it to SInvoice")
-
-        # == Lock ==
-        self.env['res.company']._with_locked_records(self)
+            return {}, _("In order to download the invoice's XML file, you must first send it to SInvoice")
 
         access_token, error = self.company_id._l10n_vn_edi_get_access_token()
         if error:
             return {}, error
 
-        return _l10n_vn_edi_send_request(
-            method='POST',
-            url=f'{SINVOICE_API_URL}InvoiceAPI/InvoiceUtilsWS/getInvoiceRepresentationFile',
-            json_data={
-                'supplierTaxCode': self.company_id.vat,
-                'templateCode': self.l10n_vn_edi_invoice_symbol.invoice_template_code,
-                'invoiceNo': self.l10n_vn_edi_invoice_number,
-                'fileType': file_format,
-            },
-            cookies={'access_token': access_token},
-        )
-
-    def _l10n_vn_edi_fetch_invoice_xml_file_data(self):
-        """
-        Query sinvoice in order to fetch the xsl and xml data representation of the invoice.
-
-        Returns a list of tuple with both file names, mimetype, content and the field it should be stored in.
-        """
-        self.ensure_one()
-        files_data, error_message = self._l10n_vn_edi_fetch_invoice_file_data('ZIP')
-        if error_message:
-            return files_data, error_message
-
-        file_bytes = base64.b64decode(files_data['fileToBytes'])
-
-        # For some reason, request_response['fileToBytes'] is a zip file containing the other zip file.
-        # The content of the inner zip is a xsl file as well as a xml file.
-        # In our case the xsl file is not important, so we can simply ignore it.
-        with zipfile.ZipFile(io.BytesIO(file_bytes)) as zip_file:
-            inner_zip_bytes = zip_file.read(zip_file.infolist()[0])
-            with zipfile.ZipFile(io.BytesIO(inner_zip_bytes)) as inner_zip:
-                for file in inner_zip.infolist():
-                    if file.filename.endswith('.xml'):
-                        return {
-                            'name': file.filename,
-                            'mimetype': 'application/xml',
-                            'raw': inner_zip.read(file),
-                            'res_field': 'l10n_vn_edi_sinvoice_xml_file',
-                        }, ""
+        with SInvoiceService(access_token=access_token, vat=self.company_id.vat, env=self.env) as sinvoice:
+            zip_data, error = sinvoice.get_invoice_file(
+                self.l10n_vn_edi_invoice_symbol.invoice_template_code,
+                self.l10n_vn_edi_invoice_number,
+                'ZIP',
+            )
+            if error:
+                return {}, error
+            if not (file_bytes := zip_data.get('fileToBytes')):
+                return {}, _('XML file not yet available from Viettel.')
+            return sinvoice.extract_xml_from_zip(base64.b64decode(file_bytes))
 
     def _l10n_vn_edi_fetch_invoice_pdf_file_data(self):
         """
         Query sinvoice in order to fetch the pdf data representation of the invoice.
 
-        Returns a tuple with the pdf name, mimetype, content and field.
+        Returns a tuple of (file_dict, error_message).
         """
         self.ensure_one()
-        file_data, error_message = self._l10n_vn_edi_fetch_invoice_file_data('PDF')
-        if error_message:
-            return file_data, error_message
+        if not self._l10n_vn_edi_is_sent():
+            return {}, _("In order to download the invoice's PDF file, you must first send it to SInvoice")
 
-        file_bytes = base64.b64decode(file_data['fileToBytes'])
+        access_token, error = self.company_id._l10n_vn_edi_get_access_token()
+        if error:
+            return {}, error
 
+        with SInvoiceService(access_token=access_token, vat=self.company_id.vat, env=self.env) as sinvoice:
+            file_data, error = sinvoice.get_invoice_file(
+                self.l10n_vn_edi_invoice_symbol.invoice_template_code,
+                self.l10n_vn_edi_invoice_number,
+                'PDF',
+            )
+        if error:
+            return {}, error
         return {
             'name': file_data['fileName'],
             'mimetype': 'application/pdf',
-            'raw': file_bytes,
+            'raw': base64.b64decode(file_data['fileToBytes']),
             'res_field': 'l10n_vn_edi_sinvoice_pdf_file',
-        }, ""
+        }, None
 
     def _l10n_vn_edi_fetch_invoice_files(self):
         """
@@ -322,16 +262,15 @@ class AccountMove(models.Model):
         # well while allowing users to download the files before sending.
         attachments_data = []
         for file, error in [(xml_data, xml_error_message), (pdf_data, pdf_error_message)]:
-            if error:
+            if error or not file:
                 continue
-
             attachments_data.append({
                 'name': file['name'],
                 'raw': file['raw'],
                 'mimetype': file['mimetype'],
                 'res_model': self._name,
                 'res_id': self.id,
-                'res_field': file['res_field'],  # Binary field
+                'res_field': file['res_field'],
             })
 
         if attachments_data:
@@ -352,7 +291,7 @@ class AccountMove(models.Model):
         if xml_error_message or pdf_error_message:
             return {
                 'error_title': _('Error when receiving SInvoice files.'),
-                'errors': [error_message for error_message in [xml_error_message, pdf_error_message] if error_message],
+                'errors': [e for e in [xml_error_message, pdf_error_message] if e],
             }
 
     def action_l10n_vn_edi_update_payment_status(self):
@@ -371,46 +310,32 @@ class AccountMove(models.Model):
             # SInvoice will return a NOT_FOUND_DATA error if the status in Odoo matches the one on their side.
             # Because of that we wouldn't be able to differentiate a real issue (invoice on our side not matching theirs)
             # With simply a status already up to date. So we need to check the status first to see if we need to update.
-            invoice_lookup, error_message = invoice._l10n_vn_edi_lookup_invoice()
-            if error_message:
-                raise UserError(error_message)
-
-            if 'result' in invoice_lookup:
-                invoice_data = invoice_lookup['result'][0]
-                if invoice_data['status'] == 'Chưa thanh toán':  # Vietnamese for 'unpaid'
-                    sinvoice_status = 'unpaid'
-                else:
-                    sinvoice_status = 'paid'
-
-            params = {
-                'supplierTaxCode': invoice.company_id.vat,
-                'invoiceNo': invoice.l10n_vn_edi_invoice_number,
-                'strIssueDate': invoice._l10n_vn_edi_format_date(invoice.l10n_vn_edi_issue_date),
-            }
-
-            if invoice.payment_state in {'in_payment', 'paid'} and sinvoice_status == 'unpaid':
-                # Mark the invoice as paid
-                endpoint = f'{SINVOICE_API_URL}InvoiceAPI/InvoiceWS/updatePaymentStatus'
-                params['templateCode'] = invoice.l10n_vn_edi_invoice_symbol.invoice_template_code
-            elif invoice.payment_state not in {'in_payment', 'paid'} and sinvoice_status == 'paid':
-                # Mark the invoice as not paid
-                endpoint = f'{SINVOICE_API_URL}InvoiceAPI/InvoiceWS/cancelPaymentStatus'
-            else:
-                continue
-
-            access_token, error = self.company_id._l10n_vn_edi_get_access_token()
+            access_token, error = invoice.company_id._l10n_vn_edi_get_access_token()
             if error:
                 raise UserError(error)
 
-            _request_response, error_message = _l10n_vn_edi_send_request(
-                method='POST',
-                url=endpoint,
-                params=params,
-                headers={
-                    'Content-Type': 'application/x-www-form-urlencoded;',
-                },
-                cookies={'access_token': access_token},
-            )
+            with SInvoiceService(access_token=access_token, vat=invoice.company_id.vat, env=self.env) as sinvoice:
+                invoice_lookup, error_message = sinvoice.lookup_invoice(invoice.l10n_vn_edi_invoice_transaction_id)
+                if error_message:
+                    raise UserError(error_message)
+
+                if 'result' in invoice_lookup:
+                    invoice_data = invoice_lookup['result'][0]
+                    sinvoice_status = 'unpaid' if invoice_data['status'] == 'Chưa thanh toán' else 'paid'
+
+                issue_date_ms = SInvoiceService.format_date(invoice.l10n_vn_edi_issue_date)
+                template_code = invoice.l10n_vn_edi_invoice_symbol.invoice_template_code
+
+                if invoice.payment_state in {'in_payment', 'paid'} and sinvoice_status == 'unpaid':
+                    _resp, error_message = sinvoice.update_payment_status(
+                        invoice.l10n_vn_edi_invoice_number, issue_date_ms, template_code
+                    )
+                elif invoice.payment_state not in {'in_payment', 'paid'} and sinvoice_status == 'paid':
+                    _resp, error_message = sinvoice.cancel_payment_status(
+                        invoice.l10n_vn_edi_invoice_number, issue_date_ms
+                    )
+                else:
+                    continue
 
             if error_message:
                 raise UserError(error_message)
@@ -456,10 +381,10 @@ class AccountMove(models.Model):
             errors.append(_('SInvoice credentials are missing on company %s.', company.display_name))
         if not company.vat:
             errors.append(_('VAT number is missing on company %s.', company.display_name))
-        company_phone = company.phone and self._l10n_vn_edi_format_phone_number(company.phone)
+        company_phone = company.phone and SInvoiceService.format_phone_number(company.phone)
         if company_phone and not company_phone.isdecimal():
             errors.append(_('Phone number for company %s must only contain digits or +.', company.display_name))
-        commercial_partner_phone = commercial_partner.phone and self._l10n_vn_edi_format_phone_number(commercial_partner.phone)
+        commercial_partner_phone = commercial_partner.phone and SInvoiceService.format_phone_number(commercial_partner.phone)
         if commercial_partner_phone and not commercial_partner_phone.isdecimal():
             errors.append(_('Phone number for partner %s must only contain digits or +.', commercial_partner.display_name))
         if not self.l10n_vn_edi_invoice_symbol:
@@ -488,37 +413,29 @@ class AccountMove(models.Model):
         # == Lock ==
         self.env['res.company']._with_locked_records(self)
 
-        invoice_data = {}
-        # If the request was sent but ended up failing, there is still the possibility that the invoice was saved
-        # on their system (timeout, for example)
-        if self.l10n_vn_edi_invoice_transaction_id:
-            invoice_lookup, error_message = self._l10n_vn_edi_lookup_invoice()
-            if 'result' in invoice_lookup:
-                invoice_data = invoice_lookup['result'][0]
-            # note: We do not catch errors on this endpoint for simplicity, as it should not be required.
-        else:
-            # We do not store the transaction id on the move right away so that we can avoid the above api call.
-            # When sending for the first time, we'll get the id from the file data, which we generated earlier in the flow.
-            self.l10n_vn_edi_invoice_transaction_id = invoice_json_data['generalInvoiceInfo']['transactionUuid']
+        access_token, error = self.company_id._l10n_vn_edi_get_access_token()
+        if error:
+            return [error]
 
-        # if the above request did not return data, we can assume that the invoice has failed to be created, or was never sent
-        if not invoice_data:
-            # Send the invoice to the system
-            access_token, error = self.company_id._l10n_vn_edi_get_access_token()
-            if error:
-                return [error]
+        with SInvoiceService(access_token=access_token, vat=self.company_id.vat, env=self.env) as sinvoice:
+            invoice_data = {}
+            # If the request was sent but ended up failing, there is still the possibility that the invoice was saved
+            # on their system (timeout, for example)
+            if self.l10n_vn_edi_invoice_transaction_id:
+                invoice_lookup, _error = sinvoice.lookup_invoice(self.l10n_vn_edi_invoice_transaction_id)
+                if 'result' in invoice_lookup:
+                    invoice_data = invoice_lookup['result'][0]
+                # note: We do not catch errors on this endpoint for simplicity, as it should not be required.
+            else:
+                # We do not store the transaction id on the move right away so that we can avoid the above api call.
+                # When sending for the first time, we'll get the id from the file data, which we generated earlier in the flow.
+                self.l10n_vn_edi_invoice_transaction_id = invoice_json_data['generalInvoiceInfo']['transactionUuid']
 
-            request_response, error_message = _l10n_vn_edi_send_request(
-                method='POST',
-                url=f'{SINVOICE_API_URL}InvoiceAPI/InvoiceWS/createInvoice/{self.company_id.vat}',
-                json_data=invoice_json_data,
-                cookies={'access_token': access_token},
-            )
-
-            if error_message:
-                return [error_message]
-
-            invoice_data = request_response.get('result', {})
+            # if the above request did not return data, we can assume that the invoice has failed to be created, or was never sent
+            if not invoice_data:
+                invoice_data, error_message = sinvoice.create_invoice(invoice_json_data)
+                if error_message:
+                    return [error_message]
 
         self.write({
             'l10n_vn_edi_reservation_code': invoice_data.get('reservationCode'),
@@ -536,28 +453,19 @@ class AccountMove(models.Model):
         # == Lock ==
         self.env['res.company']._with_locked_records(self)
 
-        # If no error raised, we try to cancel it on the EDI.
         access_token, error = self.company_id._l10n_vn_edi_get_access_token()
         if error:
             raise UserError(error)
 
-        _request_response, error_message = _l10n_vn_edi_send_request(
-            method='POST',
-            url=f'{SINVOICE_API_URL}InvoiceAPI/InvoiceWS/cancelTransactionInvoice',
-            params={
-                'supplierTaxCode': self.company_id.vat,
-                'templateCode': self.l10n_vn_edi_invoice_symbol.invoice_template_code,
-                'invoiceNo': self.l10n_vn_edi_invoice_number,
-                'strIssueDate': self._l10n_vn_edi_format_date(self.l10n_vn_edi_issue_date),
-                'additionalReferenceDesc': agreement_document_name,
-                'additionalReferenceDate': self._l10n_vn_edi_format_date(agreement_document_date),
-                'reasonDelete': reason,
-            },
-            headers={
-                'Content-Type': 'application/x-www-form-urlencoded;',
-            },
-            cookies={'access_token': access_token},
-        )
+        with SInvoiceService(access_token=access_token, vat=self.company_id.vat, env=self.env) as sinvoice:
+            _resp, error_message = sinvoice.cancel_invoice(
+                template_code=self.l10n_vn_edi_invoice_symbol.invoice_template_code,
+                invoice_no=self.l10n_vn_edi_invoice_number,
+                issue_date_ms=SInvoiceService.format_date(self.l10n_vn_edi_issue_date),
+                reason=reason,
+                agreement_desc=agreement_document_name,
+                agreement_date_ms=SInvoiceService.format_date(agreement_document_date),
+            )
 
         if error_message:
             raise UserError(error_message)
@@ -627,7 +535,7 @@ class AccountMove(models.Model):
             # This timestamp is important as it is used to check the chronological order of Invoice Numbers.
             # Since this xml is generated upon posting, just like the invoice number, using now() should keep that order
             # correct in most case.
-            'invoiceIssuedDate': self._l10n_vn_edi_format_date(self.l10n_vn_edi_issue_date),
+            'invoiceIssuedDate': SInvoiceService.format_date(self.l10n_vn_edi_issue_date),
             'currencyCode': self.currency_id.name,
             'adjustmentType': '1',  # 1 for original invoice, which is the case during first issuance.
             'paymentStatus': self.payment_state in {'in_payment', 'paid'},
@@ -657,10 +565,10 @@ class AccountMove(models.Model):
                 'adjustmentType': '5' if self.move_type == 'out_refund' else '3',  # Adjustment or replacement
                 'adjustmentInvoiceType': self.l10n_vn_edi_adjustment_type or '',
                 'originalInvoiceId': adjustment_origin_invoice.l10n_vn_edi_invoice_number,
-                'originalInvoiceIssueDate': self._l10n_vn_edi_format_date(adjustment_origin_invoice.l10n_vn_edi_issue_date),
+                'originalInvoiceIssueDate': SInvoiceService.format_date(adjustment_origin_invoice.l10n_vn_edi_issue_date),
                 'originalTemplateCode': adjustment_origin_invoice.l10n_vn_edi_invoice_symbol.invoice_template_code,
                 'additionalReferenceDesc': self.l10n_vn_edi_agreement_document_name,
-                'additionalReferenceDate': self._l10n_vn_edi_format_date(self.l10n_vn_edi_agreement_document_date),
+                'additionalReferenceDate': SInvoiceService.format_date(self.l10n_vn_edi_agreement_document_date),
             })
 
         json_values['generalInvoiceInfo'] = invoice_data
@@ -669,7 +577,7 @@ class AccountMove(models.Model):
         """ Create and return the buyer information for the current invoice. """
         self.ensure_one()
 
-        commercial_partner_phone = self.commercial_partner_id.phone and self._l10n_vn_edi_format_phone_number(self.commercial_partner_id.phone)
+        commercial_partner_phone = self.commercial_partner_id.phone and SInvoiceService.format_phone_number(self.commercial_partner_id.phone)
         buyer_address = self.partner_id._display_address(without_name=True, separator=', ')
         buyer_information = {
             'buyerName': self.partner_id.name,
@@ -694,7 +602,7 @@ class AccountMove(models.Model):
     def _l10n_vn_edi_add_seller_information(self, json_values):
         """ Create and return the seller information for the current invoice. """
         self.ensure_one()
-        company_phone = self.company_id.phone and self._l10n_vn_edi_format_phone_number(self.company_id.phone)
+        company_phone = self.company_id.phone and SInvoiceService.format_phone_number(self.company_id.phone)
         seller_address = self.company_id.partner_id._display_address(without_name=True, separator=', ')
         seller_information = {
             'sellerLegalName': self.company_id.name,
@@ -811,27 +719,6 @@ class AccountMove(models.Model):
 
         json_values['taxBreakdowns'] = tax_breakdowns
 
-    def _l10n_vn_edi_lookup_invoice(self):
-        """ Lookup on invoice, returning its current details on SInvoice. """
-        self.ensure_one()
-        access_token, error = self.company_id._l10n_vn_edi_get_access_token()
-        if error:
-            return {}, error
-
-        invoice_data, error_message = _l10n_vn_edi_send_request(
-            method='POST',
-            url=f'{SINVOICE_API_URL}InvoiceAPI/InvoiceWS/searchInvoiceByTransactionUuid',
-            params={
-                'supplierTaxCode': self.company_id.vat,
-                'transactionUuid': self.l10n_vn_edi_invoice_transaction_id,
-            },
-            headers={
-                'Content-Type': 'application/x-www-form-urlencoded;',
-            },
-            cookies={'access_token': access_token},
-        )
-        return invoice_data, error_message
-
     def l10n_vn_edi_fetch_files_with_tax_code(self):
         """ Fetch the tax code assigned by sinvoice for this invoice. """
         self.ensure_one()
@@ -839,7 +726,12 @@ class AccountMove(models.Model):
         if not self.l10n_vn_edi_invoice_number.startswith('C'):
             raise UserError(_("This invoice uses a symbol without the tax authority's code. There is no code to be fetched."))
 
-        invoice_lookup, error_message = self._l10n_vn_edi_lookup_invoice()
+        access_token, error = self.company_id._l10n_vn_edi_get_access_token()
+        if error:
+            raise UserError(error)
+
+        with SInvoiceService(access_token=access_token, vat=self.company_id.vat, env=self.env) as sinvoice:
+            invoice_lookup, error_message = sinvoice.lookup_invoice(self.l10n_vn_edi_invoice_transaction_id)
         if error_message:
             raise UserError(error_message)
 
@@ -852,25 +744,6 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # HELPERS
     # -------------------------------------------------------------------------
-
-    @api.model
-    def _l10n_vn_edi_format_date(self, date):
-        """
-        All APIs for Sinvoice uses the same time format, being the current hour, minutes and seconds converted into
-        seconds since unix epoch, but formatting like milliseconds since unix epoch.
-        It means that the time will end in 000 for the milliseconds as they are not as of today used by the system.
-        """
-        return int(date.timestamp()) * 1000 if date else 0
-
-    @api.model
-    def _l10n_vn_edi_format_phone_number(self, number):
-        """
-        Simple helper that takes in a phone number and try to format it to fit sinvoice format.
-        SInvoice only allows digits, so we will remove any (, ), -, + characters.
-        """
-        # We first replace + by 00, then we remove all non digit characters.
-        number = number.replace('+', '00')
-        return re.sub(r'[^0-9]+', '', number)
 
     def _l10n_vn_edi_is_sent(self):
         """ Small helper that returns true if self has been sent to sinvoice. """

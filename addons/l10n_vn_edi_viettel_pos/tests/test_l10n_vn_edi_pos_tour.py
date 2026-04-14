@@ -19,14 +19,8 @@ class TestVNEDIPOSTour(TestVNEDI, TestPointOfSaleHttpCommon):
         })
 
     @staticmethod
-    def _mock_sinvoice_send_request(method, url, json_data=None, params=None, headers=None, cookies=None):
-        if url.endswith("/auth/login"):
-            return {
-                "access_token": "test_access_token",
-                "expires_in": "3600",
-            }, None
-
-        if "InvoiceAPI/InvoiceWS/createInvoice" in url:
+    def _mock_sinvoice_send_request(method, endpoint, json_data=None, params=None, headers=None):
+        if "InvoiceAPI/InvoiceWS/createInvoice" in endpoint:
             return {
                 "result": {
                     "reservationCode": "123456",
@@ -34,10 +28,10 @@ class TestVNEDIPOSTour(TestVNEDI, TestPointOfSaleHttpCommon):
                 },
             }, None
 
-        if "InvoiceAPI/InvoiceWS/searchInvoiceByTransactionUuid" in url:
+        if "InvoiceAPI/InvoiceWS/searchInvoiceByTransactionUuid" in endpoint:
             return {"result": []}, None
 
-        if "InvoiceAPI/InvoiceUtilsWS/getInvoiceRepresentationFile" in url:
+        if "InvoiceAPI/InvoiceUtilsWS/getInvoiceRepresentationFile" in endpoint:
             return {
                 "fileToBytes": "",
                 "fileName": "sinvoice.pdf",
@@ -53,7 +47,7 @@ class TestVNEDIPOSTour(TestVNEDI, TestPointOfSaleHttpCommon):
         self.company.l10n_vn_pos_default_symbol = False
 
         with patch(
-            "odoo.addons.l10n_vn_edi_viettel.models.account_move._l10n_vn_edi_send_request",
+            "odoo.addons.l10n_vn_edi_viettel.models.sinvoice_service.SInvoiceService._send_request",
             side_effect=self._mock_sinvoice_send_request,
         ):
             self.start_pos_tour("L10nVnEdiPosConfigErrorTour", login="pos_admin")
@@ -65,6 +59,6 @@ class TestVNEDIPOSTour(TestVNEDI, TestPointOfSaleHttpCommon):
             "l10n_vn_pos_symbol": self.symbol.id,
         })
 
-        with patch("odoo.addons.l10n_vn_edi_viettel.models.account_move._l10n_vn_edi_send_request", side_effect=self._mock_sinvoice_send_request), \
-             patch("odoo.addons.l10n_vn_edi_viettel.models.res_company._l10n_vn_edi_send_request", side_effect=self._mock_sinvoice_send_request):
+        with patch("odoo.addons.l10n_vn_edi_viettel.models.sinvoice_service.SInvoiceService._send_request", side_effect=self._mock_sinvoice_send_request), \
+             patch("odoo.addons.l10n_vn_edi_viettel.models.sinvoice_service.SInvoiceService.get_access_token", return_value=({"access_token": "test_access_token", "expires_in": "3600"}, None)):
             self.start_pos_tour("L10nVnEdiPosRefundReasonTour", login="pos_admin")

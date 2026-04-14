@@ -361,8 +361,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
         # Trying to cancel a sent invoice should result in an action to open the cancellation wizard.
         action = invoice.button_request_cancel()
         self.assertEqual(action['res_model'], 'l10n_vn_edi_viettel.cancellation')
-        with patch('odoo.addons.l10n_vn_edi_viettel.models.account_move._l10n_vn_edi_send_request', return_value=(None, None)), \
-             patch('odoo.addons.l10n_vn_edi_viettel.models.res_company._l10n_vn_edi_send_request', return_value=(None, None)):
+        with patch('odoo.addons.l10n_vn_edi_viettel.models.sinvoice_service.SInvoiceService.cancel_invoice', return_value=({}, None)):
             self.env['l10n_vn_edi_viettel.cancellation'].create({
                 'invoice_id': invoice.id,
                 'reason': 'Unwanted',
@@ -389,7 +388,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
         }
 
         # Do a few tests to ensure that the access token is handled correctly.
-        with patch('odoo.addons.l10n_vn_edi_viettel.models.res_company._l10n_vn_edi_send_request', return_value=(request_response, None)):
+        with patch('odoo.addons.l10n_vn_edi_viettel.models.sinvoice_service.SInvoiceService.get_access_token', return_value=(request_response, None)):
             # First ensure that fetching the token will set the value correctly on the company.
             with freeze_time('2024-01-01 02:00:00'):
                 invoice.company_id._l10n_vn_edi_get_access_token()
@@ -431,8 +430,8 @@ class TestVNEDI(AccountTestInvoicingCommon):
 
         with patch('odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove._l10n_vn_edi_fetch_invoice_pdf_file_data', return_value=pdf_response), \
              patch('odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove._l10n_vn_edi_fetch_invoice_xml_file_data', return_value=xml_response), \
-             patch('odoo.addons.l10n_vn_edi_viettel.models.account_move._l10n_vn_edi_send_request', return_value=(request_response, None)), \
-             patch('odoo.addons.l10n_vn_edi_viettel.models.res_company._l10n_vn_edi_send_request', return_value=(request_response, None)):
+             patch('odoo.addons.l10n_vn_edi_viettel.models.sinvoice_service.SInvoiceService.create_invoice', return_value=({'invoiceNo': 'K24TUT01', 'reservationCode': '123456', 'codeOfTax': '1234567890'}, None)), \
+             patch('odoo.addons.l10n_vn_edi_viettel.models.sinvoice_service.SInvoiceService.get_access_token', return_value=(request_response, None)):
             self.env['account.move.send.wizard'].with_context(active_model=invoice._name, active_ids=invoice.ids).create({}).action_send_and_print()
 
     @freeze_time('2024-01-01')
