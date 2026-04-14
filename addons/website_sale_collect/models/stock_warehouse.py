@@ -32,8 +32,8 @@ class StockWarehouse(models.Model):
             pickup_location_values = {
                 "id": self.id,
                 "name": wh_location["name"],
-                "street": wh_location["street"],
-                "city": wh_location.city,
+                "street": wh_location["street"] or "",
+                "city": wh_location.city or "",
                 "state": wh_location.state_id.code or "",
                 "zip_code": wh_location.zip or "",
                 "country_code": wh_location.country_code,
