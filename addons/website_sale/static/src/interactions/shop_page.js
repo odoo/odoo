@@ -63,6 +63,16 @@ export class ShopPage extends Interaction {
         const attributeValueSlugs = Array.from(filters).filter(
             filter => filter.name === 'attribute_value' && filter.value
         ).map(filter => filter.value);
+        // Ignore the ghost input created by Multirange.
+        form.querySelectorAll(".o_attr_range.original").forEach((range) => {
+            const min = range.valueLow;
+            const max = range.valueHigh;
+            const { attributeSlug, valueSlugs } = range.dataset;
+            const slugs = JSON.parse(valueSlugs || "[]");
+            if (!(min === 0 && max === Number(range.max))) {
+                attributeValueSlugs.push(`${attributeSlug}/${slugs[min]}<${slugs[max]}`);
+            }
+        });
         const tagSlugs = Array.from(filters).filter(
             filter => filter.name === 'tags' && filter.value
         ).map(filter => filter.value);
