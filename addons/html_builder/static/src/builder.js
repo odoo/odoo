@@ -22,7 +22,6 @@ import { setBuilderCSSVariables } from "@html_builder/utils/utils_css";
 import { withSequence } from "@html_editor/utils/resource";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
 import { isVisible } from "@html_builder/utils/utils";
-import { localization } from "@web/core/l10n/localization";
 
 // These elements should only have inline content (even if they have a `block`
 // display style, for example if they are in a flex)
@@ -215,7 +214,7 @@ export class Builder extends Component {
                 cleanEmptyStructuralContainers: false,
                 isEditableRTL: false,
                 publicAttachments: true,
-                direction: localization.direction || "ltr",
+                direction: "ltr",
             },
             this.env.services
         );
@@ -236,6 +235,7 @@ export class Builder extends Component {
 
             if (this.editableEl.matches(".o_rtl")) {
                 this.editor.config.isEditableRTL = true;
+                this.editor.config.direction = "rtl";
             }
 
             // Prevent image dragging in the website builder. Not via css because
