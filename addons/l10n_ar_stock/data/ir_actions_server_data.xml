@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_generate_delivery_guide" model="ir.actions.server">
+        <field name="name">Generate Delivery Guide</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.l10n_ar_action_create_delivery_guide()</field>
+    </record>
+    <record id="action_send_delivery_guide" model="ir.actions.server">
+        <field name="name">Send Delivery Guide</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.l10n_ar_action_send_delivery_guide(do_async=True)</field>
+    </record>
+</odoo>
