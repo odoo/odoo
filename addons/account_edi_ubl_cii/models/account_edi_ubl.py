@@ -1980,7 +1980,7 @@ class AccountEdiUBL(models.AbstractModel):
         )
         values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
         expected_tax_inclusive_amount = sum(
-             values['base_amount_currency'] + values['tax_amount_currency']
+             values['total_excluded_currency'] + values['tax_amount_currency']
              for values in values_per_grouping_key.values()
         )
 
