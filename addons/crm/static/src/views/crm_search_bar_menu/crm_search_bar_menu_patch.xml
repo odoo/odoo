@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="crm.TeamSearchBarMenu" t-inherit="web.SearchBarMenu" t-inherit-mode="extension">
+        <xpath expr="//Dropdown" position="after">
+            <Dropdown
+                t-if="this.tsFilterItem and this.tsFilterItem.options?.length"
+                menuClass="'o_team_switcher_dropdown o_search_bar_menu d-flex flex-wrap flex-lg-nowrap w-100 w-md-auto mx-md-auto'"
+                position="'bottom-end'"
+                bottomSheet="false">
+                <button
+                    t-attf-class="{{this.env.isSmall ? '' : 'o-dropdown-caret'}} o_team_switcher_dropdown_toggler d-print-none btn btn-outline-secondary rounded ms-2"
+                    title="Toggle Crm Team Search Dropdown">
+                    <i class="fa fa-users"/>
+                    <span t-if="!this.env.isSmall" class="text-truncate" t-out="this.tsSelectedName"/>
+                </button>
+                <t t-set-slot="content">
+
+                    <div class="o_dropdown_container w-100 w-lg-auto h-100 border-end">
+
+                        <!-- "All": unselect current option or do nothing if current is already "All" -->
+                        <CheckboxItem class="{ o_item_option: true, selected: !this.tsSelectedOptionId, 'text-truncate': true }"
+                            t-out="this.tsAllTeamLabel"
+                            checked="!this.tsSelectedOptionId"
+                            closingMode="'closest'"
+                            onSelected="() => this.onFilterSelected({ itemId: this.tsFilterItem.id, optionId: this.tsSelectedOptionId })"
+                        />
+
+                        <t t-foreach="this.tsFilterItem.options" t-as="option" t-key="option.id">
+                            <CheckboxItem class="{ o_item_option: true, selected: option.isActive, 'text-truncate': true }"
+                                t-out="option.description"
+                                checked="option.isActive"
+                                closingMode="'closest'"
+                                onSelected="() => this.onFilterSelected({ itemId: this.tsFilterItem.id, optionId: option.id })"
+                            />
+                        </t>
+                        <DropdownItem t-if="this.tsFilterItem.optionsParams.limit and this.tsFilterItem.optionsParams.count > this.tsFilterItem.optionsParams.limit"
+                            class="'o_item_option'"
+                            closingMode="'none'"
+                            onSelected.bind="() => this.onLoadMoreOptions({ itemId: this.tsFilterItem.id})">
+                            More...
+                        </DropdownItem>
+                    </div>
+
+                </t>
+            </Dropdown>
+        </xpath>
+    </t>
+
+</templates>
