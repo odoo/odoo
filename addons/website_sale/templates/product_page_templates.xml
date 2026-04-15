@@ -152,37 +152,7 @@
                                     >
                                         <t t-call="website_sale.product_accordion"/>
                                     </div>
-                                    <t t-set="product_documents" t-value="product.sudo().product_document_ids.filtered(lambda doc: doc.shown_on_product_page)"/>
-                                    <div
-                                        id="product_documents"
-                                        class="o_wsale_product_details_content_section o_wsale_product_details_content_section_documents mb-4"
-                                        t-if="product_documents"
-                                    >
-                                        <strong>Documents</strong>
-                                        <div class="list-group">
-                                            <t t-foreach="product_documents" t-as="document_sudo">
-                                                <t
-                                                    t-set="attachment_sudo"
-                                                    t-value="document_sudo.ir_attachment_id"
-                                                />
-                                                <t
-                                                    t-set="target"
-                                                    t-value="attachment_sudo.type == 'url' and '_blank' or '_self'"
-                                                />
-                                                <t
-                                                    t-set="icon"
-                                                    t-value="attachment_sudo.type == 'url' and 'fa-link' or 'fa-download'"
-                                                />
-                                                <a
-                                                    class="list-group-item list-group-item-action"
-                                                    t-att-href="'/shop/' + slug(product) + '/document/' + str(document_sudo.id)"
-                                                    t-att-target="target">
-                                                    <i t-att-class="'fa ' + icon + ' me-2'"/>
-                                                    <t t-out="attachment_sudo.name"/>
-                                                </a>
-                                            </t>
-                                        </div>
-                                    </div>
+                                    <t t-call="website_sale.documents"/>
                                 </article>
                             </div>
                         </div>
@@ -1018,6 +988,46 @@
             <small t-if="combination_info.get('tax_disclaimer')" class="text-muted">
                 <t t-out="combination_info['tax_disclaimer']"/>
             </small>
+        </div>
+    </template>
+
+    <!-- Product page documents -->
+    <template id="website_sale.documents">
+        <t
+            t-set="product_documents"
+            t-value="product._get_product_page_documents(variant=product_variant)"
+        />
+        <div
+            id="product_documents"
+            class="o_wsale_product_details_content_section o_wsale_product_details_content_section_documents mb-4"
+            t-if="product_documents"
+        >
+            <div class="attribute_name mb-2 h6">
+                <span>Documents</span>
+            </div>
+            <div class="list-group">
+                <t t-foreach="product_documents" t-as="document_sudo">
+                    <t
+                        t-set="attachment_sudo"
+                        t-value="document_sudo.ir_attachment_id"
+                    />
+                    <t
+                        t-set="target"
+                        t-value="attachment_sudo.type == 'url' and '_blank' or '_self'"
+                    />
+                    <t
+                        t-set="icon"
+                        t-value="attachment_sudo.type == 'url' and 'fa-link' or 'fa-download'"
+                    />
+                    <a
+                        class="list-group-item list-group-item-action"
+                        t-att-href="'/shop/' + slug(product) + '/document/' + str(document_sudo.id)"
+                        t-att-target="target">
+                        <i t-att-class="'fa ' + icon + ' me-2'"/>
+                        <t t-out="attachment_sudo.name"/>
+                    </a>
+                </t>
+            </div>
         </div>
     </template>
 

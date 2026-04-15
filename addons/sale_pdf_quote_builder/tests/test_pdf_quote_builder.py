@@ -6,7 +6,6 @@ from unittest.mock import patch
 
 from werkzeug.datastructures import FileStorage
 
-from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.http import Response
 from odoo.tests import Form, tagged
@@ -50,7 +49,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
         cls.product_document = cls.env["product.document"].create({
             "name": "Product Document",
             "ir_attachment_id": att_prod_doc.id,
-            "attached_on_sale": "inside",
+            "attached_on_sale": "sale_order",
             "res_model": "product.product",
             "res_id": cls.product.id,
         })
@@ -182,7 +181,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
         self.assertNotIn(self.header, self.sale_order.available_quotation_document_ids)
         self.assertEqual(len(self.sale_order.quotation_document_ids), 0)
 
-    def test_non_pdf_attachment_inside_quote_form_save(self):
+    def test_non_pdf_attachment_not_available_in_quote_builder(self):
         non_pdf_att = self.env["ir.attachment"].create({
             "name": "Not a PDF",
             "raw": b"hello",
@@ -190,11 +189,13 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
         })
 
         product_document = self.product_document
-
         product_document.write({"ir_attachment_id": non_pdf_att.id})
-        with self.assertRaises(ValidationError):
-            with Form(product_document) as doc_form:
-                doc_form.attached_on_sale = "inside"
+
+        self.assertNotIn(
+            product_document,
+            self.sale_order.order_line[0].available_product_document_ids,
+            "Non-PDF product documents should not be available in quote builder.",
+        )
 
     def test_onchange_product_removes_previously_selected_documents(self):
         """Check that changing a line that has a selected document unselect said document."""
