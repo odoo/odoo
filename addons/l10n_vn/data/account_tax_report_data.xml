@@ -109,7 +109,7 @@
                                         <field name="label">amount_untaxed</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">
-                                            2324.amount_untaxed_0 + 2324.amount_untaxed_5 + 2324.amount_untaxed_8 + 2324.amount_untaxed_10 + 2324.amount_untaxed_exempt + 2324.amount_untaxed_import_0 + 2324.amount_untaxed_import_5 + 2324.amount_untaxed_import_8 + 2324.amount_untaxed_import_10 + 2324.amount_untaxed_import_exempt
+                                            2324.amount_untaxed_0 + 2324.amount_untaxed_5 + 2324.amount_untaxed_8 + 2324.amount_untaxed_10 + 2324.amount_untaxed_exempt + 2324.amount_untaxed_import_exempt + 23a24a.amount_untaxed
                                         </field>
                                     </record>
                                     <record id="form_01_gtgt_report_C_I_1_amount_untaxed_exempt" model="account.report.expression">
@@ -142,26 +142,6 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">tax_purchase_import_exemption_base</field>
                                     </record>
-                                    <record id="form_01_gtgt_report_C_I_1_amount_untaxed_import_0" model="account.report.expression">
-                                        <field name="label">amount_untaxed_import_0</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">tax_purchase_import_0_base</field>
-                                    </record>
-                                    <record id="form_01_gtgt_report_C_I_1_amount_untaxed_import_5" model="account.report.expression">
-                                        <field name="label">amount_untaxed_import_5</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">tax_purchase_import_5_base</field>
-                                    </record>
-                                    <record id="form_01_gtgt_report_C_I_1_amount_untaxed_import_8" model="account.report.expression">
-                                        <field name="label">amount_untaxed_import_8</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">tax_purchase_import_8_base</field>
-                                    </record>
-                                    <record id="form_01_gtgt_report_C_I_1_amount_untaxed_import_10" model="account.report.expression">
-                                        <field name="label">amount_untaxed_import_10</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">tax_purchase_import_10_base</field>
-                                    </record>
                                     <record id="form_01_gtgt_report_C_I_1_code_2" model="account.report.expression">
                                         <field name="label">code_2</field>
                                         <field name="engine">text</field>
@@ -170,9 +150,7 @@
                                     <record id="form_01_gtgt_report_C_I_1_balance" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">
-                                            2324.balance_0 + 2324.balance_5 + 2324.balance_8 + 2324.balance_10 + 2324.balance_import_0 + 2324.balance_import_5 + 2324.balance_import_8 + 2324.balance_import_10 + 2324.balance_nondeductible + 2324.balance_nondeductible_import
-                                        </field>
+                                        <field name="formula">2324.balance_0 + 2324.balance_5 + 2324.balance_8 + 2324.balance_10 + 2324.balance_nondeductible + 23a24a.balance</field>
                                     </record>
                                     <record id="form_01_gtgt_report_C_I_1_balance_0" model="account.report.expression">
                                         <field name="label">balance_0</field>
@@ -198,31 +176,6 @@
                                         <field name="label">balance_nondeductible</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT_non_deductible</field>
-                                    </record>
-                                    <record id="form_01_gtgt_report_C_I_1_balance_import_0" model="account.report.expression">
-                                        <field name="label">balance_import_0</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">tax_purchase_import_0</field>
-                                    </record>
-                                    <record id="form_01_gtgt_report_C_I_1_balance_import_5" model="account.report.expression">
-                                        <field name="label">balance_import_5</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">tax_purchase_import_5</field>
-                                    </record>
-                                    <record id="form_01_gtgt_report_C_I_1_balance_import_8" model="account.report.expression">
-                                        <field name="label">balance_import_8</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">tax_purchase_import_8</field>
-                                    </record>
-                                    <record id="form_01_gtgt_report_C_I_1_balance_import_10" model="account.report.expression">
-                                        <field name="label">balance_import_10</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">tax_purchase_import_10</field>
-                                    </record>
-                                    <record id="form_01_gtgt_report_C_I_1_balance_nondeductible_import" model="account.report.expression">
-                                        <field name="label">balance_nondeductible_import</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">VAT_non_deductible_import</field>
                                     </record>
                                 </field>
                                 <field name="children_ids">
