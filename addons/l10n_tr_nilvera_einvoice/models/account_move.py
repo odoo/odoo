@@ -361,7 +361,7 @@ class AccountMove(models.Model):
             endpoint = f"/{invoice_channel}/{quote(document_category)}"
             last_fetched_date_field_name = f"l10n_tr_{invoice_channel}_{journal_type}_last_fetched_date"
             start_date = self.env.company[last_fetched_date_field_name]
-            end_date = fields.Datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+            end_date = fields.Datetime.context_timestamp(self.with_context(tz='Europe/Istanbul'), fields.Datetime.now()).strftime("%Y-%m-%dT%H:%M:%S")
             page = 1
 
             # We filter documents by their CreatedDate on Nilvera, which represents when the document was created on
