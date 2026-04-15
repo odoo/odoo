@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { advanceTime, describe, expect, test } from "@odoo/hoot";
 import { click, press, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { preloadBundle } from "@web/../tests/web_test_helpers";
@@ -100,5 +100,31 @@ describe("Emoji list picker", () => {
         await expectElementCount(".o-we-SuggestionList", 1);
         press("escape");
         await expectElementCount(".o-we-SuggestionList", 0);
+    });
+
+    test("should not open emoji list picker when a space is typed between ':' and the search term", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        await insertText(editor, ": t");
+        // `updateEmojiList` is debounced by 100ms, wait for it to resolve.
+        await advanceTime(100);
+        expect(".o-we-SuggestionList").toHaveCount(0);
+    });
+
+    test("should not open emoji list picker when a space is typed after the search term", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        await insertText(editor, ":t ");
+        // `updateEmojiList` is debounced by 100ms, wait for it to resolve.
+        await advanceTime(100);
+        expect(".o-we-SuggestionList").toHaveCount(0);
+    });
+
+    test("should close emoji list picker on space and reopen it on backspace", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        await insertText(editor, ":wave");
+        await expectElementCount(".o-we-SuggestionList", 1);
+        await insertText(editor, " ");
+        await expectElementCount(".o-we-SuggestionList", 0);
+        await press("backspace");
+        await expectElementCount(".o-we-SuggestionList", 1);
     });
 });
