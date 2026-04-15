@@ -93,6 +93,13 @@ class TestCursor(Cursor):
 
     def now(self) -> datetime:
         """ Return the transaction's timestamp ``datetime.now()``. """
+
+        # If freezegun is currently active, bypass the static cache 
+        # and return the fake time directly.
+        if type(datetime.now()).__name__ == 'FakeDatetime':
+            self._now = datetime.now()
+            return self._now
+    
         if self._now is None:
             self._now = datetime.now()
         return self._now
