@@ -17,7 +17,6 @@ defineHrHolidaysModels();
 
 test("change icon on change partner im_status for leave variants", async () => {
     const pyEnv = await startServer();
-    pyEnv["res.partner"].write([serverState.partnerId], { im_status: "online" });
     pyEnv["hr.employee"].create({ user_id: serverState.userId, leave_date_to: "2023-01-01" });
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     patchWithCleanup(ImStatusMixin, { IM_STATUS_DEBOUNCE_DELAY: 0 });
@@ -26,15 +25,15 @@ test("change icon on change partner im_status for leave variants", async () => {
     await contains(
         ".o-mail-DiscussContent-header .o-mail-ImStatus.fa-plane[title='User is on leave and online']"
     );
-    sendPresenceUpdate("res.partner", serverState.partnerId, "offline");
+    sendPresenceUpdate("res.users", serverState.userId, "offline");
     await contains(
         ".o-mail-DiscussContent-header .o-mail-ImStatus.fa-plane[title='User is on leave']"
     );
-    sendPresenceUpdate("res.partner", serverState.partnerId, "away");
+    sendPresenceUpdate("res.users", serverState.userId, "away");
     await contains(
         ".o-mail-DiscussContent-header .o-mail-ImStatus.fa-plane[title='User is on leave and idle']"
     );
-    sendPresenceUpdate("res.partner", serverState.partnerId, "online");
+    sendPresenceUpdate("res.users", serverState.userId, "online");
     await contains(
         ".o-mail-DiscussContent-header .o-mail-ImStatus.fa-plane[title='User is on leave and online']"
     );

@@ -191,10 +191,7 @@ test("Should not show IM status of agents", async () => {
         password: "joel",
     });
     pyEnv["res.partner"].create({ name: "Joel", user_ids: [joelUid] });
-    pyEnv["res.partner"].write(serverState.partnerId, {
-        im_status: "online",
-        user_livechat_username: "MitchellOp",
-    });
+    pyEnv["res.partner"].write(serverState.partnerId, { user_livechat_username: "MitchellOp" });
     await start({ authenticateAs: { login: "joel", password: "joel" } });
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow-header:text('MitchellOp')");

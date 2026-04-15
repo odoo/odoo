@@ -1143,7 +1143,7 @@ class MailMessage(models.Model):
                 res.one("main_user_id", ["partner_id", "share"]),
                 res.from_method("_store_avatar_fields"),
             ),
-            dynamic_fields="_store_partner_name_dynamic_fields",
+            dynamic_fields="_store_author_dynamic_fields",
             sudo=True,
         )
         res.extend(["body", "create_date", "date"])
@@ -1322,6 +1322,9 @@ class MailMessage(models.Model):
                 message_link_preview.id,
             ),
         )
+
+    def _store_author_dynamic_fields(self, res: Store.FieldList):
+        self._store_partner_name_dynamic_fields(res)
 
     def _store_partner_name_dynamic_fields(self, res: Store.FieldList):
         res.attr("name")

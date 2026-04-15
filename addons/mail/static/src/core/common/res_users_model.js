@@ -1,20 +1,22 @@
+import { ImStatusMixin } from "@mail/core/common/im_status_mixin";
+
 import { createElementWithContent } from "@web/core/utils/html";
-import { fields, Record } from "@mail/model/export";
+import { fields } from "@mail/model/export";
 import { getOuterHtml } from "@mail/utils/common/html";
 
 import { imageUrl } from "@web/core/utils/urls";
 
-export class ResUsers extends Record {
+export class ResUsers extends ImStatusMixin {
     static _name = "res.users";
     static _inherits = { "res.partner": "partner_id" };
 
     /** @type {number} */
     id;
     company_id = fields.One("res.company");
-    /** @type {string} */
-    im_status;
     /** @type {boolean} */
     is_admin;
+    /** @type {boolean} */
+    is_public;
     /** @type {"email" | "inbox"} */
     notification_type;
     partner_id = fields.One("res.partner", { inverse: "user_ids" });
@@ -48,6 +50,10 @@ export class ResUsers extends Record {
             ...createElementWithContent("div", this.signature).childNodes
         );
         return getOuterHtml(divElement);
+    }
+
+    _computeMonitorPresence() {
+        return super._computeMonitorPresence() && !this.is_public;
     }
 }
 

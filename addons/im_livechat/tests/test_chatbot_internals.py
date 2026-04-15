@@ -317,17 +317,18 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     {
                         "res.partner": self._filter_partners_fields(
                             {
+                                "agent_ids": [],
                                 "email": "e.e@example.com",
                                 "id": self.partner_employee.id,
-                                "im_status": "offline",
-                                "im_status_access_token": self.partner_employee._get_im_status_access_token(),
-                                "main_user_id": self.user_employee.id,
                                 "tz": False,
+                                "user_ids": self.user_employee.ids,
                             },
                         ),
                         "res.users": self._filter_users_fields({
                             "employee_ids": [],
                             "id": self.user_employee.id,
+                            "im_status": "offline",
+                            "im_status_access_token": self.user_employee._get_im_status_access_token(),
                             "partner_id": self.partner_employee.id,
                         }),
                     },

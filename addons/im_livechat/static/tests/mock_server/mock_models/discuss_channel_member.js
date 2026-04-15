@@ -1,5 +1,6 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
-import { fields } from "@web/../tests/web_test_helpers";
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { fields, makeKwArgs } from "@web/../tests/web_test_helpers";
 
 export class DiscussChannelMember extends mailModels.DiscussChannelMember {
     livechat_member_type = fields.Selection({
@@ -65,7 +66,13 @@ export class DiscussChannelMember extends mailModels.DiscussChannelMember {
                     ...this.env["res.partner"]._get_store_im_status_fields(),
                 ];
                 if (member.livechat_member_type == "visitor") {
-                    fields.push("offline_since", "email");
+                    fields.push(
+                        "email",
+                        mailDataHelpers.Store.many(
+                            "user_ids",
+                            makeKwArgs({ fields: ["offline_since"] })
+                        )
+                    );
                 }
             }
         }

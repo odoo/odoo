@@ -437,7 +437,8 @@ test("Compacted chat hub shows badge with amount of hidden chats with important 
 
 test("Show IM status", async () => {
     const pyEnv = await startServer();
-    const demoId = pyEnv["res.partner"].create({ name: "Demo User", im_status: "online" });
+    const demoId = pyEnv["res.partner"].create({ name: "Demo User" });
+    pyEnv["res.users"].create({ partner_id: demoId, im_status: "online" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),

@@ -6,12 +6,12 @@ import { effectWithCleanup } from "@mail/utils/common/misc";
 import { effect } from "@web/core/utils/reactive";
 import { debounce } from "@web/core/utils/timing";
 
-/** @typedef {'offline' | 'bot' | 'online' | 'away' | 'im_partner' | undefined} ImStatus */
+/** @typedef {'offline' | 'bot' | 'online' | 'away' | undefined} ImStatus */
 
 const { DateTime } = luxon;
 
 /**
- * Both ResPartner and MailGuest models need to react to `presence_status` updates and
+ * Both ResUsers and MailGuest models need to react to `presence_status` updates and
  * debounce updates to their `im_status` field to avoid flickering. This common class
  * groups the logic used by both models.
  */

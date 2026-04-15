@@ -15,7 +15,6 @@ imStatusDataRegistry.add(
             away: "fa fa-adjust",
             busy: "fa fa-minus-circle",
             offline: "fa fa-circle-o",
-            bot: "fa fa-heart o-xsmaller o-pt-0_5",
             default: "fa fa-question-circle",
         },
         title: {
@@ -23,11 +22,20 @@ imStatusDataRegistry.add(
             away: _t("User is idle"),
             busy: _t("User is busy"),
             offline: _t("User is offline"),
-            bot: _t("User is a bot"),
             default: _t("No IM status available"),
         },
     },
     { sequence: 100 }
+);
+
+imStatusDataRegistry.add(
+    "bot",
+    {
+        condition: ({ persona }) => persona?.isBot,
+        icon: "fa fa-heart o-xsmaller o-pt-0_5",
+        title: _t("User is a bot"),
+    },
+    { sequence: 90 }
 );
 
 export class ImStatus extends Component {
@@ -61,7 +69,7 @@ export class ImStatus extends Component {
     get class() {
         return attClassObjectToString({
             [`o-mail-ImStatus d-flex ${this.colorClass} ${this.props.className}`]: true,
-            "o-fs-small": this.persona?.im_status !== "bot",
+            "o-fs-small": !this.persona?.isBot,
             [`rounded-circle bg-transparent ${this.icon}`]: !this.showTypingIndicator,
             "rounded-pill": this.showTypingIndicator,
         });
@@ -70,7 +78,9 @@ export class ImStatus extends Component {
     get activeImStatusData() {
         return imStatusDataRegistry
             .getAll()
-            .find((r) => r.condition({ member: this.props.member, user: this.user }));
+            .find((r) =>
+                r.condition({ member: this.props.member, persona: this.persona, user: this.user })
+            );
     }
 
     get icon() {

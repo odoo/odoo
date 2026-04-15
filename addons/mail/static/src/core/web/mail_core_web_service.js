@@ -42,7 +42,7 @@ export class MailCoreWeb {
             /** @type {import("models").Message} */
             const message = this.store["mail.message"].get(messageId);
             this.addMessageToInbox(message, notifId);
-            if (!this.store.self?.im_status?.includes("busy")) {
+            if (this.store.self_user?.im_status !== "busy") {
                 this.store.env.services["mail.out_of_focus"].notify(message);
             }
         });

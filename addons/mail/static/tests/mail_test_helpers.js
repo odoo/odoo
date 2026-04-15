@@ -1055,5 +1055,5 @@ export function sendPresenceUpdate(modelName, id, newPresence) {
         presence_status: newPresence,
         im_status: newPresence,
     });
-    env["bus.bus"]._sendone(serverState.partnerId, "mail.record/insert", store.get_result());
+    env["bus.bus"]._sendone(serverState.userId, "mail.record/insert", store.get_result());
 }

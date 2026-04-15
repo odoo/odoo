@@ -7,6 +7,7 @@ from odoo import _, api, Command, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import email_normalize
+from odoo.tools.misc import limited_field_access_token
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -43,6 +44,7 @@ class ResUsers(models.Model):
     is_out_of_office = fields.Boolean('Out of Office', compute='_compute_is_out_of_office')
     # sudo: res.users - can access presence of accessible user
     im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
+    offline_since = fields.Datetime("Offline since", compute="_compute_im_status", compute_sudo=True)
     manual_im_status = fields.Selection(
         [("away", "Away"), ("busy", "Do Not Disturb"), ("offline", "Offline")],
         string="IM status manually set by the user",
@@ -115,6 +117,7 @@ class ResUsers(models.Model):
                 if user.presence_ids.status in ["offline", False]
                 else user.manual_im_status or user.presence_ids.status
             )
+            user.offline_since = user.presence_ids.last_poll if user.im_status == "offline" else None
 
     def _inverse_notification_type(self):
         inbox_group = self.env.ref('mail.group_mail_notification_type_inbox')
@@ -374,6 +377,15 @@ class ResUsers(models.Model):
     # DISCUSS
     # ------------------------------------------------------------
 
+    def _get_im_status_access_token(self):
+        """Return a scoped access token for the `im_status` field. The token is used in
+        `ir_websocket._prepare_subscribe_data` to grant access to presence channels.
+
+        :rtype: str
+        """
+        self.ensure_one()
+        return limited_field_access_token(self, "im_status", scope="mail.presence")
+
     def _store_init_global_fields(self, res: Store.FieldList):
         xmlid_to_res_id = self.env["ir.model.data"]._xmlid_to_res_id
         # sudo: res.partner - exposing OdooBot data is considered acceptable
@@ -418,6 +430,8 @@ class ResUsers(models.Model):
         res.extend(["active", "partner_id", "share"])
 
     def _store_im_status_fields(self, res: Store.FieldList):
+        res.attr("im_status")
+        res.attr("im_status_access_token", lambda p: p._get_im_status_access_token())
         res.one("partner_id", "_store_im_status_fields")
 
     def _store_bookmark_box_global_fields(self, res: Store.FieldList, bus_last_id=None):
@@ -525,6 +539,8 @@ class ResUsers(models.Model):
     def _store_avatar_card_fields(self, res: Store.FieldList):
         res.attr("share")
         res.one("partner_id", "_store_avatar_card_fields")
+        res.attr("is_public", lambda u: u._is_public())
+        res.from_method("_store_im_status_fields", internal=True)
 
     # ------------------------------------------------------------
     # Mail Servers

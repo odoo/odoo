@@ -205,18 +205,19 @@ class TestChannelInternals(MailCommon, HttpCase):
                     {
                         "res.partner": self._filter_partners_fields(
                             {
+                                "agent_ids": [],
                                 "email": "test_customer@example.com",
                                 "id": self.test_partner.id,
-                                "im_status": "offline",
-                                "im_status_access_token": self.test_partner._get_im_status_access_token(),
-                                "main_user_id": self.test_user.id,
                                 "tz": False,
+                                "user_ids": self.test_user.ids,
                             },
                         ),
                         "res.users": self._filter_users_fields(
                             {
                                 "employee_ids": [],
                                 "id": self.test_user.id,
+                                "im_status": "offline",
+                                "im_status_access_token": self.test_user._get_im_status_access_token(),
                                 "partner_id": self.test_partner.id,
                             },
                         ),
@@ -249,16 +250,16 @@ class TestChannelInternals(MailCommon, HttpCase):
                         "res.partner": self._filter_partners_fields(
                             {
                                 "active": True,
+                                "agent_ids": [],
                                 "avatar_128_access_token": self.test_partner._get_avatar_128_access_token(),
                                 "email": "test_customer@example.com",
                                 "id": self.test_partner.id,
-                                "im_status": "offline",
-                                "im_status_access_token": self.test_partner._get_im_status_access_token(),
                                 "is_company": False,
                                 "main_user_id": self.test_user.id,
                                 "mention_token": self.test_partner._get_mention_token(),
                                 "name": "Test Partner",
                                 "tz": False,
+                                "user_ids": self.test_user.ids,
                                 "write_date": test_partner_write_date,
                             },
                         ),
@@ -266,6 +267,8 @@ class TestChannelInternals(MailCommon, HttpCase):
                             {
                                 "active": True,
                                 "id": self.test_user.id,
+                                "im_status": "offline",
+                                "im_status_access_token": self.test_user._get_im_status_access_token(),
                                 "employee_ids": [],
                                 "partner_id": self.test_partner.id,
                                 "share": False,
@@ -502,16 +505,17 @@ class TestChannelInternals(MailCommon, HttpCase):
                     {
                         "res.partner": self._filter_partners_fields(
                             {
+                                "agent_ids": [],
                                 "id": self.test_partner.id,
-                                "im_status": self.test_partner.im_status,
-                                "im_status_access_token": self.test_partner._get_im_status_access_token(),
-                                "main_user_id": self.test_user.id,
+                                "user_ids": self.test_user.ids,
                             },
                         ),
                         "res.users": self._filter_users_fields(
                             {
                                 "employee_ids": [],
                                 "id": self.test_user.id,
+                                "im_status": self.test_user.im_status,
+                                "im_status_access_token": self.test_user._get_im_status_access_token(),
                                 "partner_id": self.test_partner.id,
                             },
                         ),
@@ -552,13 +556,12 @@ class TestChannelInternals(MailCommon, HttpCase):
                         ],
                         "res.partner": self._filter_partners_fields(
                             {
+                                "agent_ids": [],
                                 "avatar_128_access_token": self.test_partner._get_avatar_128_access_token(),
                                 "id": self.test_partner.id,
-                                "im_status": self.test_partner.im_status,
-                                "im_status_access_token": self.test_partner._get_im_status_access_token(),
-                                "main_user_id": self.test_user.id,
                                 "mention_token": self.test_partner._get_mention_token(),
                                 "name": self.test_partner.name,
+                                "user_ids": self.test_user.ids,
                                 "write_date": fields.Datetime.to_string(self.test_partner.write_date),
                             },
                         ),
@@ -566,6 +569,8 @@ class TestChannelInternals(MailCommon, HttpCase):
                             {
                                 "employee_ids": [],
                                 "id": self.test_user.id,
+                                "im_status": self.test_user.im_status,
+                                "im_status_access_token": self.test_user._get_im_status_access_token(),
                                 "partner_id": self.test_partner.id,
                             },
                         ),

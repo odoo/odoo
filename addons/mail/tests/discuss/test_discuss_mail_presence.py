@@ -19,7 +19,6 @@ from odoo.addons.bus.models.bus import channel_with_db, json_dump
 class TestMailPresence(WebsocketCase, MailCommon):
     def _receive_presence(self, requested_by, target, has_token=False):
         self.env["mail.presence"].search([]).unlink()
-        target_user = isinstance(target, self.env.registry["res.users"])
         if isinstance(requested_by, self.env.registry["res.users"]):
             session = self.authenticate(requested_by.login, requested_by.login)
             auth_cookie = f"session_id={session.sid};"
@@ -27,10 +26,9 @@ class TestMailPresence(WebsocketCase, MailCommon):
             self.authenticate(None, None)
             auth_cookie = f"{requested_by._cookie_name}={requested_by._format_auth_cookie()};"
         websocket = self.websocket_connect(cookie=auth_cookie)
-        target_channel = target.partner_id if target_user else target
-        channel_parts = ["odoo-presence", f"{target_channel._name}_{target_channel.id}"]
+        channel_parts = ["odoo-presence", f"{target._name}_{target.id}"]
         if has_token:
-            channel_parts.append(target_channel._get_im_status_access_token())
+            channel_parts.append(target._get_im_status_access_token())
         self.subscribe(websocket, ["-".join(channel_parts)], self.env["bus.bus"]._bus_last_id())
         self.env["mail.presence"]._update_presence(target)
         self.trigger_notification_dispatching([(target, "presence")])
@@ -43,13 +41,10 @@ class TestMailPresence(WebsocketCase, MailCommon):
         )
         self.assertEqual(notifications[0]["message"]["type"], "mail.record/insert")
         self.assertEqual(
-            notifications[0]["message"]["payload"][target_channel._name][0]["im_status"],
+            notifications[0]["message"]["payload"][target._name][0]["im_status"],
             "online",
         )
-        self.assertEqual(
-            notifications[0]["message"]["payload"][target_channel._name][0]["id"],
-            target_channel.id,
-        )
+        self.assertEqual(notifications[0]["message"]["payload"][target._name][0]["id"], target.id)
 
     @freeze_all_time()
     def test_presence_access(self):
@@ -85,7 +80,7 @@ class TestMailPresence(WebsocketCase, MailCommon):
                 (bob, "presence"),
                 "mail.record/insert",
                 {
-                    "res.partner": [{"id": bob.partner_id.id, "im_status": "offline"}],
+                    "res.users": [{"id": bob.id, "im_status": "offline"}],
                 },
             ),
         ):
@@ -104,15 +99,9 @@ class TestMailPresence(WebsocketCase, MailCommon):
         self.assertEqual(presence_channel_notif.channel, json_dump(channel_with_db(self.env.cr.dbname, (bob, "presence"))))
         self.assertEqual(self_channel_notif.channel, json_dump(channel_with_db(self.env.cr.dbname, bob)))
         presence_payload = json.loads(presence_channel_notif.message)["payload"]
-        self.assertEqual(
-            presence_payload,
-            {"res.partner": [{"id": bob.partner_id.id, "im_status": "online"}]},
-        )
+        self.assertEqual(presence_payload, {"res.users": [{"id": bob.id, "im_status": "online"}]})
         self_payload = json.loads(self_channel_notif.message)["payload"]
-        self.assertEqual(
-            self_payload,
-            {"res.partner": [{"id": bob.partner_id.id, "presence_status": "online"}]},
-        )
+        self.assertEqual(self_payload, {"res.users": [{"id": bob.id, "presence_status": "online"}]})
         other_user = new_test_user(self.env, login="other_user", groups="base.group_user")
         self._reset_bus()
         bob_presence = self.env["mail.presence"].search([("user_id", "=", bob.id)])
@@ -126,5 +115,5 @@ class TestMailPresence(WebsocketCase, MailCommon):
         )
         self.assertEqual(
            json.loads(notifications.message)["payload"],
-            {"res.partner": [{"id": bob.partner_id.id, "im_status": "online"}]},
+            {"res.users": [{"id": bob.id, "im_status": "online"}]},
         )

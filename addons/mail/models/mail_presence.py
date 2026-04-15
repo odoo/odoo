@@ -102,17 +102,9 @@ class MailPresence(models.Model):
         for presence in self:
             persona = presence.guest_id or presence.user_id
             target = bus_target or (persona, "presence")
-            stores[target].add(
-                presence.guest_id or presence.user_id.partner_id,
-                {"im_status": im_status or persona.im_status},
-            )
+            stores[target].add(persona, {"im_status": im_status or persona.im_status})
             if bus_target is None or persona == bus_target:
-                stores[persona].add(
-                    persona
-                    if isinstance(persona, self.env.registry["mail.guest"])
-                    else persona.partner_id,
-                    {"presence_status": im_status or presence.status},
-                )
+                stores[persona].add(persona, {"presence_status": im_status or presence.status})
         stores.bus_send()
 
     @api.autovacuum

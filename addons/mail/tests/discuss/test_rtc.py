@@ -160,7 +160,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                             self._res_for_partner(self.partner_employee, internal=True),
                         ),
                         "res.users": self._filter_users_fields(
-                            self._res_for_user(self.user_employee),
+                            self._res_for_user(self.user_employee, internal=True),
                         ),
                     },
                 ),
@@ -193,7 +193,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                     self._res_for_partner(self.partner_employee, internal=True),
                 ),
                 "res.users": self._filter_users_fields(
-                    self._res_for_user(self.user_employee),
+                    self._res_for_user(self.user_employee, internal=True),
                 ),
                 "Rtc": {
                     "iceServers": False,
@@ -275,7 +275,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                             ),
                         ),
                         "res.users": self._filter_users_fields(
-                            self._res_for_user(self.user_employee),
+                            self._res_for_user(self.user_employee, internal=True),
                         ),
                     },
                 ),
@@ -298,7 +298,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                             self._res_for_partner(self.partner_employee, internal=True),
                         ),
                         "res.users": self._filter_users_fields(
-                            self._res_for_user(self.user_employee),
+                            self._res_for_user(self.user_employee, internal=True),
                         ),
                     },
                 ),
@@ -330,7 +330,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                             self._res_for_partner(self.test_partner, common=False, internal=True),
                         ),
                         "res.users": self._filter_users_fields(
-                            self._res_for_user(self.test_user),
+                            self._res_for_user(self.test_user, internal=True),
                         ),
                     },
                 ),
@@ -413,7 +413,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                             ),
                         ),
                         "res.users": self._filter_users_fields(
-                            self._res_for_user(self.user_employee),
+                            self._res_for_user(self.user_employee, internal=True),
                         ),
                     },
                 ),
@@ -436,7 +436,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                             self._res_for_partner(self.partner_employee, internal=True),
                         ),
                         "res.users": self._filter_users_fields(
-                            self._res_for_user(self.user_employee),
+                            self._res_for_user(self.user_employee, internal=True),
                         ),
                     },
                 ),
@@ -501,7 +501,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                             self._res_for_partner(self.test_partner, common=False, internal=True),
                         ),
                         "res.users": self._filter_users_fields(
-                            self._res_for_user(self.test_user),
+                            self._res_for_user(self.test_user, internal=True),
                         ),
                     },
                 ),
@@ -561,7 +561,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                             self._res_for_partner(self.test_partner, common=False, internal=True),
                         ),
                         "res.users": self._filter_users_fields(
-                            self._res_for_user(self.test_user),
+                            self._res_for_user(self.test_user, internal=True),
                         ),
                     },
                 ),
@@ -594,7 +594,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                             self._res_for_partner(self.test_partner, common=False, internal=True),
                         ),
                         "res.users": self._filter_users_fields(
-                            self._res_for_user(self.test_user),
+                            self._res_for_user(self.test_user, internal=True),
                         ),
                     },
                 ),
@@ -730,7 +730,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                             self._res_for_partner(self.test_partner, common=False, internal=True),
                         ),
                         "res.users": self._filter_users_fields(
-                            self._res_for_user(self.test_user),
+                            self._res_for_user(self.test_user, internal=True),
                         ),
                     },
                 ),
@@ -859,7 +859,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                             self._res_for_partner(self.test_partner, common=False, internal=True),
                         ),
                         "res.users": self._filter_users_fields(
-                            self._res_for_user(self.test_user),
+                            self._res_for_user(self.test_user, internal=True),
                         ),
                     },
                 ),
@@ -940,7 +940,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                             self._res_for_partner(self.partner_employee, internal=True),
                         ),
                         "res.users": self._filter_users_fields(
-                            self._res_for_user(self.user_employee),
+                            self._res_for_user(self.user_employee, internal=True),
                         ),
                     },
                 ),
@@ -1001,7 +1001,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                             self._res_for_partner(self.test_partner, common=False, internal=True),
                         ),
                         "res.users": self._filter_users_fields(
-                            self._res_for_user(self.test_user),
+                            self._res_for_user(self.test_user, internal=True),
                         ),
                     },
                 ),
@@ -1217,9 +1217,8 @@ class TestChannelRTC(MailCommon, HttpCase):
             res["name"] = partner.name
             res["write_date"] = fields.Datetime.to_string(partner.write_date)
         if internal:
-            res["im_status"] = partner.im_status
-            res["im_status_access_token"] = partner._get_im_status_access_token()
-            res["main_user_id"] = partner.main_user_id.id
+            res["agent_ids"] = []
+            res["user_ids"] = partner.user_ids.ids
         return res
 
     def _res_for_rtc_session(self, rtc_session, extra=False):
@@ -1234,9 +1233,13 @@ class TestChannelRTC(MailCommon, HttpCase):
             res["is_screen_sharing_on"] = rtc_session.is_screen_sharing_on
         return res
 
-    def _res_for_user(self, user):
-        return {
+    def _res_for_user(self, user, internal=False):
+        res = {
             "employee_ids": [],
             "id": user.id,
             "partner_id": user.partner_id.id,
         }
+        if internal:
+            res["im_status"] = user.im_status
+            res["im_status_access_token"] = user._get_im_status_access_token()
+        return res

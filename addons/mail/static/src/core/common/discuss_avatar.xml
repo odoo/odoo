@@ -14,7 +14,7 @@
                     <foreignObject x="0" y="0" width="25" height="15">
                         <ThreadIcon t-if="this.thread" thread="this.thread" typing="this.props.typing"/>
                         <ImStatus t-elif="this.props.member" member="this.props.member" className="'d-flex'" size="'md'" typing="this.props.typing"/>
-                        <ImStatus t-elif="this.user" user="this.user" typing="this.props.typing"/>
+                        <ImStatus t-elif="this.user" user="this.user" persona="this.persona"  typing="this.props.typing"/>
                         <ImStatus t-elif="this.persona" persona="this.persona" typing="this.props.typing"/>
                     </foreignObject>
                 </svg>

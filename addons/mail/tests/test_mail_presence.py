@@ -40,5 +40,11 @@ class TestMailPresence(HttpCase):
         user_bus_notif = self.env["bus.bus"].sudo().search(
             [("channel", "=", user_channel)], order="id desc", limit=1,
         )
-        self.assertEqual(json.loads(presence_bus_notif.message)["payload"]["res.partner"][0]["im_status"], "offline")
-        self.assertEqual(json.loads(user_bus_notif.message)["payload"]["res.partner"][0]["presence_status"], "offline")
+        self.assertEqual(
+            json.loads(presence_bus_notif.message)["payload"]["res.users"][0]["im_status"],
+            "offline",
+        )
+        self.assertEqual(
+            json.loads(user_bus_notif.message)["payload"]["res.users"][0]["presence_status"],
+            "offline",
+        )

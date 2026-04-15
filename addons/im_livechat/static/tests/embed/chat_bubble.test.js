@@ -13,8 +13,8 @@ test("Do not show bot IM status", async () => {
     const pyEnv = await startServer();
     await loadDefaultEmbedConfig();
     await makeMockEnv({ embedLivechat: true });
-    const partnerId1 = pyEnv["res.partner"].create({ name: "Mitchell", im_status: "online" });
-    pyEnv["res.users"].create({ partner_id: partnerId1 });
+    const partnerId1 = pyEnv["res.partner"].create({ name: "Mitchell" });
+    pyEnv["res.users"].create({ partner_id: partnerId1, im_status: "online" });
     const channelId1 = pyEnv["discuss.channel"].create({
         channel_member_ids: [Command.create({ partner_id: partnerId1 })],
         channel_type: "chat",

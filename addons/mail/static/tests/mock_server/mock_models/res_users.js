@@ -223,6 +223,14 @@ export class ResUsers extends webModels.ResUsers {
         return res;
     }
 
+    _get_store_im_status_fields() {
+        return [
+            "im_status",
+            mailDataHelpers.Store.attr("im_status_access_token", (p) => p.id),
+            "partner_id",
+        ];
+    }
+
     get _to_store_defaults() {
         return [mailDataHelpers.Store.one("partner_id")];
     }

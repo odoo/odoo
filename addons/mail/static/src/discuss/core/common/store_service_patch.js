@@ -23,9 +23,6 @@ const storeServicePatch = {
             0
         );
     },
-    get onlineMemberStatuses() {
-        return ["away", "bot", "busy", "online"];
-    },
     /**
      * @param {Object} param0
      * @param {string} param0.default_display_mode

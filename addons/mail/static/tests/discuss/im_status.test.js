@@ -25,10 +25,10 @@ describe.current.tags("headless");
 test("update presence if IM status changes to offline while this device is online", async () => {
     mockService("bus_service", { send: (type) => expect.step(type) });
     const pyEnv = await startServer();
-    pyEnv["res.partner"].write(serverState.partnerId, { im_status: "online" });
+    pyEnv["res.users"].write(serverState.userId, { im_status: "online" });
     await start();
-    await expect.waitForSteps(["update_presence"]);
-    sendPresenceUpdate("res.partner", serverState.partnerId, "offline");
+    await expect.waitForSteps([]);
+    sendPresenceUpdate("res.users", serverState.userId, "offline");
     await expect.waitForSteps(["update_presence"]);
 });
 
@@ -36,10 +36,10 @@ test("update presence if IM status changes to away while this device is online",
     mockService("bus_service", { send: (type) => expect.step(type) });
     localStorage.setItem("presence.lastPresence", Date.now());
     const pyEnv = await startServer();
-    pyEnv["res.partner"].write(serverState.partnerId, { im_status: "online" });
+    pyEnv["res.users"].write(serverState.userId, { im_status: "online" });
     await start();
-    await expect.waitForSteps(["update_presence"]);
-    sendPresenceUpdate("res.partner", serverState.partnerId, "away");
+    await expect.waitForSteps([]);
+    sendPresenceUpdate("res.users", serverState.userId, "away");
     await expect.waitForSteps(["update_presence"]);
 });
 
@@ -47,10 +47,10 @@ test("do not update presence if IM status changes to away while this device is a
     mockService("bus_service", { send: (type) => expect.step(type) });
     localStorage.setItem("presence.lastPresence", Date.now() - AWAY_DELAY);
     const pyEnv = await startServer();
-    pyEnv["res.partner"].write(serverState.partnerId, { im_status: "away" });
+    pyEnv["res.users"].write(serverState.userId, { im_status: "away" });
     await start();
     await expect.waitForSteps(["update_presence"]);
-    sendPresenceUpdate("res.partner", serverState.partnerId, "away");
+    sendPresenceUpdate("res.users", serverState.userId, "away");
     await expect.waitForSteps([]);
 });
 
@@ -58,11 +58,11 @@ test("do not update presence if other user's IM status changes to away", async (
     mockService("bus_service", { send: (type) => expect.step(type) });
     localStorage.setItem("presence.lastPresence", Date.now());
     const pyEnv = await startServer();
-    pyEnv["res.partner"].write(serverState.partnerId, { im_status: "online" });
-    const bobPartnerId = pyEnv["res.partner"].create({ name: "bob", im_status: "online" });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "bob" });
+    const bobUserId = pyEnv["res.users"].create({ partner_id: bobPartnerId, im_status: "online" });
     await start();
     await expect.waitForSteps(["update_presence"]);
-    sendPresenceUpdate("res.partner", bobPartnerId, "away");
+    sendPresenceUpdate("res.users", bobUserId, "away");
     await expect.waitForSteps([]);
 });
 
@@ -76,7 +76,7 @@ test("update presence when user comes back from away", async () => {
     });
     localStorage.setItem("presence.lastPresence", Date.now() - AWAY_DELAY);
     const pyEnv = await startServer();
-    pyEnv["res.partner"].write(serverState.partnerId, { im_status: "away" });
+    pyEnv["res.users"].write(serverState.userId, { im_status: "away" });
     await start();
     await expect.waitForSteps([AWAY_DELAY]);
     localStorage.setItem("presence.lastPresence", Date.now());
@@ -93,7 +93,7 @@ test("update presence when user status changes to away", async () => {
     });
     localStorage.setItem("presence.lastPresence", Date.now());
     const pyEnv = await startServer();
-    pyEnv["res.partner"].write(serverState.partnerId, { im_status: "online" });
+    pyEnv["res.users"].write(serverState.userId, { im_status: "online" });
     await start();
     await expect.waitForSteps([0]);
     await advanceTime(AWAY_DELAY);
@@ -106,7 +106,7 @@ test("new tab update presence when user comes back from away", async () => {
     // its first update (important when old tabs close and new ones replace them).
     localStorage.setItem("presence.lastPresence", Date.now() - AWAY_DELAY);
     const pyEnv = await startServer();
-    pyEnv["res.partner"].write([serverState.partnerId], { im_status: "offline" });
+    pyEnv["res.users"].write([serverState.userId], { im_status: "offline" });
     const tabEnv_1 = await makeMockEnv();
     patchWithCleanup(tabEnv_1.services.bus_service, {
         send: (type) => {

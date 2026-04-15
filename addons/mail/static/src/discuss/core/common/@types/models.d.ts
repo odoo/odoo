@@ -33,7 +33,6 @@ declare module "models" {
         "discuss.channel.member": StaticMailRecord<ChannelMember, typeof ChannelMemberClass>;
         fetchChannel: (channelId: number) => Promise<void>;
         getRecentChatPartnerIds: () => number[];
-        onlineMemberStatuses: Readonly<string[]>;
         sortMembers: (m1: ChannelMember, m2: ChannelMember) => number;
         startChat: (partnerIds: number[]) => Promise<void>;
         updateBusSubscription: (() => unknown) & { cancel: () => void };

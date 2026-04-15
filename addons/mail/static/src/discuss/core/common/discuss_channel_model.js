@@ -286,7 +286,7 @@ export class DiscussChannel extends Record {
         /** @this {import("models").DiscussChannel} */
         compute() {
             return this.channel_member_ids
-                .filter((member) => this.store.onlineMemberStatuses.includes(member.imStatusUI))
+                .filter((member) => ["online", "away", "busy"].includes(member.imStatusUI))
                 .sort((m1, m2) => this.store.sortMembers(m1, m2)); // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
         },
     });
@@ -813,9 +813,7 @@ export class DiscussChannel extends Record {
 
     /** @returns {import("models").ChannelMember[]} */
     _computeUnknownStatusMembers() {
-        return this.channel_member_ids.filter((member) =>
-            [undefined, "im_partner"].includes(member.imStatusUI)
-        );
+        return this.channel_member_ids.filter((member) => member.imStatusUI === undefined);
     }
     get composerHidden() {
         return !this.canSelfInteractWithChannel;

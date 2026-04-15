@@ -260,14 +260,13 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                 "res.partner": self._filter_partners_fields(
                     {
                         "active": True,
+                        "agent_ids": [],
                         "avatar_128_access_token": self.operator.partner_id._get_avatar_128_access_token(),
                         "country_id": False,
                         "id": self.operator.partner_id.id,
-                        "im_status": "online",
-                        "im_status_access_token": self.operator.partner_id._get_im_status_access_token(),
                         "is_public": False,
-                        "main_user_id": self.operator.id,
                         "mention_token": self.operator.partner_id._get_mention_token(),
+                        "user_ids": self.operator.ids,
                         "user_livechat_username": "El Deboulonnator",
                         "write_date": fields.Datetime.to_string(
                             self.operator.partner_id.write_date
@@ -277,6 +276,8 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                 "res.users": self._filter_users_fields(
                     {
                         "id": self.operator.id,
+                        "im_status": "online",
+                        "im_status_access_token": self.operator._get_im_status_access_token(),
                         "employee_ids": [],
                         "partner_id": self.operator.partner_id.id,
                     },

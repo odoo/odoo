@@ -1,9 +1,10 @@
-import { ImStatusMixin } from "@mail/core/common/im_status_mixin";
-import { fields } from "@mail/model/misc";
+import { fields, Record } from "@mail/model/export";
 
 import { imageUrl } from "@web/core/utils/urls";
 
-export class ResPartner extends ImStatusMixin {
+const { DateTime } = luxon;
+
+export class ResPartner extends Record {
     static _name = "res.partner";
 
     /** @type {string} */
@@ -22,6 +23,21 @@ export class ResPartner extends ImStatusMixin {
     group_ids = fields.Many("res.groups", { inverse: "partners" });
     /** @type {number} */
     id;
+    /** @type {import("./im_status_mixin").ImStatus} */
+    imStatusUI = fields.Attr(undefined, {
+        compute() {
+            const userStatuses = this.user_ids.map((u) => u.imStatusUI);
+            if (userStatuses.includes("online") || this.isBot) {
+                return "online";
+            } else if (userStatuses.includes("away")) {
+                return "away";
+            } else if (userStatuses.includes("busy")) {
+                return "busy";
+            } else if (userStatuses.includes("offline")) {
+                return "offline";
+            }
+        },
+    });
     /** @type {boolean | undefined} */
     is_company;
     /** @type {boolean} */
@@ -33,6 +49,10 @@ export class ResPartner extends ImStatusMixin {
     display_name;
     /** @type {string} */
     phone;
+    /** @type {luxon.DateTime} */
+    offline_since = fields.Datetime(undefined, {
+        compute: () => DateTime.max(this.user_ids.map((u) => u.offline_since)),
+    });
     user_ids = fields.Many("res.users", { inverse: "partner_id" });
     write_date = fields.Datetime();
 
@@ -60,17 +80,15 @@ export class ResPartner extends ImStatusMixin {
         return this.name || this.display_name;
     }
 
-    _computeMonitorPresence() {
-        return (
-            super._computeMonitorPresence() && this.im_status !== "im_partner" && !this.is_public
-        );
-    }
-
     searchChat() {
         return Object.values(this.store["discuss.channel"].records).find(
             (channel) =>
                 channel.channel_type === "chat" && channel.correspondent?.partner_id?.eq(this)
         );
+    }
+
+    get isBot() {
+        return this.eq(this.store.odoobot);
     }
 }
 

@@ -182,7 +182,8 @@ class DiscussChannelMember(models.Model):
         partner_res.from_method("_store_livechat_username_fields")
         partner_res.from_method("_store_mention_fields")
         if self.livechat_member_type == "visitor":
-            partner_res.extend(["offline_since", "email"])
+            partner_res.attr("email")
+            partner_res.many("user_ids", ["offline_since"])
         partner_res.from_method("_store_im_status_fields", internal=True)
 
     def _store_guest_dynamic_fields(self, guest_res: Store.FieldList):
