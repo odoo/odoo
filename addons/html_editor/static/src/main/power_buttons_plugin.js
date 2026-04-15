@@ -180,7 +180,8 @@ export class PowerButtonsPlugin extends Plugin {
             this.powerButtonsContainer.style.transform = "translateX(-100%)";
         } else {
             this.powerButtonsContainer.style.transform = "unset";
-            this.powerButtonsContainer.style.left = placeholderWidth + 30 + "px";
+            this.powerButtonsContainer.style.left =
+                blockRect.left - overlayRect.left + placeholderWidth + 30 + "px";
         }
         this.powerButtonsContainer.style.top = blockRect.top - overlayRect.top + "px";
     }
