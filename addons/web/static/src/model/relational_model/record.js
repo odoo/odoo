@@ -1157,12 +1157,10 @@ export class Record extends DataPoint {
             if (nextId) {
                 return this.model.load({ resId: nextId });
             }
-            // eslint-disable-next-line no-undef
-            owl.preventWrite(() => {
-                this._changes = markRaw({});
-                this.data = { ...this._values };
-                this.dirty = false;
-            });
+            this._changes = markRaw({});
+            // toRaw to prevent effect
+            toRaw(this).data = { ...this._values };
+            this.dirty = false;
             return true;
         }
         if (
