@@ -825,7 +825,6 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         this.logoInputRef = useRef("logoSelectionInput");
         this.toneOptions = TONE_OPTIONS;
         this.state.selectedTone = "inspirational";
-        this.is_content_generated = false;
         this.images_loaded = false;
         this.closeGeneratorNotification = null;
         this.previewPalettePrefetchId = 0;
@@ -839,6 +838,12 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
             document.body.classList.add("o_configurator_notifications_top");
             this.onScrollContent(this.scrollContentRef, "isStylePanelBottomReached");
             this.onScrollContent(this.colorPanelBodyRef, "isColorPanelBottomReached");
+            document.getElementById("describeYourWebsiteTextarea").value = _t(
+                "Generate the text content for my %(industryName)s business.",
+                {
+                    industryName: this.state.selectedIndustry.label,
+                }
+            );
         });
         onWillUnmount(() => {
             document.body.classList.remove("o_configurator_notifications_top");
@@ -1033,7 +1038,9 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
     }
 
     getFeaturedPalettes() {
-        return this.state.featuredPaletteNames.map((paletteName) => this.state.palettes[paletteName]);
+        return this.state.featuredPaletteNames.map(
+            (paletteName) => this.state.palettes[paletteName]
+        );
     }
 
     getOtherPaletteSections() {
@@ -1080,7 +1087,11 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
 
     async setPalette(paletteName) {
         this.state.selectedPalette = paletteName;
-        if (paletteName !== "logoPalette" && !this.state.featuredPaletteNames.includes(paletteName)) {
+        console.log("Selected palette:", this.state.selectedPalette);
+        if (
+            paletteName !== "logoPalette" &&
+            !this.state.featuredPaletteNames.includes(paletteName)
+        ) {
             this.updateFeaturedPaletteNames(paletteName);
         }
         this.cancelPreviewPalettePrefetch();
@@ -1402,10 +1413,6 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         }
         this.previewState.initialLoaded = true;
         this.state.previewIsLoading = false;
-        if (!this.is_content_generated) {
-            this.generateContent();
-            return;
-        }
     }
 
     deactivatePreviewInteractions(iframeDoc) {
@@ -1437,36 +1444,32 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
     }
 
     generateContent() {
-        const userPrompt = document.getElementById("describeYourWebsiteTextarea")?.value || "";
-        if (userPrompt !== "" || !this.is_content_generated) {
-            const params = new URLSearchParams({
-                industry: this.state.selectedIndustry.label,
-                industry_id: this.state.selectedIndustry.id,
-                install_theme: "0",
-                theme_name: this.state.selectedTheme || "theme_default",
-                generate_content: "1",
-                with_images: this.images_loaded ? "0" : "1",
-                user_prompt: userPrompt !== "" ? userPrompt : null,
-                tone: this.state.selectedTone || null,
-            });
-            const iframe = this.previewIframeRef.el;
-            if (iframe) {
-                this.closeGeneratorNotification?.();
-                this.closeGeneratorNotification = this.notification.add(
-                    markup(
-                        `<i class="fa fa-circle-o-notch fa-spin me-2" role="img" aria-label="${_t(
-                            "Loading"
-                        )}"></i>${_t("Generating your website content with AI...")}`
-                    ),
-                    {
-                        type: "info",
-                        sticky: true,
-                    }
-                );
-                this.is_content_generated = true;
-                this.images_loaded = true;
-                iframe.src = `/website/configurator/preview?${params.toString()}&preview_ts=${Date.now()}`;
-            }
+        const userPrompt = document.getElementById("describeYourWebsiteTextarea").value || "";
+        const params = new URLSearchParams({
+            industry: this.state.selectedIndustry.label,
+            industry_id: this.state.selectedIndustry.id,
+            install_theme: "0",
+            theme_name: this.state.selectedTheme || "theme_default",
+            generate_content: "1",
+            user_prompt: userPrompt !== "" ? userPrompt : null,
+            tone: this.state.selectedTone || null,
+            with_images: "1",
+        });
+        const iframe = this.previewIframeRef.el;
+        if (iframe) {
+            this.closeGeneratorNotification?.();
+            this.closeGeneratorNotification = this.notification.add(
+                markup(
+                    `<i class="fa fa-circle-o-notch fa-spin me-2" role="img" aria-label="${_t(
+                        "Loading"
+                    )}"></i>${_t("Generating your website content with AI...")}`
+                ),
+                {
+                    type: "info",
+                    sticky: true,
+                }
+            );
+            iframe.src = `/website/configurator/preview?${params.toString()}&preview_ts=${Date.now()}`;
         }
     }
 
@@ -1477,7 +1480,9 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
             install_theme: "1",
             theme_name: this.state.selectedTheme || "theme_default",
             generate_content: "0",
+            with_images: "1",
         });
+        this.images_loaded = true;
         return `/website/configurator/preview?${params.toString()}`;
     }
 }
