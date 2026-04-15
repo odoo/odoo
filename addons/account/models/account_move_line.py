@@ -3266,7 +3266,7 @@ class AccountMoveLine(models.Model):
                 exchange_moves_to_post |= exchange_move
 
         if exchange_moves_to_post:
-            exchange_moves_to_post._post(soft=False)
+            exchange_moves_to_post.with_context(validate_analytic=False)._post(soft=False)
 
         return exchange_moves
 
