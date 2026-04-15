@@ -158,4 +158,62 @@ describe("nesting", () => {
             `<p><span class="o_rfs" style="font-size: ${fontSizeProperty};">[Text]</span></p>`
         );
     });
+
+    test("apply bold on text effect, then remove bold should keep text effect", async () => {
+        addBuilderPlugin(TextEffectPlugin);
+        await setupHTMLBuilder(`<p>Text</p>`);
+        const p = await waitFor(":iframe p");
+        expect(":iframe p").toHaveCount(1);
+        setSelection({
+            anchorNode: p,
+            anchorOffset: 0,
+            focusNode: p,
+            focusOffset: 1,
+        });
+        await contains(".oi-ellipsis-v").click();
+        await contains(".o-select-text-effect").click();
+        await contains(`[data-action-id="setTextEffect"][data-action-value*="sharp"]`).click();
+        expect(`:iframe [data-text-effect*="sharp"]`).toHaveStyle("text-shadow");
+        await waitFor(":iframe span[data-text-effect]");
+        await contains(".o-select-text-effect").click();
+        await waitForNone(".o_text_effect_popover");
+
+        // Apply bold
+        await contains(".fa-bold").click();
+        await waitFor(":iframe strong");
+
+        // Remove bold
+        await contains(".fa-bold").click();
+        await waitForNone(":iframe strong");
+        expect(`:iframe [data-text-effect*="sharp"]`).toHaveStyle("text-shadow");
+    });
+
+    test("apply text effect on bold, then remove bold should keep text effect", async () => {
+        addBuilderPlugin(TextEffectPlugin);
+        await setupHTMLBuilder(`<p>Text</p>`);
+        const p = await waitFor(":iframe p");
+        expect(":iframe p").toHaveCount(1);
+        setSelection({
+            anchorNode: p,
+            anchorOffset: 0,
+            focusNode: p,
+            focusOffset: 1,
+        });
+
+        // Apply bold
+        await contains(".fa-bold").click();
+        await waitFor(":iframe strong");
+
+        // Apply text effect
+        await contains(".oi-ellipsis-v").click();
+        await contains(".o-select-text-effect").click();
+        await contains(`[data-action-id="setTextEffect"][data-action-value*="sharp"]`).click();
+        expect(`:iframe [data-text-effect*="sharp"]`).toHaveStyle("text-shadow");
+        await waitFor(":iframe strong span[data-text-effect]");
+
+        // Remove bold
+        await contains(".fa-bold").click();
+        await waitForNone(":iframe strong");
+        expect(`:iframe [data-text-effect*="sharp"]`).toHaveStyle("text-shadow");
+    });
 });
