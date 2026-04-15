@@ -142,6 +142,9 @@ export class ProductTemplate extends ProductTemplateAccounting {
 
     get searchString() {
         return this.cacheValues("searchString", () => {
+            if (this.search_string) {
+                return this.search_string;
+            }
             const fields = ["name", "default_code", "barcode"];
             const raw = fields
                 .map((field) => this[field] || "")

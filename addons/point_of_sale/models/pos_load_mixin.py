@@ -47,9 +47,57 @@ class PosLoadMixin(models.AbstractModel):
         if not config:
             raise ValueError("config must be provided to read PoS data.")
 
+        import time
+        import logging
+        _logger = logging.getLogger(__name__)
+
         fields = self._load_pos_data_fields(config)
-        records = records._filtered_access("read").read(fields, load=False)
-        return records or []
+
+        # Allow each model to exclude slow computed fields from the ORM read.
+        # These fields are then simulated efficiently in _process_pos_ui_data.
+        fields_to_exclude = self._load_pos_data_fields_to_exclude(config, len(records))
+        if fields_to_exclude:
+            fields = [f for f in fields if f not in fields_to_exclude]
+
+        start_read = time.time()
+        read_records = records._filtered_access("read").read(fields, load=False)
+        read_duration = time.time() - start_read
+
+        start_process = time.time()
+        if read_records:
+            self._process_pos_ui_data(read_records, config)
+        process_duration = time.time() - start_process
+
+        _logger.info("PoS Load Detail: %s - read: %.2fs, process: %.2fs, count: %d",
+                      self._name, read_duration, process_duration, len(read_records))
+
+        return read_records or []
+
+    @api.model
+    def _load_pos_data_fields_to_exclude(self, config, record_count):
+        """Return field names to exclude from ORM read for performance.
+
+        Override this in each model to skip expensive computed/property fields.
+        These fields should be simulated in _process_pos_ui_data instead.
+        """
+        return []
+
+    @api.model
+    def _process_pos_ui_data(self, records, config):
+        """Post-process records before sending to the PoS client.
+
+        Override this in each model to simulate excluded fields or add
+        computed values. The base implementation converts binary image
+        fields to booleans (presence checks) to avoid transferring large
+        binary blobs to the frontend.
+        """
+        if not records:
+            return
+
+        for record in records:
+            for img_field in ['image_128', 'image_256', 'image_512', 'image_1024', 'image_1920', 'image']:
+                if img_field in record:
+                    record[img_field] = bool(record[img_field])
 
     def _unrelevant_records(self, config):
         unrelevant_record_ids = []

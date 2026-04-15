@@ -1,7 +1,7 @@
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
-const BATCH_SIZE = 500; // Can be adjusted based on performance testing
-const TRANSACTION_TIMEOUT = 5000; // 5 seconds timeout for transactions
+const BATCH_SIZE = 1000; // Optimal balance between throughput and responsiveness
+const TRANSACTION_TIMEOUT = 10000; // Increased timeout for larger batches
 const CONSOLE_COLOR = "#3ba9ff";
 
 export default class IndexedDB {
@@ -81,7 +81,7 @@ export default class IndexedDB {
             logPosMessage(
                 "IndexedDB",
                 "databaseEventListener",
-                `IndexedDB ${this.dbVersion} Ready`,
+                `IndexedDB v${this.db.version} Ready`,
                 CONSOLE_COLOR
             );
             whenReady();
@@ -115,26 +115,42 @@ export default class IndexedDB {
                 continue;
             }
 
-            const doneMethod = () => {
-                finished = true;
-                clearTimeout(timeoutId);
-                this.activeTransactions.delete(transaction);
-            };
-
-            // Mark transaction as finished in all cases
-            transaction.oncomplete = doneMethod;
-            transaction.onabort = doneMethod;
-            transaction.onerror = doneMethod;
-            transaction.onsuccess = doneMethod;
-
             const batchPromise = new Promise((resolve, reject) => {
-                const store = transaction.objectStore(storeName);
-                let completed = 0;
                 let hasError = false;
+
+                const doneMethod = () => {
+                    finished = true;
+                    clearTimeout(timeoutId);
+                    this.activeTransactions.delete(transaction);
+                    if (!hasError) {
+                        resolve();
+                    }
+                };
+
+                const errorMethod = (event) => {
+                    finished = true;
+                    hasError = true;
+                    clearTimeout(timeoutId);
+                    this.activeTransactions.delete(transaction);
+                    const errorMsg = event.target?.error || event.message || "Transaction failed";
+                    logPosMessage(
+                        "IndexedDB",
+                        method,
+                        `Error in transaction for ${storeName}: ${errorMsg}`,
+                        CONSOLE_COLOR
+                    );
+                    reject(errorMsg);
+                };
+
+                transaction.oncomplete = doneMethod;
+                transaction.onabort = errorMethod;
+                transaction.onerror = errorMethod;
+
+                const store = transaction.objectStore(storeName);
 
                 timeoutId = setTimeout(() => {
                     if (!finished) {
-                        reject(new Error("IndexedDB transaction timeout"));
+                        errorMethod({ target: { error: "IndexedDB transaction timeout" } });
                         try {
                             transaction.abort();
                         } catch (e) {
@@ -151,42 +167,26 @@ export default class IndexedDB {
                 logPosMessage(
                     "IndexedDB",
                     method,
-                    `Processing ${batch.length} items in store ${storeName}`,
+                    `Processing ${batch.length} items in store ${storeName}...`,
                     CONSOLE_COLOR
                 );
 
-                for (const data of batch) {
-                    try {
-                        const deepCloned = JSON.parse(JSON.stringify(data));
-                        const request = store[method](deepCloned);
-
-                        request.onsuccess = () => {
-                            completed++;
-                            if (completed === batch.length && !hasError && !finished) {
-                                clearTimeout(timeoutId);
-                                resolve();
-                            }
-                        };
-
-                        request.onerror = (event) => {
-                            hasError = true;
-                            clearTimeout(timeoutId);
-                            logPosMessage(
-                                "IndexedDB",
-                                method,
-                                `Error processing ${method} for ${storeName}: ${event.target?.error}`,
-                                CONSOLE_COLOR
-                            );
-                            reject(event.target?.error || "Unknown error");
-                        };
-                    } catch {
-                        logPosMessage(
-                            "IndexedDB",
-                            method,
-                            `Error processing ${method} for ${storeName}: Invalid data format`,
-                            CONSOLE_COLOR
-                        );
+                try {
+                    // Deep clone entire batch outside loop to minimize overhead
+                    const parsedBatch =
+                        method === "delete" ? batch : JSON.parse(JSON.stringify(batch));
+                    for (const data of parsedBatch) {
+                        store[method](data);
                     }
+                } catch {
+                    logPosMessage(
+                        "IndexedDB",
+                        method,
+                        `Error processing ${method} for ${storeName}: Invalid data format`,
+                        CONSOLE_COLOR
+                    );
+                    hasError = true;
+                    reject("Invalid data format");
                 }
             });
 
@@ -194,6 +194,9 @@ export default class IndexedDB {
                 .then(() => ({ status: "fulfilled" }))
                 .catch((err) => ({ status: "rejected", reason: err }));
             results.push(result);
+
+            // Yield to the main thread between batches to keep the PoS responsive.
+            await new Promise((resolve) => setTimeout(resolve, 0));
         }
 
         return results;

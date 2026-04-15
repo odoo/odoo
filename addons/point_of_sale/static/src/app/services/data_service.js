@@ -232,18 +232,20 @@ export class PosData {
 
     async synchronizeServerDataInIndexedDB(serverData = {}) {
         try {
-            for (const [model, data] of Object.entries(serverData)) {
-                try {
-                    await this.indexedDB.create(model, data);
-                } catch {
-                    logPosMessage(
-                        "DataService",
-                        "synchronizeServerDataInIndexedDB",
-                        `Error while updating ${model} in indexedDB.`,
-                        CONSOLE_COLOR
-                    );
-                }
-            }
+            await Promise.allSettled(
+                Object.entries(serverData).map(async ([model, data]) => {
+                    try {
+                        await this.indexedDB.create(model, data);
+                    } catch {
+                        logPosMessage(
+                            "DataService",
+                            "synchronizeServerDataInIndexedDB",
+                            `Error while updating ${model} in indexedDB.`,
+                            CONSOLE_COLOR
+                        );
+                    }
+                })
+            );
         } catch {
             logPosMessage(
                 "DataService",
@@ -355,7 +357,7 @@ export class PosData {
                     }
                 }
 
-                this.synchronizeServerDataInIndexedDB(localData);
+                this.synchronizeServerDataInIndexedDB(data);
             } catch (error) {
                 let message = _t("An error occurred while loading the Point of Sale: \n");
                 if (error instanceof RPCError) {
