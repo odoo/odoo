@@ -36,9 +36,9 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         cls.creditors_account = ChartTemplate.ref('p11211')
 
         # ==== Taxes ====
-        cls.tax_393_1_6_i_a = ChartTemplate.ref('tds_sale_1_us_393_1_6_i_a')
-        cls.tax_393_1_6_iii_b = ChartTemplate.ref('tds_sale_10_us_393_1_6_iii_b')
-        cls.tax_393_1_2_ii_b = ChartTemplate.ref('tds_sale_10_us_393_1_2_ii_b')
+        cls.tax_393_1_6_i_a = ChartTemplate.ref('tds_1_us_393_1_6_i_a')
+        cls.tax_393_1_6_iii_b = ChartTemplate.ref('tds_10_us_393_1_6_iii_b')
+        cls.tax_393_1_2_ii_b = ChartTemplate.ref('tds_10_us_393_1_2_ii_b')
         cls.tax_394_1_7_b = ChartTemplate.ref('tcs_20_us_394_1_7_b_lrs_oth')
 
         country_in_id = cls.env.ref("base.in").id
@@ -153,7 +153,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company=self.branch_a,
             quantities=[1]
         )
-        self.assertEqual(move.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
+        self.assertEqual(move.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1) SI.6(i) D(a) CONTR IND/HUF on this transaction.")
 
         move_1 = self.create_invoice(
             partner=self.partner_b,
@@ -162,7 +162,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company=self.branch_b,
             quantities=[1]
         )
-        self.assertEqual(move_1.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
+        self.assertEqual(move_1.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1) SI.6(i) D(a) CONTR IND/HUF on this transaction.")
 
         move_3 = self.create_invoice(
             partner=self.partner_b,
@@ -204,7 +204,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company=self.branch_c,
             accounts=[self.rent_account]
         )
-        self.assertEqual(move_2.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1)2(ii)(b) RENT LAND on this transaction.")
+        self.assertEqual(move_2.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1) SI.2(ii) D(b) RENT LAND on this transaction.")
 
         move_3 = self.create_invoice(
             partner=self.partner_a,
@@ -222,7 +222,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company=self.branch_c,
             accounts=[self.rent_account]
         )
-        self.assertEqual(move_4.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1)2(ii)(b) RENT LAND on this transaction.")
+        self.assertEqual(move_4.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1) SI.2(ii) D(b) RENT LAND on this transaction.")
 
     def test_tcs_tds_warning_partner_wiht_pan(self):
         '''
@@ -265,7 +265,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company=self.branch_b,
             accounts=[self.internet_account]
         )
-        self.assertEqual(move_3.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1)6(iii)(b) PROF on this transaction.")
+        self.assertEqual(move_3.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1) SI.6(iii) D(b) PROF on this transaction.")
 
     def test_tcs_tds_warning_on_exceeded_aggregate_limit(self):
         '''
@@ -293,7 +293,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             amounts=[31000],
             company=self.branch_c,
         )
-        self.assertEqual(move_2.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
+        self.assertEqual(move_2.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1) SI.6(i) D(a) CONTR IND/HUF on this transaction.")
 
         move_3 = self.create_invoice(
             partner=self.partner_b,
@@ -317,7 +317,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             amounts=[25000],
             company=self.branch_c,
         )
-        self.assertEqual(move_5.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
+        self.assertEqual(move_5.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1) SI.6(i) D(a) CONTR IND/HUF on this transaction.")
 
     def test_tcs_tds_warning_on_case_of_credit_note(self):
         '''
@@ -410,7 +410,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             amounts=[101000, 0],
             company=self.branch_a,
         )
-        self.assertEqual(move.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
+        self.assertEqual(move.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1) SI.6(i) D(a) CONTR IND/HUF on this transaction.")
 
         move_1 = self.create_invoice(
             partner=self.partner_a,
@@ -432,7 +432,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             accounts=[],
             quantities=[15, 16]
         )
-        self.assertEqual(move.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
+        self.assertEqual(move.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1) SI.6(i) D(a) CONTR IND/HUF on this transaction.")
         self.tds_wizard_entry(move=move, lines=[(self.tax_393_1_6_i_a, 100000)])
         move.button_draft()
         move.action_post()
@@ -473,7 +473,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company=self.branch_a,
         )
 
-        self.assertEqual(move.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
+        self.assertEqual(move.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1) SI.6(i) D(a) CONTR IND/HUF on this transaction.")
 
     def test_tcs_tds_warning_tcs_use_in_bill(self):
         '''
@@ -516,7 +516,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company=self.branch_a,
             accounts=[self.house_expense_account, self.purchase_account],
         )
-        self.assertEqual(move.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
+        self.assertEqual(move.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1) SI.6(i) D(a) CONTR IND/HUF on this transaction.")
 
         move_1 = self.create_invoice(
             partner=self.partner_a,
@@ -542,7 +542,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             amounts=[10000],
             company=self.branch_a,
         )
-        self.assertEqual(move_3.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
+        self.assertEqual(move_3.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1) SI.6(i) D(a) CONTR IND/HUF on this transaction.")
 
     def test_tcs_tds_warning_for_not_consider_draft_cancel_invoices_for_aggregate(self):
         '''
@@ -576,7 +576,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company=self.branch_a,
             accounts=[self.purchase_account],
         )
-        self.assertEqual(move_2.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1)6(i)(a) CONTR IND/HUF on this transaction.")
+        self.assertEqual(move_2.l10n_in_tcs_tds_warning, "It's advisable to deduct TDS u/s 393(1) SI.6(i) D(a) CONTR IND/HUF on this transaction.")
 
     def test_tcs_tds_warning_if_some_lines_has_tax(self):
         '''
@@ -592,4 +592,4 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             company=self.branch_a,
         )
 
-        self.assertEqual(move.l10n_in_tcs_tds_warning, "It's advisable to collect TCS u/s TCS 394(1)7(b) Remittance (Other) on this transaction.")
+        self.assertEqual(move.l10n_in_tcs_tds_warning, "It's advisable to collect TCS u/s 394(1) SI.7 D(b) Remittance (Other) on this transaction.")
