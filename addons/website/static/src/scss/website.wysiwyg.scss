@@ -232,7 +232,8 @@ html[data-edit_translations="1"] {
     z-index: $zindex-modal-backdrop; // > $o-we-zindex
     width: ceil($o-we-sidebar-width * 0.9) !important;
     font-size: $o-we-sidebar-font-size;
-    margin-left: -$o-we-sidebar-width/2;
+    padding-top: 0;
+    padding-bottom: 0;
     border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-dropdown-border-color;
     border-top: none;
     border-radius: $o-we-item-border-radius;
@@ -249,8 +250,6 @@ html[data-edit_translations="1"] {
     .pac-item {
         @include o-text-overflow(block);
         line-height: $o-we-sidebar-content-field-dropdown-item-height;
-        color: $o-we-sidebar-content-field-clickable-color;
-        padding: 0 1em 0 (2 * $o-we-sidebar-content-field-control-item-spacing + $o-we-sidebar-content-field-control-item-size);
         border-top: $o-we-sidebar-content-field-border-width solid lighten($o-we-sidebar-content-field-dropdown-border-color, 15%);
         border-radius: $o-we-sidebar-content-field-border-radius;
         background-color: $o-we-sidebar-content-field-clickable-bg;
