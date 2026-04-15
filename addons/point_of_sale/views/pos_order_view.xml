@@ -117,7 +117,7 @@
                                 </group>
                             </form>
                         </field>
-                        <group class="oe_subtotal_footer" colspan="2" name="order_total">
+                        <group class="oe_subtotal_footer border-0 mt-4 mt-md-0" name="order_total">
                             <field name="amount_tax"
                                    force_save="1"
                                    widget="monetary"/>
@@ -135,17 +135,16 @@
                                 invisible="amount_paid == 'amount_total'"
                                 readonly="state != 'draft'"/>
                             <label for="margin"/>
-                            <div class="text-nowrap">
+                            <div>
                                 <field name="margin" class="oe_inline" invisible="not is_total_cost_computed"/>
                                 <span class="oe_inline" invisible="not is_total_cost_computed">
                                     (<field name="margin_percent" nolabel="1" class="oe_inline" widget="percentage"/>)
                                 </span>
-                                <span class="float-end" invisible="is_total_cost_computed">To be determined</span>
+                                <span class="o_field_widget o_readonly_modifier" invisible="is_total_cost_computed">To be determined</span>
                             </div>
                             <field name="is_total_cost_computed" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
-                        <div class="clearfix"/>
                     </page>
                     <page string="Payments" name="payments">
                         <field name="payment_ids" colspan="4" nolabel="1" readonly="account_move or state == 'done' or nb_print > 0">
