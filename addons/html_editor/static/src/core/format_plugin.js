@@ -427,7 +427,8 @@ export class FormatPlugin extends Plugin {
             while (
                 parentNode &&
                 !isBlock(parentNode) &&
-                !this.dependencies.split.isUnsplittable(parentNode) &&
+                (!this.dependencies.split.isUnsplittable(parentNode) ||
+                    parentNode.dataset.textEffect) &&
                 (parentNode.classList.length === 0 || isClassListSplittable(parentNode.classList))
             ) {
                 const isUselessZws =
