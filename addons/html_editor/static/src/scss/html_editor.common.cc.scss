@@ -702,3 +702,63 @@
         --progress-bar-bg: #{$btn-primary-color};
     }
 }
+
+/// =============================================================================
+/// CC BG COLOR
+/// =============================================================================
+///
+/// Given a background color, emits the full o-cc-* component token set by
+/// contrast-checking o_cc{$cc-index} preset colors against $bg-color.
+///
+/// Intended to be included inside a selector (e.g. .bg-300) — the nested
+/// :where(.dropdown-menu) etc. rules scope automatically to that context.
+/// Does NOT set background-color: (handled by bg-variant / Bootstrap utilities).
+///
+/// Background: Bootstrap utility classes (.bg-300, .bg-success …) only set the
+/// background. Without this mixin, buttons, dropdowns, navbars and other
+/// components inside the block keep the global :root colors, which may be
+/// unreadable on the new background. o-bg-color already handles text /
+/// heading / muted, but not the full component set. This mixin fills that gap
+/// using the same resolution logic as the .o_cc{N} preset classes.
+///
+/// @param $bg-color   The background color of the utility class.
+/// @param $cc-index   Preset index whose colors to use as tier-2 candidates
+///                    (default: 1 = the page-default combination).
+@mixin o-bg-color-cc($bg-color, $cc-index: 1) {
+    // Resolve all colors using shared logic
+    // Stricter thresholds for utility backgrounds to ensure accessibility
+    @include o-cc-resolve-colors(
+        $bg-color: $bg-color,
+        $index: $cc-index,
+        $use-user-palette: false,      // No user overrides for utility backgrounds
+        $text-threshold: 4.0,          // Stricter for accessibility
+        $headings-threshold: 4.0,
+    );
+
+    // Compat vars expected by .badge and similar components (mirrors o-bg-color).
+    --background-color:     #{$bg-color};
+    --background-color-rgb: #{to-rgb($bg-color)};
+    --color:                #{$resolved-text-color};
+    --color-rgb:            #{to-rgb($resolved-text-color)};
+    // Not !important so that text utilities (.text-white etc.) still override.
+    color: RGBA(var(--color-rgb), var(--text-opacity, 1));
+
+    // Full component token set — overrides --heading-color / --secondary-color
+    // with better values, and emits Bootstrap component vars (dropdowns, navbars,
+    // cards, list-groups, accordions, tables, pagination) as scoped nested rules.
+    @include o-cc-variables(
+            $bg-color,
+            $resolved-text-color,
+            $resolved-headings-color,
+            $resolved-link-color,
+            $resolved-link-hover-color,
+            $resolved-btn-primary-color,
+            $resolved-btn-primary-color,         // border = fill color (no per-bg user override)
+            $resolved-btn-primary-outline-color,
+            $resolved-btn-secondary-color,
+            $resolved-btn-secondary-color,       // border = fill color
+            $resolved-btn-secondary-outline-color
+    );
+    // Mirror .o_cc{N} behavior: ensure .btn-close is visible on the bg.
+    :where(.btn-close) { filter: var(--o-cc-btn-close-filter); }
+}

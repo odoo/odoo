@@ -170,19 +170,17 @@ $o-base-gray-color-palette: (
     '900': #212529,
     'black': #000000,
 ) !default;
-$o-transparent-grays: (
-    'black-15': rgba(black, 0.15),
-    'black-25': rgba(black, 0.25),
-    'black-50': rgba(black, 0.5),
-    'black-75': rgba(black, 0.75),
-    'white-25': rgba(white, 0.25),
-    'white-50': rgba(white, 0.5),
-    'white-75': rgba(white, 0.75),
-    'white-85': rgba(white, 0.85),
-) !default;
+
 $o-gray-color-palettes: () !default;
-$o-gray-color-palettes: map-merge($o-transparent-grays, $o-gray-color-palettes);
 $o-gray-color-palette-name: '' !default;
+
+$o-transparent-polar-colors: (
+    '15': 0.15,
+    '25': 0.25,
+    '50': 0.5,
+    '75': 0.75,
+    '85': 0.85,
+) !default;
 
 // Color combinations
 $o-base-color-combination: (
@@ -246,14 +244,6 @@ $o-color-combinations-presets: (
     ),
 ) !default;
 $o-color-combinations-preset-number: 1;
-
-// We allow snippets to be colored and elements like card and columns to be
-// colored as well. We need components targeted by those colored classes to
-// use the deepest coloring element config. We only allow here for this to
-// work for one level of nesting. Note: snippets which can contain other
-// snippets will have problem because of this; this is a limitation of the
-// system until a better solution is found.
-$o-color-extras-nesting-selector: '&, .o_colored_level &';
 
 // Function which returns if a color has contrast enough in comparaison to
 // another given color.

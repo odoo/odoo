@@ -402,10 +402,21 @@ const builderStylesheet = new CSSStyleSheet();
 export function setBuilderCSSVariables(htmlStyle) {
     const styles = [];
     for (const style of EDITOR_COLOR_CSS_VARIABLES) {
-        let value = getCSSVariableValue(style, htmlStyle);
-        if (value.startsWith("'") && value.endsWith("'")) {
-            // Gradient values are recovered within a string.
-            value = value.substring(1, value.length - 1);
+        let value;
+        
+        // Handle black-{opacity} and white-{opacity} special cases
+        const blackWhiteMatch = style.match(/^(black|white)-(\d+)$/);
+        if (blackWhiteMatch) {
+            const [, color, opacity] = blackWhiteMatch;
+            const baseColor = color === 'black' ? '0, 0, 0' : '255, 255, 255';
+            const opacityValue = parseInt(opacity) / 100;
+            value = `rgba(${baseColor}, ${opacityValue})`;
+        } else {
+            value = getCSSVariableValue(style, htmlStyle);
+            if (value.startsWith("'") && value.endsWith("'")) {
+                // Gradient values are recovered within a string.
+                value = value.substring(1, value.length - 1);
+            }
         }
         styles.push(`--hb-cp-${style}: ${value};`);
     }

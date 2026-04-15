@@ -24,7 +24,7 @@ export const DEFAULT_COLORS = [
 ];
 
 export const DEFAULT_GRAYSCALES = {
-    solid: ["black", "900", "800", "600", "400", "200", "100", "white"],
+    solid: ["black", "900", "800", "700", "600", "500", "400", "300", "200", "100", "white"],
 };
 
 // These CSS variables are defined in html_editor.
