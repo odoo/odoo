@@ -235,6 +235,20 @@ export class TableOfContent extends Interaction {
 
 patch(AnchorSlide.prototype, {
     /**
+     * Overridden to always allow smooth scrolling for TOC navbar links.
+     *
+     * These links do not use the `data-anchor` attribute, so this override
+     * makes sure they still trigger scrolling.
+     *
+     * @override
+     */
+    shouldScroll(anchorEl) {
+        if (this.el.classList.contains("table_of_content_link")) {
+            return true;
+        }
+        return super.shouldScroll(anchorEl);
+    },
+    /**
      * Overridden to add the height of the horizontal sticky navbar at the scroll value
      * when the link is from the table of content navbar
      *
