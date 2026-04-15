@@ -24,12 +24,13 @@ def _configure_ctep_lib(lib_name: str) -> bool:
     :return: True if the library was successfully configured, False otherwise.
     """
     drivers_path = path_file("odoo/addons/iot_drivers/iot_handlers/drivers")
+    unzip_path = drivers_path / "ctep" if IS_WINDOWS else drivers_path
     source_zip_name = "worldline-ctepv21_07.zip" if IS_RPI else "worldline-ctepv23_02_w.zip"
-    if (drivers_path / "ctep" / lib_name).exists():
+    if (unzip_path / lib_name).exists():
         return True
     zip_path = drivers_path / "ctep.zip"
     helpers.download_from_url(f"https://download.odoo.com/master/posbox/iotbox/{source_zip_name}", zip_path)
-    helpers.unzip_file(zip_path, drivers_path)
+    helpers.unzip_file(zip_path, unzip_path)
 
     if IS_WINDOWS:
         # Add WorldLine dll path so that the linker can find the required dll files
