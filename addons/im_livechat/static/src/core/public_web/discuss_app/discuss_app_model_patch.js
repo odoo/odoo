@@ -1,9 +1,9 @@
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
 import { fields } from "@mail/model/export";
-import { effectWithDebouncedCleanup } from "@mail/utils/common/misc";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
+import { effectWithCleanup } from "@mail/utils/common/misc";
 
 // Looking for help subscription is triggered when the sidebar category is
 // opened, and when the discuss app is active. To avoid unsubscribing right away
@@ -11,21 +11,34 @@ import { patch } from "@web/core/utils/patch";
 // minutes before unsubscribing.
 export const LFH_UNSUBSCRIBE_DELAY = 5 * 60 * 1000;
 
+const DISPOSE_EFFECT_TIMEOUT_SYM = Symbol("DISPOSE_EFFECT_TIMEOUT");
+const DISPOSE_EFFECT_SYM = Symbol("DISPOSE_EFFECT");
+
 const discussAppStaticPatch = {
     new() {
         /** @type {import("models").DiscussApp} */
         const app = super.new(...arguments);
-        effectWithDebouncedCleanup({
-            delay: LFH_UNSUBSCRIBE_DELAY,
-            dependencies: (app) => ({
-                busService: app.store.env.services.bus_service,
-                category: app.livechatLookingForHelpCategory,
-                store: app.store,
-            }),
-            effect({ busService, category, store }) {
+        app[DISPOSE_EFFECT_SYM] = effectWithCleanup(() => {
+            const busService = app.store.env.services.bus_service;
+            const category = app.livechatLookingForHelpCategory;
+            const store = app.store;
+            if (
+                !app.exists() ||
+                !app.livechatLookingForHelpCategory?.is_open ||
+                app.livechatLookingForHelpCategory.hidden ||
+                !app.isActive
+            ) {
+                return;
+            }
+            clearTimeout(app[DISPOSE_EFFECT_TIMEOUT_SYM]);
+            if (!app.isSubscribedToLookingForHelp) {
                 busService.addChannel("im_livechat.looking_for_help");
                 store.fetchStoreData("/im_livechat/looking_for_help");
-                return () => {
+                app.isSubscribedToLookingForHelp = true;
+            }
+            return () => {
+                app[DISPOSE_EFFECT_TIMEOUT_SYM] = setTimeout(() => {
+                    app.isSubscribedToLookingForHelp = false;
                     busService.deleteChannel("im_livechat.looking_for_help");
                     if (!category.exists()) {
                         return;
@@ -33,16 +46,8 @@ const discussAppStaticPatch = {
                     category.channels
                         .filter((channel) => !channel.self_member_id && !channel.isLocallyPinned)
                         .forEach((channel) => channel.delete());
-                };
-            },
-            predicate: (app) =>
-                Boolean(
-                    app.exists() &&
-                        app.livechatLookingForHelpCategory?.is_open &&
-                        !app.livechatLookingForHelpCategory.hidden &&
-                        app.isActive
-                ),
-            reactiveTargets: [app],
+                }, LFH_UNSUBSCRIBE_DELAY);
+            };
         });
         return app;
     },
@@ -83,6 +88,10 @@ patch(DiscussApp.prototype, {
         this.lastThread = fields.One("mail.thread");
         this.livechats = fields.Many("discuss.channel", { inverse: "appAsLivechats" });
         this.isLivechatInfoPanelOpenByDefault = fields.Attr(true, { localStorage: true });
+    },
+    delete(...args) {
+        this[DISPOSE_EFFECT_SYM]();
+        super.delete(...args);
     },
 
     shouldDisableMemberPanelAutoOpenFromClose(nextActiveAction) {
