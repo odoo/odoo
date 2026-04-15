@@ -275,7 +275,14 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             if uuid_move := self._peppol_import_invoice(attachment, content['state'], uuid, journal=self.company_id.peppol_purchase_journal_id):
                 # Only acknowledge when we saved the document somewhere
                 processed_uuids.append(uuid)
+<<<<<<< 3421864c3a095ab5eb5ee7eccb9f69b95cf6fc9f
                 moves += uuid_move.get('move', self.env['account.move'])
+||||||| 7302b504fc03583944f4dff947cf9725fec9a75b
+                moves += move
+=======
+                if not isinstance(move, bool):
+                    moves += move
+>>>>>>> bd14315e2a9499278f19fa175ed6cf711926177f
         return processed_uuids, moves
 
     def _peppol_post_process_new_messages(self, moves):
