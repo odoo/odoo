@@ -47,11 +47,7 @@
             <field name="domain_force">
                 [
                     ('is_self', '=', True),
-                    "|",
-                        ("channel_id.channel_type", "!=", "channel"),
-                        "|",
-                            ("channel_id.group_public_id", "=", False),
-                            ("channel_id.group_public_id", "in", user.all_group_ids.ids),
+                    ('channel_id', 'access', 'read'),
                 ]
             </field>
             <!--
@@ -77,19 +73,7 @@
                 ]"
             />
             <field name="domain_force">
-                [
-                    "|",
-                        "&amp;",
-                            ("channel_id.channel_type", "!=", "channel"),
-                            "|",
-                                ("channel_id.is_member", "=", True),
-                                ("channel_id.parent_channel_id.is_member", "=", True),
-                        "&amp;",
-                            ("channel_id.channel_type", "=", "channel"),
-                            "|",
-                                ("channel_id.group_public_id", "=", False),
-                                ("channel_id.group_public_id", "in", user.all_group_ids.ids),
-                ]
+                [('channel_id', 'access', 'read')]
             </field>
             <field name="perm_create" eval="False"/>
             <field name="perm_write" eval="False"/>
@@ -143,7 +127,7 @@
             <field name="perm_write" eval="False"/>
         </record>
         <record id="ir_rule_discuss_channel_member_create_is_group_matching_all" model="ir.rule">
-            <field name="name">discuss.channel.member: can join group restricted channels when group is matching</field>
+            <field name="name">discuss.channel.member: can join accessible channels</field>
             <field name="model_id" ref="mail.model_discuss_channel_member"/>
             <field name="groups"
                 eval="[
@@ -156,9 +140,7 @@
                 [
                     ('is_self', '=', True),
                     ('channel_id.channel_type', '=', 'channel'),
-                    '|',
-                        ('channel_id.group_public_id', '=', False),
-                        ('channel_id.group_public_id', 'in', user.all_group_ids.ids)
+                    ('channel_id', 'access', 'read'),
                 ]
             </field>
             <!--
@@ -171,16 +153,14 @@
         </record>
 
         <record id="ir_rule_discuss_channel_member_create_is_group_matching_group_user" model="ir.rule">
-            <field name="name">discuss.channel.member: internal users can invite others in group restricted channels when group is matching</field>
+            <field name="name">discuss.channel.member: internal users can invite others in accessible channels</field>
             <field name="model_id" ref="mail.model_discuss_channel_member"/>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
             <field name="domain_force">
                 [
                     ('is_self', '=', False),
                     ('channel_id.channel_type', '=', 'channel'),
-                    '|',
-                        ('channel_id.group_public_id', '=', False),
-                        ('channel_id.group_public_id', 'in', user.all_group_ids.ids)
+                    ('channel_id', 'access', 'read'),
                 ]
             </field>
             <field name="perm_read" eval="False"/>
@@ -219,19 +199,7 @@
                 ]"
             />
             <field name="domain_force">
-                [
-                    "|",
-                        "&amp;",
-                            ("channel_id.channel_type", "!=", "channel"),
-                            "|",
-                                ("channel_id.is_member", "=", True),
-                                ("channel_id.parent_channel_id.is_member", "=", True),
-                        "&amp;",
-                            ("channel_id.channel_type", "=", "channel"),
-                            "|",
-                                ("channel_id.group_public_id", "=", False),
-                                ("channel_id.group_public_id", "in", user.all_group_ids.ids),
-                ]
+                [('channel_id', 'access', 'read')]
             </field>
             <field name="perm_create" eval="False"/>
             <field name="perm_write" eval="False"/>
