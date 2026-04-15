@@ -594,6 +594,10 @@ class ResUsers(models.Model):
             # unarchive partners before unarchiving the users
             self.partner_id.action_unarchive()
 
+        if 'company_id' in vals or 'company_ids' in vals:
+            # reset before the call to super to ensure `_check_company` sees the right company
+            self._reset_cached_properties()
+
         res = super().write(vals)
 
         if 'company_id' in vals:
@@ -603,15 +607,8 @@ class ResUsers(models.Model):
                     user.partner_id.write({'company_id': user.company_id.id})
 
         if 'company_id' in vals or 'company_ids' in vals:
-            # Access cache depends on the company, clear it
-            self.env.transaction.invalidate_access_cache()
-            # Reset lazy properties `company` & `companies` on all envs,
-            # This is unlikely in a business code to change the company of a user and then do business stuff
-            # but in case it happens this is handled.
-            # e.g. `account_test_savepoint.py` `setup_company_data`, triggered by `test_account_invoice_report.py`
-            for env in list(self.env.transaction.envs):
-                if env.user in self:
-                    reset_cached_properties(env)
+            # reset after the call to super to ensure the wrong value wasn't cached because of automations or hooks
+            self._reset_cached_properties()
 
         if 'group_ids' in vals and any(self._ids):
             # clear caches linked to the users
@@ -626,6 +623,17 @@ class ResUsers(models.Model):
             self.env.registry.clear_cache()
 
         return res
+
+    def _reset_cached_properties(self):
+        # Access cache depends on the company, clear it
+        self.env.transaction.invalidate_access_cache()
+        # Reset lazy properties `company` & `companies` on all envs,
+        # This is unlikely in a business code to change the company of a user and then do business stuff
+        # but in case it happens this is handled.
+        # e.g. `account_test_savepoint.py` `setup_company_data`, triggered by `test_account_invoice_report.py`
+        for env in list(self.env.transaction.envs):
+            if env.user in self:
+                reset_cached_properties(env)
 
     @api.ondelete(at_uninstall=True)
     def _unlink_except_master_data(self):
