@@ -146,8 +146,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
         try:
             xml_tree = etree.fromstring(attachment.raw)
-        except etree.XMLSyntaxError:
-            _logger.exception("The Peppol XML file is invalid for attachment ID %s", attachment.id)
+        except (etree.XMLSyntaxError, ValueError):
+            _logger.exception("The Peppol XML file is invalid or empty for attachment ID %s", attachment.id)
             return journal, move_type
 
         invoice_type_code = xml_tree.findtext('.//{*}InvoiceTypeCode')
