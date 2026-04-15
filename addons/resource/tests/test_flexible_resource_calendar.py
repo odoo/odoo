@@ -149,6 +149,28 @@ class TestFlexibleResourceCalendar(TransactionCase):
                 (datetime(2025, 8, 31, 0, 0, tzinfo=UTC), datetime(2025, 8, 31, 17, 0, 0, tzinfo=UTC), self.env['resource.calendar.attendance']),
             ])
 
+    def test_flexible_resource_work_hours_first_week_day(self):
+        """
+        Check the case where the language's first day of the week is changed from
+        the language's default.
+        """
+        self.env['res.lang']._activate_lang(code='en_GB')
+        self.env['res.lang'].search([('code', '=', 'en_GB')]).week_start = "7"
+        self.flex_calendar.hours_per_week = 40
+
+        # Sunday to Saturday
+        start_dt = datetime(2026, 4, 12, 0, 0, 0).astimezone(UTC)
+        end_dt = datetime(2026, 4, 18, 23, 59, 59).astimezone(UTC)
+
+        flex_resource = self.flex_resource.with_context(lang='en_GB')
+        work_intervals, hours_per_day, hours_per_week = flex_resource._get_flexible_resource_valid_work_intervals(start_dt, end_dt)
+        hours = flex_resource._get_flexible_resource_work_hours(
+            work_intervals[self.flex_resource.id],
+            hours_per_day[self.flex_resource.id],
+            hours_per_week[self.flex_resource.id],
+        )
+        self.assertAlmostEqual(hours, 40.0, 2)
+
     def test_hours_per_week_for_different_years(self):
         start_dt = datetime(2025, 12, 26).astimezone(UTC)
         end_dt = datetime(2026, 1, 1, 17).astimezone(UTC)
