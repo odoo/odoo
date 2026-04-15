@@ -500,14 +500,13 @@ class ResourceCalendar(models.Model):
         """
         assert start_dt.tzinfo and end_dt.tzinfo
 
-        if not resources:
-            resources = self.env['resource.resource']
-            resources_list = [resources]
-        else:
-            resources_list = list(resources) + [self.env['resource.resource']]
         if domain is None:
             domain = [('time_type', '=', 'leave')]
+
+        resources_list = list(resources) if resources else []
+
         if self:
+            resources_list.append(self.env['resource.resource'])
             domain = domain + [('calendar_id', 'in', [False] + self.ids)]
 
         # for the computation, express all datetimes in UTC
