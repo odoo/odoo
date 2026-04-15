@@ -1,4 +1,4 @@
-import { Component, onMounted, useState, xml } from "@odoo/owl";
+import { Component, onMounted, useRef, useState, xml } from "@odoo/owl";
 import { ACTIVE_ELEMENT_CLASS, Navigator, useNavigation } from "@web/core/navigation/navigation";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { describe, destroy, expect, test } from "@odoo/hoot";
@@ -445,4 +445,72 @@ test("browser default navigation is not captured", async () => {
 
     await navigate(["shift", "tab"], ".outside-one");
     expect(".focus").toHaveCount(0);
+});
+
+test("focus not stolen from search input during typing, hovering, and clearing", async () => {
+    class FakeSearchList extends Component {
+        static template = xml`
+            <div t-ref="container">
+                <input
+                    t-ref="inputRef"
+                    class="o-navigable"
+                    type="text"
+                    t-on-input="onSearch"
+                    placeholder="Search..."
+                />
+                <t t-foreach="visibleItems" t-as="item" t-key="item">
+                    <div class="o-navigable fake-item" tabindex="0" t-esc="item"/>
+                </t>
+            </div>
+        `;
+        static props = [];
+
+        setup() {
+            this.containerRef = useRef("container");
+            this.inputRef = useRef("inputRef");
+            this.state = useState({
+                searchFilter: "",
+                allItems: Array.from({ length: 10 }, (_, i) => `Item ${i + 1}`),
+            });
+            useNavigation(this.containerRef);
+        }
+
+        get visibleItems() {
+            const filter = this.state.searchFilter.toLowerCase();
+            if (!filter) {
+                return this.state.allItems;
+            }
+            return this.state.allItems.filter((item) => item.toLowerCase().includes(filter));
+        }
+
+        onSearch(ev) {
+            this.state.searchFilter = ev.target.value;
+        }
+    }
+
+    await mountWithCleanup(FakeSearchList);
+
+    const inputEl = queryOne("input");
+    inputEl.focus();
+    await animationFrame();
+
+    expect("input").toBeFocused();
+
+    await hover(".fake-item:nth-child(2)");
+    await animationFrame();
+    expect("input").toBeFocused();
+
+    inputEl.value = "Item 2";
+    await manuallyDispatchProgrammaticEvent(inputEl, "input");
+    await animationFrame();
+
+    expect(".fake-item").toHaveCount(1);
+    expect("input").toBeFocused();
+
+    inputEl.value = "";
+    await manuallyDispatchProgrammaticEvent(inputEl, "input");
+    await animationFrame();
+
+    expect(".fake-item").toHaveCount(10);
+    expect("input").toBeFocused();
 });
