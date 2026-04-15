@@ -181,6 +181,7 @@ class HrEmployee(models.Model):
         column2='bank_account_id',
         domain="[('partner_id', '=', work_contact_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         groups="hr.group_hr_user",
+        copy=False,
         tracking=True,
         string='Bank Accounts',
         help='Employee bank accounts to pay salaries')
