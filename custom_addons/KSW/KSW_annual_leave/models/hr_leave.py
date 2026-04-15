@@ -1,7 +1,7 @@
 from markupsafe import Markup
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 ANNUAL_MULTI_STATES = [
     ('pending_dm', 'Pending DM Approval'),
@@ -57,6 +57,23 @@ class HrLeave(models.Model):
         return ksw_rec.remaining_balance if ksw_rec else 0.0
 
     # ------------------------------------------------------------------
+    # View helper fields (stored for reliable invisible expressions)
+    # ------------------------------------------------------------------
+
+    x_is_annual_leave_type = fields.Boolean(
+        string='Is Annual Leave Type',
+        related='holiday_status_id.is_annual_leave',
+        store=True,
+        help='Stored related field for reliable use in view invisible expressions.',
+    )
+    x_exceeds_annual_balance = fields.Boolean(
+        string='Exceeds Annual Balance',
+        default=False, store=True, copy=False,
+        help='True when the requested calendar days exceed the '
+             'remaining annual leave balance.  Set by _compute_duration.',
+    )
+
+    # ------------------------------------------------------------------
     # Full Balance Clearance
     # ------------------------------------------------------------------
 
@@ -76,6 +93,27 @@ class HrLeave(models.Model):
         string='Balance Consumed',
         digits=(10, 4), readonly=True, copy=False,
         help='The full remaining balance consumed by this clearance leave.',
+    )
+
+    # ------------------------------------------------------------------
+    # Excess Days (Combined Annual + Unpaid)
+    # ------------------------------------------------------------------
+
+    x_excess_days_accepted = fields.Boolean(
+        string='Accept Excess as Unpaid',
+        default=False, copy=False, tracking=True,
+        help='When checked, the days exceeding the annual leave balance '
+             'are treated as unpaid leave within this same request.',
+    )
+    x_annual_portion_days = fields.Float(
+        string='Annual Portion (Days)',
+        digits=(10, 4), readonly=True, copy=False,
+        help='Number of days covered by the annual leave balance.',
+    )
+    x_unpaid_portion_days = fields.Float(
+        string='Unpaid Portion (Days)',
+        digits=(10, 4), readonly=True, copy=False,
+        help='Number of excess days treated as unpaid leave.',
     )
 
     # ==================================================================
@@ -177,20 +215,43 @@ class HrLeave(models.Model):
     # Duration computation (annual-leave calendar-day counting)
     # ==================================================================
 
-    @api.depends('holiday_status_id', 'x_is_full_clearance')
+    @api.depends('holiday_status_id', 'x_is_full_clearance', 'x_excess_days_accepted')
     def _compute_duration(self):
         annual = self.filtered(self._is_annual_leave)
         remaining = self - annual
 
         if remaining:
             super(HrLeave, remaining)._compute_duration()
+            # Ensure new fields are set for non-annual leaves and
+            # clear stale toggles if leave type changed from annual
+            for leave in remaining:
+                leave.x_exceeds_annual_balance = False
+                if leave.x_is_full_clearance:
+                    leave.with_context(_skip_toggle_validity=True).x_is_full_clearance = False
+                if leave.x_excess_days_accepted:
+                    leave.with_context(_skip_toggle_validity=True).x_excess_days_accepted = False
 
         for leave in annual:
             cal_days, cal_hours = self._annual_cal_days(leave)
+            daily_hours = cal_hours / cal_days if cal_days else 8.0
+
+            # Compute whether days exceed the remaining balance
+            balance = self._get_remaining_balance(leave)
+            exceeds = bool(cal_days > 0 and balance > 0 and cal_days > balance)
+            leave.x_exceeds_annual_balance = exceeds
+
+            # Auto-clear excess toggle when days no longer exceed balance
+            if not exceeds and leave.x_excess_days_accepted:
+                leave.with_context(_skip_toggle_validity=True).x_excess_days_accepted = False
+
+            # Auto-clear full clearance when days exceed balance —
+            # full clearance only makes sense when vacation days ≤ balance.
+            # When days > balance the user must use "Accept Excess as Unpaid".
+            if exceeds and leave.x_is_full_clearance:
+                leave.with_context(_skip_toggle_validity=True).x_is_full_clearance = False
+
             if leave.x_is_full_clearance and cal_days > 0:
-                balance = self._get_remaining_balance(leave)
                 if balance > 0:
-                    daily_hours = cal_hours / cal_days if cal_days else 8.0
                     leave.number_of_days = balance
                     leave.number_of_hours = balance * daily_hours
                     leave.x_actual_vacation_days = cal_days
@@ -200,11 +261,34 @@ class HrLeave(models.Model):
                     leave.number_of_hours = cal_hours
                     leave.x_actual_vacation_days = cal_days
                     leave.x_clearance_balance = 0
+                # Clear excess fields when full clearance
+                leave.x_annual_portion_days = 0
+                leave.x_unpaid_portion_days = 0
+
+            elif leave.x_excess_days_accepted and cal_days > 0:
+                if balance > 0 and cal_days > balance:
+                    # Combined leave: annual portion + unpaid excess
+                    leave.number_of_days = balance
+                    leave.number_of_hours = balance * daily_hours
+                    leave.x_actual_vacation_days = cal_days
+                    leave.x_annual_portion_days = balance
+                    leave.x_unpaid_portion_days = cal_days - balance
+                else:
+                    # Balance covers all days — no excess
+                    leave.number_of_days = cal_days
+                    leave.number_of_hours = cal_hours
+                    leave.x_actual_vacation_days = cal_days
+                    leave.x_annual_portion_days = cal_days
+                    leave.x_unpaid_portion_days = 0
+                leave.x_clearance_balance = 0
+
             else:
                 leave.number_of_days = cal_days
                 leave.number_of_hours = cal_hours
                 leave.x_actual_vacation_days = 0
                 leave.x_clearance_balance = 0
+                leave.x_annual_portion_days = 0
+                leave.x_unpaid_portion_days = 0
 
     def _get_durations(self, check_leave_type=True, resource_calendar=None):
         annual = self.filtered(self._is_annual_leave)
@@ -218,13 +302,16 @@ class HrLeave(models.Model):
             ))
 
         for leave in annual:
+            daily_hours = (
+                self._get_daily_work_hours(leave.employee_id)
+                if leave.employee_id else 8.0
+            )
             if leave.x_is_full_clearance and leave.x_clearance_balance > 0:
-                daily_hours = (
-                    self._get_daily_work_hours(leave.employee_id)
-                    if leave.employee_id else 8.0
-                )
                 result[leave.id] = (leave.x_clearance_balance,
                                     leave.x_clearance_balance * daily_hours)
+            elif leave.x_excess_days_accepted and leave.x_annual_portion_days > 0:
+                result[leave.id] = (leave.x_annual_portion_days,
+                                    leave.x_annual_portion_days * daily_hours)
             else:
                 result[leave.id] = self._annual_cal_days(leave)
 
@@ -244,6 +331,10 @@ class HrLeave(models.Model):
                 if self.x_is_full_clearance:
                     balance = self._get_remaining_balance(self)
                     if balance > 0:
+                        return {'days': balance, 'hours': balance * daily_hours}
+                elif self.x_excess_days_accepted:
+                    balance = self._get_remaining_balance(self)
+                    if balance > 0 and cal_days > balance:
                         return {'days': balance, 'hours': balance * daily_hours}
                 return {'days': cal_days, 'hours': cal_days * daily_hours}
             return {'days': 0, 'hours': 0}
@@ -397,6 +488,40 @@ class HrLeave(models.Model):
             super(HrLeave, remaining)._compute_can_validate()
         for leave in annual_multi:
             leave.can_validate = False
+
+    # ==================================================================
+    # Write override — re-check allocation validity on toggle changes
+    # ==================================================================
+
+    def write(self, vals):
+        """Re-trigger allocation validity when annual-leave toggles change.
+
+        The base write() only calls _check_validity() for date/employee/
+        state/leave-type changes.  Toggling x_excess_days_accepted or
+        x_is_full_clearance changes number_of_days via _compute_duration
+        but would NOT re-check allocations without this override.
+
+        The _skip_toggle_validity context flag is set by _compute_duration
+        when auto-clearing stale toggles — those internal clears should
+        NOT trigger validity checks (the compute is still in progress).
+        """
+        result = super().write(vals)
+
+        toggle_fields = {'x_excess_days_accepted', 'x_is_full_clearance'}
+        if (toggle_fields & vals.keys()
+                and not self.env.context.get('_skip_toggle_validity')):
+            # Only validate annual leaves that require allocation
+            annual_to_check = self.filtered(
+                lambda l: self._is_annual_leave(l)
+                and l.holiday_status_id.requires_allocation
+                and l.state not in ('cancel', 'refuse')
+            )
+            if annual_to_check:
+                annual_to_check._check_validity()
+                self.env['hr.leave.allocation'].invalidate_model(
+                    ['leaves_taken', 'max_leaves'])
+
+        return result
 
     # ==================================================================
     # Multi-Step Approval: create hook
@@ -652,6 +777,7 @@ class HrLeave(models.Model):
         self.mapped('x_commission_line_ids').unlink()
         self.write({
             'x_annual_approval_state': False,
+            'x_is_full_clearance': False,
             'x_penalty_amount': 0,
             'x_penalty_description': False,
             'x_iqama_renewal_amount': 0,
@@ -660,6 +786,9 @@ class HrLeave(models.Model):
             'x_flight_ticket_description': False,
             'x_remaining_loans': 0,
             'x_remaining_loans_description': False,
+            'x_excess_days_accepted': False,
+            'x_annual_portion_days': 0,
+            'x_unpaid_portion_days': 0,
             'x_dm_approved_by': False,
             'x_dm_approved_date': False,
             'x_hr_approved_by': False,

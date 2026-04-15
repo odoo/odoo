@@ -2,25 +2,30 @@
 """Cross-month annual vacation payslip tests.
 
 Validates that when an employee's annual vacation spans multiple calendar
-months, a vacation payslip is created for **each** affected month so the
-employee receives HRA and GOSI for every month.
+months, only ONE vacation payslip is created for the **current month**
+(the month the leave is approved).  Past months are already settled via
+regular monthly payslip batches; future months will be handled by
+upcoming batches.
+
+Key rule: the vacation payslip is always for the current month (today's
+month), regardless of when the leave starts or ends.
 
 Scenarios
 ---------
-S1: 2-month vacation (Mar 25 – Apr 10), immediate return Apr 11.
-    Two vacation payslips (March + April).  April monthly payslip
-    uses PRIOR_HRA/PRIOR_GOSI from the April vacation payslip.
+S1: Leave starts in the past (Feb 2025 – Apr 2026).
+    Vacation payslip covers April 2026 (current month), not Feb 2025.
 
-S2: 2-month with gap (Mar 20 – Apr 15), return Apr 20 (5-day gap).
-    Two vacation payslips.  April monthly payslip counts from Apr 20
-    with 19 pre-return absent days (including 5-day gap penalty).
+S2: Leave starts this month (Apr 5 – Apr 12).
+    Same-month single-month case — payslip for April.
 
-S3: Single-month regression (Apr 5 – Apr 12), return Apr 13.
-    Only ONE vacation payslip for April.  Existing behaviour preserved.
+S3: Leave starts this month, ends next month (Apr 20 – May 10).
+    Payslip for April (current month). May handled by monthly batch.
 
-S4: 3-month vacation (Jan 28 – Mar 5), return Mar 6.
-    Three vacation payslips (Jan, Feb, Mar).  March monthly payslip
-    has PRIOR_HRA/PRIOR_GOSI from March vacation payslip.
+S4: Leave starts in March, ends in April (Mar 20 – Apr 15).
+    Payslip for April (current month). March already settled.
+
+S5: Same-month vacation with monthly payslip overlap.
+    Vacation payslip + monthly payslip both in April. PRIOR_HRA.
 
 Employee setup (same for all)
 -----------------------------
@@ -152,6 +157,10 @@ class TestCrossMonthVacation(TransactionCase):
         cls.DAILY_RATE = (cls.WAGE + cls.TRAVEL + cls.MEAL + cls.MEDICAL) / 30.0
         cls.GOSI_FULL = -round((cls.WAGE + cls.HRA) * 9.75 / 100.0)   # -731
 
+        # The current month when tests run (used for assertions)
+        cls.TODAY = date.today()
+        cls.CURRENT_MONTH_START = cls.TODAY.replace(day=1)
+
     # ==================================================================
     # HELPERS
     # ==================================================================
@@ -235,408 +244,175 @@ class TestCrossMonthVacation(TransactionCase):
             lambda w: w.code == code)[:1]
 
     # ==================================================================
-    # S1: 2-month vacation (Mar 25 – Apr 10), immediate return Apr 11
+    # S1: Leave in the past — payslip should still be current month
     # ==================================================================
 
-    def test_s1_two_month_vacation_immediate_return(self):
+    def test_s1_past_leave_payslip_is_current_month(self):
         """
-        S1 — Vacation spans March and April, immediate return
-        ─────────────────────────────────────────────────────
-        Pre-vacation attendance: Mar 1–24 (24 days).
-        Annual leave: Mar 25 – Apr 10 (17 calendar days).
-        Return: Apr 11 (immediately).
-        Post-return attendance: Apr 11–30 (20 days).
-
-        Expected:
-        - TWO vacation payslips created (March + April).
-        - March vac payslip: HRA=1500, GOSI=-731, has VACATION_BAL.
-        - April vac payslip: HRA=1500, GOSI=-731, NO VACATION_BAL.
-        - April monthly payslip: PRIOR_HRA=1500 (from Apr vac),
-          HRA=0, GOSI=0.  effective_from=Apr 11.
+        S1 — Leave started in the past (Mar 15 – Apr 22).
+        The vacation payslip should cover the current month (April),
+        NOT March.  March is already settled.
         """
-        # Pre-vacation attendance (March)
-        for d in range(1, 25):
-            self._create_attendance(date(2026, 3, d))
+        # Remove any mandatory days / public holidays that might conflict
+        self.env.cr.execute("""
+            DELETE FROM resource_calendar_leaves
+            WHERE resource_id IS NULL
+        """)
+        self.env.cr.execute("""
+            DELETE FROM hr_leave_mandatory_day
+        """)
+        self.env.invalidate_all()
 
-        # Create & approve leave (Mar 25 – Apr 10)
-        leave = self._create_leave_sql(date(2026, 3, 25), date(2026, 4, 10))
+        # Pre-vacation attendance — current month up to today
+        for d in range(1, self.TODAY.day):
+            self._create_attendance(date(self.TODAY.year, self.TODAY.month, d))
+
+        leave = self._create_leave_sql(date(2026, 3, 15), date(2026, 4, 22))
         self._approve_full_chain(leave)
-        self.assertEqual(leave.state, 'validate', 'S1: Leave validated.')
+        self.assertEqual(leave.state, 'validate')
 
-        # Verify TWO vacation payslips created
+        # ONE vacation payslip — for current month
         vac_payslips = leave.x_vacation_payslip_ids
-        self.assertEqual(len(vac_payslips), 2,
-                         'S1: Two vacation payslips should be created.')
+        self.assertEqual(len(vac_payslips), 1,
+                         'S1: Only one vacation payslip.')
 
-        # Identify March and April payslips
-        mar_vac = vac_payslips.filtered(
-            lambda p: p.date_from.month == 3)
-        apr_vac = vac_payslips.filtered(
-            lambda p: p.date_from.month == 4)
-        self.assertTrue(mar_vac, 'S1: March vacation payslip exists.')
-        self.assertTrue(apr_vac, 'S1: April vacation payslip exists.')
+        vac = vac_payslips[0]
+        self.assertEqual(vac.date_from.month, self.TODAY.month,
+                         'S1: Payslip is for current month, not leave start.')
+        self.assertEqual(vac.date_from.year, self.TODAY.year)
+        self.assertEqual(vac.date_from.day, 1,
+                         'S1: Payslip starts on the 1st.')
 
-        # Primary payslip should be the March one
-        self.assertEqual(leave.x_vacation_payslip_id.id, mar_vac.id,
-                         'S1: Primary payslip is the first (March).')
-
-        # March vac payslip checks
-        self.assertEqual(self._get_total(mar_vac, 'HRA'), 1500.0,
-                         'S1-MarVac: HRA = 1500.')
-        self.assertEqual(self._get_total(mar_vac, 'GOSI'), self.GOSI_FULL,
-                         'S1-MarVac: GOSI = -731.')
-        vac_bal = self._get_input(mar_vac, 'VACATION_BAL')
-        self.assertTrue(vac_bal, 'S1-MarVac: VACATION_BAL input exists.')
-
-        # April vac payslip checks
-        self.assertEqual(self._get_total(apr_vac, 'HRA'), 1500.0,
-                         'S1-AprVac: HRA = 1500.')
-        self.assertEqual(self._get_total(apr_vac, 'GOSI'), self.GOSI_FULL,
-                         'S1-AprVac: GOSI = -731.')
-        apr_vac_bal = self._get_input(apr_vac, 'VACATION_BAL')
-        self.assertFalse(apr_vac_bal,
-                         'S1-AprVac: NO VACATION_BAL on second payslip.')
-
-        # Confirm return and create post-return attendance
-        self._confirm_return(leave, date(2026, 4, 11))
-        for d in range(11, 31):
-            self._create_attendance(date(2026, 4, d))
-
-        # Confirm both vacation payslips
-        mar_vac.action_payslip_done()
-        apr_vac.action_payslip_done()
-
-        # Create April monthly payslip
-        monthly = self._create_monthly_payslip(
-            date(2026, 4, 1), date(2026, 4, 30), name='S1 Apr Monthly')
-        monthly.compute_sheet()
-
-        # April monthly should have PRIOR_HRA from April vac payslip
-        prior_hra = self._get_input(monthly, 'PRIOR_HRA')
-        self.assertTrue(prior_hra, 'S1-AprMon: PRIOR_HRA injected.')
-        self.assertEqual(prior_hra.amount, 1500.0)
-        self.assertEqual(self._get_total(monthly, 'HRA'), 0.0,
-                         'S1-AprMon: HRA = 0 (already paid).')
-        self.assertEqual(self._get_total(monthly, 'GOSI'), 0.0,
-                         'S1-AprMon: GOSI = 0 (already paid).')
-
-        # Monthly WORK100 should be 20 days (Apr 11–30)
-        self.assertEqual(self._get_wd(monthly, 'WORK100').number_of_days, 20,
-                         'S1-AprMon: 20 worked days (Apr 11–30).')
-
-        # Monthly ATT_ABS = 10 pre-return absent days (Apr 1–10)
-        m_absent = self._get_wd(monthly, 'ATT_ABS')
-        self.assertTrue(m_absent, 'S1-AprMon: ATT_ABS exists.')
-        self.assertEqual(m_absent.number_of_days, 10,
-                         'S1-AprMon: 10 pre-return absent days (Apr 1–10).')
-
-        # HRA paid exactly once per month
-        mar_hra = self._get_total(mar_vac, 'HRA')
-        apr_hra = self._get_total(apr_vac, 'HRA') + self._get_total(monthly, 'HRA')
-        self.assertEqual(mar_hra, 1500.0, 'S1: March HRA = 1500.')
-        self.assertEqual(apr_hra, 1500.0, 'S1: April HRA = 1500 (once).')
+        # Has VACATION_BAL and allowances
+        self.assertTrue(self._get_input(vac, 'VACATION_BAL'))
+        self.assertEqual(self._get_total(vac, 'HRA'), 1500.0)
+        self.assertEqual(self._get_total(vac, 'GOSI'), self.GOSI_FULL)
 
     # ==================================================================
-    # S2: 2-month with gap (Mar 20 – Apr 15), return Apr 20
+    # S2: Same-month leave — payslip is also current month
     # ==================================================================
 
-    def test_s2_two_month_vacation_with_gap(self):
+    def test_s2_same_month_leave(self):
         """
-        S2 — Cross-month vacation with 5-day gap before return
-        ──────────────────────────────────────────────────────
-        Pre-vacation attendance: Mar 1–19 (19 days).
-        Annual leave: Mar 20 – Apr 15 (27 calendar days).
-        Vacation ends Apr 15, employee returns Apr 20 (5-day gap).
-        Post-return attendance: Apr 20–30 (11 days).
-
-        Expected:
-        - TWO vacation payslips (March + April).
-        - April monthly payslip: effective_from=Apr 20 (NOT Apr 16).
-          Pre-return absent = 19 days (Apr 1–19, includes 5-day gap).
-        """
-        # Pre-vacation attendance (March)
-        for d in range(1, 20):
-            self._create_attendance(date(2026, 3, d))
-
-        # Create & approve leave (Mar 20 – Apr 15)
-        leave = self._create_leave_sql(date(2026, 3, 20), date(2026, 4, 15))
-        self._approve_full_chain(leave)
-        self.assertEqual(leave.state, 'validate', 'S2: Leave validated.')
-
-        # Verify TWO vacation payslips
-        vac_payslips = leave.x_vacation_payslip_ids
-        self.assertEqual(len(vac_payslips), 2,
-                         'S2: Two vacation payslips created.')
-
-        mar_vac = vac_payslips.filtered(lambda p: p.date_from.month == 3)
-        apr_vac = vac_payslips.filtered(lambda p: p.date_from.month == 4)
-
-        # Both have HRA and GOSI
-        self.assertEqual(self._get_total(mar_vac, 'HRA'), 1500.0)
-        self.assertEqual(self._get_total(mar_vac, 'GOSI'), self.GOSI_FULL)
-        self.assertEqual(self._get_total(apr_vac, 'HRA'), 1500.0)
-        self.assertEqual(self._get_total(apr_vac, 'GOSI'), self.GOSI_FULL)
-
-        # VACATION_BAL only on March (first)
-        self.assertTrue(self._get_input(mar_vac, 'VACATION_BAL'))
-        self.assertFalse(self._get_input(apr_vac, 'VACATION_BAL'))
-
-        # Confirm return with 5-day gap
-        self._confirm_return(leave, date(2026, 4, 20))
-        for d in range(20, 31):
-            self._create_attendance(date(2026, 4, d))
-
-        # Confirm vacation payslips
-        mar_vac.action_payslip_done()
-        apr_vac.action_payslip_done()
-
-        # Create April monthly payslip
-        monthly = self._create_monthly_payslip(
-            date(2026, 4, 1), date(2026, 4, 30), name='S2 Apr Monthly')
-        monthly.compute_sheet()
-
-        # Monthly should count from return date (Apr 20)
-        self.assertEqual(self._get_wd(monthly, 'WORK100').number_of_days, 11,
-                         'S2-AprMon: 11 worked days (Apr 20–30).')
-
-        # Pre-return absent = 19 days (Apr 1–19, includes the 5-day gap)
-        m_absent = self._get_wd(monthly, 'ATT_ABS')
-        self.assertTrue(m_absent)
-        self.assertEqual(m_absent.number_of_days, 19,
-                         'S2-AprMon: 19 pre-return absent days.')
-
-        # PRIOR_HRA from April vacation payslip
-        self.assertEqual(self._get_total(monthly, 'HRA'), 0.0)
-        self.assertEqual(self._get_total(monthly, 'GOSI'), 0.0)
-
-        # HRA once per month
-        self.assertEqual(
-            self._get_total(apr_vac, 'HRA') + self._get_total(monthly, 'HRA'),
-            1500.0, 'S2: April HRA paid exactly once.')
-
-    # ==================================================================
-    # S3: Single-month regression (Apr 5 – Apr 12), return Apr 13
-    # ==================================================================
-
-    def test_s3_single_month_regression(self):
-        """
-        S3 — Single-month vacation (regression test)
-        ─────────────────────────────────────────────
-        Verify that a vacation within a single month still produces
-        exactly ONE vacation payslip (no regression from cross-month
-        changes).
-
-        Pre-vacation attendance: Apr 1–4 (4 days).
-        Annual leave: Apr 5 – Apr 12 (8 calendar days).
-        Return: Apr 13.
-        Post-return attendance: Apr 13–30 (18 days).
+        S2 — Leave within the current month (Apr 5 – Apr 12).
+        Payslip should be for April (current month).
         """
         for d in range(1, 5):
             self._create_attendance(date(2026, 4, d))
 
         leave = self._create_leave_sql(date(2026, 4, 5), date(2026, 4, 12))
         self._approve_full_chain(leave)
-        self.assertEqual(leave.state, 'validate', 'S3: Leave validated.')
 
-        # Only ONE vacation payslip
         vac_payslips = leave.x_vacation_payslip_ids
-        self.assertEqual(len(vac_payslips), 1,
-                         'S3: Exactly one vacation payslip (single month).')
+        self.assertEqual(len(vac_payslips), 1)
+        vac = vac_payslips[0]
+        self.assertEqual(vac.date_from, date(2026, 4, 1))
+        self.assertEqual(vac.date_to, date(2026, 4, 30))
+        self.assertTrue(self._get_input(vac, 'VACATION_BAL'))
 
-        # Primary link matches the only payslip
-        self.assertEqual(leave.x_vacation_payslip_id.id,
-                         vac_payslips[0].id)
-
-        # Has VACATION_BAL
-        self.assertTrue(self._get_input(vac_payslips[0], 'VACATION_BAL'))
-
-        # HRA and GOSI present
-        self.assertEqual(self._get_total(vac_payslips[0], 'HRA'), 1500.0)
-        self.assertEqual(self._get_total(vac_payslips[0], 'GOSI'),
-                         self.GOSI_FULL)
-
-        # Confirm return and create post-return attendance
+        # Confirm return and test monthly payslip
         self._confirm_return(leave, date(2026, 4, 13))
         for d in range(13, 31):
             self._create_attendance(date(2026, 4, d))
+        vac.action_payslip_done()
 
-        vac_payslips[0].action_payslip_done()
-
-        # Monthly payslip
         monthly = self._create_monthly_payslip(
-            date(2026, 4, 1), date(2026, 4, 30), name='S3 Apr Monthly')
+            date(2026, 4, 1), date(2026, 4, 30), name='S2 Monthly')
         monthly.compute_sheet()
 
-        # PRIOR_HRA injected
+        # PRIOR_HRA — same month overlap
         self.assertEqual(self._get_total(monthly, 'HRA'), 0.0)
         self.assertEqual(self._get_total(monthly, 'GOSI'), 0.0)
-
-        # 18 worked days (Apr 13–30), 12 pre-return absent (Apr 1–12)
         self.assertEqual(self._get_wd(monthly, 'WORK100').number_of_days, 18)
         self.assertEqual(self._get_wd(monthly, 'ATT_ABS').number_of_days, 12)
 
     # ==================================================================
-    # S4: 3-month vacation (Jan 28 – Mar 5), return Mar 6
+    # S3: Leave starts this month, ends next month
     # ==================================================================
 
-    def test_s4_three_month_vacation(self):
+    def test_s3_current_to_next_month(self):
         """
-        S4 — Vacation spans 3 calendar months
-        ──────────────────────────────────────
-        Pre-vacation attendance: May 1–27 (27 days).
-        Annual leave: May 28 – Jul 5 (39 calendar days).
-        Return: Jul 6.
-        Post-return attendance: Jul 6–31 (26 days).
-
-        Expected:
-        - THREE vacation payslips (May, Jun, Jul).
-        - VACATION_BAL only on the first (May).
-        - Each payslip has its own HRA=1500 and GOSI=-731.
-        - July monthly payslip gets PRIOR_HRA/PRIOR_GOSI from
-          the July vacation payslip only (not May or Jun).
+        S3 — Leave from Apr 20 – May 10.
+        Payslip for April (current month). May handled by monthly batch.
         """
-        # Remove any mandatory days / public holidays that might conflict
-        self.env['resource.calendar.leaves'].sudo().search([
-            ('resource_id', '=', False),
-        ]).unlink()
-
-        # Pre-vacation attendance (May)
-        for d in range(1, 28):
-            self._create_attendance(date(2026, 5, d))
-
-        # Create & approve leave (May 28 – Jul 5)
-        leave = self._create_leave_sql(date(2026, 5, 28), date(2026, 7, 5))
-        self._approve_full_chain(leave)
-        self.assertEqual(leave.state, 'validate', 'S4: Leave validated.')
-
-        # Verify THREE vacation payslips
-        vac_payslips = leave.x_vacation_payslip_ids
-        self.assertEqual(len(vac_payslips), 3,
-                         'S4: Three vacation payslips (May, Jun, Jul).')
-
-        may_vac = vac_payslips.filtered(lambda p: p.date_from.month == 5)
-        jun_vac = vac_payslips.filtered(lambda p: p.date_from.month == 6)
-        jul_vac = vac_payslips.filtered(lambda p: p.date_from.month == 7)
-
-        self.assertTrue(may_vac and jun_vac and jul_vac,
-                        'S4: Payslips exist for all 3 months.')
-
-        # VACATION_BAL only on May (first)
-        self.assertTrue(self._get_input(may_vac, 'VACATION_BAL'),
-                        'S4: VACATION_BAL on May payslip.')
-        self.assertFalse(self._get_input(jun_vac, 'VACATION_BAL'),
-                         'S4: No VACATION_BAL on June payslip.')
-        self.assertFalse(self._get_input(jul_vac, 'VACATION_BAL'),
-                         'S4: No VACATION_BAL on July payslip.')
-
-        # Each month gets its own HRA and GOSI
-        for label, vac_slip in [('May', may_vac), ('Jun', jun_vac),
-                                ('Jul', jul_vac)]:
-            self.assertEqual(self._get_total(vac_slip, 'HRA'), 1500.0,
-                             f'S4-{label}Vac: HRA = 1500.')
-            self.assertEqual(self._get_total(vac_slip, 'GOSI'),
-                             self.GOSI_FULL,
-                             f'S4-{label}Vac: GOSI = -731.')
-
-        # Confirm return and post-return attendance
-        self._confirm_return(leave, date(2026, 7, 6))
-        for d in range(6, 32):
-            self._create_attendance(date(2026, 7, d))
-
-        # Confirm all vacation payslips
-        for vac_slip in vac_payslips:
-            vac_slip.action_payslip_done()
-
-        # Create July monthly payslip
-        monthly = self._create_monthly_payslip(
-            date(2026, 7, 1), date(2026, 7, 31), name='S4 Jul Monthly')
-        monthly.compute_sheet()
-
-        # PRIOR_HRA from July vacation payslip ONLY (not May/Jun)
-        prior_hra = self._get_input(monthly, 'PRIOR_HRA')
-        self.assertTrue(prior_hra, 'S4-JulMon: PRIOR_HRA injected.')
-        self.assertEqual(prior_hra.amount, 1500.0,
-                         'S4-JulMon: PRIOR_HRA = 1500 (from Jul vac only).')
-
-        self.assertEqual(self._get_total(monthly, 'HRA'), 0.0,
-                         'S4-JulMon: HRA = 0.')
-        self.assertEqual(self._get_total(monthly, 'GOSI'), 0.0,
-                         'S4-JulMon: GOSI = 0.')
-
-        # 26 worked days (Jul 6–31), 5 pre-return absent (Jul 1–5)
-        self.assertEqual(self._get_wd(monthly, 'WORK100').number_of_days, 26,
-                         'S4-JulMon: 26 worked days (Jul 6–31).')
-        m_absent = self._get_wd(monthly, 'ATT_ABS')
-        self.assertTrue(m_absent)
-        self.assertEqual(m_absent.number_of_days, 5,
-                         'S4-JulMon: 5 pre-return absent days (Jul 1–5).')
-
-        # Total HRA across all payslips = 1500 per month
-        total_jul_hra = (self._get_total(jul_vac, 'HRA')
-                         + self._get_total(monthly, 'HRA'))
-        self.assertEqual(total_jul_hra, 1500.0,
-                         'S4: July HRA paid exactly once.')
-
-    # ==================================================================
-    # S5: Cross-month — no monthly payslip for vacation-start month
-    # ==================================================================
-
-    def test_s5_no_double_hra_for_non_return_month(self):
-        """
-        S5 — Verify that a monthly payslip for the vacation-start month
-        does NOT incorrectly inject PRIOR_HRA from a different month's
-        vacation payslip.
-
-        Vacation: Mar 25 – Apr 10.
-        March vac payslip exists, April vac payslip exists.
-        If someone creates a March monthly payslip, PRIOR_HRA should
-        come from the March vac payslip (same month), NOT from the
-        April vac payslip.
-        """
-        for d in range(1, 25):
-            self._create_attendance(date(2026, 3, d))
-
-        leave = self._create_leave_sql(date(2026, 3, 25), date(2026, 4, 10))
-        self._approve_full_chain(leave)
-
-        vac_payslips = leave.x_vacation_payslip_ids
-        mar_vac = vac_payslips.filtered(lambda p: p.date_from.month == 3)
-        apr_vac = vac_payslips.filtered(lambda p: p.date_from.month == 4)
-
-        # Confirm return
-        self._confirm_return(leave, date(2026, 4, 11))
-
-        # Confirm vacation payslips
-        mar_vac.action_payslip_done()
-        apr_vac.action_payslip_done()
-
-        # Create March monthly payslip (edge case — not typical)
-        mar_monthly = self._create_monthly_payslip(
-            date(2026, 3, 1), date(2026, 3, 31), name='S5 Mar Monthly')
-        mar_monthly.compute_sheet()
-
-        # PRIOR_HRA should be 1500 (from MARCH vac payslip only)
-        prior_hra = self._get_input(mar_monthly, 'PRIOR_HRA')
-        self.assertTrue(prior_hra, 'S5: PRIOR_HRA injected on March monthly.')
-        self.assertEqual(prior_hra.amount, 1500.0,
-                         'S5: PRIOR_HRA = 1500 (from March vac, not April).')
-        self.assertEqual(self._get_total(mar_monthly, 'HRA'), 0.0)
-        self.assertEqual(self._get_total(mar_monthly, 'GOSI'), 0.0)
-
-        # April monthly payslip
-        for d in range(11, 31):
+        for d in range(1, 20):
             self._create_attendance(date(2026, 4, d))
 
-        apr_monthly = self._create_monthly_payslip(
-            date(2026, 4, 1), date(2026, 4, 30), name='S5 Apr Monthly')
-        apr_monthly.compute_sheet()
+        leave = self._create_leave_sql(date(2026, 4, 20), date(2026, 5, 10))
+        self._approve_full_chain(leave)
 
-        # PRIOR_HRA = 1500 (from APRIL vac payslip, not March)
-        apr_prior = self._get_input(apr_monthly, 'PRIOR_HRA')
-        self.assertTrue(apr_prior, 'S5: PRIOR_HRA injected on April monthly.')
-        self.assertEqual(apr_prior.amount, 1500.0,
-                         'S5: PRIOR_HRA = 1500 (from April vac).')
-        self.assertEqual(self._get_total(apr_monthly, 'HRA'), 0.0)
-        self.assertEqual(self._get_total(apr_monthly, 'GOSI'), 0.0)
+        vac_payslips = leave.x_vacation_payslip_ids
+        self.assertEqual(len(vac_payslips), 1)
+        vac = vac_payslips[0]
+        self.assertEqual(vac.date_from, date(2026, 4, 1),
+                         'S3: Payslip is for current month (April).')
+        self.assertTrue(self._get_input(vac, 'VACATION_BAL'))
+        self.assertEqual(self._get_total(vac, 'HRA'), 1500.0)
+        self.assertEqual(self._get_total(vac, 'GOSI'), self.GOSI_FULL)
 
+    # ==================================================================
+    # S4: Leave started last month, extends into current month
+    # ==================================================================
 
+    def test_s4_past_start_current_end(self):
+        """
+        S4 — Leave Mar 20 – Apr 15.
+        Payslip for April (current month), not March.
+        After return, April monthly payslip gets PRIOR_HRA from the
+        April vacation payslip.
+        """
+        for d in range(1, self.TODAY.day):
+            self._create_attendance(date(2026, 4, d))
+
+        leave = self._create_leave_sql(date(2026, 3, 20), date(2026, 4, 15))
+        self._approve_full_chain(leave)
+
+        vac_payslips = leave.x_vacation_payslip_ids
+        self.assertEqual(len(vac_payslips), 1)
+        vac = vac_payslips[0]
+        self.assertEqual(vac.date_from, date(2026, 4, 1),
+                         'S4: Payslip is for current month (April).')
+        self.assertTrue(self._get_input(vac, 'VACATION_BAL'))
+
+        # Confirm return, create attendance, make monthly payslip
+        self._confirm_return(leave, date(2026, 4, 20))
+        for d in range(20, 31):
+            self._create_attendance(date(2026, 4, d))
+        vac.action_payslip_done()
+
+        monthly = self._create_monthly_payslip(
+            date(2026, 4, 1), date(2026, 4, 30), name='S4 Monthly')
+        monthly.compute_sheet()
+
+        # PRIOR_HRA — vacation payslip is also for April
+        prior = self._get_input(monthly, 'PRIOR_HRA')
+        self.assertTrue(prior, 'S4: PRIOR_HRA injected (same month).')
+        self.assertEqual(prior.amount, 1500.0)
+        self.assertEqual(self._get_total(monthly, 'HRA'), 0.0)
+        self.assertEqual(self._get_total(monthly, 'GOSI'), 0.0)
+
+    # ==================================================================
+    # S5: Future-month leave — payslip still current month
+    # ==================================================================
+
+    def test_s5_future_leave_payslip_is_current_month(self):
+        """
+        S5 — Leave entirely in the future (May 1 – May 15).
+        Payslip is still for the current month (April) — the employee
+        is getting their salary for the current month before going
+        on vacation.
+        """
+        # Full April attendance up to today
+        for d in range(1, self.TODAY.day):
+            self._create_attendance(date(2026, 4, d))
+
+        leave = self._create_leave_sql(date(2026, 5, 1), date(2026, 5, 15))
+        self._approve_full_chain(leave)
+
+        vac_payslips = leave.x_vacation_payslip_ids
+        self.assertEqual(len(vac_payslips), 1)
+        vac = vac_payslips[0]
+        self.assertEqual(vac.date_from, date(2026, 4, 1),
+                         'S5: Payslip is for current month even for future leave.')
+        self.assertTrue(self._get_input(vac, 'VACATION_BAL'))
+        self.assertEqual(self._get_total(vac, 'HRA'), 1500.0)

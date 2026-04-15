@@ -418,6 +418,7 @@ class HrLeave(models.Model):
                         leave.number_of_hours = hours
 
         for leave in leaves_with_attendance:
+            leave.x_exceeds_annual_balance = False
             if leave.request_unit_hours:
                 total_accepted = leave._get_total_accepted_minutes()
                 total_hours = total_accepted / 60.0

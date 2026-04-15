@@ -94,6 +94,42 @@ Filled by the Accounting department during the annual leave approval process.</f
         </record>
 
         <!-- ========================================================= -->
+        <!-- Financial Consideration for Excess Leave (DED)             -->
+        <!-- Reads from payslip input line 'FIN_CONSIDERATION'          -->
+        <!-- ========================================================= -->
+        <record id="hr_rule_fin_consideration" model="hr.salary.rule">
+            <field name="name">Financial Consideration for Excess Leave</field>
+            <field name="sequence" eval="172"/>
+            <field name="code">FIN_CONSIDERATION</field>
+            <field name="category_id" ref="om_hr_payroll.DED"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.FIN_CONSIDERATION and inputs.FIN_CONSIDERATION.amount</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -inputs.FIN_CONSIDERATION.amount if inputs.FIN_CONSIDERATION else 0.0</field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="note">Financial consideration for excess unpaid leave days.
+Filled by the Accounting department during the combined annual+unpaid leave approval.</field>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Visa Cost Recovery for Excess Leave (DED)                  -->
+        <!-- Reads from payslip input line 'VISA_COST_RECOVERY'         -->
+        <!-- ========================================================= -->
+        <record id="hr_rule_visa_cost_recovery" model="hr.salary.rule">
+            <field name="name">Visa Cost Recovery for Excess Leave</field>
+            <field name="sequence" eval="173"/>
+            <field name="code">VISA_COST_RECOVERY</field>
+            <field name="category_id" ref="om_hr_payroll.DED"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.VISA_COST_RECOVERY and inputs.VISA_COST_RECOVERY.amount</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -inputs.VISA_COST_RECOVERY.amount if inputs.VISA_COST_RECOVERY else 0.0</field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="note">Visa cost recovery for excess unpaid leave days.
+Filled by the Accounting department during the combined annual+unpaid leave approval.</field>
+        </record>
+
+        <!-- ========================================================= -->
         <!-- Attach all vacation rules to the BASE salary structure     -->
         <!-- ========================================================= -->
         <record id="om_hr_payroll.structure_base" model="hr.payroll.structure">
@@ -103,6 +139,8 @@ Filled by the Accounting department during the annual leave approval process.</f
                 (4, ref('hr_rule_penalty')),
                 (4, ref('hr_rule_additional_commissions')),
                 (4, ref('hr_rule_remaining_loans')),
+                (4, ref('hr_rule_fin_consideration')),
+                (4, ref('hr_rule_visa_cost_recovery')),
             ]"/>
         </record>
 

@@ -8,6 +8,17 @@ class HrLeaveUnpaid(models.Model):
     _inherit = 'hr.leave'
 
     # ------------------------------------------------------------------
+    # View helper fields (stored for reliable invisible expressions)
+    # ------------------------------------------------------------------
+
+    x_is_unpaid_leave_type = fields.Boolean(
+        string='Is Unpaid Leave Type',
+        related='holiday_status_id.is_unpaid_leave',
+        store=True,
+        help='Stored related field for reliable use in view invisible expressions.',
+    )
+
+    # ------------------------------------------------------------------
     # Unpaid-specific accounting fields (filled by Accountant)
     # ------------------------------------------------------------------
 
@@ -63,6 +74,7 @@ class HrLeaveUnpaid(models.Model):
             # Ensure full-clearance fields stay 0 for unpaid
             leave.x_actual_vacation_days = 0
             leave.x_clearance_balance = 0
+            leave.x_exceeds_annual_balance = False
 
     def _get_durations(self, check_leave_type=True, resource_calendar=None):
         unpaid = self.filtered(self._is_unpaid_leave)
@@ -156,12 +168,43 @@ class HrLeaveUnpaid(models.Model):
     # ------------------------------------------------------------------
 
     def action_acc_approve(self):
-        """Override: for unpaid leaves, log the unpaid accounting fields."""
+        """Override: for unpaid leaves, log the unpaid accounting fields.
+        For combined annual+unpaid leaves, also log unpaid fields."""
         unpaid = self.filtered(self._is_unpaid_leave)
         remaining = self - unpaid
 
         if remaining:
             super(HrLeaveUnpaid, remaining).action_acc_approve()
+
+        # For combined annual leaves, also log the unpaid accounting fields
+        combined = remaining.filtered(
+            lambda l: l.x_excess_days_accepted and l.x_unpaid_portion_days > 0
+        )
+        for leave in combined:
+            body_parts = []
+            if leave.x_financial_consideration_excess:
+                body_parts.append(
+                    '<b>Financial Consideration for Excess Leave:</b> '
+                    '%.2f SAR' % leave.x_financial_consideration_excess)
+                if leave.x_financial_consideration_excess_description:
+                    body_parts.append(
+                        ' — %s'
+                        % leave.x_financial_consideration_excess_description)
+                body_parts.append('<br/>')
+            if leave.x_visa_cost_recovery:
+                body_parts.append(
+                    '<b>Visa Cost Recovery for Excess Leave:</b> '
+                    '%.2f SAR' % leave.x_visa_cost_recovery)
+                if leave.x_visa_cost_recovery_description:
+                    body_parts.append(
+                        ' — %s'
+                        % leave.x_visa_cost_recovery_description)
+                body_parts.append('<br/>')
+            if body_parts:
+                leave.message_post(
+                    body=Markup(''.join(body_parts)),
+                    subtype_xmlid='mail.mt_note',
+                )
 
         for leave in unpaid:
             self._check_group(
@@ -264,14 +307,13 @@ class HrLeaveUnpaid(models.Model):
         result = super()._action_validate(check_state=check_state)
 
         unpaid = self.filtered(self._is_unpaid_leave)
+        annual = self.filtered(self._is_annual_leave)
+
+        # Lock attendance sheet lines for BOTH annual and unpaid leaves
+        for leave in (unpaid | annual):
+            self._lock_attendance_sheet_lines(leave)
+
         if unpaid:
-            # Do NOT set x_return_state for unpaid leaves — no return
-            # tracking needed.  (The parent sets 'on_vacation' only for
-            # annual leaves, so we don't need to undo anything here.)
-
-            for leave in unpaid:
-                self._lock_attendance_sheet_lines(leave)
-
             # Refresh accrual — unpaid days now reduce effective service
             emp_ids = unpaid.mapped('employee_id').ids
             self.env['ksw.annual.leave']._refresh_accrual_for_employees(
@@ -285,11 +327,12 @@ class HrLeaveUnpaid(models.Model):
 
     def action_refuse(self):
         unpaid = self.filtered(self._is_unpaid_leave)
+        annual = self.filtered(self._is_annual_leave)
         unpaid_multi = self.filtered(self._is_unpaid_multi)
         unpaid_emp_ids = unpaid.mapped('employee_id').ids
 
         # Unlock BEFORE super (super may change state)
-        for leave in unpaid:
+        for leave in (unpaid | annual):
             self._unlock_attendance_sheet_lines(leave)
 
         result = super().action_refuse()
@@ -306,9 +349,10 @@ class HrLeaveUnpaid(models.Model):
     def _move_validate_leave_to_confirm(self):
         unpaid_multi = self.filtered(self._is_unpaid_multi)
         unpaid = self.filtered(self._is_unpaid_leave)
+        annual = self.filtered(self._is_annual_leave)
         unpaid_emp_ids = unpaid.mapped('employee_id').ids
 
-        for leave in unpaid:
+        for leave in (unpaid | annual):
             self._unlock_attendance_sheet_lines(leave)
 
         if unpaid_multi:
@@ -326,10 +370,11 @@ class HrLeaveUnpaid(models.Model):
         return result
 
     def action_draft(self):
-        unpaid_emp_ids = self.filtered(
-            self._is_unpaid_leave).mapped('employee_id').ids
+        unpaid = self.filtered(self._is_unpaid_leave)
+        annual = self.filtered(self._is_annual_leave)
+        unpaid_emp_ids = unpaid.mapped('employee_id').ids
 
-        for leave in self.filtered(self._is_unpaid_leave):
+        for leave in (unpaid | annual):
             self._unlock_attendance_sheet_lines(leave)
 
         result = super().action_draft()
@@ -348,9 +393,10 @@ class HrLeaveUnpaid(models.Model):
 
     def unlink(self):
         unpaid = self.filtered(self._is_unpaid_leave)
+        annual = self.filtered(self._is_annual_leave)
         unpaid_emp_ids = unpaid.mapped('employee_id').ids
 
-        for leave in unpaid:
+        for leave in (unpaid | annual):
             self._unlock_attendance_sheet_lines(leave)
 
         result = super().unlink()

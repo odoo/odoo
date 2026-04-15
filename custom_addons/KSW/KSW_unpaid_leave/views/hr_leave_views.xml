@@ -10,6 +10,11 @@
         <field name="inherit_id" ref="KSW_annual_leave.hr_leave_view_form_inherit_annual_return"/>
         <field name="arch" type="xml">
 
+            <!-- Hidden helper: stored related for reliable invisible -->
+            <xpath expr="//field[@name='x_is_annual_leave_type']" position="after">
+                <field name="x_is_unpaid_leave_type" invisible="1"/>
+            </xpath>
+
             <!-- ===== Widen multi-step button visibility ===== -->
 
             <!-- Step 1 – DM: also show for unpaid_multi -->
@@ -50,18 +55,18 @@
             <!-- ===== Hide full-clearance toggle for unpaid ===== -->
             <xpath expr="//field[@name='x_is_full_clearance'][@widget='boolean_toggle']" position="attributes">
                 <attribute name="invisible">
-                    not holiday_status_id or not holiday_status_id.is_annual_leave or holiday_status_id.is_unpaid_leave
+                    not x_is_annual_leave_type or x_is_unpaid_leave_type or x_excess_days_accepted or x_exceeds_annual_balance
                 </attribute>
             </xpath>
             <!-- Also hide the clearance-related fields -->
             <xpath expr="//field[@name='x_actual_vacation_days']" position="attributes">
                 <attribute name="invisible">
-                    not x_is_full_clearance or x_actual_vacation_days == 0 or (holiday_status_id and holiday_status_id.is_unpaid_leave)
+                    not x_is_full_clearance or x_actual_vacation_days == 0 or x_is_unpaid_leave_type
                 </attribute>
             </xpath>
             <xpath expr="//field[@name='x_clearance_balance']" position="attributes">
                 <attribute name="invisible">
-                    not x_is_full_clearance or x_clearance_balance == 0 or (holiday_status_id and holiday_status_id.is_unpaid_leave)
+                    not x_is_full_clearance or x_clearance_balance == 0 or x_is_unpaid_leave_type
                 </attribute>
             </xpath>
 
@@ -92,11 +97,11 @@
                 </attribute>
             </xpath>
 
-            <!-- ===== Unpaid accounting fields (shown only for unpaid_multi) ===== -->
+            <!-- ===== Unpaid accounting fields (unpaid_multi OR combined annual+unpaid) ===== -->
             <xpath expr="//group[@name='accounting_allowances']" position="after">
                 <group string="Accounting — Unpaid Leave"
                        name="unpaid_accounting"
-                       invisible="validation_type != 'unpaid_multi' or x_annual_approval_state in ('pending_hr', 'pending_gm_initial')">
+                       invisible="(validation_type != 'unpaid_multi' and (not x_excess_days_accepted or x_unpaid_portion_days == 0)) or x_annual_approval_state in ('pending_hr', 'pending_gm_initial')">
                     <field name="x_financial_consideration_excess"
                            readonly="x_annual_approval_state != 'pending_acc'"/>
                     <field name="x_financial_consideration_excess_description"

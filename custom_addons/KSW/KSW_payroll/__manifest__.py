@@ -25,6 +25,7 @@ Extends om_hr_payroll with:
         'om_hr_payroll',
         'KSW_attendance_leave',
         'KSW_annual_leave',
+        'KSW_unpaid_leave',
         'KSW_attendance_sheet',
         'KSW_working_schedule',
         'mail',

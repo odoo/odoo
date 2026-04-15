@@ -13,13 +13,27 @@ class KswAnnualLeaveUnpaid(models.Model):
 
     def _get_unpaid_leave_days(self, employee_id):
         """Return the total number of validated unpaid-leave calendar days
-        for the given employee (all time)."""
-        leaves = self.env['hr.leave'].sudo().search([
+        for the given employee (all time).  Includes the unpaid portion
+        of combined annual+unpaid leaves."""
+        # Standalone unpaid leaves
+        unpaid_leaves = self.env['hr.leave'].sudo().search([
             ('employee_id', '=', employee_id),
             ('state', '=', 'validate'),
             ('holiday_status_id.is_unpaid_leave', '=', True),
         ])
-        return sum(leaves.mapped('number_of_days'))
+        total = sum(unpaid_leaves.mapped('number_of_days'))
+
+        # Unpaid portion of combined annual leaves
+        combined_leaves = self.env['hr.leave'].sudo().search([
+            ('employee_id', '=', employee_id),
+            ('state', '=', 'validate'),
+            ('holiday_status_id.is_annual_leave', '=', True),
+            ('x_excess_days_accepted', '=', True),
+            ('x_unpaid_portion_days', '>', 0),
+        ])
+        total += sum(combined_leaves.mapped('x_unpaid_portion_days'))
+
+        return total
 
     @api.depends('employee_id')
     def _compute_leave_data(self):

@@ -17,8 +17,11 @@
                 <field name="x_can_confirm_return_manager" invisible="1"/>
                 <field name="x_can_confirm_return_hr" invisible="1"/>
                 <field name="x_is_full_clearance" invisible="1"/>
+                <field name="x_excess_days_accepted" invisible="1"/>
                 <field name="x_annual_approval_state" invisible="1"/>
                 <field name="validation_type" invisible="1"/>
+                <field name="x_is_annual_leave_type" invisible="1"/>
+                <field name="x_exceeds_annual_balance" invisible="1"/>
             </xpath>
 
             <!-- Return confirmation buttons in header -->
@@ -92,16 +95,19 @@
                 <widget name="web_ribbon" title="⏳ Return Pending HR"
                         bg_color="text-bg-info"
                         invisible="x_return_state != 'manager_confirmed'"/>
-                <widget name="web_ribbon" title="📋 Full Clearance"
+                <widget name="web_ribbon" title="⚠ Full Clearance"
                         bg_color="text-bg-danger"
                         invisible="not x_is_full_clearance"/>
+                <widget name="web_ribbon" title="⚠ Combined Leave"
+                        bg_color="text-bg-warning"
+                        invisible="not x_excess_days_accepted or x_unpaid_portion_days == 0"/>
             </xpath>
 
             <!-- Full clearance checkbox + clearance info below leave description -->
             <xpath expr="//field[@name='name']" position="after">
                 <!-- Full Balance Clearance section -->
                 <field name="x_is_full_clearance" widget="boolean_toggle"
-                       invisible="not holiday_status_id or not holiday_status_id.is_annual_leave"
+                       invisible="not x_is_annual_leave_type or x_excess_days_accepted or x_exceeds_annual_balance"
                        readonly="state != 'confirm'"/>
                 <field name="x_actual_vacation_days"
                        invisible="not x_is_full_clearance or x_actual_vacation_days == 0"
@@ -109,6 +115,19 @@
                 <field name="x_clearance_balance"
                        invisible="not x_is_full_clearance or x_clearance_balance == 0"
                        string="Balance Consumed"/>
+
+                <!-- Excess Days: Combined Annual + Unpaid -->
+                <field name="x_excess_days_accepted" widget="boolean_toggle"
+                       string="Accept Excess Days as Unpaid"
+                       invisible="not x_is_annual_leave_type or x_is_full_clearance or not x_exceeds_annual_balance"
+                       readonly="state != 'confirm'"/>
+                <field name="x_annual_portion_days"
+                       invisible="not x_excess_days_accepted or x_annual_portion_days == 0"
+                       string="Annual Portion (Days)"/>
+                <field name="x_unpaid_portion_days"
+                       invisible="not x_excess_days_accepted or x_unpaid_portion_days == 0"
+                       string="Unpaid Portion (Days)"/>
+
                 <!-- Return confirmation section -->
                 <field name="x_return_date"
                        invisible="x_return_state == 'not_applicable'"

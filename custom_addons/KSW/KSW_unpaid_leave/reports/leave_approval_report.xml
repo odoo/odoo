@@ -25,6 +25,9 @@
                             <t t-if="o.holiday_status_id.is_unpaid_leave">
                                 Unpaid Leave — Approval Report
                             </t>
+                            <t t-elif="o.x_excess_days_accepted and o.x_unpaid_portion_days">
+                                Annual + Unpaid Leave — Approval Report
+                            </t>
                             <t t-elif="o.holiday_status_id.is_annual_leave">
                                 Annual Leave — Approval Report
                             </t>
@@ -76,6 +79,20 @@
                                     <td>Yes</td>
                                     <td><strong>Balance Consumed</strong></td>
                                     <td t-out="'%.4f' % o.x_clearance_balance"/>
+                                </tr>
+                            </t>
+                            <t t-if="o.x_excess_days_accepted and o.x_unpaid_portion_days">
+                                <tr>
+                                    <td><strong>Combined Leave</strong></td>
+                                    <td>Yes — Annual + Unpaid</td>
+                                    <td><strong>Total Calendar Days</strong></td>
+                                    <td t-out="'%.0f' % o.x_actual_vacation_days"/>
+                                </tr>
+                                <tr>
+                                    <td><strong>Annual Portion</strong></td>
+                                    <td t-out="'%.4f days' % o.x_annual_portion_days"/>
+                                    <td><strong>Unpaid Portion</strong></td>
+                                    <td t-out="'%.0f days' % o.x_unpaid_portion_days"/>
                                 </tr>
                             </t>
                         </table>
@@ -226,9 +243,9 @@
                             </t>
                         </t>
 
-                        <!-- ── Accounting Inputs (unpaid only) ── -->
-                        <t t-if="o.holiday_status_id.is_unpaid_leave and (o.x_financial_consideration_excess or o.x_visa_cost_recovery)">
-                            <h4>Accounting Inputs</h4>
+                        <!-- ── Accounting Inputs (unpaid or combined leave) ── -->
+                        <t t-if="(o.holiday_status_id.is_unpaid_leave or (o.x_excess_days_accepted and o.x_unpaid_portion_days)) and (o.x_financial_consideration_excess or o.x_visa_cost_recovery)">
+                            <h4>Accounting Inputs — Unpaid Leave</h4>
                             <table class="table table-sm table-bordered mb-3">
                                 <t t-if="o.x_financial_consideration_excess">
                                     <tr>

@@ -16,15 +16,14 @@ class HrLeave(models.Model):
 
     x_vacation_payslip_id = fields.Many2one(
         'hr.payslip', string='Vacation Payslip', readonly=True, copy=False,
-        help='Primary vacation payslip (first month).  For cross-month '
-             'vacations, see x_vacation_payslip_ids for all payslips.',
+        help='The vacation payslip generated for this annual leave '
+             '(covers the current month at the time of approval).',
     )
 
     x_vacation_payslip_ids = fields.One2many(
         'hr.payslip', 'x_leave_id', string='Vacation Payslips',
         readonly=True, copy=False,
-        help='All vacation payslips generated for this leave.  '
-             'One per affected calendar month.',
+        help='Vacation payslip(s) linked to this leave via x_leave_id.',
     )
 
     # ------------------------------------------------------------------
@@ -32,52 +31,30 @@ class HrLeave(models.Model):
     # vacation payslip when the GM gives final approval.
     # ------------------------------------------------------------------
 
-    @staticmethod
-    def _get_affected_months(date_from, date_to):
-        """Return a list of (month_start, month_end) for each calendar
-        month touched by the date range *date_from* .. *date_to*."""
-        months = []
-        current = date_from.replace(day=1)
-        while current <= date_to:
-            month_start = current
-            if current.month == 12:
-                next_month = date(current.year + 1, 1, 1)
-            else:
-                next_month = date(current.year, current.month + 1, 1)
-            month_end = next_month - timedelta(days=1)
-            months.append((month_start, month_end))
-            current = next_month
-        return months
-
     def _create_vacation_payslip(self):
-        """Create vacation payslip(s) for the approved annual leave.
+        """Create a single vacation payslip for the approved annual leave.
 
-        One payslip is created for **each calendar month** touched by
-        the leave dates.  This ensures the employee receives HRA and
-        GOSI for every affected month.
+        Only **one** payslip is created, covering the **current month**
+        (the month the leave is approved).  Past months are already
+        settled via regular monthly payslip batches; future months will
+        be handled by upcoming monthly batches.
 
-        Only the **first** payslip carries the one-time inputs
-        (VACATION_BAL, FLIGHT_TICKET, PENALTY).  Subsequent payslips
-        are pure salary-continuation (BASIC + allowances + HRA + GOSI
-        minus attendance deductions).
+        The payslip carries all one-time inputs (VACATION_BAL,
+        FLIGHT_TICKET, PENALTY, etc.).
 
         Called BEFORE _action_validate so x_return_state is still
         'not_applicable', avoiding the vacation-return guard.
         """
         Payslip = self.env['hr.payslip'].sudo()
+        today = fields.Date.context_today(self)
 
         for leave in self:
             employee = leave.employee_id
             if not employee:
                 continue
 
-            # Determine affected months from leave request dates
-            leave_start = leave.request_date_from
-            leave_end = leave.request_date_to
-            if not leave_start or not leave_end:
+            if not leave.request_date_from:
                 continue
-
-            affected_months = self._get_affected_months(leave_start, leave_end)
 
             # Find the employee's salary structure and version
             version = employee.current_version_id
@@ -98,42 +75,42 @@ class HrLeave(models.Model):
                 )
                 continue
 
-            first_payslip = None
+            # Use the current month (approval month), not the leave
+            # start month.  Past months are already settled.
+            month_start = today.replace(day=1)
+            if month_start.month == 12:
+                month_end = date(month_start.year + 1, 1, 1) - timedelta(days=1)
+            else:
+                month_end = date(month_start.year, month_start.month + 1, 1) - timedelta(days=1)
 
-            for idx, (month_start, month_end) in enumerate(affected_months):
-                # Create the payslip for this month
-                payslip = Payslip.create({
-                    'employee_id': employee.id,
-                    'name': 'Vacation Payslip — %s — %s/%s' % (
-                        employee.name, month_start.year, month_start.month),
-                    'date_from': month_start,
-                    'date_to': month_end,
-                    'struct_id': structure.id,
-                    'version_id': version.id,
-                    'x_leave_id': leave.id,
-                })
+            payslip = Payslip.create({
+                'employee_id': employee.id,
+                'name': 'Vacation Payslip — %s — %s/%s' % (
+                    employee.name, month_start.year, month_start.month),
+                'date_from': month_start,
+                'date_to': month_end,
+                'struct_id': structure.id,
+                'version_id': version.id,
+                'x_leave_id': leave.id,
+            })
 
-                # Build input lines — one-time items only on first payslip
-                if idx == 0:
-                    input_vals = self._build_vacation_input_lines(
-                        leave, employee, payslip)
-                    if input_vals:
-                        self.env['hr.payslip.input'].sudo().create(input_vals)
-                    first_payslip = payslip
+            # Build and attach input lines
+            input_vals = self._build_vacation_input_lines(
+                leave, employee, payslip)
+            if input_vals:
+                self.env['hr.payslip.input'].sudo().create(input_vals)
 
-                # Compute the payslip
-                payslip.compute_sheet()
+            # Compute the payslip
+            payslip.compute_sheet()
 
-                _logger.info(
-                    'Vacation payslip #%s created for employee %s '
-                    '(leave #%s, month %s/%s).',
-                    payslip.id, employee.name, leave.id,
-                    month_start.year, month_start.month,
-                )
+            _logger.info(
+                'Vacation payslip #%s created for employee %s '
+                '(leave #%s, month %s/%s).',
+                payslip.id, employee.name, leave.id,
+                month_start.year, month_start.month,
+            )
 
-            # Link the primary (first) payslip to the leave
-            if first_payslip:
-                leave.write({'x_vacation_payslip_id': first_payslip.id})
+            leave.write({'x_vacation_payslip_id': payslip.id})
 
     def _build_vacation_input_lines(self, leave, employee, payslip):
         """Build the list of hr.payslip.input values for vacation items."""
@@ -147,6 +124,10 @@ class HrLeave(models.Model):
             # Full clearance → consume the entire remaining balance
             vacation_days = self._get_remaining_balance(leave)
             label = 'Vacation Balance Settlement — Full Clearance'
+        elif leave.x_excess_days_accepted and leave.x_annual_portion_days > 0:
+            # Combined leave → only the annual portion settles
+            vacation_days = leave.x_annual_portion_days
+            label = 'Vacation Balance Settlement — Annual Portion'
         else:
             # Normal vacation → calendar days from request dates
             vacation_days, _hours = self._annual_cal_days(leave)
@@ -205,6 +186,28 @@ class HrLeave(models.Model):
                 'name': 'Remaining Loans',
                 'code': 'REMAINING_LOANS',
                 'amount': leave.x_remaining_loans,
+            })
+
+        # 6. Financial Consideration for Excess Leave (combined leave only)
+        fin_consideration = getattr(leave, 'x_financial_consideration_excess', 0) or 0
+        if fin_consideration:
+            vals_list.append({
+                'payslip_id': payslip.id,
+                'version_id': version_id,
+                'name': 'Financial Consideration for Excess Leave',
+                'code': 'FIN_CONSIDERATION',
+                'amount': fin_consideration,
+            })
+
+        # 7. Visa Cost Recovery for Excess Leave (combined leave only)
+        visa_recovery = getattr(leave, 'x_visa_cost_recovery', 0) or 0
+        if visa_recovery:
+            vals_list.append({
+                'payslip_id': payslip.id,
+                'version_id': version_id,
+                'name': 'Visa Cost Recovery for Excess Leave',
+                'code': 'VISA_COST_RECOVERY',
+                'amount': visa_recovery,
             })
 
         return vals_list
