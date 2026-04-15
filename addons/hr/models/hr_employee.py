@@ -79,6 +79,7 @@ class HrEmployeePrivate(models.Model):
         domain="[('partner_id', '=', address_home_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         groups="hr.group_hr_user",
         tracking=True,
+        copy=False,
         help='Employee bank account to pay salaries')
     permit_no = fields.Char('Work Permit No', groups="hr.group_hr_user", tracking=True)
     visa_no = fields.Char('Visa No', groups="hr.group_hr_user", tracking=True)
