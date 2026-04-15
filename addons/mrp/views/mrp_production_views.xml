@@ -232,16 +232,13 @@
                 <form string="Manufacturing Orders">
                 <header>
                     <field name="show_lock" invisible="1"/>
-                    <field name="show_produce" invisible="1"/>
-                    <field name="show_produce_all" invisible="1"/>
-                    <button name="button_mark_done" invisible="not move_raw_ids or not show_produce" string="Produce" type="object" class="oe_highlight" data-hotkey="g"/>
-                    <button name="button_mark_done" invisible="not move_raw_ids or not show_produce_all" string="Produce All" type="object" class="oe_highlight" data-hotkey="g"/>
-                    <button name="button_mark_done" invisible="move_raw_ids or not show_produce" string="Produce" type="object" class="oe_highlight" data-hotkey="g"
-                            confirm="There are no components to consume. Are you still sure you want to continue?"/>
-                    <button name="button_mark_done" invisible="move_raw_ids or not show_produce_all" string="Produce All" type="object" class="oe_highlight" data-hotkey="g"
-                            confirm="There are no components to consume. Are you still sure you want to continue?"/>
+                    <button name="button_mark_done" type="object" string="Produce" class="oe_highlight"
+                            invisible="not move_raw_ids or state not in ('confirmed', 'progress', 'to_close')" data-hotkey="g"/>
+                    <button name="button_mark_done" type="object" string="Produce" class="oe_highlight"
+                            invisible="move_raw_ids or state not in ('confirmed', 'progress', 'to_close')"
+                            confirm="There are no components to consume. Are you still sure you want to continue?" data-hotkey="g"/>
                     <button name="action_confirm" invisible="state != 'draft'" string="Confirm" type="object" class="oe_highlight" data-hotkey="q"/>
-                    <button name="button_plan" invisible="state not in ('confirmed', 'progress', 'to_close') or is_planned" type="object" string="Plan" class="oe_highlight" data-hotkey="z"/>
+                    <button name="button_plan" type="object" string="Plan" class="oe_highlight" invisible="state not in ('confirmed', 'progress', 'to_close') or is_planned" data-hotkey="z"/>
                     <button name="button_unplan" type="object" string="Unplan" invisible="not is_planned or state in ['cancel', 'done']" data-hotkey="z"/>
                     <button name="action_start"  type="object" string="Start" invisible="state != 'confirmed'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
@@ -342,10 +339,12 @@
                             <div class="o_row g-0 d-flex" name="qty">
                                 <div invisible="state == 'draft'" class="o_row flex-grow-1">
                                     <label for="qty_producing" string="Quantity" class="d-none d-touch-block"/>
-                                    <field name="qty_producing" class="text-start text-truncate" readonly="state == 'cancel' or (state == 'done' and is_locked) or product_tracking=='serial'" force_save="1"/>
+                                    <field name="qty_producing" widget="external_placeholder_float_field" placeholder="product_qty" class="text-start text-truncate"
+                                           readonly="state == 'cancel' or (state == 'done' and is_locked) or product_tracking=='serial'" force_save="1"/>
                                     /
                                 </div>
-                                <field name="product_qty" class="oe_inline text-start text-truncate" invisible="state not in ('draft', 'done')" readonly="state != 'draft'" style="width:auto!important"/>
+                                <field name="product_qty" class="oe_inline text-start text-truncate"
+                                       invisible="state not in ('draft', 'done')" readonly="state != 'draft'" style="width:auto!important"/>
                                 <button type="action" name="%(mrp.action_change_production_qty)d"
                                     context="{'default_mo_id': id}" class="oe_link oe_inline" style="margin: 0px; padding: 0px;" invisible="state in ('draft', 'done', 'cancel') or not id">
                                     <field name="product_qty" class="oe_inline" readonly="state != 'draft'"/>
@@ -487,8 +486,16 @@
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" column_invisible="True"/>
                                     <field name="state" column_invisible="True" force_save="1"/>
                                     <field name="should_consume_qty" column_invisible="True"/>
-                                    <field name="product_uom_qty" force_save="1" string="To Consume" column_invisible="not parent.show_produce_all" readonly="parent.state != 'draft' and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned) or (parent.is_locked and state != 'draft'))"/>
-                                    <field name="product_uom_qty" widget="mrp_should_consume" force_save="1" string="To Consume" column_invisible="parent.show_produce_all" readonly="parent.state != 'draft' and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned) or (parent.is_locked and state != 'draft'))"/>
+                                    <field name="product_uom_qty" widget="mrp_should_consume" force_save="1" string="To Consume"
+                                           column_invisible="parent.qty_producing in (0, parent.product_qty)"
+                                           readonly="parent.state != 'draft'
+                                                     and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned)
+                                                          or (parent.is_locked and state != 'draft'))"/>
+                                    <field name="product_uom_qty" force_save="1" string="To Consume"
+                                           column_invisible="parent.qty_producing not in (0, parent.product_qty)"
+                                           readonly="parent.state != 'draft'
+                                                     and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned)
+                                                          or (parent.is_locked and state != 'draft'))"/>
                                     <field name="product_qty" readonly="1" column_invisible="True"/>
                                     <field name="forecast_expected_date" column_invisible="True"/>
                                     <field name="quantity" string="Consumed"

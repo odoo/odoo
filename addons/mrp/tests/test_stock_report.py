@@ -145,6 +145,7 @@ class TestMrpStockReports(TestReportsCommon):
         mo_form.bom_id = bom
         mo_form.product_qty = 4
         mo_1 = mo_form.save()
+        mo_1.picking_type_id.create_backorder = 'ask'
         mo_1.action_confirm()
         pick = mo_1.move_raw_ids.move_orig_ids.picking_id
         pick.picking_type_id.show_operations = True  # Could be false without demo data, as the lot group is disabled

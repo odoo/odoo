@@ -33,7 +33,16 @@ class MrpProductionBackorder(models.TransientModel):
     def action_close_mo(self):
         ctx = dict(self.env.context)
         always_backorder_mo_ids = ctx.pop('always_backorder_mo_ids', [])
-        return self.mrp_production_ids.with_context(ctx, skip_backorder=True, mo_ids_to_backorder=always_backorder_mo_ids).button_mark_done()
+        return self.mrp_production_ids.with_context(
+            ctx,
+            close_production=True,
+            skip_backorder=True,
+            # It's possible to trigger the consumption warning a second time.
+            # So, if we came here from a consumption warning, we need to make
+            # sure we don't suppress the next one.
+            skip_consumption=False,
+            mo_ids_to_backorder=always_backorder_mo_ids,
+        ).button_mark_done()
 
     def action_backorder(self):
         ctx = dict(self.env.context)

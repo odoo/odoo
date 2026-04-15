@@ -1062,7 +1062,7 @@ stepUtils.autoExpandMoreButtons(),
     tooltipPosition: "right",
     run: "edit 1 && click body",
 },
-...stepUtils.statusbarButtonsSteps('Produce All', "Produce All", ".o_statusbar_status .dropdown-toggle:contains('To Close')"),
+...stepUtils.statusbarButtonsSteps('Produce', "Produce", ".o_statusbar_status .dropdown-toggle:contains('To Close')"),
 ...stepUtils.toggleHomeMenu(),
 ...stepUtils.goToAppSteps('sale.sale_menu_root', "Organize your sales activities with the Sales app."),
 {
