@@ -72,7 +72,7 @@
             <div class="dropdown-menu">
                 <t t-foreach="countries" t-as="country" t-if="country['country_id']">
                     <t t-set='all_countries' t-value="dict(country_all=1) if country['country_id'][0] == 0 else {} "/>
-                    <a t-att-href="keep_partners_url(country=country['country_id'][0])" class="dropdown-item d-flex justify-content-between">
+                    <a t-att-href="keep_partners_url(country=country['country_id'][0], **all_countries)" class="dropdown-item d-flex justify-content-between">
                         <t t-out="country['country_id'][1]"/>&amp;nbsp;&amp;nbsp;
                         <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-out="country['country_id_count']"/>
                     </a>
