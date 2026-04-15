@@ -1,7 +1,9 @@
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as CustomerDisplay from "@point_of_sale/../tests/customer_display/customer_display_utils";
+import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { registry } from "@web/core/registry";
 import { isVisible } from "@web/core/utils/ui";
+import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("CustomerDisplayTour", {
     steps: () =>
@@ -107,6 +109,7 @@ registry.category("web_tour.tours").add("CustomerDisplayTourWithQr", {
             { trigger: "img[alt='QR Code']" },
             CustomerDisplay.postMessage(CustomerDisplay.PAY_WITH_CARD, "confirm payment"),
             CustomerDisplay.postMessage(CustomerDisplay.ORDER_IS_FINALIZED, "order is finalized"),
+            negateStep(Dialog.is()),
             {
                 content: "Check that we are now on the 'Thank you' screen",
                 trigger: "div:contains('Thank you.')",

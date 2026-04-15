@@ -35,7 +35,7 @@ export class CustomerDisplay extends Component {
                 if (!qrPaymentData || qrPaymentData.qrCode !== this.state.prevQrCode) {
                     singleDialog.close();
                 }
-                if (qrPaymentData) {
+                if (qrPaymentData?.qrCode) {
                     singleDialog.open(QRPopup, qrPaymentData);
                 }
 
