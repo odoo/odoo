@@ -135,9 +135,7 @@
                     </group>
                     <notebook>
                         <page name="map" string="Map" invisible="not google_map_iframe">
-                            <!-- The readonly is set to false just to remove the iframe from the parent div with class "o_readonly" -->
-                            <!-- This class add some padding which we want to remove to make the map use all the space available in the page -->
-                            <field name="google_map_iframe" readonly="0"/>
+                            <field name="google_map_iframe"/>
                         </page>
                         <page name="description" string="Description">
                             <field name="description" options="{'resizable': false}" placeholder="Project description..."/>
