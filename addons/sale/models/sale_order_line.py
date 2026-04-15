@@ -600,6 +600,7 @@ class SaleOrderLine(models.Model):
             product_taxes=product_taxes,
             fiscal_position=line.order_id.fiscal_position_id,
         )
+        price_unit = line.currency_id.round(price_unit)
         line.update({
             'price_unit': price_unit,
             'technical_price_unit': price_unit,

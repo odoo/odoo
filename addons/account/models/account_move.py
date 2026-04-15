@@ -5383,6 +5383,7 @@ class AccountMove(models.Model):
                     fiscal_position=line.move_id.fiscal_position_id,
                     product_taxes_after_fp=new_taxes,
                 )
+                line.price_unit = line.currency_id.round(line.price_unit)
         lines_to_recompute._compute_price_unit()
         self.invoice_line_ids._compute_tax_ids()
         self.line_ids._compute_account_id()

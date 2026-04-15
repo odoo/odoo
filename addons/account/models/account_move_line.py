@@ -868,13 +868,15 @@ class AccountMoveLine(models.Model):
                 document_type = 'purchase'
             else:
                 document_type = 'other'
-            line.price_unit = line.product_id._get_tax_included_unit_price(
-                line.move_id.company_id,
-                line.move_id.currency_id,
-                line.move_id.date,
-                document_type,
-                fiscal_position=line.move_id.fiscal_position_id,
-                product_uom=line.product_uom_id,
+            line.price_unit = line.move_id.currency_id.round(
+                line.product_id._get_tax_included_unit_price(
+                    line.move_id.company_id,
+                    line.move_id.currency_id,
+                    line.move_id.date,
+                    document_type,
+                    fiscal_position=line.move_id.fiscal_position_id,
+                    product_uom=line.product_uom_id,
+                )
             )
 
     @api.depends('product_id', 'product_uom_id')
