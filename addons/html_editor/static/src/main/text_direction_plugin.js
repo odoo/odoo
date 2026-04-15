@@ -29,7 +29,7 @@ export class TextDirectionPlugin extends Plugin {
     };
 
     setup() {
-        if (this.config.direction) {
+        if (this.config.direction && !this.editable.closest("[dir]")) {
             this.editable.setAttribute("dir", this.config.direction);
         }
         this.direction = this.config.direction || "ltr";
