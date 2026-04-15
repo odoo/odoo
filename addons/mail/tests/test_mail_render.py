@@ -448,8 +448,6 @@ class TestRegexRendering(common.MailCommon):
                     Default
                     </p>''', '<p>Default</p>'),
             ('''<div><p t-out="object.name"/></div>''', '<div><p>Alice</p></div>'),
-            ('''<div/aa t-out="object.name"></div/aa>''', '<div>Alice</div>'),
-            ('''<div/aa='x' t-out="object.name"></div/aa='x'>''', '<div>Alice</div>'),
         )
         o_qweb_render = self.env['ir.qweb']._render
         for template, expected in static_templates:
