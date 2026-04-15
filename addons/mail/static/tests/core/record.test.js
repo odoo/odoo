@@ -785,7 +785,7 @@ test("sort works on fields.Attr()", async () => {
     function render() {
         expect.step(`render ${reactiveChannel.messages.map((m) => m.id)}`);
     }
-    const reactiveChannel = reactive(thread, render);
+    const reactiveChannel = reactive(thread);
     immediateEffect(() => {
         if (!observe) {
             return;
