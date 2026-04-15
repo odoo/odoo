@@ -1177,8 +1177,8 @@ class ProjectProject(models.Model):
         for partner, tasks in dict_tasks_per_partner.items():
             tasks.message_subscribe(dict_partner_ids_to_subscribe_per_partner[partner])
 
-    def _store_thread_fields(self, res: Store.FieldList, *, request_list):
-        super()._store_thread_fields(res, request_list=request_list)
+    def _store_thread_fields(self, res: Store.FieldList, *, request_list, **kwargs):
+        super()._store_thread_fields(res, request_list=request_list, **kwargs)
         if "followers" in request_list:
             res.many("collaborator_ids", [], value=lambda p: p.collaborator_ids.partner_id)
 

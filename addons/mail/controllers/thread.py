@@ -213,7 +213,7 @@ class ThreadController(http.Controller):
         message = thread.sudo().message_post(
             **self._prepare_message_data(post_data, thread=thread, from_create=True, **kwargs),
         )
-        store.add(message, "_store_message_fields")
+        store.add(message, "_store_message_fields", fields_params={"chatter_fields": True})
         return {"store_data": store, "message_id": message.id}
 
     @mail_route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")

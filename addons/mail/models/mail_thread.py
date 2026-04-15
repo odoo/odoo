@@ -5121,7 +5121,7 @@ class MailThread(models.AbstractModel):
     # STORE
     # ------------------------------------------------------
 
-    def _store_thread_fields(self, res: Store.FieldList, *, request_list):
+    def _store_thread_fields(self, res: Store.FieldList, *, request_list, **kwargs):
         if res.is_for_current_user():
             res.attr("hasReadAccess", lambda t: t.sudo(False).has_access("read"))
             res.attr("hasWriteAccess", lambda t: t.sudo(False).has_access("write"))
@@ -5147,6 +5147,7 @@ class MailThread(models.AbstractModel):
                 "attachments",
                 "_store_attachment_fields",
                 value=lambda t: t._get_mail_thread_data_attachments(),
+                fields_params={"chatter_fields": kwargs.get("chatter_fields", False)},
             )
             res.append({"areAttachmentsLoaded": True, "isLoadingAttachments": False})
         if "contact_fields" in request_list:

@@ -1064,6 +1064,7 @@ class MailMessage(models.Model):
         *,
         format_reply=True,
         msg_vals=False,
+        chatter_fields=False,
         inbox_fields=False,
         followers: Store.LazyValue[MailFollowers] = None,
     ):
@@ -1080,6 +1081,8 @@ class MailMessage(models.Model):
             each thread of each message as well as module icon and priority fields.
             Only applicable if ``res.target`` is a specific user.
 
+        :param chatter_fields: forwarded to _store_attachment_fields
+
         :param followers: if given, use this pre-computed list of followers instead of fetching
             them. It lessen query count in some optimized use cases.
             Only applicable if ``inbox_fields`` is True.
@@ -1091,6 +1094,7 @@ class MailMessage(models.Model):
             sort="id",
             dynamic_fields="_store_attachment_dynamic_fields",
             sudo=True,
+            fields_params={"chatter_fields": chatter_fields},
         )
         # sudo: mail.message: access to author_guest_id is allowed
         res.one("author_guest_id", "_store_avatar_fields", sudo=True)

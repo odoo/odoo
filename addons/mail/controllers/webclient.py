@@ -36,7 +36,7 @@ class WebclientController(ThreadController):
     def _process_request_loop(self, store: Store, fetch_params):
         # aggregate of messages to return, to batch them in a single query when all the fetch params
         # have been processed
-        request.update_context(messages=request.env["mail.message"], add_inbox_fields=False)
+        request.update_context(messages=request.env["mail.message"], add_inbox_fields=False, add_chatter_fields=False)
         for fetch_param in fetch_params:
             name, params, data_id = (
                 (fetch_param, None, None)
@@ -50,10 +50,14 @@ class WebclientController(ThreadController):
             if request.env.user._is_internal():
                 self._process_request_for_internal_user(store, name, params)
         if messages := request.env.context["messages"]:
+            fields_params = {
+                **({"inbox_fields": True} if request.env.context["add_inbox_fields"] else {}),
+                **({"chatter_fields": True} if request.env.context["add_chatter_fields"] else {}),
+            }
             if request.env.context["add_inbox_fields"]:
                 # sudo: bus.bus: reading non-sensitive last id
                 bus_last_id = request.env["bus.bus"].sudo()._bus_last_id()
-                store.add(messages, "_store_message_fields", fields_params={"inbox_fields": True})
+                store.add(messages, "_store_message_fields", fields_params=fields_params)
                 for records in messages._records_by_model_name().values():
                     if not isinstance(records, request.env.registry["mail.thread"]):
                         continue
@@ -67,7 +71,7 @@ class WebclientController(ThreadController):
                         as_thread=True,
                     )
             else:
-                store.add(messages, "_store_message_fields")
+                store.add(messages, "_store_message_fields", fields_params=fields_params)
         store.data_id = None
 
     @classmethod
@@ -93,7 +97,7 @@ class WebclientController(ThreadController):
                 store.add(
                     thread,
                     "_store_thread_fields",
-                    fields_params={"request_list": params["request_list"]},
+                    fields_params={"request_list": params["request_list"], "chatter_fields": True},
                     as_thread=True,
                 )
         if name == "res.partner":
@@ -140,6 +144,7 @@ class WebclientController(ThreadController):
                 lost.sudo().unlink()  # no unlink right except admin, ok to remove as lost anyway
             store.add(valid.mail_message_id, "_store_notification_fields")
         if name == "/mail/thread/messages":
+            request.update_context(add_chatter_fields=True)
             if thread := self._get_thread_with_access(
                 params["thread_model"],
                 params["thread_id"],

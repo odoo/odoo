@@ -6,8 +6,8 @@ class MailThreadSubjectSuggest(models.AbstractModel):
     _name = 'mail.thread.subject.suggested'
     _description = 'Thread with suggested subject'
 
-    def _store_thread_fields(self, res, *, request_list):
-        super()._store_thread_fields(res, request_list=request_list)
+    def _store_thread_fields(self, res, *, request_list, **kwargs):
+        super()._store_thread_fields(res, request_list=request_list, **kwargs)
         if 'showSubjectInSmallComposer' in request_list:
             res.attr('showSubjectInSmallComposer', lambda _: True)
         if 'suggestedSubject' in request_list:
