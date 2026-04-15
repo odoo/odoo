@@ -36,6 +36,9 @@ def _to_ms(ns):
 
 def _timing_gc_callback(event, info):
     """Called before and after each run of the gc, see gc_set_timing."""
+    # Avoid calling time's methods if module has already been unloaded
+    if _gc_time is None:
+        return
     global _gc_start  # noqa: PLW0603
     gen = info['generation']
     if event == 'start':
