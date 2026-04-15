@@ -75,6 +75,10 @@ class AccountEdiProxyClientUser(models.Model):
     def _get_can_send_domain(self):
         return ('sender', 'smp_registration', 'receiver')
 
+    @api.model
+    def _get_can_receive_domain(self):
+        return ('smp_registration', 'receiver')
+
     @handle_demo
     def _check_company_on_peppol(self, company, edi_identification):
         if (
@@ -93,7 +97,7 @@ class AccountEdiProxyClientUser(models.Model):
     # -------------------------------------------------------------------------
 
     def _cron_peppol_get_new_documents(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'receiver'), ('proxy_type', '=', 'peppol')])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', self._get_can_receive_domain()), ('proxy_type', '=', 'peppol')])
         edi_users._peppol_get_new_documents()
 
     def _cron_peppol_get_message_status(self):
