@@ -27,7 +27,6 @@ import {
 import {
     assertArguments,
     CASE_EVENT_TYPES,
-    DEEP_EQUAL_OPTIONS_TYPE,
     deepCopy,
     deepEqual,
     ElementMap,
@@ -45,6 +44,7 @@ import {
     S_ANY,
     S_NONE,
     strictEqual,
+    T_DEEP_EQUAL_OPTIONS,
     T_INTEGER,
     T_NODE,
     T_NULL,
@@ -54,30 +54,6 @@ import {
 import { mockFetch } from "../mock/network";
 import { logger } from "./logger";
 import { Test } from "./test";
-
-//-----------------------------------------------------------------------------
-// Global
-//-----------------------------------------------------------------------------
-
-const {
-    Array: { isArray: $isArray },
-    clearTimeout,
-    Error,
-    Math: { abs: $abs, floor: $floor },
-    Object: { create: $create, entries: $entries, keys: $keys },
-    parseFloat,
-    performance,
-    Promise,
-    setTimeout,
-    TypeError,
-    WeakMap,
-} = globalThis;
-/** @type {Performance["now"]} */
-const $now = performance.now.bind(performance);
-
-//-----------------------------------------------------------------------------
-// Types
-//-----------------------------------------------------------------------------
 
 /**
  * @typedef {{
@@ -131,9 +107,33 @@ const $now = performance.now.bind(performance);
  * @typedef {T | Iterable<T>} MaybeIterable
  */
 
-const ASSERTION_MESSAGE_TYPE = t.or([t.string(), t.function([t.boolean()], t.string())]);
+//-----------------------------------------------------------------------------
+// Global
+//-----------------------------------------------------------------------------
 
-const DOM_RECT_TYPE = t.object({
+const {
+    Array: { isArray: $isArray },
+    clearTimeout,
+    Error,
+    Math: { abs: $abs, floor: $floor },
+    Object: { create: $create, entries: $entries, keys: $keys },
+    parseFloat,
+    performance,
+    Promise,
+    setTimeout,
+    TypeError,
+    WeakMap,
+} = globalThis;
+/** @type {Performance["now"]} */
+const $now = performance.now.bind(performance);
+
+//-----------------------------------------------------------------------------
+// Types
+//-----------------------------------------------------------------------------
+
+const T_ASSERTION_MESSAGE = t.or([t.string(), t.function([t.boolean()], t.string())]);
+
+const T_DOM_RECT = t.object({
     "width?": t.number(),
     "height?": t.number(),
     "top?": t.number(),
@@ -142,75 +142,75 @@ const DOM_RECT_TYPE = t.object({
     "y?": t.number(),
 });
 
-const VERIFIER_OPTIONS_TYPE = t.and([
-    DEEP_EQUAL_OPTIONS_TYPE,
+const T_VERIFIER_OPTIONS = t.and([
+    T_DEEP_EQUAL_OPTIONS,
     t.object({
-        "message?": ASSERTION_MESSAGE_TYPE,
+        "message?": T_ASSERTION_MESSAGE,
     }),
 ]);
-const ASYNC_VERIFIER_OPTIONS_TYPE = t.and([
-    VERIFIER_OPTIONS_TYPE,
+const T_ASYNC_VERIFIER_OPTIONS = t.and([
+    T_VERIFIER_OPTIONS,
     t.object({
         "timeout?": t.number(),
     }),
 ]);
 
-const MATCHER_OPTIONS_TYPE = t.object({
-    "message?": ASSERTION_MESSAGE_TYPE,
+const T_MATCHER_OPTIONS = t.object({
+    "message?": T_ASSERTION_MESSAGE,
     "not?": t.boolean(),
     "rejects?": t.boolean(),
     "resolves?": t.boolean(),
     "silent?": t.boolean(),
 });
-const MATCHER_DEEP_EQUAL_OPTIONS_TYPE = t.and([MATCHER_OPTIONS_TYPE, DEEP_EQUAL_OPTIONS_TYPE]);
-const MATCHER_CHECKED_OPTIONS_TYPE = t.and([
-    MATCHER_OPTIONS_TYPE,
+const T_MATCHER_DEEP_EQUAL_OPTIONS = t.and([T_MATCHER_OPTIONS, T_DEEP_EQUAL_OPTIONS]);
+const T_MATCHER_CHECKED_OPTIONS = t.and([
+    T_MATCHER_OPTIONS,
     t.object({
         "indeterminate?": t.boolean(),
     }),
 ]);
-const MATCHER_CLOSE_TO_OPTIONS_TYPE = t.and([
-    MATCHER_OPTIONS_TYPE,
+const T_MATCHER_CLOSE_TO_OPTIONS = t.and([
+    T_MATCHER_OPTIONS,
     t.object({
         "margin?": t.number(),
     }),
 ]);
-const MATCHER_CLASS_LIST_OPTIONS_TYPE = t.and([
-    MATCHER_OPTIONS_TYPE,
+const T_MATCHER_CLASS_LIST_OPTIONS = t.and([
+    T_MATCHER_OPTIONS,
     t.object({
         "exact?": t.boolean(),
     }),
 ]);
-const MATCHER_DOM_STYLE_OPTIONS_TYPE = t.and([
-    MATCHER_OPTIONS_TYPE,
+const T_MATCHER_DOM_STYLE_OPTIONS = t.and([
+    T_MATCHER_OPTIONS,
     t.object({
         "exact?": t.boolean(),
         "inline?": t.boolean(),
     }),
 ]);
-const MATCHER_FORMAT_XML_OPTIONS_TYPE = t.and([
-    MATCHER_OPTIONS_TYPE,
+const T_MATCHER_FORMAT_XML_OPTIONS = t.and([
+    T_MATCHER_OPTIONS,
     t.object({
         "keepInlineTextNodes?": t.boolean(),
         "tabSize?": t.number(),
         "type?": t.selection(["html", "xml"]),
     }),
 ]);
-const MATCHER_QUERY_RECT_OPTIONS_TYPE = t.and([
-    MATCHER_OPTIONS_TYPE,
+const T_MATCHER_QUERY_RECT_OPTIONS = t.and([
+    T_MATCHER_OPTIONS,
     t.object({
         "trimPadding?": t.boolean(),
     }),
 ]);
-const MATCHER_QUERY_TEXT_OPTIONS_TYPE = t.and([
-    MATCHER_OPTIONS_TYPE,
+const T_MATCHER_QUERY_TEXT_OPTIONS = t.and([
+    T_MATCHER_OPTIONS,
     t.object({
         "inline?": t.boolean(),
         "raw?": t.boolean(),
     }),
 ]);
-const MATCHER_QUERY_VALUE_OPTIONS_TYPE = t.and([
-    MATCHER_OPTIONS_TYPE,
+const T_MATCHER_QUERY_VALUE_OPTIONS = t.and([
+    T_MATCHER_OPTIONS,
     t.object({
         "raw?": t.boolean(),
     }),
@@ -614,7 +614,7 @@ export function makeExpect(params) {
                 test.status.set(Test.FAILED);
             }
 
-            /** @type {typeof import("../hoot_utils").REPORTING_TYPE} */
+            /** @type {typeof import("../hoot_utils").T_REPORTING} */
             const report = {
                 assertions: assertionCount,
                 duration: test.lastResults?.duration || 0,
@@ -842,7 +842,7 @@ export function makeExpect(params) {
      * `expect.errors(...)` should be called before function
      *
      * @param {unknown[]} errors
-     * @param {typeof VERIFIER_OPTIONS_TYPE} [options]
+     * @param {typeof T_VERIFIER_OPTIONS} [options]
      * @returns {boolean}
      * @example
      *  expect.verifyErrors([/RPCError/, /Invalid domain AST/]);
@@ -851,7 +851,7 @@ export function makeExpect(params) {
         if (!currentResult) {
             throw scopeError("expect.verifyErrors");
         }
-        assertArguments(arguments, [t.array(), VERIFIER_OPTIONS_TYPE]);
+        assertArguments(arguments, [t.array(), T_VERIFIER_OPTIONS]);
         if (errors.length > currentResult.expectedErrors) {
             throw new HootError(
                 `cannot call \`expect.verifyErrors()\` without calling \`expect.errors()\` beforehand`
@@ -867,7 +867,7 @@ export function makeExpect(params) {
      * will reset the list of current steps.
      *
      * @param {unknown[]} steps
-     * @param {typeof VERIFIER_OPTIONS_TYPE} [options]
+     * @param {typeof T_VERIFIER_OPTIONS} [options]
      * @returns {boolean}
      * @example
      *  expect.step("web_read_group");
@@ -878,7 +878,7 @@ export function makeExpect(params) {
         if (!currentResult) {
             throw scopeError("expect.verifySteps");
         }
-        assertArguments(arguments, [t.array(), VERIFIER_OPTIONS_TYPE]);
+        assertArguments(arguments, [t.array(), T_VERIFIER_OPTIONS]);
 
         return checkSteps({ steps, options }, true);
     }
@@ -892,7 +892,7 @@ export function makeExpect(params) {
      * an error is detected.
      *
      * @param {unknown[]} errors
-     * @param {typeof ASYNC_VERIFIER_OPTIONS_TYPE} [options]
+     * @param {typeof T_ASYNC_VERIFIER_OPTIONS} [options]
      * @returns {Promise<boolean>}
      * @example
      *  fetch("invalid/url");
@@ -902,7 +902,7 @@ export function makeExpect(params) {
         if (!currentResult) {
             throw scopeError("expect.waitForErrors");
         }
-        assertArguments(arguments, [t.array(), ASYNC_VERIFIER_OPTIONS_TYPE]);
+        assertArguments(arguments, [t.array(), T_ASYNC_VERIFIER_OPTIONS]);
 
         // Run check for any current resolver (if any)
         checkErrors(currentResult.errorResolver, true);
@@ -933,7 +933,7 @@ export function makeExpect(params) {
      * a step is registered.
      *
      * @param {unknown[]} steps
-     * @param {typeof ASYNC_VERIFIER_OPTIONS_TYPE} [options]
+     * @param {typeof T_ASYNC_VERIFIER_OPTIONS} [options]
      * @returns {Promise<boolean>}
      * @example
      *  fetch(".../call_kw/web_read_group");
@@ -943,7 +943,7 @@ export function makeExpect(params) {
         if (!currentResult) {
             throw scopeError("expect.waitForSteps");
         }
-        assertArguments(arguments, [t.array(), ASYNC_VERIFIER_OPTIONS_TYPE]);
+        assertArguments(arguments, [t.array(), T_ASYNC_VERIFIER_OPTIONS]);
 
         // Run check for any current resolver (if any)
         checkSteps(currentResult.stepResolver, true);
@@ -1255,14 +1255,14 @@ export class Matcher {
      * Expects the received value to be *strictly* equal to the `expected` value.
      *
      * @param {R} expected
-     * @param {typeof MATCHER_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect("foo").toBe("foo");
      * @example
      *  expect({ foo: 1 }).not.toBe({ foo: 1 });
      */
     toBe(expected, options) {
-        this._assertArguments(arguments, [t.any(), MATCHER_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [t.any(), T_MATCHER_OPTIONS]);
 
         return this._resolve(() => ({
             name: "toBe",
@@ -1282,14 +1282,14 @@ export class Matcher {
      * Note: the margin is exclusive; it should be strictly larger than the diff.
      *
      * @param {R} expected
-     * @param {typeof MATCHER_CLOSE_TO_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_CLOSE_TO_OPTIONS} [options]
      * @example
      *  expect(0.2 + 0.1).toBeCloseTo(0.3);
      * @example
      *  expect(3.51).toBeCloseTo(3.5, { margin: 0.1 });
      */
     toBeCloseTo(expected, options) {
-        this._assertArguments(arguments, [t.number(), MATCHER_CLOSE_TO_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [t.number(), T_MATCHER_CLOSE_TO_OPTIONS]);
 
         const margin = options?.margin ?? 1;
         return this._resolve(() => ({
@@ -1310,7 +1310,7 @@ export class Matcher {
      * - `node`: no content (i.e. no value or text)
      * - anything else: falsy value (`false`, `0`, `""`, `null`, `undefined`)
      *
-     * @param {typeof MATCHER_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect({}).toBeEmpty();
      * @example
@@ -1319,7 +1319,7 @@ export class Matcher {
      *  expect(queryOne("input")).toBeEmpty();
      */
     toBeEmpty(options) {
-        this._assertArguments(arguments, [MATCHER_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [T_MATCHER_OPTIONS]);
 
         return this._resolve(() => ({
             name: "toBeEmpty",
@@ -1336,14 +1336,14 @@ export class Matcher {
      * Expects the received value to be strictly greater than `min`.
      *
      * @param {number} min
-     * @param {typeof MATCHER_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect(5).toBeGreaterThan(-1);
      * @example
      *  expect(4 + 2).toBeGreaterThan(5);
      */
     toBeGreaterThan(min, options) {
-        this._assertArguments(arguments, [t.number(), MATCHER_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [t.number(), T_MATCHER_OPTIONS]);
 
         return this._resolve(() => ({
             name: "toBeGreaterThan",
@@ -1364,14 +1364,14 @@ export class Matcher {
      * Expects the received value to be an instance of the given `cls`.
      *
      * @param {new (...args: any[]) => any} cls
-     * @param {typeof MATCHER_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect({ foo: 1 }).not.toBeInstanceOf(Object);
      * @example
      *  expect(document.createElement("div")).toBeInstanceOf(HTMLElement);
      */
     toBeInstanceOf(cls, options) {
-        this._assertArguments(arguments, [t.function(), MATCHER_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [t.function(), T_MATCHER_OPTIONS]);
 
         return this._resolve(() => ({
             name: "toBeInstanceOf",
@@ -1392,14 +1392,14 @@ export class Matcher {
      * Expects the received value to be strictly less than `max`.
      *
      * @param {number} max
-     * @param {typeof MATCHER_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect(5).toBeLessThan(10);
      * @example
      *  expect(8 - 6).toBeLessThan(3);
      */
     toBeLessThan(max, options) {
-        this._assertArguments(arguments, [t.number(), MATCHER_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [t.number(), T_MATCHER_OPTIONS]);
 
         return this._resolve(() => ({
             name: "toBeLessThan",
@@ -1420,14 +1420,14 @@ export class Matcher {
      * Expects the received value to be of the given `type`.
      *
      * @param {ArgumentType} type
-     * @param {typeof MATCHER_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect("foo").toBeOfType("string");
      * @example
      *  expect({ foo: 1 }).toBeOfType("object");
      */
     toBeOfType(type, options) {
-        this._assertArguments(arguments, [t.string(), MATCHER_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [t.string(), T_MATCHER_OPTIONS]);
 
         return this._resolve(() => ({
             name: "toBeOfType",
@@ -1449,7 +1449,7 @@ export class Matcher {
      *
      * @param {number} min (inclusive)
      * @param {number} max (inclusive)
-     * @param {typeof MATCHER_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect(3).toBeWithin(3, 9);
      * @example
@@ -1458,7 +1458,7 @@ export class Matcher {
      *  expect(100).toBeWithin(50, 100);
      */
     toBeWithin(min, max, options) {
-        this._assertArguments(arguments, [t.number(), t.number(), MATCHER_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [t.number(), t.number(), T_MATCHER_OPTIONS]);
 
         if (min > max) {
             [min, max] = [max, min];
@@ -1482,14 +1482,14 @@ export class Matcher {
      * Expects the received value to be *deeply* equal to the `expected` value.
      *
      * @param {R} expected
-     * @param {typeof MATCHER_DEEP_EQUAL_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_DEEP_EQUAL_OPTIONS} [options]
      * @example
      *  expect(["foo"]).toEqual(["foo"]);
      * @example
      *  expect({ foo: 1 }).toEqual({ foo: 1 });
      */
     toEqual(expected, options) {
-        this._assertArguments(arguments, [t.any(), MATCHER_DEEP_EQUAL_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [t.any(), T_MATCHER_DEEP_EQUAL_OPTIONS]);
 
         return this._resolve(() => ({
             name: "toEqual",
@@ -1508,7 +1508,7 @@ export class Matcher {
      * Received value can be a string, an iterable or an object.
      *
      * @param {number} length
-     * @param {typeof MATCHER_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect("foo").toHaveLength(3);
      * @example
@@ -1519,7 +1519,7 @@ export class Matcher {
      *  expect(new Set([1, 2])).toHaveLength(2);
      */
     toHaveLength(length, options) {
-        this._assertArguments(arguments, [T_INTEGER, MATCHER_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [T_INTEGER, T_MATCHER_OPTIONS]);
 
         return this._resolve(() => {
             const receivedLength = getLength(this._received);
@@ -1549,7 +1549,7 @@ export class Matcher {
      * equality against each item of the iterable.
      *
      * @param {keyof R | R[number]} item
-     * @param {typeof MATCHER_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect([1, 2, 3]).toInclude(2);
      * @example
@@ -1560,7 +1560,7 @@ export class Matcher {
      *  expect(new Set([{ foo: 1 }, { bar: 2 }])).toInclude({ bar: 2 });
      */
     toInclude(item, options) {
-        this._assertArguments(arguments, [t.any(), MATCHER_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [t.any(), T_MATCHER_OPTIONS]);
 
         return this._resolve(() => ({
             name: "toInclude",
@@ -1581,14 +1581,14 @@ export class Matcher {
      * Expects the received value to match the given `matcher`.
      *
      * @param {import("../hoot_utils").Matcher} matcher
-     * @param {typeof MATCHER_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect(new Error("foo")).toMatch("foo");
      * @example
      *  expect("a foo value").toMatch(/fo.*ue/);
      */
     toMatch(matcher, options) {
-        this._assertArguments(arguments, [t.any(), MATCHER_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [t.any(), T_MATCHER_OPTIONS]);
 
         return this._resolve(() => ({
             name: "toMatch",
@@ -1616,7 +1616,7 @@ export class Matcher {
      * non-iterable objects contained in iterables will be partially checked again.
      *
      * @param {Partial<R>} partialObject
-     * @param {typeof MATCHER_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  // Partial equality can be performed on nested objects
      *  expect({
@@ -1641,7 +1641,7 @@ export class Matcher {
      *  expect({ list: [1, 2, 3], other: "property" }).toMatchObject({ list: [1, 2, 3] });
      */
     toMatchObject(partialObject, options) {
-        this._assertArguments(arguments, [t.or([t.array(), t.record()]), MATCHER_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [t.or([t.array(), t.record()]), T_MATCHER_OPTIONS]);
 
         return this._resolve(() => ({
             name: "toMatchObject",
@@ -1662,14 +1662,14 @@ export class Matcher {
      * Expects the received {@link Function} to throw an error after being called.
      *
      * @param {import("../hoot_utils").Matcher} [matcher=Error]
-     * @param {typeof MATCHER_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect(() => { throw new Error("Woops!") }).toThrow(/woops/i);
      * @example
      *  await expect(Promise.reject("foo")).rejects.toThrow("foo");
      */
     toThrow(matcher = Error, options) {
-        this._assertArguments(arguments, [t.any(), MATCHER_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [t.any(), T_MATCHER_OPTIONS]);
 
         return this._resolve(() => {
             const isAsync = this._flags & (FLAGS.rejects | FLAGS.resolves);
@@ -1715,12 +1715,12 @@ export class Matcher {
      * Expects the received {@link Target} to be checked, or to be indeterminate
      * if the homonymous option is set to `true`.
      *
-     * @param {typeof MATCHER_OPTIONS_TYPE & { indeterminate?: boolean }} [options]
+     * @param {typeof T_MATCHER_OPTIONS & { indeterminate?: boolean }} [options]
      * @example
      *  expect("input[type=checkbox]").toBeChecked();
      */
     toBeChecked(options) {
-        this._assertArguments(arguments, [MATCHER_CHECKED_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [T_MATCHER_CHECKED_OPTIONS]);
 
         const prop = options?.indeterminate ? "indeterminate" : "checked";
         const pseudo = ":" + prop;
@@ -1742,14 +1742,14 @@ export class Matcher {
      * - it has a bounding box;
      * - it is contained in the root document.
      *
-     * @param {typeof MATCHER_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect(document.body).toBeDisplayed();
      * @example
      *  expect(document.createElement("div")).not.toBeDisplayed();
      */
     toBeDisplayed(options) {
-        this._assertArguments(arguments, [MATCHER_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [T_MATCHER_OPTIONS]);
 
         return this._resolve(() => ({
             name: "toBeDisplayed",
@@ -1767,14 +1767,14 @@ export class Matcher {
      * Expects the received {@link Target} to be enabled, meaning that it
      * matches the `:enabled` pseudo-selector.
      *
-     * @param {typeof MATCHER_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect("button").toBeEnabled();
      * @example
      *  expect("input[type=radio]").not.toBeEnabled();
      */
     toBeEnabled(options) {
-        this._assertArguments(arguments, [MATCHER_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [T_MATCHER_OPTIONS]);
 
         return this._resolve(() => ({
             name: "toBeEnabled",
@@ -1791,10 +1791,10 @@ export class Matcher {
     /**
      * Expects the received {@link Target} to be focused in its owner document.
      *
-     * @param {typeof MATCHER_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_OPTIONS} [options]
      */
     toBeFocused(options) {
-        this._assertArguments(arguments, [MATCHER_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [T_MATCHER_OPTIONS]);
 
         return this._resolve(() => ({
             name: "toBeFocused",
@@ -1814,14 +1814,14 @@ export class Matcher {
      * - it is contained in the root document;
      * - it is not hidden by CSS properties.
      *
-     * @param {typeof MATCHER_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect(document.body).toBeVisible();
      * @example
      *  expect("[style='opacity: 0']").not.toBeVisible();
      */
     toBeVisible(options) {
-        this._assertArguments(arguments, [MATCHER_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [T_MATCHER_OPTIONS]);
 
         return this._resolve(() => ({
             name: "toBeVisible",
@@ -1841,7 +1841,7 @@ export class Matcher {
      *
      * @param {string} attribute
      * @param {import("../hoot_utils").Matcher} [value]
-     * @param {typeof MATCHER_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect("a").toHaveAttribute("href");
      * @example
@@ -1851,7 +1851,7 @@ export class Matcher {
         this._assertArguments(arguments, [
             t.string(),
             t.or([t.string(), t.number(), T_REGEX, T_NULL, T_UNDEFINED]),
-            MATCHER_OPTIONS_TYPE,
+            T_MATCHER_OPTIONS,
         ]);
 
         const expectsValue = !isNil(value);
@@ -1883,7 +1883,7 @@ export class Matcher {
      * Expects the received {@link Target} to have the given class name(s).
      *
      * @param {string | string[]} className
-     * @param {typeof MATCHER_CLASS_LIST_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_CLASS_LIST_OPTIONS} [options]
      * @example
      *  expect("inline").toHaveClass("btn btn-primary");
      * @example
@@ -1892,7 +1892,7 @@ export class Matcher {
     toHaveClass(className, options) {
         this._assertArguments(arguments, [
             t.or([t.string(), t.array(t.string())]),
-            MATCHER_CLASS_LIST_OPTIONS_TYPE,
+            T_MATCHER_CLASS_LIST_OPTIONS,
         ]);
 
         const rawClassNames = ensureArray(className);
@@ -1928,7 +1928,7 @@ export class Matcher {
      * will expect *at least* one element.
      *
      * @param {number} [amount]
-     * @param {typeof MATCHER_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect(".o_webclient").toHaveCount(1);
      * @example
@@ -1939,7 +1939,7 @@ export class Matcher {
     toHaveCount(amount, options) {
         this._assertArguments(arguments, [
             t.or([T_INTEGER, T_NULL, T_UNDEFINED]),
-            MATCHER_OPTIONS_TYPE,
+            T_MATCHER_OPTIONS,
         ]);
 
         const anyAmount = isNil(amount);
@@ -1972,7 +1972,7 @@ export class Matcher {
      * value (upon formatting).
      *
      * @param {string | RegExp} [expected]
-     * @param {typeof MATCHER_FORMAT_XML_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_FORMAT_XML_OPTIONS} [options]
      * @example
      *  expect(".my_element").toHaveInnerHTML(`
      *      Some <strong>text</strong>
@@ -1981,7 +1981,7 @@ export class Matcher {
     toHaveInnerHTML(expected, options) {
         this._assertArguments(arguments, [
             t.or([t.string(), T_REGEX]),
-            MATCHER_FORMAT_XML_OPTIONS_TYPE,
+            T_MATCHER_FORMAT_XML_OPTIONS,
         ]);
 
         return this._toHaveHTML("toHaveInnerHTML", "innerHTML", ...arguments);
@@ -1992,7 +1992,7 @@ export class Matcher {
      * value (upon formatting).
      *
      * @param {string | RegExp} [expected]
-     * @param {typeof MATCHER_FORMAT_XML_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_FORMAT_XML_OPTIONS} [options]
      * @example
      *  expect(".my_element").toHaveOuterHTML(`
      *      <div class="my_element">
@@ -2003,7 +2003,7 @@ export class Matcher {
     toHaveOuterHTML(expected, options) {
         this._assertArguments(arguments, [
             t.or([t.string(), T_REGEX]),
-            MATCHER_FORMAT_XML_OPTIONS_TYPE,
+            T_MATCHER_FORMAT_XML_OPTIONS,
         ]);
 
         return this._toHaveHTML("toHaveOuterHTML", "outerHTML", ...arguments);
@@ -2015,14 +2015,14 @@ export class Matcher {
      *
      * @param {string} property
      * @param {any} [value]
-     * @param {typeof MATCHER_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_OPTIONS} [options]
      * @example
      *  expect("button").toHaveProperty("tabIndex", 0);
      * @example
      *  expect("script").toHaveProperty("src", "./index.js");
      */
     toHaveProperty(property, value, options) {
-        this._assertArguments(arguments, [t.string(), t.any(), MATCHER_OPTIONS_TYPE]);
+        this._assertArguments(arguments, [t.string(), t.any(), T_MATCHER_OPTIONS]);
 
         const expectsValue = !isNil(value);
         return this._resolve(() => ({
@@ -2060,7 +2060,7 @@ export class Matcher {
      * If the resulting `rect` value is a node, then both nodes' rects will be compared.
      *
      * @param {Partial<DOMRect> | Target} rect
-     * @param {typeof MATCHER_QUERY_RECT_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_QUERY_RECT_OPTIONS} [options]
      * @example
      *  expect("button").toHaveRect({ x: 20, width: 100, height: 50 });
      * @example
@@ -2068,8 +2068,8 @@ export class Matcher {
      */
     toHaveRect(rect, options) {
         this._assertArguments(arguments, [
-            t.or([DOM_RECT_TYPE, t.string(), T_NODE, t.array(T_NODE)]),
-            MATCHER_QUERY_RECT_OPTIONS_TYPE,
+            t.or([T_DOM_RECT, t.string(), T_NODE, t.array(T_NODE)]),
+            T_MATCHER_QUERY_RECT_OPTIONS,
         ]);
 
         let refRect;
@@ -2097,7 +2097,7 @@ export class Matcher {
      * Expects the received {@link Target} to match the given style properties.
      *
      * @param {string | Record<string, string | RegExp>} style
-     * @param {typeof MATCHER_DOM_STYLE_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_DOM_STYLE_OPTIONS} [options]
      * @example
      *  expect("button").toHaveStyle({ color: "red" });
      * @example
@@ -2106,7 +2106,7 @@ export class Matcher {
     toHaveStyle(style, options) {
         this._assertArguments(arguments, [
             t.or([t.string(), t.record(t.or([t.string(), t.number()]))]),
-            MATCHER_DOM_STYLE_OPTIONS_TYPE,
+            T_MATCHER_DOM_STYLE_OPTIONS,
         ]);
 
         const styleDef = parseInlineStyle(style, S_ANY);
@@ -2143,7 +2143,7 @@ export class Matcher {
      * - match a given regular expression.
      *
      * @param {string | RegExp} [text]
-     * @param {typeof MATCHER_QUERY_TEXT_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_QUERY_TEXT_OPTIONS} [options]
      * @example
      *  expect("p").toHaveText("lorem ipsum dolor sit amet");
      * @example
@@ -2152,7 +2152,7 @@ export class Matcher {
     toHaveText(text, options) {
         this._assertArguments(arguments, [
             t.or([t.string(), T_REGEX, T_NULL, T_UNDEFINED]),
-            MATCHER_QUERY_TEXT_OPTIONS_TYPE,
+            T_MATCHER_QUERY_TEXT_OPTIONS,
         ]);
 
         const expectsText = !isNil(text);
@@ -2176,7 +2176,7 @@ export class Matcher {
      * - contain file objects matching the given `files` list.
      *
      * @param {ReturnType<typeof getNodeValue>} [value]
-     * @param {typeof MATCHER_QUERY_VALUE_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_QUERY_VALUE_OPTIONS} [options]
      * @example
      *  expect("input[name=age]").toHaveValue(29);
      * @example
@@ -2196,7 +2196,7 @@ export class Matcher {
                 T_NULL,
                 T_UNDEFINED,
             ]),
-            MATCHER_QUERY_VALUE_OPTIONS_TYPE,
+            T_MATCHER_QUERY_VALUE_OPTIONS,
         ]);
 
         const expectsValue = !isNil(value);
@@ -2234,24 +2234,29 @@ export class Matcher {
     //-------------------------------------------------------------------------
 
     /**
-     * Validates the given `arguments` object, with an implicitly added `options`
-     * validator at the end (optional).
+     * This method serves 3 purposes:
+     * 1. it "consumes" the current matcher (= mark it as called);
+     * 2. it validates the arguments it was given;
+     * 3. it assigns additional flags passed in the options dict (if any).
      *
-     * Flags are then modified based on these options, and the current stack is
-     * saved for error reporting.
+     * These must be done at the start of each matcher call, which is way they are
+     * combined in a single method.
      *
      * @private
      * @param {ArrayLike<any>} args
      * @param {any[]} types
      */
     _assertArguments(args, types) {
+        // Consume matcher
         if (!unconsumedMatchers.has(this)) {
             throw new HootError(`cannot use multiple matchers on the same \`expect()\` call`);
         }
         unconsumedMatchers.delete(this);
 
+        // Validate arguments
         assertArguments(args, types);
 
+        // Assign flags
         const options = args[types.length];
         if (options) {
             for (const flag in FLAGS) {
@@ -2265,6 +2270,7 @@ export class Matcher {
             }
         }
 
+        // Optionaly: stack is adjusted when using GUI
         if (!(this._flags & FLAGS.headless)) {
             currentStack = getStack(1);
         }
@@ -2410,7 +2416,7 @@ export class Matcher {
      * @param {"toHaveInnerHTML" | "toHaveOuterHTML"} name
      * @param {"innerHTML" | "outerHTML"} property
      * @param {string | RegExp} expected
-     * @param {typeof MATCHER_FORMAT_XML_OPTIONS_TYPE} [options]
+     * @param {typeof T_MATCHER_FORMAT_XML_OPTIONS} [options]
      */
     _toHaveHTML(name, property, expected, options) {
         options = { type: "html", ...options };

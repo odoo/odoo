@@ -32,7 +32,7 @@ import {
 import { cleanupAnimations } from "../mock/animation";
 import { cleanupDate } from "../mock/date";
 import { internalRandom } from "../mock/math";
-import { PLATFORM_TYPE, cleanupNavigator } from "../mock/navigator";
+import { T_PLATFORM, cleanupNavigator } from "../mock/navigator";
 import { cleanupNetwork, throttleNetwork } from "../mock/network";
 import {
     cleanupWindow,
@@ -61,39 +61,6 @@ import * as _notification from "../mock/notification";
 import * as _window from "../mock/window";
 
 const { isPrevented, mockPreventDefault } = _window;
-
-//-----------------------------------------------------------------------------
-// Global
-//-----------------------------------------------------------------------------
-
-const {
-    clearTimeout,
-    console: { error: $error },
-    EventTarget,
-    Map,
-    Math: { abs: $abs, floor: $floor },
-    Number: { parseFloat: $parseFloat },
-    Object: {
-        assign: $assign,
-        defineProperty: $defineProperty,
-        entries: $entries,
-        freeze: $freeze,
-        keys: $keys,
-        values: $values,
-    },
-    performance,
-    Promise,
-    removeEventListener,
-    Set,
-    setTimeout,
-    window,
-} = globalThis;
-/** @type {Performance["now"]} */
-const $now = performance.now.bind(performance);
-
-//-----------------------------------------------------------------------------
-// Types
-//-----------------------------------------------------------------------------
 
 /**
  * @typedef {{
@@ -137,10 +104,43 @@ const $now = performance.now.bind(performance);
  * @typedef {T | PromiseLike<T>} MaybePromise
  */
 
-const PRESET_TYPE = t.object({
+//-----------------------------------------------------------------------------
+// Global
+//-----------------------------------------------------------------------------
+
+const {
+    clearTimeout,
+    console: { error: $error },
+    EventTarget,
+    Map,
+    Math: { abs: $abs, floor: $floor },
+    Number: { parseFloat: $parseFloat },
+    Object: {
+        assign: $assign,
+        defineProperty: $defineProperty,
+        entries: $entries,
+        freeze: $freeze,
+        keys: $keys,
+        values: $values,
+    },
+    performance,
+    Promise,
+    removeEventListener,
+    Set,
+    setTimeout,
+    window,
+} = globalThis;
+/** @type {Performance["now"]} */
+const $now = performance.now.bind(performance);
+
+//-----------------------------------------------------------------------------
+// Types
+//-----------------------------------------------------------------------------
+
+const T_PRESET = t.object({
     "icon?": t.string(),
     label: t.string(),
-    "platform?": PLATFORM_TYPE,
+    "platform?": T_PLATFORM,
     "size?": t.tuple([t.number(), t.number()]),
     "tags?": t.array(t.string()),
     "touch?": t.boolean(),
@@ -324,7 +324,7 @@ export class Runner {
     };
     presets = signal.Map(new Map([["", { label: "No preset" }]]), {
         keyType: t.string(),
-        valueType: PRESET_TYPE,
+        valueType: T_PRESET,
     });
     reporting = createReporting();
     /** @type {Suite[]} */
@@ -845,7 +845,7 @@ export class Runner {
 
     /**
      * @param {string} key
-     * @param {typeof PRESET_TYPE} preset
+     * @param {typeof T_PRESET} preset
      */
     definePreset(key, preset) {
         this.presets().set(key, preset);

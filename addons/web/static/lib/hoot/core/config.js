@@ -8,9 +8,9 @@ import { deepEqual, DEFAULT_EVENT_TYPES, generateSeed } from "../hoot_utils";
  *  [Key in keyof HootConfig]: import("@odoo/owl").ReactiveValue<HootConfig[Key]>
  * }} ConfigManager
  *
- * @typedef {DEFAULT_CONFIG_AND_FILTERS} HootConfig
+ * @typedef {typeof DEFAULT_CONFIG_AND_FILTERS} HootConfig
  *
- * @typedef {keyof FILTER_SCHEMA} SearchFilter
+ * @typedef {keyof typeof FILTER_SCHEMA} SearchFilter
  */
 
 //-----------------------------------------------------------------------------

@@ -3,7 +3,7 @@
 import { Component, computed, plugin, props, signal, types as t, useEffect, xml } from "@odoo/owl";
 import { Suite } from "../core/suite";
 import { createUrlFromId } from "../core/url";
-import { lookup, parseQuery, REPORTING_TYPE, T_NULL } from "../hoot_utils";
+import { lookup, parseQuery, T_REPORTING, T_NULL } from "../hoot_utils";
 import { HootJobButtons } from "./hoot_job_buttons";
 import { getRunnerPlugin } from "./runner_plugin";
 import { UiPlugin } from "./ui_plugin";
@@ -48,7 +48,7 @@ export class HootSideBarSuite extends Component {
         "multi?": t.number(),
         name: t.string(),
         hasSuites: t.boolean(),
-        reporting: REPORTING_TYPE,
+        reporting: T_REPORTING,
         selected: t.boolean(),
         unfolded: t.boolean(),
     });
@@ -98,7 +98,7 @@ export class HootSideBarCounter extends Component {
 
     // Props & plugins
     props = props({
-        reporting: REPORTING_TYPE,
+        reporting: T_REPORTING,
         statusFilter: t.or([t.string(), T_NULL]),
     });
 
