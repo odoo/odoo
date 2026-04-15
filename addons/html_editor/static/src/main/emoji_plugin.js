@@ -172,9 +172,13 @@ export class EmojiPlugin extends Plugin {
 
         const selection = this.dependencies.selection.getEditableSelection();
         const searchTerm = this.searchNode.nodeValue.slice(this.offset, selection.endOffset) || "";
-        const emojis = fuzzyLookup(searchTerm, emojiLoader.emojis, (e) =>
-            [e.name].concat(e.shortcodes, e.keywords)
-        ).slice(0, 8);
+        // Keywords may contain spaces (e.g. "grinning face") which
+        // would cause suggestion list to open on space. Replacing
+        // them with underscores prevents this.
+        const emojis = fuzzyLookup(searchTerm, emojiLoader.emojis, (e) => [
+            ...e.shortcodes,
+            ...e.keywords.map((k) => k.replaceAll(" ", "_")),
+        ]).slice(0, 8);
         this.emojiListState.list = emojis.map((e) => ({
             value: e.codepoints,
             label: e.shortcodes[0],
