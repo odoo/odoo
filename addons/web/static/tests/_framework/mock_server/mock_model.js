@@ -1561,6 +1561,14 @@ export class Model extends Array {
         this.definition._views = value;
     }
 
+    static get _translations() {
+        return this.definition._translations || {};
+    }
+
+    static set _translations(value) {
+        this.definition._translations = value;
+    }
+
     /**
      * @param {Model} [instance]
      */

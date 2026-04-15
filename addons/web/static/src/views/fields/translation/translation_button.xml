@@ -3,10 +3,11 @@
 
     <t t-name="web.TranslationButton">
         <t t-if="this.isMultiLang">
-            <button class="o_field_translate btn btn-link"
-                t-att-class="this.buttonClasses?.()"
-                t-att-data-tooltip="this.buttonTooltip?.()"
-                t-on-click.prevent="this.onClick">
+            <button class="o-translate-button btn"
+                type="button"
+                t-on-click.prevent="this.onClick"
+                t-att-class="this.buttonClasses()"
+                t-att-data-tooltip="this.buttonTooltip()">
                 <t t-out="this.lang" />
             </button>
         </t>

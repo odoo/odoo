@@ -51,7 +51,6 @@
             'web/static/src/scss/animation.scss',
             'web/static/src/scss/mimetypes.scss',
             'web/static/src/scss/ui.scss',
-            'web/static/src/views/fields/translation_dialog.scss',
 
             'web/static/src/module_loader.js',
             'web/static/src/session.js',

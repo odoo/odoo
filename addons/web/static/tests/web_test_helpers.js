@@ -145,6 +145,7 @@ export {
     allowTranslations,
     installLanguages,
     patchTranslations,
+    xml_translate,
 } from "./_framework/translation_test_helpers";
 export { isSmall } from "./_framework/ui_test_helpers";
 export {

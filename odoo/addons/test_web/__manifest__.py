@@ -5,13 +5,13 @@
     'category': 'Hidden/Tests',
     'version': '0.1',
 
-    'depends': ['web', 'test_orm'],
+    'depends': ['web', 'test_orm', 'test_tools'],
 
     'data': ['ir.access.csv'],
 
     'assets': {
         'web.assets_tests': [
-            'test_web/static/tests/tours/x2many.js',
+            'test_web/static/tests/tours/*.js',
         ],
     },
 

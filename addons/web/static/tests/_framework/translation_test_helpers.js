@@ -39,3 +39,31 @@ export function patchTranslations(terms = {}) {
         patchWithCleanup(translatedTermsGlobal, terms[addonName]);
     }
 }
+
+function _translate_tree(tree, callback) {
+    function translateNode(node) {
+        if (node.nodeName.toUpperCase() === "P") {
+            const translated = callback(node.innerHTML);
+            if (translated) {
+                node.innerHTML = translated;
+            }
+            return;
+        } else if (node.nodeName.toUpperCase() === "DIV" && node.hasAttribute("title")) {
+            const titleTranslated = callback(node.getAttribute("title"));
+            if (titleTranslated) {
+                node.setAttribute("title", titleTranslated);
+            }
+        }
+        for (const child of node.children) {
+            translateNode(child);
+        }
+    }
+    translateNode(tree);
+    return tree;
+}
+
+export function xml_translate(callback, value) {
+    const tree = new DOMParser().parseFromString(`<div>${value}</div>`, "application/xhtml+xml");
+    return _translate_tree(tree.firstElementChild, callback).innerHTML;
+}
+xml_translate.toJSON = () => true;

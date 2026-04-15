@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, test, waitFor, waitForNone } from "@odoo/hoot";
 import { click, edit, pointerDown, queryAll, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
@@ -6,6 +6,7 @@ import {
     contains,
     defineModels,
     fields,
+    installLanguages,
     models,
     mountView,
     onRpc,
@@ -134,60 +135,30 @@ test("html fields are correctly rendered in kanban view", async () => {
 });
 
 test("field html translatable", async () => {
-    expect.assertions(10);
+    installLanguages({
+        en_US: "American",
+        "en-US": "EN",
+        fr_BE: "French (Belgium)",
+    });
 
     Partner._fields.txt = fields.Html({ string: "txt", trim: true, translate: true });
+    Partner._records.find((r) => r.id === 1).txt = "<p>first paragraph</p><p>second paragraph</p>";
 
     serverState.lang = "en_US";
     serverState.multiLang = true;
 
     onRpc("has_group", () => true);
-    onRpc("get_field_translations", function ({ args }) {
-        expect(args).toEqual([[1], "txt"], {
-            message: "should translate the txt field of the record",
-        });
-        return [
-            [
-                { lang: "en_US", source: "first paragraph", value: "first paragraph" },
-                {
-                    lang: "en_US",
-                    source: "second paragraph",
-                    value: "second paragraph",
-                },
-                {
-                    lang: "fr_BE",
-                    source: "first paragraph",
-                    value: "",
-                },
-                {
-                    lang: "fr_BE",
-                    source: "second paragraph",
-                    value: "deuxième paragraphe",
-                },
-            ],
-            { translation_type: "char", translation_show_source: true },
-        ];
-    });
-    onRpc("get_installed", () => [
-        ["en_US", "English"],
-        ["fr_BE", "French (Belgium)"],
-    ]);
-    onRpc("update_field_translations", ({ args }) => {
-        expect(args).toEqual(
-            [
-                [1],
-                "txt",
-                {
-                    en_US: { "first paragraph": "first paragraph modified" },
-                    fr_BE: {
-                        "first paragraph": "premier paragraphe modifié",
-                        "second paragraph": "deuxième paragraphe modifié",
-                    },
-                },
-            ],
-            { message: "the new translation value should be written" }
+
+    onRpc("/web/translations/get_translation_for_field", async (request) => {
+        const { params } = await request.json();
+        expect.step(
+            `get_translation_for_field ${params.res_model} - ${params.res_id} - ${params.field_name}`
         );
-        return [];
+    });
+
+    onRpc("/web/translations/save_translation_for_field", async (request) => {
+        const { params } = await request.json();
+        expect.step(params);
     });
 
     await mountView({
@@ -213,38 +184,53 @@ test("field html translatable", async () => {
         message: "the button should have as test the current language",
     });
 
-    await click(".o_field_html .btn.o_field_translate");
-    await animationFrame();
-
+    await contains(".o_field_html .btn.o_field_translate").click();
+    await waitFor(".modal");
+    expect.verifySteps(["get_translation_for_field partner - 1 - txt"]);
     expect(".modal").toHaveCount(1, { message: "a translate modal should be visible" });
-    expect(".translation").toHaveCount(4, { message: "four rows should be visible" });
 
-    const translations = queryAll(".modal .o_translation_dialog .translation input");
+    await contains(".modal .o-translate-lang-buttons button:contains(French)").click();
+    await waitFor(".modal .o-translate-lang-buttons button:contains(French).active");
+    expect(".modal .translation").toHaveCount(2, { message: "2 field html present" });
 
+    const translations = queryAll(".modal .o_translation_dialog .translation textarea");
     const enField1 = translations[0];
-    expect(enField1).toHaveValue("first paragraph", {
+    expect(enField1).toHaveValue(`<p>first paragraph</p><p>second paragraph</p>`, {
         message: "first part of english translation should be filled",
     });
-    await click(enField1);
-    await edit("first paragraph modified");
+    await contains(".modal .o_translation_dialog .translation textarea#en_US").edit(
+        "first paragraph modified"
+    );
 
-    const frField1 = translations[2];
-    expect(frField1).toHaveValue("", {
-        message: "first part of french translation should not be filled",
+    const frField1 = translations[1];
+    expect(frField1).toHaveValue(`<p>first paragraph</p><p>second paragraph</p>`, {
+        message:
+            "first part of french translation should be the same as English because it is not set",
     });
-    await click(frField1);
-    await edit("premier paragraphe modifié");
+    await contains(".modal .o_translation_dialog .translation textarea#fr_BE").edit(
+        "premier paragraphe modifié"
+    );
+    await contains(".modal footer button.btn-primary:not(disabled)").click(); // save
+    await waitForNone(".modal");
+    expect.verifySteps([
+        {
+            changes: {
+                en_US: "first paragraph modified",
+                fr_BE: "premier paragraphe modifié",
+            },
+            context: {
+                allowed_company_ids: [1],
+                lang: "en_US",
+                tz: "taht",
+                uid: 7,
+            },
+            field_name: "txt",
+            res_id: 1,
+            res_model: "partner",
+        },
+    ]);
 
-    const frField2 = translations[3];
-    expect(frField2).toHaveValue("deuxième paragraphe", {
-        message: "second part of french translation should be filled",
-    });
-
-    await click(frField2);
-    await edit("deuxième paragraphe modifié");
-
-    await click(".modal button.btn-primary"); // save
-    await animationFrame();
+    expect("[name=txt] textarea").toHaveValue("first paragraph modified");
 });
 
 test("html fields: spellcheck is disabled on blur", async () => {

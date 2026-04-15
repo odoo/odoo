@@ -6,6 +6,7 @@ import {
     defineModels,
     fieldInput,
     fields,
+    installLanguages,
     models,
     mountView,
     onRpc,
@@ -129,23 +130,13 @@ test("is translatable", async () => {
     Product._fields.description.translate = true;
     Product._records = [{ id: 1, description: "Description as text" }];
 
+    installLanguages({
+        en: "EN",
+        en_US: "English",
+        fr_BE: "Belge",
+    });
     serverState.multiLang = true;
 
-    onRpc("get_installed", () => [
-        ["en_US", "English"],
-        ["fr_BE", "French (Belgium)"],
-    ]);
-    onRpc("get_field_translations", () => [
-        [
-            { lang: "en_US", source: "Description as text", value: "Description as text" },
-            {
-                lang: "fr_BE",
-                source: "Description as text",
-                value: "Description sous forme de texte",
-            },
-        ],
-        { translation_type: "text", translation_show_source: false },
-    ]);
     await mountView({
         type: "form",
         resModel: "product",
