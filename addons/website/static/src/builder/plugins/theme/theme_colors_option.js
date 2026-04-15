@@ -5,12 +5,13 @@ import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { _t } from "@web/core/l10n/translation";
 
 const CATEGORIES = {
-    'base': _t('Base'),
+    'theme': _t('Theme'),
     'soft': _t('Soft & Pastel'),
     'elegant': _t('Elegant & Professional'),
     'vibrant': _t('Vibrant'),
     'earthy': _t('Earthy & Nature'),
     'inverted': _t('Dark'),
+    'base': _t('Base'),
 }
 
 export class ThemeColorsOption extends BaseOptionComponent {

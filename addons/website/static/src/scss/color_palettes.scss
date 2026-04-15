@@ -1,3 +1,14 @@
+// Build the final palette list: theme palettes first, then core palettes.
+// Done here (not in primary_variables.scss) because $o-theme-palettes-selection
+// is populated by theme primary_variables files, which are processed after
+// website's primary_variables.scss in the asset pipeline.
+// Use a local variable to avoid mutating the original list's type.
+$-palette-names-to-render: if(
+    length($o-theme-palettes-selection) > 0,
+    join($o-theme-palettes-selection, $o-selected-color-palettes-names, comma),
+    $o-selected-color-palettes-names
+);
+
 :root {
     // Override css variables to influence the default style of the editor
     // without duplicating the css.
@@ -14,7 +25,7 @@
         $-default-cc: map-merge($-default-cc, ($attr: map-get($o-base-color-palette, $attr)))
     }
 
-    @each $-selected-palette-name in $o-selected-color-palettes-names {
+    @each $-selected-palette-name in $-palette-names-to-render {
         $-palette: map-get($o-color-palettes, $-selected-palette-name);
 
         @if $-selected-palette-name != 'user-palette' {
@@ -47,7 +58,7 @@
         @include print-variable('o-default-#{$attr-name}-bg', $-default-bg);
     }
 
-    @include print-variable('palette-names', $o-selected-color-palettes-names);
+    @include print-variable('palette-names', $-palette-names-to-render);
 
     // Need info about the base grays which are used to compute the final grays
     @each $name, $color in $o-base-gray-color-palette {

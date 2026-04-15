@@ -2098,6 +2098,16 @@ $o-color-palettes-compatibility-indexes: (
 $o-gray-color-palettes-compatibility-indexes: null; // Default to the color one above
 $o-theme-color-palettes-compatibility-indexes: null; // Default to the color one above
 
+// Themes can inject palettes into the UI by appending their palette names to
+// this list in their own primary_variables.scss. Those names are prepended to
+// $o-selected-color-palettes-names in color_palettes.scss (after all primary
+// variables have been processed), so they appear at the top of the palette
+// picker under the 'theme' category.
+//
+// Usage in a theme's primary_variables.scss:
+//   $o-theme-palettes-selection: append($o-theme-palettes-selection, 'my-palette');
+$o-theme-palettes-selection: () !default;
+
 // Create the list of palettes proposed by the UI
 $o-selected-color-palettes-names: (
     'base-1',
