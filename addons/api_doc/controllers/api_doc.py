@@ -219,7 +219,7 @@ class DocController(http.Controller):
         result = {
             'model': model_name,
             'name': ir_model.name,
-            'doc': ir_model.explanation,
+            'doc': ir_model.explanation or '',
             'fields': {
                 field['name']: dict(
                     field,

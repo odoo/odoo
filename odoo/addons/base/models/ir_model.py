@@ -3,9 +3,9 @@ import itertools
 import logging
 import random
 import re
-import textwrap
 import psycopg2
 import typing
+from inspect import cleandoc
 from ast import literal_eval
 from collections import defaultdict
 from collections.abc import Mapping
@@ -473,7 +473,7 @@ class IrModel(models.Model):
             explanation = cls.__dict__.get('_explanation')
             # Only include if it matches the target model's name (ignores mixins).
             if explanation and getattr(cls, '_name', None) == model._name:
-                explanations.append(textwrap.dedent(explanation).strip())
+                explanations.append(cleandoc(explanation or ''))
 
         return {
             'model': model._name,

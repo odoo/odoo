@@ -80,7 +80,12 @@ class TestDoc(HttpCaseWithUserDemo):
         self.assertTrue(res_partner, "res.partner not found in json['models']")
         res_partner_fields = res_partner.pop('fields')
         res_partner_methods = res_partner.pop('methods')
-        self.assertIsInstance(res_partner.pop('doc', None), str)
+        doc_str = res_partner.pop('doc', '')
+        # In CI environment other modules (like hr, mail) might be installed and append their own explanations to the base explaination, hence startswith
+        self.assertTrue(
+            doc_str.startswith("Foundational model for all people and companies (customers, vendors, employees, etc.). Used for identifying individuals or organizations."),
+            f"Unexpected doc content: {doc_str}"
+        )
         self.assertEqual(res_partner, {'name': "Contact", 'model': 'res.partner'})
         self.assertGreater(set(res_partner_methods), {'search'})
         self.assertGreater(set(res_partner_fields), {'id', 'create_uid', 'lang', 'tz'})
@@ -103,7 +108,12 @@ class TestDoc(HttpCaseWithUserDemo):
         json = res.json()
         fields = json.pop('fields', None)
         methods = json.pop('methods', None)
-        self.assertIsInstance(json.pop('doc', None), str)
+        doc_str = json.pop('doc', '')
+        # In CI environment other modules (like hr, mail) might be installed and append their own explanations to the base explaination, hence startswith
+        self.assertTrue(
+            doc_str.startswith("Foundational model for all people and companies (customers, vendors, employees, etc.). Used for identifying individuals or organizations."),
+            f"Unexpected doc content: {doc_str}"
+        )
         self.maxDiff = None
         self.assertEqual(json, {
             'model': 'res.partner',
