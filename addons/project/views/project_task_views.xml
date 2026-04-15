@@ -624,8 +624,17 @@
             <field name="view_mode">form</field>
             <field name="context">{'dialog_size': 'medium'}</field>
             <field name="target">new</field>
-            <field name="binding_model_id" ref="model_project_task"/>
+        </record>
+
+        <record id="action_server_share_task" model="ir.actions.server">
+            <field name="name">Share Task</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="binding_model_id" ref="project.model_project_task"/>
             <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = record.action_open_share_task_wizard()
+            </field>
         </record>
 
         <record id="quick_create_task_form" model="ir.ui.view">
@@ -700,11 +709,12 @@
                     <field name="is_template"/>
                     <field name="has_project_template"/>
                     <field name="parent_id"/>
+                    <field name="project_privacy_visibility"/>
                     <progressbar field="state" colors='{"1_done": "success-done", "1_canceled": "danger", "03_approved": "success", "02_changes_requested": "warning", "04_waiting_normal": "info", "01_in_progress": "300" }'/>
                     <templates>
                         <t t-name="menu" t-if="!selection_mode" groups="base.group_user">
                             <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
-                            <a name="%(project.portal_share_action)d" role="menuitem" type="action" class="dropdown-item">Share Task</a>
+                            <a t-if="['portal', 'invited_users'].includes(record.project_privacy_visibility.raw_value) and !record.is_template.raw_value" name="%(project.portal_share_action)d" role="menuitem" type="action" class="dropdown-item">Share Task</a>
                             <a class="dropdown-item" role="menuitem" type="object" name="copy">Duplicate</a>
                             <div role="separator" class="dropdown-divider"></div>
                             <field name="color" widget="kanban_color_picker"/>

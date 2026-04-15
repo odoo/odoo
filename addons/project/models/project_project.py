@@ -676,6 +676,11 @@ class ProjectProject(models.Model):
             if self.privacy_visibility not in ['invited_users', 'portal']:
                 vals['access_token'] = ''
 
+        if 'privacy_visibility' in vals:
+            vals['access_token'] = ''
+            if vals['privacy_visibility'] != 'portal':
+                self.env['project.task'].search([('project_id', 'in', self.ids)]).write({'access_token': ''})
+
         # Here we modify the project's stage according to the selected company (selecting the first
         # stage in sequence that is linked to the company).
         company_id = vals.get('company_id')
@@ -947,14 +952,12 @@ class ProjectProject(models.Model):
                 'tag': 'display_notification',
                 'params': {
                     'type': 'danger',
-                    'message': self.env._("Sharing is not available for this project visibility setting."),
+                    'message': self.env._('Sharing is not available with this project visibility setting.'),
                 },
             }
 
-        template = self.env.ref('project.mail_template_project_sharing', raise_if_not_found=False)
-
         local_context = self.env.context | {
-            'default_template_id': template.id if template else False,
+            'default_template_id': False,
             'default_email_layout_xmlid': 'mail.mail_notification_light',
             'active_id': self.id,
             'active_model': 'project.project',
@@ -1186,6 +1189,16 @@ class ProjectProject(models.Model):
     def _compute_task_completion_percentage(self):
         for task in self:
             task.task_completion_percentage = task.task_count and 1 - task.open_task_count / task.task_count
+
+    def _get_share_url(self, redirect=False, signup_partner=False, pid=None, share_token=True):
+        self.ensure_one()
+        return super()._get_share_url(redirect=redirect, signup_partner=signup_partner, pid=pid, share_token=False)
+
+    def _portal_ensure_token(self):
+        return ''
+
+    def get_portal_url(self, suffix=None, report_type=None, download=None, query_string=None, anchor=None, share_token=True):
+        return super().get_portal_url(suffix=suffix, report_type=report_type, download=download, query_string=query_string, anchor=anchor, share_token=False)
 
     # ---------------------------------------------------
     #  Project Template Methods

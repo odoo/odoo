@@ -2166,6 +2166,45 @@ class ProjectTask(models.Model):
             ),
         )
 
+    def _get_share_url(self, redirect=False, signup_partner=False, pid=None, share_token=True):
+        self.ensure_one()
+        if self.sudo().project_privacy_visibility != 'portal':
+            return super()._get_share_url(redirect=redirect, signup_partner=signup_partner, pid=pid, share_token=False)
+        return super()._get_share_url(redirect=redirect, signup_partner=signup_partner, pid=pid, share_token=share_token)
+
+    def _portal_ensure_token(self):
+        self.ensure_one()
+        if self.sudo().project_privacy_visibility != 'portal':
+            return ''
+        return super()._portal_ensure_token()
+
+    def get_portal_url(self, suffix=None, report_type=None, download=None, query_string=None, anchor=None, share_token=True):
+        return super().get_portal_url(
+            suffix=suffix,
+            report_type=report_type,
+            download=download,
+            query_string=query_string,
+            anchor=anchor,
+            share_token=share_token and self.sudo().project_privacy_visibility == 'portal',
+        )
+
+    def action_open_share_task_wizard(self):
+        self.ensure_one()
+        error_notification = {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'danger',
+            },
+        }
+        if self.is_template:
+            error_notification['params']['message'] = self.env._('Task templates cannot be shared.')
+            return error_notification
+        if self.project_privacy_visibility in ['followers', 'employees']:
+            error_notification['params']['message'] = self.env._('Sharing is not available with this project visibility setting.')
+            return error_notification
+        return self.env['ir.actions.actions']._for_xml_id('project.portal_share_action')
+
     @api.model
     def get_import_templates(self):
         return [{

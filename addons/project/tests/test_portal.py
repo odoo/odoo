@@ -57,9 +57,8 @@ class TestPortalProject(TestProjectPortalCommon, HttpCase):
         })
         wizard.action_send_mail()
         self.assertEqual(self.task_1.project_id, self.project_pigs)
-        self.assertTrue(self.project_pigs.access_token, 'The access token should be set since the project has been shared.')
-        self.assertTrue(self.task_1.access_token, 'The access token should be set since the task has been shared.')
-        access_token = self.project_pigs.access_token
+        self.assertFalse(self.project_pigs.access_token, 'The access token should not be set even if the project has been shared.')
+        self.assertFalse(self.task_1.access_token, 'The access token should not be set even if the task has been shared.')
         task_access_token = self.task_1.access_token
         self.project_pigs.privacy_visibility = 'followers'
         self.assertFalse(self.project_pigs.access_token, 'The access token should no longer be set since now the project is private.')
@@ -68,7 +67,7 @@ class TestPortalProject(TestProjectPortalCommon, HttpCase):
         self.assertFalse(self.project_pigs.access_token, 'The access token should still not be set since now the project has not been shared yet.')
         self.assertFalse(all(self.project_pigs.tasks.mapped('access_token')), 'The access token should no longer be set in any tasks linked to the project since now the project is private.')
         wizard.action_send_mail()
-        self.assertTrue(self.project_pigs.access_token, 'The access token should now be regenerated for this project since that project has been shared to an external partner.')
+        self.assertFalse(self.project_pigs.access_token, 'The access token should not be set even if the project has been shared again.')
         self.assertFalse(self.task_1.access_token)
         task_wizard = self.env['portal.share'].create({
             'res_model': 'project.task',
@@ -79,7 +78,7 @@ class TestPortalProject(TestProjectPortalCommon, HttpCase):
         })
         task_wizard.action_send_mail()
         self.assertTrue(self.task_1.access_token, 'The access token should be set since the task has been shared.')
-        self.assertNotEqual(self.project_pigs.access_token, access_token, 'The new access token generated for the project should not be the old one.')
+        self.assertFalse(self.project_pigs.access_token, 'The access token should not be set even if the project has been shared again.')
         self.assertNotEqual(self.task_1.access_token, task_access_token, 'The new access token generated for the task should not be the old one.')
         self.project_pigs.privacy_visibility = 'employees'
         self.assertFalse(self.project_pigs.access_token, 'The access token should no longer be set since now the project is only available by internal users.')
