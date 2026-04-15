@@ -294,3 +294,9 @@ class AccountMoveSend(models.AbstractModel):
                     'active_ids': moves.ids
                 },
             }
+
+    def _can_process_event_account_move_send(self, move, sending_methods):
+        can_process = super()._can_process_event_account_move_send(move, sending_methods)
+        if 'peppol' in sending_methods:
+            can_process &= move.peppol_move_state == 'to_send'
+        return can_process

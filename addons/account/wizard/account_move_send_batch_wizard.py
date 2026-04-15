@@ -102,10 +102,17 @@ class AccountMoveSendBatchWizard(models.TransientModel):
                 )
             raise UserError(_("Batch invoice sending is unavailable. Please, contact your system administrator to activate the cron to enable batch sending of invoices."))
 
-        self.move_ids.sending_data = {
-            'author_user_id': self.env.user.id,
-            'author_partner_id': self.env.user.partner_id.id,
-        }
+        self.env['account.move.event.process'].create([
+            {
+                'move_id': move.id,
+                'event_code': 'account_move_send',
+                'data': {
+                    'author_user_id': self.env.user.id,
+                    'author_partner_id': self.env.user.partner_id.id,
+                },
+            } for move in self.move_ids
+        ])
+
         account_move_send_cron._trigger()
         return {
             'type': 'ir.actions.client',

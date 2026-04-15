@@ -40,7 +40,7 @@ def _mock_call_nemhandel_proxy(func, self, *args, **kwargs):
         return {
             'messages': [{
                 'message_uuid': 'demo_%s' % uuid.uuid4(),
-            } for i in args[1]['documents']],
+            } for i in kwargs['params']['documents']],
         }
 
     endpoint = args[0].split('/')[-1]
