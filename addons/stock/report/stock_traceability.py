@@ -156,6 +156,12 @@ class StockTraceabilityReport(models.TransientModel):
             'res_model': res_model}]
         return data
 
+    def _make_column(self, name, value):
+        return {
+            'name': name,
+            'value': value,
+        }
+
     @api.model
     def _final_vals_to_lines(self, final_vals, level):
         lines = []
@@ -176,13 +182,15 @@ class StockTraceabilityReport(models.TransientModel):
                 'picking_type_code': data.get('picking_type_code', False),
                 'res_id': data.get('res_id', False),
                 'res_model': data.get('res_model', False),
-                'columns': [data.get('reference_id', False),
-                            data.get('product_id', False),
-                            format_datetime(self.env, data.get('date', False), tz=False, dt_format=False),
-                            data.get('lot_name', False),
-                            data.get('location_source', False),
-                            data.get('location_destination', False),
-                            data.get('product_qty_uom', 0)],
+                'columns': [
+                    self._make_column('reference', data.get('reference_id', False)),
+                    self._make_column('product', data.get('product_id', False)),
+                    self._make_column('date', format_datetime(self.env, data.get('date', False), tz=False, dt_format=False)),
+                    self._make_column('lot_name', data.get('lot_name', False)),
+                    self._make_column('location_source', data.get('location_source', False)),
+                    self._make_column('location_destination', data.get('location_destination', False)),
+                    self._make_column('quantity', data.get('product_qty_uom', 0)),
+                ],
                 'level': level,
                 'unfoldable': data['unfoldable'],
             })
