@@ -242,6 +242,7 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
     @freeze_time('2026-02-02T12:00:00')
     @patch_nilvera_request
     def test_fetching_einvoices(self, mocked_request):
+        # EndDate is adjusted to match Europe/Istanbul timezone(UTC+3)
         with patch.object(self.env.cr, 'commit', autospec=True):
             self.env['account.move']._l10n_tr_nilvera_get_documents()
             self.env['account.move']._l10n_tr_nilvera_get_documents()
@@ -253,7 +254,7 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
                     params={
                         'StatusCode': ['succeed'],
                         'StartDate': '2026-01-02',
-                        'EndDate': '2026-02-02T12:00:00',
+                        'EndDate': '2026-02-02T15:00:00',
                         'DateFilterType': 'CreatedDate',
                         'SortColumn': 'CreationDateTime',
                         'SortType': 'ASC',
@@ -268,7 +269,7 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
                     params={
                         'StatusCode': ['succeed'],
                         'StartDate': '2026-02-02',
-                        'EndDate': '2026-02-02T12:00:00',
+                        'EndDate': '2026-02-02T15:00:00',
                         'DateFilterType': 'CreatedDate',
                         'SortColumn': 'CreationDateTime',
                         'SortType': 'ASC',
