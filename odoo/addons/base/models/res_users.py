@@ -595,6 +595,8 @@ class ResUsers(models.Model):
             self.partner_id.action_unarchive()
 
         if 'company_id' in vals or 'company_ids' in vals:
+            # Access cache depends on the company, clear it
+            self.env.transaction.invalidate_access_cache()
             # reset before the call to super to ensure `_check_company` sees the right company
             self._reset_cached_properties()
 
@@ -608,6 +610,10 @@ class ResUsers(models.Model):
 
         if 'company_id' in vals or 'company_ids' in vals:
             # reset after the call to super to ensure the wrong value wasn't cached because of automations or hooks
+            self.env.transaction.invalidate_access_cache()
+            self._reset_cached_properties()
+        elif 'tz' in vals:
+            # also reset for changes of the time zone
             self._reset_cached_properties()
 
         if 'group_ids' in vals and any(self._ids):
@@ -625,8 +631,6 @@ class ResUsers(models.Model):
         return res
 
     def _reset_cached_properties(self):
-        # Access cache depends on the company, clear it
-        self.env.transaction.invalidate_access_cache()
         # Reset lazy properties `company` & `companies` on all envs,
         # This is unlikely in a business code to change the company of a user and then do business stuff
         # but in case it happens this is handled.
