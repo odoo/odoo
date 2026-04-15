@@ -259,7 +259,8 @@ class AccountEdiProxyClientUser(models.Model):
             if move := self._peppol_import_invoice(attachment, None, content['state'], uuid):
                 # Only acknowledge when we saved the document somewhere
                 processed_uuids.append(uuid)
-                moves += move
+                if not isinstance(move, bool):
+                    moves += move
         return processed_uuids, moves
 
     def _peppol_post_process_new_messages(self, moves):
