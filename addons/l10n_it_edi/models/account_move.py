@@ -274,7 +274,8 @@ class AccountMove(models.Model):
         def parse_xml(parser, content):
             try:
                 return etree.fromstring(content, parser)
-            except (etree.ParseError, ValueError) as e:
+            except (etree.ParseError, ValueError, TypeError) as e:
+                # Note: lxml < 5.0 raises ValueError; lxml 5.0+ / libxml2 2.12+ raises TypeError
                 _logger.info("XML parsing of %s failed: %s", name, e)
 
         parser = etree.XMLParser(recover=True, resolve_entities=False)
