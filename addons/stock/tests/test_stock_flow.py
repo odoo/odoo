@@ -2889,3 +2889,27 @@ class TestStockFlowPostInstall(TestStockCommon):
         receipt.write({'date_done': TEST_DATE})
 
         self.assertEqual(10, self.productA.with_context(to_date=TEST_DATE.date()).qty_available)
+
+    def test_scrap_tracked_product_with_multiple_lots(self):
+        """Test Scrapping a tracked product that has multiple lots"""
+        screws = self.env['product.product'].create({
+            'name': 'Screws',
+            'is_storable': True,
+            'tracking': 'lot',
+        })
+        lot1, lot2 = self.env['stock.lot'].create([{'name': 'L1', 'product_id': screws.id}, {'name': 'L2', 'product_id': screws.id}])
+        self.env['stock.quant']._update_available_quantity(screws, self.stock_location, 100, lot_id=lot1)
+        self.env['stock.quant']._update_available_quantity(screws, self.stock_location, 100, lot_id=lot2)
+        scrap = self.env['stock.move'].with_context(default_is_scrap=True).create({
+            'is_scrap': True,
+            'product_id': screws.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.scrap_location.id,
+            'quantity': 50,
+            'lot_ids': lot2.ids,
+        })
+        scrap._action_scrap()
+        self.assertEqual(scrap.state, 'done')
+        self.assertRecordValues(scrap.move_line_ids, [{'lot_id': lot2.id, 'quantity': 50}])
+        self.assertEqual(50, self.env['stock.quant']._get_available_quantity(screws, self.stock_location, lot2))
+        self.assertEqual(100, self.env['stock.quant']._get_available_quantity(screws, self.stock_location, lot1))
