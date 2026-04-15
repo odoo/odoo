@@ -7,8 +7,8 @@
                     <t t-set="ordering_mode" t-value="config['self_ordering_mode']"/>
                     <t t-set="service_mode" t-value="config['self_ordering_service_mode']"/>
                     <div t-if="ordering_mode != 'nothing'" class="picking-service text-center pt-3">
-                        <span t-if="preset.get('identification') == 'none' or (not preset and service_mode == 'table')">Service at Table</span>
-                        <span t-elif="preset.get('identification') == 'name' or (not preset and service_mode != 'table')">Pickup At Counter</span>
+                        <span t-if="(preset and preset.get('identification') == 'none') or (not preset and service_mode == 'table')">Service at Table</span>
+                        <span t-elif="(preset and preset.get('identification') == 'name') or (not preset and service_mode != 'table')">Pickup At Counter</span>
                         <span t-else="">Delivery</span>
                     </div>
                     <div t-if="order['tracking_number'] and config['self_ordering_mode'] != 'nothing'" class="tracking-number text-center text-bold" style="font-size: 75px; line-height: 130px;" t-out="order['tracking_number']" />
