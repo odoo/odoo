@@ -18,7 +18,6 @@ import { Test } from "../core/test";
 import { refresh } from "../core/url";
 import {
     debounce,
-    elSignal,
     EXACT_MARKER,
     INCLUDE_LEVEL,
     lookup,
@@ -171,7 +170,7 @@ const templateIncludeWidget = (tagName) => /* xml */ `
 
 /**
  *
- * @param {ReturnType<typeof elSignal>} ref
+ * @param {typeof t.ref<HTMLElement>} ref
  */
 function useKeepSelection(ref) {
     /**
@@ -417,17 +416,16 @@ export class HootSearch extends Component {
     ui = plugin(UiPlugin);
 
     // Reactive values
-    rootRef = elSignal();
-    /** @type {ReturnType<typeof elSignal<HTMLInputElement>>} */
-    searchInputRef = elSignal();
+    rootRef = signal(null, { type: t.ref(HTMLElement) });
+    searchInputRef = signal(null, { type: t.ref(HTMLInputElement) });
     categories = {
         suite: signal.Array([], { type: t.instanceOf(Suite) }),
         tag: signal.Array([], { type: t.instanceOf(Tag) }),
         test: signal.Array([], { type: t.instanceOf(Test) }),
     };
-    query = signal(this.config.filter() || "", { type: t.string });
-    isEmpty = signal(!this.query().trim(), { type: t.string });
-    showDropdown = signal(false, { type: t.boolean });
+    query = signal(this.config.filter() || "", { type: t.string() });
+    isEmpty = signal(!this.query().trim(), { type: t.string() });
+    showDropdown = signal(false, { type: t.boolean() });
     trimmedQuery = computed(() => this.query().trim());
 
     // Other members

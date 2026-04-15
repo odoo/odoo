@@ -294,7 +294,7 @@ export class HootTestResult extends Component {
 
     // Props & plugins
     props = props({
-        open: t.or([t.boolean, t.literal("always")]),
+        open: t.or([t.boolean(), t.literal("always")]),
         slots: t.object(["default"]),
         test: t.instanceOf(Test),
     });
@@ -310,8 +310,8 @@ export class HootTestResult extends Component {
     filteredResults = computed(() =>
         filterResults(this.props.test.results(), this.ui.statusFilter())
     );
-    showCode = signal(false, { type: t.boolean });
-    showDetails = signal(Boolean(this.props.open), { type: t.boolean });
+    showCode = signal(false, { type: t.boolean() });
+    showDetails = signal(Boolean(this.props.open), { type: t.boolean() });
 
     // Other members
     CASE_EVENT_TYPES = CASE_EVENT_TYPES;

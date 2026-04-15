@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { on, queryAll } from "@odoo/hoot-dom";
-import { App, proxy, signal, types as t, useEffect, useListener } from "@odoo/owl";
+import { App, proxy, types as t, useEffect, useListener, validateType } from "@odoo/owl";
 import { isNode } from "@web/../lib/hoot-dom/helpers/dom";
 import {
     isInstanceOf,
@@ -32,11 +32,6 @@ import {
  *  | "url"
  *  | "undefined"} ArgumentPrimitive
  *
- * @typedef {{
- *  ignoreOrder?: boolean;
- *  partial?: boolean;
- * }} DeepEqualOptions
- *
  * @typedef {[string, ArgumentType]} Label
  *
  * @typedef {"expected" | "group" | "received" | "technical"} MarkupType
@@ -44,16 +39,6 @@ import {
  * @typedef {string | RegExp | { new(): any }} Matcher
  *
  * @typedef {QueryRegExp | QueryExactString | QueryPartialString} QueryPart
- *
- * @typedef {{
- *  assertions: number;
- *  failed: number;
- *  passed: number;
- *  skipped: number;
- *  suites: number;
- *  tests: number;
- *  todo: number;
- * }} Reporting
  */
 
 /**
@@ -126,6 +111,33 @@ const $setItem = localStorage.setItem.bind(localStorage);
 const $removeItem = localStorage.removeItem.bind(localStorage);
 /** @type {Clipboard["writeText"]} */
 const $writeText = $clipboard?.writeText.bind($clipboard);
+
+//-----------------------------------------------------------------------------
+// Types
+//-----------------------------------------------------------------------------
+
+/** @type {number} */
+export const T_INTEGER = t.customValidator(t.number(), $isInteger, "value is not an integer");
+export const T_NODE = t.instanceOf(Node);
+export const T_REGEX = t.instanceOf(RegExp);
+/** @type {null} */
+export const T_NULL = t.literal(null);
+/** @type {undefined} */
+export const T_UNDEFINED = t.literal(undefined);
+
+export const DEEP_EQUAL_OPTIONS_TYPE = t.object({
+    "ignoreOrder?": t.boolean(),
+    "partial?": t.boolean(),
+});
+export const REPORTING_TYPE = t.object({
+    assertions: t.number(),
+    failed: t.number(),
+    passed: t.number(),
+    skipped: t.number(),
+    suites: t.number(),
+    tests: t.number(),
+    todo: t.number(),
+});
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -628,6 +640,62 @@ let fuzzyScoreMap = null;
 //-----------------------------------------------------------------------------
 
 /**
+ * @param {ArrayLike<any>} args
+ * @param {any[]} types
+ * @param {boolean} [noOptions]
+ */
+export function assertArguments(args, types, noOptions) {
+    const argsLength = args.length;
+    if (argsLength > types.length) {
+        throw new TypeError(
+            `expected a maximum of ${types.length} arguments and got ${argsLength}`
+        );
+    }
+    const allIssues = [];
+    for (let i = 0; i < argsLength; i++) {
+        const value = args[i];
+        if (!noOptions && i === types.length - 1 && isNil(value)) {
+            // This means that the value for the 'options' argument is empty
+            // -> no need to validate it.
+            break;
+        }
+        const issues = validateType(value, types[i]);
+        if (issues.length) {
+            allIssues.push(formatValidationIssues(`invalid ${ordinal(i + 1)} argument:`, issues));
+        }
+    }
+    if (allIssues.length) {
+        throw new TypeError(allIssues.join("\n"));
+    }
+}
+
+/**
+ * @template {(...args: any[]) => any} T
+ * @param {T} fn
+ */
+export function batch(fn) {
+    /** @type {Parameters<T>[]} */
+    const currentBatch = [];
+
+    /** @type {T} */
+    function batched(...args) {
+        currentBatch.push(args);
+        throttledFlush();
+    }
+
+    function flush() {
+        for (const args of currentBatch) {
+            fn(...args);
+        }
+        currentBatch.length = 0;
+    }
+
+    const throttledFlush = throttle(flush);
+
+    return [batched, flush];
+}
+
+/**
  * @param {string} text
  */
 export async function copy(text) {
@@ -670,11 +738,11 @@ export function copyAndBind(object) {
 }
 
 /**
- * @param {Reporting} [parentReporting]
+ * @param {typeof REPORTING_TYPE} [parentReporting]
  */
 export function createReporting(parentReporting) {
     /**
-     * @param {Partial<Reporting>} values
+     * @param {Partial<typeof REPORTING_TYPE>} values
      */
     function add(values) {
         for (const [key, value] of $entries(values)) {
@@ -738,32 +806,6 @@ export function createMock(target, descriptors) {
 /**
  * @template {(...args: any[]) => any} T
  * @param {T} fn
- */
-export function batch(fn) {
-    /** @type {Parameters<T>[]} */
-    const currentBatch = [];
-
-    /** @type {T} */
-    function batched(...args) {
-        currentBatch.push(args);
-        throttledFlush();
-    }
-
-    function flush() {
-        for (const args of currentBatch) {
-            fn(...args);
-        }
-        currentBatch.length = 0;
-    }
-
-    const throttledFlush = throttle(flush);
-
-    return [batched, flush];
-}
-
-/**
- * @template {(...args: any[]) => any} T
- * @param {T} fn
  * @param {number} delay
  * @returns {T}
  */
@@ -795,7 +837,7 @@ export function deepCopy(value) {
 /**
  * @param {unknown} a
  * @param {unknown} b
- * @param {DeepEqualOptions} [options]
+ * @param {typeof DEEP_EQUAL_OPTIONS_TYPE} [options]
  * @returns {boolean}
  */
 export function deepEqual(a, b, options) {
@@ -812,40 +854,6 @@ export function destroy(target) {
     }
     destroyed.add(app);
     app.destroy();
-}
-
-/**
- * @template [T=HTMLElement]
- * @returns {import("@odoo/owl").Signal<T | null>}
- */
-export function elSignal() {
-    return signal(null, { type: t.or([t.instanceOf(HTMLElement), t.literal(null)]) });
-}
-
-/**
- * @param {any[]} args
- * @param {...(ArgumentType | ArgumentType[])} argumentsDefs
- */
-export function ensureArguments(args, ...argumentsDefs) {
-    if (args.length > argumentsDefs.length) {
-        throw new HootError(
-            `expected a maximum of ${argumentsDefs.length} arguments and got ${args.length}`
-        );
-    }
-    for (let i = 0; i < argumentsDefs.length; i++) {
-        const value = args[i];
-        const acceptedType = argumentsDefs[i];
-        const types = isIterable(acceptedType) ? [...acceptedType] : [acceptedType];
-        if (!types.some((type) => isOfType(value, type))) {
-            const strTypes = types.map(formatHumanReadable);
-            const last = strTypes.pop();
-            throw new TypeError(
-                `expected ${ordinal(i + 1)} argument to be of type ${[strTypes.join(", "), last]
-                    .filter(Boolean)
-                    .join(" or ")}, got ${formatHumanReadable(value)}`
-            );
-        }
-    }
 }
 
 /**
@@ -943,6 +951,20 @@ export function formatTime(value, unit) {
     return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(
         seconds
     ).padStart(2, "0")}`;
+}
+
+/**
+ *
+ * @param {string} message
+ * @param {import("@odoo/owl").ValidationIssue[]} issues
+ * @returns
+ */
+export function formatValidationIssues(message, issues) {
+    const formatted = [message];
+    for (const issue of issues) {
+        formatted.push(`- ${issue.message} (received: ${formatHumanReadable(issue.received)})`);
+    }
+    return formatted.join("\n");
 }
 
 /**
@@ -1157,7 +1179,7 @@ export function isOfType(value, type) {
         case "null":
         case null:
         case undefined:
-            return value === null || value === undefined;
+            return isNil(value);
         case "any":
             return true;
         case "date":
@@ -1532,7 +1554,8 @@ export function toExplicitString(value) {
 }
 
 /**
- * @param {ReturnType<typeof elSignal<HTMLElement>>} ref
+ * @template {HTMLElement} T
+ * @param {typeof types.ref<T>} ref
  */
 export function useAutofocus(ref) {
     let displayed = new Set();

@@ -31,7 +31,7 @@ export class HootTagButton extends Component {
 
     // Props & plugins
     props = props({
-        "inert?": t.boolean,
+        "inert?": t.boolean(),
         tag: t.instanceOf(Tag),
     });
 

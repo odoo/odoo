@@ -52,8 +52,9 @@ export class Test extends Job {
         error: 0,
         warn: 0,
     });
+    // FIXME: cannot import on CaseResult for proper validation
     /** @type {import("@odoo/owl").Signal<import("./expect").CaseResult[]>} */
-    results = signal.Array([]);
+    results = signal.Array([], { type: t.object() });
     /** @type {() => MaybePromise<void> | null} */
     run = null;
     runFnString = "";

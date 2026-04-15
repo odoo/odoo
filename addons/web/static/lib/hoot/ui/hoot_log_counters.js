@@ -27,8 +27,8 @@ export class HootLogCounters extends Component {
     // Props & plugins
     props = props({
         logs: t.object({
-            error: t.number,
-            warn: t.number,
+            error: t.number(),
+            warn: t.number(),
         }),
     });
 }

@@ -97,8 +97,8 @@ export class HootButtons extends Component {
     runner = getRunnerPlugin();
 
     // Reactive values
-    isDisabled = signal(false, { type: t.boolean });
-    isOpen = signal(false, { type: t.boolean });
+    isDisabled = signal(false, { type: t.boolean() });
+    isOpen = signal(false, { type: t.boolean() });
 
     // Other members
     disableTimeout = 0;

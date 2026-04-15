@@ -3,7 +3,7 @@
 import { Component, signal, types as t, xml } from "@odoo/owl";
 import { Test } from "../core/test";
 import { createUrl, refresh } from "../core/url";
-import { callHootKey, useHootKey, useWindowListener } from "../hoot_utils";
+import { callHootKey, T_NULL, useHootKey, useWindowListener } from "../hoot_utils";
 import { HootButtons } from "./hoot_buttons";
 import { HootConfigMenu } from "./hoot_config_menu";
 import { HootDebugToolBar } from "./hoot_debug_toolbar";
@@ -111,7 +111,7 @@ export class HootMain extends Component {
     runner = getRunnerPlugin();
 
     // Reactive values
-    testToDebug = signal(null, { type: t.or([t.instanceOf(Test), t.literal(null)]) });
+    testToDebug = signal(null, { type: t.or([t.instanceOf(Test), T_NULL]) });
 
     // Other members
     createUrl = createUrl;

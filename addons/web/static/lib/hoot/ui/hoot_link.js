@@ -39,23 +39,23 @@ export class HootLink extends Component {
 
     // Props & plugins
     props = props({
-        "class?": t.string,
-        "ids?": t.record(t.or([t.string, t.array(t.string)])),
+        "class?": t.string(),
+        "ids?": t.record(t.or([t.string(), t.array(t.string())])),
         "onClick?": t.function([t.instanceOf(PointerEvent)]),
         "options?": t.object({
-            "debug?": t.boolean,
-            "ignore?": t.boolean,
+            "debug?": t.boolean(),
+            "ignore?": t.boolean(),
         }),
         slots: t.object(["default"]),
-        "style?": t.string,
-        "target?": t.string,
-        "title?": t.string,
+        "style?": t.string(),
+        "target?": t.string(),
+        "title?": t.string(),
     });
 
     runner = getRunnerPlugin();
 
     // Reactive values
-    href = signal("#", { type: t.string });
+    href = signal("#", { type: t.string() });
 
     /**
      * @param {PointerEvent} ev

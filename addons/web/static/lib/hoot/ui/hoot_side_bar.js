@@ -3,7 +3,7 @@
 import { Component, computed, plugin, props, signal, types as t, useEffect, xml } from "@odoo/owl";
 import { Suite } from "../core/suite";
 import { createUrlFromId } from "../core/url";
-import { elSignal, lookup, parseQuery } from "../hoot_utils";
+import { lookup, parseQuery, REPORTING_TYPE, T_NULL } from "../hoot_utils";
 import { HootJobButtons } from "./hoot_job_buttons";
 import { getRunnerPlugin } from "./runner_plugin";
 import { UiPlugin } from "./ui_plugin";
@@ -45,16 +45,16 @@ export class HootSideBarSuite extends Component {
 
     // Props & plugins
     props = props({
-        "multi?": t.number,
-        name: t.string,
-        hasSuites: t.boolean,
-        reporting: t.object(),
-        selected: t.boolean,
-        unfolded: t.boolean,
+        "multi?": t.number(),
+        name: t.string(),
+        hasSuites: t.boolean(),
+        reporting: REPORTING_TYPE,
+        selected: t.boolean(),
+        unfolded: t.boolean(),
     });
 
     // Reactive values
-    rootRef = elSignal();
+    rootRef = signal(null, { type: t.ref(HTMLSpanElement) });
 
     setup() {
         let wasSelected = false;
@@ -98,8 +98,8 @@ export class HootSideBarCounter extends Component {
 
     // Props & plugins
     props = props({
-        reporting: t.object(),
-        statusFilter: t.or([t.string, t.literal(null)]),
+        reporting: REPORTING_TYPE,
+        statusFilter: t.or([t.string(), T_NULL]),
     });
 
     getCounterInfo() {
@@ -200,12 +200,11 @@ export class HootSideBar extends Component {
     ui = plugin(UiPlugin);
 
     // Reactive values
-    /** @type {ReturnType<typeof elSignal<HTMLInputElement>>} */
-    searchInputRef = elSignal();
-    suitesListRef = elSignal();
-    filter = signal("", { type: t.string });
-    hideEmpty = signal(false, { type: t.boolean });
-    unfoldedIds = signal.Set(new Set(["fake_ID"]), { type: t.string }); // fake ID used to render on start
+    searchInputRef = signal(null, { type: t.ref(HTMLInputElement) });
+    suitesListRef = signal(null, { type: t.ref(HTMLUListElement) });
+    filter = signal("", { type: t.string() });
+    hideEmpty = signal(false, { type: t.boolean() });
+    unfoldedIds = signal.Set(new Set(["fake_ID"]), { type: t.string() }); // fake ID used to render on start
     unfoldedSuites = computed(() => this.getFilteredVisibleSuites());
 
     setup() {

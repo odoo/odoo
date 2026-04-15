@@ -1,9 +1,9 @@
 /** @odoo-module */
 
-import { Component, plugin, signal, useEffect, types as t, xml } from "@odoo/owl";
+import { Component, plugin, signal, types as t, useEffect, xml } from "@odoo/owl";
 import { getColorHex } from "../../hoot-dom/hoot_dom_utils";
 import { Test } from "../core/test";
-import { elSignal, formatTime } from "../hoot_utils";
+import { formatTime } from "../hoot_utils";
 import { getTitle, setTitle } from "../mock/window";
 import { onColorSchemeChange } from "./hoot_colors";
 import { HootTestPath } from "./hoot_test_path";
@@ -211,11 +211,10 @@ export class HootStatusPanel extends Component {
     ui = plugin(UiPlugin);
 
     // Reactive values
-    /** @type {ReturnType<typeof elSignal<HTMLCanvasElement>>} */
-    canvasRef = elSignal();
-    timer = signal(0, { type: t.number });
-    progressBarIndex = signal(0, { type: t.number });
-    isDebugging = signal(false, { type: t.boolean });
+    canvasRef = signal(null, { type: t.ref(HTMLCanvasElement) });
+    timer = signal(0, { type: t.number() });
+    progressBarIndex = signal(0, { type: t.number() });
+    isDebugging = signal(false, { type: t.boolean() });
 
     // Other members
     currentTestStart = 0;

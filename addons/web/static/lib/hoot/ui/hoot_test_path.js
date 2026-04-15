@@ -75,10 +75,10 @@ export class HootTestPath extends Component {
 
     // Props & plugins
     props = props({
-        "canCopy?": t.boolean,
-        "full?": t.boolean,
-        "inert?": t.boolean,
-        "showStatus?": t.boolean,
+        "canCopy?": t.boolean(),
+        "full?": t.boolean(),
+        "inert?": t.boolean(),
+        "showStatus?": t.boolean(),
         test: t.instanceOf(Test),
     });
     ui = plugin(UiPlugin);

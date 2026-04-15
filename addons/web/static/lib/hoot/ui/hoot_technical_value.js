@@ -36,7 +36,7 @@ function makePromiseWrapperSignal(value) {
     }
 
     const promiseSignal = signal(["pending", null], {
-        type: t.tuple([t.selection(["pending", "fulfilled", "rejected"]), t.any]),
+        type: t.tuple([t.selection(["pending", "fulfilled", "rejected"]), t.any()]),
     });
 
     Promise.resolve(value).then(
@@ -182,13 +182,13 @@ export class HootTechnicalValue extends Component {
 
     // Props & plugins
     props = props({
-        "value?": t.any,
+        "value?": t.any(),
     });
 
     rawValue = toRaw(this.props.value);
 
     // Reactive values
-    isOpen = signal(false, { type: t.boolean });
+    isOpen = signal(false, { type: t.boolean() });
     promiseState = makePromiseWrapperSignal(this.rawValue);
 
     // Other members

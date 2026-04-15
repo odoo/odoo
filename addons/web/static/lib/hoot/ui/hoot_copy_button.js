@@ -20,12 +20,12 @@ export class HootCopyButton extends Component {
 
     // Props & plugins
     props = props({
-        "altText?": t.string,
-        text: t.string,
+        "altText?": t.string(),
+        text: t.string(),
     });
 
     // Reactive values
-    copied = signal(false, { type: t.boolean });
+    copied = signal(false, { type: t.boolean() });
 
     // Other members
     hasClipboard = hasClipboard;

@@ -98,7 +98,7 @@ describe(parseUrl(import.meta.url), () => {
         hooks.before();
 
         expect(() => customExpect.assertions(0)).toThrow(
-            "expected assertions count should be more than 1"
+            "expected assertion count should be greater than 1"
         );
 
         const results = hooks.after();
@@ -236,7 +236,7 @@ describe(parseUrl(import.meta.url), () => {
         hooks.before();
 
         expect(() => customExpect(undefined).toInclude("3")).toThrow(
-            "expected received value to be of type string, any[] or object, got undefined"
+            "cannot execute matcher 'toInclude'"
         );
 
         const testResult = hooks.after();

@@ -13,6 +13,7 @@ import {
     INCLUDE_LEVEL,
     Markup,
     STORAGE,
+    T_NULL,
     batch,
     createReporting,
     destroy,
@@ -31,7 +32,7 @@ import {
 import { cleanupAnimations } from "../mock/animation";
 import { cleanupDate } from "../mock/date";
 import { internalRandom } from "../mock/math";
-import { cleanupNavigator } from "../mock/navigator";
+import { PLATFORM_TYPE, cleanupNavigator } from "../mock/navigator";
 import { cleanupNetwork, throttleNetwork } from "../mock/network";
 import {
     cleanupWindow,
@@ -61,57 +62,6 @@ import * as _window from "../mock/window";
 
 const { isPrevented, mockPreventDefault } = _window;
 
-/**
- * @typedef {{
- *  readonly config: (config: JobConfig) => CurrentConfigurators;
- *  readonly debug: () => CurrentConfigurators;
- *  readonly multi: (count: number) => CurrentConfigurators;
- *  readonly only: () => CurrentConfigurators;
- *  readonly skip: () => CurrentConfigurators;
- *  readonly tags: (...tags: string[]) => CurrentConfigurators;
- *  readonly timeout: (ms: number) => CurrentConfigurators;
- *  readonly todo: () => CurrentConfigurators;
- * }} CurrentConfigurators
- *
- * @typedef {{
- *  count: number;
- *  message: string;
- *  name: string;
- * }} GlobalIssueReport
- *
- * @typedef {import("./config").HootConfig} HootConfig
- *
- * @typedef {Suite | Test} Job
- *
- * @typedef {import("./job").JobConfig} JobConfig
- *
- * @typedef {{
- *  icon?: string;
- *  label: string;
- *  platform?: import("../mock/navigator").Platform;
- *  size?: [number, number];
- *  tags?: string[];
- *  touch?: boolean;
- * }} Preset
- *
- * @typedef {import("./config").SearchFilter} SearchFilter
- */
-
-/**
- * @template T
- * @typedef {(payload: T) => MaybePromise<any>} Callback
- */
-
-/**
- * @template {unknown[]} T
- * @typedef {import("../hoot_utils").DropFirst} DropFirst
- */
-
-/**
- * @template T
- * @typedef {T | PromiseLike<T>} MaybePromise
- */
-
 //-----------------------------------------------------------------------------
 // Global
 //-----------------------------------------------------------------------------
@@ -140,6 +90,61 @@ const {
 } = globalThis;
 /** @type {Performance["now"]} */
 const $now = performance.now.bind(performance);
+
+//-----------------------------------------------------------------------------
+// Types
+//-----------------------------------------------------------------------------
+
+/**
+ * @typedef {{
+ *  readonly config: (config: JobConfig) => CurrentConfigurators;
+ *  readonly debug: () => CurrentConfigurators;
+ *  readonly multi: (count: number) => CurrentConfigurators;
+ *  readonly only: () => CurrentConfigurators;
+ *  readonly skip: () => CurrentConfigurators;
+ *  readonly tags: (...tags: string[]) => CurrentConfigurators;
+ *  readonly timeout: (ms: number) => CurrentConfigurators;
+ *  readonly todo: () => CurrentConfigurators;
+ * }} CurrentConfigurators
+ *
+ * @typedef {{
+ *  count: number;
+ *  message: string;
+ *  name: string;
+ * }} GlobalIssueReport
+ *
+ * @typedef {import("./config").HootConfig} HootConfig
+ *
+ * @typedef {Suite | Test} Job
+ *
+ * @typedef {import("./job").JobConfig} JobConfig
+ *
+ * @typedef {import("./config").SearchFilter} SearchFilter
+ */
+
+/**
+ * @template T
+ * @typedef {(payload: T) => MaybePromise<any>} Callback
+ */
+
+/**
+ * @template {unknown[]} T
+ * @typedef {import("../hoot_utils").DropFirst} DropFirst
+ */
+
+/**
+ * @template T
+ * @typedef {T | PromiseLike<T>} MaybePromise
+ */
+
+const PRESET_TYPE = t.object({
+    "icon?": t.string(),
+    label: t.string(),
+    "platform?": PLATFORM_TYPE,
+    "size?": t.tuple([t.number(), t.number()]),
+    "tags?": t.array(t.string()),
+    "touch?": t.boolean(),
+});
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -278,8 +283,7 @@ export class Runner {
 
     // Properties
     aborted = false;
-    /** @type {import("@odoo/owl").Signal<Test | null>} */
-    currentTest = signal(null, { type: t.or([t.instanceOf(Test), t.literal(null)]) });
+    currentTest = signal(null, { type: t.or([t.instanceOf(Test), T_NULL]) });
     /** @type {boolean | Test | Suite} */
     debug = false;
     dry = false;
@@ -288,7 +292,7 @@ export class Runner {
     /** @type {ReturnType<typeof makeExpect>[1]} */
     expectHooks;
     /** List of IDs of tests that have failed (previously AND during this run) */
-    failedIds = signal.Set(new Set(storageGet(STORAGE.failed)), { type: t.string });
+    failedIds = signal.Set(new Set(storageGet(STORAGE.failed)), { type: t.string() });
     /** List of suites that will be run (only available after {@link Runner.start}) */
     filteredSuites = signal.Array([], { type: t.instanceOf(Suite) });
     /** List of tests that will be run (only available after {@link Runner.start}) */
@@ -318,8 +322,10 @@ export class Runner {
         id: {},
         tag: {},
     };
-    /** @type {import("@odoo/owl").Signal<Map<string, Preset>>} */
-    presets = signal.Map(new Map([["", { label: "No preset" }]]));
+    presets = signal.Map(new Map([["", { label: "No preset" }]]), {
+        keyType: t.string(),
+        valueType: PRESET_TYPE,
+    });
     reporting = createReporting();
     /** @type {Suite[]} */
     rootSuites = [];
@@ -839,7 +845,7 @@ export class Runner {
 
     /**
      * @param {string} key
-     * @param {Preset} preset
+     * @param {typeof PRESET_TYPE} preset
      */
     definePreset(key, preset) {
         this.presets().set(key, preset);

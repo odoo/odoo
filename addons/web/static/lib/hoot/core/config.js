@@ -5,12 +5,12 @@ import { deepEqual, DEFAULT_EVENT_TYPES, generateSeed } from "../hoot_utils";
 
 /**
  * @typedef {BaseConfigManager & {
- *  [Key in keyof HootConfig]: import("@odoo/owl").Signal<HootConfig[Key]>
+ *  [Key in keyof HootConfig]: import("@odoo/owl").ReactiveValue<HootConfig[Key]>
  * }} ConfigManager
  *
- * @typedef {typeof DEFAULT_CONFIG_AND_FILTERS} HootConfig
+ * @typedef {DEFAULT_CONFIG_AND_FILTERS} HootConfig
  *
- * @typedef {keyof typeof FILTER_SCHEMA} SearchFilter
+ * @typedef {keyof FILTER_SCHEMA} SearchFilter
  */
 
 //-----------------------------------------------------------------------------
@@ -51,7 +51,7 @@ function getSchemaKeys(schema) {
  * @returns {(valueIfEmpty: T) => (values: string[]) => T}
  */
 function makeParser(parse) {
-    return (valueIfEmpty) => (values) => values.length ? parse(values) : valueIfEmpty;
+    return (valueIfEmpty) => (values) => (values.length ? parse(values) : valueIfEmpty);
 }
 
 const parseBoolean = makeParser(([value]) => value === "true");
