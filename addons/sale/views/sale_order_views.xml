@@ -944,19 +944,9 @@
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"/>
                             </group>
                             <group name="sale_info" string="Invoicing">
-                                <field name="show_update_fpos" invisible="1"/>
                                 <label for="fiscal_position_id"/>
                                 <div class="o_row">
                                     <field name="fiscal_position_id" options="{'no_create': True}"/>
-                                    <button
-                                        string="Update Taxes"
-                                        name="action_update_taxes"
-                                        type="object"
-                                        help="Recompute all taxes based on this fiscal position"
-                                        class="btn-link mb-1 px-0"
-                                        icon="fa-refresh"
-                                        confirm="This will update all taxes based on the currently selected fiscal position."
-                                        invisible="not show_update_fpos or state in ['sale', 'cancel']"/>
                                 </div>
                                 <field name="preferred_payment_method_line_id"/>
                                 <field name="partner_invoice_id" groups="!account.group_delivery_invoice_address" invisible="1"/>

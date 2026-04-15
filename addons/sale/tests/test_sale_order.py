@@ -497,10 +497,10 @@ class TestSaleOrder(SaleCommon):
 
     def test_so_company_empty(self):
         """Check emptying company on SO form"""
-        self.env['res.company'].create({  # activate multi company for the form view
-            'name': 'Company 2'
+        self.env["res.company"].create({  # activate multi company for the form view
+            "name": "Company 2"
         })
-        so_form = Form(self.env['sale.order'])
+        so_form = Form(self.env["sale.order"])
         with self.assertRaises(ValidationError):
             so_form.company_id = self.env["res.company"]
 
@@ -1154,7 +1154,7 @@ class TestSalesTeam(SaleCommon):
             sale_order.order_line,
         )
 
-    def test_action_recompute_taxes(self):
+    def test_recompute_taxes(self):
         """Test the action that can be triggered after a fiscal position change."""
         special_tax = self.env["account.tax"].create({
             "name": "special_tax_10",
@@ -1208,15 +1208,45 @@ class TestSalesTeam(SaleCommon):
         self.assertEqual(order.amount_total, 300)
         self.assertEqual(order.amount_tax, 100)
         order.fiscal_position_id = mapping_a
-        order._recompute_prices()
-        order.action_update_taxes()
+        order._recompute_taxes()
         self.assertEqual(order.amount_total, 270)
         self.assertEqual(order.amount_tax, 70)
         order.fiscal_position_id = mapping_b
-        order._recompute_prices()
-        order.action_update_taxes()
+        order._recompute_taxes()
         self.assertEqual(order.amount_total, 252)
         self.assertEqual(order.amount_tax, 52)
+
+        # Test `_onchange_fpos_id_recompute_taxes`
+
+        (partner_no_fpos, partner_fpos_a_1, partner_fpos_a_2) = self.env["res.partner"].create([
+            {"name": "Partner No FPOS"},
+            {"name": "Partner 1 FPOS A", "property_account_position_id": mapping_a.id},
+            {"name": "Partner 2 FPOS A", "property_account_position_id": mapping_a.id},
+        ])
+
+        with Form(self.env["sale.order"]) as order_form:
+            order_form.partner_id = partner_no_fpos
+            with order_form.order_line.new() as line_form:
+                line_form.product_id = self.product
+                line_form.product_uom_qty = 1.0
+        form_order = order_form.save()
+        self.assertEqual(form_order.amount_total, 300)
+        self.assertEqual(form_order.amount_tax, 100)
+
+        # Setting a partner with a different fpos should recompute taxes.
+        order_form.partner_id = partner_fpos_a_1
+        form_order = order_form.save()
+        self.assertEqual(form_order.amount_total, 270)
+        self.assertEqual(form_order.amount_tax, 70)
+        self.assertEqual(form_order.fiscal_position_id, mapping_a)
+
+        # Setting a partner with the same fpos shouldn't recompute taxes.
+        with patch(
+            'odoo.addons.sale.models.sale_order_line.SaleOrderLine._compute_tax_ids'
+        ) as patched:
+            order_form.partner_id = partner_fpos_a_2
+            form_order = order_form.save()
+            patched.assert_not_called()
 
 
 @tagged("post_install", "-at_install")

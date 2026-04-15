@@ -462,9 +462,6 @@ class SaleOrder(models.Model):
 
     # Remaining ux fields (not computed, not stored)
 
-    show_update_fpos = fields.Boolean(
-        string="Has Fiscal Position Changed", store=False
-    )  # True if the fiscal position was changed
     has_active_pricelist = fields.Boolean(compute="_compute_has_active_pricelist")
     show_update_pricelist = fields.Boolean(
         string="Has Pricelist Changed", store=False
@@ -579,7 +576,6 @@ class SaleOrder(models.Model):
             if not order.partner_id:
                 order.fiscal_position_id = False
                 continue
-            fpos_id_before = order.fiscal_position_id.id
             key = (order.company_id.id, order.partner_id.id, order.partner_shipping_id.id)
             if key not in cache:
                 cache[key] = (
@@ -589,8 +585,6 @@ class SaleOrder(models.Model):
                     ._get_fiscal_position(order.partner_id, order.partner_shipping_id)
                     .id
                 )
-            if fpos_id_before != cache[key] and order.order_line:
-                order.show_update_fpos = True
             order.fiscal_position_id = cache[key]
 
     @api.depends("partner_id")
@@ -1265,15 +1259,9 @@ class SaleOrder(models.Model):
                 )
 
     @api.onchange("fiscal_position_id")
-    def _onchange_fpos_id_show_update_fpos(self):
-        if self.order_line and (
-            not self.fiscal_position_id
-            or (
-                self.fiscal_position_id
-                and self._origin.fiscal_position_id != self.fiscal_position_id
-            )
-        ):
-            self.show_update_fpos = True
+    def _onchange_fpos_id_recompute_taxes(self):
+        if self.order_line:
+            self._recompute_taxes()
 
     @api.onchange("pricelist_id")
     def _onchange_pricelist_id_show_update_prices(self):
@@ -1725,24 +1713,10 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return {"type": "ir.actions.act_url", "target": "new", "url": self.get_portal_url()}
 
-    def action_update_taxes(self):
-        self.ensure_one()
-
-        self._recompute_taxes()
-
-        if self.partner_id:
-            self.message_post(
-                body=self.env._(
-                    "Product taxes have been recomputed according to fiscal position %s.",
-                    self.fiscal_position_id._get_html_link() if self.fiscal_position_id else "",
-                )
-            )
-
     def _recompute_taxes(self):
         lines_to_recompute = self.order_line.filtered(lambda line: not line.display_type)
 
         lines_to_recompute.with_context(recompute_unit_price_on_tax_change=True)._compute_tax_ids()
-        self.show_update_fpos = False
 
     def action_update_prices(self):
         self.ensure_one()
