@@ -79,6 +79,11 @@ export class SelfOrder extends Reactive {
         this.availableCategories = [];
         this.snoozedProductTracker = new SnoozedProductTracker();
 
+        this.env.utils = {
+            roundCurrency: (amount) => this.currency.round(amount),
+            formatCurrency: (amount) => this.formatMonetary(amount),
+        };
+
         this.initData();
         if (this.config.self_ordering_mode === "kiosk") {
             await this.initKioskData();

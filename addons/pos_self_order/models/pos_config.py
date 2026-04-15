@@ -221,7 +221,7 @@ class PosConfig(models.Model):
 
     @api.constrains("payment_method_ids", "self_ordering_mode")
     def _onchange_payment_method_ids(self):
-        if any(record.self_ordering_mode == 'kiosk' and any(pm.is_cash_count for pm in record.payment_method_ids) for record in self):
+        if any(record.self_ordering_mode == 'kiosk' and any(pm.is_cash_count and not pm.payment_provider for pm in record.payment_method_ids) for record in self):
             raise ValidationError(_("You cannot add cash payment methods in kiosk mode."))
 
     def _get_qr_code_data(self):

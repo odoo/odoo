@@ -70,6 +70,13 @@ export class PaymentPage extends Component {
                 const newPaymentLine = result.data;
                 try {
                     const paymentSuccessful = await newPaymentLine.pay();
+                    if (
+                        this.selectedPaymentMethod.payment_method_type === "cash_machine" &&
+                        newPaymentLine.amount > this.selfOrder.currentOrder.totalDue
+                    ) {
+                        // This fixes payments from cash machines which give change
+                        newPaymentLine.setAmount(this.selfOrder.currentOrder.totalDue);
+                    }
                     if (!paymentSuccessful) {
                         if (newPaymentLine.useQr && newPaymentLine.qr_code) {
                             this.state.fadeOut = true;

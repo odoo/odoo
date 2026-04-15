@@ -31,6 +31,12 @@
                                 <img class="w-100" t-att-src="state.qrCode" />
                             </div>
                         </t>
+                        <t name="cash_machine" t-elif="this.state.paymentMethodType === 'cash_machine'">
+                            <h1 class="text-center">Follow instructions on the cash machine</h1>
+                            <div class="btn btn-light btn-lg w-100 py-5 border border-light shadow-sm">
+                                Remaining: <t t-out="this.selfOrder.formatMonetary(this.selfOrder.currentOrder.totalDue - this.selectedPaymentMethod.payment_interface.amountInserted)" />
+                            </div>
+                        </t>
                         <t t-else="">
                             <h1 class="text-center">Processing your payment...</h1>
                             <div class="btn btn-light btn-lg w-100 py-5 border border-light shadow-sm">

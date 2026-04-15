@@ -11,12 +11,19 @@ definePosSelfModels();
 class MockPaymentInterface extends PaymentInterface {
     setup() {
         this.hasBeenCalled = false;
+        this.amountPaid = 0;
+        this.amountChange = 0;
     }
     sendPaymentRequest(line) {
         this.hasBeenCalled = true;
         if (line.useQr) {
             line.qr_code = "mock_qr_code";
             return false;
+        }
+        if (line.payment_method_id.payment_method_type === "cash_machine") {
+            // Simulate cash payment with change returned
+            this.amountPaid = line.amount;
+            line.setAmount(line.amount + this.amountChange);
         }
         return true;
     }
@@ -64,6 +71,12 @@ const setupPaymentPage = async () => {
     });
     paymentExternalQrWithError.payment_interface = new MockPaymentInterfaceWithError();
 
+    const paymentCashMachine = store.models["pos.payment.method"].create({
+        payment_provider: "mock_cash_machine",
+        payment_method_type: "cash_machine",
+    });
+    paymentCashMachine.payment_interface = new MockPaymentInterface();
+
     await getFilledSelfOrder(store);
     const paymentPage = await mountWithCleanup(PaymentPage, {});
 
@@ -75,6 +88,7 @@ const setupPaymentPage = async () => {
         paymentTerminalWithError,
         paymentExternalQr,
         paymentExternalQrWithError,
+        paymentCashMachine,
     };
 };
 
@@ -156,5 +170,33 @@ describe("startPayment", () => {
 
         expect(paymentExternalQrWithError.payment_interface.hasBeenCalled).toBe(true);
         expect(store.paymentError).toBe(true);
+    });
+
+    test("succeeds if the cash machine payment interface succeeds", async () => {
+        const { paymentPage, store, paymentCashMachine } = await setupPaymentPage();
+        paymentPage.state.paymentMethodId = paymentCashMachine.id;
+
+        onRpc("/kiosk/payment/1/kiosk", () => true);
+        await paymentPage.startPayment();
+
+        expect(paymentCashMachine.payment_interface.hasBeenCalled).toBe(true);
+        expect(store.paymentError).toBe(false);
+    });
+
+    test("sets the cash machine payment amount to the order price if change is given", async () => {
+        const { paymentPage, store, paymentCashMachine } = await setupPaymentPage();
+        paymentPage.state.paymentMethodId = paymentCashMachine.id;
+        paymentCashMachine.payment_interface.amountChange = 5;
+
+        onRpc("/kiosk/payment/1/kiosk", async (request) => {
+            const requestBody = await request.json();
+            const amountPaid = requestBody.params.order.payment_ids[0][2].amount;
+            expect(amountPaid).toBe(paymentCashMachine.payment_interface.amountPaid);
+            return true;
+        });
+        await paymentPage.startPayment();
+
+        expect(paymentCashMachine.payment_interface.hasBeenCalled).toBe(true);
+        expect(store.paymentError).toBe(false);
     });
 });
