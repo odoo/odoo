@@ -688,11 +688,15 @@ class Website(models.CachedModel):
         """Build homepage preview content using a theme configurator snippets."""
         website = self.get_current_website()
         if not theme_name:
+            if request:
+                request.session['configurator_generated_homepage_content'] = {}
             return ''
 
         Module = request.env['ir.module.module']
         theme = Module.search(Domain.AND([Module.get_themes_domain(), [('name', '=', theme_name)]]), limit=1)
         if not theme:
+            if request:
+                request.session['configurator_generated_homepage_content'] = {}
             return ''
 
         if install_theme and website.theme_id != theme:
@@ -700,6 +704,8 @@ class Website(models.CachedModel):
 
         snippet_list = website.get_theme_configurator_snippets(theme_name).get('homepage', [])
         if not snippet_list:
+            if request:
+                request.session['configurator_generated_homepage_content'] = {}
             return '<div class="oe_structure"></div>'
 
         cta_data = website.get_cta_data(None, None)
@@ -717,7 +723,8 @@ class Website(models.CachedModel):
             html_text_processor, snippet_generated_content, snippet_translated_content = html_text_processor._get_snippet_content(snippet_key)
             generated_content.update(snippet_generated_content)
             translated_content.update(snippet_translated_content)
-        
+        homepage_placeholder_keys = set(generated_content)
+
         footer_ids = [
             'website.template_footer_contact', 'website.template_footer_headline',
             'website.footer_custom', 'website.template_footer_links',
@@ -872,6 +879,15 @@ class Website(models.CachedModel):
                 shaped_url = f'{shaped_url}?{shape_query}&{image_query}' if shape_query else f'{shaped_url}?{image_query}'
                 final_html = final_html.replace(shape_src, shaped_url)
 
+        generated_homepage_content = {}
+        if generate_content:
+            generated_homepage_content = {
+                placeholder: value
+                for placeholder, value in generated_content.items()
+                if placeholder in homepage_placeholder_keys and value
+            }
+        if request:
+            request.session['configurator_generated_homepage_content'] = generated_homepage_content
         return final_html
 
     def configurator_generate_AI_content(
@@ -1110,36 +1126,17 @@ class Website(models.CachedModel):
             text_generation_target_lang=text_generation_target_lang,
             text_must_be_translated_for_openai=text_must_be_translated_for_openai,
         )
-        generated_content = {}
-        translated_content = {}
-        for snippet in homepage_snippets:
-            snippet_key = website._get_snippet_view_key(snippet, 'homepage')
-            html_text_processor, snippet_generated_content, snippet_translated_content = html_text_processor._get_snippet_content(snippet_key)
-            generated_content.update(snippet_generated_content)
-            translated_content.update(snippet_translated_content)
-
-        # Extract placeholders from footers
-        for footer_id in footer_ids:
-            view_id = self.env['website'].viewref(footer_id, raise_if_not_found=False)
-            if view_id and view_id.arch_db:
-                html_text_processor, placeholders = html_text_processor._process_snippet(view_id.arch_db, view_id.arch_db)
-                for placeholder in placeholders:
-                    generated_content[placeholder] = ''
-
-        generated_content = self.configurator_generate_AI_content(
-            website,
-            generated_content,
-            translated_content,
-            html_text_processor,
-            industry,
-        )
         page_view_id = self.with_context(website_id=website.id).viewref('website.homepage')
         rendered_snippets = []
         nb_snippets = len(homepage_snippets)
+        generated_homepage_content = request and request.session.pop(
+            'configurator_generated_homepage_content',
+            {}
+        ) or {}
         for i, snippet in enumerate(homepage_snippets, start=1):
             try:
                 snippet_key = website._get_snippet_view_key(snippet, 'homepage')
-                el = html_text_processor._update_snippet_content(generated_content, snippet_key)
+                el = html_text_processor._update_snippet_content(generated_homepage_content, snippet_key)
 
                 # Add the data-snippet attribute to identify the snippet
                 # for compatibility code
@@ -1193,7 +1190,7 @@ class Website(models.CachedModel):
             # view
             view_to_update = current_website_footer_view or generic_view
             if generic_view and view_to_update:
-                el = html_text_processor._update_snippet_content(generated_content, key, view_to_update.arch_db)
+                el = html_text_processor._update_snippet_content(generated_homepage_content, key, view_to_update.arch_db)
                 updated_view = etree.tostring(el, encoding='unicode')
                 generic_view.with_context(website_id=website.id).write({'arch_db': updated_view})
 
