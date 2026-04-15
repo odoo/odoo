@@ -1,14 +1,18 @@
 // Mixins
 // ============================================================================
-@mixin o-wsale-card-btn-design-subtle($-bg-color, $-text) {
-    @include button-variant(
-        $background: $-bg-color,
-        $border: opaque($-bg-color, rgba($-text, 0.15)),
-        $hover-background: rgba($-bg-color, 0.8),
-        $hover-border: rgba($-text, 0.8),
-    );
-    --btn-bg: #{rgba($-bg-color, 0.5)};
+@mixin o-wsale-card-btn-design-subtle() {
+    --btn-bg: var(--o-wsale-card-cc-bg);
+    --btn-border-color: var(--o-wsale-card-cc-border);
+    --btn-color: var(--o-wsale-card-cc-text);
+    --btn-hover-bg: var(--o-wsale-card-cc-bg);
+    --btn-hover-border-color: var(--o-wsale-card-cc-text);
+    --btn-hover-color: var(--o-wsale-card-cc-text);
+    opacity: 0.8;
     backdrop-filter: blur(var(--o-wsale-card-btn-subtle-blur, 3px));
+
+    &:hover {
+        opacity: 1;
+    }
 }
 
 
@@ -386,7 +390,9 @@
             $top: var(--o-wsale-wishlist-card-offset-top, var(--o-wsale-wishlist-btn-offset-top-default)),
             $right: var(--o-wsale-wishlist-card-offset-x, var(--o-wsale-wishlist-btn-offset-end-default))
         );
-        @include o-wsale-card-btn-design-subtle($body-bg, $body-color);
+        @include o-wsale-card-btn-design-subtle();
+        --o-wsale-card-cc-bg: #{$body-bg};
+        --o-wsale-card-cc-text: #{$body-color};
 
         aspect-ratio: 1;
     }
@@ -1760,60 +1766,50 @@ $_wsale_products_roundness_map: (
 // ==== Colors Preset and Default Colors
 
 @for $index from 1 through length($o-color-combinations) {
-    // Retrieve initial values form the map
-    $-bg: map-get($colors, 'o-cc#{$index}-bg');
-    $-text: map-get($colors, 'o-cc#{$index}-text');
-    $-headings: map-get($colors, 'o-cc#{$index}-headings');
-    $-link: map-get($colors, 'o-cc#{$index}-link');
-
-    $-btn-primary: map-get($colors, 'o-cc#{$index}-btn-primary');
-    $-btn-primary-border: map-get($colors, 'o-cc#{$index}-btn-primary-border');
-    $-btn-secondary: map-get($colors, 'o-cc#{$index}-btn-secondary');
-    $-btn-secondary-border: map-get($colors, 'o-cc#{$index}-btn-secondary-border');
-
-    // Verify and fine-tune retrieved colors
-    $-bg-color: o-color($-bg) or $body-bg;
-    $-text: o-color($-text) or color-contrast($-bg-color);
-    $-headings: o-color($-headings) or $headings-color;
-    $-link-color: if($-link, o-color($-link), map-get($theme-colors, 'primary'));
-    $-muted: opaque($-bg-color, rgba($-text, 0.7));
-
-    $-btn-primary-color: if($-btn-primary, o-color($-btn-primary), map-get($theme-colors, 'primary'));
-    $-btn-primary-border-color: if($-btn-primary-border, o-color($-btn-primary-border), $-btn-primary-color);
-    $-btn-secondary-color: if($-btn-secondary, o-color($-btn-secondary), map-get($theme-colors, 'secondary'));
-    $-btn-secondary-border-color: if($-btn-secondary-border, o-color($-btn-secondary-border), $-btn-secondary-color);
 
     .o_wsale_products_opt_cc#{$index} {
-        --o-wsale-card-cc-bg: #{$-bg-color};
-        --o-wsale-card-cc-bg-rgb: #{to-rgb($-bg-color)};
-        --o-wsale-card-cc-text: #{$-text};
-        --o-wsale-card-cc-text-rgb: #{to-rgb($-text)};
-        --o-wsale-card-cc-muted: #{$-muted};
-        --o-wsale-card-cc-headings: #{$-headings};
-        --o-wsale-card-cc-link: #{$-link-color};
+        // Apply color combination styles directly to this custom selector
+        @include o-cc-emit-styles($index);
+        // Strip the bg the o_cc{x} rule sets on the wrapper itself
+        background-color: transparent !important;
+        color: inherit !important;
+    }
 
-        --o-wsale-card-bg: var(--o-wsale-card-cc-bg);
+    .o_wsale_products_opt_cc#{$index} {
+        --o-wsale-card-cc-bg: var(--o-cc-bg);
+        --o-wsale-card-cc-bg-rgb: var(--o-cc-bg-rgb);
+        --o-wsale-card-cc-border: var(--o-cc-border);
+        --o-wsale-card-cc-text: var(--o-cc-text);
+        --o-wsale-card-cc-text-rgb: var(--o-cc-text-rgb);
+        --o-wsale-card-cc-muted: var(--o-cc-muted);
+        --o-wsale-card-cc-headings: var(--o-cc-headings);
+        --o-wsale-card-cc-link: var(--o-cc-link);
+
+        .oe_product_cart {
+            background-color: var(--o-cc-bg);
+            color: var(--o-cc-text);
+        }
 
         &:where(.o_wsale_products_opt_actions_subtle) {
             .o_wsale_product_btn .btn {
-                @include o-wsale-card-btn-design-subtle($-bg-color, $-text);
+                @include o-wsale-card-btn-design-subtle();
             }
         }
 
         &:where(.o_wsale_products_opt_actions_promote) {
             .o_wsale_product_btn .btn:where(:not(.o_wsale_product_btn_primary)) {
-                @include o-wsale-card-btn-design-subtle($-bg-color, $-text);
+                @include o-wsale-card-btn-design-subtle();
             }
         }
 
         &:where(.o_wsale_products_opt_actions_promote), &:where(.o_wsale_products_opt_actions_theme) {
             .o_wsale_product_btn .o_wsale_product_btn_primary {
-                @include button-variant($-btn-primary-color, $-btn-primary-border-color);
+                @include o-cc-make-btn-primary();
             }
         }
         &:where(.o_wsale_products_opt_actions_theme) {
             .o_wsale_product_btn .btn:where(:not(.o_wsale_product_btn_primary)) {
-                @include button-variant($-btn-secondary-color, $-btn-secondary-border-color);
+                @include o-cc-make-btn-secondary();
             }
         }
     }
@@ -1825,12 +1821,12 @@ $_wsale_products_roundness_map: (
     &:not(.o_wsale_products_opt_cc) {
         &:where(.o_wsale_products_opt_actions_subtle) {
             .o_wsale_product_btn .btn {
-                @include o-wsale-card-btn-design-subtle($body-bg, $body-color);
+                @include o-wsale-card-btn-design-subtle();
             }
         }
         &:where(.o_wsale_products_opt_actions_promote) {
             .o_wsale_product_btn .btn:where(:not(.o_wsale_product_btn_primary)) {
-                @include o-wsale-card-btn-design-subtle($body-bg, $body-color);
+                @include o-wsale-card-btn-design-subtle();
             }
         }
         &:where(.o_wsale_products_opt_actions_theme) {
