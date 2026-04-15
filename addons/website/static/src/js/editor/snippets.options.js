@@ -11,6 +11,7 @@ import weUtils from "@web_editor/js/common/utils";
 import options from "@web_editor/js/editor/snippets.options";
 import { NavbarLinkPopoverWidget } from "@website/js/widgets/link_popover_widget";
 import wUtils from "@website/js/utils";
+import { PlacesAutoComplete } from "@website/components/googleplaces_autocomplete/places_autocomplete";
 import {
     applyModifications,
     isImageSupportedForStyle,
@@ -710,22 +711,29 @@ const GPSPicker = InputUserValueWidget.extend({
             return;
         }
 
-        this._gmapAutocomplete = new this.contentWindow.google.maps.places.Autocomplete(this.inputEl, {types: ['geocode']});
-        this.contentWindow.google.maps.event.addListener(this._gmapAutocomplete, 'place_changed', this._onPlaceChanged.bind(this));
+        this._unmountAutocompleteWithGPS = wUtils.mountAutocompleteComponent(PlacesAutoComplete, {
+            targetDropdown: this.inputEl,
+            maps: this.contentWindow.google.maps,
+            onPlaceSelected: this.onPlaceSelected.bind(this),
+            onError: this._notifyGMapError.bind(this),
+        });
     },
     /**
      * @override
      */
     destroy() {
         this._super(...arguments);
+        this._unmountAutocompleteWithGPS?.();
 
         // Without this, the google library injects elements inside the backend
         // DOM but do not remove them once the editor is left. Notice that
         // this is also done when the widget is destroyed for another reason
         // than leaving the editor, but if the google API needs that container
         // again afterwards, it will simply recreate it.
-        for (const el of document.body.querySelectorAll('.pac-container')) {
-            el.remove();
+        if (this.__gmapAutocomplete) {
+            for (const el of document.body.querySelectorAll('.pac-container')) {
+                el.remove();
+            }
         }
     },
 
@@ -846,6 +854,24 @@ const GPSPicker = InputUserValueWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @param {Object} place Place object from Google Maps API
+     */
+    onPlaceSelected(place) {
+        if (place && place.geometry) {
+            this._gmapPlace = place;
+            const latLng = this._gmapPlace.geometry.location;
+            const oldValue = this._value;
+            this._value = `(${latLng.lat},${latLng.lng})`;
+            this._gmapCacheGPSToPlace[this._value] = place;
+            if (oldValue !== this._value) {
+                this._onUserValueChange();
+            }
+        }
+    },
+    /**
+     * @deprecated the GPS picker now relies on the `PlacesAutoComplete`
+     * component, which calls `onPlaceSelected` instead.
+     *
      * @private
      * @param {Event} ev
      */
@@ -861,6 +887,24 @@ const GPSPicker = InputUserValueWidget.extend({
                 this._onUserValueChange(ev);
             }
         }
+    },
+});
+
+Object.defineProperty(GPSPicker.prototype, '_gmapAutocomplete', {
+    configurable: true,
+    /**
+     * @deprecated `google.maps.places.Autocomplete` is deprecated, the GPS
+     * picker now uses `PlacesAutoComplete`.
+     */
+    get() {
+        if (!this.__gmapAutocomplete) {
+            this.__gmapAutocomplete = new this.contentWindow.google.maps.places.Autocomplete(this.inputEl, {types: ['geocode']});
+        }
+        console.warn("google.maps.places.Autocomplete is deprecated, you should update your code");
+        return this.__gmapAutocomplete;
+    },
+    set(value) {
+        this.__gmapAutocomplete = value;
     },
 });
 options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
