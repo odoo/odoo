@@ -224,7 +224,8 @@ export class RelationalModel extends Model {
             throw e;
         }
         this.couldNotLoadRootOffline = false;
-        this.root = this._createRoot(config, data);
+        // toRaw to prevent effect
+        toRaw(this).root = this._createRoot(config, data);
         resolve({ root: this.root, loadId: config.loadId });
         this.config = config;
         await this.hooks.onRootLoaded(this.root);
