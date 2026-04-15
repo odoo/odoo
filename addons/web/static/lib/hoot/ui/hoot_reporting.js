@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, computed, plugin, signal, useEffect, xml } from "@odoo/owl";
+import { Component, computed, plugin, signal, types as t, useEffect, xml } from "@odoo/owl";
 import { Test } from "../core/test";
 import { formatTime, parseQuery } from "../hoot_utils";
 import { HootJobButtons } from "./hoot_job_buttons";
@@ -248,8 +248,7 @@ export class HootReporting extends Component {
     ui = plugin(UiPlugin);
 
     // Reactive values
-    /** @type {import("@odoo/owl").Signal<Set<string>>} */
-    openTests = signal.Set(new Set());
+    openTests = signal.Set(new Set(), { type: t.string() });
     filteredResults = computed(() => this.computeFilteredResults());
 
     // Other members

@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { computed, Plugin, signal, types as t } from "@odoo/owl";
+import { T_NULL } from "../hoot_utils";
 
 export class UiPlugin extends Plugin {
     /** @private */
@@ -8,11 +9,11 @@ export class UiPlugin extends Plugin {
         type: t.selection(["failed", "passed", "skipped", "todo", null]),
     });
 
-    resultsPage = signal(0, { type: t.number });
-    resultsPerPage = signal(40, { type: t.number });
-    selectedSuiteId = signal(null, { type: t.or([t.string, t.literal(null)]) });
+    resultsPage = signal(0, { type: t.number() });
+    resultsPerPage = signal(40, { type: t.number() });
+    selectedSuiteId = signal(null, { type: t.or([t.string(), T_NULL]) });
     sortResults = signal(false, { type: t.selection(["asc", "desc", false]) });
-    totalResults = signal(0, { type: t.number });
+    totalResults = signal(0, { type: t.number() });
 
     statusFilter = computed(this._statusFilter, {
         set: (status) => {

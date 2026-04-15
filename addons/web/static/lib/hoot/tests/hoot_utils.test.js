@@ -101,20 +101,20 @@ describe(parseUrl(import.meta.url), () => {
 
         for (const [a, b] of TRUTHY_CASES) {
             expect(deepEqual(a, b)).toBe(true, {
-                message: [a, `==`, b],
+                message: formatHumanReadable([a, `==`, b]),
             });
         }
         for (const [a, b] of FALSY_CASES) {
             expect(deepEqual(a, b)).toBe(false, {
-                message: [a, `!=`, b],
+                message: formatHumanReadable([a, `!=`, b]),
             });
         }
         for (const [a, b] of TRUTHY_IF_UNORDERED_CASES) {
             expect(deepEqual(a, b)).toBe(false, {
-                message: [a, `!=`, b],
+                message: formatHumanReadable([a, `!=`, b]),
             });
             expect(deepEqual(a, b, { ignoreOrder: true })).toBe(true, {
-                message: [a, `==`, b, `(unordered))`],
+                message: formatHumanReadable([a, `==`, b, `(unordered))`]),
             });
         }
     });

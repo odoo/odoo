@@ -3,7 +3,7 @@
 import { Component, computed, props, signal, types as t, useEffect, xml } from "@odoo/owl";
 import { Test } from "../core/test";
 import { refresh } from "../core/url";
-import { elSignal, formatTime, throttle } from "../hoot_utils";
+import { formatTime, throttle } from "../hoot_utils";
 import { HootConfigMenu } from "./hoot_config_menu";
 import { HootTestPath } from "./hoot_test_path";
 import { HootTestResult } from "./hoot_test_result";
@@ -21,9 +21,9 @@ const removeWindowListener = window.removeEventListener.bind(window);
 const { addEventListener, removeEventListener } = HTMLElement.prototype;
 
 /**
- * @param {import("@odoo/owl").Signal<HTMLElement | null>} containerRef
- * @param {import("@odoo/owl").Signal<HTMLElement | null>} handleRef
- * @param {import("@odoo/owl").Signal<boolean>} isOpen
+ * @param {ReturnType<typeof t.ref>} containerRef
+ * @param {ReturnType<typeof t.ref>} handleRef
+ * @param {import("@odoo/owl").ReactiveValue<boolean>} isOpen
  */
 function useMovable(containerRef, handleRef, isOpen) {
     /**
@@ -232,8 +232,8 @@ export class HootDebugToolBar extends Component {
     runner = getRunnerPlugin();
 
     // Reactive values
-    isConfigOpen = signal(false, { type: t.boolean });
-    isOpen = signal(false, { type: t.boolean });
+    isConfigOpen = signal(false, { type: t.boolean() });
+    isOpen = signal(false, { type: t.boolean() });
     info = computed(() => {
         const [status, className] = this.getStatus();
         const [assertPassed, assertFailed] = this.groupAssertions(
@@ -246,8 +246,8 @@ export class HootDebugToolBar extends Component {
             failed: assertFailed,
         };
     });
-    rootRef = elSignal(null);
-    handleRef = elSignal(null);
+    rootRef = signal(null, { type: t.ref(HTMLDivElement) });
+    handleRef = signal(null, { type: t.ref(HTMLElement) });
 
     // Other members
     formatTime = formatTime;

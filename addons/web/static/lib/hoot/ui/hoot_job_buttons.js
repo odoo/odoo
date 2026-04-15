@@ -40,7 +40,7 @@ export class HootJobButtons extends Component {
 
     // Props & plugins
     props = props({
-        "hidden?": t.boolean,
+        "hidden?": t.boolean(),
         job: t.instanceOf(Job),
     });
 

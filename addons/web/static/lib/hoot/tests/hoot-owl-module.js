@@ -1,5 +1,4 @@
 const _owl = window.owl;
-delete window.owl;
 
 export const App = _owl.App;
 export const Component = _owl.Component;
@@ -16,6 +15,7 @@ export const computed = _owl.computed;
 export const config = _owl.config;
 export const effect = _owl.effect;
 export const htmlEscape = _owl.htmlEscape;
+export const immediateEffect = _owl.immediateEffect;
 export const markRaw = _owl.markRaw;
 export const markup = _owl.markup;
 export const mount = _owl.mount;
