@@ -8,6 +8,7 @@ export class Toolbar extends Component {
         class: { type: String, optional: true },
         getSelection: Function,
         focusEditable: Function,
+        overlay: Object,
         state: {
             type: Object,
             shape: {
@@ -68,6 +69,7 @@ export const toolbarButtonProps = {
     title: [String, Function],
     getSelection: Function,
     isDisabled: Boolean,
+    overlay: Object,
 };
 
 /** @typedef {import("@html_editor/core/user_command_plugin").UserCommand} UserCommand */

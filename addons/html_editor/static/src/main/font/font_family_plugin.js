@@ -31,7 +31,7 @@ export const fontFamilyItems = [
 
 export class FontFamilyPlugin extends Plugin {
     static id = "fontFamily";
-    static dependencies = ["split", "selection", "dom", "format"];
+    static dependencies = ["split", "selection", "dom", "format", "history"];
     fontFamily = reactive({ displayName: defaultFontFamily.nameShort });
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -51,6 +51,9 @@ export class FontFamilyPlugin extends Plugin {
                         });
                         this.fontFamily.displayName = item.nameShort;
                     },
+                    applyFontFamilyResetPreview: this.applyFontFamilyResetPreview.bind(this),
+                    applyFontFamliyPreview: this.applyFontFamliyPreview.bind(this),
+                    applyFontFamilyCommit: this.applyFontFamilyCommit.bind(this),
                 },
                 isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
                 isAvailable: (selection) =>
@@ -62,6 +65,12 @@ export class FontFamilyPlugin extends Plugin {
         on_undone_handlers: this.updateCurrentFontFamily.bind(this),
         on_redone_handlers: this.updateCurrentFontFamily.bind(this),
     };
+
+    setup() {
+        this.previewableApplyFontFamily = this.dependencies.history.makePreviewableOperation(
+            (item, onSelected) => onSelected(item)
+        );
+    }
 
     updateCurrentFontFamily(ev) {
         const selelectionData = this.dependencies.selection.getSelectionData();
@@ -75,5 +84,17 @@ export class FontFamilyPlugin extends Plugin {
             fontFamilyItems.find((item) => item.fontFamily === anchorElementFontFamily);
 
         this.fontFamily.displayName = (currentFontItem || defaultFontFamily).nameShort;
+    }
+
+    applyFontFamilyCommit(item, onSelected) {
+        this.previewableApplyFontFamily.commit(item, onSelected);
+    }
+
+    applyFontFamliyPreview(item, onSelected) {
+        this.previewableApplyFontFamily.preview(item, onSelected);
+    }
+
+    applyFontFamilyResetPreview() {
+        this.previewableApplyFontFamily.revert();
     }
 }

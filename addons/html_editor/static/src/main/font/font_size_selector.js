@@ -19,9 +19,13 @@ export class FontSizeSelector extends Component {
         getDisplay: Function,
         onFontSizeInput: Function,
         onSelected: Function,
+        applyFontSizeResetPreview: Function,
+        applyFontSizePreview: Function,
+        applyFontSizeCommit: Function,
         onBlur: { type: Function, optional: true },
         document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
         ...toolbarButtonProps,
+        overlay: { type: Object, optional: true },
     };
     static components = { Dropdown, DropdownItem };
 
@@ -154,6 +158,23 @@ export class FontSizeSelector extends Component {
     }
 
     onSelected(item) {
-        this.props.onSelected(item);
+        this.props.overlay.bus.trigger("previewChange", {
+            isPreviewActive: false,
+        });
+        this.props.applyFontSizeCommit(item, this.props.onSelected);
+    }
+
+    onItemHover(item) {
+        this.props.overlay.bus.trigger("previewChange", {
+            isPreviewActive: true,
+        });
+        this.props.applyFontSizePreview(item, this.props.onSelected);
+    }
+
+    onItemHoverOut(item) {
+        this.props.overlay.bus.trigger("previewChange", {
+            isPreviewActive: false,
+        });
+        this.props.applyFontSizeResetPreview(item);
     }
 }

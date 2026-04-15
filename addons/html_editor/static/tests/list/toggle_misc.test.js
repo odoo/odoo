@@ -1,8 +1,9 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame, click, describe, expect, hover, test, waitFor } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { toggleOrderedList, toggleUnorderedList, toggleCheckList } from "../_helpers/user_actions";
 import { expandToolbar } from "../_helpers/toolbar";
+import { getContent } from "../_helpers/selection";
 
 describe("Mixed", () => {
     test("should turn an ordered list into an unordered list (1)", async () => {
@@ -422,4 +423,57 @@ test("should have list tool only if the block is content editable", async () => 
         await expandToolbar();
         expect(".btn[name='list_selector']").toHaveCount(count);
     }
+});
+
+describe("List type preview", () => {
+    test.tags("desktop");
+    test("should preview list types on hover when no list is applied", async () => {
+        const { el } = await setupEditor("<p>a[bc]d</p>");
+        await expandToolbar();
+        await waitFor(".btn[name='list_selector']");
+        await click(".btn[name='list_selector']");
+        await waitFor(".o-we-toolbar-dropdown button[name='bulleted_list']");
+        await hover(".o-we-toolbar-dropdown button[name='bulleted_list']");
+        await animationFrame();
+        expect(getContent(el)).toBe(`<ul><li>a[bc]d</li></ul>`);
+        await hover(".o-we-toolbar-dropdown button[name='numbered_list']");
+        await animationFrame();
+        expect(getContent(el)).toBe(`<ol><li>a[bc]d</li></ol>`);
+        await hover(".o-we-toolbar-dropdown button[name='checklist']");
+        await animationFrame();
+        expect(getContent(el)).toBe(`<ul class="o_checklist"><li>a[bc]d</li></ul>`);
+    });
+
+    test.tags("desktop");
+    test("should preview list types on hover when a list is already applied", async () => {
+        const { el } = await setupEditor("<ol><li>a[bc]d</li></ol>");
+        await expandToolbar();
+        await waitFor(".btn[name='list_selector']");
+        await click(".btn[name='list_selector']");
+        await waitFor(".o-we-toolbar-dropdown button[name='bulleted_list']");
+        await hover(".o-we-toolbar-dropdown button[name='bulleted_list']");
+        await animationFrame();
+        expect(getContent(el)).toBe(`<ul><li>a[bc]d</li></ul>`);
+        await animationFrame();
+        await hover(".o-we-toolbar-dropdown button[name='numbered_list']");
+        await animationFrame();
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+        await hover(".o-we-toolbar-dropdown button[name='checklist']");
+        await animationFrame();
+        expect(getContent(el)).toBe(`<ul class="o_checklist"><li>a[bc]d</li></ul>`);
+    });
+
+    test.tags("desktop");
+    test("should revert list type preview when mouse leaves without applying list", async () => {
+        const { el } = await setupEditor("<p>a[bc]d</p>");
+        await expandToolbar();
+        await waitFor(".btn[name='list_selector']");
+        await click(".btn[name='list_selector']");
+        await waitFor(".o-we-toolbar-dropdown button[name='bulleted_list']");
+        await hover(".o-we-toolbar-dropdown button[name='bulleted_list']");
+        await animationFrame();
+        expect(getContent(el)).toBe(`<ul><li>a[bc]d</li></ul>`);
+        await hover(el);
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+    });
 });

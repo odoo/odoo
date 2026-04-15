@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { click, describe, expect, hover, queryOne, test, waitFor } from "@odoo/hoot";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import {
     alignCenter,
@@ -10,6 +10,7 @@ import {
     alignBottom,
 } from "./_helpers/user_actions";
 import { expandToolbar } from "./_helpers/toolbar";
+import { getContent } from "./_helpers/selection";
 
 test("should have align tool only if the block is content editable", async () => {
     for (const [contenteditable, count] of [
@@ -639,5 +640,50 @@ describe("bottom", () => {
                     </tbody>
                 </table>`,
         });
+    });
+});
+
+describe("Align font preview", () => {
+    test.tags("desktop");
+    test("should preview different align on hover", async () => {
+        const { el } = await setupEditor("<p>a[bc]d</p>");
+        await expandToolbar();
+        expect(queryOne(".btn[name='text_align'] i")).toHaveClass("fa-align-left");
+        await click(".btn[name='text_align']");
+        await waitFor(".o-we-toolbar-dropdown button[title='Center align']");
+        await hover(".o-we-toolbar-dropdown button[title='Center align']");
+        expect(getContent(el)).toBe(`<p style="text-align: center;">a[bc]d</p>`);
+        await hover(".o-we-toolbar-dropdown button[title='Right align']");
+        expect(getContent(el)).toBe(`<p style="text-align: end;">a[bc]d</p>`);
+        await hover(".o-we-toolbar-dropdown button[title='Justify']");
+        expect(getContent(el)).toBe(`<p style="text-align: justify;">a[bc]d</p>`);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when mouse leaves without applying align style (no initial align)", async () => {
+        const { el } = await setupEditor("<p>a[bc]d</p>");
+        await expandToolbar();
+        expect(queryOne(".btn[name='text_align'] i")).toHaveClass("fa-align-left");
+        await click(".btn[name='text_align']");
+        await waitFor(".o-we-toolbar-dropdown button[title='Center align']");
+        await hover(".o-we-toolbar-dropdown button[title='Center align']");
+        expect(getContent(el)).toBe(`<p style="text-align: center;">a[bc]d</p>`);
+        await hover(el);
+        expect(queryOne(".btn[name='text_align'] i")).toHaveClass("fa-align-left");
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when mouse leaves without applying align style (existing align)", async () => {
+        const { el } = await setupEditor('<p style="text-align: center;">a[bc]d</p>');
+        await expandToolbar();
+        expect(queryOne(".btn[name='text_align'] i")).toHaveClass("fa-align-center");
+        await click(".btn[name='text_align']");
+        await waitFor(".o-we-toolbar-dropdown button[title='Left align']");
+        await hover(".o-we-toolbar-dropdown button[title='Left align']");
+        expect(getContent(el)).toBe(`<p style="text-align: start;">a[bc]d</p>`);
+        await hover(el);
+        expect(queryOne(".btn[name='text_align'] i")).toHaveClass("fa-align-center");
+        expect(getContent(el)).toBe(`<p style="text-align: center;">a[bc]d</p>`);
     });
 });

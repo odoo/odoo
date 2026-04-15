@@ -7,13 +7,14 @@
                 </span>
             </button>
             <t t-set-slot="content">
-                <div data-prevent-closing-overlay="true">
+                <div data-prevent-closing-overlay="true" t-on-mouseleave="() => this.onItemHoverOut(item)">
                     <t t-foreach="this.items" t-as="item" t-key="item_index">
                         <button
                             t-att-title="item.description"
                             t-attf-class="btn btn-light fa fa-align-{{item.icon}}"
                             t-att-class="{ active: item.icon === this.state.displayName }"
                             t-on-click="() => this.onSelected(item)"
+                            t-on-mouseover="() => this.onItemHover(item)"
                             t-on-pointerdown.prevent="() => {}"
                         />
                     </t>

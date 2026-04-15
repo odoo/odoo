@@ -13,6 +13,10 @@ export class FontTypeSelector extends Component {
         getItems: Function,
         getDisplay: Function,
         onSelected: Function,
+        applyFontTypeResetPreview: Function,
+        applyFontTypePreview: Function,
+        applyFontTypeCommit: Function,
+        overlay: { type: Object, optional: true },
     };
     static components = { Dropdown, DropdownItem };
 
@@ -24,6 +28,23 @@ export class FontTypeSelector extends Component {
     }
 
     onSelected(item) {
-        this.props.onSelected(item);
+        this.props.overlay.bus.trigger("previewChange", {
+            isPreviewActive: false,
+        });
+        this.props.applyFontTypeCommit(item, this.props.onSelected);
+    }
+
+    onItemHover(item) {
+        this.props.overlay.bus.trigger("previewChange", {
+            isPreviewActive: true,
+        });
+        this.props.applyFontTypePreview(item, this.props.onSelected);
+    }
+
+    onItemHoverOut(item) {
+        this.props.overlay.bus.trigger("previewChange", {
+            isPreviewActive: false,
+        });
+        this.props.applyFontTypeResetPreview(item);
     }
 }
