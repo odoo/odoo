@@ -2,11 +2,9 @@
 
 import pprint
 
-from werkzeug.exceptions import Forbidden
-
 from odoo import http
 from odoo.http import request
-from odoo.tools import consteq, str2bool
+from odoo.tools import str2bool
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -39,10 +37,11 @@ class XenditController(http.Controller):
         data = request.get_json_data()
         _logger.info("Notification received from Xendit with data:\n%s", pprint.pformat(data))
 
-        received_token = request.httprequest.headers.get("x-callback-token")
         tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("xendit", data)
         if tx_sudo:
-            self._verify_notification_token(received_token, tx_sudo)
+            received_token = request.httprequest.headers.get("x-callback-token")
+            expected_token = tx_sudo.provider_id.xendit_webhook_token
+            payment_utils.verify_signature(received_token, expected_token)
             tx_sudo._process("xendit", data)
 
         return request.make_json_response(["accepted"], status=200)
@@ -67,20 +66,3 @@ class XenditController(http.Controller):
             if tx_sudo and payment_utils.check_access_token(access_token, tx_ref, tx_sudo.amount):
                 tx_sudo._set_pending()
         return request.redirect("/payment/status")
-
-    def _verify_notification_token(self, received_token, tx_sudo):
-        """Check that the received token matches the saved webhook token.
-
-        :param str received_token: The callback token received with the payment data.
-        :param payment.transaction tx_sudo: The transaction referenced by the payment data.
-        :return: None
-        :raise Forbidden: If the tokens don't match.
-        """
-        # Check for the received token.
-        if not received_token:
-            _logger.warning("Received payment data with missing token.")
-            raise Forbidden
-
-        if not consteq(tx_sudo.provider_id.xendit_webhook_token, received_token):
-            _logger.warning("Received payment data with invalid callback token %r.", received_token)
-            raise Forbidden

@@ -4,8 +4,6 @@ import hashlib
 import hmac
 import pprint
 
-from werkzeug.exceptions import Forbidden
-
 from odoo import _, http
 from odoo.exceptions import ValidationError
 from odoo.http import request
@@ -76,8 +74,16 @@ class AuthorizeController(http.Controller):
             if tx_sudo and data.get("webhookId") == tx_sudo.provider_id.authorize_webhook_id:
                 # Check the integrity of the notification
                 signature_header = request.httprequest.headers.get("X-ANET-Signature")
-                signature = signature_header and signature_header.split("=", 1)[1].upper()
-                self._verify_signature(signature, request.httprequest.get_data(), tx_sudo)
+                received_signature = signature_header and signature_header.split("=", 1)[1].upper()
+                signature_key = tx_sudo.provider_id.authorize_signature_key
+                request_body = request.httprequest.get_data()
+                expected_signature = (
+                    hmac
+                    .new(signature_key.encode(), request_body, hashlib.sha512)
+                    .hexdigest()
+                    .upper()
+                )
+                payment_utils.verify_signature(received_signature, expected_signature)
 
                 # Process the payment data. The data are structured in the same format as the
                 # transaction API's responses.
@@ -91,25 +97,3 @@ class AuthorizeController(http.Controller):
                 }
                 tx_sudo._process("authorize", payment_data)
         return request.make_json_response("")
-
-    @staticmethod
-    def _verify_signature(signature, request_body, tx_sudo):
-        """Check that the received signature matches the expected one.
-
-        :param str signature: The extracted HMAC signature value.
-        :param bytes request_body: The raw request body.
-        :param payment.transaction tx_sudo: The sudoed transaction referenced by the payment data.
-        :rtype: None
-        :raise Forbidden: If the signatures don't match.
-        """
-        if not signature:
-            _logger.warning("Received notification with missing signature.")
-            raise Forbidden
-
-        signature_key = tx_sudo.provider_id.authorize_signature_key
-        expected_signature = (
-            hmac.new(signature_key.encode(), request_body, hashlib.sha512).hexdigest().upper()
-        )
-        if not hmac.compare_digest(expected_signature, signature):
-            _logger.warning("Received notification with invalid signature.")
-            raise Forbidden

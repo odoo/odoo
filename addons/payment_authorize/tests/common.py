@@ -41,3 +41,7 @@ class AuthorizeCommon(PaymentCommon):
                 "invoiceNumber": cls.reference,
             },
         }
+        cls.webhook_authcapture_data_signature = (
+            "7A0515EF579CB958D6902E7B5BE94DBB359B9CE89E9F19D92EF3D9745432BFFF474DCB3A7"
+            "32DA8AC9D12D6514361EBD7F19232B1FC3D97F3DECAE8086D21CEF5"
+        )

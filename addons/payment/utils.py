@@ -3,12 +3,19 @@
 from hashlib import sha1
 from urllib.parse import parse_qsl, urlparse
 
+from werkzeug.exceptions import Forbidden
+
 from odoo import api, fields
 from odoo.http import request
 from odoo.tools import consteq, float_round
 from odoo.tools.misc import hmac as hmac_tool
 
-from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
+from odoo.addons.payment.const import CURRENCY_MINOR_UNITS, SENSITIVE_KEYS
+from odoo.addons.payment.logging import get_payment_logger
+
+# Pass the possibly empty set of sensitive keys to the logger in case a provider module extends it.
+_logger = get_payment_logger(__name__, sensitive_keys=SENSITIVE_KEYS)
+
 
 # Access token management
 
@@ -219,6 +226,27 @@ def split_partner_name(partner_name):
         return parts[0], ""
 
     return " ".join(parts[:-1]), parts[-1]
+
+
+# Transaction signature verification
+
+
+def verify_signature(received_signature, expected_signature):
+    """Check that the received signature matches the expected one.
+
+    :param str|None received_signature: The received signature
+    :param str expected_signature: The expected signature
+    :rtype: None
+    :raise Forbidden: If the signatures don't match.
+    """
+    if not received_signature:
+        _logger.warning("Received payment data with missing signature.")
+        raise Forbidden
+
+    # Compare the received signature with the expected signature.
+    if not expected_signature or not consteq(received_signature, expected_signature):
+        _logger.warning("Received payment data with invalid signature.")
+        raise Forbidden
 
 
 # Security

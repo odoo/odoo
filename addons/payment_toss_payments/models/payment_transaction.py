@@ -80,7 +80,7 @@ class PaymentTransaction(models.Model):
         # Update the provider reference.
         self.provider_reference = payment_data["paymentKey"]
 
-        # Save the secret key used for verifying webhook events. See `_verify_signature`.
+        # Save the secret key used for verifying webhook events. See `_toss_payments_webhook`.
         self.toss_payments_payment_secret = payment_data.get("secret")
 
         # Update the payment state.

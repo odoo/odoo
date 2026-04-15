@@ -27,6 +27,7 @@ class WorldlineCommon(PaymentCommon):
             "currencyCode": cls.currency.name,
         }
 
+        cls.payment_data_signature = "nKI5BljRrj29B49JvWgXW8VajVr19qTU9Gvhs6S4P18="
         cls.payment_data = {
             "payment": {
                 "paymentOutput": {

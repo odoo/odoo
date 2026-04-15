@@ -1,13 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import hmac
 import pprint
-
-from werkzeug.exceptions import Forbidden
 
 from odoo import http
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_razorpay.const import HANDLED_WEBHOOK_EVENTS
 
@@ -44,7 +42,10 @@ class RazorpayController(http.Controller):
                 .sudo()
                 ._search_by_reference("razorpay", {"description": reference})
             )  # Use the same key as for webhook notifications' data.
-            self._verify_signature(data, data.get("razorpay_signature"), tx_sudo)
+            expected_signature = tx_sudo.provider_id._razorpay_calculate_signature(
+                data, is_redirect=True
+            )
+            payment_utils.verify_signature(data.get("razorpay_signature"), expected_signature)
             tx_sudo._process("razorpay", data)
         else:  # The customer cancelled the payment or the payment failed.
             pass  # Don't try to process this case because the payment id was not provided.
@@ -75,36 +76,10 @@ class RazorpayController(http.Controller):
                 ._search_by_reference("razorpay", entity_data)
             )
             if tx_sudo:
-                self._verify_signature(
-                    request.httprequest.data, received_signature, tx_sudo, is_redirect=False
+                expected_signature = tx_sudo.provider_id._razorpay_calculate_signature(
+                    request.httprequest.data, is_redirect=False
                 )
+                payment_utils.verify_signature(received_signature, expected_signature)
                 tx_sudo._process("razorpay", entity_data)
 
         return request.make_json_response("")
-
-    @staticmethod
-    def _verify_signature(payment_data, received_signature, tx_sudo, is_redirect=True):
-        """Check that the received signature matches the expected one.
-
-        :param dict|bytes payment_data: The payment data.
-        :param str received_signature: The signature to compare with the expected signature.
-        :param payment.transaction tx_sudo: The sudoed transaction referenced by the payment data
-        :param bool is_redirect: Whether the payment data should be treated as redirect data or as
-                                 coming from a webhook notification.
-        :return: None
-        :raise Forbidden: If the signatures don't match.
-        """
-        # Check for the received signature.
-        if not received_signature:
-            _logger.warning("Received payment data with missing signature.")
-            raise Forbidden
-
-        # Compare the received signature with the expected signature.
-        expected_signature = tx_sudo.provider_id._razorpay_calculate_signature(
-            payment_data, is_redirect=is_redirect
-        )
-        if expected_signature is None or not hmac.compare_digest(
-            received_signature, expected_signature
-        ):
-            _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden

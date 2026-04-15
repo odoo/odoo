@@ -6,8 +6,6 @@ import hashlib
 import hmac
 import pprint
 
-from werkzeug.exceptions import Forbidden
-
 from odoo import _, http, release
 from odoo.exceptions import ValidationError
 from odoo.http import request
@@ -265,7 +263,10 @@ class AdyenController(http.Controller):
                 ._search_by_reference("adyen", payment_data)
             )
             if tx_sudo:
-                self._verify_signature(payment_data, tx_sudo)
+                received_signature = payment_data.get("additionalData", {}).get("hmacSignature")
+                hmac_key = tx_sudo.provider_id.adyen_hmac_key
+                expected_signature = AdyenController._compute_signature(payment_data, hmac_key)
+                payment_utils.verify_signature(received_signature, expected_signature)
 
                 # Check whether the event of the notification succeeded and reshape the notification
                 # data for parsing
@@ -284,28 +285,6 @@ class AdyenController(http.Controller):
                     continue  # Don't handle unsupported event codes and failed events
                 tx_sudo._process("adyen", payment_data)
         return request.make_json_response("[accepted]")  # Acknowledge the notification
-
-    @staticmethod
-    def _verify_signature(payment_data, tx_sudo):
-        """Check that the received signature matches the expected one.
-
-        :param dict payment_data: The payment data containing the received signature.
-        :param payment.transaction tx_sudo: The sudoed transaction referenced by the payment data.
-        :return: None
-        :raise Forbidden: If the signatures don't match.
-        """
-        # Retrieve the received signature from the payload
-        received_signature = payment_data.get("additionalData", {}).get("hmacSignature")
-        if not received_signature:
-            _logger.warning("received payment data with missing signature")
-            raise Forbidden
-
-        # Compare the received signature with the expected signature computed from the payload
-        hmac_key = tx_sudo.provider_id.adyen_hmac_key
-        expected_signature = AdyenController._compute_signature(payment_data, hmac_key)
-        if not hmac.compare_digest(received_signature, expected_signature):
-            _logger.warning("received payment data with invalid signature")
-            raise Forbidden
 
     @staticmethod
     def _compute_signature(payload, hmac_key):

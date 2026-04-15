@@ -20,6 +20,9 @@ class APSCommon(PaymentHttpCommon):
 
         cls.provider = cls.aps
 
+        cls.payment_data_signature = (
+            "6d2bb7904ac6141a0c10375c70fd417616c740bb1ddab862a224777880aa3600"
+        )
         cls.payment_data = {
             "access_code": cls.provider.aps_access_code,
             "amount": cls.amount,
@@ -39,7 +42,7 @@ class APSCommon(PaymentHttpCommon):
             "payment_option": "VISA",
             "response_code": "14000",
             "response_message": "Success",
-            "signature": "6d2bb7904ac6141a0c10375c70fd417616c740bb1ddab862a224777880aa3600",
+            "signature": cls.payment_data_signature,
             "status": "14",
             "token_name": "123abc456def789",
         }

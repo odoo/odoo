@@ -1,13 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import hmac
 import pprint
-
-from werkzeug.exceptions import Forbidden
 
 from odoo import http
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 
 _logger = get_payment_logger(__name__)
@@ -38,28 +36,10 @@ class AsiaPayController(http.Controller):
         _logger.info("Notification received from AsiaPay with data:\n%s", pprint.pformat(data))
         tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("asiapay", data)
         if tx_sudo:
-            self._verify_signature(data, tx_sudo)
+            received_signature = data.get("secureHash")
+            expected_signature = tx_sudo.provider_id._asiapay_calculate_signature(
+                data, incoming=True
+            )
+            payment_utils.verify_signature(received_signature, expected_signature)
             tx_sudo._process("asiapay", data)
         return "OK"  # Acknowledge the notification.
-
-    @staticmethod
-    def _verify_signature(payment_data, tx_sudo):
-        """Check that the received signature matches the expected one.
-
-        :param dict payment_data: The payment data.
-        :param payment.transaction tx_sudo: The sudoed transaction referenced by the payment data.
-        :return: None
-        :raise Forbidden: If the signatures don't match.
-        """
-        received_signature = payment_data.get("secureHash")
-        if not received_signature:
-            _logger.warning("Received payment data with missing signature.")
-            raise Forbidden
-
-        # Compare the received signature with the expected signature computed from the data.
-        expected_signature = tx_sudo.provider_id._asiapay_calculate_signature(
-            payment_data, incoming=True
-        )
-        if not hmac.compare_digest(received_signature, expected_signature):
-            _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden

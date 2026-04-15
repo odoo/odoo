@@ -1,15 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import hmac
 import json
 import pprint
-
-from werkzeug.exceptions import Forbidden
 
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 
 _logger = get_payment_logger(__name__)
@@ -64,30 +62,11 @@ class FlutterwaveController(http.Controller):
                 ._search_by_reference("flutterwave", payment_data)
             )
             if tx_sudo:
-                signature = request.httprequest.headers.get("verif-hash")
-                self._verify_signature(signature, tx_sudo)
+                received_signature = request.httprequest.headers.get("verif-hash")
+                expected_signature = tx_sudo.provider_id.flutterwave_webhook_secret
+                payment_utils.verify_signature(received_signature, expected_signature)
             tx_sudo._process("flutterwave", payment_data)
         return request.make_json_response("")
-
-    @staticmethod
-    def _verify_signature(received_signature, tx_sudo):
-        """Check that the received signature matches the expected one.
-
-        :param dict received_signature: The signature received with the payment data.
-        :param payment.transaction tx_sudo: The sudoed transaction referenced by the payment data.
-        :return: None
-        :raise Forbidden: If the signatures don't match.
-        """
-        # Check for the received signature.
-        if not received_signature:
-            _logger.warning("Received payment data with missing signature.")
-            raise Forbidden
-
-        # Compare the received signature with the expected signature.
-        expected_signature = tx_sudo.provider_id.flutterwave_webhook_secret
-        if not hmac.compare_digest(received_signature, expected_signature):
-            _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden
 
     @staticmethod
     def _verify_and_process(data):

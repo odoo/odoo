@@ -20,7 +20,7 @@ class RedsysCommon(PaymentCommon):
         )
         cls.provider = cls.redsys
         cls.merchant_parameters = {
-            "Ds_Order": "Test Transaction",
+            "Ds_Order": cls.reference,
             "Ds_Amount": cls.amount * 100,  # In minor units
             "Ds_Currency": 978,  # EUR
             "Ds_Card_Brand": "1",  # VISA
@@ -29,9 +29,10 @@ class RedsysCommon(PaymentCommon):
         cls.encoded_merchant_parameter = base64.b64encode(
             json.dumps(cls.merchant_parameters).encode()
         ).decode()
+        cls.payment_data_signature = "upzUj96lLgOEUP5lvaj7lz0Se4MXmc5_GoJ32ACqZ3A="
         cls.payment_data = {
             "Ds_MerchantParameters": cls.encoded_merchant_parameter,
-            "Ds_Signature": "upzUj96lLgOEUP5lvaj7lz0Se4MXmc5_GoJ32ACqZ3A=",
+            "Ds_Signature": cls.payment_data_signature,
         }
         cls.provider_ref = "test_identifier_123"
         cls.token_merchant_data = {

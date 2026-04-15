@@ -1,7 +1,4 @@
-import hmac
 import pprint
-
-from werkzeug.exceptions import Forbidden
 
 from odoo import http
 from odoo.exceptions import ValidationError
@@ -92,32 +89,13 @@ class TossPaymentsController(http.Controller):
                 ._search_by_reference("toss_payments", payment_data)
             )
             if tx_sudo:
-                self._verify_signature(payment_data, tx_sudo)
+                # Expired events might not have a secret if we never initiated the payment flow.
+                # Also aborted events have a secret, but our implementation would not capture the
+                # secret in the case of API call validation error (see
+                # `_toss_payments_success_return`). In these two cases, we skip the verification.
+                if payment_data.get("status") not in const.VERIFICATION_EXEMPT_STATUSES:
+                    received_signature = payment_data.get("secret")
+                    expected_signature = tx_sudo.toss_payments_payment_secret or ""
+                    payment_utils.verify_signature(received_signature, expected_signature)
                 tx_sudo._process("toss_payments", payment_data)
         return request.make_json_response("")
-
-    @staticmethod
-    def _verify_signature(payment_data, tx_sudo):
-        """Check that the received payment data's secret key matches the transaction's secret key.
-
-        :param dict payment_data: The payment data.
-        :param payment.transaction tx_sudo: The sudoed transaction referenced by the payment data.
-        :rtype: None
-        :raise Forbidden: If the secret keys don't match.
-        """
-        # Expired events might not have a secret if we never initiated the payment flow. Also
-        # aborted events have a secret, but our implementation would not capture the secret in the
-        # case of API call validation error (see `_toss_payments_success_return`). In these two
-        # cases, we skip the verification.
-        if payment_data.get("status") in const.VERIFICATION_EXEMPT_STATUSES:
-            return
-
-        received_signature = payment_data.get("secret")
-        if not received_signature:
-            _logger.warning("Received notification with missing signature.")
-            raise Forbidden
-
-        expected_signature = tx_sudo.toss_payments_payment_secret or ""
-        if not hmac.compare_digest(received_signature, expected_signature):
-            _logger.warning("Received notification with invalid signature.")
-            raise Forbidden
