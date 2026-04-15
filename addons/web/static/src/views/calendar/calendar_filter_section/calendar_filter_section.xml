@@ -64,13 +64,13 @@
                 name="selection"
                 class="o_cw_filter_input_bg form-check-input"
                 t-att-style="filter.colorIndex and typeof filter.colorIndex !== 'number' ? `border-color: ${filter.colorIndex}; background-color: ${filter.colorIndex};` : ''"
-                t-attf-id="o_calendar_filter_item_{{this.filterId}}"
+                t-attf-id="o_calendar_filter_item_{{filterId}}"
                 t-att-checked="filter.active"
                 t-on-change="(ev) => this.onFilterInputChange(filter, ev)"
             />
             <label
                 class="d-flex align-items-center gap-1 cursor-pointer"
-                t-attf-for="o_calendar_filter_item_{{this.filterId}}"
+                t-attf-for="o_calendar_filter_item_{{filterId}}"
             >
                 <t t-if="this.section.hasAvatar and filter.hasAvatar">
                     <img
