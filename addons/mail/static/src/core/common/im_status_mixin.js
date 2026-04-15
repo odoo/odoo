@@ -1,14 +1,18 @@
+import { effect } from "@odoo/owl";
+
 import { AWAY_DELAY } from "@mail/core/common/im_status_service";
 import { fields } from "@mail/model/misc";
 import { Record } from "@mail/model/record";
-import { effectWithCleanup } from "@mail/utils/common/misc";
 
-import { effect } from "@web/core/utils/reactive";
 import { debounce } from "@web/core/utils/timing";
+import { effectWithCleanup } from "@mail/utils/common/misc";
 
 /** @typedef {'offline' | 'bot' | 'online' | 'away' | undefined} ImStatus */
 
 const { DateTime } = luxon;
+
+const DISPOSE_EFFECT_SYM_1 = Symbol("DISPOSE_EFFECT_1");
+const DISPOSE_EFFECT_SYM_2 = Symbol("DISPOSE_EFFECT_2");
 
 /**
  * Both ResUsers and MailGuest models need to react to `presence_status` updates and
@@ -27,40 +31,35 @@ export class ImStatusMixin extends Record {
         );
         record.setImStatusDebounced = setImStatusDebounced;
         record.cancelSetImStatusDebounced = setImStatusDebounced.cancel;
-        effect(
-            (record, store, presenceService, statusService) => {
-                if (record.notEq(store.self)) {
-                    return;
-                }
-                const isOnline = presenceService.getInactivityPeriod() < AWAY_DELAY;
-                if (
-                    (record.presence_status === "away" && isOnline) ||
-                    record.presence_status === "offline"
-                ) {
-                    statusService.updateBusPresence();
-                }
-            },
-            [
-                record,
-                record.store,
-                record.store.env.services.presence,
-                record.store.env.services.im_status,
-            ]
-        );
-        effectWithCleanup({
-            effect: (busService, presenceChannel) => {
-                if (presenceChannel) {
-                    busService.addChannel(presenceChannel);
-                    return () => busService.deleteChannel(presenceChannel);
-                }
-            },
-            dependencies: (record) => [
-                record.store.env.services.bus_service,
-                record.monitorPresence && record.presenceChannel,
-            ],
-            reactiveTargets: [record],
+        record[DISPOSE_EFFECT_SYM_1] = effect(() => {
+            const store = record.store;
+            const presenceService = record.store.env.services.presence;
+            const statusService = record.store.env.services.im_status;
+            if (record.notEq(store.self)) {
+                return;
+            }
+            const isOnline = presenceService.getInactivityPeriod() < AWAY_DELAY;
+            if (
+                (record.presence_status === "away" && isOnline) ||
+                record.presence_status === "offline"
+            ) {
+                statusService.updateBusPresence();
+            }
+        });
+        record[DISPOSE_EFFECT_SYM_2] = effectWithCleanup(() => {
+            const busService = record.store.env.services.bus_service;
+            const presenceChannel = record.monitorPresence && record.presenceChannel;
+            if (presenceChannel) {
+                busService.addChannel(presenceChannel);
+                return () => busService.deleteChannel(presenceChannel);
+            }
         });
         return record;
+    }
+    delete(...args) {
+        this[DISPOSE_EFFECT_SYM_1]();
+        this[DISPOSE_EFFECT_SYM_2]();
+        super.delete(...args);
     }
     /** @type {(status) => void} */
     setImStatusDebounced;
