@@ -3,7 +3,7 @@
 
     <t t-name="web.TranslationButton">
         <t t-if="this.isMultiLang">
-            <button class="o_field_translate btn btn-link" t-on-click.prevent="this.onClick">
+            <button class="o-translate-button btn" t-on-click.prevent="this.onClick" t-att-class="this.buttonClasses()" type="button" t-att-data-tooltip="this.buttonTooltip()">
                 <t t-out="this.lang" />
             </button>
         </t>

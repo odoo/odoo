@@ -2031,21 +2031,21 @@ class TestHTMLTranslation(TransactionCase):
     def test_delay_translations_no_term(self):
         self.env['res.lang']._activate_lang('fr_FR')
         self.env['res.lang']._activate_lang('nl_NL')
-        Company = self.env['res.company']
-        company0 = Company.create({'name': 'company_1', 'report_footer': '<h1>Knife</h1>'})
-        company0.update_field_translations('report_footer', {'fr_FR': {'Knife': 'Couteau'}})
+        Translatable = self.env['translatable.cases']
+        translatable0 = Translatable.create({'structured_html': '<h1>Knife</h1>'})
+        translatable0.update_field_translations('structured_html', {'fr_FR': {'Knife': 'Couteau'}})
 
         for html in ('<h1></h1>', '', False):
             # delay_translations only works when the written value has at least one translatable term
-            company0.with_context(lang='en_US', delay_translations=True).report_footer = html
+            translatable0.with_context(lang='en_US', delay_translations=True).structured_html = html
             for lang in ('en_US', 'fr_FR', 'nl_NL'):
                 self.assertEqual(
-                    company0.with_context(lang=lang).report_footer,
+                    translatable0.with_context(lang=lang).structured_html,
                     html,
                     f'report_footer for {lang} should be {html}'
                 )
                 self.assertEqual(
-                    company0.with_context(lang=lang, check_translations=True).report_footer,
+                    translatable0.with_context(lang=lang, check_translations=True).structured_html,
                     html,
                     f'report_footer for {lang} should be {html} when check_translations'
                 )

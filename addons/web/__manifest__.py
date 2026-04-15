@@ -59,7 +59,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/scss/animation.scss',
             'web/static/src/scss/mimetypes.scss',
             'web/static/src/scss/ui.scss',
-            'web/static/src/views/fields/translation_dialog.scss',
 
             'web/static/src/polyfills/clipboard.js',
 
@@ -182,7 +181,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/scss/base_frontend.scss',
             'web/static/src/scss/mimetypes.scss',
             'web/static/src/scss/ui.scss',
-            'web/static/src/views/fields/translation_dialog.scss',
             'web/static/src/views/fields/signature/signature_field.scss',
 
             ('include', 'web.assets_frontend_minimal'),

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from hashlib import sha256
 
 import odoo.tools
 from odoo import http, release
@@ -8,6 +9,7 @@ from odoo.http import request
 from odoo.http.stream import STATIC_CACHE_LONG
 from odoo.modules import Manifest
 from odoo.tools.misc import file_path
+
 
 from .utils import _local_web_translations
 
@@ -120,3 +122,72 @@ class WebClient(http.Controller):
         } for tag, attrs in files]
 
         return request.make_json_response(data)
+
+
+def digest_term(term):
+    return sha256(term.encode()).hexdigest()
+
+
+class Translations(http.Controller):
+
+    def _get_translation_mode(self, res_model, field_name):
+        field = self.env[res_model]._fields[field_name]
+        match (field.type, callable(field.translate)):
+            case ("html", True):
+                return "structured_html"
+            case ("html", _):
+                return "html"
+            case (_, True):
+                return "xml"
+            case _:
+                return "text"
+
+    @http.route("/web/translations/get_translation_for_field", type="jsonrpc", methods=["POST"], auth="user", readonly=True)
+    def _get_translation_for_field(self, res_model, field_name, res_id, target_lang=None, context=None):
+        if context:
+            request.update_context(**context)
+        translation_mode = self._get_translation_mode(res_model, field_name)
+
+        record_base_lang = self.env[res_model].browse(res_id)._get_base_lang()
+        langs = self.env["res.lang"].sudo()._get_active_langs().sorted('name')
+        lang_codes = langs.mapped("code")
+
+        if target_lang is None or target_lang not in lang_codes:
+            target_lang = next(iter(code for code in lang_codes if code != record_base_lang), None)
+
+        result = {
+            "target_lang": target_lang,
+            "translation_mode": translation_mode,
+            "languages": {l.code: {"name": l.name, "direction": l.direction, "code": l.code, "is_base": record_base_lang == l.code} for l in langs}
+        }
+
+        record = self.env[res_model].browse(res_id)
+        match translation_mode:
+            case "xml" | "structured_html":
+                rec_context = record.with_context(lang=target_lang, edit_translations=True)
+                rec_context.fetch([field_name])
+                result["xml_values"] = {
+                    target_lang: rec_context[field_name]
+                }
+                field_translations, _ = record.get_field_translations(field_name, [target_lang])
+                for tr in field_translations:
+                    tr["source_sha"] = digest_term(tr["source"])
+                result["terms"] = field_translations
+            case "html" | "text":
+                result["terms"] = record.get_field_translations(field_name, (lang.code for lang in langs))[0]
+        return result
+
+    @http.route("/web/translations/save_translation_for_field", type="jsonrpc", methods=["POST"], auth="user")
+    def _save_translation_for_field(self, res_model, field_name, res_id, target_lang=None, changes=None, context=None):
+        if context:
+            request.update_context(**context)
+        translation_mode = self._get_translation_mode(res_model, field_name)
+        record = self.env[res_model].browse(res_id)
+        langs = self.env["res.lang"].sudo()._get_active_langs().mapped('code')
+        match translation_mode:
+            case "xml" | "structured_html":
+                record._update_field_translations(field_name, changes, digest=digest_term)
+            case "text" | "html":
+                if ("en_US" in changes and changes["en_US"] is None) or "en_US" not in langs:
+                    changes["en_US"] = next(v for v in changes.values() if v is not None)
+                record._update_field_translations(field_name, changes)

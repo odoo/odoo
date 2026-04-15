@@ -5966,17 +5966,9 @@ test(`fields are translatable in list view`, async () => {
     Foo._fields.foo = fields.Char({ translate: true });
 
     installLanguages({
-        en_US: "English",
+        en: "En",
         fr_BE: "Frenglish",
     });
-
-    onRpc("foo", "get_field_translations", () => [
-        [
-            { lang: "en_US", source: "yop", value: "yop" },
-            { lang: "fr_BE", source: "yop", value: "valeur français" },
-        ],
-        { translation_type: "char", translation_show_source: false },
-    ]);
 
     await mountView({
         resModel: "foo",
