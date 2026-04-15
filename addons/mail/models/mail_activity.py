@@ -626,7 +626,8 @@ class MailActivity(models.Model):
                         render_values={
                             'activity': activity,
                             'feedback': feedback,
-                            'display_assignee': activity.user_id != self.env.user
+                            'display_assignee': activity.user_id != self.env.user,
+                            **self._get_activity_done_message_extra_values(activity),
                         },
                         mail_activity_type_id=activity.activity_type_id.id,
                         subtype_xmlid='mail.mt_activities',
@@ -912,3 +913,7 @@ class MailActivity(models.Model):
         deadline_threshold_dt = datetime.now() - relativedelta(years=year_threshold)
         old_overdue_activities = self.env['mail.activity'].search([('date_deadline', '<', deadline_threshold_dt)], limit=10_000)
         old_overdue_activities.unlink()
+
+    def _get_activity_done_message_extra_values(self, activity):
+        """To ease passing new values to the mail.message_activity_done chatter template."""
+        return {}

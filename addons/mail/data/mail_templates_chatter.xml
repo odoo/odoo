@@ -11,15 +11,15 @@
 
         <template id="message_activity_done">
 <div>
-    <p>
+    <p class="o_mail_activity_title">
         <span t-attf-class="fa #{activity.activity_type_id.icon} fa-fw"/><span t-field="activity.activity_type_id.name"/> done
         <t t-if="display_assignee"> (originally assigned to <span t-field="activity.user_id.name"/>)</t>
         <span t-if="activity.summary">: </span><span t-if="activity.summary" t-field="activity.summary"/>
     </p>
-    <t t-if="activity.note and activity.note != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'"><!-- <p></br></p> -->
+    <div t-if="activity.note and activity.note != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'" class="o_mail_activity_note"><!-- <p></br></p> -->
         <div class="o_mail_note_title fw-bold">Original note:</div>
         <div t-field="activity.note"/>
-    </t>
+    </div>
     <div t-if="feedback">
         <div class="fw-bold">Feedback:</div>
         <t t-foreach="feedback.split('\n')" t-as="feedback_line">

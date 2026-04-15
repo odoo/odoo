@@ -2,7 +2,7 @@
 from datetime import UTC
 
 from odoo import models, fields, tools, _
-from odoo.tools import is_html_empty
+from odoo.tools import format_list, is_html_empty
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -67,6 +67,26 @@ class MailActivity(models.Model):
         events.unlink()
         return res
 
+    def _get_activity_done_message_extra_values(self, activity):
+        """Extra values for the chatter template send on activity marked as done."""
+        event = activity.calendar_event_id
+        if not event.partner_ids:
+            return {}
+        attendee_names = format_list(self.env, event.partner_ids.mapped("name"))
+        attendee_count = len(event.partner_ids)
+        return {
+            "attendee_names": attendee_names,
+            "truncated_attendee_names": (
+                format_list(self.env, [
+                    *event.partner_ids[:2].mapped("name"),
+                    self.env._("%s others", attendee_count - 2),
+                ])
+                if attendee_count > 3
+                else attendee_names
+            ),
+        }
+
     def _store_activity_fields(self, res: Store.FieldList):
         super()._store_activity_fields(res)
-        res.extend(["calendar_event_id", "res_name"])
+        res.attr("res_name")
+        res.one("calendar_event_id", "_store_calendar_event_fields")

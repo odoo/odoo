@@ -2,12 +2,36 @@
 <templates id="template" xml:space="preserve">
 
     <t t-inherit="mail.Activity" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-Activity-note')]" position="attributes">
+            <attribute name="t-if">!this.props.activity.calendar_event_id</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-Activity-note')]" position="after">
+            <div t-if="meeting" class="mt-1">
+                <t t-set="startToday" t-value="this.isToday(meeting.start)"/>
+                <t t-set="stopToday" t-value="this.isToday(meeting.stop)"/>
+                <div t-if="!startToday || !stopToday">
+                    <t t-if="startToday">Today</t>
+                    <t t-else="" t-out="meeting.start.toLocaleString(this.dateFormat)"/>
+                    <t t-if="meeting.stop > meeting.start.startOf('day').plus({days: 1})">
+                        -
+                        <t t-if="stopToday">Today</t>
+                        <t t-else="" t-out="meeting.stop.toLocaleString(this.dateFormat)"/>
+                    </t>
+                </div>
+                <div class="d-flex flex-nowrap gap-4">
+                    <t t-out="meeting.start.toLocaleString(this.timeFormat)"/> - <t t-out="meeting.stop.toLocaleString(this.timeFormat)"/>
+                    <span t-if="attendeeNames" t-out="truncatedAttendeeNames" t-att-title="attendeeNames" class="text-muted"/>
+                </div>
+                <t t-if="meeting.location" t-out="meeting.location"/>
+                <t t-else="">Online</t>
+            </div>
+        </xpath>
         <xpath expr="//button[hasclass('o-mail-Activity-edit')]" position="attributes">
             <attribute name="t-if">!this.props.activity.calendar_event_id</attribute>
         </xpath>
         <xpath expr="//button[hasclass('o-mail-Activity-edit')]" position="after">
             <button t-if="this.props.activity.calendar_event_id" class="btn btn-link p-0 me-3" t-on-click="this.onClickReschedule">
-                <i class="fa fa-calendar"/> Reschedule
+                <i class="fa fa-calendar"/> View
             </button>
         </xpath>
     </t>

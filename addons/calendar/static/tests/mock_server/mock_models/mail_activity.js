@@ -1,3 +1,4 @@
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { mailModels, openView } from "@mail/../tests/mail_test_helpers";
 import { fields } from "@web/../tests/web_test_helpers";
 import { serializeDate, today } from "@web/core/l10n/dates";
@@ -29,20 +30,14 @@ export class MailActivity extends mailModels.MailActivity {
         return res;
     }
 
-    /** @param {number[]} ids */
-    _to_store(store) {
-        super._to_store(...arguments);
-        for (const activity of this) {
-            const fieldsToStore = ["calendar_event_id", "res_name"];
-            const storeData = fieldsToStore.reduce((acc, key) => {
-                if (key in activity) {
-                    acc[key] = activity[key];
-                }
-                return acc;
-            }, {});
-            if (Object.keys(storeData).length) {
-                store._add_record_fields(this.browse(activity.id), storeData);
-            }
-        }
+    get _to_store_defaults() {
+        return [
+            ...super._to_store_defaults,
+            "res_name",
+            mailDataHelpers.Store.one(
+                "calendar_event_id",
+                this.env["calendar.event"]._store_calendar_event_fields(...arguments)
+            ),
+        ];
     }
 }

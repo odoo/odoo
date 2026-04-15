@@ -26,6 +26,7 @@ from odoo.addons.calendar.models.calendar_recurrence import (
     BYDAY_SELECTION
 )
 from odoo.addons.calendar.models.utils import interval_from_events
+from odoo.addons.mail.tools.discuss import Store
 from odoo.tools.intervals import intervals_overlap
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang, babel_locale_parse
@@ -1899,3 +1900,11 @@ class CalendarEvent(models.Model):
         res = res or ir_default_get('calendar.event', 'duration', company_id=True)
         res = res or ir_default_get('calendar.event', 'duration')
         return res or 1
+
+    # ------------------------------------------------------------
+    # DISCUSS
+    # ------------------------------------------------------------
+
+    def _store_calendar_event_fields(self, res: Store.FieldList):
+        res.extend(["name", "start", "stop", "location"])
+        res.many("partner_ids", ["name"])

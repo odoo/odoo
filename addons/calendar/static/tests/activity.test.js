@@ -18,7 +18,7 @@ const { DateTime } = luxon;
 defineCalendarModels();
 preloadBundle("web.fullcalendar_lib");
 
-test("activity click on Reschedule", async () => {
+test("activity click on View", async () => {
     registerArchs({ "calendar.event,false,calendar": `<calendar date_start="start"/>` });
     const pyEnv = await startServer();
     const resPartnerId = pyEnv["res.partner"].create({});
@@ -45,7 +45,7 @@ test("activity click on Reschedule", async () => {
     });
     await start();
     await openFormView("res.partner", resPartnerId);
-    await click(".btn", { text: "Reschedule" });
+    await click(".btn", { text: "View" });
     await contains(".o_calendar_view");
 });
 
@@ -76,7 +76,7 @@ test("Can delete activity linked to an event", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Activity .btn", { text: "Reschedule" });
+    await click(".o-mail-Activity .btn", { text: "View" });
     await contains(".o_calendar_view");
     await animationFrame();
     await clickEvent(calendaMeetingId);

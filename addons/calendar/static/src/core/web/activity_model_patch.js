@@ -1,12 +1,11 @@
 import { Activity } from "@mail/core/common/activity_model";
-import { assignIn } from "@mail/utils/common/misc";
+import { fields } from "@mail/model/export";
 import { patch } from "@web/core/utils/patch";
 
-patch(Activity, {
-    _insert(data) {
-        const activity = super._insert(...arguments);
-        assignIn(activity, data, ["calendar_event_id"]);
-        return activity;
+patch(Activity.prototype, {
+    setup() {
+        super.setup();
+        this.calendar_event_id = fields.One("calendar.event");
     },
 });
 
