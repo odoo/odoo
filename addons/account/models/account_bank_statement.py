@@ -236,9 +236,9 @@ class AccountBankStatement(models.Model):
         self.ensure_one()
         return self.env['account.bank.statement'].search(
             [
-                ('journal_id', '=', self.journal_id.id),
                 ('first_line_index', '<', self.first_line_index),
                 ('first_line_index', '!=', False),
+                ('journal_id', '=', self.journal_id.id),
             ],
             order='first_line_index DESC',
             limit=1,
@@ -300,7 +300,6 @@ class AccountBankStatement(models.Model):
             path="reconciliation",  # to allow going back and forth without breaking the URL
             context={
                 **self.env.context,
-                'kanban_view_ref': 'account_accountant.view_bank_statement_line_kanban_bank_rec_widget',
             },
         )
 

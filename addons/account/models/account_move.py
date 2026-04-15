@@ -7047,9 +7047,6 @@ class AccountMove(models.Model):
                 'statement_id': statement.id,
             })
 
-            # TODO: Can we use this to replace the lower block?
-            # st_line.set_line_bank_statement_line(opening_bank_lines.ids)
-
             _liquidity, suspense, _other = st_line._seek_for_lines()
             if suspense:
                 suspense.with_context(
