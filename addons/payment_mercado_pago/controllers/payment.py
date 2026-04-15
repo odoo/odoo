@@ -68,7 +68,7 @@ class MercadoPagoPaymentController(http.Controller):
         return request.redirect("/payment/status")
 
     @http.route(
-        f"{const.WEBHOOK_ROUTE}/<reference>",
+        f"{const.WEBHOOK_ROUTE}/<path:reference>",
         type="http",
         auth="public",
         methods=["POST"],
