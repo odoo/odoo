@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="printer.delete_printer">
+        <div class="container mt-4">
+            <h2>Reports with Saved Printer Preferences</h2>
+            <div class="mt-3">
+                <p t-if="!this.state.reportList.length">No reports to display</p>
+                <div class="card mb-3"  t-foreach="this.state.reportList" t-as="item" t-key="item.id">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <h5 class="card-title m-0" t-out="item.name" />
+                        <button class="btn btn-primary" t-on-click="(ev) => this.removePrinterFromLocal(ev, item.id)">Reset</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

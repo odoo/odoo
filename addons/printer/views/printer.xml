@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_printer_list" model="ir.ui.view">
+        <field name="name">printer.list</field>
+        <field name="model">printer.printer</field>
+        <field name="arch" type="xml">
+            <list string="Printer" sample="1">
+                <field name="name"/>
+                <field name="printer_ip"/>
+                <field name="printer_type"/>
+                <field name="report_ids"  widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_printer_form" model="ir.ui.view">
+        <field name="name">printer.form</field>
+        <field name="model">printer.printer</field>
+        <field name="arch" type="xml">
+            <form string="Printer">
+                <sheet>
+                    <div class="oe_title mb-2">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Printer 1"/></h1>
+                    </div>
+                    <group>
+                        <field name="printer_type"/>
+                    </group>
+                    <group>
+                        <field name="printer_ip"/>
+                    </group>
+                    <group>
+                        <field name="report_ids" widget="many2many_tags"/>      
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_printer_view" model="ir.actions.act_window">
+        <field name="name">Printer</field>
+        <field name="res_model">printer.printer</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_printer_delete_linked_devices_menu" model="ir.actions.client">
+        <field name="name">reset.linked.printers</field>
+        <field name="tag">printer_delete_linked_devices_action</field>
+    </record>
+
+    <menuitem
+        id="printer_clear_selected_printers"
+        name="Reset Linked Printers"
+        parent="base.reporting_menuitem"
+        action="action_printer_delete_linked_devices_menu"/>
+
+    <menuitem id="menu_printer" name="Printer" parent="base.reporting_menuitem" action="action_printer_view"/>
+</odoo>
