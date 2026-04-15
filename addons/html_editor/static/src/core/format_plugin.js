@@ -802,7 +802,10 @@ export class FormatPlugin extends Plugin {
 
 function getOrCreateSpan(node, ancestors) {
     const document = node.ownerDocument;
-    const span = ancestors.find((element) => element.tagName === "SPAN" && element.isConnected);
+    const span = ancestors.find(
+        (element) =>
+            element.tagName === "SPAN" && element.isConnected && !element.dataset.textEffect
+    );
     const lastInlineAncestor = ancestors.findLast(
         (element) => !isBlock(element) && element.isConnected
     );
