@@ -284,9 +284,7 @@ class MrpProduction(models.Model):
         compute='_compute_show_allocation',
         help='Technical Field used to decide whether the button "Allocation" should be displayed.')
     allow_workorder_dependencies = fields.Boolean('Allow Work Order Dependencies')
-    show_produce = fields.Boolean(compute='_compute_show_produce', help='Technical field to check if produce button can be shown')
     show_generate_bom = fields.Boolean('Show Generate BOM', compute='_compute_show_generate_bom')
-    show_produce_all = fields.Boolean(compute='_compute_show_produce', help='Technical field to check if produce all button can be shown')
     is_outdated_bom = fields.Boolean("Outdated BoM", help="The BoM has been updated since creation of the MO")
     is_delayed = fields.Boolean(compute='_compute_is_delayed', search='_search_is_delayed')
     is_due_today = fields.Boolean(compute='_compute_is_delayed')
@@ -907,14 +905,6 @@ class MrpProduction(models.Model):
                 (production.move_raw_ids and production.product_id not in production.move_raw_ids.product_id)
                 or (not production.move_raw_ids and production.workorder_ids)
             )
-
-    @api.depends('state', 'product_qty', 'qty_producing')
-    def _compute_show_produce(self):
-        for production in self:
-            state_ok = production.state in ('confirmed', 'progress', 'to_close')
-            qty_none_or_all = production.qty_producing in (0, production.product_qty)
-            production.show_produce_all = state_ok and qty_none_or_all
-            production.show_produce = state_ok and not qty_none_or_all
 
     @api.depends('bom_id', 'bom_id.note')
     def _compute_note(self):
@@ -1842,10 +1832,13 @@ class MrpProduction(models.Model):
             all_lines = self.env['mrp.bom.line']
             # Dynamic recordset of orphan lines to be processed as we remove matched lines.
             missing_lines = self.env['mrp.bom.line']
-            bomless_factor = order.qty_producing / order.product_qty
+            if self.env.context.get('close_production') or order.picking_type_id.create_backorder == 'never':
+                qty_producing = order.product_qty
+            else:
+                qty_producing = order.qty_producing
+            bomless_factor = qty_producing / order.product_qty
             if order.bom_id:
-                bom_factor = order.qty_producing / order.bom_id.uom_id._compute_quantity(
-                    order.bom_id.product_qty, order.uom_id, round=False)
+                bom_factor = qty_producing / order.bom_id.uom_id._compute_quantity(order.bom_id.product_qty, order.uom_id, round=False)
                 bom_factors = defaultdict(lambda: bom_factor)
                 # Flatten the BoM lines into only the ones that are supposed to correspond to moves in the MO (ie those
                 # of the current MO's BoM and of the components that are kits), stash the BoMs' normalised factors (the
@@ -1917,7 +1910,8 @@ class MrpProduction(models.Model):
         if self.env.context.get('skip_backorder', False):
             return quantity_issues
         for order in self:
-            if not order.uom_id.is_zero(order._get_quantity_to_backorder()):
+            if order.picking_type_id.create_backorder != 'never' \
+               and not order.uom_id.is_zero(order._get_quantity_to_backorder()):
                 quantity_issues.append(order)
         return quantity_issues
 
