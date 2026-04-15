@@ -8,6 +8,7 @@ import weUtils from "@web_editor/js/common/utils";
 import options from "@web_editor/js/editor/snippets.options";
 import { NavbarLinkPopoverWidget } from "@website/js/widgets/link_popover_widget";
 import wUtils from "@website/js/utils";
+import { PlacesAutoComplete } from "@website/components/googleplaces_autocomplete/places_autocomplete";
 import {
     applyModifications,
     isImageSupportedForStyle,
@@ -495,23 +496,19 @@ const GPSPicker = InputUserValueWidget.extend({
             return;
         }
 
-        this._gmapAutocomplete = new this.contentWindow.google.maps.places.Autocomplete(this.inputEl, {types: ['geocode']});
-        this.contentWindow.google.maps.event.addListener(this._gmapAutocomplete, 'place_changed', this._onPlaceChanged.bind(this));
+        this._unmountAutocompleteWithGPS = wUtils.mountAutocompleteComponent(PlacesAutoComplete, {
+            targetDropdown: this.inputEl,
+            maps: this.contentWindow.google.maps,
+            onPlaceSelected: this.onPlaceSelected.bind(this),
+            onError: this._notifyGMapError.bind(this),
+        });
     },
     /**
      * @override
      */
     destroy() {
         this._super(...arguments);
-
-        // Without this, the google library injects elements inside the backend
-        // DOM but do not remove them once the editor is left. Notice that
-        // this is also done when the widget is destroyed for another reason
-        // than leaving the editor, but if the google API needs that container
-        // again afterwards, it will simply recreate it.
-        for (const el of document.body.querySelectorAll('.pac-container')) {
-            el.remove();
-        }
+        this._unmountAutocompleteWithGPS?.();
     },
 
     //--------------------------------------------------------------------------
@@ -631,19 +628,17 @@ const GPSPicker = InputUserValueWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @private
-     * @param {Event} ev
+     * @param {Object} place Place object from Google Maps API
      */
-    _onPlaceChanged(ev) {
-        const gmapPlace = this._gmapAutocomplete.getPlace();
-        if (gmapPlace && gmapPlace.geometry) {
-            this._gmapPlace = gmapPlace;
+    onPlaceSelected(place) {
+        if (place && place.geometry) {
+            this._gmapPlace = place;
             const location = this._gmapPlace.geometry.location;
             const oldValue = this._value;
-            this._value = `(${location.lat()},${location.lng()})`;
-            this._gmapCacheGPSToPlace[this._value] = gmapPlace;
+            this._value = `(${location.lat},${location.lng})`;
+            this._gmapCacheGPSToPlace[this._value] = place;
             if (oldValue !== this._value) {
-                this._onUserValueChange(ev);
+                this._onUserValueChange();
             }
         }
     },
