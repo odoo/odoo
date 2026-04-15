@@ -23,7 +23,7 @@ class AccountAnalyticLine(models.Model):
         store=True,
         readonly=False,
         index="btree_not_null",
-        domain=lambda self: self._domain_so_line(),
+        domain=lambda self: str(self._domain_so_line()),
     )
     order_id = fields.Many2one(
         string="Customer Order",
@@ -38,7 +38,7 @@ class AccountAnalyticLine(models.Model):
         return
 
     def _domain_so_line(self):
-        return Domain("qty_delivered_method", "=", "analytic")
+        return Domain("qty_delivered_method", "!=", "manual")
 
     def _compute_order_id(self):
         return
