@@ -432,6 +432,7 @@ export class Rtc extends Record {
                 .map(([id, definition]) => new CallAction({ owner: this, id, definition }));
             for (const action of transformedActions) {
                 action.setup();
+                void action.isActive;
             }
             return transformedActions;
         },
