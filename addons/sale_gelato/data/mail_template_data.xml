@@ -9,37 +9,35 @@
         <field name="description">Sent to the customer when Gelato updates the status of an order</field>
         <field name="email_layout_xmlid">mail.mail_notification_layout</field>
         <field name="body_html" type="html">
-            <div style="margin: 0px; padding: 0px;">
-                <p style="margin: 0px; padding: 0px; font-size: 13px;">
-                    Hello <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,<br/><br/>
-                    <!-- Order in transit body -->
-                    <t t-if="ctx.get('tracking_data')">
-                        We are glad to inform you that your order is in transit.
-                        <t t-if="len(ctx['tracking_data']) == 1">
-                            <t t-set="tracking_url" t-value="list(ctx['tracking_data'].keys())[0]"/>
-                            Your tracking number is <a t-att-href="tracking_url" t-out="ctx['tracking_data'][tracking_url]"/>.
-                            <br/><br/>
-                        </t>
-                        <t t-else="">
-                            Your tracking numbers are:
-                            <ul>
-                                <li t-foreach="ctx['tracking_data']" t-as="tracking_url">
-                                    <a t-att-href="tracking_url" t-out="ctx['tracking_data'][tracking_url]"/>
-                                </li>
-                            </ul>
-                        </t>
-                    </t>
-                    <!-- Order delivered body -->
-                    <t t-if="ctx.get('order_delivered')">
-                        We are glad to inform you that your order has been delivered.
+            <div style="margin: 0px; padding: 0px; font-size: 13px;">
+                Hello <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,<br/><br/>
+                <!-- Order in transit body -->
+                <t t-if="ctx.get('tracking_data')">
+                    We are glad to inform you that your order is in transit.
+                    <t t-if="len(ctx['tracking_data']) == 1">
+                        <t t-set="tracking_url" t-value="list(ctx['tracking_data'].keys())[0]"/>
+                        Your tracking number is <a t-att-href="tracking_url" t-out="ctx['tracking_data'][tracking_url]"/>.
                         <br/><br/>
                     </t>
-                    Thank you,
-                    <t t-if="object.user_id.name">
-                        <br />
-                        <div>--<br/><t t-out="object.user_id.name or ''">Mitchell Admin</t></div>
+                    <t t-else="">
+                        Your tracking numbers are:
+                        <ul>
+                            <li t-foreach="ctx['tracking_data']" t-as="tracking_url">
+                                <a t-att-href="tracking_url" t-out="ctx['tracking_data'][tracking_url]"/>
+                            </li>
+                        </ul>
                     </t>
-                </p>
+                </t>
+                <!-- Order delivered body -->
+                <t t-if="ctx.get('order_delivered')">
+                    We are glad to inform you that your order has been delivered.
+                    <br/><br/>
+                </t>
+                Thank you,
+                <t t-if="object.user_id.name">
+                    <br />
+                    <div>--<br/><t t-out="object.user_id.name or ''">Mitchell Admin</t></div>
+                </t>
             </div>
         </field>
         <field name="auto_delete" eval="True"/>
