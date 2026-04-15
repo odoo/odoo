@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:37+0000\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
 "PO-Revision-Date: 2026-02-28 13:08+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -168,15 +168,15 @@ msgstr ""
 "                            Xin chào <t t-out=\"object.name or ''\">Marc "
 "Demo</t>,<br/><br/>\n"
 "                            Bạn đã được mời xác minh địa chỉ email để truy "
-"cập vào trang web \"<t t-out=\"object.company_id.name or ''"
-"\">YourCompany</t>\".\n"
+"cập vào trang web \"<t t-out=\"object.company_id.name or ''\">YourCompany</"
+"t>\".\n"
 "                            Để xác minh địa chỉ email, vui lòng nhấp vào nút "
 "dưới đây:\n"
 "                           <div style=\"margin: 32px 0px 32px 0px;\">\n"
-"                                <a t-att-href=\"ctx.get('token_url')\" t"
-"-attf-style=\"background-color: {{object.company_id.email_secondary_color or "
-"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{"
-"object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"                                <a t-att-href=\"ctx.get('token_url')\" t-"
+"attf-style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
 "font-size:13px;\"> \n"
 "                                    Xác minh tài khoản của tôi\n"
 "                               </a>\n"
@@ -608,6 +608,12 @@ msgid "XP"
 msgstr "XP"
 
 #. module: website_profile
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
+msgid "You are not allowed to edit this user"
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid ""
 "You can score more points by answering quizzes at the end of each course "
@@ -648,6 +654,11 @@ msgstr "hay"
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "point"
 msgstr "điểm"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
+msgid "s"
+msgstr ""
 
 #. module: website_profile
 #. odoo-python
