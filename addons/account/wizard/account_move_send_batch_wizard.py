@@ -105,13 +105,25 @@ class AccountMoveSendBatchWizard(models.TransientModel):
             'author_partner_id': self.env.user.partner_id.id,
         }
         account_move_send_cron._trigger()
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'type': 'info',
-                'title': _('Sending invoices'),
-                'message': _('Invoices are being sent in the background.'),
-                'next': {'type': 'ir.actions.act_window_close'},
-            },
-        }
+        if any(move.partner_id.email for move in self.move_ids):
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'info',
+                    'title': _('Sending invoices'),
+                    'message': _('Invoices are being sent in the background.'),
+                    'next': {'type': 'ir.actions.act_window_close'},
+                },
+            }
+        else:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'info',
+                    'title': _('Generating invoices'),
+                    'message': _('Invoices are being generated in the background.'),
+                    'next': {'type': 'ir.actions.act_window_close'},
+                },
+            }

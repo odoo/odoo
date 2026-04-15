@@ -701,6 +701,41 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertFalse(self._get_mail_message(invoice1))
         self.assertTrue(invoice2.invoice_pdf_report_id)
         self.assertTrue(self._get_mail_message(invoice2))
+        self.assertFalse(invoice1.is_move_sent)
+        self.assertTrue(invoice2.is_move_sent)
+
+    def test_invoice_multi_sent_after_email_missing(self):
+        invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
+        invoice2 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
+
+        self.partner_a.email = None
+        self.partner_b.email = None
+        wizard = self.create_send_and_print(invoice1 + invoice2)
+
+        self.assertTrue('account_missing_email' in wizard.alerts)
+        self.assertEqual(wizard.alerts['account_missing_email']['level'], 'warning')
+        wizard.action_send_and_print()
+        self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
+        # invoices are generated, and no partner got an email, without raising any errors
+        self.assertTrue(invoice1.invoice_pdf_report_id)
+        self.assertFalse(self._get_mail_message(invoice1))
+        self.assertTrue(invoice2.invoice_pdf_report_id)
+        self.assertFalse(self._get_mail_message(invoice2))
+        self.assertFalse(invoice1.is_move_sent)
+        self.assertFalse(invoice2.is_move_sent)
+
+        self.partner_a.email = "turlututu@tsointsoin"
+        self.partner_b.email = "turlututu@tsointsoin"
+
+        wizard.action_send_and_print()
+        self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
+        # invoices are generated, and both partners got an email, without raising any errors
+        self.assertTrue(invoice1.invoice_pdf_report_id)
+        self.assertTrue(self._get_mail_message(invoice1))
+        self.assertTrue(invoice2.invoice_pdf_report_id)
+        self.assertTrue(self._get_mail_message(invoice2))
+        self.assertTrue(invoice1.is_move_sent)
+        self.assertTrue(invoice2.is_move_sent)
 
     def test_invoice_multi_cron_disabled_alert(self):
         invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)

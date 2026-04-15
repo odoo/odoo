@@ -5749,21 +5749,32 @@ class AccountMove(models.Model):
         """
         def get_account_notification(moves, is_success: bool):
             _ = self.env._
-            return [
-                'account_notification',
-                {
-                    'type': 'success' if is_success else 'warning',
-                    'title': _('Invoices sent') if is_success else _('Invoices in error'),
-                    'message': _('Invoices sent successfully.') if is_success else _(
-                        "One or more invoices couldn't be processed."),
-                    'action_button': {
-                        'name': _('Open'),
-                        'action_name': _('Sent invoices') if is_success else _('Invoices in error'),
-                        'model': 'account.move',
-                        'res_ids': moves.ids,
+            if any(move.partner_id.email for move in moves):
+                return [
+                    'account_notification',
+                    {
+                        'type': 'success' if is_success else 'warning',
+                        'title': _('Invoices sent') if is_success else _('Invoices in error'),
+                        'message': _('Invoices sent successfully.') if is_success else _(
+                            "One or more invoices couldn't be processed."),
+                        'action_button': {
+                            'name': _('Open'),
+                            'action_name': _('Sent invoices') if is_success else _('Invoices in error'),
+                            'model': 'account.move',
+                            'res_ids': moves.filtered(lambda move: move.partner_id.email).ids,
+                        },
                     },
-                },
-            ]
+                ]
+            else:
+                return [
+                    'simple_notification',
+                    {
+                        'type': 'success' if is_success else 'warning',
+                        'title': _('Invoices generated') if is_success else _('Invoices in error'),
+                        'message': _('Invoices generated successfully.') if is_success else _(
+                            "One or more invoices couldn't be processed."),
+                    },
+                ]
 
         domain = [
             ('sending_data', '!=', False),

@@ -431,6 +431,9 @@ class AccountMoveSend(models.AbstractModel):
         # note: Binary is used for security reason
         attachment_to_create = [invoice_data['pdf_attachment_values'] for invoice_data in invoices_data.values() if invoice_data.get('pdf_attachment_values')]
         if not attachment_to_create:
+            for invoice, invoice_data in invoices_data.items():
+                if not invoice.is_move_sent and (len(invoices_data.items()) == 1 or invoice.partner_id.email):
+                    invoice.is_move_sent = True
             return
 
         attachments = self.sudo().env['ir.attachment'].create(attachment_to_create)
@@ -440,7 +443,8 @@ class AccountMoveSend(models.AbstractModel):
             if attachment := res_id_to_attachment.get(invoice.id):
                 invoice.message_main_attachment_id = attachment
                 invoice.invalidate_recordset(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
-                invoice.is_move_sent = True
+                if len(invoices_data.items()) == 1 or invoice.partner_id.email:
+                    invoice.is_move_sent = True
 
     @api.model
     def _hook_if_errors(self, moves_data, allow_raising=True):
