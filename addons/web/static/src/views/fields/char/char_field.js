@@ -5,7 +5,7 @@ import { useDynamicPlaceholder } from "../dynamic_placeholder_hook";
 import { formatChar } from "../formatters";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
-import { TranslationButton } from "../translation_button";
+import { TranslationButton } from "../translation/translation";
 
 import { Component, onMounted, onPatched, signal, t, useListener, useProps } from "@odoo/owl";
 
