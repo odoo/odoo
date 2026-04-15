@@ -71,6 +71,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 'partner_name': details['partner_name'],
                 'partner_email': details['partner_email'],
                 'partner_country_id': int(details['partner_country_id']),
+                'partner_lang': request.env.lang,
             })
         elif not tx_sudo.partner_country_id:
             tx_sudo.partner_country_id = int(kwargs['partner_details']['partner_country_id'])

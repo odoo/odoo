@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class PaymentTransaction(models.Model):
@@ -19,13 +19,25 @@ class PaymentTransaction(models.Model):
     def _send_donation_email(self, is_internal_notification=False, comment=None, recipient_email=None):
         self.ensure_one()
         if is_internal_notification or self.state == 'done':
-            subject = _('A donation has been made on your website') if is_internal_notification else _('Donation confirmation')
-            body = self.env['ir.qweb'].with_context(lang=self.partner_id.lang)._render('website_payment.donation_mail_body', {
+            if is_internal_notification:
+                recipient_user = self.env['res.users'].search(
+                    [('email', '=', recipient_email)], limit=1,
+                )
+                lang = recipient_user.lang or self.company_id.partner_id.lang
+            else:
+                lang = self.partner_lang
+            env = self.with_context(lang=lang).env
+            subject = (
+                env._("A donation has been made on your website")
+                if is_internal_notification
+                else env._("Donation confirmation")
+            )
+            body = self.env['ir.qweb'].with_context(lang=lang)._render('website_payment.donation_mail_body', {
                 'is_internal_notification': is_internal_notification,
                 'tx': self,
                 'comment': comment,
             }, minimal_qcontext=True)
-            body = self.env['mail.render.mixin'].with_context(lang=self.partner_id.lang)._render_encapsulate(
+            body = self.env['mail.render.mixin'].with_context(lang=lang)._render_encapsulate(
                 'mail.mail_notification_light',
                 body,
                 context_record=self,
