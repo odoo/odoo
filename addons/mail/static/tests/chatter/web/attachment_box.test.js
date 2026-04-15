@@ -3,6 +3,7 @@ import {
     click,
     contains,
     defineMailModels,
+    inputFiles,
     openFormView,
     patchUiSize,
     scroll,
@@ -10,6 +11,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -206,4 +208,39 @@ test("attachment box auto-closed on switch to record wih no attachments", async 
     await contains(".o-mail-AttachmentBox");
     await click(".o_pager_next");
     await contains(".o-mail-AttachmentBox", { count: 0 });
+});
+
+test("pager should be disabled during chatter attachment upload", async () => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { display_name: "first partner" },
+        { display_name: "second partner" },
+    ]);
+    await start();
+    await openFormView("res.partner", partnerId_1, {
+        arch: `
+            <form>
+                <sheet><field name="name"/></sheet>
+                <chatter/>
+            </form>`,
+        resIds: [partnerId_1, partnerId_2],
+    });
+    await contains(".o_pager_next:enabled");
+    await contains(".o_pager_previous:enabled");
+    let resolveUpload;
+    const uploadPromise = new Promise((resolve) => {
+        resolveUpload = resolve;
+    });
+    onRpc("/mail/attachment/upload", async () => {
+        await uploadPromise;
+    });
+    await click(".o-mail-Chatter-attachFiles");
+    await inputFiles(".o_input_file", [
+        new File(["image"], "testing.jpeg", { type: "image/jpeg" }),
+    ]);
+    await contains(".o_pager_next:disabled");
+    await contains(".o_pager_previous:disabled");
+    resolveUpload();
+    await contains(".o_pager_next:enabled");
+    await contains(".o_pager_previous:enabled");
 });

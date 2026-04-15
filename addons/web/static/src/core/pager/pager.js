@@ -80,6 +80,12 @@ export class Pager extends Component {
         return parts.join("-");
     }
     /**
+     * @returns {boolean}
+     */
+    get isDisabled() {
+        return this.state.isDisabled || this.isSinglePage;
+    }
+    /**
      * Note: returns false if we received the props "updateTotal", as in this case we don't know
      * the real total so we can't assert that there's a single page.
      * @returns {boolean} true if there is only one page
