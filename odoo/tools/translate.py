@@ -395,7 +395,10 @@ def get_text_content(term):
 
 def is_text(term):
     """ Return whether the term has only text. """
-    return len(html.fromstring(f"<_>{term}</_>")) == 0
+    it = html.fromstring(f"<root>{term}</root>").iter()
+    next(it)  # consume <root>
+    return next(it, None) is None
+
 
 xml_translate.get_text_content = get_text_content
 html_translate.get_text_content = get_text_content
