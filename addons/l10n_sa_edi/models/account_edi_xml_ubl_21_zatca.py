@@ -380,6 +380,8 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
         """
         if not line.move_id._is_downpayment() and (downpayment_line := line._get_downpayment_lines()):
             prepayment_move_id = downpayment_line.move_id.filtered(lambda m: m.move_type == 'out_invoice' and m._is_downpayment())
+            if non_reversed := prepayment_move_id.filtered(lambda m: m.payment_state != 'reversed'):
+                prepayment_move_id = non_reversed
             return {
                 'prepayment_id': prepayment_move_id.name,
                 'issue_date': fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'),
