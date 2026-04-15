@@ -12,7 +12,7 @@ registry.category("web_tour.tours").add("CustomerDisplayTourOnlinePayment", {
             CustomerDisplay.amountIs("Total", "2,972.75"),
             CustomerDisplay.postMessage(CustomerDisplay.PAY_ONLINE, "pay with cash"),
             {
-                trigger: `.modal-content img[alt='QR Code to pay'][src='${CustomerDisplay.QR_URL}']`,
+                trigger: `.qr-payment-card .qr-image[alt='QR Code'][src='${CustomerDisplay.QR_URL}']`,
             },
             CustomerDisplay.postMessage(CustomerDisplay.PAID, "payment approved"),
             CustomerDisplay.postMessage(CustomerDisplay.ORDER_IS_FINALIZED, "order is finalized"),
@@ -35,7 +35,7 @@ registry.category("web_tour.tours").add("CustomerDisplayTourOnlinePayment", {
             CustomerDisplay.amountIs("Total", "2,972.75"),
             CustomerDisplay.postMessage(CustomerDisplay.PAY_ONLINE, "pay with cash"),
             {
-                trigger: `.modal-content img[alt='QR Code to pay'][src='${CustomerDisplay.QR_URL}']`,
+                trigger: `.qr-payment-card .qr-image[alt='QR Code'][src='${CustomerDisplay.QR_URL}']`,
             },
         ].flat(),
 });

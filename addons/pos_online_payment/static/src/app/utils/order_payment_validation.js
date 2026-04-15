@@ -1,9 +1,9 @@
 import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
-import { OnlinePaymentPopup } from "@pos_online_payment/app/components/popups/online_payment_popup/online_payment_popup";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { generateQRCodeDataUrl } from "@point_of_sale/utils";
+import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 
 patch(OrderPaymentValidation.prototype, {
@@ -123,24 +123,16 @@ patch(OrderPaymentValidation.prototype, {
                     this.order.selectPaymentline(onlinePaymentLine);
                     const qrCodeUrl = `${this.pos.config._base_url}/pos/pay/${this.order.id}?access_token=${this.order.access_token}`;
                     const onlinePaymentData = {
-                        formattedAmount: this.pos.env.utils.formatCurrency(onlinePaymentLineAmount),
+                        amount: this.pos.env.utils.formatCurrency(onlinePaymentLineAmount),
                         qrCode: generateQRCodeDataUrl(qrCodeUrl),
-                        orderName: this.order.name,
                     };
                     this.order.onlinePaymentData = onlinePaymentData;
-                    const qrCodePopupCloser = this.pos.dialog.add(
-                        OnlinePaymentPopup,
-                        {
-                            ...onlinePaymentData,
-                            qrCode: generateQRCodeDataUrl(qrCodeUrl, { useThemeQr: true }),
+                    const qrCodePopupCloser = this.pos.dialog.add(QRPopup, onlinePaymentData, {
+                        onClose: () => {
+                            onlinePaymentLine.onlinePaymentResolver(false);
+                            this.order.onlinePaymentData = {};
                         },
-                        {
-                            onClose: () => {
-                                onlinePaymentLine.onlinePaymentResolver(false);
-                                this.order.onlinePaymentData = {};
-                            },
-                        }
-                    );
+                    });
                     const paymentResult = await new Promise(
                         (r) => (onlinePaymentLine.onlinePaymentResolver = r)
                     );

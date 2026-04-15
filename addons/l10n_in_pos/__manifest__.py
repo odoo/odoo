@@ -24,13 +24,13 @@
     'assets': {
         'point_of_sale._assets_pos': [
             'l10n_in/static/src/helpers/hsn_summary.js',
-            'l10n_in_pos/static/src/**/*',
+            'l10n_in_pos/static/src/app/**/*',
         ],
         'web.assets_tests': [
             'l10n_in_pos/static/tests/tours/**/*',
         ],
         'point_of_sale.customer_display_assets': [
-            'l10n_in_pos/static/src/app/components/popups/qr_code_popup/*',
+            'l10n_in_pos/static/src/customer_display/**/*',
         ]
     },
     'author': 'Odoo S.A.',
