@@ -35,7 +35,7 @@ const tableTemplate = `
                 <div class="col-lg-9 s_table_of_content_main oe_structure oe_empty" data-name="Content">
                     <section class="s_text_block pt0 pb64" data-snippet="s_text_block" data-name="Section">
                         <div class="container s_allow_columns">
-                            <h2 id="table_of_content_heading_1_1" class="h3" data-anchor="true">Intuitive system</h2>
+                            <h2 id="table_of_content_heading_1_1" class="h3">Intuitive system</h2>
                             <div class="s_hr pt8 pb24" data-snippet="s_hr" data-name="Separator">
                                 <hr class="w-100 mx-auto"/>
                             </div>
@@ -58,7 +58,7 @@ const tableTemplate = `
                     </section>
                     <section class="s_text_block pt0 pb64" data-snippet="s_text_block" data-name="Section">
                         <div class="container s_allow_columns">
-                            <h2 id="table_of_content_heading_1_2" class="h3" data-anchor="true">Design features</h2>
+                            <h2 id="table_of_content_heading_1_2" class="h3">Design features</h2>
                             <div class="s_hr pt8 pb24" data-snippet="s_hr" data-name="Separator">
                                 <hr class="w-100 mx-auto"/>
                             </div>

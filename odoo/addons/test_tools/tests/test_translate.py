@@ -1335,7 +1335,7 @@ class TestXMLTranslation(TransactionCase):
     </div>
     <div class="s_table_of_content_main" data-name="Content">
         <section class="pb16">
-            <h1 data-anchor="true" id="table_of_content_heading_1672668075678_4">%s</h1>
+            <h1 id="table_of_content_heading_1672668075678_4">%s</h1>
         </section>
     </div>
 </form>'''
@@ -1385,7 +1385,7 @@ class TestXMLTranslation(TransactionCase):
     </div>
     <div class="s_table_of_content_main" data-name="Content">
         <section class="pb16">
-            <h1 data-anchor="true" id="table_of_content_heading_1672668075678_4">%s</h1>
+            <h1 id="table_of_content_heading_1672668075678_4">%s</h1>
         </section>
     </div>
 </form>'''
